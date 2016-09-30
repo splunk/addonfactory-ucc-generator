@@ -1,0 +1,15 @@
+<!--
+@template=__template__
+@title=News
+-->
+
+## [JavaScript Lint 0.1j Released](__BASENAME__)
+_Mon, 05 Dec 2005 20:19:35 +0000_
+
+This release fixes a bug in the "duplicate case" warning for numbers. Certain numbers were incorrectly reported as duplicates.  (This bug is more likely to affect JavaScript programmers using big-endian processors.)
+
+The [Online Lint](/online_lint.php) has also been updated to use a local CGI, making the script much more responsive. PHP source code for the Online Lint is included in the source package.
+
+Available from the [download page](/download.htm).
+
+

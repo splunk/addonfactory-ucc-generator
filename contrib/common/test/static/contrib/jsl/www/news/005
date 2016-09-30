@@ -1,0 +1,11 @@
+<!--
+@template=__template__
+@title=News
+-->
+
+## [JavaScript Lint 0.1f Released](__BASENAME__)
+_Sat, 10 Sep 2005 14:59:43 +0000_
+
+This release adds a separate warning for nested statements that don't use curly braces (nested _if_, _for_, _while_, etc.), a warning for useless assignments (x = x), and a configuration option to enable option-explicit across all files.
+
+

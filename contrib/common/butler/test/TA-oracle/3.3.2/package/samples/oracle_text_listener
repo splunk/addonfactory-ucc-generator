@@ -1,0 +1,73 @@
+21-OCT-2014 04:06:03 * (CONNECT_DATA=(SID=orcl)(CID=(PROGRAM=perl)(HOST=Oracle10gR2_linux)(USER=oracle))) * (ADDRESS=(PROTOCOL=tcp)(HOST=127.0.0.1)(PORT=52404)) * establish * orcl * 0
+21-OCT-2014 04:06:03 * (CONNECT_DATA=(SID=orcl)(CID=(PROGRAM=perl)(HOST=Oracle10gR2_linux)(USER=oracle))) * (ADDRESS=(PROTOCOL=tcp)(HOST=127.0.0.1)(PORT=52404)) * establish * orcl * 0
+21-OCT-2014 04:06:03 * (CONNECT_DATA=(SID=orcl)(CID=(PROGRAM=perl)(HOST=Oracle10gR2_linux)(USER=oracle))) * (ADDRESS=(PROTOCOL=tcp)(HOST=127.0.0.1)(PORT=52404)) * establish * orcl * 0
+21-OCT-2014 04:06:03 * (CONNECT_DATA=(SID=orcl)(CID=(PROGRAM=perl)(HOST=Oracle10gR2_linux)(USER=oracle))) * (ADDRESS=(PROTOCOL=tcp)(HOST=127.0.0.1)(PORT=52404)) * establish * orcl * 0
+21-OCT-2014 04:06:03 * (CONNECT_DATA=(SID=orcl)(CID=(PROGRAM=perl)(HOST=Oracle10gR2_linux)(USER=oracle))) * (ADDRESS=(PROTOCOL=tcp)(HOST=127.0.0.1)(PORT=52404)) * establish * orcl * 0
+21-OCT-2014 04:05:54 * (CONNECT_DATA=(CID=(PROGRAM=)(HOST=Oracle10gR2_linux)(USER=oracle))(COMMAND=status)(ARGUMENTS=64)(SERVICE=(ADDRESS=(PROTOCOL=TCP)(HOST=localhost)(PORT=1521)))(VERSION=169869568)) * status * 0
+21-OCT-2014 04:05:54 * (CONNECT_DATA=(CID=(PROGRAM=)(HOST=Oracle10gR2_linux)(USER=oracle))(COMMAND=status)(ARGUMENTS=64)(SERVICE=(ADDRESS=(PROTOCOL=TCP)(HOST=localhost)(PORT=1521)))(VERSION=169869568)) * status * 0
+21-OCT-2014 04:05:54 * (CONNECT_DATA=(CID=(PROGRAM=)(HOST=Oracle10gR2_linux)(USER=oracle))(COMMAND=status)(ARGUMENTS=64)(SERVICE=(ADDRESS=(PROTOCOL=TCP)(HOST=localhost)(PORT=1521)))(VERSION=169869568)) * status * 0
+21-OCT-2014 04:05:54 * (CONNECT_DATA=(CID=(PROGRAM=)(HOST=Oracle10gR2_linux)(USER=oracle))(COMMAND=status)(ARGUMENTS=64)(SERVICE=(ADDRESS=(PROTOCOL=TCP)(HOST=localhost)(PORT=1521)))(VERSION=169869568)) * status * 0
+21-OCT-2014 04:05:54 * (CONNECT_DATA=(CID=(PROGRAM=)(HOST=Oracle10gR2_linux)(USER=oracle))(COMMAND=status)(ARGUMENTS=64)(SERVICE=(ADDRESS=(PROTOCOL=TCP)(HOST=localhost)(PORT=1521)))(VERSION=169869568)) * status * 0
+21-OCT-2014 04:15:54 * ping * 0
+WARNING: Subscription for node down event still pending
+21-OCT-2014 04:15:54 * ping * 0
+WARNING: Subscription for node down event still pending
+21-OCT-2014 04:15:54 * ping * 0
+WARNING: Subscription for node down event still pending
+21-OCT-2014 04:15:54 * ping * 0
+WARNING: Subscription for node down event still pending
+21-OCT-2014 04:15:54 * ping * 0
+WARNING: Subscription for node down event still pending
+21-OCT-2014 04:15:54 * ping * 0
+WARNING: Subscription for node down event still pending
+23-SEP-2014 10:50:28 * status * 12618
+TNS-12618: TNS:versions are incompatible
+23-SEP-2014 10:50:28 * status * 12618
+TNS-12618: TNS:versions are incompatible
+23-SEP-2014 10:50:28 * status * 12618
+TNS-12618: TNS:versions are incompatible
+23-SEP-2014 10:50:28 * status * 12618
+TNS-12618: TNS:versions are incompatible
+23-SEP-2014 10:50:28 * status * 12618
+TNS-12618: TNS:versions are incompatible
+23-SEP-2014 10:50:28 * status * 12618
+TNS-12618: TNS:versions are incompatible
+23-SEP-2014 10:50:28 * (CONNECT_DATA=(PASSWORD=xxxxxxxx)(COMMAND=STATUS)(VERSION=169869568)) * status * 1189
+TNS-01189: The listener could not authenticate the user
+23-SEP-2014 10:50:28 * (CONNECT_DATA=(PASSWORD=xxxxxxxx)(COMMAND=STATUS)(VERSION=169869568)) * status * 1189
+TNS-01189: The listener could not authenticate the user
+23-SEP-2014 10:50:28 * (CONNECT_DATA=(PASSWORD=xxxxxxxx)(COMMAND=STATUS)(VERSION=169869568)) * status * 1189
+TNS-01189: The listener could not authenticate the user
+23-SEP-2014 10:50:28 * (CONNECT_DATA=(PASSWORD=xxxxxxxx)(COMMAND=STATUS)(VERSION=169869568)) * status * 1189
+TNS-01189: The listener could not authenticate the user
+23-SEP-2014 10:50:28 * (CONNECT_DATA=(PASSWORD=xxxxxxxx)(COMMAND=STATUS)(VERSION=169869568)) * status * 1189
+TNS-01189: The listener could not authenticate the user
+23-SEP-2014 10:50:28 * (CONNECT_DATA=(PASSWORD=xxxxxxxx)(COMMAND=STATUS)(VERSION=169869568)) * status * 1189
+TNS-01189: The listener could not authenticate the user
+23-SEP-2014 10:28:45 * (CONNECT_DATA=(SID=SAY)(CID=(PROGRAM=JDBC Thin Client)(HOST=__jdbc__)(USER=root))) * (ADDRESS=(PROTOCOL=tcp)(HOST=10.10.255.250)(PORT=60431)) * establish * SAY * 12505
+TNS-12505: TNS:listener does not currently know of SID given in connect descriptor
+23-SEP-2014 10:28:45 * (CONNECT_DATA=(SID=SAY)(CID=(PROGRAM=JDBC Thin Client)(HOST=__jdbc__)(USER=root))) * (ADDRESS=(PROTOCOL=tcp)(HOST=10.10.255.250)(PORT=60431)) * establish * SAY * 12505
+TNS-12505: TNS:listener does not currently know of SID given in connect descriptor
+23-SEP-2014 10:28:45 * (CONNECT_DATA=(SID=SAY)(CID=(PROGRAM=JDBC Thin Client)(HOST=__jdbc__)(USER=root))) * (ADDRESS=(PROTOCOL=tcp)(HOST=10.10.255.250)(PORT=60431)) * establish * SAY * 12505
+TNS-12505: TNS:listener does not currently know of SID given in connect descriptor
+23-SEP-2014 10:28:45 * (CONNECT_DATA=(SID=SAY)(CID=(PROGRAM=JDBC Thin Client)(HOST=__jdbc__)(USER=root))) * (ADDRESS=(PROTOCOL=tcp)(HOST=10.10.255.250)(PORT=60431)) * establish * SAY * 12505
+TNS-12505: TNS:listener does not currently know of SID given in connect descriptor
+23-SEP-2014 10:28:45 * (CONNECT_DATA=(SID=SAY)(CID=(PROGRAM=JDBC Thin Client)(HOST=__jdbc__)(USER=root))) * (ADDRESS=(PROTOCOL=tcp)(HOST=10.10.255.250)(PORT=60431)) * establish * SAY * 12505
+TNS-12505: TNS:listener does not currently know of SID given in connect descriptor
+23-SEP-2014 10:28:45 * (CONNECT_DATA=(SID=SAY)(CID=(PROGRAM=JDBC Thin Client)(HOST=__jdbc__)(USER=root))) * (ADDRESS=(PROTOCOL=tcp)(HOST=10.10.255.250)(PORT=60431)) * establish * SAY * 12505
+TNS-12505: TNS:listener does not currently know of SID given in connect descriptor
+22-SEP-2014 04:59:56 * (CONNECT_DATA=(SID=orcl)(CID=(PROGRAM=emagent)(HOST=Oracle10gR2_linux)(USER=oracle))) * (ADDRESS=(PROTOCOL=tcp)(HOST=127.0.0.1)(PORT=13031)) * establish * orcl * 12528
+TNS-12528: TNS:listener: all appropriate instances are blocking new connections
+22-SEP-2014 04:59:56 * (CONNECT_DATA=(SID=orcl)(CID=(PROGRAM=emagent)(HOST=Oracle10gR2_linux)(USER=oracle))) * (ADDRESS=(PROTOCOL=tcp)(HOST=127.0.0.1)(PORT=13031)) * establish * orcl * 12528
+TNS-12528: TNS:listener: all appropriate instances are blocking new connections
+22-SEP-2014 04:59:56 * (CONNECT_DATA=(SID=orcl)(CID=(PROGRAM=emagent)(HOST=Oracle10gR2_linux)(USER=oracle))) * (ADDRESS=(PROTOCOL=tcp)(HOST=127.0.0.1)(PORT=13031)) * establish * orcl * 12528
+TNS-12528: TNS:listener: all appropriate instances are blocking new connections
+22-SEP-2014 04:59:56 * (CONNECT_DATA=(SID=orcl)(CID=(PROGRAM=emagent)(HOST=Oracle10gR2_linux)(USER=oracle))) * (ADDRESS=(PROTOCOL=tcp)(HOST=127.0.0.1)(PORT=13031)) * establish * orcl * 12528
+TNS-12528: TNS:listener: all appropriate instances are blocking new connections
+22-SEP-2014 04:59:56 * (CONNECT_DATA=(SID=orcl)(CID=(PROGRAM=emagent)(HOST=Oracle10gR2_linux)(USER=oracle))) * (ADDRESS=(PROTOCOL=tcp)(HOST=127.0.0.1)(PORT=13031)) * establish * orcl * 12528
+23-SEP-2014 10:50:28 * ORA-00313: open failed for members of log group 3 of thread 1 ORA-00312: online log 3 thread 1: &apos;/u01/app/oracle/oradata/orcl/redo03.log&apos; ORA-27037: unable to obtain file status TNS-01189: The listener could not authenticate the user * status * 102
+23-SEP-2014 10:50:28 * ORA-00313: open failed for members of log group 3 of thread 1 ORA-00312: online log 3 thread 1: &apos;/u01/app/oracle/oradata/orcl/redo03.log&apos; ORA-27037: unable to obtain file status TNS-01189: The listener could not authenticate the user * status * 1189
+23-SEP-2014 10:50:28 * ORA-00313: open failed for members of log group 3 of thread 1 ORA-00312: online log 3 thread 1: &apos;/u01/app/oracle/oradata/orcl/redo03.log&apos; ORA-27037: unable to obtain file status TNS-01189: The listener could not authenticate the user * status * 102
+23-SEP-2014 10:50:28 * ORA-00313: open failed for members of log group 3 of thread 1 ORA-00312: online log 3 thread 1: &apos;/u01/app/oracle/oradata/orcl/redo03.log&apos; ORA-27037: unable to obtain file status TNS-01189: The listener could not authenticate the user * status * 1189
+23-SEP-2014 10:50:28 * ORA-00313: open failed for members of log group 3 of thread 1 ORA-00312: online log 3 thread 1: &apos;/u01/app/oracle/oradata/orcl/redo03.log&apos; ORA-27037: unable to obtain file status TNS-01189: The listener could not authenticate the user * status * 102
+23-SEP-2014 10:50:28 * ORA-00313: open failed for members of log group 3 of thread 1 ORA-00312: online log 3 thread 1: &apos;/u01/app/oracle/oradata/orcl/redo03.log&apos; ORA-27037: unable to obtain file status TNS-01189: The listener could not authenticate the user * status * 1189

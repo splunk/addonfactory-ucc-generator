@@ -1,0 +1,28 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<html>
+<head>
+    <title>JavaScript Lint Test Page</title>
+	<!-- If e4x is disabled, HTML commments are treated as
+		comment-till-end-of-line. -->
+    <script type="text/javascript">
+		// e4x is disabled by default, so HTML comments are single-line only.
+		var comment_a = <!--
+			? /*warning:syntax_error*/
+		-->;
+	</script>
+    <script type="text/javascript;e4x=1">
+		// Explicitly enable e4x.
+		var comment_c = <!--
+			?
+		-->;
+    </script>
+    <script type="text/javascript;version=1.6;e4x=0">
+		// e4x is always enabled in 1.6+
+		var comment_b = <!--
+			?
+		-->;
+	</script>
+</head>
+<body>
+</body>
+</html>

@@ -1,0 +1,16 @@
+activateUser
+confirmResetPassword
+createUser
+deactivateUser
+activateUser
+deleteUser
+grantEntitlement
+grantEntitlementGroup
+RequestResetPassword
+ResetAuthSecret
+RevokeEntitlement
+RevokeEntitlementGroup
+selfAcceptEula
+twoFactorAuthenticate
+updateUser
+userAuthenticate

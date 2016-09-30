@@ -1,0 +1,48 @@
+<?xml version="1.0" ?>
+<license>
+	<signature>mzGDaNmiR3JnJrc6n8tIDqPkj+n4853Owtsq5hrqIH7Id4Jn7HiOuDziE3ycwWp2hYEHFSPKfv4cm9yZMGg7evRwSX/wNbr2c8e2tucYQGPIFYPPDvLfRh3ZSBuIWR7ybHVmVLWDejPvdSxZ8W7xu58z3z30fRIJw9ojNlbY+1DuEjj89oFmPIEjLyhzTHaXB9EBgECxq2LUES+LjXaDTFBnliKI6bfGj/FnXcafQh+HP9YxDLDFwKjBq3j6DpEFUcjQmaWCpKmq/93mM00yWSZdjd2FtzuZ7dEqlZzCB3tsZWVwm/sSbMQT+EbKjTFarGkc2xjBqRNzMB3mgB6XNQ==</signature>
+	<payload>
+		<type>lite</type>
+		<group_id>Lite</group_id>
+		<quota>1</quota>
+		<max_violations>5</max_violations>
+		<window_period>30</window_period>
+		<creation_time>1469689200</creation_time>
+		<label>Splunk Light Reset Warnings Test DO NOT DISTRIBUTE</label>
+		<expiration_time>1470034799</expiration_time>
+		<max_users>5</max_users>
+		<max_stack_quota>21474836480</max_stack_quota>
+		<features>
+			<feature>Auth</feature>
+			<feature>RcvData</feature>
+			<feature>LocalSearch</feature>
+			<feature>ScheduledSearch</feature>
+			<feature>Alerting</feature>
+			<feature>DeployServer</feature>
+			<feature>SplunkWeb</feature>
+			<feature>SigningProcessor</feature>
+			<feature>ResetWarnings</feature>
+		</features>
+		<disabled_features>
+			<feature>Acceleration</feature>
+			<feature>AdvancedSearchCommands</feature>
+			<feature>AdvancedXML</feature>
+			<feature>CustomRoles</feature>
+			<feature>GuestPass</feature>
+			<feature>KVStore</feature>
+			<feature>LDAPAuth</feature>
+			<feature>MultisiteClustering</feature>
+			<feature>NontableLookups</feature>
+			<feature>SearchheadPooling</feature>
+			<feature>UnisiteClustering</feature>
+		</disabled_features>
+		<sourcetypes/>
+		<allowedRoles>
+			<role assignable="true">admin</role>
+			<role assignable="false">power</role>
+			<role assignable="true">can_delete</role>
+			<role assignable="true">user</role>
+		</allowedRoles>
+		<guid>6CD4A3A7-322E-44CF-A103-93A31D3A66EA</guid>
+	</payload>
+</license>

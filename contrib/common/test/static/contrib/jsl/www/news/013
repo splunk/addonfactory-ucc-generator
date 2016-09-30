@@ -1,0 +1,13 @@
+<!--
+@template=__template__
+@title=News
+-->
+
+## [JavaScript Lint 0.1m Released](__BASENAME__)
+_Tue, 03 Jan 2006 17:31:25 +0000_
+
+This release fixes a bug with the "undeclared identifier" warnings when using the import control comment.
+
+Available from the [download page](/download.htm).
+
+

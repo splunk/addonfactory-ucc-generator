@@ -1,0 +1,1 @@
+time ansible-playbook  -i hosts-3577  ./ES.yml 

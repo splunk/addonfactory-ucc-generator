@@ -1,0 +1,13 @@
+<!--
+@template=__template__
+@title=News
+-->
+
+## [JavaScript Lint 0.1g Released](__BASENAME__)
+_Sat, 08 Oct 2005 16:37:29 +0000_
+
+This release includes a warning if the default case is missing from switch, a warning if a case is duplicated within a switch, better intelligence when checking for missing break statements, and a `/*@fallthru*@/` control comment (must always come at the very end of a case).
+
+Available from the [download page](/download.htm).
+
+

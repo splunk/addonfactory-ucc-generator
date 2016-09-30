@@ -1,0 +1,352 @@
+body {
+    background-color: #fff;
+}
+.tab-pane {
+    background-color: #fff;
+}
+.submit-dialog {
+    cursor: pointer;
+}
+.delete-item {
+    cursor: pointer;
+}
+.update-item {
+    cursor: pointer;
+}
+.enable-item {
+    cursor: pointer;
+}
+.disable-item {
+    cursor: pointer;
+}
+.modal-body {
+    max-height: 800px;
+}
+.higherWider {
+    width: 600px;
+    left: 45%;
+}
+.higherWiderEx {
+    width: 700px;
+    left: 35%;
+}
+.tool-bar {
+    position: relative;
+    padding-top: 10px;
+    padding-left: 20px;
+    padding-bottom: 20px;
+    background-color: #eee;
+}
+div.modal-body {
+    overflow: auto;
+}
+.modal-body .delete-prompt {
+    margin: 20px;
+}
+.tool-title {
+    float: left;
+    font-size: 24px;
+    font-weight: lighter;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.tool-button {
+    float: right;
+    margin-top: 20px;
+    margin-right: 20px;
+}
+.tool-description {
+    clear: both;
+}
+
+/*Add button CSS*/
+
+.add-button {
+    float: right;
+    margin-right: 20px;
+}
+
+/*Delete the top border in first cell of table*/
+
+.table-chrome>thead>tr>th {
+    position: inherit !important;
+}
+.table-row-expanding {
+    border-bottom: 2px solid #ccc;
+}
+
+/*Input type filter*/
+
+.type-filter {
+    float: left;
+    margin-top: 10px;
+}
+.select-wrapper {
+    margin-top: 20px;
+    margin-left: 20px;
+    width: 300px;
+}
+.control-wrapper {
+    width: 300px;
+    margin-top: 10px;
+}
+.control-wrapper p {
+    font-size: 12px;
+    font-weight: bold;
+}
+.control-wrapper input {
+    width: 230px;
+}
+.section-header p {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+/*Modal footer CSS*/
+
+.modal-footer .cancel-btn {
+    float: left;
+}
+.modal-footer .submit-btn {
+    float: right;
+}
+.modal-footer {
+    margin-bottom: -16px !important;
+    padding: 10px 20px;
+}
+
+/*Error Message CSS*/
+
+.modal-body .msg-error {
+    padding: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    background-color: #faeae6;
+    border: 1px solid #d85d3c;
+    color: #d85d3c;
+    min-height: 25px;
+    overflow: hidden;
+}
+.modal-body .msg-error i.icon {
+    display: block;
+    float: left;
+    font-size: 20px;
+    line-height: 24px;
+    width: 18px;
+    margin-right: 8px;
+}
+.modal-body .msg-error div.msg-text {
+    display: block;
+    float: left;
+    margin-top: 4px;
+    /*width: 500px;*/
+    word-wrap: break-word;
+    word-break: normal;
+}
+.modal-body .msg-error div.msg-text:after {
+    clear: both
+}
+
+/*Loading Message CSS*/
+
+.modal-body .msg-loading {
+    padding: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    background-color: #d1e5c6;
+    border: 1px solid #7b5;
+    overflow: hidden;
+}
+.modal-body .msg-loading .msg-icon {
+    background-image: url("../img/loading-24.gif");
+    background-repeat: no-repeat;
+    padding-left: 5px;
+    line-height: 24px;
+    float: left;
+    margin-right: 8px;
+    width: 24px;
+    height: 24px;
+}
+.modal-body .msg-loading div.msg-text {
+    display: block;
+    float: left;
+    margin-top: 4px;
+    /*width: 500px;*/
+    word-wrap: break-word;
+    word-break: normal;
+}
+
+/*Warning Message CSS*/
+.modal-body .msg-warning{
+    padding:5px;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    background-color: #fdf4de;
+    border: 1px solid #d99f0d;
+    color: #d99f0d;
+    min-height: 25px;
+    overflow: hidden;
+}
+
+.modal-body .msg-warning i.icon{
+    display: block;
+    float: left;
+    font-size: 20px;
+    line-height: 24px;
+    width: 18px;
+    margin-right: 8px;
+}
+
+.modal-body .msg-warning div.msg-text{
+    display: block;
+    float: left;
+    margin-top: 4px;
+    width: 500px;
+    word-wrap: break-word;
+    word-break: normal;
+}
+
+.modal-body .msg-warning div.msg-text:after{
+    clear:both
+}
+
+
+.modal-body .msg-detail-text{
+    padding:5px;
+    margin: 10px;
+}
+
+.modal-body .msg-detail-text .help-block{
+    display: inline;
+}
+
+
+
+/*Dialog input width*/
+
+.form-small .control-label {
+    width: 150px;
+}
+.form-small .controls {
+    margin-left: 170px;
+}
+.form-small input[type=text] {
+    width: 320px;
+}
+.form-small input[type=password] {
+    width: 320px;
+}
+.form-small .uneditable-input {
+    width: 339px;
+}
+
+/*Table column width*/
+.list-dotted dt {
+    width: 200px;
+}
+
+.list-dotted dt:after {
+    content: " ...........................................................";
+}
+
+.list-dotted dd{
+    margin-left: 210px;
+}
+
+thead th:nth-child(1) {
+    /*Force line break when too long*/
+    word-wrap: break-word;
+    word-break: normal;
+}
+tbody tr td {
+    word-wrap: break-word;
+    word-break: normal;
+}
+.form-small .select2-container {
+    width: 283px;
+}
+div.description_block {
+    margin-left: 20px;
+}
+
+/*Proxy footer*/
+
+.panel-footer {
+    padding-left: 20px;
+}
+
+/*Credential*/
+
+span.filename {
+    margin-bottom: 0px;
+}
+.cert-container form.control-upload {
+    float: left;
+    clear: both;
+}
+.cert-container .status-container {
+    margin-right: 10px;
+}
+.cert-container .file-input-container {
+    margin: 10px 0;
+}
+.cert-container input[type="submit"] {
+    clear: both;
+    float: left;
+}
+.cert-container .manifest-container {
+    clear: both;
+    width: 100%;
+}
+.cert-container textarea {
+    width: 590px;
+    height: 350px;
+    margin-top: 10px;
+}
+.cert-container .upload-form {
+    clear: both;
+    padding-top: 10px;
+    padding-bottom: 20px;
+}
+.cert-container .upload-form .description{
+    width: 590px;
+}
+.cert-container .accordion-toggle {
+    clear: both;
+}
+.cert-container .accordion-toggle i {
+    width: 10px;
+    margin-right: 5px;
+}
+
+.cert-container .auto-toggle i {
+    width: 10px;
+    margin-right: 5px;
+}
+
+.cert-container .auto-toggle {
+    clear: both;
+}
+
+.cert-container .auto-form {
+    margin: 10px 0;
+    clear: both;
+}
+
+.cert-container .options {
+    display: block;
+    margin:10px 0;
+    padding: 10px 0;
+}
+
+/*Navigation tab shadow*/
+.nav-tabs > li > a:focus {
+    box-shadow: none;
+}
+
+a:focus {
+    box-shadow: none;
+}

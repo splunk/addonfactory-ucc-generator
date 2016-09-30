@@ -1,0 +1,11 @@
+<!--
+@template=__template__
+@title=News
+-->
+
+## [JavaScript Lint 0.2.6 Released](__BASENAME__)
+_Sat, 29 Apr 2006 15:07:13 +0000_
+
+JavaScript Lint now has a `/*jsl:ignoreall*/` keyword to allow entire files to easily be ignored.  Additionally, it no longer complains about blank JavaScript files.
+
+Available from the [download page](/download.htm).

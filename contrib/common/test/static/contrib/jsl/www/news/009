@@ -1,0 +1,22 @@
+<!--
+@template=__template__
+@title=News
+-->
+
+## [JavaScript Lint 0.1i Released](__BASENAME__)
+_Wed, 16 Nov 2005 14:28:54 +0000_
+
+This release has a more specific warning for _else_ statements that may be intended for one of multiple _if_ statements (it previously warned that nested statements should use curly braces to resolve ambiguity):
+
+>
+	`if (i)`
+	`if (j) func1();`
+	`else func2();`
+
+The warning against duplicate case statements now correctly handles case statements with string literals.
+
+This release fixes a bug that caused a "Bus error" on Mac OS X and a segmentation fault on Solaris 5.9; JavaScript Lint has now been compiled and run on those operating systems. If Mac users are interested in precompiled binaries, I will consider making them available for download on the website.
+
+Available from the [download page](/download.htm).
+
+

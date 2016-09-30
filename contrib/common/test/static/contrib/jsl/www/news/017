@@ -1,0 +1,12 @@
+<!--
+@template=__template__
+@title=News
+-->
+
+## [JavaScript Lint 0.2.3 Released](__BASENAME__)
+_Thu, 16 Feb 2006 01:11:07 +0000_
+
+Syntax errors in imported scripts were not being reported.
+Available from the [download page](/download.htm).
+
+

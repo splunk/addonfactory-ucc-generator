@@ -1,0 +1,3 @@
+RETURNCODE,result
+0,success
+*,failure

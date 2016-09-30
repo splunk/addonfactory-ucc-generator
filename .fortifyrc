@@ -1,0 +1,23 @@
+[fortify]
+project_name = SPLUNK-APPS
+project_template = Splunk Apps Project Template
+pythonpath = package/bin:package/bin/splunk_ta_crowdstrike
+include = package
+filetypes = *.js *.html *.xml *.py
+exclude = */bootstrap/js/*
+          */select2-3.5.2/*
+          */concurrent/*
+          */splunklib/*
+          */azure/*
+          */six.py
+          */solnlib/*
+          */certifi/*
+          */chardet/*
+          */dateutil/*
+          */enum/*
+          */isodate/*
+          */keyring/*
+          */msrest/*
+          */msrestazure/*
+          */oauthlib/*
+          */requests_oauthlib/*

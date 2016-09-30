@@ -1,0 +1,29 @@
+<html>
+<head>
+	<title>%(title)s</title>
+	<link rel="stylesheet" type="text/css" href="/static/global.css" />
+	<link rel="alternate" type="text/xml" title="RSS 2.0" href="/news/index.rss" />
+</head>
+<body>
+	<div id="title">
+		JavaScript Lint
+	</div>
+	<div id="nav">
+		%(nav)s
+
+		<p align="center"><br/><a href="/news/index.rss">
+			<img border="0" src="/static/feed-icon-32x32.png" width="32" height="32"></a></p>
+
+		<p align="center"><br/><a href="http://sourceforge.net/projects/javascriptlint">
+		<img src="http://sflogo.sourceforge.net/sflogo.php?group_id=168518&type=1"
+			width="88" height="31" border="0" alt="SourceForge.net Logo"><br>
+			<font size="1">SourceForge Project</font></a></p>
+	</div>
+	<div id="body">
+		%(body)s
+	</div>
+	<div id="footer">
+		JavaScript Lint is sponsored by <a href="http://blog.outofhanwell.com/">Matthias Miller</a>.
+	</div>
+</body>
+</html>

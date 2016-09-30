@@ -1,0 +1,21 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<html>
+<head>
+    <title>JavaScript Lint Test Page</title>
+    <script src="include.ecmascript"></script>
+    <script type="text/javascript"><!--
+        var myglobal = GlobalFromInclude();
+        myglobal.set(global_var);
+        bogus = myglobal.get(); /*warning:undeclared_identifier*/
+        var page_global = 42;
+    //-->
+    </script>
+    <script type="text/javascript"><!--
+        myglobal.set(page_global);
+		undef(); /*warning:undeclared_identifier*/
+    //-->
+    </script>
+</head>
+<body>
+</body>
+</html>

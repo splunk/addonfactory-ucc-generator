@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<license>
+  <signature>EFkDi338ZOUJbtrwJAH6HbFPudSSmBLW6DlB2W3wzBSzQ0Q0MrW7fF6C6nAJwPHS9LruAdz3QTh3ZW41i3ZIYUOkYozm/5J8cwvmxGkwCZUJ0s73GLaqFjjqfEVsWWytJyf0x8yqrUk8a9BkELZqGACEg18qSnJ8jCOfnjj4GGcCrSPVyi/HboD58DI0h9woUQzMg+Vw9BnzqwtVyjby9QeRk4HzqNkHe6Lw7CupvLdHk6Eo27W5VGeriaYKvbgI6ar8gjgbJ2Hv0o25AXf/AH5OMBRTTml4ic/BRcmg9jNxD1i5UKOnvU2OpdIB+xEl0A8hh65ZUzvmAyME4JOmOA==</signature>
+  <payload>
+    <type>enterprise</type>
+    <group_id>Enterprise</group_id>
+    <quota>524288000</quota>
+    <max_violations>5</max_violations>
+    <window_period>30</window_period>
+    <creation_time>1312847971</creation_time>
+    <absolute_expiration_time>1356940800</absolute_expiration_time>
+    <!-- THIS IS THE NEW FIELD THAT SPECIFIES TIME BOMB INTERVAL IN SECONDS -->
+    <relative_expiration_interval>86400</relative_expiration_interval>
+    <label>Dev_Splunk_Enterprise_TimeBombed</label>
+    <features>
+      <feature>Auth</feature>
+      <feature>FwdData</feature>
+      <feature>RcvData</feature>
+      <feature>LocalSearch</feature>
+      <feature>DistSearch</feature>
+      <feature>RcvSearch</feature>
+      <feature>ScheduledSearch</feature>
+      <feature>Alerting</feature>
+      <feature>DeployClient</feature>
+      <feature>DeployServer</feature>
+      <feature>SplunkWeb</feature>
+      <feature>SigningProcessor</feature>
+      <feature>SyslogOutputProcessor</feature>
+      <feature>AllowDuplicateKeys</feature>
+      <feature>CanBeRemoteMaster</feature>
+    </features>
+    <sourcetypes/>
+    <guid>02763329-40D0-4572-8074-CBF90338F082</guid>
+  </payload>
+</license>

@@ -1,0 +1,113 @@
+<!--
+@template=__template__
+@title=Running from your IDE
+-->
+
+Running from your IDE
+=====================
+
+Visual Studio
+-------------
+
+> If you use Microsoft Visual Studio to edit JavaScript or HTML, you may want to integrate this tool into Visual Studio. This will let you lint the file that is currently open. You can double-click on error messages or use keyboard shortcuts to look at the line of code that triggered a warning.
+
+> In Visual Studio 2003/2005, go to Tools, External Tools... and create a tool with these settings:
+
+> > __Command__: `c:\path\to\jsl.exe`  
+> > __Arguments__: `-conf c:\path\to\configuration\file -process $(ItemPath)`  
+> > __Initial directory__:  
+> > [x] Use output window; [_] Prompt for arguments
+
+> In Visual C++ 6.0, go to Tools, Customize, Tools and create a new tool with the following settings.
+
+> > __Command__: `c:\path\to\jsl.exe`  
+> > __Arguments__: `-conf c:\path\to\configuration\file -process $(FilePath)`  
+> > __Initial directory__:  
+> > [x] Use output window; [_] Prompt for arguments
+
+> If you wish to disable warnings, you can simply modify configuration file that is passed through the command line.
+
+> You may also want to create a second tool to lint all of your JavaScript files. To do this, you can create a copy of the configuration and specify specific folders to lint. (Instructions are included in the default configuration file.)
+
+
+TextMate
+--------
+
+> See [JavaScript Tools TextMate Bundle](http://www.andrewdupont.net/2006/10/01/javascript-tools-textmate-bundle/).
+
+
+SciTE
+-----
+
+> You can also integrate JavaScript Lint into [SciTE](http://scintilla.sourceforge.net/SciTE.html). Open `~/.SciteUser.properties` (choose Options, Open User Options File). Add the following to the following lines:
+
+> > `file.patterns.js=*.js;*.es`  
+> > `command.compile.$(file.patterns.js)=/path/to/jsl conf /path/to/configuration/file process $(FileNameExt)`
+
+> You will also need to change your JavaScript Lint configuration so that SciTE will correctly place a yellow dot at the beginning of the line corresponding to the current error. Change the `output-format` setting to:
+
+> > `+output-format __FILE__:__LINE__: __ERROR__`
+
+> Like Visual Studio, you can press F4 to go to the next error.
+
+
+vim
+---
+
+> See [Integrating JavaScript Lint with vim](http://blogs.linux.ie/kenguest/2007/03/18/integrating-javascript-lint-with-vim/ "Integrating JavaScript lint with vim").
+
+vim (Cygwin)
+------------
+
+> This configuration is for vim on Cygwin. There may be some differences with vim directly on Windows.
+
+1. Copy jsl.exe to /usr/bin
+1. Copy jsl.default.conf to /etc/jsl.conf<
+1. Edit /etc/jsl.conf:
+	1. Comment out the line containing "+process"
+	1. Comment out the line containing "+pauseatend"
+	1. Set the line containing "+context" to "-context"
+1. Add one of the following configurations to vimrc:
+	* To process the current file:
+
+		`autocmd FileType javascript set makeprg=jsl\ -nologo\ -nofilelisting\ -nosummary\ -nocontext\ -conf\ '/cygwin/etc/jsl.conf'\ -process\ %`  
+		`autocmd FileType javascript set errorformat=%f(%l):\ %m^M` 
+
+	* To process ALL files in the directory instead of just the current file:
+
+		`autocmd FileType javascript set makeprg=jsl\ -nologo\ -nofilelisting\ -nosummary\ <autocmd FileType javascript set makeprg=jsl\ -nologo\ -nofilelisting\ -nosummary\ -nocontext\ -conf\ '/cygwin/etc/jsl.conf'\ -process\ '*.js'`  
+		`autocmd FileType javascript set errorformat=%f(%l):\ %m^M`
+
+	* If you want to process ALL files recursively, use these lines instead:
+
+		`autocmd FileType javascript set makeprg=jsl\ -nologo\ -nofilelisting\ -nosummary\ -nocontext\ -conf\ '/cygwin/etc/jsl.conf'\ -process\ '*.js'\ -recurse`  
+		`autocmd FileType javascript set errorformat=%f(%l):\ %m^M`
+
+> _Note that ^M should be a control character! To enter it, Press {Ctrl-V}{Ctrl-M}. If this doesn't work for you, just leave out ^M. Note also that if using method 2 or 3 and vim on cygwin, you will probably get vim errors about "unable to open swap file...". I have no way around this, but if you are ok with not having a swap file in vim (no recovery on crash), then that's fine._
+
+emacs
+-----
+
+> To integrate JavaScript Lint to emacs, add the following to your emacs init file (~/.emacs). It assumes you are using a javascript-mode with a hook support.  You can use [Karl Landstr&#246;m's mode](http://www.brgeight.se/downloads/emacs/javascript.el).
+
+> > 	
+	;; javascript lint
+	(defun jslint-thisfile ()
+	  (interactive)
+	  (compile (format "jsl -process %s" (buffer-file-name))))
+> > 
+	(add-hook 'javascript-mode-hook
+	  '(lambda ()
+	  (local-set-key [f8] 'jslint-thisfile)))
+
+> Just press 'F8' and it will execute JavaScript Lint in the current buffer.
+
+Other IDEs
+----------
+
+Many IDEs can launch a third-party tool and show the results in a window in the IDE. If the tool correctly formats its output, the IDE will read the file 
+names and line numbers from the tool and provide a way of finding the corresponding location in the code.
+
+If you use an IDE other than Visual Studio, you may need to customize the format of JavaScript Lint's outputted error messages. The sample configuration 
+file (jsl.default.conf) demonstrates this feature.
+

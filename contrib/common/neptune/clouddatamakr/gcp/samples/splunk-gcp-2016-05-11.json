@@ -1,0 +1,88 @@
+[ {
+  "accountId" : "000B08-85DCF6-FA9F33",
+  "lineItemId" : "com.google.cloud/services/cloud-storage/BandwidthDownloadChina",
+  "description" : "Download China",
+  "startTime" : "2016-06-15T00:00:00-07:00",
+  "endTime" : "2016-06-16T00:00:00-07:00",
+  "projectNumber" : "227824305345",
+  "projectId" : "central-insight-130923",
+  "projectName" : "Playground",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/cloud-storage/BandwidthDownloadChina",
+    "sum" : "4719",
+    "unit" : "bytes"
+  } ],
+  "credits" : [ {
+    "creditId" : "FreeTrial:2016-05-11T00:00:00.000-07:00",
+    "amount" : "-0.000001",
+    "currency" : "USD"
+  } ],
+  "cost" : {
+    "amount" : "0.000001",
+    "currency" : "USD"
+  }
+}, {
+  "accountId" : "000B08-85DCF6-FA9F33",
+  "lineItemId" : "com.google.cloud/services/cloud-storage/ClassARequest",
+  "description" : "Class A Request",
+  "startTime" : "2016-06-15T00:00:00-07:00",
+  "endTime" : "2016-06-16T00:00:00-07:00",
+  "projectNumber" : "227824305345",
+  "projectId" : "central-insight-130923",
+  "projectName" : "Playground",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/cloud-storage/ClassARequest",
+    "sum" : "10",
+    "unit" : "requests"
+  } ],
+  "credits" : [ {
+    "creditId" : "FreeTrial:2016-05-11T00:00:00.000-07:00",
+    "amount" : "-0.0001",
+    "currency" : "USD"
+  } ],
+  "cost" : {
+    "amount" : "0.0001",
+    "currency" : "USD"
+  }
+}, {
+  "accountId" : "000B08-85DCF6-FA9F33",
+  "lineItemId" : "com.google.cloud/services/cloud-storage/ClassBRequest",
+  "description" : "Class B Request",
+  "startTime" : "2016-06-15T00:00:00-07:00",
+  "endTime" : "2016-06-16T00:00:00-07:00",
+  "projectNumber" : "227824305345",
+  "projectId" : "central-insight-130923",
+  "projectName" : "Playground",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/cloud-storage/ClassBRequest",
+    "sum" : "3",
+    "unit" : "requests"
+  } ],
+  "credits" : [ {
+    "creditId" : "FreeTrial:2016-05-11T00:00:00.000-07:00",
+    "amount" : "-0.000003",
+    "currency" : "USD"
+  } ],
+  "cost" : {
+    "amount" : "0.000003",
+    "currency" : "USD"
+  }
+}, {
+  "accountId" : "000B08-85DCF6-FA9F33",
+  "lineItemId" : "com.google.cloud/services/cloud-storage/StorageDurableReducedRedundancyGbsec",
+  "description" : "Durable Reduced Availability Storage",
+  "startTime" : "2016-06-15T00:00:00-07:00",
+  "endTime" : "2016-06-16T00:00:00-07:00",
+  "projectNumber" : "227824305345",
+  "projectId" : "central-insight-130923",
+  "projectName" : "Playground",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/cloud-storage/StorageDurableReducedRedundancyGbsec",
+    "sum" : "221844480",
+    "unit" : "byte-seconds"
+  } ],
+  "cost" : {
+    "amount" : "0",
+    "currency" : "USD"
+  }
+} ]

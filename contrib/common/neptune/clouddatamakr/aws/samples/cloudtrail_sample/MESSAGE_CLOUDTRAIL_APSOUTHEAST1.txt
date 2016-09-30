@@ -1,0 +1,11 @@
+{
+  "Type" : "Notification",
+  "MessageId" : "0c7d6a34-4f5d-54a7-818f-245ed2b5aff3",
+  "TopicArn" : "arn:aws:sns:ap-southeast-1:063605715280:ta-cloudtrail-singapore",
+  "Message" : "{\"s3Bucket\":\"ta-cloudtrail-singapore\",\"s3ObjectKey\":[\"AWSLogs/063605715280/CloudTrail/ap-southeast-1/2015/09/09/063605715280_CloudTrail_ap-southeast-1_20150909T2050Z_yosH6anIeGGKIwn8.json.gz\"]}",
+  "Timestamp" : "2015-09-09T20:50:48.991Z",
+  "SignatureVersion" : "1",
+  "Signature" : "fOmHxcW5bMFZCQxcvBO33APw0nyhmJXCh+vtO5ktI5uKBCOHGDAuPtTtpwGQPMG56XN4E9hfSx+eRVXBQvqIgf+aL1CBTFg5GNUsZR4Z0WHH6bPugL8c5utvNgBYxwYI1m7HCFlPbKMVi2KFqW7BcxN2W6GqZbZKY0N4zPYoB0WdbTQK2wL95JIy2yqYLEyQTNTGj1kE6luNvLiOAdRkY/3cDhU1BH1plsrT6eHKiTscqkYVR/+yqq/01WWOxru+BqoSUkiye8Dg16jcYqJ2lv17KKcH9OhKMZeqeCPxUPambcWtwh1+qhJVtlahsNuyZBxN1lOpF59PO9NBzN2zpQ==",
+  "SigningCertURL" : "https://sns.ap-southeast-1.amazonaws.com/SimpleNotificationService-bb750dd426d95ee9390147a5624348ee.pem",
+  "UnsubscribeURL" : "https://sns.ap-southeast-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:ap-southeast-1:063605715280:ta-cloudtrail-singapore:5fa1fb9e-722e-426f-a52b-d5a34bd2d397"
+}

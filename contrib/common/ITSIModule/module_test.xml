@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module name="DA-ITSI-OS">
+    <conffile name="app" test="true">
+        <stanza name="install">
+            <item key="is_configured" value="0"></item>
+            <item key="build" ></item>
+        </stanza>
+        <stanza name="ui">
+            <item key="is_visible" value="1"></item>
+            <item key="label" value="ITSI Module for Operating Systems"></item>
+        </stanza>
+        <stanza name="launcher">
+            <item key="author" value="Splunk, Inc."></item>
+            <item key="description" value=""></item>
+            <item key="version" value=""></item>
+        </stanza>
+        <stanza name="triggers">
+            <item key="reload.itsi_da" value="simple"></item>
+            <item key="reload.itsi_kpi_template" value="simple"></item>
+            <item key="reload.deep_dive_drilldowns" value="simple"></item>
+        </stanza>
+    </conffile>
+    <conffile name="deep_dive_drilldowns" test="true">
+        <!-- this stanza name is different for each ITSI Module, it could have multiple stanzas, but the contents is like -->
+        <stanza name="OS Host Details">
+            <item key="replace_tokens" value="true"></item>
+            <item key="kpi_lane_enabled" value="true"></item>
+            <item key="entity_level_only" value="true"></item>
+            <item key="entity_activation_rules" value="" isJson="true"></item>
+            <item key="entity_tokens" value="host,family"></item>
+            <item key="uri" value="/app/itsi/DA-ITSI-OS-Host_Entity_View"></item>
+            <item key="uri_payload_type" value="json"></item>
+        </stanza>
+    </conffile>
+    <conffile name="inputs" test="true">
+        <stanza name="itsi_csv_import://DA-ITSI-OS-OS_Hosts_Import">
+            <item key="entity_identifier_fields" value="host,dest"></item>
+            <item key="entity_informational_fields" value="family,version,vendor_product,role"></item>
+            <item key="entity_title_field" value="host"></item>
+            <item key="import_from_search" value="1"></item>
+            <item key="index_earliest" value="-4h"></item>
+            <item key="index_latest" value="now"></item>
+            <item key="search_string" value="| savedsearch DA-ITSI-OS-OS_Hosts_Search"
+                  match="savedsearches"></item>
+            <item key="service_title_field" value="null"></item>
+            <item key="update_type" value="UPSERT"></item>
+            <item key="interval" value="14400"></item>
+        </stanza>
+    </conffile>
+    <conffile name="itsi_da" test="true">
+        <stanza name="entity_source_template://DA-ITSI-OS-OS_Hosts_Search">
+            <item key="title" value="OS Hosts Search"></item>
+            <item key="description" value="Entity search for OS Hosts"></item>
+            <item key="saved_search" value="DA-ITSI-OS-OS_Hosts_Search"
+                  match="savedsearches"></item>
+            <item key="title_field" value="host"></item>
+            <item key="identifier_fields" value="dest"></item>
+            <item key="description_fields" ></item>
+            <item key="informational_fields" value="family, version, vendor_product, role"></item>
+        </stanza>
+        <stanza name="service_template://DA-ITSI-OS-OS_Hosts_Monitoring">
+            <item key="title" value="OS Hosts Monitoring"></item>
+            <item key="description"></item>
+            <item key="entity_source_templates" value="DA-ITSI-OS-OS_Hosts_Search" match="itsi_da"></item>
+            <item key="recommended_kpis"
+                  value="DA-ITSI-OS-Memory_Free:_%_System,DA-ITSI-OS-Storage_Free_Space:_%_System,DA-ITSI-OS-Processor_:_System,DA-ITSI-OS-CPU_Overutilization:_%_System"
+                  kpi_defined="itsi_kpi_template"></item>
+            <item key="informational_kpis"
+                  value="DA-ITSI-OS-Storage_Operations:_Total,DA-ITSI-OS-Memory_Operations:_Paging,DA-ITSI-OS-Storage_Operations:_Read,DA-ITSI-OS-CPU_Utilization:_%_User,DA-ITSI-OS-Memory_Available:_MB_System,DA-ITSI-OS-CPU_Utilization:_Interrupts/second,DA-ITSI-OS-Storage_Operations:_Write,DA-ITSI-OS-Network_Utilization:_Bytes/sec,DA-ITSI-OS-Network_Utilization:_Packets_in/sec,DA-ITSI-OS-Network_Utilization:_Packets_out/sec,DA-ITSI-OS-CPU_Utilization:_System_Threads"
+                  kpi_defined="itsi_kpi_template"></item>
+            <item key="optional_kpis"
+                  value="DA-ITSI-OS-CPU_Underutilization:_%_System,DA-ITSI-OS-Memory_Used:_MB_System"
+                  kpi_defined="itsi_kpi_template"></item>
+        </stanza>
+    </conffile>
+    <conffile name="itsi_kpi_template" test="true">
+        <stanza name="DA-ITSI-OS-Memory_Utilization_KPIs" isKpiTemplate="true">
+            <item key="title" value="Operating System: Memory Utilization"></item>
+            <item key="description" value="KPIs to collect various memory utilization metrics"></item>
+            <item key="source_itsi_da" value="DA-ITSI-OS"></item>
+            <item key="_owner" value="nobody"></item>
+            <item key="kpis" value="" isJson="true"></item>
+        </stanza>
+        <stanza name="DA-ITSI-OS-CPU_Utilization_KPIs">
+            <item key="title" value="Operating System: CPU Utilization"></item>
+            <item key="description" value="KPIs to collect various CPU utilization metrics"></item>
+            <item key="source_itsi_da" value="DA-ITSI-OS"></item>
+            <item key="_owner" value="nobody"></item>
+            <item key="kpis" value="" isJson="true"></item>
+        </stanza>
+        <stanza name="DA-ITSI-OS-Network_Utilization_KPIs">
+            <item key="title" value="Operating System: Network Utilization"></item>
+            <item key="description" value="KPIs to collect various network utilization metrics"></item>
+            <item key="source_itsi_da" value="DA-ITSI-OS"></item>
+            <item key="_owner" value="nobody"></item>
+            <item key="kpis" value="" isJson="true"></item>
+        </stanza>
+        <stanza name="DA-ITSI-OS-Storage_Utilization_KPIs">
+            <item key="title" value="Operating System: Storage Utilization"></item>
+            <item key="description" value="KPIs to collect various storage utilization metrics"></item>
+            <item key="source_itsi_da" value="DA-ITSI-OS"></item>
+            <item key="_owner" value="nobody"></item>
+            <item key="kpis" value="" isJson="true"></item>
+        </stanza>
+    </conffile>
+    <conffile name="savedsearches" test="true">
+        <stanza name="DA-ITSI-OS-OS_Hosts_Search">
+            <item key="description" value="Search for discovering OS Hosts"></item>
+            <item key="search"
+                  value="| tstats latest(Inventory.family) as family, latest(Inventory.version) as version, latest(Inventory.vendor_product) as vendor_product FROM datamodel=Host_OS.Inventory by host | fields + host, family, version, vendor_product, role"></item>
+            <item key="dispatch.earliest_time" value="-4h"></item>
+            <item key="dispatch.latest_time" value="now"></item>
+            <item key="request.ui_dispatch_app" value="itsi"></item>
+            <item key="request.ui_dispatch_view" value="itsi"></item>
+        </stanza>
+        <stanza name="DA-ITSI-OS-Inventory_Search" test="true">
+            <item key="search" value="index=* host=$host$ tag=inventory (tag=cpu OR tag=memory) (cpu_cores=* OR family=* OR vendor_product=* OR mem=* OR version=* OR processor=*) | stats latest(family) as &quot;OS Family&quot;, latest(version) as &quot;OS Version&quot;, latest(cpu_cores) as CPUCores, latest(mem) as TotalMemory latest(processor) as Processor by host | eval &quot;Total Memory&quot; = tostring(round(TotalMemory), &quot;commas&quot;) . &quot; MB&quot; | eval core_string = if(CPUCores==1, &quot;core&quot;, &quot;cores&quot;) | eval &quot;Processor (cores)&quot; = Processor . &quot; (&quot; . CPUCores .&quot; &quot; . core_string . &quot;)&quot; | table &quot;OS Family&quot;, &quot;OS Version&quot;, &quot;Processor (cores)&quot;, &quot;Total Memory&quot;"></item>
+        </stanza>
+        <stanza name="DA-ITSI-OS-Context_Chart_Disk_Usage_Search" test="true">
+            <item key="search" value="index=* host=$host$ tag=performance tag=storage (storage_used=* OR storage=* storage_free=* OR mount=*) | search mount=* | stats latest(storage_used) as used, latest(storage_free) as free by mount | stats sum(used) as used, sum(free) as free | eval total = used + free | eval pct_used = used*100.0/total | `get-closest-disk-unit(total)` | eval used_space = round(used/divisor, 1).&quot; &quot;.unit_to_use.&quot; / &quot;.round(total/divisor, 1).&quot; &quot;.unit_to_use | fields + pct_used, used_space"></item>
+        </stanza>
+        <stanza name="DA-ITSI-OS-Context_Chart_Host_Events_Search" test="true">
+            <item key="search" value="index=* host=$host$ tag!=performance tag!=inventory | timechart count | eventstats sum(count) as _total | eval _total = tostring(_total, &quot;commas&quot;).&quot; events&quot;"></item>
+        </stanza>
+        <stanza name="DA-ITSI-OS-Context_Chart_CPU_Usage_Search" test="true">
+            <item key="search" value="index=* host=$host$ tag=performance tag=cpu cpu_load_percent=* | timechart avg(cpu_load_percent) as cpu_pct | eventstats avg(cpu_pct) as average | eventstats min(cpu_pct) as minimum | eventstats max(cpu_pct) as maximum | eval _stats = &quot;Range: &quot;.round(minimum, 1).&quot; - &quot;.round(maximum, 1).&quot;%, &quot;.&quot;Average: &quot;.round(average, 1).&quot;%&quot; | fields - average, minimum, maximum"></item>
+        </stanza>
+        <stanza name="DA-ITSI-OS-Context_Chart_Memory_Usage_Search" test="true">
+            <item key="search" value="index=* host=$host$ tag=performance tag=memory mem_free_percent=* | timechart avg(mem_free_percent) as mem_pct | eventstats avg(mem_pct) as average | eventstats min(mem_pct) as minimum | eventstats max(mem_pct) as maximum | eval _stats = &quot;Range: &quot;.round(minimum, 1).&quot; - &quot;.round(maximum, 1).&quot;%, &quot;.&quot;Average: &quot;.round(average, 1).&quot;%&quot; | fields - average, minimum, maximum"></item>
+        </stanza>
+    </conffile>
+
+    <kpi id="DA-ITSI-OS-Memory_Operations:_Paging" test_datamodel="false">
+        <aggregate_statop value="avg"></aggregate_statop>
+        <datamodel value="{'datamodel': 'Host_OS', 'field': 'mem_page_ops', 'object': 'Memory','owner_field': 'Performance.Memory.mem_page_ops'}"></datamodel>
+        <entity_statop value="avg"></entity_statop>
+    </kpi>
+    <kpi id="DA-ITSI-OS-Memory_Free:_%_System" test_datamodel="false">
+        <aggregate_statop value="avg"></aggregate_statop>
+        <datamodel value="{'datamodel': 'Host_OS', 'field': 'Memory', 'object': 'Memory','owner_field': 'Performance.Memory.mem_free_percent'}"></datamodel>
+        <entity_statop value="avg"></entity_statop>
+    </kpi>
+    <kpi id="DA-ITSI-OS-Memory_Available:_MB_System" test_datamodel="false">
+        <aggregate_statop value="avg"></aggregate_statop>
+        <datamodel value="{'datamodel': 'Host_OS', 'field': 'mem_free', 'object': 'Memory','owner_field': 'Performance.Memory.mem_free'}"></datamodel>
+        <entity_statop value="avg"></entity_statop>
+    </kpi>
+    <kpi id="DA-ITSI-OS-Memory_Used:_MB_System" test_datamodel="false">
+        <aggregate_statop value="avg"></aggregate_statop>
+        <datamodel value="{'datamodel': 'Host_OS', 'field': 'mem_used', 'object': 'Memory','owner_field': 'Performance.Memory.mem_used'}"></datamodel>
+        <entity_statop value="avg"></entity_statop>
+    </kpi>
+    <kpi id="DA-ITSI-OS-CPU_Utilization:_%_User" test_datamodel="false">
+        <aggregate_statop value="avg"></aggregate_statop>
+        <datamodel value="{'datamodel': 'Host_OS', 'field': 'cpu_user_percent', 'object': 'Memory','owner_field': 'Performance.Memory.cpu_user_percent'}"></datamodel>
+        <entity_statop value="avg"></entity_statop>
+    </kpi>
+    <kpi id="DA-ITSI-OS-Processor_Queue_Length:_System" test_datamodel="false">
+        <aggregate_statop value="avg"></aggregate_statop>
+        <datamodel value="{'datamodel': 'Host_OS', 'field': 'wait_threads_count', 'object': 'CPU','owner_field': 'Performance.CPU.wait_threads_count'}"></datamodel>
+        <entity_statop value="avg"></entity_statop>
+    </kpi>
+        <kpi id="DA-ITSI-OS-CPU_Overutilization:_%_System" test_datamodel="false">
+        <aggregate_statop value="avg"></aggregate_statop>
+        <datamodel value="{'datamodel': 'Host_OS', 'field': 'cpu_load_percent', 'object': 'CPU','owner_field': 'Performance.CPU.cpu_load_percent'}"></datamodel>
+        <entity_statop value="avg"></entity_statop>
+    </kpi>
+    <kpi id="DA-ITSI-OS-CPU_Utilization:_Interrupts/second" test_datamodel="false">
+        <aggregate_statop value="avg"></aggregate_statop>
+        <datamodel value="{'datamodel': 'Host_OS', 'field': 'cpu_interrupts', 'object': 'CPU','owner_field': 'Performance.CPU.cpu_interrupts'}"></datamodel>
+        <entity_statop value="avg"></entity_statop>
+    </kpi>
+    <kpi id="DA-ITSI-OS-CPU_Utilization:_System_Threads" test_datamodel="false">
+        <aggregate_statop value="avg"></aggregate_statop>
+        <datamodel value="{'datamodel': 'Host_OS', 'field': 'system_threads_count', 'object': 'CPU','owner_field': 'Performance.CPU.system_threads_count'}"></datamodel>
+        <entity_statop value="avg"></entity_statop>
+    </kpi>
+    <kpi id="DA-ITSI-OS-CPU_Underutilization:_%_System" test_datamodel="false">
+        <aggregate_statop value="avg"></aggregate_statop>
+        <datamodel value="{'datamodel': 'Host_OS', 'field': 'cpu_load_percent', 'object': 'CPU','owner_field': 'Performance.CPU.cpu_load_percent'}"></datamodel>
+        <entity_statop value="avg"></entity_statop>
+    </kpi>
+    <kpi id="DA-ITSI-OS-Storage_Operations:_Total" test_datamodel="false">
+        <aggregate_statop value="avg"></aggregate_statop>
+        <datamodel value="{'datamodel': 'Host_OS', 'field': 'total_ops', 'object': 'Storage','owner_field': 'Performance.Storage.total_ops'}"></datamodel>
+        <entity_statop value="avg"></entity_statop>
+    </kpi>
+    <kpi id="DA-ITSI-OS-Storage_Free_Space:_%_System" test_datamodel="false">
+        <aggregate_statop value="avg"></aggregate_statop>
+        <datamodel value="{'datamodel': 'Host_OS', 'field': 'storage_free_percent', 'object': 'Storage','owner_field': 'Performance.Storage.storage_free_percent'}"></datamodel>
+        <entity_statop value="avg"></entity_statop>
+    </kpi>
+        <kpi id="DA-ITSI-OS-Storage_Operations:_Read" test_datamodel="false">
+        <aggregate_statop value="avg"></aggregate_statop>
+        <datamodel value="{'datamodel': 'Host_OS', 'field': 'read_ops', 'object': 'Storage','owner_field': 'Performance.Storage.read_ops'}"></datamodel>
+        <entity_statop value="avg"></entity_statop>
+    </kpi>
+    <kpi id="DA-ITSI-OS-Storage_Operations:_Write" test_datamodel="false">
+        <aggregate_statop value="avg"></aggregate_statop>
+        <datamodel value="{'datamodel': 'Host_OS', 'field': 'write_ops', 'object': 'Storage','owner_field': 'Performance.Storage.write_ops'}"></datamodel>
+        <entity_statop value="avg"></entity_statop>
+    </kpi>
+    <kpi id="DA-ITSI-OS-Network_Utilization:_Bytes/sec" test_datamodel="false">
+        <aggregate_statop value="avg"></aggregate_statop>
+        <datamodel value="{'datamodel': 'Host_OS', 'field': 'bytes', 'object': 'Network','owner_field': 'Performance.Memory.mem_page_ops'}"></datamodel>
+        <entity_statop value="avg"></entity_statop>
+    </kpi>
+    <kpi id="DA-ITSI-OS-Network_Utilization:_Packets_in/sec" test_datamodel="false">
+        <aggregate_statop value="avg"></aggregate_statop>
+        <datamodel value="{'datamodel': 'Host_OS', 'field': 'packets_in', 'object': 'Network','owner_field': 'Performance.Network.packets_in'}"></datamodel>
+        <entity_statop value="avg"></entity_statop>
+    </kpi>
+    <kpi id="DA-ITSI-OS-Network_Utilization:_Packets_out/sec" test_datamodel="false">
+        <aggregate_statop value="avg"></aggregate_statop>
+        <datamodel value="{'datamodel': 'Host_OS', 'field': 'packets_out', 'object': 'Network','owner_field': 'Performance.Network.packets_out'}"></datamodel>
+        <entity_statop value="avg"></entity_statop>
+    </kpi>
+
+</module>

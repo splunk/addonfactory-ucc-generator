@@ -1,0 +1,29 @@
+[run]
+parallel = True
+data_file = .coverage
+
+[report]
+omit = */azure/*
+       */certifi/*
+       */chardet/*
+       */concurrent/*
+       */dateutil/*
+       */enum/*
+       */httplib2/*
+       */isodate/*
+       */keyring/*
+       */msrest/*
+       */msrestazure/*
+       */oauthlib/*
+       */pkg_resources/*
+       */requests/*
+       */requests_oauthlib/*
+       */secretstorage/*
+       */six.py
+       */solnlib/*
+       */sortedcontainers/*
+       */splunklib/*
+
+[html]
+directory = coverage_report
+title = TA-crowdstrike Python coverage report

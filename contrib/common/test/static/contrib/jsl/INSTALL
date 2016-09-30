@@ -1,0 +1,21 @@
+
+BUILDING FROM THE SUBVERSION TRUNK
+* Windows Prequisites:
+ * Visual Studio 2008 Express
+ * Python 2.6
+ * py2exe
+ * MozillaBuild (http://developer.mozilla.org/en/docs/Windows_Build_Prerequisites)
+
+ Launch the MozillaBuild MSVC 9 batch file. (You may have to run this as an
+ Administrator on Windows Vista.) Run the commands in that shell.
+
+On all platforms:
+ $ python setup.py build
+
+To install on Unix:
+ $ sudo python setup.py install
+
+WEBSITE
+ * Windows: http://pypi.python.org/pypi/Markdown/1.7
+ * Linux: $ sudo apt-get install python-markdown
+

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<license>
+  <signature>790UJydHUji0hiHhjb2Ze/RAANiOD4ylPWY+Z6z+Zyu09HMk9p1l7P5+c4nGOR6DE1fHIEpdaU8jWg+khi6e3JU1LykcqLNO9M2rOySl0xd0Leju47mqkTVx6tWAkjWXZjcfdPGg7zNl/sQCfd6Q94c7qn8nyHzbgWS54+79wHWDJ0ApN02hjYRMbStiSIM4NWHBTtm3PLe6EFQHIYqJ6HA4ww0BXGTDe+s7/5i5iGbFN3B8H/7K42VejlsC0EYOt64Fop9ltBsiGj3POffRAWZJDybOYaG8LIph+h3AL2hiQ3vZngeDV5fVklpGZHTuORmIsiXZgoMo04kgbN6ySA==</signature>
+  <payload>
+    <type>lite_free</type>
+    <group_id>Lite_Free</group_id>
+    <quota>524288000</quota>
+    <max_violations>5</max_violations>
+    <window_period>30</window_period>
+    <creation_time>1454454611</creation_time>
+    <expiration_time>2145916800</expiration_time>
+    <label>Splunk Light Free</label>
+    <features>
+      <feature>Auth</feature>
+      <feature>RcvData</feature>
+      <feature>LocalSearch</feature>
+      <feature>ScheduledSearch</feature>
+      <feature>SplunkWeb</feature>
+      <feature>SigningProcessor</feature>
+      <feature>DeployServer</feature>
+    </features>
+    <disabled_features>
+      <feature>SearchheadPooling</feature>
+      <feature>MultisiteClustering</feature>
+      <feature>UnisiteClustering</feature>
+      <feature>AdvancedXML</feature>
+      <feature>Acceleration</feature>
+      <feature>GuestPass</feature>
+      <feature>CustomRoles</feature>
+      <feature>LDAPAuth</feature>
+      <feature>NontableLookups</feature>
+      <feature>AdvancedSearchCommands</feature>
+      <feature>KVStore</feature>
+    </disabled_features>
+    <sourcetypes/>
+    <max_users>1</max_users>
+<guid>E7B14BCC-25DB-4241-B0AE-159091282FB8</guid></payload>
+</license>
+

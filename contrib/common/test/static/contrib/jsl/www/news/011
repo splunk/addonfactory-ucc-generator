@@ -1,0 +1,42 @@
+<!--
+@template=__template__
+@title=News
+-->
+
+## [JavaScript Lint 0.1k Released](__BASENAME__)
+_Sat, 24 Dec 2005 18:56:35 +0000_
+
+This release includes a number changes.
+
+__Enhancements:__
+
+* JavaScript Lint warns if the default case is not at the end of the switch statement.
+
+* Control comments can now use the `/*jsl:keyword*/` syntax in addition to the `/*@keyword@*/` syntax. The new syntax is recommended for interoperability with JScript conditional compilation, although the traditional syntax is still supported.
+
+* The "missing break" warning can be disabled for the last case in a switch statement. The presence of this _break_ is merely stylistic preference.
+
+* The "missing semicolon" warning can be disabled when anonymous functions are assigned to variables and properties (such as function prototypes). Code such as the following can optionally be allowed:
+
+>
+    function Coord() {  
+        this.x = function() {  
+            return 1;  
+        }  
+	}
+	Coord.prototype.y = function() {
+	    return 0;
+	}
+
+__Bug Fixes:__
+
+* The "undeclared identifier" warning for variables has been updated to reflect the ECMA specification. The following code no longer issues a warning:
+  > 
+	function getX() { return x; }
+	var x;
+
+* Scripts with circular _import_ directives no longer incorrectly report undeclared identifiers.
+
+Available from the [download page](/download.htm).
+
+

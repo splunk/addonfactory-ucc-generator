@@ -1,0 +1,39 @@
+<!--
+@template=__template__
+@title=Running from Your Windows Program
+-->
+
+Running from Your Windows Program
+=================================
+
+It is difficult for Windows programs to interact with console applications. For that reason, the JavaScript Lint source package (available from the [download](/download.htm) page) includes a C++ source file JavaScriptLintAPI.cpp to help Windows programmers integrate with JavaScript Lint.
+
+The following code demonstrates how to lint a file:
+
+> 
+    using namespace std;
+>
+    JavaScriptLint jsl("c:\\path\\to\\jsl.exe", "c:\\path\\to\\configuration\\file");
+>
+    string error;
+    vector<JSLMessage> messages;
+    if (jsl.LintFile("c:\\path\\to\\script.js", messages, error))
+    {
+       for (vector<JSLMessage>::const_iterator msg = messages.begin(); msg != messages.end(); msg++)
+       {
+          // process messages
+          AfxMessageBox(msg->filename.c_str());
+       }
+    }
+    else
+    {
+       // process error
+    }
+
+Additionally, the LintString function can be used to lint code in memory:
+
+>  
+    // ...
+    if (jsl.LintString("var x = x;", messages, error))
+    // ...
+

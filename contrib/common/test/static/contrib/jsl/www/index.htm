@@ -1,0 +1,41 @@
+<!--
+@template=__template__
+@title=JavaScript Lint
+-->
+
+What It Is
+==========
+
+Many JavaScript implementations do not warn against questionable coding practices. Yes, that's nice for the site that "works best with Internet Explorer" (designed with templates, scripted with snippets copied from forums). But it's a nightmare when you actually want to write quality, maintainable code.
+
+That's where JavaScript Lint comes in. With JavaScript Lint, you can check all your JavaScript source code for common mistakes without actually running the script or opening the web page.
+
+JavaScript Lint holds an advantage over competing lints because it is based on the JavaScript engine for the [Firefox browser](http://www.spreadfirefox.com/?q=affiliates&id=123423&t=70). This provides a robust framework that can not only check JavaScript syntax but also examine the coding techniques used in the script and warn against questionable practices.
+
+What It Does
+============
+
+Here are some common mistakes that JavaScript Lint looks for:
+
+* Missing semicolons at the end of a line.
+* Curly braces without an _if_, _for_, _while_, etc.
+* Code that is never run because of a _return_, _throw_, _continue_, or _break_.
+* Case statements in a switch that do not have a _break_ statement.
+* Leading and trailing decimal points on a number.
+* A leading zero that turns a number into octal (base 8).
+* Comments within comments.
+* Ambiguity whether two adjacent lines are part of the same statement.
+* Statements that don't do anything.
+
+JavaScript Lint also looks for the following less common mistakes:
+
+* Regular expressions that are not preceded by a left parenthesis, assignment, colon, or comma.
+* Statements that are separated by commas instead of semicolons.
+* Use of increment (++) and decrement (--) except for simple statements such as "i++;" or "--i;".
+* Use of the _void_ type.
+* Successive plus (e.g. x+++y) or minus (e.g. x---y) signs.
+* Use of labeled _for_ and _while_ loops.
+* _if_, _for_, _while_, etc. without curly braces. (This check is disabled by default.)
+
+Advanced users can also configure JavaScript Lint to check for [undeclared identifiers](docs/).
+

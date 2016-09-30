@@ -1,0 +1,46 @@
+app:
+  url: http://10.66.130.125:8000/app
+  host: 10.66.130.125
+  port: 8089
+  app_name: splunk_app_akamai
+  app_version: 1.1.0-255
+  username: admin
+  password: password
+
+searches:
+  saved_search: true
+
+test:
+  concurrency: 2
+  iterations: 30
+  #think_time's default unit = millisecond
+  think_time: 500
+  name_prefix: apptest
+
+result:
+  unit: second
+  realtime2splk: true
+
+resource:
+  cpu: true
+  memory: true
+#  dma: false
+  disk: false
+  process:
+    - splunkd
+    - python2.7
+    - mongod
+
+servers:
+  monitor_server:
+    is_same_as_test_server: true
+  result_server:
+  test_server:
+
+criteria:
+
+product:
+  product_name: splunk_app_akamai
+  product_category: app
+  product_version: 1.1.0
+  build_version: 1.1.0-255

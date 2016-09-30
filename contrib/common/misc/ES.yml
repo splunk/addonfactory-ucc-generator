@@ -1,0 +1,127 @@
+- hosts: ansible-host
+  vars:
+    p4: /usr/local/bin/p4 -u bamboo -P symantec
+    lic_file_depot_path: //splunk/current/test/data/licenses/5TB-1.lic
+    es_app_url: http://sc-build.sv.splunk.com:8081/ES/latest/splunk_app_installer_es-3.0.0-190363.spl
+    svu_url: http://sc-build.sv.splunk.com:8081/sideview_utils/sideview_utils.tar.gz
+    stage_dir: /tmp/es_stage
+  tasks:
+  - name: get splunk dev license from p4
+    command: ${p4} print -o /tmp/license ${lic_file_depot_path}
+
+  - name: "clean the staging dir: ${stage_dir}"
+    shell: rm -rf ${stage_dir} ; mkdir ${stage_dir}
+
+  - name: get the ES installer from sc-build
+    get_url: dest=${stage_dir}/es.tgz force=yes url=${es_app_url}
+
+  - name: extract the ES pkg from the ES installer
+    shell: cd ${stage_dir} ; tar xzf es.tgz  '*.zip' --to-stdout > es.zip
+
+  - name: unzip the ES pkg
+    shell: cd ${stage_dir} ; unzip es.zip
+
+  - name: get the sideview utils pkg from sc-build
+    get_url: dest=/tmp/svu.tgz force=yes url=${svu_url}
+
+  - name: extract the sideview utils pkg into the stage dir
+    shell: cd ${stage_dir}/etc/apps ; tar xzf /tmp/svu.tgz 
+
+
+- hosts: indexers:searchheads
+  vars:
+    splunk_pkg_url: http://releases/dl/6.0.1_builds/6.0.1.1-20131217-1956/splunk-6.0.1.1-190330-Linux-x86_64.tgz
+    splunk_home: /usr/local/bamboo/splunk
+    splunk_cmd: ${splunk_home}/bin/splunk
+    server_conf: ${splunk_home}/etc/system/default/server.conf 
+    props_conf: ${splunk_home}/etc/system/default/props.conf 
+  tasks:
+  - name: distribute the splunk dev license file 
+    copy: src=/tmp/license dest=/tmp/license owner=bamboo mode=0644
+
+  - name: stop splunk
+    command: ${splunk_cmd} stop removes=${splunk_cmd}
+    ignore_errors: true
+
+  - name: delete splunk_home
+    file: path=${splunk_home} state=absent
+
+  - name: get splunk pkg
+    get_url: dest=/tmp/splunk.tgz force=yes url=${splunk_pkg_url}
+
+  - name: extract splunk pkg
+    command: tar xzf /tmp/splunk.tgz chdir=/usr/local/bamboo creates=${splunk_cmd}
+
+  - name: chmod 0644 ${server_conf}
+    file: path=${server_conf} mode=0644
+
+  - name: enable admin login in ${server_conf}
+    lineinfile: dest=${server_conf} regexp='^allowRemoteLogin=' line='allowRemoteLogin = always'
+
+  - name: chmod 0644 ${props_conf}
+    file: path=${props_conf} mode=0644
+
+  - name: set DATETIME_CONFIG = CURRENT in in ${props_conf}
+    lineinfile: dest=${props_conf} regexp='^DATETIME_CONFIG = /etc/datetime.xml' line='DATETIME_CONFIG = CURRENT'
+
+  - name: start splunk
+    command: ${splunk_cmd} start --accept-license
+
+  - name: install splunk dev license
+    command: ${splunk_cmd} add license -auth admin:changeme /tmp/license --accept-license
+
+
+- hosts: searchheads
+  vars:
+    splunk_home: /usr/local/bamboo/splunk
+    splunk_cmd: ${splunk_home}/bin/splunk
+  tasks:
+  - name: configure distributed search
+    command: ${splunk_cmd} add search-server -host ${item}:8089 -auth admin:changeme -remoteUsername admin -remotePassword changeme
+    with_items: ${groups.indexers}
+
+- hosts: indexers
+  vars:
+    splunk_home: /usr/local/bamboo/splunk
+    splunk_cmd: ${splunk_home}/bin/splunk
+    listener_port: 9999
+  tasks:
+  - name: "enable listener on port: ${listener_port}"
+    command: ${splunk_cmd} enable listen ${listener_port} -auth admin:changeme
+
+
+- hosts: ansible-host
+  vars:
+    stage_dir: /tmp/es_stage
+    splunk_home: /usr/local/bamboo/splunk
+  tasks:
+  - name: "copy the es app to the search head"
+    shell: cd ${stage_dir}/etc/apps ; scp -pr * ${item}:${splunk_home}/etc/apps
+    with_items: ${groups.searchheads}
+
+  - name: "copy the TA's to the indexers"
+    shell: cd ${stage_dir}/etc/apps ; scp -pr TA-* ${item}:${splunk_home}/etc/apps
+    with_items: ${groups.indexers}
+
+  - name: "update props.conf & transforms.conf on the indexers for whois data sourcetype recognition"
+    shell: cd ${stage_dir}/etc/apps/SA-NetworkProtection/default ; scp -p transforms.conf ${item}:${splunk_home}/etc/system/local
+    with_items: ${groups.indexers}
+
+  - name: "copy indexes.conf to the indexers to define the whois index"
+    shell: scp -p /usr/local/bamboo/ansible/playbook_data/lib/indexes.conf ${item}:${splunk_home}/etc/system/local
+    with_items: ${groups.indexers}
+
+  - name: "copy props.conf to the indexers to support indexing the whois data properly"
+    shell: scp -p /usr/local/bamboo/ansible/playbook_data/lib/props.conf ${item}:${splunk_home}/etc/system/local
+    with_items: ${groups.indexers}
+
+
+- hosts: indexers:searchheads
+  vars:
+    splunk_home: /usr/local/bamboo/splunk
+    splunk_cmd: ${splunk_home}/bin/splunk
+  tasks:
+  - name: restart splunk
+    command: ${splunk_cmd} restart --accept-license
+
+

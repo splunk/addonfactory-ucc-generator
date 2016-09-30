@@ -1,0 +1,5 @@
+AUDITTYPE,audit
+1,Standard
+2,Fine-grained
+4,SYS
+8,Mandatory

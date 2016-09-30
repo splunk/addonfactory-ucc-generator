@@ -1,0 +1,10 @@
+<panel>
+  <title>Oracle - FGA Events in Last 24 Hours</title>
+  <table>
+    <search>
+      <query>sourcetype=oracle:audit:xml audit="Fine-grained" | table OBJNAME, POLICYNAME, USERHOST, USERID, OSUSERID, action, _time, host</query>
+      <earliest>-24h@h</earliest>
+      <latest>now</latest>
+    </search>
+  </table>
+</panel>

@@ -1,0 +1,59 @@
+## THIS IS AN INTERNAL MAKEFILE FOR setup.py
+## DO NOT RUN THIS MAKEFILE DIRECTLY.
+
+SPIDERMONKEY_SRC=spidermonkey/src
+
+# Load the SpiderMonkey config to find the OS define
+# Also use this for the SO_SUFFIX
+DEPTH=$(SPIDERMONKEY_SRC)
+include $(SPIDERMONKEY_SRC)/config.mk
+SPIDERMONKEY_OS=$(firstword $(patsubst -D%, %, $(filter -DXP_%, $(OS_CFLAGS))))
+
+ifdef USE_MSVC
+JS_LIB=js32.lib
+else
+JS_LIB=libjs.a
+endif
+
+BUILD_DIR=build/spidermonkey
+
+ORIG_LIB=$(SPIDERMONKEY_SRC)/$(OBJDIR)/$(JS_LIB)
+COPY_LIB=$(BUILD_DIR)/$(JS_LIB)
+ORIG_DLL=$(SPIDERMONKEY_SRC)/$(OBJDIR)/js32.dll
+COPY_DLL_DIR=$(DISTUTILS_DIR)/javascriptlint
+COPY_DLL_PATH=$(COPY_DLL_DIR)/js32.dll
+OS_HEADER=$(BUILD_DIR)/js_operating_system.h
+ORIG_JSAUTOCFG_H=$(SPIDERMONKEY_SRC)/$(OBJDIR)/jsautocfg.h
+COPY_JSAUTOCFG_H=$(BUILD_DIR)/jsautocfg.h
+
+ALL_TARGETS=$(COPY_LIB) $(OS_HEADER)
+ifndef PREBUILT_CPUCFG
+ALL_TARGETS+=$(COPY_JSAUTOCFG_H)
+endif
+
+ifeq ($(SPIDERMONKEY_OS),XP_WIN)
+ALL_TARGETS+=$(COPY_DLL_PATH)
+endif
+
+all: $(ALL_TARGETS)
+
+clean:
+	rm -f $(ORIG_LIB)
+	rm -Rf $(BUILD_DIR)
+
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
+
+$(COPY_LIB): $(BUILD_DIR) $(ORIG_LIB)
+	cp $(ORIG_LIB) $(COPY_LIB)
+
+$(COPY_DLL_PATH): $(ORIG_DLL)
+	mkdir -p $(COPY_DLL_DIR)
+	cp $(ORIG_DLL) $(COPY_DLL_PATH)
+
+$(OS_HEADER): $(BUILD_DIR)
+	echo "#define $(SPIDERMONKEY_OS)" > $(OS_HEADER)
+
+$(COPY_JSAUTOCFG_H): $(ORIG_JSAUTOCFG_H)
+	cp $(ORIG_JSAUTOCFG_H) $(COPY_JSAUTOCFG_H)
+

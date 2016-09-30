@@ -1,0 +1,16 @@
+{
+  "devDependencies": {
+    "eslint": "^3.5.0",
+    "ext-grunt-basebuild": "1.0.32",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-webpack": "^1.0.11",
+    "webpack": "^1.13.1",
+    "webpack-dev-server": "^1.14.1"
+  },
+  "scripts": {
+    "postinstall": "python setup.py;bower install",
+    "build": "grunt",
+    "build_dev": "KEEP_STAGE=1 grunt",
+    "fortify": "/usr/bin/fortify-scanner.py"
+  }
+}

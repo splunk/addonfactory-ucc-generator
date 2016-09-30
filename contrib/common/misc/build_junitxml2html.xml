@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="junitreport" basedir="../." default="xml2html">
+    <target name="xml2html">
+        <junitreport todir="./">
+            <fileset dir="./functional/">
+                <include name="*.xml"/>
+            </fileset>
+            <report format="noframes" todir="./">
+                <param name="TITLE" expression="Test Results"/>
+            </report>
+        </junitreport>
+    </target>
+</project>

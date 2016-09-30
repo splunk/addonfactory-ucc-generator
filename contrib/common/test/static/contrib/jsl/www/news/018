@@ -1,0 +1,17 @@
+<!--
+@template=__template__
+@title=News
+-->
+
+## [JavaScript Lint 0.2.4 Released](__BASENAME__)
+_Sat, 11 Mar 2006 02:55:51 +0000_
+
+JavaScript within HTML files can now contain `</script>` in string literals and comments.
+
+When referencing an external script, the _script_ start and end tags no longer need to be on the same line.
+
+JavaScript files using "Unicode (UTF-8 with signature) - Codepage 65001" encoding, such as those created in Microsoft Visual Studio, no longer generate errors.
+
+Available from the [download page](/download.htm).
+
+

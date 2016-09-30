@@ -1,0 +1,17 @@
+<panel>
+  <title>Oracle - Incidents in Last 24 Hours</title>
+  <single>
+    <title>Incidents</title>
+    <search>
+      <query>sourcetype=oracle:incident | stats count by host | rangemap field=count low=0-1 elevated=2-3 default=severe</query>
+      <earliest>-2d@d</earliest>
+      <latest>now</latest>
+    </search>
+    <option name="classField">range</option>
+    <option name="field">count</option>
+    <option name="afterLabel">Incidents</option>
+    <option name="beforeLabel">Detected</option>
+    <option name="linkFields">result</option>
+    <option name="linkSearch">sourcetype=oracle:incident</option>
+  </single>
+</panel>

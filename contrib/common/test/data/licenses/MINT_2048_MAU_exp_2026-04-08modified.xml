@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<license>
+  <signature>KA34TbXNpJ3JL4/GlG2KhUWUbgrPPYyUpagncoIKppUgNOdANA4gqL5tWthytufsHHGVmtIe+urVYBxod//2aGRMQaXb0CjDRUsUhQF3HRtKNvaNSai6dfnVkmdc+VXvTpvQSmNDXrgPqxJYe8PqkbAr3DrNYfLcoINncvI488ujYaGXJbat6szX5Ep/5UlH7elW4/7eD9vmHd9ESsV0c1CZZ2EPI4x3SVHcOa2sVZNELF2kTzjQM3p/BNOEoxv557cYLBzGvUQvtMFn1lEYEwKltkUtlxF/NjwEIfLLNhKd7+IJmN/cRzD782PFHvv+8hovRY/u1ACTTNGKAL6mUw==</signature>
+  <payload>
+    <type>enterprise</type>
+    <group_id>Enterprise</group_id>
+    <quota>1</quota>
+    <max_violations>5</max_violations>
+    <window_period>29</window_period>
+    <creation_time>1460098800</creation_time>
+    <label>Splunk MINT Term</label>
+    <expiration_time>1775717999</expiration_time>
+    <features>
+      <feature>Auth</feature>
+      <feature>FwdData</feature>
+      <feature>LocalSearch</feature>
+      <feature>ScheduledSearch</feature>
+      <feature>Alerting</feature>
+      <feature>SplunkWeb</feature>
+    </features>
+    <add_ons>
+      <add_on name="mint" type="app">
+        <parameter key="mau" value="2048"/>
+      </add_on>
+    </add_ons>
+    <sourcetypes/>
+    <guid>47E205A1-375F-4E40-892C-6087F1C0BFB3</guid>
+  </payload>
+</license>

@@ -1,0 +1,175 @@
+# This file provides template inputs for use with DB Connect 2.X.
+# Copy these stanzas to $SPLUNK_HOME/etc/apps/splunk_app_db_connect/local/inputs.conf and edit from there.
+# Note: If you are using DB Connect 1.1.7, 
+# please use dbx1.inputs.conf.template as the data input template instead.
+
+# To configure your inputs with DB Connect 2.X:
+#  -- change "disabled = 1" to "disabled = 0"
+#  -- verify that the connection name matches the connection name in database.conf
+#  -- change "index = main" to your preferred index name 
+# Note: if you are using 10g, please search "10g" in this file, uncomment the
+# oracle:osPerf section for 10g, and comment out the 11g/12c stanza.
+
+[mi_input://oracle:database]
+connection = Oracle_Connection
+index = main
+interval = 7200
+max_rows = 10000
+mode = batch
+output_timestamp_format = yyyy-MM-dd HH:mm:ss
+query = SELECT * FROM V$DATABASE
+source = dbx
+sourcetype = oracle:database
+ui_query_catalog = NULL
+ui_query_mode = advanced
+disabled = 1
+
+
+[mi_input://oracle:instance]
+connection = Oracle_Connection
+index = main
+interval = 7200
+max_rows = 10000
+mode = batch
+output_timestamp_format = yyyy-MM-dd HH:mm:ss
+query = SELECT * FROM V$INSTANCE
+source = dbx
+sourcetype = oracle:instance
+ui_query_catalog = NULL
+ui_query_mode = advanced
+disabled = 1
+
+
+[mi_input://oracle:session]
+connection = Oracle_Connection
+index = main
+interval = 900
+max_rows = 10000
+mode = batch
+output_timestamp_format = yyyy-MM-dd HH:mm:ss
+query = SELECT * FROM V$SESSION
+source = dbx
+sourcetype = oracle:session
+ui_query_catalog = NULL
+ui_query_mode = advanced
+disabled = 1
+
+
+[mi_input://oracle:tablespace]
+connection = Oracle_Connection
+index = main
+interval = 3600
+max_rows = 10000
+mode = batch
+output_timestamp_format = yyyy-MM-dd HH:mm:ss
+query = SELECT * FROM DBA_TABLESPACES
+source = dbx
+sourcetype = oracle:tablespace
+ui_query_catalog = NULL
+ui_query_mode = advanced
+disabled = 1
+
+
+[mi_input://oracle:tablespaceMetrics]
+connection = Oracle_Connection
+index = main
+interval = 900
+max_rows = 10000
+mode = batch
+output_timestamp_format = yyyy-MM-dd HH:mm:ss
+query = SELECT TABLESPACE_NAME, TOTAL_BYTES, TOTAL_BLOCKS, FREE_BYTES, USED_BYTES FROM (SELECT D.TABLESPACE_NAME, TOTAL_BYTES, TOTAL_BLOCKS,FREE_BYTES, TOTAL_BYTES - NVL(FREE_BYTES, 0) "USED_BYTES" FROM (SELECT TABLESPACE_NAME, SUM (BYTES) TOTAL_BYTES, SUM (BLOCKS) TOTAL_BLOCKS FROM DBA_DATA_FILES GROUP BY TABLESPACE_NAME) D, (SELECT TABLESPACE_NAME, SUM (BYTES) FREE_BYTES FROM DBA_FREE_SPACE GROUP BY TABLESPACE_NAME) F WHERE D.TABLESPACE_NAME = F.TABLESPACE_NAME(+) UNION ALL SELECT D.TABLESPACE_NAME, TOTAL_BYTES, TOTAL_BLOCKS,NVL(FREE_BYTES, 0) "FREE_BYTES", USED_BYTES FROM (SELECT TABLESPACE_NAME, SUM(BYTES) TOTAL_BYTES, SUM(BLOCKS) TOTAL_BLOCKS FROM DBA_TEMP_FILES GROUP BY TABLESPACE_NAME) D, (SELECT TABLESPACE_NAME, SUM(BYTES_USED) USED_BYTES, SUM(BYTES_FREE) FREE_BYTES FROM V$TEMP_SPACE_HEADER GROUP BY TABLESPACE_NAME) F WHERE D.TABLESPACE_NAME = F.TABLESPACE_NAME(+))
+source = dbx
+sourcetype = oracle:tablespaceMetrics
+ui_query_catalog = NULL
+ui_query_mode = advanced
+disabled = 1
+
+
+[mi_input://oracle:sga]
+connection = Oracle_Connection
+index = main
+interval = 300
+max_rows = 10000
+mode = batch
+output_timestamp_format = yyyy-MM-dd HH:mm:ss
+query = SELECT NAME, TOTAL, FREE  FROM (  SELECT 'SGA' NAME,  (SELECT SUM(VALUE) FROM V$SGA) TOTAL,  (SELECT SUM(BYTES) FROM V$SGASTAT WHERE NAME = 'free memory') FREE  FROM DUAL  )  UNION  SELECT NAME, TOTAL, TOTAL - USED FREE  FROM (  SELECT 'PGA' NAME,  (SELECT VALUE FROM V$PGASTAT WHERE NAME = 'aggregate PGA target parameter') TOTAL,  (SELECT VALUE FROM V$PGASTAT WHERE NAME = 'total PGA allocated') USED  FROM DUAL  )  UNION  SELECT NAME, TOTAL, FREE  FROM (  SELECT 'Shared pool' NAME,  (SELECT SUM(BYTES) FROM V$SGASTAT WHERE POOL = 'shared pool' GROUP BY POOL) TOTAL,  (SELECT BYTES FROM V$SGASTAT WHERE NAME = 'free memory' and POOL = 'shared pool') FREE  FROM DUAL  )  UNION  SELECT NAME, TOTAL, FREE  FROM (  SELECT 'Large pool' NAME,  (SELECT SUM(BYTES) FROM V$SGASTAT WHERE POOL = 'large pool' GROUP BY POOL) TOTAL,  (SELECT BYTES FROM V$SGASTAT WHERE POOL = 'large pool' AND NAME = 'free memory') FREE  FROM DUAL  )
+source = dbx
+sourcetype = oracle:sga
+ui_query_catalog = NULL
+ui_query_mode = advanced
+disabled = 1
+
+
+[mi_input://oracle:libraryCachePerf]
+connection = Oracle_Connection
+index = main
+interval = 60
+max_rows = 10000
+mode = batch
+output_timestamp_format = yyyy-MM-dd HH:mm:ss
+query = SELECT NAMESPACE, GETS, GETHITS, GETHITRATIO, PINS, PINHITS, PINHITRATIO, RELOADS, INVALIDATIONS, DLM_LOCK_REQUESTS, DLM_PIN_REQUESTS, DLM_PIN_RELEASES, DLM_INVALIDATION_REQUESTS, DLM_INVALIDATIONS FROM V$LIBRARYCACHE
+source = dbx
+sourcetype = oracle:libraryCachePerf
+ui_query_catalog = NULL
+ui_query_mode = advanced
+disabled = 1
+
+[mi_input://oracle:dbFileIoPerf]
+connection = Oracle_Connection
+index = main
+interval = 120
+max_rows = 10000
+mode = batch
+output_timestamp_format = yyyy-MM-dd HH:mm:ss
+query = SELECT 'DB_FILE' TYPE, D.NAME FILE_NAME, F.PHYRDS, F.PHYWRTS, F.AVGIOTIM,  F.MINIOTIM, F.MAXIOWTM, F.MAXIORTM  FROM V$FILESTAT F, V$DATAFILE D WHERE F.FILE# = D.FILE#  UNION  SELECT 'TEMP_DB_FILE' TYPE, T.NAME FILE_NAME,  F.PHYRDS, F.PHYWRTS, F.AVGIOTIM, F.MINIOTIM, F.MAXIOWTM, F.MAXIORTM  FROM V$FILESTAT F, V$TEMPFILE T  WHERE F.FILE# = T.FILE#  ORDER BY 1
+source = dbx
+sourcetype = oracle:dbFileIoPerf
+ui_query_catalog = NULL
+ui_query_mode = advanced
+disabled = 1
+
+[mi_input://oracle:osPerf]
+connection = Oracle_Connection
+index = main
+interval = 300
+max_rows = 10000
+mode = batch
+output_timestamp_format = yyyy-MM-dd HH:mm:ss
+query = SELECT STAT_NAME, VALUE, CUMULATIVE FROM V$OSSTAT
+source = dbx
+sourcetype = oracle:osPerf
+ui_query_catalog = NULL
+ui_query_mode = advanced
+disabled = 1
+
+# For 10g, please uncomment this stanza and comment out the above same stanza
+#[mi_input://oracle:osPerf]
+#connection = Oracle_Connection
+#index = main
+#interval = 300
+#max_rows = 10000
+#mode = batch
+#output_timestamp_format = yyyy-MM-dd HH:mm:ss
+#query = SELECT STAT_NAME, VALUE, 'YES' as CUMULATIVE FROM V$OSSTAT
+#source = dbx
+#sourcetype = oracle:osPerf
+#ui_query_catalog = NULL
+#ui_query_mode = advanced
+#disabled = 1
+
+[mi_input://oracle:sysPerf]
+connection = Oracle_Connection
+index = main
+interval = 60
+max_rows = 1000000
+mode = tail
+output_timestamp_format = yyyy-MM-dd HH:mm:ss
+query = SELECT BEGIN_TIME, END_TIME, INTSIZE_CSEC,METRIC_NAME, VALUE, METRIC_UNIT FROM V$SYSMETRIC_HISTORY
+source = dbx
+sourcetype = oracle:sysPerf
+tail_follow_only = 1
+tail_rising_column_name = END_TIME
+tail_rising_column_number = 2
+ui_query_catalog = NULL
+ui_query_mode = advanced
+disabled = 1

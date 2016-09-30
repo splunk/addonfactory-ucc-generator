@@ -1,0 +1,9 @@
+<!--
+@template=__template__
+@title=News
+-->
+
+## [JavaScript Lint 0.1b Released](__BASENAME__)
+_Tue, 30 Aug 2005 15:37:08 +0000_
+
+This release fixes a crash caused by certain syntax errors. For example: _if (a !=== b)_.

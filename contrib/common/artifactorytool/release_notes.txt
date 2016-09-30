@@ -1,0 +1,55 @@
+Version 0.3.13 - Enhancement(08/08/2016)
+
+Summary:
+1) Enable downloading of select dependencies
+
+==============================================================================================================
+Version 0.3.12 - Enhancement(08/03/2016)
+
+Summary
+1) Added searchdir option
+
+==============================================================================================================
+Version 0.3.11 - Bug fix (05/23/2016)
+
+Summary
+1) Fixed permission issue related to deletion of  old package folders
+
+==============================================================================================================
+
+Version 0.3.10 - Enhancement (05/01/2016)
+
+JIRA Ticket : APPSC-1011
+
+Summary
+1) Update Artifactory tool to enable configuration to branch path
+
+===============================================================================================================
+Version 0.3.9 - Bug fixes (04/06/2016)
+
+JIRA Ticket : FAST-4634
+
+===============================================================================================================
+Summary
+1) After deprecated buildnote.txt, the commit url was missed. Now add commit url in properties back
+===============================================================================================================
+Version 0.3.8 - Bug fixes (03/31/2016)
+
+JIRA Ticket : APPSC-876
+
+===============================================================================================================
+Summary
+1) When deleting old packages, artifactorytool is only looking for version names that match x.x.x-x.
+Added support for _x.x.x as well.
+
+===============================================================================================================
+Version 0.3.7 - Bug fixes (03/15/2016)
+
+JIRA Ticket : APPSC-759
+
+===============================================================================================================
+Summary
+Includes fixes for:
+1) If a filename is incorrectly specified such that it does not exist locally then it creates the 'latest' folder
+and throws an error leaving the repo in a invalid state.
+2) If refresh is specified but the same version exists locally, then it does not update the local version.

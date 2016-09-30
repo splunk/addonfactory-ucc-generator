@@ -1,0 +1,46 @@
+<?xml version="1.0" ?>
+<license>
+	<signature>IKp0XDfZRiPfQCOUUBeMeXGPxIVwMxzWDDVreLw/4hoBRlELjH/SR2rI7Q70DL+y+RNqsWFTy/qFswzDbNM6/6hGe/e5Iq2hKvwpm2VVgr/3iyhgSLu7mJE1VSjJNu8tBwsSHo1TrTOiPqmcqXZ+Z82JQLRWkVKkObmEiX+D9hECrk0yDfJu2PfkEPujro8GJGNclOiYDD7csvZqylbS4vWmNnahTxOGMJdjyTjYonv+Rbhiclhv9s/an2uboDeD2uBYnWHnlGLWwuQ1LbJNanItfPGb0+AD+Q0QzrfP27snAvkFU5mhhdqj2lTRDr6jn6S/K1M9lTVEVt3gJZdOpA==</signature>
+	<payload>
+		<type>lite</type>
+		<group_id>Lite</group_id>
+		<quota>1073741824</quota>
+		<max_violations>5</max_violations>
+		<window_period>30</window_period>
+		<creation_time>1469689200</creation_time>
+		<label>Splunk Light Internal License DO NOT DISTRIBUTE</label>
+		<expiration_time>1477551599</expiration_time>
+		<max_users>5</max_users>
+		<max_stack_quota>21474836480</max_stack_quota>
+		<features>
+			<feature>Auth</feature>
+			<feature>RcvData</feature>
+			<feature>LocalSearch</feature>
+			<feature>ScheduledSearch</feature>
+			<feature>Alerting</feature>
+			<feature>DeployServer</feature>
+			<feature>SplunkWeb</feature>
+			<feature>SigningProcessor</feature>
+		</features>
+		<disabled_features>
+			<feature>Acceleration</feature>
+			<feature>AdvancedSearchCommands</feature>
+			<feature>AdvancedXML</feature>
+			<feature>CustomRoles</feature>
+			<feature>GuestPass</feature>
+			<feature>LDAPAuth</feature>
+			<feature>MultisiteClustering</feature>
+			<feature>NontableLookups</feature>
+			<feature>SearchheadPooling</feature>
+			<feature>UnisiteClustering</feature>
+		</disabled_features>
+		<sourcetypes/>
+		<allowedRoles>
+			<role assignable="true">admin</role>
+			<role assignable="false">power</role>
+			<role assignable="true">can_delete</role>
+			<role assignable="true">user</role>
+		</allowedRoles>
+		<guid>21BB13C0-4990-42FE-AC65-2A487F6EEC1D</guid>
+	</payload>
+</license>

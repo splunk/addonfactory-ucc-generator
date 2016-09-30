@@ -1,0 +1,10 @@
+var global_var = 42;
+function GlobalFromInclude() {
+    var value;
+    this.set = function(newvalue) {
+        value = newvalue;
+    };
+    this.get = function() {
+        return value;
+    };
+}

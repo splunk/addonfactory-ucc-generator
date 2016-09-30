@@ -1,0 +1,27 @@
+# README
+
+gen_event_until.py
+Wait until target number of events exists in Splunk. Then turn off SA-Event
+Usage: gen_event_until.py 1000000 # generate until more than 1M events
+
+prepare_environment.py
+Install Splunk, test add-on and run gen_event_until.py 1000000
+Usage: {add-on_source_folder}/contrib/common/DSG-util-misc/harpy/prepare_environment.py --splunk-version current_ga
+
+run_test.py
+Run all tests defined in {add-on_source_folder}/test/performance/testcase.json with add-on enabled and disabled.
+Sample testcase.json:
+{
+  "addon_name": "Splunk_TA_checkpoint-opseclea",
+  "all": "search *",
+  "sourcetype_checkpoint":              "search sourcetype=checkpoint",
+  "sourcetype_opsec":                   "search sourcetype=opsec",
+  "sourcetype_opsec_ips":               "search sourcetype=opsec:ips",
+  "sourcetype_opsec_smartdefense":      "search sourcetype=opsec:smartdefense",
+  "sourcetype_opsec_vpn":               "search sourcetype=opsec:vpn",
+  "sourcetype_opsec_audit":             "search sourcetype=opsec:audit",
+  "sourcetype_opsec_threat_emulation":  "search sourcetype=opsec:threat_emulation",
+  "sourcetype_opsec_anti_bot":          "search sourcetype=opsec:anti_bot",
+  "sourcetype_opsec_anti_malware":      "search sourcetype=opsec:anti_malware",
+  "sourcetype_opsec_anti_virus":        "search sourcetype=opsec:anti_virus"
+}

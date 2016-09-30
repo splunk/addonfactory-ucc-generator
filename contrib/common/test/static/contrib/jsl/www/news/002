@@ -1,0 +1,9 @@
+<!--
+@template=__template__
+@title=News
+-->
+
+## [JavaScript Lint 0.1c Released](__BASENAME__)
+_Tue, 30 Aug 2005 18:54:06 +0000_
+
+This release corrects problems with the wildcard feature.

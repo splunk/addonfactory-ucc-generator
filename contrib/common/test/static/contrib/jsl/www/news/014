@@ -1,0 +1,15 @@
+<!--
+@template=__template__
+@title=News
+-->
+
+## [JavaScript Lint 0.2.0 Released](__BASENAME__)
+_Wed, 04 Jan 2006 02:20:01 +0000_
+
+This release includes cumulative changes through version 0.1m.
+
+This release has a command-line parameter to disable the file listing in the output.
+
+Available from the [download page](/download.htm).
+
+

@@ -1,0 +1,4 @@
+function unicode() {
+	return 'ö';
+}
+

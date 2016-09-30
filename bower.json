@@ -1,0 +1,20 @@
+{
+  "name": "Splunk_TA_crowdstrike",
+  "description": "CrowdStrike add-on web dependencies",
+  "main": "",
+  "authors": [
+    "Holden Zhang <hozhang@splunk.com>"
+  ],
+  "license": "MIT",
+  "moduleType": [],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+    "SplunkWebCore": "=6.4.1606",
+    "select2": "=3.5.3"
+  }
+}

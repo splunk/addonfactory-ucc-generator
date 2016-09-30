@@ -1,0 +1,24 @@
+<div class ="tool-bar">
+  <div class ="tool-title">
+    <span class="icon-tasks"></span><%= title%>
+  </div>
+  <% if (enableButton) { %>
+    <div class = "tool-button">
+      <div class="dropdown add-button">
+        <button  id="<%= buttonId%>" class="btn btn-primary" type="button">
+           <%= buttonValue%>
+          <% if (!singleInput) { %>
+            <span class="caret"></span>
+          <% } %>
+        </button>
+      </div>
+    </div>
+  <% } %>
+
+    <div class= "tool-description">
+        <%= description%>
+    </div>
+</div>
+<% if(enableHr){ %>
+<hr>
+<% } %>

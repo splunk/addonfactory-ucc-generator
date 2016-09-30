@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<license>
+<signature>Bo6vV08plAk90BgIy1ULU3OOb76KXPoJ+tVD/3hBvcEdajHX17dzLuvJHeG6f0l4Bbvu3zTi7MdJG+iD7ZtIu8ro3mpDuhO2zhHTHQSU/yjt5OEqJkcDg5i9JfPpYF3vvwwTaupVj+Yl7xxFRxdi3N+7wJYrRrOon7ovcr9d2a4SaHkXkHukcd38QcK1MZmorspbGcWb8VXDtU+VMTdJoS737DGkiURsv+qyAUhXaTVJrS907yYPJn8vRSNqt+Qt7sNNGmrnfnF4ngoboY0ZENApecUN4eOyyQcs61hCDF0WSVcuaaH8CsVIlPST+BQLuGZIk08ViUi0Z1F664t0tA==</signature>
+<payload>
+<type>enterprise</type>
+<group_id>Enterprise</group_id>
+<quota>1</quota>
+<max_violations>5</max_violations>
+<window_period>30</window_period>
+<creation_time>1376895600</creation_time>
+<label>Hunk</label>
+<expiration_time>1383289200</expiration_time>
+<features>
+<feature>Alerting</feature>
+<feature>AllowDuplicateKeys</feature>
+<feature>Auth</feature>
+<feature>FwdData</feature>
+<feature>LocalSearch</feature>
+<feature>RcvData</feature>
+<feature>RcvSearch</feature>
+<feature>ScheduledSearch</feature>
+<feature>SplunkWeb</feature>
+<feature>SyslogOutputProcessor</feature>
+</features>
+
+<add_ons>
+<add_on name="hadoop" type="external_results_provider">
+<parameter key="erp_type" value="report"/>
+<parameter key="max_nodes" value="50"/>
+</add_on>
+</add_ons>
+<sourcetypes/>
+<guid>30CCFAAA-91E4-4E1B-AC7B-C65F8455001E</guid></payload>
+</license>

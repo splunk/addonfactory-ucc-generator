@@ -1,0 +1,11 @@
+<!--
+@template=__template__
+@title=News
+-->
+
+## [IDE Integration](__BASENAME__)
+_Sat, 29 Sep 2007 22:08:21 +0000_
+
+The [documentation page](/docs/running_from_your_ide.htm) now contains instructions for integrating JavaScript Lint with TextMate, vim, and emacs.
+
+Improvements to the documentation are welcome.
