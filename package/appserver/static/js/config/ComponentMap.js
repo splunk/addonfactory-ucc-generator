@@ -1,3 +1,9 @@
+const normalEscape = field => field.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const mappingServiceName = field => {
+    return field.indexOf('ta_crowdstrike_falcon_host_inputs') > -1 ?
+        "Falcon Host" : "Unknown";
+};
+
 /*global define,window*/
 define([
     'underscore',
@@ -41,44 +47,31 @@ define([
                    "field": "name",
                    "label": "Name",
                    "sort": true,
-                   mapping: function (field) {
-                       return field.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                   }
+                   mapping: normalEscape
                },
                {
                    "field": "service",
                    "label": "Service",
                    "sort": true,
-                   mapping: function (model) {
-                       if (model.id.indexOf('ta_crowdstrike_falcon_host_inputs') > -1) {
-                           return "Falcon Host";
-                       }
-                        return "Unknown";
-                   }
+                   mapping: model => mappingServiceName(model.id)
                },
                 {
                    "field": "account",
                    "label": "Account",
                    "sort":true,
-                   mapping: function (field) {
-                       return field.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                   }
+                   mapping: normalEscape
                },
                {
                    "field": "interval",
                    "label": "Interval",
                    "sort": true,
-                   mapping: function (field) {
-                       return field.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                   }
+                   mapping: normalEscape
                },
                {
                    "field": "index",
                    "label": "Index",
                    "sort": true,
-                   mapping: function (field) {
-                       return field.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                   }
+                   mapping: normalEscape
                },
                {
                    "field": "disabled",
@@ -93,38 +86,28 @@ define([
                {
                    "field": "name",
                    "label": "Name",
-                   mapping: function (field) {
-                       return field.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                   }
+                   mapping: normalEscape
                },
                {
                    "field": "account",
                    "label": "Account",
-                   mapping: function (field) {
-                       return field.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                   }
+                   mapping: normalEscape
                },
                {
                    "field": "start_offset",
                    "label": "Start Offset",
-                   mapping: function (field) {
-                       return field.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                   }
+                   mapping: normalEscape
                },
                // Common fields
                {
                    "field": "interval",
                    "label": "Interval",
-                   mapping: function (field) {
-                       return field.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                   }
+                   mapping: normalEscape
                },
                {
                    "field": "index",
                    "label": "Index",
-                   mapping: function (field) {
-                       return field.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                   }
+                   mapping: normalEscape
                },
                {
                    "field": "disabled",
@@ -197,25 +180,19 @@ define([
                     "field": "name",
                     "label": "Name",
                     "sort": true,
-                    mapping: function (field) {
-                        return field.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                    }
+                    mapping: normalEscape
                 },
                 {
                     "field": "endpoint",
                     "label": "Endpoint",
                     "sort": true,
-                    mapping: function (field) {
-                        return field.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                    }
+                    mapping: normalEscape
                 },
                 {
                     "field": "api_uuid",
                     "label": "API UUID",
                     "sort": true,
-                    mapping: function (field) {
-                        return field.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                    }
+                    mapping: normalEscape
                 }
             ],
             "entity": [
