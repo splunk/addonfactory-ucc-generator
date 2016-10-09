@@ -464,59 +464,12 @@ define([
          },
 
          sortCollection: function (stateModel) {
-             var sort_dir = stateModel.get('sortDirection'),
-                 sort_key = stateModel.get('sortKey'),
-                 sortable = this.inputs.models,
-                 all_deferred,
+             var handler = ComponentMap.input.generateSortHandler(stateModel),
+                sort_key = stateModel.get('sortKey');
+
+             var all_deferred = this.fetchAllCollection(),
                  offset = stateModel.get('offset'),
-                 count = stateModel.get('count'),
-                 sort_alphabetical = function (a, b) {
-                     var textA = a.entry.content.get(sort_key) ? a.entry.content.get(sort_key).toUpperCase() : '',
-                         textB = b.entry.content.get(sort_key) ? b.entry.content.get(sort_key).toUpperCase() : '';
-                     if (sort_dir === 'asc') {
-                         return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
-                     }
-                     return (textA > textB) ? -1 : (textA < textB) ? 1 : 0;
-                 },
-                 sort_numerical = function (a, b) {
-                     var numA = a.entry.content.get(sort_key) ? Number(a.entry.content.get(sort_key)) : 0,
-                         numB = b.entry.content.get(sort_key) ? Number(b.entry.content.get(sort_key)) : 0;
-                     if (sort_dir === 'asc') {
-                         return (numA < numB) ? -1 : (numA > numB) ? 1 : 0;
-                     }
-                     return (numA > numB) ? -1 : (numA < numB) ? 1 : 0;
-                 },
-                 handler = {
-                     'name': function (a, b) {
-                         var textA = a.entry.get(sort_key).toUpperCase(),
-                             textB = b.entry.get(sort_key).toUpperCase();
-
-                         if (sort_dir === 'asc') {
-                             return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
-                         }
-                         return (textA > textB) ? -1 : (textA < textB) ? 1 : 0;
-                     },
-                     'index': sort_alphabetical,
-                     'interval': sort_numerical,
-                     'disabled': function (a, b) {
-                         var textA = a.entry.content.get('disabled') ? 1 : 0,
-                             textB = b.entry.content.get('disabled') ? 1 : 0;
-                         if (sort_dir === 'asc') {
-                             return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
-                         }
-                         return (textA > textB) ? -1 : (textA < textB) ? 1 : 0;
-                     },
-                     'service': function (a, b) {
-                         var textA = a.id.indexOf("ta_crowdstrike_falcon_host_inputs") > -1 ? "falcon host" : "unkonwn";
-                             textB = b.id.indexOf("ta_crowdstrike_falcon_host_inputs") > -1 ? "falcon host" : "unknown";
-                         if (sort_dir === 'asc') {
-                             return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
-                         }
-                         return (textA > textB) ? -1 : (textA < textB) ? 1 : 0;
-                     }
-                 };
-
-             all_deferred = this.fetchAllCollection();
+                 count = stateModel.get('count');
              all_deferred.done(function () {
                  var temp_collection = this.combineCollection();
                  this.cached_inputs = temp_collection[0];

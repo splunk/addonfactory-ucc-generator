@@ -42,6 +42,56 @@ define([
                buttonValue: "Create New Input",
                enableHr: true
            },
+           generateSortHandler: (stateModel) => {
+               var sort_dir = stateModel.get('sortDirection'),
+                   sort_key = stateModel.get('sortKey'),
+                   sort_alphabetical = function (a, b) {
+                       var textA = a.entry.content.get(sort_key) ? a.entry.content.get(sort_key).toUpperCase() : '',
+                           textB = b.entry.content.get(sort_key) ? b.entry.content.get(sort_key).toUpperCase() : '';
+                       if (sort_dir === 'asc') {
+                           return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+                       }
+                       return (textA > textB) ? -1 : (textA < textB) ? 1 : 0;
+                   },
+                   sort_numerical = function (a, b) {
+                       var numA = a.entry.content.get(sort_key) ? Number(a.entry.content.get(sort_key)) : 0,
+                           numB = b.entry.content.get(sort_key) ? Number(b.entry.content.get(sort_key)) : 0;
+                       if (sort_dir === 'asc') {
+                           return (numA < numB) ? -1 : (numA > numB) ? 1 : 0;
+                       }
+                       return (numA > numB) ? -1 : (numA < numB) ? 1 : 0;
+                   };
+
+               return {
+                   'name': function (a, b) {
+                       var textA = a.entry.get(sort_key).toUpperCase(),
+                           textB = b.entry.get(sort_key).toUpperCase();
+
+                       if (sort_dir === 'asc') {
+                           return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+                       }
+                       return (textA > textB) ? -1 : (textA < textB) ? 1 : 0;
+                   },
+                   'index': sort_alphabetical,
+                   'interval': sort_numerical,
+                   'disabled': function (a, b) {
+                       var textA = a.entry.content.get('disabled') ? 1 : 0,
+                           textB = b.entry.content.get('disabled') ? 1 : 0;
+                       if (sort_dir === 'asc') {
+                           return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+                       }
+                       return (textA > textB) ? -1 : (textA < textB) ? 1 : 0;
+                   },
+                   'service': function (a, b) {
+                       var textA = a.id.indexOf("ta_crowdstrike_falcon_host_inputs") > -1 ? "falcon host" : "unkonwn";
+                           textB = b.id.indexOf("ta_crowdstrike_falcon_host_inputs") > -1 ? "falcon host" : "unknown";
+                       if (sort_dir === 'asc') {
+                           return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+                       }
+                       return (textA > textB) ? -1 : (textA < textB) ? 1 : 0;
+                   }
+               };
+           },
            "header": [
                {
                    "field": "name",
