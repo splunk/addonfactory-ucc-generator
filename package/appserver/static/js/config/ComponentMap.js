@@ -3,6 +3,18 @@ const mappingServiceName = field => {
     return field.indexOf('ta_crowdstrike_falcon_host_inputs') > -1 ?
         "Falcon Host" : "Unknown";
 };
+const sort_alphabetical = (a, b, sort_dir) => {
+    a = a ? a : '',
+    b = b ? b : '';
+    const res = (a < b) ? -1 : (a > b) ? 1 : 0;
+    return sort_dir === 'asc' ? res : -res;
+};
+const sort_numerical = (a, b, sort_dir) => {
+    a = a ? a : 0,
+    b = b ? b : 0;
+    const res = (a < b) ? -1 : (a > b) ? 1 : 0;
+    return sort_dir === 'asc' ? res : -res;
+};
 
 /*global define,window*/
 define([
@@ -44,36 +56,12 @@ define([
            },
            generateSortHandler: (stateModel) => {
                var sort_dir = stateModel.get('sortDirection'),
-                   sort_key = stateModel.get('sortKey'),
-                   sort_alphabetical = function (a, b) {
-                       var textA = a.entry.content.get(sort_key) ? a.entry.content.get(sort_key).toUpperCase() : '',
-                           textB = b.entry.content.get(sort_key) ? b.entry.content.get(sort_key).toUpperCase() : '';
-                       if (sort_dir === 'asc') {
-                           return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
-                       }
-                       return (textA > textB) ? -1 : (textA < textB) ? 1 : 0;
-                   },
-                   sort_numerical = function (a, b) {
-                       var numA = a.entry.content.get(sort_key) ? Number(a.entry.content.get(sort_key)) : 0,
-                           numB = b.entry.content.get(sort_key) ? Number(b.entry.content.get(sort_key)) : 0;
-                       if (sort_dir === 'asc') {
-                           return (numA < numB) ? -1 : (numA > numB) ? 1 : 0;
-                       }
-                       return (numA > numB) ? -1 : (numA < numB) ? 1 : 0;
-                   };
+                   sort_key = stateModel.get('sortKey');
 
                return {
-                   'name': function (a, b) {
-                       var textA = a.entry.get(sort_key).toUpperCase(),
-                           textB = b.entry.get(sort_key).toUpperCase();
-
-                       if (sort_dir === 'asc') {
-                           return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
-                       }
-                       return (textA > textB) ? -1 : (textA < textB) ? 1 : 0;
-                   },
-                   'index': sort_alphabetical,
-                   'interval': sort_numerical,
+                   'name': (a, b) => sort_alphabetical(a.entry.get(sort_key), b.entry.get(sort_key), sort_dir),
+                   'index': (a, b) => sort_alphabetical(a.entry.content.get(sort_key), b.entry.content.get(sort_key), sort_dir),
+                   'interval': (a, b) => sort_numerical(a.entry.content.get(sort_key), b.entry.content.get(sort_key), sort_dir),
                    'disabled': function (a, b) {
                        var textA = a.entry.content.get('disabled') ? 1 : 0,
                            textB = b.entry.content.get('disabled') ? 1 : 0;
@@ -83,8 +71,8 @@ define([
                        return (textA > textB) ? -1 : (textA < textB) ? 1 : 0;
                    },
                    'service': function (a, b) {
-                       var textA = a.id.indexOf("ta_crowdstrike_falcon_host_inputs") > -1 ? "falcon host" : "unkonwn";
-                           textB = b.id.indexOf("ta_crowdstrike_falcon_host_inputs") > -1 ? "falcon host" : "unknown";
+                       var textA = mappingServiceName(a.id);
+                           textB = mappingServiceName(b.id);
                        if (sort_dir === 'asc') {
                            return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
                        }
