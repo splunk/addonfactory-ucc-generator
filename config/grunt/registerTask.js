@@ -11,7 +11,8 @@ module.exports = function(grunt) {
             'shell:style'
         ]],
         "dev-watch": ['sync files to stage dir', [
-            'buildTask:copy'
+            'buildTask:copy',
+            'webpack:dev'
         ]]
     };
 };

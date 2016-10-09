@@ -38,6 +38,11 @@ module.exports = function(grunt) {
                   numeral: path.join(appJsDir, 'shim', 'numeral') // this is to fix the i18m issues. The issue should be resolved in 6.5
                 }
             },
+            module: {
+                loaders: [
+                    { test: /\.js$/, include: appJsDir, loader: 'babel' }
+                ]
+            },
             output: {
                 path: path.join(rootDir, 'stage', 'appserver', 'static', 'js', 'build'),
                 filename: '[name].js',
