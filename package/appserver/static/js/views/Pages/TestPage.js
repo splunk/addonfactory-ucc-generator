@@ -7,7 +7,7 @@
 //     'app/collections/ProxyBase.Collection',
 //     'app/collections/Accounts',
 //     'app/models/appData',
-//     'contrib/text!app/templates/Common/PageTitle.html',
+//     'app/templates/Common/PageTitle.html',
 //     'models/Base',
 //     'views/shared/tablecaption/Master',
 //     'app/views/Component/InputFilterMenu',

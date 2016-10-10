@@ -12,9 +12,9 @@ define([
     'app/models/CertificationUpload',
     'app/collections/Certifications',
     'app/config/ContextMap',
-    'contrib/text!app/templates/Models/LoadingMsg.html',
-    'contrib/text!app/templates/Models/ErrorMsg.html',
-    'contrib/text!app/templates/Configuration/CredentialTemplate.html'
+    'app/templates/Models/LoadingMsg.html',
+    'app/templates/Models/ErrorMsg.html',
+    'app/templates/Configuration/CredentialTemplate.html'
 ], function (
     $,
     _,

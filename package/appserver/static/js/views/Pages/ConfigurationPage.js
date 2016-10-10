@@ -6,8 +6,8 @@ define([
     'underscore',
     'backbone',
     'splunkjs/mvc/headerview',
-    'contrib/text!app/templates/Common/PageTitle.html',
-    'contrib/text!app/templates/Common/TabTemplate.html',
+    'app/templates/Common/PageTitle.html',
+    'app/templates/Common/TabTemplate.html',
     'app/models/Authorization'
 ], function (
     $,

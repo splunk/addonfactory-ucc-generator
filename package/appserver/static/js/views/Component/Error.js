@@ -2,7 +2,7 @@
 define([
     'underscore',
     'backbone',
-    'contrib/text!app/templates/Dialogs/Error.html'
+    'app/templates/Dialogs/Error.html'
 ], function (
     _,
     Backbone,

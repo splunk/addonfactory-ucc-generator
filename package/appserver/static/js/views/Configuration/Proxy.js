@@ -3,9 +3,9 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'contrib/text!app/templates/Configuration/ProxyTemplate.html',
-    'contrib/text!app/templates/Models/SavingMsg.html',
-    'contrib/text!app/templates/Models/ErrorMsg.html',
+    'app/templates/Configuration/ProxyTemplate.html',
+    'app/templates/Models/SavingMsg.html',
+    'app/templates/Models/ErrorMsg.html',
     'app/config/ComponentMap',
     'app/views/Models/ControlWrapper',
     'app/models/Setting'

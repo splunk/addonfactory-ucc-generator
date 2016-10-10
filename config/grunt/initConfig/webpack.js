@@ -40,7 +40,8 @@ module.exports = function(grunt) {
             },
             module: {
                 loaders: [
-                    { test: /\.js$/, include: appJsDir, loader: 'babel' }
+                    { test: /\.js$/, include: appJsDir, loader: 'babel' },
+                    { test: /\.html$/, include: appJsDir, loader: 'raw' }
                 ]
             },
             output: {

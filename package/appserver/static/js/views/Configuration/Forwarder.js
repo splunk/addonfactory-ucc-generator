@@ -12,7 +12,7 @@ define([
     'app/collections/Forwarders',
     'app/models/appData',
     'app/config/ComponentMap',
-    'contrib/text!app/templates/Common/ButtonTemplate.html'
+    'app/templates/Common/ButtonTemplate.html'
 ], function (
     $,
     _,

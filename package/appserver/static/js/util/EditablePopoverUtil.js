@@ -4,8 +4,8 @@ define([
     'jquery',
     'bootstrap',
     'underscore',
-    'contrib/text!app/templates/Popover/EditText.html',
-    'contrib/text!app/templates/Popover/EditNumber.html'
+    'app/templates/Popover/EditText.html',
+    'app/templates/Popover/EditNumber.html'
 ], function (
     $,
     Bootstrap,
