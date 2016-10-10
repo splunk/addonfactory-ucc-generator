@@ -36,7 +36,7 @@ define([
                     }
                     var title = tab.title,
                         token = title.toLowerCase().replace(/\s/g, '-'),
-                        view = new tab.view(),
+                        view = new tab.view({ containerId: `#${token}-tab` }),
                         active;
 
                     if (!self.tabName) {

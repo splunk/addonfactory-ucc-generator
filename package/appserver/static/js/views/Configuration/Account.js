@@ -29,7 +29,9 @@ define([
     ButtonTemplate
 ) {
     return Backbone.View.extend({
-        initialize: function () {
+        initialize: function (options) {
+            const { containerId } = options;
+            this.containerId = containerId;
             this.addonName = Util.getAddonName();
             //state model
             this.stateModel = new BaseModel();
@@ -40,21 +42,6 @@ define([
                 offset: 0,
                 fetching: true
             });
-
-            //Load service inputs
-            // this.services = ComponentMap.input.services;
-            // var service, Collection;
-            // for (service in this.services) {
-            //     if (this.services.hasOwnProperty(service)) {
-            //         Collection = this.services[service].collection;
-            //
-            //         this[service] = new Collection([], {
-            //             appData: {app: appData.get("app"), owner: appData.get("owner")},
-            //             targetApp: this.addonName,
-            //             targetOwner: "nobody"
-            //         });
-            //     }
-            // }
 
             //accounts collection
             this.accounts = new Accounts([], {
@@ -102,7 +89,7 @@ define([
 
                     this.$el.append(this.caption.render().$el);
                     this.$el.append(this.account_list.render().$el);
-                    $('#crowdstrike-account-tab .table-caption-inner').prepend($(_.template(ButtonTemplate, add_button_data)));
+                    $(`${this.containerId} .table-caption-inner`).prepend($(_.template(ButtonTemplate, add_button_data)));
 
                     $('#addAccountBtn').on('click', function () {
                         var dlg = new EntityDialog({

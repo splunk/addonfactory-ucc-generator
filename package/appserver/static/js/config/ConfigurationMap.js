@@ -13,18 +13,15 @@ export default {
         "allTabs": [
             {
                title: "CrowdStrike Account",
-               order: 0,
                active: true,
                view: AccountView
             },
             {
                 title: "Proxy",
-                order: 1,
                 view: ProxyView
             },
             {
                 title: "Logging",
-                order: 2,
                 view: LoggingView
             }
         ]
