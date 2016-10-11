@@ -12,7 +12,6 @@ require([
     HeaderView,
     InputsPageView
 ) {
-    // Common header
     new HeaderView({
         id: 'header',
         section: 'dashboards',

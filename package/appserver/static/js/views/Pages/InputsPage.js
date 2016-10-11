@@ -291,9 +291,7 @@ define([
         },
 
         fetchAllCollection: function () {
-            var singleStateModel = new BaseModel(),
-                calls = [],
-                service;
+            var singleStateModel = new BaseModel();
             singleStateModel.set({
                 sortKey: 'name',
                 sortDirection: 'asc',
@@ -301,11 +299,10 @@ define([
                 offset: 0,
                 fetching: true
             });
-            for (service in this.services) {
-                if (this.services.hasOwnProperty(service)) {
-                    calls.push(this.fetchListCollection(this[service], singleStateModel));
-                }
-            }
+
+            var calls = Object.keys(this.services).map(d =>
+                this.fetchListCollection(this[d], singleStateModel)
+            );
 
             return $.when.apply(this, calls);
         },
@@ -323,12 +320,10 @@ define([
                 }),
                 service;
 
-            for (service in this.services) {
-                if (this.services.hasOwnProperty(service)) {
-                    temp_collection1.add(this[service].models, {silent: true});
-                    temp_collection2.add(this[service].models, {silent: true});
-                }
-            }
+            Object.keys(this.services).forEach(d => {
+                temp_collection1.add(this[d].models, {silent: true});
+                temp_collection2.add(this[d].models, {silent: true});
+            });
 
             return [temp_collection1, temp_collection2];
         },
