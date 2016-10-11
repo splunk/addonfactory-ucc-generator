@@ -4,8 +4,8 @@ define([
     'jquery',
     'app/util/Util',
     'views/shared/PopTart',
-    'app/views/Component/EntityDialog',
-    'app/views/Component/Error',
+    'app/views/component/EntityDialog',
+    'app/views/component/Error',
     'app/collections/Accounts',
     'app/models/appData'
 ], function (

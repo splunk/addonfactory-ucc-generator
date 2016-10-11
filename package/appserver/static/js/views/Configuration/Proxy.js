@@ -3,11 +3,11 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'app/templates/Configuration/ProxyTemplate.html',
-    'app/templates/Models/SavingMsg.html',
-    'app/templates/Models/ErrorMsg.html',
+    'app/views/configuration/ProxyTemplate.html',
+    'app/templates/messages/SavingMsg.html',
+    'app/templates/messages/ErrorMsg.html',
     'app/config/ComponentMap',
-    'app/views/Models/ControlWrapper',
+    'app/views/controls/ControlWrapper',
     'app/models/Setting'
 ], function (
     $,

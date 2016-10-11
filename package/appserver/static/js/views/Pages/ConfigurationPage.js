@@ -6,8 +6,8 @@ define([
     'underscore',
     'backbone',
     'splunkjs/mvc/headerview',
-    'app/templates/Common/PageTitle.html',
-    'app/templates/Common/TabTemplate.html',
+    'app/templates/common/PageTitle.html',
+    'app/templates/common/TabTemplate.html',
     'app/models/Authorization'
 ], function (
     $,
@@ -31,20 +31,15 @@ define([
 
             function renderTabs(tabs) {
                 _.each(tabs, function (tab) {
-                    if (tab.title === "Forwarders" && self.show_fowarder === "0") {
-                        return;
-                    }
                     var title = tab.title,
                         token = title.toLowerCase().replace(/\s/g, '-'),
                         view = new tab.view({ containerId: `#${token}-tab` }),
                         active;
-
                     if (!self.tabName) {
                         active = tab.active;
                     } else if (self.tabName && self.tabName === token) {
                         active = true;
                     }
-
                     $(".nav-tabs").append(_.template(tab_title_template, {title, token, active}));
                     $(".tab-content").append(_.template(tab_content_template, {token, active}));
                     $(`#${token}-tab`).html(view.render().$el);

@@ -1,6 +1,6 @@
-import ProxyView from 'app/views/Configuration/Proxy';
-import LoggingView from 'app/views/Configuration/Logging';
-import AccountView from 'app/views/Configuration/Account';
+import ProxyView from 'app/views/configuration/Proxy';
+import LoggingView from 'app/views/configuration/Logging';
+import AccountView from 'app/views/configuration/Account';
 
 export default {
     "configuration": {

@@ -2,7 +2,7 @@
 define([
     'jquery',
     'backbone',
-    'app/views/Component/InputFilter'
+    'app/views/component/InputFilter'
 ], function (
     $,
     Backbone,

@@ -4,9 +4,9 @@ define([
     'underscore',
     'backbone',
     'app/config/ContextMap',
-    'app/templates/Dialogs/DeleteDialog.html',
-    'app/templates/Models/ErrorMsg.html',
-    'app/templates/Models/WarningMsg.html'
+    'app/templates/dialogs/DeleteDialog.html',
+    'app/templates/messages/ErrorMsg.html',
+    'app/templates/messages/WarningMsg.html'
 ], function (
     $,
     _,

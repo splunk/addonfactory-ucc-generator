@@ -1,8 +1,8 @@
 /*global define*/
 define([
     'underscore',
-    'app/views/Component/TableRow',
-    'app/views/Component/MoreInfo',
+    'app/views/component/TableRow',
+    'app/views/component/MoreInfo',
     'views/Base',
     'views/shared/TableHead',
     'views/shared/delegates/TableRowToggle'

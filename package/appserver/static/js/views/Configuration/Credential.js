@@ -7,14 +7,14 @@ define([
     'splunk.util',
     'models/Base',
     'app/models/appData',
-    'app/views/Models/FileUploadControl',
+    'app/views/controls/FileUploadControl',
     'app/models/Certification',
     'app/models/CertificationUpload',
     'app/collections/Certifications',
     'app/config/ContextMap',
-    'app/templates/Models/LoadingMsg.html',
-    'app/templates/Models/ErrorMsg.html',
-    'app/templates/Configuration/CredentialTemplate.html'
+    'app/templates/messages/LoadingMsg.html',
+    'app/templates/messages/ErrorMsg.html',
+    'app/views/configuration/CredentialTemplate.html'
 ], function (
     $,
     _,

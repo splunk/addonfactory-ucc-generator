@@ -4,7 +4,7 @@ define([
     'underscore',
     'backbone',
     'views/Base',
-    'app/views/Component/EditMenu',
+    'app/views/component/EditMenu',
     'views/shared/controls/ControlGroup',
     'views/shared/controls/SyntheticCheckboxControl'
 ], function (

@@ -4,7 +4,7 @@ require([
     'underscore',
     'backbone',
     'splunkjs/mvc/headerview',
-    'app/views/Pages/InputsPage'
+    'app/views/pages/InputsPage'
 ], function (
     $,
     _,

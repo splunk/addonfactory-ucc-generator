@@ -7,14 +7,14 @@
 //     'app/collections/ProxyBase.Collection',
 //     'app/collections/Accounts',
 //     'app/models/appData',
-//     'app/templates/Common/PageTitle.html',
+//     'app/templates/common/PageTitle.html',
 //     'models/Base',
 //     'views/shared/tablecaption/Master',
-//     'app/views/Component/InputFilterMenu',
-//     'app/views/Component/AddInputMenu',
-//     'app/views/Component/EntityDialog',
+//     'app/views/component/InputFilterMenu',
+//     'app/views/component/AddInputMenu',
+//     'app/views/component/EntityDialog',
 //     'app/config/ComponentMap',
-//     'app/views/Component/Table'
+//     'app/views/component/Table'
 // ], function (
 //     $,
 //     _,

@@ -19,13 +19,13 @@ const sort_numerical = (a, b, sort_dir) => {
 /*global define,window*/
 define([
     'underscore',
-    'app/views/Models/TextDisplayControl',
+    'app/views/controls/TextDisplayControl',
     'views/shared/controls/TextControl',
-    'app/views/Models/SingleInputControl',
-    'app/views/Models/SingleInputControlEx',
+    'app/views/controls/SingleInputControl',
+    'app/views/controls/SingleInputControlEx',
     'views/shared/controls/SyntheticCheckboxControl',
     'views/shared/controls/SyntheticRadioControl',
-    'app/views/Models/MultiSelectInputControl',
+    'app/views/controls/MultiSelectInputControl',
     'app/models/Input',
     'app/models/Account',
     'app/collections/Inputs'

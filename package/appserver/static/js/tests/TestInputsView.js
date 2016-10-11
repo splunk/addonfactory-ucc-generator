@@ -1,8 +1,8 @@
 define([
     'jquery',
     'backbone',
-    'app/views/Pages/InputsPage',
-    'app/views/Component/EntityDialog',
+    'app/views/pages/InputsPage',
+    'app/views/component/EntityDialog',
     'app/collections/Inputs',
     'app/util/Util',
     'app/models/appData',

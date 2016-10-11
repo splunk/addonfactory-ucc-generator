@@ -6,13 +6,13 @@ define([
     'app/util/Util',
     'models/Base',
     'views/shared/tablecaption/Master',
-    'app/views/Component/Table',
-    'app/views/Component/EntityDialog',
+    'app/views/component/Table',
+    'app/views/component/EntityDialog',
     'app/collections/Accounts',
     'app/collections/ProxyBase.Collection',
     'app/models/appData',
     'app/config/ComponentMap',
-    'app/templates/Common/ButtonTemplate.html'
+    'app/templates/common/ButtonTemplate.html'
 ], function (
     $,
     _,

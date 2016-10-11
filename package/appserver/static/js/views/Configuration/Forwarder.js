@@ -7,12 +7,12 @@ define([
     'splunk.util',
     'models/Base',
     'views/shared/tablecaption/Master',
-    'app/views/Component/Table',
-    'app/views/Component/EntityDialog',
+    'app/views/component/Table',
+    'app/views/component/EntityDialog',
     'app/collections/Forwarders',
     'app/models/appData',
     'app/config/ComponentMap',
-    'app/templates/Common/ButtonTemplate.html'
+    'app/templates/common/ButtonTemplate.html'
 ], function (
     $,
     _,

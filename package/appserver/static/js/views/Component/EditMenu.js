@@ -3,10 +3,10 @@ define([
     'underscore',
     'jquery',
     'views/shared/PopTart',
-    'app/views/Component/EntityDialog',
-    'app/views/Component/DeleteDialog',
-    'app/views/Component/Error',
-    'app/views/Component/Warning',
+    'app/views/component/EntityDialog',
+    'app/views/component/DeleteDialog',
+    'app/views/component/Error',
+    'app/views/component/Warning',
     'app/models/ServerInfo',
     'app/config/ContextMap'
 ], function (
