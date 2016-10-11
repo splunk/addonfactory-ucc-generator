@@ -370,17 +370,6 @@ define([
                 all_deferred,
                 models;
 
-            function statusMap(disabled) {
-                return disabled ? 'Disabled' :'Enabled';
-            }
-
-            function serviceMap(model) {
-                if (model.id.indexOf('ta_crowdstrike_falcon_host_inputs') > -1) {
-                    return "Falcon Host";
-                }
-                return "Unknown";
-            }
-
             if (search !== this.emptySearchString) {
                 search = a.substring(a.indexOf('*') + 1, a.indexOf('*', a.indexOf('*') + 1)).toLowerCase();
                 result = this.cached_inputs.models.filter(d =>

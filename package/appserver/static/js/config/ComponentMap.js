@@ -215,7 +215,7 @@ define([
                {key: 'start_offset'},
                {key: 'index'},
                {key: 'interval'},
-               {key: 'status', mapping: d => d.entry.content.get('disabled') ? 'Enabled' : 'Disabled'}
+               {key: 'status', mapping: d => d.entry.content.get('disabled') ? 'Disabled' : 'Enabled'}
            ]
         },
         "account": {
