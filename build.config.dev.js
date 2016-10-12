@@ -9,7 +9,7 @@ var sharedConfig = require(path.join(webpackDir, 'profiles/common/shared.config'
 var postCssConfig = require(path.join(webpackDir, 'profiles/common/postcss.config'));
 var appDir = path.join(__dirname, 'stage');
 var appName = 'Splunk_TA_crowdstrike';
-var publicPathInjectionLoader = 'splunk-public-path-injection-loader?/static/app/' + appName + '/js/build!splunk-require-to-define-loader!';
+var publicPathInjectionLoader = 'splunk-require-to-define-loader!';
 
 var appJsDir = path.join(appDir, 'appserver', 'static', 'js');
 

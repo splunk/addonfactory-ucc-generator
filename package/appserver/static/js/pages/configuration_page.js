@@ -4,14 +4,17 @@ require([
     'underscore',
     'backbone',
     'splunkjs/mvc/headerview',
-    'app/views/pages/ConfigurationPage'
+    'app/views/pages/ConfigurationPage',
+    'app/util/Util'
 ], function (
     $,
     _,
     Backbone,
     HeaderView,
-    ConfigurationPageView
+    ConfigurationPageView,
+    Util
 ) {
+    Util.injectPublicPath('Splunk_TA_crowdstrike');
     new HeaderView({
         id: 'header',
         section: 'dashboards',
