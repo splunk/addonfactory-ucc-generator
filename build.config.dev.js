@@ -35,6 +35,12 @@ module.exports = mergeConfigs(sharedConfig, postCssConfig({ loadTheme: 'enterpri
           numeral: path.join(appJsDir, 'shim', 'numeral') // this is to fix the i18m issues. The issue should be resolved in 6.5
         }
     },
+    module: {
+        loaders: [
+            { test: /\.js$/, include: appJsDir, loader: 'babel' },
+            { test: /\.html$/, include: appJsDir, loader: 'raw' }
+        ]
+    },
     output: {
         path: path.join(appJsDir, 'build'),
         filename: '[name].js',
