@@ -150,9 +150,9 @@ define([
                 services: ComponentMap.input.services
             });
 
-            this.emptySearchString = _.map(ComponentMap.input.filterKey, function(key) {
-                return key + '=*';
-            }).join(' OR ');
+            this.emptySearchString =
+                ComponentMap.input.filters.map(d => d.key + '=*')
+                .join(' OR ');
         },
 
         filterChange: function (type, stateModel) {
@@ -233,7 +233,7 @@ define([
                     },
                     collection: this.inputs,
                     noFilterButtons: true,
-                    filterKey: ComponentMap.input.filterKey
+                    filterKey: ComponentMap.input.filters.map(d => d.key)
                 });
 
                 this.input_list = new Table({
@@ -370,30 +370,20 @@ define([
                 all_deferred,
                 models;
 
-            function statusMap(disabled) {
-                return disabled ? 'Disabled' :'Enabled';
-            }
-
-            function serviceMap(model) {
-                if (model.id.indexOf('ta_crowdstrike_falcon_host_inputs') > -1) {
-                    return "Falcon Host";
-                }
-                return "Unknown";
-            }
-
             if (search !== this.emptySearchString) {
                 search = a.substring(a.indexOf('*') + 1, a.indexOf('*', a.indexOf('*') + 1)).toLowerCase();
-                _.each(this.cached_inputs.models, function (model) {
-                    _.each(ComponentMap.input.filterKey, function(key) {
-                        if (model.entry.get(key) && model.entry.get(key).toLowerCase().indexOf(search) > -1 ||
-                            model.entry.content.get(key) && model.entry.content.get(key).toLowerCase().indexOf(search) > -1 ||
-                            key === 'status' && statusMap(model.entry.content.get('disabled')).toLowerCase().indexOf(search) > -1 ||
-                            key === 'service' && serviceMap(model).toLowerCase().indexOf(search) > -1
-                        ) {
-                            result.push(model);
+                result = this.cached_inputs.models.filter(d =>
+                    ComponentMap.input.filters.some(filter => {
+                            const {key, mapping} = filter;
+                            const entryValue = (d.entry.get(key) && d.entry.get(key).toLowerCase()) || undefined;
+                            const contentValue = (d.entry.content.get(key) && d.entry.content.get(key).toLowerCase()) || undefined;
+
+                            return (entryValue && entryValue.indexOf(search) > -1) ||
+                                (contentValue && contentValue.indexOf(search) > -1) ||
+                                (mapping && mapping(d).toLowerCase().indexOf(search) > -1);
                         }
-                    });
-                });
+                    )
+                );
 
                 this.inputs.paging.set('offset', offset);
                 this.inputs.paging.set('perPage', count);

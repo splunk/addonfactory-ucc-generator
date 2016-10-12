@@ -207,9 +207,17 @@ define([
                    ]
                }
            },
-           filterKey: ['name', 'service', 'account', 'url', 'start_offset', 'index', 'interval', 'status']
+           filters: [
+               {key: 'name'},
+               {key: 'service', mapping: d => mappingServiceName(d.id)},
+               {key: 'account'},
+               {key: 'url'},
+               {key: 'start_offset'},
+               {key: 'index'},
+               {key: 'interval'},
+               {key: 'status', mapping: d => d.entry.content.get('disabled') ? 'Disabled' : 'Enabled'}
+           ]
         },
-
         "account": {
             "model": Account,
             "title": "Crowdstrike Account",
