@@ -1,0 +1,6 @@
+bower_components
+stage
+package/bin/splunk_ta_crowdstrike/httplib2/
+package/bin/splunk_ta_crowdstrike/remote_pdb.py
+package/bin/splunk_ta_crowdstrike/solnlib/
+package/bin/splunk_ta_crowdstrike/splunklib/
