@@ -1,14 +1,16 @@
 global_ta_ui_config =
 {
-    "meta_data": {
-        "ta_name": "Splunk_TA_AOB_test",
-        "ta_display_name": "AOB Test",
+    "meta": {
+        "name": "Splunk_TA_AOB_test",
+        "displayName": "AOB Test",
         "version": "1.0.0",
-        "ucc_version": "2.0"
+        "uccVersion": "2.0",
+        "restRoot": "aob_test"
     },
-    "pages_config": {
+    "pages": {
         "configuration":  {
-            "page_title": "Configurations",
+            "title": "Configurations",
+            "description": "Configure your account, proxy and logging level."
             "tabs": [
                 {
                     "type": "account",
@@ -72,13 +74,14 @@ global_ta_ui_config =
             ]
 
         },
-        {
-            "page_name": "inputs",
-            "page_title": "Inputs",
+        "inputs": {
+            "title": "Inputs",
+            "description": "This is description",
             "inputs": [
                 {
-                    "input_name": "input1",
-                    "input_title": "Azure Blob",
+                    "name": "input1",   // should be unique
+                    "title": "Azure Blob",
+                    "endpoint": "input1",   // rest endpoint
                     "entity": [
                         {
                             "name": "name",   // cannot change
