@@ -5,7 +5,7 @@ global_ta_ui_config =
         "displayName": "AOB Test",
         "version": "1.0.0",
         "uccVersion": "2.0",
-        "restRoot": "aob_test"
+        // "restRoot": "aob_test"  // can not change, generated from name
     },
     "pages": {
         "configuration":  {
@@ -15,27 +15,31 @@ global_ta_ui_config =
                 {
                     "type": "account",
                     "title": "Account",
+                    //"endpoint": "account",   // rest endpoint, auto generated based on `type` field
+                    "table": {      // Single form link proxy and logging does not have this field
+                        "header": ["name", "endpoint", "api_uuid"]
+                        "actions": [
+                            "edit",
+                            "delete",
+                            "clone"
+                        ]
+                    }
                     "entity": [
                         {
-                            "name": "name",   // cannot change
-                            "title": "Name",
-                            "type": "id"   // cannot change
+                            "field": "name",   // cannot change
+                            "label": "Name",
+                            "type": "text",      // can only be text, password, checkbox, singleSelect, multipleSelect
+                            "help": "unique name" // optional
                         },
                         {  // optional
-                            "name": "username", // cannot change
-                            "title": "User Name",
-                            "options": {
-                                "max_len": 30,
-                                "min_len": 1
-                            }
+                            "field": "username",
+                            "label": "User Name",
+                            "type": "text"
                         },
                         { // optional
-                            "name": "password",
-                            "title": "Password",
-                            "options": {
-                                "max_len": 30,
-                                "min_len": 1
-                            }
+                            "field": "password",
+                            "label": "Password",
+                            "type": "password"
                         }
                     ]
                 },
@@ -50,24 +54,17 @@ global_ta_ui_config =
                 {
                     "type": "custom_abc",
                     "title": "Some settings",
-                    "controls": [
-                        "type": "textbox, encrypted_textbox, drop_downlist",  // ediable
-                        "name": "internal_name",  // ediable
-                        "title": "Lable here",  // ediable
+                    "entity": [
+                        "type": "singleSelect",  // ediable
+                        "field": "internal_name",  // ediable
+                        "label": "Lable here",  // ediable
                         "options": { // ediable
-
-                        }
-                    ]
-                },
-                {
-                    "type": "custom_abc",
-                    "title": "Some settings",
-                    "controls": [
-                        "type": "textbox, encrypted_textbox, drop_downlist",  // ediable
-                        "name": "internal_name",  // ediable
-                        "title": "Lable here",  // ediable
-                        "options": { // ediable
-
+                            "disableSearch": true,
+                            "autoCompleteFields": [
+                                {"label": "http", "value": "http"},
+                                {"label": "socks4", "value": "socks4"},
+                                {"label": "socks5", "value": "socks5"}
+                            ]
                         }
                     ]
                 }
@@ -77,45 +74,51 @@ global_ta_ui_config =
         "inputs": {
             "title": "Inputs",
             "description": "This is description",
-            "inputs": [
+            "table": {
+                "header": [     // header should contain common fields in all inputs entity fields
+                    "name",
+                    "index",
+                    "sourcetype",
+                    "service"   // can not change, special field for indentifying different inputs
+                ],
+                "actions": [
+                    "edit",
+                    "delete",
+                    "clone"
+                ]
+            },
+            "services": [
                 {
                     "name": "input1",   // should be unique
                     "title": "Azure Blob",
-                    "endpoint": "input1",   // rest endpoint
+                    //"endpoint": "input1",   // rest endpoint, auto generated based on `name` field
                     "entity": [
                         {
-                            "name": "name",   // cannot change
-                            "title": "Input Name",
-                            "type": "id"   // cannot change
+                            "field": "name",   // cannot change
+                            "label": "Input Name",
+                            "type": "text"
                         },
                         {
-                            "name": "account_name",
-                            "title": "Account Name",//
-                            "type": "textbox, encrypted_textbox, drop_downlist",  // ediable
+                            "field": "account_name",
+                            "label": "Account Name",
+                            "type": "singleSelect",  // ediable
                             "options": {
-                                "is_dynamic": "true",
-                                "rest": "rest_account"
+                                "referenceType": "account"
                             }
                         },
                         {
-                            "name": "index",
-                            "title": "Index",
-                            "type": "drop_downlist",
+                            "field": "index", // load index from splunk if field equals index
+                            "label": "Index",
+                            "type": "singleSelect",
                             "options": {
-                                "is_dynamic": "true",
-                                "rest": "rest_index"
+
                             }
-                        },
-                        {
-                            // dito
                         }
                     ]
-
                 },
                 {
-                    "input_name:": "input2",
-                    "input_title": "Azure Table",
-                    "rest": "rest_input2",
+                    "name:": "input2",
+                    "title": "Azure Table",
                     "entities": [
                         // ....
                     ]
