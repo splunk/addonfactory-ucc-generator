@@ -81,6 +81,14 @@ global_ta_ui_config =
                     "sourcetype",
                     "service"   // can not change, special field for indentifying different inputs
                 ],
+                "moreInfo": [
+                    "name",
+                    "index",
+                    "input1_field1",
+                    "input1_field2",
+                    "input2_field1",
+                    "input2_field2"
+                ],
                 "actions": [
                     "edit",
                     "delete",
