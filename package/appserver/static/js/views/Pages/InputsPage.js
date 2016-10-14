@@ -1,4 +1,3 @@
-/*global require*/
 define([
     'jquery',
     'underscore',
@@ -7,7 +6,7 @@ define([
     'app/collections/ProxyBase.Collection',
     'app/collections/Accounts',
     'app/models/appData',
-    'app/templates/common/PageTitle.html',
+    'app/views/pages/InputsPage.html',
     'models/Base',
     'views/shared/tablecaption/Master',
     'app/views/component/InputFilterMenu',
@@ -23,7 +22,7 @@ define([
     ProxyBase,
     Accounts,
     appData,
-    InputTitleTemplate,
+    InputsPageTemplate,
     BaseModel,
     CaptionView,
     InputFilter,
@@ -36,6 +35,20 @@ define([
         className: 'inputsContainer',
         initialize: function () {
             this.addonName = Util.getAddonName();
+            //TODO: changeme
+            this.inputsPageTemplateData = {
+                "title": "Inputs",
+                "description": "This is description",
+                "singleInput": true
+            };
+            // this.inputsPageTemplateData.title = window.globalConfig &&
+            //                                     window.globalConfig.pages &&
+            //                                     window.globalConfig.pages.inputs &&
+            //                                     window.globalConfig.pages.inputs.title;
+            // this.inputsPageTemplateData.title = window.globalConfig.pages.inputs.title;
+            // this.inputsPageTemplateData.description = window.globalConfig.pages.inputs.description;
+            // this.inputsPageTemplateData.singleInput = window.globalConfig.pages.inputs.services.length === 1;
+
             //state model
             this.stateModel = new BaseModel();
             this.stateModel.set({
@@ -205,11 +218,9 @@ define([
         },
 
         render: function () {
-            var title_template, inputs_template_data, temp_collection;
+            var inputs_template_data, temp_collection;
             this.deferred.done(function () {
                 this.stateModel.set('fetching', false);
-                inputs_template_data = ComponentMap.input.caption;
-                title_template = _.template(InputTitleTemplate);
                 temp_collection = this.combineCollection();
                 this.cached_inputs = temp_collection[0];
                 this.cached_search_inputs = temp_collection[1];
@@ -246,7 +257,7 @@ define([
                     component: ComponentMap.input
                 });
 
-                this.$el.append(title_template(inputs_template_data));
+                this.$el.append(_.template(InputsPageTemplate, this.inputsPageTemplateData));
                 this.$el.append(this.caption.render().$el);
 
                 if (!ComponentMap.input.caption.singleInput && Object.keys(ComponentMap.input.services).length > 1) {
@@ -255,21 +266,19 @@ define([
 
                 this.$el.append(this.input_list.render().$el);
 
-                if (ComponentMap.input.caption.singleInput) {
+                if (this.inputsPageTemplateData.singleInput) {
                     var keys = Object.keys(ComponentMap.input.services);
-                    if (keys.length === 1) {
-                        $('#' + ComponentMap.input.caption.buttonId).on('click', function () {
-                            var dlg = new EntityDialog({
-                                el: $(".dialog-placeholder"),
-                                collection: this.inputs,
-                                component: ComponentMap.input.services[keys[0]],
-                                isInput: true
-                            }).render();
-                            dlg.modal();
-                        }.bind(this));
-                    }
+                    $('#addInputBtn').on('click', function () {
+                        var dlg = new EntityDialog({
+                            el: $(".dialog-placeholder"),
+                            collection: this.inputs,
+                            component: ComponentMap.input.services[keys[0]],
+                            isInput: true
+                        }).render();
+                        dlg.modal();
+                    }.bind(this));
                 } else {
-                    $('#' + ComponentMap.input.caption.buttonId).on("click", function (e) {
+                    $('#addInputBtn').on("click", function (e) {
                         var $target = $(e.currentTarget);
                         if (this.editmenu && this.editmenu.shown) {
                             this.editmenu.hide();
