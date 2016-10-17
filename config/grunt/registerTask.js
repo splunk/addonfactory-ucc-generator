@@ -7,12 +7,8 @@ module.exports = function(grunt) {
             'buildTask:copy',
             'buildTask:concat',
             'buildTask:patternReplace',
-            'shell:webpack_dev',
-            'shell:style'
-        ]],
-        "dev-watch": ['sync files to stage dir', [
-            'buildTask:copy',
-            'shell:webpack_dev'
+            'shell:style',
+            'webpack:dev'
         ]]
     };
 };

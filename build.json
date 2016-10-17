@@ -16,7 +16,7 @@
         ]
     },
     "hooks": {
-        "prebundle": ["shell:webpack", "shell:style"]
+        "prebundle": ["webpack:build", "shell:style"]
     },
     "extension": "spl"
 }

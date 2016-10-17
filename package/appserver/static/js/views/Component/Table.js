@@ -59,12 +59,9 @@ define([
 
                 tableHeaders.push(item);
             });
-
-            //tableHeaders = tableHeaders.concat(this.component.header);
             if (this.showActions) {
                 tableHeaders.push({label: _('Actions').t(), className: 'col-action'});
             }
-
             //TODO: implement bulk action
             TableHead = TableHeadView;
 
@@ -82,7 +79,7 @@ define([
             this.listenTo(this.collection, 'change', this.renderRows);
             this.listenTo(this.collection, 'add', this.addWithOffsetChange);
         },
-        
+
         addWithOffsetChange: function () {
             if (this.collection._url === undefined) {
                 this.dispatcher.trigger('add-input');

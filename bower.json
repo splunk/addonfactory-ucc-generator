@@ -4,7 +4,7 @@
   "authors": [
   ],
   "dependencies": {
-    "SplunkWebCore": "=6.4.1606",
+    "SplunkWebCore": "=6.5.0",
     "select2": "=3.5.3"
   }
 }

@@ -62,11 +62,7 @@ module.exports = function(grunt) {
             keepalive: true
         },
         build: {
-            stats: {
-                colors: false,
-                modules: true,
-            },
-            progress: false,
+            devtool: 'cheap-module-source-map',
             plugins: [
                 new webpack.optimize.CommonsChunkPlugin("common.js"),
                 new webpack.optimize.UglifyJsPlugin({
