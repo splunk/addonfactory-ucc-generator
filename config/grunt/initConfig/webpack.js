@@ -56,7 +56,10 @@ module.exports = function(grunt) {
             devtool: 'eval',
             watch: true,
             plugins: [
-                new webpack.optimize.CommonsChunkPlugin("common.js")
+                new webpack.optimize.CommonsChunkPlugin("common.js"),
+                new webpack.DefinePlugin({
+                    __CONFIG_FROM_FILE__: false
+                })
             ],
             watch: true,
             keepalive: true
@@ -65,6 +68,9 @@ module.exports = function(grunt) {
             devtool: 'cheap-module-source-map',
             plugins: [
                 new webpack.optimize.CommonsChunkPlugin("common.js"),
+                new webpack.DefinePlugin({
+                    __CONFIG_FROM_FILE__: false
+                }),
                 new webpack.optimize.UglifyJsPlugin({
                     compress: {warnings: false}
                 })

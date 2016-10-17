@@ -13,7 +13,13 @@ require([
     InputsPageView,
     {generatePublicPath}
 ) {
-    const appName = window.globalConfig && window.globalConfig.name;
+    var globalConfig = null;
+    if (__CONFIG_FROM_FILE__) {
+        globalConfig = require('app/config/GlobalConfig');
+    } else {
+        globalConfig = window.globalConfig;
+    }
+    const appName = globalConfig && globalConfig.name;
     __webpack_public_path__ = generatePublicPath(appName || 'Splunk_TA_crowdstrike');
     new HeaderView({
         id: 'header',
