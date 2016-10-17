@@ -5,7 +5,8 @@ require([
     'splunkjs/mvc/headerview',
     'app/views/pages/InputsPage',
     'app/util/webpack',
-    'app/util/script'
+    'app/util/script',
+    'app/util/configManager'
 ], function (
     $,
     _,
@@ -13,11 +14,13 @@ require([
     HeaderView,
     InputsPageView,
     {generatePublicPath},
-    {loadGlobalConfig}
+    {loadGlobalConfig},
+    {configManager}
 ) {
-    let globalConfig;
     const render = () => {
-        const appName = globalConfig && globalConfig.name;
+        const {unifiedConfig} = configManager;
+        const appName = unifiedConfig && unifiedConfig.name;
+
         __webpack_public_path__ = generatePublicPath(appName || 'Splunk_TA_crowdstrike');
         new HeaderView({
             id: 'header',
@@ -25,7 +28,6 @@ require([
             el: $('.preload'),
             acceleratedAppNav: true
         }).render();
-        // Set the title
         document.title = 'Inputs';
         var inputsPageView = new InputsPageView();
         inputsPageView.render();
@@ -33,11 +35,11 @@ require([
     }
 
     if (__CONFIG_FROM_FILE__) {
-        globalConfig = require('app/config/globalConfig');
+        configManager.init(require('app/config/globalConfig'));
         render();
     } else {
         loadGlobalConfig(() => {
-            globalConfig = window.globalConfig;
+            configManager.init(window.globalConfig);
             render();
         })
     }
