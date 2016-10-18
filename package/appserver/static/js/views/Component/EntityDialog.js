@@ -1,4 +1,6 @@
-/*global define,console,window,addEventListener,attachEvent*/
+import {configManager} from 'app/util/configManager';
+import {generateModel} from 'app/util/backbone';
+
 define([
     'jquery',
     'underscore',
@@ -15,8 +17,7 @@ define([
     'app/views/controls/ControlWrapper',
     'app/models/Account',
     'app/collections/Indexes',
-    'app/collections/Accounts',
-    'app/util/configManager'
+    'app/collections/Accounts'
 ], function (
     $,
     _,
@@ -33,8 +34,7 @@ define([
     ControlWrapper,
     Account,
     Indexes,
-    Accounts,
-    {configManager}
+    Accounts
 ) {
     return Backbone.View.extend({
         initialize: function (options) {
@@ -63,17 +63,11 @@ define([
             }
 
             this.model = new Backbone.Model({});
-            let InputType = BaseModel.extend({
-                url: this.unifiedConfig.meta.restRoot + '/' + this.service.name,
-                initialize: function (attributes, options) {
-                    BaseModel.prototype.initialize.call(this, attributes, options);
-                },
-            });
+            let InputType = generateModel(this.service.name);
 
             if (!options.model) { //Create mode
                 this.mode = "create";
                 this.model = new Backbone.Model({});
-                // InputType = this.component.model;
                 this.real_model = new InputType(null, {
                     appData: this.appData,
                     collection: this.collection
@@ -93,7 +87,6 @@ define([
                     this.model.unset("refCount");
                 }
                 this.cloneName = options.model.entry.get("name");
-                // InputType = this.component.model;
                 this.real_model = new InputType({
                     appData: this.appData,
                     collection: this.collection
