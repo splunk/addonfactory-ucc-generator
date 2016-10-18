@@ -5,6 +5,7 @@ define([
     'backbone',
     'app/models/appData',
     'app/util/Util',
+    'app/models/Base.Model',
     'app/templates/common/AddDialog.html',
     'app/templates/common/EditDialog.html',
     'app/templates/common/CloneDialog.html',
@@ -14,13 +15,15 @@ define([
     'app/views/controls/ControlWrapper',
     'app/models/Account',
     'app/collections/Indexes',
-    'app/collections/Accounts'
+    'app/collections/Accounts',
+    'app/util/configManager'
 ], function (
     $,
     _,
     Backbone,
     appData,
     Util,
+    BaseModel,
     AddDialogTemplate,
     EditDialogTemplate,
     CloneDialogTemplate,
@@ -30,14 +33,17 @@ define([
     ControlWrapper,
     Account,
     Indexes,
-    Accounts
+    Accounts,
+    {configManager}
 ) {
     return Backbone.View.extend({
         initialize: function (options) {
+            this.unifiedConfig = configManager.unifiedConfig;
             this.collection = options.collection;
             this.mode = options.mode;
             this.dispatcher = options.dispatcher;
-            this.component = options.component;
+            // this.component = options.component;
+            this.service = options.service;
             this.isInput = options.isInput;
 
             //guid of current dialog
@@ -57,18 +63,17 @@ define([
             //     }.bind(this));
             // }
             this.model = new Backbone.Model({});
-            var InputType;
+            let InputType = BaseModel.extend({
+                url: this.unifiedConfig.meta.restRoot + '/' + this.service.name,
+                initialize: function (attributes, options) {
+                    BaseModel.prototype.initialize.call(this, attributes, options);
+                },
+            });
 
             if (!options.model) { //Create mode
                 this.mode = "create";
                 this.model = new Backbone.Model({});
-                // let InputType = BaseModel.extend({
-                //     url: this.globalConfig.meta.restRoot + '/' + service.name,
-                //     initialize: function (attributes, options) {
-                //         BaseModel.prototype.initialize.call(this, attributes, options);
-                //     },
-                // });
-                InputType = this.component.model;
+                // InputType = this.component.model;
                 this.real_model = new InputType(null, {
                     appData: this.appData,
                     collection: this.collection
@@ -88,7 +93,7 @@ define([
                     this.model.unset("refCount");
                 }
                 this.cloneName = options.model.entry.get("name");
-                InputType = this.component.model;
+                // InputType = this.component.model;
                 this.real_model = new InputType({
                     appData: this.appData,
                     collection: this.collection
@@ -128,7 +133,7 @@ define([
                 new_json = this.model.toJSON(),
                 original_json = input.entry.content.toJSON(),
                 //Add label attribute for validation prompt
-                entity = this.component.entity,
+                entity = this.service.entity,
                 attr_labels = {};
             _.each(entity, function (e) {
                 attr_labels[e.field] = e.label;
@@ -202,12 +207,12 @@ define([
                 template = _.template(template_map[this.mode]),
                 json_data = this.mode === "clone" ? {
                     name: this.cloneName,
-                    title: this.component.title
+                    title: this.service.title
                 } : {
-                    title: this.component.title,
+                    title: this.service.title,
                     isInput: this.isInput
                 },
-                entity = this.component.entity;
+                entity = this.service.entity;
 
             this.$el.html(template(json_data));
 
@@ -268,9 +273,9 @@ define([
             }
             this.$("input[type=submit]").on("click", this.submitTask.bind(this));
             //Add hidden input field to disable autocomplete
-            if (this.component.model === Account) {
-                this.$('.modal-body').prepend('<input type="password" id="password" style="display: none"/>');
-            }
+            // if (this.component.model === Account) {
+            //     this.$('.modal-body').prepend('<input type="password" id="password" style="display: none"/>');
+            // }
             //Add guid to current dialog
             this.$(".modal-body").addClass(this.currentWindow);
 

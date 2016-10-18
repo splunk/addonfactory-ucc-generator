@@ -38,12 +38,12 @@ define([
     return Backbone.View.extend({
         className: 'inputsContainer',
         initialize: function (options) {
-            this.globalConfig = options.globalConfig;
+            this.unifiedConfig = configManager.unifiedConfig;
             this.inputsPageTemplateData = {};
-            this.inputsPageTemplateData.title = this.globalConfig.pages.inputs.title;
-            this.inputsPageTemplateData.description = this.globalConfig.pages.inputs.description;
-            this.inputsPageTemplateData.singleInput = this.globalConfig.pages.inputs.services.length === 1;
-            this.addonName = this.globalConfig.name;
+            this.inputsPageTemplateData.title = this.unifiedConfig.pages.inputs.title;
+            this.inputsPageTemplateData.description = this.unifiedConfig.pages.inputs.description;
+            this.inputsPageTemplateData.singleInput = this.unifiedConfig.pages.inputs.services.length === 1;
+            this.addonName = this.unifiedConfig.name;
             //state model
             this.stateModel = new SplunkBaseModel();
             this.stateModel.set({
@@ -53,16 +53,16 @@ define([
                 offset: 0,
                 fetching: true
             });
-            this.services = this.globalConfig.pages.inputs.services;
+            this.services = this.unifiedConfig.pages.inputs.services;
             _.each(this.services, service => {
                 let model = BaseModel.extend({
-                    url: this.globalConfig.meta.restRoot + '/' + service.name,
+                    url: this.unifiedConfig.meta.restRoot + '/' + service.name,
                     initialize: function (attributes, options) {
                         BaseModel.prototype.initialize.call(this, attributes, options);
                     },
                 });
                 let collection = BaseCollection.extend({
-                    url: this.globalConfig.meta.restRoot + '/' + service.name,
+                    url: this.unifiedConfig.meta.restRoot + '/' + service.name,
                     model: model,
                     initialize: function (attributes, options) {
                         BaseCollection.prototype.initialize.call(this, attributes, options);
@@ -238,7 +238,7 @@ define([
                 }
                 this.inputs.paging.set('total', this.inputs.length);
                 let filterKey = [];
-                _.each(this.globalConfig.pages.inputs.services, service =>
+                _.each(this.unifiedConfig.pages.inputs.services, service =>
                     _.each(service.entity, e => {
                         if (filterKey.indexOf(e.field) < 0) {
                             filterKey.push(e.field);
@@ -246,7 +246,7 @@ define([
                     })
                 );
                 this.caption = new CaptionView({
-                    countLabel: _(this.globalConfig.pages.inputs.title).t(),
+                    countLabel: _(this.unifiedConfig.pages.inputs.title).t(),
                     model: {
                         state: this.stateModel
                     },
@@ -281,7 +281,7 @@ define([
                         var dlg = new EntityDialog({
                             el: $(".dialog-placeholder"),
                             collection: this.inputs,
-                            component: this.globalConfig.pages.inputs.services[0],
+                            service: this.unifiedConfig.pages.inputs.services[0],
                             isInput: true
                         }).render();
                         dlg.modal();
@@ -297,7 +297,7 @@ define([
                         this.editmenu = new AddInputMenu({
                             collection: this.inputs,
                             dispatcher: this.dispatcher,
-                            services: this.globalConfig.pages.inputs.services
+                            services: this.unifiedConfig.pages.inputs.services
                         });
 
                         $('body').append(this.editmenu.render().el);

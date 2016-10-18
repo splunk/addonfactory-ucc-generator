@@ -288,11 +288,11 @@ define([
         "proxy": {
             "title": "Proxy",
             "entity": [
-                {"field": "proxy_enabled", "label": "Enable", "type": SyntheticCheckboxControl},
+                {"field": "proxy_enabled", "label": "Enable", "type": "checkbox"},
                 {
                     "field": "proxy_type",
                     "label": "Proxy Type",
-                    "type": SingleInputControl,
+                    "type": "singleSelect",
                     "options": {
                         "disableSearch": true,
                         "autoCompleteFields": [
@@ -303,13 +303,13 @@ define([
                     },
                     "defaultValue": "http"
                 },
-                {"field": "proxy_url", "label": "Host", "type": TextControl},
-                {"field": "proxy_port", "label": "Port", "type": TextControl},
-                {"field": "proxy_username", "label": "Username", "type": TextControl},
+                {"field": "proxy_url", "label": "Host", "type": "text"},
+                {"field": "proxy_port", "label": "Port", "type": "text"},
+                {"field": "proxy_username", "label": "Username", "type": "text"},
                 {
                     "field": "proxy_password",
                     "label": "Password",
-                    "type": TextControl,
+                    "type": "text",
                     "encrypted": true,
                     "associated": "username"
                 }
@@ -320,7 +320,7 @@ define([
                 {
                     "field": "loglevel",
                     "label": "Log Level",
-                    "type": SingleInputControl,
+                    "type": "singleSelect",
                     "options": {
                         "disableSearch": true,
                         "autoCompleteFields": [

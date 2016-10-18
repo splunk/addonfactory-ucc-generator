@@ -1,8 +1,19 @@
-/*global define*/
 define([
-    'views/Base'
+    'views/Base',
+    'views/shared/controls/TextControl',
+    'views/shared/controls/SyntheticCheckboxControl',
+    'views/shared/controls/SyntheticRadioControl',
+    // 'views/shared/controls/SingleInputControl',
+    // 'views/shared/controls/MultiInputControl',
+    'app/views/controls/SingleInputControl',
+    'app/views/controls/MultiSelectInputControl',
 ], function (
-    BaseView
+    BaseView,
+    TextControl,
+    CheckboxControl,
+    RadioControl,
+    SingleInputControl,
+    MultiInputControl
 ) {
     /**
      *  A wrapper view for controls.
@@ -12,12 +23,22 @@ define([
     return BaseView.extend({
         className: 'form-horizontal',
         initialize: function (options) {
+            //text, password, checkbox, radio, singleSelect, multipleSelect
+            const controlTypeMap = {
+                "text": TextControl,
+                "password": TextControl,
+                "checkbox": CheckboxControl,
+                "radio": RadioControl,
+                "singleSelect": SingleInputControl,
+                "multipleSelect": MultiInputControl
+            };
             this.label = options.label;
             this.labelPosition = options.labelPosition || 'top';
             this.tooltip = options.tooltip;
             this.required = options.required;
             this.help = options.help;
-            this.controlType = options.controlType;
+            // this.controlType = options.controlType;
+            this.controlType = controlTypeMap[options.controlType];
             this.wrapperClass = options.wrapperClass;
             this.controlClass = options.controlClass;
             this.controlOptions = options.controlOptions;
