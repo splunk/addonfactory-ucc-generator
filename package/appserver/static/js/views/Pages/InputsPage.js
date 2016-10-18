@@ -13,7 +13,8 @@ define([
     'app/views/component/AddInputMenu',
     'app/views/component/EntityDialog',
     'app/config/ComponentMap',
-    'app/views/component/Table'
+    'app/views/component/Table',
+    'app/util/configManager'
 ], function (
     $,
     _,
@@ -29,11 +30,14 @@ define([
     AddInputMenu,
     EntityDialog,
     ComponentMap,
-    Table
+    Table,
+    {configManager}
 ) {
     return Backbone.View.extend({
         className: 'inputsContainer',
         initialize: function () {
+            // Using configManager directly here without the need of init it again.
+
             this.addonName = Util.getAddonName();
             //TODO: changeme
             this.inputsPageTemplateData = {
