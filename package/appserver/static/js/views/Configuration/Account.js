@@ -1,4 +1,5 @@
-/*global define*/
+import {configManager} from 'app/util/configManager';
+
 define([
     'jquery',
     'underscore',
@@ -12,8 +13,7 @@ define([
     'app/collections/ProxyBase.Collection',
     'app/models/appData',
     'app/config/ComponentMap',
-    'app/templates/common/ButtonTemplate.html',
-    'app/util/configManager'
+    'app/templates/common/ButtonTemplate.html'
 ], function (
     $,
     _,
@@ -27,8 +27,7 @@ define([
     ProxyBase,
     appData,
     ComponentMap,
-    ButtonTemplate,
-    {configManager}
+    ButtonTemplate
 ) {
     return Backbone.View.extend({
         initialize: function (options) {

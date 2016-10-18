@@ -1,27 +1,25 @@
-import ConfigurationMap from 'app/config/ConfigurationMap';
-
-/*global define*/
 define([
     'jquery',
     'underscore',
     'backbone',
     'app/templates/common/PageTitle.html',
-    'app/templates/common/TabTemplate.html'
+    'app/templates/common/TabTemplate.html',
+    'app/util/configManager'
 ], function (
     $,
     _,
     Backbone,
     PageTitleTemplate,
-    TabTemplate
+    TabTemplate,
+    {configManager}
 ) {
     return Backbone.View.extend({
-        initialize: function() {
-        },
-
         render: function () {
-            $(".addonContainer").append(_.template(PageTitleTemplate, ConfigurationMap.configuration.header));
+            const {configurationMap} = configManager;
+
+            $(".addonContainer").append(_.template(PageTitleTemplate, configurationMap.configuration.header));
             $(".addonContainer").append(_.template(TabTemplate));
-            let tabs = ConfigurationMap.configuration.allTabs;
+            let tabs = configurationMap.configuration.allTabs;
             this.renderTabs(tabs);
             //Router for each tab
             let Router = Backbone.Router.extend({
