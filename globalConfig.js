@@ -13,7 +13,7 @@ window.globalConfig =
             "description": "Configure your account, proxy and logging level.",
             "tabs": [
                 {
-                    "type": "account",
+                    "name": "account",
                     "title": "Account",
                     "table": {
                         "header": ["name", "endpoint", "api_uuid"],
@@ -28,30 +28,45 @@ window.globalConfig =
                             "field": "name",
                             "label": "Name",
                             "type": "text",
-                            "help": "unique name"
+                            "required": true,
+                            "help": "Enter a unique name for each Crowdstrike falcon host account."
                         },
                         {
-                            "field": "username",
-                            "label": "User Name",
-                            "type": "text"
+                            "field": "endpoint",
+                            "label": "Endpoint",
+                            "type": "text",
+                            "required": true,
+                            "defaultValue": "https://firehose.crowdstrike.com/sensors/entities/datafeed/v1",
+                            "options": {
+                                "enabled": false,
+                                "placeholder": "https://firehose.crowdstrike.com/sensors/entities/datafeed/v1"
+                            }
                         },
                         {
-                            "field": "password",
-                            "label": "Password",
-                            "type": "password"
+                            "field": "api_uuid",
+                            "label": "API UUID",
+                            "type": "text",
+                            "required": true
+                        },
+                        {
+                            "field": "api_key",
+                            "label": "API Key",
+                            "type": "text",
+                            "required": true,
+                            "encrypted": true
                         }
                     ]
                 },
                 {
-                    "type": "logging",
+                    "name": "logging",
                     "title": "Logging"
                 },
                 {
-                    "type": "proxy",
+                    "name": "proxy",
                     "title": "Proxy"
                 },
                 {
-                    "type": "custom_abc",
+                    "name": "custom_abc",
                     "title": "Some settings",
                     "entity": [
                         {
@@ -103,24 +118,34 @@ window.globalConfig =
                     "entity": [
                         {
                             "field": "name",
-                            "label": "Input Name",
-                            "type": "text"
+                            "label": "Name",
+                            "type": "text",
+                            "help": "Enter a unique name for each crowdstrike falcon host data input."
                         },
                         {
-                            "field": "account_name",
-                            "label": "Account Name",
+                            "field": "account",
+                            "label": "Account",
+                            "type": "singleSelect",
+                            "options": {}
+                        },
+                        {
+                            "field": "start_offset",
+                            "label": "Start Offset",
                             "type": "text",
-                            "options": {
-                                "referenceType": "account"
-                            }
+                            "defaultValue": "0"
+                        },
+                        {
+                            "field": "interval",
+                            "label": "Interval",
+                            "type": "text",
+                            "defaultValue": "60",
+                            "help": "Time interval of input in seconds."
                         },
                         {
                             "field": "index",
                             "label": "Index",
                             "type": "singleSelect",
-                            "options": {
-
-                            }
+                            "defaultValue": "default"
                         }
                     ]
                 }

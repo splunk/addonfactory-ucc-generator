@@ -42,26 +42,26 @@ define([
             this.collection = options.collection;
             this.mode = options.mode;
             this.dispatcher = options.dispatcher;
-            // this.component = options.component;
             this.service = options.service;
             this.isInput = options.isInput;
 
             //guid of current dialog
             this.currentWindow = Util.guid();
             //Encrypted field list
-            // this.encrypted_field = [];
-            // _.each(this.component.entity, function(e){
-            //     if (e.encrypted) {
-            //         this.encrypted_field.push(e.field);
-            //     }
-            // }.bind(this));
+            this.encryptedFields = [];
+            _.each(this.service.entity, e => {
+                if (e.encrypted) {
+                    this.encryptedFields.push(e.field);
+                }
+            });
 
             //Delete encrypted field in delete or clone mode
-            // if (options.model && this.encrypted_field.length) {
-            //     _.each(this.encrypted_field, function (f) {
-            //         delete options.model.entry.content.attributes[f];
-            //     }.bind(this));
-            // }
+            if (options.model && this.encryptedFields.length) {
+                _.each(this.encryptedFields, f => {
+                    delete options.model.entry.content.attributes[f];
+                });
+            }
+
             this.model = new Backbone.Model({});
             let InputType = BaseModel.extend({
                 url: this.unifiedConfig.meta.restRoot + '/' + this.service.name,
@@ -100,17 +100,6 @@ define([
                 });
             }
             this.real_model.on("invalid", this.displayValidationError.bind(this));
-            //Listen to metrics select change
-            var self = this;
-            this.model.on('change:metric', function () {
-                var metric = self.model.get("metric");
-
-                if (metric === 'nessus_scan') {
-                    self.model.set('interval', '86400');
-                } else {
-                    self.model.set('interval', '604800');
-                }
-            });
         },
 
         modal: function () {
@@ -120,7 +109,6 @@ define([
         submitTask: function () {
             //Disable the button to prevent repeat submit
             this.$("input[type=submit]").attr('disabled', true);
-
             // Remove loading and error message
             this.removeErrorMsg();
             this.removeLoadingMsg();
@@ -157,8 +145,8 @@ define([
                 this.addLoadingMsg("Saving...");
                 deffer.done(function () {
                     //Delete encrypted field before adding to collection
-                    if (this.encrypted_field.length) {
-                        _.each(this.encrypted_field, function (f) {
+                    if (this.encryptedFields.length) {
+                        _.each(this.encryptedFields, f => {
                             delete input.entry.content.attributes[f];
                         });
                     }

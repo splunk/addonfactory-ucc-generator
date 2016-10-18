@@ -20,7 +20,7 @@
       "endpoint": "ta_crowdstrike_settings"
     },
     "accounts": {
-      "endpoint": "ta_crowdstrike_falcon_host_accounts"
+      "endpoint": "account"
     },
     "inputs": {
       "endpoint": "ta_crowdstrike_falcon_host_inputs"

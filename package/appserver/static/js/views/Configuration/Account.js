@@ -12,7 +12,8 @@ define([
     'app/collections/ProxyBase.Collection',
     'app/models/appData',
     'app/config/ComponentMap',
-    'app/templates/common/ButtonTemplate.html'
+    'app/templates/common/ButtonTemplate.html',
+    'app/util/configManager'
 ], function (
     $,
     _,
@@ -26,10 +27,14 @@ define([
     ProxyBase,
     appData,
     ComponentMap,
-    ButtonTemplate
+    ButtonTemplate,
+    {configManager}
 ) {
     return Backbone.View.extend({
         initialize: function (options) {
+            this.accountConfig = _.find(configManager.unifiedConfig.pages.configuration.tabs, tab => {
+                return tab.name === 'account';
+            });
             const { containerId } = options;
             this.containerId = containerId;
             this.addonName = Util.getAddonName();
@@ -95,7 +100,7 @@ define([
                         var dlg = new EntityDialog({
                             el: $(".dialog-placeholder"),
                             collection: this.accounts,
-                            component: ComponentMap.account,
+                            service: this.accountConfig,
                             isInput: false
                         }).render();
                         dlg.modal();

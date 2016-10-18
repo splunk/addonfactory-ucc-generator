@@ -13,7 +13,7 @@ global_ta_ui_config =
             "description": "Configure your account, proxy and logging level."
             "tabs": [
                 {
-                    "type": "account",
+                    "name": "account",
                     "title": "Account",
                     //"endpoint": "account",   // rest endpoint, auto generated based on `type` field
                     "table": {      // Single form link proxy and logging does not have this field
@@ -44,15 +44,15 @@ global_ta_ui_config =
                     ]
                 },
                 {
-                    "type": "logging",
+                    "name": "logging",
                     "title": "Logging"
                 },
                 {
-                    "type": "proxy"
+                    "name": "proxy"
                     "title": "Proxy"
                 },
                 {
-                    "type": "custom_abc",
+                    "name": "custom_abc",
                     "title": "Some settings",
                     "entity": [
                         "type": "singleSelect",  // ediable
