@@ -1,11 +1,5 @@
 import configurationPageMap from 'app/constants/configurationPageMap';
 
-const ALLOWED_CONFIGURATION_PAGE_TYPE_MAP = {
-    'account': true,
-    'logging': true,
-    'proxy': true
-}
-
 class ConfigManager {
     init(configData) {
         // TODO: validate config here
@@ -31,11 +25,12 @@ function parseConfigurationMap(unifiedConfig) {
 
     // Parse tabs
     tabs.forEach((d, i) => {
-        if(ALLOWED_CONFIGURATION_PAGE_TYPE_MAP[d.name]) {
+        const view = configurationPageMap[d.name];
+        if(view) {
             const page = {
-                view: configurationPageMap[d.name],
                 active: i === 0,
-                title: d.title
+                title: d.title,
+                view
             };
 
             allTabs.push(page);

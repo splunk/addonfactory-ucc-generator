@@ -6,4 +6,5 @@ export default {
     "account": AccountView,
     "logging": LoggingView,
     "proxy": ProxyView
+    // TODO: support custom view
 }
