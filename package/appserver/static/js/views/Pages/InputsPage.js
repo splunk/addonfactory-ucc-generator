@@ -3,6 +3,7 @@ define([
     'underscore',
     'backbone',
     'app/util/Util',
+    'app/models/Base.Model',
     'app/collections/ProxyBase.Collection',
     'app/collections/Accounts',
     'app/models/appData',
@@ -20,11 +21,12 @@ define([
     _,
     Backbone,
     Util,
-    ProxyBase,
+    BaseModel,
+    BaseCollection,
     Accounts,
     appData,
     InputsPageTemplate,
-    BaseModel,
+    SplunkBaseModel,
     CaptionView,
     InputFilter,
     AddInputMenu,
@@ -35,26 +37,15 @@ define([
 ) {
     return Backbone.View.extend({
         className: 'inputsContainer',
-        initialize: function () {
-            // Using configManager directly here without the need of init it again.
-
-            this.addonName = Util.getAddonName();
-            //TODO: changeme
-            this.inputsPageTemplateData = {
-                "title": "Inputs",
-                "description": "This is description",
-                "singleInput": true
-            };
-            // this.inputsPageTemplateData.title = window.globalConfig &&
-            //                                     window.globalConfig.pages &&
-            //                                     window.globalConfig.pages.inputs &&
-            //                                     window.globalConfig.pages.inputs.title;
-            // this.inputsPageTemplateData.title = window.globalConfig.pages.inputs.title;
-            // this.inputsPageTemplateData.description = window.globalConfig.pages.inputs.description;
-            // this.inputsPageTemplateData.singleInput = window.globalConfig.pages.inputs.services.length === 1;
-
+        initialize: function (options) {
+            this.globalConfig = options.globalConfig;
+            this.inputsPageTemplateData = {};
+            this.inputsPageTemplateData.title = this.globalConfig.pages.inputs.title;
+            this.inputsPageTemplateData.description = this.globalConfig.pages.inputs.description;
+            this.inputsPageTemplateData.singleInput = this.globalConfig.pages.inputs.services.length === 1;
+            this.addonName = this.globalConfig.name;
             //state model
-            this.stateModel = new BaseModel();
+            this.stateModel = new SplunkBaseModel();
             this.stateModel.set({
                 sortKey: 'name',
                 sortDirection: 'asc',
@@ -62,20 +53,27 @@ define([
                 offset: 0,
                 fetching: true
             });
-            this.services = ComponentMap.input.services;
-            var service, Collection;
-            for (service in this.services) {
-                if (this.services.hasOwnProperty(service)) {
-                    Collection = this.services[service].collection;
-
-                    this[service] = new Collection([], {
-                        appData: {app: appData.get("app"), owner: appData.get("owner")},
-                        targetApp: this.addonName,
-                        targetOwner: "nobody"
-                    });
-                }
-            }
-
+            this.services = this.globalConfig.pages.inputs.services;
+            _.each(this.services, service => {
+                let model = BaseModel.extend({
+                    url: this.globalConfig.meta.restRoot + '/' + service.name,
+                    initialize: function (attributes, options) {
+                        BaseModel.prototype.initialize.call(this, attributes, options);
+                    },
+                });
+                let collection = BaseCollection.extend({
+                    url: this.globalConfig.meta.restRoot + '/' + service.name,
+                    model: model,
+                    initialize: function (attributes, options) {
+                        BaseCollection.prototype.initialize.call(this, attributes, options);
+                    }
+                });
+                this[service.name] = new collection([], {
+                    appData: {app: appData.get("app"), owner: appData.get("owner")},
+                    targetApp: this.addonName,
+                    targetOwner: "nobody"
+                });
+            });
             this.dispatcher = _.extend({}, Backbone.Events);
 
             //Change filter
@@ -87,21 +85,21 @@ define([
             this.listenTo(this.dispatcher, 'delete-input', function () {
                 var all_deferred = this.fetchAllCollection();
                 all_deferred.done(function () {
-                    var temp_collection = this.combineCollection(),
+                    var tempCollection= this.combineCollection(),
                         offset = this.stateModel.get('offset'),
                         count = this.stateModel.get('count'),
                         models;
-                    this.cached_inputs = temp_collection[0];
-                    this.cached_search_inputs = temp_collection[1];
+                    this.cachedInputs = tempCollection[0];
+                    this.cachedSearchInputs = tempCollection[1];
 
                     this.inputs.paging.set('offset', offset);
                     this.inputs.paging.set('perPage', count);
-                    this.inputs.paging.set('total', this.cached_search_inputs.length);
-                    models = this.cached_search_inputs.models.slice(offset, offset + count);
+                    this.inputs.paging.set('total', this.cachedSearchInputs.length);
+                    models = this.cachedSearchInputs.models.slice(offset, offset + count);
                     _.each(models, function (model) {
                         model.paging.set('offset', offset);
                         model.paging.set('perPage', count);
-                        model.paging.set('total', this.cached_search_inputs.length);
+                        model.paging.set('total', this.cachedSearchInputs.length);
                     }.bind(this));
                     this.inputs.reset(models);
                     this.inputs._url = undefined;
@@ -112,21 +110,21 @@ define([
             this.listenTo(this.dispatcher, 'add-input', function () {
                 var all_deferred = this.fetchAllCollection();
                 all_deferred.done(function () {
-                    var temp_collection = this.combineCollection(),
+                    var tempCollection= this.combineCollection(),
                         offset = this.stateModel.get('offset'),
                         count = this.stateModel.get('count'),
                         models;
-                    this.cached_inputs = temp_collection[0];
-                    this.cached_search_inputs = temp_collection[1];
+                    this.cachedInputs = tempCollection[0];
+                    this.cachedSearchInputs = tempCollection[1];
 
                     this.inputs.paging.set('offset', offset);
                     this.inputs.paging.set('perPage', count);
-                    this.inputs.paging.set('total', this.cached_search_inputs.length);
-                    models = this.cached_search_inputs.models.slice(offset, offset + count);
+                    this.inputs.paging.set('total', this.cachedSearchInputs.length);
+                    models = this.cachedSearchInputs.models.slice(offset, offset + count);
                     _.each(models, function (model) {
                         model.paging.set('offset', offset);
                         model.paging.set('perPage', count);
-                        model.paging.set('total', this.cached_search_inputs.length);
+                        model.paging.set('total', this.cachedSearchInputs.length);
                     }.bind(this));
                     this.inputs.reset(models);
                     this.inputs._url = undefined;
@@ -187,19 +185,19 @@ define([
                 } else {
                     all_deferred = this.fetchAllCollection();
                     all_deferred.done(function () {
-                        var temp_collection = this.combineCollection(),
+                        var tempCollection= this.combineCollection(),
                             offset = this.stateModel.get('offset'),
                             count = this.stateModel.get('count');
-                        this.cached_inputs = temp_collection[0];
-                        this.cached_search_inputs = temp_collection[1];
+                        this.cachedInputs = tempCollection[0];
+                        this.cachedSearchInputs = tempCollection[1];
                         this.inputs.paging.set('offset', offset);
                         this.inputs.paging.set('perPage', count);
-                        this.inputs.paging.set('total', this.cached_search_inputs.length);
-                        models = this.cached_search_inputs.models.slice(offset, offset + count);
+                        this.inputs.paging.set('total', this.cachedSearchInputs.length);
+                        models = this.cachedSearchInputs.models.slice(offset, offset + count);
                         _.each(models, function (model) {
                             model.paging.set('offset', offset);
                             model.paging.set('perPage', count);
-                            model.paging.set('total', this.cached_search_inputs.length);
+                            model.paging.set('total', this.cachedSearchInputs.length);
                         }.bind(this));
                         this.inputs.reset(models);
                         this.inputs._url = undefined;
@@ -222,89 +220,95 @@ define([
         },
 
         render: function () {
-            var inputs_template_data, temp_collection;
-            this.deferred.done(function () {
+            let tempCollection;
+            this.deferred.done(() => {
                 this.stateModel.set('fetching', false);
-                temp_collection = this.combineCollection();
-                this.cached_inputs = temp_collection[0];
-                this.cached_search_inputs = temp_collection[1];
+                tempCollection = this.combineCollection();
+                this.cachedInputs = tempCollection[0];
+                this.cachedSearchInputs = tempCollection[1];
 
                 //Display the first page
                 this.inputs = this.combineCollection()[0];
-                this.inputs.models = this.cached_inputs.models.slice(0, this.stateModel.get('count'));
+                this.inputs.models = this.cachedInputs.models.slice(0, this.stateModel.get('count'));
 
                 if (this.inputs.length !== 0) {
-                    _.each(this.inputs.models, function (model) {
-                        model.paging.set('total', this.inputs.length);
-                    }.bind(this));
+                    _.each(this.inputs.models, model =>
+                        model.paging.set('total', this.inputs.length)
+                    );
                 }
-
                 this.inputs.paging.set('total', this.inputs.length);
-
+                let filterKey = [];
+                _.each(this.globalConfig.pages.inputs.services, service =>
+                    _.each(service.entity, e => {
+                        if (filterKey.indexOf(e.field) < 0) {
+                            filterKey.push(e.field);
+                        }
+                    })
+                );
                 this.caption = new CaptionView({
-                    countLabel: _('Inputs').t(),
+                    countLabel: _(this.globalConfig.pages.inputs.title).t(),
                     model: {
                         state: this.stateModel
                     },
                     collection: this.inputs,
                     noFilterButtons: true,
-                    filterKey: ComponentMap.input.filters.map(d => d.key)
+                    // default filter keys: all inputs entity group
+                    filterKey: filterKey
                 });
 
-                this.input_list = new Table({
+                this.inputTable = new Table({
                     stateModel: this.stateModel,
                     collection: this.inputs,
                     dispatcher: this.dispatcher,
                     enableBulkActions: false,
                     showActions: true,
                     enableMoreInfo: true,
+                    //TODO: change me
                     component: ComponentMap.input
                 });
 
                 this.$el.append(_.template(InputsPageTemplate, this.inputsPageTemplateData));
                 this.$el.append(this.caption.render().$el);
-
-                if (!ComponentMap.input.caption.singleInput && Object.keys(ComponentMap.input.services).length > 1) {
+                // render input filter for multiple inputs
+                if (!this.inputsPageTemplateData.singleInput) {
                     $('.table-caption-inner').append(this.filter.render().$el);
                 }
-
-                this.$el.append(this.input_list.render().$el);
+                // render inputs table
+                this.$el.append(this.inputTable.render().$el);
 
                 if (this.inputsPageTemplateData.singleInput) {
-                    var keys = Object.keys(ComponentMap.input.services);
-                    $('#addInputBtn').on('click', function () {
+                    this.$('#addInputBtn').on('click', () => {
                         var dlg = new EntityDialog({
                             el: $(".dialog-placeholder"),
                             collection: this.inputs,
-                            component: ComponentMap.input.services[keys[0]],
+                            component: this.globalConfig.pages.inputs.services[0],
                             isInput: true
                         }).render();
                         dlg.modal();
-                    }.bind(this));
+                    });
                 } else {
-                    $('#addInputBtn').on("click", function (e) {
+                    this.$('#addInputBtn').on("click", e => {
                         var $target = $(e.currentTarget);
                         if (this.editmenu && this.editmenu.shown) {
                             this.editmenu.hide();
                             e.preventDefault();
                             return;
                         }
-
                         this.editmenu = new AddInputMenu({
                             collection: this.inputs,
                             dispatcher: this.dispatcher,
-                            services: ComponentMap.input.services
+                            services: this.globalConfig.pages.inputs.services
                         });
 
                         $('body').append(this.editmenu.render().el);
                         this.editmenu.show($target);
-                    }.bind(this));
+                    });
                 }
-            }.bind(this));
+            });
         },
 
         fetchAllCollection: function () {
-            var singleStateModel = new BaseModel();
+            var singleStateModel = new SplunkBaseModel();
             singleStateModel.set({
                 sortKey: 'name',
                 sortDirection: 'asc',
@@ -312,33 +316,28 @@ define([
                 offset: 0,
                 fetching: true
             });
-
-            var calls = Object.keys(this.services).map(d =>
-                this.fetchListCollection(this[d], singleStateModel)
-            );
-
+            let calls = _.each(this.services, service => {
+                this.fetchListCollection(this[service.name], singleStateModel)
+            });
             return $.when.apply(this, calls);
         },
 
         combineCollection: function () {
-            var temp_collection1 = new ProxyBase([], {
+            let tempCollection1 = new BaseCollection([], {
                     appData: {app: appData.get("app"), owner: appData.get("owner")},
                     targetApp: this.addonName,
                     targetOwner: "nobody"
                 }),
-                temp_collection2 = new ProxyBase([], {
+                tempCollection2 = new BaseCollection([], {
                     appData: {app: appData.get("app"), owner: appData.get("owner")},
                     targetApp: this.addonName,
                     targetOwner: "nobody"
-                }),
-                service;
-
-            Object.keys(this.services).forEach(d => {
-                temp_collection1.add(this[d].models, {silent: true});
-                temp_collection2.add(this[d].models, {silent: true});
-            });
-
-            return [temp_collection1, temp_collection2];
+                });
+            _.each(this.services, service => {
+                tempCollection1.add(this[service.name].models, {silent: true});
+                tempCollection2.add(this[service.name].models, {silent: true});
+            })
+            return [tempCollection1, tempCollection2];
         },
 
         fetchListCollection: function (collection, stateModel) {
@@ -379,13 +378,13 @@ define([
                 a = stateModel.get('search'),
                 offset = this.stateModel.get('offset'),
                 count = this.stateModel.get('count'),
-                newPageStateModel = new BaseModel(),
+                newPageStateModel = new SplunkBaseModel(),
                 all_deferred,
                 models;
 
             if (search !== this.emptySearchString) {
                 search = a.substring(a.indexOf('*') + 1, a.indexOf('*', a.indexOf('*') + 1)).toLowerCase();
-                result = this.cached_inputs.models.filter(d =>
+                result = this.cachedInputs.models.filter(d =>
                     ComponentMap.input.filters.some(filter => {
                             const {key, mapping} = filter;
                             const entryValue = (d.entry.get(key) && d.entry.get(key).toLowerCase()) || undefined;
@@ -406,7 +405,7 @@ define([
                     model.paging.set('perPage', count);
                     model.paging.set('total', result.length);
                 }.bind(this));
-                this.cached_search_inputs.reset(result);
+                this.cachedSearchInputs.reset(result);
 
                 newPageStateModel.set({
                     sortKey: 'name',
@@ -421,17 +420,17 @@ define([
             } else {
                 all_deferred = this.fetchAllCollection();
                 all_deferred.done(function () {
-                    var temp_collection = this.combineCollection();
-                    this.cached_inputs = temp_collection[0];
-                    this.cached_search_inputs = temp_collection[1];
+                    var tempCollection= this.combineCollection();
+                    this.cachedInputs = tempCollection[0];
+                    this.cachedSearchInputs = tempCollection[1];
                     this.inputs.paging.set('offset', offset);
                     this.inputs.paging.set('perPage', count);
-                    this.inputs.paging.set('total', this.cached_search_inputs.length);
-                    models = this.cached_search_inputs.models.slice(offset, offset + count);
+                    this.inputs.paging.set('total', this.cachedSearchInputs.length);
+                    models = this.cachedSearchInputs.models.slice(offset, offset + count);
                     _.each(models, function (model) {
                         model.paging.set('offset', offset);
                         model.paging.set('perPage', count);
-                        model.paging.set('total', this.cached_search_inputs.length);
+                        model.paging.set('total', this.cachedSearchInputs.length);
                     }.bind(this));
                     this.inputs.reset(models);
                     this.inputs._url = undefined;
@@ -450,13 +449,13 @@ define([
             this.inputs.paging.set('offset', offset);
             this.inputs.paging.set('perPage', count);
 
-            this.inputs.paging.set('total', this.cached_search_inputs.length);
-            models = this.cached_search_inputs.models.slice(offset, offset + count);
+            this.inputs.paging.set('total', this.cachedSearchInputs.length);
+            models = this.cachedSearchInputs.models.slice(offset, offset + count);
 
             _.each(models, function (model) {
                 model.paging.set('offset', offset);
                 model.paging.set('perPage', count);
-                model.paging.set('total', this.cached_search_inputs.length);
+                model.paging.set('total', this.cachedSearchInputs.length);
             }.bind(this));
             this.inputs.reset(models);
         },
@@ -469,19 +468,19 @@ define([
                 offset = stateModel.get('offset'),
                 count = stateModel.get('count');
             all_deferred.done(function () {
-                var temp_collection = this.combineCollection();
-                this.cached_inputs = temp_collection[0];
-                this.cached_search_inputs = temp_collection[1];
+                var tempCollection= this.combineCollection();
+                this.cachedInputs = tempCollection[0];
+                this.cachedSearchInputs = tempCollection[1];
                 this.inputs.paging.set('offset', offset);
                 this.inputs.paging.set('perPage', count);
-                this.inputs.paging.set('total', this.cached_search_inputs.length);
+                this.inputs.paging.set('total', this.cachedSearchInputs.length);
 
-                this.cached_search_inputs.models.sort(handler[sort_key]);
-                var models = this.cached_search_inputs.models.slice(offset, offset + count);
+                this.cachedSearchInputs.models.sort(handler[sort_key]);
+                var models = this.cachedSearchInputs.models.slice(offset, offset + count);
                 _.each(models, function (model) {
                     model.paging.set('offset', offset);
                     model.paging.set('perPage', count);
-                    model.paging.set('total', this.cached_search_inputs.length);
+                    model.paging.set('total', this.cachedSearchInputs.length);
                 }.bind(this));
                 this.inputs.reset(models);
                 this.inputs._url = undefined;

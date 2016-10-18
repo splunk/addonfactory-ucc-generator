@@ -13,7 +13,6 @@ define([
     'app/templates/messages/LoadingMsg.html',
     'app/views/controls/ControlWrapper',
     'app/models/Account',
-    // 'app/models/Nessus',
     'app/collections/Indexes',
     'app/collections/Accounts'
 ], function (
@@ -30,7 +29,6 @@ define([
     LoadingMsg,
     ControlWrapper,
     Account,
-    // Nessus,
     Indexes,
     Accounts
 ) {
@@ -45,27 +43,31 @@ define([
             //guid of current dialog
             this.currentWindow = Util.guid();
             //Encrypted field list
-            this.encrypted_field = [];
-            _.each(this.component.entity, function(e){
-                if (e.encrypted) {
-                    this.encrypted_field.push(e.field);
-                }
-            }.bind(this));
-
-            this.model = new Backbone.Model({});
-
-            var InputType;
+            // this.encrypted_field = [];
+            // _.each(this.component.entity, function(e){
+            //     if (e.encrypted) {
+            //         this.encrypted_field.push(e.field);
+            //     }
+            // }.bind(this));
 
             //Delete encrypted field in delete or clone mode
-            if (options.model && this.encrypted_field.length) {
-                _.each(this.encrypted_field, function (f) {
-                    delete options.model.entry.content.attributes[f];
-                }.bind(this));
-            }
+            // if (options.model && this.encrypted_field.length) {
+            //     _.each(this.encrypted_field, function (f) {
+            //         delete options.model.entry.content.attributes[f];
+            //     }.bind(this));
+            // }
+            this.model = new Backbone.Model({});
+            var InputType;
 
             if (!options.model) { //Create mode
                 this.mode = "create";
                 this.model = new Backbone.Model({});
+                // let InputType = BaseModel.extend({
+                //     url: this.globalConfig.meta.restRoot + '/' + service.name,
+                //     initialize: function (attributes, options) {
+                //         BaseModel.prototype.initialize.call(this, attributes, options);
+                //     },
+                // });
                 InputType = this.component.model;
                 this.real_model = new InputType(null, {
                     appData: this.appData,
@@ -260,94 +262,19 @@ define([
                 this.$('.modal-body').append(child.render().$el);
             }.bind(this));
 
-            if (this.component.tabs) {
-                this.renderSetting();
-            }
-
             //Disable the name field in edit mode
             if (this.mode === 'edit') {
                 this.$("input[name=name]").attr("readonly", "readonly");
             }
-
             this.$("input[type=submit]").on("click", this.submitTask.bind(this));
-
             //Add hidden input field to disable autocomplete
             if (this.component.model === Account) {
                 this.$('.modal-body').prepend('<input type="password" id="password" style="display: none"/>');
             }
-            // if (this.component.model === Nessus) {
-            //     this.$('.modal-body').prepend('<input type="password" id="access_key" style="display: none"/>');
-            // }
-
             //Add guid to current dialog
             this.$(".modal-body").addClass(this.currentWindow);
 
             return this;
-        },
-
-        renderSetting: function () {
-            $(".modal-body").append(_.template(TabTemplate));
-
-            var tab_title_template = '<li <% if (active) { %> class="active" <% } %>><a data-toggle="tab" href="#<%= token%>-tab" id="<%= token%>-li"><%= title%></a></li>',
-                tab_content_template = '<div id="<%= token%>-tab" class="tab-pane <% if (active){ %>active<% } %>"></div>',
-                tabs = this.component.tabs,
-                k,
-                token,
-                active,
-                children,
-                i,
-                renderTab = function (e) {
-                    var option, controlOptions, controlWrapper;
-
-                    controlOptions = {
-                        model: this.model,
-                        modelAttribute: e.field,
-                        password: e.encrypted ? true : false
-                    };
-                    for (option in e.options) {
-                        if (e.options.hasOwnProperty(option)) {
-                            controlOptions[option] = e.options[option];
-                        }
-                    }
-                    controlWrapper = new ControlWrapper({
-                        label: _(e.label).t(),
-                        controlType: e.type,
-                        wrapperClass: e.field,
-                        required: e.required ? true : false,
-                        help: e.help || null,
-                        controlOptions: controlOptions
-                    });
-
-                    if (e.field === 'index') {
-                        this._loadIndex(controlWrapper);
-                    }
-                    children.push(controlWrapper);
-                },
-                appendToTab = function (token, child) {
-                    $("#" + token + "-tab").append(child.render().$el);
-                };
-
-            for (k in tabs) {
-                if (tabs.hasOwnProperty(k)) {
-                    token = k.toLowerCase().replace(' ', '-');
-                    active = tabs[k].active;
-
-                    $(".nav-tabs").append(_.template(tab_title_template, {title: k, token: token, active: active}));
-                    $(".tab-content").append(_.template(tab_content_template, {token: token, active: active}));
-                    children = [];
-                    for (i = 0; i < tabs[k].length; i += 1) {
-                        renderTab(tabs[k][i]);
-                    }
-
-                    for (i = 0; i < children.length; i += 1) {
-                        appendToTab(token, children[i]);
-                    }
-
-                    //Make the first tab active
-                    $(".modal-body .nav-tabs li:first-child").addClass("active");
-                    $(".modal-body .tab-content div:first-child").addClass("active");
-                }
-            }
         },
 
         displayValidationError: function (error) {
