@@ -1,4 +1,4 @@
-import configurationPageMap from 'app/constants/configurationPageMap';
+import CONFIGURATION_PAGE_MAP from 'app/constants/configurationPageMap';
 
 class ConfigManager {
     init(configData) {
@@ -25,7 +25,7 @@ function parseConfigurationMap(unifiedConfig) {
 
     // Parse tabs
     tabs.forEach((d, i) => {
-        const view = configurationPageMap[d.name];
+        const view = CONFIGURATION_PAGE_MAP[d.name];
         if(view) {
             const page = {
                 active: i === 0,
