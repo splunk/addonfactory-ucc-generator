@@ -3,7 +3,6 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'app/config/ContextMap',
     'app/templates/dialogs/DeleteDialog.html',
     'app/templates/messages/ErrorMsg.html',
     'app/templates/messages/WarningMsg.html'
@@ -11,7 +10,6 @@ define([
     $,
     _,
     Backbone,
-    ContextMap,
     DeleteInput,
     ErrorMsg,
     WarningMsg
@@ -43,7 +41,6 @@ define([
             this.$("[role=dialog]").on('hidden.bs.modal', function () {
                 dlg.undelegateEvents();
             });
-
             return this;
         },
 
@@ -59,7 +56,6 @@ define([
                 url,
                 this.encodeUrl(this.model.entry.attributes.name)
             ].join("/") + '?output_mode=json';
-
 
             this._delete(delete_url);
         },

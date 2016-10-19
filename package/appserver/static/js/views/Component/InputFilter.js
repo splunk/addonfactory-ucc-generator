@@ -20,13 +20,13 @@ define([
         },
 
         render: function () {
-            var html = '<ul class="first-group"><li><a href="#" class="all">All</a></li></ul><ul class="second-group">',
-                service;
-            for (service in this.services) {
-                if (this.services.hasOwnProperty(service)) {
-                    html += '<li><a href="#" class="' + service + '">' + this.services[service].title + '</a></li>';
-                }
-            }
+            var html = '<ul class="first-group">' +
+                '<li><a href="#" class="all">All</a></li></ul>' +
+                '<ul class="second-group">';
+            _.each(this.services, service => {
+                html += '<li><a href="#" class="' + service.name + '">' +
+                    this.services[service].title + '</a></li>';
+            });
             html += '</ul>';
 
             this.el.innerHTML = PopTartView.prototype.template_menu;

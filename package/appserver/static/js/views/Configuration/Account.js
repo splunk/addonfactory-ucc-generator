@@ -12,7 +12,6 @@ define([
     'app/collections/Accounts',
     'app/collections/ProxyBase.Collection',
     'app/models/appData',
-    'app/config/ComponentMap',
     'app/templates/common/ButtonTemplate.html'
 ], function (
     $,
@@ -26,7 +25,6 @@ define([
     Accounts,
     ProxyBase,
     appData,
-    ComponentMap,
     ButtonTemplate
 ) {
     return Backbone.View.extend({
@@ -87,7 +85,7 @@ define([
                         collection: this.accounts,
                         refCollection: this.combineCollection(),
                         showActions: true,
-                        enableMoreInfo: ComponentMap.account.moreInfo ? true : false,
+                        enableMoreInfo: this.accountConfig.table.moreInfo ? true : false,
                         component: this.accountConfig,
                     });
 

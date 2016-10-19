@@ -67,19 +67,6 @@ define([
                 this.editmenu.remove();
                 e.preventDefault();
             }
-            //
-            // deleteTag = this.component.tag || "";
-            // //Get the model type and delete tag
-            // if (!this.component.hasOwnProperty('entity')) {
-            //     for (service in this.component.services) {
-            //         if (this.component.services.hasOwnProperty(service) && this.model.entity instanceof this.component.services[service].model) {
-            //             this.component = this.component.services[service];
-            //             deleteTag = "input";
-            //             break;
-            //         }
-            //     }
-            // }
-
             this.rowDispatcher = _.extend({}, Backbone.Events);
 
             this.editmenu = new EditMenu({
@@ -90,7 +77,6 @@ define([
                 component: this.component,
                 dispatcher: this.dispatcher,
                 rowDispatcher: this.rowDispatcher,
-                // deleteTag: deleteTag
                 deleteTag: ''
             });
             $('body').append(this.editmenu.render().el);

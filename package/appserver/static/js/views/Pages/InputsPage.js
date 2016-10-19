@@ -1,11 +1,12 @@
 import {configManager} from 'app/util/configManager';
+import {generateModel, generateCollection} from 'app/util/backbone';
+import {sort_alphabetical, sort_numerical} from 'app/util/sort';
 
 define([
     'jquery',
     'underscore',
     'backbone',
     'app/util/Util',
-    'app/models/Base.Model',
     'app/collections/ProxyBase.Collection',
     'app/collections/Accounts',
     'app/models/appData',
@@ -15,14 +16,12 @@ define([
     'app/views/component/InputFilterMenu',
     'app/views/component/AddInputMenu',
     'app/views/component/EntityDialog',
-    'app/config/ComponentMap',
     'app/views/component/Table'
 ], function (
     $,
     _,
     Backbone,
     Util,
-    BaseModel,
     BaseCollection,
     Accounts,
     appData,
@@ -32,7 +31,6 @@ define([
     InputFilter,
     AddInputMenu,
     EntityDialog,
-    ComponentMap,
     Table
 ) {
     return Backbone.View.extend({
@@ -54,21 +52,18 @@ define([
                 fetching: true
             });
             this.services = this.unifiedConfig.pages.inputs.services;
+            // filter keys for search
+            this.filterKey = [];
+            _.each(this.services, service =>
+                _.each(service.entity, e => {
+                    if (this.filterKey.indexOf(e.field) < 0) {
+                        this.filterKey.push(e.field);
+                    }
+                })
+            );
+            // create collection for each service
             _.each(this.services, service => {
-                let model = BaseModel.extend({
-                    url: this.unifiedConfig.meta.restRoot + '/' + service.name,
-                    initialize: function (attributes, options) {
-                        this.collection = options.collection;
-                        BaseModel.prototype.initialize.call(this, attributes, options);
-                    }
-                });
-                let collection = BaseCollection.extend({
-                    url: this.unifiedConfig.meta.restRoot + '/' + service.name,
-                    model: model,
-                    initialize: function (attributes, options) {
-                        BaseCollection.prototype.initialize.call(this, attributes, options);
-                    }
-                });
+                let collection = generateCollection(service.name);
                 this[service.name] = new collection([], {
                     appData: {app: appData.get("app"), owner: appData.get("owner")},
                     targetApp: this.addonName,
@@ -163,11 +158,11 @@ define([
 
             this.filter = new InputFilter({
                 dispatcher: this.dispatcher,
-                services: ComponentMap.input.services
+                services: this.services
             });
 
             this.emptySearchString =
-                ComponentMap.input.filters.map(d => d.key + '=*')
+                this.filterKey.map(d => d + '=*')
                 .join(' OR ');
         },
 
@@ -238,14 +233,7 @@ define([
                     );
                 }
                 this.inputs.paging.set('total', this.inputs.length);
-                let filterKey = [];
-                _.each(this.unifiedConfig.pages.inputs.services, service =>
-                    _.each(service.entity, e => {
-                        if (filterKey.indexOf(e.field) < 0) {
-                            filterKey.push(e.field);
-                        }
-                    })
-                );
+
                 this.caption = new CaptionView({
                     countLabel: _(this.unifiedConfig.pages.inputs.title).t(),
                     model: {
@@ -253,8 +241,7 @@ define([
                     },
                     collection: this.inputs,
                     noFilterButtons: true,
-                    // default filter keys: all inputs entity group
-                    filterKey: filterKey
+                    filterKey: this.filterKey
                 });
 
                 this.inputTable = new Table({
@@ -264,7 +251,6 @@ define([
                     enableBulkActions: false,
                     showActions: true,
                     enableMoreInfo: true,
-                    // component: ComponentMap.input,
                     component: this.unifiedConfig.pages.inputs
                 });
 
@@ -384,16 +370,17 @@ define([
                 models;
 
             if (search !== this.emptySearchString) {
-                search = a.substring(a.indexOf('*') + 1, a.indexOf('*', a.indexOf('*') + 1)).toLowerCase();
+                search = a.substring(a.indexOf('*') + 1,
+                    a.indexOf('*', a.indexOf('*') + 1)).toLowerCase();
                 result = this.cachedInputs.models.filter(d =>
-                    ComponentMap.input.filters.some(filter => {
-                            const {key, mapping} = filter;
-                            const entryValue = (d.entry.get(key) && d.entry.get(key).toLowerCase()) || undefined;
-                            const contentValue = (d.entry.content.get(key) && d.entry.content.get(key).toLowerCase()) || undefined;
+                    this.filterKey.some(field => {
+                            const entryValue = (d.entry.get(field) &&
+                                d.entry.get(field).toLowerCase()) || undefined;
+                            const contentValue = (d.entry.content.get(field) &&
+                                d.entry.content.get(field).toLowerCase()) || undefined;
 
                             return (entryValue && entryValue.indexOf(search) > -1) ||
-                                (contentValue && contentValue.indexOf(search) > -1) ||
-                                (mapping && mapping(d).toLowerCase().indexOf(search) > -1);
+                                (contentValue && contentValue.indexOf(search) > -1);
                         }
                     )
                 );
@@ -462,13 +449,14 @@ define([
         },
 
         sortCollection: function (stateModel) {
-            var handler = ComponentMap.input.generateSortHandler(stateModel),
-            sort_key = stateModel.get('sortKey');
+            //TODO: changeme
+            var handler = sort_alphabetical,
+                sortKey = stateModel.get('sortKey');
 
-            var all_deferred = this.fetchAllCollection(),
+            var allDeferred = this.fetchAllCollection(),
                 offset = stateModel.get('offset'),
                 count = stateModel.get('count');
-            all_deferred.done(function () {
+            allDeferred.done(function () {
                 var tempCollection= this.combineCollection();
                 this.cachedInputs = tempCollection[0];
                 this.cachedSearchInputs = tempCollection[1];
@@ -476,7 +464,7 @@ define([
                 this.inputs.paging.set('perPage', count);
                 this.inputs.paging.set('total', this.cachedSearchInputs.length);
 
-                this.cachedSearchInputs.models.sort(handler[sort_key]);
+                this.cachedSearchInputs.models.sort(handler);
                 var models = this.cachedSearchInputs.models.slice(offset, offset + count);
                 _.each(models, function (model) {
                     model.paging.set('offset', offset);
