@@ -1,20 +1,5 @@
-const normalEscape = field => field.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-const mappingServiceName = field => {
-    return field.indexOf('ta_crowdstrike_falcon_host_inputs') > -1 ?
-        "Falcon Host" : "Unknown";
-};
-const sort_alphabetical = (a, b, sort_dir) => {
-    a = a ? a : '',
-    b = b ? b : '';
-    const res = (a < b) ? -1 : (a > b) ? 1 : 0;
-    return sort_dir === 'asc' ? res : -res;
-};
-const sort_numerical = (a, b, sort_dir) => {
-    a = a ? a : 0,
-    b = b ? b : 0;
-    const res = (a < b) ? -1 : (a > b) ? 1 : 0;
-    return sort_dir === 'asc' ? res : -res;
-};
+import {normalEscape, mappingServiceName} from 'app/util/format';
+import {sort_alphabetical, sort_numerical} from 'app/util/sort';
 
 /*global define,window*/
 define([

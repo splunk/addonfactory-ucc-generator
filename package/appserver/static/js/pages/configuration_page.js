@@ -29,9 +29,7 @@ require([
             acceleratedAppNav: true
         }).render();
         document.title = 'Configuration';
-        var configurationPageView = new ConfigurationPageView();
-        configurationPageView.render();
-        // $(".addonContainer").html(configurationPageView.el);
+        new ConfigurationPageView().render();
     }
 
     if (__CONFIG_FROM_FILE__) {
