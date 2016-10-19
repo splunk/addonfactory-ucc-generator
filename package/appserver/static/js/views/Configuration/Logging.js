@@ -1,4 +1,5 @@
-/*global define*/
+import {defaultLoggingTabEntity} from 'app/constants/defaultEntities';
+
 define([
     'jquery',
     'underscore',
@@ -7,7 +8,6 @@ define([
     'app/views/configuration/LoggingTemplate.html',
     'app/templates/messages/SavingMsg.html',
     'app/templates/messages/ErrorMsg.html',
-    'app/config/ComponentMap',
     'app/views/controls/ControlWrapper',
     'app/models/Setting',
     'splunk.util',
@@ -20,7 +20,6 @@ define([
     LoggingTemplate,
     SavingMsgTemplate,
     ErrorMsgTemplate,
-    ComponentMap,
     ControlWrapper,
     Setting,
     SplunkdUtil,
@@ -48,7 +47,7 @@ define([
                 this.$el.html(_.template(LoggingTemplate));
                 this.$el.prepend($(description_html));
 
-                entity = ComponentMap.logging.entity;
+                entity = defaultLoggingTabEntity;
                 this.children = [];
                 _.each(entity, function (e) {
                     if (e.encrypted) {
@@ -94,7 +93,7 @@ define([
             json = this.model.toJSON();
             this.logging.entry.content.set(json);
             //Add label attribute for validation prompt
-            entity = ComponentMap.logging.entity;
+            entity = defaultLoggingTabEntity;
             attr_labels = {};
             _.each(entity, function (e) {
                 attr_labels[e.field] = e.label;
