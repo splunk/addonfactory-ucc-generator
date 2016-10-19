@@ -1,17 +1,17 @@
+import {configManager} from 'app/util/configManager';
+
 define([
     'jquery',
     'underscore',
     'backbone',
     'app/templates/common/PageTitle.html',
-    'app/templates/common/TabTemplate.html',
-    'app/util/configManager'
+    'app/templates/common/TabTemplate.html'
 ], function (
     $,
     _,
     Backbone,
     PageTitleTemplate,
-    TabTemplate,
-    {configManager}
+    TabTemplate
 ) {
     return Backbone.View.extend({
         render: function () {

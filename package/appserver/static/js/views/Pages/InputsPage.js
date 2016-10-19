@@ -1,3 +1,5 @@
+import {configManager} from 'app/util/configManager';
+
 define([
     'jquery',
     'underscore',
@@ -14,8 +16,7 @@ define([
     'app/views/component/AddInputMenu',
     'app/views/component/EntityDialog',
     'app/config/ComponentMap',
-    'app/views/component/Table',
-    'app/util/configManager'
+    'app/views/component/Table'
 ], function (
     $,
     _,
@@ -32,8 +33,7 @@ define([
     AddInputMenu,
     EntityDialog,
     ComponentMap,
-    Table,
-    {configManager}
+    Table
 ) {
     return Backbone.View.extend({
         className: 'inputsContainer',
