@@ -50,7 +50,7 @@ define([
             this.$el.append(html);
             this.$el.addClass('dropdown-menu-narrow');
 
-            actions = this.component.actions;
+            actions = this.component.table.actions;
             if ($.inArray('enable', actions) > 0 || $.inArray('disable', actions) > 0) {
                 if (this.model.entry.content.attributes.disabled) {
                     this.$('.second-group').append('<li><a href="#" class="enable">' + _("Enable").t() + '</a></li>');
@@ -71,7 +71,7 @@ define([
                 collection: this.collection,
                 model: this.model,
                 mode: "edit",
-                component: this.component
+                component: this._getComponent()
             });
             editDialog.render().modal();
             this.hide();
@@ -154,7 +154,7 @@ define([
                 collection: this.collection,
                 model: this.model,
                 mode: "clone",
-                component: this.component
+                component: this._getComponent()
             });
             cloneDialog.render().modal();
             this.hide();
@@ -186,6 +186,21 @@ define([
                 });
                 errorDialog.render().modal();
             }
+        },
+
+        _getComponent: function () {
+            let component;
+            if (this.component.services) {
+                component = _.find(this.component.services, service => {
+                    let name = this.model.id.split('/')[this.model.id.split('/').length - 2];
+                    if (service.name === name) {
+                        return service;
+                    }
+                });
+            } else {
+                component = this.component;
+            }
+            return component;
         },
 
         encodeUrl: function (str) {

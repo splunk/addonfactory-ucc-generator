@@ -18,17 +18,12 @@ define([
         },
 
         render: function () {
-            var header = this.component.header,
-                moreInfo = this.component.moreInfo;
+            var header = this.component.table.header,
+                moreInfo = this.component.table.moreInfo;
 
             this.$el.html(_.template(this.template, {cols: header.length + 1}));
-            _.each(moreInfo, function (m) {
+            _.each(moreInfo, m => {
                 if (this.model.entry.content.attributes.hasOwnProperty(m.field)) {
-                    // Specific code for Nessus add-on to hide batch_size field
-                    if (m.field === 'batch_size' && this.model.entry.content.attributes.hasOwnProperty('server')) {
-                        return;
-                    }
-                    
                     this.$('.list-dotted').append('<dt>' + m.label + '</dt><dd>' +
                         (m.mapping ? m.mapping(this.model.entry.content.attributes[m.field]) : this.model.entry.content.attributes[m.field]) +
                         '</dd>');
@@ -37,8 +32,7 @@ define([
                         (m.mapping ? m.mapping(this.model.entry.attributes[m.field]) : this.model.entry.attributes[m.field]) +
                         '</dd>');
                 }
-            }.bind(this));
-
+            });
             return this;
         },
 

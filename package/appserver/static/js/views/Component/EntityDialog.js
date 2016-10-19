@@ -42,14 +42,14 @@ define([
             this.collection = options.collection;
             this.mode = options.mode;
             this.dispatcher = options.dispatcher;
-            this.service = options.service;
+            this.component = options.component;
             this.isInput = options.isInput;
 
             //guid of current dialog
             this.currentWindow = Util.guid();
             //Encrypted field list
             this.encryptedFields = [];
-            _.each(this.service.entity, e => {
+            _.each(this.component.entity, e => {
                 if (e.encrypted) {
                     this.encryptedFields.push(e.field);
                 }
@@ -63,8 +63,7 @@ define([
             }
 
             this.model = new Backbone.Model({});
-            let InputType = generateModel(this.service.name);
-
+            let InputType = generateModel(this.component.name);
             if (!options.model) { //Create mode
                 this.mode = "create";
                 this.model = new Backbone.Model({});
@@ -114,7 +113,7 @@ define([
                 new_json = this.model.toJSON(),
                 original_json = input.entry.content.toJSON(),
                 //Add label attribute for validation prompt
-                entity = this.service.entity,
+                entity = this.component.entity,
                 attr_labels = {};
             _.each(entity, function (e) {
                 attr_labels[e.field] = e.label;
@@ -188,12 +187,12 @@ define([
                 template = _.template(template_map[this.mode]),
                 json_data = this.mode === "clone" ? {
                     name: this.cloneName,
-                    title: this.service.title
+                    title: this.component.title
                 } : {
-                    title: this.service.title,
+                    title: this.component.title,
                     isInput: this.isInput
                 },
-                entity = this.service.entity;
+                entity = this.component.entity;
 
             this.$el.html(template(json_data));
 

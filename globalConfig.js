@@ -16,7 +16,20 @@ window.globalConfig =
                     "name": "account",
                     "title": "Account",
                     "table": {
-                        "header": ["name", "endpoint", "api_uuid"],
+                        "header": [
+                            {
+                                "field": "name",
+                                "label": "Name"
+                            },
+                            {
+                                "field": "endpoint",
+                                "label": "Endpoint"
+                            },
+                            {
+                                "field": "api_uuid",
+                                "label": "API UUID"
+                            }
+                        ],
                         "actions": [
                             "edit",
                             "delete",
@@ -92,18 +105,57 @@ window.globalConfig =
             "description": "This is description",
             "table": {
                 "header": [
-                    "name",
-                    "index",
-                    "sourcetype",
-                    "service"
+                    {
+                        "field": "name",
+                        "label": "Name",
+                    },
+                    {
+                        "field": "account",
+                        "label": "Account",
+                    },
+                    {
+                        "field": "start_offset",
+                        "label": "Start Offset",
+                    },
+                    {
+                        "field": "interval",
+                        "label": "Interval",
+                    },
+                    {
+                        "field": "index",
+                        "label": "Index"
+                    },
+                    {
+                        "field": "disabled",
+                        "label": "Status"
+                    }
                 ],
                 "moreInfo": [
-                    "name",
-                    "index",
-                    "input1_field1",
-                    "input1_field2",
-                    "input2_field1",
-                    "input2_field2"
+                    {
+                        "field": "name",
+                        "label": "Name",
+                    },
+                    {
+                        "field": "account",
+                        "label": "Account",
+                    },
+                    {
+                        "field": "start_offset",
+                        "label": "Start Offset",
+                    },
+                    // Common fields
+                    {
+                        "field": "interval",
+                        "label": "Interval",
+                    },
+                    {
+                        "field": "index",
+                        "label": "Index"
+                    },
+                    {
+                        "field": "disabled",
+                        "label": "Status"
+                    }
                 ],
                 "actions": [
                     "edit",

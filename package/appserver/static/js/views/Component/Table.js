@@ -25,40 +25,47 @@ define([
             this.dispatcher = options.dispatcher;
             this.component = options.component;
 
-            if (this.refCollection !== undefined) {
-                _.each(this.collection.models, function (model) {
-                    var count = 0;
-                    _.each(this.refCollection.models, function (refModel) {
-                        if ((this.component.refLogic)(model, refModel)) {
-                            count += 1;
-                        }
-                    }.bind(this));
-                    model.entry.content.attributes.refCount = count;
-                    count = 0;
-                }.bind(this));
-            }
+            // if (this.refCollection !== undefined) {
+            //     _.each(this.collection.models, function (model) {
+            //         var count = 0;
+            //         _.each(this.refCollection.models, function (refModel) {
+            //             if ((this.component.refLogic)(model, refModel)) {
+            //                 count += 1;
+            //             }
+            //         }.bind(this));
+            //         model.entry.content.attributes.refCount = count;
+            //         count = 0;
+            //     }.bind(this));
+            // }
 
             //Expand the detail row
             this.children.tableRowToggle = new TableRowToggleView({el: this.el, collapseOthers: true });
             //Table Header
             var tableHeaders = [],
-                header,
+                // header,
                 TableHead;
             if (this.enableMoreInfo) {
                 tableHeaders.push({label: 'i', className: 'col-info', html: '<i class="icon-info"></i>'});
             }
 
-            header = this.component.header;
-            _.each(header, function (h) {
-                var item = {};
-                item.label = _(h.label).t();
-                item.className = 'col-' + h.field;
-                if (h.sort) {
-                    item.sortKey = h.field;
-                }
-
-                tableHeaders.push(item);
+            // header = this.component.header;
+            _.each(this.component.table.header, h => {
+                tableHeaders.push({
+                    "label": _(h.label).t(),
+                    "className": 'col-' + h.field,
+                    "sortKey": h.field
+                });
             });
+            // _.each(this.component.table.header, function (h) {
+            //     let item = {};
+            //     item.label = _(h.label).t();
+            //     item.className = 'col-' + h.field;
+            //     item.sortKey = h.field;
+            //     // if (h.sort) {
+            //     //     item.sortKey = h.field;
+            //     // }
+            //     tableHeaders.push(item);
+            // });
             if (this.showActions) {
                 tableHeaders.push({label: _('Actions').t(), className: 'col-action'});
             }

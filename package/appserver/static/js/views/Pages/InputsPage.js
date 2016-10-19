@@ -43,7 +43,7 @@ define([
             this.inputsPageTemplateData.title = this.unifiedConfig.pages.inputs.title;
             this.inputsPageTemplateData.description = this.unifiedConfig.pages.inputs.description;
             this.inputsPageTemplateData.singleInput = this.unifiedConfig.pages.inputs.services.length === 1;
-            this.addonName = this.unifiedConfig.name;
+            this.addonName = this.unifiedConfig.meta.name;
             //state model
             this.stateModel = new SplunkBaseModel();
             this.stateModel.set({
@@ -58,8 +58,9 @@ define([
                 let model = BaseModel.extend({
                     url: this.unifiedConfig.meta.restRoot + '/' + service.name,
                     initialize: function (attributes, options) {
+                        this.collection = options.collection;
                         BaseModel.prototype.initialize.call(this, attributes, options);
-                    },
+                    }
                 });
                 let collection = BaseCollection.extend({
                     url: this.unifiedConfig.meta.restRoot + '/' + service.name,
@@ -263,8 +264,8 @@ define([
                     enableBulkActions: false,
                     showActions: true,
                     enableMoreInfo: true,
-                    //TODO: change me
-                    component: ComponentMap.input
+                    // component: ComponentMap.input,
+                    component: this.unifiedConfig.pages.inputs
                 });
 
                 this.$el.append(_.template(InputsPageTemplate, this.inputsPageTemplateData));
@@ -281,7 +282,7 @@ define([
                         var dlg = new EntityDialog({
                             el: $(".dialog-placeholder"),
                             collection: this.inputs,
-                            service: this.unifiedConfig.pages.inputs.services[0],
+                            component: this.unifiedConfig.pages.inputs.services[0],
                             isInput: true
                         }).render();
                         dlg.modal();
@@ -316,8 +317,8 @@ define([
                 offset: 0,
                 fetching: true
             });
-            let calls = _.each(this.services, service => {
-                this.fetchListCollection(this[service.name], singleStateModel)
+            var calls = _.map(this.services, service => {
+                return this.fetchListCollection(this[service.name], singleStateModel);
             });
             return $.when.apply(this, calls);
         },

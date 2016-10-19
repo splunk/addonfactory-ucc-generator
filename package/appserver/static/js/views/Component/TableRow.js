@@ -67,18 +67,18 @@ define([
                 this.editmenu.remove();
                 e.preventDefault();
             }
-
-            deleteTag = this.component.tag || "";
-            //Get the model type and delete tag
-            if (!this.component.hasOwnProperty('entity')) {
-                for (service in this.component.services) {
-                    if (this.component.services.hasOwnProperty(service) && this.model.entity instanceof this.component.services[service].model) {
-                        this.component = this.component.services[service];
-                        deleteTag = "input";
-                        break;
-                    }
-                }
-            }
+            //
+            // deleteTag = this.component.tag || "";
+            // //Get the model type and delete tag
+            // if (!this.component.hasOwnProperty('entity')) {
+            //     for (service in this.component.services) {
+            //         if (this.component.services.hasOwnProperty(service) && this.model.entity instanceof this.component.services[service].model) {
+            //             this.component = this.component.services[service];
+            //             deleteTag = "input";
+            //             break;
+            //         }
+            //     }
+            // }
 
             this.rowDispatcher = _.extend({}, Backbone.Events);
 
@@ -90,7 +90,8 @@ define([
                 component: this.component,
                 dispatcher: this.dispatcher,
                 rowDispatcher: this.rowDispatcher,
-                deleteTag: deleteTag
+                // deleteTag: deleteTag
+                deleteTag: ''
             });
             $('body').append(this.editmenu.render().el);
             this.editmenu.show($target);
@@ -129,7 +130,7 @@ define([
                 this.$el.append('<td class="expands"><a href="#"><i class="icon-triangle-right-small"></i></a></td>');
             }
 
-            var header = this.component.header;
+            var header = this.component.table.header;
             _.each(header, function (h) {
                 if (h.field === "name") {
                     this.$el.append('<td class="col-name">' + (h.mapping ? h.mapping(this.model.entity.entry.attributes[h.field]) : this.model.entity.entry.attributes[h.field]) + '</td>');

@@ -88,7 +88,7 @@ define([
                         refCollection: this.combineCollection(),
                         showActions: true,
                         enableMoreInfo: ComponentMap.account.moreInfo ? true : false,
-                        component: ComponentMap.account
+                        component: this.accountConfig,
                     });
 
                     this.$el.append(this.caption.render().$el);
@@ -99,7 +99,7 @@ define([
                         var dlg = new EntityDialog({
                             el: $(".dialog-placeholder"),
                             collection: this.accounts,
-                            service: this.accountConfig,
+                            component: this.accountConfig,
                             isInput: false
                         }).render();
                         dlg.modal();
