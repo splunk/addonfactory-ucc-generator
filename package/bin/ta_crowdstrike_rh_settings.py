@@ -15,7 +15,7 @@ util.remove_http_proxy_env_vars()
 
 class CrowdstrikeCredMgmt(CredMgmt):
     def context(self, _, data=None):
-        return ('Splunk_TA_crowdstrike', '__Splunk_TA_crowdstrike_proxy__', '', )
+        return ('Splunk_TA_crowdstrike', '__Splunk_TA_proxy__', '', )
 
 
 class CrowdstrikeSettingsHandler(multimodel.MultiModelRestHandler):
@@ -68,8 +68,8 @@ class Proxy(base.BaseModel):
 class Setting(multimodel.MultiModel):
     endpoint = "configs/conf-crowdstrike"
     modelMap = {
-        'crowdstrike_proxy': Proxy,
-        'crowdstrike_loglevel': Logging
+        'proxy': Proxy,
+        'loglevel': Logging
     }
     cap4endpoint = ''
     cap4get_cred = ''

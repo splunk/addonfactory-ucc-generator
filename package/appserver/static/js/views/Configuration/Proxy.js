@@ -1,4 +1,5 @@
-/*global define*/
+import {defaultProxyTabEntity} from 'app/constants/defaultEntities';
+
 define([
     'jquery',
     'underscore',
@@ -6,7 +7,6 @@ define([
     'app/views/configuration/ProxyTemplate.html',
     'app/templates/messages/SavingMsg.html',
     'app/templates/messages/ErrorMsg.html',
-    'app/config/ComponentMap',
     'app/views/controls/ControlWrapper',
     'app/models/Setting'
 ], function (
@@ -16,13 +16,13 @@ define([
     ProxyTemplate,
     SavingMsgTemplate,
     ErrorMsgTemplate,
-    ComponentMap,
     ControlWrapper,
     Setting
 ) {
     return Backbone.View.extend({
         initialize: function () {
-            this.proxy = new Setting({name: "crowdstrike_proxy"});
+            // TODO: refactor code below
+            this.proxy = new Setting({name: "proxy"});
             this.model = new Backbone.Model({});
 
             this.proxy.on("invalid", this.displayValidationError.bind(this));
@@ -38,7 +38,7 @@ define([
 
                 this.$el.html(_.template(ProxyTemplate));
 
-                entity = ComponentMap.proxy.entity;
+                entity = defaultProxyTabEntity;
                 this.children = [];
                 _.each(entity, function (e) {
                     if (e.encrypted) {
@@ -92,7 +92,7 @@ define([
 
             this.proxy.entry.content.set(json);
             //Add label attribute for validation prompt
-            entity = ComponentMap.proxy.entity;
+            entity = defaultProxyTabEntity;
             attr_labels = {};
             _.each(entity, function (e) {
                 attr_labels[e.field] = e.label;

@@ -28,7 +28,7 @@ define([
     return Backbone.View.extend({
         initialize: function () {
             this.logging = new Setting({
-                name: "crowdstrike_loglevel"
+                name: "loglevel"
             });
             this.model = new Backbone.Model({});
             this.logging.on("invalid", this.displayValidationError.bind(this));

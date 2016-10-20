@@ -97,7 +97,7 @@ class FalconHostDataClient(ta_data_client.TaDataClient):
         )
 
     def _parse_proxies(self):
-        proxy = self._global['crowdstrike_proxy']
+        proxy = self._global['proxy']
         proxy_enabled = proxy['proxy_enabled'] == 'true' or str(proxy['proxy_enabled']) == '1'
         if proxy_enabled:
             proxy_type = proxy['proxy_type']
@@ -113,7 +113,7 @@ class FalconHostDataClient(ta_data_client.TaDataClient):
         return None
 
     def _parse_log_level(self):
-        return self._global['crowdstrike_loglevel']['loglevel']
+        return self._global['loglevel']['loglevel']
 
     def _parse_credentials(self):
         api_uuid = self._account['api_uuid']

@@ -28,7 +28,7 @@ class TestFalconHostClient(unittest.TestCase):
             }
         },
         'global_settings': {
-            'crowdstrike_proxy': {
+            'proxy': {
                 'proxy_username': '',
                 'proxy_enabled': '0',
                 'proxy_type': 'http',
@@ -36,7 +36,7 @@ class TestFalconHostClient(unittest.TestCase):
                 'proxy_port': '',
                 'proxy_url': ''
             },
-            'crowdstrike_loglevel': {
+            'loglevel': {
                 'loglevel': 'DEBUG'
             }
         },
@@ -67,7 +67,7 @@ class TestFalconHostClient(unittest.TestCase):
             }
         },
         'global_settings': {
-            'crowdstrike_proxy': {
+            'proxy': {
                 'proxy_username': 'testuser',
                 'proxy_enabled': '1',
                 'proxy_type': 'socks5',
@@ -75,7 +75,7 @@ class TestFalconHostClient(unittest.TestCase):
                 'proxy_port': '8016',
                 'proxy_url': '10.0.0.2'
             },
-            'crowdstrike_loglevel': {
+            'loglevel': {
                 'loglevel': 'INFO'
             }
         },
