@@ -39,11 +39,7 @@ define([
     return Backbone.View.extend({
         initialize: function (options) {
             this.unifiedConfig = configManager.unifiedConfig;
-            this.collection = options.collection;
-            this.mode = options.mode;
-            this.dispatcher = options.dispatcher;
-            this.component = options.component;
-            this.isInput = options.isInput;
+            _.extend(this, options);
 
             //guid of current dialog
             this.currentWindow = Util.guid();

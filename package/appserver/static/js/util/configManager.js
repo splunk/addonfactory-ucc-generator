@@ -5,6 +5,7 @@ class ConfigManager {
         // TODO: validate config here
         this.unifiedConfig = configData;
         this.configurationMap = parseConfigurationMap(configData);
+        this.generateEndPointUrl = name => `${configData.meta.restRoot}/${name}`;
     }
 }
 

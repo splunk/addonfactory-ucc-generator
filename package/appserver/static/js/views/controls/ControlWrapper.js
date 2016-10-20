@@ -1,9 +1,11 @@
 import CONTROL_TYPE_MAP from 'app/constants/controlTypeMap';
 
 define([
-    'views/Base'
+    'views/Base',
+    'underscore'
 ], function (
-    BaseView
+    BaseView,
+    _
 ) {
     /**
      *  A wrapper view for controls.
@@ -14,17 +16,12 @@ define([
         className: 'form-horizontal',
         initialize: function (options) {
             this.label = options.label;
+            _.extend(this, options);
             this.labelPosition = options.labelPosition || 'top';
-            this.tooltip = options.tooltip;
-            this.required = options.required;
-            this.help = options.help;
             // Support both string mapping and raw component
-            this.controlType = typeof options.controlType === 'string' ?
+            const controlType = typeof options.controlType === 'string' ?
                 CONTROL_TYPE_MAP[options.controlType] : options.controlType;
-            this.wrapperClass = options.wrapperClass;
-            this.controlClass = options.controlClass;
-            this.controlOptions = options.controlOptions;
-            this.control = new this.controlType(this.controlOptions);
+            this.control = new controlType(this.controlOptions);
             this.listenTo(this.control, 'all', this.trigger);
         },
         events: {

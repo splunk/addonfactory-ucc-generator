@@ -19,8 +19,7 @@ define([
 
             $(".addonContainer").append(_.template(PageTitleTemplate, configurationMap.configuration.header));
             $(".addonContainer").append(_.template(TabTemplate));
-            let tabs = configurationMap.configuration.allTabs;
-            this.renderTabs(tabs);
+            this.renderTabs(configurationMap.configuration.allTabs);
             //Router for each tab
             let Router = Backbone.Router.extend({
                 routes: {
