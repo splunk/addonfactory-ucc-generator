@@ -1,16 +1,13 @@
+import {configManager} from 'app/util/configManager';
+
 /*global define*/
 define([
-    'app/models/Base.Model',
-    'app/config/ContextMap'
+    'app/models/Base.Model'
 ], function (
-    BaseModel,
-    ContextMap
+    BaseModel
 ) {
     return BaseModel.extend({
-        url: [
-            ContextMap.restRoot,
-            ContextMap.account
-        ].join('/'),
+        url: () => configManager.generateEndPointUrl('account'),
 
         initialize: function (attributes, options) {
             options = options || {};

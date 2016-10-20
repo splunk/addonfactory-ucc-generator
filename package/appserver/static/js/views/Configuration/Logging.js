@@ -4,7 +4,6 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'app/models/appData',
     'app/views/configuration/LoggingTemplate.html',
     'app/templates/messages/SavingMsg.html',
     'app/templates/messages/ErrorMsg.html',
@@ -16,7 +15,6 @@ define([
     $,
     _,
     Backbone,
-    appData,
     LoggingTemplate,
     SavingMsgTemplate,
     ErrorMsgTemplate,
@@ -37,7 +35,6 @@ define([
         render: function () {
             var deferred = this.logging.fetch();
             deferred.done(function () {
-                var helpLink, description_html, entity, self, controlOptions;
                 helpLink = SplunkdUtil.make_url("help") + "?location=" + Util.getLinkPrefix() + "crowdstrike.logging";
                 //Description
                 description_html = "<div class='description_block'>Data collection logging levels. <a class='external' target='_blank' href='" + helpLink + "'>Learn more</a></div>";

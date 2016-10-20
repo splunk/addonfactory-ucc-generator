@@ -1,12 +1,12 @@
+import {configManager} from 'app/util/configManager';
+
 /*global define,window*/
 define([
     'splunk.config',
-    'models/Base',
-    'app/config/ContextMap'
+    'models/Base'
 ], function (
     $C,
-    BaseModel,
-    ContextMap
+    BaseModel
 ) {
     var app,
         // if we're using custom root, then app name is @ index 4
@@ -19,16 +19,17 @@ define([
         app = window.location.pathname.split("/")[appIdx] || app;
     }
 
+    const {unifiedConfig: {meta}} = configManager;
     Model = BaseModel.extend({
 
         defaults: {
             owner: $C.USERNAME,
             //TODO: Change me
             // app: app,
-            app: ContextMap.appName,
-            custom_rest: ContextMap.restRoot,
+            app: meta.name,
+            custom_rest: meta.restRoot,
             nullStr: 'NULL',
-            stanzaPrefix: ContextMap.restRoot
+            stanzaPrefix: meta.restRoot
         },
 
         id: "appData",

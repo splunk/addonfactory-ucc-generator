@@ -1,18 +1,15 @@
+import {configManager} from 'app/util/configManager';
+
 /*global define*/
 define([
     'app/collections/ProxyBase.Collection',
-    'app/models/Account',
-    'app/config/ContextMap'
+    'app/models/Account'
 ], function (
     BaseCollection,
-    Account,
-    ContextMap
+    Account
 ) {
     return BaseCollection.extend({
-        url: [
-            ContextMap.restRoot,
-            ContextMap.account
-        ].join('/'),
+        url: configManager.generateEndPointUrl('account'),
         model: Account,
         initialize: function (attributes, options) {
             BaseCollection.prototype.initialize.call(this, attributes, options);

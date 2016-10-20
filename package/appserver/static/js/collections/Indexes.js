@@ -1,18 +1,15 @@
+import {configManager} from 'app/util/configManager';
+
 /*global define*/
 define([
     'backbone',
-    'app/collections/ProxyBase.Collection',
-    'app/config/ContextMap'
+    'app/collections/ProxyBase.Collection'
 ], function (
     Backbone,
-    BaseCollection,
-    ContextMap
+    BaseCollection
 ) {
     return BaseCollection.extend({
-        url: [
-            ContextMap.restRoot,
-            ContextMap.index
-        ].join('/'),
+        url: configManager.generateEndPointUrl('ta_crowdstrike_indexes'),
         model: Backbone.Model,
         initialize: function (attributes, options) {
             BaseCollection.prototype.initialize.call(this, attributes, options);
