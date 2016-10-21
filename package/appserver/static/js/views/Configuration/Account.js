@@ -10,7 +10,6 @@ define([
     'views/shared/tablecaption/Master',
     'app/views/component/Table',
     'app/views/component/EntityDialog',
-    'app/collections/Accounts',
     'app/collections/ProxyBase.Collection',
     'app/templates/common/ButtonTemplate.html'
 ], function (
@@ -22,7 +21,6 @@ define([
     CaptionView,
     Table,
     EntityDialog,
-    Accounts,
     ProxyBase,
     ButtonTemplate
 ) {
