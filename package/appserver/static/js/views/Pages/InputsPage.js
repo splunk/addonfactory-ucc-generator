@@ -61,10 +61,6 @@ define([
             _.each(this.services, service => {
                 let collection = generateCollection(service.name);
                 this[service.name] = new collection([], {
-                    appData: {
-                        app: this.addonName,
-                        owner: "nobody"
-                    },
                     targetApp: this.addonName,
                     targetOwner: "nobody"
                 });

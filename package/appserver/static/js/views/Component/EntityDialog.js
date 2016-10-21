@@ -346,7 +346,6 @@ define([
         _loadAccount: function (controlWrapper) {
             const accoutsCollection = generateCollection('account');
             this.accounts = new accoutsCollection([], {
-                appData: this.appData.toJSON(),
                 targetApp: this.addonName,
                 targetOwner: "nobody"
             });

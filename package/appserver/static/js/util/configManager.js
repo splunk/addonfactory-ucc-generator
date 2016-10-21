@@ -7,23 +7,26 @@ class ConfigManager {
         // TODO: validate config here
         this.unifiedConfig = configData;
         this.configurationMap = parseConfigurationMap(configData);
-        this.generateEndPointUrl = name => `${configData.meta.restRoot}/${name}`;
+        const {meta} = this.unifiedConfig;
+
+        this.generateEndPointUrl = name => `${meta.restRoot}/${name}`;
+        const AppDataModel = SplunkBaseModel.extend({
+            defaults: {
+                owner: $C.USERNAME,
+                app: meta.name,
+                custom_rest: meta.restRoot,
+                nullStr: 'NULL',
+                stanzaPrefix: meta.restRoot
+            },
+            id: "appData",
+            sync: function (method) {
+                throw new Error('invalid method: ' + method);
+            }
+        });
+
+        const appData = new AppDataModel({});
         this.getAppData = () => {
-            const meta = this.unifiedConfig.meta;
-            const model = SplunkBaseModel.extend({
-                defaults: {
-                    owner: $C.USERNAME,
-                    app: meta.name,
-                    custom_rest: meta.restRoot,
-                    nullStr: 'NULL',
-                    stanzaPrefix: meta.restRoot
-                },
-                id: "appData",
-                sync: function (method) {
-                    throw new Error('invalid method: ' + method);
-                }
-            });
-            return new model({});
+            return appData;
         }
     }
 }

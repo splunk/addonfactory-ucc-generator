@@ -26,10 +26,6 @@ define([
             this.services = options.services;
             const accoutsCollection = generateCollection('account');
             this.servers = new accoutsCollection([], {
-                appData: {
-                    app: this.addonName,
-                    owner: "nobody"
-                },
                 targetApp: Util.getAddonName(),
                 targetOwner: "nobody"
             });
