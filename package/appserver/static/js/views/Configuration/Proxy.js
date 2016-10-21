@@ -1,4 +1,6 @@
 import {defaultProxyTabEntity} from 'app/constants/defaultEntities';
+import {configManager} from 'app/util/configManager';
+import {generateModel} from 'app/util/backbone';
 
 define([
     'jquery',
@@ -22,7 +24,16 @@ define([
     return Backbone.View.extend({
         initialize: function () {
             // TODO: refactor code below
-            this.proxy = new Setting({name: "proxy"});
+            // this.proxy = new Setting({
+            //     name: "proxy",
+            //     url: configManager.unifiedConfig.meta.restRoot + '/settings'
+            // }, {
+            //     appData: configManager.getAppData().toJSON()
+            // });
+            const proxySettingModel = generateModel('settings');
+            this.proxy = new proxySettingModel({
+                name: "proxy"
+            }, {});
             this.model = new Backbone.Model({});
 
             this.proxy.on("invalid", this.displayValidationError.bind(this));

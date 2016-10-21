@@ -17,7 +17,7 @@
     "_protocol_version": "",
     "_version": "1.0.0.0",
     "global_settings": {
-      "endpoint": "ta_crowdstrike_settings"
+      "endpoint": "settings"
     },
     "accounts": {
       "endpoint": "account"

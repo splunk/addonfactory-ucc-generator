@@ -11,7 +11,6 @@ define([
     'app/views/component/EntityDialog',
     'app/collections/Accounts',
     'app/collections/ProxyBase.Collection',
-    'app/models/appData',
     'app/templates/common/ButtonTemplate.html'
 ], function (
     $,
@@ -24,7 +23,6 @@ define([
     EntityDialog,
     Accounts,
     ProxyBase,
-    appData,
     ButtonTemplate
 ) {
     return Backbone.View.extend({
@@ -34,6 +32,7 @@ define([
             });
             const { containerId } = options;
             this.containerId = containerId;
+            this.appData = configManager.getAppData();
             this.addonName = Util.getAddonName();
             //state model
             this.stateModel = new BaseModel();
@@ -47,7 +46,7 @@ define([
 
             //accounts collection
             this.accounts = new Accounts([], {
-                appData: {app: appData.get("app"), owner: appData.get("owner")},
+                appData: this.appData.toJSON(),
                 targetApp: this.addonName,
                 targetOwner: "nobody"
             });
@@ -152,7 +151,7 @@ define([
         //Different from the function in manage_input
         combineCollection: function () {
             var temp_collection = new ProxyBase([], {
-                    appData: {app: appData.get("app"), owner: appData.get("owner")},
+                    appData: this.appData.toJSON(),
                     targetApp: this.addonName,
                     targetOwner: "nobody"
                 }),

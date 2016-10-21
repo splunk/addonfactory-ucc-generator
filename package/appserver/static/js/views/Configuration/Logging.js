@@ -1,4 +1,6 @@
 import {defaultLoggingTabEntity} from 'app/constants/defaultEntities';
+import {configManager} from 'app/util/configManager';
+import {generateModel} from 'app/util/backbone';
 
 define([
     'jquery',
@@ -25,9 +27,16 @@ define([
 ) {
     return Backbone.View.extend({
         initialize: function () {
-            this.logging = new Setting({
+            const loggingSettingModel = generateModel('settings');
+            this.logging = new loggingSettingModel({
                 name: "loglevel"
-            });
+            }, {});
+            // this.logging = new Setting({
+            //     name: "loglevel",
+            //     url: configManager.unifiedConfig.meta.restRoot + '/settings'
+            // }, {
+            //     appData: configManager.getAppData().toJSON()
+            // });
             this.model = new Backbone.Model({});
             this.logging.on("invalid", this.displayValidationError.bind(this));
         },
