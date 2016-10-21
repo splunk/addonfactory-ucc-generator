@@ -1,11 +1,30 @@
-import CONFIGURATION_PAGE_MAP from 'app/constants/configurationPageMap';
+// import CONFIGURATION_PAGE_MAP from 'app/constants/configurationPageMap';
+import $C from 'splunk.config';
+import SplunkBaseModel from 'models/Base'
 
 class ConfigManager {
     init(configData) {
         // TODO: validate config here
         this.unifiedConfig = configData;
-        this.configurationMap = parseConfigurationMap(configData);
+        // this.configurationMap = parseConfigurationMap(configData);
         this.generateEndPointUrl = name => `${configData.meta.restRoot}/${name}`;
+        this.getAppData = () => {
+            const meta = this.unifiedConfig.meta;
+            const model = SplunkBaseModel.extend({
+                defaults: {
+                    owner: $C.USERNAME,
+                    app: meta.name,
+                    custom_rest: meta.restRoot,
+                    nullStr: 'NULL',
+                    stanzaPrefix: meta.restRoot
+                },
+                id: "appData",
+                sync: function (method) {
+                    throw new Error('invalid method: ' + method);
+                }
+            });
+            return new model({});
+        }
     }
 }
 

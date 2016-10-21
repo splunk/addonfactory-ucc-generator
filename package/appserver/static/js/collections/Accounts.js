@@ -9,7 +9,8 @@ define([
     Account
 ) {
     return BaseCollection.extend({
-        url: configManager.generateEndPointUrl('account'),
+        // url: configManager.generateEndPointUrl('account'),
+        url: 'ta_crowdstrike/account',
         model: Account,
         initialize: function (attributes, options) {
             BaseCollection.prototype.initialize.call(this, attributes, options);

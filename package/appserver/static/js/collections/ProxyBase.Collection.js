@@ -1,14 +1,11 @@
-/*global define,Splunk,sprintf*/
 define([
     'jquery',
     'underscore',
     'collections/SplunkDsBase',
-    'app/models/appData'
 ], function (
     $,
     _,
     SplunkDsBase,
-    appData
 ) {
     return SplunkDsBase.extend({
         initialize: function (attributes, options) {
@@ -18,7 +15,7 @@ define([
             this.options = options || {};
             // allow appData to be passed on options, otherwise just use the
             // singleton
-            this.appData = this.options.appData || appData.toJSON();
+            this.appData = this.options.appData;
 
             var targetApp = this.options.targetApp || this.appData.app,
                 targetOwner = this.options.targetOwner || this.appData.owner;

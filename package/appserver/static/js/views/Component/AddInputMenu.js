@@ -7,7 +7,7 @@ define([
     'app/views/component/EntityDialog',
     'app/views/component/Error',
     'app/collections/Accounts',
-    'app/models/appData'
+    // 'app/models/appData'
 ], function (
     _,
     $,
@@ -16,7 +16,7 @@ define([
     EntityDialog,
     ErrorDialog,
     Accounts,
-    appData
+    // appData
 ) {
     return PopTartView.extend({
         className: 'dropdown-menu',
@@ -27,7 +27,11 @@ define([
             this.dispatcher = options.dispatcher;
             this.services = options.services;
             this.servers = new Accounts([], {
-                appData: {app: appData.get("app"), owner: appData.get("owner")},
+                // appData: {app: appData.get("app"), owner: appData.get("owner")},
+                appData: {
+                    app: this.addonName,
+                    owner: "nobody"
+                },
                 targetApp: Util.getAddonName(),
                 targetOwner: "nobody"
             });

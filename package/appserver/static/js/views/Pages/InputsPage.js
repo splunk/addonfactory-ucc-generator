@@ -8,8 +8,6 @@ define([
     'backbone',
     'app/util/Util',
     'app/collections/ProxyBase.Collection',
-    'app/collections/Accounts',
-    'app/models/appData',
     'app/views/pages/InputsPage.html',
     'models/Base',
     'views/shared/tablecaption/Master',
@@ -23,8 +21,6 @@ define([
     Backbone,
     Util,
     BaseCollection,
-    Accounts,
-    appData,
     InputsPageTemplate,
     SplunkBaseModel,
     CaptionView,
@@ -65,7 +61,10 @@ define([
             _.each(this.services, service => {
                 let collection = generateCollection(service.name);
                 this[service.name] = new collection([], {
-                    appData: {app: appData.get("app"), owner: appData.get("owner")},
+                    appData: {
+                        app: this.addonName,
+                        owner: "nobody"
+                    },
                     targetApp: this.addonName,
                     targetOwner: "nobody"
                 });
@@ -311,12 +310,18 @@ define([
 
         combineCollection: function () {
             let tempCollection1 = new BaseCollection([], {
-                    appData: {app: appData.get("app"), owner: appData.get("owner")},
+                    appData: {
+                        app: this.addonName,
+                        owner: "nobody"
+                    },
                     targetApp: this.addonName,
                     targetOwner: "nobody"
                 }),
                 tempCollection2 = new BaseCollection([], {
-                    appData: {app: appData.get("app"), owner: appData.get("owner")},
+                    appData: {
+                        app: this.addonName,
+                        owner: "nobody"
+                    },
                     targetApp: this.addonName,
                     targetOwner: "nobody"
                 });

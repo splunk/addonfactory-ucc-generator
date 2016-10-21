@@ -5,7 +5,7 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'app/models/appData',
+    // 'app/models/appData',
     'app/util/Util',
     'app/models/Base.Model',
     'app/templates/common/AddDialog.html',
@@ -22,7 +22,7 @@ define([
     $,
     _,
     Backbone,
-    appData,
+    // appData,
     Util,
     BaseModel,
     AddDialogTemplate,
@@ -39,6 +39,7 @@ define([
     return Backbone.View.extend({
         initialize: function (options) {
             this.unifiedConfig = configManager.unifiedConfig;
+            this.appData = configManager.getAppData();
             _.extend(this, options);
 
             //guid of current dialog
@@ -317,7 +318,7 @@ define([
 
         _loadIndex: function (controlWrapper) {
             var indexes = new Indexes([], {
-                appData: {app: appData.get("app"), owner: appData.get("owner")},
+                appData: {app: this.appData.get("app"), owner: this.appData.get("owner")},
                 targetApp: Util.getAddonName(),
                 targetOwner: "nobody"
             });
@@ -350,7 +351,7 @@ define([
 
         _loadAccount: function (controlWrapper) {
             this.accounts = new Accounts([], {
-                appData: {app: appData.get("app"), owner: appData.get("owner")},
+                appData: {app: this.appData.get("app"), owner: this.appData.get("owner")},
                 targetApp: this.addonName,
                 targetOwner: "nobody"
             });
