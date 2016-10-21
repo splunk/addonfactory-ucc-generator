@@ -31,12 +31,6 @@ define([
             this.logging = new loggingSettingModel({
                 name: "loglevel"
             }, {});
-            // this.logging = new Setting({
-            //     name: "loglevel",
-            //     url: configManager.unifiedConfig.meta.restRoot + '/settings'
-            // }, {
-            //     appData: configManager.getAppData().toJSON()
-            // });
             this.model = new Backbone.Model({});
             this.logging.on("invalid", this.displayValidationError.bind(this));
         },

@@ -23,13 +23,6 @@ define([
 ) {
     return Backbone.View.extend({
         initialize: function () {
-            // TODO: refactor code below
-            // this.proxy = new Setting({
-            //     name: "proxy",
-            //     url: configManager.unifiedConfig.meta.restRoot + '/settings'
-            // }, {
-            //     appData: configManager.getAppData().toJSON()
-            // });
             const proxySettingModel = generateModel('settings');
             this.proxy = new proxySettingModel({
                 name: "proxy"

@@ -1,5 +1,5 @@
 import {configManager} from 'app/util/configManager';
-import {generateModel} from 'app/util/backbone';
+import {generateModel, generateCollection} from 'app/util/backbone';
 
 define([
     'jquery',
@@ -14,9 +14,7 @@ define([
     'app/templates/messages/ErrorMsg.html',
     'app/templates/messages/LoadingMsg.html',
     'app/views/controls/ControlWrapper',
-    'app/models/Account',
     'app/collections/Indexes',
-    'app/collections/Accounts'
 ], function (
     $,
     _,
@@ -30,9 +28,7 @@ define([
     ErrorMsg,
     LoadingMsg,
     ControlWrapper,
-    Account,
-    Indexes,
-    Accounts
+    Indexes
 ) {
     return Backbone.View.extend({
         initialize: function (options) {
@@ -348,8 +344,9 @@ define([
         },
 
         _loadAccount: function (controlWrapper) {
-            this.accounts = new Accounts([], {
-                appData: {app: this.appData.get("app"), owner: this.appData.get("owner")},
+            const accoutsCollection = generateCollection('account');
+            this.accounts = new accoutsCollection([], {
+                appData: this.appData.toJSON(),
                 targetApp: this.addonName,
                 targetOwner: "nobody"
             });

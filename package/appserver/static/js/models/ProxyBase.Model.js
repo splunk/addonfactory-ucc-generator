@@ -58,7 +58,7 @@ define([
         parse: function (resp, options) {
             resp = SplunkDBase.prototype.parse.call(this, resp, options);
             var proxyUrl, appOwner;
-            appOwner = this.get('appData') || options.appData || appData.toJSON();
+            appOwner = this.get('appData') || options.appData || 'nobody';
             proxyUrl = this._getProxyUrl(appOwner);
 
             /*

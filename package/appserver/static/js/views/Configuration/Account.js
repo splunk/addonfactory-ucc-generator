@@ -1,4 +1,5 @@
 import {configManager} from 'app/util/configManager';
+import {generateCollection} from 'app/util/backbone';
 
 define([
     'jquery',
@@ -45,7 +46,8 @@ define([
             });
 
             //accounts collection
-            this.accounts = new Accounts([], {
+            const accoutsCollection = generateCollection('account');
+            this.accounts = new accoutsCollection([], {
                 appData: this.appData.toJSON(),
                 targetApp: this.addonName,
                 targetOwner: "nobody"
@@ -121,7 +123,7 @@ define([
                     count: stateModel.get('count'),
                     offset: stateModel.get('offset')
                 },
-                success: function () {
+                success: function (response, options) {
                     stateModel.set('fetching', false);
                 }.bind(this)
             });
@@ -144,7 +146,6 @@ define([
                     calls.push(this.fetchListCollection(this[service], singleStateModel));
                 }
             }
-
             return $.when.apply(this, calls);
         },
 
