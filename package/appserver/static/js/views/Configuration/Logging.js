@@ -10,7 +10,6 @@ define([
     'app/templates/messages/SavingMsg.html',
     'app/templates/messages/ErrorMsg.html',
     'app/views/controls/ControlWrapper',
-    'app/models/Setting',
     'splunk.util',
     'app/util/Util'
 ], function (
@@ -21,7 +20,6 @@ define([
     SavingMsgTemplate,
     ErrorMsgTemplate,
     ControlWrapper,
-    Setting,
     SplunkdUtil,
     Util
 ) {

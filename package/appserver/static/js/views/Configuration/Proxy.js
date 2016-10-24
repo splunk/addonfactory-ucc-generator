@@ -9,8 +9,7 @@ define([
     'app/views/configuration/ProxyTemplate.html',
     'app/templates/messages/SavingMsg.html',
     'app/templates/messages/ErrorMsg.html',
-    'app/views/controls/ControlWrapper',
-    'app/models/Setting'
+    'app/views/controls/ControlWrapper'
 ], function (
     $,
     _,
@@ -18,8 +17,7 @@ define([
     ProxyTemplate,
     SavingMsgTemplate,
     ErrorMsgTemplate,
-    ControlWrapper,
-    Setting
+    ControlWrapper
 ) {
     return Backbone.View.extend({
         initialize: function () {

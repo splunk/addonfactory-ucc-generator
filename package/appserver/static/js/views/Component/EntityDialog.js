@@ -13,8 +13,7 @@ define([
     'app/templates/common/TabTemplate.html',
     'app/templates/messages/ErrorMsg.html',
     'app/templates/messages/LoadingMsg.html',
-    'app/views/controls/ControlWrapper',
-    'app/collections/Indexes',
+    'app/views/controls/ControlWrapper'
 ], function (
     $,
     _,
@@ -27,8 +26,7 @@ define([
     TabTemplate,
     ErrorMsg,
     LoadingMsg,
-    ControlWrapper,
-    Indexes
+    ControlWrapper
 ) {
     return Backbone.View.extend({
         initialize: function (options) {
@@ -222,7 +220,8 @@ define([
                 });
 
                 if (e.field === 'index') {
-                    this._loadIndex(controlWrapper);
+                    this._loadSingleSelectReference(controlWrapper, 'indexes');
+                    // this._loadIndex(controlWrapper);
                 }
                 // load reference collection for singleSelect
                 if (e.type === 'singleSelect' && controlOptions.referenceName) {
@@ -313,17 +312,17 @@ define([
         },
 
         _loadIndex: function (controlWrapper) {
-            var indexes = new Indexes([], {
-                appData: {app: this.appData.get("app"), owner: this.appData.get("owner")},
+            const indexesCollection = generateCollection('indexes');
+            const indexes = new indexesCollection([], {
                 targetApp: Util.getAddonName(),
                 targetOwner: "nobody"
             });
-            indexes.deferred = indexes.fetch();
-            indexes.deferred.done(function () {
-                var id_lst = _.map(indexes.models[0].attributes.entry[0].content.indexes, function (index) {
+            const indexDeferred = indexes.fetch();
+            indexDeferred.done(function () {
+                let id_lst = _.map(indexes.models, model => {
                     return {
-                        label: index,
-                        value: index
+                        label: model.entry.attributes.name,
+                        value: model.entry.attributes.name
                     };
                 });
 
@@ -338,7 +337,6 @@ define([
                         value: "default"
                     });
                 }
-
                 controlWrapper.control.setAutoCompleteFields(id_lst, true);
             }.bind(this)).fail(function () {
                 this.addErrorMsg("Failed to load index", this.currentWindow);
