@@ -203,12 +203,7 @@ define([
                     displayText: e.displayText,
                     helpLink: e.helpLink
                 };
-
-                for (option in e.options) {
-                    if (e.options.hasOwnProperty(option)) {
-                        controlOptions[option] = e.options[option];
-                    }
-                }
+                _.extend(controlOptions, e.options);
 
                 controlWrapper = new ControlWrapper({
                     label: _(e.label).t(),
@@ -220,12 +215,12 @@ define([
                 });
 
                 if (e.field === 'index') {
-                    this._loadSingleSelectReference(controlWrapper, 'indexes');
-                    // this._loadIndex(controlWrapper);
-                }
-                // load reference collection for singleSelect
-                if (e.type === 'singleSelect' && controlOptions.referenceName) {
-                    this._loadSingleSelectReference(controlWrapper, controlOptions.referenceName);
+                    this._loadSingleSelectReference(controlWrapper, {referenceName: 'indexes'});
+                } else if (e.type === 'singleSelect') {
+                    const {customizedUrl, referenceName} = controlOptions;
+                    if(referenceName || customizedUrl) {
+                        this._loadSingleSelectReference(controlWrapper, {customizedUrl, referenceName});
+                    }
                 }
 
                 if (e.display !== undefined) {
@@ -343,8 +338,8 @@ define([
             }.bind(this));
         },
 
-        _loadSingleSelectReference: function (controlWrapper, referenceName) {
-            const referenceCollection = generateCollection(referenceName);
+        _loadSingleSelectReference: function (controlWrapper, {customizedUrl, referenceName}) {
+            const referenceCollection = generateCollection(referenceName, {customizedUrl});
             const referenceCollectionInstance = new referenceCollection([], {
                 targetApp: this.addonName,
                 targetOwner: "nobody"
