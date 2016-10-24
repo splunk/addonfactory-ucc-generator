@@ -1,3 +1,5 @@
+import {generateCollection} from 'app/util/backbone';
+
 /*global define*/
 define([
     'underscore',
@@ -6,8 +8,6 @@ define([
     'views/shared/PopTart',
     'app/views/component/EntityDialog',
     'app/views/component/Error',
-    'app/collections/Accounts',
-    'app/models/appData'
 ], function (
     _,
     $,
@@ -15,8 +15,6 @@ define([
     PopTartView,
     EntityDialog,
     ErrorDialog,
-    Accounts,
-    appData
 ) {
     return PopTartView.extend({
         className: 'dropdown-menu',
@@ -26,8 +24,8 @@ define([
             this.collection = options.collection;
             this.dispatcher = options.dispatcher;
             this.services = options.services;
-            this.servers = new Accounts([], {
-                appData: {app: appData.get("app"), owner: appData.get("owner")},
+            const accoutsCollection = generateCollection('account');
+            this.servers = new accoutsCollection([], {
                 targetApp: Util.getAddonName(),
                 targetOwner: "nobody"
             });

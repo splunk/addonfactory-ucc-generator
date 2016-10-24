@@ -1,11 +1,10 @@
 import {configManager} from 'app/util/configManager';
-import {generateModel} from 'app/util/backbone';
+import {generateModel, generateCollection} from 'app/util/backbone';
 
 define([
     'jquery',
     'underscore',
     'backbone',
-    'app/models/appData',
     'app/util/Util',
     'app/models/Base.Model',
     'app/templates/common/AddDialog.html',
@@ -14,15 +13,11 @@ define([
     'app/templates/common/TabTemplate.html',
     'app/templates/messages/ErrorMsg.html',
     'app/templates/messages/LoadingMsg.html',
-    'app/views/controls/ControlWrapper',
-    'app/models/Account',
-    'app/collections/Indexes',
-    'app/collections/Accounts'
+    'app/views/controls/ControlWrapper'
 ], function (
     $,
     _,
     Backbone,
-    appData,
     Util,
     BaseModel,
     AddDialogTemplate,
@@ -31,14 +26,12 @@ define([
     TabTemplate,
     ErrorMsg,
     LoadingMsg,
-    ControlWrapper,
-    Account,
-    Indexes,
-    Accounts
+    ControlWrapper
 ) {
     return Backbone.View.extend({
         initialize: function (options) {
             this.unifiedConfig = configManager.unifiedConfig;
+            this.appData = configManager.getAppData();
             _.extend(this, options);
 
             //guid of current dialog
@@ -175,13 +168,13 @@ define([
         },
 
         render: function () {
-            var template_map = {
+            var templateMap = {
                     "create": AddDialogTemplate,
                     "edit": EditDialogTemplate,
                     "clone": CloneDialogTemplate
                 },
-                template = _.template(template_map[this.mode]),
-                json_data = this.mode === "clone" ? {
+                template = _.template(templateMap[this.mode]),
+                jsonData = this.mode === "clone" ? {
                     name: this.cloneName,
                     title: this.component.title
                 } : {
@@ -190,11 +183,11 @@ define([
                 },
                 entity = this.component.entity;
 
-            this.$el.html(template(json_data));
+            this.$el.html(template(jsonData));
 
-            this.$("[role=dialog]").on('hidden.bs.modal', function () {
+            this.$("[role=dialog]").on('hidden.bs.modal', () => {
                 this.undelegateEvents();
-            }.bind(this));
+            });
 
             this.children = [];
             _.each(entity, function (e) {
@@ -227,11 +220,14 @@ define([
                 });
 
                 if (e.field === 'index') {
-                    this._loadIndex(controlWrapper);
+                    this._loadSingleSelectReference(controlWrapper, 'indexes');
+                    // this._loadIndex(controlWrapper);
                 }
-                if (e.field === 'account') {
-                    this._loadAccount(controlWrapper);
+                // load reference collection for singleSelect
+                if (e.type === 'singleSelect' && controlOptions.referenceName) {
+                    this._loadSingleSelectReference(controlWrapper, controlOptions.referenceName);
                 }
+
                 if (e.display !== undefined) {
                     controlWrapper.$el.css("display", "none");
                 }
@@ -316,17 +312,17 @@ define([
         },
 
         _loadIndex: function (controlWrapper) {
-            var indexes = new Indexes([], {
-                appData: {app: appData.get("app"), owner: appData.get("owner")},
+            const indexesCollection = generateCollection('indexes');
+            const indexes = new indexesCollection([], {
                 targetApp: Util.getAddonName(),
                 targetOwner: "nobody"
             });
-            indexes.deferred = indexes.fetch();
-            indexes.deferred.done(function () {
-                var id_lst = _.map(indexes.models[0].attributes.entry[0].content.indexes, function (index) {
+            const indexDeferred = indexes.fetch();
+            indexDeferred.done(function () {
+                let id_lst = _.map(indexes.models, model => {
                     return {
-                        label: index,
-                        value: index
+                        label: model.entry.attributes.name,
+                        value: model.entry.attributes.name
                     };
                 });
 
@@ -341,30 +337,28 @@ define([
                         value: "default"
                     });
                 }
-
                 controlWrapper.control.setAutoCompleteFields(id_lst, true);
             }.bind(this)).fail(function () {
                 this.addErrorMsg("Failed to load index", this.currentWindow);
             }.bind(this));
         },
 
-        _loadAccount: function (controlWrapper) {
-            this.accounts = new Accounts([], {
-                appData: {app: appData.get("app"), owner: appData.get("owner")},
+        _loadSingleSelectReference: function (controlWrapper, referenceName) {
+            const referenceCollection = generateCollection(referenceName);
+            const referenceCollectionInstance = new referenceCollection([], {
                 targetApp: this.addonName,
                 targetOwner: "nobody"
             });
-            var accounts_defered = this.accounts.fetch();
-            accounts_defered.done(function () {
-                var dic = _.map(this.accounts.models, function (account) {
+            const referenceDeferred = referenceCollectionInstance.fetch();
+            referenceDeferred.done(() => {
+                let dic = _.map(referenceCollectionInstance.models, model => {
                     return {
-                        label: account.entry.attributes.name,
-                        value: account.entry.attributes.name
+                        label: model.entry.attributes.name,
+                        value: model.entry.attributes.name
                     };
                 });
-
                 controlWrapper.control.setAutoCompleteFields(dic, true);
-            }.bind(this));
+            });
         },
 
         _ensureIndexInList: function (data) {

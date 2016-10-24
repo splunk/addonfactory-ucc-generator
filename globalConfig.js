@@ -178,7 +178,9 @@ window.globalConfig =
                             "field": "account",
                             "label": "Account",
                             "type": "singleSelect",
-                            "options": {}
+                            "options": {
+                                "referenceName": "account"
+                            }
                         },
                         {
                             "field": "start_offset",

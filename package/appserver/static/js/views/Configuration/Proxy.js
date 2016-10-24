@@ -1,4 +1,6 @@
 import {defaultProxyTabEntity} from 'app/constants/defaultEntities';
+import {configManager} from 'app/util/configManager';
+import {generateModel} from 'app/util/backbone';
 
 define([
     'jquery',
@@ -7,8 +9,7 @@ define([
     'app/views/configuration/ProxyTemplate.html',
     'app/templates/messages/SavingMsg.html',
     'app/templates/messages/ErrorMsg.html',
-    'app/views/controls/ControlWrapper',
-    'app/models/Setting'
+    'app/views/controls/ControlWrapper'
 ], function (
     $,
     _,
@@ -16,13 +17,14 @@ define([
     ProxyTemplate,
     SavingMsgTemplate,
     ErrorMsgTemplate,
-    ControlWrapper,
-    Setting
+    ControlWrapper
 ) {
     return Backbone.View.extend({
         initialize: function () {
-            // TODO: refactor code below
-            this.proxy = new Setting({name: "proxy"});
+            const proxySettingModel = generateModel('settings');
+            this.proxy = new proxySettingModel({
+                name: "proxy"
+            }, {});
             this.model = new Backbone.Model({});
 
             this.proxy.on("invalid", this.displayValidationError.bind(this));

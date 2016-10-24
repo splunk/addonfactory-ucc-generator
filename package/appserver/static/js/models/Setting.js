@@ -1,19 +1,14 @@
+import {configManager} from 'app/util/configManager';
+
 /*global define*/
 define([
     'underscore',
-    'app/models/Base.Model',
-    'app/config/ContextMap'
+    'app/models/Base.Model'
 ], function (
     _,
-    BaseModel,
-    ContextMap
+    BaseModel
 ) {
     return BaseModel.extend({
-        url: [
-            ContextMap.restRoot,
-            ContextMap.setting
-        ].join('/'),
-
         initialize: function (attributes, options) {
             options = options || {};
             this.collection = options.collection;

@@ -1,35 +1,34 @@
 import {defaultLoggingTabEntity} from 'app/constants/defaultEntities';
+import {configManager} from 'app/util/configManager';
+import {generateModel} from 'app/util/backbone';
 
 define([
     'jquery',
     'underscore',
     'backbone',
-    'app/models/appData',
     'app/views/configuration/LoggingTemplate.html',
     'app/templates/messages/SavingMsg.html',
     'app/templates/messages/ErrorMsg.html',
     'app/views/controls/ControlWrapper',
-    'app/models/Setting',
     'splunk.util',
     'app/util/Util'
 ], function (
     $,
     _,
     Backbone,
-    appData,
     LoggingTemplate,
     SavingMsgTemplate,
     ErrorMsgTemplate,
     ControlWrapper,
-    Setting,
     SplunkdUtil,
     Util
 ) {
     return Backbone.View.extend({
         initialize: function () {
-            this.logging = new Setting({
+            const loggingSettingModel = generateModel('settings');
+            this.logging = new loggingSettingModel({
                 name: "loglevel"
-            });
+            }, {});
             this.model = new Backbone.Model({});
             this.logging.on("invalid", this.displayValidationError.bind(this));
         },
@@ -37,7 +36,6 @@ define([
         render: function () {
             var deferred = this.logging.fetch();
             deferred.done(function () {
-                var helpLink, description_html, entity, self, controlOptions;
                 helpLink = SplunkdUtil.make_url("help") + "?location=" + Util.getLinkPrefix() + "crowdstrike.logging";
                 //Description
                 description_html = "<div class='description_block'>Data collection logging levels. <a class='external' target='_blank' href='" + helpLink + "'>Learn more</a></div>";

@@ -6,8 +6,7 @@ define([
     'app/views/component/EntityDialog',
     'app/views/component/DeleteDialog',
     'app/views/component/Error',
-    'app/views/component/Warning',
-    'app/models/ServerInfo'
+    'app/views/component/Warning'
 ], function (
     _,
     $,
@@ -15,8 +14,7 @@ define([
     EntityDialog,
     DeleteDialog,
     ErrorDialog,
-    WarningDialog,
-    ServerInfo
+    WarningDialog
 ) {
     return PopTartView.extend({
         className: 'dropdown-menu',

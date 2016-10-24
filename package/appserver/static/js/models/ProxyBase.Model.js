@@ -1,12 +1,9 @@
-/*global define,Splunk*/
 define([
     'underscore',
     'models/SplunkDBase',
-    'app/models/appData'
 ], function (
     _,
     SplunkDBase,
-    appData
 ) {
     /**
     If a different app needs to be used, it
@@ -24,7 +21,7 @@ define([
             this._url = this.url;
             this.options = options = (options || {});
 
-            var appOwner = options.appData || this.get('appData') || appData.toJSON();
+            var appOwner = options.appData || this.get('appData');
             this.set('appData', appOwner);
 
             if (options !== undefined) {
@@ -61,7 +58,7 @@ define([
         parse: function (resp, options) {
             resp = SplunkDBase.prototype.parse.call(this, resp, options);
             var proxyUrl, appOwner;
-            appOwner = this.get('appData') || options.appData || appData.toJSON();
+            appOwner = this.get('appData') || options.appData || 'nobody';
             proxyUrl = this._getProxyUrl(appOwner);
 
             /*

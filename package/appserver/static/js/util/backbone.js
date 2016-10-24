@@ -9,6 +9,7 @@ export function generateModel(name, options) {
     const newModel = BaseModel.extend({
         url: meta.restRoot + '/' + name,
         initialize: function (attributes, options) {
+            options.appData = configManager.getAppData().toJSON();
             BaseModel.prototype.initialize.call(this, attributes, options);
         },
     });
@@ -22,6 +23,7 @@ export function generateCollection(name) {
         url: meta.restRoot + '/' + name,
         model: generateModel(name),
         initialize: function (attributes, options) {
+            options.appData = configManager.getAppData().toJSON();
             BaseCollection.prototype.initialize.call(this, attributes, options);
         },
     });

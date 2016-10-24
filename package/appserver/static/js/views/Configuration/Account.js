@@ -1,4 +1,5 @@
 import {configManager} from 'app/util/configManager';
+import {generateCollection} from 'app/util/backbone';
 
 define([
     'jquery',
@@ -9,9 +10,7 @@ define([
     'views/shared/tablecaption/Master',
     'app/views/component/Table',
     'app/views/component/EntityDialog',
-    'app/collections/Accounts',
     'app/collections/ProxyBase.Collection',
-    'app/models/appData',
     'app/templates/common/ButtonTemplate.html'
 ], function (
     $,
@@ -22,9 +21,7 @@ define([
     CaptionView,
     Table,
     EntityDialog,
-    Accounts,
     ProxyBase,
-    appData,
     ButtonTemplate
 ) {
     return Backbone.View.extend({
@@ -34,6 +31,7 @@ define([
             });
             const { containerId } = options;
             this.containerId = containerId;
+            this.appData = configManager.getAppData();
             this.addonName = Util.getAddonName();
             //state model
             this.stateModel = new BaseModel();
@@ -46,8 +44,8 @@ define([
             });
 
             //accounts collection
-            this.accounts = new Accounts([], {
-                appData: {app: appData.get("app"), owner: appData.get("owner")},
+            const accoutsCollection = generateCollection('account');
+            this.accounts = new accoutsCollection([], {
                 targetApp: this.addonName,
                 targetOwner: "nobody"
             });
@@ -122,7 +120,7 @@ define([
                     count: stateModel.get('count'),
                     offset: stateModel.get('offset')
                 },
-                success: function () {
+                success: function (response, options) {
                     stateModel.set('fetching', false);
                 }.bind(this)
             });
@@ -145,14 +143,13 @@ define([
                     calls.push(this.fetchListCollection(this[service], singleStateModel));
                 }
             }
-
             return $.when.apply(this, calls);
         },
 
         //Different from the function in manage_input
         combineCollection: function () {
             var temp_collection = new ProxyBase([], {
-                    appData: {app: appData.get("app"), owner: appData.get("owner")},
+                    appData: this.appData.toJSON(),
                     targetApp: this.addonName,
                     targetOwner: "nobody"
                 }),
