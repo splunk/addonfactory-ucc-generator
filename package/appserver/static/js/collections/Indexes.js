@@ -9,8 +9,7 @@ define([
     BaseCollection
 ) {
     return BaseCollection.extend({
-        // url: configManager.generateEndPointUrl('ta_crowdstrike_indexes'),
-        url: 'ta_crowdstrike/ta_crowdstrike_indexes',
+        url: 'ta_crowdstrike/indexes',
         model: Backbone.Model,
         initialize: function (attributes, options) {
             BaseCollection.prototype.initialize.call(this, attributes, options);

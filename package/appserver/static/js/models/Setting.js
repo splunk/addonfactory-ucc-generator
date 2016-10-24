@@ -9,9 +9,6 @@ define([
     BaseModel
 ) {
     return BaseModel.extend({
-        // url: configManager.generateEndPointUrl('settings'),
-        // url: 'ta_crowdstrike/settings',
-
         initialize: function (attributes, options) {
             options = options || {};
             this.collection = options.collection;
