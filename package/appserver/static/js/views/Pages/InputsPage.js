@@ -1,6 +1,6 @@
 import {configManager} from 'app/util/configManager';
 import {generateModel, generateCollection} from 'app/util/backbone';
-import {sort_alphabetical, sort_numerical} from 'app/util/sort';
+import {sortAlphabetical, sortNumerical} from 'app/util/sort';
 
 define([
     'jquery',
@@ -451,12 +451,13 @@ define([
 
         sortCollection: function (stateModel) {
             //TODO: changeme
-            var handler = sort_alphabetical,
-                sortKey = stateModel.get('sortKey');
-
-            var allDeferred = this.fetchAllCollection(),
+            var sortDir = stateModel.get('sortDirection'),
+                sortKey = stateModel.get('sortKey'),
+                allDeferred = this.fetchAllCollection(),
                 offset = stateModel.get('offset'),
-                count = stateModel.get('count');
+                count = stateModel.get('count'),
+                handler = (a, b) => sortAlphabetical(a.entry.get(sortKey), b.entry.get(sortKey), sortDir);
+
             allDeferred.done(function () {
                 var tempCollection= this.combineCollection();
                 this.cachedInputs = tempCollection[0];

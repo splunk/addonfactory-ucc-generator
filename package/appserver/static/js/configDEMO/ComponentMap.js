@@ -1,5 +1,5 @@
 import {normalEscape, mappingServiceName} from 'app/util/format';
-import {sort_alphabetical, sort_numerical} from 'app/util/sort';
+import {sortAlphabetical, sortNumerical} from 'app/util/sort';
 
 /*global define,window*/
 define([
@@ -44,9 +44,9 @@ define([
                    sort_key = stateModel.get('sortKey');
 
                return {
-                   'name': (a, b) => sort_alphabetical(a.entry.get(sort_key), b.entry.get(sort_key), sort_dir),
-                   'index': (a, b) => sort_alphabetical(a.entry.content.get(sort_key), b.entry.content.get(sort_key), sort_dir),
-                   'interval': (a, b) => sort_numerical(a.entry.content.get(sort_key), b.entry.content.get(sort_key), sort_dir),
+                   'name': (a, b) => sortAlphabetical(a.entry.get(sort_key), b.entry.get(sort_key), sort_dir),
+                   'index': (a, b) => sortAlphabetical(a.entry.content.get(sort_key), b.entry.content.get(sort_key), sort_dir),
+                   'interval': (a, b) => sortNumerical(a.entry.content.get(sort_key), b.entry.content.get(sort_key), sort_dir),
                    'disabled': function (a, b) {
                        var textA = a.entry.content.get('disabled') ? 1 : 0,
                            textB = b.entry.content.get('disabled') ? 1 : 0;
