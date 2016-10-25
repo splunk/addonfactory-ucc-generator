@@ -1,15 +1,35 @@
 import CONFIGURATION_PAGE_MAP from 'app/constants/configurationPageMap';
 import $C from 'splunk.config';
-import SplunkBaseModel from 'models/Base'
+import SplunkBaseModel from 'models/Base';
+import {loadGlobalConfig} from 'app/util/script';
 
 class ConfigManager {
-    init(configData) {
-        // TODO: validate config here
-        this.unifiedConfig = configData;
-        this.configurationMap = parseConfigurationMap(configData);
-        const {meta} = this.unifiedConfig;
+    init(next) {
+        if (__CONFIG_FROM_FILE__) {
+            this.unifiedConfig = require('app/config/globalConfig');
+            attchPropertie();
+        } else {
+            loadGlobalConfig(() => {
+                this.unifiedConfig = window.globalConfig;
+                attchPropertie();
+            });
+        }
 
-        this.generateEndPointUrl = name => `${meta.restRoot}/${name}`;
+        const attchPropertie = () => {
+            // TODO: validate config
+            this.configurationMap = parseConfigurationMap(this.unifiedConfig);
+            const {meta} = this.unifiedConfig;
+
+            this.generateEndPointUrl = name => `${meta.restRoot}/${name}`;
+
+            this.generateAppData(meta);
+            this.getAppData = () => this.appData;
+
+            next && next();
+        };
+    }
+
+    generateAppData(meta) {
         const AppDataModel = SplunkBaseModel.extend({
             defaults: {
                 owner: $C.USERNAME,
@@ -24,10 +44,7 @@ class ConfigManager {
             }
         });
 
-        const appData = new AppDataModel({});
-        this.getAppData = () => {
-            return appData;
-        }
+        this.appData = new AppDataModel({});
     }
 }
 

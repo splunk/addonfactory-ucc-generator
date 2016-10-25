@@ -456,7 +456,11 @@ define([
                 allDeferred = this.fetchAllCollection(),
                 offset = stateModel.get('offset'),
                 count = stateModel.get('count'),
-                handler = (a, b) => sortAlphabetical(a.entry.get(sortKey), b.entry.get(sortKey), sortDir);
+                // TODO: support numerical sorting
+                handler = (a, b) => sortAlphabetical(
+                    a.entry.get(sortKey) || a.entry.content.get(sortKey),
+                    b.entry.get(sortKey) || b.entry.content.get(sortKey),
+                sortDir);
 
             allDeferred.done(function () {
                 var tempCollection= this.combineCollection();

@@ -5,7 +5,6 @@ require([
     'splunkjs/mvc/headerview',
     'app/views/pages/InputsPage',
     'app/util/webpack',
-    'app/util/script',
     'app/util/configManager'
 ], function (
     $,
@@ -14,7 +13,6 @@ require([
     HeaderView,
     InputsPageView,
     {generatePublicPath},
-    {loadGlobalConfig},
     {configManager}
 ) {
     const render = () => {
@@ -32,15 +30,7 @@ require([
         var inputsPageView = new InputsPageView();
         inputsPageView.render();
         $(".addonContainer").html(inputsPageView.el);
-    }
+    };
 
-    if (__CONFIG_FROM_FILE__) {
-        configManager.init(require('app/config/globalConfig'));
-        render();
-    } else {
-        loadGlobalConfig(() => {
-            configManager.init(window.globalConfig);
-            render();
-        })
-    }
+    configManager.init(render);
 });

@@ -5,7 +5,6 @@ require([
     'splunkjs/mvc/headerview',
     'app/views/pages/ConfigurationPage',
     'app/util/webpack',
-    'app/util/script',
     'app/util/configManager'
 ], function (
     $,
@@ -14,7 +13,6 @@ require([
     HeaderView,
     ConfigurationPageView,
     {generatePublicPath},
-    {loadGlobalConfig},
     {configManager}
 ) {
     const render = () => {
@@ -30,16 +28,7 @@ require([
         }).render();
         document.title = 'Configuration';
         new ConfigurationPageView().render();
-    }
+    };
 
-    if (__CONFIG_FROM_FILE__) {
-        configManager.init(require('app/config/globalConfig'));
-        render();
-    } else {
-        loadGlobalConfig(() => {
-            configManager.init(window.globalConfig);
-            render();
-        })
-    }
-
+    configManager.init(render);
 });

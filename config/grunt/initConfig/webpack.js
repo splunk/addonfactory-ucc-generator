@@ -65,7 +65,7 @@ module.exports = function(grunt) {
             keepalive: true
         },
         build: {
-            devtool: 'cheap-module-source-map',
+            devtool: 'null',
             plugins: [
                 new webpack.optimize.CommonsChunkPlugin("common.js"),
                 new webpack.DefinePlugin({
