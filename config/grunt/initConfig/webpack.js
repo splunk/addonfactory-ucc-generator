@@ -9,8 +9,7 @@ var mergeConfigs = require(path.join(webpackDir, '/util/mergeConfigs'));
 var sharedConfig = require(path.join(webpackDir, 'profiles/common/shared.config'));
 var postCssConfig = require(path.join(webpackDir, 'profiles/common/postcss.config'));
 var appDir = path.join(rootDir, 'package');
-var appName = 'Splunk_TA_crowdstrike';
-var publicPathInjectionLoader = 'splunk-public-path-injection-loader?/static/app/' + appName + '/js/build!splunk-require-to-define-loader!';
+var requireToDefineLoader = 'splunk-require-to-define-loader!';
 
 var appJsDir = path.join(appDir, 'appserver', 'static', 'js');
 
@@ -22,7 +21,7 @@ var entries = fs.readdirSync(path.join(appDir, 'appserver', 'static', 'js', 'pag
         return pageFile.slice(0, -3);
     })
     .reduce(function(accum, page) {
-        accum[page] = publicPathInjectionLoader + path.join(appJsDir, 'pages', page);
+        accum[page] = requireToDefineLoader + path.join(appJsDir, 'pages', page);
         return accum;
     }, {});
 
