@@ -1,6 +1,6 @@
 /*global define*/
 define([
-    'underscore',
+    'lodash',
     'app/views/component/TableRow',
     'app/views/component/MoreInfo',
     'views/Base',
@@ -94,7 +94,7 @@ define([
         },
 
         rowsFromCollection: function () {
-            return _.flatten(
+            return _.flattenDeep(
                 this.collection.map(function (model, i) {
                     var result = [];
                     result.push(new TableRow({
@@ -126,7 +126,7 @@ define([
             );
         },
         _render: function () {
-            _(this.children.rows).each(function (row) {
+            _(this.children.rows).each(row => {
                 this.$el.find('tbody:first').append(row.render().$el);
             }, this);
         },

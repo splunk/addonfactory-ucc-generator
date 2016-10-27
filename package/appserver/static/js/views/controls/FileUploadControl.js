@@ -1,7 +1,7 @@
 /*global define,window */
 define([
     'jquery',
-    'underscore',
+    'lodash',
     'views/shared/controls/Control',
     'splunk.util'
 ], function(
@@ -88,7 +88,7 @@ define([
         render: function() {
             var template, additionalClassNames;
             if (!this.el.innerHTML) {
-                template = _.template(this.template, {
+                template = _.template(this.template)({
                     options: this.options,
                     value: this._value || '',
                     _: _,

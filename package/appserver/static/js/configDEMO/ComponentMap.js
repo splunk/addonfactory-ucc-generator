@@ -3,7 +3,7 @@ import {sortAlphabetical, sortNumerical} from 'app/util/sort';
 
 /*global define,window*/
 define([
-    'underscore',
+    'lodash',
     'app/views/controls/TextDisplayControl',
     'views/shared/controls/TextControl',
     'app/views/controls/SingleInputControl',

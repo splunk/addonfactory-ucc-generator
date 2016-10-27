@@ -1,7 +1,7 @@
 /*global define*/
 define([
     'jquery',
-    'underscore',
+    'lodash',
     'backbone',
     'app/util/Util',
     'splunk.util',

@@ -1,7 +1,7 @@
 /*global define,console,Splunk*/
 define([
     'jquery',
-    'underscore',
+    'lodash',
     'app/models/ProxyBase.Model',
     'app/util/mixin',
     'app/mixins/WithDeepClone.Mixin'

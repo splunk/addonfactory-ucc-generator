@@ -1,6 +1,6 @@
 /*global define*/
 define([
-    'underscore',
+    'lodash',
     'backbone',
     'app/templates/dialogs/Error.html'
 ], function (

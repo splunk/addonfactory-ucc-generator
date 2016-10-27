@@ -2,7 +2,7 @@ import CONTROL_TYPE_MAP from 'app/constants/controlTypeMap';
 
 define([
     'views/Base',
-    'underscore'
+    'lodash'
 ], function (
     BaseView,
     _

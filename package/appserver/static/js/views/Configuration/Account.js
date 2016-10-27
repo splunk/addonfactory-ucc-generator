@@ -3,7 +3,7 @@ import {generateCollection} from 'app/util/backbone';
 
 define([
     'jquery',
-    'underscore',
+    'lodash',
     'backbone',
     'app/util/Util',
     'models/Base',
@@ -89,7 +89,7 @@ define([
 
                     this.$el.append(this.caption.render().$el);
                     this.$el.append(this.account_list.render().$el);
-                    $(`${this.containerId} .table-caption-inner`).prepend($(_.template(ButtonTemplate, add_button_data)));
+                    $(`${this.containerId} .table-caption-inner`).prepend($(_.template(ButtonTemplate)(add_button_data)));
 
                     $('#addAccountBtn').on('click', function () {
                         var dlg = new EntityDialog({

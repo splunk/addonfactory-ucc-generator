@@ -25,5 +25,8 @@
     "fortify": "/usr/bin/fortify-scanner.py",
     "watch": "grunt watch &",
     "copyConfig": "copyfiles ./globalConfig.js ./stage/appserver/static/js/build"
+  },
+  "dependencies": {
+    "lodash": "^4.16.4"
   }
 }

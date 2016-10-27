@@ -1,6 +1,5 @@
 require([
     'jquery',
-    'underscore',
     'backbone',
     'splunkjs/mvc/headerview',
     'app/views/pages/InputsPage',
@@ -8,7 +7,6 @@ require([
     'app/util/configManager'
 ], function (
     $,
-    _,
     Backbone,
     HeaderView,
     InputsPageView,

@@ -1,7 +1,7 @@
 /*global define*/
 define([
     'jquery',
-    'underscore',
+    'lodash',
     'backbone',
     'app/util/Util',
     'models/Base',
@@ -102,7 +102,7 @@ define([
 
                     this.$el.append(this.caption.render().$el);
                     this.$el.append(this.connection_list.render().$el);
-                    $('#connection-tab .table-caption-inner').prepend($(_.template(ButtonTemplate, add_button_data)));
+                    $('#connection-tab .table-caption-inner').prepend($(_.template(ButtonTemplate)(add_button_data)));
 
                     $('#addConnectionBtn').on('click', function () {
                         var dlg = new EntityDialog({

@@ -2,7 +2,7 @@ import {generateCollection} from 'app/util/backbone';
 
 /*global define*/
 define([
-    'underscore',
+    'lodash',
     'jquery',
     'app/util/Util',
     'views/shared/PopTart',

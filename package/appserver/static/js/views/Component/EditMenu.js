@@ -1,6 +1,6 @@
 /*global define*/
 define([
-    'underscore',
+    'lodash',
     'jquery',
     'views/shared/PopTart',
     'app/views/component/EntityDialog',
@@ -19,7 +19,7 @@ define([
     return PopTartView.extend({
         className: 'dropdown-menu',
         initialize: function (options) {
-            _.bindAll(this, 'edit', 'delete', 'clone');
+            _.bindAll(this, ['edit', 'delete', 'clone']);
             PopTartView.prototype.initialize.apply(this, arguments);
             this.collection = options.collection;
             this.model = options.model;

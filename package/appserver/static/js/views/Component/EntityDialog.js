@@ -3,7 +3,7 @@ import {generateModel, generateCollection} from 'app/util/backbone';
 
 define([
     'jquery',
-    'underscore',
+    'lodash',
     'backbone',
     'app/util/Util',
     'app/models/Base.Model',
@@ -254,7 +254,7 @@ define([
             if (this.$('.msg-text').length) {
                 this.$('.msg-text').text(error.validationError);
             } else {
-                this.$("." + this.currentWindow).prepend(_.template(ErrorMsg, {msg: error.validationError}));
+                this.$("." + this.currentWindow).prepend(_.template(ErrorMsg)({msg: error.validationError}));
             }
         },
 
@@ -262,7 +262,7 @@ define([
             if (this.$('.msg-error').length) {
                 this.$('.msg-error > .msg-text').text(text);
             } else {
-                this.$("." + guid).prepend(_.template(ErrorMsg, {msg: text}));
+                this.$("." + guid).prepend(_.template(ErrorMsg)({msg: text}));
             }
         },
 
@@ -276,7 +276,7 @@ define([
             if (this.$('.msg-loading').length) {
                 this.$('.msg-loading > .msg-text').text(text);
             } else {
-                this.$("." + this.currentWindow).prepend(_.template(LoadingMsg, {msg: text}));
+                this.$("." + this.currentWindow).prepend(_.template(LoadingMsg)({msg: text}));
             }
         },
 

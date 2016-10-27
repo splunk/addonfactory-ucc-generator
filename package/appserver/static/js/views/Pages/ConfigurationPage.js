@@ -2,7 +2,7 @@ import {configManager} from 'app/util/configManager';
 
 define([
     'jquery',
-    'underscore',
+    'lodash',
     'backbone',
     'app/templates/common/PageTitle.html',
     'app/templates/common/TabTemplate.html'
@@ -17,7 +17,7 @@ define([
         render: function () {
             const {configurationMap} = configManager;
 
-            $(".addonContainer").append(_.template(PageTitleTemplate, configurationMap.configuration.header));
+            $(".addonContainer").append(_.template(PageTitleTemplate)(configurationMap.configuration.header));
             $(".addonContainer").append(_.template(TabTemplate));
             this.renderTabs(configurationMap.configuration.allTabs);
             //Router for each tab
@@ -52,8 +52,8 @@ define([
                 } else if (self.tabName && self.tabName === token) {
                     active = true;
                 }
-                $(".nav-tabs").append(_.template(tabTitleTemplate, {title, token, active}));
-                $(".tab-content").append(_.template(tabContentTemplate, {token, active}));
+                $(".nav-tabs").append(_.template(tabTitleTemplate)({title, token, active}));
+                $(".tab-content").append(_.template(tabContentTemplate)({token, active}));
                 $(`#${token}-tab`).html(view.render().$el);
             });
         }

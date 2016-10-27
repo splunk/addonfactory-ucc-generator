@@ -1,7 +1,7 @@
 /*global define*/
 define([
     'jquery',
-    'underscore',
+    'lodash',
     'views/shared/controls/Control',
     'app/util/EditablePopoverUtil',
     'select2/select2'

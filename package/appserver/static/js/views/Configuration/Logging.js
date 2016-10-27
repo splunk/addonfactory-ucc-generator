@@ -4,7 +4,7 @@ import {generateModel} from 'app/util/backbone';
 
 define([
     'jquery',
-    'underscore',
+    'lodash',
     'backbone',
     'app/views/configuration/LoggingTemplate.html',
     'app/templates/messages/SavingMsg.html',
@@ -117,7 +117,7 @@ define([
             if (this.$('.msg-text').length) {
                 this.$('.msg-text').text(error.validationError);
             } else {
-                this.$(".modal-body").prepend(_.template(ErrorMsgTemplate, {msg: error.validationError}));
+                this.$(".modal-body").prepend(_.template(ErrorMsgTemplate)({msg: error.validationError}));
             }
         },
 
@@ -125,7 +125,7 @@ define([
             if (this.$(container + ' .msg-error').length) {
                 this.$(container + ' .msg-text').text(text);
             } else {
-                this.$(container + ".modal-body").prepend(_.template(ErrorMsgTemplate, {msg: text}));
+                this.$(container + ".modal-body").prepend(_.template(ErrorMsgTemplate)({msg: text}));
             }
         },
 
@@ -139,7 +139,7 @@ define([
             if (this.$(container + ' .msg-loading').length) {
                 this.$(container + ' .msg-text').text('Saving ' + text);
             } else {
-                this.$(container + '.modal-body').prepend(_.template(SavingMsgTemplate, {msg: text}));
+                this.$(container + '.modal-body').prepend(_.template(SavingMsgTemplate)({msg: text}));
             }
         },
 

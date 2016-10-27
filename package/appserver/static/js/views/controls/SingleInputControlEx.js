@@ -1,6 +1,6 @@
 /*global define,$*/
 define([
-    'underscore',
+    'lodash',
     'views/shared/controls/Control',
     'select2/select2'
 ], function (

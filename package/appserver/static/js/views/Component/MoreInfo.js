@@ -1,6 +1,6 @@
 /*global define*/
 define([
-    'underscore',
+    'lodash',
     'views/Base'
 ], function (
     _,
@@ -21,7 +21,7 @@ define([
             const {header, moreInfo} = this.options.model.component.table;
             const {entry} = this.options.model.entity;
 
-            this.$el.html(_.template(this.template, {cols: header.length + 1}));
+            this.$el.html(_.template(this.template)({cols: header.length + 1}));
 
             _.each(moreInfo, m => {
                 const value = entry.content.attributes[m.field] || entry.attributes[m.field];

@@ -4,7 +4,7 @@ import {sortAlphabetical, sortNumerical} from 'app/util/sort';
 
 define([
     'jquery',
-    'underscore',
+    'lodash',
     'backbone',
     'app/util/Util',
     'app/collections/ProxyBase.Collection',
@@ -248,8 +248,7 @@ define([
                     enableMoreInfo: true,
                     component: this.unifiedConfig.pages.inputs
                 });
-
-                this.$el.append(_.template(InputsPageTemplate, this.inputsPageTemplateData));
+                this.$el.append(_.template(InputsPageTemplate)(this.inputsPageTemplateData));
                 this.$el.append(this.caption.render().$el);
                 // render input filter for multiple inputs
                 if (!this.inputsPageTemplateData.singleInput) {

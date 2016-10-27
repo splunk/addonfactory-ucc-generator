@@ -1,7 +1,7 @@
 /*global define*/
 define([
     'jquery',
-    'underscore',
+    'lodash',
     'backbone',
     'views/Base',
     'app/views/component/EditMenu',

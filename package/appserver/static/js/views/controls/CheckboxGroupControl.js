@@ -1,6 +1,6 @@
 /*global define,$*/
 define([
-    'underscore',
+    'lodash',
     'views/shared/controls/CheckboxGroup',
     'views/shared/controls/SyntheticCheckboxControl'
 ], function (

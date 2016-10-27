@@ -1,7 +1,7 @@
 /*global define*/
 define([
     'jquery',
-    'underscore',
+    'lodash',
     'backbone',
     'app/util/Util',
     'splunk.util',
@@ -253,7 +253,7 @@ define([
             if (this.$('.msg-error').length) {
                 this.$('.msg-text').text(text);
             } else {
-                this.$('.modal-body').prepend(_.template(ErrorMsgTemplate, {
+                this.$('.modal-body').prepend(_.template(ErrorMsgTemplate)({
                     msg: text
                 }));
             }
@@ -269,7 +269,7 @@ define([
             if (this.$('.msg-loading').length) {
                 this.$('.msg-text').text(text);
             } else {
-                this.$('.modal-body').prepend(_.template(LoadingMsgTemplate, {
+                this.$('.modal-body').prepend(_.template(LoadingMsgTemplate)({
                     msg: text
                 }));
             }

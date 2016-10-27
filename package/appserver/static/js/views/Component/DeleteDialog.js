@@ -1,7 +1,7 @@
 /*global define*/
 define([
     'jquery',
-    'underscore',
+    'lodash',
     'backbone',
     'app/templates/dialogs/DeleteDialog.html',
     'app/templates/messages/ErrorMsg.html',
@@ -92,7 +92,7 @@ define([
             if (this.$('.msg-error').length) {
                 this.$('.msg-error > .msg-text').text(text);
             } else {
-                this.$(".modal-body").prepend(_.template(ErrorMsg, {msg: text}));
+                this.$(".modal-body").prepend(_.template(ErrorMsg)({msg: text}));
             }
         },
 
@@ -100,7 +100,7 @@ define([
             if (this.$('.msg-error').length) {
                 this.$('.msg-error > .msg-text').text(text);
             } else {
-                this.$(".modal-body").prepend(_.template(WarningMsg, {msg: text}));
+                this.$(".modal-body").prepend(_.template(WarningMsg)({msg: text}));
             }
         },
 

@@ -31,7 +31,9 @@ module.exports = function(grunt) {
             resolve: {
                 alias: {
                   app: appJsDir,
+                  'lib/lodash': path.join(rootDir, "node_modules", "lodash"),
                   lib: path.join(appJsDir, 'lib'),
+                  lodash: path.join(appJsDir, 'shim', 'lodash'),
                   select2: path.join(rootDir, 'bower_components', 'select2', 'select2.min'),
                   bootstrap: path.join(rootDir, 'bower_components', 'SplunkWebCore', 'search_mrsparkle', 'exposed', 'js', 'contrib', 'bootstrap-2.3.1.min'),
                   numeral: path.join(appJsDir, 'shim', 'numeral') // this is to fix the i18m issues. The issue should be resolved in 6.5

@@ -6,7 +6,7 @@
  */
 /*global define*/
 define([
-    'underscore'
+    'lodash'
 ], function (
     _
 ) {

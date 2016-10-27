@@ -1,6 +1,6 @@
 define([
     'jquery',
-    'underscore',
+    'lodash',
     'collections/SplunkDsBase',
 ], function (
     $,
@@ -105,7 +105,7 @@ define([
                     searchQuery = "search=" + searchQuery;
 
                     options.data.output_mode = "json";
-                    remainingArgs = _.omit(options.data, "filterApps", "name");
+                    remainingArgs = _.omit(options.data, ["filterApps", "name"]);
                     qs = $.param(remainingArgs);
                     qs += "&" + searchQuery;
                     options.data = qs;
