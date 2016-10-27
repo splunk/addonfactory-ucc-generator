@@ -197,7 +197,8 @@ define([
             } else {
                 deferred = this.fetchListCollection(this[type], this.stateModel);
                 deferred.done(function () {
-                    this.inputs.model = this.services[type].model;
+                    const service = this.services.find(d => d.name === type);
+                    this.inputs.model = generateModel[service.name];
                     this.inputs._url = this[type]._url;
                     this.inputs.reset(this[type].models);
 

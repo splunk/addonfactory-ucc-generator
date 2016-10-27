@@ -38,9 +38,10 @@ define([
         },
 
         changeType: function (type) {
+            const service = this.services.find(d => d.name === type);
             this.$('a.dropdown-toggle').empty();
             this.$('a.dropdown-toggle').append('Service : ');
-            this.$('a.dropdown-toggle').append(type === 'all' ? 'All' : this.services[type].title);
+            this.$('a.dropdown-toggle').append(type === 'all' ? 'All' : service.title);
             this.$('a.dropdown-toggle').append($('<span class="caret"></span>'));
         },
 

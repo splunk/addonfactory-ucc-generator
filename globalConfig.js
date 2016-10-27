@@ -203,6 +203,40 @@ window.globalConfig =
                             "defaultValue": "default"
                         }
                     ]
+                },
+                {
+                    "name": "ta_crowdstrike_falcon_host_inputs",
+                    "title": "Falcon Host Input test",
+                    "entity": [
+                        {
+                            "field": "name",
+                            "label": "Name",
+                            "type": "text",
+                            "help": "Enter a unique name for each crowdstrike falcon host data input."
+                        },
+                        {
+                            "field": "account",
+                            "label": "Account",
+                            "type": "singleSelect",
+                            "options": {
+                                "referenceName": "account",
+                                "customizedUrl": "ta_crowdstrike/account"
+                            }
+                        },
+                        {
+                            "field": "start_offset",
+                            "label": "Start Offset",
+                            "type": "text",
+                            "defaultValue": "0"
+                        },
+                        {
+                            "field": "interval",
+                            "label": "Interval",
+                            "type": "text",
+                            "defaultValue": "60",
+                            "help": "Time interval of input in seconds."
+                        }
+                    ]
                 }
             ]
         }

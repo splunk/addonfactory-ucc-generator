@@ -1,9 +1,11 @@
 /*global define*/
 define([
     'jquery',
+    'lodash',
     'views/shared/PopTart'
 ], function (
     $,
+    _,
     PopTartView
 ) {
     return PopTartView.extend({
@@ -25,7 +27,7 @@ define([
                 '<ul class="second-group">';
             _.each(this.services, service => {
                 html += '<li><a href="#" class="' + service.name + '">' +
-                    this.services[service].title + '</a></li>';
+                    service.title + '</a></li>';
             });
             html += '</ul>';
 
