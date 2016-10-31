@@ -24,16 +24,16 @@ define([
 
             _.each(moreInfo, m => {
                 const value = entry.content.attributes[m.field] || entry.attributes[m.field];
-                this.$('.list-dotted').append(`
-                    <dt>${m.label}</dt>
+                this.$('.list-dotted').append(_.template(`
+                    <dt><%- _(m.label).t() %></dt>
                     <dd>${m.mapping ? m.mapping(value) : value}</dd>
-                `)
+                `)({m: m}));
             });
             return this;
         },
 
         template: `
-            <td class="details" colspan="<%= cols %>">
+            <td class="details" colspan="<%- cols %>">
                 <dl class="list-dotted"></dl>
             </td>
         `

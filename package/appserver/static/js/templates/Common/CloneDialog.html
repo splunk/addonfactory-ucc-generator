@@ -4,15 +4,15 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
                         class="sr-only">Close</span></button>
-                <h4 class="modal-title">Clone <%- title %> from <%- name %> </h4>
+                <h4 class="modal-title"><%- _("Clone").t()%> <%- _(title).t() %></h4>
             </div>
             <form class="form form-horizontal form-small" role="form" onsubmit="return false;" autocomplete="off">
                 <div class="modal-body">
                     <input type="password" style="display: none"/>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default cancel-btn" data-dismiss="modal">Cancel</button>
-                    <input type="submit" class="btn btn-primary submit-btn submit-dialog" value="Save"/>
+                    <button type="button" class="btn btn-default cancel-btn" data-dismiss="modal"><%- _("Cancel").t() %></button>
+                    <input type="submit" class="btn btn-primary submit-btn submit-dialog" value=<%- _("Save").t() %> />
                 </div>
             </form>
         </div>

@@ -40,16 +40,17 @@ define([
                 help: this.help
             }));
             if (this.tooltip) {
-                this.$('.tooltip-link').tooltip({animation: false, title: this.options.tooltip, container: 'body'});
+                this.$('.tooltip-link').tooltip({
+                    animation: false,
+                    title: this.options.tooltip,
+                    container: 'body'
+                });
             }
             var $control = this.control.render().$el;
             if (this.controlClass) {
                 $control.addClass(this.controlClass);
             }
-            // this.$('.control-placeholder').replaceWith($control);
-            //this.$('.control-placeholder').append($control);
             this.$('.control-placeholder').prepend($control);
-            //this.$el.addClass('label-position-' + this.labelPosition);
             this.$el.addClass('form-small');
             this.wrapperClass && this.$el.addClass(this.wrapperClass);
             return this;
@@ -61,14 +62,28 @@ define([
             return BaseView.prototype.remove.apply(this, arguments);
         },
 
-        template: [
-            '<div class="form-group control-group">',
-            '<% if (label) { %><div class="control-label col-sm-2"><p><%- label %><% if (tooltip) { %><a href="#" class="tooltip-link"><%- _("?").t() %></a><% } %>',
-            '<% if (required) { %><span class="required">*</span><% } %></p></div><% } %>',
-            '<div class="col-sm-10 controls control-placeholder">',
-            '<% if (help) { %><span class="help-block"><%- help %></span><% } %>',
-            '</div>',
-            '</div>'
-        ].join('')
+        template: `
+            <div class="form-group control-group">
+                <% if (label) { %>
+                    <div class="control-label col-sm-2">
+                    <p>
+                        <%- _(label).t() %>
+                        <% if (tooltip) { %>
+                            <a href="#" class="tooltip-link"><%- _("?").t() %></a>
+                        <% } %>
+                        <% if (required) { %>
+                            <span class="required">*</span>
+                        <% } %>
+                    </p>
+                    </div>
+                <% } %>
+                <div class="col-sm-10 controls control-placeholder">
+                    <% if (help) { %>
+                        <span class="help-block">
+                        <%- _(help).t() %></span>
+                    <% } %>
+                </div>
+            </div>
+        `
     });
 });

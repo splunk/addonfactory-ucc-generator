@@ -40,7 +40,7 @@ define([
                 service;
             for (service in this.services) {
                 if (this.services.hasOwnProperty(service)) {
-                    html += '<li><a href="#" class="' + service + '">' + this.services[service].title + '</a></li>';
+                    html += '<li><a href="#" class="' + service + '">' + _(this.services[service].title).t() + '</a></li>';
                 }
             }
             html += '</ul>';
@@ -54,9 +54,9 @@ define([
 
         create: function (e) {
             var dlg, errorDialog;
-            this.service_type = $(e.target).attr('class');
+            this.serviceType = $(e.target).attr('class');
             // Check the dependency for Security Center input
-            if (this.service_type === 'input') {
+            if (this.serviceType === 'input') {
                 this.checkDependency().done(function () {
                     if (this.servers.models.length === 0) {
                         errorDialog = new ErrorDialog({
@@ -68,7 +68,7 @@ define([
                         dlg = new EntityDialog({
                             el: $(".dialog-placeholder"),
                             collection: this.collection,
-                            component: this.services[this.service_type],
+                            component: this.services[this.serviceType],
                             isInput: true
                         }).render();
                         dlg.modal();
@@ -78,7 +78,7 @@ define([
                 dlg = new EntityDialog({
                     el: $(".dialog-placeholder"),
                     collection: this.collection,
-                    component: this.services[this.service_type],
+                    component: this.services[this.serviceType],
                     isInput: true
                 }).render();
                 dlg.modal();

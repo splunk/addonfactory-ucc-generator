@@ -1,10 +1,12 @@
 /*global define*/
 define([
     'jquery',
+    'lodash',
     'backbone',
     'app/views/component/InputFilter'
 ], function (
     $,
+    _,
     Backbone,
     InputFilter
 ) {
@@ -33,15 +35,19 @@ define([
         },
 
         render: function () {
-            this.$el.html(this.template);
+            this.$el.html(_.template(this.template));
             return this;
         },
 
         changeType: function (type) {
             const service = this.services.find(d => d.name === type);
             this.$('a.dropdown-toggle').empty();
-            this.$('a.dropdown-toggle').append('Service : ');
-            this.$('a.dropdown-toggle').append(type === 'all' ? 'All' : service.title);
+            this.$('a.dropdown-toggle').append(_.template('<%- _("Service : ").t() %>'));
+            if (type === 'all') {
+                this.$('a.dropdown-toggle').append(_.template('<%- _("All").t() %>'));
+            } else {
+                this.$('a.dropdown-toggle').append(_.template(_(service.title).t()));
+            }
             this.$('a.dropdown-toggle').append($('<span class="caret"></span>'));
         },
 
@@ -61,6 +67,10 @@ define([
             this.inputFilter.show($target);
         },
 
-        template: '<a class="dropdown-toggle" href="#">Service : All<span class="caret"></span></a>'
+        template: `
+            <a class="dropdown-toggle" href="#">
+                <%- _("Service : All").t() %><span class="caret"></span>
+            </a>
+        `
     });
 });

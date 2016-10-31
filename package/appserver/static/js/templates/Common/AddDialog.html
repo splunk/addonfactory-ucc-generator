@@ -4,14 +4,14 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
                         class="sr-only">Close</span></button>
-                <h4 class="modal-title">Add <%- title %> <% if(isInput){ %>Input<% }%></h4>
+                <h4 class="modal-title"><%- _("Add").t()%> <%- _(title).t() %></h4>
             </div>
             <form class="form form-horizontal form-small" role="form" onsubmit="return false;" autocomplete="off">
                 <div class="modal-body">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default cancel-btn" data-dismiss="modal">Cancel</button>
-                    <input type="submit" class="btn btn-primary submit-btn submit-dialog" value="Add"/>
+                    <button type="button" class="btn btn-default cancel-btn" data-dismiss="modal"><%- _("Cancel").t() %></button>
+                    <input type="submit" class="btn btn-primary submit-btn submit-dialog" value=<%- _("Add").t() %> />
                 </div>
             </form>
         </div>

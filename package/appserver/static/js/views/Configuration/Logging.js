@@ -42,13 +42,13 @@ define([
                 //Description
                 descriptionHtml = `
                     <div class='description_block'>
-                        Data collection logging levels.
+                        <%- _('Data collection logging levels.').t() %>
                     </div>
                 `;
                 this.model = this.logging.entry.content.clone();
 
                 this.$el.html(_.template(LoggingTemplate));
-                this.$el.prepend($(descriptionHtml));
+                this.$el.prepend(_.template(descriptionHtml));
 
                 entity = this.loggingConfig.entity || defaultLoggingTabEntity;
                 this.children = [];
@@ -69,7 +69,7 @@ define([
                         }
                     }
                     this.children.push(new ControlWrapper({
-                        label: _(e.label).t(),
+                        label: e.label,
                         controlType: e.type,
                         wrapperClass: e.field,
                         required: e.required ? true : false,

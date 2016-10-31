@@ -25,11 +25,11 @@ define([
                 routes: {
                     '*filter': 'changeTab'
                 },
-                changeTab: function (params) {
+                changeTab: params => {
                     if (params === null) return;
-                    self.tabName = params;
+                    this.tabName = params;
                     $('.nav-tabs li').removeClass('active');
-                    $('#' + self.tabName + '-li').parent().addClass('active');
+                    $('#' + this.tabName + '-li').parent().addClass('active');
                     $('.tab-content div').removeClass('active');
                     $('#' + params + '-tab').addClass('active');
                 }
@@ -39,15 +39,23 @@ define([
         },
 
         renderTabs: function (tabs) {
-            let tabTitleTemplate = '<li <% if (active) { %> class="active" <% } %>><a href="#<%= token%>" id="<%= token%>-li"><%= title%></a></li>',
-                tabContentTemplate = '<div id="<%= token%>-tab" class="tab-pane <% if (active){ %>active<% } %>"></div>',
-                self = this;
-            _.each(tabs, function (tab) {
+            let tabTitleTemplate = `
+                    <li <% if (active) { %> class="active" <% } %>>
+                        <a href="#<%- token %>" id="<%- token %>-li">
+                            <%- _(title).t() %>
+                        </a>
+                    </li>
+                `,
+                tabContentTemplate = `
+                    <div id="<%- token %>-tab" class="tab-pane <% if (active){ %>active<% } %>">
+                    </div>
+                `;
+            _.each(tabs, tab => {
                 const { title, token, view } = tab;
                 let active;
                 if (!self.tabName) {
                     active = tab.active;
-                } else if (self.tabName && self.tabName === token) {
+                } else if (this.tabName && this.tabName === token) {
                     active = true;
                 }
                 $(".nav-tabs").append(_.template(tabTitleTemplate)({title, token, active}));
