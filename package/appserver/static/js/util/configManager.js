@@ -1,4 +1,4 @@
-import CONFIGURATION_PAGE_MAP from 'app/constants/configurationPageMap';
+import {generateTabView} from './configurationTabs';
 import $C from 'splunk.config';
 import SplunkBaseModel from 'models/Base';
 import {loadGlobalConfig} from 'app/util/script';
@@ -17,7 +17,6 @@ class ConfigManager {
 
         const attchPropertie = () => {
             // TODO: validate config
-            this.configurationMap = parseConfigurationMap(this.unifiedConfig);
             const {meta} = this.unifiedConfig;
 
             this.generateEndPointUrl = name => `${meta.restRoot}/${name}`;
@@ -25,6 +24,7 @@ class ConfigManager {
             this.generateAppData(meta);
             this.getAppData = () => this.appData;
 
+            this.configurationMap = parseConfigurationMap(this.unifiedConfig);
             next && next();
         };
     }
@@ -65,11 +65,18 @@ function parseConfigurationMap(unifiedConfig) {
 
     // Parse tabs
     tabs.forEach((d, i) => {
-        const view = CONFIGURATION_PAGE_MAP[d.name];
-        if(view) {
+        const {title} = d,
+            token = title.toLowerCase().replace(/\s/g, '-'),
+            viewType = generateTabView(d);
+
+        if(viewType) {
+            const view = new viewType({
+                containerId: `#${token}-tab`
+            });
             const page = {
                 active: i === 0,
-                title: d.title,
+                title,
+                token,
                 view
             };
 

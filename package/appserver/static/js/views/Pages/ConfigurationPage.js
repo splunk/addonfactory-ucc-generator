@@ -43,10 +43,8 @@ define([
                 tabContentTemplate = '<div id="<%= token%>-tab" class="tab-pane <% if (active){ %>active<% } %>"></div>',
                 self = this;
             _.each(tabs, function (tab) {
-                let title = tab.title,
-                    token = title.toLowerCase().replace(/\s/g, '-'),
-                    view = new tab.view({ containerId: `#${token}-tab` }),
-                    active;
+                const { title, token, view } = tab;
+                let active;
                 if (!self.tabName) {
                     active = tab.active;
                 } else if (self.tabName && self.tabName === token) {
