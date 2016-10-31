@@ -71,7 +71,8 @@ function parseConfigurationMap(unifiedConfig) {
 
         if(viewType) {
             const view = new viewType({
-                containerId: `#${token}-tab`
+                containerId: `#${token}-tab`,
+                props: d
             });
             const page = {
                 active: i === 0,
