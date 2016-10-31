@@ -31,7 +31,7 @@ module.exports = function(grunt) {
             resolve: {
                 alias: {
                   app: appJsDir,
-                  'lib/lodash': path.join(rootDir, "node_modules", "lodash"),
+                  'lib/lodash': path.join(rootDir, 'bower_components', "lodash", "dist", "lodash"),
                   lib: path.join(appJsDir, 'lib'),
                   lodash: path.join(appJsDir, 'shim', 'lodash'),
                   select2: path.join(rootDir, 'bower_components', 'select2', 'select2.min'),

@@ -1,4 +1,3 @@
-/*global define*/
 define([
     'lodash',
     'views/Base'
@@ -17,7 +16,7 @@ define([
         },
 
         render: function () {
-            // TOOD: Component shouldn't care about how these data are retrived.
+            // TODO: Component shouldn't care about how these data are retrived.
             const {header, moreInfo} = this.options.model.component.table;
             const {entry} = this.options.model.entity;
 
