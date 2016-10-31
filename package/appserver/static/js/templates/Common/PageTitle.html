@@ -1,12 +1,12 @@
 <div class ="tool-bar">
   <div class ="tool-title">
-    <span class="icon-tasks"></span><%= title%>
+    <span class="icon-tasks"></span><%- _(title).t() %>
   </div>
   <% if (enableButton) { %>
     <div class = "tool-button">
       <div class="dropdown add-button">
         <button  id="<%= buttonId%>" class="btn btn-primary" type="button">
-           <%= buttonValue%>
+           <%- _(buttonValue).t() %>
           <% if (!singleInput) { %>
             <span class="caret"></span>
           <% } %>
@@ -16,7 +16,7 @@
   <% } %>
 
     <div class= "tool-description">
-        <%= description%>
+        <%- _(description).t() %>
     </div>
 </div>
 <% if(enableHr){ %>

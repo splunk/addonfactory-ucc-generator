@@ -62,7 +62,7 @@ define([
                         }
                     }
                     controlWrapper = new ControlWrapper({
-                        label: _(e.label).t(),
+                        label: e.label,
                         controlType: e.type,
                         wrapperClass: e.field,
                         required: e.required ? true : false,
