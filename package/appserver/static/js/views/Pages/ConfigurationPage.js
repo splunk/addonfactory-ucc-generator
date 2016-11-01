@@ -53,7 +53,7 @@ define([
             _.each(tabs, tab => {
                 const { title, token, view } = tab;
                 let active;
-                if (!self.tabName) {
+                if (!this.tabName) {
                     active = tab.active;
                 } else if (this.tabName && this.tabName === token) {
                     active = true;
