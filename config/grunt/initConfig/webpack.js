@@ -58,6 +58,8 @@ module.exports = function(grunt) {
             watch: true,
             keepalive: true,
             plugins: [
+                // Use old watching plugin as the bug below
+                // https://github.com/webpack/webpack/issues/675#issuecomment-224991459
                 new webpack.OldWatchingPlugin(),
                 new webpack.optimize.CommonsChunkPlugin("common.js"),
                 new webpack.DefinePlugin({

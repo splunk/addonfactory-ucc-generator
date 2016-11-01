@@ -74,7 +74,7 @@ define([
                         },
                         collection: this.accounts,
                         noFilterButtons: true,
-                        filterKey: _.map(this.accountConfig.entity, e => {return e.name})
+                        filterKey: _.map(this.accountConfig.entity, e => e.name)
                     });
                     //Create view
                     this.accountList = new Table({

@@ -23,17 +23,17 @@ define([
             this.$el.html(_.template(this.template)({cols: header.length + 1}));
 
             _.each(moreInfo, m => {
-                const label = m.label;
+                const {label, field} = m;
                 let value;
-                if (entry.content.attributes[m.field] != undefined) {
-                    value = String(entry.content.attributes[m.field]);
+                if (entry.content.attributes[field] != undefined) {
+                    value = String(entry.content.attributes[field]);
                 } else {
-                    value = String(entry.attributes[m.field]);
+                    value = String(entry.attributes[field]);
                 }
                 this.$('.list-dotted').append(_.template(`
                     <dt><%- _(label).t() %></dt>
                     <dd><%- _(value).t() %></dd>
-                `)({label: label, value: value}));
+                `)({label, value}));
             });
             return this;
         },
