@@ -203,7 +203,7 @@ define([
                     displayText: e.displayText,
                     helpLink: e.helpLink
                 };
-                _.extend(controlOptions, e.options);
+                _.extend(controlOptions, e.options, e.field === 'index' ? {referenceName: 'indexes'} : {});
 
                 controlWrapper = new ControlWrapper({
                     label: e.label,
@@ -213,15 +213,6 @@ define([
                     help: e.help || null,
                     controlOptions: controlOptions
                 });
-
-                if (e.field === 'index') {
-                    this._loadSingleSelectReference(controlWrapper, {referenceName: 'indexes'});
-                } else if (e.type === 'singleSelect') {
-                    const {customizedUrl, referenceName} = controlOptions;
-                    if(referenceName || customizedUrl) {
-                        this._loadSingleSelectReference(controlWrapper, {customizedUrl, referenceName});
-                    }
-                }
 
                 if (e.display !== undefined) {
                     controlWrapper.$el.css("display", "none");
@@ -336,24 +327,6 @@ define([
             }.bind(this)).fail(function () {
                 this.addErrorMsg("Failed to load index", this.currentWindow);
             }.bind(this));
-        },
-
-        _loadSingleSelectReference: function (controlWrapper, {customizedUrl, referenceName}) {
-            const referenceCollection = generateCollection(referenceName, {customizedUrl});
-            const referenceCollectionInstance = new referenceCollection([], {
-                targetApp: this.addonName,
-                targetOwner: "nobody"
-            });
-            const referenceDeferred = referenceCollectionInstance.fetch();
-            referenceDeferred.done(() => {
-                let dic = _.map(referenceCollectionInstance.models, model => {
-                    return {
-                        label: model.entry.attributes.name,
-                        value: model.entry.attributes.name
-                    };
-                });
-                controlWrapper.control.setAutoCompleteFields(dic, true);
-            });
         },
 
         _ensureIndexInList: function (data) {

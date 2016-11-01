@@ -1,4 +1,5 @@
 import CONTROL_TYPE_MAP from 'app/constants/controlTypeMap';
+import {generateCollection} from 'app/util/backbone';
 
 define([
     'views/Base',
@@ -23,11 +24,34 @@ define([
                 CONTROL_TYPE_MAP[options.controlType] : options.controlType;
             this.control = new controlType(this.controlOptions);
             this.listenTo(this.control, 'all', this.trigger);
+            const {referenceName, customizedUrl} = this.controlOptions;
+            if(referenceName || customizedUrl) {
+                this._loadSingleSelectReference(customizedUrl, referenceName);
+            }
         },
         events: {
             'click a.tooltip-link': function (e) {
                 e.preventDefault();
             }
+        },
+        _loadSingleSelectReference: function(customizedUrl, referenceName) {
+            const referenceCollection = generateCollection(referenceName, {customizedUrl});
+            const referenceCollectionInstance = new referenceCollection([], {
+                targetApp: this.addonName,
+                targetOwner: "nobody"
+            });
+            const referenceDeferred = referenceCollectionInstance.fetch();
+            referenceDeferred.done(() => {
+                let dic = _.map(referenceCollectionInstance.models, model => {
+                    return {
+                        label: model.entry.attributes.name,
+                        value: model.entry.attributes.name
+                    };
+                });
+                if(this.control.setAutoCompleteFields) {
+                    this.control.setAutoCompleteFields(dic, true);
+                }
+            });
         },
         validate: function () {
             return this.control.validate();
