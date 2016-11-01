@@ -56,14 +56,14 @@ module.exports = function(grunt) {
             debug: true,
             devtool: 'eval',
             watch: true,
+            keepalive: true,
             plugins: [
+                new webpack.OldWatchingPlugin(),
                 new webpack.optimize.CommonsChunkPlugin("common.js"),
                 new webpack.DefinePlugin({
                     __CONFIG_FROM_FILE__: false
                 })
-            ],
-            watch: true,
-            keepalive: true
+            ]
         },
         build: {
             devtool: 'null',
