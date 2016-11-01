@@ -10,6 +10,8 @@ class ConfigManager {
             attchPropertie();
         } else {
             loadGlobalConfig(() => {
+                // The configuration object should be attached to global object,
+                // before executing the code below.
                 this.unifiedConfig = window.globalConfig;
                 attchPropertie();
             });

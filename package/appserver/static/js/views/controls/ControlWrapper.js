@@ -34,6 +34,7 @@ define([
                 e.preventDefault();
             }
         },
+        // TODO: support more component loading content dynamically like this one
         _loadSingleSelectReference: function(customizedUrl, referenceName) {
             const referenceCollection = generateCollection(referenceName, {customizedUrl});
             const referenceCollectionInstance = new referenceCollection([], {

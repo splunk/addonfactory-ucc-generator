@@ -203,7 +203,12 @@ define([
                     displayText: e.displayText,
                     helpLink: e.helpLink
                 };
-                _.extend(controlOptions, e.options, e.field === 'index' ? {referenceName: 'indexes'} : {});
+                _.extend(controlOptions, e.options);
+                // TODO: find a better way to manage this kind of hard code.
+                // SOLUTION A: add a preprocessor for the configuration, add metadata like below in advance and just in one place.
+                if (e.field === 'index') {
+                    _.extend(controlOptions, {referenceName: 'indexes'})
+                }
 
                 controlWrapper = new ControlWrapper({
                     label: e.label,
@@ -297,6 +302,7 @@ define([
             this.addErrorMsg(this.parseAjaxError(model), this.currentWindow);
         },
 
+        // TODO: delete this method after we fix the missing "default" in index selector.
         _loadIndex: function (controlWrapper) {
             const indexesCollection = generateCollection('indexes');
             const indexes = new indexesCollection([], {
