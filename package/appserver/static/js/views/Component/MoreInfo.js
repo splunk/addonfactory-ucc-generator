@@ -24,7 +24,7 @@ define([
 
             _.each(moreInfo, m => {
                 const label = m.label;
-                const value;
+                let value;
                 if (entry.content.attributes[m.field] != undefined) {
                     value = String(entry.content.attributes[m.field]);
                 } else {

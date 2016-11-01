@@ -59,12 +59,12 @@ define([
         },
 
         render: function () {
-            var add_button_data = {
+            var addButtonData = {
                     buttonId: "addAccountBtn",
                     buttonValue: "Add Account"
                 },
-                account_deferred = this.fetchListCollection(this.accounts, this.stateModel);
-            account_deferred.done(function () {
+                accountDeferred = this.fetchListCollection(this.accounts, this.stateModel);
+            accountDeferred.done(function () {
                 this.deferred.done(function () {
                     //Caption
                     this.caption = new CaptionView({
@@ -74,11 +74,10 @@ define([
                         },
                         collection: this.accounts,
                         noFilterButtons: true,
-                        filterKey: ['name', 'endpoint', 'api_uuid']
+                        filterKey: _.map(this.accountConfig.entity, e => {return e.name})
                     });
-
                     //Create view
-                    this.account_list = new Table({
+                    this.accountList = new Table({
                         stateModel: this.stateModel,
                         collection: this.accounts,
                         refCollection: this.combineCollection(),
@@ -88,8 +87,8 @@ define([
                     });
 
                     this.$el.append(this.caption.render().$el);
-                    this.$el.append(this.account_list.render().$el);
-                    $(`${this.containerId} .table-caption-inner`).prepend($(_.template(ButtonTemplate)(add_button_data)));
+                    this.$el.append(this.accountList.render().$el);
+                    $(`${this.containerId} .table-caption-inner`).prepend($(_.template(ButtonTemplate)(addButtonData)));
 
                     $('#addAccountBtn').on('click', function () {
                         var dlg = new EntityDialog({
