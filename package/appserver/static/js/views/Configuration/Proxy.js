@@ -21,12 +21,14 @@ define([
 ) {
     return Backbone.View.extend({
         initialize: function () {
+            this.proxyConfig = _.find(configManager.unifiedConfig.pages.configuration.tabs, tab => {
+                return tab.name === 'proxy';
+            });
             const proxySettingModel = generateModel('settings');
             this.proxy = new proxySettingModel({
                 name: "proxy"
             }, {});
             this.model = new Backbone.Model({});
-
             this.proxy.on("invalid", this.displayValidationError.bind(this));
         },
 
@@ -40,7 +42,8 @@ define([
 
                 this.$el.html(_.template(ProxyTemplate));
 
-                entity = defaultProxyTabEntity;
+                entity = this.proxyConfig.entity || defaultProxyTabEntity;
+
                 this.children = [];
                 _.each(entity, function (e) {
                     if (e.encrypted) {
@@ -59,7 +62,7 @@ define([
                         }
                     }
                     controlWrapper = new ControlWrapper({
-                        label: _(e.label).t(),
+                        label: e.label,
                         controlType: e.type,
                         wrapperClass: e.field,
                         required: e.required ? true : false,

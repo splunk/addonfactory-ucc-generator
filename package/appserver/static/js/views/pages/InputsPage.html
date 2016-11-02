@@ -1,9 +1,9 @@
 <div class ="tool-bar">
-    <div class ="tool-title"><%- title %></div>
+    <div class ="tool-title"><%- _(title).t() %></div>
     <div class = "tool-button">
         <div class="dropdown add-button">
             <button id="addInputBtn" class="btn btn-primary" type="button">
-                Create New Input
+                <%- _("Create New Input").t() %>
                 <% if (!singleInput) { %>
                     <span class="caret"></span>
                 <% } %>
@@ -11,7 +11,7 @@
         </div>
     </div>
     <div class= "tool-description">
-        <%- description %>
+        <%- _(description).t() %>
     </div>
 </div>
 <hr>

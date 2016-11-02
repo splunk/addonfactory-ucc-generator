@@ -25,6 +25,9 @@ define([
 ) {
     return Backbone.View.extend({
         initialize: function () {
+            this.loggingConfig = _.find(configManager.unifiedConfig.pages.configuration.tabs, tab => {
+                return tab.name === 'logging';
+            });
             const loggingSettingModel = generateModel('settings');
             this.logging = new loggingSettingModel({
                 name: "loglevel"
@@ -36,16 +39,18 @@ define([
         render: function () {
             var deferred = this.logging.fetch();
             deferred.done(function () {
-                helpLink = SplunkdUtil.make_url("help") + "?location=" + Util.getLinkPrefix() + "crowdstrike.logging";
                 //Description
-                description_html = "<div class='description_block'>Data collection logging levels. <a class='external' target='_blank' href='" + helpLink + "'>Learn more</a></div>";
-
+                descriptionHtml = `
+                    <div class='description_block'>
+                        <%- _('Data collection logging levels.').t() %>
+                    </div>
+                `;
                 this.model = this.logging.entry.content.clone();
 
                 this.$el.html(_.template(LoggingTemplate));
-                this.$el.prepend($(description_html));
+                this.$el.prepend(_.template(descriptionHtml));
 
-                entity = defaultLoggingTabEntity;
+                entity = this.loggingConfig.entity || defaultLoggingTabEntity;
                 this.children = [];
                 _.each(entity, function (e) {
                     if (e.encrypted) {
@@ -64,7 +69,7 @@ define([
                         }
                     }
                     this.children.push(new ControlWrapper({
-                        label: _(e.label).t(),
+                        label: e.label,
                         controlType: e.type,
                         wrapperClass: e.field,
                         required: e.required ? true : false,
