@@ -1,4 +1,5 @@
 import {configManager} from 'app/util/configManager';
+import {generateTabView} from 'app/util/configurationTabs';
 
 define([
     'jquery',
@@ -15,11 +16,14 @@ define([
 ) {
     return Backbone.View.extend({
         render: function () {
-            const {configurationMap} = configManager;
+            const {unifiedConfig: {pages: {configuration}}} = configManager;
 
-            $(".addonContainer").append(_.template(PageTitleTemplate)(configurationMap.configuration.header));
+            const header = this._parseHeader(configuration);
+            $(".addonContainer").append(_.template(PageTitleTemplate)(header));
             $(".addonContainer").append(_.template(TabTemplate));
-            this.renderTabs(configurationMap.configuration.allTabs);
+
+            const tabs = this._parseTabs(configuration);
+            this.renderTabs(tabs);
             //Router for each tab
             let Router = Backbone.Router.extend({
                 routes: {
@@ -36,6 +40,36 @@ define([
             });
             var router = new Router();
             Backbone.history.start();
+        },
+
+        _parseHeader({title, description}) {
+            return {
+                title: title ? title : '',
+                description: description ? description : '',
+                enableButton: false,
+                enableHr: false
+            };
+        },
+
+        _parseTabs({tabs}) {
+            return tabs.map((d, i) => {
+                const {title} = d,
+                    token = title.toLowerCase().replace(/\s/g, '-'),
+                    viewType = generateTabView(d);
+
+                if(viewType) {
+                    const view = new viewType({
+                        containerId: `#${token}-tab`,
+                        props: d
+                    });
+                    return {
+                        active: i === 0,
+                        title,
+                        token,
+                        view
+                    };
+                }
+            }).filter(d => !!d);
         },
 
         renderTabs: function (tabs) {

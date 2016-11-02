@@ -21,7 +21,7 @@ export function generateCollection(name, options = {}) {
     const {customizedUrl} = options;
 
     const newCollection = BaseCollection.extend({
-        url: customizedUrl || (meta.restRoot + '/' + name),
+        url: (meta.restRoot + '/' + name) || customizedUrl,
         model: generateModel(name, options),
         initialize: function (attributes, options) {
             options.appData = configManager.getAppData().toJSON();

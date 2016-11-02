@@ -26,7 +26,6 @@ class ConfigManager {
             this.generateAppData(meta);
             this.getAppData = () => this.appData;
 
-            this.configurationMap = parseConfigurationMap(this.unifiedConfig);
             next && next();
         };
     }
@@ -48,46 +47,6 @@ class ConfigManager {
 
         this.appData = new AppDataModel({});
     }
-}
-
-function parseConfigurationMap(unifiedConfig) {
-    const header = {
-        title: '',
-        description: '',
-        enableButton: false,
-        enableHr: false
-    };
-    const allTabs = [];
-
-    const {pages: {configuration: {title, description, tabs}}} = unifiedConfig;
-
-    // Parse header
-    if(title) header.title = title;
-    if(description) header.description = description;
-
-    // Parse tabs
-    tabs.forEach((d, i) => {
-        const {title} = d,
-            token = title.toLowerCase().replace(/\s/g, '-'),
-            viewType = generateTabView(d);
-
-        if(viewType) {
-            const view = new viewType({
-                containerId: `#${token}-tab`,
-                props: d
-            });
-            const page = {
-                active: i === 0,
-                title,
-                token,
-                view
-            };
-
-            allTabs.push(page);
-        }
-    });
-
-    return {configuration: {header, allTabs}};
 }
 
 export const configManager = new ConfigManager();
