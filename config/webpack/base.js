@@ -1,7 +1,7 @@
 var path = require('path');
 var fs = require('fs');
 var webpack = require('webpack');
-var devConfig = require('./devConfig')
+var devConfig = require('./devConfig');
 
 var rootDir = path.join(__dirname, '../../');
 
