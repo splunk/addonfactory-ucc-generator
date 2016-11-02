@@ -254,7 +254,6 @@ window.globalConfig =
                             "type": "singleSelect",
                             "options": {
                                 "referenceName": "account",
-                                "customizedUrl": "ta_crowdstrike/account"
                             }
                         },
                         {
@@ -293,7 +292,6 @@ window.globalConfig =
                             "label": "Account",
                             "type": "singleSelect",
                             "options": {
-                                "referenceName": "account",
                                 "customizedUrl": "ta_crowdstrike/account"
                             }
                         },
