@@ -35,7 +35,8 @@
     "build_dev": "KEEP_STAGE=1 grunt",
     "fortify": "/usr/bin/fortify-scanner.py",
     "watch": "grunt watch &",
-    "copyConfig": "copyfiles ./globalConfig.js ./stage/appserver/static/js/build"
+    "copyConfig": "copyfiles ./globalConfig.js ./stage/appserver/static/js/build",
+    "test": "karma start"
   },
   "dependencies": {
     "lodash": "^4.16.4"

@@ -30,7 +30,7 @@ module.exports = function (config) {
       require("karma-sourcemap-loader")
     ],
 
-    webpack: mergeConfigs(webpackBaseConfig, {output: undefined, plugins: undefined}),
+    webpack: mergeConfigs(webpackBaseConfig, {output: undefined}),
 
     webpackServer: {
       noInfo: true

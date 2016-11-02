@@ -50,5 +50,5 @@ module.exports = mergeConfigs(sharedConfig, postCssConfig({ loadTheme: 'enterpri
             sourceMapFilename: '[file].map'
         },
         entry: entries
-    }, devConfig
+    }
 );
