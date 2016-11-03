@@ -1,6 +1,6 @@
 var webpack = require('webpack');
-var webpackBaseConfig = require('./config/webpack/base');
-var mergeConfigs = require('./bower_components/SplunkWebCore/build_tools/util/mergeConfigs');
+var webpackBaseConfig = require('../webpack/base');
+var mergeConfigs = require('../../bower_components/SplunkWebCore/build_tools/util/mergeConfigs');
 
 module.exports = function (config) {
   config.set({
@@ -12,8 +12,8 @@ module.exports = function (config) {
     frameworks: ['mocha'],
 
     files: [
-      './node_modules/phantomjs-polyfill/bind-polyfill.js',
-      'tests.webpack.js'
+      '../../node_modules/phantomjs-polyfill/bind-polyfill.js',
+      './tests.webpack.js'
     ],
 
     preprocessors: {
