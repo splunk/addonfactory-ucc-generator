@@ -3,7 +3,6 @@
     "properties": {
         "meta": {"$ref": "#/definitions/metaSchema"},
         "pages": {"$ref": "#/definitions/pagesSchema"}
-
     },
     "required": ["meta", "pages"],
     "type": "object",
@@ -31,13 +30,35 @@
           "properties": {
               "configuration": {"$ref": "#/definitions/configurationSchema"},
               "inputs": {"$ref": "#/definitions/inputsSchema"}
-          },
+          }
         },
         "configurationSchema": {
-
+            "type": "object",
+            "properties": {
+                "description": {"type": "string"},
+                "tabs": {"type": "array"},
+                "title": {"type": "string"}
+            }
         },
         "inputsSchema": {
-
+            "type": "object",
+            "properties": {
+                "description": {"type": "string"},
+                "services": {
+                    "type": "array",
+                    "items": {
+                        "additionalProperties": false,
+                        "type": "object",
+                        "properties": {
+                            "name": {"type": "string"},
+                            "title": {"type": "string"},
+                            "entity": {"type": "array"}
+                        }
+                    }
+                },
+                "table": {"type": "object"},
+                "title": {"type": "string"}
+            }
         }
     }
 }
