@@ -248,7 +248,7 @@ window.globalConfig =
                             "type": "singleSelect",
                             "defaultValue": "default",
                             "options": {
-                                "referenceName": "indexes",
+                                "customizedUrl": "data/indexes"
                             }
                         }
                     ]
