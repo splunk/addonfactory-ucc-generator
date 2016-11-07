@@ -300,7 +300,10 @@ window.globalConfig =
                             "field": "index",
                             "label": "Index",
                             "type": "singleSelect",
-                            "defaultValue": "default"
+                            "defaultValue": "default",
+                            "options": {
+                                "customizedUrl": "data/indexes"
+                            }
                         }
                     ]
                 },
