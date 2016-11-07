@@ -1,4 +1,3 @@
-/*global define,$*/
 define([
     'lodash',
     'views/shared/controls/Control',
@@ -13,20 +12,6 @@ define([
                 this.setValue(e.val, false);
             }
         },
-
-        initialize: function (options) {
-            Control.prototype.initialize.apply(this, arguments);
-
-            this.options.placeholder = this.options.placeholder || "";
-            this.placeholder = this.options.placeholder;
-            if (options.allowClear === undefined) {
-                this.allowClear = false;
-            } else {
-                this.allowClear = true;
-            }
-            this.modelAttribute = this.options.modelAttribute;
-        },
-
         /**
          * @constructor
          * @param {Object} options {
@@ -38,6 +23,14 @@ define([
          *     {String, optional} inputClassName A class name to apply to the input element
          *     {Function, optional} tooltip A function to add tooltip on items based on rules
          */
+        initialize: function (options) {
+            Control.prototype.initialize.apply(this, arguments);
+
+            this.options.placeholder = this.options.placeholder || "";
+            this.placeholder = this.options.placeholder;
+            this.allowClear = options.allowClear ? true : false;
+            this.modelAttribute = this.options.modelAttribute;
+        },
 
         render: function () {
             var data, options, $input, tooltipFun;
@@ -49,21 +42,37 @@ define([
             $input = this.$('input');
 
             if (this.options.unselectableFields) {
-                _.each(this.options.autoCompleteFields, function (field) {
-                    if (_.find(this.options.unselectableFields, function (unselectable) {
-                            return (unselectable.value === field.value) && (unselectable.label === field.label);
+                _.each(this.options.autoCompleteFields, field => {
+                    if (_.find(this.options.unselectableFields, unselectable => {
+                            return (unselectable.value === field.value) &&
+                                (unselectable.label === field.label);
                         })) {
                         field.disabled = true;
                     } else {
                         field.disabled = false;
                     }
-                }.bind(this));
+                });
             }
 
             data = [];
-            _.each(this.options.autoCompleteFields, function (field) {
-                data.push({id: field.value, text: field.label, disabled: field.disabled});
-            }.bind(this));
+            _.each(this.options.autoCompleteFields, field => {
+                if (field.children && field.label) {
+                    data.push({
+                        "text" : field.label,
+                        "children" : _.map(field.children, child => ({
+                            "id" : child.value,
+                            "text" : child.label
+                        }))
+                    });
+                }
+                if (field.value && field.label){
+                    data.push({
+                        id: field.value,
+                        text: field.label,
+                        disabled: field.disabled
+                    });
+                }
+            });
 
             options = {
                 placeholder: this.options.placeholder,
@@ -83,7 +92,9 @@ define([
                 $.extend(options, {minimumResultsForSearch: Infinity});
             }
             $input.select2(options).select2('val', this._value || '');
-            this.options.disabled && this.disable();
+            if (this.options.disabled) {
+                this.disable();
+            }
 
             // add tooltip in case
             if (typeof this.options.tooltip === "function") {
@@ -94,9 +105,9 @@ define([
                     });
                 });
             }
-
             return this;
         },
+
         setAutoCompleteFields: function (fields, render, unselectableFields) {
             render = render !== null ? render : true;
             if (fields !== null) {
@@ -115,15 +126,17 @@ define([
                 this.render();
             }
         },
+
         remove: function () {
             this.$('input').select2('close').select2('destroy');
             return Control.prototype.remove.apply(this, arguments);
         },
+
         validate: function () {
-            return this.getValue() !== null
-                && this.$('input').select2('val').length > 0
-                && this.getValue() === this.$('input').select2('val')
-                && !this.options.disabled;
+            return this.getValue() !== null &&
+                this.$('input').select2('val').length > 0 &&
+                this.getValue() === this.$('input').select2('val') &&
+                !this.options.disabled;
         },
 
         disable: function () {
@@ -140,11 +153,14 @@ define([
         enable: function (render) {
             if (this.options.placeholder !== this.placeholder) {
                 this.options.placeholder = this.placeholder;
-                render && this.render();
+                if (render) {
+                    this.render();
+                }
             }
             this.options.disabled = false;
             this.$('input').prop('disabled', false);
         },
-        template: '<input type="hidden" class="<%= options.inputClassName %>" />'
+
+        template: '<input type="hidden" class="<%- options.inputClassName %>">'
     });
 });

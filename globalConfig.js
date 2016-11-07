@@ -230,6 +230,60 @@ window.globalConfig =
                             }
                         },
                         {
+                            "field": "singleSelectTest",
+                            "label": "Single Select Group Test",
+                            "type": "singleSelect",
+                            "options": {
+                                "autoCompleteFields": [
+                                    {
+                                        "label": "Group1",
+                                        "children": [
+                                            {
+                                                "value": "one",
+                                                "label": "One"
+                                            },
+                                            {
+                                                "value": "two",
+                                                "label": "Two"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "label": "Group2",
+                                        "children": [
+                                            {
+                                                "value": "three",
+                                                "label": "Three"
+                                            },
+                                            {
+                                                "value": "four",
+                                                "label": "Four"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "field": "multipleSelectTest",
+                            "label": "Multiple Select Test",
+                            "type": "multipleSelect",
+                            "options": {
+                                // Optional, default is `,`
+                                "delimiter": "|",
+                                "items": [
+                                    {
+                                        "value": "a",
+                                        "label": "A"
+                                    },
+                                    {
+                                        "value": "b",
+                                        "label": "B"
+                                    }
+                                ]
+                            }
+                        },
+                        {
                             "field": "start_offset",
                             "label": "Start Offset",
                             "type": "text",
@@ -246,7 +300,10 @@ window.globalConfig =
                             "field": "index",
                             "label": "Index",
                             "type": "singleSelect",
-                            "defaultValue": "default"
+                            "defaultValue": "default",
+                            "options": {
+                                "customizedUrl": "data/indexes"
+                            }
                         }
                     ]
                 },
