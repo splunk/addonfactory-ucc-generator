@@ -15,7 +15,7 @@ _APP_ID_MAX_LEN = 10
 class Input(base.BaseModel):
     rest_prefix = 'ta_crowdstrike'
     endpoint = "configs/conf-crowdstrike_falcon_host_inputs"
-    requiredArgs = {'index', 'interval', 'account'}
+    requiredArgs = {'index', 'interval', 'account', 'multipleSelectTest'}
     optionalArgs = {'start_offset', 'app_id'}
     validators = {'app_id', validator.String(maxLen=_APP_ID_MAX_LEN)}
     cap4endpoint = ''

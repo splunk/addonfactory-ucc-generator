@@ -117,15 +117,21 @@ define([
             }
 
             var header = this.component.table.header;
-            _.each(header, function (h) {
+            _.each(header, h => {
                 if (h.field === "name") {
-                    this.$el.append('<td class="col-name">' + (h.mapping ? h.mapping(this.model.entity.entry.attributes[h.field]) : this.model.entity.entry.attributes[h.field]) + '</td>');
+                    let fieldValue = this.model.entity.entry.attributes[h.field];
+                    let html = '<td class="col-name">' + _(fieldValue).t() + '</td>';
+                    this.$el.append(_.template(html));
                 } else if (h.field === "service") {
-                    this.$el.append('<td class="col-service">' + (h.mapping ? h.mapping(this.model.entity) : this.model.entity.entry.content.attributes[h.field]) + '</td>');
+                    let fieldValue = this.model.entity.entry.content.attributes[h.field];
+                    let html = '<td class="col-service">' + _(fieldValue).t() + '</td>';
+                    this.$el.append(_.template(html));
                 } else {
-                    this.$el.append('<td  class="col-' + h.field + '">' + (h.mapping ? h.mapping(this.model.entity.entry.content.attributes[h.field]) : this.model.entity.entry.content.attributes[h.field]) + '</td>');
+                    let fieldValue = String(this.model.entity.entry.content.attributes[h.field]);
+                    let html = '<td  class="col-' + h.field + '">' + _(fieldValue).t() + '</td>';
+                    this.$el.append(_.template(html));
                 }
-            }.bind(this));
+            });
 
             if (this.showActions) {
                 this.$el.append('<td class="actions col-actions"><a class="dropdown-toggle" href="#">' + _("Action").t() + '<span class="caret"></span></a></td>');

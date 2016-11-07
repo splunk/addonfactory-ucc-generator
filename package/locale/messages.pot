@@ -1,0 +1,3 @@
+#: appserver/static/js/views/Pages/InputsPage.html:6
+msgid "Create New Input"
+msgstr ""
