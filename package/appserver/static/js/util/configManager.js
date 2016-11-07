@@ -2,6 +2,7 @@ import {generateTabView} from './configurationTabs';
 import $C from 'splunk.config';
 import SplunkBaseModel from 'models/Base';
 import {loadGlobalConfig} from 'app/util/script';
+import {Validator} from 'jsonschema';
 
 class ConfigManager {
     init(next) {
@@ -18,7 +19,9 @@ class ConfigManager {
         }
 
         const attchPropertie = () => {
-            // TODO: validate config
+            // TODO: display error message when validation failed
+            const validationResult = validateSchema(this.unifiedConfig);
+            this.configurationMap = parseConfigurationMap(this.unifiedConfig);
             const {meta} = this.unifiedConfig;
 
             this.generateEndPointUrl = name => `${meta.restRoot}/${name}`;
