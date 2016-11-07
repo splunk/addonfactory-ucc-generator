@@ -1,3 +1,4 @@
+// The callback will only be executed if the globalConfig exsit
 export function loadGlobalConfig(callback)
 {
     // Adding the script tag to the head as suggested before
@@ -6,7 +7,6 @@ export function loadGlobalConfig(callback)
     script.type = 'text/javascript';
     script.src = `${getBuildDirPath()}/globalConfig.js`;
 
-    // Then bind the event to the callback function.
     // There are several events for cross browser compatibility.
     script.onreadystatechange = callback;
     script.onload = callback;
