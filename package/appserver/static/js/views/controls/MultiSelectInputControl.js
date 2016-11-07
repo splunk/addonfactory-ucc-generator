@@ -1,4 +1,3 @@
-/*global define*/
 define([
     'views/shared/controls/Control',
     'splunk.util',
@@ -8,7 +7,6 @@ define([
     splunkUtils
 ) {
     /**
-     * Radio button Group
      *
      * @param {Object} options
      *                        {Object} model The model to operate on
@@ -21,7 +19,7 @@ define([
 
     return Control.extend({
         className: 'control multiselect-input-control splunk-multidropdown splunk-chioce-input',
-        // moduleId: module.id,
+
         initialize: function () {
             Control.prototype.initialize.call(this, this.options);
             if (this.options.modelAttribute) {
@@ -29,6 +27,7 @@ define([
             }
             this.delimiter = this.options.delimiter || ',';
         },
+
         render: function () {
             this.$el.html(this.compiledTemplate({
                 items: this.options.items
@@ -47,11 +46,15 @@ define([
                 .select2('val', this.stringToFieldList(this._value || ''));
             return this;
         },
+
         setItems: function (items, render) {
             render = render || true;
             this.options.items = items;
-            render && this.render();
+            if (render) {
+                this.render();
+            }
         },
+
         remove: function () {
             this.$('select').select2('close').select2('destroy');
             return Control.prototype.remove.apply(this, arguments);
@@ -62,7 +65,6 @@ define([
             if (typeof(strList) != 'string' || !strList) return [];
             var items = [];
             var field_name_buffer = [];
-            var inquote = false;
             var str = $.trim(strList);
             for (var i=0,j=str.length; i<j; i++) {
                 if (str.charAt(i) == '\\') {
@@ -76,31 +78,19 @@ define([
                         continue;
                     }
                 }
-
-                if (str.charAt(i) == '"') {
-                    if (!inquote) {
-                        inquote = true;
-                        continue;
-                    } else {
-                        inquote = false;
-                        items.push(field_name_buffer.join(''));
-                        field_name_buffer = [];
-                        continue;
-                    }
-                }
-
                 // Template metrics field
-                if (str.charAt(i) === this.delimiter && !inquote) {
+                if (str.charAt(i) === this.delimiter) {
                     if (field_name_buffer.length > 0) {
-                        items.push(field_name_buffer.join(''));
+                        items.push($.trim(field_name_buffer.join('')));
                     }
                     field_name_buffer = [];
                     continue;
                 }
-
                 field_name_buffer.push(str.charAt(i));
             }
-            if (field_name_buffer.length > 0) items.push(field_name_buffer.join(''));
+            if (field_name_buffer.length > 0) {
+                items.push($.trim(field_name_buffer.join('')));
+            }
             return items;
         },
 
@@ -109,12 +99,11 @@ define([
             var output = [];
             for (var i=0,L=fieldArray.length; i<L; i++) {
                 var v = $.trim(fieldArray[i]);
-                if (v != '') {
+                if (v !== '') {
                     // Escape any char with the backslash.
                     if (v.search(this._sflEscapable) > -1) {
                         v = v.replace(this._sflEscapable, "\\$1");
                     }
-
                     output.push(v);
                 }
             }
@@ -131,20 +120,12 @@ define([
             }
         },
 
-        template: [
-            '<select multiple="multiple">',
-            '<% _.each(items, function(item){ %>',
-            '<% if (item.children) { %>',    
-            '<optgroup label="<%- item.label %>">',
-            '<% _.each(item.children, function(child){ %>',
-            '<option value="<%- child.value %>"><%- child.label %></option>',
-            '<% }) %>',
-            '</optgroup>',
-            '<% } else{ %>',
-            '<option value="<%- item.value %>"><%- item.label %></option>',
-            '<% } %>',
-            '<% }) %>',
-            '</select>'
-        ].join('')
+        template: `
+            <select multiple="multiple">
+                <% _.each(items, function(item, index) { %>
+                    <option value="<%- item.value %>"><%- item.label %></option>
+                <% }) %>
+            </select>
+        `
     });
 });
