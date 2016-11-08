@@ -26,10 +26,8 @@ define([
 ) {
     return Backbone.View.extend({
         initialize: function (options) {
-            this.accountConfig = _.find(configManager.unifiedConfig.pages.configuration.tabs, tab => {
-                return tab.name === 'account';
-            });
             const { containerId } = options;
+            this.props = options.props;
             this.containerId = containerId;
             this.appData = configManager.getAppData();
             this.addonName = Util.getAddonName();
@@ -63,6 +61,7 @@ define([
                     buttonId: "addAccountBtn",
                     buttonValue: "Add Account"
                 },
+                {props} = this,
                 accountDeferred = this.fetchListCollection(this.accounts, this.stateModel);
             accountDeferred.done(function () {
                 this.deferred.done(function () {
@@ -74,7 +73,7 @@ define([
                         },
                         collection: this.accounts,
                         noFilterButtons: true,
-                        filterKey: _.map(this.accountConfig.entity, e => e.name)
+                        filterKey: _.map(props.entity, e => e.name)
                     });
                     //Create view
                     this.accountList = new Table({
@@ -82,8 +81,8 @@ define([
                         collection: this.accounts,
                         refCollection: this.combineCollection(),
                         showActions: true,
-                        enableMoreInfo: this.accountConfig.table.moreInfo ? true : false,
-                        component: this.accountConfig,
+                        enableMoreInfo: props.table.moreInfo ? true : false,
+                        component: props,
                     });
 
                     this.$el.append(this.caption.render().$el);
@@ -94,7 +93,7 @@ define([
                         var dlg = new EntityDialog({
                             el: $(".dialog-placeholder"),
                             collection: this.accounts,
-                            component: this.accountConfig,
+                            component: props,
                             isInput: false
                         }).render();
                         dlg.modal();

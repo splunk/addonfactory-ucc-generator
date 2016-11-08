@@ -214,13 +214,6 @@ define([
                     controlOptions: controlOptions
                 });
 
-                if (e.type === 'singleSelect') {
-                    const {customizedUrl, referenceName} = controlOptions;
-                    if(referenceName || customizedUrl) {
-                        this._loadSingleSelectReference(controlWrapper, {customizedUrl, referenceName});
-                    }
-                }
-
                 if (e.display !== undefined) {
                     controlWrapper.$el.css("display", "none");
                 }
@@ -304,6 +297,7 @@ define([
             this.addErrorMsg(this.parseAjaxError(model), this.currentWindow);
         },
 
+        // TODO: delete this method after we fix the missing "default" in index selector.
         _loadIndex: function (controlWrapper) {
             const indexesCollection = generateCollection('indexes');
             const indexes = new indexesCollection([], {
@@ -334,24 +328,6 @@ define([
             }.bind(this)).fail(function () {
                 this.addErrorMsg("Failed to load index", this.currentWindow);
             }.bind(this));
-        },
-
-        _loadSingleSelectReference: function (controlWrapper, {customizedUrl, referenceName}) {
-            const referenceCollection = generateCollection(referenceName, {customizedUrl});
-            const referenceCollectionInstance = new referenceCollection([], {
-                targetApp: this.addonName,
-                targetOwner: "nobody"
-            });
-            const referenceDeferred = referenceCollectionInstance.fetch();
-            referenceDeferred.done(() => {
-                let dic = _.map(referenceCollectionInstance.models, model => {
-                    return {
-                        label: model.entry.attributes.name,
-                        value: model.entry.attributes.name
-                    };
-                });
-                controlWrapper.control.setAutoCompleteFields(dic, true);
-            });
         },
 
         _ensureIndexInList: function (data) {

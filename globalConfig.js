@@ -140,6 +140,33 @@ window.__globalConfig =
                                     {"label": "socks5", "value": "socks5"}
                                 ]
                             }
+                        },
+                        {
+                            "field": "name",
+                            "label": "Name",
+                            "type": "text",
+                            "help": "Enter a unique name for each crowdstrike falcon host data input."
+                        },
+                        {
+                            "field": "account",
+                            "label": "Account",
+                            "type": "singleSelect",
+                            "options": {
+                                "referenceName": "account"
+                            }
+                        },
+                        {
+                            "field": "start_offset",
+                            "label": "Start Offset",
+                            "type": "text",
+                            "defaultValue": "0"
+                        },
+                        {
+                            "field": "interval",
+                            "label": "Interval",
+                            "type": "text",
+                            "defaultValue": "60",
+                            "help": "Time interval of input in seconds."
                         }
                     ]
                 }
@@ -225,8 +252,7 @@ window.__globalConfig =
                             "label": "Account",
                             "type": "singleSelect",
                             "options": {
-                                "referenceName": "account",
-                                "customizedUrl": "ta_crowdstrike/account"
+                                "referenceName": "account"
                             }
                         },
                         {
@@ -322,7 +348,6 @@ window.__globalConfig =
                             "label": "Account",
                             "type": "singleSelect",
                             "options": {
-                                "referenceName": "account",
                                 "customizedUrl": "ta_crowdstrike/account"
                             }
                         },
