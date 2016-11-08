@@ -32,7 +32,6 @@ define([
             this.logging = new loggingSettingModel({
                 name: "loglevel"
             }, {});
-            this.model = new Backbone.Model({});
             this.logging.on("invalid", this.displayValidationError.bind(this));
         },
 

@@ -1,4 +1,4 @@
-import CONFIGURATION_PAGE_MAP from 'app/constants/configurationPageMap';
+import {generateTabView} from './configurationTabs';
 import $C from 'splunk.config';
 import SplunkBaseModel from 'models/Base';
 import {loadGlobalConfig} from 'app/util/script';
@@ -10,6 +10,8 @@ class ConfigManager {
             attchPropertie();
         } else {
             loadGlobalConfig(() => {
+                // The configuration object should be attached to global object,
+                // before executing the code below.
                 this.unifiedConfig = window.globalConfig;
                 attchPropertie();
             });
@@ -17,7 +19,6 @@ class ConfigManager {
 
         const attchPropertie = () => {
             // TODO: validate config
-            this.configurationMap = parseConfigurationMap(this.unifiedConfig);
             const {meta} = this.unifiedConfig;
 
             this.generateEndPointUrl = name => `${meta.restRoot}/${name}`;
@@ -46,38 +47,6 @@ class ConfigManager {
 
         this.appData = new AppDataModel({});
     }
-}
-
-function parseConfigurationMap(unifiedConfig) {
-    const header = {
-        title: '',
-        description: '',
-        enableButton: false,
-        enableHr: false
-    };
-    const allTabs = [];
-
-    const {pages: {configuration: {title, description, tabs}}} = unifiedConfig;
-
-    // Parse header
-    if(title) header.title = title;
-    if(description) header.description = description;
-
-    // Parse tabs
-    tabs.forEach((d, i) => {
-        const view = CONFIGURATION_PAGE_MAP[d.name];
-        if(view) {
-            const page = {
-                active: i === 0,
-                title: d.title,
-                view
-            };
-
-            allTabs.push(page);
-        }
-    });
-
-    return {configuration: {header, allTabs}};
 }
 
 export const configManager = new ConfigManager();

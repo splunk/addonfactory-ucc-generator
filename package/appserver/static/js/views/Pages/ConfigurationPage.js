@@ -1,4 +1,5 @@
 import {configManager} from 'app/util/configManager';
+import {generateTabView} from 'app/util/configurationTabs';
 
 define([
     'jquery',
@@ -15,11 +16,14 @@ define([
 ) {
     return Backbone.View.extend({
         render: function () {
-            const {configurationMap} = configManager;
+            const {unifiedConfig: {pages: {configuration}}} = configManager;
 
-            $(".addonContainer").append(_.template(PageTitleTemplate)(configurationMap.configuration.header));
+            const header = this._parseHeader(configuration);
+            $(".addonContainer").append(_.template(PageTitleTemplate)(header));
             $(".addonContainer").append(_.template(TabTemplate));
-            this.renderTabs(configurationMap.configuration.allTabs);
+
+            const tabs = this._parseTabs(configuration);
+            this.renderTabs(tabs);
             //Router for each tab
             let Router = Backbone.Router.extend({
                 routes: {
@@ -38,6 +42,36 @@ define([
             Backbone.history.start();
         },
 
+        _parseHeader({title, description}) {
+            return {
+                title: title ? title : '',
+                description: description ? description : '',
+                enableButton: false,
+                enableHr: false
+            };
+        },
+
+        _parseTabs({tabs}) {
+            return tabs.map((d, i) => {
+                const {title} = d,
+                    token = title.toLowerCase().replace(/\s/g, '-'),
+                    viewType = generateTabView(d);
+
+                if(viewType) {
+                    const view = new viewType({
+                        containerId: `#${token}-tab`,
+                        props: d
+                    });
+                    return {
+                        active: i === 0,
+                        title,
+                        token,
+                        view
+                    };
+                }
+            }).filter(d => !!d);
+        },
+
         renderTabs: function (tabs) {
             let tabTitleTemplate = `
                     <li <% if (active) { %> class="active" <% } %>>
@@ -51,10 +85,8 @@ define([
                     </div>
                 `;
             _.each(tabs, tab => {
-                let title = tab.title,
-                    token = title.toLowerCase().replace(/\s/g, '-'),
-                    view = new tab.view({ containerId: `#${token}-tab` }),
-                    active;
+                const { title, token, view } = tab;
+                let active;
                 if (!this.tabName) {
                     active = tab.active;
                 } else if (this.tabName && this.tabName === token) {

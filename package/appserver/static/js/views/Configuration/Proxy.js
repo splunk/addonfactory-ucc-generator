@@ -28,7 +28,6 @@ define([
             this.proxy = new proxySettingModel({
                 name: "proxy"
             }, {});
-            this.model = new Backbone.Model({});
             this.proxy.on("invalid", this.displayValidationError.bind(this));
         },
 
