@@ -12,7 +12,7 @@ class ConfigManager {
             loadGlobalConfig(() => {
                 // The configuration object should be attached to global object,
                 // before executing the code below.
-                this.unifiedConfig = window.globalConfig;
+                this.unifiedConfig = window.__globalConfig;
                 attchPropertie();
             });
         }

@@ -7,8 +7,8 @@ export function generateModel(name, options = {}) {
     const {unifiedConfig: {meta}} = configManager;
 
     const newModel = BaseModel.extend({
-        url: name ? (meta.restRoot + '/' + name) : customizedUrl,
-        initialize: function (attributes, options) {
+        url: name ? (meta.restRoot + '/' + name) : customizedUrl, 
+        initialize: function (attributes, options = {}) {
             options.appData = configManager.getAppData().toJSON();
             BaseModel.prototype.initialize.call(this, attributes, options);
         },
@@ -23,7 +23,7 @@ export function generateCollection(name, options = {}) {
     const newCollection = BaseCollection.extend({
         url: name ? (meta.restRoot + '/' + name) : customizedUrl,
         model: generateModel(name, options),
-        initialize: function (attributes, options) {
+        initialize: function (attributes, options = {}) {
             options.appData = configManager.getAppData().toJSON();
             BaseCollection.prototype.initialize.call(this, attributes, options);
         },

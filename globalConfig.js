@@ -1,4 +1,4 @@
-window.globalConfig =
+window.__globalConfig =
 {
     "meta": {
         "name": "Splunk_TA_crowdstrike",
