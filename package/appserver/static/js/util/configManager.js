@@ -2,11 +2,12 @@ import {generateTabView} from './configurationTabs';
 import $C from 'splunk.config';
 import SplunkBaseModel from 'models/Base';
 import {loadGlobalConfig} from 'app/util/script';
+import {validateSchema} from './validators';
 
 class ConfigManager {
     init(next) {
         if (__CONFIG_FROM_FILE__) {
-            this.unifiedConfig = require('app/config/globalConfig');
+            this.unifiedConfig = require('rootDir/globalConfig');
             attchPropertie();
         } else {
             loadGlobalConfig(() => {
@@ -18,7 +19,8 @@ class ConfigManager {
         }
 
         const attchPropertie = () => {
-            // TODO: validate config
+            // TODO: display error message when validation failed
+            const validationResult = validateSchema(this.unifiedConfig);
             const {meta} = this.unifiedConfig;
 
             this.generateEndPointUrl = name => `${meta.restRoot}/${name}`;

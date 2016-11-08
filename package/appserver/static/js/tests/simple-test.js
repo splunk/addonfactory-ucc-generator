@@ -1,5 +1,5 @@
-import {expect} from 'chai';
 import assert from 'assert';
+import {expect} from 'chai';
 
 describe('simple test', () => {
   it('Should passed', () => {
