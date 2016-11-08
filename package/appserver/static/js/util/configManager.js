@@ -10,7 +10,7 @@ class ConfigManager {
             attchPropertie();
         } else {
             loadGlobalConfig(() => {
-                this.unifiedConfig = window.globalConfig;
+                this.unifiedConfig = window.__globalConfig;
                 attchPropertie();
             });
         }

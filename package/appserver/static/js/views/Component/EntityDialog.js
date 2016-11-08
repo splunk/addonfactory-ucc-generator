@@ -214,9 +214,7 @@ define([
                     controlOptions: controlOptions
                 });
 
-                if (e.field === 'index') {
-                    this._loadSingleSelectReference(controlWrapper, {referenceName: 'indexes'});
-                } else if (e.type === 'singleSelect') {
+                if (e.type === 'singleSelect') {
                     const {customizedUrl, referenceName} = controlOptions;
                     if(referenceName || customizedUrl) {
                         this._loadSingleSelectReference(controlWrapper, {customizedUrl, referenceName});
