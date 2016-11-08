@@ -21,7 +21,6 @@ class ConfigManager {
         const attchPropertie = () => {
             // TODO: display error message when validation failed
             const validationResult = validateSchema(this.unifiedConfig);
-            this.configurationMap = parseConfigurationMap(this.unifiedConfig);
             const {meta} = this.unifiedConfig;
 
             this.generateEndPointUrl = name => `${meta.restRoot}/${name}`;
