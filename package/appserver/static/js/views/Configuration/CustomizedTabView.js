@@ -33,7 +33,7 @@ define([
                     help: d.help || null,
                     controlOptions
                 });
-                this.$el.append(controlWrapper.render().$el)
+                this.$el.append(controlWrapper.render().$el);
             });
             return this;
         }
