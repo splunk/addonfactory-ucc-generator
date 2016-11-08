@@ -204,11 +204,6 @@ define([
                     helpLink: e.helpLink
                 };
                 _.extend(controlOptions, e.options);
-                // TODO: find a better way to manage this kind of hard code.
-                // SOLUTION A: add a preprocessor for the configuration, add metadata like below in advance and just in one place.
-                if (e.field === 'index') {
-                    _.extend(controlOptions, {referenceName: 'indexes'})
-                }
 
                 controlWrapper = new ControlWrapper({
                     label: e.label,
