@@ -1,8 +1,7 @@
+import schema from 'rootDir/schema/schema.json';
 import {Validator} from 'jsonschema';
 
 export function validateSchema(config) {
-    const schema = require('rootDir/schema/schema.json');
-
     const validator = new Validator();
     const res = validator.validate(config, schema);
     return {
