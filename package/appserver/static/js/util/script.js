@@ -3,13 +3,13 @@ import $ from 'jquery';
 // NOTE: The callback will only be executed if the globalConfig exsit
 export function loadGlobalConfig(callback)
 {
-    $.getJSON( `${getBuildDirPath()}/globalConfig.json`)
+    $.getJSON(`${getBuildDirPath()}/globalConfig.json`)
         .done(json => {
             window.__globalConfig = json;
             callback();
         })
         .fail((xhr, state, err) => {
-            console.error(err)
+            console.error(err);
         });
 }
 
