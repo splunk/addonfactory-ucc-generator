@@ -1,20 +1,19 @@
-// The callback will only be executed if the globalConfig exsit
+import $ from 'jquery';
+
+// NOTE: The callback will only be executed if the globalConfig exsit
 export function loadGlobalConfig(callback)
 {
-    // Adding the script tag to the head as suggested before
-    const head = document.getElementsByTagName('head')[0];
-    const script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = `${getBuildDirPath()}/globalConfig.js`;
-
-    // There are several events for cross browser compatibility.
-    script.onreadystatechange = callback;
-    script.onload = callback;
-
-    // Fire the loading
-    head.appendChild(script);
+    $.getJSON( `${getBuildDirPath()}/globalConfig.json`)
+        .done(json => {
+            window.__globalConfig = json;
+            callback();
+        })
+        .fail((xhr, state, err) => {
+            console.error(err)
+        });
 }
 
+// NOTE: if bundle script is put some dir instead of js/build, this function will broken.
 export function getBuildDirPath() {
     const scripts = document.getElementsByTagName("script");
 

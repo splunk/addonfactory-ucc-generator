@@ -1,4 +1,3 @@
-window.__globalConfig =
 {
     "meta": {
         "name": "Splunk_TA_crowdstrike",
@@ -180,19 +179,19 @@ window.__globalConfig =
                 "header": [
                     {
                         "field": "name",
-                        "label": "Name",
+                        "label": "Name"
                     },
                     {
                         "field": "account",
-                        "label": "Account",
+                        "label": "Account"
                     },
                     {
                         "field": "start_offset",
-                        "label": "Start Offset",
+                        "label": "Start Offset"
                     },
                     {
                         "field": "interval",
-                        "label": "Interval",
+                        "label": "Interval"
                     },
                     {
                         "field": "index",
@@ -206,20 +205,19 @@ window.__globalConfig =
                 "moreInfo": [
                     {
                         "field": "name",
-                        "label": "Name",
+                        "label": "Name"
                     },
                     {
                         "field": "account",
-                        "label": "Account",
+                        "label": "Account"
                     },
                     {
                         "field": "start_offset",
-                        "label": "Start Offset",
+                        "label": "Start Offset"
                     },
-                    // Common fields
                     {
                         "field": "interval",
-                        "label": "Interval",
+                        "label": "Interval"
                     },
                     {
                         "field": "index",
@@ -295,7 +293,6 @@ window.__globalConfig =
                             "label": "Multiple Select Test",
                             "type": "multipleSelect",
                             "options": {
-                                // Optional, default is `,`
                                 "delimiter": "|",
                                 "items": [
                                     {
