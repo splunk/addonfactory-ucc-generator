@@ -126,7 +126,7 @@ window.__globalConfig =
                 },
                 {
                     "name": "custom_abc",
-                    "title": "Some settings",
+                    "title": "Customized tab",
                     "entity": [
                         {
                             "type": "singleSelect",
@@ -239,7 +239,7 @@ window.__globalConfig =
             "services": [
                 {
                     "name": "ta_crowdstrike_falcon_host_inputs",
-                    "title": "Falcon Host Input",
+                    "title": "Input type 1",
                     "entity": [
                         {
                             "field": "name",
@@ -335,7 +335,7 @@ window.__globalConfig =
                 },
                 {
                     "name": "ta_crowdstrike_falcon_host_inputs",
-                    "title": "Falcon Host Input test",
+                    "title": "Input type 2",
                     "entity": [
                         {
                             "field": "name",
