@@ -41,7 +41,18 @@
                             "label": "Name",
                             "type": "text",
                             "required": true,
-                            "help": "Enter a unique name for each Crowdstrike falcon host account."
+                            "help": "Enter a unique name for each Crowdstrike falcon host account.",
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "min_length": 1,
+                                    "max_length": 50
+                                },
+                                {
+                                    "type": "regex",
+                                    "pattern": "\\w+"
+                                }
+                            ]
                         },
                         {
                             "field": "endpoint",
@@ -58,7 +69,13 @@
                             "field": "api_uuid",
                             "label": "API UUID",
                             "type": "text",
-                            "required": true
+                            "required": true,
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "pattern": "\\w{1,50}"
+                                }
+                            ]
                         },
                         {
                             "field": "api_key",
@@ -113,7 +130,15 @@
                             "defaultValue": "http"
                         },
                         {"field": "proxy_url", "label": "Host", "type": "text"},
-                        {"field": "proxy_port", "label": "Port", "type": "text"},
+                        {
+                            "field": "proxy_port", "label": "Port", "type": "text",
+                            "validators": [
+                                {
+                                    "type": "number",
+                                    "range": [1, 65535]
+                                }
+                            ]
+                        },
                         {"field": "proxy_username", "label": "Username", "type": "text"},
                         {
                             "field": "proxy_password",
@@ -121,7 +146,11 @@
                             "type": "text",
                             "encrypted": true
                         }
-                    ]
+                    ],
+                    "options": {
+                        "validator.save": "function(form_data) { return True; }",
+                        "validator.save2": "function(form_data) { return 'host cannot be empty'; }"
+                    }
                 },
                 {
                     "name": "custom_abc",
@@ -166,6 +195,7 @@
                             "type": "text",
                             "defaultValue": "60",
                             "help": "Time interval of input in seconds."
+
                         }
                     ]
                 }
