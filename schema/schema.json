@@ -1,178 +1,354 @@
 {
-    "$schema": "http://json-schema.org/schema#",
-    "additionalProperties": false,
-    "properties": {
-        "meta": {"$ref": "#/definitions/metaSchema"},
-        "pages": {"$ref": "#/definitions/pagesSchema"}
-    },
-    "required": ["meta", "pages"],
-    "type": "object",
+    "$schema": "http://json-schema.org/draft-04/schema#",
     "definitions": {
-        "metaSchema": {
+        "AccountTabContent": {
             "type": "object",
             "properties": {
-                "displayName": {"type": "string"},
-                "name": {"type": "string"},
-                "restRoot": {"type": "string"},
-                "uccVersion": {"type": "string"},
-                "version": {"type": "string"}
+                "entity": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Entity"
+                    }
+                },
+                "title": {
+                    "type": "string"
+                },
+                "options": {
+                    "type": "object"
+                },
+                "name": {
+                    "type": "string",
+                    "enum": [
+                        "account"
+                    ]
+                },
+                "table": {
+                    "$ref": "#/definitions/Table"
+                }
             },
-            "additionalProperties": false,
+            "required": [
+                "entity",
+                "title",
+                "name",
+                "table"
+            ],
+            "additionalProperties": false
+        },
+        "ConfigurationPage": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "tabs": {
+                    "type": "array",
+                    "items": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/definitions/AccountTabContent"
+                            },
+                            {
+                                "$ref": "#/definitions/CustomizedTabContent"
+                            },
+                            {
+                                "$ref": "#/definitions/LoggingTabContent"
+                            },
+                            {
+                                "$ref": "#/definitions/ProxyTabContent"
+                            }
+                        ]
+                    }
+                }
+            },
+            "required": [
+                "description",
+                "title",
+                "tabs"
+            ],
+            "additionalProperties": false
+        },
+        "CustomizedTabContent": {
+            "type": "object",
+            "properties": {
+                "entity": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Entity"
+                    }
+                },
+                "title": {
+                    "type": "string"
+                },
+                "options": {
+                    "type": "object"
+                },
+                "name": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "entity",
+                "title",
+                "name"
+            ],
+            "additionalProperties": false
+        },
+        "Entity": {
+            "type": "object",
+            "properties": {
+                "field": {
+                    "type": "string"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "help": {
+                    "type": "string"
+                },
+                "defaultValue": {
+                    "oneOf": [
+                        {
+                            "type": "number"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "options": {
+                    "type": "object"
+                },
+                "required": {
+                    "type": "boolean"
+                },
+                "encrypted": {
+                    "type": "boolean"
+                },
+                "validators": {
+                    "type": "array"
+                }
+            },
+            "required": [
+                "field",
+                "label",
+                "type"
+            ],
+            "additionalProperties": false
+        },
+        "InputsPage": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "table": {
+                    "$ref": "#/definitions/Table"
+                },
+                "services": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "title": {
+                                "type": "string"
+                            },
+                            "entity": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/Entity"
+                                }
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "title",
+                            "entity"
+                        ]
+                    }
+                },
+                "title": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "table",
+                "services",
+                "title"
+            ],
+            "additionalProperties": false
+        },
+        "LoggingTabContent": {
+            "type": "object",
+            "properties": {
+                "entity": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Entity"
+                    }
+                },
+                "title": {
+                    "type": "string"
+                },
+                "options": {
+                    "type": "object"
+                },
+                "name": {
+                    "type": "string",
+                    "enum": [
+                        "logging"
+                    ]
+                }
+            },
+            "required": [
+                "entity",
+                "title",
+                "name"
+            ],
+            "additionalProperties": false
+        },
+        "Meta": {
+            "type": "object",
+            "properties": {
+                "displayName": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "restRoot": {
+                    "type": "string"
+                },
+                "uccVersion": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "string"
+                }
+            },
             "required": [
                 "displayName",
                 "name",
                 "restRoot",
                 "uccVersion",
                 "version"
-            ]
+            ],
+            "additionalProperties": false
         },
-
-        "pagesSchema": {
-          "additionalProperties": false,
-          "properties": {
-              "configuration": {"$ref": "#/definitions/configurationSchema"},
-              "inputs": {"$ref": "#/definitions/inputsSchema"}
-          }
-        },
-
-        "configurationSchema": {
+        "Pages": {
             "type": "object",
             "properties": {
-                "description": {"type": "string"},
-                "tabs": {
-                    "items": {
-                        "anyOf": [
-                            {"$ref": "#/definitions/accountTabContentSchema"},
-                            {"$ref": "#/definitions/customizedTabContentSchema"},
-                            {"$ref": "#/definitions/loggingTabContentSchema"},
-                            {"$ref": "#/definitions/proxyTabContentSchema"}
-                        ]
-                    },
-                    "type": "array"
+                "configuration": {
+                    "$ref": "#/definitions/ConfigurationPage"
                 },
-                "title": {"type": "string"}
-            }
+                "inputs": {
+                    "$ref": "#/definitions/InputsPage"
+                }
+            },
+            "additionalProperties": false
         },
-
-        "inputsSchema": {
+        "ProxyTabContent": {
             "type": "object",
             "properties": {
-                "description": {"type": "string"},
-                "services": {
+                "entity": {
                     "type": "array",
                     "items": {
-                        "additionalProperties": false,
-                        "type": "object",
-                        "properties": {
-                            "name": {"type": "string"},
-                            "title": {"type": "string"},
-                            "entity": {"$ref": "#/definitions/entitySchema"}
-                        }
+                        "$ref": "#/definitions/Entity"
                     }
                 },
-                "table": {"$ref": "#/definitions/tableSchema"},
-                "title": {"type": "string"}
-            }
-        },
-
-        "entitySchema": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "field": {"type": "string"},
-                    "label": {"type": "string"},
-                    "type": {"type": "string"},
-                    "help": {"type": "string"},
-                    "defaultValue": {
-                        "anyOf": [
-                            { "type": "string" },
-                            { "type": "number" }
-                        ]
-                    },
-                    "options": {"type": "object"},
-                    "required": {"type": "boolean"},
-                    "encrypted": {"type": "boolean"}
+                "title": {
+                    "type": "string"
                 },
-                "additionalProperties": false
-            }
+                "options": {
+                    "type": "object"
+                },
+                "name": {
+                    "type": "string",
+                    "enum": [
+                        "proxy"
+                    ]
+                }
+            },
+            "required": [
+                "entity",
+                "title",
+                "name"
+            ],
+            "additionalProperties": false
         },
-
-        "tableSchema": {
-            "additionalProperties": false,
+        "Table": {
             "type": "object",
             "properties": {
-                "header": {
-                    "tyoe": "array",
-                    "items": {
-                        "additionalProperties": false,
-                        "type": "object",
-                        "properties": {
-                            "field": {"type": "string"},
-                            "label": {"type": "string"}
-                        },
-                        "required": ["field", "label"]
-                    }
-                },
-                "moreInfo": {
-                    "tyoe": "array",
-                    "items": {
-                        "additionalProperties": false,
-                        "type": "object",
-                        "properties": {
-                            "field": {"type": "string"},
-                            "label": {"type": "string"}
-                        },
-                        "required": ["field", "label"]
-                    }
-                },
                 "actions": {
-                    "tyoe": "array",
+                    "type": "array",
                     "items": {
                         "type": "string"
                     }
+                },
+                "moreInfo": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "label": {
+                                "type": "string"
+                            },
+                            "field": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "label",
+                            "field"
+                        ]
+                    }
+                },
+                "header": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "label": {
+                                "type": "string"
+                            },
+                            "field": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "label",
+                            "field"
+                        ]
+                    }
                 }
-            }
-        },
-
-        "accountTabContentSchema": {
-            "type": "object",
-            "properties": {
-                "name": {"type": "string"},
-                "title": {"type": "string"},
-                "entity": {"$ref": "#/definitions/entitySchema"},
-                "table": {"$ref": "#/definitions/tableSchema"}
-            }
-        },
-
-        "loggingTabContentSchema": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "name": {"type": "string"},
-                "title": {"type": "string"},
-                "entity": {"$ref": "#/definitions/entitySchema"}
-            }
-        },
-
-        "proxyTabContentSchema": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "name": {"type": "string"},
-                "title": {"type": "string"},
-                "entity": {"$ref": "#/definitions/entitySchema"}
-            }
-        },
-
-        "customizedTabContentSchema": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "name": {"type": "string"},
-                "title": {"type": "string"},
-                "entity": {"$ref": "#/definitions/entitySchema"}
-            }
+            },
+            "required": [
+                "actions",
+                "header"
+            ],
+            "additionalProperties": false
         }
-    }
+    },
+    "type": "object",
+    "properties": {
+        "meta": {
+            "$ref": "#/definitions/Meta"
+        },
+        "pages": {
+            "$ref": "#/definitions/Pages"
+        }
+    },
+    "required": [
+        "meta",
+        "pages"
+    ],
+    "additionalProperties": false
 }
