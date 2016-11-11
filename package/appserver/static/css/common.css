@@ -33,6 +33,10 @@
     float: right;
     margin-right: 20px;
 }
+/*Modal body overflow*/
+.modal-body {
+    overflow: auto;
+}
 
 /*Modal footer cancel button CSS*/
 .modal-footer .cancel-btn {
