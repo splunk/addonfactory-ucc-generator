@@ -273,7 +273,8 @@
                             "field": "name",
                             "label": "Name",
                             "type": "text",
-                            "help": "Enter a unique name for each crowdstrike falcon host data input."
+                            "help": "Enter a unique name for each crowdstrike falcon host data input.",
+                            "required": true
                         },
                         {
                             "field": "account",
@@ -281,7 +282,8 @@
                             "type": "singleSelect",
                             "options": {
                                 "referenceName": "account"
-                            }
+                            },
+                            "required": true
                         },
                         {
                             "field": "singleSelectTest",
@@ -347,7 +349,8 @@
                             "label": "Interval",
                             "type": "text",
                             "defaultValue": "60",
-                            "help": "Time interval of input in seconds."
+                            "help": "Time interval of input in seconds.",
+                            "required": true
                         },
                         {
                             "field": "index",
@@ -356,7 +359,8 @@
                             "defaultValue": "default",
                             "options": {
                                 "customizedUrl": "data/indexes"
-                            }
+                            },
+                            "required": true
                         }
                     ]
                 },
