@@ -58,17 +58,17 @@ define([
             _.each(this.options.autoCompleteFields, field => {
                 if (field.children && field.label) {
                     data.push({
-                        "text" : field.label,
-                        "children" : _.map(field.children, child => ({
-                            "id" : child.value,
-                            "text" : child.label
+                        text : _(field.label).t(),
+                        children : _.map(field.children, child => ({
+                            id : child.value,
+                            text : _(child.label).t()
                         }))
                     });
                 }
                 if (field.value && field.label){
                     data.push({
                         id: field.value,
-                        text: field.label,
+                        text: _(field.label).t(),
                         disabled: field.disabled
                     });
                 }
