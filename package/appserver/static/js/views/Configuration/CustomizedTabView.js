@@ -35,6 +35,10 @@ define([
                 });
                 this.$el.append(controlWrapper.render().$el);
             });
+            // TODO change below to button control 
+            this.$el.append(`
+                <input type="submit" class="btn btn-primary submit-btn" value="Save" style="margin-left: 170px">
+            `);
             return this;
         }
     });

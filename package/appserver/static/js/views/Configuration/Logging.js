@@ -38,17 +38,9 @@ define([
         render: function () {
             var deferred = this.logging.fetch();
             deferred.done(function () {
-                //Description
-                descriptionHtml = `
-                    <div class='description_block'>
-                        <%- _('Data collection logging levels.').t() %>
-                    </div>
-                `;
                 this.model = this.logging.entry.content.clone();
 
                 this.$el.html(_.template(LoggingTemplate));
-                this.$el.prepend(_.template(descriptionHtml));
-
                 entity = this.loggingConfig.entity || defaultLoggingTabEntity;
                 this.children = [];
                 _.each(entity, function (e) {
