@@ -171,23 +171,23 @@
                     "items": {
                         "type": "object",
                         "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "title": {
+                                "type": "string"
+                            },
                             "entity": {
                                 "type": "array",
                                 "items": {
                                     "$ref": "#/definitions/Entity"
                                 }
-                            },
-                            "title": {
-                                "type": "string"
-                            },
-                            "name": {
-                                "type": "string"
                             }
                         },
                         "required": [
-                            "entity",
+                            "name",
                             "title",
-                            "name"
+                            "entity"
                         ]
                     }
                 },
@@ -238,7 +238,8 @@
                     "type": "string"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "pattern": "^\\w+$"
                 },
                 "restRoot": {
                     "type": "string"

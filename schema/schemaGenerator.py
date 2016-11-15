@@ -8,7 +8,7 @@ class DocumentWithoutAddProp(Document):
 
 class Meta(DocumentWithoutAddProp):
     displayName = StringField(required=True)
-    name = StringField(required=True)
+    name = StringField(required=True, pattern="^\\w+$")
     restRoot = StringField(required=True)
     uccVersion = StringField(required=True)
     version = StringField(required=True)
