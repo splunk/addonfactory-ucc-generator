@@ -134,7 +134,20 @@
                     "type": "boolean"
                 },
                 "validators": {
-                    "type": "array"
+                    "type": "array",
+                    "items": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/definitions/StringValidator"
+                            },
+                            {
+                                "$ref": "#/definitions/NumberValidator"
+                            },
+                            {
+                                "$ref": "#/definitions/RegexpValidator"
+                            }
+                        ]
+                    }
                 }
             },
             "required": [
@@ -158,22 +171,22 @@
                     "items": {
                         "type": "object",
                         "properties": {
-                            "title": {
-                                "type": "string"
-                            },
                             "entity": {
                                 "type": "array",
                                 "items": {
                                     "$ref": "#/definitions/Entity"
                                 }
                             },
+                            "title": {
+                                "type": "string"
+                            },
                             "name": {
                                 "type": "string"
                             }
                         },
                         "required": [
-                            "title",
                             "entity",
+                            "title",
                             "name"
                         ]
                     }
@@ -246,6 +259,28 @@
             ],
             "additionalProperties": false
         },
+        "NumberValidator": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "number"
+                    ]
+                },
+                "range": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                }
+            },
+            "required": [
+                "type",
+                "range"
+            ],
+            "additionalProperties": false
+        },
         "Pages": {
             "type": "object",
             "properties": {
@@ -284,6 +319,48 @@
                 "entity",
                 "title",
                 "name"
+            ],
+            "additionalProperties": false
+        },
+        "RegexpValidator": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "regex"
+                    ]
+                },
+                "pattern": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "type",
+                "pattern"
+            ],
+            "additionalProperties": false
+        },
+        "StringValidator": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "string"
+                    ]
+                },
+                "minLength": {
+                    "type": "number"
+                },
+                "maxLength": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "type",
+                "minLength",
+                "maxLength"
             ],
             "additionalProperties": false
         },

@@ -13,6 +13,19 @@ class Meta(DocumentWithoutAddProp):
     uccVersion = StringField(required=True)
     version = StringField(required=True)
 
+class StringValidator(DocumentWithoutAddProp):
+    type = StringField(required=True, enum=["string"])
+    minLength = NumberField(required=True)
+    maxLength = NumberField(required=True)
+
+class NumberValidator(DocumentWithoutAddProp):
+    type = StringField(required=True, enum=["number"])
+    range = ArrayField(NumberField(), required=True)
+
+class RegexpValidator(DocumentWithoutAddProp):
+    type = StringField(required=True, enum=["regex"])
+    pattern = StringField(required=True)
+
 class Entity(DocumentWithoutAddProp):
     field = StringField(required=True)
     label = StringField(required=True)
@@ -25,7 +38,11 @@ class Entity(DocumentWithoutAddProp):
     options = DictField()
     required = BooleanField()
     encrypted = BooleanField()
-    validators = ArrayField()
+    validators = ArrayField(AnyOfField([
+        DocumentField(StringValidator, as_ref=True),
+        DocumentField(NumberValidator, as_ref=True),
+        DocumentField(RegexpValidator, as_ref=True)
+    ]))
 
 class TabContentBase(Document):
     entity = ArrayField(DocumentField(Entity, as_ref=True), required=True)
