@@ -45,8 +45,8 @@
                             "validators": [
                                 {
                                     "type": "string",
-                                    "min_length": 1,
-                                    "max_length": 50
+                                    "minLength": 1,
+                                    "maxLength": 50
                                 },
                                 {
                                     "type": "regex",

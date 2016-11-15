@@ -87,6 +87,9 @@
                 },
                 "name": {
                     "type": "string"
+                },
+                "table": {
+                    "$ref": "#/definitions/Table"
                 }
             },
             "required": [
@@ -155,9 +158,6 @@
                     "items": {
                         "type": "object",
                         "properties": {
-                            "name": {
-                                "type": "string"
-                            },
                             "title": {
                                 "type": "string"
                             },
@@ -166,12 +166,15 @@
                                 "items": {
                                     "$ref": "#/definitions/Entity"
                                 }
+                            },
+                            "name": {
+                                "type": "string"
                             }
                         },
                         "required": [
-                            "name",
                             "title",
-                            "entity"
+                            "entity",
+                            "name"
                         ]
                     }
                 },
@@ -290,7 +293,13 @@
                 "actions": {
                     "type": "array",
                     "items": {
-                        "type": "string"
+                        "type": "string",
+                        "enum": [
+                            "edit",
+                            "delete",
+                            "clone",
+                            "enable"
+                        ]
                     }
                 },
                 "moreInfo": {

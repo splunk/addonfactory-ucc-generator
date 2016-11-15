@@ -33,7 +33,7 @@ class TabContentBase(Document):
     options = DictField()
 
 class Table(DocumentWithoutAddProp):
-    actions = ArrayField(StringField(), required=True)
+    actions = ArrayField(StringField(enum=["edit", "delete", "clone", "enable"]), required=True)
     moreInfo = ArrayField(DictField(
         properties={
             "field": StringField(required=True),
@@ -53,6 +53,7 @@ class AccountTabContent(TabContentBase):
 
 class CustomizedTabContent(TabContentBase):
     name = StringField(required=True)
+    table = DocumentField(Table, as_ref=True)
 
 class LoggingTabContent(TabContentBase):
     name = StringField(required=True, enum=["logging"])
@@ -94,5 +95,5 @@ if __name__ == "__main__":
     formated = json.dumps(UCCConfig.get_schema(ordered=True), indent=4)
     formated = formated.replace("__main__.", "")
 
-    with open('./schema.json', 'w+') as schema_handler:
+    with open('./schema/schema.json', 'w+') as schema_handler:
         schema_handler.write(formated)

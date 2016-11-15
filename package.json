@@ -34,7 +34,8 @@
     "fortify": "/usr/bin/fortify-scanner.py",
     "watch": "grunt watch &",
     "copyConfig": "copyfiles ./globalConfig.json ./stage/appserver/static/js/build",
-    "test": "karma start ./config/karma/karma.conf.js"
+    "test": "karma start ./config/karma/karma.conf.js",
+    "watchSchemaGenerator": "nodemon --exec python3 schema/schemaGenerator.py --watch schema/schemaGenerator.py"
   },
   "dependencies": {
     "jsonschema": "^1.1.0",
