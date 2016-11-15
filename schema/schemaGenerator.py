@@ -7,16 +7,17 @@ class DocumentWithoutAddProp(Document):
         additional_properties = False
 
 class Meta(DocumentWithoutAddProp):
+    # TODO: add pattern
     displayName = StringField(required=True)
-    name = StringField(required=True, pattern="^\\w+$")
-    restRoot = StringField(required=True)
-    uccVersion = StringField(required=True)
-    version = StringField(required=True)
+    name = StringField(required=True, pattern="^\w+$")
+    restRoot = StringField(required=True, pattern="^\w+$")
+    uccVersion = StringField(required=True, pattern="^(\d{1,3}\.){2}\d{1,3}$")
+    version = StringField(required=True, pattern="^(\d{1,3}\.){2}\d{1,3}$")
 
 class StringValidator(DocumentWithoutAddProp):
     type = StringField(required=True, enum=["string"])
-    minLength = NumberField(required=True)
-    maxLength = NumberField(required=True)
+    minLength = NumberField(required=True, minimum=0)
+    maxLength = NumberField(required=True, minimum=0)
 
 class NumberValidator(DocumentWithoutAddProp):
     type = StringField(required=True, enum=["number"])
@@ -27,9 +28,11 @@ class RegexpValidator(DocumentWithoutAddProp):
     pattern = StringField(required=True)
 
 class Entity(DocumentWithoutAddProp):
-    field = StringField(required=True)
+    field = StringField(required=True, pattern="^\w+$")
+    # TODO: add pattern
     label = StringField(required=True)
-    type = StringField(required=True)
+    type = StringField(required=True, pattern="^\w+$")
+    # TODO: add pattern
     help = StringField()
     defaultValue = OneOfField([
         NumberField(),
@@ -46,6 +49,7 @@ class Entity(DocumentWithoutAddProp):
 
 class TabContentBase(Document):
     entity = ArrayField(DocumentField(Entity, as_ref=True), required=True)
+    # TODO: add pattern
     title = StringField(required=True)
     options = DictField()
 
@@ -53,13 +57,15 @@ class Table(DocumentWithoutAddProp):
     actions = ArrayField(StringField(enum=["edit", "delete", "clone", "enable"]), required=True)
     moreInfo = ArrayField(DictField(
         properties={
-            "field": StringField(required=True),
+            "field": StringField(required=True, pattern="^\w+$"),
+            # TODO: add pattern
             "label": StringField(required=True)
         }
     ))
     header = ArrayField(DictField(
         properties={
-            "field": StringField(required=True),
+            "field": StringField(required=True, pattern="^\w+$"),
+            # TODO: add pattern
             "label": StringField(required=True)
         }
     ), required=True)
@@ -69,7 +75,7 @@ class AccountTabContent(TabContentBase):
     table = DocumentField(Table, as_ref=True, required=True)
 
 class CustomizedTabContent(TabContentBase):
-    name = StringField(required=True)
+    name = StringField(required=True, pattern="^\w+$")
     table = DocumentField(Table, as_ref=True)
 
 class LoggingTabContent(TabContentBase):
@@ -79,7 +85,9 @@ class ProxyTabContent(TabContentBase):
     name = StringField(required=True, enum=["proxy"])
 
 class ConfigurationPage(DocumentWithoutAddProp):
+    # TODO: add pattern
     description = StringField(required=True)
+    # TODO: add pattern
     title = StringField(required=True)
     tabs = ArrayField(AnyOfField([
         DocumentField(AccountTabContent, as_ref=True),
@@ -89,15 +97,18 @@ class ConfigurationPage(DocumentWithoutAddProp):
     ]), required=True)
 
 class InputsPage(DocumentWithoutAddProp):
+    # TODO: add pattern
     description = StringField()
     table = DocumentField(Table, as_ref=True, required=True)
     services = ArrayField(DictField(
         properties={
-            "name": StringField(required=True),
+            "name": StringField(required=True, pattern="^\w+$"),
+            # TODO: add pattern
             "title": StringField(required=True),
             "entity": ArrayField(DocumentField(Entity, as_ref=True), required=True)
         }
     ), required=True)
+    # TODO: add pattern
     title = StringField(required=True)
 
 class Pages(DocumentWithoutAddProp):
