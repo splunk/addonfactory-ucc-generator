@@ -238,7 +238,7 @@ window.__globalConfig =
             },
             "services": [
                 {
-                    "name": "ta_crowdstrike_falcon_host_inputs",
+                    "name": "crowdstrike_input_1",
                     "title": "Falcon Host Input",
                     "entity": [
                         {
@@ -334,7 +334,7 @@ window.__globalConfig =
                     ]
                 },
                 {
-                    "name": "ta_crowdstrike_falcon_host_inputs",
+                    "name": "crowdstrike_input_2",
                     "title": "Falcon Host Input test",
                     "entity": [
                         {

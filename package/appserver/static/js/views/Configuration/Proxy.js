@@ -1,4 +1,5 @@
 import {defaultProxyTabEntity} from 'app/constants/defaultEntities';
+import restEndpointMap from 'app/constants/restEndpointMap';
 import {configManager} from 'app/util/configManager';
 import {generateModel} from 'app/util/backbone';
 
@@ -24,7 +25,13 @@ define([
             this.proxyConfig = _.find(configManager.unifiedConfig.pages.configuration.tabs, tab => {
                 return tab.name === 'proxy';
             });
-            const proxySettingModel = generateModel('settings');
+            // Add splunkd REST support
+            var proxySettingModel;
+            if (!restEndpointMap['proxy']) {
+                proxySettingModel = generateModel('setting');
+            } else {
+                proxySettingModel = generateModel('', {'customizedUrl': restEndpointMap['proxy']});
+            }
             this.proxy = new proxySettingModel({
                 name: "proxy"
             }, {});

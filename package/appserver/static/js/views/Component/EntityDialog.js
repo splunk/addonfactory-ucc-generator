@@ -1,5 +1,6 @@
 import {configManager} from 'app/util/configManager';
 import {generateModel, generateCollection} from 'app/util/backbone';
+import restEndpointMap from 'app/constants/restEndpointMap';
 
 define([
     'jquery',
@@ -52,7 +53,13 @@ define([
             }
 
             this.model = new Backbone.Model({});
-            let InputType = generateModel(this.component.name);
+            let InputType;
+            if (!restEndpointMap[this.component.name]) {
+                InputType = generateModel(this.component.name);
+            } else {
+                InputType = generateModel('', {'customizedUrl': restEndpointMap[this.component.name]});
+            }
+
             if (!options.model) { //Create mode
                 this.mode = "create";
                 this.model = new Backbone.Model({});

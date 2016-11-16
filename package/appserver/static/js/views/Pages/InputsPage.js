@@ -1,6 +1,7 @@
 import {configManager} from 'app/util/configManager';
 import {generateModel, generateCollection} from 'app/util/backbone';
 import {sortAlphabetical, sortNumerical} from 'app/util/sort';
+import restEndpointMap from 'app/constants/restEndpointMap';
 
 define([
     'jquery',
@@ -59,7 +60,12 @@ define([
             );
             // create collection for each service
             _.each(this.services, service => {
-                let collection = generateCollection(service.name);
+                let collection;
+                if (!restEndpointMap[service.name]) {
+                    collection = generateCollection(service.name);
+                } else {
+                    collection = generateCollection('', {'customizedUrl': restEndpointMap[service.name]});
+                }
                 this[service.name] = new collection([], {
                     targetApp: this.addonName,
                     targetOwner: "nobody"
@@ -198,7 +204,11 @@ define([
                 deferred = this.fetchListCollection(this[type], this.stateModel);
                 deferred.done(function () {
                     const service = this.services.find(d => d.name === type);
-                    this.inputs.model = generateModel[service.name];
+                    if (!restEndpointMap[service.name]) {
+                        this.inputs.model = generateModel(service.name);
+                    } else {
+                        this.inputs.model = generateModel('', {'customizedUrl': restEndpointMap[service.name]});
+                    }
                     this.inputs._url = this[type]._url;
                     this.inputs.reset(this[type].models);
 
