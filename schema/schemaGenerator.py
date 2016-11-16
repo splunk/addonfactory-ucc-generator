@@ -29,6 +29,18 @@ class RegexpValidator(DocumentWithoutAddProp):
     pattern = StringField(required=True)
     errorMsg = StringField(enum=["string"], max_length=200)
 
+class EmailValidator(DocumentWithoutAddProp):
+    type = StringField(required=True, enum=["email"])
+
+class Ipv4Validator(DocumentWithoutAddProp):
+    type = StringField(required=True, enum=["ipv4"])
+
+class DateValidator(DocumentWithoutAddProp):
+    type = StringField(required=True, enum=["date"])
+
+class UrlValidator(DocumentWithoutAddProp):
+    type = StringField(required=True, enum=["url"])
+
 class Entity(DocumentWithoutAddProp):
     field = StringField(required=True, pattern="^\w+$")
     label = StringField(required=True, max_length=30)
@@ -71,7 +83,11 @@ class Entity(DocumentWithoutAddProp):
     validators = ArrayField(AnyOfField([
         DocumentField(StringValidator, as_ref=True),
         DocumentField(NumberValidator, as_ref=True),
-        DocumentField(RegexpValidator, as_ref=True)
+        DocumentField(RegexpValidator, as_ref=True),
+        DocumentField(EmailValidator, as_ref=True),
+        DocumentField(Ipv4Validator, as_ref=True),
+        DocumentField(UrlValidator, as_ref=True),
+        DocumentField(DateValidator, as_ref=True)
     ]))
 
 class Table(DocumentWithoutAddProp):

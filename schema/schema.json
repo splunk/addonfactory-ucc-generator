@@ -26,6 +26,36 @@
             ],
             "additionalProperties": false
         },
+        "DateValidator": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "date"
+                    ]
+                }
+            },
+            "required": [
+                "type"
+            ],
+            "additionalProperties": false
+        },
+        "EmailValidator": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "email"
+                    ]
+                }
+            },
+            "required": [
+                "type"
+            ],
+            "additionalProperties": false
+        },
         "Entity": {
             "type": "object",
             "properties": {
@@ -65,40 +95,8 @@
                 "options": {
                     "type": "object",
                     "properties": {
-                        "autoCompleteFields": {
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "label": {
-                                        "type": "string"
-                                    },
-                                    "children": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "object",
-                                            "properties": {
-                                                "label": {
-                                                    "type": "string"
-                                                },
-                                                "value": {
-                                                    "type": "string"
-                                                }
-                                            },
-                                            "required": [
-                                                "label",
-                                                "value"
-                                            ]
-                                        }
-                                    },
-                                    "value": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": [
-                                    "label"
-                                ]
-                            }
+                        "referenceName": {
+                            "type": "string"
                         },
                         "items": {
                             "type": "array",
@@ -118,20 +116,52 @@
                                 ]
                             }
                         },
+                        "customizedUrl": {
+                            "type": "string"
+                        },
+                        "autoCompleteFields": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "label": {
+                                        "type": "string"
+                                    },
+                                    "value": {
+                                        "type": "string"
+                                    },
+                                    "children": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "label": {
+                                                    "type": "string"
+                                                },
+                                                "value": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "label",
+                                                "value"
+                                            ]
+                                        }
+                                    }
+                                },
+                                "required": [
+                                    "label"
+                                ]
+                            }
+                        },
+                        "enable": {
+                            "type": "boolean"
+                        },
                         "placeholder": {
                             "type": "string"
                         },
                         "disableSearch": {
                             "type": "boolean"
-                        },
-                        "referenceName": {
-                            "type": "string"
-                        },
-                        "enable": {
-                            "type": "boolean"
-                        },
-                        "customizedUrl": {
-                            "type": "string"
                         },
                         "delimiter": {
                             "type": "string"
@@ -156,6 +186,18 @@
                             },
                             {
                                 "$ref": "#/definitions/RegexpValidator"
+                            },
+                            {
+                                "$ref": "#/definitions/EmailValidator"
+                            },
+                            {
+                                "$ref": "#/definitions/Ipv4Validator"
+                            },
+                            {
+                                "$ref": "#/definitions/UrlValidator"
+                            },
+                            {
+                                "$ref": "#/definitions/DateValidator"
                             }
                         ]
                     }
@@ -187,25 +229,25 @@
                     "items": {
                         "type": "object",
                         "properties": {
-                            "title": {
-                                "type": "string",
-                                "maxLength": 50
-                            },
-                            "name": {
-                                "type": "string",
-                                "pattern": "^[A-Za-z0-9_]+$"
-                            },
                             "entity": {
                                 "type": "array",
                                 "items": {
                                     "$ref": "#/definitions/Entity"
                                 }
+                            },
+                            "name": {
+                                "type": "string",
+                                "pattern": "^[A-Za-z0-9_]+$"
+                            },
+                            "title": {
+                                "type": "string",
+                                "maxLength": 50
                             }
                         },
                         "required": [
-                            "title",
+                            "entity",
                             "name",
-                            "entity"
+                            "title"
                         ]
                     }
                 }
@@ -214,6 +256,21 @@
                 "title",
                 "table",
                 "services"
+            ],
+            "additionalProperties": false
+        },
+        "Ipv4Validator": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "ipv4"
+                    ]
+                }
+            },
+            "required": [
+                "type"
             ],
             "additionalProperties": false
         },
@@ -264,6 +321,13 @@
                     "items": {
                         "type": "number"
                     }
+                },
+                "errorMsg": {
+                    "type": "string",
+                    "enum": [
+                        "string"
+                    ],
+                    "maxLength": 200
                 }
             },
             "required": [
@@ -295,6 +359,13 @@
                 },
                 "pattern": {
                     "type": "string"
+                },
+                "errorMsg": {
+                    "type": "string",
+                    "enum": [
+                        "string"
+                    ],
+                    "maxLength": 200
                 }
             },
             "required": [
@@ -319,6 +390,13 @@
                 "maxLength": {
                     "type": "number",
                     "minimum": 0
+                },
+                "errorMsg": {
+                    "type": "string",
+                    "enum": [
+                        "string"
+                    ],
+                    "maxLength": 200
                 }
             },
             "required": [
@@ -418,6 +496,21 @@
             "required": [
                 "actions",
                 "header"
+            ],
+            "additionalProperties": false
+        },
+        "UrlValidator": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "url"
+                    ]
+                }
+            },
+            "required": [
+                "type"
             ],
             "additionalProperties": false
         }
