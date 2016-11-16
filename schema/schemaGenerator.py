@@ -11,8 +11,8 @@ class Meta(DocumentWithoutAddProp):
     displayName = StringField(required=True)
     name = StringField(required=True, pattern="^\w+$")
     restRoot = StringField(required=True, pattern="^\w+$")
-    uccVersion = StringField(required=True, pattern="^(\d{1,3}\.){2}\d{1,3}$")
-    version = StringField(required=True, pattern="^(\d{1,3}\.){2}\d{1,3}$")
+    uccVersion = StringField(required=True, pattern="^(?:\d{1,3}\.){2}\d{1,3}$")
+    version = StringField(required=True, pattern="^(?:\d{1,3}\.){2}\d{1,3}$")
 
 class StringValidator(DocumentWithoutAddProp):
     type = StringField(required=True, enum=["string"])
