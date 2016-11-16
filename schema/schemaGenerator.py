@@ -7,9 +7,8 @@ class DocumentWithoutAddProp(Document):
         additional_properties = False
 
 class Meta(DocumentWithoutAddProp):
-    # TODO: add pattern
-    displayName = StringField(required=True)
-    name = StringField(required=True, pattern="^\w+$")
+    displayName = StringField(required=True, max_length=200)
+    name = StringField(required=True, pattern="^[^<>\:\"\/\\\|\?\*]+$")
     restRoot = StringField(required=True, pattern="^\w+$")
     uccVersion = StringField(required=True, pattern="^(?:\d{1,3}\.){2}\d{1,3}$")
     version = StringField(required=True, pattern="^(?:\d{1,3}\.){2}\d{1,3}$")
@@ -29,16 +28,41 @@ class RegexpValidator(DocumentWithoutAddProp):
 
 class Entity(DocumentWithoutAddProp):
     field = StringField(required=True, pattern="^\w+$")
-    # TODO: add pattern
-    label = StringField(required=True)
-    type = StringField(required=True, pattern="^\w+$")
-    # TODO: add pattern
-    help = StringField()
+    label = StringField(required=True, max_length=30)
+    type = StringField(required=True, enum=["text", "singleSelect", "checkbox", "multipleSelect", "password", "radio"])
+    help = StringField(max_length=200)
     defaultValue = OneOfField([
         NumberField(),
         StringField()
     ])
-    options = DictField()
+    options = DictField(
+        properties={
+            "disableSearch": BooleanField(),
+            "autoCompleteFields": ArrayField(DictField(
+                properties={
+                    "label": StringField(required=True),
+                    "value": StringField(),
+                    "children": ArrayField(DictField(
+                        properties={
+                            "value": StringField(required=True),
+                            "label": StringField(required=True)
+                        }
+                    ))
+                }
+            )),
+            "customizedUrl": StringField(),
+            "delimiter": StringField(),
+            "items": ArrayField(DictField(
+                properties={
+                    "value": StringField(required=True),
+                    "label": StringField(required=True)
+                }
+            )),
+            "referenceName": StringField(),
+            "enable": BooleanField(),
+            "placeholder": StringField()
+        }
+    )
     required = BooleanField()
     encrypted = BooleanField()
     validators = ArrayField(AnyOfField([
@@ -52,47 +76,39 @@ class Table(DocumentWithoutAddProp):
     moreInfo = ArrayField(DictField(
         properties={
             "field": StringField(required=True, pattern="^\w+$"),
-            # TODO: add pattern
-            "label": StringField(required=True)
+            "label": StringField(required=True, max_length=30)
         }
     ))
     header = ArrayField(DictField(
         properties={
             "field": StringField(required=True, pattern="^\w+$"),
-            # TODO: add pattern
-            "label": StringField(required=True)
+            "label": StringField(required=True, max_length=30)
         }
     ), required=True)
 
 class TabContent(DocumentWithoutAddProp):
     entity = ArrayField(DocumentField(Entity, as_ref=True), required=True)
-    name = StringField(required=True, pattern="^\w+$")
-    # TODO: add pattern
-    title = StringField(required=True)
+    name = StringField(required=True, pattern="^[A-Za-z0-9_]+$")
+    title = StringField(required=True, max_length=50)
     options = DictField()
     table = DocumentField(Table, as_ref=True)
 
 class ConfigurationPage(DocumentWithoutAddProp):
-    # TODO: add pattern
-    description = StringField(required=True)
-    # TODO: add pattern
-    title = StringField(required=True)
+    title = StringField(required=True, max_length=50)
+    description = StringField(max_length=200)
     tabs = ArrayField(DocumentField(TabContent, as_ref=True), required=True, min_items=1)
 
 class InputsPage(DocumentWithoutAddProp):
-    # TODO: add pattern
-    description = StringField()
+    title = StringField(required=True, max_length=50)
+    description = StringField(max_length=200)
     table = DocumentField(Table, as_ref=True, required=True)
     services = ArrayField(DictField(
         properties={
-            "name": StringField(required=True, pattern="^\w+$"),
-            # TODO: add pattern
-            "title": StringField(required=True),
+            "name": StringField(required=True, pattern="^[A-Za-z0-9_]+$"),
+            "title": StringField(required=True, max_length=50),
             "entity": ArrayField(DocumentField(Entity, as_ref=True), required=True)
         }
     ), required=True)
-    # TODO: add pattern
-    title = StringField(required=True)
 
 class Pages(DocumentWithoutAddProp):
     configuration = DocumentField(ConfigurationPage, as_ref=True, required=False)
