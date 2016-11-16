@@ -47,12 +47,6 @@ class Entity(DocumentWithoutAddProp):
         DocumentField(RegexpValidator, as_ref=True)
     ]))
 
-class TabContentBase(Document):
-    entity = ArrayField(DocumentField(Entity, as_ref=True), required=True)
-    # TODO: add pattern
-    title = StringField(required=True)
-    options = DictField()
-
 class Table(DocumentWithoutAddProp):
     actions = ArrayField(StringField(enum=["edit", "delete", "clone", "enable"]), required=True)
     moreInfo = ArrayField(DictField(
@@ -70,31 +64,20 @@ class Table(DocumentWithoutAddProp):
         }
     ), required=True)
 
-class AccountTabContent(TabContentBase):
-    name = StringField(required=True, enum=["account"])
-    table = DocumentField(Table, as_ref=True, required=True)
-
-class CustomizedTabContent(TabContentBase):
+class TabContent(DocumentWithoutAddProp):
+    entity = ArrayField(DocumentField(Entity, as_ref=True), required=True)
     name = StringField(required=True, pattern="^\w+$")
-    table = DocumentField(Table, as_ref=True)
-
-class LoggingTabContent(TabContentBase):
-    name = StringField(required=True, enum=["logging"])
-
-class ProxyTabContent(TabContentBase):
-    name = StringField(required=True, enum=["proxy"])
+    # TODO: add pattern
+    title = StringField(required=True)
+    options = DictField()
+    table = DocumentField(Table, as_ref=True)    
 
 class ConfigurationPage(DocumentWithoutAddProp):
     # TODO: add pattern
     description = StringField(required=True)
     # TODO: add pattern
     title = StringField(required=True)
-    tabs = ArrayField(AnyOfField([
-        DocumentField(AccountTabContent, as_ref=True),
-        DocumentField(CustomizedTabContent, as_ref=True),
-        DocumentField(LoggingTabContent, as_ref=True),
-        DocumentField(ProxyTabContent, as_ref=True)
-    ]), required=True)
+    tabs = ArrayField(TabContent, required=True)
 
 class InputsPage(DocumentWithoutAddProp):
     # TODO: add pattern
