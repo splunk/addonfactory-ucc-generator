@@ -17,14 +17,17 @@ class StringValidator(DocumentWithoutAddProp):
     type = StringField(required=True, enum=["string"])
     minLength = NumberField(required=True, minimum=0)
     maxLength = NumberField(required=True, minimum=0)
+    errorMsg = StringField(enum=["string"], max_length=200)
 
 class NumberValidator(DocumentWithoutAddProp):
     type = StringField(required=True, enum=["number"])
     range = ArrayField(NumberField(), required=True)
+    errorMsg = StringField(enum=["string"], max_length=200)
 
 class RegexpValidator(DocumentWithoutAddProp):
     type = StringField(required=True, enum=["regex"])
     pattern = StringField(required=True)
+    errorMsg = StringField(enum=["string"], max_length=200)
 
 class Entity(DocumentWithoutAddProp):
     field = StringField(required=True, pattern="^\w+$")
