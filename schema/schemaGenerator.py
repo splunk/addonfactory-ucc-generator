@@ -70,14 +70,14 @@ class TabContent(DocumentWithoutAddProp):
     # TODO: add pattern
     title = StringField(required=True)
     options = DictField()
-    table = DocumentField(Table, as_ref=True)    
+    table = DocumentField(Table, as_ref=True)
 
 class ConfigurationPage(DocumentWithoutAddProp):
     # TODO: add pattern
     description = StringField(required=True)
     # TODO: add pattern
     title = StringField(required=True)
-    tabs = ArrayField(TabContent, required=True)
+    tabs = ArrayField(DocumentField(TabContent, as_ref=True), required=True, min_items=1)
 
 class InputsPage(DocumentWithoutAddProp):
     # TODO: add pattern
