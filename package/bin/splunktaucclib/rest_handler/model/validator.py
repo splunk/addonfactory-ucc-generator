@@ -169,7 +169,7 @@ class RequiresIf(Validator):
 
         fields = []
         for field in self.fields:
-            val = data.get(field, None)
+            val = data.get(field)
             if val is None or val == '':
                 fields.append(field)
         if fields:

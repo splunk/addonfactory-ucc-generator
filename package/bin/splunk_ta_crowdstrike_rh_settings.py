@@ -27,7 +27,6 @@ fields_proxy = [
     ),
     field.RestField(
         'proxy_password',
-        required=True,
         encrypted=True,
         validator=validator.RequiresIf(['proxy_username'])
     ),
