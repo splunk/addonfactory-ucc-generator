@@ -54,7 +54,7 @@ define([
 
             this.model = new Backbone.Model({});
             const validators = generateValidators(this.component.entity);
-            let InputType = generateModel(this.component.name, {validators});
+            const InputType = generateModel(this.component.name, {validators});
             if (!options.model) { //Create mode
                 this.mode = "create";
                 this.model = new Backbone.Model({});
