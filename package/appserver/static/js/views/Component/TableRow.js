@@ -120,15 +120,15 @@ define([
             _.each(header, h => {
                 if (h.field === "name") {
                     let fieldValue = this.model.entity.entry.attributes[h.field];
-                    let html = '<td class="col-name">' + _(fieldValue).t() + '</td>';
+                    let html = '<td class="col-name">' + fieldValue + '</td>';
                     this.$el.append(_.template(html));
                 } else if (h.field === "service") {
                     let fieldValue = this.model.entity.entry.content.attributes[h.field];
-                    let html = '<td class="col-service">' + _(fieldValue).t() + '</td>';
+                    let html = '<td class="col-service">' + fieldValue + '</td>';
                     this.$el.append(_.template(html));
                 } else {
                     let fieldValue = String(this.model.entity.entry.content.attributes[h.field]);
-                    let html = '<td  class="col-' + h.field + '">' + _(fieldValue).t() + '</td>';
+                    let html = '<td  class="col-' + h.field + '">' + fieldValue + '</td>';
                     this.$el.append(_.template(html));
                 }
             });

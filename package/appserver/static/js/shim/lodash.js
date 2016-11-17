@@ -4,6 +4,8 @@ define(['lib/lodash', 'splunk.i18n'], function(_, i18n) {
         t: function(string) {
             return i18n._(string);
         }
+    }, {
+        'chain': false
     });
 
     return _.noConflict();
