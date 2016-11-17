@@ -50,7 +50,7 @@
                                 },
                                 {
                                     "type": "regex",
-                                    "pattern": "\\w+"
+                                    "pattern": "^\\w+$"
                                 }
                             ]
                         },
