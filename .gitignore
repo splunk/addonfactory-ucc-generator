@@ -23,14 +23,12 @@ opcua/opcua_ansic/AnsiCSample/linux
 opcua/opcua_ansic/AnsiCSample/win32
 
 ### Files for Add-on local data
-package/local
 package/metadata/local.meta
 
 ###3rd libs
-package/bin/splunk_ta_crowdstrike/httplib2/
-package/bin/splunk_ta_crowdstrike/remote_pdb.py
-package/bin/splunk_ta_crowdstrike/solnlib/
-package/bin/splunk_ta_crowdstrike/splunklib/
+package/bin/solnlib/
+package/bin/splunklib/
+package/bin/sortedcontainers/
 
 ### Files for Temporary Output
 package/linux_x86

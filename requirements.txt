@@ -1,3 +1,2 @@
-solnlib==1.0.7
-httplib2==0.9.2
-remote-pdb==1.2.0
+solnlib==1.0.10
+splunk-sdk==1.6.0
