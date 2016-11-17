@@ -6,6 +6,10 @@ class DocumentWithoutAddProp(Document):
     class Options(object):
         additional_properties = False
 
+class ValueLabelPair(DocumentWithoutAddProp):
+    value = StringField(required=True)
+    label = StringField(required=True)
+
 class Meta(DocumentWithoutAddProp):
     displayName = StringField(required=True, max_length=200)
     name = StringField(required=True, pattern="^[^<>\:\"\/\\\|\?\*]+$")
@@ -41,6 +45,7 @@ class DateValidator(DocumentWithoutAddProp):
 class UrlValidator(DocumentWithoutAddProp):
     type = StringField(required=True, enum=["url"])
 
+
 class Entity(DocumentWithoutAddProp):
     field = StringField(required=True, pattern="^\w+$")
     label = StringField(required=True, max_length=30)
@@ -57,22 +62,12 @@ class Entity(DocumentWithoutAddProp):
                 properties={
                     "label": StringField(required=True),
                     "value": StringField(),
-                    "children": ArrayField(DictField(
-                        properties={
-                            "value": StringField(required=True),
-                            "label": StringField(required=True)
-                        }
-                    ))
+                    "children": ArrayField(DocumentField(ValueLabelPair, as_ref=True))
                 }
             )),
             "customizedUrl": StringField(),
             "delimiter": StringField(),
-            "items": ArrayField(DictField(
-                properties={
-                    "value": StringField(required=True),
-                    "label": StringField(required=True)
-                }
-            )),
+            "items": ArrayField(DocumentField(ValueLabelPair, as_ref=True)),
             "referenceName": StringField(),
             "enable": BooleanField(),
             "placeholder": StringField()
@@ -125,7 +120,8 @@ class InputsPage(DocumentWithoutAddProp):
         properties={
             "name": StringField(required=True, pattern="^[A-Za-z0-9_]+$"),
             "title": StringField(required=True, max_length=50),
-            "entity": ArrayField(DocumentField(Entity, as_ref=True), required=True)
+            "entity": ArrayField(DocumentField(Entity, as_ref=True), required=True),
+            "options": DictField()
         }
     ), required=True)
 
