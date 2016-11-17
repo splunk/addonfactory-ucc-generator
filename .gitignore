@@ -2,40 +2,21 @@
 *.pyc
 *.pyo
 
-###Files for Pycharm
+### Files for Pycharm
 package/.idea
 .idea/
-
-### Files for C/Golang Temporary Output
-*.o
-*.a
-*.obj
-
-### Files for Tags
-TAGS
-
-### Files for OPC UA SDK Build Output
-opcua/opcua_ansic/bin
-opcua/opcua_ansic/lib
-opcua/opcua_ansic/Stack/linux
-opcua/opcua_ansic/Stack/win32
-opcua/opcua_ansic/AnsiCSample/linux
-opcua/opcua_ansic/AnsiCSample/win32
 
 ### Files for Add-on local data
 package/local/
 package/metadata/local.meta
 
-###3rd libs
+### 3rd libs
 package/bin/solnlib/
 package/bin/splunklib/
 package/bin/sortedcontainers/
+package/bin/requests/
 
 ### Files for Temporary Output
-package/linux_x86
-package/linux_x86_64
-package/windows_x86
-package/windows_x86_64
 cached_build_info.properties
 bower_components
 node_modules

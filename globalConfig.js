@@ -4,7 +4,7 @@ window.__globalConfig =
         "name": "Splunk_TA_crowdstrike",
         "displayName": "AOB Test",
         "version": "1.0.0",
-        "uccVersion": "2.0",
+        "uccVersion": "3.0.0",
         "restRoot": "splunk_ta_crowdstrike"
     },
     "pages": {
@@ -71,7 +71,7 @@ window.__globalConfig =
                     ]
                 },
                 {
-                    "name": "ta_crowdstrike_settings/logging",
+                    "name": "logging",
                     "title": "Logging",
                     "entity": [
                         {
@@ -91,7 +91,7 @@ window.__globalConfig =
                     ]
                 },
                 {
-                    "name": "ta_crowdstrike_settings/proxy",
+                    "name": "proxy",
                     "title": "Proxy",
                     "entity": [
                         {
@@ -238,7 +238,7 @@ window.__globalConfig =
             },
             "services": [
                 {
-                    "name": "ta_crowdstrike_inputs_01",
+                    "name": "inputs_01",
                     "title": "Falcon Host Input",
                     "entity": [
                         {
@@ -334,7 +334,7 @@ window.__globalConfig =
                     ]
                 },
                 {
-                    "name": "ta_crowdstrike_inputs_01",
+                    "name": "inputs_02",
                     "title": "Falcon Host Input test",
                     "entity": [
                         {

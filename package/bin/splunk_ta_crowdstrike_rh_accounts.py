@@ -11,12 +11,12 @@ fields = [
     ),
     field.RestField(
         'api_uuid',
-        required=True,
+        required=True
     ),
     field.RestField(
         'api_key',
-        required=True,
-    ),
+        required=True
+    )
 ]
 
 model = SingleModel(
