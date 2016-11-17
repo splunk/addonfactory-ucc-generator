@@ -1,10 +1,9 @@
-window.__globalConfig =
 {
     "meta": {
         "name": "Splunk_TA_crowdstrike",
         "displayName": "AOB Test",
         "version": "1.0.0",
-        "uccVersion": "2.0",
+        "uccVersion": "3.0.0",
         "restRoot": "ta_crowdstrike"
     },
     "pages": {
@@ -42,7 +41,18 @@ window.__globalConfig =
                             "label": "Name",
                             "type": "text",
                             "required": true,
-                            "help": "Enter a unique name for each Crowdstrike falcon host account."
+                            "help": "Enter a unique name for each Crowdstrike falcon host account.",
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 50
+                                },
+                                {
+                                    "type": "regex",
+                                    "pattern": "\\w+"
+                                }
+                            ]
                         },
                         {
                             "field": "endpoint",
@@ -59,7 +69,13 @@ window.__globalConfig =
                             "field": "api_uuid",
                             "label": "API UUID",
                             "type": "text",
-                            "required": true
+                            "required": true,
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "pattern": "\\w{1,50}"
+                                }
+                            ]
                         },
                         {
                             "field": "api_key",
@@ -114,7 +130,15 @@ window.__globalConfig =
                             "defaultValue": "http"
                         },
                         {"field": "proxy_url", "label": "Host", "type": "text"},
-                        {"field": "proxy_port", "label": "Port", "type": "text"},
+                        {
+                            "field": "proxy_port", "label": "Port", "type": "text",
+                            "validators": [
+                                {
+                                    "type": "number",
+                                    "range": [1, 65535]
+                                }
+                            ]
+                        },
                         {"field": "proxy_username", "label": "Username", "type": "text"},
                         {
                             "field": "proxy_password",
@@ -122,11 +146,15 @@ window.__globalConfig =
                             "type": "text",
                             "encrypted": true
                         }
-                    ]
+                    ],
+                    "options": {
+                        "validator.save": "function(form_data) { return True; }",
+                        "validator.save2": "function(form_data) { return 'host cannot be empty'; }"
+                    }
                 },
                 {
                     "name": "custom_abc",
-                    "title": "Some settings",
+                    "title": "Customized tab",
                     "entity": [
                         {
                             "type": "singleSelect",
@@ -167,6 +195,7 @@ window.__globalConfig =
                             "type": "text",
                             "defaultValue": "60",
                             "help": "Time interval of input in seconds."
+
                         }
                     ]
                 }
@@ -180,19 +209,19 @@ window.__globalConfig =
                 "header": [
                     {
                         "field": "name",
-                        "label": "Name",
+                        "label": "Name"
                     },
                     {
                         "field": "account",
-                        "label": "Account",
+                        "label": "Account"
                     },
                     {
                         "field": "start_offset",
-                        "label": "Start Offset",
+                        "label": "Start Offset"
                     },
                     {
                         "field": "interval",
-                        "label": "Interval",
+                        "label": "Interval"
                     },
                     {
                         "field": "index",
@@ -206,20 +235,19 @@ window.__globalConfig =
                 "moreInfo": [
                     {
                         "field": "name",
-                        "label": "Name",
+                        "label": "Name"
                     },
                     {
                         "field": "account",
-                        "label": "Account",
+                        "label": "Account"
                     },
                     {
                         "field": "start_offset",
-                        "label": "Start Offset",
+                        "label": "Start Offset"
                     },
-                    // Common fields
                     {
                         "field": "interval",
-                        "label": "Interval",
+                        "label": "Interval"
                     },
                     {
                         "field": "index",
@@ -239,13 +267,14 @@ window.__globalConfig =
             "services": [
                 {
                     "name": "ta_crowdstrike_falcon_host_inputs",
-                    "title": "Falcon Host Input",
+                    "title": "Input type 1",
                     "entity": [
                         {
                             "field": "name",
                             "label": "Name",
                             "type": "text",
-                            "help": "Enter a unique name for each crowdstrike falcon host data input."
+                            "help": "Enter a unique name for each crowdstrike falcon host data input.",
+                            "required": true
                         },
                         {
                             "field": "account",
@@ -253,7 +282,8 @@ window.__globalConfig =
                             "type": "singleSelect",
                             "options": {
                                 "referenceName": "account"
-                            }
+                            },
+                            "required": true
                         },
                         {
                             "field": "singleSelectTest",
@@ -295,7 +325,6 @@ window.__globalConfig =
                             "label": "Multiple Select Test",
                             "type": "multipleSelect",
                             "options": {
-                                // Optional, default is `,`
                                 "delimiter": "|",
                                 "items": [
                                     {
@@ -320,7 +349,8 @@ window.__globalConfig =
                             "label": "Interval",
                             "type": "text",
                             "defaultValue": "60",
-                            "help": "Time interval of input in seconds."
+                            "help": "Time interval of input in seconds.",
+                            "required": true
                         },
                         {
                             "field": "index",
@@ -329,13 +359,14 @@ window.__globalConfig =
                             "defaultValue": "default",
                             "options": {
                                 "customizedUrl": "data/indexes"
-                            }
+                            },
+                            "required": true
                         }
                     ]
                 },
                 {
                     "name": "ta_crowdstrike_falcon_host_inputs",
-                    "title": "Falcon Host Input test",
+                    "title": "Input type 2",
                     "entity": [
                         {
                             "field": "name",
