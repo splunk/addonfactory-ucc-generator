@@ -243,17 +243,19 @@ define([
         displayValidationError: function (error) {
             this.removeLoadingMsg();
             if (this.$('.msg-text').length) {
-                this.$('.msg-text').text(error.validationError);
+                this.$('.msg-text').text(_(error.validationError).t());
             } else {
-                this.$("." + this.currentWindow).prepend(_.template(ErrorMsg)({msg: error.validationError}));
+                this.$("." + this.currentWindow).prepend(_.template(ErrorMsg)({
+                    msg: _(error.validationError).t()
+                }));
             }
         },
 
         addErrorMsg: function (text, guid) {
             if (this.$('.msg-error').length) {
-                this.$('.msg-error > .msg-text').text(text);
+                this.$('.msg-error > .msg-text').text(_(text).t());
             } else {
-                this.$("." + guid).prepend(_.template(ErrorMsg)({msg: text}));
+                this.$("." + guid).prepend(_.template(ErrorMsg)({msg: _(text).t()}));
             }
         },
 
@@ -265,9 +267,9 @@ define([
 
         addLoadingMsg: function (text) {
             if (this.$('.msg-loading').length) {
-                this.$('.msg-loading > .msg-text').text(text);
+                this.$('.msg-loading > .msg-text').text(_(text).t());
             } else {
-                this.$("." + this.currentWindow).prepend(_.template(LoadingMsg)({msg: text}));
+                this.$("." + this.currentWindow).prepend(_.template(LoadingMsg)({msg: _(text).t()}));
             }
         },
 
