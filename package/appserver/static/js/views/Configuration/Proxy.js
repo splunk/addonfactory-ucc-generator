@@ -1,6 +1,7 @@
 import {defaultProxyTabEntity} from 'app/constants/defaultEntities';
 import {configManager} from 'app/util/configManager';
 import {generateModel} from 'app/util/backbone';
+import {generateValidators} from 'app/util/validators';
 
 define([
     'jquery',
@@ -24,7 +25,8 @@ define([
             this.proxyConfig = _.find(configManager.unifiedConfig.pages.configuration.tabs, tab => {
                 return tab.name === 'proxy';
             });
-            const proxySettingModel = generateModel('settings');
+            const validators = generateValidators(this.proxyConfig.entity);
+            const proxySettingModel = generateModel('settings', {validators});
             this.proxy = new proxySettingModel({
                 name: "proxy"
             }, {});
