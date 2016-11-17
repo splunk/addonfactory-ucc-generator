@@ -23,6 +23,7 @@ opcua/opcua_ansic/AnsiCSample/linux
 opcua/opcua_ansic/AnsiCSample/win32
 
 ### Files for Add-on local data
+package/local/
 package/metadata/local.meta
 
 ###3rd libs
