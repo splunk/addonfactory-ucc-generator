@@ -21,10 +21,6 @@ fields = [
         required=True,
     ),
     field.RestField(
-        'interval',
-        required=True,
-    ),
-    field.RestField(
         'disabled',
         converter=converter.Boolean(),
     ),

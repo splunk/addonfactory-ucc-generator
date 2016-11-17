@@ -1,7 +1,6 @@
 
 from splunktaucclib.rest_handler.admin_external import handle
 from splunktaucclib.rest_handler.model import field, SingleModel
-from splunktaucclib.rest_handler.model import validator
 
 
 fields = [
