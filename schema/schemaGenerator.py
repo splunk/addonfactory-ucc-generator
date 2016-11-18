@@ -13,9 +13,9 @@ class ValueLabelPair(DocumentWithoutAddProp):
 class Meta(DocumentWithoutAddProp):
     displayName = StringField(required=True, max_length=200)
     name = StringField(required=True, pattern="^[^<>\:\"\/\\\|\?\*]+$")
-    restRoot = StringField(required=True, pattern="^\w+$")
+    restRoot = StringField(required=True, pattern="^[a-z_]+$")
     uccVersion = StringField(required=True, pattern="^(?:\d{1,3}\.){2}\d{1,3}$")
-    version = StringField(required=True, pattern="^(?:\d{1,3}\.){2}\d{1,3}$")
+    version = StringField(required=True)
 
 class StringValidator(DocumentWithoutAddProp):
     type = StringField(required=True, enum=["string"])
@@ -53,7 +53,8 @@ class Entity(DocumentWithoutAddProp):
     help = StringField(max_length=200)
     defaultValue = OneOfField([
         NumberField(),
-        StringField()
+        StringField(),
+        BooleanField()
     ])
     options = DictField(
         properties={
@@ -102,7 +103,7 @@ class Table(DocumentWithoutAddProp):
 
 class TabContent(DocumentWithoutAddProp):
     entity = ArrayField(DocumentField(Entity, as_ref=True), required=True)
-    name = StringField(required=True, pattern="^[A-Za-z0-9_]+$")
+    name = StringField(required=True, pattern="^\w+$")
     title = StringField(required=True, max_length=50)
     options = DictField()
     table = DocumentField(Table, as_ref=True)
@@ -118,7 +119,7 @@ class InputsPage(DocumentWithoutAddProp):
     table = DocumentField(Table, as_ref=True, required=True)
     services = ArrayField(DictField(
         properties={
-            "name": StringField(required=True, pattern="^[A-Za-z0-9_]+$"),
+            "name": StringField(required=True, pattern="^\w+$"),
             "title": StringField(required=True, max_length=50),
             "entity": ArrayField(DocumentField(Entity, as_ref=True), required=True),
             "options": DictField()
