@@ -148,8 +148,7 @@
                         }
                     ],
                     "options": {
-                        "validator.save": "function(form_data) { return True; }",
-                        "validator.save2": "function(form_data) { return 'host cannot be empty'; }"
+                        "saveValidator": "function(form_data) { return True; }"
                     }
                 },
                 {

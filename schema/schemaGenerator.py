@@ -10,6 +10,9 @@ class ValueLabelPair(DocumentWithoutAddProp):
     value = StringField(required=True)
     label = StringField(required=True)
 
+class ValidatorBase(DocumentWithoutAddProp):
+    errorMsg = StringField(enum=["string"], max_length=200)
+
 class Meta(DocumentWithoutAddProp):
     displayName = StringField(required=True, max_length=200)
     name = StringField(required=True, pattern="^[^<>\:\"\/\\\|\?\*]+$")
@@ -17,32 +20,29 @@ class Meta(DocumentWithoutAddProp):
     uccVersion = StringField(required=True, pattern="^(?:\d{1,3}\.){2}\d{1,3}$")
     version = StringField(required=True)
 
-class StringValidator(DocumentWithoutAddProp):
+class StringValidator(ValidatorBase):
     type = StringField(required=True, enum=["string"])
     minLength = NumberField(required=True, minimum=0)
     maxLength = NumberField(required=True, minimum=0)
-    errorMsg = StringField(enum=["string"], max_length=200)
 
-class NumberValidator(DocumentWithoutAddProp):
+class NumberValidator(ValidatorBase):
     type = StringField(required=True, enum=["number"])
     range = ArrayField(NumberField(), required=True)
-    errorMsg = StringField(enum=["string"], max_length=200)
 
-class RegexpValidator(DocumentWithoutAddProp):
+class RegexValidator(ValidatorBase):
     type = StringField(required=True, enum=["regex"])
     pattern = StringField(required=True)
-    errorMsg = StringField(enum=["string"], max_length=200)
 
-class EmailValidator(DocumentWithoutAddProp):
+class EmailValidator(ValidatorBase):
     type = StringField(required=True, enum=["email"])
 
-class Ipv4Validator(DocumentWithoutAddProp):
+class Ipv4Validator(ValidatorBase):
     type = StringField(required=True, enum=["ipv4"])
 
-class DateValidator(DocumentWithoutAddProp):
+class DateValidator(ValidatorBase):
     type = StringField(required=True, enum=["date"])
 
-class UrlValidator(DocumentWithoutAddProp):
+class UrlValidator(ValidatorBase):
     type = StringField(required=True, enum=["url"])
 
 
@@ -79,7 +79,7 @@ class Entity(DocumentWithoutAddProp):
     validators = ArrayField(AnyOfField([
         DocumentField(StringValidator, as_ref=True),
         DocumentField(NumberValidator, as_ref=True),
-        DocumentField(RegexpValidator, as_ref=True),
+        DocumentField(RegexValidator, as_ref=True),
         DocumentField(EmailValidator, as_ref=True),
         DocumentField(Ipv4Validator, as_ref=True),
         DocumentField(UrlValidator, as_ref=True),
@@ -101,11 +101,15 @@ class Table(DocumentWithoutAddProp):
         }
     ), required=True)
 
+class Hooks(DocumentWithoutAddProp):
+    saveValidator = StringField()
+    onLoad = StringField()
+
 class TabContent(DocumentWithoutAddProp):
     entity = ArrayField(DocumentField(Entity, as_ref=True), required=True)
     name = StringField(required=True, pattern="^\w+$")
     title = StringField(required=True, max_length=50)
-    options = DictField()
+    options = DocumentField(Hooks, as_ref=True)
     table = DocumentField(Table, as_ref=True)
 
 class ConfigurationPage(DocumentWithoutAddProp):
@@ -122,7 +126,7 @@ class InputsPage(DocumentWithoutAddProp):
             "name": StringField(required=True, pattern="^\w+$"),
             "title": StringField(required=True, max_length=50),
             "entity": ArrayField(DocumentField(Entity, as_ref=True), required=True),
-            "options": DictField()
+            "options": DocumentField(Hooks, as_ref=True)
         }
     ), required=True)
 
