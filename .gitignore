@@ -40,6 +40,7 @@ package/windows_x86_64
 cached_build_info.properties
 bower_components
 node_modules
+npm-debug.log
 pypi_modules
 stage
 *.spl
