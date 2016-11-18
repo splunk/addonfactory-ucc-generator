@@ -46,11 +46,13 @@
                                 {
                                     "type": "string",
                                     "minLength": 1,
-                                    "maxLength": 50
+                                    "maxLength": 50,
+                                    "errorMsg": "Length of Name is restricted from 1 to 50."
                                 },
                                 {
                                     "type": "regex",
-                                    "pattern": "^\\w+$"
+                                    "pattern": "^\\w+$",
+                                    "errorMsg": "Characters of Name should match regex ^\\w+$ ."
                                 }
                             ]
                         },

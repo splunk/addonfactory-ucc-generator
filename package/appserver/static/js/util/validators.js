@@ -13,7 +13,7 @@ export function validateSchema(config) {
 
 // TODO: support customized error message
 function validatorFactory(validatorInfo) {
-    const {type} = validatorInfo;
+    const {type, errorMsg} = validatorInfo;
 
     if(type === 'regex') {
         const {pattern} = validatorInfo;
@@ -24,7 +24,7 @@ function validatorFactory(validatorInfo) {
                 try {
                     const regex = new RegExp(pattern);
                     if(!regex.test(val))
-                        return `Value of ${attr} not match RegExp ${pattern}.`;
+                        return errorMsg ? errorMsg : `Value of ${attr} not match RegExp ${pattern}.`;
                 } catch (e) {
                     return `${pattern} isn't a legal RegExp.`;
                 }
@@ -41,7 +41,7 @@ function validatorFactory(validatorInfo) {
             return function(attr) {
                 const val = Number(this.entry.content.get(attr));
                 if(Number.isNaN(val))
-                    return `Value of ${attr} is not a number.`;
+                    return errorMsg ? errorMsg : `Value of ${attr} is not a number.`;
 
                 if(val > range[1] || val < range[0])
                     return `Value of ${attr} not in range ${range[0]} - ${range[1]}.`;
@@ -59,9 +59,9 @@ function validatorFactory(validatorInfo) {
                 const strLength = this.entry.content.get(attr).length;
 
                 if(strLength > maxLength)
-                    return `Value of ${attr} is too long(more than ${maxLength} characters).`;
+                    return errorMsg ? errorMsg : `Value of ${attr} is too long(more than ${maxLength} characters).`;
                 if(strLength < minLength)
-                    return `Value of ${attr} is too short(less than ${minLength} characters).`;
+                    return errorMsg ? errorMsg : `Value of ${attr} is too short(less than ${minLength} characters).`;
             }
         }
     }
