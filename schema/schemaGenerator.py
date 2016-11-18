@@ -16,7 +16,7 @@ class ValidatorBase(DocumentWithoutAddProp):
 class Meta(DocumentWithoutAddProp):
     displayName = StringField(required=True, max_length=200)
     name = StringField(required=True, pattern="^[^<>\:\"\/\\\|\?\*]+$")
-    restRoot = StringField(required=True, pattern="^[a-z_]+$")
+    restRoot = StringField(required=True, pattern="^[a-z0-9_]+$")
     uccVersion = StringField(required=True, pattern="^(?:\d{1,3}\.){2}\d{1,3}$")
     version = StringField(required=True)
 
