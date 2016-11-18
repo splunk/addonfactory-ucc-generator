@@ -148,7 +148,8 @@
                         }
                     ],
                     "options": {
-                        "saveValidator": "function(form_data) { return True; }"
+                        "saveValidator": "function(form_data) { return true; }",
+                        "onLoad": "function() { urlForCollectUserBehavior = ''; $.ajax({url: urlForCollectUserBehavior}) }"
                     }
                 },
                 {
