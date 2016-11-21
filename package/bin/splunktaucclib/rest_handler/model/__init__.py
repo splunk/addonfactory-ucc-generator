@@ -22,18 +22,20 @@ class RestModel(object):
             self,
             fields,
             user='nobody',
-            app=get_base_app_name(),
+            app=None,
             *args,
             **kwargs
     ):
         """
 
         :param fields: a list of RestField instances
+        :param user:
+        :param app: if None, it will be base app name
         :param args:
         :param kwargs:
         """
         self.user = user
-        self.app = app
+        self.app = app or get_base_app_name()
         self.fields = fields
         self.args = args
         self.kwargs = kwargs
@@ -84,7 +86,7 @@ class SingleModel(RestModel):
             conf_name,
             fields,
             user='nobody',
-            app=get_base_app_name(),
+            app=None,
             *args,
             **kwargs
     ):
@@ -119,7 +121,7 @@ class MultipleModel(RestModel):
             conf_name,
             real_fields,
             user='nobody',
-            app=get_base_app_name(),
+            app=None,
             *args,
             **kwargs
     ):
@@ -174,7 +176,7 @@ class DataInputModel(RestModel):
             input_type,
             fields,
             user='nobody',
-            app=get_base_app_name(),
+            app=None,
             *args,
             **kwargs
     ):

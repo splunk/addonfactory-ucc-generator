@@ -83,7 +83,7 @@ def _decode(meth):
         except binding.HTTPError as exc:
             raise RestError(exc.status, exc.message)
         except Exception:
-            raise RestError(400, traceback.format_exc())
+            raise RestError(500, traceback.format_exc())
     return wrapper
 
 
@@ -184,4 +184,13 @@ class RestHandler(object):
         return path.strip('/')
 
     def _check_name(self, name):
-        pass
+        if name == 'default':
+            raise RestError(
+                400,
+                '"default" is not allowed for entity name',
+            )
+        if name.startswith("_"):
+            raise RestError(
+                400,
+                '"default" is not allowed for entity name',
+            )
