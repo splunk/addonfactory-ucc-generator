@@ -7,8 +7,8 @@ class DocumentWithoutAddProp(Document):
         additional_properties = False
 
 class ValueLabelPair(DocumentWithoutAddProp):
-    value = StringField(required=True)
-    label = StringField(required=True)
+    value = StringField(required=True, max_length=300)
+    label = StringField(required=True, max_length=150)
 
 class ValidatorBase(DocumentWithoutAddProp):
     errorMsg = StringField(enum=["string"], max_length=400)
@@ -53,7 +53,7 @@ class Entity(DocumentWithoutAddProp):
     help = StringField(max_length=200)
     defaultValue = OneOfField([
         NumberField(),
-        StringField(),
+        StringField(max_length=250),
         BooleanField()
     ])
     options = DictField(
@@ -61,17 +61,17 @@ class Entity(DocumentWithoutAddProp):
             "disableSearch": BooleanField(),
             "autoCompleteFields": ArrayField(DictField(
                 properties={
-                    "label": StringField(required=True),
-                    "value": StringField(),
+                    "label": StringField(required=True, max_length=150),
+                    "value": StringField(max_length=300),
                     "children": ArrayField(DocumentField(ValueLabelPair, as_ref=True))
                 }
             )),
-            "customizedUrl": StringField(),
-            "delimiter": StringField(),
+            "customizedUrl": StringField(max_length=350),
+            "delimiter": StringField(max_length=30),
             "items": ArrayField(DocumentField(ValueLabelPair, as_ref=True)),
-            "referenceName": StringField(),
+            "referenceName": StringField(max_length=250),
             "enable": BooleanField(),
-            "placeholder": StringField()
+            "placeholder": StringField(max_length=250)
         }
     )
     required = BooleanField()
@@ -113,12 +113,12 @@ class TabContent(DocumentWithoutAddProp):
     table = DocumentField(Table, as_ref=True)
 
 class ConfigurationPage(DocumentWithoutAddProp):
-    title = StringField(required=True, max_length=50)
+    title = StringField(required=True, max_length=60)
     description = StringField(max_length=200)
     tabs = ArrayField(DocumentField(TabContent, as_ref=True), required=True, min_items=1)
 
 class InputsPage(DocumentWithoutAddProp):
-    title = StringField(required=True, max_length=50)
+    title = StringField(required=True, max_length=60)
     description = StringField(max_length=200)
     table = DocumentField(Table, as_ref=True, required=True)
     services = ArrayField(DictField(

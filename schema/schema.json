@@ -6,7 +6,7 @@
             "properties": {
                 "title": {
                     "type": "string",
-                    "maxLength": 50
+                    "maxLength": 60
                 },
                 "description": {
                     "type": "string",
@@ -102,7 +102,8 @@
                             "type": "number"
                         },
                         {
-                            "type": "string"
+                            "type": "string",
+                            "maxLength": 250
                         },
                         {
                             "type": "boolean"
@@ -112,25 +113,24 @@
                 "options": {
                     "type": "object",
                     "properties": {
-                        "delimiter": {
-                            "type": "string"
-                        },
                         "autoCompleteFields": {
                             "type": "array",
                             "items": {
                                 "type": "object",
                                 "properties": {
+                                    "label": {
+                                        "type": "string",
+                                        "maxLength": 150
+                                    },
                                     "value": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "maxLength": 300
                                     },
                                     "children": {
                                         "type": "array",
                                         "items": {
                                             "$ref": "#/definitions/ValueLabelPair"
                                         }
-                                    },
-                                    "label": {
-                                        "type": "string"
                                     }
                                 },
                                 "required": [
@@ -138,26 +138,33 @@
                                 ]
                             }
                         },
-                        "enable": {
-                            "type": "boolean"
-                        },
-                        "referenceName": {
-                            "type": "string"
-                        },
-                        "disableSearch": {
-                            "type": "boolean"
-                        },
-                        "customizedUrl": {
-                            "type": "string"
-                        },
-                        "placeholder": {
-                            "type": "string"
-                        },
                         "items": {
                             "type": "array",
                             "items": {
                                 "$ref": "#/definitions/ValueLabelPair"
                             }
+                        },
+                        "enable": {
+                            "type": "boolean"
+                        },
+                        "referenceName": {
+                            "type": "string",
+                            "maxLength": 250
+                        },
+                        "placeholder": {
+                            "type": "string",
+                            "maxLength": 250
+                        },
+                        "customizedUrl": {
+                            "type": "string",
+                            "maxLength": 350
+                        },
+                        "disableSearch": {
+                            "type": "boolean"
+                        },
+                        "delimiter": {
+                            "type": "string",
+                            "maxLength": 30
                         }
                     }
                 },
@@ -220,7 +227,7 @@
             "properties": {
                 "title": {
                     "type": "string",
-                    "maxLength": 50
+                    "maxLength": 60
                 },
                 "description": {
                     "type": "string",
@@ -234,6 +241,13 @@
                     "items": {
                         "type": "object",
                         "properties": {
+                            "options": {
+                                "$ref": "#/definitions/Hooks"
+                            },
+                            "title": {
+                                "type": "string",
+                                "maxLength": 50
+                            },
                             "entity": {
                                 "type": "array",
                                 "items": {
@@ -243,19 +257,12 @@
                             "name": {
                                 "type": "string",
                                 "pattern": "^\\w+$"
-                            },
-                            "options": {
-                                "$ref": "#/definitions/Hooks"
-                            },
-                            "title": {
-                                "type": "string",
-                                "maxLength": 50
                             }
                         },
                         "required": [
+                            "title",
                             "entity",
-                            "name",
-                            "title"
+                            "name"
                         ]
                     }
                 }
@@ -472,18 +479,18 @@
                     "items": {
                         "type": "object",
                         "properties": {
-                            "field": {
-                                "type": "string",
-                                "pattern": "^\\w+$"
-                            },
                             "label": {
                                 "type": "string",
                                 "maxLength": 30
+                            },
+                            "field": {
+                                "type": "string",
+                                "pattern": "^\\w+$"
                             }
                         },
                         "required": [
-                            "field",
-                            "label"
+                            "label",
+                            "field"
                         ]
                     }
                 },
@@ -492,18 +499,18 @@
                     "items": {
                         "type": "object",
                         "properties": {
-                            "field": {
-                                "type": "string",
-                                "pattern": "^\\w+$"
-                            },
                             "label": {
                                 "type": "string",
                                 "maxLength": 30
+                            },
+                            "field": {
+                                "type": "string",
+                                "pattern": "^\\w+$"
                             }
                         },
                         "required": [
-                            "field",
-                            "label"
+                            "label",
+                            "field"
                         ]
                     }
                 }
@@ -540,10 +547,12 @@
             "type": "object",
             "properties": {
                 "value": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 300
                 },
                 "label": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 150
                 }
             },
             "required": [
