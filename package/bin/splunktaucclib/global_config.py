@@ -74,7 +74,7 @@ class GlobalConfigScheme(RestScheme):
                 input_name,
                 input_item['entity'],
                 endpoint_name,
-                input_item['input_type'],
+                input_item['name'],
             )
 
     def _parse_entity(self, name, content, endpoint):
