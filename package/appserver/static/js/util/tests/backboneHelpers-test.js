@@ -1,7 +1,7 @@
 import assert from 'assert';
 import {generateValidators} from 'app/util/validators';
 
-describe('Backbone utilities test', () => {
+describe('Backbone utilities testes', () => {
     describe('generateValidators should works', () => {
         it('Empty array should be returned when input is empty', () => {
             const result = generateValidators([]);
