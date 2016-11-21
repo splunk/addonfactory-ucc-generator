@@ -1,6 +1,6 @@
 import {defaultProxyTabEntity} from 'app/constants/defaultEntities';
 import {configManager} from 'app/util/configManager';
-import {generateModel} from 'app/util/backbone';
+import {generateModel} from 'app/util/backboneHelpers';
 import {generateValidators} from 'app/util/validators';
 
 define([

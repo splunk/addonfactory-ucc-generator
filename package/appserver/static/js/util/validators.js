@@ -11,8 +11,7 @@ export function validateSchema(config) {
     };
 };
 
-// TODO: support customized error message
-function validatorFactory(validatorInfo) {
+function validatorFactory(validatorInfo, label) {
     const {type, errorMsg} = validatorInfo;
 
     if(type === 'regex') {
@@ -24,9 +23,10 @@ function validatorFactory(validatorInfo) {
                 try {
                     const regex = new RegExp(pattern);
                     if(!regex.test(val))
-                        return errorMsg ? errorMsg : `Value of ${attr} not match RegExp ${pattern}.`;
+                        return errorMsg ? errorMsg :
+                            `${_('Input of').t()} ${label} ${_('not match Regular Expression').t()} ${pattern}${_('.').t()}`;
                 } catch (e) {
-                    return `${pattern} isn't a legal RegExp.`;
+                    return `${pattern} ${_('isn\'t a legal Regular Expression').t()}${_('.').t()}`;
                 }
             }
         }
@@ -41,10 +41,11 @@ function validatorFactory(validatorInfo) {
             return function(attr) {
                 const val = Number(this.entry.content.get(attr));
                 if(Number.isNaN(val))
-                    return errorMsg ? errorMsg : `Value of ${attr} is not a number.`;
+                    return errorMsg ? errorMsg :
+                        `${_('Input of').t()} ${label} ${_('is not a number.').t()}`;
 
                 if(val > range[1] || val < range[0])
-                    return `Value of ${attr} not in range ${range[0]} - ${range[1]}.`;
+                    return `${_('Input of').t()} ${label} ${_('not in range').t()} ${range[0]} - ${range[1]}${_('.').t()}`;
             }
         }
     }
@@ -59,9 +60,11 @@ function validatorFactory(validatorInfo) {
                 const strLength = this.entry.content.get(attr).length;
 
                 if(strLength > maxLength)
-                    return errorMsg ? errorMsg : `Value of ${attr} is too long(more than ${maxLength} characters).`;
+                    return errorMsg ? errorMsg :
+                        `${_('Length of the').t()} ${label} ${_('input is greater than').t()} ${maxLength}${_('.').t()}`;
                 if(strLength < minLength)
-                    return errorMsg ? errorMsg : `Value of ${attr} is too short(less than ${minLength} characters).`;
+                    return errorMsg ? errorMsg :
+                        `${_('Length of the').t()} ${label} ${_('input is less than').t()} ${minLength}${_('.').t()}`;
             }
         }
     }
@@ -70,12 +73,11 @@ function validatorFactory(validatorInfo) {
     return () => {};
 };
 
-// TODO: currently, each field only support one validator, need fix that.
 export function generateValidators(entities) {
     return entities.reduce((res, entity) => {
         const backboneValidators = (entity.validators || []).map(d => {
             let validator;
-            validator = validatorFactory(d);
+            validator = validatorFactory(d, entity.label);
             return {
                 validator,
                 fieldName: entity.field

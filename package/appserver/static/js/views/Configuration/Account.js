@@ -1,5 +1,5 @@
 import {configManager} from 'app/util/configManager';
-import {generateCollection} from 'app/util/backbone';
+import {generateCollection} from 'app/util/backboneHelpers';
 
 define([
     'jquery',
