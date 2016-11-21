@@ -7,7 +7,7 @@ class DocumentWithoutAddProp(Document):
         additional_properties = False
 
 class ValueLabelPair(DocumentWithoutAddProp):
-    value = StringField(required=True, max_length=300)
+    value = StringField(required=True, max_length=300, pattern="^\w+$")
     label = StringField(required=True, max_length=150)
 
 class ValidatorBase(DocumentWithoutAddProp):
@@ -62,7 +62,7 @@ class Entity(DocumentWithoutAddProp):
             "autoCompleteFields": ArrayField(DictField(
                 properties={
                     "label": StringField(required=True, max_length=150),
-                    "value": StringField(max_length=300),
+                    "value": StringField(max_length=300, pattern="^\w+$"),
                     "children": ArrayField(DocumentField(ValueLabelPair, as_ref=True))
                 }
             )),
