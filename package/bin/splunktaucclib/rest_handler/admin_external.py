@@ -66,8 +66,9 @@ class AdminExternalHandler(admin.MConfigHandler):
         self.payload = self._convert_paload()
 
     def setup(self):
-        if not self.payload:
-            return
+        # TODO: check it
+        # if not self.payload:
+        #     return
 
         real_model = self.model.real_model(
             self.callerArgs.id,
