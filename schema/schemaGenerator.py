@@ -11,7 +11,7 @@ class ValueLabelPair(DocumentWithoutAddProp):
     label = StringField(required=True)
 
 class ValidatorBase(DocumentWithoutAddProp):
-    errorMsg = StringField(enum=["string"], max_length=200)
+    errorMsg = StringField(enum=["string"], max_length=400)
 
 class Meta(DocumentWithoutAddProp):
     displayName = StringField(required=True, max_length=200)
@@ -107,7 +107,7 @@ class Hooks(DocumentWithoutAddProp):
 
 class TabContent(DocumentWithoutAddProp):
     entity = ArrayField(DocumentField(Entity, as_ref=True), required=True)
-    name = StringField(required=True, pattern="^\w+$")
+    name = StringField(required=True, pattern="^\w+$", max_length=250)
     title = StringField(required=True, max_length=50)
     options = DocumentField(Hooks, as_ref=True)
     table = DocumentField(Table, as_ref=True)
