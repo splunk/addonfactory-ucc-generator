@@ -1,5 +1,7 @@
 import _ from 'lodash';
 
+// Regex of ipv4, email and date come from
+// https://github.com/aldeed/meteor-simple-schema/blob/4c1e2570b1055ad60e1e6540582b882f765fde13/simple-schema.js#L525
 export const REGEX_IPV4 = /^(?:(?:[0-1]?\d{1,2}|2[0-4]\d|25[0-5])(?:\.|$)){4}$/;
 
 export const REGEX_EMAIL = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
