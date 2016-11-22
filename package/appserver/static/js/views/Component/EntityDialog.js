@@ -1,5 +1,6 @@
 import {configManager} from 'app/util/configManager';
-import {generateModel, generateCollection} from 'app/util/backbone';
+import {generateModel, generateCollection} from 'app/util/backboneHelpers';
+import {generateValidators} from 'app/util/validators';
 
 define([
     'jquery',
@@ -52,7 +53,8 @@ define([
             }
 
             this.model = new Backbone.Model({});
-            let InputType = generateModel(this.component.name);
+            const validators = generateValidators(this.component.entity);
+            const InputType = generateModel(this.component.name, {validators});
             if (!options.model) { //Create mode
                 this.mode = "create";
                 this.model = new Backbone.Model({});

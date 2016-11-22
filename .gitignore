@@ -20,6 +20,7 @@ package/bin/requests/
 cached_build_info.properties
 bower_components
 node_modules
+npm-debug.log
 pypi_modules
 stage
 *.spl

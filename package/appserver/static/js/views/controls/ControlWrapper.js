@@ -1,5 +1,5 @@
 import CONTROL_TYPE_MAP from 'app/constants/controlTypeMap';
-import {generateCollection} from 'app/util/backbone';
+import {generateCollection} from 'app/util/backboneHelpers';
 
 define([
     'views/Base',
