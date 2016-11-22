@@ -102,8 +102,9 @@ class Table(DocumentWithoutAddProp):
     ), required=True)
 
 class Hooks(DocumentWithoutAddProp):
-    saveValidator = StringField()
-    onLoad = StringField()
+    saveValidator = StringField(max_length=3000)
+    onLoad = StringField(max_length=3000)
+    onChange = StringField(max_length=3000)
 
 class TabContent(DocumentWithoutAddProp):
     entity = ArrayField(DocumentField(Entity, as_ref=True), required=True)

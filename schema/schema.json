@@ -113,18 +113,33 @@
                 "options": {
                     "type": "object",
                     "properties": {
+                        "referenceName": {
+                            "type": "string",
+                            "maxLength": 250
+                        },
                         "disableSearch": {
                             "type": "boolean"
+                        },
+                        "placeholder": {
+                            "type": "string",
+                            "maxLength": 250
+                        },
+                        "delimiter": {
+                            "type": "string",
+                            "maxLength": 30
+                        },
+                        "enable": {
+                            "type": "boolean"
+                        },
+                        "customizedUrl": {
+                            "type": "string",
+                            "maxLength": 350
                         },
                         "autoCompleteFields": {
                             "type": "array",
                             "items": {
                                 "type": "object",
                                 "properties": {
-                                    "label": {
-                                        "type": "string",
-                                        "maxLength": 150
-                                    },
                                     "value": {
                                         "type": "string",
                                         "pattern": "^\\w+$",
@@ -135,31 +150,16 @@
                                         "items": {
                                             "$ref": "#/definitions/ValueLabelPair"
                                         }
+                                    },
+                                    "label": {
+                                        "type": "string",
+                                        "maxLength": 150
                                     }
                                 },
                                 "required": [
                                     "label"
                                 ]
                             }
-                        },
-                        "customizedUrl": {
-                            "type": "string",
-                            "maxLength": 350
-                        },
-                        "referenceName": {
-                            "type": "string",
-                            "maxLength": 250
-                        },
-                        "enable": {
-                            "type": "boolean"
-                        },
-                        "delimiter": {
-                            "type": "string",
-                            "maxLength": 30
-                        },
-                        "placeholder": {
-                            "type": "string",
-                            "maxLength": 250
                         },
                         "items": {
                             "type": "array",
@@ -215,10 +215,16 @@
             "type": "object",
             "properties": {
                 "saveValidator": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 3000
                 },
                 "onLoad": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 3000
+                },
+                "onChange": {
+                    "type": "string",
+                    "maxLength": 3000
                 }
             },
             "additionalProperties": false
@@ -242,6 +248,9 @@
                     "items": {
                         "type": "object",
                         "properties": {
+                            "options": {
+                                "$ref": "#/definitions/Hooks"
+                            },
                             "title": {
                                 "type": "string",
                                 "maxLength": 50
@@ -251,9 +260,6 @@
                                 "items": {
                                     "$ref": "#/definitions/Entity"
                                 }
-                            },
-                            "options": {
-                                "$ref": "#/definitions/Hooks"
                             },
                             "name": {
                                 "type": "string",
