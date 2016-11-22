@@ -192,10 +192,12 @@ define([
 
         addValidation: function (name, validator) {
             const {validation} = this.entry.content;
-            if(!validation[name])
+            if(!validation[name]) {
                 validation[name] = [validator.bind(this)];
-            else
+            }
+            else {
                 validation[name] = [...validation[name], validator.bind(this)];
+            }
         },
 
         removeValidation: function (name) {

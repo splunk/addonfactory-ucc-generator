@@ -24,7 +24,7 @@ function validatorFactory(validatorInfo, label) {
                     const regex = new RegExp(pattern);
                     if(!regex.test(val))
                         return errorMsg ? errorMsg :
-                            `${_('Input of').t()} ${label} ${_('not match Regular Expression').t()} ${pattern}${_('.').t()}`;
+                            `${_('Input of').t()} ${label} ${_('does not match Regular Expression').t()} ${pattern}${_('.').t()}`;
                 } catch (e) {
                     return `${pattern} ${_('isn\'t a legal Regular Expression').t()}${_('.').t()}`;
                 }
@@ -45,7 +45,7 @@ function validatorFactory(validatorInfo, label) {
                         `${_('Input of').t()} ${label} ${_('is not a number.').t()}`;
 
                 if(val > range[1] || val < range[0])
-                    return `${_('Input of').t()} ${label} ${_('not in range').t()} ${range[0]} - ${range[1]}${_('.').t()}`;
+                    return `${_('Input of').t()} ${label} ${_('is not in range').t()} ${range[0]} - ${range[1]}${_('.').t()}`;
             }
         }
     }
