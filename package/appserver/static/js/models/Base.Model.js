@@ -54,7 +54,7 @@ define([
 
             //Validation
             this.entry.content.validation = {
-                'name': this.nameValidator.bind(this)
+                'name': [this.nameValidator.bind(this)]
             };
 
         },
