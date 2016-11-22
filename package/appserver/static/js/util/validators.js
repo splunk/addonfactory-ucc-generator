@@ -29,7 +29,7 @@ function validatorFactory(validatorInfo, label) {
                 } catch (e) {
                     return `${pattern} ${_('is not a legal Regular Expression').t()}${_('.').t()}`;
                 }
-            }
+            };
         }
     }
 
@@ -47,7 +47,7 @@ function validatorFactory(validatorInfo, label) {
 
                 if(val > range[1] || val < range[0])
                     return `${_('Input of').t()} ${label} ${_('is not in range').t()} ${range[0]} - ${range[1]}${_('.').t()}`;
-            }
+            };
         }
     }
 
@@ -66,7 +66,7 @@ function validatorFactory(validatorInfo, label) {
                 if(strLength < minLength)
                     return errorMsg ? errorMsg :
                         `${_('Length of the').t()} ${label} ${_('input is less than').t()} ${minLength}${_('.').t()}`;
-            }
+            };
         }
     }
 
@@ -80,7 +80,7 @@ function validatorFactory(validatorInfo, label) {
             if(!regex.test(val)) {
                 return `${_('Input of').t()} ${label} ${_('is not a').t()} ${inputValueType}${_('.').t()}`;
             }
-        }
+        };
     }
 
     // Handle invalid configuration, just in case.
