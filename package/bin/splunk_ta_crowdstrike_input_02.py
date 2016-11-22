@@ -11,8 +11,8 @@ class SplunkTACrowdstrikeInput01(smi.Script):
         super(SplunkTACrowdstrikeInput01, self).__init__()
 
     def get_scheme(self):
-        scheme = smi.Scheme('splunk_ta_crowdstrike_input_01')
-        scheme.description = 'Splunk Add-on Crowdstrike Input 01'
+        scheme = smi.Scheme('splunk_ta_crowdstrike_input_02')
+        scheme.description = 'Splunk Add-on Crowdstrike Input 02'
         scheme.use_external_validation = True
         scheme.streaming_mode_xml = True
         scheme.use_single_instance = True
@@ -29,11 +29,6 @@ class SplunkTACrowdstrikeInput01(smi.Script):
             smi.Argument(
                 'account',
                 required_on_create=True,
-            )
-        )
-        scheme.add_argument(
-            smi.Argument(
-                'app_id',
             )
         )
         scheme.add_argument(

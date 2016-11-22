@@ -7,28 +7,28 @@ from splunktaucclib.rest_handler.model import converter
 fields = [
     field.RestField(
         'account',
-        required=True,
+        required=True
     ),
     field.RestField(
-        'app_id',
+        'app_id'
     ),
     field.RestField(
-        'start_offset',
+        'start_offset'
     ),
     # meta fields
     field.RestField(
         'index',
-        required=True,
+        required=True
     ),
     field.RestField(
         'disabled',
-        converter=converter.Boolean(),
+        converter=converter.Boolean()
     ),
 ]
 
 model = DataInputModel(
     'splunk_ta_crowdstrike_input_01',
-    fields,
+    fields
 )
 
 
