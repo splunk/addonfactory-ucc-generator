@@ -194,8 +194,7 @@ define([
             const {validation} = this.entry.content;
             if(!validation[name]) {
                 validation[name] = [validator.bind(this)];
-            }
-            else {
+            } else {
                 validation[name] = [...validation[name], validator.bind(this)];
             }
         },

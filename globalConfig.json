@@ -131,9 +131,20 @@
                             },
                             "defaultValue": "http"
                         },
-                        {"field": "proxy_url", "label": "Host", "type": "text"},
                         {
-                            "field": "proxy_port", "label": "Port", "type": "text",
+                            "field": "proxy_url",
+                            "label": "Host",
+                            "type": "text",
+                            "validators": [
+                                {
+                                    "type": "url"
+                                }
+                            ]
+                        },
+                        {
+                            "field": "proxy_port",
+                            "label": "Port",
+                            "type": "text",
                             "validators": [
                                 {
                                     "type": "number",
