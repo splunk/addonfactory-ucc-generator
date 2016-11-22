@@ -87,7 +87,7 @@
                     ]
                 },
                 {
-                    "name": "logging",
+                    "name": "settings/logging",
                     "title": "Logging",
                     "entity": [
                         {
@@ -107,7 +107,7 @@
                     ]
                 },
                 {
-                    "name": "proxy",
+                    "name": "settings/proxy",
                     "title": "Proxy",
                     "entity": [
                         {
@@ -153,7 +153,7 @@
                     }
                 },
                 {
-                    "name": "custom_abc",
+                    "name": "settings/custom_abc",
                     "title": "Customized tab",
                     "entity": [
                         {
@@ -379,7 +379,7 @@
                             "label": "Account",
                             "type": "singleSelect",
                             "options": {
-                                "referenceName": "account"
+                                "customizedUrl": "splunk_ta_crowdstrike/ta_crowdstrike_account"
                             }
                         },
                         {

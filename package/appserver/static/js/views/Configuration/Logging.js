@@ -30,7 +30,7 @@ define([
             });
             const loggingSettingModel = generateModel('settings');
             this.logging = new loggingSettingModel({
-                name: "loglevel"
+                name: "logging"
             }, {});
             this.logging.on("invalid", this.displayValidationError.bind(this));
         },
