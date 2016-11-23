@@ -1,0 +1,198 @@
+/*Dialog width*/
+.higherWider {
+    width: 700px;
+    left: 45%;
+}
+
+/*Page header CSS*/
+.tool-bar {
+    position: relative;
+    padding-top: 10px;
+    padding-left: 20px;
+    padding-bottom: 20px;
+    background-color: #eee;
+}
+.tool-title {
+    float: left;
+    font-size: 24px;
+    font-weight: lighter;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.tool-button {
+    float: right;
+    margin-top: 20px;
+    margin-right: 20px;
+}
+.tool-description {
+    clear: both;
+}
+
+/*Add button CSS*/
+.add-button {
+    float: right;
+    margin-right: 20px;
+}
+/*Modal body overflow*/
+.modal-body {
+    overflow: auto;
+}
+
+/*Modal footer cancel button CSS*/
+.modal-footer .cancel-btn {
+    float: left;
+}
+
+/*Modal footer blank gap*/
+.modal-footer {
+    margin-bottom: -16px !important;
+    padding: 10px 20px;
+}
+
+/*Error Message CSS*/
+.modal-body .msg-error {
+    padding: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    background-color: #faeae6;
+    border: 1px solid #d85d3c;
+    color: #d85d3c;
+    min-height: 25px;
+    overflow: hidden;
+}
+.modal-body .msg-error i.icon {
+    display: block;
+    float: left;
+    font-size: 20px;
+    line-height: 24px;
+    width: 18px;
+    margin-right: 8px;
+}
+.modal-body .msg-error div.msg-text {
+    display: block;
+    float: left;
+    margin-top: 4px;
+    word-wrap: break-word;
+    word-break: normal;
+}
+.modal-body .msg-error div.msg-text:after {
+    clear: both;
+}
+
+/*Loading Message CSS*/
+.modal-body .msg-loading {
+    padding: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    background-color: #d1e5c6;
+    border: 1px solid #7b5;
+    overflow: hidden;
+}
+.modal-body .msg-loading .msg-icon {
+    background-image: url("../img/loading-24.gif");
+    background-repeat: no-repeat;
+    padding-left: 5px;
+    line-height: 24px;
+    float: left;
+    margin-right: 8px;
+    width: 24px;
+    height: 24px;
+}
+.modal-body .msg-loading div.msg-text {
+    display: block;
+    float: left;
+    margin-top: 4px;
+    word-wrap: break-word;
+    word-break: normal;
+}
+
+/*Warning Message CSS*/
+.modal-body .msg-warning{
+    padding:5px;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    background-color: #fdf4de;
+    border: 1px solid #d99f0d;
+    color: #d99f0d;
+    min-height: 25px;
+    overflow: hidden;
+}
+
+.modal-body .msg-warning i.icon{
+    display: block;
+    float: left;
+    font-size: 20px;
+    line-height: 24px;
+    width: 18px;
+    margin-right: 8px;
+}
+
+.modal-body .msg-warning div.msg-text{
+    display: block;
+    float: left;
+    margin-top: 4px;
+    width: 500px;
+    word-wrap: break-word;
+    word-break: normal;
+}
+
+.modal-body .msg-warning div.msg-text:after{
+    clear:both
+}
+
+/*Dialog input width*/
+.form-small .control-label {
+    width: 170px;
+}
+.form-small .controls {
+    margin-left: 190px;
+}
+.form-small input[type=text], input[type=password] {
+    width: 417px;
+}
+.form-small .uneditable-input {
+    width: 436px;
+}
+.form-small .select2-container {
+    width: 450px;
+}
+
+/*Help block width*/
+.form-horizontal .controls > .help-block {
+    width: 450px;
+}
+
+/*Delete the top border in first cell of table*/
+.table-chrome > thead > tr > th {
+    position: inherit !important;
+}
+
+/*Table column width*/
+.list-dotted dt {
+    width: 200px;
+}
+.list-dotted dt:after {
+    content: " ...........................................................";
+}
+.list-dotted dd{
+    margin-left: 210px;
+}
+
+thead th {
+    /*Force line break when too long*/
+    word-wrap: break-word;
+    word-break: normal;
+}
+
+tbody tr td {
+    word-wrap: break-word;
+    word-break: normal;
+}
+
+tr.more-info > td.details {
+    word-wrap: break-word;
+    word-break: normal;
+}
