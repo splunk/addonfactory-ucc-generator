@@ -1,6 +1,6 @@
 import {configManager} from 'app/util/configManager';
-import {generateCollection} from 'app/util/backbone';
 import restEndpointMap from 'app/constants/restEndpointMap';
+import {generateCollection} from 'app/util/backboneHelpers';
 
 define([
     'jquery',

@@ -123,7 +123,7 @@ define([
         template: `
             <select multiple="multiple">
                 <% _.each(items, function(item, index) { %>
-                    <option value="<%- item.value %>"><%- item.label %></option>
+                    <option value="<%- item.value %>"><%- _(item.label).t() %></option>
                 <% }) %>
             </select>
         `

@@ -1,3 +1,5 @@
+var path = require('path');
+var rootDir = path.join(__dirname, '../../');
 var webpack = require('webpack');
 var webpackBaseConfig = require('../webpack/base');
 var mergeConfigs = require('../../bower_components/SplunkWebCore/build_tools/util/mergeConfigs');
@@ -30,7 +32,14 @@ module.exports = function (config) {
       require("karma-sourcemap-loader")
     ],
 
-    webpack: mergeConfigs(webpackBaseConfig, {output: undefined}),
+    webpack: mergeConfigs(webpackBaseConfig, {
+        output: undefined,
+        resolve: {
+            alias: {
+                'lodash': path.join(rootDir, 'bower_components', "lodash", "dist", "lodash"),
+            }
+        }
+    }),
 
     webpackServer: {
       noInfo: true

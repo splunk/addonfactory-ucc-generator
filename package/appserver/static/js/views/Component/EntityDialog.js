@@ -1,6 +1,7 @@
 import {configManager} from 'app/util/configManager';
-import {generateModel, generateCollection} from 'app/util/backbone';
 import restEndpointMap from 'app/constants/restEndpointMap';
+import {generateModel, generateCollection} from 'app/util/backboneHelpers';
+import {generateValidators} from 'app/util/validators';
 
 define([
     'jquery',
@@ -53,11 +54,14 @@ define([
             }
 
             this.model = new Backbone.Model({});
+
+            const validators = generateValidators(this.component.entity);
+            const customizedUrl = restEndpointMap[this.component.name];
             let InputType;
-            if (!restEndpointMap[this.component.name]) {
-                InputType = generateModel(this.component.name);
+            if (!customizedUrl) {
+                InputType = generateModel(this.component.name, {validators});
             } else {
-                InputType = generateModel('', {'customizedUrl': restEndpointMap[this.component.name]});
+                InputType = generateModel('', {validators, customizedUrl});
             }
 
             if (!options.model) { //Create mode
@@ -250,17 +254,19 @@ define([
         displayValidationError: function (error) {
             this.removeLoadingMsg();
             if (this.$('.msg-text').length) {
-                this.$('.msg-text').text(error.validationError);
+                this.$('.msg-text').text(_(error.validationError).t());
             } else {
-                this.$("." + this.currentWindow).prepend(_.template(ErrorMsg)({msg: error.validationError}));
+                this.$("." + this.currentWindow).prepend(_.template(ErrorMsg)({
+                    msg: _(error.validationError).t()
+                }));
             }
         },
 
         addErrorMsg: function (text, guid) {
             if (this.$('.msg-error').length) {
-                this.$('.msg-error > .msg-text').text(text);
+                this.$('.msg-error > .msg-text').text(_(text).t());
             } else {
-                this.$("." + guid).prepend(_.template(ErrorMsg)({msg: text}));
+                this.$("." + guid).prepend(_.template(ErrorMsg)({msg: _(text).t()}));
             }
         },
 
@@ -272,9 +278,9 @@ define([
 
         addLoadingMsg: function (text) {
             if (this.$('.msg-loading').length) {
-                this.$('.msg-loading > .msg-text').text(text);
+                this.$('.msg-loading > .msg-text').text(_(text).t());
             } else {
-                this.$("." + this.currentWindow).prepend(_.template(LoadingMsg)({msg: text}));
+                this.$("." + this.currentWindow).prepend(_.template(LoadingMsg)({msg: _(text).t()}));
             }
         },
 

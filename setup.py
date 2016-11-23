@@ -8,7 +8,7 @@ def install_3rdlibs():
     os.chdir(basedir)
     pip_version = os.popen("pip -V").read().rstrip().split()[1]
 
-    target = os.path.join(basedir, "package", "bin", "splunk_ta_crowdstrike")
+    target = os.path.join(basedir, "package", "bin")
 
     install_cmd = "pip install --requirement requirements.txt -i http://repo.splunk.com/artifactory/api/pypi/pypi-virtual/simple --no-compile --no-binary :all: --target " + target
 

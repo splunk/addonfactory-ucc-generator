@@ -32,7 +32,7 @@ define([
                 }
                 this.$('.list-dotted').append(_.template(`
                     <dt><%- _(label).t() %></dt>
-                    <dd><%- _(value).t() %></dd>
+                    <dd><%- value %></dd>
                 `)({label, value}));
             });
             return this;

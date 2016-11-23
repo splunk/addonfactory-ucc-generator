@@ -1,7 +1,7 @@
 import {defaultLoggingTabEntity} from 'app/constants/defaultEntities';
 import restEndpointMap from 'app/constants/restEndpointMap';
 import {configManager} from 'app/util/configManager';
-import {generateModel} from 'app/util/backbone';
+import {generateModel} from 'app/util/backboneHelpers';
 
 define([
     'jquery',
@@ -37,7 +37,7 @@ define([
                 loggingSettingModel = generateModel('', {'customizedUrl': restEndpointMap['logging']});
             }
             this.logging = new loggingSettingModel({
-                name: "loglevel"
+                name: "logging"
             }, {});
             this.logging.on("invalid", this.displayValidationError.bind(this));
         },

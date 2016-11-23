@@ -1,5 +1,5 @@
 import {configManager} from 'app/util/configManager';
-import {generateModel, generateCollection} from 'app/util/backbone';
+import {generateModel, generateCollection} from 'app/util/backboneHelpers';
 import {sortAlphabetical, sortNumerical} from 'app/util/sort';
 import restEndpointMap from 'app/constants/restEndpointMap';
 

@@ -1,4 +1,4 @@
-import {generateCollection} from 'app/util/backbone';
+import {generateCollection} from 'app/util/backboneHelpers';
 
 /*global define*/
 define([

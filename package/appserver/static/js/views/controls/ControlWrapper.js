@@ -1,6 +1,6 @@
 import CONTROL_TYPE_MAP from 'app/constants/controlTypeMap';
-import {generateCollection} from 'app/util/backbone';
 import restEndpointMap from 'app/constants/restEndpointMap';
+import {generateCollection} from 'app/util/backboneHelpers';
 
 define([
     'views/Base',
@@ -30,6 +30,7 @@ define([
                 this._loadSingleSelectReference(customizedUrl, referenceName);
             }
         },
+
         events: {
             'click a.tooltip-link': function (e) {
                 e.preventDefault();
@@ -60,9 +61,11 @@ define([
                 }
             });
         },
+
         validate: function () {
             return this.control.validate();
         },
+
         render: function () {
             this.$el.html(this.compiledTemplate({
                 label: this.label,
@@ -86,6 +89,7 @@ define([
             this.wrapperClass && this.$el.addClass(this.wrapperClass);
             return this;
         },
+
         remove: function () {
             if (this.tooltip) {
                 this.$('.tooltip-link').tooltip('destroy');
