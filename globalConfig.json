@@ -4,7 +4,7 @@
         "displayName": "AOB Test",
         "version": "1.0.0",
         "uccVersion": "3.0.0",
-        "restRoot": "ta_crowdstrike"
+        "restRoot": "splunk_ta_crowdstrike"
     },
     "pages": {
         "configuration":  {
@@ -161,8 +161,9 @@
                         }
                     ],
                     "options": {
-                        "validator.save": "function(form_data) { return True; }",
-                        "validator.save2": "function(form_data) { return 'host cannot be empty'; }"
+                        "saveValidator": "function(formData) { return (formData.proxy_enabled === true && isNaN(Number(formData.proxy_port)) && Number(formData.proxy_port) < 65535) true ? 'Input of Port should be in range of [0, 65535]'; }",
+                        "onLoad": "function(formData, formWidgetsIdDict) { var enabled = formData.proxy_enabled; $(formWidgetsIdDict['proxy_type']).hide(!enabled); }",
+                        "onChange": "function(formData, changedField, formWidgetsIdDict) { if(changedField === 'proxy_enabled') { var enabled = formData.proxy_enabled; $(formWidgetsIdDict['proxy_type']).hide(!enabled); } }"
                     }
                 },
                 {
@@ -279,8 +280,8 @@
             },
             "services": [
                 {
-                    "name": "ta_crowdstrike_falcon_host_inputs",
-                    "title": "Input type 1",
+                    "name": "inputs_01",
+                    "title": "Falcon Host Input",
                     "entity": [
                         {
                             "field": "name",
@@ -378,8 +379,8 @@
                     ]
                 },
                 {
-                    "name": "ta_crowdstrike_falcon_host_inputs",
-                    "title": "Input type 2",
+                    "name": "inputs_02",
+                    "title": "Falcon Host Input test",
                     "entity": [
                         {
                             "field": "name",
@@ -392,7 +393,7 @@
                             "label": "Account",
                             "type": "singleSelect",
                             "options": {
-                                "customizedUrl": "ta_crowdstrike/account"
+                                "referenceName": "account"
                             }
                         },
                         {
