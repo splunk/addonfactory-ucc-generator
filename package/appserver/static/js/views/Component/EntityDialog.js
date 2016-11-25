@@ -207,13 +207,7 @@ define([
                 };
                 _.extend(controlOptions, e.options);
 
-                controlWrapper = new ControlWrapper({
-                    label: e.label,
-                    controlType: e.type,
-                    required: e.required ? true : false,
-                    help: e.help || null,
-                    controlOptions: controlOptions
-                });
+                controlWrapper = new ControlWrapper({...e, controlOptions});
 
                 if (e.display !== undefined) {
                     controlWrapper.$el.css("display", "none");

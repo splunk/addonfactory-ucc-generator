@@ -16,14 +16,16 @@ define([
     return BaseView.extend({
         className: 'form-horizontal',
         initialize: function (options) {
-            this.label = options.label;
             _.extend(this, options);
-            this.labelPosition = options.labelPosition || 'top';
+
+            const {type} = options;
             // Support both string mapping and raw component
-            const controlType = typeof options.controlType === 'string' ?
-                CONTROL_TYPE_MAP[options.controlType] : options.controlType;
+            const controlType = typeof type === 'string' ?
+                CONTROL_TYPE_MAP[type] : type;
+
             this.control = new controlType(this.controlOptions);
             this.listenTo(this.control, 'all', this.trigger);
+
             const {referenceName, customizedUrl} = this.controlOptions;
             if(referenceName || customizedUrl) {
                 this._loadSingleSelectReference(customizedUrl, referenceName);

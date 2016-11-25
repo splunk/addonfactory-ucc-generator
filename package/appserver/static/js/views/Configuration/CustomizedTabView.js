@@ -25,13 +25,7 @@ define([
                     password: d.encrypted ? true : false
                 };
                 _.extend(controlOptions, d.options);
-                const controlWrapper = new ControlWrapper({
-                    label: d.label,
-                    controlType: d.type,
-                    required: d.required ? true : false,
-                    help: d.help || null,
-                    controlOptions
-                });
+                const controlWrapper = new ControlWrapper({...d, controlOptions});
                 this.$el.append(controlWrapper.render().$el);
             });
             // TODO change below to button control

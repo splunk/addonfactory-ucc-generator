@@ -57,13 +57,7 @@ define([
                             controlOptions[option] = e.options[option];
                         }
                     }
-                    this.children.push(new ControlWrapper({
-                        label: e.label,
-                        controlType: e.type,
-                        required: e.required ? true : false,
-                        help: e.help || null,
-                        controlOptions: controlOptions
-                    }));
+                    this.children.push(new ControlWrapper({...e, controlOptions}));
                     if (this.model.get(e.field) === undefined && e.defaultValue) {
                         this.model.set(e.field, e.defaultValue);
                     }
