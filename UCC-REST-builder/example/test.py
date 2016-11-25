@@ -19,7 +19,7 @@ scheme = GlobalConfigSchema(schema_content)
 builder = build(
     scheme,
     AdminExternalHandler,
-    './output'
+    './output/Splunk_TA_crowdstrike'
 )
 print builder.requirements
 print builder.restmap_admin
