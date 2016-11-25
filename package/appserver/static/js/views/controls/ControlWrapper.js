@@ -76,7 +76,6 @@ define([
             }
             this.$('.control-placeholder').prepend($control);
             this.$el.addClass('form-small');
-            this.wrapperClass && this.$el.addClass(this.wrapperClass);
             return this;
         },
 

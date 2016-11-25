@@ -60,7 +60,6 @@ define([
                     this.children.push(new ControlWrapper({
                         label: e.label,
                         controlType: e.type,
-                        wrapperClass: e.field,
                         required: e.required ? true : false,
                         help: e.help || null,
                         controlOptions: controlOptions
