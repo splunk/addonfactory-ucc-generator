@@ -63,7 +63,6 @@ class _RestBuilderOutput(object):
         self._path = path
         self._product = product
         self._root_path = op.abspath(self._path)
-        print self._root_path
         if not op.isdir(self._root_path):
             os.makedirs(self._root_path)
         self._content = {}
