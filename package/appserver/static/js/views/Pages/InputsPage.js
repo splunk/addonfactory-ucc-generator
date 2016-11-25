@@ -59,11 +59,7 @@ define([
             );
             // create collection for each service
             _.each(this.services, service => {
-                let collection = generateCollection(service.name);
-                this[service.name] = new collection([], {
-                    targetApp: this.addonName,
-                    targetOwner: "nobody"
-                });
+                this[service.name] = generateCollection(service.name);
             });
             this.dispatcher = _.extend({}, Backbone.Events);
 

@@ -303,11 +303,7 @@ define([
 
         // TODO: delete this method after we fix the missing "default" in index selector.
         _loadIndex: function (controlWrapper) {
-            const indexesCollection = generateCollection('indexes');
-            const indexes = new indexesCollection([], {
-                targetApp: Util.getAddonName(),
-                targetOwner: "nobody"
-            });
+            const indexes = generateCollection('indexes');
             const indexDeferred = indexes.fetch();
             indexDeferred.done(function () {
                 let id_lst = _.map(indexes.models, model => {

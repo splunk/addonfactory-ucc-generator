@@ -37,11 +37,7 @@ define([
         },
         // TODO: support more component loading content dynamically like this one
         _loadSingleSelectReference: function(customizedUrl, referenceName) {
-            const referenceCollection = generateCollection(referenceName, {customizedUrl});
-            const referenceCollectionInstance = new referenceCollection([], {
-                targetApp: this.addonName,
-                targetOwner: "nobody"
-            });
+            const referenceCollectionInstance = generateCollection(referenceName, {customizedUrl});
             const referenceDeferred = referenceCollectionInstance.fetch();
             referenceDeferred.done(() => {
                 let dic = _.map(referenceCollectionInstance.models, model => {

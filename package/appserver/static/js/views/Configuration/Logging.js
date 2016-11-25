@@ -29,9 +29,7 @@ define([
                 return tab.name === 'logging';
             });
             const loggingSettingModel = generateModel('settings');
-            this.logging = new loggingSettingModel({
-                name: "logging"
-            }, {});
+            this.logging = new loggingSettingModel({ name: "logging" });
             this.logging.on("invalid", this.displayValidationError.bind(this));
         },
 
@@ -167,4 +165,4 @@ define([
             return error_msg.replace(/Splunk Add-on REST Handler ERROR\[\d{1,6}\]\: /, '');
         }
     });
-});
+})

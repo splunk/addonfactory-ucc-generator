@@ -6,7 +6,6 @@ define([
     'lodash',
     'backbone',
     'app/util/Util',
-    'models/Base',
     'views/shared/tablecaption/Master',
     'app/views/component/Table',
     'app/views/component/EntityDialog',
@@ -17,7 +16,6 @@ define([
     _,
     Backbone,
     Util,
-    BaseModel,
     CaptionView,
     Table,
     EntityDialog,
@@ -32,8 +30,7 @@ define([
             this.appData = configManager.getAppData();
             this.addonName = Util.getAddonName();
             //state model
-            this.stateModel = new BaseModel();
-            this.stateModel.set({
+            this.stateModel = new Backbone.Model({
                 sortKey: 'name',
                 sortDirection: 'asc',
                 count: 100,
@@ -42,11 +39,7 @@ define([
             });
 
             //accounts collection
-            const accoutsCollection = generateCollection('account');
-            this.accounts = new accoutsCollection([], {
-                targetApp: this.addonName,
-                targetOwner: "nobody"
-            });
+            this.accounts = generateCollection('account');
 
             //Change search
             this.listenTo(this.stateModel, 'change:search change:sortDirection change:sortKey', _.debounce(function () {
@@ -125,7 +118,7 @@ define([
         },
 
         fetchAllCollection: function () {
-            var singleStateModel = new BaseModel(),
+            var singleStateModel = new Backbone.Model(),
                 calls = [],
                 service;
             singleStateModel.set({
