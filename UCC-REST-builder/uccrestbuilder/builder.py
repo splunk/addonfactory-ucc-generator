@@ -62,7 +62,7 @@ class _RestBuilderOutput(object):
     def __init__(self, path, product):
         self._path = path
         self._product = product
-        self._root_path = op.abspath(op.join(self._path, self._product))
+        self._root_path = op.abspath(self._path)
         if not op.isdir(self._root_path):
             os.makedirs(self._root_path)
         self._content = {}
