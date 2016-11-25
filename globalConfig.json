@@ -133,13 +133,7 @@
                         },
                         {"field": "proxy_url", "label": "Host", "type": "text"},
                         {
-                            "field": "proxy_port", "label": "Port", "type": "text",
-                            "validators": [
-                                {
-                                    "type": "number",
-                                    "range": [1, 65535]
-                                }
-                            ]
+                            "field": "proxy_port", "label": "Port", "type": "text"
                         },
                         {"field": "proxy_username", "label": "Username", "type": "text"},
                         {
@@ -150,8 +144,9 @@
                         }
                     ],
                     "options": {
-                        "validator.save": "function(form_data) { return True; }",
-                        "validator.save2": "function(form_data) { return 'host cannot be empty'; }"
+                        "saveValidator": "function(formData) { return (formData.proxy_enabled === true && isNaN(Number(formData.proxy_port)) && Number(formData.proxy_port) < 65535) true ? 'Input of Port should be in range of [0, 65535]'; }",
+                        "onLoad": "function(formData, formWidgetsIdDict) { var enabled = formData.proxy_enabled; $(formWidgetsIdDict['proxy_type']).hide(!enabled); }",
+                        "onChange": "function(formData, changedField, formWidgetsIdDict) { if(changedField === 'proxy_enabled') { var enabled = formData.proxy_enabled; $(formWidgetsIdDict['proxy_type']).hide(!enabled); } }"
                     }
                 },
                 {

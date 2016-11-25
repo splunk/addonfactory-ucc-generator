@@ -6,7 +6,7 @@
             "properties": {
                 "title": {
                     "type": "string",
-                    "maxLength": 50
+                    "maxLength": 60
                 },
                 "description": {
                     "type": "string",
@@ -29,6 +29,13 @@
         "DateValidator": {
             "type": "object",
             "properties": {
+                "errorMsg": {
+                    "type": "string",
+                    "enum": [
+                        "string"
+                    ],
+                    "maxLength": 400
+                },
                 "type": {
                     "type": "string",
                     "enum": [
@@ -44,6 +51,13 @@
         "EmailValidator": {
             "type": "object",
             "properties": {
+                "errorMsg": {
+                    "type": "string",
+                    "enum": [
+                        "string"
+                    ],
+                    "maxLength": 400
+                },
                 "type": {
                     "type": "string",
                     "enum": [
@@ -88,7 +102,11 @@
                             "type": "number"
                         },
                         {
-                            "type": "string"
+                            "type": "string",
+                            "maxLength": 250
+                        },
+                        {
+                            "type": "boolean"
                         }
                     ]
                 },
@@ -96,57 +114,46 @@
                     "type": "object",
                     "properties": {
                         "referenceName": {
-                            "type": "string"
+                            "type": "string",
+                            "maxLength": 250
                         },
-                        "items": {
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "label": {
-                                        "type": "string"
-                                    },
-                                    "value": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": [
-                                    "label",
-                                    "value"
-                                ]
-                            }
+                        "disableSearch": {
+                            "type": "boolean"
+                        },
+                        "placeholder": {
+                            "type": "string",
+                            "maxLength": 250
+                        },
+                        "delimiter": {
+                            "type": "string",
+                            "maxLength": 30
+                        },
+                        "enable": {
+                            "type": "boolean"
                         },
                         "customizedUrl": {
-                            "type": "string"
+                            "type": "string",
+                            "maxLength": 350
                         },
                         "autoCompleteFields": {
                             "type": "array",
                             "items": {
                                 "type": "object",
                                 "properties": {
-                                    "label": {
-                                        "type": "string"
-                                    },
                                     "value": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "pattern": "^\\w+$",
+                                        "maxLength": 300
                                     },
                                     "children": {
                                         "type": "array",
                                         "items": {
-                                            "type": "object",
-                                            "properties": {
-                                                "label": {
-                                                    "type": "string"
-                                                },
-                                                "value": {
-                                                    "type": "string"
-                                                }
-                                            },
-                                            "required": [
-                                                "label",
-                                                "value"
-                                            ]
+                                            "$ref": "#/definitions/ValueLabelPair"
                                         }
+                                    },
+                                    "label": {
+                                        "type": "string",
+                                        "maxLength": 150
                                     }
                                 },
                                 "required": [
@@ -154,17 +161,11 @@
                                 ]
                             }
                         },
-                        "enable": {
-                            "type": "boolean"
-                        },
-                        "placeholder": {
-                            "type": "string"
-                        },
-                        "disableSearch": {
-                            "type": "boolean"
-                        },
-                        "delimiter": {
-                            "type": "string"
+                        "items": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ValueLabelPair"
+                            }
                         }
                     }
                 },
@@ -185,7 +186,7 @@
                                 "$ref": "#/definitions/NumberValidator"
                             },
                             {
-                                "$ref": "#/definitions/RegexpValidator"
+                                "$ref": "#/definitions/RegexValidator"
                             },
                             {
                                 "$ref": "#/definitions/EmailValidator"
@@ -210,12 +211,30 @@
             ],
             "additionalProperties": false
         },
+        "Hooks": {
+            "type": "object",
+            "properties": {
+                "saveValidator": {
+                    "type": "string",
+                    "maxLength": 3000
+                },
+                "onLoad": {
+                    "type": "string",
+                    "maxLength": 3000
+                },
+                "onChange": {
+                    "type": "string",
+                    "maxLength": 3000
+                }
+            },
+            "additionalProperties": false
+        },
         "InputsPage": {
             "type": "object",
             "properties": {
                 "title": {
                     "type": "string",
-                    "maxLength": 50
+                    "maxLength": 60
                 },
                 "description": {
                     "type": "string",
@@ -229,6 +248,13 @@
                     "items": {
                         "type": "object",
                         "properties": {
+                            "options": {
+                                "$ref": "#/definitions/Hooks"
+                            },
+                            "title": {
+                                "type": "string",
+                                "maxLength": 50
+                            },
                             "entity": {
                                 "type": "array",
                                 "items": {
@@ -237,17 +263,13 @@
                             },
                             "name": {
                                 "type": "string",
-                                "pattern": "^[A-Za-z0-9_]+$"
-                            },
-                            "title": {
-                                "type": "string",
-                                "maxLength": 50
+                                "pattern": "^\\w+$"
                             }
                         },
                         "required": [
+                            "title",
                             "entity",
-                            "name",
-                            "title"
+                            "name"
                         ]
                     }
                 }
@@ -262,6 +284,13 @@
         "Ipv4Validator": {
             "type": "object",
             "properties": {
+                "errorMsg": {
+                    "type": "string",
+                    "enum": [
+                        "string"
+                    ],
+                    "maxLength": 400
+                },
                 "type": {
                     "type": "string",
                     "enum": [
@@ -287,15 +316,14 @@
                 },
                 "restRoot": {
                     "type": "string",
-                    "pattern": "^\\w+$"
+                    "pattern": "^[a-z0-9_]+$"
                 },
                 "uccVersion": {
                     "type": "string",
                     "pattern": "^(?:\\d{1,3}\\.){2}\\d{1,3}$"
                 },
                 "version": {
-                    "type": "string",
-                    "pattern": "^(?:\\d{1,3}\\.){2}\\d{1,3}$"
+                    "type": "string"
                 }
             },
             "required": [
@@ -310,6 +338,13 @@
         "NumberValidator": {
             "type": "object",
             "properties": {
+                "errorMsg": {
+                    "type": "string",
+                    "enum": [
+                        "string"
+                    ],
+                    "maxLength": 400
+                },
                 "type": {
                     "type": "string",
                     "enum": [
@@ -321,13 +356,6 @@
                     "items": {
                         "type": "number"
                     }
-                },
-                "errorMsg": {
-                    "type": "string",
-                    "enum": [
-                        "string"
-                    ],
-                    "maxLength": 200
                 }
             },
             "required": [
@@ -348,9 +376,16 @@
             },
             "additionalProperties": false
         },
-        "RegexpValidator": {
+        "RegexValidator": {
             "type": "object",
             "properties": {
+                "errorMsg": {
+                    "type": "string",
+                    "enum": [
+                        "string"
+                    ],
+                    "maxLength": 400
+                },
                 "type": {
                     "type": "string",
                     "enum": [
@@ -359,13 +394,6 @@
                 },
                 "pattern": {
                     "type": "string"
-                },
-                "errorMsg": {
-                    "type": "string",
-                    "enum": [
-                        "string"
-                    ],
-                    "maxLength": 200
                 }
             },
             "required": [
@@ -377,6 +405,13 @@
         "StringValidator": {
             "type": "object",
             "properties": {
+                "errorMsg": {
+                    "type": "string",
+                    "enum": [
+                        "string"
+                    ],
+                    "maxLength": 400
+                },
                 "type": {
                     "type": "string",
                     "enum": [
@@ -390,13 +425,6 @@
                 "maxLength": {
                     "type": "number",
                     "minimum": 0
-                },
-                "errorMsg": {
-                    "type": "string",
-                    "enum": [
-                        "string"
-                    ],
-                    "maxLength": 200
                 }
             },
             "required": [
@@ -417,14 +445,15 @@
                 },
                 "name": {
                     "type": "string",
-                    "pattern": "^[A-Za-z0-9_]+$"
+                    "pattern": "^\\w+$",
+                    "maxLength": 250
                 },
                 "title": {
                     "type": "string",
                     "maxLength": 50
                 },
                 "options": {
-                    "type": "object"
+                    "$ref": "#/definitions/Hooks"
                 },
                 "table": {
                     "$ref": "#/definitions/Table"
@@ -502,6 +531,13 @@
         "UrlValidator": {
             "type": "object",
             "properties": {
+                "errorMsg": {
+                    "type": "string",
+                    "enum": [
+                        "string"
+                    ],
+                    "maxLength": 400
+                },
                 "type": {
                     "type": "string",
                     "enum": [
@@ -511,6 +547,25 @@
             },
             "required": [
                 "type"
+            ],
+            "additionalProperties": false
+        },
+        "ValueLabelPair": {
+            "type": "object",
+            "properties": {
+                "value": {
+                    "type": "string",
+                    "pattern": "^\\w+$",
+                    "maxLength": 300
+                },
+                "label": {
+                    "type": "string",
+                    "maxLength": 150
+                }
+            },
+            "required": [
+                "value",
+                "label"
             ],
             "additionalProperties": false
         }
