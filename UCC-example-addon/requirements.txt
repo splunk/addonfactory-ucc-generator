@@ -1,0 +1,2 @@
+solnlib==1.0.15
+splunk-sdk==1.6.0
