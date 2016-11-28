@@ -30,7 +30,7 @@ handleractions = {actions}
             external = cls._external_template.format(
                 name=endpoint.name,
                 rh_name=endpoint.rh_name,
-                actions=', '.join(endpoint.actions),
+                actions=', '.join(endpoint.actions()),
             )
             externals.append(external)
         return ''.join(externals)

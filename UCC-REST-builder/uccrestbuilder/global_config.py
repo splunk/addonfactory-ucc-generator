@@ -6,14 +6,21 @@ from __future__ import absolute_import
 
 import traceback
 from solnlib.utils import is_true
-from splunktaucclib.rest_handler.model.field import RestField
+from splunktaucclib.rest_handler.endpoint.field import RestField
 
 from .builder import RestBuilderError, RestSchema
-from .endpoint import (
-    RestFieldBuilder,
-    RestEntityBuilder,
-    RestEndpointBuilder,
-    datainput,
+from .endpoint.field import RestFieldBuilder
+from .endpoint.single_model import (
+    SingleModelEntityBuilder,
+    SingleModelEndpointBuilder,
+)
+from .endpoint.multiple_model import (
+    MultipleModelEntityBuilder,
+    MultipleModelEndpointBuilder,
+)
+from .endpoint.datainput import (
+    DataInputEndpointBuilder,
+    DataInputEntityBuilder,
 )
 
 
@@ -64,50 +71,54 @@ class GlobalConfigSchema(RestSchema):
         for configuration in configurations['tabs']:
             parts = configuration['name'].split('/')
             endpoint_name = parts[0]
-            if len(parts) > 1:
-                configuration_name = parts[1]
+            if len(parts) <= 1:
+                self._parse_single_model_entity(
+                    None,
+                    configuration['entity'],
+                    endpoint_name,
+                )
             else:
-                configuration_name = RestEntityBuilder.WILDCARD_NAME
-            self._parse_entity(
-                configuration_name,
-                configuration['entity'],
-                endpoint_name,
-            )
+                self._parse_multiple_model_entity(
+                    parts[1],
+                    configuration['entity'],
+                    endpoint_name,
+                )
 
     def _parse_inputs(self, inputs):
         if not inputs:
             return
         for input_item in inputs['services']:
-            parts = input_item['name'].split('/')
-            endpoint_name = parts[0]
-            if len(parts) > 1:
-                input_name = parts[1]
-            else:
-                input_name = RestEntityBuilder.WILDCARD_NAME
-            self._parse_input_entity(
-                input_name,
-                input_item['entity'],
-                endpoint_name,
+            self._parse_datainput_entity(
                 input_item['name'],
+                input_item['entity'],
             )
 
-    def _parse_entity(self, name, content, endpoint):
+    def _parse_single_model_entity(self, name, content, endpoint):
         endpoint_obj = self._get_endpoint(
             endpoint,
-            RestEndpointBuilder,
+            SingleModelEndpointBuilder,
         )
         fields = [self._parse_field(field) for field in content]
-        entity = RestEntityBuilder(name, fields)
+        entity = SingleModelEntityBuilder(name, fields)
         endpoint_obj.add_entity(entity)
 
-    def _parse_input_entity(self, name, content, endpoint, input_type):
+    def _parse_multiple_model_entity(self, name, content, endpoint):
         endpoint_obj = self._get_endpoint(
             endpoint,
-            datainput.DataInputEndpointBuilder,
+            MultipleModelEndpointBuilder,
+        )
+        fields = [self._parse_field(field) for field in content]
+        entity = MultipleModelEntityBuilder(name, fields)
+        endpoint_obj.add_entity(entity)
+
+    def _parse_datainput_entity(self, input_type, content):
+        endpoint_obj = self._get_endpoint(
+            input_type,
+            DataInputEndpointBuilder,
             input_type=input_type,
         )
         fields = [self._parse_field(field) for field in content]
-        entity = datainput.DataInputEntityBuilder(name, fields, input_type)
+        entity = DataInputEntityBuilder(input_type, fields)
         endpoint_obj.add_entity(entity)
 
     def _get_endpoint(self, name, endpoint_cls, *args, **kwargs):

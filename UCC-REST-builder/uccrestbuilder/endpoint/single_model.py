@@ -1,44 +1,43 @@
 
 from __future__ import absolute_import
 
-from .single_model import RestEndpointBuilder, RestEntityBuilder
+from .base import RestEntityBuilder, RestEndpointBuilder
 
 
-class DataInputEntityBuilder(RestEntityBuilder):
+class SingleModelEntityBuilder(RestEntityBuilder):
 
-    def __init__(self, input_type, fields):
-        super(DataInputEntityBuilder, self).__init__(input_type, fields)
-        self._input_type = input_type
+    def __init__(self, name, fields):
+        super(SingleModelEntityBuilder, self).__init__(name, fields)
 
     @property
     def name_spec(self):
-        return '{}://<name>'.format(self._input_type)
+        return '<name>'
 
     @property
     def name_default(self):
-        return self._input_type
+        return 'default'
 
     @property
     def name_rh(self):
         return ''
 
 
-class DataInputEndpointBuilder(RestEndpointBuilder):
+class SingleModelEndpointBuilder(RestEndpointBuilder):
 
     _rh_template = """
 from splunktaucclib.rest_handler.endpoint import (
     field,
     validator,
     RestModel,
-    DataInputModel,
+    SingleModel,
 )
 from splunktaucclib.rest_handler import admin_external
 from {handler_module} import {handler_name}
 
 {entity}
 
-endpoint = DataInputModel(
-    '{input_type}',
+endpoint = SingleModel(
+    '{conf_name}',
     model,
 )
 
@@ -50,10 +49,6 @@ if __name__ == '__main__':
     )
 """
 
-    def __init__(self, name, namespace, input_type):
-        super(DataInputEndpointBuilder, self).__init__(name, namespace)
-        self.input_type = input_type
-
     def actions(self):
         return ['edit', 'list', 'remove', 'create']
 
@@ -63,5 +58,5 @@ if __name__ == '__main__':
             handler_module=handler.__module__,
             handler_name=handler.__name__,
             entity=entity.generate_rh(),
-            input_type=self.input_type,
+            conf_name=self.name,
         )
