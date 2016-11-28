@@ -6,6 +6,7 @@ from StringIO import StringIO
 __all__ = [
     'RestEntityBuilder',
     'RestEndpointBuilder',
+    'quote_string',
     'indent',
 ]
 
@@ -14,10 +15,10 @@ class RestEntityBuilder(object):
 
     _title_template = '[{}]'
     _rh_template = """
-fields{name} = [
+fields{name_rh} = [
 {fields}
 ]
-model{name} = RestModel(fields{name})
+model{name_rh} = RestModel(fields{name_rh}, name={name})
 """
 
     def __init__(self, name, fields):
@@ -60,7 +61,8 @@ model{name} = RestModel(fields{name})
         fields_lines = ', \n'.join(fields)
         return self._rh_template.format(
             fields=indent(fields_lines),
-            name=self.name_rh,
+            name_rh=self.name_rh,
+            name=quote_string(self._name),
         )
 
 
@@ -107,6 +109,18 @@ class RestEndpointBuilder(object):
 
     def generate_rh(self, handler):
         raise NotImplementedError()
+
+
+def quote_string(value):
+    """
+    Quote a string
+    :param value:
+    :return:
+    """
+    if isinstance(value, basestring):
+        return '\'%s\'' % value
+    else:
+        return value
 
 
 def indent(lines, spaces=1):

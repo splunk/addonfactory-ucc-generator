@@ -116,7 +116,7 @@ class GlobalConfigSchema(RestSchema):
             input_type=input_type,
         )
         fields = [self._parse_field(field) for field in content]
-        entity = DataInputEntityBuilder(input_type, fields)
+        entity = DataInputEntityBuilder(None, fields, input_type)
         endpoint_obj.add_entity(entity)
 
     def _get_endpoint(self, name, endpoint_cls, *args, **kwargs):

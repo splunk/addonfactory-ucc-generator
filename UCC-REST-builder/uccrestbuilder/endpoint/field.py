@@ -1,6 +1,8 @@
 
 from __future__ import absolute_import
 
+from .base import quote_string
+
 
 class RestFieldBuilder(object):
 
@@ -31,16 +33,9 @@ field.RestField(
 
     def generate_rh(self):
         return self._rh_template.format(
-            name=self._quote_string(self._field.name),
+            name=quote_string(self._field.name),
             required=self._field.required,
             encrypted=self._field.encrypted,
-            default=self._quote_string(self._field.default),
+            default=quote_string(self._field.default),
             validator=None,
         )
-
-    @classmethod
-    def _quote_string(cls, value):
-        if isinstance(value, basestring):
-            return '\'%s\'' % value
-        else:
-            return value
