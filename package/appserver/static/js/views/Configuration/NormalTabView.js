@@ -14,6 +14,7 @@ export default Backbone.View.extend({
     initialize: function(options) {
         this.props = options.props;
 
+        this.submitBtnId = options.submitBtnId;
         this.dataStore = options.dataStore;
         this.msgContainerId = `${options.containerId} .modal-body`;
         options.dataStore.on('invalid', err => {
@@ -40,7 +41,7 @@ export default Backbone.View.extend({
     },
 
     render: function() {
-        this.$el.html(_.template(NormalTabViewTemplate));
+        this.$el.html(_.template(NormalTabViewTemplate)({buttonId: this.submitBtnId}));
 
         this.dataStore.fetch().done(() => {
             const {content} = this.dataStore.entry;

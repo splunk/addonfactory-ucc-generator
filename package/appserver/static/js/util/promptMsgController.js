@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import _ from 'lodash';
 import ErrorMsgTemplate from 'app/templates/messages/ErrorMsg.html';
 import SavingMsgTemplate from 'app/templates/messages/SavingMsg.html';
@@ -37,9 +38,9 @@ export function removeSavingMsg(containerSelector) {
 export function displayValidationError(containerSelector, {validationError}) {
     removeSavingMsg(containerSelector);
     if ($(containerSelector + ' .msg-text').length) {
-        $(containerSelector + ' .msg-text').text(error.validationError);
+        $(containerSelector + ' .msg-text').text(validationError);
     } else {
-        $(containerSelector).prepend(_.template(ErrorMsgTemplate)({msg: error.validationError}));
+        $(containerSelector).prepend(_.template(ErrorMsgTemplate)({msg: validationError}));
     }
 };
 
