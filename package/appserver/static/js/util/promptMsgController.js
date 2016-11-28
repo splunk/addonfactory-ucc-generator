@@ -22,7 +22,7 @@ export function removeErrorMsg(containerSelector) {
 
 export function addSavingMsg(containerSelector, text) {
     if ($(containerSelector + ' .msg-loading').length) {
-        $(containerSelector + ' .msg-text').text('Saving ' + text);
+        $(containerSelector + ' .msg-text').text(text);
     } else {
         $(containerSelector + '.modal-body').prepend(_.template(SavingMsgTemplate)({msg: text}));
     }

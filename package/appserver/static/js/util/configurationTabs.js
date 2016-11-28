@@ -1,3 +1,4 @@
+// TODO: delete this map
 import CONFIGURATION_PAGE_MAP from 'app/constants/configurationViewMap';
 import CustomizedTabView from 'app/views/Configuration/CustomizedTabView';
 

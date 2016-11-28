@@ -1,38 +1,54 @@
+import $ from 'jquery';
+import _ from 'lodash';
+import Backbone from 'backbone';
+import NormalTabViewTemplate from 'app/views/configuration/NormalTabViewTemplate.html';
+import ControlWrapper from 'app/views/controls/ControlWrapper';
 import {configManager} from 'app/util/configManager';
+import {generateModel} from 'app/util/backboneHelpers';
+import {generateValidators} from 'app/util/validators';
+import {
+    addErrorMsg,
+    removeErrorMsg,
+    addSavingMsg,
+    removeSavingMsg,
+    displayValidationError
+} from 'app/util/promptMsgController';
 
-define([
-    'jquery',
-    'lodash',
-    'backbone',
-    'app/views/configuration/NormalTabViewTemplate.html',
-    'app/views/controls/ControlWrapper'
-], function (
-    $,
-    _,
-    Backbone,
-    NormalTabViewTemplate,
-    ControlWrapper
-) {
-    return Backbone.View.extend({
-        initialize: function(options) {
-            this.isTableBasedView = !!options.props.table;
-            this.props = options.props;
+export default Backbone.View.extend({
+    initialize: function(options) {
+        this.isTableBasedView = !!options.props.table;
+        this.props = options.props;
 
-            this.initDataBinding();
-        },
+        this.initDataBinding();
+        this.msgContainerId = `${options.containerId} .modal-body`;
+    },
 
-        initDataBinding: function() {
+    initDataBinding: function() {
+        if (this.isTableBasedView) {
 
-        },
+        } else {
+            const {entity, name} = this.props;
+            const validators = generateValidators(entity);
+            const [baseModelName, fieldName] = name.split('/');
 
-        renderNormalView: function() {
-            this.$el.html(_.template(NormalTabViewTemplate));
+            this.dataStore = new (generateModel(baseModelName, {validators}))({name: fieldName});
+            this.dataStore.on('invalid', err => displayValidationError(this.msgContainerId,  error));
+        }
+    },
 
+    renderNormalView: function() {
+        this.$el.html(_.template(NormalTabViewTemplate));
+
+        this.dataStore.fetch().done(() => {
+            const {content} = this.dataStore.entry;
             const {entity} = this.props;
             entity.forEach(d => {
+                if (content.get(d.field) === undefined && d.defaultValue) {
+                    content.set(d.field, d.defaultValue);
+                }
                 const controlOptions = {
                     ...d.options,
-                    model: this.model,
+                    model: content,
                     modelAttribute: d.field,
                     password: d.encrypted ? true : false
                 };
@@ -40,20 +56,38 @@ define([
                 const controlWrapper = new ControlWrapper({...d, controlOptions});
                 this.$('.modal-body').append(controlWrapper.render().$el);
             });
-        },
+        });
 
-        renderTableBasedView: function() {
+        this.$("input[type=submit]").on("click", this.saveDataStore.bind(this));
+    },
 
-        },
+    saveDataStore: function() {
+        const {entity} = this.props;
+        this.dataStore.attr_labels = {};
+        entity.forEach(({field, label}) => this.dataStore.attr_labels[field] = label);
 
-        render: function() {
-            if (this.isTableBasedView) {
-                this.renderTableBasedView();
-            } else {
-                this.renderNormalView();
+        removeErrorMsg(this.msgContainerId);
+        addSavingMsg(this.msgContainerId, _('Saving').t());
+        this.dataStore.save(null, {
+            success: () => removeSavingMsg(this.msgContainerId),
+            error: function (model, response) {
+                removeSavingMsg(this.msgContainerId);
+                addErrorMsg(this.msgContainerId, response, true);
             }
+        });
+    },
 
-            return this;
+    renderTableBasedView: function() {
+
+    },
+
+    render: function() {
+        if (this.isTableBasedView) {
+            this.renderTableBasedView();
+        } else {
+            this.renderNormalView();
         }
-    });
+
+        return this;
+    }
 });
