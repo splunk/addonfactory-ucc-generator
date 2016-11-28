@@ -69,19 +69,17 @@ class GlobalConfigSchema(RestSchema):
         if not configurations:
             return
         for configuration in configurations['tabs']:
-            parts = configuration['name'].split('/')
-            endpoint_name = parts[0]
-            if len(parts) <= 1:
+            if 'table' in configuration:
                 self._parse_single_model_entity(
                     None,
                     configuration['entity'],
-                    endpoint_name,
+                    configuration['name'],
                 )
             else:
                 self._parse_multiple_model_entity(
-                    parts[1],
+                    configuration['name'],
                     configuration['entity'],
-                    endpoint_name,
+                    'settings',
                 )
 
     def _parse_inputs(self, inputs):
