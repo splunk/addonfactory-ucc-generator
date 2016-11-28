@@ -1,4 +1,3 @@
-
 from __future__ import absolute_import
 
 
@@ -6,7 +5,7 @@ class RestmapConf(object):
 
     _admin_template = """
 [admin:{namespace}]
-match = /{namespace}
+match = /
 members = {endpoints}
 """
 
@@ -45,13 +44,13 @@ class WebConf(object):
 
     _template = """
 [expose:{name}]
-pattern = {namespace}/{name}
+pattern = {name}
 methods = POST, GET
 """
 
     _specified_template = """
 [expose:{name}_specified]
-pattern = {namespace}/{name}/*
+pattern = {name}/*
 methods = POST, GET, DELETE
 """
 
