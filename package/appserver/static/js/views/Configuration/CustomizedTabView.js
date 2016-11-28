@@ -58,10 +58,10 @@ export default Backbone.View.extend({
             });
         });
 
-        this.$("input[type=submit]").on("click", this.saveDataStore.bind(this));
+        this.$("input[type=submit]").on("click", this.saveData.bind(this));
     },
 
-    saveDataStore: function() {
+    saveData: function() {
         const {entity} = this.props;
         this.dataStore.attr_labels = {};
         entity.forEach(({field, label}) => this.dataStore.attr_labels[field] = label);
