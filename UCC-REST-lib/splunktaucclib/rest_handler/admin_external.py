@@ -67,8 +67,8 @@ class AdminExternalHandler(admin.MConfigHandler):
 
     def setup(self):
         # TODO: check it
-        if not self.payload:
-            return
+        # if not self.payload:
+        #     return
 
         model = self.endpoint.model(
             self.callerArgs.id,
