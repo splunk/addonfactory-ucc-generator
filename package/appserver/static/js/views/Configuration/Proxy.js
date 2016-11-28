@@ -29,7 +29,7 @@ define([
             // Add splunkd REST support
             const validators = generateValidators(this.proxyConfig.entity);
             const customizedUrl = restEndpointMap['proxy'];
-            var proxySettingModel;
+            let proxySettingModel;
             if (!customizedUrl) {
                 proxySettingModel = generateModel('setting', {validators});
             } else {
