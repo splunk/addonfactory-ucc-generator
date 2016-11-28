@@ -96,7 +96,7 @@ class GlobalConfigSchema(RestSchema):
             endpoint,
             SingleModelEndpointBuilder,
         )
-        fields = [self._parse_field(field) for field in content]
+        fields = self._parse_fields(content)
         entity = SingleModelEntityBuilder(name, fields)
         endpoint_obj.add_entity(entity)
 
@@ -105,7 +105,7 @@ class GlobalConfigSchema(RestSchema):
             endpoint,
             MultipleModelEndpointBuilder,
         )
-        fields = [self._parse_field(field) for field in content]
+        fields = self._parse_fields(content)
         entity = MultipleModelEntityBuilder(name, fields)
         endpoint_obj.add_entity(entity)
 
@@ -115,9 +115,16 @@ class GlobalConfigSchema(RestSchema):
             DataInputEndpointBuilder,
             input_type=input_type,
         )
-        fields = [self._parse_field(field) for field in content]
+        fields = self._parse_fields(content)
         entity = DataInputEntityBuilder(None, fields, input_type)
         endpoint_obj.add_entity(entity)
+
+    def _parse_fields(self, fields_content):
+        return [
+            self._parse_field(field)
+            for field in fields_content
+            if field['field'] != 'name'
+        ]
 
     def _get_endpoint(self, name, endpoint_cls, *args, **kwargs):
         if name not in self._endpoints:
