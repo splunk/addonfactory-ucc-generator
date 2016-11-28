@@ -1,4 +1,5 @@
 import {configManager} from 'app/util/configManager';
+import restEndpointMap from 'app/constants/restEndpointMap';
 import {generateCollection} from 'app/util/backboneHelpers';
 
 define([
@@ -40,9 +41,14 @@ define([
                 offset: 0,
                 fetching: true
             });
-
             //accounts collection
-            const accoutsCollection = generateCollection('account');
+            // Add splunkd REST support
+            var accoutsCollection;
+            if (!restEndpointMap['account']) {
+                accoutsCollection = generateCollection('account');
+            } else {
+                accoutsCollection = generateCollection('', {'customizedUrl': restEndpointMap['account']});
+            }
             this.accounts = new accoutsCollection([], {
                 targetApp: this.addonName,
                 targetOwner: "nobody"
