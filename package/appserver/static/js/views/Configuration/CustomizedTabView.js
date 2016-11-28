@@ -1,26 +1,16 @@
-import $ from 'jquery';
-import _ from 'lodash';
 import Backbone from 'backbone';
-import NormalTabViewTemplate from 'app/views/configuration/NormalTabViewTemplate.html';
-import ControlWrapper from 'app/views/controls/ControlWrapper';
-import {configManager} from 'app/util/configManager';
 import {generateModel} from 'app/util/backboneHelpers';
 import {generateValidators} from 'app/util/validators';
-import {
-    addErrorMsg,
-    removeErrorMsg,
-    addSavingMsg,
-    removeSavingMsg,
-    displayValidationError
-} from 'app/util/promptMsgController';
+import NormalTabView from './NormalTabView';
 
 export default Backbone.View.extend({
     initialize: function(options) {
+        this.initOptions = options;
+
         this.isTableBasedView = !!options.props.table;
         this.props = options.props;
 
         this.initDataBinding();
-        this.msgContainerId = `${options.containerId} .modal-body`;
     },
 
     initDataBinding: function() {
@@ -32,60 +22,16 @@ export default Backbone.View.extend({
             const [baseModelName, fieldName] = name.split('/');
 
             this.dataStore = new (generateModel(baseModelName, {validators}))({name: fieldName});
-            this.dataStore.on('invalid', err => displayValidationError(this.msgContainerId,  error));
         }
     },
 
-    renderNormalView: function() {
-        this.$el.html(_.template(NormalTabViewTemplate));
-
-        this.dataStore.fetch().done(() => {
-            const {content} = this.dataStore.entry;
-            const {entity} = this.props;
-            entity.forEach(d => {
-                if (content.get(d.field) === undefined && d.defaultValue) {
-                    content.set(d.field, d.defaultValue);
-                }
-                const controlOptions = {
-                    ...d.options,
-                    model: content,
-                    modelAttribute: d.field,
-                    password: d.encrypted ? true : false
-                };
-                _.extend(controlOptions, d.options);
-                const controlWrapper = new ControlWrapper({...d, controlOptions});
-                this.$('.modal-body').append(controlWrapper.render().$el);
-            });
-        });
-
-        this.$("input[type=submit]").on("click", this.saveData.bind(this));
-    },
-
-    saveData: function() {
-        const {entity} = this.props;
-        this.dataStore.attr_labels = {};
-        entity.forEach(({field, label}) => this.dataStore.attr_labels[field] = label);
-
-        removeErrorMsg(this.msgContainerId);
-        addSavingMsg(this.msgContainerId, _('Saving').t());
-        this.dataStore.save(null, {
-            success: () => removeSavingMsg(this.msgContainerId),
-            error: function (model, response) {
-                removeSavingMsg(this.msgContainerId);
-                addErrorMsg(this.msgContainerId, response, true);
-            }
-        });
-    },
-
-    renderTableBasedView: function() {
-
-    },
-
     render: function() {
+        const {dataStore} = this;
         if (this.isTableBasedView) {
             this.renderTableBasedView();
         } else {
-            this.renderNormalView();
+            const view = new NormalTabView({...this.initOptions, dataStore});
+            this.$el.html(view.render().$el);
         }
 
         return this;
