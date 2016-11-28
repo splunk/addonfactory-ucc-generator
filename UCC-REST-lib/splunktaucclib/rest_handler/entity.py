@@ -8,12 +8,11 @@ __all__ = ['RestEntity']
 
 class RestEntity(object):
 
-    def __init__(self, name, content, real_model, acl=None):
+    def __init__(self, name, content, model, user, app, acl=None):
         self.name = name
         self.content = content
-        self.model = real_model
-
-        self._eai = RestEAI(self.model, acl)
+        self.model = model
+        self._eai = RestEAI(self.model, user, app, acl)
 
     @property
     def eai(self):

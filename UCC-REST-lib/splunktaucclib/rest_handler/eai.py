@@ -18,11 +18,11 @@ EAI_ATTRIBUTES_WILDCARD = 'wildcardFields'
 
 class RestEAI(object):
 
-    def __init__(self, real_model, acl=None):
-        self.model = real_model
+    def __init__(self, model, user, app, acl=None):
+        self.model = model
         default_acl = {
-            'owner': self.model.user,
-            'app': self.model.app,
+            'owner': user,
+            'app': app,
             'global': 1,
             'can_write': 1,
             'modifiable': 1,
@@ -31,8 +31,8 @@ class RestEAI(object):
             'perms': {'read': ['*'], 'write': ['admin']},
         }
         self.acl = acl or default_acl
-        self.user = self.model.user
-        self.app = self.model.app
+        self.user = user
+        self.app = app
         self.attributes = self._build_attributes()
 
     @property

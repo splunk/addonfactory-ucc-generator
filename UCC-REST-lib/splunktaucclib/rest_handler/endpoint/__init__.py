@@ -2,11 +2,13 @@
 from __future__ import absolute_import
 
 from ..util import get_base_app_name
+from ..error import RestError
 from .field import RestField
 
 
 __all__ = [
     'RestModel',
+    'RestEndpoint',
     'SingleModel',
     'MultipleModel',
     'DataInputModel',
@@ -14,13 +16,24 @@ __all__ = [
 
 
 class RestModel(object):
+
+    def __init__(self, fields, name=None):
+        """
+        REST Model.
+        :param name:
+        :param fields:
+        """
+        self.name = name
+        self.fields = fields
+
+
+class RestEndpoint(object):
     """
-    REST Model.
+    REST Endpoint.
     """
 
     def __init__(
             self,
-            fields,
             user='nobody',
             app=None,
             *args,
@@ -28,7 +41,6 @@ class RestModel(object):
     ):
         """
 
-        :param fields: a list of RestField instances
         :param user:
         :param app: if None, it will be base app name
         :param args:
@@ -36,20 +48,19 @@ class RestModel(object):
         """
         self.user = user
         self.app = app or get_base_app_name()
-        self.fields = fields
         self.args = args
         self.kwargs = kwargs
 
     @property
-    def endpoint(self):
+    def internal_endpoint(self):
         """
-        Endpoint of Splunk service.
+        Endpoint of Splunk internal service.
 
         :return:
         """
         raise NotImplementedError()
 
-    def real_model(self, name, data):
+    def model(self, name, data):
         """
         Real model for given name & data.
 
@@ -59,23 +70,24 @@ class RestModel(object):
         """
         raise NotImplementedError()
 
-    def _loop_fields(self, meth, *args, **kwargs):
+    def _loop_fields(self, meth, name, data, *args, **kwargs):
+        model = self.model(name, data)
         return map(
-            lambda f: getattr(f, meth)(*args, **kwargs),
-            self.fields,
+            lambda f: getattr(f, meth)(data, *args, **kwargs),
+            model.fields,
         )
 
-    def validate(self, data):
-        self._loop_fields('validate', data)
+    def validate(self, name, data):
+        self._loop_fields('validate', name, data)
 
-    def encode(self, data):
-        self._loop_fields('encode', data)
+    def encode(self, name, data):
+        self._loop_fields('encode', name, data)
 
-    def decode(self, data):
-        self._loop_fields('decode', data)
+    def decode(self, name, data):
+        self._loop_fields('decode', name, data)
 
 
-class SingleModel(RestModel):
+class SingleModel(RestEndpoint):
     """
     REST Model with Single Mode. It will store stanzas
     with same format  into one conf file.
@@ -84,7 +96,7 @@ class SingleModel(RestModel):
     def __init__(
             self,
             conf_name,
-            fields,
+            model,
             user='nobody',
             app=None,
             *args,
@@ -93,24 +105,26 @@ class SingleModel(RestModel):
         """
 
         :param conf_name: conf file name
-        :param fields: a list of RestField instances
+        :param model: REST model
+        :type model: RestModel
         :param args:
         :param kwargs:
         """
         super(SingleModel, self).__init__(
-            fields, user=user, app=app, *args, **kwargs)
+            user=user, app=app, *args, **kwargs)
 
+        self._model = model
         self.conf_name = conf_name
 
     @property
-    def endpoint(self):
+    def internal_endpoint(self):
         return 'configs/conf-{}'.format(self.conf_name)
 
-    def real_model(self, name, data):
-        return self
+    def model(self, name, data):
+        return self._model
 
 
-class MultipleModel(RestModel):
+class MultipleModel(RestEndpoint):
     """
     REST Model with Multiple Modes. It will store
      stanzas with different formats into one conf file.
@@ -119,7 +133,7 @@ class MultipleModel(RestModel):
     def __init__(
             self,
             conf_name,
-            real_fields,
+            models,
             user='nobody',
             app=None,
             *args,
@@ -129,44 +143,29 @@ class MultipleModel(RestModel):
 
         :param conf_name:
         :type conf_name: basestring
-        :param real_fields: used to create SingleModel instance.
-            A dict of: ``name``==> ``fields``
-        :type real_fields: dict
+        :param models: list of RestModel
+        :type models: list
         :param args:
         :param kwargs:
         """
         super(MultipleModel, self).__init__(
-            None, user=user, app=app, *args, **kwargs)
+            user=user, app=app, *args, **kwargs)
 
         self.conf_name = conf_name
-        self.real_models = self._build_real_models(real_fields)
+        self.models = {model.name: model for model in models}
 
     @property
-    def endpoint(self):
+    def internal_endpoint(self):
         return 'configs/conf-{}'.format(self.conf_name)
 
-    def real_model(self, name, data):
-        real_model = self.real_models[name]
-        if real_model.conf_name is None:
-            real_model.conf_name = self.conf_name
-        return real_model
-
-    def _build_real_models(self, real_fields):
-        real_models = {}
-        for name, fields in real_fields.iteritems():
-            real_model = SingleModel(
-                self.conf_name,
-                fields,
-                user=self.user,
-                app=self.app,
-                *self.args,
-                **self.kwargs
-            )
-            real_models[name] = real_model
-        return real_models
+    def model(self, name, data):
+        try:
+            return self.models[name]
+        except KeyError:
+            raise RestError(404, 'name=%s' % name)
 
 
-class DataInputModel(RestModel):
+class DataInputModel(RestEndpoint):
     """
     REST Model for Data Input.
     """
@@ -174,20 +173,21 @@ class DataInputModel(RestModel):
     def __init__(
             self,
             input_type,
-            fields,
+            model,
             user='nobody',
             app=None,
             *args,
             **kwargs
     ):
         super(DataInputModel, self).__init__(
-            fields, user=user, app=app, *args, **kwargs)
+            user=user, app=app, *args, **kwargs)
 
         self.input_type = input_type
+        self._model = model
 
     @property
-    def endpoint(self):
+    def internal_endpoint(self):
         return 'data/inputs/{}'.format(self.input_type)
 
-    def real_model(self, name, data):
-        return self
+    def model(self, name, data):
+        return self._model

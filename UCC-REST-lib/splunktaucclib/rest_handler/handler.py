@@ -20,57 +20,60 @@ from .credentials import RestCredentials
 __all__ = ['RestHandler']
 
 
-def _encode(meth):
+def _encode_request(meth):
     """
     Encode payload before request.
-    :param meth:
+    :param meth: RestHandler instance method
     :return:
     """
     @wraps(meth)
     def wrapper(self, name, data):
-        real_model = self._model.real_model(name, data)
-        real_model.validate(data)
-        real_model.encode(data)
+        self._endpoint.validate(name, data)
+        self._endpoint.encode(name, data)
 
         rest_credentials = RestCredentials(
             self._splunkd_uri,
             self._session_key,
-            real_model,
+            self._endpoint.model(name, data),
         )
         rest_credentials.encrypt(name, data)
         return meth(self, name, data)
     return wrapper
 
 
-def _decode(meth):
+def _decode_response(meth):
     """
-    Decode response.
-    :param meth:
+    Decode response body.
+    :param meth: RestHandler instance method
     :return:
     """
     def parse(self, response):
         body = response.body.read()
         cont = json.loads(body)
 
+        entities = []
         for entry in cont['entry']:
             name = entry['name']
             data = entry['content']
-            real_model = self._model.real_model(name, data)
+            model = self._endpoint.model(name, data)
             rest_credentials = RestCredentials(
                 self._splunkd_uri,
                 self._session_key,
-                real_model,
+                model,
             )
             rest_credentials.decrypt(name, data)
-            real_model.decode(data)
+            self._endpoint.decode(name, data)
 
-            rest_entity = RestEntity(
+            entity = RestEntity(
                 name,
                 data,
-                real_model,
+                model,
+                self._endpoint.user,
+                self._endpoint.app,
                 acl=entry['acl'],
             )
-            yield rest_entity
+            entities.append(entity)
+        return entities
 
     @wraps(meth)
     def wrapper(self, *args, **kwargs):
@@ -92,26 +95,26 @@ class RestHandler(object):
             self,
             splunkd_uri,
             session_key,
-            model,
+            endpoint,
             *args,
             **kwargs
     ):
         self._splunkd_uri = splunkd_uri
         self._session_key = session_key
-        self._model = model
+        self._endpoint = endpoint
         self._args = args
         self._kwargs = kwargs
 
         splunkd_info = urlparse(self._splunkd_uri)
         self._client = SplunkRestClient(
             self._session_key,
-            self._model.app,
+            self._endpoint.app,
             scheme=splunkd_info.scheme,
             host=splunkd_info.hostname,
             port=splunkd_info.port,
         )
 
-    @_decode
+    @_decode_response
     def get(self, name):
         self.reload()
         return self._client.get(
@@ -119,7 +122,7 @@ class RestHandler(object):
             output_mode='json',
         )
 
-    @_decode
+    @_decode_response
     def all(self, **query):
         self.reload()
         return self._client.get(
@@ -128,8 +131,8 @@ class RestHandler(object):
             **query
         )
 
-    @_decode
-    @_encode
+    @_decode_response
+    @_encode_request
     def create(self, name, data):
         self._check_name(name)
         return self._client.post(
@@ -139,8 +142,8 @@ class RestHandler(object):
             **data
         )
 
-    @_decode
-    @_encode
+    @_decode_response
+    @_encode_request
     def update(self, name, data):
         return self._client.post(
             self._path_segment(name=name),
@@ -148,21 +151,21 @@ class RestHandler(object):
             **data
         )
 
-    @_decode
+    @_decode_response
     def delete(self, name):
         return self._client.delete(
             self._path_segment(name=name),
             output_mode='json',
         )
 
-    @_decode
+    @_decode_response
     def disable(self, name):
         return self._client.post(
             self._path_segment(name=name, action='disable'),
             output_mode='json',
         )
 
-    @_decode
+    @_decode_response
     def enable(self, name):
         return self._client.post(
             self._path_segment(name=name, action='enable'),
@@ -176,20 +179,21 @@ class RestHandler(object):
         template = '{endpoint}{name}{action}'
         name = ('/%s' % quote(name.encode('utf-8'))) if name else ''
         path = template.format(
-            endpoint=self._model.endpoint.strip('/'),
+            endpoint=self._endpoint.internal_endpoint.strip('/'),
             name=name,
             action='/%s' % action if action else '',
         )
         return path.strip('/')
 
-    def _check_name(self, name):
+    @classmethod
+    def _check_name(cls, name):
         if name == 'default':
             raise RestError(
                 400,
-                '"default" is not allowed for entity name',
+                '"%s" is not allowed for entity name' % name,
             )
         if name.startswith("_"):
             raise RestError(
                 400,
-                '"default" is not allowed for entity name',
+                'Name starting with "_" is not allowed for entity',
             )

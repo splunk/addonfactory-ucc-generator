@@ -49,7 +49,7 @@ def build_conf_info(meth):
 class AdminExternalHandler(admin.MConfigHandler):
 
     # Leave it for setting REST model
-    model = None
+    endpoint = None
 
     def __init__(self, scriptMode, ctxInfo, request=None):
         admin.MConfigHandler.__init__(
@@ -61,28 +61,28 @@ class AdminExternalHandler(admin.MConfigHandler):
         self.handler = RestHandler(
             get_splunkd_uri(),
             self.getSessionKey(),
-            self.model,
+            self.endpoint,
         )
-        self.payload = self._convert_paload()
+        self.payload = self._convert_payload()
 
     def setup(self):
         # TODO: check it
         if not self.payload:
             return
 
-        real_model = self.model.real_model(
+        model = self.endpoint.model(
             self.callerArgs.id,
             self.payload,
         )
         if self.requestedAction == admin.ACTION_CREATE:
-            for field in real_model.fields:
+            for field in model.fields:
                 if field.required:
                     self.supportedArgs.addReqArg(field.name)
                 else:
                     self.supportedArgs.addOptArg(field.name)
 
         if self.requestedAction == admin.ACTION_EDIT:
-            for field in real_model.fields:
+            for field in model.fields:
                 self.supportedArgs.addOptArg(field.name)
 
     @build_conf_info
@@ -118,7 +118,7 @@ class AdminExternalHandler(admin.MConfigHandler):
     def handleRemove(self, confInfo):
         return self.handler.delete(self.callerArgs.id)
 
-    def _convert_paload(self):
+    def _convert_payload(self):
         check_actions = (admin.ACTION_CREATE, admin.ACTION_EDIT)
         if self.requestedAction not in check_actions:
             return None
@@ -130,14 +130,14 @@ class AdminExternalHandler(admin.MConfigHandler):
 
 
 def handle(
-        model,
+        endpoint,
         handler=AdminExternalHandler,
         context_info=admin.CONTEXT_APP_ONLY,
 ):
     """
     Handle request.
 
-    :param model: REST model
+    :param endpoint: REST endpoint
     :param handler: REST handler
     :param context_info:
     :return:
@@ -145,6 +145,6 @@ def handle(
     real_handler = type(
         handler.__name__,
         (handler, ),
-        {'model': model},
+        {'endpoint': endpoint},
     )
     admin.init(real_handler, ctxInfo=context_info)

@@ -19,7 +19,9 @@ STATUS_CODES = {
     407: 'Proxy Authentication Required',
     408: 'Request Timeout',
     409: 'Conflict',
+    411: 'Length Required',
     500: 'Internal Server Error',
+    503: 'Service Unavailable',
 }
 
 
@@ -30,7 +32,10 @@ class RestError(Exception):
 
     def __init__(self, status, message):
         self.status = status
-        self.reason = STATUS_CODES[status]
+        self.reason = STATUS_CODES.get(
+            status,
+            'Unknown Error',
+        )
         self.message = message
         template = 'REST Error[{status}]: {reason} -- {message}'
         err_msg = template.format(

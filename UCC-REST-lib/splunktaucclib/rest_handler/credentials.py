@@ -27,11 +27,11 @@ class RestCredentials(object):
             self,
             splunkd_uri,
             session_key,
-            real_model,
+            model,
     ):
         self.splunkd_uri = splunkd_uri
         self.session_key = session_key
-        self.model = real_model
+        self.model = model
 
     def realm(self, name):
         """
@@ -42,7 +42,7 @@ class RestCredentials(object):
         """
         return RestCredentials.REALM.format(
             base_app=get_base_app_name(),
-            endpoint=self.model.endpoint,
+            endpoint=self.model.internal_endpoint,
         )
 
     def username(self, name):
