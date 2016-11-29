@@ -1,5 +1,5 @@
 import {configManager} from 'app/util/configManager';
-import {generateTabView} from 'app/util/configurationTabs';
+import CustomizedTabView from 'app/views/Configuration/CustomizedTabView';
 
 define([
     'jquery',
@@ -55,7 +55,7 @@ define([
             return tabs.map((d, i) => {
                 const {title} = d,
                     token = title.toLowerCase().replace(/\s/g, '-'),
-                    viewType = generateTabView(d);
+                    viewType = CustomizedTabView;
 
                 if(viewType) {
                     const view = new viewType({

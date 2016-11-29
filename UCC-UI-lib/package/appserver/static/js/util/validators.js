@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import schema from 'rootDir/schema/schema.json';
 import {Validator} from 'jsonschema';
+import {PREDEFINED_VALIDATORS_DICT} from 'app/constants/preDefinedRegex';
 
 export function validateSchema(config) {
     const validator = new Validator();
@@ -20,15 +21,16 @@ function validatorFactory(validatorInfo, label) {
         if(pattern !== undefined) {
             return function(attr) {
                 const val = this.entry.content.get(attr);
+                let regex;
                 try {
-                    const regex = new RegExp(pattern);
-                    if(!regex.test(val))
-                        return errorMsg ? errorMsg :
-                            `${_('Input of').t()} ${label} ${_('does not match Regular Expression').t()} ${pattern}${_('.').t()}`;
+                    regex = new RegExp(pattern);
                 } catch (e) {
-                    return `${pattern} ${_('isn\'t a legal Regular Expression').t()}${_('.').t()}`;
+                    return `${pattern} ${_('is not a legal Regular Expression').t()}${_('.').t()}`;
                 }
-            }
+                if(!regex.test(val))
+                    return errorMsg ? errorMsg :
+                        `${_('Input of').t()} ${label} ${_('does not match Regular Expression').t()} ${pattern}${_('.').t()}`;
+            };
         }
     }
 
@@ -46,7 +48,7 @@ function validatorFactory(validatorInfo, label) {
 
                 if(val > range[1] || val < range[0])
                     return `${_('Input of').t()} ${label} ${_('is not in range').t()} ${range[0]} - ${range[1]}${_('.').t()}`;
-            }
+            };
         }
     }
 
@@ -65,8 +67,21 @@ function validatorFactory(validatorInfo, label) {
                 if(strLength < minLength)
                     return errorMsg ? errorMsg :
                         `${_('Length of the').t()} ${label} ${_('input is less than').t()} ${minLength}${_('.').t()}`;
-            }
+            };
         }
+    }
+
+    const preDefinedRegexObj = PREDEFINED_VALIDATORS_DICT[type];
+    if(preDefinedRegexObj) {
+        const {inputValueType, regex} = preDefinedRegexObj;
+
+        return function(attr) {
+            const val = this.entry.content.get(attr);
+
+            if(!regex.test(val)) {
+                return `${_('Input of').t()} ${label} ${_('is not a').t()} ${inputValueType}${_('.').t()}`;
+            }
+        };
     }
 
     // Handle invalid configuration, just in case.

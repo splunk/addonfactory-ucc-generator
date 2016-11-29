@@ -30,16 +30,16 @@
         "webpack-dev-server": "^1.14.1"
     },
     "scripts": {
+        "postinstall": "bower install",
         "build": "grunt copy:publish && grunt shell:style && grunt webpack:build",
         "buildDev": "grunt copy:dev && grunt shell:style && grunt webpack:dev",
         "fortify": "/usr/bin/fortify-scanner.py",
-        "copyConfig": "copyfiles ./globalConfig.json ./stage/appserver/static/js/build",
+        "copyConfig": "copyfiles ../globalConfig.json ./build/appserver/static/js/build",
         "test": "karma start ./config/karma/karma.conf.js",
         "watchSchemaGenerator": "nodemon --exec python3 schema/schemaGenerator.py --watch schema/schemaGenerator.py"
     },
     "dependencies": {
-        "jsonschema": "^1.1.0",
-        "lodash": "^4.16.4"
+        "jsonschema": "^1.1.0"
     },
     "publishConfig": {
         "registry": "https://repo.splunk.com/artifactory/api/npm/npm-solutions-local"

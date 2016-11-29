@@ -1,4 +1,5 @@
 import {configManager} from 'app/util/configManager';
+import restEndpointMap from 'app/constants/restEndpointMap';
 import {generateModel, generateCollection} from 'app/util/backboneHelpers';
 import {generateValidators} from 'app/util/validators';
 
@@ -53,8 +54,16 @@ define([
             }
 
             this.model = new Backbone.Model({});
+
             const validators = generateValidators(this.component.entity);
-            const InputType = generateModel(this.component.name, {validators});
+            const customizedUrl = restEndpointMap[this.component.name];
+            let InputType;
+            if (!customizedUrl) {
+                InputType = generateModel(this.component.name, {validators});
+            } else {
+                InputType = generateModel('', {validators, customizedUrl});
+            }
+
             if (!options.model) { //Create mode
                 this.mode = "create";
                 this.model = new Backbone.Model({});
@@ -207,14 +216,7 @@ define([
                 };
                 _.extend(controlOptions, e.options);
 
-                controlWrapper = new ControlWrapper({
-                    label: e.label,
-                    controlType: e.type,
-                    wrapperClass: e.field,
-                    required: e.required ? true : false,
-                    help: e.help || null,
-                    controlOptions: controlOptions
-                });
+                controlWrapper = new ControlWrapper({...e, controlOptions});
 
                 if (e.display !== undefined) {
                     controlWrapper.$el.css("display", "none");
@@ -303,11 +305,7 @@ define([
 
         // TODO: delete this method after we fix the missing "default" in index selector.
         _loadIndex: function (controlWrapper) {
-            const indexesCollection = generateCollection('indexes');
-            const indexes = new indexesCollection([], {
-                targetApp: Util.getAddonName(),
-                targetOwner: "nobody"
-            });
+            const indexes = generateCollection('indexes');
             const indexDeferred = indexes.fetch();
             indexDeferred.done(function () {
                 let id_lst = _.map(indexes.models, model => {
