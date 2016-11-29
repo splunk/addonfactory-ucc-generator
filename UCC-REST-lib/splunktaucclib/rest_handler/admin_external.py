@@ -4,6 +4,7 @@ from __future__ import absolute_import
 from functools import wraps
 from splunk import admin
 from solnlib.splunkenv import get_splunkd_uri
+from solnlib.utils import is_true
 
 from .eai import EAI_FIELDS
 from .handler import RestHandler
@@ -66,9 +67,9 @@ class AdminExternalHandler(admin.MConfigHandler):
         self.payload = self._convert_payload()
 
     def setup(self):
-        # TODO: check it
-        # if not self.payload:
-        #     return
+        actions = (admin.ACTION_LIST, admin.ACTION_REMOVE)
+        if self.requestedAction in actions:
+            return
 
         model = self.endpoint.model(
             self.callerArgs.id,
@@ -109,10 +110,16 @@ class AdminExternalHandler(admin.MConfigHandler):
 
     @build_conf_info
     def handleEdit(self, confInfo):
-        return self.handler.update(
-            self.callerArgs.id,
-            self.payload,
-        )
+        disabled = self.payload.get('self.payload')
+        if disabled is None:
+            return self.handler.update(
+                self.callerArgs.id,
+                self.payload,
+            )
+        elif is_true(disabled):
+            return self.handler.disable()
+        else:
+            return self.handler.enable()
 
     @build_conf_info
     def handleRemove(self, confInfo):

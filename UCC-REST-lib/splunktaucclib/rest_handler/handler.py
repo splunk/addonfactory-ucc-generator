@@ -20,25 +20,51 @@ from .credentials import RestCredentials
 __all__ = ['RestHandler']
 
 
-def _encode_request(meth):
+def _encode_request(existing=False):
     """
     Encode payload before request.
-    :param meth: RestHandler instance method
+    :param existing: if check existing needed
     :return:
     """
-    @wraps(meth)
-    def wrapper(self, name, data):
-        self._endpoint.validate(name, data)
-        self._endpoint.encode(name, data)
 
-        rest_credentials = RestCredentials(
-            self._splunkd_uri,
-            self._session_key,
-            self._endpoint.model(name, data),
-        )
-        rest_credentials.encrypt(name, data)
-        return meth(self, name, data)
-    return wrapper
+    def _encode_request_wrapper(meth):
+        """
+
+        :param meth: RestHandler instance method
+        :return:
+        """
+        def check_existing(self, name):
+            if not existing:
+                return None
+            entities = self.get(name)
+            if len(entities) < 1:
+                raise RestError(
+                    404,
+                    'name=%s' % name,
+                )
+            return entities[0].content
+
+        @wraps(meth)
+        def wrapper(self, name, data):
+
+            self._endpoint.validate(
+                name,
+                data,
+                check_existing(self, name),
+            )
+            self._endpoint.encode(name, data)
+
+            rest_credentials = RestCredentials(
+                self._splunkd_uri,
+                self._session_key,
+                self._endpoint,
+            )
+            rest_credentials.encrypt(name, data)
+            return meth(self, name, data)
+
+        return wrapper
+
+    return _encode_request_wrapper
 
 
 def _decode_response(meth):
@@ -55,19 +81,24 @@ def _decode_response(meth):
         for entry in cont['entry']:
             name = entry['name']
             data = entry['content']
-            model = self._endpoint.model(name, data)
             rest_credentials = RestCredentials(
                 self._splunkd_uri,
                 self._session_key,
-                model,
+                self._endpoint,
             )
-            rest_credentials.decrypt(name, data)
+            masked = rest_credentials.decrypt(name, data)
+            if masked:
+                # passwords.conf changed
+                self._client.post(
+                    self._path_segment(name=name),
+                    **masked
+                )
             self._endpoint.decode(name, data)
 
             entity = RestEntity(
                 name,
                 data,
-                model,
+                self._endpoint.model(name, data),
                 self._endpoint.user,
                 self._endpoint.app,
                 acl=entry['acl'],
@@ -132,7 +163,7 @@ class RestHandler(object):
         )
 
     @_decode_response
-    @_encode_request
+    @_encode_request()
     def create(self, name, data):
         self._check_name(name)
         return self._client.post(
@@ -143,7 +174,7 @@ class RestHandler(object):
         )
 
     @_decode_response
-    @_encode_request
+    @_encode_request(existing=True)
     def update(self, name, data):
         return self._client.post(
             self._path_segment(name=name),
@@ -153,10 +184,19 @@ class RestHandler(object):
 
     @_decode_response
     def delete(self, name):
-        return self._client.delete(
+        ret = self._client.delete(
             self._path_segment(name=name),
             output_mode='json',
         )
+
+        # delete credentials
+        rest_credentials = RestCredentials(
+            self._splunkd_uri,
+            self._session_key,
+            self._endpoint,
+        )
+        rest_credentials.delete(name)
+        return ret
 
     @_decode_response
     def disable(self, name):
