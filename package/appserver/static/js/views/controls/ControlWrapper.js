@@ -1,4 +1,5 @@
 import CONTROL_TYPE_MAP from 'app/constants/controlTypeMap';
+import restEndpointMap from 'app/constants/restEndpointMap';
 import {generateCollection} from 'app/util/backboneHelpers';
 
 define([
@@ -39,7 +40,12 @@ define([
         },
         // TODO: support more component loading content dynamically like this one
         _loadSingleSelectReference: function(customizedUrl, referenceName) {
-            const referenceCollectionInstance = generateCollection(referenceName, {customizedUrl});
+            let referenceCollectionInstance;
+            if (!restEndpointMap[referenceName]) {
+                referenceCollectionInstance = generateCollection(referenceName, {customizedUrl});
+            } else {
+                referenceCollectionInstance = generateCollection('', {'customizedUrl': restEndpointMap[referenceName]});
+            }
             const referenceDeferred = referenceCollectionInstance.fetch();
             referenceDeferred.done(() => {
                 let dic = _.map(referenceCollectionInstance.models, model => {

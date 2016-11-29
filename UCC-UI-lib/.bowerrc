@@ -1,0 +1,5 @@
+{
+    "strict-ssl": false,
+    "registry": "https://repo.splunk.com/artifactory/api/bower/bower",
+    "resolvers": ["bower-art-resolver"]
+}

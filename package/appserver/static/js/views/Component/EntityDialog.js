@@ -1,4 +1,5 @@
 import {configManager} from 'app/util/configManager';
+import restEndpointMap from 'app/constants/restEndpointMap';
 import {generateModel, generateCollection} from 'app/util/backboneHelpers';
 import {generateValidators} from 'app/util/validators';
 
@@ -53,8 +54,16 @@ define([
             }
 
             this.model = new Backbone.Model({});
+
             const validators = generateValidators(this.component.entity);
-            const InputType = generateModel(this.component.name, {validators});
+            const customizedUrl = restEndpointMap[this.component.name];
+            let InputType;
+            if (!customizedUrl) {
+                InputType = generateModel(this.component.name, {validators});
+            } else {
+                InputType = generateModel('', {validators, customizedUrl});
+            }
+
             if (!options.model) { //Create mode
                 this.mode = "create";
                 this.model = new Backbone.Model({});

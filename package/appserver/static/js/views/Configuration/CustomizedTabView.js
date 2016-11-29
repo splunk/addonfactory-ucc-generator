@@ -4,6 +4,7 @@ import {generateValidators} from 'app/util/validators';
 import {generateCollection} from 'app/util/backboneHelpers';
 import NormalTabView from './NormalTabView';
 import TableBasedTabView from './TableBasedTabView';
+import restEndpointMap from 'app/constants/restEndpointMap';
 
 export default Backbone.View.extend({
     initialize: function(options) {
@@ -22,13 +23,21 @@ export default Backbone.View.extend({
         const {name} = this.props;
 
         if (this.isTableBasedView) {
-            this.dataStore = generateCollection(name);
+            this.dataStore = restEndpointMap[name] ?
+                generateCollection('',{customizedUrl: restEndpointMap[name]}) : generateCollection(name);
         } else {
             const {entity} = this.props;
             const validators = generateValidators(entity);
             const [baseModelName, fieldName] = name.split('/');
 
-            this.dataStore = new (generateModel(baseModelName, {validators}))({name: fieldName});
+            if (!restEndpointMap[fieldName]) {
+                this.dataStore = new (generateModel(baseModelName, {validators}))({name: fieldName});
+            } else {
+                this.dataStore = new (generateModel('', {
+                    customizedUrl: restEndpointMap[fieldName],
+                    validators
+                }))({name: fieldName});
+            }
         }
     },
 
