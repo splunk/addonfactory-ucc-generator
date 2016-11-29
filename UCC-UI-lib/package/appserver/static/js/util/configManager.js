@@ -1,4 +1,3 @@
-import {generateTabView} from './configurationTabs';
 import $C from 'splunk.config';
 import SplunkBaseModel from 'models/Base';
 import {loadGlobalConfig} from 'app/util/script';

@@ -1,45 +1,56 @@
-import {configManager} from 'app/util/configManager';
+import Backbone from 'backbone';
+import {generateModel} from 'app/util/backboneHelpers';
+import {generateValidators} from 'app/util/validators';
+import {generateCollection} from 'app/util/backboneHelpers';
+import NormalTabView from './NormalTabView';
+import TableBasedTabView from './TableBasedTabView';
+import restEndpointMap from 'app/constants/restEndpointMap';
 
-define([
-    'jquery',
-    'lodash',
-    'backbone',
-    'app/views/controls/ControlWrapper'
-], function (
-    $,
-    _,
-    Backbone,
-    ControlWrapper
-) {
-    return Backbone.View.extend({
-        initialize: function (options) {
-            this.props = options.props;
-        },
+export default Backbone.View.extend({
+    initialize: function(options) {
+        this.initOptions = options;
 
-        render: function() {
+        this.isTableBasedView = !!options.props.table;
+        this.props = options.props;
+
+        // This id will be used by QA team for testes
+        this.submitBtnId = `add${this.props.title.replace(' ', '')}Btn`;
+
+        this.initDataBinding();
+    },
+
+    initDataBinding: function() {
+        const {name} = this.props;
+
+        if (this.isTableBasedView) {
+            this.dataStore = restEndpointMap[name] ?
+                generateCollection('',{customizedUrl: restEndpointMap[name]}) : generateCollection(name);
+        } else {
             const {entity} = this.props;
+            const validators = generateValidators(entity);
+            const [baseModelName, fieldName] = name.split('/');
 
-            entity.forEach(d => {
-                const controlOptions = {
-                    modelAttribute: d.field,
-                    password: d.encrypted ? true : false
-                };
-                _.extend(controlOptions, d.options);
-                const controlWrapper = new ControlWrapper({
-                    label: d.label,
-                    controlType: d.type,
-                    wrapperClass: d.field,
-                    required: d.required ? true : false,
-                    help: d.help || null,
-                    controlOptions
-                });
-                this.$el.append(controlWrapper.render().$el);
-            });
-            // TODO change below to button control 
-            this.$el.append(`
-                <input type="submit" class="btn btn-primary submit-btn" value="Save" style="margin-left: 170px">
-            `);
-            return this;
+            if (!restEndpointMap[fieldName]) {
+                this.dataStore = new (generateModel(baseModelName, {validators}))({name: fieldName});
+            } else {
+                this.dataStore = new (generateModel('', {
+                    customizedUrl: restEndpointMap[fieldName],
+                    validators
+                }))({name: fieldName});
+            }
         }
-    });
+    },
+
+    render: function() {
+        const {dataStore, submitBtnId} = this;
+        let view;
+        if (this.isTableBasedView) {
+            view = new TableBasedTabView({...this.initOptions, dataStore, submitBtnId});
+        } else {
+            view = new NormalTabView({...this.initOptions, dataStore, submitBtnId});
+        }
+        this.$el.html(view.render().$el);
+
+        return this;
+    }
 });
