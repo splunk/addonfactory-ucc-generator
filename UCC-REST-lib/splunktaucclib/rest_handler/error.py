@@ -3,25 +3,26 @@ Error Handling.
 """
 
 from __future__ import absolute_import
+from splunk.appserver.mrsparkle.lib import i18n
 
 __all__ = ['STATUS_CODES', 'RestError']
 
 
 # HTTP status codes
 STATUS_CODES = {
-    400: 'Bad Request',
-    401: 'Unauthorized',
-    402: 'Payment Required',
-    403: 'Forbidden',
-    404: 'Not Found',
-    405: 'Method Not Allowed',
-    406: 'Not Acceptable',
-    407: 'Proxy Authentication Required',
-    408: 'Request Timeout',
-    409: 'Conflict',
-    411: 'Length Required',
-    500: 'Internal Server Error',
-    503: 'Service Unavailable',
+    400: _('Bad Request'),
+    401: _('Unauthorized'),
+    402: _('Payment Required'),
+    403: _('Forbidden'),
+    404: _('Not Found'),
+    405: _('Method Not Allowed'),
+    406: _('Not Acceptable'),
+    407: _('Proxy Authentication Required'),
+    408: _('Request Timeout'),
+    409: _('Conflict'),
+    411: _('Length Required'),
+    500: _('Internal Server Error'),
+    503: _('Service Unavailable')
 }
 
 
@@ -34,13 +35,12 @@ class RestError(Exception):
         self.status = status
         self.reason = STATUS_CODES.get(
             status,
-            'Unknown Error',
+            _('Unknown Error'),
         )
         self.message = message
-        template = 'REST Error[{status}]: {reason} -- {message}'
-        err_msg = template.format(
-            status=self.status,
-            reason=self.reason,
-            message=self.message,
-        )
+        err_msg = sprintf(_('REST Error [%(status)s]: %(reason)s -- %(message)s') % {
+            'status': self.status,
+            'reason': self.reason,
+            'message': self.message
+        })
         super(RestError, self).__init__(err_msg)
