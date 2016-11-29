@@ -24,3 +24,9 @@ npm-debug.log
 pypi_modules
 stage
 *.spl
+
+UCC-example-addon/output
+UCC-example-addon/solnlib
+UCC-example-addon/splunklib
+UCC-example-addon/splunktaucclib
+UCC-example-addon/uccrestbuilder
