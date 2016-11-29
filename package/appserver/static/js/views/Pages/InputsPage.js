@@ -60,16 +60,11 @@ define([
             );
             // create collection for each service
             _.each(this.services, service => {
-                let collection;
                 if (!restEndpointMap[service.name]) {
-                    collection = generateCollection(service.name);
+                    this[service.name] = generateCollection(service.name);
                 } else {
-                    collection = generateCollection('', {'customizedUrl': restEndpointMap[service.name]});
+                    this[service.name] = generateCollection('', {'customizedUrl': restEndpointMap[service.name]});
                 }
-                this[service.name] = new collection([], {
-                    targetApp: this.addonName,
-                    targetOwner: "nobody"
-                });
             });
             this.dispatcher = _.extend({}, Backbone.Events);
 

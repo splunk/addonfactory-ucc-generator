@@ -216,14 +216,7 @@ define([
                 };
                 _.extend(controlOptions, e.options);
 
-                controlWrapper = new ControlWrapper({
-                    label: e.label,
-                    controlType: e.type,
-                    wrapperClass: e.field,
-                    required: e.required ? true : false,
-                    help: e.help || null,
-                    controlOptions: controlOptions
-                });
+                controlWrapper = new ControlWrapper({...e, controlOptions});
 
                 if (e.display !== undefined) {
                     controlWrapper.$el.css("display", "none");
@@ -312,11 +305,7 @@ define([
 
         // TODO: delete this method after we fix the missing "default" in index selector.
         _loadIndex: function (controlWrapper) {
-            const indexesCollection = generateCollection('indexes');
-            const indexes = new indexesCollection([], {
-                targetApp: Util.getAddonName(),
-                targetOwner: "nobody"
-            });
+            const indexes = generateCollection('indexes');
             const indexDeferred = indexes.fetch();
             indexDeferred.done(function () {
                 let id_lst = _.map(indexes.models, model => {

@@ -17,14 +17,16 @@ define([
     return BaseView.extend({
         className: 'form-horizontal',
         initialize: function (options) {
-            this.label = options.label;
             _.extend(this, options);
-            this.labelPosition = options.labelPosition || 'top';
+
+            const {type} = options;
             // Support both string mapping and raw component
-            const controlType = typeof options.controlType === 'string' ?
-                CONTROL_TYPE_MAP[options.controlType] : options.controlType;
+            const controlType = typeof type === 'string' ?
+                CONTROL_TYPE_MAP[type] : type;
+
             this.control = new controlType(this.controlOptions);
             this.listenTo(this.control, 'all', this.trigger);
+
             const {referenceName, customizedUrl} = this.controlOptions;
             if(referenceName || customizedUrl) {
                 this._loadSingleSelectReference(customizedUrl, referenceName);
@@ -38,16 +40,12 @@ define([
         },
         // TODO: support more component loading content dynamically like this one
         _loadSingleSelectReference: function(customizedUrl, referenceName) {
-            var referenceCollection;
+            let referenceCollectionInstance;
             if (!restEndpointMap[referenceName]) {
-                referenceCollection = generateCollection(referenceName, {customizedUrl});
+                referenceCollectionInstance = generateCollection(referenceName, {customizedUrl});
             } else {
-                referenceCollection = generateCollection('', {'customizedUrl': restEndpointMap[referenceName]});
+                referenceCollectionInstance = generateCollection('', {'customizedUrl': restEndpointMap[referenceName]});
             }
-            const referenceCollectionInstance = new referenceCollection([], {
-                targetApp: this.addonName,
-                targetOwner: "nobody"
-            });
             const referenceDeferred = referenceCollectionInstance.fetch();
             referenceDeferred.done(() => {
                 let dic = _.map(referenceCollectionInstance.models, model => {
@@ -86,7 +84,6 @@ define([
             }
             this.$('.control-placeholder').prepend($control);
             this.$el.addClass('form-small');
-            this.wrapperClass && this.$el.addClass(this.wrapperClass);
             return this;
         },
 

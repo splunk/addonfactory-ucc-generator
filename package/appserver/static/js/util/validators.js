@@ -21,14 +21,15 @@ function validatorFactory(validatorInfo, label) {
         if(pattern !== undefined) {
             return function(attr) {
                 const val = this.entry.content.get(attr);
+                let regex;
                 try {
-                    const regex = new RegExp(pattern);
-                    if(!regex.test(val))
-                        return errorMsg ? errorMsg :
-                            `${_('Input of').t()} ${label} ${_('does not match Regular Expression').t()} ${pattern}${_('.').t()}`;
+                    regex = new RegExp(pattern);
                 } catch (e) {
                     return `${pattern} ${_('is not a legal Regular Expression').t()}${_('.').t()}`;
                 }
+                if(!regex.test(val))
+                    return errorMsg ? errorMsg :
+                        `${_('Input of').t()} ${label} ${_('does not match Regular Expression').t()} ${pattern}${_('.').t()}`;
             };
         }
     }
