@@ -1,6 +1,6 @@
 import assert from 'assert';
 import {validateSchema} from 'app/util/validators';
-import globalConfig from 'rootDir/globalConfig.json'
+import globalConfig from 'repoBaseDir/globalConfig.json';
 
 describe('Schema test', () => {
     it('Local reference config JSON should match the schema', () => {

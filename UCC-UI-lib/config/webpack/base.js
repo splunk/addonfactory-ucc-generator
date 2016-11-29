@@ -4,6 +4,7 @@ var webpack = require('webpack');
 var devConfig = require('./devConfig');
 
 var rootDir = path.join(__dirname, '../../');
+var repoBaseDir = path.join(__dirname, '../../..');
 
 var webpackDir = path.join(rootDir, 'bower_components', 'SplunkWebCore', 'build_tools');
 var mergeConfigs = require(path.join(webpackDir, '/util/mergeConfigs'));
@@ -35,6 +36,7 @@ module.exports = mergeConfigs(sharedConfig, postCssConfig({ loadTheme: 'enterpri
               lodash: path.join(appJsDir, 'shim', 'lodash'),
               select2: path.join(rootDir, 'bower_components', 'select2', 'select2.min'),
               rootDir: rootDir,
+              repoBaseDir: repoBaseDir,
               bootstrap: path.join(rootDir, 'bower_components', 'SplunkWebCore', 'search_mrsparkle', 'exposed', 'js', 'contrib', 'bootstrap-2.3.1.min'),
               numeral: path.join(appJsDir, 'shim', 'numeral') // this is to fix the i18m issues. The issue should be resolved in 6.5
             }

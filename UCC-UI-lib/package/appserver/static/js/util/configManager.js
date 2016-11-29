@@ -6,7 +6,7 @@ import {validateSchema} from './validators';
 class ConfigManager {
     init(next) {
         if (__CONFIG_FROM_FILE__) {
-            this.unifiedConfig = require('rootDir/globalConfig.json');
+            this.unifiedConfig = require('repoBaseDir/globalConfig.json');
             attchPropertie();
         } else {
             loadGlobalConfig(() => {
