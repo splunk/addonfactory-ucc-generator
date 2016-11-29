@@ -6,6 +6,7 @@ from __future__ import absolute_import
 
 import base64
 import json
+from splunk.appserver.mrsparkle.lib import i18n
 
 __all__ = [
     'Converter',
@@ -192,8 +193,7 @@ class Unifier(Normaliser):
             for val_old in val_old_list:
                 val_old = val_old if case_sensitive else val_old.lower()
                 assert val_old not in self._value_map, \
-                    'Normaliser "Unifier" supports Many-to-one ' \
-                    'mapping only: "%s"' % val_old
+                    sprintf(_('Normaliser "Unifier" only supports Many-to-one mapping: %s') % val_old)
                 self._value_map[val_old] = val_new
 
     def normalize(self, value, data):
@@ -256,10 +256,10 @@ class Mapping(Converter):
         if not self._case_sensitive:
             interface = interface.lower()
             storage = storage.lower()
-        temp = 'Converter "Mapping" supports one-to-one ' \
-               'mapping only: "%s"'
-        assert interface not in self._map_interface, temp % interface
-        assert storage not in self._map_storage, temp % storage
+        assert interface not in self._map_interface, \
+            sprintf(_('Converter "Mapping" only supports one-to-one mapping: "%s"') % interface)
+        assert storage not in self._map_storage, \
+            sprintf(_('Converter "Mapping" only supports one-to-one mapping: "%s"') % storage)
         self._map_interface[interface] = storage
         self._map_storage[storage] = interface
 

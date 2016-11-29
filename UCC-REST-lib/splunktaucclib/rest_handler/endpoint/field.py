@@ -2,6 +2,7 @@
 from __future__ import absolute_import
 
 from ..error import RestError
+from splunk.appserver.mrsparkle.lib import i18n
 
 
 __all = ['RestField']
@@ -34,7 +35,8 @@ class RestField(object):
             if self.required:
                 raise RestError(
                     400,
-                    'Required field is missing: %s' % existing,
+                    sprintf(_('Required field is missing: %s') % self.name)
+
                 )
             return
         if self.validator is None or not value:

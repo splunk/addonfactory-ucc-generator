@@ -1,9 +1,7 @@
-
 from __future__ import absolute_import
 
 from ..util import get_base_app_name
 from ..error import RestError
-from .field import RestField
 
 
 __all__ = [
