@@ -81,7 +81,7 @@ scheme = GlobalConfigSchema(schema_content)
 
 
 def clean_before_build():
-    shutil.rmtree(basedir + "/output")
+    shutil.rmtree(basedir + "/output", ignore_errors=True)
 
 
 def generate_rest():
