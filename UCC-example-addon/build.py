@@ -5,7 +5,6 @@ import os
 import subprocess
 from StringIO import StringIO
 
-
 from splunktaucclib.rest_handler.admin_external import AdminExternalHandler
 from uccrestbuilder.global_config import GlobalConfigSchema
 from uccrestbuilder import build
@@ -124,7 +123,7 @@ def indent(lines, spaces=1):
 
 
 def generate_ui():
-    subprocess.call("npm run build", shell=True)
+    subprocess.call("cd ../UCC-UI-lib;npm run build", shell=True)
     ui_lib_dir = os.path.dirname(basedir) + "/UCC-UI-lib/build"
 
     # copy appserver folder
@@ -217,7 +216,7 @@ def copy_global_config():
         basedir + "/output/" + schema_content.get("meta").get("name") + "/appserver/static/js/build"
     )
 
-
+clean_before_build()
 generate_rest()
 generate_ui()
 copy_libs()
