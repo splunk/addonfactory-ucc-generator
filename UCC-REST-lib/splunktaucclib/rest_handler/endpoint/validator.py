@@ -244,7 +244,10 @@ class Enum(Validator):
             self._values = set(values)
         except TypeError:
             self._values = list(values)
-        self._msg = sprintf(_('Value should be in %s') % json.dumps(list(self._values)))
+
+        self.put_msg(
+            sprintf(_('Value should be in %s') % json.dumps(list(self._values)))
+        )
 
     def validate(self, value, data):
         return value in self._values

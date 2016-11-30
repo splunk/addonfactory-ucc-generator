@@ -75,8 +75,8 @@ class RestEndpoint(object):
             model.fields,
         )
 
-    def validate(self, name, data):
-        self._loop_fields('validate', name, data)
+    def validate(self, name, data, existing=None):
+        self._loop_fields('validate', name, data, existing=existing)
 
     def encode(self, name, data):
         self._loop_fields('encode', name, data)
