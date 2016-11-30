@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build-example": "cd ./UCC-example-addon && python setup.py",
+    "build-example": "cd ./UCC-example-addon && python setup.py && python build.py ",
     "build-ui-lib": "cd ./UCC-UI-lib && npm install && npm run build",
     "build": "npm run build-example && npm run build-ui-lib"
   },
