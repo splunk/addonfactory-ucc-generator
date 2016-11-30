@@ -36,7 +36,6 @@ class RestField(object):
                 raise RestError(
                     400,
                     sprintf(_('Required field is missing: %s') % self.name)
-
                 )
             return
         if self.validator is None or not value:
