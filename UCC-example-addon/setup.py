@@ -34,6 +34,10 @@ def copy_directory(src, dest):
 
 
 def copy_ucc_files():
+    # remove existing libs
+    shutil.rmtree(basedir + "/uccrestbuilder")
+    shutil.rmtree(basedir + "/splunktaucclib")
+
     rest_builder_dir = os.path.dirname(basedir) + "/UCC-REST-builder/uccrestbuilder"
     copy_directory(rest_builder_dir, basedir + "/uccrestbuilder")
 

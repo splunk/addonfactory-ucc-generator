@@ -30,3 +30,5 @@ UCC-example-addon/solnlib
 UCC-example-addon/splunklib
 UCC-example-addon/splunktaucclib
 UCC-example-addon/uccrestbuilder
+
+UCC-UI-lib/build

@@ -89,7 +89,7 @@
                     ]
                 },
                 {
-                    "name": "settings/logging",
+                    "name": "logging",
                     "title": "Logging",
                     "entity": [
                         {
@@ -109,7 +109,7 @@
                     ]
                 },
                 {
-                    "name": "settings/proxy",
+                    "name": "proxy",
                     "title": "Proxy",
                     "entity": [
                         {
@@ -167,7 +167,7 @@
                     }
                 },
                 {
-                    "name": "settings/custom_abc",
+                    "name": "custom_abc",
                     "title": "Customized tab",
                     "entity": [
                         {
@@ -209,7 +209,6 @@
                             "type": "text",
                             "defaultValue": "60",
                             "help": "Time interval of input in seconds."
-
                         }
                     ]
                 }
