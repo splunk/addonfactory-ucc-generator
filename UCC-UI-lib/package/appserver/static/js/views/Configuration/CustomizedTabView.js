@@ -28,10 +28,8 @@ export default Backbone.View.extend({
         } else {
             const {entity} = this.props;
             const validators = generateValidators(entity);
-            //const [baseModelName, fieldName] = name.split('/');
 
             if (!restEndpointMap[name]) {
-                //this.dataStore = new (generateModel(baseModelName, {validators}))({name: fieldName});
                 this.dataStore = new (generateModel('settings', {validators}))({name});
             } else {
                 this.dataStore = new (generateModel('', {
