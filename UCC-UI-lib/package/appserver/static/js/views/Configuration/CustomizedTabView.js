@@ -21,22 +21,21 @@ export default Backbone.View.extend({
 
     initDataBinding: function() {
         const {name} = this.props;
+        const preDefinedUrl = restEndpointMap[name];
 
         if (this.isTableBasedView) {
-            this.dataStore = restEndpointMap[name] ?
-                generateCollection('',{customizedUrl: restEndpointMap[name]}) : generateCollection(name);
+            this.dataStore = generateCollection(preDefinedUrl ? '' : name, {
+                customizedUrl: preDefinedUrl
+            });
         } else {
-            const {entity} = this.props;
+            const {entity, options} = this.props;
             const validators = generateValidators(entity);
 
-            if (!restEndpointMap[name]) {
-                this.dataStore = new (generateModel('settings', {validators}))({name});
-            } else {
-                this.dataStore = new (generateModel('', {
-                    customizedUrl: restEndpointMap[name],
-                    validators
-                }))({name});
-            }
+            this.dataStore = new (generateModel(preDefinedUrl ? undefined : name, {
+                customizedUrl: preDefinedUrl,
+                formDataValidatorRawStr: options ? options.saveValidator : undefined,
+                validators
+            }))({name});
         }
     },
 

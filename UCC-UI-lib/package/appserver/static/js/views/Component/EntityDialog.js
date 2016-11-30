@@ -57,12 +57,7 @@ define([
 
             const validators = generateValidators(this.component.entity);
             const customizedUrl = restEndpointMap[this.component.name];
-            let InputType;
-            if (!customizedUrl) {
-                InputType = generateModel(this.component.name, {validators});
-            } else {
-                InputType = generateModel('', {validators, customizedUrl});
-            }
+            const InputType = generateModel(customizedUrl ? '' : this.component.name, {customizedUrl, validators});
 
             if (!options.model) { //Create mode
                 this.mode = "create";

@@ -36,7 +36,7 @@
         "copyConfig": "cp ../globalConfig.json ./build/appserver/static/js/build/globalConfig.json",
         "test": "karma start ./config/karma/karma.conf.js",
         "watchSchemaGenerator": "nodemon --exec python schema/schemaGenerator.py --watch schema/schemaGenerator.py",
-        "setupXML": "node viewXmlSetup.js && node copyGlobalConfig"
+        "setupXML": "node viewXmlSetup.js"
     },
     "dependencies": {
         "jsonschema": "^1.1.0"

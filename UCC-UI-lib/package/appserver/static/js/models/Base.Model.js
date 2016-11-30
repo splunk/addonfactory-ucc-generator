@@ -57,6 +57,8 @@ define([
                 'name': [this.nameValidator.bind(this)]
             };
 
+            // setup Hooks
+            this.validateFormData = options.validateFormData;
         },
         clone: function () {
             var clone = ProxyBase.prototype.clone.apply(this, arguments),
@@ -172,6 +174,13 @@ define([
                     if (ret) {
                         return ret;
                     }
+                }
+            }
+
+            if(this.validateFormData) {
+                ret = this.validateFormData(this.entry.content.toJSON());
+                if (typeof ret === 'string') {
+                    return ret;
                 }
             }
         },
