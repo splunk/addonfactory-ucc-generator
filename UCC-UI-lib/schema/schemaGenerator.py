@@ -7,42 +7,42 @@ class DocumentWithoutAddProp(Document):
         additional_properties = False
 
 class ValueLabelPair(DocumentWithoutAddProp):
-    value = StringField(required=True)
-    label = StringField(required=True)
+    value = StringField(required=True, max_length=300, pattern="^\w+$")
+    label = StringField(required=True, max_length=150)
+
+class ValidatorBase(DocumentWithoutAddProp):
+    errorMsg = StringField(max_length=400)
 
 class Meta(DocumentWithoutAddProp):
     displayName = StringField(required=True, max_length=200)
     name = StringField(required=True, pattern="^[^<>\:\"\/\\\|\?\*]+$")
     restRoot = StringField(required=True, pattern="^\w+$")
     uccVersion = StringField(required=True, pattern="^(?:\d{1,3}\.){2}\d{1,3}$")
-    version = StringField(required=True, pattern="^(?:\d{1,3}\.){2}\d{1,3}$")
+    version = StringField(required=True)
 
-class StringValidator(DocumentWithoutAddProp):
+class StringValidator(ValidatorBase):
     type = StringField(required=True, enum=["string"])
     minLength = NumberField(required=True, minimum=0)
     maxLength = NumberField(required=True, minimum=0)
-    errorMsg = StringField(enum=["string"], max_length=200)
 
-class NumberValidator(DocumentWithoutAddProp):
+class NumberValidator(ValidatorBase):
     type = StringField(required=True, enum=["number"])
     range = ArrayField(NumberField(), required=True)
-    errorMsg = StringField(enum=["string"], max_length=200)
 
-class RegexpValidator(DocumentWithoutAddProp):
+class RegexValidator(ValidatorBase):
     type = StringField(required=True, enum=["regex"])
     pattern = StringField(required=True)
-    errorMsg = StringField(enum=["string"], max_length=200)
 
-class EmailValidator(DocumentWithoutAddProp):
+class EmailValidator(ValidatorBase):
     type = StringField(required=True, enum=["email"])
 
-class Ipv4Validator(DocumentWithoutAddProp):
+class Ipv4Validator(ValidatorBase):
     type = StringField(required=True, enum=["ipv4"])
 
-class DateValidator(DocumentWithoutAddProp):
+class DateValidator(ValidatorBase):
     type = StringField(required=True, enum=["date"])
 
-class UrlValidator(DocumentWithoutAddProp):
+class UrlValidator(ValidatorBase):
     type = StringField(required=True, enum=["url"])
 
 
@@ -53,24 +53,25 @@ class Entity(DocumentWithoutAddProp):
     help = StringField(max_length=200)
     defaultValue = OneOfField([
         NumberField(),
-        StringField()
+        StringField(max_length=250),
+        BooleanField()
     ])
     options = DictField(
         properties={
             "disableSearch": BooleanField(),
             "autoCompleteFields": ArrayField(DictField(
                 properties={
-                    "label": StringField(required=True),
-                    "value": StringField(),
+                    "label": StringField(required=True, max_length=150),
+                    "value": StringField(max_length=300, pattern="^\w+$"),
                     "children": ArrayField(DocumentField(ValueLabelPair, as_ref=True))
                 }
             )),
-            "customizedUrl": StringField(),
-            "delimiter": StringField(),
+            "customizedUrl": StringField(max_length=350),
+            "delimiter": StringField(max_length=30),
             "items": ArrayField(DocumentField(ValueLabelPair, as_ref=True)),
-            "referenceName": StringField(),
+            "referenceName": StringField(max_length=250),
             "enable": BooleanField(),
-            "placeholder": StringField()
+            "placeholder": StringField(max_length=250)
         }
     )
     required = BooleanField()
@@ -78,7 +79,7 @@ class Entity(DocumentWithoutAddProp):
     validators = ArrayField(AnyOfField([
         DocumentField(StringValidator, as_ref=True),
         DocumentField(NumberValidator, as_ref=True),
-        DocumentField(RegexpValidator, as_ref=True),
+        DocumentField(RegexValidator, as_ref=True),
         DocumentField(EmailValidator, as_ref=True),
         DocumentField(Ipv4Validator, as_ref=True),
         DocumentField(UrlValidator, as_ref=True),
@@ -100,28 +101,33 @@ class Table(DocumentWithoutAddProp):
         }
     ), required=True)
 
+class Hooks(DocumentWithoutAddProp):
+    saveValidator = StringField(max_length=3000)
+    onLoad = StringField(max_length=3000)
+    onChange = StringField(max_length=3000)
+
 class TabContent(DocumentWithoutAddProp):
     entity = ArrayField(DocumentField(Entity, as_ref=True), required=True)
-    name = StringField(required=True, pattern="^[A-Za-z0-9_]+$")
+    name = StringField(required=True, pattern="^[\/\w]+$", max_length=250)
     title = StringField(required=True, max_length=50)
-    options = DictField()
+    options = DocumentField(Hooks, as_ref=True)
     table = DocumentField(Table, as_ref=True)
 
 class ConfigurationPage(DocumentWithoutAddProp):
-    title = StringField(required=True, max_length=50)
+    title = StringField(required=True, max_length=60)
     description = StringField(max_length=200)
     tabs = ArrayField(DocumentField(TabContent, as_ref=True), required=True, min_items=1)
 
 class InputsPage(DocumentWithoutAddProp):
-    title = StringField(required=True, max_length=50)
+    title = StringField(required=True, max_length=60)
     description = StringField(max_length=200)
     table = DocumentField(Table, as_ref=True, required=True)
     services = ArrayField(DictField(
         properties={
-            "name": StringField(required=True, pattern="^[A-Za-z0-9_]+$"),
+            "name": StringField(required=True, pattern="^\w+$"),
             "title": StringField(required=True, max_length=50),
             "entity": ArrayField(DocumentField(Entity, as_ref=True), required=True),
-            "options": DictField()
+            "options": DocumentField(Hooks, as_ref=True)
         }
     ), required=True)
 

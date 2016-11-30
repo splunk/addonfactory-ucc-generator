@@ -1,4 +1,3 @@
-import {generateTabView} from './configurationTabs';
 import $C from 'splunk.config';
 import SplunkBaseModel from 'models/Base';
 import {loadGlobalConfig} from 'app/util/script';
@@ -7,7 +6,7 @@ import {validateSchema} from './validators';
 class ConfigManager {
     init(next) {
         if (__CONFIG_FROM_FILE__) {
-            this.unifiedConfig = require('rootDir/globalConfig.json');
+            this.unifiedConfig = require('repoBaseDir/globalConfig.json');
             attchPropertie();
         } else {
             loadGlobalConfig(() => {

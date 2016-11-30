@@ -24,11 +24,7 @@ define([
             this.collection = options.collection;
             this.dispatcher = options.dispatcher;
             this.services = options.services;
-            const accoutsCollection = generateCollection('account');
-            this.servers = new accoutsCollection([], {
-                targetApp: Util.getAddonName(),
-                targetOwner: "nobody"
-            });
+            this.servers = generateCollection('account');
         },
 
         events: {
