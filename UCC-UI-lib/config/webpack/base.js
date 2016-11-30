@@ -1,7 +1,5 @@
 var path = require('path');
 var fs = require('fs');
-var webpack = require('webpack');
-var devConfig = require('./devConfig');
 
 var rootDir = path.join(__dirname, '../../');
 var repoBaseDir = path.join(__dirname, '../../..');
@@ -14,6 +12,7 @@ var appDir = path.join(rootDir, 'package');
 var requireToDefineLoader = 'splunk-require-to-define-loader!';
 
 var appJsDir = path.join(appDir, 'appserver', 'static', 'js');
+var testesDir = path.join(rootDir, 'testes');
 
 var entries = fs.readdirSync(path.join(appDir, 'appserver', 'static', 'js', 'pages'))
     .filter(function(pageFile) {
@@ -31,7 +30,7 @@ module.exports = mergeConfigs(sharedConfig, postCssConfig({ loadTheme: 'enterpri
         resolve: {
             alias: {
               app: appJsDir,
-              'lib/lodash': path.join(rootDir, 'bower_components', "lodash", "dist", "lodash"),
+              'lib/lodash': path.join(rootDir, 'bower_components', 'lodash', 'dist', 'lodash'),
               lib: path.join(appJsDir, 'lib'),
               lodash: path.join(appJsDir, 'shim', 'lodash'),
               select2: path.join(rootDir, 'bower_components', 'select2', 'select2.min'),
@@ -43,8 +42,8 @@ module.exports = mergeConfigs(sharedConfig, postCssConfig({ loadTheme: 'enterpri
         },
         module: {
             loaders: [
-                { test: /\.js$/, include: appJsDir, loader: 'babel' },
-                { test: /\.html$/, include: appJsDir, loader: 'raw' }
+                { test: /\.js$/, include: [appJsDir, testesDir], loader: 'babel' },
+                { test: /\.html$/, include: [appJsDir, testesDir], loader: 'raw' }
             ]
         },
         output: {

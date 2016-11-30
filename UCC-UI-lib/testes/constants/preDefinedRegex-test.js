@@ -1,5 +1,5 @@
 import assert from 'assert';
-import {REGEX_URL, REGEX_EMAIL, REGEX_IPV4, REGEX_DATE} from '../preDefinedRegex';
+import {REGEX_URL, REGEX_EMAIL, REGEX_IPV4, REGEX_DATE} from 'app/constants/preDefinedRegex';
 
 describe('Predefined regex testes', () => {
     describe('Regex for URL should works', () => {
