@@ -1,9 +1,9 @@
-
 from __future__ import absolute_import
 
 import os.path
 
 from .error import RestError
+from splunk.appserver.mrsparkle.lib import i18n
 
 
 __all__ = [
@@ -29,5 +29,5 @@ def get_base_app_name():
             pass
     raise RestError(
         status=500,
-        message='Cannot get app name from file: %s' % main_name,
+        message=sprintf(_('Cannot get app name from file: %s') % main_name)
     )

@@ -15,6 +15,7 @@ from solnlib.splunk_rest_client import SplunkRestClient
 from .error import RestError
 from .entity import RestEntity
 from .credentials import RestCredentials
+from splunk.appserver.mrsparkle.lib import i18n
 
 
 __all__ = ['RestHandler']
@@ -190,10 +191,10 @@ class RestHandler(object):
         if name == 'default':
             raise RestError(
                 400,
-                '"%s" is not allowed for entity name' % name,
+                sprintf(_('"%s" is not allowed for entity name') % name)
             )
         if name.startswith("_"):
             raise RestError(
                 400,
-                'Name starting with "_" is not allowed for entity',
+                _('Name starting with "_" is not allowed for entity')
             )
