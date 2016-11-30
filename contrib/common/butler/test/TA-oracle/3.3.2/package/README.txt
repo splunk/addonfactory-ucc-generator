@@ -1,8 +1,0 @@
-Splunk Add-on for Oracle Database version @version.major@.@version.minor@.@version.revision@
-@copyright@
-
-The Splunk Add-on for Oracle Database allows a Splunk Enterprise administrator to collect and ingest data from the Oracle Database Server. This add-on can import data directly by monitoring the standard and fine-grained audit trails, trace files, incident, alert, listener, and other logs on the operating system where the Oracle database server is installed. The add-on also provides lookups for Oracle ORA-error codes, actions, privileges, audit types, audit actions, and return codes. Through log file monitoring and field extraction, the database administrator can create alerts and dashboards to track what errors, problems, or incidents happen to the database in real time. This add-on leverages Splunk DB Connect to collect basic performance and inventory data from Oracle database tables. Using trace logs and inventory and performance metrics, database administrators can correlate events. This add-on provides the inputs and CIM-compatible knowledge to use the add-on with other Splunk Enterprise apps, such as Splunk App for Enterprise Security and Splunk App for PCI Compliance.
-Documentation for this add-on is located at: http://docs.splunk.com/Documentation/AddOns/latest/Oracle/About
-For installation and set-up instructions, refer to the Installation and Configuration section:
-http://docs.splunk.com/Documentation/AddOns/latest/Oracle/Hardwareandsoftwarerequirements
-For release notes, refer to the Release notes section: http://docs.splunk.com/Documentation/AddOns/latest/Oracle/Releasenotes
