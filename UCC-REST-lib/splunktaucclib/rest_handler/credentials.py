@@ -120,9 +120,6 @@ class RestCredentials(object):
         :return: If the passwords.conf is updated, masked data.
             Else, None.
         """
-        for key in data.keys():
-            if key.startswith(EAI_FIELD_PREFIX) or key == 'disabled':
-                del data[key]
         masked = None
         try:
             encrypted = self._get(name)
@@ -133,6 +130,9 @@ class RestCredentials(object):
         if self._need_encrypting(encrypted, encrypting):
             self._set(name, credentials)
             masked = copy.copy(data)
+            for key in masked.keys():
+                if key.startswith(EAI_FIELD_PREFIX) or key == 'disabled':
+                    del masked[key]
 
         data.update(credentials)
         return masked

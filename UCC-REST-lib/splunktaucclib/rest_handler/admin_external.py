@@ -110,16 +110,16 @@ class AdminExternalHandler(admin.MConfigHandler):
 
     @build_conf_info
     def handleEdit(self, confInfo):
-        disabled = self.payload.get('self.payload')
+        disabled = self.payload.get('disabled')
         if disabled is None:
             return self.handler.update(
                 self.callerArgs.id,
                 self.payload,
             )
         elif is_true(disabled):
-            return self.handler.disable()
+            return self.handler.disable(self.callerArgs.id)
         else:
-            return self.handler.enable()
+            return self.handler.enable(self.callerArgs.id)
 
     @build_conf_info
     def handleRemove(self, confInfo):

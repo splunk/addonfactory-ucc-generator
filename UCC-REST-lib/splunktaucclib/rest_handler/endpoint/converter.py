@@ -197,7 +197,9 @@ class Unifier(Normaliser):
                 self._value_map[val_old] = val_new
 
     def normalize(self, value, data):
-        val_old = value if self._case_sensitive else value.lower()
+        need_lower = not self._case_sensitive and \
+                     isinstance(value, basestring)
+        val_old = value.lower() if need_lower else value
         val_default = self._default or value
         return self._value_map.get(val_old, val_default)
 
