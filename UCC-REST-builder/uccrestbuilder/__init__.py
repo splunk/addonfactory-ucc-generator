@@ -4,15 +4,15 @@ REST Builder.
 
 from __future__ import absolute_import
 
+from splunktaucclib.rest_handler.schema import RestSchema
+
 from .builder import (
     RestBuilder,
-    RestSchema,
     RestBuilderError,
 )
 
 __all__ = [
     'RestBuilder',
-    'RestSchema',
     'RestBuilderError',
     'build',
 ]

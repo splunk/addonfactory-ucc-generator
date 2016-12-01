@@ -4,11 +4,10 @@ Global config schema.
 
 from __future__ import absolute_import
 
-import traceback
 from solnlib.utils import is_true
+from splunktaucclib.global_config import GlobalConfigSchema
 from splunktaucclib.rest_handler.endpoint.field import RestField
 
-from .builder import RestBuilderError, RestSchema
 from .endpoint.field import RestFieldBuilder
 from .endpoint.single_model import (
     SingleModelEntityBuilder,
@@ -24,99 +23,78 @@ from .endpoint.datainput import (
 )
 
 
-class GlobalConfigSchema(RestSchema):
+class GlobalConfigBuilderSchema(GlobalConfigSchema):
 
     def __init__(self, content, *args, **kwargs):
-        """
-
-        :param content: Python object for REST schema
-        :param args:
-        :param kwargs:
-        """
-        super(GlobalConfigSchema, self).__init__(*args, **kwargs)
-        self._content = content
+        super(GlobalConfigBuilderSchema, self).__init__(
+            content,
+            *args,
+            **kwargs
+        )
         self._endpoints = {}
-        try:
-            self._parse()
-        except Exception:
-            raise RestBuilderError(
-                'Invalid JSON format: %s' % traceback.format_exc(),
-            )
-
-    @property
-    def product(self):
-        return self._meta['name']
-
-    @property
-    def namespace(self):
-        return self._meta['restRoot']
-
-    @property
-    def version(self):
-        return self._meta['uccVersion']
+        self._parse_builder_schema()
 
     @property
     def endpoints(self):
         return [endpoint for _, endpoint in self._endpoints.iteritems()]
 
-    def _parse(self):
-        self._meta = self._content['meta']
-        pages = self._content['pages']
-        self._parse_configuration(pages.get('configuration'))
-        self._parse_inputs(pages.get('inputs'))
+    def _parse_builder_schema(self):
+        self._builder_configs()
+        self._builder_settings()
+        self._builder_inputs()
 
-    def _parse_configuration(self, configurations):
-        if not configurations:
-            return
-        for configuration in configurations['tabs']:
-            if 'table' in configuration:
-                self._parse_single_model_entity(
-                    None,
-                    configuration['entity'],
-                    configuration['name'],
-                )
-            else:
-                self._parse_multiple_model_entity(
-                    configuration['name'],
-                    configuration['entity'],
-                    'settings',
-                )
-
-    def _parse_inputs(self, inputs):
-        if not inputs:
-            return
-        for input_item in inputs['services']:
-            self._parse_datainput_entity(
-                input_item['name'],
-                input_item['entity'],
+    def _builder_configs(self):
+        # SingleModel
+        for config in self._configs:
+            self._builder_entity(
+                None,
+                config['entity'],
+                config['name'],
+                SingleModelEndpointBuilder,
+                SingleModelEntityBuilder,
             )
 
-    def _parse_single_model_entity(self, name, content, endpoint):
+    def _builder_settings(self):
+        # MultipleModel
+        for setting in self._settings:
+            self._builder_entity(
+                setting['name'],
+                setting['entity'],
+                'settings',
+                MultipleModelEndpointBuilder,
+                MultipleModelEntityBuilder,
+            )
+
+    def _builder_inputs(self):
+        # DataInput
+        for input_item in self._inputs:
+            self._builder_entity(
+                None,
+                input_item['entity'],
+                input_item['name'],
+                DataInputEndpointBuilder,
+                DataInputEntityBuilder,
+                input_type=input_item['name'],
+            )
+
+    def _builder_entity(
+            self,
+            name,
+            content,
+            endpoint,
+            endpoint_builder,
+            entity_builder,
+            *args,
+            **kwargs
+    ):
         endpoint_obj = self._get_endpoint(
             endpoint,
-            SingleModelEndpointBuilder,
+            endpoint_builder,
+            *args,
+            **kwargs
         )
         fields = self._parse_fields(content)
-        entity = SingleModelEntityBuilder(name, fields)
-        endpoint_obj.add_entity(entity)
-
-    def _parse_multiple_model_entity(self, name, content, endpoint):
-        endpoint_obj = self._get_endpoint(
-            endpoint,
-            MultipleModelEndpointBuilder,
-        )
-        fields = self._parse_fields(content)
-        entity = MultipleModelEntityBuilder(name, fields)
-        endpoint_obj.add_entity(entity)
-
-    def _parse_datainput_entity(self, input_type, content):
-        endpoint_obj = self._get_endpoint(
-            input_type,
-            DataInputEndpointBuilder,
-            input_type=input_type,
-        )
-        fields = self._parse_fields(content)
-        entity = DataInputEntityBuilder(None, fields, input_type)
+        entity = entity_builder(name, fields, *args, **kwargs)
         endpoint_obj.add_entity(entity)
 
     def _parse_fields(self, fields_content):
@@ -126,13 +104,13 @@ class GlobalConfigSchema(RestSchema):
             if field['field'] != 'name'
         ]
 
-    def _get_endpoint(self, name, endpoint_cls, *args, **kwargs):
+    def _get_endpoint(self, name, endpoint_builder, *args, **kwargs):
         if name not in self._endpoints:
-            endpoint = endpoint_cls(
+            endpoint = endpoint_builder(
                 name=name,
                 namespace=self._meta['restRoot'],
                 *args,
-                ** kwargs
+                **kwargs
             )
             self._endpoints[name] = endpoint
         return self._endpoints[name]

@@ -2,6 +2,7 @@
 from __future__ import absolute_import
 
 from StringIO import StringIO
+from splunktaucclib.rest_handler.schema import RestSchema
 
 __all__ = [
     'RestEntityBuilder',
@@ -75,7 +76,7 @@ class RestEndpointBuilder(object):
 
     @property
     def name(self):
-        return '{}_{}'.format(self._namespace, self._name)
+        return RestSchema.endpoint_name(self._name, self._namespace)
 
     @property
     def namespace(self):

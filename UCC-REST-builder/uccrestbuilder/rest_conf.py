@@ -5,7 +5,7 @@ class RestmapConf(object):
 
     _admin_template = """
 [admin:{namespace}]
-match = /
+match = /{admin_match}
 members = {endpoints}
 """
 
@@ -17,12 +17,13 @@ handleractions = {actions}
 """
 
     @classmethod
-    def build(cls, endpoints, namespace):
+    def build(cls, endpoints, namespace, admin_match):
         if not endpoints:
             return ''
         externals = [
             cls._admin_template.format(
                 namespace=namespace,
+                admin_match=admin_match,
                 endpoints=', '.join([ep.name for ep in endpoints])
             )
         ]

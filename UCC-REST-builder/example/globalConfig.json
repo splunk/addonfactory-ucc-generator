@@ -46,11 +46,13 @@
                                 {
                                     "type": "string",
                                     "minLength": 1,
-                                    "maxLength": 50
+                                    "maxLength": 50,
+                                    "errorMsg": "Length of Name is restricted from 1 to 50."
                                 },
                                 {
                                     "type": "regex",
-                                    "pattern": "\\w+"
+                                    "pattern": "^\\w+$",
+                                    "errorMsg": "Characters of Name should match regex ^\\w+$ ."
                                 }
                             ]
                         },
@@ -129,9 +131,20 @@
                             },
                             "defaultValue": "http"
                         },
-                        {"field": "proxy_url", "label": "Host", "type": "text"},
                         {
-                            "field": "proxy_port", "label": "Port", "type": "text",
+                            "field": "proxy_url",
+                            "label": "Host",
+                            "type": "text",
+                            "validators": [
+                                {
+                                    "type": "url"
+                                }
+                            ]
+                        },
+                        {
+                            "field": "proxy_port",
+                            "label": "Port",
+                            "type": "text",
                             "validators": [
                                 {
                                     "type": "number",
@@ -148,8 +161,9 @@
                         }
                     ],
                     "options": {
-                        "validator.save": "function(form_data) { return True; }",
-                        "validator.save2": "function(form_data) { return 'host cannot be empty'; }"
+                        "saveValidator": "function(formData) { return (formData.proxy_enabled === true && isNaN(Number(formData.proxy_port)) && Number(formData.proxy_port) < 65535) true ? 'Input of Port should be in range of [0, 65535]'; }",
+                        "onLoad": "function(formData, formWidgetsIdDict) { var enabled = formData.proxy_enabled; $(formWidgetsIdDict['proxy_type']).hide(!enabled); }",
+                        "onChange": "function(formData, changedField, formWidgetsIdDict) { if(changedField === 'proxy_enabled') { var enabled = formData.proxy_enabled; $(formWidgetsIdDict['proxy_type']).hide(!enabled); } }"
                     }
                 },
                 {
@@ -195,7 +209,6 @@
                             "type": "text",
                             "defaultValue": "60",
                             "help": "Time interval of input in seconds."
-
                         }
                     ]
                 }
