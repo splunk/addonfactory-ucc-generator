@@ -12,14 +12,14 @@ describe('Backbone utilities testes', () => {
         it('Entity with single validator should output single KV pairs', () => {
             const src = [
                 {
-                    "field": "api_uuid",
-                    "label": "API UUID",
-                    "type": "text",
-                    "required": true,
-                    "validators": [
+                    'field': 'api_uuid',
+                    'label': 'API UUID',
+                    'type': 'text',
+                    'required': true,
+                    'validators': [
                         {
-                            "type": "regex",
-                            "pattern": "\\w{1,50}"
+                            'type': 'regex',
+                            'pattern': '\\w{1,50}'
                         }
                     ]
                 }
@@ -27,29 +27,29 @@ describe('Backbone utilities testes', () => {
             const result = generateValidators(src);
             assert.equal(result.length, 1);
             assert.equal(result[0].fieldName, src[0].field);
-            assert.equal(typeof result[0].validator, "function");
+            assert.equal(typeof result[0].validator, 'function');
         });
 
         it('Entity with multiple validator should output multiple KV pairs', () => {
             const src = [
                 {
-                    "field": "api_uuid",
-                    "label": "API UUID",
-                    "type": "text",
-                    "required": true,
-                    "validators": [
+                    'field': 'api_uuid',
+                    'label': 'API UUID',
+                    'type': 'text',
+                    'required': true,
+                    'validators': [
                         {
-                            "type": "regex",
-                            "pattern": "\\w{1,50}"
+                            'type': 'regex',
+                            'pattern': '\\w{1,50}'
                         }
                     ]
                 },
                 {
-                    "field": "api_uuid2",
-                    "validators": [
+                    'field': 'api_uuid2',
+                    'validators': [
                         {
-                            "type": "regex",
-                            "pattern": "\\w{1,50}"
+                            'type': 'regex',
+                            'pattern': '\\w{1,50}'
                         }
                     ]
                 }

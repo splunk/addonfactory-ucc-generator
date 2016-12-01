@@ -6,7 +6,7 @@ module.exports = {
     watch: true,
     keepalive: true,
     plugins: [
-        new webpack.optimize.CommonsChunkPlugin("common.js"),
+        new webpack.optimize.CommonsChunkPlugin('common.js'),
         new webpack.DefinePlugin({
             __CONFIG_FROM_FILE__: false
         }),
