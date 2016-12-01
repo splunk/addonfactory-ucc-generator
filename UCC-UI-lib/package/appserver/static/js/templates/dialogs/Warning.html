@@ -1,0 +1,37 @@
+<div class="modal fade higherWider modal-warning" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title"><%- _("Warning").t() %></h4>
+            </div>
+            <div class="modal-body">
+                <div class="msg msg-warning">
+                    <i class="icon icon-info-circle"></i>
+                    <div class="msg-text">
+                        <% if (_.isArray(msg)) { %>
+                          <% _(msg).each(function(m, i){ %>
+                            <%- _(m).t() %>
+                            <% if (i !== msg.length - 1) { %>
+                              <br>
+                            <% } %>
+                          <% }); %>
+                        <% } else { %>
+                          <%- _(msg).t() %>
+                        <% } %>
+                    </div>
+                </div>
+                <% if (detail != null) { %>
+                    <div class="msg-detail-text"></div>
+                <% } %>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="<%- cancelButton.className %>"><%- _(cancelButton.text).t() %></button>
+                <button type="button" class="<%- continueButton.className %>" data-dismiss="modal"><%- _(continueButton.text).t() %></button>
+            </div>
+        </div>
+    </div>
+</div>

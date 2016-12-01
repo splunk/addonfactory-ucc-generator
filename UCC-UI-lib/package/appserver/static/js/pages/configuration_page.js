@@ -2,7 +2,7 @@ require([
     'jquery',
     'backbone',
     'splunkjs/mvc/headerview',
-    'app/views/Pages/ConfigurationPage',
+    'app/views/pages/ConfigurationPage',
     'app/util/webpack',
     'app/util/configManager'
 ], function (
