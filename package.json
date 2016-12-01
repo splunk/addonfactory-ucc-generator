@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build-example": "cd ./UCC-example-addon && python setup.py && python build.py ",
+    "build-example-addon": "cd ./UCC-example-addon && python setup.py && python build.py ",
     "build-ui-lib": "cd ./UCC-UI-lib && npm install && npm run build",
-    "build": "npm run build-ui-lib && build-ui-example"
+    "build": "npm run build-ui-lib && npm run build-example-addon"
   },
   "repository": {
     "type": "git",
