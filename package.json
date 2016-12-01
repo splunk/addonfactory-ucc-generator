@@ -1,0 +1,18 @@
+{
+  "name": "ta-ui-framework",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build-example-addon": "cd ./UCC-example-addon && python setup.py && source ${SPLUNK_HOME}/bin/setSplunkEnv && python build.py ",
+    "build-ui-lib": "cd ./UCC-UI-lib && npm install && npm run build",
+    "build": "npm run build-ui-lib && npm run build-example-addon"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@git.splunk.com:7999/soln/ta-ui-framework.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

@@ -1,6 +1,6 @@
 var BLACK_LIST = [];
 
-module.exports = function(grunt) {
+module.exports = function() {
     return {
         dev: {
             files: [

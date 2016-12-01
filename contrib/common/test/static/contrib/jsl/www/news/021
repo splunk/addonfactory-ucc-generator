@@ -1,9 +1,0 @@
-<!--
-@template=__template__
-@title=News
--->
-
-## [JavaScript Lint SourceForge Project](__BASENAME__)
-_Fri, 26 May 2006 05:15:10 +0000_
-
-JavaScript Lint now has its own [SourceForge project](http://sourceforge.net/projects/javascriptlint) with [discussion forums](http://sourceforge.net/forum/?group_id=168518), [bug/feature trackers](http://sourceforge.net/tracker/?group_id=168518), and a publicly-available [Subversion repository](http://sourceforge.net/svn/?group_id=168518).

@@ -1,4 +1,0 @@
-function unicode() {
-	return 'ö';
-}
-
