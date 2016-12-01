@@ -45,7 +45,7 @@ export default Backbone.View.extend({
 
         this.dataStore.fetch().done(() => {
             const {content} = this.dataStore.entry;
-            const {entity} = this.props;
+            const {entity, name} = this.props;
             entity.forEach(d => {
                 if (content.get(d.field) === undefined && d.defaultValue) {
                     content.set(d.field, d.defaultValue);
@@ -54,7 +54,8 @@ export default Backbone.View.extend({
                     ...d.options,
                     model: content,
                     modelAttribute: d.field,
-                    password: d.encrypted ? true : false
+                    password: d.encrypted ? true : false,
+                    elementId: `${name}-${d.field}`
                 };
                 _.extend(controlOptions, d.options);
                 const controlWrapper = new ControlWrapper({...d, controlOptions});

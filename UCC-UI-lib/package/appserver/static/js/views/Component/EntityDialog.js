@@ -55,9 +55,17 @@ define([
 
             this.model = new Backbone.Model({});
 
-            const validators = generateValidators(this.component.entity);
-            const customizedUrl = restEndpointMap[this.component.name];
-            const InputType = generateModel(customizedUrl ? '' : this.component.name, {customizedUrl, validators});
+            const {entity, name, options: comOpt} = this.component;
+            const validators = generateValidators(entity);
+            const customizedUrl = restEndpointMap[name];
+            const InputType = generateModel(customizedUrl ? '' : this.component.name, {
+                modelName: name,
+                fields: entity,
+                customizedUrl,
+                formDataValidatorRawStr: comOpt ? comOpt.saveValidator : undefined,
+                onLoadRawStr: comOpt ? comOpt.onLoad : undefined,
+                validators
+            });
 
             if (!options.model) { //Create mode
                 this.mode = "create";
@@ -202,12 +210,14 @@ define([
                     this.model.set(e.field, e.defaultValue);
                 }
 
+                // TODO: fix model can't get init data when onLoad
                 controlOptions = {
                     model: this.model,
                     modelAttribute: e.field,
                     password: e.encrypted ? true : false,
                     displayText: e.displayText,
-                    helpLink: e.helpLink
+                    helpLink: e.helpLink,
+                    elementId: `${this.component.name}-${e.field}`
                 };
                 _.extend(controlOptions, e.options);
 

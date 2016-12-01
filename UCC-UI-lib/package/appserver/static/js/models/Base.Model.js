@@ -59,6 +59,18 @@ define([
 
             // setup Hooks
             this.validateFormData = options.validateFormData;
+            const invokeOnload = () => {
+                const {onLoad, modelName, fields} = options
+                if (onLoad) {
+                    const formData = this.entry.content.toJSON();
+                    const widgetsIdDict = {};
+                    (fields || []).forEach(d => {
+                        widgetsIdDict[d.field] = `${modelName}-${d.field}`;
+                    });
+                    onLoad(formData, widgetsIdDict);
+                }
+            };
+            setTimeout(invokeOnload, 200);
         },
         clone: function () {
             var clone = ProxyBase.prototype.clone.apply(this, arguments),
