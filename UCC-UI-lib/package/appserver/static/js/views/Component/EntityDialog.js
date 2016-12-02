@@ -95,6 +95,7 @@ define([
                 });
             }
             this.real_model.on("invalid", this.displayValidationError.bind(this));
+            this.initModel();
         },
 
         modal: function () {
@@ -109,6 +110,17 @@ define([
             this.removeLoadingMsg();
             //Save the model
             this.saveModel();
+        },
+
+        initModel: function() {
+            const {content} = this.real_model.entry,
+                {entity} = this.component;
+
+            entity.forEach(d => {
+                if (content.get(d.field) === undefined && d.defaultValue) {
+                    content.set(d.field, d.defaultValue);
+                }
+            });
         },
 
         saveModel: function () {
@@ -210,7 +222,6 @@ define([
                     this.model.set(e.field, e.defaultValue);
                 }
 
-                // TODO: fix model can't get init data when onLoad
                 controlOptions = {
                     model: this.model,
                     modelAttribute: e.field,
