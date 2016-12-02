@@ -18,7 +18,7 @@ export function loadGlobalConfig(callback, errorHandler) {
 
 // NOTE: if bundle script is put some dir instead of js/build, this function will broken.
 export function getBuildDirPath() {
-    const scripts = document.getElementsByTagName("script");
+    const scripts = document.getElementsByTagName('script');
 
     const scriptsCount = scripts.length;
     for (let i = 0; i < scriptsCount; i++) {
@@ -30,4 +30,18 @@ export function getBuildDirPath() {
     }
 
     return '';
+}
+
+export function parseFuncRawStr(rawStr) {
+    let result;
+
+    try {
+        if (rawStr) {
+            result = eval(`(${rawStr})`);
+        }
+    } catch (e) {
+        console.warn(`${rawStr} is not a function.`);
+    }
+
+    return result;
 }

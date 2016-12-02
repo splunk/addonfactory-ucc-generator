@@ -65,7 +65,7 @@ define([
                     const formData = this.entry.content.toJSON();
                     const widgetsIdDict = {};
                     (fields || []).forEach(d => {
-                        widgetsIdDict[d.field] = `${modelName}-${d.field}`;
+                        widgetsIdDict[d.field] = `#${modelName}-${d.field}`;
                     });
                     onLoad(formData, widgetsIdDict);
                 }

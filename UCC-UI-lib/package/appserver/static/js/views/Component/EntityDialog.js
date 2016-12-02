@@ -2,6 +2,7 @@ import {configManager} from 'app/util/configManager';
 import restEndpointMap from 'app/constants/restEndpointMap';
 import {generateModel, generateCollection} from 'app/util/backboneHelpers';
 import {generateValidators} from 'app/util/validators';
+import {parseFuncRawStr} from 'app/util/script';
 
 define([
     'jquery',
@@ -95,7 +96,25 @@ define([
                 });
             }
             this.real_model.on("invalid", this.displayValidationError.bind(this));
+
+            // We can't set onChange-hook up in the data fetching model. Since it will only be updated when user save form data.
+            this.model.on('change', this.onStateChange.bind(this));
             this.initModel();
+        },
+
+        onStateChange: function() {
+            const onChangeHookRawStr = _.get(this.component, ['options', 'onChange']);
+            if (onChangeHookRawStr) {
+                const changedField = this.model.changedAttributes();
+                const widgetsIdDict = {};
+                const {entity, name} = this.component;
+                (entity || []).forEach(d => {
+                    widgetsIdDict[d.field] = `#${name}-${d.field}`;
+                });
+                const formData = this.model.toJSON();
+                const onChangeHook = parseFuncRawStr(onChangeHookRawStr);
+                onChangeHook(formData, changedField, widgetsIdDict);
+            }
         },
 
         modal: function () {

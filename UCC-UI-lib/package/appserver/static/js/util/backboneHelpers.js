@@ -2,6 +2,7 @@ import {configManager} from 'app/util/configManager';
 import BaseModel from 'app/models/Base.Model';
 import BaseCollection from 'app/collections/ProxyBase.Collection';
 import {getAddonName} from 'app/util/Util';
+import {parseFuncRawStr} from 'app/util/script';
 
 export function generateModel(name, options = {}) {
     const {
@@ -13,19 +14,9 @@ export function generateModel(name, options = {}) {
         validators
     } = options;
     const {unifiedConfig: {meta}} = configManager;
+    const validateFormData = parseFuncRawStr(formDataValidatorRawStr);
+    const onLoad = parseFuncRawStr(onLoadRawStr);
 
-    let validateFormData, onLoad;
-    try {
-        if (formDataValidatorRawStr) {
-            validateFormData = eval(`(${formDataValidatorRawStr})`);
-        }
-        if (onLoadRawStr) {
-            onLoad = eval(`(${onLoadRawStr})`);
-        }
-    } catch (e) {
-        // No need for error prompt here, if there is some thing wrong,
-        // such as the raw str is not a function, it will be found in the early stage.
-    }
     const optionsNeedMerge = {fields, modelName, onLoad, validateFormData};
 
     const newModel = BaseModel.extend({
