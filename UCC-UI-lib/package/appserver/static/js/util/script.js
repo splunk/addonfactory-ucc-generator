@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import _ from 'lodash';
 
 // NOTE: The callback will only be executed if the globalConfig exsit
 export function loadGlobalConfig(callback, errorHandler) {
@@ -40,7 +41,7 @@ export function parseFuncRawStr(rawStr) {
             result = eval(`(${rawStr})`);
         }
     } catch (e) {
-        console.warn(`${rawStr} is not a function.`);
+        console.warn(`${rawStr} ${_('is not a function').t()}${_('.').t()}`);
     }
 
     return result;
