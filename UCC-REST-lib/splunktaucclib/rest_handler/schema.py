@@ -3,6 +3,7 @@ REST Schema
 """
 
 from __future__ import absolute_import
+from abc import abstractproperty
 
 __all__ = [
     'RestSchemaError',
@@ -26,14 +27,14 @@ class RestSchema(object):
     def endpoint_name(name, namespace):
         return '{}_{}'.format(namespace, name)
 
-    @property
+    @abstractproperty
     def product(self):
-        raise NotImplementedError()
+        pass
 
-    @property
+    @abstractproperty
     def namespace(self):
-        raise NotImplementedError()
+        pass
 
-    @property
+    @abstractproperty
     def version(self):
-        raise NotImplementedError()
+        pass
