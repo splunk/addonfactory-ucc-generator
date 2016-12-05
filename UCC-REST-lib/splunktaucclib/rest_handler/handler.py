@@ -91,7 +91,7 @@ def _decode_response(meth):
             if masked:
                 # passwords.conf changed
                 self._client.post(
-                    self._path_segment(name=name),
+                    self.path_segment(self._endpoint.internal_endpoint, name=name),
                     **masked
                 )
             self._endpoint.decode(name, data)
@@ -150,7 +150,10 @@ class RestHandler(object):
     def get(self, name):
         self.reload()
         return self._client.get(
-            self._path_segment(name=name),
+            self.path_segment(
+                self._endpoint.internal_endpoint,
+                name=name,
+            ),
             output_mode='json',
         )
 
@@ -158,7 +161,7 @@ class RestHandler(object):
     def all(self, **query):
         self.reload()
         return self._client.get(
-            self._path_segment(),
+            self.path_segment(self._endpoint.internal_endpoint),
             output_mode='json',
             **query
         )
@@ -168,7 +171,7 @@ class RestHandler(object):
     def create(self, name, data):
         self._check_name(name)
         return self._client.post(
-            self._path_segment(),
+            self.path_segment(self._endpoint.internal_endpoint),
             output_mode='json',
             name=name,
             **data
@@ -178,7 +181,10 @@ class RestHandler(object):
     @_encode_request(existing=True)
     def update(self, name, data):
         return self._client.post(
-            self._path_segment(name=name),
+            self.path_segment(
+                self._endpoint.internal_endpoint,
+                name=name,
+            ),
             output_mode='json',
             **data
         )
@@ -186,7 +192,10 @@ class RestHandler(object):
     @_decode_response
     def delete(self, name):
         ret = self._client.delete(
-            self._path_segment(name=name),
+            self.path_segment(
+                self._endpoint.internal_endpoint,
+                name=name,
+            ),
             output_mode='json',
         )
 
@@ -202,25 +211,39 @@ class RestHandler(object):
     @_decode_response
     def disable(self, name):
         return self._client.post(
-            self._path_segment(name=name, action='disable'),
+            self.path_segment(
+                self._endpoint.internal_endpoint,
+                name=name,
+                action='disable',
+            ),
             output_mode='json',
         )
 
     @_decode_response
     def enable(self, name):
         return self._client.post(
-            self._path_segment(name=name, action='enable'),
+            self.path_segment(
+                self._endpoint.internal_endpoint,
+                name=name,
+                action='enable',
+            ),
             output_mode='json',
         )
 
     def reload(self):
-        self._client.get(self._path_segment(action='_reload'))
+        self._client.get(
+            self.path_segment(
+                self._endpoint.internal_endpoint,
+                action='_reload',
+            ),
+        )
 
-    def _path_segment(self, name=None, action=None):
+    @classmethod
+    def path_segment(cls, endpoint, name=None, action=None):
         template = '{endpoint}{name}{action}'
         name = ('/%s' % quote(name.encode('utf-8'))) if name else ''
         path = template.format(
-            endpoint=self._endpoint.internal_endpoint.strip('/'),
+            endpoint=endpoint.strip('/'),
             name=name,
             action='/%s' % action if action else '',
         )

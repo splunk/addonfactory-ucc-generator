@@ -10,7 +10,6 @@ from .rest_conf import RestmapConf, WebConf
 __all__ = [
     'RestBuilderError',
     'RestBuilder',
-    'RestSchema',
 ]
 
 
@@ -26,31 +25,6 @@ __requirements__ = (
 
 class RestBuilderError(Exception):
     pass
-
-
-class RestSchema(object):
-    """
-    REST Scheme.
-    """
-
-    def __init__(self, *args, **kwargs):
-        pass
-
-    @property
-    def product(self):
-        raise NotImplementedError()
-
-    @property
-    def namespace(self):
-        raise NotImplementedError()
-
-    @property
-    def version(self):
-        raise NotImplementedError()
-
-    @property
-    def endpoints(self):
-        raise NotImplementedError()
 
 
 class _RestBuilderOutput(object):
@@ -148,6 +122,7 @@ class RestBuilder(object):
             RestmapConf.build(
                 self._schema.endpoints,
                 self._schema.namespace,
+                self._schema.admin_match,
             ),
         )
         self.output.put(
