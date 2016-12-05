@@ -118,19 +118,25 @@ class GlobalConfig(object):
             port=splunkd_info.port,
         )
 
-    def inputs(self, name):
+        self.FILTERS = ['eai:appName', 'eai:acl', 'eai:userName']
+
+    def inputs(self, name=None):
         inputs = {}
         configs = self.configs()
         for input_item in self._schema.inputs:
             if name is None or input_item['name'] == name:
                 input_entities = self._load_endpoint(
                     input_item['name'],
-                    input_item['entity'],
+                    input_item['entity']
                 )
+                # filter unused fields in response
+                for input_entity in input_entities:
+                    self._filter_fields(input_entity)
+                # expand referenced entity
                 self._inputs_reference(
                     input_entities,
                     input_item,
-                    configs,
+                    configs
                 )
                 inputs[input_item['name']] = input_entities
         return inputs
@@ -141,8 +147,10 @@ class GlobalConfig(object):
             if name is None or config['name'] == name:
                 config_entities = self._load_endpoint(
                     config['name'],
-                    config['entity'],
+                    config['entity']
                 )
+                for config_entity in config_entities:
+                    self._filter_fields(config_entity)
                 configs[config['name']] = config_entities
         return configs
 
@@ -151,17 +159,28 @@ class GlobalConfig(object):
         for setting in self._schema.settings:
             setting_entity = self._load_endpoint(
                 'settings/%s' % setting['name'],
-                setting['entity'],
+                setting['entity']
             )
             self._parse_multiple_select(
                 setting_entity[0],
-                setting['entity'],
+                setting['entity']
             )
+            entity = setting_entity[0]
+            self._filter_fields(entity, filter_name=True)
+            settings.append({setting['name']: entity})
         return {'settings': settings}
+
+    def _filter_fields(self, entity, filter_name=False):
+        for (k, v) in entity.items():
+            if k in self.FILTERS:
+                del entity[k]
+        if filter_name:
+            del entity['name']
 
     def _load_endpoint(self, name, schema):
         response = self._client.get(
             RestHandler.path_segment(self._endpoint_path(name)),
+            output_mode='json'
         )
         body = response.body.read()
         cont = json.loads(body)
@@ -178,19 +197,19 @@ class GlobalConfig(object):
     def _parse_multiple_select(cls, entity, schema):
         for field in schema:
             field_type = field.get('type')
-            value = entity.get(field['name'])
+            value = entity.get(field['field'])
             if field_type != 'multipleSelect' or not value:
                 continue
-            delimiter = schema['options']['delimiter']
-            entity[field['name']] = value.split(delimiter)
+            delimiter = field['options']['delimiter']
+            entity[field['field']] = value.split(delimiter)
 
     def _endpoint_path(self, name):
         return '{admin_match}/{endpoint_name}'.format(
             admin_match=self._schema.admin_match,
             endpoint_name=RestSchema.endpoint_name(
                 name,
-                self._schema.namespace,
-            ),
+                self._schema.namespace
+            )
         )
 
     @classmethod
@@ -198,14 +217,14 @@ class GlobalConfig(object):
             cls,
             input_entities,
             input_item,
-            configs,
+            configs
     ):
         for input_entity in input_entities:
             cls._input_reference(
                 input_item['name'],
                 input_entity,
                 input_item['entity'],
-                configs,
+                configs
             )
 
     @classmethod
@@ -214,18 +233,18 @@ class GlobalConfig(object):
             input_type,
             input_entity,
             input_schema,
-            configs,
+            configs
     ):
         for field in input_schema:
             options = field.get('options', {})
             config_type = options.get('referenceName')
-            config_name = input_entity.get(field['name'])
+            config_name = input_entity.get(field['field'])
             if not config_type or not config_name:
                 continue
 
             for config in configs.get(config_type, []):
                 if config['name'] == config_name:
-                    input_entity[field['name']] = config
+                    input_entity[field['field']] = config
                     break
             else:
                 raise GlobalConfigError(
@@ -237,6 +256,6 @@ class GlobalConfig(object):
                         input_type=input_type,
                         input_name=input_entity['name'],
                         config_type=config_type,
-                        config_name=config_name,
+                        config_name=config_name
                     )
                 )
