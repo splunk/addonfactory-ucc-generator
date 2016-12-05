@@ -20,7 +20,7 @@ __all__ = [
 __version__ = '1.0.0'
 
 
-def build(schema, handler, output_path):
+def build(schema, handler, output_path, post_process=None):
     """
     Build REST for Add-on.
 
@@ -29,8 +29,11 @@ def build(schema, handler, output_path):
     :param handler: REST handler class, subclass of
         ``rest_handler.RestHandler``.
     :param output_path: path for output.
+    :param post_process:
     :return:
     """
     builder_obj = RestBuilder(schema, handler, output_path)
     builder_obj.build()
+    if post_process is not None:
+        post_process(builder_obj, schema)
     return builder_obj

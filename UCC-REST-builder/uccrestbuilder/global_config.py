@@ -4,6 +4,9 @@ Global config schema.
 
 from __future__ import absolute_import
 
+import os
+import os.path as op
+import shutil
 from solnlib.utils import is_true
 from splunktaucclib.global_config import GlobalConfigSchema
 from splunktaucclib.rest_handler.endpoint.field import RestField
@@ -127,3 +130,112 @@ class GlobalConfigBuilderSchema(GlobalConfigSchema):
 
     def _parse_validation(self, validation):
         return None
+
+
+class GlobalConfigPostProcessor(object):
+    """
+    Post process for REST builder.
+    """
+
+    output_local = 'local'
+    _import_declare_template = """
+import {import_declare_name}
+"""
+
+    _import_declare_content = """
+import os
+import sys
+import re
+
+ta_name = os.path.basename(os.path.dirname(os.path.dirname(__file__)))
+pattern = re.compile(r"[\\/]etc[\\/]apps[\\/][^\\/]+[\\/]bin[\\/]?$")
+new_paths = [path for path in sys.path if not pattern.search(path) or ta_name in path]
+new_paths.insert(0, os.path.dirname(__file__))
+sys.path = new_paths
+"""
+
+    def __init__(self):
+        self.builder = None
+        self.schema = None
+
+    @property
+    def root_path(self):
+        return getattr(self.builder.output, '_path')
+
+    def third_path(self):
+        return self.schema.namespace
+
+    def requirements(self):
+        third_path = op.join(
+            self.root_path,
+            self.builder.output.bin,
+            self.third_path(),
+        )
+        os.makedirs(third_path)
+        shutil.move(
+            op.join(
+                self.root_path,
+                self.builder.output.bin,
+                'requirements.txt',
+            ),
+            op.join(
+                self.root_path,
+                self.builder.output.bin,
+                self.third_path(),
+                'requirements.txt',
+            ),
+        )
+
+    def default_to_local(self):
+        shutil.move(
+            op.join(
+                self.root_path,
+                self.builder.output.default,
+            ),
+            op.join(
+                self.root_path,
+                self.output_local,
+            ),
+        )
+
+    def import_declare_name(self):
+        return '{}_import_declare'.format(self.schema.namespace)
+
+    def import_declare_content(self):
+        import_declare_file = op.join(
+            self.root_path,
+            self.builder.output.bin,
+            self.import_declare_name() + '.py',
+        )
+        with open(import_declare_file, 'w') as f:
+            f.write(self._import_declare_content)
+
+    def import_declare(self, rh_file):
+        with open(rh_file) as f:
+            cont = [l for l in f]
+        import_declare = self._import_declare_template.format(
+            import_declare_name=self.import_declare_name()
+        )
+        cont.insert(0, import_declare)
+        with open(rh_file, 'w') as f:
+            f.write(''.join(cont))
+
+    def __call__(self, builder, schema):
+        """
+        :param builder: REST builder
+        :param schema: Global Config Schema
+        :return:
+        """
+        self.builder = builder
+        self.schema = schema
+
+        self.import_declare_content()
+        for endpoint in schema.endpoints:
+            rh_file = op.join(
+                getattr(builder.output, '_path'),
+                builder.output.bin,
+                endpoint.rh_name + '.py'
+            )
+            self.import_declare(rh_file)
+        self.requirements()
+        self.default_to_local()
