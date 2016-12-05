@@ -5,9 +5,9 @@ from splunktaucclib.rest_handler.admin_external import AdminExternalHandler
 from uccrestbuilder.global_config import GlobalConfigBuilderSchema
 from uccrestbuilder import build
 
-path = op.join('/', *op.realpath(__file__).split('/')[:-1])
+path = op.dirname(op.abspath(__file__))
 
-with open(op.join(path, 'globalConfig.json')) as f:
+with open(op.join(op.dirname(op.dirname(path)), 'globalConfig.json')) as f:
     json_schema = ''.join([l for l in f])
 
 schema_content = json.loads(json_schema)
@@ -16,7 +16,7 @@ schema = GlobalConfigBuilderSchema(schema_content)
 builder = build(
     schema,
     AdminExternalHandler,
-    './output/Splunk_TA_crowdstrike'
+    './output'
 )
 print builder.requirements
 print builder.restmap_admin
