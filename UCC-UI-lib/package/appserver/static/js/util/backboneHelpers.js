@@ -11,13 +11,14 @@ export function generateModel(name, options = {}) {
         modelName,
         formDataValidatorRawStr,
         onLoadRawStr,
+        shouldInvokeOnload,
         validators
     } = options;
     const {unifiedConfig: {meta}} = configManager;
     const validateFormData = parseFuncRawStr(formDataValidatorRawStr);
     const onLoad = parseFuncRawStr(onLoadRawStr);
 
-    const optionsNeedMerge = {fields, modelName, onLoad, validateFormData};
+    const optionsNeedMerge = {fields, modelName, onLoad, shouldInvokeOnload, validateFormData};
 
     const newModel = BaseModel.extend({
         url: name ? (meta.restRoot + '_' + name) : customizedUrl,

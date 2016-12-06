@@ -37,6 +37,7 @@ export default Backbone.View.extend({
                 customizedUrl: preDefinedUrl,
                 formDataValidatorRawStr: options ? options.saveValidator : undefined,
                 onLoadRawStr: options ? options.onLoad : undefined,
+                shouldInvokeOnload: true,
                 validators
             }))({name});
         }
