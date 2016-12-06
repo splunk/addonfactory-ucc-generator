@@ -31,7 +31,7 @@ export default Backbone.View.extend({
             const {entity, options} = this.props;
             const validators = generateValidators(entity);
 
-            this.dataStore = new (generateModel(preDefinedUrl ? undefined : name, {
+            this.dataStore = new (generateModel(preDefinedUrl ? undefined : 'settings', {
                 modelName: name,
                 fields: entity,
                 customizedUrl: preDefinedUrl,
