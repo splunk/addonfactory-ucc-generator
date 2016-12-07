@@ -10,7 +10,7 @@
     "upload": "npm run upload-uccrestbuilder && npm run upload-uccrestlib",
     "build-example-addon": "cd ./UCC-example-addon && python setup.py && source ${SPLUNK_HOME}/bin/setSplunkEnv && python build.py ",
     "build-ui-lib": "cd ./UCC-UI-lib && npm install && npm run build",
-    "build": "npm run build-ui-lib && npm run build-example-addon"
+    "build": "npm run build-ui-lib && npm run build-example-addon && npm run upload"
   },
   "repository": {
     "type": "git",
