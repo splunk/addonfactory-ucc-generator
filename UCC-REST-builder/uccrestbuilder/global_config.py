@@ -147,8 +147,8 @@ import os
 import sys
 import re
 
-ta_name = os.path.basename(os.path.dirname(os.path.dirname(__file__)))
-pattern = re.compile(r"[\\/]etc[\\/]apps[\\/][^\\/]+[\\/]bin[\\/]?$")
+ta_name = '{ta_name}'
+pattern = re.compile(r'[\\\\/]etc[\\\\/]apps[\\\\/][^\\\\/]+[\\\\/]bin[\\\\/]?$')
 new_paths = [path for path in sys.path if not pattern.search(path) or ta_name in path]
 new_paths.insert(0, os.path.dirname(__file__))
 sys.path = new_paths
@@ -157,6 +157,7 @@ sys.path = new_paths
     def __init__(self):
         self.builder = None
         self.schema = None
+        self.import_declare_name = None
 
     @property
     def root_path(self):
@@ -198,29 +199,34 @@ sys.path = new_paths
             ),
         )
 
-    def import_declare_name(self):
+    def import_declare_py_name(self):
+        if self.import_declare_name:
+            return self.import_declare_name
         return '{}_import_declare'.format(self.schema.namespace)
 
-    def import_declare_content(self):
+    def import_declare_py_content(self):
         import_declare_file = op.join(
             self.root_path,
             self.builder.output.bin,
-            self.import_declare_name() + '.py',
+            self.import_declare_py_name() + '.py',
+        )
+        content = self._import_declare_content.format(
+            ta_name=self.schema.namespace,
         )
         with open(import_declare_file, 'w') as f:
-            f.write(self._import_declare_content)
+            f.write(content)
 
     def import_declare(self, rh_file):
         with open(rh_file) as f:
             cont = [l for l in f]
         import_declare = self._import_declare_template.format(
-            import_declare_name=self.import_declare_name()
+            import_declare_name=self.import_declare_py_name()
         )
         cont.insert(0, import_declare)
         with open(rh_file, 'w') as f:
             f.write(''.join(cont))
 
-    def __call__(self, builder, schema):
+    def __call__(self, builder, schema, import_declare_name=None):
         """
         :param builder: REST builder
         :param schema: Global Config Schema
@@ -228,8 +234,9 @@ sys.path = new_paths
         """
         self.builder = builder
         self.schema = schema
+        self.import_declare_name = import_declare_name
 
-        self.import_declare_content()
+        self.import_declare_py_content()
         for endpoint in schema.endpoints:
             rh_file = op.join(
                 getattr(builder.output, '_path'),

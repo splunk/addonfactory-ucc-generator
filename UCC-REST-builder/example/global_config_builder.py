@@ -21,6 +21,7 @@ builder = build(
     AdminExternalHandler,
     op.abspath('./output'),
     post_process=GlobalConfigPostProcessor(),
+    import_declare_name='import_decalare_test',
 )
 print builder.requirements
 print builder.restmap_admin
