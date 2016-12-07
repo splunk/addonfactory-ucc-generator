@@ -17,13 +17,13 @@ export function validateSchema(config) {
 
 // In this function, we can be sure that the config has already passed the basic schema validation
 function checkConfigDetails({pages: {configuration, inputs}}) {
-    const erros = [];
+    const errors = [];
 
     const checkBaseOptions = (options) => {
         _.values(options).forEach(d => {
             const {error} = parseFunctionRawStr(d);
             if (error) {
-                erros.push(error);
+                errors.push(error);
             }
         });
     };
@@ -46,7 +46,7 @@ function checkConfigDetails({pages: {configuration, inputs}}) {
                     default:
                 }
                 if (error) {
-                    erros.push(error);
+                    errors.push(error);
                 }
             });
         });
@@ -69,7 +69,7 @@ function checkConfigDetails({pages: {configuration, inputs}}) {
             checkEntity(entity);
         });
     }
-    return erros;
+    return errors;
 }
 
 function parseFunctionRawStr(rawStr) {
