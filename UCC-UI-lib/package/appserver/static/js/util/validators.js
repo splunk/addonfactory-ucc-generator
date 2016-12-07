@@ -6,12 +6,82 @@ import {PREDEFINED_VALIDATORS_DICT} from 'app/constants/preDefinedRegex';
 export function validateSchema(config) {
     const validator = new Validator();
     const res = validator.validate(config, schema);
-    // If there already are some errors from
-    // TODO: do more validate, and append it to res.errors
+    if(!res.errors.length) {
+        res.errors = checkConfigDetails(config);
+    }
     return {
         failed: !!res.errors.length,
         errors: res.errors
     };
+}
+
+// In this function, we can be sure that the config has already passed the basic schema validation
+function checkConfigDetails({pages: {configuration, inputs}}) {
+    const erros = [];
+
+    const checkBaseOptions = (options) => {
+        _.values(options).forEach(d => {
+            const {error} = parseFunctionRawStr(d);
+            if (error) {
+                erros.push(error);
+            }
+        });
+    };
+
+    const checkEntity = (entity) => {
+        _.values(entity).forEach(item => {
+            const {validators} = item;
+            _.values(validators).forEach(d => {
+                let error;
+                switch (d.type) {
+                    case 'string':
+                        error = parseStringValidator(d.minLength, d.maxLength).error;
+                        break;
+                    case 'number':
+                        error = parseNumberValidator(d.range).error;
+                        break;
+                    case 'regex':
+                        error = parseRegexRawStr(d.pattern).error;
+                        break;
+                    default:
+                }
+                if (error) {
+                    erros.push(error);
+                }
+            });
+        });
+    };
+
+    if (inputs) {
+        const {services} = inputs;
+        services.forEach(service => {
+            const {entity, options} = service;
+            checkBaseOptions(options);
+            checkEntity(entity);
+            _.values(options).forEach(d => console.log(d));
+        });
+    }
+
+    if(configuration) {
+        configuration.tabs.forEach(tab => {
+            const {entity, options} = tab;
+            checkBaseOptions(options);
+            checkEntity(entity);
+        });
+    }
+    return erros;
+}
+
+function parseFunctionRawStr(rawStr) {
+    let error, result;
+
+    try {
+        result = eval(`(${rawStr})`);
+    } catch (e) {
+        error = `${rawStr} ${_('is not a function').t()}${_('.').t()}`;
+    }
+
+    return {error, result};
 }
 
 function parseRegexRawStr(rawStr) {
