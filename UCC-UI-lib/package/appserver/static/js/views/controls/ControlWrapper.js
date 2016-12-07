@@ -5,7 +5,7 @@ import {generateCollection} from 'app/util/backboneHelpers';
 define([
     'views/Base',
     'lodash'
-], function (
+], function(
     BaseView,
     _
 ) {
@@ -16,7 +16,7 @@ define([
      */
     return BaseView.extend({
         className: 'form-horizontal',
-        initialize: function (options) {
+        initialize: function(options) {
             _.extend(this, options);
 
             const {type} = options;
@@ -34,7 +34,7 @@ define([
         },
 
         events: {
-            'click a.tooltip-link': function (e) {
+            'click a.tooltip-link': function(e) {
                 e.preventDefault();
             }
         },
@@ -60,11 +60,11 @@ define([
             });
         },
 
-        validate: function () {
+        validate: function() {
             return this.control.validate();
         },
 
-        render: function () {
+        render: function() {
             this.$el.html(this.compiledTemplate({
                 label: this.label,
                 tooltip: this.tooltip,
@@ -87,7 +87,7 @@ define([
             return this;
         },
 
-        remove: function () {
+        remove: function() {
             if (this.tooltip) {
                 this.$('.tooltip-link').tooltip('destroy');
             }
