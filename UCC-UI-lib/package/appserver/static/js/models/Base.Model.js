@@ -57,6 +57,21 @@ define([
                 'name': [this.nameValidator.bind(this)]
             };
 
+            // setup Hooks
+            this.validateFormData = options.validateFormData;
+            if (options.shouldInvokeOnload) {
+                this.on('sync', () => {
+                    const {onLoad, modelName, fields} = options;
+                    if (onLoad) {
+                        const formData = this.entry.content.toJSON();
+                        const widgetsIdDict = {};
+                        (fields || []).forEach(d => {
+                            widgetsIdDict[d.field] = `#${modelName}-${d.field}`;
+                        });
+                        onLoad(formData, widgetsIdDict);
+                    }
+                });
+            }
         },
         clone: function () {
             var clone = ProxyBase.prototype.clone.apply(this, arguments),
@@ -172,6 +187,13 @@ define([
                     if (ret) {
                         return ret;
                     }
+                }
+            }
+
+            if(this.validateFormData) {
+                ret = this.validateFormData(this.entry.content.toJSON());
+                if (typeof ret === 'string') {
+                    return ret;
                 }
             }
         },

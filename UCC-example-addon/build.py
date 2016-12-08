@@ -6,7 +6,7 @@ import subprocess
 from StringIO import StringIO
 
 from splunktaucclib.rest_handler.admin_external import AdminExternalHandler
-from uccrestbuilder.global_config import GlobalConfigSchema
+from uccrestbuilder.global_config import GlobalConfigBuilderSchema
 from uccrestbuilder import build
 
 _input_template = '''
@@ -77,7 +77,7 @@ with open(os.path.join(root_path, 'globalConfig.json')) as f:
     json_schema = ''.join([l for l in f])
 
 schema_content = json.loads(json_schema)
-scheme = GlobalConfigSchema(schema_content)
+scheme = GlobalConfigBuilderSchema(schema_content)
 
 
 def clean_before_build():
