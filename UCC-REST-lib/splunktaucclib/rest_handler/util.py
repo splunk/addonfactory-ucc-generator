@@ -8,6 +8,7 @@ from splunk.appserver.mrsparkle.lib import i18n
 
 __all__ = [
     'get_base_app_name',
+    'remove_http_proxy_env_vars',
 ]
 
 
@@ -31,3 +32,11 @@ def get_base_app_name():
         status=500,
         message=sprintf(_('Cannot get app name from file: %s') % main_name)
     )
+
+
+def remove_http_proxy_env_vars():
+    for k in ("http_proxy", "https_proxy"):
+        if k in os.environ:
+            del os.environ[k]
+        elif k.upper() in os.environ:
+            del os.environ[k.upper()]
