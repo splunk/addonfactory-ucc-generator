@@ -6,7 +6,7 @@ import subprocess
 from StringIO import StringIO
 
 from splunktaucclib.rest_handler.admin_external import AdminExternalHandler
-from uccrestbuilder.global_config import GlobalConfigBuilderSchema
+from uccrestbuilder.global_config import GlobalConfigBuilderSchema, GlobalConfigPostProcessor
 from uccrestbuilder import build
 
 _input_template = '''
@@ -88,7 +88,9 @@ def generate_rest():
     build(
         scheme,
         AdminExternalHandler,
-        './output/' + schema_content.get("meta").get("name")
+        './output/' + schema_content.get("meta").get("name"),
+        post_process=GlobalConfigPostProcessor(),
+        import_declare_name='import_decalare_test'
     )
 
 

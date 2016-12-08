@@ -32,8 +32,10 @@ from splunktaucclib.rest_handler.endpoint import (
     RestModel,
     DataInputModel,
 )
-from splunktaucclib.rest_handler import admin_external
+from splunktaucclib.rest_handler import admin_external, util
 from {handler_module} import {handler_name}
+
+util.remove_http_proxy_env_vars()
 
 {entity}
 

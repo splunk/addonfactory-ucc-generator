@@ -7,8 +7,7 @@ from .base import quote_string
 class RestFieldBuilder(object):
 
     _kv_template = '{name} = {value}'
-    _rh_template = """
-field.RestField(
+    _rh_template = """field.RestField(
     {name},
     required={required},
     encrypted={encrypted},
