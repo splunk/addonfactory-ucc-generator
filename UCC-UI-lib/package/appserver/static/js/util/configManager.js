@@ -28,7 +28,7 @@ class ConfigManager {
                 // Currently, the ErrorDialog seems not support \n, that's why just display single error here.
                 new ErrorDialog({
                     el: $('.dialog-placeholder'),
-                    msg: `${_('Error in configuration: ').t()} ${validationResult.errors[0]}`
+                    msg: `${_('Configuration file error: ').t()} ${validationResult.errors[0]}`
                 }).render().modal();
                 return;
             }
