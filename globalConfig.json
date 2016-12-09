@@ -302,6 +302,7 @@
                 ],
                 "actions": [
                     "edit",
+                    "enable",
                     "delete",
                     "clone"
                 ]
