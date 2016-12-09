@@ -39,6 +39,7 @@ util.remove_http_proxy_env_vars()
 
 {entity}
 
+
 endpoint = DataInputModel(
     '{input_type}',
     model,

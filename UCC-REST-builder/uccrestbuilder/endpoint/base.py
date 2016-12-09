@@ -21,6 +21,13 @@ fields{name_rh} = [
 ]
 model{name_rh} = RestModel(fields{name_rh}, name={name})
 """
+    _disabled_feild_template = """
+field.RestField(
+    'disabled',
+    required=False,
+    validator=None
+)
+"""
 
     def __init__(self, name, fields):
         self._name = name
@@ -59,11 +66,14 @@ model{name_rh} = RestModel(fields{name_rh}, name={name})
         for field in self._fields:
             field_line = field.generate_rh()
             fields.append(field_line)
+        # add disabled field for data input
+        if self.__class__.__name__ == 'DataInputEntityBuilder':
+            fields.append(self._disabled_feild_template)
         fields_lines = ', \n'.join(fields)
         return self._rh_template.format(
             fields=indent(fields_lines),
             name_rh=self.name_rh,
-            name=quote_string(self._name),
+            name=quote_string(self._name)
         )
 
 
@@ -115,6 +125,18 @@ class RestEndpointBuilder(object):
 def quote_string(value):
     """
     Quote a string
+    :param value:
+    :return:
+    """
+    if isinstance(value, basestring):
+        return '\'%s\'' % value
+    else:
+        return value
+
+
+def quote_regex(value):
+    """
+    Quote a regex
     :param value:
     :return:
     """
