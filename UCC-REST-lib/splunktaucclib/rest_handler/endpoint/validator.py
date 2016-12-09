@@ -49,7 +49,7 @@ class Validator(object):
             Or return False.
         """
         raise NotImplementedError(
-            _('Function "validate" needs to be implemented.')
+            'Function "validate" needs to be implemented.'
         )
 
     @property
@@ -59,7 +59,7 @@ class Validator(object):
 
         :return:
         """
-        return self._msgs[0] if self._msgs else _('Invalid input value')
+        return self._msgs[0] if self._msgs else 'Invalid input value'
 
     def put_msg(self, msg, high_priority=False):
         """
@@ -105,7 +105,7 @@ class AnyOf(Validator):
                 return True
         else:
             self.put_msg(
-                sprintf(_('At least one of the following errors need to be fixed: %s') % json.dumps(msgs))
+                'At least one of the following errors need to be fixed: %s' % json.dumps(msgs)
             )
             return False
 
@@ -131,7 +131,7 @@ class AllOf(Validator):
                 msgs.append(validator.msg)
         if msgs:
             self.put_msg(
-                sprintf(_('All of the following errors need to be fixed: %s') % json.dumps(msgs))
+                'All of the following errors need to be fixed: %s' % json.dumps(msgs)
             )
             return False
         return True
@@ -154,7 +154,7 @@ class RequiresIf(Validator):
                returns a boolean value
         """
         assert isinstance(fields, (list, set, tuple)), \
-            _('Argument "fields" should be list, set or tuple')
+            'Argument "fields" should be list, set or tuple'
         super(RequiresIf, self).__init__()
         self.fields = fields
         self.condition = condition
@@ -168,7 +168,7 @@ class RequiresIf(Validator):
             need_validate = True
         else:
             assert isfunction(self.condition), \
-                _('Condition should be a function for RequiresIf validator')
+                'Condition should be a function for RequiresIf validator'
             need_validate = self.condition(value, data)
         if not need_validate:
             return True
@@ -180,7 +180,7 @@ class RequiresIf(Validator):
                 fields.append(field)
         if fields:
             self.put_msg(
-                sprintf(_('For given input, fields are required: %s') % ', '.join(fields))
+                'For given input, fields are required: %s' % ', '.join(fields)
             )
             return False
         return True
@@ -246,7 +246,7 @@ class Enum(Validator):
             self._values = list(values)
 
         self.put_msg(
-            sprintf(_('Value should be in %s') % json.dumps(list(self._values)))
+            'Value should be in %s' % json.dumps(list(self._values))
         )
 
     def validate(self, value, data):
@@ -258,7 +258,7 @@ class Number(Validator):
     A validator that accepts values within in a certain range.
     This is for numeric value.
 
-    Accepted condition: min_val <= value < max_val
+    Accepted condition: min_val <= value <= max_val
     """
 
     def __init__(self, min_val=None, max_val=None, is_int=False):
@@ -271,10 +271,10 @@ class Number(Validator):
         def check(val):
             return val is None or isinstance(val, (int, long, float))
         assert check(min_val) and check(max_val), \
-            sprintf(_('%(min_val)s & %(max_val)s should be numbers') % {
-                'min_val': i18n.format_decimal(min_val),
-                'max_val': i18n.format_decimal(max_val)
-            })
+            '%(min_val)s & %(max_val)s should be numbers' % {
+                'min_val': min_val,
+                'max_val': max_val
+            }
 
         super(Number, self).__init__()
         self._min_val = min_val
@@ -286,36 +286,29 @@ class Number(Validator):
             value = long(value) if self._is_int else float(value)
         except ValueError:
             self.put_msg(
-                sprintf(_('Invalid format for %s value') % ('integer' if self._is_int else 'numeric'))
+                'Invalid format for %s value' % ('integer' if self._is_int else 'numeric')
             )
             return False
 
         msg = None
-        if None not in (self._min_val, self._max_val):
-            msg = sprintf(_('Value should be between %(min_val)s and %(max_val)s') % {
-                'min_val': i18n.format_decimal(self._min_val),
-                'max_val': i18n.format_decimal(self._max_val)
-            })
-        elif self._min_val is not None:
-            msg = sprintf(_('Value should be no smaller than %(min_val)s') % {
-                'min_val': i18n.format_decimal(self._min_val)
-            })
-        elif self._max_val is not None:
-            msg = sprintf(_('Value should be no smaller than %(max_val)s') % {
-                'max_val': i18n.format_decimal(self._max_val)
-            })
+        if not self._min_val and self._max_val and value > self._max_val:
+            msg = 'Value should be smaller than %(max_val)s' % {
+                'max_val': self._max_val
+            }
+        elif not self._max_val and self._min_val and value < self._min_val:
+            msg = 'Value should be no smaller than %(min_val)s' % {
+                'min_val': self._min_val
+            }
+        elif self._min_val and self._max_val:
+            if value < self._min_val or value > self._max_val:
+                msg = 'Value should be between %(min_val)s and %(max_val)s' % {
+                    'min_val': self._min_val,
+                    'max_val': self._max_val
+                }
         if msg is not None:
             self.put_msg(msg)
-
-        if self._min_val is None:
-            min_val = value - 1
-        else:
-            min_val = self._min_val
-        if self._max_val is None:
-            max_val = value + 1
-        else:
-            max_val = self._max_val
-        return min_val <= value < max_val
+            return False
+        return True
 
 
 class String(Validator):
@@ -340,40 +333,40 @@ class String(Validator):
             return isinstance(val, (int, long)) and val >= 0
 
         assert check(min_len) and check(max_len), \
-            sprintf(_('%(min_len)s & %(max_len)s should be numbers') % {
-                'min_len': i18n.format_decimal(min_len),
-                'max_len': i18n.format_decimal(max_len)
-            })
+            '%(min_len)s & %(max_len)s should be numbers' % {
+                'min_len': min_len,
+                'max_len': max_len
+            }
 
         super(String, self).__init__()
         self._min_len, self._max_len = min_len, max_len
 
     def validate(self, value, data):
         if not isinstance(value, basestring):
-            self.put_msg(_('Input value should be string'))
+            self.put_msg('Input value should be string')
             return False
 
+        str_len = len(value)
         msg = None
-        if None not in (self._min_len, self._max_len):
-            msg = sprintf(_('String length should be between %(min_len)s and %(max_len)s') % {
-                'min_len': i18n.format_decimal(self._min_len),
-                'max_len': i18n.format_decimal(self._max_len)
-            })
-        elif self._min_len is not None:
-            msg = sprintf(_('String should be no shorter than %(min_len)s') % {
-                'min_len': i18n.format_decimal(self._min_len)
-            })
-        elif self._max_len is not None:
-            msg = sprintf(_('String should be shorter than %(max_len)s') % {
-                'max_len': i18n.format_decimal(self._max_len)
-            })
+
+        if not self._min_len and self._max_len and str_len > self._max_len:
+            msg = 'String should be shorter than %(max_len)s' % {
+                'max_len': self._max_len
+            }
+        elif self._min_len and not self._max_len and str_len < self._min_len:
+            msg = 'String should be no shorter than %(min_len)s' % {
+                'min_len': self._min_len
+            }
+        elif self._min_len and self._max_len:
+            if str_len < self._min_len or str_len > self._max_len:
+                msg = 'String length should be between %(min_len)s and %(max_len)s' % {
+                    'min_len': self._min_len,
+                    'max_len': self._max_len
+                }
         if msg is not None:
             self.put_msg(msg)
-
-        str_len = len(value)
-        min_len = self._min_len or (str_len - 1)
-        max_len = self._max_len or (str_len + 1)
-        return min_len <= value < max_len
+            return False
+        return True
 
 
 class Datetime(Validator):
@@ -394,7 +387,7 @@ class Datetime(Validator):
         try:
             datetime.datetime.strptime(value, self._format)
         except ValueError, exc:
-            error = sprintf(_('Wrong datetime with format "%s": %s') % (self._format, str(exc)))
+            error = 'Wrong datetime with format "%s": %s' % (self._format, str(exc))
             self.put_msg(error)
             return False
         return True
@@ -415,7 +408,7 @@ class Pattern(Validator):
         """
         super(Pattern, self).__init__()
         self._regexp = re.compile(regex, flags=flags)
-        self.put_msg(sprintf(_('Not matching the pattern: %s') % regex))
+        self.put_msg('Not matching the pattern: %s' % regex)
 
     def validate(self, value, data):
         return self._regexp.match(value) and True or False
@@ -431,7 +424,7 @@ class Host(Pattern):
             r'([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$'
         )
         super(Host, self).__init__(regexp, flags=re.I)
-        self.put_msg(_('Invalid hostname'), high_priority=True)
+        self.put_msg('Invalid hostname', high_priority=True)
 
 
 class Port(Number):
@@ -445,7 +438,7 @@ class Port(Number):
             is_int=True,
         )
         self.put_msg(
-            _('Invalid port number, it should be a integer between 0 and 65535'),
+            'Invalid port number, it should be a integer between 0 and 65535',
             high_priority=True,
         )
 
@@ -461,7 +454,7 @@ class Email(Pattern):
             r'(?:[A-Z0-9](?:[A-Z0-9-]{0,62}[A-Z0-9])?\.){1,8}[A-Z]{2,63}$'
         )
         super(Email, self).__init__(regexp, flags=re.I)
-        self.put_msg(_('Invalid email address'), high_priority=True)
+        self.put_msg('Invalid email address', high_priority=True)
 
 
 class JsonString(Validator):
@@ -473,6 +466,6 @@ class JsonString(Validator):
         try:
             json.loads(value)
         except ValueError:
-            self.put_msg(_('Invalid JSON string'))
+            self.put_msg('Invalid JSON string')
             return False
         return True

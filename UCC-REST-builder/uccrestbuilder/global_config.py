@@ -148,7 +148,7 @@ class GlobalConfigValidation(object):
         if not self._validation:
             return None
         for item in self._validation:
-            parser = getattr(self, item['type'], None)
+            parser = GlobalConfigValidation.validation_mapping.get(item['type'], None)
             if parser is None:
                 continue
             validator, arguments = parser(item)
@@ -191,8 +191,8 @@ class GlobalConfigValidation(object):
             'String',
             {
                 'min_len': validation.get('minLength'),
-                'max_len': validation.get('maxLength'),
-            },
+                'max_len': validation.get('maxLength')
+            }
         )
 
     @classmethod
@@ -202,39 +202,65 @@ class GlobalConfigValidation(object):
             'Number',
             {
                 'min_val': ranges[0],
-                'max_val': ranges[1],
-            },
+                'max_val': ranges[1]
+            }
         )
 
     @classmethod
     def regex(cls, validation):
         return (
             'Pattern',
-            {'regex': 'r' + quote_string(validation['pattern'])},
+            {'regex': 'r' + quote_string(validation.get('pattern'))}
         )
 
     @classmethod
     def email(cls, validation):
-        return 'Email', None
+        regex = (
+            '^[a-zA-Z0-9.!#$%&\'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}'
+            '[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$'
+        )
+        return (
+            'Pattern',
+            {'regex': 'r' + quote_string(regex)}
+        )
 
     @classmethod
     def ipv4(cls, validation):
         regex = (
-            '^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}'
-            '(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'
+            '^(?:(?:[0-1]?\d{1,2}|2[0-4]\d|25[0-5])(?:\.|$)){4}$'
         )
         return (
             'Pattern',
-            {'regex': 'r' + quote_string(regex)},
+            {'regex': 'r' + quote_string(regex)}
         )
 
     @classmethod
     def date(cls, validation):
-        return 'Datetime', None
+        # TODO: keep the same logic with front end
+        regex = '.*'
+        return (
+            'Pattern',
+            {'regex': 'r' + quote_string(regex)}
+        )
 
     @classmethod
     def url(cls, validation):
-        return 'Host', None
+        regex = (
+            '^(?:(?:https?|ftp|opc.tcp):\/\/)?(?:\S+(?::\S*)?@)?'
+            '(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})'
+            '(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})'
+            '(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})'
+            '(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])'
+            '(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}'
+            '(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|'
+            '(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)'
+            '(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*'
+            '(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$'
+        )
+        return (
+            'Pattern',
+            {'regex': 'r' + quote_string(regex)}
+        )
 
     @classmethod
     def multiple_validators(cls, validators):
@@ -243,6 +269,16 @@ class GlobalConfigValidation(object):
         return _template.format(
             validators=indent(validators_str),
         )
+
+GlobalConfigValidation.validation_mapping = {
+    'string': GlobalConfigValidation.string,
+    'number': GlobalConfigValidation.number,
+    'regex': GlobalConfigValidation.regex,
+    'email': GlobalConfigValidation.email,
+    'ipv4': GlobalConfigValidation.ipv4,
+    'date': GlobalConfigValidation.date,
+    'url': GlobalConfigValidation.url
+}
 
 
 class GlobalConfigPostProcessor(object):

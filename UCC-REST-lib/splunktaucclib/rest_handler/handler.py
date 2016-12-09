@@ -254,10 +254,10 @@ class RestHandler(object):
         if name == 'default':
             raise RestError(
                 400,
-                sprintf(_('"%s" is not allowed for entity name') % name)
+                '"%s" is not allowed for entity name' % name
             )
         if name.startswith("_"):
             raise RestError(
                 400,
-                _('Name starting with "_" is not allowed for entity')
+                'Name starting with "_" is not allowed for entity'
             )

@@ -119,7 +119,7 @@ def quote_string(value):
     :return:
     """
     if isinstance(value, basestring):
-        return '\'%s\'' % value
+        return '"""%s"""' % value
     else:
         return value
 
