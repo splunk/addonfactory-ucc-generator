@@ -24,6 +24,7 @@ from .endpoint.datainput import (
     DataInputEndpointBuilder,
     DataInputEntityBuilder,
 )
+from .endpoint.base import indent, quote_string
 
 
 class GlobalConfigBuilderSchema(GlobalConfigSchema):
@@ -124,12 +125,160 @@ class GlobalConfigBuilderSchema(GlobalConfigSchema):
             required=is_true(content.get('required')),
             encrypted=is_true(content.get('encrypted')),
             default=content.get('defaultValue'),
-            validator=self._parse_validation(content.get('validators')),
         )
-        return RestFieldBuilder(field)
+        return RestFieldBuilder(
+            field,
+            self._parse_validation(content.get('validators')),
+        )
 
     def _parse_validation(self, validation):
-        return None
+        global_config_validation = GlobalConfigValidation(validation)
+        return global_config_validation.build()
+
+
+class GlobalConfigValidation(object):
+
+    _validation_template = """validator.{validator}({arguments})"""
+
+    def __init__(self, validation):
+        self._validators = []
+        self._validation = validation
+
+    def build(self):
+        if not self._validation:
+            return None
+        for item in self._validation:
+            parser = GlobalConfigValidation.validation_mapping.get(item['type'], None)
+            if parser is None:
+                continue
+            validator, arguments = parser(item)
+            if validator is None:
+                continue
+            arguments = arguments or {}
+            self._validators.append(
+                self._validation_template.format(
+                    validator=validator,
+                    arguments=self._arguments(**arguments),
+                )
+            )
+
+        if not self._validators:
+            return None
+        if len(self._validators) > 1:
+            return self.multiple_validators(self._validators)
+        else:
+            return self._validators[0]
+
+    @classmethod
+    def _arguments(cls, **kwargs):
+        if not kwargs:
+            return ''
+        args = map(
+            lambda (k, v): '{}={}, '.format(k, v),
+            kwargs.items(),
+        )
+        args.insert(0, '')
+        args.append('')
+        return indent('\n'.join(args))
+
+    @classmethod
+    def _content(cls, validator, arguments):
+        pass
+
+    @classmethod
+    def string(cls, validation):
+        return (
+            'String',
+            {
+                'min_len': validation.get('minLength'),
+                'max_len': validation.get('maxLength')
+            }
+        )
+
+    @classmethod
+    def number(cls, validation):
+        ranges = validation.get('range', [None, None])
+        return (
+            'Number',
+            {
+                'min_val': ranges[0],
+                'max_val': ranges[1]
+            }
+        )
+
+    @classmethod
+    def regex(cls, validation):
+        return (
+            'Pattern',
+            {'regex': 'r' + quote_string(validation.get('pattern'))}
+        )
+
+    @classmethod
+    def email(cls, validation):
+        regex = (
+            '^[a-zA-Z0-9.!#$%&\'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}'
+            '[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$'
+        )
+        return (
+            'Pattern',
+            {'regex': 'r' + quote_string(regex)}
+        )
+
+    @classmethod
+    def ipv4(cls, validation):
+        regex = (
+            '^(?:(?:[0-1]?\d{1,2}|2[0-4]\d|25[0-5])(?:\.|$)){4}$'
+        )
+        return (
+            'Pattern',
+            {'regex': 'r' + quote_string(regex)}
+        )
+
+    @classmethod
+    def date(cls, validation):
+        # TODO: keep the same logic with front end
+        regex = '.*'
+        return (
+            'Pattern',
+            {'regex': 'r' + quote_string(regex)}
+        )
+
+    @classmethod
+    def url(cls, validation):
+        regex = (
+            '^(?:(?:https?|ftp|opc.tcp):\/\/)?(?:\S+(?::\S*)?@)?'
+            '(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})'
+            '(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})'
+            '(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})'
+            '(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])'
+            '(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}'
+            '(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|'
+            '(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)'
+            '(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*'
+            '(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$'
+        )
+        return (
+            'Pattern',
+            {'regex': 'r' + quote_string(regex)}
+        )
+
+    @classmethod
+    def multiple_validators(cls, validators):
+        validators_str = ', \n'.join(validators)
+        _template = """validator.AllOf(\n{validators}\n)"""
+        return _template.format(
+            validators=indent(validators_str),
+        )
+
+GlobalConfigValidation.validation_mapping = {
+    'string': GlobalConfigValidation.string,
+    'number': GlobalConfigValidation.number,
+    'regex': GlobalConfigValidation.regex,
+    'email': GlobalConfigValidation.email,
+    'ipv4': GlobalConfigValidation.ipv4,
+    'date': GlobalConfigValidation.date,
+    'url': GlobalConfigValidation.url
+}
 
 
 class GlobalConfigPostProcessor(object):

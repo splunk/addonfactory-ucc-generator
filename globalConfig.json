@@ -165,44 +165,79 @@
                     "title": "Customized tab",
                     "entity": [
                         {
-                            "type": "singleSelect",
-                            "field": "internal_name",
-                            "label": "Lable here",
-                            "options": {
-                                "disableSearch": true,
-                                "autoCompleteFields": [
-                                    {"label": "http", "value": "http"},
-                                    {"label": "socks4", "value": "socks4"},
-                                    {"label": "socks5", "value": "socks5"}
-                                ]
-                            }
-                        },
-                        {
-                            "field": "name",
-                            "label": "Name",
+                            "field": "testString",
+                            "label": "Test String",
                             "type": "text",
-                            "help": "Enter a unique name for each crowdstrike falcon host data input."
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "maxLength": 10,
+                                    "minLength": 5
+                                }
+                            ]
                         },
                         {
-                            "field": "account",
-                            "label": "Account",
-                            "type": "singleSelect",
-                            "options": {
-                                "referenceName": "account"
-                            }
-                        },
-                        {
-                            "field": "start_offset",
-                            "label": "Start Offset",
+                            "field": "testNumber",
+                            "label": "Test number",
                             "type": "text",
-                            "defaultValue": "0"
+                            "validators": [
+                                {
+                                    "type": "number",
+                                    "range": [1, 10]
+                                }
+                            ]
                         },
                         {
-                            "field": "interval",
-                            "label": "Interval",
+                            "field": "testRegex",
+                            "label": "Test regex",
                             "type": "text",
-                            "defaultValue": "60",
-                            "help": "Time interval of input in seconds."
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "pattern": "^\\w+$",
+                                    "errorMsg": "Characters of Name should match regex ^\\w+$ ."
+                                }
+                            ]
+                        },
+                        {
+                            "field": "testEmail",
+                            "label": "Test Email",
+                            "type": "text",
+                            "validators": [
+                                {
+                                    "type": "email"
+                                }
+                            ]
+                        },
+                        {
+                            "field": "testIpv4",
+                            "label": "Test ipv4",
+                            "type": "text",
+                            "validators": [
+                                {
+                                    "type": "ipv4"
+                                }
+                            ]
+                        },
+                        {
+                            "field": "testDate",
+                            "label": "Test date",
+                            "type": "text",
+                            "validators": [
+                                {
+                                    "type": "date"
+                                }
+                            ]
+                        },
+                        {
+                            "field": "testUrl",
+                            "label": "Test url",
+                            "type": "text",
+                            "validators": [
+                                {
+                                    "type": "url"
+                                }
+                            ]
                         }
                     ]
                 }
