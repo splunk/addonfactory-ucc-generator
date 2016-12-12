@@ -1,7 +1,10 @@
+import _ from 'lodash';
 import $C from 'splunk.config';
 import SplunkBaseModel from 'models/Base';
 import {loadGlobalConfig} from 'app/util/script';
 import {validateSchema} from './validators';
+import $ from 'jquery';
+import ErrorDialog from 'app/views/component/Error';
 
 class ConfigManager {
     init(next) {
@@ -20,6 +23,15 @@ class ConfigManager {
         const attchPropertie = () => {
             // TODO: display error message when validation failed
             const validationResult = validateSchema(this.unifiedConfig);
+            if (validationResult.failed) {
+                // TODO: display multiple errors in the popup window,
+                // Currently, the ErrorDialog seems not support \n, that's why just display single error here.
+                new ErrorDialog({
+                    el: $('.dialog-placeholder'),
+                    msg: `${_('Error in an internal configuration file, it should be something wrong within the package or installation step. Contact your administrator for support. Detail: ').t()} ${validationResult.errors[0]}`
+                }).render().modal();
+                return;
+            }
             const {meta} = this.unifiedConfig;
 
             this.generateEndPointUrl = name => `${meta.restRoot}/${name}`;
@@ -40,7 +52,7 @@ class ConfigManager {
                 nullStr: 'NULL',
                 stanzaPrefix: meta.restRoot
             },
-            id: "appData",
+            id: 'appData',
             sync: function (method) {
                 throw new Error('invalid method: ' + method);
             }

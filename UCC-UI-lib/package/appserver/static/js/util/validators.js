@@ -6,69 +6,164 @@ import {PREDEFINED_VALIDATORS_DICT} from 'app/constants/preDefinedRegex';
 export function validateSchema(config) {
     const validator = new Validator();
     const res = validator.validate(config, schema);
+    if(!res.errors.length) {
+        res.errors = checkConfigDetails(config);
+    }
     return {
         failed: !!res.errors.length,
         errors: res.errors
     };
-};
+}
+
+// In this function, we can be sure that the config has already passed the basic schema validation
+function checkConfigDetails({pages: {configuration, inputs}}) {
+    const errors = [];
+
+    const checkBaseOptions = (options) => {
+        _.values(options).forEach(d => {
+            const {error} = parseFunctionRawStr(d);
+            if (error) {
+                errors.push(error);
+            }
+        });
+    };
+
+    const checkEntity = (entity) => {
+        _.values(entity).forEach(item => {
+            const {validators} = item;
+            _.values(validators).forEach(d => {
+                let error;
+                switch (d.type) {
+                    case 'string':
+                        error = parseStringValidator(d.minLength, d.maxLength).error;
+                        break;
+                    case 'number':
+                        error = parseNumberValidator(d.range).error;
+                        break;
+                    case 'regex':
+                        error = parseRegexRawStr(d.pattern).error;
+                        break;
+                    default:
+                }
+                if (error) {
+                    errors.push(error);
+                }
+            });
+        });
+    };
+
+    if (inputs) {
+        const {services} = inputs;
+        services.forEach(service => {
+            const {entity, options} = service;
+            checkBaseOptions(options);
+            checkEntity(entity);
+            _.values(options).forEach(d => console.log(d));
+        });
+    }
+
+    if(configuration) {
+        configuration.tabs.forEach(tab => {
+            const {entity, options} = tab;
+            checkBaseOptions(options);
+            checkEntity(entity);
+        });
+    }
+    return errors;
+}
+
+function parseFunctionRawStr(rawStr) {
+    let error, result;
+
+    try {
+        result = eval(`(${rawStr})`);
+    } catch (e) {
+        error = `${rawStr} ${_('is not a function').t()}${_('.').t()}`;
+    }
+
+    return {error, result};
+}
+
+function parseRegexRawStr(rawStr) {
+    let error, result;
+
+    try {
+        result = new RegExp(rawStr);
+    } catch (e) {
+        error = `${rawStr} ${_('is not a legal Regular Expression').t()}${_('.').t()}`;
+    }
+
+    return {error, result};
+}
+
+function parseNumberValidator(range) {
+    const isRangeLegal = range.length === 2 && _.isNumber(range[0]) &&
+        _.isNumber(range[1]) && range[0] <= range[1];
+
+    const error = isRangeLegal ? undefined :
+        `${JSON.stringify(range)} } ${_('is not a legal number range').t()}${_('.').t()}`;
+
+    return {error};
+}
+
+function parseStringValidator(minLength, maxLength) {
+    const error = maxLength >= minLength ? undefined :
+        `${minLength} ${maxLength} ${_('is not legal as minimum and maximum length of a string').t()}${_('.').t()}`;
+
+    return {error};
+}
 
 function validatorFactory(validatorInfo, label) {
     const {type, errorMsg} = validatorInfo;
 
     if(type === 'regex') {
         const {pattern} = validatorInfo;
-        // Assume pattern can be an empty string, so using !== here
-        if(pattern !== undefined) {
-            return function(attr) {
-                const val = this.entry.content.get(attr);
-                let regex;
-                try {
-                    regex = new RegExp(pattern);
-                } catch (e) {
-                    return `${pattern} ${_('is not a legal Regular Expression').t()}${_('.').t()}`;
-                }
-                if(!regex.test(val))
-                    return errorMsg ? errorMsg :
-                        `${_('Input of').t()} ${label} ${_('does not match Regular Expression').t()} ${pattern}${_('.').t()}`;
-            };
-        }
+        return function(attr) {
+            const {error, result: regex} = parseRegexRawStr(pattern);
+            if (error) {
+                return error;
+            }
+            const val = this.entry.content.get(attr);
+            if(!regex.test(val)) {
+                return  errorMsg ? errorMsg :
+                    `${_('Input of').t()} ${label} ${_('does not match Regular Expression').t()} ${pattern}${_('.').t()}`;
+            }
+        };
     }
 
     if(type === 'number') {
         const {range} = validatorInfo;
-        if(range && _.isArray(range) && range.length === 2 &&
-            _.isNumber(range[0]) && _.isNumber(range[1]) &&
-            range[0] <= range[1]
-        ) {
-            return function(attr) {
-                const val = Number(this.entry.content.get(attr));
-                if(Number.isNaN(val))
-                    return errorMsg ? errorMsg :
-                        `${_('Input of').t()} ${label} ${_('is not a number.').t()}`;
+        return function(attr) {
+            const {error} = parseNumberValidator(range);
+            if(error) {
+                return error;
+            }
+            const val = Number(this.entry.content.get(attr));
+            if(Number.isNaN(val))
+                return errorMsg ? errorMsg :
+                    `${_('Input of').t()} ${label} ${_('is not a number.').t()}`;
 
-                if(val > range[1] || val < range[0])
-                    return `${_('Input of').t()} ${label} ${_('is not in range').t()} ${range[0]} - ${range[1]}${_('.').t()}`;
-            };
-        }
+            if(val > range[1] || val < range[0])
+                return `${_('Input of').t()} ${label} ${_('is not in range').t()} ${range[0]} - ${range[1]}${_('.').t()}`;
+        };
     }
 
     if(type === 'string') {
         const {minLength, maxLength} = validatorInfo;
-        if(minLength !== undefined && _.isNumber(minLength) &&
-            maxLength !== undefined && _.isNumber(maxLength) &&
-            maxLength >= minLength
-        ) {
-            return function(attr) {
-                const strLength = this.entry.content.get(attr).length;
+        return function(attr) {
+            const {error} = parseStringValidator(minLength, maxLength);
+            if (error) {
+                return error;
+            }
+            const strLength = this.entry.content.get(attr).length;
 
-                if(strLength > maxLength)
-                    return errorMsg ? errorMsg :
-                        `${_('Length of the').t()} ${label} ${_('input is greater than').t()} ${maxLength}${_('.').t()}`;
-                if(strLength < minLength)
-                    return errorMsg ? errorMsg :
-                        `${_('Length of the').t()} ${label} ${_('input is less than').t()} ${minLength}${_('.').t()}`;
-            };
-        }
+            if(strLength > maxLength)
+                return errorMsg ? errorMsg :
+                    `${_('Length of the').t()} ${label} ${_('input is greater than').t()} ${maxLength}${_('.').t()}`;
+            if(strLength < minLength)
+                return errorMsg ? errorMsg :
+                    `${_('Length of the').t()} ${label} ${_('input is less than').t()} ${minLength}${_('.').t()}`;
+        };
     }
 
     const preDefinedRegexObj = PREDEFINED_VALIDATORS_DICT[type];
@@ -86,7 +181,7 @@ function validatorFactory(validatorInfo, label) {
 
     // Handle invalid configuration, just in case.
     return () => {};
-};
+}
 
 export function generateValidators(entities) {
     return entities.reduce((res, entity) => {
@@ -100,4 +195,4 @@ export function generateValidators(entities) {
         });
         return res.concat(backboneValidators);
     }, []);
-};
+}
