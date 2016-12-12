@@ -57,7 +57,7 @@ export function fetchServiceCollections() {
     const {unifiedConfig: {pages: {inputs}}} = configManager;
     // User may only sepecified config for configuration page.
     if (!inputs) {
-        return;
+        return {};
     }
     const {services} = inputs,
         collectionMap = {};
