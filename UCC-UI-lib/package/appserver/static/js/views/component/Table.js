@@ -28,9 +28,7 @@ define([
             if (this.refCollection !== undefined) {
                 _.each(this.collection.models, function (model) {
                     let count = 0;
-                    _.each(this.refCollection.models, function (refModel) {
-                        count ++;
-                    }.bind(this));
+                    this.refCollection.models.forEach(() => count++);
                     model.entry.content.attributes.refCount = count;
                 }.bind(this));
             }
