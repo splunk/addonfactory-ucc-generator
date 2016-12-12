@@ -5,6 +5,8 @@ import CaptionView from 'views/shared/tablecaption/Master';
 import Table from 'app/views/component/Table';
 import EntityDialog from 'app/views/component/EntityDialog';
 import ButtonTemplate from 'app/templates/common/ButtonTemplate.html';
+import {fetchServiceCollections, combineCollection} from 'app/util/backboneHelpers';
+
 
 export default Backbone.View.extend({
     initialize: function (options) {
@@ -25,6 +27,13 @@ export default Backbone.View.extend({
         this.listenTo(this.stateModel, 'change:search change:sortDirection change:sortKey', _.debounce(() => {
             this.fetchListCollection(this.dataStore, this.stateModel);
         }, 0));
+
+        const {
+            deferred: servicesDeferred,
+            collectionMap: serviceCollectionMap
+        } = fetchServiceCollections();
+
+        _.extend(this, {servicesDeferred, serviceCollectionMap});
     },
 
     render: function () {
@@ -32,9 +41,10 @@ export default Backbone.View.extend({
                 buttonId: this.submitBtnId,
                 buttonValue: 'Add'
             },
-            {props} = this,
+            {props, servicesDeferred, serviceCollectionMap} = this,
             deferred = this.fetchListCollection(this.dataStore, this.stateModel);
-        deferred.done(function () {
+
+        const renderTab = (refCollection) => {
             const caption = new CaptionView({
                 countLabel: _('Items').t(),
                 model: {
@@ -50,7 +60,8 @@ export default Backbone.View.extend({
                 collection: this.dataStore,
                 showActions: true,
                 enableMoreInfo: props.table.moreInfo ? true : false,
-                component: props
+                component: props,
+                refCollection
             });
 
             this.$el.append(caption.render().$el);
@@ -65,7 +76,18 @@ export default Backbone.View.extend({
                     isInput: false
                 }).render().modal();
             });
-        }.bind(this));
+        }
+
+        deferred.done(() => {
+            if (servicesDeferred) {
+                servicesDeferred.done(() => {
+                    const combinedCollection = combineCollection(serviceCollectionMap);
+                    renderTab(combinedCollection);
+                });
+            } else {
+                renderTab();
+            }
+        });
         return this;
     },
 

@@ -25,18 +25,15 @@ define([
             this.dispatcher = options.dispatcher;
             this.component = options.component;
 
-            // if (this.refCollection !== undefined) {
-            //     _.each(this.collection.models, function (model) {
-            //         var count = 0;
-            //         _.each(this.refCollection.models, function (refModel) {
-            //             if ((this.component.refLogic)(model, refModel)) {
-            //                 count += 1;
-            //             }
-            //         }.bind(this));
-            //         model.entry.content.attributes.refCount = count;
-            //         count = 0;
-            //     }.bind(this));
-            // }
+            if (this.refCollection !== undefined) {
+                _.each(this.collection.models, function (model) {
+                    let count = 0;
+                    _.each(this.refCollection.models, function (refModel) {
+                        count ++;
+                    }.bind(this));
+                    model.entry.content.attributes.refCount = count;
+                }.bind(this));
+            }
 
             //Expand the detail row
             this.children.tableRowToggle = new TableRowToggleView({el: this.el, collapseOthers: true });
