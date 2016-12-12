@@ -49,6 +49,9 @@ class RestEndpoint(object):
         self.args = args
         self.kwargs = kwargs
 
+        # If reload is needed while GET request
+        self.need_reload = True
+
     @property
     def internal_endpoint(self):
         """
@@ -179,6 +182,7 @@ class DataInputModel(RestEndpoint):
     ):
         super(DataInputModel, self).__init__(
             user=user, app=app, *args, **kwargs)
+        self.need_reload = False
 
         self.input_type = input_type
         self._model = model
