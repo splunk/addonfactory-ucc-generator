@@ -111,15 +111,18 @@ define([
             enable_url = [
                 collection.proxyUrl,
                 url,
-                this.encodeUrl(this.model.entry.attributes.name),
-                'enable'
-            ].join("/") + '?output_mode=json';
+                this.encodeUrl(this.model.entry.attributes.name)
+            ].join('/') + '?output_mode=json';
 
-            $.post(enable_url).done(function () {
+            $.ajax({
+                type: 'POST',
+                data: {disabled: 0},
+                url: enable_url
+            }).done(() => {
                 this.rowDispatcher.trigger('enable-input');
-            }.bind(this)).fail(function (model, response) {
+            }).fail((model, response) => {
                 this._displayError(model, response);
-            }.bind(this));
+            });
         },
 
         disable: function (e) {
@@ -133,14 +136,18 @@ define([
             disable_url = [
                 collection.proxyUrl,
                 url,
-                this.encodeUrl(this.model.entry.attributes.name),
-                'disable'
-            ].join("/") + '?output_mode=json';
-            $.post(disable_url).done(function () {
+                this.encodeUrl(this.model.entry.attributes.name)
+            ].join('/') + '?output_mode=json';
+
+            $.ajax({
+                type: 'POST',
+                data: {disabled: 1},
+                url: disable_url
+            }).done(() => {
                 this.rowDispatcher.trigger('disable-input');
-            }.bind(this)).fail(function (model, response) {
+            }).fail((model, response) => {
                 this._displayError(model, response);
-            }.bind(this));
+            });
             e.preventDefault();
         },
 

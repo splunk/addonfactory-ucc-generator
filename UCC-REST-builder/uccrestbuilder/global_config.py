@@ -24,7 +24,7 @@ from .endpoint.datainput import (
     DataInputEndpointBuilder,
     DataInputEntityBuilder,
 )
-from .endpoint.base import indent, quote_string
+from .endpoint.base import indent, quote_regex
 
 
 class GlobalConfigBuilderSchema(GlobalConfigSchema):
@@ -210,7 +210,7 @@ class GlobalConfigValidation(object):
     def regex(cls, validation):
         return (
             'Pattern',
-            {'regex': 'r' + quote_string(validation.get('pattern'))}
+            {'regex': 'r' + quote_regex(validation.get('pattern'))}
         )
 
     @classmethod
@@ -221,7 +221,7 @@ class GlobalConfigValidation(object):
         )
         return (
             'Pattern',
-            {'regex': 'r' + quote_string(regex)}
+            {'regex': 'r' + quote_regex(regex)}
         )
 
     @classmethod
@@ -231,7 +231,7 @@ class GlobalConfigValidation(object):
         )
         return (
             'Pattern',
-            {'regex': 'r' + quote_string(regex)}
+            {'regex': 'r' + quote_regex(regex)}
         )
 
     @classmethod
@@ -240,7 +240,7 @@ class GlobalConfigValidation(object):
         regex = '.*'
         return (
             'Pattern',
-            {'regex': 'r' + quote_string(regex)}
+            {'regex': 'r' + quote_regex(regex)}
         )
 
     @classmethod
@@ -259,7 +259,7 @@ class GlobalConfigValidation(object):
         )
         return (
             'Pattern',
-            {'regex': 'r' + quote_string(regex)}
+            {'regex': 'r' + quote_regex(regex)}
         )
 
     @classmethod
