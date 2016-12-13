@@ -50,7 +50,7 @@ class RestEndpoint(object):
         self.kwargs = kwargs
 
         # If reload is needed while GET request
-        self.need_reload = True
+        self.need_reload = False
 
     @property
     def internal_endpoint(self):
@@ -113,6 +113,7 @@ class SingleModel(RestEndpoint):
         """
         super(SingleModel, self).__init__(
             user=user, app=app, *args, **kwargs)
+        self.need_reload = True
 
         self._model = model
         self.conf_name = conf_name
@@ -151,6 +152,7 @@ class MultipleModel(RestEndpoint):
         """
         super(MultipleModel, self).__init__(
             user=user, app=app, *args, **kwargs)
+        self.need_reload = True
 
         self.conf_name = conf_name
         self.models = {model.name: model for model in models}
@@ -182,7 +184,6 @@ class DataInputModel(RestEndpoint):
     ):
         super(DataInputModel, self).__init__(
             user=user, app=app, *args, **kwargs)
-        self.need_reload = False
 
         self.input_type = input_type
         self._model = model
