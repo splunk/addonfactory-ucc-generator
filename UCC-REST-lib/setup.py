@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 setup(
     name='splunktaucclib',
     description='The REST development kit for Universal Configuration Console',
-    version=3.0,
+    version=3.0.0,
     author='Splunk, Inc.',
     author_email='Shanghai-TA-dev@splunk.com',
     license='http://www.apache.org/licenses/LICENSE-2.0',
