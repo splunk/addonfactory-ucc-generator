@@ -17,5 +17,5 @@ export const PREDEFINED_VALIDATORS_DICT = !_.t ? {} : {
     'url': {regex: REGEX_URL, inputValueType: _('URL').t()},
     'email': {regex: REGEX_EMAIL, inputValueType: _('email address').t()},
     'ipv4': {regex: REGEX_IPV4, inputValueType: _('IPV4 address').t()},
-    'date': {regex: REGEX_DATE, inputValueType: _('date(dd/mm/yyyy, dd-mm-yyyy or dd.mm.yyyy)').t()}
+    'date': {regex: REGEX_DATE, inputValueType: _('date in ISO 8601 format').t()}
 };
