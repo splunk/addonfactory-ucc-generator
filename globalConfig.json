@@ -422,7 +422,7 @@
                             "label": "Account",
                             "type": "singleSelect",
                             "options": {
-                                "customizedUrl": "splunk_ta_crowdstrike/ta_crowdstrike_account"
+                                "customizedUrl": "splunk_ta_crowdstrike_account"
                             }
                         },
                         {
