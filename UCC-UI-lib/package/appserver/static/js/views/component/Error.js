@@ -1,22 +1,22 @@
-/*global define*/
+import {getFormattedMessage} from 'app/util/messageUtil';
+
 define([
     'lodash',
     'backbone',
-    'app/templates/dialogs/Error.html'
+    'app/views/component/Error.html'
 ], function (
     _,
     Backbone,
     Error
 ) {
     return Backbone.View.extend({
-        template: _.template(Error),
-
         initialize: function (options) {
             this.msg = options.msg;
         },
 
         render: function () {
-            this.$el.html(this.template({
+            this.$el.html(_.template(Error)({
+                title: getFormattedMessage(104),
                 msg: this.msg
             }));
 

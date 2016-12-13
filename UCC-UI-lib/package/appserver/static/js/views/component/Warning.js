@@ -1,8 +1,9 @@
-/*global define*/
+import {getFormattedMessage} from 'app/util/messageUtil';
+
 define([
-    "underscore",
-    "backbone",
-    "app/templates/dialogs/Warning.html"
+    'underscore',
+    'backbone',
+    'app/views/component/Warning.html'
 ], function (
     _,
     Backbone,
@@ -20,6 +21,7 @@ define([
 
         render: function () {
             this.$el.html(this.template({
+                title: getFormattedMessage(105),
                 msg: this.msg,
                 detail: this.detail,
                 cancelButton: this.cancelButton,
@@ -29,7 +31,6 @@ define([
             if (this.detail) {
                 this.$(".msg-detail-text").html(this.detail);
             }
-
             return this;
         },
         events: {

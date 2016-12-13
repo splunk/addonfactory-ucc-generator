@@ -1,3 +1,71 @@
-#: appserver/static/js/views/Pages/InputsPage.html:6
+#: appserver/static/js/constants/messageDict.js:3
+msgid "Field \"Name\" is required"
+msgstr ""
+
+#: appserver/static/js/constants/messageDict.js:4
+msgid "Field \"Name\" must be a string"
+msgstr ""
+
+#: appserver/static/js/constants/messageDict.js:5
+msgid "Name is already in use"
+msgstr ""
+
+#: appserver/static/js/constants/messageDict.js:6
+msgid "\"default\" is a reserved word"
+msgstr ""
+
+#: appserver/static/js/constants/messageDict.js:7
+msgid ". is not supported"
+msgstr ""
+
+#: appserver/static/js/constants/messageDict.js:8
+msgid "Field @field should be a positive number"
+msgstr ""
+
+#: appserver/static/js/constants/messageDict.js:9
+msgid "Field @field is required"
+msgstr ""
+
+#: appserver/static/js/constants/messageDict.js:10
+msgid "Field @field is not a valid regex"
+msgstr ""
+
+#: appserver/static/js/constants/messageDict.js:11
+msgid "Field @field should be in range [@start, @end]"
+msgstr ""
+
+#: appserver/static/js/constants/messageDict.js:12
+msgid "Field @field should be greater than or equal to @start"
+msgstr ""
+
+#: appserver/static/js/constants/messageDict.js:13
+msgid "Field @field should be less than or equal to @end"
+msgstr ""
+
+#: appserver/static/js/constants/messageDict.js:16
 msgid "Create New Input"
+msgstr ""
+
+#: appserver/static/js/constants/messageDict.js:18
+msgid "Delete Confirmation"
+msgstr ""
+
+#: appserver/static/js/constants/messageDict.js:19
+msgid "@name cannot be deleted because it is in use"
+msgstr ""
+
+#: appserver/static/js/constants/messageDict.js:20
+msgid "Are you sure you want to delete @name @tag?"
+msgstr ""
+
+#: appserver/static/js/constants/messageDict.js:22
+msgid "Error Message"
+msgstr ""
+
+#: appserver/static/js/constants/messageDict.js:24
+msgid "Warning"
+msgstr ""
+
+#: appserver/static/js/constants/messageDict.js:26
+msgid "Services"
 msgstr ""

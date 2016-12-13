@@ -1,4 +1,5 @@
-/*global define,console,Splunk*/
+import {getFormattedMessage} from 'app/util/messageUtil';
+
 define([
     'jquery',
     'lodash',
@@ -113,15 +114,15 @@ define([
             }
 
             if (_.isUndefined(value)) {
-                return _('Field "Name" is required').t();
+                return _(getFormattedMessage(0)).t();
             }
 
             if (_.isEmpty(value)) {
-                return _('Field "Name" is required').t();
+                return _(getFormattedMessage(0)).t();
             }
 
             if (!_.isString(value)) {
-                return _('Field "Name" must be a string').t();
+                return _(getFormattedMessage(1)).t();
             }
 
             if (this.targetCollection !== undefined) {
@@ -129,16 +130,16 @@ define([
                     return model.entry.attributes.name === value;
                 }.bind(this), this);
                 if (matches !== undefined) {
-                    return _('Name is already in use').t();
+                    return _(getFormattedMessage(2)).t();
                 }
             }
 
             if (value === 'default') {
-                return _("default is a reserved word").t();
+                return _(getFormattedMessage(3)).t();
             }
 
             if (value === '.' || value === '..') {
-                return _(". is not supported").t();
+                return _(getFormattedMessage(4)).t();
             }
         },
 
@@ -201,14 +202,14 @@ define([
         positiveNumberValidator: function (attr) {
             var ret = this.convertNumericAttr(attr);
             if (undefined === ret || isNaN(ret)) {
-                return _('Field "' + this._getAttrLabel(attr) + '" should be a positive number').t();
+                return _(getFormattedMessage(5, this._getAttrLabel(attr))).t();
             }
         },
 
         nonEmptyString: function (attr) {
             var val = this.entry.content.get(attr);
             if (!val || !String(val).replace(/^\s+|\s+$/gm, '')) {
-                return _('Field "' + this._getAttrLabel(attr) + '" is required').t();
+                return _(getFormattedMessage(6, this._getAttrLabel(attr))).t();
             }
         },
 
@@ -239,7 +240,7 @@ define([
             }
 
             if (!isValid) {
-                return 'Field "' + this._getAttrLabel(attr) + '" is not a valid regex';
+                return _(getFormattedMessage(7, this._getAttrLabel(attr))).t();
             }
         },
 
@@ -262,18 +263,17 @@ define([
                 val = this.convertNumericAttr(attr);
                 if (_.isNumber(start) && _.isNumber(end)) {
                     if (val < start || val > end) {
-                        return 'Field "' + this._getAttrLabel(attr) + '" is not in expected range (' + start + ', ' + end + ')';
+                        return _(getFormattedMessage(8, this._getAttrLabel(attr), start, end)).t();
                     }
                 } else if (_.isNumber(start)) {
                     if (val < start) {
-                        return 'Field "' + this._getAttrLabel(attr) + '" should be >= ' + start;
+                        return _(getFormattedMessage(9, this._getAttrLabel(attr), start)).t();
                     }
                 } else if (_.isNumber(end)) {
                     if (val > end) {
-                        return 'Field "' + this._getAttrLabel(attr) + '" should be <= ' + end;
+                        return _(getFormattedMessage(10, this._getAttrLabel(attr), end)).t();
                     }
                 }
-
             }.bind(this);
         },
 

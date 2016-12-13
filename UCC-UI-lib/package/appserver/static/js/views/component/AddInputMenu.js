@@ -1,20 +1,15 @@
-import {generateCollection} from 'app/util/backboneHelpers';
-
-/*global define*/
 define([
     'lodash',
     'jquery',
     'app/util/Util',
     'views/shared/PopTart',
-    'app/views/component/EntityDialog',
-    'app/views/component/Error',
+    'app/views/component/EntityDialog'
 ], function (
     _,
     $,
     Util,
     PopTartView,
-    EntityDialog,
-    ErrorDialog,
+    EntityDialog
 ) {
     return PopTartView.extend({
         className: 'dropdown-menu',
@@ -24,7 +19,6 @@ define([
             this.collection = options.collection;
             this.dispatcher = options.dispatcher;
             this.services = options.services;
-            this.servers = generateCollection('account');
         },
 
         events: {
@@ -36,7 +30,8 @@ define([
                 service;
             for (service in this.services) {
                 if (this.services.hasOwnProperty(service)) {
-                    html += '<li><a href="#" class="' + service + '">' + _(this.services[service].title).t() + '</a></li>';
+                    html += '<li><a href="#" class="' + service + '">' +
+                        _(this.services[service].title).t() + '</a></li>';
                 }
             }
             html += '</ul>';
@@ -49,41 +44,15 @@ define([
         },
 
         create: function (e) {
-            var dlg, errorDialog;
             this.serviceType = $(e.target).attr('class');
-            // Check the dependency for Security Center input
-            if (this.serviceType === 'input') {
-                this.checkDependency().done(function () {
-                    if (this.servers.models.length === 0) {
-                        errorDialog = new ErrorDialog({
-                            el: $('.dialog-placeholder'),
-                            msg: 'Please add a Security Center Server first under configuration page.'
-                        });
-                        errorDialog.render().modal();
-                    } else {
-                        dlg = new EntityDialog({
-                            el: $(".dialog-placeholder"),
-                            collection: this.collection,
-                            component: this.services[this.serviceType],
-                            isInput: true
-                        }).render();
-                        dlg.modal();
-                    }
-                }.bind(this));
-            } else {
-                dlg = new EntityDialog({
-                    el: $(".dialog-placeholder"),
-                    collection: this.collection,
-                    component: this.services[this.serviceType],
-                    isInput: true
-                }).render();
-                dlg.modal();
-            }
+            var dlg = new EntityDialog({
+                el: $(".dialog-placeholder"),
+                collection: this.collection,
+                component: this.services[this.serviceType],
+                isInput: true
+            }).render();
+            dlg.modal();
             this.hide();
-        },
-
-        checkDependency: function () {
-            return $.when(this.servers.fetch());
         }
     });
 });

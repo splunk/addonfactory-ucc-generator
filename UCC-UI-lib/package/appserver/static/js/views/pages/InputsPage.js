@@ -1,6 +1,7 @@
 import {configManager} from 'app/util/configManager';
 import {generateModel, generateCollection} from 'app/util/backboneHelpers';
 import {sortAlphabetical, sortNumerical} from 'app/util/sort';
+import {getFormattedMessage} from 'app/util/messageUtil';
 import restEndpointMap from 'app/constants/restEndpointMap';
 
 define([
@@ -38,6 +39,7 @@ define([
             this.inputsPageTemplateData.title = this.unifiedConfig.pages.inputs.title;
             this.inputsPageTemplateData.description = this.unifiedConfig.pages.inputs.description;
             this.inputsPageTemplateData.singleInput = this.unifiedConfig.pages.inputs.services.length === 1;
+            this.inputsPageTemplateData.buttonText = getFormattedMessage(100);
             this.addonName = this.unifiedConfig.meta.name;
             //state model
             this.stateModel = new SplunkBaseModel();
