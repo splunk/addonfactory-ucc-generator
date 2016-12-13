@@ -37,7 +37,6 @@ describe('Predefined regex testes', () => {
             assert.equal(true, REGEX_EMAIL.test('wguan@splunk.com'));
             assert.equal(true, REGEX_EMAIL.test('wguan@gmail.com'));
             assert.equal(true, REGEX_EMAIL.test('wguan@hotmail.com'));
-            assert.equal(true, REGEX_EMAIL.test('wguan@hotmail.com'));
         });
 
         it('A wrong email should not match regex', () => {
