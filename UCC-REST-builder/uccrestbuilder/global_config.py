@@ -236,8 +236,11 @@ class GlobalConfigValidation(object):
 
     @classmethod
     def date(cls, validation):
-        # TODO: keep the same logic with front end
-        regex = '.*'
+        # iso8601 date time format
+        regex = (
+            '^\s*((?:[+-]\d{6}|\d{4})-(?:\d\d-\d\d|W\d\d-\d|W\d\d|\d\d\d|\d\d))'
+            '(?:(T| )(\d\d(?::\d\d(?::\d\d(?:[.,]\d+)?)?)?)([\+\-]\d\d(?::?\d\d)?|\s*Z)?)?$'
+        )
         return (
             'Pattern',
             {'regex': 'r' + quote_regex(regex)}
