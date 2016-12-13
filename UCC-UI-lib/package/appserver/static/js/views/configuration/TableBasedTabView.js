@@ -61,6 +61,7 @@ export default Backbone.View.extend({
                 showActions: true,
                 enableMoreInfo: props.table.moreInfo ? true : false,
                 component: props,
+                refTargetField: props.name,
                 refCollection
             });
 

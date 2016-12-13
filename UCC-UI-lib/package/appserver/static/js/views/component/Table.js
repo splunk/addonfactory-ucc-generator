@@ -26,11 +26,16 @@ define([
             this.component = options.component;
 
             if (this.refCollection !== undefined) {
-                _.each(this.collection.models, function (model) {
+                const {refTargetField} = options;
+                this.collection.models.forEach(model => {
                     let count = 0;
-                    this.refCollection.models.forEach(() => count++);
+                    this.refCollection.models.forEach(d => {
+                        if (model.entry.attributes.name === d.entry.content.attributes[refTargetField]) {
+                            count++;
+                        }
+                    });
                     model.entry.content.attributes.refCount = count;
-                }.bind(this));
+                });
             }
 
             //Expand the detail row
