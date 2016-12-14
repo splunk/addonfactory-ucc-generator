@@ -11,6 +11,7 @@ import {
     displayValidationError,
     addClickListener
 } from 'app/util/promptMsgController';
+import {getFormattedMessage} from 'app/util/messageUtil';
 
 define([
     'jquery',
@@ -293,7 +294,7 @@ define([
         _loadIndex: function (controlWrapper) {
             const indexes = generateCollection('indexes');
             const indexDeferred = indexes.fetch();
-            indexDeferred.done(function () {
+            indexDeferred.done(() => {
                 let id_lst = _.map(indexes.models, model => {
                     return {
                         label: model.entry.attributes.name,
@@ -313,9 +314,9 @@ define([
                     });
                 }
                 controlWrapper.control.setAutoCompleteFields(id_lst, true);
-            }.bind(this)).fail(function () {
-                addErrorMsg(this.curWinSelector, _('Failed to load index').t());
-            }.bind(this));
+            }).fail(() => {
+                addErrorMsg(this.curWinSelector, _(getFormattedMessage(109)).t());
+            });
         },
 
         _ensureIndexInList: function (data) {

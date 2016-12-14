@@ -11,6 +11,7 @@ import {
     addClickListener
 } from 'app/util/promptMsgController';
 import {parseFuncRawStr} from 'app/util/script';
+import {getFormattedMessage} from 'app/util/messageUtil';
 
 export default Backbone.View.extend({
     initialize: function(options) {
@@ -47,7 +48,7 @@ export default Backbone.View.extend({
 
     saveData: function() {
         removeErrorMsg(this.msgContainerId);
-        addSavingMsg(this.msgContainerId, _('Saving').t());
+        addSavingMsg(this.msgContainerId, _(getFormattedMessage(108)).t());
         addClickListener(this.msgContainerId, 'msg-loading');
         this.dataStore.entry.content.set(this.stateModel.toJSON());
         this.dataStore.save(null, {

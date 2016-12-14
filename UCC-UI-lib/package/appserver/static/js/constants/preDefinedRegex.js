@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {getFormattedMessage} from 'app/util/messageUtil';
 
 // Regex of ipv4, email and date come from
 // https://github.com/aldeed/meteor-simple-schema/blob/4c1e2570b1055ad60e1e6540582b882f765fde13/simple-schema.js#L525
@@ -14,8 +15,8 @@ export const REGEX_DATE = /^\s*((?:[+-]\d{6}|\d{4})-(?:\d\d-\d\d|W\d\d-\d|W\d\d|
 // _.t is undefined in unit test environment, and this dictionary is no need for testing.
 // So, an empty object is returned when _.t undefined.
 export const PREDEFINED_VALIDATORS_DICT = !_.t ? {} : {
-    'url': {regex: REGEX_URL, inputValueType: _('URL').t()},
-    'email': {regex: REGEX_EMAIL, inputValueType: _('email address').t()},
-    'ipv4': {regex: REGEX_IPV4, inputValueType: _('IPV4 address').t()},
-    'date': {regex: REGEX_DATE, inputValueType: _('date in ISO 8601 format').t()}
+    'url': {regex: REGEX_URL, inputValueType: _(getFormattedMessage(111)).t()},
+    'email': {regex: REGEX_EMAIL, inputValueType: _(getFormattedMessage(112)).t()},
+    'ipv4': {regex: REGEX_IPV4, inputValueType: _(getFormattedMessage(113)).t()},
+    'date': {regex: REGEX_DATE, inputValueType: _(getFormattedMessage(114)).t()}
 };

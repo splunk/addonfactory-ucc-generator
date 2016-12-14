@@ -9,7 +9,7 @@ define([
     'jquery',
     'lodash',
     'backbone',
-    'app/templates/dialogs/DeleteDialog.html'
+    'app/views/component/DeleteDialog.html'
 ], function (
     $,
     _,

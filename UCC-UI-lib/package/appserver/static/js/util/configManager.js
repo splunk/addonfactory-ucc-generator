@@ -5,6 +5,7 @@ import {loadGlobalConfig} from 'app/util/script';
 import {validateSchema} from './validators';
 import $ from 'jquery';
 import ErrorDialog from 'app/views/component/Error';
+import {getFormattedMessage} from 'app/util/messageUtil';
 
 class ConfigManager {
     init(next) {
@@ -28,7 +29,7 @@ class ConfigManager {
                 // Currently, the ErrorDialog seems not support \n, that's why just display single error here.
                 new ErrorDialog({
                     el: $('.dialog-placeholder'),
-                    msg: `${_('Error in an internal configuration file, it should be something wrong within the package or installation step. Contact your administrator for support. Detail: ').t()} ${validationResult.errors[0]}`
+                    msg: getFormattedMessage(110, validationResult.errors[0])
                 }).render().modal();
                 return;
             }
