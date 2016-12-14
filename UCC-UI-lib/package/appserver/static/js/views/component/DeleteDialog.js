@@ -1,18 +1,19 @@
-/*global define*/
+import {
+    addErrorMsg,
+    removeWarningMsg,
+    addClickListener
+} from 'app/util/promptMsgController';
+
 define([
     'jquery',
     'lodash',
     'backbone',
-    'app/templates/dialogs/DeleteDialog.html',
-    'app/templates/messages/ErrorMsg.html',
-    'app/templates/messages/WarningMsg.html'
+    'app/templates/dialogs/DeleteDialog.html'
 ], function (
     $,
     _,
     Backbone,
-    DeleteInput,
-    ErrorMsg,
-    WarningMsg
+    DeleteInput
 ) {
     return Backbone.View.extend({
         template: _.template(DeleteInput),
@@ -60,50 +61,6 @@ define([
             this._delete(delete_url);
         },
 
-        removeErrorMsg: function () {
-            if (this.$('.msg-error').length) {
-                this.$('.msg-error').remove();
-            }
-        },
-
-        removeWarningMsg: function () {
-            if (this.$('.msg-warning').length) {
-                this.$('.msg-warning').remove();
-            }
-        },
-
-        parseAjaxError: function (model) {
-            var rsp = JSON.parse(model.responseText),
-                regx = /In handler.+and output:\s+\'([\s\S]*)\'\.\s+See splunkd\.log for stderr output\./,
-                msg = String(rsp.messages[0].text),
-                matches = regx.exec(msg);
-            if (!matches || !matches[1]) {
-                // try to extract another one
-                regx = /In handler[^:]+:\s+(.*)/;
-                matches = regx.exec(msg);
-                if (!matches || !matches[1]) {
-                    return msg;
-                }
-            }
-            return matches[1];
-        },
-
-        addErrorMsg: function (text) {
-            if (this.$('.msg-error').length) {
-                this.$('.msg-error > .msg-text').text(text);
-            } else {
-                this.$(".modal-body").prepend(_.template(ErrorMsg)({msg: text}));
-            }
-        },
-
-        addWarningMsg: function (text) {
-            if (this.$('.msg-error').length) {
-                this.$('.msg-error > .msg-text').text(text);
-            } else {
-                this.$(".modal-body").prepend(_.template(WarningMsg)({msg: text}));
-            }
-        },
-
         modal: function () {
             this.$("[role=dialog]").modal({backdrop: 'static', keyboard: false});
         },
@@ -116,13 +73,13 @@ define([
             $.ajax({
                 url: delete_url,
                 type: 'DELETE'
-            }).done(function () {
+            }).done(() => {
                 this.collection.remove(this.model);
 
                 if (this.collection.length > 0) {
-                    _.each(this.collection.models, function (model) {
+                    _.each(this.collection.models, (model) => {
                         model.paging.set('total', model.paging.get('total') - 1);
-                    }.bind(this));
+                    });
                     this.collection.reset(this.collection.models);
                 } else {
                     var offset = this.stateModel.get('offset'),
@@ -131,11 +88,11 @@ define([
                     this.collection.paging.set('perPage', count);
                     this.collection.paging.set('total', offset);
 
-                    _.each(this.collection.models, function (model) {
+                    _.each(this.collection.models, (model) => {
                         model.paging.set('offset', (offset - count) < 0 ? 0 : (offset - count));
                         model.paging.set('perPage', count);
                         model.paging.set('total', offset);
-                    }.bind(this));
+                    });
 
                     this.stateModel.set('offset', (offset - count) < 0 ? 0 : (offset - count));
                     this.collection.reset(null);
@@ -145,10 +102,11 @@ define([
                     this.dispatcher.trigger('delete-input');
                 }
                 this.$("[role=dialog]").modal('hide');
-            }.bind(this)).fail(function (model) {
-                this.removeWarningMsg();
-                this.addErrorMsg(this.parseAjaxError(model));
-            }.bind(this));
+            }).fail((model, response) => {
+                removeWarningMsg('.modal-content');
+                addErrorMsg('.modal-content', response, true);
+                addClickListener('.modal-content', 'msg-error');
+            });
         }
     });
 });

@@ -7,7 +7,8 @@ import {
     removeErrorMsg,
     addSavingMsg,
     removeSavingMsg,
-    displayValidationError
+    displayValidationError,
+    addClickListener
 } from 'app/util/promptMsgController';
 import {parseFuncRawStr} from 'app/util/script';
 
@@ -20,6 +21,7 @@ export default Backbone.View.extend({
         this.msgContainerId = `${options.containerId} .modal-body`;
         options.dataStore.on('invalid', err => {
             displayValidationError(this.msgContainerId,  err);
+            addClickListener(this.msgContainerId, 'msg-error');
         });
 
         this.stateModel = new Backbone.Model({});
@@ -46,12 +48,14 @@ export default Backbone.View.extend({
     saveData: function() {
         removeErrorMsg(this.msgContainerId);
         addSavingMsg(this.msgContainerId, _('Saving').t());
+        addClickListener(this.msgContainerId, 'msg-loading');
         this.dataStore.entry.content.set(this.stateModel.toJSON());
         this.dataStore.save(null, {
             success: () => removeSavingMsg(this.msgContainerId),
             error: function (model, response) {
                 removeSavingMsg(this.msgContainerId);
                 addErrorMsg(this.msgContainerId, response, true);
+                addClickListener(this.msgContainerId, 'msg-error');
             }
         });
     },
