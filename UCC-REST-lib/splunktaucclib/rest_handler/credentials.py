@@ -120,10 +120,10 @@ class RestCredentials(object):
         :return: If the passwords.conf is updated, masked data.
             Else, None.
         """
-        if not self._has_credentials(name, data):
-            return data
-
         masked = None
+        if not self._has_credentials(name, data):
+            return masked
+
         try:
             encrypted = self._get(name)
         except CredentialNotExistException:
