@@ -1,4 +1,5 @@
-/*global define*/
+import {getFormattedMessage} from 'app/util/messageUtil';
+
 define([
     'jquery',
     'lodash',
@@ -32,17 +33,19 @@ define([
             this.dispatcher.on('filter-change', function (type) {
                 this.changeType(type);
             }.bind(this));
+            this.inputFilterLabel = getFormattedMessage(106);
         },
 
         render: function () {
-            this.$el.html(_.template(this.template));
+            this.$el.html(_.template(this.template)({
+                inputFilterLabel: this.inputFilterLabel
+            }));
             return this;
         },
 
         changeType: function (type) {
             const service = this.services.find(d => d.name === type);
             this.$('a.dropdown-toggle').empty();
-            this.$('a.dropdown-toggle').append(_.template('<%- _("Service : ").t() %>'));
             if (type === 'all') {
                 this.$('a.dropdown-toggle').append(_.template('<%- _("All").t() %>'));
             } else {
@@ -68,8 +71,9 @@ define([
         },
 
         template: `
+            <%- inputFilterLabel %> :
             <a class="dropdown-toggle" href="#">
-                <%- _("Service : All").t() %><span class="caret"></span>
+                <%- _("All").t() %><span class="caret"></span>
             </a>
         `
     });

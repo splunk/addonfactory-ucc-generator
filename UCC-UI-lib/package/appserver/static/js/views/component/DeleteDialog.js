@@ -1,3 +1,4 @@
+import {getFormattedMessage} from 'app/util/messageUtil';
 import {
     addErrorMsg,
     removeWarningMsg,
@@ -8,16 +9,14 @@ define([
     'jquery',
     'lodash',
     'backbone',
-    'app/templates/dialogs/DeleteDialog.html'
+    'app/views/component/DeleteDialog.html'
 ], function (
     $,
     _,
     Backbone,
-    DeleteInput
+    DeleteDialog
 ) {
     return Backbone.View.extend({
-        template: _.template(DeleteInput),
-
         events: {
             "submit form": "delete"
         },
@@ -32,10 +31,18 @@ define([
         },
 
         render: function () {
-            this.$el.html(this.template({
+            this.$el.html(_.template(DeleteDialog)({
+                title: getFormattedMessage(101),
                 inUse: this.inUse,
-                name: this.model.entry.attributes.name,
-                deleteTag: this.deleteTag
+                inUseMsg: getFormattedMessage(
+                    102,
+                    this.model.entry.attributes.name
+                ),
+                notinUseMsg: getFormattedMessage(
+                    103,
+                    this.model.entry.attributes.name,
+                    this.deleteTag || ''
+                 )
             }));
 
             var dlg = this;

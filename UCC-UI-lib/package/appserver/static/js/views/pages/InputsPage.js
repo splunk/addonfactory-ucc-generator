@@ -1,5 +1,6 @@
 import {configManager} from 'app/util/configManager';
 import {generateModel, generateCollection} from 'app/util/backboneHelpers';
+import {getFormattedMessage} from 'app/util/messageUtil';
 import {sortAlphabetical} from 'app/util/sort';
 import restEndpointMap from 'app/constants/restEndpointMap';
 
@@ -34,6 +35,7 @@ define([
             this.inputsPageTemplateData.title = this.unifiedConfig.pages.inputs.title;
             this.inputsPageTemplateData.description = this.unifiedConfig.pages.inputs.description;
             this.inputsPageTemplateData.singleInput = this.unifiedConfig.pages.inputs.services.length === 1;
+            this.inputsPageTemplateData.buttonText = getFormattedMessage(100);
             this.addonName = this.unifiedConfig.meta.name;
             //state model
             this.stateModel = new Backbone.Model();

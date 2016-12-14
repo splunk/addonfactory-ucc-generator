@@ -2,6 +2,7 @@ import _ from 'lodash';
 import schema from 'rootDir/schema/schema.json';
 import {Validator} from 'jsonschema';
 import {PREDEFINED_VALIDATORS_DICT} from 'app/constants/preDefinedRegex';
+import {getFormattedMessage} from 'app/util/messageUtil';
 
 export function validateSchema(config) {
     const validator = new Validator();
@@ -78,7 +79,7 @@ function parseFunctionRawStr(rawStr) {
     try {
         result = eval(`(${rawStr})`);
     } catch (e) {
-        error = `${rawStr} ${_('is not a function').t()}${_('.').t()}`;
+        error = getFormattedMessage(11, rawStr);
     }
 
     return {error, result};
@@ -90,7 +91,7 @@ function parseRegexRawStr(rawStr) {
     try {
         result = new RegExp(rawStr);
     } catch (e) {
-        error = `${rawStr} ${_('is not a legal Regular Expression').t()}${_('.').t()}`;
+        error = getFormattedMessage(12, rawStr);
     }
 
     return {error, result};
@@ -101,14 +102,14 @@ function parseNumberValidator(range) {
         _.isNumber(range[1]) && range[0] <= range[1];
 
     const error = isRangeLegal ? undefined :
-        `${JSON.stringify(range)} } ${_('is not a legal number range').t()}${_('.').t()}`;
+        getFormattedMessage(13, JSON.stringify(range));
 
     return {error};
 }
 
 function parseStringValidator(minLength, maxLength) {
     const error = maxLength >= minLength ? undefined :
-        `${minLength} ${maxLength} ${_('is not legal as minimum and maximum length of a string').t()}${_('.').t()}`;
+        getFormattedMessage(14, minLength, maxLength);
 
     return {error};
 }
@@ -126,7 +127,7 @@ function validatorFactory(validatorInfo, label) {
             const val = this.entry.content.get(attr);
             if(!regex.test(val)) {
                 return  errorMsg ? errorMsg :
-                    `${_('Input of').t()} ${label} ${_('does not match Regular Expression').t()} ${pattern}${_('.').t()}`;
+                    getFormattedMessage(15, label, pattern);
             }
         };
     }
@@ -141,10 +142,10 @@ function validatorFactory(validatorInfo, label) {
             const val = Number(this.entry.content.get(attr));
             if(Number.isNaN(val))
                 return errorMsg ? errorMsg :
-                    `${_('Input of').t()} ${label} ${_('is not a number.').t()}`;
+                    getFormattedMessage(16, label);
 
             if(val > range[1] || val < range[0])
-                return `${_('Input of').t()} ${label} ${_('is not in range').t()} ${range[0]} - ${range[1]}${_('.').t()}`;
+                getFormattedMessage(8, label, range[0], range[1]);
         };
     }
 
@@ -159,10 +160,10 @@ function validatorFactory(validatorInfo, label) {
 
             if(strLength > maxLength)
                 return errorMsg ? errorMsg :
-                    `${_('Length of the').t()} ${label} ${_('input is greater than').t()} ${maxLength}${_('.').t()}`;
+                    getFormattedMessage(18, label, maxLength);
             if(strLength < minLength)
                 return errorMsg ? errorMsg :
-                    `${_('Length of the').t()} ${label} ${_('input is less than').t()} ${minLength}${_('.').t()}`;
+                    getFormattedMessage(17, label, minLength);
         };
     }
 
@@ -174,7 +175,7 @@ function validatorFactory(validatorInfo, label) {
             const val = this.entry.content.get(attr);
 
             if(!regex.test(val)) {
-                return `${_('Input of').t()} ${label} ${_('is not a').t()} ${inputValueType}${_('.').t()}`;
+                getFormattedMessage(19, label, inputValueType);
             }
         };
     }

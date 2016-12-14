@@ -6,6 +6,7 @@ import Table from 'app/views/component/Table';
 import EntityDialog from 'app/views/component/EntityDialog';
 import ButtonTemplate from 'app/templates/common/ButtonTemplate.html';
 import {fetchServiceCollections, combineCollection} from 'app/util/backboneHelpers';
+import {getFormattedMessage} from 'app/util/messageUtil';
 
 
 export default Backbone.View.extend({
@@ -46,7 +47,7 @@ export default Backbone.View.extend({
 
         const renderTab = (refCollection) => {
             const caption = new CaptionView({
-                countLabel: _('Items').t(),
+                countLabel: getFormattedMessage(107),
                 model: {
                     state: this.stateModel
                 },
