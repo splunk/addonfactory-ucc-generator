@@ -120,6 +120,9 @@ class RestCredentials(object):
         :return: If the passwords.conf is updated, masked data.
             Else, None.
         """
+        if not self._has_credentials(name, data):
+            return data
+
         masked = None
         try:
             encrypted = self._get(name)
@@ -205,5 +208,12 @@ class RestCredentials(object):
         for key, val_encrypting in encrypting.iteritems():
             val_encrypted = encrypted.get(key, RestCredentials.EMPTY_VALUE)
             if val_encrypting != val_encrypted:
+                return True
+        return False
+
+    def _has_credentials(self, name, data):
+        model = self._endpoint.model(name, data)
+        for field in model.fields:
+            if field.encrypted is True:
                 return True
         return False

@@ -3,6 +3,14 @@ import restEndpointMap from 'app/constants/restEndpointMap';
 import {generateModel, generateCollection} from 'app/util/backboneHelpers';
 import {generateValidators} from 'app/util/validators';
 import {parseFuncRawStr} from 'app/util/script';
+import {
+    addErrorMsg,
+    removeErrorMsg,
+    addSavingMsg,
+    removeSavingMsg,
+    displayValidationError,
+    addClickListener
+} from 'app/util/promptMsgController';
 
 define([
     'jquery',
@@ -14,8 +22,6 @@ define([
     'app/templates/common/EditDialog.html',
     'app/templates/common/CloneDialog.html',
     'app/templates/common/TabTemplate.html',
-    'app/templates/messages/ErrorMsg.html',
-    'app/templates/messages/LoadingMsg.html',
     'app/views/controls/ControlWrapper'
 ], function (
     $,
@@ -27,8 +33,6 @@ define([
     EditDialogTemplate,
     CloneDialogTemplate,
     TabTemplate,
-    ErrorMsg,
-    LoadingMsg,
     ControlWrapper
 ) {
     return Backbone.View.extend({
@@ -38,7 +42,8 @@ define([
             _.extend(this, options);
 
             //guid of current dialog
-            this.currentWindow = Util.guid();
+            this.curWinId = Util.guid();
+            this.curWinSelector = '.' + this.curWinId;
             //Encrypted field list
             this.encryptedFields = [];
             _.each(this.component.entity, e => {
@@ -95,7 +100,10 @@ define([
                     collection: this.collection
                 });
             }
-            this.real_model.on("invalid", this.displayValidationError.bind(this));
+            this.real_model.on("invalid", err => {
+                displayValidationError(this.curWinSelector,  err);
+                addClickListener(this.curWinSelector, 'msg-error');
+            });
 
             // We can't set onChange-hook up in the data fetching model. Since it will only be updated when user save form data.
             this.model.on('change', this.onStateChange.bind(this));
@@ -125,8 +133,8 @@ define([
             //Disable the button to prevent repeat submit
             this.$("input[type=submit]").attr('disabled', true);
             // Remove loading and error message
-            this.removeErrorMsg();
-            this.removeLoadingMsg();
+            removeErrorMsg(this.curWinSelector);
+            removeSavingMsg(this.curWinSelector);
             //Save the model
             this.saveModel();
         },
@@ -168,7 +176,8 @@ define([
                 //Re-enable when failed
                 this.$("input[type=submit]").removeAttr('disabled');
             } else {
-                this.addLoadingMsg("Saving...");
+                addSavingMsg(this.curWinSelector, _("Saving").t());
+                addClickListener(this.curWinSelector, 'msg-loading');
                 deffer.done(function () {
                     //Delete encrypted field before adding to collection
                     if (this.encryptedFields.length) {
@@ -205,8 +214,9 @@ define([
                     input.trigger('change');
                     // re-enable when failed
                     this.$("input[type=submit]").removeAttr('disabled');
-                    this.removeLoadingMsg();
-                    this.displayError(model, response);
+                    removeSavingMsg(this.curWinSelector);
+                    addErrorMsg(this.curWinSelector, response, true);
+                    addClickListener(this.curWinSelector, 'msg-error');
                 }.bind(this));
             }
             return deffer;
@@ -274,68 +284,9 @@ define([
             //     this.$('.modal-body').prepend('<input type="password" id="password" style="display: none"/>');
             // }
             //Add guid to current dialog
-            this.$(".modal-body").addClass(this.currentWindow);
+            this.$(".modal-body").addClass(this.curWinId);
 
             return this;
-        },
-
-        displayValidationError: function (error) {
-            this.removeLoadingMsg();
-            if (this.$('.msg-text').length) {
-                this.$('.msg-text').text(_(error.validationError).t());
-            } else {
-                this.$("." + this.currentWindow).prepend(_.template(ErrorMsg)({
-                    msg: _(error.validationError).t()
-                }));
-            }
-        },
-
-        addErrorMsg: function (text, guid) {
-            if (this.$('.msg-error').length) {
-                this.$('.msg-error > .msg-text').text(_(text).t());
-            } else {
-                this.$("." + guid).prepend(_.template(ErrorMsg)({msg: _(text).t()}));
-            }
-        },
-
-        removeErrorMsg: function () {
-            if (this.$('.msg-error').length) {
-                this.$('.msg-error').remove();
-            }
-        },
-
-        addLoadingMsg: function (text) {
-            if (this.$('.msg-loading').length) {
-                this.$('.msg-loading > .msg-text').text(_(text).t());
-            } else {
-                this.$("." + this.currentWindow).prepend(_.template(LoadingMsg)({msg: _(text).t()}));
-            }
-        },
-
-        removeLoadingMsg: function () {
-            if (this.$('.msg-loading').length) {
-                this.$('.msg-loading').remove();
-            }
-        },
-
-        parseAjaxError: function (model) {
-            var rsp = JSON.parse(model.responseText),
-                regx = /In handler.+and output:\s+\'([\s\S]*)\'\.\s+See splunkd\.log for stderr output\./,
-                msg = String(rsp.messages[0].text),
-                matches = regx.exec(msg);
-            if (!matches || !matches[1]) {
-                // try to extract another one
-                regx = /In handler[^:]+:\s+(.*)/;
-                matches = regx.exec(msg);
-                if (!matches || !matches[1]) {
-                    return msg;
-                }
-            }
-            return matches[1];
-        },
-
-        displayError: function (model) {
-            this.addErrorMsg(this.parseAjaxError(model), this.currentWindow);
         },
 
         // TODO: delete this method after we fix the missing "default" in index selector.
@@ -363,7 +314,7 @@ define([
                 }
                 controlWrapper.control.setAutoCompleteFields(id_lst, true);
             }.bind(this)).fail(function () {
-                this.addErrorMsg("Failed to load index", this.currentWindow);
+                addErrorMsg(this.curWinSelector, _('Failed to load index').t());
             }.bind(this));
         },
 

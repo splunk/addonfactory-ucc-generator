@@ -1,7 +1,7 @@
 import {configManager} from 'app/util/configManager';
 import {generateModel, generateCollection} from 'app/util/backboneHelpers';
-import {sortAlphabetical, sortNumerical} from 'app/util/sort';
 import {getFormattedMessage} from 'app/util/messageUtil';
+import {sortAlphabetical} from 'app/util/sort';
 import restEndpointMap from 'app/constants/restEndpointMap';
 
 define([
@@ -9,9 +9,7 @@ define([
     'lodash',
     'backbone',
     'app/util/Util',
-    'app/collections/ProxyBase.Collection',
     'app/views/pages/InputsPage.html',
-    'models/Base',
     'views/shared/tablecaption/Master',
     'app/views/component/InputFilterMenu',
     'app/views/component/AddInputMenu',
@@ -22,9 +20,7 @@ define([
     _,
     Backbone,
     Util,
-    BaseCollection,
     InputsPageTemplate,
-    SplunkBaseModel,
     CaptionView,
     InputFilter,
     AddInputMenu,
@@ -42,7 +38,7 @@ define([
             this.inputsPageTemplateData.buttonText = getFormattedMessage(100);
             this.addonName = this.unifiedConfig.meta.name;
             //state model
-            this.stateModel = new SplunkBaseModel();
+            this.stateModel = new Backbone.Model();
             this.stateModel.set({
                 sortKey: 'name',
                 sortDirection: 'asc',
@@ -79,12 +75,11 @@ define([
             this.listenTo(this.dispatcher, 'delete-input', function () {
                 var all_deferred = this.fetchAllCollection();
                 all_deferred.done(function () {
-                    var tempCollection= this.combineCollection(),
-                        offset = this.stateModel.get('offset'),
+                    var offset = this.stateModel.get('offset'),
                         count = this.stateModel.get('count'),
                         models;
-                    this.cachedInputs = tempCollection[0];
-                    this.cachedSearchInputs = tempCollection[1];
+                    this.cachedInputs = this.combineCollection();
+                    this.cachedSearchInputs = this.combineCollection();
 
                     this.inputs.paging.set('offset', offset);
                     this.inputs.paging.set('perPage', count);
@@ -104,12 +99,11 @@ define([
             this.listenTo(this.dispatcher, 'add-input', function () {
                 var all_deferred = this.fetchAllCollection();
                 all_deferred.done(function () {
-                    var tempCollection= this.combineCollection(),
-                        offset = this.stateModel.get('offset'),
+                    var offset = this.stateModel.get('offset'),
                         count = this.stateModel.get('count'),
                         models;
-                    this.cachedInputs = tempCollection[0];
-                    this.cachedSearchInputs = tempCollection[1];
+                    this.cachedInputs = this.combineCollection();
+                    this.cachedSearchInputs = this.combineCollection();
 
                     this.inputs.paging.set('offset', offset);
                     this.inputs.paging.set('perPage', count);
@@ -179,11 +173,10 @@ define([
                 } else {
                     all_deferred = this.fetchAllCollection();
                     all_deferred.done(function () {
-                        var tempCollection= this.combineCollection(),
-                            offset = this.stateModel.get('offset'),
+                        var offset = this.stateModel.get('offset'),
                             count = this.stateModel.get('count');
-                        this.cachedInputs = tempCollection[0];
-                        this.cachedSearchInputs = tempCollection[1];
+                        this.cachedInputs = this.combineCollection();
+                        this.cachedSearchInputs = this.combineCollection();
                         this.inputs.paging.set('offset', offset);
                         this.inputs.paging.set('perPage', count);
                         this.inputs.paging.set('total', this.cachedSearchInputs.length);
@@ -219,15 +212,13 @@ define([
         },
 
         render: function () {
-            let tempCollection;
             this.deferred.done(() => {
                 this.stateModel.set('fetching', false);
-                tempCollection = this.combineCollection();
-                this.cachedInputs = tempCollection[0];
-                this.cachedSearchInputs = tempCollection[1];
+                this.cachedInputs = this.combineCollection();
+                this.cachedSearchInputs = this.combineCollection();
 
                 //Display the first page
-                this.inputs = this.combineCollection()[0];
+                this.inputs = this.combineCollection();
                 this.inputs.models = this.cachedInputs.models.slice(0, this.stateModel.get('count'));
 
                 if (this.inputs.length !== 0) {
@@ -297,8 +288,7 @@ define([
         },
 
         fetchAllCollection: function () {
-            var singleStateModel = new SplunkBaseModel();
-            singleStateModel.set({
+            var singleStateModel = new Backbone.Model({
                 sortKey: 'name',
                 sortDirection: 'asc',
                 count: 100,
@@ -312,27 +302,11 @@ define([
         },
 
         combineCollection: function () {
-            let tempCollection1 = new BaseCollection([], {
-                    appData: {
-                        app: this.addonName,
-                        owner: "nobody"
-                    },
-                    targetApp: this.addonName,
-                    targetOwner: "nobody"
-                }),
-                tempCollection2 = new BaseCollection([], {
-                    appData: {
-                        app: this.addonName,
-                        owner: "nobody"
-                    },
-                    targetApp: this.addonName,
-                    targetOwner: "nobody"
-                });
+            const tempCollection = generateCollection();
             _.each(this.services, service => {
-                tempCollection1.add(this[service.name].models, {silent: true});
-                tempCollection2.add(this[service.name].models, {silent: true});
-            })
-            return [tempCollection1, tempCollection2];
+                tempCollection.add(this[service.name].models, {silent: true});
+            });
+            return tempCollection;
         },
 
         fetchListCollection: function (collection, stateModel) {
@@ -373,7 +347,6 @@ define([
                 a = stateModel.get('search'),
                 offset = this.stateModel.get('offset'),
                 count = this.stateModel.get('count'),
-                newPageStateModel = new SplunkBaseModel(),
                 all_deferred,
                 models;
 
@@ -403,7 +376,7 @@ define([
                 }.bind(this));
                 this.cachedSearchInputs.reset(result);
 
-                newPageStateModel.set({
+                const newPageStateModel = new Backbone.Model({
                     sortKey: 'name',
                     sortDirection: 'asc',
                     count: 10,
@@ -416,9 +389,8 @@ define([
             } else {
                 all_deferred = this.fetchAllCollection();
                 all_deferred.done(function () {
-                    var tempCollection= this.combineCollection();
-                    this.cachedInputs = tempCollection[0];
-                    this.cachedSearchInputs = tempCollection[1];
+                    this.cachedInputs = this.combineCollection();
+                    this.cachedSearchInputs = this.combineCollection();
                     this.inputs.paging.set('offset', offset);
                     this.inputs.paging.set('perPage', count);
                     this.inputs.paging.set('total', this.cachedSearchInputs.length);
@@ -470,9 +442,8 @@ define([
                 sortDir);
 
             allDeferred.done(function () {
-                var tempCollection= this.combineCollection();
-                this.cachedInputs = tempCollection[0];
-                this.cachedSearchInputs = tempCollection[1];
+                this.cachedInputs = this.combineCollection();
+            this.cachedSearchInputs = this.combineCollection();
                 this.inputs.paging.set('offset', offset);
                 this.inputs.paging.set('perPage', count);
                 this.inputs.paging.set('total', this.cachedSearchInputs.length);

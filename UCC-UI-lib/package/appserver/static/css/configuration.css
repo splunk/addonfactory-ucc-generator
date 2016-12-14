@@ -6,15 +6,19 @@ body {
     overflow: visible !important;
 }
 
-/*Panel footer*/
-.panel-footer {
-    padding-left: 20px;
-}
-
 /*Navigation tab shadow*/
 .nav-tabs > li > a:focus {
     box-shadow: none;
 }
 a:focus {
     box-shadow: none;
+}
+
+/*Leave space for error message display*/
+.nav-tabs {
+    margin-bottom: 0px;
+}
+
+.table-caption {
+    margin-top: 16px;
 }

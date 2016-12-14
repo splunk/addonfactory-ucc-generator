@@ -91,7 +91,10 @@ def _decode_response(meth):
             if masked:
                 # passwords.conf changed
                 self._client.post(
-                    self.path_segment(self._endpoint.internal_endpoint, name=name),
+                    self.path_segment(
+                        self._endpoint.internal_endpoint,
+                        name=name,
+                    ),
                     **masked
                 )
             self._endpoint.decode(name, data)
@@ -148,7 +151,8 @@ class RestHandler(object):
 
     @_decode_response
     def get(self, name):
-        self.reload()
+        if self._endpoint.need_reload:
+            self.reload()
         return self._client.get(
             self.path_segment(
                 self._endpoint.internal_endpoint,
@@ -159,7 +163,8 @@ class RestHandler(object):
 
     @_decode_response
     def all(self, **query):
-        self.reload()
+        if self._endpoint.need_reload:
+            self.reload()
         return self._client.get(
             self.path_segment(self._endpoint.internal_endpoint),
             output_mode='json',
