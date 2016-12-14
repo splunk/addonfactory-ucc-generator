@@ -73,13 +73,13 @@ define([
             $.ajax({
                 url: delete_url,
                 type: 'DELETE'
-            }).done(function () {
+            }).done(() => {
                 this.collection.remove(this.model);
 
                 if (this.collection.length > 0) {
-                    _.each(this.collection.models, function (model) {
+                    _.each(this.collection.models, (model) => {
                         model.paging.set('total', model.paging.get('total') - 1);
-                    }.bind(this));
+                    });
                     this.collection.reset(this.collection.models);
                 } else {
                     var offset = this.stateModel.get('offset'),
@@ -88,11 +88,11 @@ define([
                     this.collection.paging.set('perPage', count);
                     this.collection.paging.set('total', offset);
 
-                    _.each(this.collection.models, function (model) {
+                    _.each(this.collection.models, (model) => {
                         model.paging.set('offset', (offset - count) < 0 ? 0 : (offset - count));
                         model.paging.set('perPage', count);
                         model.paging.set('total', offset);
-                    }.bind(this));
+                    });
 
                     this.stateModel.set('offset', (offset - count) < 0 ? 0 : (offset - count));
                     this.collection.reset(null);
@@ -102,11 +102,11 @@ define([
                     this.dispatcher.trigger('delete-input');
                 }
                 this.$("[role=dialog]").modal('hide');
-            }.bind(this)).fail(function (model, response) {
+            }).fail((model, response) => {
                 removeWarningMsg('.modal-content');
                 addErrorMsg('.modal-content', response, true);
                 addClickListener('.modal-content', 'msg-error');
-            }.bind(this));
+            });
         }
     });
 });
