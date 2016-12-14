@@ -15,8 +15,8 @@ export const REGEX_DATE = /^\s*((?:[+-]\d{6}|\d{4})-(?:\d\d-\d\d|W\d\d-\d|W\d\d|
 // _.t is undefined in unit test environment, and this dictionary is no need for testing.
 // So, an empty object is returned when _.t undefined.
 export const PREDEFINED_VALIDATORS_DICT = !_.t ? {} : {
-    'url': {regex: REGEX_URL, inputValueType: _(getFormattedMessage(111)).t()},
-    'email': {regex: REGEX_EMAIL, inputValueType: _(getFormattedMessage(112)).t()},
-    'ipv4': {regex: REGEX_IPV4, inputValueType: _(getFormattedMessage(113)).t()},
-    'date': {regex: REGEX_DATE, inputValueType: _(getFormattedMessage(114)).t()}
+    'url': {regex: REGEX_URL, inputValueType: getFormattedMessage(111)},
+    'email': {regex: REGEX_EMAIL, inputValueType: getFormattedMessage(112)},
+    'ipv4': {regex: REGEX_IPV4, inputValueType: getFormattedMessage(113)},
+    'date': {regex: REGEX_DATE, inputValueType: getFormattedMessage(114)}
 };

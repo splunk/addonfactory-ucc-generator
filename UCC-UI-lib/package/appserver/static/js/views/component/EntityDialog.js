@@ -315,7 +315,7 @@ define([
                 }
                 controlWrapper.control.setAutoCompleteFields(id_lst, true);
             }).fail(() => {
-                addErrorMsg(this.curWinSelector, _(getFormattedMessage(109)).t());
+                addErrorMsg(this.curWinSelector, getFormattedMessage(109));
             });
         },
 

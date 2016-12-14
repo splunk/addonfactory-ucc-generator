@@ -47,7 +47,7 @@ export default Backbone.View.extend({
 
         const renderTab = (refCollection) => {
             const caption = new CaptionView({
-                countLabel: _(getFormattedMessage(107)).t(),
+                countLabel: getFormattedMessage(107),
                 model: {
                     state: this.stateModel
                 },

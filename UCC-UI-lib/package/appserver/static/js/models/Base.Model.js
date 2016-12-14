@@ -114,15 +114,15 @@ define([
             }
 
             if (_.isUndefined(value)) {
-                return _(getFormattedMessage(0)).t();
+                return getFormattedMessage(0);
             }
 
             if (_.isEmpty(value)) {
-                return _(getFormattedMessage(0)).t();
+                return getFormattedMessage(0);
             }
 
             if (!_.isString(value)) {
-                return _(getFormattedMessage(1)).t();
+                return getFormattedMessage(1);
             }
 
             if (this.targetCollection !== undefined) {
@@ -130,16 +130,16 @@ define([
                     return model.entry.attributes.name === value;
                 }.bind(this), this);
                 if (matches !== undefined) {
-                    return _(getFormattedMessage(2)).t();
+                    return getFormattedMessage(2);
                 }
             }
 
             if (value === 'default') {
-                return _(getFormattedMessage(3)).t();
+                return getFormattedMessage(3);
             }
 
             if (value === '.' || value === '..') {
-                return _(getFormattedMessage(4)).t();
+                return getFormattedMessage(4);
             }
         },
 
@@ -202,14 +202,14 @@ define([
         positiveNumberValidator: function (attr) {
             var ret = this.convertNumericAttr(attr);
             if (undefined === ret || isNaN(ret)) {
-                return _(getFormattedMessage(5, this._getAttrLabel(attr))).t();
+                return getFormattedMessage(5, this._getAttrLabel(attr));
             }
         },
 
         nonEmptyString: function (attr) {
             var val = this.entry.content.get(attr);
             if (!val || !String(val).replace(/^\s+|\s+$/gm, '')) {
-                return _(getFormattedMessage(6, this._getAttrLabel(attr))).t();
+                return getFormattedMessage(6, this._getAttrLabel(attr));
             }
         },
 
@@ -240,7 +240,7 @@ define([
             }
 
             if (!isValid) {
-                return _(getFormattedMessage(7, this._getAttrLabel(attr))).t();
+                return getFormattedMessage(7, this._getAttrLabel(attr));
             }
         },
 
@@ -263,15 +263,15 @@ define([
                 val = this.convertNumericAttr(attr);
                 if (_.isNumber(start) && _.isNumber(end)) {
                     if (val < start || val > end) {
-                        return _(getFormattedMessage(8, this._getAttrLabel(attr), start, end)).t();
+                        return getFormattedMessage(8, this._getAttrLabel(attr), start, end);
                     }
                 } else if (_.isNumber(start)) {
                     if (val < start) {
-                        return _(getFormattedMessage(9, this._getAttrLabel(attr), start)).t();
+                        return getFormattedMessage(9, this._getAttrLabel(attr), start);
                     }
                 } else if (_.isNumber(end)) {
                     if (val > end) {
-                        return _(getFormattedMessage(10, this._getAttrLabel(attr), end)).t();
+                        return getFormattedMessage(10, this._getAttrLabel(attr), end);
                     }
                 }
             }.bind(this);
