@@ -10,6 +10,7 @@ from uccrestbuilder.global_config import GlobalConfigBuilderSchema, GlobalConfig
 from uccrestbuilder import build
 
 _input_template = '''
+{import_declare}
 import sys
 import json
 
@@ -78,19 +79,22 @@ with open(os.path.join(root_path, 'globalConfig.json')) as f:
 
 schema_content = json.loads(json_schema)
 scheme = GlobalConfigBuilderSchema(schema_content)
+ta_name = schema_content.get("meta").get("name")
+ta_namespace = schema_content.get("meta").get("restRoot")
+import_declare_name = 'import_declare_test'
 
 
 def clean_before_build():
-    shutil.rmtree(basedir + "/output", ignore_errors=True)
+    shutil.rmtree(os.path.join(basedir, 'output'), ignore_errors=True)
 
 
 def generate_rest():
     build(
         scheme,
         AdminExternalHandler,
-        './output/' + schema_content.get("meta").get("name"),
+        os.path.join('.', 'output', ta_name),
         post_process=GlobalConfigPostProcessor(),
-        import_declare_name='import_decalare_test'
+        import_declare_name=import_declare_name
     )
 
 
@@ -101,7 +105,7 @@ def copy_directory(src, dest):
         if exc.errno == errno.ENOTDIR:
             shutil.copy(src, dest)
         else:
-            print'Directory %s not copied. Error: %s' % (src, exc)
+            print 'Directory %s not copied. Error: %s' % (src, exc)
 
 
 def indent(lines, spaces=1):
@@ -126,24 +130,24 @@ def indent(lines, spaces=1):
 
 def generate_ui():
     subprocess.call("cd ../UCC-UI-lib;npm run build", shell=True)
-    ui_lib_dir = os.path.dirname(basedir) + "/UCC-UI-lib/build"
+    ui_lib_dir = os.path.join(os.path.dirname(basedir), 'UCC-UI-lib', 'build')
 
     # copy appserver folder
     copy_directory(
-            ui_lib_dir + "/appserver",
-            basedir + "/output/" + schema_content.get("meta").get("name") + "/appserver"
+            os.path.join(ui_lib_dir, 'appserver'),
+            os.path.join(basedir, 'output', ta_name, 'appserver')
         )
 
     # copy locale folder
     copy_directory(
-        ui_lib_dir + "/locale",
-        basedir + "/output/" + schema_content.get("meta").get("name") + "/locale"
+        os.path.join(ui_lib_dir, 'locale'),
+        os.path.join(basedir, 'output', ta_name, 'locale')
     )
 
     # copy default/data folder
     copy_directory(
-        ui_lib_dir + "/default/data",
-        basedir + "/output/" + schema_content.get("meta").get("name") + "/default/data"
+        os.path.join(ui_lib_dir, 'default', 'data'),
+        os.path.join(basedir, 'output', ta_name, 'default', 'data')
     )
 
 
@@ -151,13 +155,18 @@ def replace_token():
     # replace token in template
     views = ["inputs.xml", "configuration.xml"]
     for view in views:
-        template_dir = basedir + "/output/" + schema_content.get("meta").get("name") + "/default/data/ui/views"
-        with open(template_dir + "/" + view) as f:
+        template_dir = os.path.join(
+            basedir,
+            'output',
+            ta_name,
+            'default/data/ui/views'
+        )
+        with open(os.path.join(template_dir, view)) as f:
             s = f.read()
 
         # Safely write the changed content, if found in the file
         with open(template_dir + "/" + view, 'w') as f:
-            s = s.replace("${package.name}", schema_content.get("meta").get("name"))
+            s = s.replace("${package.name}", ta_name)
             f.write(s)
 
 
@@ -165,16 +174,23 @@ def copy_libs():
     libs = ["splunktaucclib", "solnlib", "splunklib"]
 
     for lib in libs:
+        lib_dest = os.path.join(
+            'output',
+            ta_name,
+            'bin',
+            ta_namespace,
+            lib
+        )
         copy_directory(
-            basedir + "/" + lib,
-            basedir + "/output/" + schema_content.get("meta").get("name") + "/bin/" + lib
+            os.path.join(basedir, lib),
+            lib_dest
         )
 
 
 def copy_res():
     shutil.copy(
-        basedir + "/res/app.conf",
-        basedir + "/output/" + schema_content.get("meta").get("name") + "/default"
+        os.path.join(basedir, 'res/app.conf'),
+        os.path.join(basedir, 'output', ta_name, 'default')
     )
 
 
@@ -201,22 +217,52 @@ def add_modular_input():
                     required=False
                 ))
         argument_lines = ''.join(argument_list)
+        import_declare = 'import ' + import_declare_name
         content = _input_template.format(
+            import_declare=import_declare,
             input_name=input_name,
             class_name=class_name,
             description=description,
             argument_list=indent(argument_lines, spaces=0)
         )
-        input_file_name = basedir + "/output/" + schema_content.get("meta").get("name") + "/bin/" + input_name + ".py"
+        input_file_name = os.path.join(
+            basedir,
+            'output',
+            ta_name,
+            'bin',
+            input_name + '.py'
+        )
         with open(input_file_name, "w") as input_file:
             input_file.write(content)
 
 
 def copy_global_config():
     shutil.copy(
-        root_path + "/globalConfig.json",
-        basedir + "/output/" + schema_content.get("meta").get("name") + "/appserver/static/js/build"
+        os.path.join(root_path, 'globalConfig.json'),
+        os.path.join(basedir, 'output', ta_name, 'appserver/static/js/build')
     )
+
+
+def move_default_to_local():
+    local_dir = os.path.join(
+        basedir,
+        'output',
+        ta_name,
+        'local'
+    )
+    default_dir = os.path.join(
+        basedir,
+        'output',
+        ta_name,
+        'default'
+    )
+    # copy from local to default
+    for conf in os.listdir(local_dir):
+        shutil.copy(os.path.join(local_dir, conf), default_dir)
+
+    # remove local
+    shutil.rmtree(local_dir, ignore_errors=True)
+
 
 clean_before_build()
 generate_rest()
@@ -226,3 +272,4 @@ replace_token()
 copy_res()
 copy_global_config()
 add_modular_input()
+move_default_to_local()

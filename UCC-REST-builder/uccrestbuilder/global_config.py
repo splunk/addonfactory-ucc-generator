@@ -302,7 +302,7 @@ import re
 ta_name = '{ta_name}'
 pattern = re.compile(r'[\\\\/]etc[\\\\/]apps[\\\\/][^\\\\/]+[\\\\/]bin[\\\\/]?$')
 new_paths = [path for path in sys.path if not pattern.search(path) or ta_name in path]
-new_paths.insert(0, os.path.dirname(__file__))
+new_paths.insert(0, os.path.sep.join([os.path.dirname(__file__), ta_name]))
 sys.path = new_paths
 """
 
@@ -340,16 +340,25 @@ sys.path = new_paths
         )
 
     def default_to_local(self):
-        shutil.move(
-            op.join(
-                self.root_path,
-                self.builder.output.default,
-            ),
-            op.join(
-                self.root_path,
-                self.output_local,
-            ),
+        default_dir = op.join(
+            self.root_path,
+            self.builder.output.default,
         )
+        local_dir = op.join(
+            self.root_path,
+            self.output_local,
+        )
+        if not op.isdir(local_dir):
+            os.makedirs(local_dir)
+        for i in os.listdir(default_dir):
+            child = op.join(default_dir, i)
+            if op.isdir(child):
+                shutil.copytree(child, local_dir)
+            else:
+                shutil.copy(child, op.join(local_dir, i))
+
+        # remove the default folder
+        shutil.rmtree(default_dir, ignore_errors=True)
 
     def import_declare_py_name(self):
         if self.import_declare_name:
