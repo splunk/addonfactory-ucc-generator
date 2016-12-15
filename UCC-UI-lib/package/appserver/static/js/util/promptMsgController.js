@@ -89,5 +89,5 @@ function parseErrorMsg(data) {
     } catch (err) {
         error_msg = 'ERROR in processing the request';
     }
-    return error_msg.replace(/Splunk Add-on REST Handler ERROR\[\d{1,6}\]\: /, '');
+    return (error_msg || '').replace(/Splunk Add-on REST Handler ERROR\[\d{1,6}\]\: /, '');
 }

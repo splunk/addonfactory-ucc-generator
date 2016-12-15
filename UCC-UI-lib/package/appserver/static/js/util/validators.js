@@ -175,7 +175,8 @@ function validatorFactory(validatorInfo, label) {
             const val = this.entry.content.get(attr);
 
             if(!regex.test(val)) {
-                getFormattedMessage(19, label, inputValueType);
+                return errorMsg ? errorMsg :
+                    getFormattedMessage(19, label, inputValueType);
             }
         };
     }

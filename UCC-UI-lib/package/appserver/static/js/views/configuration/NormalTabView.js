@@ -53,7 +53,7 @@ export default Backbone.View.extend({
         this.dataStore.entry.content.set(this.stateModel.toJSON());
         this.dataStore.save(null, {
             success: () => removeSavingMsg(this.msgContainerId),
-            error: function (model, response) {
+            error: (model, response) => {
                 removeSavingMsg(this.msgContainerId);
                 addErrorMsg(this.msgContainerId, response, true);
                 addClickListener(this.msgContainerId, 'msg-error');
