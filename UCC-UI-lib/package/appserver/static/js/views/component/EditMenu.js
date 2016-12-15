@@ -1,3 +1,5 @@
+import {configManager} from 'app/util/configManager';
+
 /*global define*/
 define([
     'lodash',
@@ -194,9 +196,11 @@ define([
         _getComponent: function () {
             let component;
             if (this.component.services) {
+                const {unifiedConfig: {meta: {restRoot}}} = configManager;
                 component = _.find(this.component.services, service => {
-                    let name = this.model.id.split('/')[this.model.id.split('/').length - 2];
-                    if (service.name === name) {
+                    // In UCCC 3.0, the "name" retrieved form model id is restRoot_originalName
+                    const name = this.model.id.split('/')[this.model.id.split('/').length - 2];
+                    if (`${restRoot}_${service.name}` === name) {
                         return service;
                     }
                 });
