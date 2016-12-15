@@ -39,6 +39,10 @@
     padding: 0px;
 }
 
+.error-dialog .modal-body {
+    padding-bottom: 80px;
+}
+
 /*Modal footer cancel button CSS*/
 .modal-footer .cancel-btn {
     float: left;

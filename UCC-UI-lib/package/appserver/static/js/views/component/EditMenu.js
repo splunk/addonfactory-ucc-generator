@@ -1,22 +1,19 @@
 import {configManager} from 'app/util/configManager';
 
-/*global define*/
 define([
     'lodash',
     'jquery',
     'views/shared/PopTart',
     'app/views/component/EntityDialog',
     'app/views/component/DeleteDialog',
-    'app/views/component/Error',
-    'app/views/component/Warning'
+    'app/views/component/Error'
 ], function (
     _,
     $,
     PopTartView,
     EntityDialog,
     DeleteDialog,
-    ErrorDialog,
-    WarningDialog
+    ErrorDialog
 ) {
     return PopTartView.extend({
         className: 'dropdown-menu',
