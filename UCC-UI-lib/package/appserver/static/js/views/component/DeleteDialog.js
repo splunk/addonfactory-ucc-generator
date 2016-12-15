@@ -77,6 +77,7 @@ define([
         },
 
         _delete: function (delete_url) {
+            this.$("input[type=submit]").attr('disabled', true);
             $.ajax({
                 url: delete_url,
                 type: 'DELETE'
@@ -110,6 +111,8 @@ define([
                 }
                 this.$("[role=dialog]").modal('hide');
             }).fail((model, response) => {
+                //Re-enable when failed
+                this.$("input[type=submit]").removeAttr('disabled');
                 removeWarningMsg('.modal-content');
                 addErrorMsg('.modal-content', response, true);
                 addClickListener('.modal-content', 'msg-error');
