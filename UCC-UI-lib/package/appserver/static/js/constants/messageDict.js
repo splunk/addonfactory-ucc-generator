@@ -45,6 +45,7 @@ export default {
     112: 'email address',
     113: 'IPV4 address',
     114: 'date in ISO 8601 format',
+    115: 'configuration file should be pure JSON.',
 
     '__unknow__': 'An unknown error occurred'
 }

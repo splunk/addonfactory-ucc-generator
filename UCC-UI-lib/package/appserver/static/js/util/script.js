@@ -1,5 +1,7 @@
 import $ from 'jquery';
 import _ from 'lodash';
+import ErrorDialog from 'app/views/component/Error';
+import {getFormattedMessage} from 'app/util/messageUtil';
 
 // NOTE: The callback will only be executed if the globalConfig exsit
 export function loadGlobalConfig(callback, errorHandler) {
@@ -12,7 +14,14 @@ export function loadGlobalConfig(callback, errorHandler) {
             if (errorHandler) {
                 errorHandler();
             } else {
-                console.error(err);
+                if (err.name === 'SyntaxError') {
+                    new ErrorDialog({
+                        el: $('.dialog-placeholder'),
+                        msg: getFormattedMessage(110, getFormattedMessage(115))
+                    }).render().modal();
+                } else {
+                    console.error(err);
+                }
             }
         });
 }
