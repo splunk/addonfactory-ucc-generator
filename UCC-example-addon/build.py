@@ -243,7 +243,7 @@ def copy_global_config():
     )
 
 
-def move_default_to_local():
+def move_local_to_default():
     local_dir = os.path.join(
         basedir,
         'output',
@@ -272,4 +272,4 @@ replace_token()
 copy_res()
 copy_global_config()
 add_modular_input()
-move_default_to_local()
+move_local_to_default()
