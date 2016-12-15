@@ -198,7 +198,7 @@ define([
             if (this.component.services) {
                 const {unifiedConfig: {meta: {restRoot}}} = configManager;
                 component = _.find(this.component.services, service => {
-                    // In UCCC 3.0, the "name" retrieved form model id is restRoot_originalName
+                    // In UCC 3.0, the "name" retrieved form model id is restRoot_originalName
                     const name = this.model.id.split('/')[this.model.id.split('/').length - 2];
                     if (`${restRoot}_${service.name}` === name) {
                         return service;
