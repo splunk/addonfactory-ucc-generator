@@ -45,6 +45,6 @@ export default {
     112: 'email address',
     113: 'IPV4 address',
     114: 'date in ISO 8601 format',
-
+    115: 'duplicate {{args[0]}} keys in entity {{args[1]}} is not allowed',
     '__unknow__': 'An unknown error occurred'
 }
