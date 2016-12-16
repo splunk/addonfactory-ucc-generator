@@ -145,6 +145,7 @@ function validatorFactory(validatorInfo, label) {
                     getFormattedMessage(16, label);
 
             if(val > range[1] || val < range[0])
+            return errorMsg ? errorMsg :
                 getFormattedMessage(8, label, range[0], range[1]);
         };
     }
