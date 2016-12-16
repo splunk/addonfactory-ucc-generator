@@ -3,6 +3,7 @@ import schema from 'rootDir/schema/schema.json';
 import {Validator} from 'jsonschema';
 import {PREDEFINED_VALIDATORS_DICT} from 'app/constants/preDefinedRegex';
 import {getFormattedMessage} from 'app/util/messageUtil';
+import BaseModel from 'app/models/Base.Model';
 
 export function validateSchema(config) {
     const validator = new Validator();
@@ -145,6 +146,7 @@ function validatorFactory(validatorInfo, label) {
                     getFormattedMessage(16, label);
 
             if(val > range[1] || val < range[0])
+            return errorMsg ? errorMsg :
                 getFormattedMessage(8, label, range[0], range[1]);
         };
     }
@@ -187,7 +189,8 @@ function validatorFactory(validatorInfo, label) {
 
 export function generateValidators(entities) {
     return entities.reduce((res, entity) => {
-        const backboneValidators = (entity.validators || []).map(d => {
+        const {validators, required} = entity;
+        const backboneValidators = (validators || []).map(d => {
             let validator;
             validator = validatorFactory(d, entity.label);
             return {
@@ -195,6 +198,14 @@ export function generateValidators(entities) {
                 fieldName: entity.field
             };
         });
+
+        if (required) {
+            backboneValidators.push({
+                validator: BaseModel.prototype.nonEmptyString,
+                fieldName: entity.field
+            });
+        }
+
         return res.concat(backboneValidators);
     }, []);
 }
