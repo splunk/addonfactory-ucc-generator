@@ -110,9 +110,9 @@ define([
                 }
                 this.$("[role=dialog]").modal('hide');
             }).fail((model, response) => {
-                removeWarningMsg('.modal-content');
-                addErrorMsg('.modal-content', response, true);
-                addClickListener('.modal-content', 'msg-error');
+                removeWarningMsg('.modal-dialog');
+                addErrorMsg('.modal-dialog', response, true);
+                addClickListener('.modal-dialog', 'msg-error');
             });
         }
     });

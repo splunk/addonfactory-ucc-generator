@@ -177,7 +177,7 @@ define([
                 //Re-enable when failed
                 this.$("input[type=submit]").removeAttr('disabled');
             } else {
-                addSavingMsg(this.curWinSelector, _("Saving").t());
+                addSavingMsg(this.curWinSelector, getFormattedMessage(108));
                 addClickListener(this.curWinSelector, 'msg-loading');
                 deffer.done(function () {
                     //Delete encrypted field before adding to collection
@@ -285,7 +285,7 @@ define([
             //     this.$('.modal-body').prepend('<input type="password" id="password" style="display: none"/>');
             // }
             //Add guid to current dialog
-            this.$(".modal-body").addClass(this.curWinId);
+            this.$(".modal-dialog").addClass(this.curWinId);
 
             return this;
         },
