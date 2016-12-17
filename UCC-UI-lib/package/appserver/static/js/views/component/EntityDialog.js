@@ -179,7 +179,7 @@ define([
             } else {
                 addSavingMsg(this.curWinSelector, _("Saving").t());
                 addClickListener(this.curWinSelector, 'msg-loading');
-                deffer.done(function () {
+                deffer.done(() => {
                     //Delete encrypted field before adding to collection
                     if (this.encryptedFields.length) {
                         _.each(this.encryptedFields, f => {
@@ -192,9 +192,9 @@ define([
                     if (this.mode !== 'edit') {
                         this.collection.add(input);
                         if (this.collection.length !== 0) {
-                            _.each(this.collection.models, function (model) {
+                            _.each(this.collection.models, (model) => {
                                 model.paging.set('total', this.collection.length);
-                            }.bind(this));
+                            });
                         }
 
                         //Trigger collection page change event to refresh the count in table caption
@@ -210,7 +210,7 @@ define([
                     }
                     this.$("[role=dialog]").modal('hide');
                     this.undelegateEvents();
-                }.bind(this)).fail(function (model, response) {
+                }).fail((model, response) => {
                     input.entry.content.set(original_json);
                     input.trigger('change');
                     // re-enable when failed
@@ -218,7 +218,7 @@ define([
                     removeSavingMsg(this.curWinSelector);
                     addErrorMsg(this.curWinSelector, response, true);
                     addClickListener(this.curWinSelector, 'msg-error');
-                }.bind(this));
+                });
             }
             return deffer;
         },
@@ -246,7 +246,7 @@ define([
             });
 
             this.children = [];
-            _.each(entity, function (e) {
+            _.each(entity, (e) => {
                 var option, controlWrapper, controlOptions;
                 if (this.model.get(e.field) === undefined && e.defaultValue) {
                     this.model.set(e.field, e.defaultValue);
@@ -267,23 +267,24 @@ define([
                 if (e.display !== undefined) {
                     controlWrapper.$el.css("display", "none");
                 }
-
                 this.children.push(controlWrapper);
-            }.bind(this));
+            });
 
-            _.each(this.children, function (child) {
+            _.each(this.children, (child) => {
+                // prevent auto complete for password
+                if (child.controlOptions.password) {
+                    this.$('.modal-body').prepend(
+                        `<input type="password" id="${child.controlOptions.modelAttribute}" style="display: none"/>`
+                    );
+                }
                 this.$('.modal-body').append(child.render().$el);
-            }.bind(this));
+            });
 
             //Disable the name field in edit mode
             if (this.mode === 'edit') {
                 this.$("input[name=name]").attr("readonly", "readonly");
             }
             this.$("input[type=submit]").on("click", this.submitTask.bind(this));
-            //Add hidden input field to disable autocomplete
-            // if (this.component.model === Account) {
-            //     this.$('.modal-body').prepend('<input type="password" id="password" style="display: none"/>');
-            // }
             //Add guid to current dialog
             this.$(".modal-body").addClass(this.curWinId);
 

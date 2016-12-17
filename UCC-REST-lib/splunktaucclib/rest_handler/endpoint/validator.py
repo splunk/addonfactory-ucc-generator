@@ -255,7 +255,7 @@ class Enum(Validator):
 
 class Number(Validator):
     """
-    A validator that accepts values within in a certain range.
+    A validator that accepts values within a certain range.
     This is for numeric value.
 
     Accepted condition: min_val <= value <= max_val
