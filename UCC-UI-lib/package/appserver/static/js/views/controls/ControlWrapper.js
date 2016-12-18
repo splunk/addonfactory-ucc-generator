@@ -54,6 +54,9 @@ define([
                         value: model.entry.attributes.name
                     };
                 });
+                if (customizedUrl === 'data/indexes') {
+                    dic = this._filterInternalIndex(dic);
+                }
                 if(this.control.setAutoCompleteFields) {
                     this.control.setAutoCompleteFields(dic, true);
                 }
@@ -92,6 +95,12 @@ define([
                 this.$('.tooltip-link').tooltip('destroy');
             }
             return BaseView.prototype.remove.apply(this, arguments);
+        },
+
+        _filterInternalIndex: function(autoCompleteFields) {
+            return _.filter(autoCompleteFields, (autoCompleteField) => {
+                return !autoCompleteField.value.startsWith('_');
+            });
         },
 
         template: `
