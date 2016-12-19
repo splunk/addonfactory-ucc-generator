@@ -6,7 +6,8 @@ import MultiInputControl from 'app/views/controls/MultiSelectInputControl';
 
 export default {
     'text': TextControl,
-    'password': TextControl,
+    // remove password in UCC 3.0
+    //'password': TextControl,
     'checkbox': CheckboxControl,
     'radio': RadioControl,
     'singleSelect': SingleInputControl,
