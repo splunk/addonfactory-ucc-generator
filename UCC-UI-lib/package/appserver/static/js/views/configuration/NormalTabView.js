@@ -29,6 +29,12 @@ export default Backbone.View.extend({
 
         // We can't set onChange-hook up in the data fetching model. Since it will only be updated when user save form data.
         this.stateModel.on('change', this.onStateChange.bind(this));
+
+        options.pageState.on('change', () => {
+            if (options.pageState.get('selectedTabId') === options.containerId) {
+                (this.refCollectionList || []).map(d => d.fetch());
+            }
+        });
     },
 
     onStateChange: function() {
@@ -67,6 +73,7 @@ export default Backbone.View.extend({
         this.dataStore.fetch().done(() => {
             const {content} = this.dataStore.entry;
             const {entity, name} = this.props;
+            const refCollectionList = [];
             entity.forEach(d => {
                 if (content.get(d.field) === undefined && d.defaultValue) {
                     this.stateModel.set(d.field, d.defaultValue);
@@ -82,6 +89,9 @@ export default Backbone.View.extend({
                 };
                 _.extend(controlOptions, d.options);
                 const controlWrapper = new ControlWrapper({...d, controlOptions});
+                if(controlWrapper.collection) {
+                    refCollectionList.push(controlWrapper.collection);
+                }
                 this.$('.modal-body').append(controlWrapper.render().$el);
                 // prevent auto complete for password
                 if (d.encrypted) {
@@ -90,6 +100,7 @@ export default Backbone.View.extend({
                     )
                 }
             });
+            this.refCollectionList = refCollectionList;
         });
         this.$('input[type=submit]').on('click', this.saveData.bind(this));
 

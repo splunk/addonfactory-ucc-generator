@@ -29,7 +29,15 @@ define([
 
             const {referenceName, customizedUrl} = this.controlOptions;
             if(referenceName || customizedUrl) {
-                this._loadSingleSelectReference(customizedUrl, referenceName);
+                if (!restEndpointMap[referenceName]) {
+                    this.collection = generateCollection(referenceName, {customizedUrl});
+                } else {
+                    this.collection = generateCollection('', {'customizedUrl': restEndpointMap[referenceName]});
+                }
+                this.collection.fetch();
+                this.listenTo(this.collection, 'sync', () => {
+                    this._updateleSelectReference();
+                });
             }
         },
 
@@ -39,25 +47,14 @@ define([
             }
         },
         // TODO: support more component loading content dynamically like this one
-        _loadSingleSelectReference: function(customizedUrl, referenceName) {
-            let referenceCollectionInstance;
-            if (!restEndpointMap[referenceName]) {
-                referenceCollectionInstance = generateCollection(referenceName, {customizedUrl});
-            } else {
-                referenceCollectionInstance = generateCollection('', {'customizedUrl': restEndpointMap[referenceName]});
+        _updateleSelectReference: function() {
+            const dic = _.map(this.collection.models, model => ({
+                label: model.entry.attributes.name,
+                value: model.entry.attributes.name
+            }));
+            if(this.control.setAutoCompleteFields) {
+                this.control.setAutoCompleteFields(dic, true);
             }
-            const referenceDeferred = referenceCollectionInstance.fetch();
-            referenceDeferred.done(() => {
-                let dic = _.map(referenceCollectionInstance.models, model => {
-                    return {
-                        label: model.entry.attributes.name,
-                        value: model.entry.attributes.name
-                    };
-                });
-                if(this.control.setAutoCompleteFields) {
-                    this.control.setAutoCompleteFields(dic, true);
-                }
-            });
         },
 
         validate: function() {
