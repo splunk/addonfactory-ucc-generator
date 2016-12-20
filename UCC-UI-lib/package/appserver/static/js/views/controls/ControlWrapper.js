@@ -118,7 +118,7 @@ define([
                 return fields;
             }
             return _.filter(fields, (field) => {
-                return whiteRegex.exec(field.value);
+                return whiteRegex.test(field.value);
             });
         },
 
@@ -131,7 +131,7 @@ define([
                 return fields;
             }
             return _.filter(fields, (field) => {
-                return !blackRegex.exec(field.value);
+                return !blackRegex.test(field.value);
             });
         },
 
