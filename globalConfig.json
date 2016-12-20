@@ -3,7 +3,7 @@
         "name": "Splunk_TA_crowdstrike",
         "displayName": "AOB Test",
         "version": "1.0.0",
-        "uccVersion": "3.0.0",
+        "apiVersion": "3.0.0",
         "restRoot": "splunk_ta_crowdstrike"
     },
     "pages": {
@@ -401,7 +401,7 @@
                             "type": "singleSelect",
                             "defaultValue": "default",
                             "options": {
-                                "customizedUrl": "data/indexes",
+                                "endpointUrl": "data/indexes",
                                 "blackList": "^_.*$"
                             },
                             "required": true
@@ -423,7 +423,7 @@
                             "label": "Account",
                             "type": "singleSelect",
                             "options": {
-                                "customizedUrl": "splunk_ta_crowdstrike_account"
+                                "endpointUrl": "splunk_ta_crowdstrike_account"
                             }
                         },
                         {

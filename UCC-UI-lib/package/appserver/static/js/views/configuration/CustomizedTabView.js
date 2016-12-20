@@ -25,7 +25,7 @@ export default Backbone.View.extend({
 
         if (this.isTableBasedView) {
             this.dataStore = generateCollection(preDefinedUrl ? '' : name, {
-                customizedUrl: preDefinedUrl
+                endpointUrl: preDefinedUrl
             });
         } else {
             const {entity, options} = this.props;
@@ -34,7 +34,7 @@ export default Backbone.View.extend({
             this.dataStore = new (generateModel(preDefinedUrl ? undefined : 'settings', {
                 modelName: name,
                 fields: entity,
-                customizedUrl: preDefinedUrl,
+                endpointUrl: preDefinedUrl,
                 formDataValidatorRawStr: options ? options.saveValidator : undefined,
                 onLoadRawStr: options ? options.onLoad : undefined,
                 shouldInvokeOnload: true,
