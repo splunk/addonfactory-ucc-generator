@@ -36,7 +36,15 @@ define([
                 }
                 this.collection.fetch();
                 this.listenTo(this.collection, 'sync', () => {
-                    this._updateleSelectReference();
+                    switch (type) {
+                        case 'singleSelect':
+                            this._updateleSingleSelect();
+                            break;
+                        case 'multipleSelect':
+                            this._updateleMultiSelect();
+                            break;
+                        default:
+                    }
                 });
             }
         },
@@ -46,14 +54,24 @@ define([
                 e.preventDefault();
             }
         },
-        // TODO: support more component loading content dynamically like this one
-        _updateleSelectReference: function() {
+
+        _updateleSingleSelect: function() {
             const dic = _.map(this.collection.models, model => ({
                 label: model.entry.attributes.name,
                 value: model.entry.attributes.name
             }));
             if(this.control.setAutoCompleteFields) {
                 this.control.setAutoCompleteFields(dic, true);
+            }
+        },
+
+        _updateleMultiSelect: function() {
+            const dic = _.map(this.collection.models, model => ({
+                label: model.entry.attributes.name,
+                value: model.entry.attributes.name
+            }));
+            if(this.control.setItems) {
+                this.control.setItems(dic, true);
             }
         },
 
