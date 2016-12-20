@@ -59,7 +59,7 @@ class GlobalConfigSchema(RestSchema):
 
     @property
     def version(self):
-        return self._meta['uccVersion']
+        return self._meta['apiVersion']
 
     @property
     def inputs(self):

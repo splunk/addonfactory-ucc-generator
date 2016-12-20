@@ -8,7 +8,7 @@ import restEndpointMap from 'app/constants/restEndpointMap';
 
 export function generateModel(name, options = {}) {
     const {
-        customizedUrl,
+        endpointUrl,
         fields,
         modelName,
         formDataValidatorRawStr,
@@ -23,7 +23,7 @@ export function generateModel(name, options = {}) {
     const optionsNeedMerge = {fields, modelName, onLoad, shouldInvokeOnload, validateFormData};
 
     const newModel = BaseModel.extend({
-        url: name ? (meta.restRoot + '_' + name) : customizedUrl,
+        url: name ? (meta.restRoot + '_' + name) : endpointUrl,
         initialize: function (attributes, options = {}) {
             options.appData = configManager.getAppData().toJSON();
             BaseModel.prototype.initialize.call(this, attributes, {...options, ...optionsNeedMerge});
@@ -37,10 +37,10 @@ export function generateModel(name, options = {}) {
 
 export function generateCollection(name, options = {}) {
     const {unifiedConfig: {meta}} = configManager;
-    const {customizedUrl} = options;
+    const {endpointUrl} = options;
 
     const collectionModel = BaseCollection.extend({
-        url: name ? (meta.restRoot + '_' + name) : customizedUrl,
+        url: name ? (meta.restRoot + '_' + name) : endpointUrl,
         model: generateModel(name, options),
         initialize: function (attributes, options = {}) {
             options.appData = configManager.getAppData().toJSON();
@@ -65,7 +65,7 @@ export function fetchServiceCollections() {
     services.forEach(({name}) => {
         collectionMap[name] = generateCollection(
             restEndpointMap[name] ? '' : name,
-            {customizedUrl: restEndpointMap[name]}
+            {endpointUrl: restEndpointMap[name]}
         );
     });
 

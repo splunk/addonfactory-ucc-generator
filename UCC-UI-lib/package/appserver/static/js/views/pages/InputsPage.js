@@ -61,7 +61,7 @@ define([
                 if (!restEndpointMap[service.name]) {
                     this[service.name] = generateCollection(service.name);
                 } else {
-                    this[service.name] = generateCollection('', {'customizedUrl': restEndpointMap[service.name]});
+                    this[service.name] = generateCollection('', {'endpointUrl': restEndpointMap[service.name]});
                 }
             });
             this.dispatcher = _.extend({}, Backbone.Events);
@@ -197,7 +197,7 @@ define([
                     if (!restEndpointMap[service.name]) {
                         this.inputs.model = generateModel(service.name);
                     } else {
-                        this.inputs.model = generateModel('', {'customizedUrl': restEndpointMap[service.name]});
+                        this.inputs.model = generateModel('', {'endpointUrl': restEndpointMap[service.name]});
                     }
                     this.inputs._url = this[type]._url;
                     this.inputs.reset(this[type].models);
