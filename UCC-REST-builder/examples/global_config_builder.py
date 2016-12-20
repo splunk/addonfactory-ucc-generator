@@ -1,7 +1,6 @@
 import json
 import os.path as op
 
-from splunktaucclib.rest_handler.admin_external import AdminExternalHandler
 from uccrestbuilder.global_config import (
     GlobalConfigBuilderSchema,
     GlobalConfigPostProcessor,
@@ -18,7 +17,7 @@ schema = GlobalConfigBuilderSchema(schema_content)
 
 builder = build(
     schema,
-    AdminExternalHandler,
+    'splunktaucclib.rest_handler.admin_external.AdminExternalHandler',
     op.abspath('./output'),
     post_process=GlobalConfigPostProcessor(),
     import_declare_name='import_decalare_test',
