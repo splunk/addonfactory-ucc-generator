@@ -29,7 +29,7 @@ define([
 
             const {referenceName, endpointUrl} = this.controlOptions;
             if(referenceName || endpointUrl) {
-                this._loadSingleSelectReference(endpointUrl, referenceName);
+                this._loadSelectReference(endpointUrl, referenceName);
             }
         },
 
@@ -39,7 +39,7 @@ define([
             }
         },
         // TODO: support more component loading content dynamically like this one
-        _loadSingleSelectReference: function(endpointUrl, referenceName) {
+        _loadSelectReference: function(endpointUrl, referenceName) {
             let referenceCollectionInstance;
             if (!restEndpointMap[referenceName]) {
                 referenceCollectionInstance = generateCollection(referenceName, {endpointUrl});
@@ -54,8 +54,21 @@ define([
                         value: model.entry.attributes.name
                     };
                 });
+                // filter result with white list
+                if (this.controlOptions.whiteList) {
+                    dic = this._filterByWhiteList(dic);
+                }
+                // filter result with black list
+                if (this.controlOptions.blackList) {
+                    dic = this._filterByBlackList(dic);
+                }
                 if(this.control.setAutoCompleteFields) {
+                    // set singleSelect selection list
                     this.control.setAutoCompleteFields(dic, true);
+                }
+                if(this.control.setItems) {
+                    // set multipleSelect selection list
+                    this.control.setItems(dic, true);
                 }
                 // unset defaultValue if not in loading list
                 this.controlOptions.model.set(this.controlOptions.modelAttribute, '');
@@ -94,6 +107,32 @@ define([
                 this.$('.tooltip-link').tooltip('destroy');
             }
             return BaseView.prototype.remove.apply(this, arguments);
+        },
+
+        _filterByWhiteList: function(fields) {
+            let whiteRegex;
+            try {
+                whiteRegex = new RegExp(this.controlOptions.whiteList);
+            } catch(e) {
+                console.log("Invalid regex for option whiteList");
+                return fields;
+            }
+            return _.filter(fields, (field) => {
+                return whiteRegex.test(field.value);
+            });
+        },
+
+        _filterByBlackList: function(fields) {
+            let blackRegex;
+            try {
+                blackRegex = new RegExp(this.controlOptions.blackList)
+            } catch(e) {
+                console.log("Invalid regex for option blackList");
+                return fields;
+            }
+            return _.filter(fields, (field) => {
+                return !blackRegex.test(field.value);
+            });
         },
 
         template: `

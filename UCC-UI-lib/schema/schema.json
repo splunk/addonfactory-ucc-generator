@@ -106,6 +106,10 @@
                 "options": {
                     "type": "object", 
                     "properties": {
+                        "blackList": {
+                            "type": "string", 
+                            "maxLength": 350
+                        }, 
                         "delimiter": {
                             "type": "string", 
                             "maxLength": 30
@@ -150,6 +154,10 @@
                                     }
                                 }
                             ]
+                        }, 
+                        "whiteList": {
+                            "type": "string", 
+                            "maxLength": 350
                         }, 
                         "referenceName": {
                             "type": "string", 
