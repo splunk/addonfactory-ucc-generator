@@ -1,565 +1,571 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$schema": "http://json-schema.org/draft-04/schema#", 
     "definitions": {
         "ConfigurationPage": {
-            "type": "object",
+            "type": "object", 
             "properties": {
                 "title": {
-                    "type": "string",
+                    "type": "string", 
                     "maxLength": 60
-                },
+                }, 
                 "description": {
-                    "type": "string",
+                    "type": "string", 
                     "maxLength": 200
-                },
+                }, 
                 "tabs": {
-                    "type": "array",
+                    "type": "array", 
                     "items": {
                         "$ref": "#/definitions/TabContent"
-                    },
+                    }, 
                     "minItems": 1
                 }
-            },
+            }, 
             "required": [
-                "title",
+                "title", 
                 "tabs"
-            ],
+            ], 
             "additionalProperties": false
-        },
+        }, 
         "DateValidator": {
-            "type": "object",
+            "type": "object", 
             "properties": {
                 "errorMsg": {
-                    "type": "string",
+                    "type": "string", 
                     "maxLength": 400
-                },
+                }, 
                 "type": {
-                    "type": "string",
+                    "type": "string", 
                     "enum": [
                         "date"
                     ]
                 }
-            },
+            }, 
             "required": [
                 "type"
-            ],
+            ], 
             "additionalProperties": false
-        },
+        }, 
         "EmailValidator": {
-            "type": "object",
+            "type": "object", 
             "properties": {
                 "errorMsg": {
-                    "type": "string",
+                    "type": "string", 
                     "maxLength": 400
-                },
+                }, 
                 "type": {
-                    "type": "string",
+                    "type": "string", 
                     "enum": [
                         "email"
                     ]
                 }
-            },
+            }, 
             "required": [
                 "type"
-            ],
+            ], 
             "additionalProperties": false
-        },
+        }, 
         "Entity": {
-            "type": "object",
+            "type": "object", 
             "properties": {
                 "field": {
-                    "type": "string",
+                    "type": "string", 
                     "pattern": "^\\w+$"
-                },
+                }, 
                 "label": {
-                    "type": "string",
+                    "type": "string", 
                     "maxLength": 30
-                },
+                }, 
                 "type": {
-                    "type": "string",
+                    "type": "string", 
                     "enum": [
-                        "text",
-                        "singleSelect",
-                        "checkbox",
-                        "multipleSelect",
+                        "text", 
+                        "singleSelect", 
+                        "checkbox", 
+                        "multipleSelect", 
                         "radio"
                     ]
-                },
+                }, 
                 "help": {
-                    "type": "string",
+                    "type": "string", 
                     "maxLength": 200
-                },
+                }, 
                 "defaultValue": {
                     "oneOf": [
                         {
                             "type": "number"
-                        },
+                        }, 
                         {
-                            "type": "string",
+                            "type": "string", 
                             "maxLength": 250
-                        },
+                        }, 
                         {
                             "type": "boolean"
                         }
                     ]
-                },
+                }, 
                 "options": {
-                    "type": "object",
+                    "type": "object", 
                     "properties": {
-                        "customizedUrl": {
-                            "type": "string",
-                            "maxLength": 350
-                        },
+                        "referenceName": {
+                            "type": "string", 
+                            "maxLength": 250
+                        }, 
                         "delimiter": {
-                            "type": "string",
+                            "type": "string", 
                             "maxLength": 30
-                        },
+                        }, 
+                        "enable": {
+                            "type": "boolean"
+                        }, 
+                        "customizedUrl": {
+                            "type": "string", 
+                            "maxLength": 350
+                        }, 
+                        "autoCompleteFields": {
+                            "oneOf": [
+                                {
+                                    "type": "array", 
+                                    "items": {
+                                        "type": "object", 
+                                        "properties": {
+                                            "children": {
+                                                "type": "array", 
+                                                "items": {
+                                                    "$ref": "#/definitions/ValueLabelPair"
+                                                }
+                                            }, 
+                                            "label": {
+                                                "type": "string", 
+                                                "maxLength": 150
+                                            }
+                                        }, 
+                                        "required": [
+                                            "children", 
+                                            "label"
+                                        ]
+                                    }
+                                }, 
+                                {
+                                    "type": "array", 
+                                    "items": {
+                                        "$ref": "#/definitions/ValueLabelPair"
+                                    }
+                                }
+                            ]
+                        }, 
                         "items": {
-                            "type": "array",
+                            "type": "array", 
                             "items": {
                                 "$ref": "#/definitions/ValueLabelPair"
                             }
-                        },
+                        }, 
+                        "placeholder": {
+                            "type": "string", 
+                            "maxLength": 250
+                        }, 
                         "disableSearch": {
                             "type": "boolean"
-                        },
-                        "placeholder": {
-                            "type": "string",
-                            "maxLength": 250
-                        },
-                        "enable": {
-                            "type": "boolean"
-                        },
-                        "autoCompleteFields": {
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "children": {
-                                        "type": "array",
-                                        "items": {
-                                            "$ref": "#/definitions/ValueLabelPair"
-                                        }
-                                    },
-                                    "label": {
-                                        "type": "string",
-                                        "maxLength": 150
-                                    },
-                                    "value": {
-                                        "type": "string",
-                                        "pattern": "^\\w+$",
-                                        "maxLength": 300
-                                    }
-                                },
-                                "required": [
-                                    "label"
-                                ]
-                            }
-                        },
-                        "referenceName": {
-                            "type": "string",
-                            "maxLength": 250
                         }
                     }
-                },
+                }, 
                 "required": {
                     "type": "boolean"
-                },
+                }, 
                 "encrypted": {
                     "type": "boolean"
-                },
+                }, 
                 "validators": {
-                    "type": "array",
+                    "type": "array", 
                     "items": {
                         "anyOf": [
                             {
                                 "$ref": "#/definitions/StringValidator"
-                            },
+                            }, 
                             {
                                 "$ref": "#/definitions/NumberValidator"
-                            },
+                            }, 
                             {
                                 "$ref": "#/definitions/RegexValidator"
-                            },
+                            }, 
                             {
                                 "$ref": "#/definitions/EmailValidator"
-                            },
+                            }, 
                             {
                                 "$ref": "#/definitions/Ipv4Validator"
-                            },
+                            }, 
                             {
                                 "$ref": "#/definitions/UrlValidator"
-                            },
+                            }, 
                             {
                                 "$ref": "#/definitions/DateValidator"
                             }
                         ]
                     }
                 }
-            },
+            }, 
             "required": [
-                "field",
-                "label",
+                "field", 
+                "label", 
                 "type"
-            ],
+            ], 
             "additionalProperties": false
-        },
+        }, 
         "Hooks": {
-            "type": "object",
+            "type": "object", 
             "properties": {
                 "saveValidator": {
-                    "type": "string",
+                    "type": "string", 
                     "maxLength": 3000
-                },
+                }, 
                 "onLoad": {
-                    "type": "string",
+                    "type": "string", 
                     "maxLength": 3000
-                },
+                }, 
                 "onChange": {
-                    "type": "string",
+                    "type": "string", 
                     "maxLength": 3000
                 }
-            },
+            }, 
             "additionalProperties": false
-        },
+        }, 
         "InputsPage": {
-            "type": "object",
+            "type": "object", 
             "properties": {
                 "title": {
-                    "type": "string",
+                    "type": "string", 
                     "maxLength": 60
-                },
+                }, 
                 "description": {
-                    "type": "string",
+                    "type": "string", 
                     "maxLength": 200
-                },
+                }, 
                 "table": {
                     "$ref": "#/definitions/Table"
-                },
+                }, 
                 "services": {
-                    "type": "array",
+                    "type": "array", 
                     "items": {
-                        "type": "object",
+                        "type": "object", 
                         "properties": {
-                            "options": {
-                                "$ref": "#/definitions/Hooks"
-                            },
-                            "title": {
-                                "type": "string",
-                                "maxLength": 50
-                            },
                             "entity": {
-                                "type": "array",
+                                "type": "array", 
                                 "items": {
                                     "$ref": "#/definitions/Entity"
                                 }
-                            },
+                            }, 
+                            "options": {
+                                "$ref": "#/definitions/Hooks"
+                            }, 
                             "name": {
-                                "type": "string",
+                                "type": "string", 
                                 "pattern": "^\\w+$"
+                            }, 
+                            "title": {
+                                "type": "string", 
+                                "maxLength": 50
                             }
-                        },
+                        }, 
                         "required": [
-                            "title",
-                            "entity",
-                            "name"
+                            "entity", 
+                            "name", 
+                            "title"
                         ]
                     }
                 }
-            },
+            }, 
             "required": [
-                "title",
-                "table",
+                "title", 
+                "table", 
                 "services"
-            ],
+            ], 
             "additionalProperties": false
-        },
+        }, 
         "Ipv4Validator": {
-            "type": "object",
+            "type": "object", 
             "properties": {
                 "errorMsg": {
-                    "type": "string",
+                    "type": "string", 
                     "maxLength": 400
-                },
+                }, 
                 "type": {
-                    "type": "string",
+                    "type": "string", 
                     "enum": [
                         "ipv4"
                     ]
                 }
-            },
+            }, 
             "required": [
                 "type"
-            ],
+            ], 
             "additionalProperties": false
-        },
+        }, 
         "Meta": {
-            "type": "object",
+            "type": "object", 
             "properties": {
                 "displayName": {
-                    "type": "string",
+                    "type": "string", 
                     "maxLength": 200
-                },
+                }, 
                 "name": {
-                    "type": "string",
+                    "type": "string", 
                     "pattern": "^[^<>\\:\"\\/\\\\|\\?\\*]+$"
-                },
+                }, 
                 "restRoot": {
-                    "type": "string",
+                    "type": "string", 
                     "pattern": "^\\w+$"
-                },
+                }, 
                 "uccVersion": {
-                    "type": "string",
+                    "type": "string", 
                     "pattern": "^(?:\\d{1,3}\\.){2}\\d{1,3}$"
-                },
+                }, 
                 "version": {
                     "type": "string"
                 }
-            },
+            }, 
             "required": [
-                "displayName",
-                "name",
-                "restRoot",
-                "uccVersion",
+                "displayName", 
+                "name", 
+                "restRoot", 
+                "uccVersion", 
                 "version"
-            ],
+            ], 
             "additionalProperties": false
-        },
+        }, 
         "NumberValidator": {
-            "type": "object",
+            "type": "object", 
             "properties": {
                 "errorMsg": {
-                    "type": "string",
+                    "type": "string", 
                     "maxLength": 400
-                },
+                }, 
                 "type": {
-                    "type": "string",
+                    "type": "string", 
                     "enum": [
                         "number"
                     ]
-                },
+                }, 
                 "range": {
-                    "type": "array",
+                    "type": "array", 
                     "items": {
                         "type": "number"
                     }
                 }
-            },
+            }, 
             "required": [
-                "type",
+                "type", 
                 "range"
-            ],
+            ], 
             "additionalProperties": false
-        },
+        }, 
         "Pages": {
-            "type": "object",
+            "type": "object", 
             "properties": {
                 "configuration": {
                     "$ref": "#/definitions/ConfigurationPage"
-                },
+                }, 
                 "inputs": {
                     "$ref": "#/definitions/InputsPage"
                 }
-            },
+            }, 
             "additionalProperties": false
-        },
+        }, 
         "RegexValidator": {
-            "type": "object",
+            "type": "object", 
             "properties": {
                 "errorMsg": {
-                    "type": "string",
+                    "type": "string", 
                     "maxLength": 400
-                },
+                }, 
                 "type": {
-                    "type": "string",
+                    "type": "string", 
                     "enum": [
                         "regex"
                     ]
-                },
+                }, 
                 "pattern": {
                     "type": "string"
                 }
-            },
+            }, 
             "required": [
-                "type",
+                "type", 
                 "pattern"
-            ],
+            ], 
             "additionalProperties": false
-        },
+        }, 
         "StringValidator": {
-            "type": "object",
+            "type": "object", 
             "properties": {
                 "errorMsg": {
-                    "type": "string",
+                    "type": "string", 
                     "maxLength": 400
-                },
+                }, 
                 "type": {
-                    "type": "string",
+                    "type": "string", 
                     "enum": [
                         "string"
                     ]
-                },
+                }, 
                 "minLength": {
-                    "type": "number",
+                    "type": "number", 
                     "minimum": 0
-                },
+                }, 
                 "maxLength": {
-                    "type": "number",
+                    "type": "number", 
                     "minimum": 0
                 }
-            },
+            }, 
             "required": [
-                "type",
-                "minLength",
+                "type", 
+                "minLength", 
                 "maxLength"
-            ],
+            ], 
             "additionalProperties": false
-        },
+        }, 
         "TabContent": {
-            "type": "object",
+            "type": "object", 
             "properties": {
                 "entity": {
-                    "type": "array",
+                    "type": "array", 
                     "items": {
                         "$ref": "#/definitions/Entity"
                     }
-                },
+                }, 
                 "name": {
-                    "type": "string",
-                    "pattern": "^[\\/\\w]+$",
+                    "type": "string", 
+                    "pattern": "^[\\/\\w]+$", 
                     "maxLength": 250
-                },
+                }, 
                 "title": {
-                    "type": "string",
+                    "type": "string", 
                     "maxLength": 50
-                },
+                }, 
                 "options": {
                     "$ref": "#/definitions/Hooks"
-                },
+                }, 
                 "table": {
                     "$ref": "#/definitions/Table"
                 }
-            },
+            }, 
             "required": [
-                "entity",
-                "name",
+                "entity", 
+                "name", 
                 "title"
-            ],
+            ], 
             "additionalProperties": false
-        },
+        }, 
         "Table": {
-            "type": "object",
+            "type": "object", 
             "properties": {
                 "actions": {
-                    "type": "array",
+                    "type": "array", 
                     "items": {
-                        "type": "string",
+                        "type": "string", 
                         "enum": [
-                            "edit",
-                            "delete",
-                            "clone",
+                            "edit", 
+                            "delete", 
+                            "clone", 
                             "enable"
                         ]
                     }
-                },
+                }, 
                 "moreInfo": {
-                    "type": "array",
+                    "type": "array", 
                     "items": {
-                        "type": "object",
+                        "type": "object", 
                         "properties": {
-                            "label": {
-                                "type": "string",
-                                "maxLength": 30
-                            },
                             "field": {
-                                "type": "string",
+                                "type": "string", 
                                 "pattern": "^\\w+$"
+                            }, 
+                            "label": {
+                                "type": "string", 
+                                "maxLength": 30
                             }
-                        },
+                        }, 
                         "required": [
-                            "label",
-                            "field"
+                            "field", 
+                            "label"
                         ]
                     }
-                },
+                }, 
                 "header": {
-                    "type": "array",
+                    "type": "array", 
                     "items": {
-                        "type": "object",
+                        "type": "object", 
                         "properties": {
-                            "label": {
-                                "type": "string",
-                                "maxLength": 30
-                            },
                             "field": {
-                                "type": "string",
+                                "type": "string", 
                                 "pattern": "^\\w+$"
+                            }, 
+                            "label": {
+                                "type": "string", 
+                                "maxLength": 30
                             }
-                        },
+                        }, 
                         "required": [
-                            "label",
-                            "field"
+                            "field", 
+                            "label"
                         ]
                     }
                 }
-            },
+            }, 
             "required": [
-                "actions",
+                "actions", 
                 "header"
-            ],
+            ], 
             "additionalProperties": false
-        },
+        }, 
         "UrlValidator": {
-            "type": "object",
+            "type": "object", 
             "properties": {
                 "errorMsg": {
-                    "type": "string",
+                    "type": "string", 
                     "maxLength": 400
-                },
+                }, 
                 "type": {
-                    "type": "string",
+                    "type": "string", 
                     "enum": [
                         "url"
                     ]
                 }
-            },
+            }, 
             "required": [
                 "type"
-            ],
+            ], 
             "additionalProperties": false
-        },
+        }, 
         "ValueLabelPair": {
-            "type": "object",
+            "type": "object", 
             "properties": {
                 "value": {
-                    "type": "string",
-                    "pattern": "^\\w+$",
+                    "type": "string", 
+                    "pattern": "^\\w+$", 
                     "maxLength": 300
-                },
+                }, 
                 "label": {
-                    "type": "string",
+                    "type": "string", 
                     "maxLength": 150
                 }
-            },
+            }, 
             "required": [
-                "value",
+                "value", 
                 "label"
-            ],
+            ], 
             "additionalProperties": false
         }
-    },
-    "type": "object",
+    }, 
+    "type": "object", 
     "properties": {
         "meta": {
             "$ref": "#/definitions/Meta"
-        },
+        }, 
         "pages": {
             "$ref": "#/definitions/Pages"
         }
-    },
+    }, 
     "required": [
-        "meta",
+        "meta", 
         "pages"
-    ],
+    ], 
     "additionalProperties": false
 }

@@ -59,13 +59,15 @@ class Entity(DocumentWithoutAddProp):
     options = DictField(
         properties={
             "disableSearch": BooleanField(),
-            "autoCompleteFields": ArrayField(DictField(
-                properties={
-                    "label": StringField(required=True, max_length=150),
-                    "value": StringField(max_length=300, pattern="^\w+$"),
-                    "children": ArrayField(DocumentField(ValueLabelPair, as_ref=True))
-                }
-            )),
+            "autoCompleteFields": OneOfField([
+                ArrayField(DictField(
+                    properties={
+                        "label": StringField(required=True, max_length=150),
+                        "children": ArrayField(DocumentField(ValueLabelPair, as_ref=True), required=True)
+                    }
+                )),
+                ArrayField(DocumentField(ValueLabelPair, as_ref=True))
+            ]),
             "customizedUrl": StringField(max_length=350),
             "delimiter": StringField(max_length=30),
             "items": ArrayField(DocumentField(ValueLabelPair, as_ref=True)),
