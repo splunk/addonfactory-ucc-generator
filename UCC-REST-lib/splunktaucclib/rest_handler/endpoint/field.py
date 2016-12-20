@@ -2,7 +2,6 @@
 from __future__ import absolute_import
 
 from ..error import RestError
-from splunk.appserver.mrsparkle.lib import i18n
 
 
 __all = ['RestField']

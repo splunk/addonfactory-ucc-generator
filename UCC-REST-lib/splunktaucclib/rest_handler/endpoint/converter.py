@@ -6,7 +6,6 @@ from __future__ import absolute_import
 
 import base64
 import json
-from splunk.appserver.mrsparkle.lib import i18n
 
 __all__ = [
     'Converter',

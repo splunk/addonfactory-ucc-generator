@@ -15,7 +15,6 @@ from solnlib.splunk_rest_client import SplunkRestClient
 from .error import RestError
 from .entity import RestEntity
 from .credentials import RestCredentials
-from splunk.appserver.mrsparkle.lib import i18n
 
 
 __all__ = ['RestHandler']
