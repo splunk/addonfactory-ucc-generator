@@ -77,6 +77,7 @@ define([
         },
 
         _delete: function (delete_url) {
+            this.$("input[type=submit]").attr('disabled', true);
             $.ajax({
                 url: delete_url,
                 type: 'DELETE'
@@ -110,9 +111,11 @@ define([
                 }
                 this.$("[role=dialog]").modal('hide');
             }).fail((model, response) => {
-                removeWarningMsg('.modal-content');
-                addErrorMsg('.modal-content', response, true);
-                addClickListener('.modal-content', 'msg-error');
+                //Re-enable when failed
+                this.$("input[type=submit]").removeAttr('disabled');
+                removeWarningMsg('.modal-dialog');
+                addErrorMsg('.modal-dialog', response, true);
+                addClickListener('.modal-dialog', 'msg-error');
             });
         }
     });

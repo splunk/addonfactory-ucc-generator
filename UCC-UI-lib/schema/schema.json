@@ -82,7 +82,6 @@
                         "singleSelect",
                         "checkbox",
                         "multipleSelect",
-                        "password",
                         "radio"
                     ]
                 },

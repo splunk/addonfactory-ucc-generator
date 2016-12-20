@@ -22,3 +22,8 @@ a:focus {
 .table-caption {
     margin-top: 16px;
 }
+
+/*Prevent scroll in form*/
+.tab-content .modal-body {
+    max-height: none;
+}

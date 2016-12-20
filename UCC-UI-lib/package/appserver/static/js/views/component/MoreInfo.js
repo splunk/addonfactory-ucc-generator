@@ -16,7 +16,6 @@ define([
         },
 
         render: function () {
-            // TODO: Component shouldn't care about how these data are retrived.
             const {header, moreInfo} = this.options.model.component.table;
             const {entry} = this.options.model.entity;
 
@@ -26,14 +25,16 @@ define([
                 const {label, field} = m;
                 let value;
                 if (entry.content.attributes[field] != undefined) {
-                    value = String(entry.content.attributes[field]);
+                    value = entry.content.attributes[field];
                 } else {
-                    value = String(entry.attributes[field]);
+                    value = entry.attributes[field];
                 }
-                this.$('.list-dotted').append(_.template(`
-                    <dt><%- _(label).t() %></dt>
-                    <dd><%- value %></dd>
-                `)({label, value}));
+                if (value !== undefined) {
+                    this.$('.list-dotted').append(_.template(`
+                        <dt><%- _(label).t() %></dt>
+                        <dd><%- value %></dd>
+                        `)({label, value}));
+                }
             });
             return this;
         },

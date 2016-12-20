@@ -19,7 +19,7 @@ export default Backbone.View.extend({
 
         this.submitBtnId = options.submitBtnId;
         this.dataStore = options.dataStore;
-        this.msgContainerId = `${options.containerId} .modal-body`;
+        this.msgContainerId = `${options.containerId}`;
         options.dataStore.on('invalid', err => {
             displayValidationError(this.msgContainerId,  err);
             addClickListener(this.msgContainerId, 'msg-error');
@@ -53,7 +53,7 @@ export default Backbone.View.extend({
         this.dataStore.entry.content.set(this.stateModel.toJSON());
         this.dataStore.save(null, {
             success: () => removeSavingMsg(this.msgContainerId),
-            error: function (model, response) {
+            error: (model, response) => {
                 removeSavingMsg(this.msgContainerId);
                 addErrorMsg(this.msgContainerId, response, true);
                 addClickListener(this.msgContainerId, 'msg-error');
@@ -83,6 +83,12 @@ export default Backbone.View.extend({
                 _.extend(controlOptions, d.options);
                 const controlWrapper = new ControlWrapper({...d, controlOptions});
                 this.$('.modal-body').append(controlWrapper.render().$el);
+                // prevent auto complete for password
+                if (d.encrypted) {
+                    this.$('.modal-body').prepend(
+                        `<input type="password" id="${d.field}" style="display: none"/>`
+                    )
+                }
             });
         });
         this.$('input[type=submit]').on('click', this.saveData.bind(this));

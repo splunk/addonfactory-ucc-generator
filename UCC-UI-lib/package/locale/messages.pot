@@ -31,7 +31,7 @@ msgid "Field @field is not a valid regular expression"
 msgstr ""
 
 #: appserver/static/js/constants/messageDict.js:11
-msgid "Field @field should be in range [@start, @end]"
+msgid "Field @field should be within the range of [@start, @end]"
 msgstr ""
 
 #: appserver/static/js/constants/messageDict.js:12
@@ -47,19 +47,19 @@ msgid "@field is not a function"
 msgstr ""
 
 #: appserver/static/js/constants/messageDict.js:15
-msgid "@field is not a legal Regular Expression"
+msgid "@field is not a valid regular expression"
 msgstr ""
 
 #: appserver/static/js/constants/messageDict.js:16
-msgid "@field is not a legal number range"
+msgid "@field is not a valid number range"
 msgstr ""
 
 #: appserver/static/js/constants/messageDict.js:17
-msgid "@field1 @field2 is not legal as minimum and maximum length of a string"
+msgid "@field1 @field2 are not valid minimum and maximum values of string length"
 msgstr ""
 
 #: appserver/static/js/constants/messageDict.js:18
-msgid "Field @field does not match Regular Expression @regex"
+msgid "Field @field does not match regular expression @regex"
 msgstr ""
 
 #: appserver/static/js/constants/messageDict.js:19
@@ -75,7 +75,7 @@ msgid "Length of @field should be less than or equal to @max"
 msgstr ""
 
 #: appserver/static/js/constants/messageDict.js:22
-msgid "Field @field is not an valid @type"
+msgid "Field @field is not a valid @type"
 msgstr ""
 
 #: appserver/static/js/constants/messageDict.js:25
@@ -119,7 +119,7 @@ msgid "Failed to load index"
 msgstr ""
 
 #: appserver/static/js/constants/messageDict.js:43
-msgid "Error in an internal configuration file, it should be something wrong within the package or installation step. Contact your administrator for support. Detail: @detail"
+msgid "Internal configuration file error. Something wrong within the package or installation step. Contact your administrator for support. Detail: @detail"
 msgstr ""
 
 #: appserver/static/js/constants/messageDict.js:44

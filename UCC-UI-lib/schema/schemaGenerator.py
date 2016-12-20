@@ -49,7 +49,7 @@ class UrlValidator(ValidatorBase):
 class Entity(DocumentWithoutAddProp):
     field = StringField(required=True, pattern="^\w+$")
     label = StringField(required=True, max_length=30)
-    type = StringField(required=True, enum=["text", "singleSelect", "checkbox", "multipleSelect", "password", "radio"])
+    type = StringField(required=True, enum=["text", "singleSelect", "checkbox", "multipleSelect", "radio"])
     help = StringField(max_length=200)
     defaultValue = OneOfField([
         NumberField(),
