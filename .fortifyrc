@@ -1,0 +1,7 @@
+[fortify]
+project_name = SPLUNK-APPS
+project_template = Splunk Apps Project Template
+pythonpath =
+include = UCC-REST-builder/uccrestbuilder UCC-REST-lib/splunktaucclib UCC-UI-lib/package
+filetypes = *.js *.html *.xml *.py
+exclude =
