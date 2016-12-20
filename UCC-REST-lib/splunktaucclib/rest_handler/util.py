@@ -3,7 +3,6 @@ from __future__ import absolute_import
 import os.path
 
 from .error import RestError
-from splunk.appserver.mrsparkle.lib import i18n
 
 
 __all__ = [
