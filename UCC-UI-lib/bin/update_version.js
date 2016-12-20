@@ -4,7 +4,7 @@ var fs = require('fs')
 var path = require('path')
 
 var buildNum = process.env.BUILDNUMBER
-var gitBranch = process.GITBRANCH
+var gitBranch = process.env.GITBRANCH
 
 if (!buildNum || !gitBranch) {
   throw new Error('Could not get build number or git branch from bamboo env');
