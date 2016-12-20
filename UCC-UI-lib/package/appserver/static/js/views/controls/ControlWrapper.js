@@ -57,6 +57,8 @@ define([
                 if(this.control.setAutoCompleteFields) {
                     this.control.setAutoCompleteFields(dic, true);
                 }
+                // unset defaultValue if not in loading list
+                this.controlOptions.model.set(this.controlOptions.modelAttribute, '');
             });
         },
 
