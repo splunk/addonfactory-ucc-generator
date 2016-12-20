@@ -27,9 +27,9 @@ define([
             this.control = new controlType(this.controlOptions);
             this.listenTo(this.control, 'all', this.trigger);
 
-            const {referenceName, customizedUrl} = this.controlOptions;
-            if(referenceName || customizedUrl) {
-                this._loadSingleSelectReference(customizedUrl, referenceName);
+            const {referenceName, endpointUrl} = this.controlOptions;
+            if(referenceName || endpointUrl) {
+                this._loadSingleSelectReference(endpointUrl, referenceName);
             }
         },
 
@@ -39,12 +39,12 @@ define([
             }
         },
         // TODO: support more component loading content dynamically like this one
-        _loadSingleSelectReference: function(customizedUrl, referenceName) {
+        _loadSingleSelectReference: function(endpointUrl, referenceName) {
             let referenceCollectionInstance;
             if (!restEndpointMap[referenceName]) {
-                referenceCollectionInstance = generateCollection(referenceName, {customizedUrl});
+                referenceCollectionInstance = generateCollection(referenceName, {endpointUrl});
             } else {
-                referenceCollectionInstance = generateCollection('', {'customizedUrl': restEndpointMap[referenceName]});
+                referenceCollectionInstance = generateCollection('', {'endpointUrl': restEndpointMap[referenceName]});
             }
             const referenceDeferred = referenceCollectionInstance.fetch();
             referenceDeferred.done(() => {
