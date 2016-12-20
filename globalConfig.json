@@ -401,7 +401,8 @@
                             "type": "singleSelect",
                             "defaultValue": "default",
                             "options": {
-                                "customizedUrl": "data/indexes"
+                                "customizedUrl": "data/indexes",
+                                "blackList": "^_.*$"
                             },
                             "required": true
                         }

@@ -67,6 +67,8 @@ class Entity(DocumentWithoutAddProp):
                 }
             )),
             "customizedUrl": StringField(max_length=350),
+            "blackList": StringField(max_length=350),
+            "whiteList": StringField(max_length=350),
             "delimiter": StringField(max_length=30),
             "items": ArrayField(DocumentField(ValueLabelPair, as_ref=True)),
             "referenceName": StringField(max_length=250),

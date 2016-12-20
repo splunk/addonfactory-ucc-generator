@@ -29,7 +29,7 @@ define([
 
             const {referenceName, customizedUrl} = this.controlOptions;
             if(referenceName || customizedUrl) {
-                this._loadSingleSelectReference(customizedUrl, referenceName);
+                this._loadSelectReference(customizedUrl, referenceName);
             }
         },
 
@@ -39,7 +39,7 @@ define([
             }
         },
         // TODO: support more component loading content dynamically like this one
-        _loadSingleSelectReference: function(customizedUrl, referenceName) {
+        _loadSelectReference: function(customizedUrl, referenceName) {
             let referenceCollectionInstance;
             if (!restEndpointMap[referenceName]) {
                 referenceCollectionInstance = generateCollection(referenceName, {customizedUrl});
@@ -54,11 +54,21 @@ define([
                         value: model.entry.attributes.name
                     };
                 });
-                if (customizedUrl === 'data/indexes') {
-                    dic = this._filterInternalIndex(dic);
+                // filter result with white list
+                if (this.controlOptions.whiteList) {
+                    dic = this._filterByWhiteList(dic);
+                }
+                // filter result with black list
+                if (this.controlOptions.blackList) {
+                    dic = this._filterByBlackList(dic);
                 }
                 if(this.control.setAutoCompleteFields) {
+                    // set singleSelect selection list
                     this.control.setAutoCompleteFields(dic, true);
+                }
+                if(this.control.setItems) {
+                    // set multipleSelect selection list
+                    this.control.setItems(dic, true);
                 }
             });
         },
@@ -97,9 +107,29 @@ define([
             return BaseView.prototype.remove.apply(this, arguments);
         },
 
-        _filterInternalIndex: function(autoCompleteFields) {
-            return _.filter(autoCompleteFields, (autoCompleteField) => {
-                return !autoCompleteField.value.startsWith('_');
+        _filterByWhiteList: function(fields) {
+            let whiteRegex;
+            try {
+                whiteRegex = new RegExp(this.controlOptions.whiteList);
+            } catch(e) {
+                console.log("Invalid regex for option whiteList");
+                return fields;
+            }
+            return _.filter(fields, (field) => {
+                return whiteRegex.exec(field.value);
+            });
+        },
+
+        _filterByBlackList: function(fields) {
+            let blackRegex;
+            try {
+                blackRegex = new RegExp(this.controlOptions.blackList)
+            } catch(e) {
+                console.log("Invalid regex for option blackList");
+                return fields;
+            }
+            return _.filter(fields, (field) => {
+                return !blackRegex.exec(field.value);
             });
         },
 
