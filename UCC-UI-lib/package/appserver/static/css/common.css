@@ -100,7 +100,8 @@
 .modal-body .msg-loading {
     background-color: #d1e5c6;
 }
-.modal-body .msg-loading .msg-icon {
+.modal-body .msg-loading .msg-icon,
+.loading-msg-icon {
     background-image: url("../img/loading-24.gif");
     background-repeat: no-repeat;
     padding-left: 5px;
@@ -110,6 +111,12 @@
     width: 25px;
     height: 25px;
 }
+
+.loading-msg-icon {
+    margin: 20px auto;
+    float: none;
+}
+
 .modal-body .msg-loading div.msg-text {
     display: inline;
     float: left;
