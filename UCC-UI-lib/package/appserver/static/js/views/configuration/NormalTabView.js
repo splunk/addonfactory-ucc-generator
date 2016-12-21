@@ -19,7 +19,7 @@ export default Backbone.View.extend({
 
         this.submitBtnId = options.submitBtnId;
         this.dataStore = options.dataStore;
-        this.msgContainerId = `${options.containerId} .modal-body`;
+        this.msgContainerId = `${options.containerId}`;
         options.dataStore.on('invalid', err => {
             displayValidationError(this.msgContainerId,  err);
             addClickListener(this.msgContainerId, 'msg-error');

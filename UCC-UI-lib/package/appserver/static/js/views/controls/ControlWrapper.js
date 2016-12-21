@@ -38,10 +38,10 @@ define([
                 this.listenTo(this.collection, 'sync', () => {
                     switch (type) {
                         case 'singleSelect':
-                            this._updateleSingleSelect();
+                            this._updateleeSelect();
                             break;
                         case 'multipleSelect':
-                            this._updateleMultiSelect();
+                            this._updateleeSelect();
                             break;
                         default:
                     }
@@ -55,24 +55,29 @@ define([
             }
         },
 
-        _updateleSingleSelect: function() {
-            const dic = _.map(this.collection.models, model => ({
+        _updateleeSelect: function() {
+            let dic = _.map(this.collection.models, model => ({
                 label: model.entry.attributes.name,
                 value: model.entry.attributes.name
             }));
+            // filter result with white list
+            if (this.controlOptions.whiteList) {
+                dic = this._filterByWhiteList(dic);
+            }
+            // filter result with black list
+            if (this.controlOptions.blackList) {
+                dic = this._filterByBlackList(dic);
+            }
             if(this.control.setAutoCompleteFields) {
+                // set singleSelect selection list
                 this.control.setAutoCompleteFields(dic, true);
             }
-        },
-
-        _updateleMultiSelect: function() {
-            const dic = _.map(this.collection.models, model => ({
-                label: model.entry.attributes.name,
-                value: model.entry.attributes.name
-            }));
             if(this.control.setItems) {
-                this.control.setItems(dic, true);
+                // set multipleSelect selection list
+                this.control.setItems(dic, false);
             }
+            // unset defaultValue if not in loading list
+            this.controlOptions.model.set(this.controlOptions.modelAttribute, '');
         },
 
         validate: function() {
@@ -107,6 +112,32 @@ define([
                 this.$('.tooltip-link').tooltip('destroy');
             }
             return BaseView.prototype.remove.apply(this, arguments);
+        },
+
+        _filterByWhiteList: function(fields) {
+            let whiteRegex;
+            try {
+                whiteRegex = new RegExp(this.controlOptions.whiteList);
+            } catch(e) {
+                console.log("Invalid regex for option whiteList");
+                return fields;
+            }
+            return _.filter(fields, (field) => {
+                return whiteRegex.test(field.value);
+            });
+        },
+
+        _filterByBlackList: function(fields) {
+            let blackRegex;
+            try {
+                blackRegex = new RegExp(this.controlOptions.blackList)
+            } catch(e) {
+                console.log("Invalid regex for option blackList");
+                return fields;
+            }
+            return _.filter(fields, (field) => {
+                return !blackRegex.test(field.value);
+            });
         },
 
         template: `

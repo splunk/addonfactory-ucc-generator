@@ -12,7 +12,7 @@ export function addErrorMsg(containerSelector, text, needParse = false) {
     if ($(containerSelector + ' .msg-error').length) {
         $(containerSelector + ' .msg-text').text(text);
     } else {
-        $(containerSelector + '.modal-body')
+        $(containerSelector + ' .modal-body')
             .prepend(_.template(ErrorMsgTemplate)({msg: text}));
     }
 };
@@ -27,7 +27,7 @@ export function addSavingMsg(containerSelector, text) {
     if ($(containerSelector + ' .msg-loading').length) {
         $(containerSelector + ' .msg-text').text(text);
     } else {
-        $(containerSelector + '.modal-body')
+        $(containerSelector + ' .modal-body')
             .prepend(_.template(SavingMsgTemplate)({msg: text}));
     }
 };
@@ -42,7 +42,7 @@ export function addWarningMsg(containerSelector) {
     if ($(containerSelector + ' .msg-warning').length) {
         $(containerSelector + ' .msg-text').text(text);
     } else {
-        $(containerSelector + '.modal-body')
+        $(containerSelector + ' .modal-body')
             .prepend(_.template(WarningMsgTemplate)({msg: text}));
     }
 };
@@ -58,7 +58,9 @@ export function displayValidationError(containerSelector, {validationError}) {
     if ($(containerSelector + ' .msg-text').length) {
         $(containerSelector + ' .msg-text').text(validationError);
     } else {
-        $(containerSelector).prepend(_.template(ErrorMsgTemplate)({msg: validationError}));
+        $(containerSelector + ' .modal-body').prepend(
+            _.template(ErrorMsgTemplate)({msg: validationError})
+        );
     }
 };
 
@@ -74,20 +76,14 @@ function parseErrorMsg(data) {
     var error_msg = '', rsp, regex, msg, matches;
     try {
         rsp = JSON.parse(data.responseText);
-        regex = /In handler.+and output:\s+\'([\s\S]*)\'\.\s+See splunkd\.log for stderr output\./;
+        regex = /.+"REST Error \[[\d]+\]:\s+.+\s+--\s+([\s\S]*)"\.\s*See splunkd\.log for more details\./;
         msg = String(rsp.messages[0].text);
         matches = regex.exec(msg);
-        if (!matches || !matches[1]) {
-            // try to extract another one
-            regex = /In handler[^:]+:\s+(.*)/;
-            matches = regex.exec(msg);
-            if (!matches || !matches[1]) {
-                matches = [msg];
-            }
+        if (matches && matches[1]) {
+            error_msg = matches[1];
         }
-        error_msg = matches[1];
     } catch (err) {
-        error_msg = 'ERROR in processing the request';
+        error_msg = 'Error in processing the request';
     }
-    return (error_msg || '').replace(/Splunk Add-on REST Handler ERROR\[\d{1,6}\]\: /, '');
+    return error_msg;
 }

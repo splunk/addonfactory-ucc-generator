@@ -57,8 +57,8 @@ if __name__ == '__main__':
     def generate_rh(self, handler):
         entity = self._entities[0]
         return self._rh_template.format(
-            handler_module=handler.__module__,
-            handler_name=handler.__name__,
+            handler_module=handler.module,
+            handler_name=handler.name,
             entity=entity.generate_rh(),
             conf_name=self.name,
         )

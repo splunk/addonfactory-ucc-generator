@@ -7,7 +7,6 @@ from __future__ import absolute_import
 import re
 import json
 from inspect import isfunction
-from splunk.appserver.mrsparkle.lib import i18n
 
 
 __all__ = [
