@@ -59,8 +59,8 @@ if __name__ == '__main__':
         models = ['model' + entity.name_rh for entity in self._entities]
         models_lines = ', \n'.join(models)
         return self._rh_template.format(
-            handler_module=handler.__module__,
-            handler_name=handler.__name__,
+            handler_module=handler.module,
+            handler_name=handler.name,
             entities='\n'.join(entities),
             models=indent(models_lines, 2),
             conf_name=self.name,
