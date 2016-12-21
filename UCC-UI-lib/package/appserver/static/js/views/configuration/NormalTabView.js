@@ -97,7 +97,7 @@ export default Backbone.View.extend({
                 if (d.encrypted) {
                     this.$('.modal-body').prepend(
                         `<input type="password" id="${d.field}" style="display: none"/>`
-                    )
+                    );
                 }
             });
             this.refCollectionList = refCollectionList;

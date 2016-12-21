@@ -8,12 +8,12 @@ import ButtonTemplate from 'app/templates/common/ButtonTemplate.html';
 import {fetchServiceCollections, combineCollection} from 'app/util/backboneHelpers';
 import {getFormattedMessage} from 'app/util/messageUtil';
 
-
 export default Backbone.View.extend({
     initialize: function (options) {
         this.containerId = options.containerId;
         this.submitBtnId = options.submitBtnId;
         this.props = options.props;
+        this.dataStore = options.dataStore;
 
         this.stateModel = new Backbone.Model({
             sortKey: 'name',
@@ -23,7 +23,6 @@ export default Backbone.View.extend({
             fetching: true
         });
 
-        this.dataStore = options.dataStore;
 
         this.listenTo(this.stateModel, 'change:search change:sortDirection change:sortKey', _.debounce(() => {
             this.fetchListCollection(this.dataStore, this.stateModel);
@@ -45,7 +44,7 @@ export default Backbone.View.extend({
             {props, servicesDeferred, serviceCollectionMap} = this,
             deferred = this.fetchListCollection(this.dataStore, this.stateModel);
 
-        const renderTab = (refCollection) => {
+        const renderTab = () => {
             const caption = new CaptionView({
                 countLabel: getFormattedMessage(107),
                 model: {
@@ -61,9 +60,7 @@ export default Backbone.View.extend({
                 collection: this.dataStore,
                 showActions: true,
                 enableMoreInfo: props.table.moreInfo ? true : false,
-                component: props,
-                refTargetField: props.name,
-                refCollection
+                component: props
             });
 
             this.$el.append(caption.render().$el);
@@ -78,13 +75,14 @@ export default Backbone.View.extend({
                     isInput: false
                 }).render().modal();
             });
-        }
+        };
 
         deferred.done(() => {
             if (servicesDeferred) {
                 servicesDeferred.done(() => {
                     const combinedCollection = combineCollection(serviceCollectionMap);
-                    renderTab(combinedCollection);
+                    setCollectionRefCount(this.dataStore, combinedCollection, props.name);
+                    renderTab();
                 });
             } else {
                 renderTab();
@@ -109,3 +107,15 @@ export default Backbone.View.extend({
         });
     }
 });
+
+function setCollectionRefCount(collection, refCollection, refTargetField) {
+    collection.models.forEach(model => {
+        let count = 0;
+        refCollection.models.forEach(d => {
+            if (model.entry.attributes.name === d.entry.content.attributes[refTargetField]) {
+                count++;
+            }
+        });
+        model.entry.content.attributes.refCount = count;
+    });
+}
