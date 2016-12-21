@@ -89,6 +89,8 @@ define([
                         model.paging.set('total', model.paging.get('total') - 1);
                     });
                     this.collection.reset(this.collection.models);
+                    //Trigger collection page change event to refresh the count in table caption
+                    this.collection.paging.set('total', this.collection.models.length);
                 } else {
                     var offset = this.stateModel.get('offset'),
                         count = this.stateModel.get('count');
