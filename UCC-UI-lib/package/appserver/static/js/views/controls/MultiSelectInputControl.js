@@ -1,10 +1,12 @@
 define([
     'views/shared/controls/Control',
     'splunk.util',
+    'lodash',
     'select2/select2'
 ], function (
     Control,
-    splunkUtils
+    splunkUtils,
+    _
 ) {
     /**
      *
@@ -48,7 +50,10 @@ define([
         },
 
         setItems: function (items, render) {
-            render = render || true;
+            if (_.isEqualWith(this.options.items, items, (a, b) => _.isEqual(a, b))) {
+                return;
+            }
+            render = render === undefined ? true : render;
             this.options.items = items;
             if (render) {
                 this.render();

@@ -29,7 +29,21 @@ define([
 
             const {referenceName, endpointUrl} = this.controlOptions;
             if(referenceName || endpointUrl) {
-                this._loadSelectReference(endpointUrl, referenceName);
+                if (!restEndpointMap[referenceName]) {
+                    this.collection = generateCollection(referenceName, {endpointUrl});
+                } else {
+                    this.collection = generateCollection('', {'endpointUrl': restEndpointMap[referenceName]});
+                }
+                this.collection.fetch();
+                // unset defaultValue if not in loading list
+                if (type === 'singleSelect' || type === 'multipleSelect') {
+                    this.controlOptions.model.set(this.controlOptions.modelAttribute, '');
+                }
+                this.listenTo(this.collection, 'sync', () => {
+                    if (type === 'singleSelect' || type === 'multipleSelect') {
+                        this._updateleeSelect();
+                    }
+                });
             }
         },
 
@@ -38,41 +52,28 @@ define([
                 e.preventDefault();
             }
         },
-        // TODO: support more component loading content dynamically like this one
-        _loadSelectReference: function(endpointUrl, referenceName) {
-            let referenceCollectionInstance;
-            if (!restEndpointMap[referenceName]) {
-                referenceCollectionInstance = generateCollection(referenceName, {endpointUrl});
-            } else {
-                referenceCollectionInstance = generateCollection('', {'endpointUrl': restEndpointMap[referenceName]});
+
+        _updateleeSelect: function() {
+            let dic = _.map(this.collection.models, model => ({
+                label: model.entry.attributes.name,
+                value: model.entry.attributes.name
+            }));
+            // filter result with white list
+            if (this.controlOptions.whiteList) {
+                dic = this._filterByWhiteList(dic);
             }
-            const referenceDeferred = referenceCollectionInstance.fetch();
-            referenceDeferred.done(() => {
-                let dic = _.map(referenceCollectionInstance.models, model => {
-                    return {
-                        label: model.entry.attributes.name,
-                        value: model.entry.attributes.name
-                    };
-                });
-                // filter result with white list
-                if (this.controlOptions.whiteList) {
-                    dic = this._filterByWhiteList(dic);
-                }
-                // filter result with black list
-                if (this.controlOptions.blackList) {
-                    dic = this._filterByBlackList(dic);
-                }
-                if(this.control.setAutoCompleteFields) {
-                    // set singleSelect selection list
-                    this.control.setAutoCompleteFields(dic, true);
-                }
-                if(this.control.setItems) {
-                    // set multipleSelect selection list
-                    this.control.setItems(dic, true);
-                }
-                // unset defaultValue if not in loading list
-                this.controlOptions.model.set(this.controlOptions.modelAttribute, '');
-            });
+            // filter result with black list
+            if (this.controlOptions.blackList) {
+                dic = this._filterByBlackList(dic);
+            }
+            if(this.control.setAutoCompleteFields) {
+                // set singleSelect selection list
+                this.control.setAutoCompleteFields(dic, true);
+            }
+            if(this.control.setItems) {
+                // set multipleSelect selection list
+                this.control.setItems(dic, true);
+            }
         },
 
         validate: function() {

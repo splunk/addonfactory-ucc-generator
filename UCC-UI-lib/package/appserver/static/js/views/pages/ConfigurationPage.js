@@ -15,6 +15,13 @@ define([
     TabTemplate
 ) {
     return Backbone.View.extend({
+        initialize: function(options) {
+            const {unifiedConfig: {pages: {configuration}}} = configManager;
+            this.stateModel = new Backbone.Model({
+                selectedTabId: this._generateTabId(configuration.tabs)
+            });
+        },
+
         render: function () {
             const {unifiedConfig: {pages: {configuration}}} = configManager;
 
@@ -35,7 +42,8 @@ define([
                     $('.nav-tabs li').removeClass('active');
                     $('#' + this.tabName + '-li').parent().addClass('active');
                     $('.tab-content div').removeClass('active');
-                    $('#' + params + '-tab').addClass('active');
+                    $(`#${params}-tab`).addClass('active');
+                    this.stateModel.set('selectedTabId', `#${params}-tab`);
                 }
             });
             var router = new Router();
@@ -51,24 +59,38 @@ define([
             };
         },
 
+        _generateTabToken(tabs, title) {
+            const token = (title || tabs[0].title).toLowerCase().replace(/\s/g, '-');
+
+            return token;
+        },
+
+        _generateTabId(tabs, title) {
+            if (!title) {
+                title = tabs[0].title;
+            }
+            const tabId = `#${this._generateTabToken(tabs, title)}-tab`;
+
+            return tabId;
+        },
+
         _parseTabs({tabs}) {
             return tabs.map((d, i) => {
                 const {title} = d,
                     token = title.toLowerCase().replace(/\s/g, '-'),
                     viewType = CustomizedTabView;
 
-                if(viewType) {
-                    const view = new viewType({
-                        containerId: `#${token}-tab`,
-                        props: d
-                    });
-                    return {
-                        active: i === 0,
-                        title,
-                        token,
-                        view
-                    };
-                }
+                const view = new CustomizedTabView({
+                    containerId: this._generateTabId(tabs, title),
+                    pageState: this.stateModel,
+                    props: d
+                });
+                return {
+                    active: i === 0,
+                    title,
+                    token: this._generateTabToken(tabs, title),
+                    view
+                };
             }).filter(d => !!d);
         },
 
@@ -94,7 +116,7 @@ define([
                 }
                 $(".nav-tabs").append(_.template(tabTitleTemplate)({title, token, active}));
                 $(".tab-content").append(_.template(tabContentTemplate)({token, active}));
-                $(`#${token}-tab`).html(view.render().$el);
+                $(this._generateTabId(tabs, title)).html(view.render().$el);
             });
         }
     });
