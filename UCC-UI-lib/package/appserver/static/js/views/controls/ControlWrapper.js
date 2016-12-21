@@ -27,23 +27,21 @@ define([
             this.control = new controlType(this.controlOptions);
             this.listenTo(this.control, 'all', this.trigger);
 
-            const {referenceName, customizedUrl} = this.controlOptions;
-            if(referenceName || customizedUrl) {
+            const {referenceName, endpointUrl} = this.controlOptions;
+            if(referenceName || endpointUrl) {
                 if (!restEndpointMap[referenceName]) {
-                    this.collection = generateCollection(referenceName, {customizedUrl});
+                    this.collection = generateCollection(referenceName, {endpointUrl});
                 } else {
-                    this.collection = generateCollection('', {'customizedUrl': restEndpointMap[referenceName]});
+                    this.collection = generateCollection('', {'endpointUrl': restEndpointMap[referenceName]});
                 }
                 this.collection.fetch();
+                // unset defaultValue if not in loading list
+                if (type === 'singleSelect' || type === 'multipleSelect') {
+                    this.controlOptions.model.set(this.controlOptions.modelAttribute, '');
+                }
                 this.listenTo(this.collection, 'sync', () => {
-                    switch (type) {
-                        case 'singleSelect':
-                            this._updateleeSelect();
-                            break;
-                        case 'multipleSelect':
-                            this._updateleeSelect();
-                            break;
-                        default:
+                    if (type === 'singleSelect' || type === 'multipleSelect') {
+                        this._updateleeSelect();
                     }
                 });
             }
@@ -74,10 +72,8 @@ define([
             }
             if(this.control.setItems) {
                 // set multipleSelect selection list
-                this.control.setItems(dic, false);
+                this.control.setItems(dic, true);
             }
-            // unset defaultValue if not in loading list
-            this.controlOptions.model.set(this.controlOptions.modelAttribute, '');
         },
 
         validate: function() {
