@@ -1,4 +1,4 @@
-export function setCollectionRefCount(collection, refCollectionList, refTargetField) {
+export function setCollectionRefCount(collection, refCollectionList, configModelList, refTargetField) {
     collection.models.forEach(model => {
         let count = 0;
         refCollectionList.forEach(collection => {

@@ -35,10 +35,7 @@ define([
                     this.collection = generateCollection('', {'endpointUrl': restEndpointMap[referenceName]});
                 }
                 this.collection.fetch();
-                // unset defaultValue if not in loading list
-                if (type === 'singleSelect' || type === 'multipleSelect') {
-                    this.controlOptions.model.set(this.controlOptions.modelAttribute, '');
-                }
+
                 this.listenTo(this.collection, 'sync', () => {
                     if (type === 'singleSelect' || type === 'multipleSelect') {
                         this._updateSelect();
@@ -73,6 +70,12 @@ define([
             if(this.control.setItems) {
                 // set multipleSelect selection list
                 this.control.setItems(dic, true);
+            }
+
+            // unset defaultValue if not in loading list
+            const existingValue = this.controlOptions.model.get(this.controlOptions.modelAttribute);
+            if (dic.every(d => d.value !== existingValue)) {
+                this.controlOptions.model.set(this.controlOptions.modelAttribute, '');
             }
         },
 

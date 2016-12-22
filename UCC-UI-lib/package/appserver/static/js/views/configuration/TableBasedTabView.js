@@ -5,7 +5,7 @@ import CaptionView from 'views/shared/tablecaption/Master';
 import Table from 'app/views/component/Table';
 import EntityDialog from 'app/views/component/EntityDialog';
 import ButtonTemplate from 'app/templates/common/ButtonTemplate.html';
-import {fetchServiceCollections} from 'app/util/backboneHelpers';
+import {fetchServiceCollections, fetchConfigurationModels} from 'app/util/backboneHelpers';
 import {setCollectionRefCount} from 'app/util/dependencyChecker';
 import {getFormattedMessage} from 'app/util/messageUtil';
 
@@ -34,7 +34,16 @@ export default Backbone.View.extend({
             collectionList: serviceCollectionList
         } = fetchServiceCollections();
 
-        _.extend(this, {servicesDeferred, serviceCollectionList});
+        const {
+            deferred: configDeferred,
+            modelList: configModelList
+        } = fetchConfigurationModels();
+
+        _.extend(this, {
+            entitiesDeferred: $.when(configDeferred, servicesDeferred),
+            serviceCollectionList,
+            configModelList
+        });
     },
 
     render: function () {
@@ -42,7 +51,7 @@ export default Backbone.View.extend({
                 buttonId: this.submitBtnId,
                 buttonValue: 'Add'
             },
-            {props, servicesDeferred, serviceCollectionList} = this,
+            {props, entitiesDeferred, serviceCollectionList, configModelList} = this,
             deferred = this.fetchListCollection(this.dataStore, this.stateModel);
 
         const renderTab = () => {
@@ -79,9 +88,9 @@ export default Backbone.View.extend({
         };
 
         deferred.done(() => {
-            if (servicesDeferred) {
-                servicesDeferred.done(() => {
-                    setCollectionRefCount(this.dataStore, serviceCollectionList, props.name);
+            if (entitiesDeferred) {
+                entitiesDeferred.done(() => {
+                    setCollectionRefCount(this.dataStore, serviceCollectionList, configModelList, props.name);
                     renderTab();
                 });
             } else {

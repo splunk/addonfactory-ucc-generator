@@ -77,7 +77,21 @@ export function fetchServiceCollections() {
 
 export function fetchConfigurationModels() {
     //TODO: fetch all models in collection, and checke refs
-    const {unifiedConfig: {pages: {configuration}}} = configManager;
+    const {unifiedConfig: {pages: {configuration: {tabs}}}} = configManager;
+    const modelList = [];
+
+    tabs.forEach(d => {
+        const isNoramlTab = !d.table;
+
+        if (isNoramlTab) {
+            modelList.push(new (generateModel('settings', {
+                modelName: d.name,
+                fields: d.entity
+            }))({name: d.name}));
+        }
+    });
+    const calls = modelList.map(d => d.fetch());
+    return {deferred: $.when(...calls), modelList};
 }
 
 function fetchListCollection(collection) {
