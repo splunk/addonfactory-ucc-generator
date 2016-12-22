@@ -116,7 +116,7 @@ define([
                 //Re-enable when failed
                 this.$("input[type=submit]").removeAttr('disabled');
                 removeWarningMsg('.modal-dialog');
-                addErrorMsg('.modal-dialog', response, true);
+                addErrorMsg('.modal-dialog', model, true);
                 addClickListener('.modal-dialog', 'msg-error');
             });
         }
