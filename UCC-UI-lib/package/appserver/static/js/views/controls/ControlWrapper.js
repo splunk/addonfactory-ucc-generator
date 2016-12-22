@@ -41,7 +41,7 @@ define([
                 }
                 this.listenTo(this.collection, 'sync', () => {
                     if (type === 'singleSelect' || type === 'multipleSelect') {
-                        this._updateleeSelect();
+                        this._updateSelect();
                     }
                 });
             }
@@ -53,7 +53,7 @@ define([
             }
         },
 
-        _updateleeSelect: function() {
+        _updateSelect: function() {
             let dic = _.map(this.collection.models, model => ({
                 label: model.entry.attributes.name,
                 value: model.entry.attributes.name

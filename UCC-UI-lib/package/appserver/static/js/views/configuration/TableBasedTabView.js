@@ -5,7 +5,8 @@ import CaptionView from 'views/shared/tablecaption/Master';
 import Table from 'app/views/component/Table';
 import EntityDialog from 'app/views/component/EntityDialog';
 import ButtonTemplate from 'app/templates/common/ButtonTemplate.html';
-import {fetchServiceCollections, combineCollection} from 'app/util/backboneHelpers';
+import {fetchServiceCollections} from 'app/util/backboneHelpers';
+import {setCollectionRefCount} from 'app/util/dependencyChecker';
 import {getFormattedMessage} from 'app/util/messageUtil';
 
 export default Backbone.View.extend({
@@ -30,10 +31,10 @@ export default Backbone.View.extend({
 
         const {
             deferred: servicesDeferred,
-            collectionMap: serviceCollectionMap
+            collectionList: serviceCollectionList
         } = fetchServiceCollections();
 
-        _.extend(this, {servicesDeferred, serviceCollectionMap});
+        _.extend(this, {servicesDeferred, serviceCollectionList});
     },
 
     render: function () {
@@ -41,7 +42,7 @@ export default Backbone.View.extend({
                 buttonId: this.submitBtnId,
                 buttonValue: 'Add'
             },
-            {props, servicesDeferred, serviceCollectionMap} = this,
+            {props, servicesDeferred, serviceCollectionList} = this,
             deferred = this.fetchListCollection(this.dataStore, this.stateModel);
 
         const renderTab = () => {
@@ -80,8 +81,7 @@ export default Backbone.View.extend({
         deferred.done(() => {
             if (servicesDeferred) {
                 servicesDeferred.done(() => {
-                    const combinedCollection = combineCollection(serviceCollectionMap);
-                    setCollectionRefCount(this.dataStore, combinedCollection, props.name);
+                    setCollectionRefCount(this.dataStore, serviceCollectionList, props.name);
                     renderTab();
                 });
             } else {
@@ -107,15 +107,3 @@ export default Backbone.View.extend({
         });
     }
 });
-
-function setCollectionRefCount(collection, refCollection, refTargetField) {
-    collection.models.forEach(model => {
-        let count = 0;
-        refCollection.models.forEach(d => {
-            if (model.entry.attributes.name === d.entry.content.attributes[refTargetField]) {
-                count++;
-            }
-        });
-        model.entry.content.attributes.refCount = count;
-    });
-}

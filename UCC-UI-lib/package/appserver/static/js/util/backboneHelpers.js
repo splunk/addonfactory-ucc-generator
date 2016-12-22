@@ -53,6 +53,7 @@ export function generateCollection(name, options = {}) {
     });
 }
 
+// TODO: check whether the collection & models is needed by using referenceName and targetFields
 export function fetchServiceCollections() {
     const {unifiedConfig: {pages: {inputs}}} = configManager;
     // User may only sepecified config for configuration page.
@@ -60,18 +61,23 @@ export function fetchServiceCollections() {
         return {};
     }
     const {services} = inputs,
-        collectionMap = {};
+        collectionList = [];
 
     services.forEach(({name}) => {
-        collectionMap[name] = generateCollection(
+        collectionList.push(generateCollection(
             restEndpointMap[name] ? '' : name,
             {endpointUrl: restEndpointMap[name]}
-        );
+        ));
     });
 
-    const calls = services.map(({name}) => fetchListCollection(collectionMap[name]));
+    const calls = collectionList.map(d => fetchListCollection(d));
 
-    return {deferred: $.when(...calls), collectionMap};
+    return {deferred: $.when(...calls), collectionList};
+}
+
+export function fetchConfigurationModels() {
+    //TODO: fetch all models in collection, and checke refs
+    const {unifiedConfig: {pages: {configuration}}} = configManager;
 }
 
 function fetchListCollection(collection) {
@@ -84,12 +90,4 @@ function fetchListCollection(collection) {
             search: ''
         }
     });
-}
-
-export function combineCollection(collectionMap) {
-    const tempCollection = generateCollection();
-    Object.keys(collectionMap).forEach(d => {
-        tempCollection.add(collectionMap[d].models, {silent: true});
-    });
-    return tempCollection;
 }
