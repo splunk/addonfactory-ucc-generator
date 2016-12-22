@@ -63,7 +63,7 @@ export default Backbone.View.extend({
     },
 
     render: function() {
-        this.$el.html('<div class="loading-msg-icon"></div>');
+        this.$el.html(`<div class="loading-msg-icon">${getFormattedMessage(115)}</div>`);
         this.dataStore.fetch().done(() => {
             this.$el.html(_.template(NormalTabViewTemplate)({buttonId: this.submitBtnId}));
             const {content} = this.dataStore.entry;

@@ -115,6 +115,8 @@
 .loading-msg-icon {
     margin: 20px auto;
     float: none;
+    text-align: right;
+    width: 70px;
 }
 
 .modal-body .msg-loading div.msg-text {

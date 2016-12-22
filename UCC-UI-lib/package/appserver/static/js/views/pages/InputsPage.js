@@ -212,7 +212,7 @@ define([
         },
 
         render: function () {
-            this.$el.html('<div class="loading-msg-icon"></div>');
+            this.$el.html(`<div class="loading-msg-icon">${getFormattedMessage(115)}</div>`);
             this.deferred.done(() => {
                 this.$el.html('');
                 this.stateModel.set('fetching', false);
