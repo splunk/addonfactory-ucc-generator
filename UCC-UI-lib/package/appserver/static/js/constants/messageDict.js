@@ -20,6 +20,7 @@ export default {
     17: 'Length of {{args[0]}} should be greater than or equal to {{args[1]}}',
     18: 'Length of {{args[0]}} should be less than or equal to {{args[1]}}',
     19: 'Field {{args[0]}} is not a valid {{args[1]}}',
+    20: 'configuration file should be pure JSON.',
 
     /* general messages, range [100, 499]*/
     100: 'Create New Input',
@@ -45,7 +46,7 @@ export default {
     112: 'email address',
     113: 'IPV4 address',
     114: 'date in ISO 8601 format',
-    115: 'configuration file should be pure JSON.',
+    115: 'Loading',
 
     '__unknow__': 'An unknown error occurred'
 }

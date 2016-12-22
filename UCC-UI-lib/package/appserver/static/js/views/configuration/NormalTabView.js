@@ -12,6 +12,7 @@ import {
 } from 'app/util/promptMsgController';
 import {parseFuncRawStr} from 'app/util/script';
 import {getFormattedMessage} from 'app/util/messageUtil';
+import LoadingMsgTemplate from 'app/templates/messages/LoadingMsg.html';
 
 export default Backbone.View.extend({
     initialize: function(options) {
@@ -68,9 +69,9 @@ export default Backbone.View.extend({
     },
 
     render: function() {
-        this.$el.html(_.template(NormalTabViewTemplate)({buttonId: this.submitBtnId}));
-
+        this.$el.html(`<div class="loading-msg-icon">${getFormattedMessage(115)}</div>`);
         this.dataStore.fetch().done(() => {
+            this.$el.html(_.template(NormalTabViewTemplate)({buttonId: this.submitBtnId}));
             const {content} = this.dataStore.entry;
             const {entity, name} = this.props;
             const refCollectionList = [];

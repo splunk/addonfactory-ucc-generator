@@ -45,7 +45,9 @@ export default Backbone.View.extend({
             {props, servicesDeferred, serviceCollectionMap} = this,
             deferred = this.fetchListCollection(this.dataStore, this.stateModel);
 
+        this.$el.html(`<div class="loading-msg-icon">${getFormattedMessage(115)}</div>`);
         const renderTab = (refCollection) => {
+            this.$el.html('');
             const caption = new CaptionView({
                 countLabel: getFormattedMessage(107),
                 model: {
