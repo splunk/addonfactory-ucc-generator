@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import _ from 'lodash';
 import {configManager} from 'app/util/configManager';
 import BaseModel from 'app/models/Base.Model';
 import BaseCollection from 'app/collections/ProxyBase.Collection';
@@ -53,45 +54,34 @@ export function generateCollection(name, options = {}) {
     });
 }
 
-// TODO: check whether the collection & models is needed by using referenceName and targetFields
 export function fetchServiceCollections() {
     const {unifiedConfig: {pages: {inputs}}} = configManager;
-    // User may only sepecified config for configuration page.
     if (!inputs) {
         return {};
     }
     const {services} = inputs,
-        collectionList = [];
+        collectionObjList = [];
 
-    services.forEach(({name}) => {
-        collectionList.push(generateCollection(
-            restEndpointMap[name] ? '' : name,
-            {endpointUrl: restEndpointMap[name]}
-        ));
-    });
+    services.forEach(service => {
+        const {name, entity} = service;
+        const dependencyList = entity
+            .filter(d => _.get(d, ['options', 'referenceName']))
+            .map(({field, options: {referenceName}}) => ({targetField: field, referenceName}));
 
-    const calls = collectionList.map(d => fetchListCollection(d));
-
-    return {deferred: $.when(...calls), collectionList};
-}
-
-export function fetchConfigurationModels() {
-    //TODO: fetch all models in collection, and checke refs
-    const {unifiedConfig: {pages: {configuration: {tabs}}}} = configManager;
-    const modelList = [];
-
-    tabs.forEach(d => {
-        const isNoramlTab = !d.table;
-
-        if (isNoramlTab) {
-            modelList.push(new (generateModel('settings', {
-                modelName: d.name,
-                fields: d.entity
-            }))({name: d.name}));
+        if (dependencyList.length) {
+            collectionObjList.push({
+                value: generateCollection(
+                    restEndpointMap[name] ? '' : name,
+                    {endpointUrl: restEndpointMap[name]}
+                ),
+                dependencyList
+            });
         }
     });
-    const calls = modelList.map(d => d.fetch());
-    return {deferred: $.when(...calls), modelList};
+
+    const calls = collectionObjList.map(({value}) => fetchListCollection(value));
+
+    return {deferred: $.when(...calls), collectionObjList};
 }
 
 function fetchListCollection(collection) {
@@ -104,4 +94,35 @@ function fetchListCollection(collection) {
             search: ''
         }
     });
+}
+
+export function fetchConfigurationModels() {
+    const {unifiedConfig: {pages: {configuration: {tabs}}}} = configManager;
+
+    if (!tabs) {
+        return {};
+    }
+    const modelObjList = [];
+
+    tabs.forEach(d => {
+        const isNoramlTab = !d.table;
+
+        if (isNoramlTab) {
+            const {name, entity} = d;
+            const dependencyList = entity
+                .filter(d => _.get(d, ['options', 'referenceName']))
+                .map(({field, options: {referenceName}}) => ({targetField: field, referenceName}));
+
+            modelObjList.push({
+                value: new (generateModel('settings', {
+                    modelName: name,
+                    fields: entity
+                }))({name}),
+                dependencyList
+            });
+        }
+    });
+
+    const calls = modelObjList.map(({value}) => value.fetch());
+    return {deferred: $.when(...calls), modelObjList};
 }

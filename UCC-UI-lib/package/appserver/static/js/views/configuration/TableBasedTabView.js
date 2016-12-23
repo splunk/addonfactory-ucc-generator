@@ -31,18 +31,24 @@ export default Backbone.View.extend({
 
         const {
             deferred: servicesDeferred,
-            collectionList: serviceCollectionList
+            collectionObjList: serviceCollectionObjList
         } = fetchServiceCollections();
 
         const {
             deferred: configDeferred,
-            modelList: configModelList
+            modelObjList: configModelObjList
         } = fetchConfigurationModels();
 
+        // servicesDeferred may not exist
+        const defferedList = [configDeferred];
+        if (servicesDeferred) {
+            defferedList.push(servicesDeferred);
+        }
+
         _.extend(this, {
-            entitiesDeferred: $.when(configDeferred, servicesDeferred),
-            serviceCollectionList,
-            configModelList
+            entitiesDeferred: $.when(...defferedList),
+            serviceCollectionObjList,
+            configModelObjList
         });
     },
 
@@ -51,7 +57,7 @@ export default Backbone.View.extend({
                 buttonId: this.submitBtnId,
                 buttonValue: 'Add'
             },
-            {props, entitiesDeferred, serviceCollectionList, configModelList} = this,
+            {props, entitiesDeferred, serviceCollectionObjList, configModelObjList} = this,
             deferred = this.fetchListCollection(this.dataStore, this.stateModel);
 
         const renderTab = () => {
@@ -90,7 +96,7 @@ export default Backbone.View.extend({
         deferred.done(() => {
             if (entitiesDeferred) {
                 entitiesDeferred.done(() => {
-                    setCollectionRefCount(this.dataStore, serviceCollectionList, configModelList, props.name);
+                    setCollectionRefCount(this.dataStore, serviceCollectionObjList, configModelObjList, props.name);
                     renderTab();
                 });
             } else {
