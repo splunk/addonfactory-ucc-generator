@@ -5,7 +5,7 @@ import CaptionView from 'views/shared/tablecaption/Master';
 import Table from 'app/views/component/Table';
 import EntityDialog from 'app/views/component/EntityDialog';
 import ButtonTemplate from 'app/templates/common/ButtonTemplate.html';
-import {fetchServiceCollections, fetchConfigurationModels} from 'app/util/backboneHelpers';
+import {fetchRefCollections, fetchConfigurationModels} from 'app/util/backboneHelpers';
 import {setCollectionRefCount} from 'app/util/dependencyChecker';
 import {getFormattedMessage} from 'app/util/messageUtil';
 
@@ -32,7 +32,7 @@ export default Backbone.View.extend({
         const {
             deferred: servicesDeferred,
             collectionObjList: serviceCollectionObjList
-        } = fetchServiceCollections();
+        } = fetchRefCollections(options.props.name);
 
         const {
             deferred: configDeferred,

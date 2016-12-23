@@ -54,16 +54,24 @@ export function generateCollection(name, options = {}) {
     });
 }
 
-export function fetchServiceCollections() {
-    const {unifiedConfig: {pages: {inputs}}} = configManager;
-    if (!inputs) {
+export function fetchRefCollections(fetcherName) {
+    const {
+        unifiedConfig: {pages: {inputs, configuration: {tabs}}}
+    } = configManager;
+    if (!inputs && !tabs) {
         return {};
     }
-    const {services} = inputs,
-        collectionObjList = [];
+    const collectionObjList = [];
+    const refCollections = _.get(inputs, 'services') ? inputs.services : [];
+    tabs.forEach(d => {
+        const isTableBasedView = !!d.table;
+        if (d.name !== fetcherName && isTableBasedView) {
+            refCollections.push(d);
+        }
+    });
 
-    services.forEach(service => {
-        const {name, entity} = service;
+    refCollections.forEach(collections => {
+        const {name, entity} = collections;
         const dependencyList = entity
             .filter(d => _.get(d, ['options', 'referenceName']))
             .map(({field, options: {referenceName}}) => ({targetField: field, referenceName}));
