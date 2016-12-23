@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import _ from 'lodash';
 import Backbone from 'backbone';
 import NormalTabViewTemplate from 'app/views/configuration/NormalTabViewTemplate.html';
@@ -12,7 +13,6 @@ import {
 } from 'app/util/promptMsgController';
 import {parseFuncRawStr} from 'app/util/script';
 import {getFormattedMessage} from 'app/util/messageUtil';
-import LoadingMsgTemplate from 'app/templates/messages/LoadingMsg.html';
 
 export default Backbone.View.extend({
     initialize: function(options) {
@@ -71,7 +71,9 @@ export default Backbone.View.extend({
     render: function() {
         this.$el.html(`<div class="loading-msg-icon">${getFormattedMessage(115)}</div>`);
         this.dataStore.fetch().done(() => {
-            this.$el.html(_.template(NormalTabViewTemplate)({buttonId: this.submitBtnId}));
+            const tabContentDOMObj = $(_.template(NormalTabViewTemplate)({buttonId: this.submitBtnId}));
+            tabContentDOMObj.find('input[type=submit]').on('click', this.saveData.bind(this));
+            this.$el.html(tabContentDOMObj);
             const {content} = this.dataStore.entry;
             const {entity, name} = this.props;
             const refCollectionList = [];
@@ -98,12 +100,11 @@ export default Backbone.View.extend({
                 if (d.encrypted) {
                     this.$('.modal-body').prepend(
                         `<input type="password" id="${d.field}" style="display: none"/>`
-                    )
+                    );
                 }
             });
             this.refCollectionList = refCollectionList;
         });
-        this.$('input[type=submit]').on('click', this.saveData.bind(this));
 
         return this;
     }
