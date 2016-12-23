@@ -1,9 +1,11 @@
 define([
     'lodash',
-    'views/Base'
+    'views/Base',
+    'app/util/Util'
 ], function (
     _,
-    BaseView
+    BaseView,
+    Util
 ) {
     return BaseView.extend({
         tagName: 'tr',
@@ -29,9 +31,9 @@ define([
                 } else {
                     value = entry.attributes[field];
                 }
-                // built-in formater for field 'disabled' in UCC 3.0
+                // built-in formater for field 'disabled'
                 if (field === 'disabled') {
-                    value = value ? 'Disabled' : 'Enabled';
+                    value = _(Util.formatDisabled(value)).t();
                 }
                 if (value !== undefined) {
                     this.$('.list-dotted').append(_.template(`

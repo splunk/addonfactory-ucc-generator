@@ -65,6 +65,19 @@ define(function () {
         guid: function guid() {
             return parseInt(new Date() - 0).toString();
         },
+
+        formatDisabled: function(val) {
+            const trueList = ['true', 't', '1', 'yes', 'y'];
+            const falseList = ['false', 'f', '0', 'no', 'n'];
+            if (val !== undefined) {
+                if (trueList.indexOf(String(val)) > -1) {
+                    return 'Disabled';
+                } else if (falseList.indexOf(String(val)) > -1) {
+                    return 'Enabled';
+                }
+            }
+            return '';
+        }
     };
 
 });

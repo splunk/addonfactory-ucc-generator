@@ -5,6 +5,7 @@ define([
     'backbone',
     'views/Base',
     'app/views/component/EditMenu',
+    'app/util/Util',
     'views/shared/controls/ControlGroup',
     'views/shared/controls/SyntheticCheckboxControl'
 ], function (
@@ -13,6 +14,7 @@ define([
     Backbone,
     BaseView,
     EditMenu,
+    Util,
     ControlGroup,
     SyntheticCheckboxControl
 ) {
@@ -121,16 +123,21 @@ define([
                 let fieldValue, html;
                 switch (h.field) {
                     case 'name':
-                        fieldValue = this.model.entity.entry.attributes[h.field];
+                        fieldValue = this.model.entity.entry.attributes.name;
                         html = '<td class="col-name">' + fieldValue + '</td>';
                         break;
                     case 'disabled':
-                        fieldValue = this.model.entity.entry.content.attributes[h.field] ?
-                            'Disabled' : 'Enabled'
+                        fieldValue = _(Util.formatDisabled(
+                            this.model.entity.entry.content.attributes.disabled
+                        )).t();
                         html = '<td class="col-status">' + fieldValue + '</td>';
                         break;
                     default:
-                        fieldValue = String(this.model.entity.entry.content.attributes[h.field]);
+                        if (this.model.entity.entry.content.attributes[h.field] !== undefined) {
+                            fieldValue = String(this.model.entity.entry.content.attributes[h.field]);
+                        } else {
+                            fieldValue = '';
+                        }
                         html = '<td  class="col-' + h.field + '">' + fieldValue + '</td>';
                 }
                 this.$el.append(_.template(html));
