@@ -17,7 +17,7 @@ export function loadGlobalConfig(callback, errorHandler) {
                 if (err.name === 'SyntaxError') {
                     new ErrorDialog({
                         el: $('.dialog-placeholder'),
-                        msg: getFormattedMessage(110, getFormattedMessage(115))
+                        msg: getFormattedMessage(110, getFormattedMessage(20))
                     }).render().modal();
                 } else {
                     console.error(err);
