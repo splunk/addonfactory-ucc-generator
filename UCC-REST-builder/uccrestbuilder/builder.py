@@ -17,7 +17,7 @@ _Lib = collections.namedtuple('_Lib', ('name', 'version'))
 
 # requirements 3rd libs in built add-on
 __requirements__ = (
-    _Lib(name='solnlib', version='1.0.15'),
+    _Lib(name='solnlib', version='1.0.16-dev'),
     _Lib(name='splunk-sdk', version='1.6.0'),
     _Lib(name='splunktaucclib', version='3.0.0'),
 )
