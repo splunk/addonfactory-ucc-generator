@@ -29,11 +29,16 @@ define([
                 } else {
                     value = entry.attributes[field];
                 }
+                // built-in formater for field 'disabled' in UCC 3.0
+                if (field === 'disabled') {
+                    value = value ? 'Disabled' : 'Enabled';
+                }
                 if (value !== undefined) {
                     this.$('.list-dotted').append(_.template(`
                         <dt><%- _(label).t() %></dt>
                         <dd><%- value %></dd>
-                        `)({label, value}));
+                        `)({label, value})
+                    );
                 }
             });
             return this;

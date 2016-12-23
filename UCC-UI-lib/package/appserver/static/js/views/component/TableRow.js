@@ -118,23 +118,28 @@ define([
 
             var header = this.component.table.header;
             _.each(header, h => {
-                if (h.field === "name") {
-                    let fieldValue = this.model.entity.entry.attributes[h.field];
-                    let html = '<td class="col-name">' + fieldValue + '</td>';
-                    this.$el.append(_.template(html));
-                } else if (h.field === "service") {
-                    let fieldValue = this.model.entity.entry.content.attributes[h.field];
-                    let html = '<td class="col-service">' + fieldValue + '</td>';
-                    this.$el.append(_.template(html));
-                } else {
-                    let fieldValue = String(this.model.entity.entry.content.attributes[h.field]);
-                    let html = '<td  class="col-' + h.field + '">' + fieldValue + '</td>';
-                    this.$el.append(_.template(html));
+                let fieldValue, html;
+                switch (h.field) {
+                    case 'name':
+                        fieldValue = this.model.entity.entry.attributes[h.field];
+                        html = '<td class="col-name">' + fieldValue + '</td>';
+                        break;
+                    case 'disabled':
+                        fieldValue = this.model.entity.entry.content.attributes[h.field] ?
+                            'Disabled' : 'Enabled'
+                        html = '<td class="col-status">' + fieldValue + '</td>';
+                        break;
+                    default:
+                        fieldValue = String(this.model.entity.entry.content.attributes[h.field]);
+                        html = '<td  class="col-' + h.field + '">' + fieldValue + '</td>';
                 }
+                this.$el.append(_.template(html));
             });
 
             if (this.showActions) {
-                this.$el.append('<td class="actions col-actions"><a class="dropdown-toggle" href="#">' + _("Action").t() + '<span class="caret"></span></a></td>');
+                this.$el.append(
+                    '<td class="actions col-actions"><a class="dropdown-toggle" href="#">' +
+                    _("Action").t() + '<span class="caret"></span></a></td>');
             }
             if (this.model.entity.entry.attributes.name) {
                 this.$el.addClass('row-' + this.model.entity.entry.attributes.name);
