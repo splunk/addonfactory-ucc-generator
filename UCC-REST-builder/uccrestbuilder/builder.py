@@ -3,24 +3,12 @@ from __future__ import absolute_import
 
 import os
 import os.path as op
-import collections
-
 from .rest_conf import RestmapConf, WebConf
 
 __all__ = [
     'RestBuilderError',
-    'RestBuilder',
+    'RestBuilder'
 ]
-
-
-_Lib = collections.namedtuple('_Lib', ('name', 'version'))
-
-# requirements 3rd libs in built add-on
-__requirements__ = (
-    _Lib(name='solnlib', version='1.0.16-dev'),
-    _Lib(name='splunk-sdk', version='1.6.0'),
-    _Lib(name='splunktaucclib', version='3.0.0'),
-)
 
 
 class RestBuilderError(Exception):
@@ -87,10 +75,6 @@ class RestBuilder(object):
         )
 
     @property
-    def requirements(self):
-        return __requirements__
-
-    @property
     def restmap_admin(self):
         return self._schema.namespace
 
@@ -129,11 +113,5 @@ class RestBuilder(object):
             self.output.default,
             'web.conf',
             WebConf.build(self._schema.endpoints),
-        )
-        reqs = [req.name + '==' + req.version for req in self.requirements]
-        self.output.put(
-            self.output.bin,
-            'requirements.txt',
-            '\n'.join(reqs)
         )
         self.output.save()

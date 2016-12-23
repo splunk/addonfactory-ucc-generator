@@ -1,2 +1,2 @@
-solnlib==1.0.16-dev
+solnlib>=1.0.16-dev
 splunk-sdk==1.6.0
