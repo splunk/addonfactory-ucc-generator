@@ -96,7 +96,7 @@ define([
                     this.model.unset("refCount");
                 }
                 this.cloneName = options.model.entry.get("name");
-                this.real_model = new InputType({
+                this.real_model = new InputType(null, {
                     appData: this.appData,
                     collection: this.collection
                 });
