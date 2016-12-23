@@ -19,7 +19,7 @@ fs.readFile(path.join(ROOT, 'package.json'), 'utf8', function(err, data) {
 
   var meta = JSON.parse(data.toString());
   var newVersion = meta.version + '-' + gitBranch + '.' + buildNum;
-  meta.version = newVersion
+  meta.version = newVersion;
 
   fs.writeFile(path.join(ROOT, 'package.json'), JSON.stringify(meta), function (err) {
     if (err) {
