@@ -76,6 +76,8 @@ define([
             const existingValue = this.controlOptions.model.get(this.controlOptions.modelAttribute);
             if (dic.every(d => d.value !== existingValue)) {
                 this.controlOptions.model.set(this.controlOptions.modelAttribute, '');
+            } else {
+                this.control.setValue(existingValue, false);
             }
         },
 
