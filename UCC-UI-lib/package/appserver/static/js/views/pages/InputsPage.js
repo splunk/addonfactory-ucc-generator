@@ -61,20 +61,23 @@ define([
                 if (!restEndpointMap[service.name]) {
                     this[service.name] = generateCollection(service.name);
                 } else {
-                    this[service.name] = generateCollection('', {'endpointUrl': restEndpointMap[service.name]});
+                    this[service.name] = generateCollection(
+                        '',
+                        {'endpointUrl': restEndpointMap[service.name]}
+                    );
                 }
             });
             this.dispatcher = _.extend({}, Backbone.Events);
 
             //Change filter
-            this.listenTo(this.dispatcher, 'filter-change', function (type) {
+            this.listenTo(this.dispatcher, 'filter-change', (type) => {
                 this.filterChange(type, this.stateModel);
-            }.bind(this));
+            });
 
             //Delete input
-            this.listenTo(this.dispatcher, 'delete-input', function () {
+            this.listenTo(this.dispatcher, 'delete-input', () => {
                 var all_deferred = this.fetchAllCollection();
-                all_deferred.done(function () {
+                all_deferred.done(() => {
                     var offset = this.stateModel.get('offset'),
                         count = this.stateModel.get('count'),
                         models;
@@ -85,20 +88,20 @@ define([
                     this.inputs.paging.set('perPage', count);
                     this.inputs.paging.set('total', this.cachedSearchInputs.length);
                     models = this.cachedSearchInputs.models.slice(offset, offset + count);
-                    _.each(models, function (model) {
+                    _.each(models, (model) => {
                         model.paging.set('offset', offset);
                         model.paging.set('perPage', count);
                         model.paging.set('total', this.cachedSearchInputs.length);
-                    }.bind(this));
+                    });
                     this.inputs.reset(models);
                     this.inputs._url = undefined;
-                }.bind(this));
-            }.bind(this));
+                });
+            });
 
             //Add input with offset change
-            this.listenTo(this.dispatcher, 'add-input', function () {
+            this.listenTo(this.dispatcher, 'add-input', () => {
                 var all_deferred = this.fetchAllCollection();
-                all_deferred.done(function () {
+                all_deferred.done(() => {
                     var offset = this.stateModel.get('offset'),
                         count = this.stateModel.get('count'),
                         models;
@@ -109,15 +112,15 @@ define([
                     this.inputs.paging.set('perPage', count);
                     this.inputs.paging.set('total', this.cachedSearchInputs.length);
                     models = this.cachedSearchInputs.models.slice(offset, offset + count);
-                    _.each(models, function (model) {
+                    _.each(models, (model) => {
                         model.paging.set('offset', offset);
                         model.paging.set('perPage', count);
                         model.paging.set('total', this.cachedSearchInputs.length);
-                    }.bind(this));
+                    });
                     this.inputs.reset(models);
                     this.inputs._url = undefined;
-                }.bind(this));
-            }.bind(this));
+                });
+            });
 
             //Change sort
             this.listenTo(this.stateModel, 'change:sortDirection change:sortKey', _.debounce(function () {
@@ -172,7 +175,7 @@ define([
                     this.inputs._url = undefined;
                 } else {
                     all_deferred = this.fetchAllCollection();
-                    all_deferred.done(function () {
+                    all_deferred.done(() => {
                         var offset = this.stateModel.get('offset'),
                             count = this.stateModel.get('count');
                         this.cachedInputs = this.combineCollection();
@@ -181,23 +184,26 @@ define([
                         this.inputs.paging.set('perPage', count);
                         this.inputs.paging.set('total', this.cachedSearchInputs.length);
                         models = this.cachedSearchInputs.models.slice(offset, offset + count);
-                        _.each(models, function (model) {
+                        _.each(models, (model) => {
                             model.paging.set('offset', offset);
                             model.paging.set('perPage', count);
                             model.paging.set('total', this.cachedSearchInputs.length);
-                        }.bind(this));
+                        });
                         this.inputs.reset(models);
                         this.inputs._url = undefined;
-                    }.bind(this));
+                    });
                 }
             } else {
                 deferred = this.fetchListCollection(this[type], this.stateModel);
-                deferred.done(function () {
+                deferred.done(() => {
                     const service = this.services.find(d => d.name === type);
                     if (!restEndpointMap[service.name]) {
                         this.inputs.model = generateModel(service.name);
                     } else {
-                        this.inputs.model = generateModel('', {'endpointUrl': restEndpointMap[service.name]});
+                        this.inputs.model = generateModel(
+                            '',
+                            {'endpointUrl': restEndpointMap[service.name]}
+                        );
                     }
                     this.inputs._url = this[type]._url;
                     this.inputs.reset(this[type].models);
@@ -207,7 +213,7 @@ define([
                     this.inputs.paging.set('offset', offset);
                     this.inputs.paging.set('perPage', count);
                     this.inputs.paging.set('total', this[type].paging.get('total'));
-                }.bind(this));
+                });
             }
         },
 
@@ -315,12 +321,11 @@ define([
             var rawSearch = '', searchString = '';
             if (stateModel.get('search')) {
                 searchString = stateModel.get('search');
-                //make the filter work for field 'service' and 'status'
-                rawSearch = searchString.substring(searchString.indexOf('*') + 1, searchString.indexOf('*', searchString.indexOf('*') + 1)).toLowerCase();
-                if (collection._url.indexOf("ta_crowdstrike_falcon_host_inputs") > -1 && "falcon host".indexOf(rawSearch) > -1 ) {
-                    searchString = this.emptySearchString;
-                }
-
+                //make the filter work for field 'status'
+                rawSearch = searchString.substring(
+                    searchString.indexOf('*') + 1,
+                    searchString.indexOf('*', searchString.indexOf('*') + 1)
+                ).toLowerCase();
                 if ("disabled".indexOf(rawSearch) > -1) {
                     searchString += ' OR (disabled="*1*")';
                 }else if ("enabled".indexOf(rawSearch) > -1) {
@@ -337,9 +342,9 @@ define([
                     count: stateModel.get('count'),
                     offset: stateModel.get('offset')
                 },
-                success: function () {
+                success: () => {
                     stateModel.set('fetching', false);
-                }.bind(this)
+                }
             });
         },
 
@@ -371,11 +376,11 @@ define([
                 this.inputs.paging.set('offset', offset);
                 this.inputs.paging.set('perPage', count);
                 this.inputs.paging.set('total', result.length);
-                _.each(result, function (model) {
+                _.each(result, (model) => {
                     model.paging.set('offset', offset);
                     model.paging.set('perPage', count);
                     model.paging.set('total', result.length);
-                }.bind(this));
+                });
                 this.cachedSearchInputs.reset(result);
 
                 const newPageStateModel = new Backbone.Model({
@@ -390,25 +395,25 @@ define([
 
             } else {
                 all_deferred = this.fetchAllCollection();
-                all_deferred.done(function () {
+                all_deferred.done(() => {
                     this.cachedInputs = this.combineCollection();
                     this.cachedSearchInputs = this.combineCollection();
                     this.inputs.paging.set('offset', offset);
                     this.inputs.paging.set('perPage', count);
                     this.inputs.paging.set('total', this.cachedSearchInputs.length);
                     models = this.cachedSearchInputs.models.slice(offset, offset + count);
-                    _.each(models, function (model) {
+                    _.each(models, (model) => {
                         model.paging.set('offset', offset);
                         model.paging.set('perPage', count);
                         model.paging.set('total', this.cachedSearchInputs.length);
-                    }.bind(this));
+                    });
                     this.inputs.reset(models);
                     this.inputs._url = undefined;
 
                     if (this.stateModel.get('search') !== this.emptySearchString) {
                         this.searchCollection(this.stateModel);
                     }
-                }.bind(this));
+                });
             }
         },
 
@@ -422,11 +427,11 @@ define([
             this.inputs.paging.set('total', this.cachedSearchInputs.length);
             models = this.cachedSearchInputs.models.slice(offset, offset + count);
 
-            _.each(models, function (model) {
+            _.each(models, (model) => {
                 model.paging.set('offset', offset);
                 model.paging.set('perPage', count);
                 model.paging.set('total', this.cachedSearchInputs.length);
-            }.bind(this));
+            });
             this.inputs.reset(models);
         },
 
@@ -443,23 +448,23 @@ define([
                     b.entry.get(sortKey) || b.entry.content.get(sortKey),
                 sortDir);
 
-            allDeferred.done(function () {
+            allDeferred.done(() => {
                 this.cachedInputs = this.combineCollection();
-            this.cachedSearchInputs = this.combineCollection();
+                this.cachedSearchInputs = this.combineCollection();
                 this.inputs.paging.set('offset', offset);
                 this.inputs.paging.set('perPage', count);
                 this.inputs.paging.set('total', this.cachedSearchInputs.length);
 
                 this.cachedSearchInputs.models.sort(handler);
                 var models = this.cachedSearchInputs.models.slice(offset, offset + count);
-                _.each(models, function (model) {
+                _.each(models, (model) => {
                     model.paging.set('offset', offset);
                     model.paging.set('perPage', count);
                     model.paging.set('total', this.cachedSearchInputs.length);
-                }.bind(this));
+                });
                 this.inputs.reset(models);
                 this.inputs._url = undefined;
-            }.bind(this));
+            });
         }
     });
 });

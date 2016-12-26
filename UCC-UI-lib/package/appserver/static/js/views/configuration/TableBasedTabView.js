@@ -55,7 +55,7 @@ export default Backbone.View.extend({
                 },
                 collection: this.dataStore,
                 noFilterButtons: true,
-                filterKey: _.map(props.entity, e => e.name)
+                filterKey: _.map(props.entity, e => e.field)
             });
 
             const table = new Table({
