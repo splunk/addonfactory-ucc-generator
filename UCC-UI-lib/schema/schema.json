@@ -112,7 +112,7 @@
                         }, 
                         "delimiter": {
                             "type": "string", 
-                            "maxLength": 30
+                            "maxLength": 1
                         }, 
                         "enable": {
                             "type": "boolean"

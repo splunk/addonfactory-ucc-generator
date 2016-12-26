@@ -38,6 +38,7 @@
         "copyConfig": "cp ../globalConfig.json ./build/appserver/static/js/build/globalConfig.json",
         "test": "karma start ./config/karma/karma.conf.js",
         "watchSchemaGenerator": "nodemon --exec python schema/schemaGenerator.py --watch schema/schemaGenerator.py",
+        "generateSchema": "python schema/schemaGenerator.py",
         "setupXML": "node viewXmlSetup.js",
         "start": "npm run setupXML && npm run copyConfig"
     },
