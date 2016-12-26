@@ -1,7 +1,7 @@
 The UCC REST builder is used to created the REST handler based on pre-defined configuration file.
 
 Requirements:
-solnlib 1.0.15
+solnlib 1.0.16-dev
 splunklib 1.6.0
 splunktaucclib 3.0.0
 uccrestbuilder 3.0.0
