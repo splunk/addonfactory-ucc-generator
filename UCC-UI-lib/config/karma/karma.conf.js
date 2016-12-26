@@ -13,6 +13,7 @@ module.exports = function (config) {
     frameworks: ['mocha'],
 
     files: [
+      '../../testes/polyfills/i18n.js',
       '../../node_modules/phantomjs-polyfill/bind-polyfill.js',
       './tests.webpack.js'
     ],

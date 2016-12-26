@@ -18,25 +18,11 @@ define([
         initialize: function (options) {
             this.stateModel = options.stateModel;
             this.collection = options.collection;
-            this.refCollection = options.refCollection;
             this.enableBulkActions = options.enableBulkActions;
             this.enableMoreInfo = options.enableMoreInfo;
             this.showActions = options.showActions;
             this.dispatcher = options.dispatcher;
             this.component = options.component;
-
-            if (this.refCollection !== undefined) {
-                const {refTargetField} = options;
-                this.collection.models.forEach(model => {
-                    let count = 0;
-                    this.refCollection.models.forEach(d => {
-                        if (model.entry.attributes.name === d.entry.content.attributes[refTargetField]) {
-                            count++;
-                        }
-                    });
-                    model.entry.content.attributes.refCount = count;
-                });
-            }
 
             //Expand the detail row
             this.children.tableRowToggle = new TableRowToggleView({el: this.el, collapseOthers: true });

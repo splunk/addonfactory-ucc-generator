@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import _ from 'lodash';
 import {configManager} from 'app/util/configManager';
 import BaseModel from 'app/models/Base.Model';
 import BaseCollection from 'app/collections/ProxyBase.Collection';
@@ -53,25 +54,42 @@ export function generateCollection(name, options = {}) {
     });
 }
 
-export function fetchServiceCollections() {
-    const {unifiedConfig: {pages: {inputs}}} = configManager;
-    // User may only sepecified config for configuration page.
-    if (!inputs) {
+export function fetchRefCollections(fetcherName) {
+    const {
+        unifiedConfig: {pages: {inputs, configuration: {tabs}}}
+    } = configManager;
+    if (!inputs && !tabs) {
         return {};
     }
-    const {services} = inputs,
-        collectionMap = {};
-
-    services.forEach(({name}) => {
-        collectionMap[name] = generateCollection(
-            restEndpointMap[name] ? '' : name,
-            {endpointUrl: restEndpointMap[name]}
-        );
+    const collectionObjList = [];
+    const refCollections = _.get(inputs, 'services') ? inputs.services : [];
+    tabs.forEach(d => {
+        const isTableBasedView = !!d.table;
+        if (d.name !== fetcherName && isTableBasedView) {
+            refCollections.push(d);
+        }
     });
 
-    const calls = services.map(({name}) => fetchListCollection(collectionMap[name]));
+    refCollections.forEach(collections => {
+        const {name, entity} = collections;
+        const dependencyList = entity
+            .filter(d => _.get(d, ['options', 'referenceName']))
+            .map(({field, options: {referenceName}}) => ({targetField: field, referenceName}));
 
-    return {deferred: $.when(...calls), collectionMap};
+        if (dependencyList.length) {
+            collectionObjList.push({
+                value: generateCollection(
+                    restEndpointMap[name] ? '' : name,
+                    {endpointUrl: restEndpointMap[name]}
+                ),
+                dependencyList
+            });
+        }
+    });
+
+    const calls = collectionObjList.map(({value}) => fetchListCollection(value));
+
+    return {deferred: $.when(...calls), collectionObjList};
 }
 
 function fetchListCollection(collection) {
@@ -86,10 +104,33 @@ function fetchListCollection(collection) {
     });
 }
 
-export function combineCollection(collectionMap) {
-    const tempCollection = generateCollection();
-    Object.keys(collectionMap).forEach(d => {
-        tempCollection.add(collectionMap[d].models, {silent: true});
+export function fetchConfigurationModels() {
+    const {unifiedConfig: {pages: {configuration: {tabs}}}} = configManager;
+
+    if (!tabs) {
+        return {};
+    }
+    const modelObjList = [];
+
+    tabs.forEach(d => {
+        const isNoramlTab = !d.table;
+
+        if (isNoramlTab) {
+            const {name, entity} = d;
+            const dependencyList = entity
+                .filter(d => _.get(d, ['options', 'referenceName']))
+                .map(({field, options: {referenceName}}) => ({targetField: field, referenceName}));
+
+            modelObjList.push({
+                value: new (generateModel('settings', {
+                    modelName: name,
+                    fields: entity
+                }))({name}),
+                dependencyList
+            });
+        }
     });
-    return tempCollection;
+
+    const calls = modelObjList.map(({value}) => value.fetch());
+    return {deferred: $.when(...calls), modelObjList};
 }
