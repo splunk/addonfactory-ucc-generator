@@ -160,12 +160,15 @@ function validatorFactory(validatorInfo, label) {
             if (error) {
                 return error;
             }
-            const strLength = this.entry.content.get(attr).length;
 
-            if(strLength > maxLength)
+            // Treat field without sepcified value as empty string
+            let str = this.entry.content.get(attr);
+            str = str === undefined ? '' : str;
+
+            if(str.length > maxLength)
                 return errorMsg ? errorMsg :
                     getFormattedMessage(18, label, maxLength);
-            if(strLength < minLength)
+            if(str.length < minLength)
                 return errorMsg ? errorMsg :
                     getFormattedMessage(17, label, minLength);
         };
