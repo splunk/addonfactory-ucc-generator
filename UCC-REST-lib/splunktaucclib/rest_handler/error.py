@@ -3,7 +3,6 @@ Error Handling.
 """
 
 from __future__ import absolute_import
-from splunk.appserver.mrsparkle.lib import i18n
 
 __all__ = ['STATUS_CODES', 'RestError']
 

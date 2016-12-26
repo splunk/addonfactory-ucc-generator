@@ -53,6 +53,8 @@ class AdminExternalHandler(admin.MConfigHandler):
     endpoint = None
 
     def __init__(self, scriptMode, ctxInfo, request=None):
+        # use classic inheritance to be compatible for
+        # old version of Splunk private SDK
         admin.MConfigHandler.__init__(
             self,
             scriptMode,

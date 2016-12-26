@@ -318,27 +318,6 @@ sys.path = new_paths
     def third_path(self):
         return self.schema.namespace
 
-    def requirements(self):
-        third_path = op.join(
-            self.root_path,
-            self.builder.output.bin,
-            self.third_path(),
-        )
-        os.makedirs(third_path)
-        shutil.move(
-            op.join(
-                self.root_path,
-                self.builder.output.bin,
-                'requirements.txt',
-            ),
-            op.join(
-                self.root_path,
-                self.builder.output.bin,
-                self.third_path(),
-                'requirements.txt',
-            ),
-        )
-
     def default_to_local(self):
         default_dir = op.join(
             self.root_path,
@@ -405,5 +384,4 @@ sys.path = new_paths
                 endpoint.rh_name + '.py'
             )
             self.import_declare(rh_file)
-        self.requirements()
         self.default_to_local()

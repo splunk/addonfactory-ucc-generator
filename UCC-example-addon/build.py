@@ -5,7 +5,6 @@ import os
 import subprocess
 from StringIO import StringIO
 
-from splunktaucclib.rest_handler.admin_external import AdminExternalHandler
 from uccrestbuilder.global_config import GlobalConfigBuilderSchema, GlobalConfigPostProcessor
 from uccrestbuilder import build
 
@@ -91,7 +90,7 @@ def clean_before_build():
 def generate_rest():
     build(
         scheme,
-        AdminExternalHandler,
+        'splunktaucclib.rest_handler.admin_external.AdminExternalHandler',
         os.path.join('.', 'output', ta_name),
         post_process=GlobalConfigPostProcessor(),
         import_declare_name=import_declare_name

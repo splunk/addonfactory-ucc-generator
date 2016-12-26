@@ -64,11 +64,11 @@ define([
 
             const {entity, name, options: comOpt} = this.component;
             const validators = generateValidators(entity);
-            const customizedUrl = restEndpointMap[name];
-            const InputType = generateModel(customizedUrl ? '' : this.component.name, {
+            const endpointUrl = restEndpointMap[name];
+            const InputType = generateModel(endpointUrl ? '' : this.component.name, {
                 modelName: name,
                 fields: entity,
-                customizedUrl,
+                endpointUrl,
                 formDataValidatorRawStr: comOpt ? comOpt.saveValidator : undefined,
                 onLoadRawStr: comOpt ? comOpt.onLoad : undefined,
                 validators
@@ -96,7 +96,7 @@ define([
                     this.model.unset("refCount");
                 }
                 this.cloneName = options.model.entry.get("name");
-                this.real_model = new InputType({
+                this.real_model = new InputType(null, {
                     appData: this.appData,
                     collection: this.collection
                 });

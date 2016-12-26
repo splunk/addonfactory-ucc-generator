@@ -165,13 +165,15 @@ function validatorFactory(validatorInfo, label) {
                 return error;
             }
             const val = Number(this.entry.content.get(attr));
-            if(Number.isNaN(val))
+            if(Number.isNaN(val)) {
                 return errorMsg ? errorMsg :
                     getFormattedMessage(16, label);
+            }
 
-            if(val > range[1] || val < range[0])
-            return errorMsg ? errorMsg :
-                getFormattedMessage(8, label, range[0], range[1]);
+            if(val > range[1] || val < range[0]) {
+                return errorMsg ? errorMsg :
+                    getFormattedMessage(8, label, range[0], range[1]);
+            }
         };
     }
 
@@ -182,12 +184,15 @@ function validatorFactory(validatorInfo, label) {
             if (error) {
                 return error;
             }
-            const strLength = this.entry.content.get(attr).length;
 
-            if(strLength > maxLength)
+            // Treat field without sepcified value as empty string
+            let str = this.entry.content.get(attr);
+            str = str === undefined ? '' : str;
+
+            if(str.length > maxLength)
                 return errorMsg ? errorMsg :
                     getFormattedMessage(18, label, maxLength);
-            if(strLength < minLength)
+            if(str.length < minLength)
                 return errorMsg ? errorMsg :
                     getFormattedMessage(17, label, minLength);
         };

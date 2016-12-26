@@ -5,15 +5,16 @@ import CaptionView from 'views/shared/tablecaption/Master';
 import Table from 'app/views/component/Table';
 import EntityDialog from 'app/views/component/EntityDialog';
 import ButtonTemplate from 'app/templates/common/ButtonTemplate.html';
-import {fetchServiceCollections, combineCollection} from 'app/util/backboneHelpers';
+import {fetchRefCollections, fetchConfigurationModels} from 'app/util/backboneHelpers';
+import {setCollectionRefCount} from 'app/util/dependencyChecker';
 import {getFormattedMessage} from 'app/util/messageUtil';
-
 
 export default Backbone.View.extend({
     initialize: function (options) {
         this.containerId = options.containerId;
         this.submitBtnId = options.submitBtnId;
         this.props = options.props;
+        this.dataStore = options.dataStore;
 
         this.stateModel = new Backbone.Model({
             sortKey: 'name',
@@ -23,7 +24,6 @@ export default Backbone.View.extend({
             fetching: true
         });
 
-        this.dataStore = options.dataStore;
 
         this.listenTo(this.stateModel, 'change:search change:sortDirection change:sortKey', _.debounce(() => {
             this.fetchListCollection(this.dataStore, this.stateModel);
@@ -31,10 +31,25 @@ export default Backbone.View.extend({
 
         const {
             deferred: servicesDeferred,
-            collectionMap: serviceCollectionMap
-        } = fetchServiceCollections();
+            collectionObjList: serviceCollectionObjList
+        } = fetchRefCollections(options.props.name);
 
-        _.extend(this, {servicesDeferred, serviceCollectionMap});
+        const {
+            deferred: configDeferred,
+            modelObjList: configModelObjList
+        } = fetchConfigurationModels();
+
+        // servicesDeferred may not exist
+        const defferedList = [configDeferred];
+        if (servicesDeferred) {
+            defferedList.push(servicesDeferred);
+        }
+
+        _.extend(this, {
+            entitiesDeferred: $.when(...defferedList),
+            serviceCollectionObjList,
+            configModelObjList
+        });
     },
 
     render: function () {
@@ -42,10 +57,12 @@ export default Backbone.View.extend({
                 buttonId: this.submitBtnId,
                 buttonValue: 'Add'
             },
-            {props, servicesDeferred, serviceCollectionMap} = this,
+            {props, entitiesDeferred, serviceCollectionObjList, configModelObjList} = this,
             deferred = this.fetchListCollection(this.dataStore, this.stateModel);
 
-        const renderTab = (refCollection) => {
+        this.$el.html(`<div class="loading-msg-icon">${getFormattedMessage(115)}</div>`);
+        const renderTab = () => {
+            this.$el.html('');
             const caption = new CaptionView({
                 countLabel: getFormattedMessage(107),
                 model: {
@@ -53,7 +70,7 @@ export default Backbone.View.extend({
                 },
                 collection: this.dataStore,
                 noFilterButtons: true,
-                filterKey: _.map(props.entity, e => e.name)
+                filterKey: _.map(props.entity, e => e.field)
             });
 
             const table = new Table({
@@ -61,9 +78,7 @@ export default Backbone.View.extend({
                 collection: this.dataStore,
                 showActions: true,
                 enableMoreInfo: props.table.moreInfo ? true : false,
-                component: props,
-                refTargetField: props.name,
-                refCollection
+                component: props
             });
 
             this.$el.append(caption.render().$el);
@@ -78,13 +93,13 @@ export default Backbone.View.extend({
                     isInput: false
                 }).render().modal();
             });
-        }
+        };
 
         deferred.done(() => {
-            if (servicesDeferred) {
-                servicesDeferred.done(() => {
-                    const combinedCollection = combineCollection(serviceCollectionMap);
-                    renderTab(combinedCollection);
+            if (entitiesDeferred) {
+                entitiesDeferred.done(() => {
+                    setCollectionRefCount(this.dataStore, serviceCollectionObjList, configModelObjList, props.name);
+                    renderTab();
                 });
             } else {
                 renderTab();

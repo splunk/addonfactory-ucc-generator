@@ -27,9 +27,20 @@ define([
             this.control = new controlType(this.controlOptions);
             this.listenTo(this.control, 'all', this.trigger);
 
-            const {referenceName, customizedUrl} = this.controlOptions;
-            if(referenceName || customizedUrl) {
-                this._loadSingleSelectReference(customizedUrl, referenceName);
+            const {referenceName, endpointUrl} = this.controlOptions;
+            if(referenceName || endpointUrl) {
+                if (!restEndpointMap[referenceName]) {
+                    this.collection = generateCollection(referenceName, {endpointUrl});
+                } else {
+                    this.collection = generateCollection('', {'endpointUrl': restEndpointMap[referenceName]});
+                }
+                this.collection.fetch();
+
+                this.listenTo(this.collection, 'sync', () => {
+                    if (type === 'singleSelect' || type === 'multipleSelect') {
+                        this._updateSelect();
+                    }
+                });
             }
         },
 
@@ -38,28 +49,36 @@ define([
                 e.preventDefault();
             }
         },
-        // TODO: support more component loading content dynamically like this one
-        _loadSingleSelectReference: function(customizedUrl, referenceName) {
-            let referenceCollectionInstance;
-            if (!restEndpointMap[referenceName]) {
-                referenceCollectionInstance = generateCollection(referenceName, {customizedUrl});
-            } else {
-                referenceCollectionInstance = generateCollection('', {'customizedUrl': restEndpointMap[referenceName]});
+
+        _updateSelect: function() {
+            let dic = _.map(this.collection.models, model => ({
+                label: model.entry.attributes.name,
+                value: model.entry.attributes.name
+            }));
+            // filter result with white list
+            if (this.controlOptions.whiteList) {
+                dic = this._filterByWhiteList(dic);
             }
-            const referenceDeferred = referenceCollectionInstance.fetch();
-            referenceDeferred.done(() => {
-                let dic = _.map(referenceCollectionInstance.models, model => {
-                    return {
-                        label: model.entry.attributes.name,
-                        value: model.entry.attributes.name
-                    };
-                });
-                if(this.control.setAutoCompleteFields) {
-                    this.control.setAutoCompleteFields(dic, true);
-                }
-                // unset defaultValue if not in loading list
+            // filter result with black list
+            if (this.controlOptions.blackList) {
+                dic = this._filterByBlackList(dic);
+            }
+            if(this.control.setAutoCompleteFields) {
+                // set singleSelect selection list
+                this.control.setAutoCompleteFields(dic, true);
+            }
+            if(this.control.setItems) {
+                // set multipleSelect selection list
+                this.control.setItems(dic, true);
+            }
+
+            // unset defaultValue if not in loading list
+            const existingValue = this.controlOptions.model.get(this.controlOptions.modelAttribute);
+            if (dic.every(d => d.value !== existingValue)) {
                 this.controlOptions.model.set(this.controlOptions.modelAttribute, '');
-            });
+            } else {
+                this.control.setValue(existingValue, false);
+            }
         },
 
         validate: function() {
@@ -94,6 +113,32 @@ define([
                 this.$('.tooltip-link').tooltip('destroy');
             }
             return BaseView.prototype.remove.apply(this, arguments);
+        },
+
+        _filterByWhiteList: function(fields) {
+            let whiteRegex;
+            try {
+                whiteRegex = new RegExp(this.controlOptions.whiteList);
+            } catch(e) {
+                console.log("Invalid regex for option whiteList");
+                return fields;
+            }
+            return _.filter(fields, (field) => {
+                return whiteRegex.test(field.value);
+            });
+        },
+
+        _filterByBlackList: function(fields) {
+            let blackRegex;
+            try {
+                blackRegex = new RegExp(this.controlOptions.blackList)
+            } catch(e) {
+                console.log("Invalid regex for option blackList");
+                return fields;
+            }
+            return _.filter(fields, (field) => {
+                return !blackRegex.test(field.value);
+            });
         },
 
         template: `
