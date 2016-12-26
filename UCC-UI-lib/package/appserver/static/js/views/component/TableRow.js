@@ -127,10 +127,11 @@ define([
                         html = '<td class="col-name">' + fieldValue + '</td>';
                         break;
                     case 'disabled':
-                        fieldValue = _(Util.formatDisabled(
-                            this.model.entity.entry.content.attributes.disabled
-                        )).t();
-                        html = '<td class="col-status">' + fieldValue + '</td>';
+                        if (Util.isTrue(this.model.entity.entry.content.attributes.disabled)) {
+                            html = '<td class="col-status">' + _('Disabled').t() + '</td>';
+                        } else {
+                            html = '<td class="col-status">' + _('Enabled').t() + '</td>';
+                        }
                         break;
                     default:
                         if (this.model.entity.entry.content.attributes[h.field] !== undefined) {

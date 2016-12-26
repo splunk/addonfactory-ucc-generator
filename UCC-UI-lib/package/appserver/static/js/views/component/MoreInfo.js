@@ -33,7 +33,7 @@ define([
                 }
                 // built-in formater for field 'disabled'
                 if (field === 'disabled') {
-                    value = _(Util.formatDisabled(value)).t();
+                    value = Util.isTrue(value) ? _('Disabled').t() : _('Enabled').t()
                 }
                 if (value !== undefined) {
                     this.$('.list-dotted').append(_.template(`

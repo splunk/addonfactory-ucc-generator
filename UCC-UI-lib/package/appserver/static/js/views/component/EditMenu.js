@@ -51,7 +51,7 @@ define([
             if (actions.indexOf('enable') > -1 || actions.indexOf('disable') > -1) {
                 let disabledVal = this.model.entry.content.attributes.disabled;
                 // load enable/disable menu based on disabled value, enable by default
-                if (Util.formatDisabled(disabledVal) === 'Enabled') {
+                if (Util.isFalse(disabledVal)) {
                     this.$('.second-group').append(
                         '<li><a href="#" class="disable">' +
                         _("Disable").t() +

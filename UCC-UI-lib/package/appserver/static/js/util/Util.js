@@ -66,17 +66,24 @@ define(function () {
             return parseInt(new Date() - 0).toString();
         },
 
-        formatDisabled: function(val) {
+        isTrue: function(val, defaultValue=false) {
             const trueList = ['true', 't', '1', 'yes', 'y'];
-            const falseList = ['false', 'f', '0', 'no', 'n'];
-            if (val !== undefined) {
-                if (trueList.indexOf(String(val)) > -1) {
-                    return 'Disabled';
-                } else if (falseList.indexOf(String(val)) > -1) {
-                    return 'Enabled';
-                }
+            if (val !== undefined &&
+                trueList.indexOf(String(val).toLowerCase()) > -1) {
+                return true;
+            } else {
+                return defaultValue;
             }
-            return '';
+        },
+
+        isFalse: function(val, defaultValue=false) {
+            const falseList = ['false', 'f', '0', 'no', 'n'];
+            if (val !== undefined &&
+                falseList.indexOf(String(val).toLowerCase()) > -1) {
+                return true;
+            } else {
+                return defaultValue;
+            }
         }
     };
 
