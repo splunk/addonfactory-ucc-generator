@@ -6,14 +6,16 @@ define([
     'views/shared/PopTart',
     'app/views/component/EntityDialog',
     'app/views/component/DeleteDialog',
-    'app/views/component/Error'
+    'app/views/component/Error',
+    'app/util/Util'
 ], function (
     _,
     $,
     PopTartView,
     EntityDialog,
     DeleteDialog,
-    ErrorDialog
+    ErrorDialog,
+    Util
 ) {
     return PopTartView.extend({
         className: 'dropdown-menu',
@@ -46,17 +48,30 @@ define([
             this.$el.addClass('dropdown-menu-narrow');
 
             actions = this.component.table.actions;
-            if ($.inArray('enable', actions) > 0 || $.inArray('disable', actions) > 0) {
-                if (this.model.entry.content.attributes.disabled) {
-                    this.$('.second-group').append('<li><a href="#" class="enable">' + _("Enable").t() + '</a></li>');
+            if (actions.indexOf('enable') > -1 || actions.indexOf('disable') > -1) {
+                let disabledVal = this.model.entry.content.attributes.disabled;
+                // load enable/disable menu based on disabled value, disable by default
+                if (Util.parseBoolean(disabledVal, false)) {
+                    this.$('.second-group').append(
+                        '<li><a href="#" class="enable">' +
+                        _("Enable").t() +
+                        '</a></li>'
+                    );
                 } else {
-                    this.$('.second-group').append('<li><a href="#" class="disable">' + _("Disable").t() + '</a></li>');
+                    this.$('.second-group').append(
+                        '<li><a href="#" class="disable">' +
+                        _("Disable").t() +
+                        '</a></li>'
+                    );
                 }
             }
-            if ($.inArray('clone', actions) > 0) {
-                this.$('.second-group').append('<li><a href="#" class="clone">' + _("Clone").t() + '</a></li>');
+            if (actions.indexOf('clone') > -1) {
+                this.$('.second-group').append(
+                    '<li><a href="#" class="clone">' +
+                    _("Clone").t() +
+                    '</a></li>'
+                );
             }
-
             return this;
         },
 

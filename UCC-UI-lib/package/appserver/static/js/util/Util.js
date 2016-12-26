@@ -65,6 +65,20 @@ define(function () {
         guid: function guid() {
             return parseInt(new Date() - 0).toString();
         },
+
+        parseBoolean: function (val, defaultValue) {
+            const trueList = ['true', 't', '1', 'yes', 'y'];
+            const falseList = ['false', 'f', '0', 'no', 'n'];
+            if (val !== undefined &&
+                trueList.indexOf(String(val).toLowerCase()) > -1) {
+                return true;
+            } else if (val !== undefined &&
+                falseList.indexOf(String(val).toLowerCase()) > -1) {
+                return false;
+            } else {
+                return defaultValue;
+            }
+        }
     };
 
 });

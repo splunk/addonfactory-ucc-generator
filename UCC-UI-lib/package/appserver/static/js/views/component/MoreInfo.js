@@ -1,9 +1,11 @@
 define([
     'lodash',
-    'views/Base'
+    'views/Base',
+    'app/util/Util'
 ], function (
     _,
-    BaseView
+    BaseView,
+    Util
 ) {
     return BaseView.extend({
         tagName: 'tr',
@@ -29,11 +31,17 @@ define([
                 } else {
                     value = entry.attributes[field];
                 }
+                // built-in formater for field 'disabled'
+                if (field === 'disabled') {
+                    value = Util.parseBoolean(value, false) ?
+                        _('Disabled').t() : _('Enabled').t()
+                }
                 if (value !== undefined) {
                     this.$('.list-dotted').append(_.template(`
                         <dt><%- _(label).t() %></dt>
                         <dd><%- value %></dd>
-                        `)({label, value}));
+                        `)({label, value})
+                    );
                 }
             });
             return this;
