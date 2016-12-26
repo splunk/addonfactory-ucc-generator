@@ -127,7 +127,7 @@ define([
                         html = '<td class="col-name">' + fieldValue + '</td>';
                         break;
                     case 'disabled':
-                        if (Util.isTrue(this.model.entity.entry.content.attributes.disabled)) {
+                        if (Util.parseBoolean(this.model.entity.entry.content.attributes.disabled, false)) {
                             html = '<td class="col-status">' + _('Disabled').t() + '</td>';
                         } else {
                             html = '<td class="col-status">' + _('Enabled').t() + '</td>';

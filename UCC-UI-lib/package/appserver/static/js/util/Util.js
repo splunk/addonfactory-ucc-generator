@@ -66,21 +66,15 @@ define(function () {
             return parseInt(new Date() - 0).toString();
         },
 
-        isTrue: function(val, defaultValue=false) {
+        parseBoolean: function (val, defaultValue) {
             const trueList = ['true', 't', '1', 'yes', 'y'];
+            const falseList = ['false', 'f', '0', 'no', 'n'];
             if (val !== undefined &&
                 trueList.indexOf(String(val).toLowerCase()) > -1) {
                 return true;
-            } else {
-                return defaultValue;
-            }
-        },
-
-        isFalse: function(val, defaultValue=false) {
-            const falseList = ['false', 'f', '0', 'no', 'n'];
-            if (val !== undefined &&
+            } else if (val !== undefined &&
                 falseList.indexOf(String(val).toLowerCase()) > -1) {
-                return true;
+                return false;
             } else {
                 return defaultValue;
             }

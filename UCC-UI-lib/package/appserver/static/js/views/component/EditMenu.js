@@ -50,17 +50,17 @@ define([
             actions = this.component.table.actions;
             if (actions.indexOf('enable') > -1 || actions.indexOf('disable') > -1) {
                 let disabledVal = this.model.entry.content.attributes.disabled;
-                // load enable/disable menu based on disabled value, enable by default
-                if (Util.isFalse(disabledVal)) {
+                // load enable/disable menu based on disabled value, disable by default
+                if (Util.parseBoolean(disabledVal, false)) {
                     this.$('.second-group').append(
-                        '<li><a href="#" class="disable">' +
-                        _("Disable").t() +
+                        '<li><a href="#" class="enable">' +
+                        _("Enable").t() +
                         '</a></li>'
                     );
                 } else {
                     this.$('.second-group').append(
-                        '<li><a href="#" class="enable">' +
-                        _("Enable").t() +
+                        '<li><a href="#" class="disable">' +
+                        _("Disable").t() +
                         '</a></li>'
                     );
                 }
