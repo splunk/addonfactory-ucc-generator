@@ -141,13 +141,15 @@ function validatorFactory(validatorInfo, label) {
                 return error;
             }
             const val = Number(this.entry.content.get(attr));
-            if(Number.isNaN(val))
+            if(Number.isNaN(val)) {
                 return errorMsg ? errorMsg :
                     getFormattedMessage(16, label);
+            }
 
-            if(val > range[1] || val < range[0])
-            return errorMsg ? errorMsg :
-                getFormattedMessage(8, label, range[0], range[1]);
+            if(val > range[1] || val < range[0]) {
+                return errorMsg ? errorMsg :
+                    getFormattedMessage(8, label, range[0], range[1]);
+            }
         };
     }
 
