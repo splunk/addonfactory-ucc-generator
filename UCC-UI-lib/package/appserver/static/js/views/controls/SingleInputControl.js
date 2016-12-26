@@ -7,11 +7,6 @@ define([
     Control
 ) {
     return Control.extend({
-        events: {
-            'change input': function (e) {
-                this.setValue(e.val, false);
-            }
-        },
         /**
          * @constructor
          * @param {Object} options {
@@ -87,6 +82,17 @@ define([
                 combobox: true,
                 allowClear: this.allowClear
             };
+            if (this.options.createSearchChoice) {
+                $.extend(options, {
+                    createSearchChoice: function (term, data) {
+                        if ($(data).filter(function () {
+                                return this.text.localeCompare(term) === 0;
+                            }).length === 0) {
+                            return {id: term, text: term};
+                        }
+                    }
+                });
+            }
 
             if (this.options.disableSearch) {
                 $.extend(options, {minimumResultsForSearch: Infinity});
@@ -105,6 +111,24 @@ define([
                     });
                 });
             }
+
+            $input.on("change", function (e) {
+                if (this.options.model && this.options.modelAttribute) {
+                    if (_.filter(this.options.autoCompleteFields, (field) => {
+                            if (field.children) {
+                                return _.map(field.children, 'value')
+                                    .indexOf(e.val) > -1 ? true : false
+                            }
+                            return field.value === e.val;
+                        }).length === 0) {
+                            this.options.autoCompleteFields.push({
+                                label: e.val,
+                                value: e.val
+                            });
+                    }
+                    this.setValue(e.val, false);
+                }
+            }.bind(this));
             return this;
         },
 

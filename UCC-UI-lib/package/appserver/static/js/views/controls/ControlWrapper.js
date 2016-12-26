@@ -27,7 +27,15 @@ define([
             this.control = new controlType(this.controlOptions);
             this.listenTo(this.control, 'all', this.trigger);
 
-            const {referenceName, endpointUrl} = this.controlOptions;
+            this.existingValue = this.controlOptions.model.get(
+                this.controlOptions.modelAttribute
+            );
+            const {
+                referenceName,
+                endpointUrl,
+                autoCompleteFields,
+                items
+            } = this.controlOptions;
             if(referenceName || endpointUrl) {
                 if (!restEndpointMap[referenceName]) {
                     this.collection = generateCollection(referenceName, {endpointUrl});
@@ -41,6 +49,16 @@ define([
                         this._updateSelect();
                     }
                 });
+            } else if (autoCompleteFields && this.existingValue){
+                this.controlOptions.autoCompleteFields = this._addValueToSelection(
+                    this.existingValue,
+                    autoCompleteFields
+                );
+            } else if (items && this.existingValue) {
+                this.controlOptions.items = this._addValueToSelection(
+                    this.existingValue,
+                    items
+                );
             }
         },
 
@@ -63,6 +81,13 @@ define([
             if (this.controlOptions.blackList) {
                 dic = this._filterByBlackList(dic);
             }
+            // add value to selection if it does exist
+            if (this.existingValue) {
+                dic = this._addValueToSelection(
+                    this.existingValue,
+                    dic
+                );
+            }
             if(this.control.setAutoCompleteFields) {
                 // set singleSelect selection list
                 this.control.setAutoCompleteFields(dic, true);
@@ -71,13 +96,11 @@ define([
                 // set multipleSelect selection list
                 this.control.setItems(dic, true);
             }
-
             // unset defaultValue if not in loading list
-            const existingValue = this.controlOptions.model.get(this.controlOptions.modelAttribute);
-            if (dic.every(d => d.value !== existingValue)) {
+            if (dic.every(d => d.value !== this.existingValue)) {
                 this.controlOptions.model.set(this.controlOptions.modelAttribute, '');
             } else {
-                this.control.setValue(existingValue, false);
+                this.control.setValue(this.existingValue, false);
             }
         },
 
@@ -139,6 +162,19 @@ define([
             return _.filter(fields, (field) => {
                 return !blackRegex.test(field.value);
             });
+        },
+
+        _addValueToSelection: function(fieldValue, fields) {
+            if (_.find(fields, (field) => {
+                    return field.value === fieldValue;
+                }) === undefined) {
+                let selectedItem = {
+                    label: fieldValue,
+                    value: fieldValue
+                };
+                return fields.concat(selectedItem);
+            }
+            return fields;
         },
 
         template: `
