@@ -243,6 +243,15 @@ class RestHandler(object):
 
     @classmethod
     def path_segment(cls, endpoint, name=None, action=None):
+        """
+        Make path segment for given context in Splunk REST format:
+        <endpoint>/<entity>/<action>
+
+        :param endpoint: Splunk REST endpoint, e.g. data/inputs
+        :param name: entity name for request, "/" will be quoted
+        :param action: Splunk REST action, e.g. disable, enable
+        :return:
+        """
         template = '{endpoint}{entity}{action}'
         entity = ''
         if name:
