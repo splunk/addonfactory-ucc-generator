@@ -195,22 +195,25 @@ function validatorFactory(validatorInfo, label) {
 export function generateValidators(entities) {
     return entities.reduce((res, entity) => {
         const {validators, required} = entity;
-        const backboneValidators = (validators || []).map(d => {
-            let validator;
-            validator = validatorFactory(d, entity.label);
-            return {
-                validator,
-                fieldName: entity.field
-            };
-        });
 
         if (required) {
+            const backboneValidators = (validators || []).map(d => {
+                let validator;
+                validator = validatorFactory(d, entity.label);
+                return {
+                    validator,
+                    fieldName: entity.field
+                };
+            });
+
             backboneValidators.push({
                 validator: BaseModel.prototype.nonEmptyString,
                 fieldName: entity.field
             });
+
+            return res.concat(backboneValidators);
         }
 
-        return res.concat(backboneValidators);
+        return res;
     }, []);
 }
