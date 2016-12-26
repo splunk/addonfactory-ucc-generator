@@ -114,17 +114,18 @@ define([
 
             $input.on("change", function (e) {
                 if (this.options.model && this.options.modelAttribute) {
-                    if (_.filter(this.options.autoCompleteFields, (field) => {
-                            if (field.children) {
-                                return _.map(field.children, 'value')
-                                    .indexOf(e.val) > -1 ? true : false
-                            }
-                            return field.value === e.val;
-                        }).length === 0) {
-                            this.options.autoCompleteFields.push({
-                                label: e.val,
-                                value: e.val
+                    if (!this.options.autoCompleteFields.some((field) => {
+                        if (field.children) {
+                            return field.children.some((child) => {
+                                return child.value === e.val;
                             });
+                        }
+                        return field.value === e.val;
+                    })) {
+                        this.options.autoCompleteFields.push({
+                            label: e.val,
+                            value: e.val
+                        });
                     }
                     this.setValue(e.val, false);
                 }
