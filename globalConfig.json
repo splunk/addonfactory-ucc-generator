@@ -333,6 +333,7 @@
                             "label": "Single Select Group Test",
                             "type": "singleSelect",
                             "options": {
+                                "createSearchChoice": true,
                                 "autoCompleteFields": [
                                     {
                                         "label": "Group1",
@@ -401,6 +402,7 @@
                             "type": "singleSelect",
                             "defaultValue": "default",
                             "options": {
+                                "createSearchChoice": true,
                                 "endpointUrl": "data/indexes",
                                 "blackList": "^_.*$"
                             },

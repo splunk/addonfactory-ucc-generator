@@ -161,7 +161,6 @@ define([
             _.each(entity, function (e) {
                 attr_labels[e.field] = e.label;
             });
-
             input.entry.content.set(new_json);
             input.attr_labels = attr_labels;
 
@@ -169,6 +168,10 @@ define([
         },
 
         save: function (input, original_json) {
+            // when update, disable parameter should be removed from parameter
+            if (this.mode === 'edit') {
+                input.entry.content.unset('disabled', {silent: true});
+            }
             var deffer = input.save();
 
             if (!deffer.done) {
@@ -290,49 +293,6 @@ define([
             this.$(".modal-dialog").addClass(this.curWinId);
 
             return this;
-        },
-
-        // TODO: delete this method after we fix the missing "default" in index selector.
-        _loadIndex: function (controlWrapper) {
-            const indexes = generateCollection('indexes');
-            const indexDeferred = indexes.fetch();
-            indexDeferred.done(() => {
-                let id_lst = _.map(indexes.models, model => {
-                    return {
-                        label: model.entry.attributes.name,
-                        value: model.entry.attributes.name
-                    };
-                });
-
-                //Ensure the model's index value in list
-                id_lst = this._ensureIndexInList(id_lst);
-
-                if (_.find(id_lst, function (item) {
-                        return item.value === "default";
-                    }) === undefined) {
-                    id_lst = id_lst.concat({
-                        label: "default",
-                        value: "default"
-                    });
-                }
-                controlWrapper.control.setAutoCompleteFields(id_lst, true);
-            }).fail(() => {
-                addErrorMsg(this.curWinSelector, getFormattedMessage(109));
-            });
-        },
-
-        _ensureIndexInList: function (data) {
-            var selected_value = this.model.get('index'),
-                selected_value_item = [];
-            if (selected_value) {
-                selected_value_item = {label: selected_value, value: selected_value};
-            }
-            if (_.find(data, function (item) {
-                    return item.value === selected_value_item.value;
-                }) === undefined) {
-                data = data.concat(selected_value_item);
-            }
-            return data;
         }
     });
 });
