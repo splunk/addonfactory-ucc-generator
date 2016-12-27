@@ -54,15 +54,6 @@ function checkConfigDetails({pages: {configuration, inputs}}) {
                 }
                 addNewError(error);
             });
-
-            let fileds = _.get(item, ['options', 'autoCompleteFields']);
-            if (fileds) {
-                if (fileds[0].children) {
-                    fileds = _.flatten(_.union(fileds.map(d => d.children)));
-                }
-                error = parseArrForDupKeys(fileds, 'value', item.field);
-                addNewError(error);
-            }
         });
     };
 
@@ -75,15 +66,52 @@ function checkConfigDetails({pages: {configuration, inputs}}) {
             ['name', 'title'].forEach(d => {
                 error = parseArrForDupKeys(servicesLikeArr, d, rootFieldName);
                 addNewError(error);
-            })
+            });
+
+            // Forbid dup value/label for items and autoCompleteFields
+            const checkEntityDupKeyValues = ({options}, objPosition) => {
+                if (options) {
+                    const {items} = options;
+                    let {autoCompleteFields} = options;
+                    if (items) {
+                        ['label', 'value'].forEach(d => {
+                            error = parseArrForDupKeys(items, d, `${objPosition}.options.items`);
+                            addNewError(error);
+                        });
+                    }
+
+                    if (autoCompleteFields) {
+                        const isGroupType = !!autoCompleteFields[0].children;
+
+                        // Label checker, allow same label exist in different group, but forbid same label in any single group
+                        const labelStoreList = isGroupType ?
+                            autoCompleteFields.map(d => d.children) : [autoCompleteFields];
+                        labelStoreList.forEach(d => {
+                            error = parseArrForDupKeys(d, 'label', `${objPosition}.options.autoCompleteFields`);
+                            addNewError(error);
+                        });
+
+
+                        if (isGroupType) {
+                            autoCompleteFields = _.flatten(_.union(autoCompleteFields.map(d => d.children)));
+                        }
+                        error = parseArrForDupKeys(autoCompleteFields, 'value', `${objPosition}.options.autoCompleteFields`);
+                        addNewError(error);
+                    }
+                }
+            };
 
             // Forbid dup field/label for entity
             servicesLikeArr.forEach((serviceLikeObj, i) => {
+                const entityPosition = `${rootFieldName}[${i}].entity`;
                 if (serviceLikeObj.entity) {
                     ['field', 'label'].forEach(d => {
-                        error = parseArrForDupKeys(serviceLikeObj.entity, d, `${rootFieldName}[${i}].entity`);
+                        error = parseArrForDupKeys(serviceLikeObj.entity, d, entityPosition);
                         addNewError(error);
-                    })
+                    });
+                    serviceLikeObj.entity.forEach((obj, i) => {
+                        checkEntityDupKeyValues(obj, `${entityPosition}[${i}]`);
+                    });
                 }
             });
         }
@@ -95,7 +123,6 @@ function checkConfigDetails({pages: {configuration, inputs}}) {
             const {entity, options} = service;
             checkBaseOptions(options);
             checkEntity(entity);
-            _.values(options).forEach(d => console.log(d));
         });
         checkDupKeyValues(inputs, true);
     }
