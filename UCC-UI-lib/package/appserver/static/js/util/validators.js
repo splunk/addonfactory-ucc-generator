@@ -20,20 +20,24 @@ export function validateSchema(config) {
 // In this function, we can be sure that the config has already passed the basic schema validation
 function checkConfigDetails({pages: {configuration, inputs}}) {
     const errors = [];
+    let error;
+
+    const addNewError = (err) => {
+        if (err) {
+            errors.push(err);
+        }
+    };
 
     const checkBaseOptions = (options) => {
         _.values(options).forEach(d => {
             const {error} = parseFunctionRawStr(d);
-            if (error) {
-                errors.push(error);
-            }
+            addNewError(error);
         });
     };
 
     const checkEntity = (entity) => {
         _.values(entity).forEach(item => {
             const {validators} = item;
-            let error;
 
             _.values(validators).forEach(d => {
                 switch (d.type) {
@@ -48,9 +52,7 @@ function checkConfigDetails({pages: {configuration, inputs}}) {
                         break;
                     default:
                 }
-                if (error) {
-                    errors.push(error);
-                }
+                addNewError(error);
             });
 
             let fileds = _.get(item, ['options', 'autoCompleteFields']);
@@ -59,11 +61,21 @@ function checkConfigDetails({pages: {configuration, inputs}}) {
                     fileds = _.flatten(_.union(fileds.map(d => d.children)));
                 }
                 error = parseArrForDupKeys(fileds, 'value', item.field);
-                if (error) {
-                    errors.push(error);
-                }
+                addNewError(error);
             }
         });
+    };
+
+    const checkDupKeyValues = (config, isInput) => {
+        // Forbid dup name/title in services and tabs
+        const servicesLikeArr = _.get(config, isInput ? 'services' : 'tabs');
+        if (servicesLikeArr) {
+            ['name', 'title'].forEach(d => {
+                error = parseArrForDupKeys(servicesLikeArr, d, isInput ?
+                    'inputs.services' : 'configuration.tabs');
+                addNewError(error);
+            })
+        }
     };
 
     if (inputs) {
@@ -74,6 +86,7 @@ function checkConfigDetails({pages: {configuration, inputs}}) {
             checkEntity(entity);
             _.values(options).forEach(d => console.log(d));
         });
+        checkDupKeyValues(inputs, true);
     }
 
     if(configuration) {
@@ -82,6 +95,7 @@ function checkConfigDetails({pages: {configuration, inputs}}) {
             checkBaseOptions(options);
             checkEntity(entity);
         });
+        checkDupKeyValues(configuration, false);
     }
     return errors;
 }
@@ -113,7 +127,7 @@ function parseRegexRawStr(rawStr) {
 function parseArrForDupKeys(arr, targetField, entityName) {
     const uniqFieldsLength = _.uniqBy(arr, targetField).length;
     if (arr.length != uniqFieldsLength) {
-        return getFormattedMessage(20, targetField, entityName);
+        return getFormattedMessage(21, targetField, entityName);
     }
 }
 
