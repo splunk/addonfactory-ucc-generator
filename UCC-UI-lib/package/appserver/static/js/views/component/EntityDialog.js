@@ -211,12 +211,13 @@ define([
                     this.$("[role=dialog]").modal('hide');
                     this.undelegateEvents();
                 }).fail((model, response) => {
+                    console.log("error happended.");
                     input.entry.content.set(original_json);
                     input.trigger('change');
                     // re-enable when failed
                     this.$("input[type=submit]").removeAttr('disabled');
                     removeSavingMsg(this.curWinSelector);
-                    addErrorMsg(this.curWinSelector, response, true);
+                    addErrorMsg(this.curWinSelector, model, true);
                     addClickListener(this.curWinSelector, 'msg-error');
                 });
             }

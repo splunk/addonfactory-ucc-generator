@@ -6,7 +6,6 @@ from __future__ import absolute_import
 
 import json
 import traceback
-from urllib import quote
 from urlparse import urlparse
 from functools import wraps
 from splunklib import binding
@@ -244,11 +243,24 @@ class RestHandler(object):
 
     @classmethod
     def path_segment(cls, endpoint, name=None, action=None):
-        template = '{endpoint}{name}{action}'
-        name = ('/%s' % quote(name.encode('utf-8'))) if name else ''
+        """
+        Make path segment for given context in Splunk REST format:
+        <endpoint>/<entity>/<action>
+
+        :param endpoint: Splunk REST endpoint, e.g. data/inputs
+        :param name: entity name for request, "/" will be quoted
+        :param action: Splunk REST action, e.g. disable, enable
+        :return:
+        """
+        template = '{endpoint}{entity}{action}'
+        entity = ''
+        if name:
+            # all special characters except "/" will be
+            # url-encoded in splunklib.binding.UrlEncoded
+            entity = '/' + name.replace('/', '%2F')
         path = template.format(
             endpoint=endpoint.strip('/'),
-            name=name,
+            entity=entity,
             action='/%s' % action if action else '',
         )
         return path.strip('/')

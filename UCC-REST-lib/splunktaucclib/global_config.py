@@ -252,7 +252,7 @@ class GlobalConfig(object):
                     'input_type={input_type}, '
                     'input_name={input_name}, '
                     'config_type={config_type}, '
-                    'config_name={config_name}, '.format(
+                    'config_name={config_name}'.format(
                         input_type=input_type,
                         input_name=input_entity['name'],
                         config_type=config_type,
