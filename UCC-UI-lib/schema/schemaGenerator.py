@@ -104,7 +104,6 @@ class Entity(DocumentWithoutAddProp):
 
 
 class Table(DocumentWithoutAddProp):
-    actions = ArrayField(StringField(enum=["edit", "delete", "clone", "enable"]), required=True)
     moreInfo = ArrayField(DictField(
         properties={
             "field": StringField(required=True, pattern="^\w+$"),
@@ -119,6 +118,14 @@ class Table(DocumentWithoutAddProp):
     ), required=True)
 
 
+class InputsTable(Table):
+    actions = ArrayField(StringField(enum=["edit", "delete", "clone", "enable"]), required=True)
+
+
+class ConfigurationTable(Table):
+    actions = ArrayField(StringField(enum=["edit", "delete", "clone"]), required=True)
+
+
 class Hooks(DocumentWithoutAddProp):
     saveValidator = StringField(max_length=3000)
     onLoad = StringField(max_length=3000)
@@ -130,7 +137,7 @@ class TabContent(DocumentWithoutAddProp):
     name = StringField(required=True, pattern="^[\/\w]+$", max_length=250)
     title = StringField(required=True, max_length=50)
     options = DocumentField(Hooks, as_ref=True)
-    table = DocumentField(Table, as_ref=True)
+    table = DocumentField(ConfigurationTable, as_ref=True)
 
 
 class ConfigurationPage(DocumentWithoutAddProp):
@@ -142,7 +149,7 @@ class ConfigurationPage(DocumentWithoutAddProp):
 class InputsPage(DocumentWithoutAddProp):
     title = StringField(required=True, max_length=60)
     description = StringField(max_length=200)
-    table = DocumentField(Table, as_ref=True, required=True)
+    table = DocumentField(InputsTable, as_ref=True, required=True)
     services = ArrayField(DictField(
         properties={
             "name": StringField(required=True, pattern="^\w+$"),
