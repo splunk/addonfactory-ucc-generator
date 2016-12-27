@@ -40,6 +40,10 @@ export default Backbone.View.extend({
                 shouldInvokeOnload: true,
                 validators
             }))({name});
+            this.dataStore.attr_labels = {};
+            entity.forEach(({field, label}) => {
+                this.dataStore.attr_labels[field] = label;
+            });
         }
     },
 
