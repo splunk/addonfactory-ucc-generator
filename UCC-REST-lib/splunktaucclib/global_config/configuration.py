@@ -58,6 +58,24 @@ class Configuration(object):
 
         :param payload: same format with return of ``load``.
         :return:
+
+        Usage::
+        >>> from splunktaucclib.global_config import GlobalConfig
+        >>> global_config = GlobalConfig()
+        >>> payload = {
+        >>>    'settings': [
+        >>>        {
+        >>>            'name': 'proxy',
+        >>>            'proxy_host': '1.2.3.4',
+        >>>            'proxy_port': '5678',
+        >>>        },
+        >>>        {
+        >>>            'name': 'logging',
+        >>>            'level': 'DEBUG',
+        >>>        }
+        >>>    ]
+        >>> }
+        >>> global_config.settings.save(payload)
         """
         errors = {}
         for type_name, configurations in payload.iteritems():
@@ -203,6 +221,16 @@ class Inputs(Configuration):
         self._references = Configs(splunkd_client, schema).load()
 
     def load(self, input_type=None):
+        """
+
+        :param input_type:
+        :return:
+
+        Usage::
+        >>> from splunktaucclib.global_config import GlobalConfig
+        >>> global_config = GlobalConfig()
+        >>> inputs = global_config.inputs.load()
+        """
         inputs = {}
         for input_item in self.internal_schema:
             if input_type is None or input_item['name'] == input_type:
@@ -278,6 +306,16 @@ class Inputs(Configuration):
 class Configs(Configuration):
 
     def load(self, config_type=None):
+        """
+
+        :param config_type:
+        :return:
+
+         Usage::
+        >>> from splunktaucclib.global_config import GlobalConfig
+        >>> global_config = GlobalConfig()
+        >>> configs = global_config.configs.load()
+        """
         configs = {}
         for config in self.internal_schema:
             if config_type is None or config['name'] == config_type:
@@ -300,6 +338,15 @@ class Settings(Configuration):
     TYPE_NAME = u'settings'
 
     def load(self):
+        """
+
+        :return:
+
+         Usage::
+        >>> from splunktaucclib.global_config import GlobalConfig
+        >>> global_config = GlobalConfig()
+        >>> settings = global_config.settings.load()
+        """
         settings = []
         for setting in self.internal_schema:
             setting_entity = self._load_endpoint(
