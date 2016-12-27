@@ -93,12 +93,8 @@ class AdminExternalHandler(admin.MConfigHandler):
         if self.callerArgs.id:
             result = self.handler.get(self.callerArgs.id)
         else:
-            sort_dir = self.sortAscending and 'asc' or 'desc'
             query = {
-                'count': self.maxCount,
-                'sort_key': self.sortByKey,
-                'sort_dir': sort_dir,
-                'offset': self.posOffset,
+                'count': 0
             }
             result = self.handler.all(**query)
         return result
