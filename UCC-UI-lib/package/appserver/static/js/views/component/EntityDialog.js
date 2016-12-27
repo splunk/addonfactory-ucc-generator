@@ -169,7 +169,7 @@ define([
 
         save: function (input, original_json) {
             // when update, disable parameter should be removed from parameter
-            if (this.mode === 'edit') {
+            if (this.mode === 'edit' || this.mode === 'clone') {
                 input.entry.content.unset('disabled', {silent: true});
             }
             var deffer = input.save();
