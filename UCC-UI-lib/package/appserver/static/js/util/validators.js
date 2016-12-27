@@ -70,11 +70,22 @@ function checkConfigDetails({pages: {configuration, inputs}}) {
         // Forbid dup name/title in services and tabs
         const servicesLikeArr = _.get(config, isInput ? 'services' : 'tabs');
         if (servicesLikeArr) {
+            const rootFieldName = isInput ? 'inputs.services' : 'configuration.tabs';
+
             ['name', 'title'].forEach(d => {
-                error = parseArrForDupKeys(servicesLikeArr, d, isInput ?
-                    'inputs.services' : 'configuration.tabs');
+                error = parseArrForDupKeys(servicesLikeArr, d, rootFieldName);
                 addNewError(error);
             })
+
+            // Forbid dup field/label for entity
+            servicesLikeArr.forEach((serviceLikeObj, i) => {
+                if (serviceLikeObj.entity) {
+                    ['field', 'label'].forEach(d => {
+                        error = parseArrForDupKeys(serviceLikeObj.entity, d, `${rootFieldName}[${i}].entity`);
+                        addNewError(error);
+                    })
+                }
+            });
         }
     };
 
