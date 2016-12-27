@@ -33,8 +33,9 @@ function checkConfigDetails({pages: {configuration, inputs}}) {
     const checkEntity = (entity) => {
         _.values(entity).forEach(item => {
             const {validators} = item;
+            let error;
+
             _.values(validators).forEach(d => {
-                let error;
                 switch (d.type) {
                     case 'string':
                         error = parseStringValidator(d.minLength, d.maxLength).error;
@@ -51,6 +52,17 @@ function checkConfigDetails({pages: {configuration, inputs}}) {
                     errors.push(error);
                 }
             });
+
+            let fileds = _.get(item, ['options', 'autoCompleteFields']);
+            if (fileds) {
+                if (fileds[0].children) {
+                    fileds = _.flatten(_.union(fileds.map(d => d.children)));
+                }
+                error = parseArrForDupKeys(fileds, 'value', item.field);
+                if (error) {
+                    errors.push(error);
+                }
+            }
         });
     };
 
@@ -96,6 +108,18 @@ function parseRegexRawStr(rawStr) {
     }
 
     return {error, result};
+}
+
+function parseArrForDupKeys(arr, targetField, entityName) {
+    const uniqFieldsLength = _.uniqBy(arr, targetField).length;
+    if (arr.length != uniqFieldsLength) {
+        return getFormattedMessage(20, targetField, entityName);
+    }
+}
+
+function parseObjForDupKeys(obj, targetField, entityName) {
+    const pairs = _.toPairs(obj);
+    return parseArrForDupKeys(pairs, targetField, entityName);
 }
 
 function parseNumberValidator(range) {
