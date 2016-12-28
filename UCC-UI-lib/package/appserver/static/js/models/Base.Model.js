@@ -60,16 +60,16 @@ define([
 
             // setup Hooks
             this.validateFormData = options.validateFormData;
+            this.widgetsIdDict = {};
+            (options.fields || []).forEach(d => {
+                this.widgetsIdDict[d.field] = `#${options.modelName}-${d.field}`;
+            });
             if (options.shouldInvokeOnload) {
                 this.on('sync', () => {
-                    const {onLoad, modelName, fields} = options;
+                    const {onLoad} = options;
                     if (onLoad) {
                         const formData = this.entry.content.toJSON();
-                        const widgetsIdDict = {};
-                        (fields || []).forEach(d => {
-                            widgetsIdDict[d.field] = `#${modelName}-${d.field}`;
-                        });
-                        onLoad(formData, widgetsIdDict);
+                        onLoad(formData, this.widgetsIdDict);
                     }
                 });
             }
@@ -192,7 +192,7 @@ define([
             }
 
             if(this.validateFormData) {
-                ret = this.validateFormData(this.entry.content.toJSON());
+                ret = this.validateFormData(this.entry.content.toJSON(), this.widgetsIdDict);
                 if (typeof ret === 'string') {
                     return ret;
                 }
