@@ -132,7 +132,7 @@ define([
 
         submitTask: function () {
             //Disable the button to prevent repeat submit
-            this.$("input[type=submit]").attr('disabled', true);
+            this.disableActions();
             // Remove loading and error message
             removeErrorMsg(this.curWinSelector);
             removeSavingMsg(this.curWinSelector);
@@ -178,7 +178,7 @@ define([
                 input.entry.content.set(original_json);
                 input.trigger('change');
                 //Re-enable when failed
-                this.$("input[type=submit]").removeAttr('disabled');
+                this.enableActions();
             } else {
                 addSavingMsg(this.curWinSelector, getFormattedMessage(108));
                 addClickListener(this.curWinSelector, 'msg-loading');
@@ -218,7 +218,7 @@ define([
                     input.entry.content.set(original_json);
                     input.trigger('change');
                     // re-enable when failed
-                    this.$("input[type=submit]").removeAttr('disabled');
+                    this.enableActions();
                     removeSavingMsg(this.curWinSelector);
                     addErrorMsg(this.curWinSelector, model, true);
                     addClickListener(this.curWinSelector, 'msg-error');
@@ -293,6 +293,16 @@ define([
             this.$(".modal-dialog").addClass(this.curWinId);
 
             return this;
+        },
+
+        disableActions: function () {
+            this.$("button[type=button]").attr('disabled', true);
+            this.$("input[type=submit]").attr('disabled', true);
+        },
+
+        enableActions: function () {
+            this.$("button[type=button]").removeAttr('disabled');
+            this.$("input[type=submit]").removeAttr('disabled');
         }
     });
 });
