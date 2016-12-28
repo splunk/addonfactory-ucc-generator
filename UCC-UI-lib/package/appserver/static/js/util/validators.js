@@ -139,8 +139,13 @@ function parseStringValidator(minLength, maxLength) {
     return {error};
 }
 
+// Required fields will be checked by `nonEmptyString`, all other validators are generated in this method
 function validatorFactory(validatorInfo, label) {
     const {type, errorMsg} = validatorInfo;
+
+    const checkIsFieldHasInput = (attrValue) => {
+        return attrValue !== undefined && attrValue !== '';
+    };
 
     if(type === 'regex') {
         const {pattern} = validatorInfo;
@@ -149,8 +154,8 @@ function validatorFactory(validatorInfo, label) {
             if (error) {
                 return error;
             }
-            const val = this.entry.content.get(attr);
-            if(!regex.test(val)) {
+            const attrValue = this.entry.content.get(attr);
+            if(checkIsFieldHasInput(attrValue) && !regex.test(attrValue)) {
                 return  errorMsg ? errorMsg :
                     getFormattedMessage(15, label, pattern);
             }
@@ -164,7 +169,12 @@ function validatorFactory(validatorInfo, label) {
             if(error) {
                 return error;
             }
-            const val = Number(this.entry.content.get(attr));
+            const attrValue = this.entry.content.get(attr);
+            if (!checkIsFieldHasInput(attrValue)) {
+                return;
+            }
+
+            const val = Number(attrValue);
             if(Number.isNaN(val)) {
                 return errorMsg ? errorMsg :
                     getFormattedMessage(16, label);
@@ -186,13 +196,15 @@ function validatorFactory(validatorInfo, label) {
             }
 
             // Treat field without sepcified value as empty string
-            let str = this.entry.content.get(attr);
-            str = str === undefined ? '' : str;
+            const attrValue = this.entry.content.get(attr);
+            if (!checkIsFieldHasInput(attrValue)) {
+                return;
+            }
 
-            if(str.length > maxLength)
+            if(attrValue.length > maxLength)
                 return errorMsg ? errorMsg :
                     getFormattedMessage(18, label, maxLength);
-            if(str.length < minLength)
+            if(attrValue.length < minLength)
                 return errorMsg ? errorMsg :
                     getFormattedMessage(17, label, minLength);
         };
@@ -203,9 +215,9 @@ function validatorFactory(validatorInfo, label) {
         const {inputValueType, regex} = preDefinedRegexObj;
 
         return function(attr) {
-            const val = this.entry.content.get(attr);
+            const attrValue = this.entry.content.get(attr);
 
-            if(!regex.test(val)) {
+            if(checkIsFieldHasInput(attrValue) && !regex.test(attrValue)) {
                 return errorMsg ? errorMsg :
                     getFormattedMessage(19, label, inputValueType);
             }
@@ -218,20 +230,21 @@ function validatorFactory(validatorInfo, label) {
 
 export function generateValidators(entities) {
     return entities.reduce((res, entity) => {
-        const {validators, required} = entity;
+        const {
+            validators,
+            required,
+            field: fieldName,
+            label
+        } = entity;
         const backboneValidators = (validators || []).map(d => {
-            let validator;
-            validator = validatorFactory(d, entity.label);
-            return {
-                validator,
-                fieldName: entity.field
-            };
+            const validator = validatorFactory(d, label);
+            return {validator, fieldName};
         });
 
         if (required) {
-            backboneValidators.push({
+            backboneValidators.unshift({
                 validator: BaseModel.prototype.nonEmptyString,
-                fieldName: entity.field
+                fieldName
             });
         }
 
