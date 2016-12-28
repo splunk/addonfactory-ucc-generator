@@ -22,6 +22,7 @@ export default {
     19: 'Field {{args[0]}} is not a valid {{args[1]}}',
     20: 'configuration file should be pure JSON.',
     21: 'duplicate {{args[0]}} keys in entity {{args[1]}} is not allowed',
+    22: 'Field "Name" must be less than 1024 characters.',
 
     /* general messages, range [100, 499]*/
     100: 'Create New Input',
