@@ -78,6 +78,10 @@ define(function () {
             } else {
                 return defaultValue;
             }
+        },
+
+        encodeHTML: function(text) {
+            return text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
         }
     };
 
