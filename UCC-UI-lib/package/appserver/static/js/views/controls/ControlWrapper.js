@@ -49,16 +49,26 @@ define([
                         this._updateSelect();
                     }
                 });
-            } else if (autoCompleteFields && this.existingValue){
+            } else if (autoCompleteFields && this.existingValue) {
                 this.controlOptions.autoCompleteFields = this._addValueToSelection(
                     this.existingValue,
                     autoCompleteFields
                 );
             } else if (items && this.existingValue) {
-                this.controlOptions.items = this._addValueToSelection(
-                    this.existingValue,
-                    items
-                );
+                let delimiter = this.controlOptions.delimiter || ',';
+                let values = this.existingValue.split(delimiter);
+                let newItems = items;
+                _.each(_.filter(values , (value) => {
+                    return _.map(items, (d) => {
+                        return d.value;
+                    }).indexOf(value) === -1;
+                }), (value) => {
+                    newItems = this._addValueToSelection(
+                        value,
+                        items
+                    );
+                });
+                this.controlOptions.items = newItems;
             }
         },
 
@@ -81,27 +91,36 @@ define([
             if (this.controlOptions.blackList) {
                 dic = this._filterByBlackList(dic);
             }
-            // add value to selection if it does exist
-            if (this.existingValue) {
-                dic = this._addValueToSelection(
-                    this.existingValue,
-                    dic
-                );
-            }
+            // set singleSelect selection list
             if(this.control.setAutoCompleteFields) {
-                // set singleSelect selection list
+                // add value to selection if it does not exist
+                if (this.existingValue) {
+                    dic = this._addValueToSelection(
+                        this.existingValue,
+                        dic
+                    );
+                }
                 this.control.setAutoCompleteFields(dic, true);
             }
+            // set multipleSelect selection list
             if(this.control.setItems) {
-                // set multipleSelect selection list
+                if (this.existingValue) {
+                    let delimiter = this.controlOptions.delimiter || ',';
+                    let values = this.existingValue.split(delimiter);
+                    _.each(_.filter(values, (value) => {
+                        return _.map(dic, (d) => {
+                            return d.value;
+                        }).indexOf(value) === -1;
+                    }), (value) => {
+                        dic = this._addValueToSelection(
+                            value,
+                            dic
+                        );
+                    });
+                }
                 this.control.setItems(dic, true);
             }
-            // unset defaultValue if not in loading list
-            if (dic.every(d => d.value !== this.existingValue)) {
-                this.controlOptions.model.set(this.controlOptions.modelAttribute, '');
-            } else {
-                this.control.setValue(this.existingValue, false);
-            }
+            this.control.setValue(this.existingValue, false);
         },
 
         validate: function() {
@@ -166,6 +185,11 @@ define([
 
         _addValueToSelection: function(fieldValue, fields) {
             if (_.find(fields, (field) => {
+                    if (field.children) {
+                        return field.children.some((child) => {
+                            return child.value === fieldValue
+                        });
+                    }
                     return field.value === fieldValue;
                 }) === undefined) {
                 let selectedItem = {
