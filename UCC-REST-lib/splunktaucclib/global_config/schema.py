@@ -38,7 +38,7 @@ class GlobalConfigSchema(RestSchema):
 
     @property
     def admin_match(self):
-        return self._meta['restRoot']
+        return ''
 
     @property
     def version(self):
