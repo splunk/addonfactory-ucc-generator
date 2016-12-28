@@ -1,7 +1,7 @@
 import assert from 'assert';
 import {generateValidators} from 'app/util/validators';
 
-describe('Backbone utilities testes', () => {
+describe('Validators generator testes', () => {
     describe('generateValidators should works', () => {
         it('Empty array should be returned when input is empty', () => {
             const result = generateValidators([]);
@@ -15,7 +15,6 @@ describe('Backbone utilities testes', () => {
                     'field': 'api_uuid',
                     'label': 'API UUID',
                     'type': 'text',
-                    'required': true,
                     'validators': [
                         {
                             'type': 'regex',
@@ -23,7 +22,7 @@ describe('Backbone utilities testes', () => {
                         }
                     ]
                 }
-            ]
+            ];
             const result = generateValidators(src);
             assert.equal(result.length, 1);
             assert.equal(result[0].fieldName, src[0].field);
@@ -36,7 +35,6 @@ describe('Backbone utilities testes', () => {
                     'field': 'api_uuid',
                     'label': 'API UUID',
                     'type': 'text',
-                    'required': true,
                     'validators': [
                         {
                             'type': 'regex',
@@ -53,9 +51,22 @@ describe('Backbone utilities testes', () => {
                         }
                     ]
                 }
-            ]
+            ];
             const result = generateValidators(src);
             assert.equal(result.length, 2);
+        });
+
+        it('Required field itself will create a validator', () => {
+            const src = [
+                {
+                    'field': 'api_uuid',
+                    'label': 'API UUID',
+                    'type': 'text',
+                    'required': true
+                }
+            ];
+            const result = generateValidators(src);
+            assert.equal(result.length, 1);
         });
     });
 });

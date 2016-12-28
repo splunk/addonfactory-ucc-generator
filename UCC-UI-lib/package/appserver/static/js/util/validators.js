@@ -206,20 +206,21 @@ function validatorFactory(validatorInfo, label) {
 
 export function generateValidators(entities) {
     return entities.reduce((res, entity) => {
-        const {validators, required} = entity;
+        const {
+            validators,
+            required,
+            field: fieldName,
+            label
+        } = entity;
         const backboneValidators = (validators || []).map(d => {
-            let validator;
-            validator = validatorFactory(d, entity.label);
-            return {
-                validator,
-                fieldName: entity.field
-            };
+            const validator = validatorFactory(d, label);
+            return {validator, fieldName};
         });
 
         if (required) {
-            backboneValidators.push({
+            backboneValidators.unshift({
                 validator: BaseModel.prototype.nonEmptyString,
-                fieldName: entity.field
+                fieldName
             });
         }
 
