@@ -19,14 +19,20 @@ export default Backbone.View.extend({
         this.stateModel = new Backbone.Model({
             sortKey: 'name',
             sortDirection: 'asc',
-            count: 100,
+            count: 10,
             offset: 0,
             fetching: true
         });
 
-
         this.listenTo(this.stateModel, 'change:search change:sortDirection change:sortKey', _.debounce(() => {
             this.fetchListCollection(this.dataStore, this.stateModel);
+        }, 0));
+
+        // listen to offset change for paging
+        this.listenTo(this.stateModel, 'change:offset', _.debounce(() => {
+            if (this.stateModel.changed.offset !== undefined) {
+                this.fetchListCollection(this.dataStore, this.stateModel);
+            }
         }, 0));
 
         const {
