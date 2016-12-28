@@ -155,9 +155,7 @@
                         }
                     ],
                     "options": {
-                        "saveValidator": "function(formData) { return (!formData.proxy_enabled || (!isNaN(Number(formData.proxy_port)) && Number(formData.proxy_port) < 65535 && Number(formData.proxy_port)) > 0) ? true : 'Input of Port should be in range of [0, 65535]'; }",
-                        "onLoad": "function(formData, formWidgetsIdDict) { var enabled = formData.proxy_enabled; $(formWidgetsIdDict['proxy_type']).hide(!enabled); }",
-                        "onChange": "function(formData, changedField, formWidgetsIdDict) { if(changedField === 'proxy_enabled') { var enabled = formData.proxy_enabled; $(formWidgetsIdDict['proxy_type']).hide(!enabled); } }"
+                        "saveValidator": "function(formData) { if(formData.proxy_enabled && !formData.proxy_url) { return 'Input of Host can not be empty'; } return (!formData.proxy_enabled || (!isNaN(Number(formData.proxy_port)) && Number(formData.proxy_port) < 65535 && Number(formData.proxy_port)) > 0) ? true : 'Input of Port should be in range of [0, 65535]'; }"
                     }
                 },
                 {
