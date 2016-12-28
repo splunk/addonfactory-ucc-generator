@@ -167,7 +167,7 @@ function parseRegexRawStr(rawStr) {
 }
 
 function parseArrForDupKeys(arr, targetField, entityName) {
-    const uniqFieldsLength = _.uniqBy(arr, targetField).length;
+    const uniqFieldsLength = _.uniqBy(arr, d => d[targetField].toLowerCase()).length;
     if (arr.length != uniqFieldsLength) {
         return getFormattedMessage(21, targetField, entityName);
     }
