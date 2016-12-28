@@ -139,7 +139,7 @@ define([
             }
 
             if (value === '.' || value === '..') {
-                return getFormattedMessage(4);
+                return getFormattedMessage(4, value);
             }
         },
 

@@ -4,7 +4,7 @@ export default {
     1: 'Field "Name" must be a string',
     2: 'Name is already in use',
     3: '"default" is a reserved word',
-    4: '. is not supported',
+    4: '{{args[0]}} is not supported',
     5: 'Field {{args[0]}} should be a positive number',
     6: 'Field {{args[0]}} is required',
     7: 'Field {{args[0]}} is not a valid regular expression',
