@@ -253,7 +253,7 @@ class RestHandler(object):
             name = entry['name']
             data = entry['content']
             acl = entry['acl']
-            if self._need_auto_encrypt(name, data, decrypt):
+            if self._need_decrypt(name, data, decrypt):
                 self._load_credentials(name, data)
             if not decrypt:
                 self._clean_credentials(name, data)
@@ -276,19 +276,25 @@ class RestHandler(object):
                 **masked
             )
 
-    def _need_auto_encrypt(self, name, data, decrypt):
-        if decrypt:
-            return True
+    def _need_decrypt(self, name, data, decrypt):
+        # some encrypted-needed fields are plain text in *.conf.
+        encrypted_field = False
         for field in self._endpoint.model(name, data).fields:
             if field.encrypted is False:
                 # ignore non-encrypted fields
                 continue
+            encrypted_field = True
             if not data.get(field.name):
                 # ignore un-stored/empty fields
                 continue
             if data[field.name] == RestCredentials.PASSWORD:
                 # ignore already-encrypted fields
                 continue
+            return True
+
+        if decrypt and encrypted_field:
+            # clear credentials is required by request and
+            # there are some encrypted-needed fields
             return True
         return False
 
