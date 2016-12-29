@@ -52,14 +52,12 @@ class AdminExternalHandler(admin.MConfigHandler, object):
     # Leave it for setting REST model
     endpoint = None
 
-    def __init__(self, scriptMode, ctxInfo, request=None):
+    def __init__(self, *args, **kwargs):
         # use classic inheritance to be compatible for
         # old version of Splunk private SDK
-        kwargs = {} if request is None else {'request': request}
         admin.MConfigHandler.__init__(
             self,
-            scriptMode,
-            ctxInfo,
+            *args,
             **kwargs
         )
         self.handler = RestHandler(
