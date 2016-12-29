@@ -35,7 +35,7 @@ def _encode_request(existing=False):
         def check_existing(self, name):
             if not existing:
                 return None
-            entities = self.get(name)
+            entities = list(self.get(name))
             if len(entities) < 1:
                 raise RestError(
                     404,
@@ -45,7 +45,6 @@ def _encode_request(existing=False):
 
         @wraps(meth)
         def wrapper(self, name, data):
-
             self._endpoint.validate(
                 name,
                 data,
@@ -72,53 +71,29 @@ def _decode_response(meth):
     :param meth: RestHandler instance method
     :return:
     """
-    def parse(self, response):
-        body = response.body.read()
-        cont = json.loads(body)
-
-        entities = []
-        for entry in cont['entry']:
-            name = entry['name']
-            data = entry['content']
-            rest_credentials = RestCredentials(
-                self._splunkd_uri,
-                self._session_key,
-                self._endpoint,
-            )
-            masked = rest_credentials.decrypt(name, data)
-            if masked:
-                # passwords.conf changed
-                self._client.post(
-                    self.path_segment(
-                        self._endpoint.internal_endpoint,
-                        name=name,
-                    ),
-                    **masked
-                )
-            self._endpoint.decode(name, data)
-
-            entity = RestEntity(
-                name,
-                data,
-                self._endpoint.model(name, data),
-                self._endpoint.user,
-                self._endpoint.app,
-                acl=entry['acl'],
-            )
-            entities.append(entity)
-        return entities
+    def decode(self, name, data, acl):
+        self._endpoint.decode(name, data)
+        return RestEntity(
+            name,
+            data,
+            self._endpoint.model(name, data),
+            self._endpoint.user,
+            self._endpoint.app,
+            acl=acl,
+        )
 
     @wraps(meth)
     def wrapper(self, *args, **kwargs):
         try:
-            response = meth(self, *args, **kwargs)
-            return parse(self, response)
+            for name, data, acl in meth(self, *args, **kwargs):
+                yield decode(self, name, data, acl)
         except RestError:
             raise
         except binding.HTTPError as exc:
             raise RestError(exc.status, exc.message)
         except Exception:
             raise RestError(500, traceback.format_exc())
+
     return wrapper
 
 
@@ -148,42 +123,45 @@ class RestHandler(object):
         )
 
     @_decode_response
-    def get(self, name):
+    def get(self, name, decrypt=False):
         if self._endpoint.need_reload:
             self.reload()
-        return self._client.get(
+        response = self._client.get(
             self.path_segment(
                 self._endpoint.internal_endpoint,
                 name=name,
             ),
             output_mode='json',
         )
+        return self._flay_response(response, decrypt)
 
     @_decode_response
-    def all(self, **query):
+    def all(self, decrypt=False, **query):
         if self._endpoint.need_reload:
             self.reload()
-        return self._client.get(
+        response = self._client.get(
             self.path_segment(self._endpoint.internal_endpoint),
             output_mode='json',
             **query
         )
+        return self._flay_response(response, decrypt)
 
     @_decode_response
     @_encode_request()
     def create(self, name, data):
         self._check_name(name)
-        return self._client.post(
+        response = self._client.post(
             self.path_segment(self._endpoint.internal_endpoint),
             output_mode='json',
             name=name,
             **data
         )
+        return self._flay_response(response)
 
     @_decode_response
     @_encode_request(existing=True)
     def update(self, name, data):
-        return self._client.post(
+        response = self._client.post(
             self.path_segment(
                 self._endpoint.internal_endpoint,
                 name=name,
@@ -191,10 +169,11 @@ class RestHandler(object):
             output_mode='json',
             **data
         )
+        return self._flay_response(response)
 
     @_decode_response
     def delete(self, name):
-        ret = self._client.delete(
+        response = self._client.delete(
             self.path_segment(
                 self._endpoint.internal_endpoint,
                 name=name,
@@ -209,11 +188,11 @@ class RestHandler(object):
             self._endpoint,
         )
         rest_credentials.delete(name)
-        return ret
+        return self._flay_response(response)
 
     @_decode_response
     def disable(self, name):
-        return self._client.post(
+        response = self._client.post(
             self.path_segment(
                 self._endpoint.internal_endpoint,
                 name=name,
@@ -221,10 +200,11 @@ class RestHandler(object):
             ),
             output_mode='json',
         )
+        return self._flay_response(response)
 
     @_decode_response
     def enable(self, name):
-        return self._client.post(
+        response = self._client.post(
             self.path_segment(
                 self._endpoint.internal_endpoint,
                 name=name,
@@ -232,6 +212,7 @@ class RestHandler(object):
             ),
             output_mode='json',
         )
+        return self._flay_response(response)
 
     def reload(self):
         self._client.get(
@@ -264,6 +245,57 @@ class RestHandler(object):
             action='/%s' % action if action else '',
         )
         return path.strip('/')
+
+    def _flay_response(self, response, decrypt=False):
+        body = response.body.read()
+        cont = json.loads(body)
+        for entry in cont['entry']:
+            name = entry['name']
+            data = entry['content']
+            acl = entry['acl']
+            if self._need_auto_encrypt(name, data, decrypt):
+                self._load_credentials(name, data)
+            if not decrypt:
+                self._clean_credentials(name, data)
+            yield name, data, acl
+
+    def _load_credentials(self, name, data):
+        rest_credentials = RestCredentials(
+            self._splunkd_uri,
+            self._session_key,
+            self._endpoint,
+        )
+        masked = rest_credentials.decrypt(name, data)
+        if masked:
+            # passwords.conf changed
+            self._client.post(
+                self.path_segment(
+                    self._endpoint.internal_endpoint,
+                    name=name,
+                ),
+                **masked
+            )
+
+    def _need_auto_encrypt(self, name, data, decrypt):
+        if decrypt:
+            return True
+        for field in self._endpoint.model(name, data).fields:
+            if field.encrypted is False:
+                # ignore non-encrypted fields
+                continue
+            if not data.get(field.name):
+                # ignore un-stored/empty fields
+                continue
+            if data[field.name] == RestCredentials.PASSWORD:
+                # ignore already-encrypted fields
+                continue
+            return True
+        return False
+
+    def _clean_credentials(self, name, data):
+        for field in self._endpoint.model(name, data).fields:
+            if field.encrypted is True and field.name in data:
+                del data[field.name]
 
     @classmethod
     def _check_name(cls, name):

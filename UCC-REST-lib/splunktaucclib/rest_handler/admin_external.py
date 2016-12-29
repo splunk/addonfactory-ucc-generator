@@ -52,6 +52,9 @@ class AdminExternalHandler(admin.MConfigHandler):
     # Leave it for setting REST model
     endpoint = None
 
+    # action parameter for getting clear credentials
+    ACTION_CRED = '--cred--'
+
     def __init__(self, scriptMode, ctxInfo, request=None):
         # use classic inheritance to be compatible for
         # old version of Splunk private SDK
@@ -69,10 +72,14 @@ class AdminExternalHandler(admin.MConfigHandler):
         self.payload = self._convert_payload()
 
     def setup(self):
+        # add args for getting clear credentials
+        if self.requestedAction == admin.ACTION_LIST:
+            self.supportedArgs.addOptArg(self.ACTION_CRED)
+
+        # add args in payload while creating/updating
         actions = (admin.ACTION_LIST, admin.ACTION_REMOVE)
         if self.requestedAction in actions:
             return
-
         model = self.endpoint.model(
             self.callerArgs.id,
             self.payload,
@@ -90,13 +97,21 @@ class AdminExternalHandler(admin.MConfigHandler):
 
     @build_conf_info
     def handleList(self, confInfo):
+        decrypt = self.callerArgs.data.get(
+            self.ACTION_CRED,
+            [False],
+        )
+        decrypt = is_true(decrypt[0])
         if self.callerArgs.id:
-            result = self.handler.get(self.callerArgs.id)
+            result = self.handler.get(
+                self.callerArgs.id,
+                decrypt=decrypt,
+            )
         else:
-            query = {
-                'count': 0
-            }
-            result = self.handler.all(**query)
+            result = self.handler.all(
+                decrypt=decrypt,
+                count=0,
+            )
         return result
 
     @build_conf_info
