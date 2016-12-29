@@ -1,3 +1,4 @@
+var webpack = require('webpack');
 var path = require('path');
 var rootDir = path.join(__dirname, '../../');
 var webpackBaseConfig = require('../webpack/base');
@@ -38,7 +39,12 @@ module.exports = function (config) {
             alias: {
                 'lodash': path.join(rootDir, 'bower_components', 'lodash', 'dist', 'lodash')
             }
-        }
+        },
+        plugins: [
+            new webpack.DefinePlugin({
+                __CONFIG_FROM_FILE__: true
+            })
+        ]
     }),
 
     webpackServer: {

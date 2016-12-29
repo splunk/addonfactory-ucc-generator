@@ -119,11 +119,15 @@ define([
             }
 
             var header = this.component.table.header;
-            _.each(header, h => {
-                let fieldValue, html;
-                switch (h.field) {
+            _.each(header, ({field}) => {
+                let html,
+                    fieldValue = field === 'name' ? this.model.entity.entry.attributes[field]
+                        : this.model.entity.entry.content.attributes[field];
+                fieldValue = fieldValue === undefined ? '' : String(fieldValue);
+                fieldValue = Util.encryptTableText(this.component, this.model.entity, field, fieldValue);
+
+                switch (field) {
                     case 'name':
-                        fieldValue = this.model.entity.entry.attributes.name;
                         html = '<td class="col-name">' + fieldValue + '</td>';
                         break;
                     case 'disabled':
@@ -134,12 +138,7 @@ define([
                         }
                         break;
                     default:
-                        if (this.model.entity.entry.content.attributes[h.field] !== undefined) {
-                            fieldValue = String(this.model.entity.entry.content.attributes[h.field]);
-                        } else {
-                            fieldValue = '';
-                        }
-                        html = '<td  class="col-' + h.field + '">' + fieldValue + '</td>';
+                        html = '<td  class="col-' + field + '">' + fieldValue + '</td>';
                 }
                 this.$el.append(_.template(html));
             });
