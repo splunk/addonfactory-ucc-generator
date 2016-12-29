@@ -80,8 +80,12 @@ define(function () {
             }
         },
 
-        encodeHTML: function(text) {
-            return text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        encodeHTML: function(value) {
+            return $('<div/>').text(value).html();
+        },
+
+        decodeHTML: function(value) {
+            return $('<div/>').html(value).text();
         }
     };
 
