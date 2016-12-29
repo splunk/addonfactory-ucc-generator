@@ -141,6 +141,10 @@ define([
             if (value === '.' || value === '..') {
                 return getFormattedMessage(4);
             }
+
+            if (value.length >= 1024) {
+                return getFormattedMessage(22);
+            }
         },
 
         _getAttrLabel: function (attr) {
