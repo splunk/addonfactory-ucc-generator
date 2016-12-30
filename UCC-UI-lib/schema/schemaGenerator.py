@@ -10,8 +10,8 @@ class DocumentWithoutAddProp(Document):
 
 
 class ValueLabelPair(DocumentWithoutAddProp):
-    value = StringField(required=True, max_length=300, pattern="^\w+$")
-    label = StringField(required=True, max_length=150)
+    value = StringField(required=True, max_length=50)
+    label = StringField(required=True, max_length=100)
 
 
 class ValidatorBase(DocumentWithoutAddProp):
@@ -152,8 +152,8 @@ class InputsPage(DocumentWithoutAddProp):
     table = DocumentField(InputsTable, as_ref=True, required=True)
     services = ArrayField(DictField(
         properties={
-            "name": StringField(required=True, pattern="^\w+$"),
-            "title": StringField(required=True, max_length=50),
+            "name": StringField(required=True, pattern="^[0-9a-zA-Z][0-9a-zA-Z_-]*$", max_length=50),
+            "title": StringField(required=True, max_length=100),
             "entity": ArrayField(DocumentField(Entity, as_ref=True), required=True),
             "options": DocumentField(Hooks, as_ref=True)
         }

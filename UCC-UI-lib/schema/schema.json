@@ -327,11 +327,12 @@
                             }, 
                             "name": {
                                 "type": "string", 
-                                "pattern": "^\\w+$"
+                                "pattern": "^[0-9a-zA-Z][0-9a-zA-Z_-]*$", 
+                                "maxLength": 50
                             }, 
                             "title": {
                                 "type": "string", 
-                                "maxLength": 50
+                                "maxLength": 100
                             }
                         }, 
                         "required": [
@@ -608,12 +609,11 @@
             "properties": {
                 "value": {
                     "type": "string", 
-                    "pattern": "^\\w+$", 
-                    "maxLength": 300
+                    "maxLength": 50
                 }, 
                 "label": {
                     "type": "string", 
-                    "maxLength": 150
+                    "maxLength": 100
                 }
             }, 
             "required": [
