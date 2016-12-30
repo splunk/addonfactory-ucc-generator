@@ -78,6 +78,14 @@ define(function () {
             } else {
                 return defaultValue;
             }
+        },
+
+        encodeHTML: function(value) {
+            return $('<div/>').text(value).html();
+        },
+
+        decodeHTML: function(value) {
+            return $('<div/>').html(value).text();
         }
     };
 
