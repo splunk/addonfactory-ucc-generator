@@ -80,6 +80,18 @@ define(function () {
             }
         },
 
+        disableElements: function(...elements) {
+            elements.forEach((element) => {
+                element.attr('disabled', true);
+            });
+        },
+
+        enableElements: function(...elements) {
+            elements.forEach((element) => {
+                element.removeAttr('disabled');
+            });
+        },
+
         encodeHTML: function(value) {
             return $('<div/>').text(value).html();
         },

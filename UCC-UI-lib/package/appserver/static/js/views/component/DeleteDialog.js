@@ -9,11 +9,13 @@ define([
     'jquery',
     'lodash',
     'backbone',
+    'app/util/Util',
     'app/views/component/DeleteDialog.html'
 ], function (
     $,
     _,
     Backbone,
+    Util,
     DeleteDialog
 ) {
     return Backbone.View.extend({
@@ -77,20 +79,23 @@ define([
         },
 
         _delete: function (delete_url) {
-            this.$("input[type=submit]").attr('disabled', true);
+            Util.disableElements(
+                this.$("button[type=button]"),
+                this.$("input[type=submit]")
+            );
             $.ajax({
                 url: delete_url,
                 type: 'DELETE'
             }).done(() => {
-                this.collection.remove(this.model);
-
                 if (this.collection.length > 0) {
                     _.each(this.collection.models, (model) => {
                         model.paging.set('total', model.paging.get('total') - 1);
                     });
-                    this.collection.reset(this.collection.models);
                     //Trigger collection page change event to refresh the count in table caption
-                    this.collection.paging.set('total', this.collection.models.length);
+                    this.collection.paging.set(
+                        'total',
+                        this.collection.paging.get('total') - 1
+                    );
                 } else {
                     var offset = this.stateModel.get('offset'),
                         count = this.stateModel.get('count');
@@ -107,6 +112,7 @@ define([
                     this.stateModel.set('offset', (offset - count) < 0 ? 0 : (offset - count));
                     this.collection.reset(null);
                 }
+                this.collection.remove(this.model);
 
                 if (this.collection._url === undefined) {
                     this.dispatcher.trigger('delete-input');
@@ -114,7 +120,10 @@ define([
                 this.$("[role=dialog]").modal('hide');
             }).fail((model, response) => {
                 //Re-enable when failed
-                this.$("input[type=submit]").removeAttr('disabled');
+                Util.enableElements(
+                    this.$("button[type=button]"),
+                    this.$("input[type=submit]")
+                );
                 removeWarningMsg('.modal-dialog');
                 addErrorMsg('.modal-dialog', model, true);
                 addClickListener('.modal-dialog', 'msg-error');
