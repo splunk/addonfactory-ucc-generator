@@ -1,5 +1,6 @@
 import {configManager} from 'app/util/configManager';
 import _ from 'lodash';
+import $ from 'jquery';
 
 define(function () {
     var APP_NAME = 'AddOns',
@@ -116,7 +117,14 @@ define(function () {
                 }
             }
             return text;
+        },
+
+        encodeHTML: function(value) {
+            return $('<div/>').text(value).html();
+        },
+
+        decodeHTML: function(value) {
+            return $('<div/>').html(value).text();
         }
     };
-
 });

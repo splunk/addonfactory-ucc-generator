@@ -127,9 +127,6 @@ define([
                 fieldValue = Util.encryptTableText(this.component, this.model.entity, field, fieldValue);
 
                 switch (field) {
-                    case 'name':
-                        html = '<td class="col-name">' + fieldValue + '</td>';
-                        break;
                     case 'disabled':
                         if (Util.parseBoolean(this.model.entity.entry.content.attributes.disabled, false)) {
                             html = '<td class="col-status">' + _('Disabled').t() + '</td>';
@@ -138,7 +135,7 @@ define([
                         }
                         break;
                     default:
-                        html = '<td  class="col-' + field + '">' + fieldValue + '</td>';
+                        html = '<td  class="col-' + field + '">' + Util.encodeHTML(fieldValue) + '</td>';
                 }
                 this.$el.append(_.template(html));
             });

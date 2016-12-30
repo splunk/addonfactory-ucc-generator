@@ -47,19 +47,18 @@ def build_conf_info(meth):
     return wrapper
 
 
-class AdminExternalHandler(admin.MConfigHandler):
+class AdminExternalHandler(admin.MConfigHandler, object):
 
     # Leave it for setting REST model
     endpoint = None
 
-    def __init__(self, scriptMode, ctxInfo, request=None):
+    def __init__(self, *args, **kwargs):
         # use classic inheritance to be compatible for
         # old version of Splunk private SDK
         admin.MConfigHandler.__init__(
             self,
-            scriptMode,
-            ctxInfo,
-            request,
+            *args,
+            **kwargs
         )
         self.handler = RestHandler(
             get_splunkd_uri(),
