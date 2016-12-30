@@ -124,7 +124,7 @@ define([
                 switch (h.field) {
                     case 'name':
                         fieldValue = this.model.entity.entry.attributes.name;
-                        html = '<td class="col-name">' + fieldValue + '</td>';
+                        html = '<td class="col-name">' + Util.encodeHTML(fieldValue) + '</td>';
                         break;
                     case 'disabled':
                         if (Util.parseBoolean(this.model.entity.entry.content.attributes.disabled, false)) {
@@ -139,7 +139,7 @@ define([
                         } else {
                             fieldValue = '';
                         }
-                        html = '<td  class="col-' + h.field + '">' + fieldValue + '</td>';
+                        html = '<td  class="col-' + h.field + '">' + Util.encodeHTML(fieldValue) + '</td>';
                 }
                 this.$el.append(_.template(html));
             });

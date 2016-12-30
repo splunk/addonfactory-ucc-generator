@@ -176,6 +176,20 @@ describe('Global config check duplicate key/value pairs testes', () => {
         assert.equal(true, checkDupKeyValues(configObj.inputs, true).length > 0);
     });
 
+    it('Checker should be case insensitive', () => {
+        let configObj = cloneDeep(NORMAL_CONFIG);
+        configObj.inputs.services[0].entity[0].options = {
+            items: [{
+                label: '1',
+                value: 'INSENSITIVE'
+            }, {
+                label: '2',
+                value: 'insensitive'
+            }]
+        };
+        assert.equal(true, checkDupKeyValues(configObj.inputs, true).length > 0);
+    });
+
     it('Entities under same service or tab with same field or label are forbidden', () => {
         let configObj = cloneDeep(NORMAL_CONFIG);
         configObj.inputs.services[0].entity[0].label = configObj.inputs.services[0].entity[1].label;
