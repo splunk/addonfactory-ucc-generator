@@ -8,7 +8,7 @@ import json
 import traceback
 from urlparse import urlparse
 from functools import wraps
-from splunklib import binding
+from solnlib.packages.splunklib import binding
 from solnlib.splunk_rest_client import SplunkRestClient
 
 from .error import RestError
