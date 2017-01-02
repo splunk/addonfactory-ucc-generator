@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name='uccrestbuilder',
     description='The REST builder tool for Universal Configuration Console',
-    version='3.0.0',
+    version='{version}',
     author='Splunk, Inc.',
     author_email='Shanghai-TA-dev@splunk.com',
     license='http://www.apache.org/licenses/LICENSE-2.0',
