@@ -62,7 +62,7 @@ export default Backbone.View.extend({
             success: () => removeSavingMsg(this.msgContainerId),
             error: (model, response) => {
                 removeSavingMsg(this.msgContainerId);
-                addErrorMsg(this.msgContainerId, model, true);
+                addErrorMsg(this.msgContainerId, response, true);
                 addClickListener(this.msgContainerId, 'msg-error');
             }
         });
