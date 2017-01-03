@@ -177,8 +177,8 @@ class RestCredentials(object):
             if data[field.name] == self.PASSWORD:
                 # ignore already-encrypted fields
                 continue
-            encrypting_data[field.name] = data[field.name]
             if data[field.name] != self.EMPTY_VALUE:
+                encrypting_data[field.name] = data[field.name]
                 # non-empty fields
                 data[field.name] = self.PASSWORD
                 if field.name in encrypted_data:
