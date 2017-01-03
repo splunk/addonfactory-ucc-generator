@@ -144,7 +144,13 @@
                         {
                             "field": "proxy_port",
                             "label": "Port",
-                            "type": "text"
+                            "type": "text",
+                            "validators": [
+                                {
+                                    "type": "number",
+                                    "range": [1, 65535]
+                                }
+                            ]
                         },
                         {"field": "proxy_username", "label": "Username", "type": "text"},
                         {
@@ -155,7 +161,7 @@
                         }
                     ],
                     "options": {
-                        "saveValidator": "function(formData) { if(formData.proxy_enabled && !formData.proxy_url) { return 'Input of Host can not be empty'; } return (!formData.proxy_enabled || (!isNaN(Number(formData.proxy_port)) && Number(formData.proxy_port) < 65535 && Number(formData.proxy_port)) > 0) ? true : 'Input of Port should be in range of [1, 65535]'; }"
+                        "saveValidator": "function(formData) { if(!formData.proxy_enabled || formData.proxy_enabled === '0') {return true; } if(!formData.proxy_url) { return 'Input of Host can not be empty'; } if(!formData.proxy_port) { return 'Input of Port can not be empty'; } return true; }"
                     }
                 },
                 {
