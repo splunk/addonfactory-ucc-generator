@@ -85,6 +85,9 @@ define([
                 this.model = options.model.entry.content.clone();
                 this.model.set({name: options.model.entry.get("name")});
                 this.real_model = options.model;
+                (validators || []).forEach(({fieldName, validator}) => {
+                    this.real_model.addValidation(fieldName, validator);
+                });
             } else if (this.mode === "clone") { //Clone mode
                 this.model = options.model.entry.content.clone();
                 //Unset the name attribute if the model is newly created
