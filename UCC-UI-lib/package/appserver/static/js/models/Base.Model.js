@@ -134,12 +134,12 @@ define([
                 }
             }
 
-            if (value === 'default') {
+            if (value === '.' || value === '..' || value.toLowerCase() === 'default') {
                 return getFormattedMessage(3);
             }
 
-            if (value === '.' || value === '..') {
-                return getFormattedMessage(4);
+            if (value.length >= 1024) {
+                return getFormattedMessage(22);
             }
         },
 

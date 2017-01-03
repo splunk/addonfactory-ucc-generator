@@ -31,7 +31,6 @@
     "scripts": {
         "postinstall": "bower install",
         "update_version": "node bin/update_version.js",
-        "prepublish": "npm run update_version",
         "build": "grunt copy:publish && grunt shell:style && grunt webpack:build",
         "buildDev": "grunt copy:dev && grunt shell:style && grunt webpack:dev",
         "fortify": "/usr/bin/fortify-scanner.py",

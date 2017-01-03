@@ -1,5 +1,7 @@
-/*global define,window,atob,escape*/
-/*jslint bitwise: true */
+import {configManager} from 'app/util/configManager';
+import _ from 'lodash';
+import $ from 'jquery';
+
 define(function () {
     var APP_NAME = 'AddOns',
         APP_VERSION = 'released',
@@ -78,7 +80,47 @@ define(function () {
             } else {
                 return defaultValue;
             }
+        },
+
+        encryptTableText: function(srcComponent, entity, field, text) {
+            if (!_.isString(text) || !field) {
+                return text;
+            }
+            const isInputsPage = !!srcComponent.services;
+            const serviceLikeArr = isInputsPage ? srcComponent['services']
+                : [srcComponent];
+
+            if (serviceLikeArr && entity) {
+                const {unifiedConfig: {meta: {restRoot}}} = configManager;
+                const modelID = entity.id;
+
+                // ID of model: /servicesNS/nobody/${TA_NAME}/${TA_REST_ROOT}_${COLLECTION_NAME}/1
+                const strArr = modelID.split('/');
+                if (strArr.length < 2) {
+                    return text;
+                }
+                const serviceName = strArr[strArr.length - 2].replace(`${restRoot}_`, '');
+                const entityList = _.get(_.find(serviceLikeArr, d => d.name === serviceName), 'entity');
+                if (!entityList) {
+                    return text;
+                }
+
+                const srcEntity = _.find(entityList, d => d.field === field);
+
+                if (srcEntity && srcEntity.encrypted) {
+                    // Return 8 "*" since the length of content is also a secret
+                    return _.repeat('*', 8);
+                }
+            }
+            return text;
+        },
+
+        encodeHTML: function(value) {
+            return $('<div/>').text(value).html();
+        },
+
+        decodeHTML: function(value) {
+            return $('<div/>').html(value).text();
         }
     };
-
 });

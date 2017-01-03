@@ -81,6 +81,8 @@ function parseErrorMsg(data) {
         matches = regex.exec(msg);
         if (matches && matches[1]) {
             error_msg = matches[1];
+        } else {
+            error_msg = msg;
         }
     } catch (err) {
         error_msg = 'Error in processing the request';

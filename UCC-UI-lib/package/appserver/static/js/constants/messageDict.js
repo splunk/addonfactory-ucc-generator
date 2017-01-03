@@ -3,8 +3,7 @@ export default {
     0: 'Field "Name" is required',
     1: 'Field "Name" must be a string',
     2: 'Name is already in use',
-    3: '"default" is a reserved word',
-    4: '. is not supported',
+    3: '"default", "." and ".." are reserved names which cannot be used',
     5: 'Field {{args[0]}} should be a positive number',
     6: 'Field {{args[0]}} is required',
     7: 'Field {{args[0]}} is not a valid regular expression',
@@ -20,8 +19,9 @@ export default {
     17: 'Length of {{args[0]}} should be greater than or equal to {{args[1]}}',
     18: 'Length of {{args[0]}} should be less than or equal to {{args[1]}}',
     19: 'Field {{args[0]}} is not a valid {{args[1]}}',
-    20: 'configuration file should be pure JSON.',
+    20: 'configuration file should be pure JSON',
     21: 'duplicate {{args[0]}} keys in entity {{args[1]}} is not allowed',
+    22: 'Field "Name" must be less than 1024 characters',
 
     /* general messages, range [100, 499]*/
     100: 'Create New Input',

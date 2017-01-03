@@ -146,9 +146,14 @@ class Configuration(object):
                 del entity[k]
 
     def _load_endpoint(self, name, schema):
+        query = {
+            'output_mode': 'json',
+            'count': '0',
+            '--cred--': '1',
+        }
         response = self._client.get(
             RestHandler.path_segment(self._endpoint_path(name)),
-            output_mode='json'
+            **query
         )
         body = response.body.read()
         cont = json.loads(body)

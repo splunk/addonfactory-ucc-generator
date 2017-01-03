@@ -201,7 +201,10 @@ define([
                         }
 
                         //Trigger collection page change event to refresh the count in table caption
-                        this.collection.paging.set('total', this.collection.models.length);
+                        this.collection.paging.set(
+                            'total',
+                            this.collection.paging.get('total') + 1
+                        );
                         //Rerender the table
                         this.collection.reset(this.collection.models);
 

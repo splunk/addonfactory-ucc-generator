@@ -299,7 +299,7 @@ define([
             var singleStateModel = new Backbone.Model({
                 sortKey: 'name',
                 sortDirection: 'asc',
-                count: 100,
+                count: 0, // fetch all stanzas
                 offset: 0,
                 fetching: true
             });

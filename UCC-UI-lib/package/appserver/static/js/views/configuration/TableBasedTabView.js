@@ -71,9 +71,7 @@ export default Backbone.View.extend({
             this.$el.html('');
             const caption = new CaptionView({
                 countLabel: getFormattedMessage(107),
-                model: {
-                    state: this.stateModel
-                },
+                model: {state: this.stateModel},
                 collection: this.dataStore,
                 noFilterButtons: true,
                 filterKey: _.map(props.entity, e => e.field)
