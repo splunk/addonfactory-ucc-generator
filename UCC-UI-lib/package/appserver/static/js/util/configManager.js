@@ -9,18 +9,6 @@ import {getFormattedMessage} from 'app/util/messageUtil';
 
 class ConfigManager {
     init(next) {
-        if (__CONFIG_FROM_FILE__) {
-            this.unifiedConfig = require('repoBaseDir/globalConfig.json');
-            attchPropertie();
-        } else {
-            loadGlobalConfig(() => {
-                // The configuration object should be attached to global object,
-                // before executing the code below.
-                this.unifiedConfig = window.__globalConfig;
-                attchPropertie();
-            });
-        }
-
         const attchPropertie = () => {
             // TODO: display error message when validation failed
             const validationResult = validateSchema(this.unifiedConfig);
@@ -42,6 +30,18 @@ class ConfigManager {
 
             next && next();
         };
+
+        if (__CONFIG_FROM_FILE__) {
+            this.unifiedConfig = require('repoBaseDir/globalConfig.json');
+            attchPropertie();
+        } else {
+            loadGlobalConfig(() => {
+                // The configuration object should be attached to global object,
+                // before executing the code below.
+                this.unifiedConfig = window.__globalConfig;
+                attchPropertie();
+            });
+        }
     }
 
     generateAppData(meta) {
