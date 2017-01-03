@@ -12,7 +12,6 @@ from solnlib.credentials import (
 
 from .util import get_base_app_name
 from .error import RestError
-from .eai import EAI_FIELD_PREFIX
 
 
 __all__ = [
@@ -59,7 +58,7 @@ class RestCredentialsContext(object):
         :type data: dict
         :return:
         """
-        return json.dumps(data) if data else None
+        return json.dumps(data)
 
     def load(self, string):
         """
@@ -105,14 +104,18 @@ class RestCredentials(object):
         """
         try:
             encrypted = self._get(name)
+            existing = True
         except CredentialNotExistException:
             encrypted = {}
+            existing = False
         encrypting = self._filter(name, data, encrypted)
-        credentials = self._merge(encrypted, encrypting)
-        if credentials:
-            self._set(name, credentials)
+        self._merge(name, data, encrypted, encrypting)
+        if existing or encrypting:
+            # only save credential when the stanza is existing in
+            # passwords.conf or encrypting data is not empty
+            self._set(name, encrypting)
 
-    def decrypt(self, name, data):
+    def decrypt(self, name, data, show_credentials=False):
         """
 
         :param name:
@@ -120,25 +123,20 @@ class RestCredentials(object):
         :return: If the passwords.conf is updated, masked data.
             Else, None.
         """
-        masked = None
-        if not self._has_credentials(name, data):
-            return masked
-
         try:
             encrypted = self._get(name)
+            existing = True
         except CredentialNotExistException:
             encrypted = {}
+            existing = False
         encrypting = self._filter(name, data, encrypted)
-        credentials = self._merge(encrypted, encrypting)
-        if self._need_encrypting(encrypted, encrypting):
-            self._set(name, credentials)
-            masked = copy.copy(data)
-            for key in masked.keys():
-                if key.startswith(EAI_FIELD_PREFIX) or key == 'disabled':
-                    del masked[key]
-
-        data.update(credentials)
-        return masked
+        self._merge(name, data, encrypted, encrypting)
+        if existing or encrypting:
+            # only save credential when the stanza is existing in
+            # passwords.conf or encrypting data is not empty
+            self._set(name, encrypting)
+        data.update(encrypting)
+        return encrypted
 
     def delete(self, name):
         context = RestCredentialsContext(self._endpoint, name)
@@ -149,7 +147,7 @@ class RestCredentials(object):
             pass
 
     def _set(self, name, credentials):
-        if not credentials:
+        if credentials is None:
             return
         context = RestCredentialsContext(self._endpoint, name)
         mgr = self._get_manager(context)
@@ -187,13 +185,25 @@ class RestCredentials(object):
                     del encrypted_data[field.name]
         return encrypting_data
 
-    def _merge(self, encrypted, encrypting):
-        credentials_data = copy.copy(encrypted)
-        credentials_data.update(encrypting)
-        for key, val in encrypting.iteritems():
-            if val == self.EMPTY_VALUE:
-                del credentials_data[key]
-        return credentials_data
+    def _merge(self, name, data, encrypted, encrypting):
+        model = self._endpoint.model(name, data)
+        for field in model.fields:
+            if field.encrypted is False:
+                continue
+
+            val_encrypting = encrypting.get(field.name)
+            if val_encrypting:
+                encrypted[field.name] = self.PASSWORD
+                continue
+            elif val_encrypting == self.EMPTY_VALUE:
+                del encrypting[field.name]
+                encrypted[field.name] = self.EMPTY_VALUE
+                continue
+
+            val_encrypted = encrypted.get(field.name)
+            if val_encrypted:
+                encrypting[field.name] = val_encrypted
+                del encrypted[field.name]
 
     def _get_manager(self, context):
         return CredentialManager(
@@ -202,18 +212,3 @@ class RestCredentials(object):
             app=self._endpoint.app,
             realm=context.realm(),
         )
-
-    @staticmethod
-    def _need_encrypting(encrypted, encrypting):
-        for key, val_encrypting in encrypting.iteritems():
-            val_encrypted = encrypted.get(key, RestCredentials.EMPTY_VALUE)
-            if val_encrypting != val_encrypted:
-                return True
-        return False
-
-    def _has_credentials(self, name, data):
-        model = self._endpoint.model(name, data)
-        for field in model.fields:
-            if field.encrypted is True:
-                return True
-        return False
