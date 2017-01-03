@@ -83,11 +83,7 @@ define(function () {
         },
 
         encryptTableText: function(srcComponent, entity, field, text) {
-            if (!text) {
-                return '';
-            }
-
-            if (text === '' || !_.isString(text) || !field) {
+            if (!_.isString(text) || !field) {
                 return text;
             }
             const isInputsPage = !!srcComponent.services;

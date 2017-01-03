@@ -46,4 +46,14 @@ describe('Encrypted table labels testes', () => {
 
         assert.equal('********', text);
     });
+
+    it('A encrypted entity should generate ""********" with empty field value', () => {
+        const config = cloneDeep(NORMAL_CONFIG);
+        config.entity[0].id = `abc/${unifiedConfig.meta.restRoot}/${config.name}/a`;
+        config.entity[0].encrypted = true;
+        const srcText = '';
+        const text = Util.encryptTableText(config, config.entity[0], 'api_key', srcText);
+
+        assert.equal('********', text);
+    });
 });
