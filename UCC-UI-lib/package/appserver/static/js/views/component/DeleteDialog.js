@@ -87,33 +87,7 @@ define([
                 url: delete_url,
                 type: 'DELETE'
             }).done(() => {
-                if (this.collection.length > 0) {
-                    _.each(this.collection.models, (model) => {
-                        model.paging.set('total', model.paging.get('total') - 1);
-                    });
-                    //Trigger collection page change event to refresh the count in table caption
-                    this.collection.paging.set(
-                        'total',
-                        this.collection.paging.get('total') - 1
-                    );
-                } else {
-                    var offset = this.stateModel.get('offset'),
-                        count = this.stateModel.get('count');
-                    this.collection.paging.set('offset', (offset - count) < 0 ? 0 : (offset - count));
-                    this.collection.paging.set('perPage', count);
-                    this.collection.paging.set('total', offset);
-
-                    _.each(this.collection.models, (model) => {
-                        model.paging.set('offset', (offset - count) < 0 ? 0 : (offset - count));
-                        model.paging.set('perPage', count);
-                        model.paging.set('total', offset);
-                    });
-
-                    this.stateModel.set('offset', (offset - count) < 0 ? 0 : (offset - count));
-                    this.collection.reset(null);
-                }
-                this.collection.remove(this.model);
-
+                this.removeFromCollection();
                 if (this.collection._url === undefined) {
                     this.dispatcher.trigger('delete-input');
                 }
@@ -128,6 +102,44 @@ define([
                 addErrorMsg('.modal-dialog', model, true);
                 addClickListener('.modal-dialog', 'msg-error');
             });
+        },
+
+        removeFromCollection: function() {
+            if (this.collection.length > 0) {
+                _.each(this.collection.models, (model) => {
+                    model.paging.set('total', model.paging.get('total') - 1);
+                });
+                //Trigger collection page change event to refresh the count in table caption
+                this.collection.paging.set(
+                    'total',
+                    this.collection.paging.get('total') - 1
+                );
+            } else {
+                var offset = this.stateModel.get('offset'),
+                    count = this.stateModel.get('count');
+                this.collection.paging.set(
+                    'offset',
+                    (offset - count) < 0 ? 0 : (offset - count)
+                );
+                this.collection.paging.set('perPage', count);
+                this.collection.paging.set('total', offset);
+
+                _.each(this.collection.models, (model) => {
+                    model.paging.set(
+                        'offset',
+                        (offset - count) < 0 ? 0 : (offset - count)
+                    );
+                    model.paging.set('perPage', count);
+                    model.paging.set('total', offset);
+                });
+
+                this.stateModel.set(
+                    'offset',
+                    (offset - count) < 0 ? 0 : (offset - count)
+                );
+                this.collection.reset(null);
+            }
+            this.collection.remove(this.model);
         }
     });
 });
