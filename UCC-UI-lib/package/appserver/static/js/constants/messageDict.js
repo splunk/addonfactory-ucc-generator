@@ -3,7 +3,7 @@ export default {
     0: 'Field "Name" is required',
     1: 'Field "Name" must be a string',
     2: 'Name is already in use',
-    3: '"default", "." and ".." are reserved names which cannot be used',
+    3: '"default", ".", ".." and string started with "_" are reserved names which cannot be used',
     5: 'Field {{args[0]}} should be a positive number',
     6: 'Field {{args[0]}} is required',
     7: 'Field {{args[0]}} is not a valid regular expression',

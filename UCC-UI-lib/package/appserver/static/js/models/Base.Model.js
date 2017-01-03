@@ -134,7 +134,7 @@ define([
                 }
             }
 
-            if (value === '.' || value === '..' || value.toLowerCase() === 'default') {
+            if (_.startsWith(value, '_') || value === '.' || value === '..' || value.toLowerCase() === 'default') {
                 return getFormattedMessage(3);
             }
 
