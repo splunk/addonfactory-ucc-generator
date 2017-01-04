@@ -206,12 +206,14 @@ define([
                                     this.collection.paging.get('total') + 1
                                 );
                             });
+                            //Trigger collection page change event to refresh the count in table caption
+                            this.collection.paging.set(
+                                'total',
+                                this.collection.paging.get('total') + 1
+                            );
+                        } else {
+                            console.log('Could not get total count for collection');
                         }
-                        //Trigger collection page change event to refresh the count in table caption
-                        this.collection.paging.set(
-                            'total',
-                            this.collection.paging.get('total') + 1
-                        );
                         this.collection.add(input);
                     }
                     this.$("[role=dialog]").modal('hide');
