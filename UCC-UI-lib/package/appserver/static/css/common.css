@@ -56,7 +56,7 @@
 
 /*Placeholder for msg*/
 .modal-body .form-horizontal {
-    margin-top: 30px;
+    margin-top: 15px;
 }
 .modal-body .form-horizontal ~ .form-horizontal {
     margin-top: 0px;
@@ -66,7 +66,6 @@
 .modal-body .msg {
     min-height: 20px;
     overflow: hidden;
-    position: absolute;
     width: 100%;
 }
 
