@@ -7,7 +7,7 @@ export function setCollectionRefCount(collection, refCollectionObjList, configMo
         (refCollectionObjList || []).forEach(({value: refCollection, dependencyList}) => {
             refCollection.models.forEach(d => {
                 const realField = _.get(
-                    dependencyList.find(d => d.referenceName === refTargetField),
+                    _.find(dependencyList, d => d.referenceName === refTargetField),
                     'targetField'
                 );
                 if (realField) {
@@ -20,7 +20,7 @@ export function setCollectionRefCount(collection, refCollectionObjList, configMo
 
         (configModeObjlList || []).forEach(({value: refModel, dependencyList}) => {
             const realField = _.get(
-                dependencyList.find(d => d.referenceName === refTargetField),
+                _.find(dependencyList, d => d.referenceName === refTargetField),
                 'targetField'
             );
             if (realField) {
