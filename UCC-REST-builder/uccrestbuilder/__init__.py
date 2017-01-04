@@ -19,7 +19,7 @@ __all__ = [
     'build',
 ]
 
-__version__ = '1.0.0'
+__version__ = '{version}'
 
 
 RestHandlerClass = collections.namedtuple(
