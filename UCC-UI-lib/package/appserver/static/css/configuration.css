@@ -10,12 +10,18 @@ body {
 .nav-tabs > li > a:focus {
     box-shadow: none;
 }
+
+.addonContainer .nav-tabs > .active {
+    border-bottom: none;
+}
+
 a:focus {
     box-shadow: none;
 }
 
 /*Leave space for error message display*/
 .nav-tabs {
+    height: auto;
     margin-bottom: 0px;
 }
 
@@ -25,5 +31,6 @@ a:focus {
 
 /*Prevent scroll in form*/
 .tab-content .modal-body {
+    height: auto;
     max-height: none;
 }
