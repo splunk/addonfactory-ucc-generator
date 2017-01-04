@@ -322,10 +322,7 @@ define([
             if (stateModel.get('search')) {
                 searchString = stateModel.get('search');
                 //make the filter work for field 'status'
-                rawSearch = searchString.substring(
-                    searchString.indexOf('*') + 1,
-                    searchString.indexOf('*', searchString.indexOf('*') + 1)
-                ).toLowerCase();
+                rawSearch = this.getRawSearch(searchString);
                 if ("disabled".indexOf(rawSearch) > -1) {
                     searchString += ' OR (disabled="*1*")';
                 }else if ("enabled".indexOf(rawSearch) > -1) {
@@ -358,8 +355,7 @@ define([
                 models;
 
             if (search !== this.emptySearchString) {
-                search = a.substring(a.indexOf('*') + 1,
-                    a.indexOf('*', a.indexOf('*') + 1)).toLowerCase();
+                search = this.getRawSearch(search);
                 result = this.cachedInputs.models.filter(d =>
                     this.filterKey.some(field => {
                             const entryValue = (d.entry.get(field) &&
@@ -372,6 +368,16 @@ define([
                         }
                     )
                 );
+                //make the filter work for field 'status'
+                if ("disabled".indexOf(search) > -1) {
+                    result = result.concat(this.cachedInputs.models.filter(model => {
+                        return model.entry.content.get('disabled') === true;
+                    }));
+                } else if ("enabled".indexOf(search) > -1) {
+                    result = result.concat(this.cachedInputs.models.filter(model => {
+                        return model.entry.content.get('disabled') === false;
+                    }));
+                }
 
                 this.inputs.paging.set('offset', offset);
                 this.inputs.paging.set('perPage', count);
@@ -392,7 +398,6 @@ define([
                 });
 
                 this.pageCollection(newPageStateModel);
-
             } else {
                 all_deferred = this.fetchAllCollection();
                 all_deferred.done(() => {
@@ -465,6 +470,17 @@ define([
                 this.inputs.reset(models);
                 this.inputs._url = undefined;
             });
+        },
+
+        getRawSearch: function(searchString) {
+            if (searchString) {
+                return searchString.substring(
+                    searchString.indexOf('*') + 1,
+                    searchString.indexOf('*', searchString.indexOf('*') + 1)
+                ).toLowerCase();
+            } else {
+                return '';
+            }
         }
     });
 });
