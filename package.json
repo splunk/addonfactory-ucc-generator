@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "update-version": "python update_version.py",
-    "build-ui-lib": "cd ./UCC-UI-lib && npm install && npm run build && npm publish",
+    "build-ui-lib": "cd ./UCC-UI-lib && npm install && bower install && npm run build && npm publish",
     "upload-uccrestlib": "cd UCC-REST-lib && python setup.py sdist upload -r pypisolutionslocal",
     "upload-uccrestbuilder": "cd UCC-REST-builder && python setup.py sdist upload -r pypisolutionslocal",
     "build-example-addon": "cd ./UCC-example-addon && python setup.py && source ${SPLUNK_HOME}/bin/setSplunkEnv && python build.py ",
