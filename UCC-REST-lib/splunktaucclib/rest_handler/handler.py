@@ -150,24 +150,24 @@ class RestHandler(object):
     @_encode_request()
     def create(self, name, data):
         self._check_name(name)
+        data['name'] = name
+        data['output_mode'] = 'json'
         response = self._client.post(
             self.path_segment(self._endpoint.internal_endpoint),
-            output_mode='json',
-            name=name,
-            **data
+            body=data
         )
         return self._flay_response(response)
 
     @_decode_response
     @_encode_request(existing=True)
     def update(self, name, data):
+        data['output_mode'] = 'json'
         response = self._client.post(
             self.path_segment(
                 self._endpoint.internal_endpoint,
                 name=name,
             ),
-            output_mode='json',
-            **data
+            body=data
         )
         return self._flay_response(response)
 
