@@ -4,14 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "update-version": "python update_version.py",
+    "build-ui-lib": "cd ./UCC-UI-lib && npm install && npm run build && npm publish",
     "upload-uccrestlib": "cd UCC-REST-lib && python setup.py sdist upload -r pypisolutionslocal",
     "upload-uccrestbuilder": "cd UCC-REST-builder && python setup.py sdist upload -r pypisolutionslocal",
-    "publish-uccuilib": "cd UCC-UI-lib && npm publish",
-    "upload": "npm run upload-uccrestbuilder && npm run upload-uccrestlib",
-    "update_version": "cd UCC-UI-lib && npm run update_version",
     "build-example-addon": "cd ./UCC-example-addon && python setup.py && source ${SPLUNK_HOME}/bin/setSplunkEnv && python build.py ",
-    "build-ui-lib": "cd ./UCC-UI-lib && npm install && npm run build",
-    "build": "npm run build-ui-lib && npm run build-example-addon && npm run upload",
+    "build": "npm run update-version && npm run build-ui-lib && npm run upload-uccrestlib && npm run upload-uccrestbuilder && npm run build-example-addon",
     "fortify": "/usr/bin/fortify-scanner.py"
   },
   "repository": {
