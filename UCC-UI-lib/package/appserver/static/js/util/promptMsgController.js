@@ -72,7 +72,7 @@ export function addClickListener(containerSelector, type) {
     });
 }
 
-function parseErrorMsg(data) {
+export function parseErrorMsg(data) {
     var error_msg = '', rsp, regex, msg, matches;
     try {
         rsp = JSON.parse(data.responseText);

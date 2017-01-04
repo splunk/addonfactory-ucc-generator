@@ -1,4 +1,7 @@
 import {configManager} from 'app/util/configManager';
+import {
+    parseErrorMsg
+} from 'app/util/promptMsgController';
 
 define([
     'lodash',
@@ -135,7 +138,7 @@ define([
             }).done(() => {
                 this.rowDispatcher.trigger('enable-input');
             }).fail((model, response) => {
-                this._displayError(model, response);
+                this._displayError(parseErrorMsg(model));
             });
         },
 
@@ -160,7 +163,7 @@ define([
             }).done(() => {
                 this.rowDispatcher.trigger('disable-input');
             }).fail((model, response) => {
-                this._displayError(model, response);
+                this._displayError(parseErrorMsg(model));
             });
             e.preventDefault();
         },
@@ -178,31 +181,12 @@ define([
             e.preventDefault();
         },
 
-        _displayError: function (model) {
-            var error_msg, rsp, regx, msg, matches, errorDialog;
-            try {
-                rsp = JSON.parse(model.responseText);
-                regx = /In handler[\s\S]+and output:\s+\'([\s\S]*)\'\.\s+See splunkd\.log for stderr output\./;
-                msg = String(rsp.messages[0].text);
-                matches = regx.exec(msg);
-                if (!matches || !matches[1]) {
-                    // try to extract another one
-                    regx = /In handler[^:]+:\s+([\s\S])/;
-                    matches = regx.exec(msg);
-                    if (!matches || !matches[1]) {
-                        matches = [msg];
-                    }
-                }
-                error_msg = matches[1];
-            } catch (err) {
-                error_msg = "ERROR in processing the request";
-            } finally {
-                errorDialog = new ErrorDialog({
-                    el: $('.dialog-placeholder'),
-                    msg: error_msg
-                });
-                errorDialog.render().modal();
-            }
+        _displayError: function (msg) {
+            let errorDialog = new ErrorDialog({
+                el: $('.dialog-placeholder'),
+                msg: msg
+            });
+            errorDialog.render().modal();
         },
 
         _getComponent: function () {

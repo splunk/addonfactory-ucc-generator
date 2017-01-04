@@ -227,7 +227,10 @@ define([
                     input.entry.content.set(original_json);
                     input.trigger('change');
                     // re-enable when failed
-                    this.enableActions();
+                    Util.enableElements(
+                        this.$("button[type=button]"),
+                        this.$("input[type=submit]")
+                    );
                     removeSavingMsg(this.curWinSelector);
                     addErrorMsg(this.curWinSelector, model, true);
                     addClickListener(this.curWinSelector, 'msg-error');
