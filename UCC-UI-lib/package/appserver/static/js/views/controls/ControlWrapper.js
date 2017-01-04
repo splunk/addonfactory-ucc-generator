@@ -21,8 +21,7 @@ define([
 
             const {type} = options;
             // Support both string mapping and raw component
-            const controlType = typeof type === 'string' ?
-                CONTROL_TYPE_MAP[type] : type;
+            const controlType = _.isString(type) ? CONTROL_TYPE_MAP[type] : type;
 
             this.control = new controlType(this.controlOptions);
             this.listenTo(this.control, 'all', this.trigger);
@@ -69,6 +68,11 @@ define([
                     );
                 });
                 this.controlOptions.items = newItems;
+            }
+
+            // Set default value of checkbox if there is no existing value, ADDON-13005
+            if (type === 'checkbox' && this.existingValue === undefined) {
+                this.control.setValue(0);
             }
         },
 
