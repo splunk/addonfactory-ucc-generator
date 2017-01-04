@@ -82,6 +82,18 @@ define(function () {
             }
         },
 
+        disableElements: function(...elements) {
+            elements.forEach((element) => {
+                element.attr('disabled', true);
+            });
+        },
+
+        enableElements: function(...elements) {
+            elements.forEach((element) => {
+                element.removeAttr('disabled');
+            });
+        },
+
         encryptTableText: function(srcComponent, entity, field, text) {
             if (!_.isString(text) || !field) {
                 return text;

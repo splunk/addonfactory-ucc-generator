@@ -132,7 +132,10 @@ define([
 
         submitTask: function () {
             //Disable the button to prevent repeat submit
-            this.disableActions();
+            Util.disableElements(
+                this.$("button[type=button]"),
+                this.$("input[type=submit]")
+            );
             // Remove loading and error message
             removeErrorMsg(this.curWinSelector);
             removeSavingMsg(this.curWinSelector);
@@ -178,7 +181,10 @@ define([
                 input.entry.content.set(original_json);
                 input.trigger('change');
                 //Re-enable when failed
-                this.enableActions();
+                Util.enableElements(
+                    this.$("button[type=button]"),
+                    this.$("input[type=submit]")
+                );
             } else {
                 addSavingMsg(this.curWinSelector, getFormattedMessage(108));
                 addClickListener(this.curWinSelector, 'msg-loading');
@@ -193,26 +199,22 @@ define([
 
                     //Add model to collection
                     if (this.mode !== 'edit') {
-                        this.collection.add(input);
-                        if (this.collection.length !== 0) {
+                        if (this.collection.paging.get('total') !== undefined) {
                             _.each(this.collection.models, (model) => {
-                                model.paging.set('total', this.collection.length);
+                                model.paging.set(
+                                    'total',
+                                    this.collection.paging.get('total') + 1
+                                );
                             });
+                            //Trigger collection page change event to refresh the count in table caption
+                            this.collection.paging.set(
+                                'total',
+                                this.collection.paging.get('total') + 1
+                            );
+                        } else {
+                            console.log('Could not get total count for collection');
                         }
-
-                        //Trigger collection page change event to refresh the count in table caption
-                        this.collection.paging.set(
-                            'total',
-                            this.collection.paging.get('total') + 1
-                        );
-                        //Rerender the table
-                        this.collection.reset(this.collection.models);
-
-                        //trigger type change event
-                        // TODO: Change me
-                        //if (this.dispatcher) {
-                        //this.dispatcher.trigger('filter-change',this.service_type);
-                        //}
+                        this.collection.add(input);
                     }
                     this.$("[role=dialog]").modal('hide');
                     this.undelegateEvents();
@@ -296,16 +298,6 @@ define([
             this.$(".modal-dialog").addClass(this.curWinId);
 
             return this;
-        },
-
-        disableActions: function () {
-            this.$("button[type=button]").attr('disabled', true);
-            this.$("input[type=submit]").attr('disabled', true);
-        },
-
-        enableActions: function () {
-            this.$("button[type=button]").removeAttr('disabled');
-            this.$("input[type=submit]").removeAttr('disabled');
         }
     });
 });
