@@ -218,6 +218,7 @@ define([
                             console.log('Could not get total count for collection');
                         }
                         this.collection.add(input);
+                        this.collection.trigger('change');
                     }
                     this.$("[role=dialog]").modal('hide');
                     this.undelegateEvents();
