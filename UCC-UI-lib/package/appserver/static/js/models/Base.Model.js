@@ -113,16 +113,21 @@ define([
                 return undefined;
             }
 
-            if (_.isUndefined(value)) {
-                return getFormattedMessage(0);
+            let nameFieldLabel = 'Name';
+            if (_.isArray(this.options.fields)) {
+                this.options.fields.forEach(d => {
+                    if (_.isObject(d) && d.field === 'name') {
+                        nameFieldLabel = d.label;
+                    }
+                });
             }
 
-            if (_.isEmpty(value)) {
-                return getFormattedMessage(0);
+            if (_.isUndefined(value) || _.isEmpty(value)) {
+                return getFormattedMessage(0, nameFieldLabel);
             }
 
             if (!_.isString(value)) {
-                return getFormattedMessage(1);
+                return getFormattedMessage(1, nameFieldLabel);
             }
 
             if (this.targetCollection !== undefined) {
@@ -130,16 +135,16 @@ define([
                     return model.entry.attributes.name === value;
                 }.bind(this), this);
                 if (matches !== undefined) {
-                    return getFormattedMessage(2);
+                    return getFormattedMessage(2, nameFieldLabel);
                 }
             }
 
             if (_.startsWith(value, '_') || value === '.' || value === '..' || value.toLowerCase() === 'default') {
-                return getFormattedMessage(3);
+                return getFormattedMessage(3, nameFieldLabel);
             }
 
             if (value.length >= 1024) {
-                return getFormattedMessage(22);
+                return getFormattedMessage(22, nameFieldLabel);
             }
         },
 
