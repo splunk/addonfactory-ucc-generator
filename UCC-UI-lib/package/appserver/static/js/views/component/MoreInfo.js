@@ -36,9 +36,9 @@ define([
                     value = Util.parseBoolean(value, false) ?
                         _('Disabled').t() : _('Enabled').t();
                 }
-                // prevent html injection
-                value = Util.encodeHTML(value);
                 if (value !== undefined) {
+                    // prevent html injection
+                    value = Util.encodeHTML(value);
                     value = Util.encryptTableText(this.model.component, this.model.entity, field, value);
                     this.$('.list-dotted').append(_.template(`
                         <dt><%- _(label).t() %></dt>
