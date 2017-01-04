@@ -30,6 +30,20 @@ describe('Predefined regex testes', () => {
         it('A wrong url should not match regex', () => {
             assert.equal(false, REGEX_URL.test('%splunk.com/:800'));
         });
+
+        it('Normal ip format url should be supported', () => {
+            assert.equal(true, REGEX_URL.test('223.30.30.5'));
+        });
+
+        it('Loopback url should be supported', () => {
+            assert.equal(true, REGEX_URL.test('127.0.0.1'));
+        });
+
+        it('Normal typeA, B, C ip format  should be supported', () => {
+            assert.equal(true, REGEX_URL.test('10.0.0.1'));
+            assert.equal(true, REGEX_URL.test('172.16.12.1'));
+            assert.equal(true, REGEX_URL.test('192.168.3.3'));
+        });
     });
 
     describe('Regex for email should works', () => {
