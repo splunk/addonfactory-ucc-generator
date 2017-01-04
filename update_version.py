@@ -18,9 +18,10 @@ try:
     git_number = os.environ['BUILDNUMBER']
     git_branch = os.environ['GITBRANCH']
 except KeyError:
-    raise Exception('Could not get build number or git branch from bamboo env')
+    print 'Could not get build number or git branch from bamboo env. Use default version.'
 else:
     VERSION = VERSION + '-' + git_branch + '.' + git_number
+finally:
     file_list =[
         'UCC-REST-lib/setup.py',
         'UCC-REST-lib/splunktaucclib/__init__.py',
