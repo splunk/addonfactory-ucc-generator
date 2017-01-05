@@ -178,6 +178,10 @@
     position: inherit !important;
 }
 
+.table-chrome .sorts a {
+    white-space: normal;
+}
+
 /*Table column width*/
 .list-dotted dt {
     width: 200px;
