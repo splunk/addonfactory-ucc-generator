@@ -18,6 +18,7 @@ describe('Predefined regex testes', () => {
         it('A url without protocol should match regex', () => {
             assert.equal(true, REGEX_URL.test('www.splunk.com/:800'));
             assert.equal(true, REGEX_URL.test('splunk.com/:800'));
+            assert.equal(true, REGEX_URL.test('splunk.com:800'));
         });
 
         it('A url with ftp protocol should match regex', () => {
@@ -37,6 +38,8 @@ describe('Predefined regex testes', () => {
             assert.equal(true, REGEX_URL.test('local_host'));
             assert.equal(true, REGEX_URL.test('local_host_host-host'));
             assert.equal(true, REGEX_URL.test('local_host_host-host-long_long_long'));
+            assert.equal(true, REGEX_URL.test('你好'));
+            assert.equal(true, REGEX_URL.test('こんにちは'));
         });
 
         it('A url with opc.tcp protocol should match regex', () => {
@@ -45,6 +48,7 @@ describe('Predefined regex testes', () => {
 
         it('A wrong url should not match regex', () => {
             assert.equal(false, REGEX_URL.test('%splunk.com/:800'));
+            assert.equal(false, REGEX_URL.test('^splunk.com/:800'));
         });
 
         it('Normal ip format url should be supported', () => {
