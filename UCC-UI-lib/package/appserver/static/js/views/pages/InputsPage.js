@@ -196,7 +196,7 @@ define([
             } else {
                 deferred = this.fetchListCollection(this[type], this.stateModel);
                 deferred.done(() => {
-                    const service = this.services.find(d => d.name === type);
+                    const service = _.find(this.services, d => d.name === type);
                     if (!restEndpointMap[service.name]) {
                         this.inputs.model = generateModel(service.name);
                     } else {

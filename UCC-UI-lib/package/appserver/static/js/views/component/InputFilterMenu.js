@@ -44,7 +44,7 @@ define([
         },
 
         changeType: function (type) {
-            const service = this.services.find(d => d.name === type);
+            const service = _.find(this.services, d => d.name === type);
             this.$('a.dropdown-toggle').empty();
             if (type === 'all') {
                 this.$('a.dropdown-toggle').append(_.template('<%- _("All").t() %>'));
