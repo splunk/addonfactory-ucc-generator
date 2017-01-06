@@ -17,7 +17,7 @@ define([
         render: function () {
             this.$el.html(_.template(Error)({
                 title: getFormattedMessage(104),
-                msg: this.msg
+                msg: _.unescape(this.msg)
             }));
 
             var dlg = this;

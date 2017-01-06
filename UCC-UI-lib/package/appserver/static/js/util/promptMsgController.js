@@ -13,45 +13,30 @@ export function addErrorMsg(containerSelector, text, needParse = false) {
         $(containerSelector + ' .msg-text').text(text);
     } else {
         $(containerSelector + ' .modal-body')
-            .prepend(_.template(ErrorMsgTemplate)({msg: text}));
+            .prepend(_.template(ErrorMsgTemplate)({msg: _.unescape(text)}));
     }
-};
+}
 
 export function removeErrorMsg(containerSelector) {
     if ($(containerSelector + ' .msg-error').length) {
         $(containerSelector + ' .msg-error').remove();
     }
-};
+}
 
 export function addSavingMsg(containerSelector, text) {
     if ($(containerSelector + ' .msg-loading').length) {
         $(containerSelector + ' .msg-text').text(text);
     } else {
         $(containerSelector + ' .modal-body')
-            .prepend(_.template(SavingMsgTemplate)({msg: text}));
+            .prepend(_.template(SavingMsgTemplate)({msg: _.unescape(text)}));
     }
-};
+}
 
 export function removeSavingMsg(containerSelector) {
     if ($(containerSelector + ' .msg-loading').length) {
         $(containerSelector + ' .msg-loading').remove();
     }
-};
-
-export function addWarningMsg(containerSelector) {
-    if ($(containerSelector + ' .msg-warning').length) {
-        $(containerSelector + ' .msg-text').text(text);
-    } else {
-        $(containerSelector + ' .modal-body')
-            .prepend(_.template(WarningMsgTemplate)({msg: text}));
-    }
-};
-
-export function removeWarningMsg(containerSelector) {
-    if ($(containerSelector + ' .msg-warning').length) {
-        $(containerSelector + ' .msg-warning').remove();
-    }
-};
+}
 
 export function displayValidationError(containerSelector, {validationError}) {
     removeSavingMsg(containerSelector);
@@ -59,13 +44,13 @@ export function displayValidationError(containerSelector, {validationError}) {
         $(containerSelector + ' .msg-text').text(validationError);
     } else {
         $(containerSelector + ' .modal-body').prepend(
-            _.template(ErrorMsgTemplate)({msg: validationError})
+            _.template(ErrorMsgTemplate)({msg: _.unescape(validationError)})
         );
     }
-};
+}
 
 export function addClickListener(containerSelector, type) {
-    $(containerSelector + ' .' + type + ' .close').on("click", () => {
+    $(containerSelector + ' .' + type + ' .close').on('click', () => {
         if ($(containerSelector + ' .' + type).length) {
             $(containerSelector + ' .' + type).remove();
         }
