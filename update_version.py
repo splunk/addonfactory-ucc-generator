@@ -1,7 +1,8 @@
 import os
+import json
 
 TOKEN = '{version}'
-VERSION = '3.0.0'
+VERSION = ''
 
 def replace_version(file_path, token, version):
     lines = []
@@ -14,13 +15,19 @@ def replace_version(file_path, token, version):
         for line in lines:
             outfile.write(line)
 
+# read version from package.json
+with open('package.json', 'r') as package:
+    data = json.load(package)
+    VERSION = data['version']
+
 try:
-    git_number = os.environ['BUILDNUMBER']
+    build_number = os.environ['BUILDNUMBER']
     git_branch = os.environ['GITBRANCH']
 except KeyError:
     print 'Could not get build number or git branch from bamboo env. Use default version.'
 else:
-    VERSION = VERSION + '-' + git_branch + '.' + git_number
+    if git_branch and git_branch == 'develop':
+        VERSION = VERSION + '-' + git_branch + '.' + build_number
 finally:
     file_list =[
         'UCC-REST-lib/setup.py',
