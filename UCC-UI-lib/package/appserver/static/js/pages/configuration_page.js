@@ -14,10 +14,10 @@ require([
     {configManager}
 ) {
     const render = () => {
-        const {unifiedConfig} = configManager;
-        const appName = unifiedConfig && unifiedConfig.name;
+        // No need to check whether appName really exist since configManager already checked it using JSON schema
+        const {unifiedConfig: {meta: {name: appName}}} = configManager;
+        __webpack_public_path__ = generatePublicPath(appName);
 
-        __webpack_public_path__ = generatePublicPath(appName || 'Splunk_TA_crowdstrike');
         new HeaderView({
             id: 'header',
             section: 'dashboards',
