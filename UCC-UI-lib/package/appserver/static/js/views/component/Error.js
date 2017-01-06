@@ -29,7 +29,9 @@ define([
         },
 
         modal: function () {
-            this.$("[role=dialog]").modal({backdrop: 'static', keyboard: false});
+            if (this.$("[role=dialog]").modal) {
+                this.$("[role=dialog]").modal({backdrop: 'static', keyboard: false});
+            }
         }
     });
 });

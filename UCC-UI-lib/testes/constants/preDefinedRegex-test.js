@@ -5,14 +5,20 @@ describe('Predefined regex testes', () => {
     describe('Regex for URL should works', () => {
         it('A normal url should match regex', () => {
             assert.equal(true, REGEX_URL.test('https://www.splunk.com/'));
+            assert.equal(true, REGEX_URL.test('https://www.splunk.cn/'));
+            assert.equal(true, REGEX_URL.test('https://www.splunk.cnc/'));
+            assert.equal(true, REGEX_URL.test('https://splunk.cnc/'));
         });
 
         it('A normal url with port should match regex', () => {
             assert.equal(true, REGEX_URL.test('https://www.splunk.com/:800'));
+            assert.equal(true, REGEX_URL.test('https://splunk.com/:8080'));
         });
 
         it('A url without protocol should match regex', () => {
             assert.equal(true, REGEX_URL.test('www.splunk.com/:800'));
+            assert.equal(true, REGEX_URL.test('splunk.com/:800'));
+            assert.equal(true, REGEX_URL.test('splunk.com:800'));
         });
 
         it('A url with ftp protocol should match regex', () => {
@@ -23,12 +29,26 @@ describe('Predefined regex testes', () => {
             assert.equal(true, REGEX_URL.test('opc.tcp://www.splunk.com/:800'));
         });
 
+        it('URL regex should match hostname', () => {
+            assert.equal(true, REGEX_URL.test('localhost'));
+            assert.equal(true, REGEX_URL.test('local_host'));
+            assert.equal(true, REGEX_URL.test('qlt_cloris_3'));
+            assert.equal(true, REGEX_URL.test('qlt_cloris_312312321'));
+            assert.equal(true, REGEX_URL.test('312312_321_321'));
+            assert.equal(true, REGEX_URL.test('local_host'));
+            assert.equal(true, REGEX_URL.test('local_host_host-host'));
+            assert.equal(true, REGEX_URL.test('local_host_host-host-long_long_long'));
+            assert.equal(true, REGEX_URL.test('你好'));
+            assert.equal(true, REGEX_URL.test('こんにちは'));
+        });
+
         it('A url with opc.tcp protocol should match regex', () => {
             assert.equal(true, REGEX_URL.test('opc.tcp://www.splunk.com/:800'));
         });
 
         it('A wrong url should not match regex', () => {
             assert.equal(false, REGEX_URL.test('%splunk.com/:800'));
+            assert.equal(false, REGEX_URL.test('^splunk.com/:800'));
         });
 
         it('Normal ip format url should be supported', () => {
