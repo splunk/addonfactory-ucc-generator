@@ -1,7 +1,6 @@
 import {getFormattedMessage} from 'app/util/messageUtil';
 import {
     addErrorMsg,
-    removeWarningMsg,
     addClickListener
 } from 'app/util/promptMsgController';
 
@@ -36,15 +35,15 @@ define([
             this.$el.html(_.template(DeleteDialog)({
                 title: getFormattedMessage(101),
                 inUse: this.inUse,
-                inUseMsg: getFormattedMessage(
+                inUseMsg: _.unescape(getFormattedMessage(
                     102,
                     this.model.entry.attributes.name
-                ),
-                notinUseMsg: getFormattedMessage(
+                )),
+                notinUseMsg: _.unescape(getFormattedMessage(
                     103,
                     this.model.entry.attributes.name,
                     this.deleteTag || ''
-                 )
+                 ))
             }));
 
             var dlg = this;
@@ -98,7 +97,6 @@ define([
                     this.$("button[type=button]"),
                     this.$("input[type=submit]")
                 );
-                removeWarningMsg('.modal-dialog');
                 addErrorMsg('.modal-dialog', model, true);
                 addClickListener('.modal-dialog', 'msg-error');
             });
