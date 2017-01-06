@@ -106,7 +106,7 @@ class Configuration(object):
         try:
             self._update(type_name, copy.copy(configuration))
         except HTTPError as exc:
-            if 'HTTPError: HTTP 404 Not Found' in str(exc):
+            if 'HTTP 404 Not Found' in str(exc):
                 # not exists, go to create
                 pass
             else:
