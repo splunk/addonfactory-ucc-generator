@@ -142,7 +142,7 @@ define([
             if (_.startsWith(value, '_') || value === '.' || value === '..' || value.toLowerCase() === 'default') {
                 return getFormattedMessage(3, nameFieldLabel);
             }
-            const regexMetaCharacters = ['*', '\\', '[', ']', '(', ')', '?'];
+            const regexMetaCharacters = ['*', '\\', '[', ']', '(', ')', '?', ':'];
             if (_.some(regexMetaCharacters, d => value.indexOf(d) > -1)) {
                 return getFormattedMessage(3, nameFieldLabel);
             }
