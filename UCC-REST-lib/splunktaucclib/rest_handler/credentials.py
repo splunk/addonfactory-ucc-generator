@@ -140,10 +140,8 @@ class RestCredentials(object):
 
     def decrypt_all(self, data):
         """
-
         :param data:
-        :return: If the passwords.conf is updated, masked data.
-            Else, None.
+        :return: changed stanza list
         """
         realm = '__REST_CREDENTIAL__#{base_app}#{endpoint}'.format(
             base_app=get_base_app_name(),
@@ -162,6 +160,7 @@ class RestCredentials(object):
         return self._merge_passwords(data, realm_passwords)
 
     def _merge_passwords(self, data, passwords):
+        # merge clear passwords to response data
         change_list = []
         password_names = map(lambda x: x['username'], passwords)
         # existed passwords models
@@ -169,19 +168,20 @@ class RestCredentials(object):
         others = filter(lambda x: x['name'] not in password_names, data)
         for existed_model in existed_models:
             name = existed_model['name']
-            password = next(x for x in passwords if x['username'] == name)
-            clear_password = json.loads(password['clear_password'])
-            password_changed = False
-            for k, v in clear_password.iteritems():
-                if existed_model['content'][k] == self.PASSWORD:
-                    existed_model['content'][k] = v
-                else:
-                    password_changed = True
-                    clear_password[k] = existed_model['content'][k]
-            # update the password
-            if password_changed and clear_password:
-                change_list.append(existed_model)
-                self._set(name, clear_password)
+            password = next((x for x in passwords if x['username'] == name), None)
+            if password and 'clear_password' in password:
+                clear_password = json.loads(password['clear_password'])
+                password_changed = False
+                for k, v in clear_password.iteritems():
+                    if existed_model['content'][k] == self.PASSWORD:
+                        existed_model['content'][k] = v
+                    else:
+                        password_changed = True
+                        clear_password[k] = existed_model['content'][k]
+                # update the password
+                if password_changed and clear_password:
+                    change_list.append(existed_model)
+                    self._set(name, clear_password)
 
         for other_model in others:
             name = other_model['name']

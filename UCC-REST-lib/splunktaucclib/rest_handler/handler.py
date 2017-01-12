@@ -262,10 +262,10 @@ class RestHandler(object):
     def _flay_all_response(self, response, decrypt=False):
         body = response.body.read()
         cont = json.loads(body)
-        # cont['entry']: collection list
-        if self._all_need_decrypt(cont['entry']) and decrypt:
+        # cont['entry']: collection list, load credentials in one request
+        if self._all_need_decrypt(cont['entry']):
             self._load_all_credentials(cont['entry'])
-        else:
+        if not decrypt:
             self._clean_all_credentials(cont['entry'])
 
         for entry in cont['entry']:
