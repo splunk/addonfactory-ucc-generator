@@ -89,7 +89,7 @@ class RestCredentials(object):
             self,
             splunkd_uri,
             session_key,
-            endpoint,
+            endpoint
     ):
         self._splunkd_uri = splunkd_uri
         self._session_key = session_key
@@ -137,6 +137,63 @@ class RestCredentials(object):
             self._set(name, encrypting)
         data.update(encrypting)
         return encrypted
+
+    def decrypt_all(self, data):
+        """
+
+        :param data:
+        :return: If the passwords.conf is updated, masked data.
+            Else, None.
+        """
+        realm = '__REST_CREDENTIAL__#{base_app}#{endpoint}'.format(
+            base_app=get_base_app_name(),
+            endpoint=self._endpoint.internal_endpoint.strip('/')
+        )
+        credential_manager = CredentialManager(
+            self._session_key,
+            owner=self._endpoint.user,
+            app=self._endpoint.app,
+            realm=realm
+        )
+
+        all_passwords = credential_manager._get_all_passwords()
+        # filter by realm
+        realm_passwords = filter(lambda x: x['realm'] == realm, all_passwords)
+        return self._merge_passwords(data, realm_passwords)
+
+    def _merge_passwords(self, data, passwords):
+        change_list = []
+        password_names = map(lambda x: x['username'], passwords)
+        # existed passwords models
+        existed_models = filter(lambda x: x['name'] in password_names, data)
+        others = filter(lambda x: x['name'] not in password_names, data)
+        for existed_model in existed_models:
+            name = existed_model['name']
+            password = next(x for x in passwords if x['username'] == name)
+            clear_password = json.loads(password['clear_password'])
+            password_changed = False
+            for k, v in clear_password.iteritems():
+                if existed_model['content'][k] == self.PASSWORD:
+                    existed_model['content'][k] = v
+                else:
+                    password_changed = True
+                    clear_password[k] = existed_model['content'][k]
+            # update the password
+            if password_changed and clear_password:
+                change_list.append(existed_model)
+                self._set(name, clear_password)
+
+        for other_model in others:
+            name = other_model['name']
+            fields = filter(lambda x: x.encrypted, self._endpoint.model(None, data).fields)
+            clear_password = {}
+            for field in fields:
+                clear_password[field.name] = other_model['content'][field.name]
+            if clear_password:
+                self._set(name, clear_password)
+
+        change_list.extend(others)
+        return change_list
 
     def delete(self, name):
         context = RestCredentialsContext(self._endpoint, name)

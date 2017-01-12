@@ -144,7 +144,7 @@ class RestHandler(object):
             output_mode='json',
             **query
         )
-        return self._flay_response(response, decrypt)
+        return self._flay_all_response(response, decrypt)
 
     @_decode_response
     @_encode_request()
@@ -259,11 +259,26 @@ class RestHandler(object):
                 self._clean_credentials(name, data)
             yield name, data, acl
 
+    def _flay_all_response(self, response, decrypt=False):
+        body = response.body.read()
+        cont = json.loads(body)
+        # cont['entry']: collection list
+        if self._all_need_decrypt(cont['entry']) and decrypt:
+            self._load_all_credentials(cont['entry'])
+        else:
+            self._clean_all_credentials(cont['entry'])
+
+        for entry in cont['entry']:
+            name = entry['name']
+            data = entry['content']
+            acl = entry['acl']
+            yield name, data, acl
+
     def _load_credentials(self, name, data):
         rest_credentials = RestCredentials(
             self._splunkd_uri,
             self._session_key,
-            self._endpoint,
+            self._endpoint
         )
         masked = rest_credentials.decrypt(name, data)
         if masked:
@@ -275,6 +290,38 @@ class RestHandler(object):
                 ),
                 **masked
             )
+
+    def _load_all_credentials(self, data):
+        rest_credentials = RestCredentials(
+            self._splunkd_uri,
+            self._session_key,
+            self._endpoint
+        )
+
+        change_list = rest_credentials.decrypt_all(data)
+        fields = filter(lambda x: x.encrypted, self._endpoint.model(None, data).fields)
+        for model in change_list:
+            # passwords.conf changed
+            masked = model['content'].copy()
+            for k in ['eai:appName', 'eai:acl', 'eai:userName', 'disabled']:
+                if k in masked:
+                    del masked[k]
+            for k, v in masked.iteritems():
+                if k in map(lambda x: x.name, fields):
+                    if k in masked:
+                        masked[k] = '********'
+            self._client.post(
+                self.path_segment(
+                    self._endpoint.internal_endpoint,
+                    name=model['name'],
+                ),
+                **masked
+            )
+
+    def _all_need_decrypt(self, data):
+        if filter(lambda x: x.encrypted, self._endpoint.model(None, data).fields):
+            return True
+        return False
 
     def _need_decrypt(self, name, data, decrypt):
         # some encrypted-needed fields are plain text in *.conf.
@@ -302,6 +349,12 @@ class RestHandler(object):
         for field in self._endpoint.model(name, data).fields:
             if field.encrypted is True and field.name in data:
                 del data[field.name]
+
+    def _clean_all_credentials(self, data):
+        for model in data:
+            for field in self._endpoint.model(None, data).fields:
+                if field.encrypted is True and field.name in model['content']:
+                    del model['content'][field.name]
 
     @classmethod
     def _check_name(cls, name):
