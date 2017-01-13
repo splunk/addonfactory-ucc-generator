@@ -323,7 +323,7 @@ class RestHandler(object):
                 if k in masked:
                     del masked[k]
             for k in masked:
-                if k in field_names:
+                if k in field_names and masked[k]:
                     masked[k] = self.PASSWORD
             self._client.post(
                 self.path_segment(
