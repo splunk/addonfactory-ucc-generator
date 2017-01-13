@@ -84,7 +84,7 @@ class RestBuilder(object):
 
     def build(self):
         for endpoint in self._schema.endpoints:
-            if endpoint.conf_name == 'inputs' or endpoint._name == 'settings':
+            if endpoint._name == 'settings':
                 self.output.put(
                     self.output.default,
                     endpoint.conf_name + '.conf',
