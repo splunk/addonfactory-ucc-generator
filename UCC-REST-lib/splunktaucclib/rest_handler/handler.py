@@ -98,7 +98,8 @@ def _decode_response(meth):
 
 
 class RestHandler(object):
-
+    FILTERS = [u'eai:appName', u'eai:acl', u'eai:userName', u'disabled']
+    PASSWORD = u'********'
     def __init__(
             self,
             splunkd_uri,
@@ -248,7 +249,13 @@ class RestHandler(object):
 
     def _flay_response(self, response, decrypt=False):
         body = response.body.read()
-        cont = json.loads(body)
+        try:
+            cont = json.loads(body)
+        except ValueError:
+            raise RestError(
+                500,
+                'Fail to load response, invalid JSON'
+            )
         for entry in cont['entry']:
             name = entry['name']
             data = entry['content']
@@ -261,7 +268,13 @@ class RestHandler(object):
 
     def _flay_all_response(self, response, decrypt=False):
         body = response.body.read()
-        cont = json.loads(body)
+        try:
+            cont = json.loads(body)
+        except ValueError:
+            raise RestError(
+                500,
+                'Fail to load response, invalid JSON'
+            )
         # cont['entry']: collection list, load credentials in one request
         if self._all_need_decrypt(cont['entry']):
             self._load_all_credentials(cont['entry'])
@@ -297,19 +310,21 @@ class RestHandler(object):
             self._session_key,
             self._endpoint
         )
-
+        # get clear passwords for response data and get the password change list
         change_list = rest_credentials.decrypt_all(data)
-        fields = filter(lambda x: x.encrypted, self._endpoint.model(None, data).fields)
+        import itertools as it
+        fields_names = set(it.imap(
+            lambda x: x.name,
+            it.ifilter(lambda x: x.encrypted, self._endpoint.model(None, data).fields)
+        ))
         for model in change_list:
-            # passwords.conf changed
             masked = model['content'].copy()
-            for k in ['eai:appName', 'eai:acl', 'eai:userName', 'disabled']:
+            for k in FILTERS:
                 if k in masked:
                     del masked[k]
-            for k, v in masked.iteritems():
-                if k in map(lambda x: x.name, fields):
-                    if k in masked:
-                        masked[k] = '********'
+            for k in masked:
+                if k in field_names:
+                    masked[k] = PASSWORD
             self._client.post(
                 self.path_segment(
                     self._endpoint.internal_endpoint,
@@ -353,7 +368,7 @@ class RestHandler(object):
     def _clean_all_credentials(self, data):
         for model in data:
             for field in self._endpoint.model(None, data).fields:
-                if field.encrypted is True and field.name in model['content']:
+                if field.encrypted and field.name in model['content']:
                     del model['content'][field.name]
 
     @classmethod

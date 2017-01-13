@@ -94,6 +94,10 @@ class RestCredentials(object):
         self._splunkd_uri = splunkd_uri
         self._session_key = session_key
         self._endpoint = endpoint
+        self._realm = '__REST_CREDENTIAL__#{base_app}#{endpoint}'.format(
+            base_app=get_base_app_name(),
+            endpoint=self._endpoint.internal_endpoint.strip('/')
+        )
 
     def encrypt(self, name, data):
         """
@@ -143,15 +147,11 @@ class RestCredentials(object):
         :param data:
         :return: changed stanza list
         """
-        realm = '__REST_CREDENTIAL__#{base_app}#{endpoint}'.format(
-            base_app=get_base_app_name(),
-            endpoint=self._endpoint.internal_endpoint.strip('/')
-        )
         credential_manager = CredentialManager(
             self._session_key,
             owner=self._endpoint.user,
             app=self._endpoint.app,
-            realm=realm
+            realm=self._realm
         )
 
         all_passwords = credential_manager._get_all_passwords()
@@ -166,6 +166,9 @@ class RestCredentials(object):
         # existed passwords models
         existed_models = filter(lambda x: x['name'] in password_names, data)
         others = filter(lambda x: x['name'] not in password_names, data)
+        # For model that password existed
+        # 1.Password changed: Update it and add to change_list
+        # 2.Password unchanged: Get the password and update the respose data
         for existed_model in existed_models:
             name = existed_model['name']
             password = next((x for x in passwords if x['username'] == name), None)
@@ -182,7 +185,7 @@ class RestCredentials(object):
                 if password_changed and clear_password:
                     change_list.append(existed_model)
                     self._set(name, clear_password)
-
+        # For other models, encrypt the password and return
         for other_model in others:
             name = other_model['name']
             fields = filter(lambda x: x.encrypted, self._endpoint.model(None, data).fields)
