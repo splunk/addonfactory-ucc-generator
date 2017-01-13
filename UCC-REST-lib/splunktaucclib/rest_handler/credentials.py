@@ -5,6 +5,7 @@ from __future__ import absolute_import
 
 import copy
 import json
+from urlparse import urlparse
 from solnlib.credentials import (
     CredentialManager,
     CredentialNotExistException,
@@ -92,6 +93,7 @@ class RestCredentials(object):
             endpoint
     ):
         self._splunkd_uri = splunkd_uri
+        self._splunkd_info = urlparse(self._splunkd_uri)
         self._session_key = session_key
         self._endpoint = endpoint
         self._realm = '__REST_CREDENTIAL__#{base_app}#{endpoint}'.format(
@@ -156,7 +158,10 @@ class RestCredentials(object):
             self._session_key,
             owner=self._endpoint.user,
             app=self._endpoint.app,
-            realm=self._realm
+            realm=self._realm,
+            scheme=self._splunkd_info.scheme,
+            host=self._splunkd_info.hostname,
+            port=self._splunkd_info.port
         )
 
         all_passwords = credential_manager._get_all_passwords()
@@ -173,7 +178,7 @@ class RestCredentials(object):
         others = filter(lambda x: x['name'] not in password_names, data)
         # For model that password existed
         # 1.Password changed: Update it and add to change_list
-        # 2.Password unchanged: Get the password and update the respose data
+        # 2.Password unchanged: Get the password and update the response data
         for existed_model in existed_models:
             name = existed_model['name']
             password = next((x for x in passwords if x['username'] == name), None)
@@ -276,4 +281,7 @@ class RestCredentials(object):
             owner=self._endpoint.user,
             app=self._endpoint.app,
             realm=context.realm(),
+            scheme=self._splunkd_info.scheme,
+            host=self._splunkd_info.hostname,
+            port=self._splunkd_info.port
         )

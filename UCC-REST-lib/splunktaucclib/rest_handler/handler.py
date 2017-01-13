@@ -330,7 +330,7 @@ class RestHandler(object):
                     self._endpoint.internal_endpoint,
                     name=model['name'],
                 ),
-                **masked
+                body=masked
             )
 
     def _all_need_decrypt(self, data):
