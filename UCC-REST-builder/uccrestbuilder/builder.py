@@ -86,12 +86,12 @@ class RestBuilder(object):
         for endpoint in self._schema.endpoints:
             self.output.put(
                 self.output.default,
-                endpoint.conf_name + '.conf',
+                endpoint.conf_name.lower() + '.conf',
                 endpoint.generate_default(),
             )
             self.output.put(
                 self.output.readme,
-                endpoint.conf_name + '.conf.spec',
+                endpoint.conf_name.lower() + '.conf.spec',
                 endpoint.generate_spec(),
             )
             self.output.put(

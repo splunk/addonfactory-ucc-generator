@@ -63,5 +63,5 @@ if __name__ == '__main__':
             handler_name=handler.name,
             entities='\n'.join(entities),
             models=indent(models_lines, 2),
-            conf_name=self.name,
+            conf_name=self.name.lower(),
         )
