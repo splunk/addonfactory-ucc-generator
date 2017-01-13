@@ -33,6 +33,12 @@ def _encode_request(existing=False):
         :return:
         """
         def check_existing(self, name):
+            # Check if encrypt is needed
+            model = self._endpoint.model(name, None)
+            need_encrypting = all(field.encrypted for field in model.fields)
+            if not need_encrypting:
+                return
+
             if not existing:
                 return None
             entities = list(self.get(name))
@@ -98,8 +104,6 @@ def _decode_response(meth):
 
 
 class RestHandler(object):
-    FILTERS = [u'eai:appName', u'eai:acl', u'eai:userName', u'disabled']
-    PASSWORD = u'********'
     def __init__(
             self,
             splunkd_uri,
@@ -122,6 +126,8 @@ class RestHandler(object):
             host=splunkd_info.hostname,
             port=splunkd_info.port,
         )
+        self.FILTERS = [u'eai:appName', u'eai:acl', u'eai:userName', u'disabled']
+        self.PASSWORD = u'********'
 
     @_decode_response
     def get(self, name, decrypt=False):
@@ -313,18 +319,18 @@ class RestHandler(object):
         # get clear passwords for response data and get the password change list
         change_list = rest_credentials.decrypt_all(data)
         import itertools as it
-        fields_names = set(it.imap(
+        field_names = set(it.imap(
             lambda x: x.name,
             it.ifilter(lambda x: x.encrypted, self._endpoint.model(None, data).fields)
         ))
         for model in change_list:
             masked = model['content'].copy()
-            for k in FILTERS:
+            for k in self.FILTERS:
                 if k in masked:
                     del masked[k]
             for k in masked:
                 if k in field_names:
-                    masked[k] = PASSWORD
+                    masked[k] = self.PASSWORD
             self._client.post(
                 self.path_segment(
                     self._endpoint.internal_endpoint,
