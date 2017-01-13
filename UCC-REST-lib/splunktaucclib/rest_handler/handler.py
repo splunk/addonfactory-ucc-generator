@@ -33,12 +33,6 @@ def _encode_request(existing=False):
         :return:
         """
         def check_existing(self, name):
-            # Check if encrypt is needed
-            model = self._endpoint.model(name, None)
-            need_encrypting = all(field.encrypted for field in model.fields)
-            if not need_encrypting:
-                return
-
             if not existing:
                 return None
             entities = list(self.get(name))

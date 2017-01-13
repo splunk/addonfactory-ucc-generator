@@ -106,6 +106,11 @@ class RestCredentials(object):
         :param data:
         :return:
         """
+        # Check if encrypt is needed
+        model = self._endpoint.model(name, data)
+        need_encrypting = all(field.encrypted for field in model.fields)
+        if not need_encrypting:
+            return
         try:
             encrypted = self._get(name)
             existing = True
@@ -156,7 +161,7 @@ class RestCredentials(object):
 
         all_passwords = credential_manager._get_all_passwords()
         # filter by realm
-        realm_passwords = filter(lambda x: x['realm'] == realm, all_passwords)
+        realm_passwords = filter(lambda x: x['realm'] == self._realm, all_passwords)
         return self._merge_passwords(data, realm_passwords)
 
     def _merge_passwords(self, data, passwords):
