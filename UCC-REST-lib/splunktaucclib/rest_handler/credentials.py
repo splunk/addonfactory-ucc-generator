@@ -5,6 +5,7 @@ from __future__ import absolute_import
 
 import copy
 import json
+from urlparse import urlparse
 from solnlib.credentials import (
     CredentialManager,
     CredentialNotExistException,
@@ -89,11 +90,16 @@ class RestCredentials(object):
             self,
             splunkd_uri,
             session_key,
-            endpoint,
+            endpoint
     ):
         self._splunkd_uri = splunkd_uri
+        self._splunkd_info = urlparse(self._splunkd_uri)
         self._session_key = session_key
         self._endpoint = endpoint
+        self._realm = '__REST_CREDENTIAL__#{base_app}#{endpoint}'.format(
+            base_app=get_base_app_name(),
+            endpoint=self._endpoint.internal_endpoint.strip('/')
+        )
 
     def encrypt(self, name, data):
         """
@@ -102,6 +108,11 @@ class RestCredentials(object):
         :param data:
         :return:
         """
+        # Check if encrypt is needed
+        model = self._endpoint.model(name, data)
+        need_encrypting = all(field.encrypted for field in model.fields)
+        if not need_encrypting:
+            return
         try:
             encrypted = self._get(name)
             existing = True
@@ -137,6 +148,65 @@ class RestCredentials(object):
             self._set(name, encrypting)
         data.update(encrypting)
         return encrypted
+
+    def decrypt_all(self, data):
+        """
+        :param data:
+        :return: changed stanza list
+        """
+        credential_manager = CredentialManager(
+            self._session_key,
+            owner=self._endpoint.user,
+            app=self._endpoint.app,
+            realm=self._realm,
+            scheme=self._splunkd_info.scheme,
+            host=self._splunkd_info.hostname,
+            port=self._splunkd_info.port
+        )
+
+        all_passwords = credential_manager._get_all_passwords()
+        # filter by realm
+        realm_passwords = filter(lambda x: x['realm'] == self._realm, all_passwords)
+        return self._merge_passwords(data, realm_passwords)
+
+    def _merge_passwords(self, data, passwords):
+        # merge clear passwords to response data
+        change_list = []
+        password_names = map(lambda x: x['username'], passwords)
+        # existed passwords models
+        existed_models = filter(lambda x: x['name'] in password_names, data)
+        others = filter(lambda x: x['name'] not in password_names, data)
+        # For model that password existed
+        # 1.Password changed: Update it and add to change_list
+        # 2.Password unchanged: Get the password and update the response data
+        for existed_model in existed_models:
+            name = existed_model['name']
+            password = next((x for x in passwords if x['username'] == name), None)
+            if password and 'clear_password' in password:
+                clear_password = json.loads(password['clear_password'])
+                password_changed = False
+                for k, v in clear_password.iteritems():
+                    if existed_model['content'][k] == self.PASSWORD:
+                        existed_model['content'][k] = v
+                    else:
+                        password_changed = True
+                        clear_password[k] = existed_model['content'][k]
+                # update the password
+                if password_changed and clear_password:
+                    change_list.append(existed_model)
+                    self._set(name, clear_password)
+        # For other models, encrypt the password and return
+        for other_model in others:
+            name = other_model['name']
+            fields = filter(lambda x: x.encrypted, self._endpoint.model(None, data).fields)
+            clear_password = {}
+            for field in fields:
+                clear_password[field.name] = other_model['content'][field.name]
+            if clear_password:
+                self._set(name, clear_password)
+
+        change_list.extend(others)
+        return change_list
 
     def delete(self, name):
         context = RestCredentialsContext(self._endpoint, name)
@@ -211,4 +281,7 @@ class RestCredentials(object):
             owner=self._endpoint.user,
             app=self._endpoint.app,
             realm=context.realm(),
+            scheme=self._splunkd_info.scheme,
+            host=self._splunkd_info.hostname,
+            port=self._splunkd_info.port
         )
