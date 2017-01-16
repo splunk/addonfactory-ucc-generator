@@ -94,7 +94,7 @@ class RestEndpointBuilder(object):
 
     @property
     def conf_name(self):
-        return self.name
+        return self.name.lower()
 
     @property
     def rh_name(self):

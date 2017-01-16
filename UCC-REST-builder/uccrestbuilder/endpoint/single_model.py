@@ -60,5 +60,5 @@ if __name__ == '__main__':
             handler_module=handler.module,
             handler_name=handler.name,
             entity=entity.generate_rh(),
-            conf_name=self.name,
+            conf_name=self.conf_name,
         )
