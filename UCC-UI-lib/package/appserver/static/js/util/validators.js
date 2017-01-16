@@ -100,7 +100,7 @@ function checkConfigDetails({pages: {configuration, inputs}}) {
 
     const checkEntity = (entity) => {
         _.values(entity).forEach(item => {
-            const {validators} = item;
+            const {validators, options} = item;
 
             _.values(validators).forEach(d => {
                 switch (d.type) {
@@ -116,6 +116,14 @@ function checkConfigDetails({pages: {configuration, inputs}}) {
                     default:
                 }
                 appendError(errors, error);
+            });
+
+            // Details check for entity options.
+            _.forEach(['blackList', 'whiteList'], d => {
+                if (options && options[d]) {
+                    error = parseRegexRawStr(options[d]).error;
+                    appendError(errors, error);
+                }
             });
         });
     };
