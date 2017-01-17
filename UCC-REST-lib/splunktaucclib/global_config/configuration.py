@@ -92,7 +92,11 @@ class Configuration(object):
         task_list = []
         for type_name, configurations in payload.iteritems():
             task_list.extend([(type_name, configuration) for configuration in configurations])
-        task_len = min(8, len(task_list))
+        task_len = len(task_list)
+        # return empty error list if task list is empty
+        if not task_list:
+            return []
+        task_len = min(8, task_len)
         pool = ThreadPool(processes=task_len)
         errors = pool.map(self.save_stanza, task_list)
         pool.close()
