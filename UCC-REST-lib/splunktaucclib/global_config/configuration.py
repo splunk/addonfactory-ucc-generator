@@ -88,11 +88,12 @@ class Configuration(object):
         >>> }
         >>> global_config.settings.save(payload)
         """
-        pool = ThreadPool(processes=8)
         # expand the payload to task_list
         task_list = []
         for type_name, configurations in payload.iteritems():
             task_list.extend([(type_name, configuration) for configuration in configurations])
+        task_len = 8 if len(task_list) > 8 else len(task_list)
+        pool = ThreadPool(processes=task_len)
         errors = pool.map(self.save_stanza, task_list)
         pool.close()
         pool.join()
