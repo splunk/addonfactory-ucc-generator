@@ -3,7 +3,7 @@ from __future__ import absolute_import
 
 import copy
 import json
-from multiprocessing.dummy import Pool as ThreadPool
+from multiprocessing.pool import ThreadPool
 
 from solnlib.packages.splunklib.binding import HTTPError
 
@@ -92,7 +92,7 @@ class Configuration(object):
         task_list = []
         for type_name, configurations in payload.iteritems():
             task_list.extend([(type_name, configuration) for configuration in configurations])
-        task_len = 8 if len(task_list) > 8 else len(task_list)
+        task_len = min(8, len(task_list))
         pool = ThreadPool(processes=task_len)
         errors = pool.map(self.save_stanza, task_list)
         pool.close()
