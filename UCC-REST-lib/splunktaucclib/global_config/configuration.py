@@ -3,6 +3,7 @@ from __future__ import absolute_import
 
 import copy
 import json
+from multiprocessing.dummy import Pool as ThreadPool
 
 from solnlib.packages.splunklib.binding import HTTPError
 
@@ -30,6 +31,7 @@ class Configuration(object):
 
     FILTERS = [u'eai:appName', u'eai:acl', u'eai:userName']
     ENTITY_NAME = u'name'
+    SETTINGS = u'settings'
 
     def __init__(self, splunkd_client, schema):
         """
@@ -49,6 +51,15 @@ class Configuration(object):
         :return:
         """
         raise NotImplementedError()
+
+    def save_stanza(self, item):
+        """
+        Save configuration with type_name and configuration
+
+        :param item:
+        :return: error while save the configuration
+        """
+        return self._save_configuration(item[0], item[1])
 
     def save(self, payload):
         """
@@ -77,22 +88,24 @@ class Configuration(object):
         >>> }
         >>> global_config.settings.save(payload)
         """
-        errors = {}
+        pool = ThreadPool(processes=8)
+        # expand the payload to task_list
+        task_list = []
         for type_name, configurations in payload.iteritems():
-            errors[type_name] = {}
-            for configuration in configurations:
-                res = self._save_configuration(
-                    type_name,
-                    configuration,
-                )
-                if res:
-                    name = configuration[self.ENTITY_NAME]
-                    errors[type_name][name] = res
+            task_list.extend([(type_name, configuration) for configuration in configurations])
+        errors = pool.map(self.save_stanza, task_list)
+        pool.close()
+        pool.join()
         return errors
 
     @property
     def internal_schema(self):
-        raise NotImplementedError()
+        """
+        Get the schema for inputs, configs and settings
+
+        :return:
+        """
+        return self._schema.inputs + self._schema.configs + self._schema.settings
 
     def _save_configuration(self, type_name, configuration):
         schema = self._search_configuration_schema(
@@ -206,7 +219,9 @@ class Configuration(object):
 
     def _search_configuration_schema(self, type_name, configuration_name):
         for item in self.internal_schema:
-            if item['name'] == type_name:
+            # add support for settings schema
+            if item['name'] == type_name or \
+                    (type_name == self.SETTINGS and item['name'] == configuration_name):
                 return item['entity']
         else:
             raise GlobalConfigError(
@@ -223,7 +238,9 @@ class Inputs(Configuration):
 
     def __init__(self, splunkd_client, schema):
         super(Inputs, self).__init__(splunkd_client, schema)
-        self._references = Configs(splunkd_client, schema).load()
+        self._splunkd_client = splunkd_client
+        self._schema = schema
+        self._references = None
 
     def load(self, input_type=None):
         """
@@ -236,6 +253,9 @@ class Inputs(Configuration):
         >>> global_config = GlobalConfig()
         >>> inputs = global_config.inputs.load()
         """
+        # move configs read operation out of init method
+        if not self._references:
+            self._references = Configs(self._splunkd_client, self._schema).load()
         inputs = {}
         for input_item in self.internal_schema:
             if input_type is None or input_item['name'] == input_type:
