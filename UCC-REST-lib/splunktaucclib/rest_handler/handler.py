@@ -322,7 +322,6 @@ class RestHandler(object):
             for field in field_names:
                 if field in model['content']:
                     masked[field] = model['content'][field]
-                model['content']
             for k in masked:
                 if k in field_names and masked[k]:
                     masked[k] = self.PASSWORD
