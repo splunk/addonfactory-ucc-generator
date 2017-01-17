@@ -135,11 +135,13 @@ class RestCredentials(object):
             Else, None.
         """
         try:
+            # clear password object loads from json
             encrypted = self._get(name)
             existing = True
         except CredentialNotExistException:
             encrypted = {}
             existing = False
+        # get fields to be encrypted
         encrypting = self._filter(name, data, encrypted)
         self._merge(name, data, encrypted, encrypting)
         if existing or encrypting:
@@ -247,12 +249,10 @@ class RestCredentials(object):
             if data[field.name] == self.PASSWORD:
                 # ignore already-encrypted fields
                 continue
-            if data[field.name] != self.EMPTY_VALUE:
-                encrypting_data[field.name] = data[field.name]
-                # non-empty fields
-                data[field.name] = self.PASSWORD
-                if field.name in encrypted_data:
-                    del encrypted_data[field.name]
+            # add data to encrypting data no matter it is empty string or not
+            encrypting_data[field.name] = data[field.name]
+            if field.name in encrypted_data:
+                del encrypted_data[field.name]
         return encrypting_data
 
     def _merge(self, name, data, encrypted, encrypting):
