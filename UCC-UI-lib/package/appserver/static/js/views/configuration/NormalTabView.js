@@ -57,7 +57,15 @@ export default Backbone.View.extend({
         removeErrorMsg(this.msgContainerId);
         addSavingMsg(this.msgContainerId, getFormattedMessage(108));
         addClickListener(this.msgContainerId, 'msg-loading');
-        this.dataStore.entry.content.set(this.stateModel.toJSON());
+        const newConfig = this.stateModel.toJSON();
+        this.props.entity.forEach(d => {
+            // https://jira.splunk.com/browse/ADDON-12723
+            if(newConfig[d.field] === undefined) {
+                newConfig[d.field] = '';
+            }
+        });
+
+        this.dataStore.entry.content.set(newConfig);
         this.dataStore.save(null, {
             success: () => removeSavingMsg(this.msgContainerId),
             error: (model, response) => {
