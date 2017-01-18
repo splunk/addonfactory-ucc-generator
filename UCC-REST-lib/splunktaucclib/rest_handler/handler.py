@@ -321,10 +321,7 @@ class RestHandler(object):
             masked = dict()
             for field in field_names:
                 if field in model['content']:
-                    masked[field] = model['content'][field]
-            for k in masked:
-                if k in field_names and masked[k]:
-                    masked[k] = self.PASSWORD
+                    masked[field] = self.PASSWORD
             self._client.post(
                 self.path_segment(
                     self._endpoint.internal_endpoint,
