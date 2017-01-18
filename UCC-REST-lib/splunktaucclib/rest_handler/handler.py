@@ -120,7 +120,6 @@ class RestHandler(object):
             host=splunkd_info.hostname,
             port=splunkd_info.port,
         )
-        self.FILTERS = [u'eai:appName', u'eai:acl', u'eai:userName', u'disabled']
         self.PASSWORD = u'********'
 
     @_decode_response
@@ -318,13 +317,11 @@ class RestHandler(object):
             it.ifilter(lambda x: x.encrypted, self._endpoint.model(None, data).fields)
         ))
         for model in change_list:
-            masked = model['content'].copy()
-            for k in self.FILTERS:
-                if k in masked:
-                    del masked[k]
-            for k in masked:
-                if k in field_names and masked[k]:
-                    masked[k] = self.PASSWORD
+            # only updates the defined fields in schema
+            masked = dict()
+            for field in field_names:
+                if field in model['content']:
+                    masked[field] = self.PASSWORD
             self._client.post(
                 self.path_segment(
                     self._endpoint.internal_endpoint,

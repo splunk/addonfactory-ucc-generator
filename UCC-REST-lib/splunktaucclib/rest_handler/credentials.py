@@ -188,11 +188,13 @@ class RestCredentials(object):
                 clear_password = json.loads(password['clear_password'])
                 password_changed = False
                 for k, v in clear_password.iteritems():
-                    if existed_model['content'][k] == self.PASSWORD:
-                        existed_model['content'][k] = v
-                    else:
-                        password_changed = True
-                        clear_password[k] = existed_model['content'][k]
+                    # make sure key exist in model content
+                    if k in existed_model['content']:
+                        if existed_model['content'][k] == self.PASSWORD:
+                            existed_model['content'][k] = v
+                        else:
+                            password_changed = True
+                            clear_password[k] = existed_model['content'][k]
                 # update the password
                 if password_changed and clear_password:
                     change_list.append(existed_model)
@@ -203,7 +205,9 @@ class RestCredentials(object):
             fields = filter(lambda x: x.encrypted, self._endpoint.model(None, data).fields)
             clear_password = {}
             for field in fields:
-                clear_password[field.name] = other_model['content'][field.name]
+                # make sure key exist in model content
+                if field.name in other_model['content']:
+                    clear_password[field.name] = other_model['content'][field.name]
             if clear_password:
                 self._set(name, clear_password)
 
