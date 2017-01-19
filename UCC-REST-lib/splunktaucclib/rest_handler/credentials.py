@@ -253,10 +253,12 @@ class RestCredentials(object):
             if data[field.name] == self.PASSWORD:
                 # ignore already-encrypted fields
                 continue
-            # add data to encrypting data no matter it is empty string or not
-            encrypting_data[field.name] = data[field.name]
-            if field.name in encrypted_data:
-                del encrypted_data[field.name]
+            if data[field.name] != self.EMPTY_VALUE:
+                encrypting_data[field.name] = data[field.name]
+                # non-empty fields
+                data[field.name] = self.PASSWORD
+                if field.name in encrypted_data:
+                    del encrypted_data[field.name]                
         return encrypting_data
 
     def _merge(self, name, data, encrypted, encrypting):
