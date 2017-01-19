@@ -88,7 +88,7 @@ class RestBuilder(object):
                 self.output.put(
                     self.output.default,
                     endpoint.conf_name + '.conf',
-                    endpoint.generate_default(),
+                    endpoint.generate_spec(),
                 )
 
             self.output.put(
