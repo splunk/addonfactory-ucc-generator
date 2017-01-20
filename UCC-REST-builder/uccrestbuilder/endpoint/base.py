@@ -55,12 +55,6 @@ field.RestField(
         lines.insert(0, title)
         return '\n'.join(lines)
 
-    def generate_default(self):
-        title = self._title_template.format(self.name_default)
-        lines = [field.generate_default() for field in self._fields]
-        lines.insert(0, title)
-        return '\n'.join(lines)
-
     def generate_rh(self):
         fields = []
         for field in self._fields:
@@ -113,10 +107,6 @@ class RestEndpointBuilder(object):
     def generate_spec(self):
         specs = [entity.generate_spec() for entity in self._entities]
         return '\n\n'.join(specs)
-
-    def generate_default(self):
-        defaults = [entity.generate_default() for entity in self._entities]
-        return '\n\n'.join(defaults)
 
     def generate_rh(self, handler):
         raise NotImplementedError()
