@@ -3,7 +3,6 @@
 
 from __future__ import absolute_import
 
-import copy
 import json
 from urlparse import urlparse
 from solnlib.credentials import (
@@ -83,8 +82,8 @@ class RestCredentials(object):
     Credential Management stored in passwords.conf
     """
 
-    PASSWORD = '********'
-    EMPTY_VALUE = ''
+    PASSWORD = u'********'
+    EMPTY_VALUE = u''
 
     def __init__(
             self,
@@ -100,6 +99,115 @@ class RestCredentials(object):
             base_app=get_base_app_name(),
             endpoint=self._endpoint.internal_endpoint.strip('/')
         )
+
+    def get_encrypted_field_names(self, name, data):
+        return [x.name for x in self._endpoint.model(name, data).fields if x.encrypted]
+
+    def encrypt_for_create(self, name, data):
+        """
+            force to encrypt all fields that need to be encrypted
+            used for create scenarios
+        :param name:
+        :param data:
+        :return:
+        """
+        encrypted_field_names = self.get_encrypted_field_names(name, data)
+        encrypting = {}
+        for field_name in encrypted_field_names:
+            if field_name in data and data[field_name]:
+                # if it exist in data and it's not empty,
+                # encrypt it and set original value as "****..."
+                encrypting[field_name] = data[field_name]
+                data[field_name] = self.PASSWORD
+
+        if encrypting:
+            # only save credential when the stanza is existing in
+            # passwords.conf or encrypting data is not empty
+            self._set(name, encrypting)
+
+    def encrypt_for_update(self, name, data):
+        """
+
+        :param name:
+        :param data:
+        :return:
+        """
+        encrypted_field_names = self.get_encrypted_field_names(name, data)
+        encrypting = {}
+        if not encrypted_field_names:
+            # return if there are not encrypted fields
+            return
+        for field_name in encrypted_field_names:
+            if field_name in data and data[field_name]:
+                if data[field_name] != self.PASSWORD:
+                    # if the field in data and not empty and it's not '*******', encrypted it
+                    encrypting[field_name] = data[field_name]
+                    data[field_name] = self.PASSWORD
+                else:
+                    # if the field value is '********', keep the original value
+                    original_clear_password = self._get(name)
+                    if original_clear_password and original_clear_password[field_name]:
+                        encrypting[field_name] = original_clear_password[field_name]
+                    else:
+                        # original password does not exist, use '********' as password
+                        encrypting[field_name] = data[field_name]
+
+        if encrypting:
+            self._set(name, encrypting)
+        else:
+            self.delete(name)
+
+    def decrypt_for_get(self, name, data):
+        """
+            encrypt password if conf changed and return data that needs to write back to conf
+        :param name:
+        :param data:
+        :return:
+        """
+        data_need_write_to_conf = dict()
+        # password dict needs to be encrypted
+        encrypting = dict()
+        encrypted_field_names = self.get_encrypted_field_names(name, data)
+        if not encrypted_field_names:
+            return
+        try:
+            # try to get clear password for the entity
+            clear_password = self._get(name)
+            # password exist for the entity
+            for field_name in encrypted_field_names:
+                if field_name in data and data[field_name]:
+                    if data[field_name] != self.PASSWORD:
+                        # if the field exist in data and not equals to '*******'
+                        # add to dict to be encrypted, else treat it as unchanged
+                        encrypting[field_name] = data[field_name]
+                        data_need_write_to_conf[field_name] = self.PASSWORD
+
+                    else:
+                        # get clear password for the field
+                        data[field_name] = clear_password[field_name]
+                        encrypting[field_name] = clear_password[field_name]
+
+            if encrypting and clear_password != encrypting:
+                # update passwords.conf if password changed
+                self._set(name, encrypting)
+        except CredentialNotExistException:
+            # password does not exist for the entity
+            for field_name in encrypted_field_names:
+                if field_name in data and data[field_name]:
+                    if data[field_name] != self.PASSWORD:
+                        # if the field exist in data and not equals to '*******'
+                        # add to dict to be encrypted
+                        encrypting[field_name] = data[field_name]
+                        data_need_write_to_conf[field_name] = self.PASSWORD
+                    else:
+                        # treat '*******' as password
+                        encrypting[field_name] = self.PASSWORD
+
+            if encrypting:
+                # set passwords.conf if encrypting data is not empty
+                self._set(name, encrypting)
+
+        return data_need_write_to_conf
 
     def encrypt(self, name, data):
         """
@@ -171,48 +279,81 @@ class RestCredentials(object):
         realm_passwords = filter(lambda x: x['realm'] == self._realm, all_passwords)
         return self._merge_passwords(data, realm_passwords)
 
+    @staticmethod
+    def _delete_empty_value_for_dict(dct):
+        empty_value_names = [k for k, v in dct.iteritems() if v == '']
+        for k in empty_value_names:
+            del dct[k]
+
     def _merge_passwords(self, data, passwords):
+        """
+            return if some fields need to write with new "******"
+        """
         # merge clear passwords to response data
-        change_list = []
-        password_names = map(lambda x: x['username'], passwords)
-        # existed passwords models
-        existed_models = filter(lambda x: x['name'] in password_names, data)
-        others = filter(lambda x: x['name'] not in password_names, data)
+        changed_item_list = []
+
+        password_dict = {pwd['username']: json.loads(pwd['clear_password']) for pwd in passwords}
+        # existed passwords models: previously has encrypted value
+        existing_encrypted_items = filter(lambda x: x['name'] in password_dict, data)
+
+        # previously has no encrypted value
+        not_encrypted_items = filter(lambda x: x['name'] not in password_dict, data)
+
         # For model that password existed
-        # 1.Password changed: Update it and add to change_list
+        # 1.Password changed: Update it and add to changed_item_list
         # 2.Password unchanged: Get the password and update the response data
-        for existed_model in existed_models:
+        for existed_model in existing_encrypted_items:
             name = existed_model['name']
-            password = next((x for x in passwords if x['username'] == name), None)
-            if password and 'clear_password' in password:
-                clear_password = json.loads(password['clear_password'])
-                password_changed = False
-                for k, v in clear_password.iteritems():
-                    # make sure key exist in model content
-                    if k in existed_model['content']:
-                        if existed_model['content'][k] == self.PASSWORD:
-                            existed_model['content'][k] = v
-                        else:
-                            password_changed = True
-                            clear_password[k] = existed_model['content'][k]
-                # update the password
-                if password_changed and clear_password:
-                    change_list.append(existed_model)
+            clear_password = password_dict[name]
+            need_write_magic_pwd = False
+            need_write_back_pwd = False
+            for k, v in clear_password.iteritems():
+                # make sure key exist in model content
+                if k in existed_model['content']:
+                    if existed_model['content'][k] == self.PASSWORD:
+                        # set existing as raw value
+                        existed_model['content'][k] = v
+                    elif existed_model['content'][k] == '':
+                        # mark to delete it
+                        clear_password[k] = ''
+                        need_write_back_pwd = True
+                        continue
+                    else:
+                        need_write_magic_pwd = True
+                        need_write_back_pwd = True
+                        clear_password[k] = existed_model['content'][k]
+                else: 
+                    # mark to delete it
+                    clear_password[k] = ''
+                    need_write_back_pwd = True
+
+            # update the password storage
+            if need_write_magic_pwd:
+                changed_item_list.append(existed_model)
+
+            if need_write_back_pwd:
+                self._delete_empty_value_for_dict(clear_password)
+                if clear_password:
                     self._set(name, clear_password)
+                else:
+                    # there's no any pwd any more, directly delete it.
+                    self.delete(name)
+
         # For other models, encrypt the password and return
-        for other_model in others:
+        for other_model in not_encrypted_items:
             name = other_model['name']
+            content = other_model['content']
             fields = filter(lambda x: x.encrypted, self._endpoint.model(None, data).fields)
             clear_password = {}
             for field in fields:
                 # make sure key exist in model content
-                if field.name in other_model['content']:
-                    clear_password[field.name] = other_model['content'][field.name]
+                if field.name in content and content[field.name] != '':
+                    clear_password[field.name] = content[field.name]
             if clear_password:
                 self._set(name, clear_password)
 
-        change_list.extend(others)
-        return change_list
+        changed_item_list.extend(not_encrypted_items)
+        return changed_item_list
 
     def delete(self, name):
         context = RestCredentialsContext(self._endpoint, name)
@@ -242,7 +383,7 @@ class RestCredentials(object):
         model = self._endpoint.model(name, data)
         encrypting_data = {}
         for field in model.fields:
-            if field.encrypted is False:
+            if not field.encrypted:
                 # remove non-encrypted fields
                 if field.name in encrypted_data:
                     del encrypted_data[field.name]
@@ -258,7 +399,7 @@ class RestCredentials(object):
                 # non-empty fields
                 data[field.name] = self.PASSWORD
                 if field.name in encrypted_data:
-                    del encrypted_data[field.name]                
+                    del encrypted_data[field.name]
         return encrypting_data
 
     def _merge(self, name, data, encrypted, encrypting):
