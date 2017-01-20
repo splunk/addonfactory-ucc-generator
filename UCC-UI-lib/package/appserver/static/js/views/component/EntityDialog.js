@@ -147,6 +147,9 @@ define([
         },
 
         initModel: function() {
+            if (this.mode !== "create") {
+                return;
+            }
             const {content} = this.real_model.entry,
                 {entity} = this.component;
 
@@ -269,8 +272,10 @@ define([
             this.children = [];
             _.each(entity, (e) => {
                 var option, controlWrapper, controlOptions;
-                if (this.model.get(e.field) === undefined && e.defaultValue) {
-                    this.model.set(e.field, e.defaultValue);
+                if (this.mode === "create") {
+                    if (this.model.get(e.field) === undefined && e.defaultValue) {
+                        this.model.set(e.field, e.defaultValue);
+                    }
                 }
 
                 controlOptions = {
