@@ -70,19 +70,40 @@ class TestCreateFunction(unittest.TestCase):
         :return:
         """
         self.endpoint = 'https://localhost:8089/servicesNS/nobody/Splunk_TA_crowdstrike/splunk_ta_crowdstrike_account'
+        self.conf_endpoint = 'https://localhost:8089/servicesNS/nobody/Splunk_TA_crowdstrike/' \
+                             'configs/conf-splunk_ta_crowdstrike_account'
         self.test_item_name = '1'
         self.PASSWORD = '********'
 
-    def create_item(self):
+    def create_item(self, via_conf=False):
+        if via_conf:
+            endpoint = self.conf_endpoint
+        else:
+            endpoint = self.endpoint
         create_cmd = ' '.join([
             self.get_prefix('POST'),
-            self.endpoint,
-            '-d name={name} -d api_uuid=1 -d endpoint=1 -d api_key=1'.format(
+            endpoint,
+            '-d name={name} -d api_uuid=1 -d endpoint=1 -d api_key=1 -d test_optional_password=1'.format(
                 name=self.test_item_name
             )
         ])
         output = subprocess.check_output(create_cmd.split(' '))
         # check if it's created successfully
+        self.assertTrue('<title>{name}</title>'.format(name=self.test_item_name) in output)
+
+    def update_item(self, data, via_conf=False):
+        if via_conf:
+            endpoint = self.conf_endpoint
+        else:
+            endpoint = self.endpoint
+
+        update_cmd = ' '.join([
+            self.get_prefix('POST'),
+            endpoint + '/' + self.test_item_name,
+            data
+        ])
+        output = subprocess.check_output(update_cmd.split(' '))
+        # check the update is done
         self.assertTrue('<title>{name}</title>'.format(name=self.test_item_name) in output)
 
     def delete_item(self):
@@ -103,10 +124,10 @@ class TestCreateFunction(unittest.TestCase):
     def get_prefix(self, method):
         return 'curl -k -u admin:admin -X {method}'.format(method=method)
 
-    def get_item_content(self, name, clear_password=False):
+    def get_item_content(self, clear_password=False):
         get_cmd = ' '.join([
             self.get_prefix('GET'),
-            self.endpoint + '/' + name,
+            self.endpoint + '/' + self.test_item_name,
             '-d output_mode=json'
         ])
         if clear_password:
@@ -115,7 +136,7 @@ class TestCreateFunction(unittest.TestCase):
         try:
             item = json.loads(response)
         except ValueError:
-            self.fail('Could not get the item %s' % name)
+            self.fail('Could not get the item %s' % self.test_item_name)
 
         # get the item content
         try:
@@ -151,13 +172,13 @@ class TestCreateFunction(unittest.TestCase):
         # check if it's created successfully
         self.assertTrue('<title>{name}</title>'.format(name=self.test_item_name) in output)
 
-        item_content = self.get_item_content(self.test_item_name)
+        item_content = self.get_item_content()
         # check the get request response contains only 'api_key=********'
         self.assertEqual(item_content['api_key'], self.PASSWORD)
         # check the get request response does not contain test_optional_password field
         self.assertFalse('test_optional_password' in item_content)
 
-        clear_item_content = self.get_item_content(self.test_item_name, clear_password=True)
+        clear_item_content = self.get_item_content(clear_password=True)
         # check the clear password is stored in passwords.conf
         self.assertEqual(clear_item_content['api_key'], self.test_item_name)
         # check the get request response does not contain test_optional_password field
@@ -169,18 +190,10 @@ class TestCreateFunction(unittest.TestCase):
     def testUpdateWithMagicPassword(self):
         # create a test item
         self.create_item()
-
         # update with password = '********'
-        update_cmd = ' '.join([
-            self.get_prefix('POST'),
-            self.endpoint + '/' + self.test_item_name,
-            '-d api_key=********'
-        ])
-        output = subprocess.check_output(update_cmd.split(' '))
-        # check the update is done
-        self.assertTrue('<title>{name}</title>'.format(name=self.test_item_name) in output)
+        self.update_item(data='-d api_key=********')
 
-        clear_item_content = self.get_item_content(self.test_item_name, clear_password=True)
+        clear_item_content = self.get_item_content(clear_password=True)
         # check the clear password is unchanged
         self.assertEqual(clear_item_content['api_key'], self.test_item_name)
 
@@ -192,21 +205,65 @@ class TestCreateFunction(unittest.TestCase):
         self.create_item()
 
         # update the test item
-        update_cmd = ' '.join([
-            self.get_prefix('POST'),
-            self.endpoint + '/' + self.test_item_name,
-            '-d api_key=other'
-        ])
-        output = subprocess.check_output(update_cmd.split(' '))
-        # check the update is done
-        self.assertTrue('<title>{name}</title>'.format(name=self.test_item_name) in output)
+        self.update_item(data='-d api_key=other')
 
-        clear_item_content = self.get_item_content(self.test_item_name, clear_password=True)
+        clear_item_content = self.get_item_content(clear_password=True)
         # check the clear password is unchanged
         self.assertEqual(clear_item_content['api_key'], 'other')
 
         # delete the created item
         self.delete_item()
+
+    def testGetEncrypt(self):
+        # create account via conf
+        self.create_item(via_conf=True)
+
+        content = self.get_item_content()
+        self.assertEqual(content['api_key'], self.PASSWORD)
+        self.assertEqual(content['test_optional_password'], self.PASSWORD)
+
+        clear_content = self.get_item_content(clear_password=True)
+        self.assertEqual(clear_content['api_key'], '1')
+        self.assertEqual(clear_content['test_optional_password'], '1')
+
+        self.delete_item()
+
+    def testGetWithOnePasswordChanged(self):
+        # create account with password encrypted
+        self.create_item()
+        # update password with other value via conf
+        self.update_item(data='-d api_key=other -d test_optional_password=other', via_conf=True)
+
+        # get account
+        content = self.get_item_content()
+        self.assertEqual(content['api_key'], self.PASSWORD)
+        self.assertEqual(content['test_optional_password'], self.PASSWORD)
+
+        # get account with clear password option
+        clear_content = self.get_item_content(clear_password=True)
+        self.assertEqual(clear_content['api_key'], 'other')
+        self.assertEqual(clear_content['test_optional_password'], 'other')
+
+        self.delete_item()
+
+    def testGetWithEmptyOptionalPassword(self):
+        self.create_item()
+
+        # update password with empty password value via conf
+        self.update_item(data='-d api_key=1 -d test_optional_password=', via_conf=True)
+
+        # get account
+        content = self.get_item_content()
+        self.assertEqual(content['api_key'], self.PASSWORD)
+        self.assertEqual(content['test_optional_password'], '')
+
+        # get account with clear password option
+        clear_content = self.get_item_content(clear_password=True)
+        self.assertEqual(clear_content['api_key'], '1')
+        self.assertEqual(clear_content['test_optional_password'], '')
+
+        self.delete_item()
+
 
 if __name__ == '__main__':
     unittest.main()
