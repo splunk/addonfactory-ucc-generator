@@ -297,6 +297,160 @@
             }, 
             "additionalProperties": false
         }, 
+        "InputsEntity": {
+            "type": "object", 
+            "properties": {
+                "field": {
+                    "type": "string", 
+                    "pattern": "(?!^(?:passAuth|queueSize)$)(?:^\\w+$)"
+                }, 
+                "label": {
+                    "type": "string", 
+                    "maxLength": 30
+                }, 
+                "type": {
+                    "type": "string", 
+                    "enum": [
+                        "text", 
+                        "singleSelect", 
+                        "checkbox", 
+                        "multipleSelect", 
+                        "radio"
+                    ]
+                }, 
+                "help": {
+                    "type": "string", 
+                    "maxLength": 200
+                }, 
+                "defaultValue": {
+                    "oneOf": [
+                        {
+                            "type": "number"
+                        }, 
+                        {
+                            "type": "string", 
+                            "maxLength": 250
+                        }, 
+                        {
+                            "type": "boolean"
+                        }
+                    ]
+                }, 
+                "options": {
+                    "type": "object", 
+                    "properties": {
+                        "blackList": {
+                            "type": "string", 
+                            "maxLength": 350
+                        }, 
+                        "delimiter": {
+                            "type": "string", 
+                            "maxLength": 1
+                        }, 
+                        "enable": {
+                            "type": "boolean"
+                        }, 
+                        "items": {
+                            "type": "array", 
+                            "items": {
+                                "$ref": "#/definitions/ValueLabelPair"
+                            }
+                        }, 
+                        "autoCompleteFields": {
+                            "oneOf": [
+                                {
+                                    "type": "array", 
+                                    "items": {
+                                        "type": "object", 
+                                        "properties": {
+                                            "children": {
+                                                "type": "array", 
+                                                "items": {
+                                                    "$ref": "#/definitions/ValueLabelPair"
+                                                }
+                                            }, 
+                                            "label": {
+                                                "type": "string", 
+                                                "maxLength": 150
+                                            }
+                                        }, 
+                                        "required": [
+                                            "children", 
+                                            "label"
+                                        ]
+                                    }
+                                }, 
+                                {
+                                    "type": "array", 
+                                    "items": {
+                                        "$ref": "#/definitions/ValueLabelPair"
+                                    }
+                                }
+                            ]
+                        }, 
+                        "whiteList": {
+                            "type": "string", 
+                            "maxLength": 350
+                        }, 
+                        "referenceName": {
+                            "type": "string", 
+                            "maxLength": 250
+                        }, 
+                        "placeholder": {
+                            "type": "string", 
+                            "maxLength": 250
+                        }, 
+                        "disableSearch": {
+                            "type": "boolean"
+                        }, 
+                        "endpointUrl": {
+                            "type": "string", 
+                            "maxLength": 350
+                        }
+                    }
+                }, 
+                "required": {
+                    "type": "boolean"
+                }, 
+                "encrypted": {
+                    "type": "boolean"
+                }, 
+                "validators": {
+                    "type": "array", 
+                    "items": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/definitions/StringValidator"
+                            }, 
+                            {
+                                "$ref": "#/definitions/NumberValidator"
+                            }, 
+                            {
+                                "$ref": "#/definitions/RegexValidator"
+                            }, 
+                            {
+                                "$ref": "#/definitions/EmailValidator"
+                            }, 
+                            {
+                                "$ref": "#/definitions/Ipv4Validator"
+                            }, 
+                            {
+                                "$ref": "#/definitions/UrlValidator"
+                            }, 
+                            {
+                                "$ref": "#/definitions/DateValidator"
+                            }
+                        ]
+                    }
+                }
+            }, 
+            "required": [
+                "field", 
+                "label", 
+                "type"
+            ], 
+            "additionalProperties": false
+        }, 
         "InputsPage": {
             "type": "object", 
             "properties": {
@@ -319,7 +473,7 @@
                             "entity": {
                                 "type": "array", 
                                 "items": {
-                                    "$ref": "#/definitions/Entity"
+                                    "$ref": "#/definitions/InputsEntity"
                                 }
                             }, 
                             "options": {
