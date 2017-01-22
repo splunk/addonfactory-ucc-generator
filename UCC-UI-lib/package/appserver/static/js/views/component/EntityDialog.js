@@ -1,6 +1,11 @@
 import {configManager} from 'app/util/configManager';
 import restEndpointMap from 'app/constants/restEndpointMap';
-import {generateModel, generateCollection} from 'app/util/backboneHelpers';
+import {
+    ENTITY_DIALOG_MODE_CLONE,
+    ENTITY_DIALOG_MODE_CREATE,
+    ENTITY_DIALOG_MODE_EDIT
+} from 'app/constants/modes';
+import {generateModel} from 'app/util/backboneHelpers';
 import {generateValidators} from 'app/util/validators';
 import {parseFuncRawStr} from 'app/util/script';
 import {
@@ -75,20 +80,20 @@ define([
             });
 
             if (!options.model) { //Create mode
-                this.mode = "create";
+                this.mode = ENTITY_DIALOG_MODE_CREATE;
                 this.model = new Backbone.Model({});
                 this.real_model = new InputType(null, {
                     appData: this.appData,
                     collection: this.collection
                 });
-            } else if (this.mode === "edit") { //Edit mode
+            } else if (this.mode === ENTITY_DIALOG_MODE_EDIT) {
                 this.model = options.model.entry.content.clone();
                 this.model.set({name: options.model.entry.get("name")});
                 this.real_model = options.model;
                 (validators || []).forEach(({fieldName, validator}) => {
                     this.real_model.addValidation(fieldName, validator);
                 });
-            } else if (this.mode === "clone") { //Clone mode
+            } else if (this.mode === ENTITY_DIALOG_MODE_CLONE) {
                 this.model = options.model.entry.content.clone();
                 //Unset the name attribute if the model is newly created
                 if (this.model.get("name")) {
@@ -147,7 +152,7 @@ define([
         },
 
         initModel: function() {
-            if (this.mode !== "create") {
+            if (this.mode !== ENTITY_DIALOG_MODE_CREATE) {
                 return;
             }
             const {content} = this.real_model.entry,
@@ -183,7 +188,7 @@ define([
 
         save: function (input, original_json) {
             // when update, disable parameter should be removed from parameter
-            if (this.mode === 'edit' || this.mode === 'clone') {
+            if (this.mode === ENTITY_DIALOG_MODE_EDIT || this.mode === ENTITY_DIALOG_MODE_CLONE) {
                 input.entry.content.unset('disabled', {silent: true});
             }
             var deffer = input.save();
@@ -209,7 +214,7 @@ define([
                     this.collection.trigger('change');
 
                     //Add model to collection
-                    if (this.mode !== 'edit') {
+                    if (this.mode !== ENTITY_DIALOG_MODE_EDIT) {
                         if (this.collection.paging.get('total') !== undefined) {
                             _.each(this.collection.models, (model) => {
                                 model.paging.set(
@@ -249,12 +254,12 @@ define([
 
         render: function () {
             var templateMap = {
-                    "create": AddDialogTemplate,
-                    "edit": EditDialogTemplate,
-                    "clone": CloneDialogTemplate
+                    [ENTITY_DIALOG_MODE_CREATE]: AddDialogTemplate,
+                    [ENTITY_DIALOG_MODE_EDIT]: EditDialogTemplate,
+                    [ENTITY_DIALOG_MODE_CLONE]: CloneDialogTemplate
                 },
                 template = _.template(templateMap[this.mode]),
-                jsonData = this.mode === "clone" ? {
+                jsonData = this.mode === ENTITY_DIALOG_MODE_CLONE ? {
                     name: this.cloneName,
                     title: this.component.title
                 } : {
@@ -271,8 +276,8 @@ define([
 
             this.children = [];
             _.each(entity, (e) => {
-                var option, controlWrapper, controlOptions;
-                if (this.mode === "create") {
+                var controlWrapper, controlOptions;
+                if (this.mode === ENTITY_DIALOG_MODE_CREATE) {
                     if (this.model.get(e.field) === undefined && e.defaultValue) {
                         this.model.set(e.field, e.defaultValue);
                     }
@@ -307,7 +312,7 @@ define([
             });
 
             //Disable the name field in edit mode
-            if (this.mode === 'edit') {
+            if (this.mode === ENTITY_DIALOG_MODE_EDIT) {
                 this.$("input[name=name]").attr("readonly", "readonly");
             }
             this.$("input[type=submit]").on("click", this.submitTask.bind(this));
