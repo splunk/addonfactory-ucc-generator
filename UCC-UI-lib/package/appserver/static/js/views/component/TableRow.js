@@ -124,7 +124,6 @@ define([
                     fieldValue = field === 'name' ? this.model.entity.entry.attributes[field]
                         : this.model.entity.entry.content.attributes[field];
                 fieldValue = fieldValue === undefined ? '' : String(fieldValue);
-                fieldValue = Util.encryptTableText(this.component, this.model.entity, field, fieldValue);
 
                 switch (field) {
                     case 'disabled':

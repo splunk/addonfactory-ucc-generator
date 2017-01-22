@@ -53,13 +53,6 @@ define([
                 }
             });
 
-            //Delete encrypted field in delete or clone mode
-            if (options.model && this.encryptedFields.length) {
-                _.each(this.encryptedFields, f => {
-                    delete options.model.entry.content.attributes[f];
-                });
-            }
-
             this.model = new Backbone.Model({});
 
             const {entity, name, options: comOpt} = this.component;
@@ -90,6 +83,12 @@ define([
                 });
             } else if (this.mode === "clone") { //Clone mode
                 this.model = options.model.entry.content.clone();
+
+                // Clean encrypted fields
+                _.forEach(this.encryptedFields, d => {
+                    delete this.model.attributes[d];
+                });
+
                 //Unset the name attribute if the model is newly created
                 if (this.model.get("name")) {
                     this.model.unset("name");
@@ -192,14 +191,6 @@ define([
                 addSavingMsg(this.curWinSelector, getFormattedMessage(108));
                 addClickListener(this.curWinSelector, 'msg-loading');
                 deffer.done(() => {
-                    //Delete encrypted field before adding to collection
-                    if (this.encryptedFields.length) {
-                        _.each(this.encryptedFields, f => {
-                            delete input.entry.content.attributes[f];
-                        });
-                    }
-                    this.collection.trigger('change');
-
                     //Add model to collection
                     if (this.mode !== 'edit') {
                         if (this.collection.paging.get('total') !== undefined) {
