@@ -85,6 +85,13 @@
                             "type": "text",
                             "required": true,
                             "encrypted": true
+                        },
+                        {
+                            "field": "test_optional_password",
+                            "label": "test_optional_password",
+                            "type": "text",
+                            "required": false,
+                            "encrypted": true
                         }
                     ]
                 },
