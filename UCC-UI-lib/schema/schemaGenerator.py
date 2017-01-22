@@ -104,7 +104,7 @@ class Entity(DocumentWithoutAddProp):
 class InputsEntity(Entity):
     # Prevnet Splunk reserved inputs field keys being used in the user customized inputs
     # https://jira.splunk.com/browse/ADDON-13014#comment-1493170
-    field = StringField(required=True, pattern="(?!^(?:passAuth|queueSize)$)(?:^\w+$)")
+    field = StringField(required=True, pattern="(?!^(?:persistentQueueSize|queueSize)$)(?:^\w+$)")
 
 class Table(DocumentWithoutAddProp):
     moreInfo = ArrayField(DictField(

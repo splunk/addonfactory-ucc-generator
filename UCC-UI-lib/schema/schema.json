@@ -302,7 +302,7 @@
             "properties": {
                 "field": {
                     "type": "string", 
-                    "pattern": "(?!^(?:passAuth|queueSize)$)(?:^\\w+$)"
+                    "pattern": "(?!^(?:persistentQueueSize|queueSize)$)(?:^\\w+$)"
                 }, 
                 "label": {
                     "type": "string", 
