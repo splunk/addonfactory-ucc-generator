@@ -151,6 +151,9 @@ class RestCredentials(object):
                     else:
                         # original password does not exist, use '********' as password
                         encrypting[field_name] = data[field_name]
+            else:
+                # if the optional encrypted field is not passed, set it to ''
+                data[field_name] = ''
 
         if encrypting:
             self._set(name, encrypting)
