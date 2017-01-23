@@ -57,6 +57,7 @@ class DateValidator(ValidatorBase):
 class UrlValidator(ValidatorBase):
     type = StringField(required=True, enum=["url"])
 
+
 class Entity(DocumentWithoutAddProp):
     field = StringField(required=True, pattern="^\w+$")
     label = StringField(required=True, max_length=30)
@@ -101,10 +102,23 @@ class Entity(DocumentWithoutAddProp):
         DocumentField(DateValidator, as_ref=True)
     ]))
 
+
 class InputsEntity(Entity):
     # Prevnet Splunk reserved inputs field keys being used in the user customized inputs
     # https://jira.splunk.com/browse/ADDON-13014#comment-1493170
-    field = StringField(required=True, pattern="(?!^(?:persistentQueueSize|queueSize)$)(?:^\w+$)")
+
+    field = StringField(
+        required=True,
+        pattern="(?!^(?:persistentQueueSize|queueSize|start_by_shell|output_mode|output_field|owner|app|sharing)$)(?:^\w+$)"
+    )
+
+
+class ConfigurationEntity(Entity):
+    field = StringField(
+        required=True,
+        pattern="(?!^(?:output_mode|output_field|owner|app|sharing)$)(?:^\w+$)"
+    )
+
 
 class Table(DocumentWithoutAddProp):
     moreInfo = ArrayField(DictField(
@@ -136,7 +150,7 @@ class Hooks(DocumentWithoutAddProp):
 
 
 class TabContent(DocumentWithoutAddProp):
-    entity = ArrayField(DocumentField(Entity, as_ref=True), required=True)
+    entity = ArrayField(DocumentField(ConfigurationEntity, as_ref=True), required=True)
     name = StringField(required=True, pattern="^[\/\w]+$", max_length=250)
     title = StringField(required=True, max_length=50)
     options = DocumentField(Hooks, as_ref=True)

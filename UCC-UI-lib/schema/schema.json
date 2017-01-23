@@ -1,6 +1,160 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#", 
     "definitions": {
+        "ConfigurationEntity": {
+            "type": "object", 
+            "properties": {
+                "field": {
+                    "type": "string", 
+                    "pattern": "(?!^(?:output_mode|output_field|owner|app|sharing)$)(?:^\\w+$)"
+                }, 
+                "label": {
+                    "type": "string", 
+                    "maxLength": 30
+                }, 
+                "type": {
+                    "type": "string", 
+                    "enum": [
+                        "text", 
+                        "singleSelect", 
+                        "checkbox", 
+                        "multipleSelect", 
+                        "radio"
+                    ]
+                }, 
+                "help": {
+                    "type": "string", 
+                    "maxLength": 200
+                }, 
+                "defaultValue": {
+                    "oneOf": [
+                        {
+                            "type": "number"
+                        }, 
+                        {
+                            "type": "string", 
+                            "maxLength": 250
+                        }, 
+                        {
+                            "type": "boolean"
+                        }
+                    ]
+                }, 
+                "options": {
+                    "type": "object", 
+                    "properties": {
+                        "placeholder": {
+                            "type": "string", 
+                            "maxLength": 250
+                        }, 
+                        "items": {
+                            "type": "array", 
+                            "items": {
+                                "$ref": "#/definitions/ValueLabelPair"
+                            }
+                        }, 
+                        "delimiter": {
+                            "type": "string", 
+                            "maxLength": 1
+                        }, 
+                        "endpointUrl": {
+                            "type": "string", 
+                            "maxLength": 350
+                        }, 
+                        "whiteList": {
+                            "type": "string", 
+                            "maxLength": 350
+                        }, 
+                        "enable": {
+                            "type": "boolean"
+                        }, 
+                        "autoCompleteFields": {
+                            "oneOf": [
+                                {
+                                    "type": "array", 
+                                    "items": {
+                                        "type": "object", 
+                                        "properties": {
+                                            "label": {
+                                                "type": "string", 
+                                                "maxLength": 150
+                                            }, 
+                                            "children": {
+                                                "type": "array", 
+                                                "items": {
+                                                    "$ref": "#/definitions/ValueLabelPair"
+                                                }
+                                            }
+                                        }, 
+                                        "required": [
+                                            "label", 
+                                            "children"
+                                        ]
+                                    }
+                                }, 
+                                {
+                                    "type": "array", 
+                                    "items": {
+                                        "$ref": "#/definitions/ValueLabelPair"
+                                    }
+                                }
+                            ]
+                        }, 
+                        "referenceName": {
+                            "type": "string", 
+                            "maxLength": 250
+                        }, 
+                        "blackList": {
+                            "type": "string", 
+                            "maxLength": 350
+                        }, 
+                        "disableSearch": {
+                            "type": "boolean"
+                        }
+                    }
+                }, 
+                "required": {
+                    "type": "boolean"
+                }, 
+                "encrypted": {
+                    "type": "boolean"
+                }, 
+                "validators": {
+                    "type": "array", 
+                    "items": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/definitions/StringValidator"
+                            }, 
+                            {
+                                "$ref": "#/definitions/NumberValidator"
+                            }, 
+                            {
+                                "$ref": "#/definitions/RegexValidator"
+                            }, 
+                            {
+                                "$ref": "#/definitions/EmailValidator"
+                            }, 
+                            {
+                                "$ref": "#/definitions/Ipv4Validator"
+                            }, 
+                            {
+                                "$ref": "#/definitions/UrlValidator"
+                            }, 
+                            {
+                                "$ref": "#/definitions/DateValidator"
+                            }
+                        ]
+                    }
+                }
+            }, 
+            "required": [
+                "field", 
+                "label", 
+                "type"
+            ], 
+            "additionalProperties": false
+        }, 
         "ConfigurationPage": {
             "type": "object", 
             "properties": {
@@ -34,18 +188,18 @@
                     "items": {
                         "type": "object", 
                         "properties": {
-                            "field": {
-                                "type": "string", 
-                                "pattern": "^\\w+$"
-                            }, 
                             "label": {
                                 "type": "string", 
                                 "maxLength": 30
+                            }, 
+                            "field": {
+                                "type": "string", 
+                                "pattern": "^\\w+$"
                             }
                         }, 
                         "required": [
-                            "field", 
-                            "label"
+                            "label", 
+                            "field"
                         ]
                     }
                 }, 
@@ -54,18 +208,18 @@
                     "items": {
                         "type": "object", 
                         "properties": {
-                            "field": {
-                                "type": "string", 
-                                "pattern": "^\\w+$"
-                            }, 
                             "label": {
                                 "type": "string", 
                                 "maxLength": 30
+                            }, 
+                            "field": {
+                                "type": "string", 
+                                "pattern": "^\\w+$"
                             }
                         }, 
                         "required": [
-                            "field", 
-                            "label"
+                            "label", 
+                            "field"
                         ]
                     }
                 }, 
@@ -125,160 +279,6 @@
             ], 
             "additionalProperties": false
         }, 
-        "Entity": {
-            "type": "object", 
-            "properties": {
-                "field": {
-                    "type": "string", 
-                    "pattern": "^\\w+$"
-                }, 
-                "label": {
-                    "type": "string", 
-                    "maxLength": 30
-                }, 
-                "type": {
-                    "type": "string", 
-                    "enum": [
-                        "text", 
-                        "singleSelect", 
-                        "checkbox", 
-                        "multipleSelect", 
-                        "radio"
-                    ]
-                }, 
-                "help": {
-                    "type": "string", 
-                    "maxLength": 200
-                }, 
-                "defaultValue": {
-                    "oneOf": [
-                        {
-                            "type": "number"
-                        }, 
-                        {
-                            "type": "string", 
-                            "maxLength": 250
-                        }, 
-                        {
-                            "type": "boolean"
-                        }
-                    ]
-                }, 
-                "options": {
-                    "type": "object", 
-                    "properties": {
-                        "blackList": {
-                            "type": "string", 
-                            "maxLength": 350
-                        }, 
-                        "delimiter": {
-                            "type": "string", 
-                            "maxLength": 1
-                        }, 
-                        "enable": {
-                            "type": "boolean"
-                        }, 
-                        "items": {
-                            "type": "array", 
-                            "items": {
-                                "$ref": "#/definitions/ValueLabelPair"
-                            }
-                        }, 
-                        "autoCompleteFields": {
-                            "oneOf": [
-                                {
-                                    "type": "array", 
-                                    "items": {
-                                        "type": "object", 
-                                        "properties": {
-                                            "children": {
-                                                "type": "array", 
-                                                "items": {
-                                                    "$ref": "#/definitions/ValueLabelPair"
-                                                }
-                                            }, 
-                                            "label": {
-                                                "type": "string", 
-                                                "maxLength": 150
-                                            }
-                                        }, 
-                                        "required": [
-                                            "children", 
-                                            "label"
-                                        ]
-                                    }
-                                }, 
-                                {
-                                    "type": "array", 
-                                    "items": {
-                                        "$ref": "#/definitions/ValueLabelPair"
-                                    }
-                                }
-                            ]
-                        }, 
-                        "whiteList": {
-                            "type": "string", 
-                            "maxLength": 350
-                        }, 
-                        "referenceName": {
-                            "type": "string", 
-                            "maxLength": 250
-                        }, 
-                        "placeholder": {
-                            "type": "string", 
-                            "maxLength": 250
-                        }, 
-                        "disableSearch": {
-                            "type": "boolean"
-                        }, 
-                        "endpointUrl": {
-                            "type": "string", 
-                            "maxLength": 350
-                        }
-                    }
-                }, 
-                "required": {
-                    "type": "boolean"
-                }, 
-                "encrypted": {
-                    "type": "boolean"
-                }, 
-                "validators": {
-                    "type": "array", 
-                    "items": {
-                        "anyOf": [
-                            {
-                                "$ref": "#/definitions/StringValidator"
-                            }, 
-                            {
-                                "$ref": "#/definitions/NumberValidator"
-                            }, 
-                            {
-                                "$ref": "#/definitions/RegexValidator"
-                            }, 
-                            {
-                                "$ref": "#/definitions/EmailValidator"
-                            }, 
-                            {
-                                "$ref": "#/definitions/Ipv4Validator"
-                            }, 
-                            {
-                                "$ref": "#/definitions/UrlValidator"
-                            }, 
-                            {
-                                "$ref": "#/definitions/DateValidator"
-                            }
-                        ]
-                    }
-                }
-            }, 
-            "required": [
-                "field", 
-                "label", 
-                "type"
-            ], 
-            "additionalProperties": false
-        }, 
         "Hooks": {
             "type": "object", 
             "properties": {
@@ -302,7 +302,7 @@
             "properties": {
                 "field": {
                     "type": "string", 
-                    "pattern": "(?!^(?:persistentQueueSize|queueSize)$)(?:^\\w+$)"
+                    "pattern": "(?!^(?:persistentQueueSize|queueSize|start_by_shell|output_mode|output_field|owner|app|sharing)$)(?:^\\w+$)"
                 }, 
                 "label": {
                     "type": "string", 
@@ -339,22 +339,30 @@
                 "options": {
                     "type": "object", 
                     "properties": {
-                        "blackList": {
+                        "placeholder": {
                             "type": "string", 
-                            "maxLength": 350
-                        }, 
-                        "delimiter": {
-                            "type": "string", 
-                            "maxLength": 1
-                        }, 
-                        "enable": {
-                            "type": "boolean"
+                            "maxLength": 250
                         }, 
                         "items": {
                             "type": "array", 
                             "items": {
                                 "$ref": "#/definitions/ValueLabelPair"
                             }
+                        }, 
+                        "delimiter": {
+                            "type": "string", 
+                            "maxLength": 1
+                        }, 
+                        "endpointUrl": {
+                            "type": "string", 
+                            "maxLength": 350
+                        }, 
+                        "whiteList": {
+                            "type": "string", 
+                            "maxLength": 350
+                        }, 
+                        "enable": {
+                            "type": "boolean"
                         }, 
                         "autoCompleteFields": {
                             "oneOf": [
@@ -363,20 +371,20 @@
                                     "items": {
                                         "type": "object", 
                                         "properties": {
+                                            "label": {
+                                                "type": "string", 
+                                                "maxLength": 150
+                                            }, 
                                             "children": {
                                                 "type": "array", 
                                                 "items": {
                                                     "$ref": "#/definitions/ValueLabelPair"
                                                 }
-                                            }, 
-                                            "label": {
-                                                "type": "string", 
-                                                "maxLength": 150
                                             }
                                         }, 
                                         "required": [
-                                            "children", 
-                                            "label"
+                                            "label", 
+                                            "children"
                                         ]
                                     }
                                 }, 
@@ -388,24 +396,16 @@
                                 }
                             ]
                         }, 
-                        "whiteList": {
-                            "type": "string", 
-                            "maxLength": 350
-                        }, 
                         "referenceName": {
                             "type": "string", 
                             "maxLength": 250
                         }, 
-                        "placeholder": {
+                        "blackList": {
                             "type": "string", 
-                            "maxLength": 250
+                            "maxLength": 350
                         }, 
                         "disableSearch": {
                             "type": "boolean"
-                        }, 
-                        "endpointUrl": {
-                            "type": "string", 
-                            "maxLength": 350
                         }
                     }
                 }, 
@@ -476,9 +476,6 @@
                                     "$ref": "#/definitions/InputsEntity"
                                 }
                             }, 
-                            "options": {
-                                "$ref": "#/definitions/Hooks"
-                            }, 
                             "name": {
                                 "type": "string", 
                                 "pattern": "^[0-9a-zA-Z][0-9a-zA-Z_-]*$", 
@@ -487,6 +484,9 @@
                             "title": {
                                 "type": "string", 
                                 "maxLength": 100
+                            }, 
+                            "options": {
+                                "$ref": "#/definitions/Hooks"
                             }
                         }, 
                         "required": [
@@ -512,18 +512,18 @@
                     "items": {
                         "type": "object", 
                         "properties": {
-                            "field": {
-                                "type": "string", 
-                                "pattern": "^\\w+$"
-                            }, 
                             "label": {
                                 "type": "string", 
                                 "maxLength": 30
+                            }, 
+                            "field": {
+                                "type": "string", 
+                                "pattern": "^\\w+$"
                             }
                         }, 
                         "required": [
-                            "field", 
-                            "label"
+                            "label", 
+                            "field"
                         ]
                     }
                 }, 
@@ -532,18 +532,18 @@
                     "items": {
                         "type": "object", 
                         "properties": {
-                            "field": {
-                                "type": "string", 
-                                "pattern": "^\\w+$"
-                            }, 
                             "label": {
                                 "type": "string", 
                                 "maxLength": 30
+                            }, 
+                            "field": {
+                                "type": "string", 
+                                "pattern": "^\\w+$"
                             }
                         }, 
                         "required": [
-                            "field", 
-                            "label"
+                            "label", 
+                            "field"
                         ]
                     }
                 }, 
@@ -713,7 +713,7 @@
                 "entity": {
                     "type": "array", 
                     "items": {
-                        "$ref": "#/definitions/Entity"
+                        "$ref": "#/definitions/ConfigurationEntity"
                     }
                 }, 
                 "name": {
