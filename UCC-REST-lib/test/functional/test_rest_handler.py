@@ -106,6 +106,7 @@ class TestCreateFunction(unittest.TestCase):
         self.endpoint = 'https://localhost:8089/servicesNS/nobody/Splunk_TA_crowdstrike/splunk_ta_crowdstrike_account'
         self.conf_endpoint = 'https://localhost:8089/servicesNS/nobody/Splunk_TA_crowdstrike/' \
                              'configs/conf-splunk_ta_crowdstrike_account'
+        self.password_endpoint = 'https://localhost:8089/servicesNS/nobody/-/storage/passwords'
         self.test_item_name = '1'
         self.PASSWORD = '********'
 
@@ -126,20 +127,22 @@ class TestCreateFunction(unittest.TestCase):
         # check if it's created successfully
         self.assertTrue('<title>{name}</title>'.format(name=name) in output)
 
-    def update_item(self, data, via_conf=False):
+    def update_item(self, data, via_conf=False, name=None):
         if via_conf:
             endpoint = self.conf_endpoint
         else:
             endpoint = self.endpoint
 
+        if not name:
+            name = self.test_item_name
         update_cmd = ' '.join([
             self.get_prefix('POST'),
-            endpoint + '/' + self.test_item_name,
+            endpoint + '/' + name,
             data
         ])
         output = subprocess.check_output(update_cmd.split(' '))
         # check the update is done
-        self.assertTrue('<title>{name}</title>'.format(name=self.test_item_name) in output)
+        self.assertTrue('<title>{name}</title>'.format(name=name) in output)
 
     def delete_item(self, name=None):
         if not name:
@@ -196,6 +199,19 @@ class TestCreateFunction(unittest.TestCase):
         except ValueError:
             self.fail('Could not get the item %s' % self.test_item_name)
         return items
+
+    def get_all_passwords(self):
+        get_password_cmd = ' '.join([
+            self.get_prefix('GET'),
+            self.password_endpoint,
+            '-d output_mode=json'
+        ])
+        output = subprocess.check_output(get_password_cmd.split(' '))
+        try:
+            passwords = json.loads(output)
+        except ValueError:
+            self.fail('Could not get the passwords')
+        return passwords
 
     def testCreateWithExisting(self):
         """
@@ -385,9 +401,9 @@ class TestCreateFunction(unittest.TestCase):
             '-d api_uuid=1 -d endpoint=1 -d api_key='
         ])
         output = subprocess.check_output(update_cmd.split(' '))
-        # TODO: Fix me
-        self.assertTrue(True)
-
+        self.assertTrue(
+            'Required field is missing: api_key' in output
+        )
         self.delete_item()
 
     def testUpdateWithMagicPassword(self):
@@ -686,13 +702,111 @@ class TestCreateFunction(unittest.TestCase):
         for item in items_with_clear_password['entry']:
             if item['name'] == 'stanza1':
                 self.assertEqual(item['content']['api_key'], '1')
-                self.assertEqual(item['content']['api_key'], '1')
+                self.assertEqual(item['content']['test_optional_password'], '1')
             elif item['name'] == 'stanza2':
                 self.assertEqual(item['content']['api_key'], '2')
-                self.assertEqual(item['content']['api_key'], '2')
+                self.assertEqual(item['content']['test_optional_password'], '2')
 
         self.delete_item(name='stanza1')
         self.delete_item(name='stanza2')
+
+    def testAllWithEmptyField(self):
+        """
+            Test:
+            1.Create two stanzas via conf with clear passwords:
+                stanza1: api_key=1
+                stanza2: api_key=2 and test_optional_password=2
+            2.Update stanza2 with: test_optional_password=
+            3.Get all stanzas via REST handler. The clear passwords should be encrypted in passwords.conf
+                For stanza1, test_optional_password should not be in response.
+                For stanza2, test_optional_password='' in response
+        """
+        self.create_item(
+            data='-d name={name} -d api_uuid=1 -d endpoint=1 -d api_key=1'.format(
+                name='stanza1'
+            ),
+            via_conf=True,
+            name='stanza1'
+        )
+        self.create_item(
+            data='-d name={name} -d api_uuid=1 -d endpoint=1 -d api_key=2 -d test_optional_password=2'.format(
+                name='stanza2'
+            ),
+            via_conf=True,
+            name='stanza2'
+        )
+
+        self.update_item(
+            data='-d api_key=2 -d endpoint=1 -d test_optional_password=',
+            via_conf=True,
+            name='stanza2'
+        )
+        items = self.get_all_item()
+        for item in items['entry']:
+            if item['name'] == 'stanza1':
+                self.assertEqual(item['content']['api_key'], self.PASSWORD)
+                self.assertFalse('test_optional_password' in item['content'])
+            if item['name'] == 'stanza2':
+                self.assertEqual(item['content']['api_key'], self.PASSWORD)
+                self.assertEqual(item['content']['test_optional_password'], '')
+
+        items_with_clear_password = self.get_all_item(clear_password=True)
+        for item in items_with_clear_password['entry']:
+            if item['name'] == 'stanza1':
+                self.assertEqual(item['content']['api_key'], '1')
+                self.assertFalse('test_optional_password' in item['content'])
+            elif item['name'] == 'stanza2':
+                self.assertEqual(item['content']['api_key'], '2')
+                self.assertEqual(item['content']['test_optional_password'], '')
+
+        self.delete_item(name='stanza1')
+        self.delete_item(name='stanza2')
+
+    def testDeleteNoneExistentItem(self):
+        """
+            Test: Delete item that does not exist
+                  Current behaviour is getting error response
+        """
+        delete_cmd = ' '.join([
+            self.get_prefix('DELETE'),
+            self.endpoint + '/' + self.test_item_name,
+            '-d output_mode=json'
+        ])
+        output = subprocess.check_output(delete_cmd.split(' '))
+        self.assertTrue('Could not find object id={name}'.format(name=self.test_item_name) in output)
+
+    def testDeleteItem(self):
+        """
+            Test: Delete an item with password. The encrypted fields in passwords.conf should be deleted too.
+        """
+        realm = '#Splunk_TA_crowdstrike#configs/conf-splunk_ta_crowdstrike_account'
+        passwords = self.get_all_passwords()
+
+        for password in passwords['entry']:
+            if realm in password['name']:
+                self.fail("Password should not exist in passwords.conf")
+        self.create_item(
+            data='-d name={name} -d api_uuid=1 -d endpoint=1 -d api_key=1 -d test_optional_password=1'.format(
+                name=self.test_item_name
+            )
+        )
+        # get all passwords again
+        passwords = self.get_all_passwords()
+
+        for password in passwords['entry']:
+            if realm in password['name']:
+                break
+        else:
+            self.fail("Password should exist in passwords.conf")
+
+        self.delete_item()
+
+        # get passwords after deleting the item
+        passwords = self.get_all_passwords()
+
+        for password in passwords['entry']:
+            if realm in password['name']:
+                self.fail("Password should not exist in passwords.conf")
 
 
 if __name__ == '__main__':
