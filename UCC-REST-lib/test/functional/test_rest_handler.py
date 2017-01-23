@@ -334,7 +334,9 @@ class TestCreateFunction(unittest.TestCase):
         self.delete_item()
 
     def testCreateWithEmptyRequiredField(self):
-        # create an account with empty required field 'api_key'
+        """
+            Test: Create an account with empty required field 'api_key'
+        """
         create_cmd = ' '.join([
             self.get_prefix('POST'),
             self.endpoint,
@@ -547,8 +549,8 @@ class TestCreateFunction(unittest.TestCase):
         content = self.get_item_content(clear_password=True)
         self.assertEqual(content['f1'], 'f1')
         self.assertEqual(content['f2'], '')
-        # Update without field 'f3' has the same effect as update with 'f3='
-        self.assertEqual(content['f3'], '')
+        # keep original password if it's not passed
+        self.assertEqual(content['f3'], '3')
 
         self.delete_item()
 
@@ -610,6 +612,9 @@ class TestCreateFunction(unittest.TestCase):
         self.delete_item()
 
     def testGetEncrypt(self):
+        """
+            Test: Create a stanza via conf, the password fields are encrypted when calling get REST call
+        """
         # create account via conf
         self.create_item(
             data='-d name={name} -d api_uuid=1 -d endpoint=1 -d api_key=1 -d test_optional_password=1'.format(
@@ -629,6 +634,10 @@ class TestCreateFunction(unittest.TestCase):
         self.delete_item()
 
     def testGetWithOnePasswordChanged(self):
+        """
+            Test: Change one password field via conf and get via REST call, the change takes effect
+
+        """
         # create account with password encrypted
         self.create_item(
             data='-d name={name} -d api_uuid=1 -d endpoint=1 -d api_key=1 -d test_optional_password=1'.format(
@@ -651,6 +660,10 @@ class TestCreateFunction(unittest.TestCase):
         self.delete_item()
 
     def testGetWithEmptyOptionalPassword(self):
+        """
+            Test: Change optional password field to empty in conf
+                  Get the stanza via REST will get empty string in response
+        """
         self.create_item(
             data='-d name={name} -d api_uuid=1 -d endpoint=1 -d api_key=1 -d test_optional_password=1'.format(
                 name=self.test_item_name
