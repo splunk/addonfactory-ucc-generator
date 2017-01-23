@@ -71,13 +71,15 @@
                             "field": "api_uuid",
                             "label": "API UUID",
                             "type": "text",
-                            "required": true,
-                            "validators": [
-                                {
-                                    "type": "regex",
-                                    "pattern": "\\w{1,50}"
-                                }
-                            ]
+                            "required": false,
+                            "defaultValue": "123456789"
+                        },
+                        {
+                            "field": "api_uuid2",
+                            "label": "API UUID2",
+                            "type": "text",
+                            "required": false,
+                            "defaultValue": "123456789"
                         },
                         {
                             "field": "api_key",
@@ -85,6 +87,46 @@
                             "type": "text",
                             "required": true,
                             "encrypted": true
+                        },
+                        {
+                            "field": "test_optional_password",
+                            "label": "test_optional_password",
+                            "type": "text",
+                            "required": false,
+                            "encrypted": true
+                        },
+                        {
+                            "field": "f1",
+                            "label": "f1",
+                            "type": "text",
+                            "required": false,
+                            "encrypted": true
+                        },
+                        {
+                            "field": "f2",
+                            "label": "f2",
+                            "type": "text",
+                            "required": false,
+                            "encrypted": true
+                        },
+                        {
+                            "field": "f3",
+                            "label": "f3",
+                            "type": "text",
+                            "required": false,
+                            "encrypted": true
+                        },
+                        {
+                            "field": "f4",
+                            "label": "f4",
+                            "type": "text",
+                            "required": false
+                        },
+                        {
+                            "field": "f5",
+                            "label": "f5",
+                            "type": "text",
+                            "required": false
                         }
                     ]
                 },
