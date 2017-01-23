@@ -103,6 +103,23 @@ class Entity(DocumentWithoutAddProp):
     ]))
 
 
+class InputsEntity(Entity):
+    # Prevnet Splunk reserved inputs field keys being used in the user customized inputs
+    # https://jira.splunk.com/browse/ADDON-13014#comment-1493170
+
+    field = StringField(
+        required=True,
+        pattern="(?!^(?:persistentQueueSize|queueSize|start_by_shell|output_mode|output_field|owner|app|sharing)$)(?:^\w+$)"
+    )
+
+
+class ConfigurationEntity(Entity):
+    field = StringField(
+        required=True,
+        pattern="(?!^(?:output_mode|output_field|owner|app|sharing)$)(?:^\w+$)"
+    )
+
+
 class Table(DocumentWithoutAddProp):
     moreInfo = ArrayField(DictField(
         properties={
@@ -133,7 +150,7 @@ class Hooks(DocumentWithoutAddProp):
 
 
 class TabContent(DocumentWithoutAddProp):
-    entity = ArrayField(DocumentField(Entity, as_ref=True), required=True)
+    entity = ArrayField(DocumentField(ConfigurationEntity, as_ref=True), required=True)
     name = StringField(required=True, pattern="^[\/\w]+$", max_length=250)
     title = StringField(required=True, max_length=50)
     options = DocumentField(Hooks, as_ref=True)
@@ -154,7 +171,7 @@ class InputsPage(DocumentWithoutAddProp):
         properties={
             "name": StringField(required=True, pattern="^[0-9a-zA-Z][0-9a-zA-Z_-]*$", max_length=50),
             "title": StringField(required=True, max_length=100),
-            "entity": ArrayField(DocumentField(Entity, as_ref=True), required=True),
+            "entity": ArrayField(DocumentField(InputsEntity, as_ref=True), required=True),
             "options": DocumentField(Hooks, as_ref=True)
         }
     ), required=True)
