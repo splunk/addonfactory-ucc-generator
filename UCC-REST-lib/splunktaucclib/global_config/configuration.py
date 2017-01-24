@@ -32,6 +32,7 @@ class Configuration(object):
     FILTERS = [u'eai:appName', u'eai:acl', u'eai:userName']
     ENTITY_NAME = u'name'
     SETTINGS = u'settings'
+    NOT_FOUND = u'[404]: Not Found'
 
     def __init__(self, splunkd_client, schema):
         """
@@ -124,7 +125,7 @@ class Configuration(object):
         try:
             self._update(type_name, copy.copy(configuration))
         except HTTPError as exc:
-            if 'HTTP 404 Not Found' in str(exc):
+            if self.NOT_FOUND in str(exc):
                 # not exists, go to create
                 pass
             else:
