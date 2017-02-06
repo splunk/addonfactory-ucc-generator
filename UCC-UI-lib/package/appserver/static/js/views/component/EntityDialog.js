@@ -182,7 +182,22 @@ define([
             input.entry.content.set(new_json);
             input.attr_labels = attr_labels;
 
-            return this.save(input, original_json);
+            this.save(input, original_json);
+        },
+
+        clearEncryptedFields: function() {
+            if (this.mode !== ENTITY_DIALOG_MODE_EDIT) {
+                return;
+            }
+
+            const modelJson = this.model.toJSON();
+            _.forEach(this.component.entity, d => {
+                if (d.encrypted && modelJson[d.field]) {
+                    modelJson[d.field] = '********';
+                }
+            });
+            this.real_model.entry.content.set(modelJson);
+            this.collection.trigger('change');
         },
 
         save: function (input, original_json) {
@@ -224,6 +239,7 @@ define([
                         this.collection.add(input);
                         this.collection.trigger('change');
                     }
+                    this.clearEncryptedFields();
                     this.$("[role=dialog]").modal('hide');
                     this.undelegateEvents();
                 }).fail((model, response) => {
