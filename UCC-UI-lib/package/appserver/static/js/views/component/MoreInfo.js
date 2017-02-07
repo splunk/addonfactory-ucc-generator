@@ -36,7 +36,7 @@ define([
                     value = Util.parseBoolean(value, false) ?
                         _('Disabled').t() : _('Enabled').t();
                 }
-                if (value !== undefined) {
+                if (value !== undefined && value !== '') {
                     // prevent html injection
                     value = Util.encodeHTML(value);
                     this.$('.list-dotted').append(_.template(`
