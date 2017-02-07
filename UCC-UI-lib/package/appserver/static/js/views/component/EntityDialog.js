@@ -174,7 +174,7 @@ define([
             _.each(entity, function (e) {
                 attr_labels[e.field] = e.label;
 
-                // https://jira.splunk.com/browse/ADDON-12723
+                // Related JIRA ID: ADDON-12723
                 if(new_json[e.field] === undefined) {
                     new_json[e.field] = '';
                 }
