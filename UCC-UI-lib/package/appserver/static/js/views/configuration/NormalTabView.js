@@ -59,7 +59,7 @@ export default Backbone.View.extend({
         addClickListener(this.msgContainerId, 'msg-loading');
         const newConfig = this.stateModel.toJSON();
         this.props.entity.forEach(d => {
-            // https://jira.splunk.com/browse/ADDON-12723
+            // Related JIRA ID: ADDON-12723
             if(newConfig[d.field] === undefined) {
                 newConfig[d.field] = '';
             }

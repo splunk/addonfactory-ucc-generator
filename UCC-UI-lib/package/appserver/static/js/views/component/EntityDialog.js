@@ -174,7 +174,7 @@ define([
             _.each(entity, function (e) {
                 attr_labels[e.field] = e.label;
 
-                // https://jira.splunk.com/browse/ADDON-12723
+                // Related JIRA ID: ADDON-12723
                 if(new_json[e.field] === undefined) {
                     new_json[e.field] = '';
                 }
@@ -182,7 +182,7 @@ define([
             input.entry.content.set(new_json);
             input.attr_labels = attr_labels;
 
-            return this.save(input, original_json);
+            this.save(input, original_json);
         },
 
         save: function (input, original_json) {
@@ -222,8 +222,8 @@ define([
                             console.log('Could not get total count for collection');
                         }
                         this.collection.add(input);
-                        this.collection.trigger('change');
                     }
+                    this.collection.trigger('change');
                     this.$("[role=dialog]").modal('hide');
                     this.undelegateEvents();
                 }).fail((model, response) => {
