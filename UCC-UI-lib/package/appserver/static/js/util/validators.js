@@ -236,7 +236,7 @@ function validatorFactory(validatorInfo, label) {
             }
 
             const val = Number(attrValue);
-            if(Number.isNaN(val)) {
+            if(_.isNaN(val)) {
                 return errorMsg ? errorMsg :
                     getFormattedMessage(16, label);
             }
