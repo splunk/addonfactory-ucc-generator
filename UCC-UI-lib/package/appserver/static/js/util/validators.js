@@ -98,7 +98,7 @@ function checkConfigDetails({pages: {configuration, inputs}}) {
         });
     };
 
-    const checkEntity = (entity) => {
+    const checkEntity = (entity, rootName, isCollectionType = true) => {
         _.values(entity).forEach(item => {
             const {validators, options} = item;
 
@@ -126,23 +126,30 @@ function checkConfigDetails({pages: {configuration, inputs}}) {
                 }
             });
         });
+
+        if (isCollectionType) {
+            // Name field should be provided
+            if (_.every(_.values(entity), ({field}) => field !== 'name')) {
+                appendError(errors, getFormattedMessage(23, rootName));
+            }
+        }
     };
 
     if (inputs) {
         const {services} = inputs;
         services.forEach(service => {
-            const {entity, options} = service;
+            const {entity, options, name} = service;
             checkBaseOptions(options);
-            checkEntity(entity);
+            checkEntity(entity, name);
         });
         errors = errors.concat(checkDupKeyValues(inputs, true));
     }
 
     if(configuration) {
         configuration.tabs.forEach(tab => {
-            const {entity, options} = tab;
+            const {entity, options, name} = tab;
             checkBaseOptions(options);
-            checkEntity(entity);
+            checkEntity(entity, name, !!tab.table);
         });
         errors = errors.concat(checkDupKeyValues(configuration, false));
     }
