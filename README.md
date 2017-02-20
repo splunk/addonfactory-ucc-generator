@@ -10,6 +10,9 @@ npm install -g bower-art-resolver
 
 ### Use the following command to build an example add-on
 ```
-npm run update-version
-npm run build
+python update_version.py
+cd ./UCC-UI-lib && npm install && bower install
+cd ./UCC-example-addon && python setup.py && source ${SPLUNK_HOME}/bin/setSplunkEnv && python build.py
 ```
+
+Note: Replace ${SPLUNK_HOME} with real Splunk home path.
