@@ -6,8 +6,8 @@ from __future__ import absolute_import
 
 import os
 import os.path as op
+import stat
 import shutil
-import subprocess
 from solnlib.utils import is_true
 from splunktaucclib.global_config import GlobalConfigSchema
 from splunktaucclib.rest_handler.endpoint.field import RestField
@@ -385,5 +385,11 @@ sys.path = new_paths
         self.default_to_local()
 
         # add executable permission to files under bin folder
+        def add_executable_attribute(file_path):
+            if op.isfile(file_path):
+                st = os.stat(file_path)
+                os.chmod(file_path, st.st_mode | 0111)
+
         bin_path = op.join(getattr(builder.output, '_path'), builder.output.bin)
-        subprocess.check_output('chmod -R +x ' + bin_path, shell=True)
+        items = os.listdir(bin_path)
+        map(add_executable_attribute, items)
