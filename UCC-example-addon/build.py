@@ -263,6 +263,17 @@ def move_local_to_default():
     shutil.rmtree(local_dir, ignore_errors=True)
 
 
+def add_executable_attr_to_files_under_bin():
+    # add executable permission to files under bin folder
+    bin_path = os.path.join(
+        basedir,
+        'output',
+        ta_name,
+        'bin'
+    )
+    subprocess.check_output('chmod -R +x ' + bin_path, shell=True)
+
+
 clean_before_build()
 generate_rest()
 generate_ui()
@@ -272,3 +283,4 @@ copy_res()
 copy_global_config()
 add_modular_input()
 move_local_to_default()
+add_executable_attr_to_files_under_bin()
