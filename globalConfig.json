@@ -366,6 +366,14 @@
                             "required": true
                         },
                         {
+                            "field": "custom_field",
+                            "label": "Custom Field",
+                            "type": "custom",
+                            "options": {
+                                "src": "customcomponent/CustomControl"
+                            }
+                        },
+                        {
                             "field": "account",
                             "label": "Account",
                             "type": "singleSelect",

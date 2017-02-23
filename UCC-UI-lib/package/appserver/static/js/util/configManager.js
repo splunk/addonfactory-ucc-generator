@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import $C from 'splunk.config';
 import SplunkBaseModel from 'models/Base';
-import {loadGlobalConfig} from 'app/util/script';
+import {loadGlobalConfig, getBuildDirPath} from 'app/util/script';
 import {validateSchema} from './validators';
 import $ from 'jquery';
 import ErrorDialog from 'app/views/component/Error';
@@ -30,6 +30,35 @@ class ConfigManager {
 
             next && next();
         };
+        //TODO: Load custom components according to globalConfig
+        const loadCustomComponent = () => {
+            let customComponents = [];
+            let componentDefinitions = this.unifiedConfig.pages.inputs.services
+                .concat(this.unifiedConfig.pages.configuration.tabs);
+            _.each(componentDefinitions, (component) => {
+                _.each(component.entity, (e) => {
+                    if (e.type === 'custom') {
+                        customComponents.push(e.options.src);
+                    }
+                });
+            });
+            console.log(customComponents);
+            console.log(getBuildDirPath());
+            // requirejs.config({
+            //     baseUrl: getBuildDirPath()
+            // });
+            // _.each(customComponents, (component) => {
+            //     requirejs([`${getBuildDirPath()}/${component}`], function(CustomControl) {
+            //         console.log('loading done');
+            //     });
+            // });
+            // _.each(customComponents, (component) => {
+            //     console.log(component);
+            //     $.getScript(`${getBuildDirPath()}/${component}`).done(() => {
+            //         console.log('loading done');
+            //     });
+            // });
+        }
 
         if (__CONFIG_FROM_FILE__) {
             this.unifiedConfig = require('repoBaseDir/globalConfig.json');
@@ -40,6 +69,7 @@ class ConfigManager {
                 // before executing the code below.
                 this.unifiedConfig = window.__globalConfig;
                 attchPropertie();
+                loadCustomComponent();
             });
         }
     }

@@ -243,6 +243,17 @@ define([
             return deffer;
         },
 
+        _load_module: function(module, modelAttribute, model) {
+            var deferred = $.Deferred();
+            requirejs([module],(CustomControl) => {
+                let el = document.createElement("DIV");
+                let control = new CustomControl(el, modelAttribute, model);
+                this.children.push(control);
+                deferred.resolve(CustomControl);
+            });
+            return deferred.promise();
+        },
+
         render: function () {
             var templateMap = {
                     [ENTITY_DIALOG_MODE_CREATE]: AddDialogTemplate,
@@ -266,8 +277,9 @@ define([
             });
 
             this.children = [];
+            this.deferreds = [];
             _.each(entity, (e) => {
-                var controlWrapper, controlOptions;
+                let controlWrapper, controlOptions, deferred;
                 if (this.mode === ENTITY_DIALOG_MODE_CREATE) {
                     if (this.model.get(e.field) === undefined && e.defaultValue) {
                         this.model.set(e.field, e.defaultValue);
@@ -284,32 +296,42 @@ define([
                 };
                 _.extend(controlOptions, e.options);
 
-                controlWrapper = new ControlWrapper({...e, controlOptions});
-
-                if (e.display !== undefined) {
-                    controlWrapper.$el.css("display", "none");
-                }
-                this.children.push(controlWrapper);
-            });
-
-            _.each(this.children, (child) => {
-                // prevent auto complete for password
-                if (child.controlOptions.password) {
-                    this.$('.modal-body').prepend(
-                        `<input type="password" id="${child.controlOptions.modelAttribute}" style="display: none"/>`
+                if(e.type === 'custom') {
+                    deferred = this._load_module(
+                        e.options.src,
+                        controlOptions.modelAttribute,
+                        controlOptions.model
                     );
+                    this.deferreds.push(deferred);
+                } else {
+                    controlWrapper = new ControlWrapper({...e, controlOptions});
+
+                    if (e.display !== undefined) {
+                        controlWrapper.$el.css("display", "none");
+                    }
+                    this.children.push(controlWrapper);
                 }
-                this.$('.modal-body').append(child.render().$el);
             });
+            $.when.apply($, this.deferreds).then(() => {
+                _.each(this.children, (child) => {
+                    // prevent auto complete for password
+                    if (child.controlOptions && child.controlOptions.password) {
+                        this.$('.modal-body').prepend(
+                            `<input type="password" id="${child.controlOptions.modelAttribute}" style="display: none"/>`
+                        );
+                    }
+                    let childComponent = child.render();
+                    this.$('.modal-body').append(childComponent.$el || childComponent.el);
+                });
 
-            //Disable the name field in edit mode
-            if (this.mode === ENTITY_DIALOG_MODE_EDIT) {
-                this.$("input[name=name]").attr("readonly", "readonly");
-            }
-            this.$("input[type=submit]").on("click", this.submitTask.bind(this));
-            //Add guid to current dialog
-            this.$(".modal-dialog").addClass(this.curWinId);
-
+                //Disable the name field in edit mode
+                if (this.mode === ENTITY_DIALOG_MODE_EDIT) {
+                    this.$("input[name=name]").attr("readonly", "readonly");
+                }
+                this.$("input[type=submit]").on("click", this.submitTask.bind(this));
+                //Add guid to current dialog
+                this.$(".modal-dialog").addClass(this.curWinId);
+            });
             return this;
         }
     });
