@@ -201,7 +201,7 @@ def add_modular_input():
         description = service.get("title")
         entity = service.get("entity")
         argument_list = []
-        field_white_list = ["name", "index"]
+        field_white_list = ["name", "index", "sourcetype"]
         for ent in entity:
             if ent.get("field") in field_white_list:
                 continue
