@@ -32,6 +32,7 @@ define([
             const {
                 referenceName,
                 endpointUrl,
+                dependency,
                 autoCompleteFields,
                 items
             } = this.controlOptions;
@@ -41,7 +42,10 @@ define([
                 } else {
                     this.collection = generateCollection('', {'endpointUrl': restEndpointMap[referenceName]});
                 }
-                this.collection.fetch();
+                // fetch the data only when there is no dependency
+                if (!dependency) {
+                    this.collection.fetch();
+                }
 
                 this.listenTo(this.collection, 'sync', () => {
                     if (type === 'singleSelect' || type === 'multipleSelect') {

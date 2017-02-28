@@ -375,6 +375,24 @@
                             "required": true
                         },
                         {
+                            "field": "region",
+                            "label": "Region",
+                            "type": "singleSelect",
+                            "options": {
+                                "endpointUrl": "splunk_ta_uccexample_region",
+                                "dependency": "account"
+                            }
+                        },
+                        {
+                            "field": "sqs_queue",
+                            "label": "SQS Queue Name",
+                            "type": "singleSelect",
+                            "options": {
+                                "endpointUrl": "splunk_ta_uccexample_sqs_queue",
+                                "dependency": "account,region"
+                            }
+                        },
+                        {
                             "field": "singleSelectTest",
                             "label": "Single Select Group Test",
                             "type": "singleSelect",
