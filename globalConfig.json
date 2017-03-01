@@ -380,7 +380,7 @@
                             "type": "singleSelect",
                             "options": {
                                 "endpointUrl": "splunk_ta_uccexample_region",
-                                "dependency": "account"
+                                "dependency": ["account"]
                             }
                         },
                         {
@@ -389,7 +389,7 @@
                             "type": "singleSelect",
                             "options": {
                                 "endpointUrl": "splunk_ta_uccexample_sqs_queue",
-                                "dependency": "account,region"
+                                "dependency": ["account", "region"]
                             }
                         },
                         {

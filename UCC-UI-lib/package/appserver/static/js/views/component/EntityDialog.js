@@ -5,7 +5,6 @@ import {
     ENTITY_DIALOG_MODE_CREATE,
     ENTITY_DIALOG_MODE_EDIT
 } from 'app/constants/modes';
-import {DEPENDENCY_SEPARATOR} from 'app/constants/common';
 import {generateModel} from 'app/util/backboneHelpers';
 import {generateValidators} from 'app/util/validators';
 import {parseFuncRawStr} from 'app/util/script';
@@ -130,7 +129,7 @@ define([
             */
             _.each(this.component.entity, e => {
                 if (e.options && e.options.dependency) {
-                    let fields = e.options.dependency.split(DEPENDENCY_SEPARATOR);
+                    let fields = e.options.dependency;
                     _.each(fields, (field, index) => {
                         if (index === fields.length - 1) {
                             _.set(
