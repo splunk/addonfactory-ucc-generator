@@ -30,9 +30,9 @@
     },
     "scripts": {
         "build": "grunt copy:publish && grunt shell:style && grunt webpack:build",
-        "buildDev": "grunt copy:dev && grunt shell:style && grunt webpack:dev",
+        "buildDev": "python build_dev.py && grunt copy:dev && grunt shell:style && npm run start && grunt webpack:dev",
         "fortify": "/usr/bin/fortify-scanner.py",
-        "copyConfig": "cp ../globalConfig.json ./build/appserver/static/js/build/globalConfig.json",
+        "copyConfig": "mkdir ./build/appserver/static/js/build && cp ../globalConfig.json ./build/appserver/static/js/build/globalConfig.json",
         "test": "karma start ./config/karma/karma.conf.js",
         "watchSchemaGenerator": "nodemon --exec python schema/schemaGenerator.py --watch schema/schemaGenerator.py",
         "generateSchema": "python schema/schemaGenerator.py",
