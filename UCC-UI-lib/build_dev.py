@@ -83,6 +83,10 @@ ta_namespace = schema_content.get("meta").get("restRoot")
 import_declare_name = 'import_declare_test'
 
 
+def clean_before_build():
+    shutil.rmtree(os.path.join(basedir, 'build'), ignore_errors=True)
+
+
 def generate_rest():
     build(
         scheme,
@@ -180,6 +184,7 @@ def add_modular_input():
             input_file.write(content)
 
 
+clean_before_build()
 generate_rest()
 copy_libs()
 add_modular_input()
