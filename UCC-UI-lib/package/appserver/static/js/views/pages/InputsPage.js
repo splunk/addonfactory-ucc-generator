@@ -14,7 +14,8 @@ define([
     'app/views/component/InputFilterMenu',
     'app/views/component/AddInputMenu',
     'app/views/component/EntityDialog',
-    'app/views/component/Table'
+    'app/views/component/Table',
+    'expose-loader?Lodash!lodash'
 ], function (
     $,
     _,

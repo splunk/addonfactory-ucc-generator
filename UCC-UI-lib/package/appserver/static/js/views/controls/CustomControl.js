@@ -1,4 +1,4 @@
-define([], function() {
+define([window.Lodash], function(Lodash) {
     class CustomComponent {
         constructor(el, field, model) {
             this.el = el;
@@ -7,6 +7,7 @@ define([], function() {
         }
         render() {
             console.log('render is called');
+            console.log(window.Lodash.now());
             this.el.innerHTML = '<input id="mytext" type="text"></text>';
             var el = this.el.querySelector('#mytext');
             el.addEventListener('change', () => {
