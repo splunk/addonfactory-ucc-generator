@@ -32,3 +32,7 @@ UCC-example-addon/splunktaucclib
 UCC-example-addon/uccrestbuilder
 
 UCC-UI-lib/build
+UCC-UI-lib/solnlib
+UCC-UI-lib/splunklib
+UCC-UI-lib/splunktaucclib
+UCC-UI-lib/uccrestbuilder
