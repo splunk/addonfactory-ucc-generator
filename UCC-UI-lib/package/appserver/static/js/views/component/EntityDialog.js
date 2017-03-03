@@ -128,34 +128,31 @@ define([
             }
             */
             _.each(this.component.entity, e => {
-                if (e.options && e.options.dependency) {
-                    let fields = e.options.dependency;
-                    _.each(fields, (field, index) => {
-                        if (index === fields.length - 1) {
+                const fields = _.get(e, ['options', 'dependencies']);
+                _.each(fields, (field, index) => {
+                    if (index === fields.length - 1) {
+                        _.set(
+                            this.dependencyMap,
+                            [field, 'load'],
+                            {'field': e.field, 'dependency': fields}
+                        );
+
+                    } else {
+                        let clearFields = _.get(
+                            this.dependencyMap,
+                            [field, 'clear'],
+                            []
+                        );
+                        if (clearFields.indexOf(e.field) === -1) {
+                            clearFields.push(e.field);
                             _.set(
                                 this.dependencyMap,
-                                [field, 'load'],
-                                {'field': e.field, 'dependency': fields}
-                            );
-
-                        } else {
-                            let clearFields = _.get(
-                                this.dependencyMap,
                                 [field, 'clear'],
-                                []
+                                clearFields
                             );
-                            if (clearFields.indexOf(e.field) === -1) {
-                                clearFields.push(e.field);
-                                _.set(
-                                    this.dependencyMap,
-                                    [field, 'clear'],
-                                    clearFields
-                                );
-                            }
                         }
-                    });
-
-                }
+                    }
+                });
             });
             //Add event listener for dependency fields
             _.each(this.dependencyMap, (value, key) => {

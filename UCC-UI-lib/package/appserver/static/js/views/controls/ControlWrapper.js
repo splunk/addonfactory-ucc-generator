@@ -43,7 +43,7 @@ define([
                     this.collection = generateCollection('', {'endpointUrl': restEndpointMap[referenceName]});
                 }
                 // fetch the data only when there is no dependency
-                if (!dependency) {
+                if (!dependencies) {
                     this.collection.fetch();
                 }
 
