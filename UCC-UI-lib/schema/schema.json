@@ -15,6 +15,7 @@
                 "type": {
                     "type": "string", 
                     "enum": [
+                        "custom", 
                         "text", 
                         "singleSelect", 
                         "checkbox", 
@@ -43,30 +44,22 @@
                 "options": {
                     "type": "object", 
                     "properties": {
-                        "placeholder": {
+                        "blackList": {
                             "type": "string", 
-                            "maxLength": 250
+                            "maxLength": 350
+                        }, 
+                        "delimiter": {
+                            "type": "string", 
+                            "maxLength": 1
+                        }, 
+                        "enable": {
+                            "type": "boolean"
                         }, 
                         "items": {
                             "type": "array", 
                             "items": {
                                 "$ref": "#/definitions/ValueLabelPair"
                             }
-                        }, 
-                        "delimiter": {
-                            "type": "string", 
-                            "maxLength": 1
-                        }, 
-                        "endpointUrl": {
-                            "type": "string", 
-                            "maxLength": 350
-                        }, 
-                        "whiteList": {
-                            "type": "string", 
-                            "maxLength": 350
-                        }, 
-                        "enable": {
-                            "type": "boolean"
                         }, 
                         "autoCompleteFields": {
                             "oneOf": [
@@ -75,20 +68,20 @@
                                     "items": {
                                         "type": "object", 
                                         "properties": {
-                                            "label": {
-                                                "type": "string", 
-                                                "maxLength": 150
-                                            }, 
                                             "children": {
                                                 "type": "array", 
                                                 "items": {
                                                     "$ref": "#/definitions/ValueLabelPair"
                                                 }
+                                            }, 
+                                            "label": {
+                                                "type": "string", 
+                                                "maxLength": 150
                                             }
                                         }, 
                                         "required": [
-                                            "label", 
-                                            "children"
+                                            "children", 
+                                            "label"
                                         ]
                                     }
                                 }, 
@@ -100,16 +93,24 @@
                                 }
                             ]
                         }, 
+                        "whiteList": {
+                            "type": "string", 
+                            "maxLength": 350
+                        }, 
                         "referenceName": {
                             "type": "string", 
                             "maxLength": 250
                         }, 
-                        "blackList": {
+                        "placeholder": {
                             "type": "string", 
-                            "maxLength": 350
+                            "maxLength": 250
                         }, 
                         "disableSearch": {
                             "type": "boolean"
+                        }, 
+                        "endpointUrl": {
+                            "type": "string", 
+                            "maxLength": 350
                         }
                     }
                 }, 
@@ -188,18 +189,18 @@
                     "items": {
                         "type": "object", 
                         "properties": {
-                            "label": {
-                                "type": "string", 
-                                "maxLength": 30
-                            }, 
                             "field": {
                                 "type": "string", 
                                 "pattern": "^\\w+$"
+                            }, 
+                            "label": {
+                                "type": "string", 
+                                "maxLength": 30
                             }
                         }, 
                         "required": [
-                            "label", 
-                            "field"
+                            "field", 
+                            "label"
                         ]
                     }
                 }, 
@@ -208,18 +209,18 @@
                     "items": {
                         "type": "object", 
                         "properties": {
-                            "label": {
-                                "type": "string", 
-                                "maxLength": 30
-                            }, 
                             "field": {
                                 "type": "string", 
                                 "pattern": "^\\w+$"
+                            }, 
+                            "label": {
+                                "type": "string", 
+                                "maxLength": 30
                             }
                         }, 
                         "required": [
-                            "label", 
-                            "field"
+                            "field", 
+                            "label"
                         ]
                     }
                 }, 
@@ -311,6 +312,7 @@
                 "type": {
                     "type": "string", 
                     "enum": [
+                        "custom", 
                         "text", 
                         "singleSelect", 
                         "checkbox", 
@@ -339,30 +341,22 @@
                 "options": {
                     "type": "object", 
                     "properties": {
-                        "placeholder": {
+                        "blackList": {
                             "type": "string", 
-                            "maxLength": 250
+                            "maxLength": 350
+                        }, 
+                        "delimiter": {
+                            "type": "string", 
+                            "maxLength": 1
+                        }, 
+                        "enable": {
+                            "type": "boolean"
                         }, 
                         "items": {
                             "type": "array", 
                             "items": {
                                 "$ref": "#/definitions/ValueLabelPair"
                             }
-                        }, 
-                        "delimiter": {
-                            "type": "string", 
-                            "maxLength": 1
-                        }, 
-                        "endpointUrl": {
-                            "type": "string", 
-                            "maxLength": 350
-                        }, 
-                        "whiteList": {
-                            "type": "string", 
-                            "maxLength": 350
-                        }, 
-                        "enable": {
-                            "type": "boolean"
                         }, 
                         "autoCompleteFields": {
                             "oneOf": [
@@ -371,20 +365,20 @@
                                     "items": {
                                         "type": "object", 
                                         "properties": {
-                                            "label": {
-                                                "type": "string", 
-                                                "maxLength": 150
-                                            }, 
                                             "children": {
                                                 "type": "array", 
                                                 "items": {
                                                     "$ref": "#/definitions/ValueLabelPair"
                                                 }
+                                            }, 
+                                            "label": {
+                                                "type": "string", 
+                                                "maxLength": 150
                                             }
                                         }, 
                                         "required": [
-                                            "label", 
-                                            "children"
+                                            "children", 
+                                            "label"
                                         ]
                                     }
                                 }, 
@@ -396,16 +390,24 @@
                                 }
                             ]
                         }, 
+                        "whiteList": {
+                            "type": "string", 
+                            "maxLength": 350
+                        }, 
                         "referenceName": {
                             "type": "string", 
                             "maxLength": 250
                         }, 
-                        "blackList": {
+                        "placeholder": {
                             "type": "string", 
-                            "maxLength": 350
+                            "maxLength": 250
                         }, 
                         "disableSearch": {
                             "type": "boolean"
+                        }, 
+                        "endpointUrl": {
+                            "type": "string", 
+                            "maxLength": 350
                         }
                     }
                 }, 
@@ -476,6 +478,9 @@
                                     "$ref": "#/definitions/InputsEntity"
                                 }
                             }, 
+                            "options": {
+                                "$ref": "#/definitions/Hooks"
+                            }, 
                             "name": {
                                 "type": "string", 
                                 "pattern": "^[0-9a-zA-Z][0-9a-zA-Z_-]*$", 
@@ -484,9 +489,6 @@
                             "title": {
                                 "type": "string", 
                                 "maxLength": 100
-                            }, 
-                            "options": {
-                                "$ref": "#/definitions/Hooks"
                             }
                         }, 
                         "required": [
@@ -512,18 +514,18 @@
                     "items": {
                         "type": "object", 
                         "properties": {
-                            "label": {
-                                "type": "string", 
-                                "maxLength": 30
-                            }, 
                             "field": {
                                 "type": "string", 
                                 "pattern": "^\\w+$"
+                            }, 
+                            "label": {
+                                "type": "string", 
+                                "maxLength": 30
                             }
                         }, 
                         "required": [
-                            "label", 
-                            "field"
+                            "field", 
+                            "label"
                         ]
                     }
                 }, 
@@ -532,18 +534,18 @@
                     "items": {
                         "type": "object", 
                         "properties": {
-                            "label": {
-                                "type": "string", 
-                                "maxLength": 30
-                            }, 
                             "field": {
                                 "type": "string", 
                                 "pattern": "^\\w+$"
+                            }, 
+                            "label": {
+                                "type": "string", 
+                                "maxLength": 30
                             }
                         }, 
                         "required": [
-                            "label", 
-                            "field"
+                            "field", 
+                            "label"
                         ]
                     }
                 }, 
