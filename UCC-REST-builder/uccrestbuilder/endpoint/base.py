@@ -29,7 +29,7 @@ field.RestField(
 )
 """
 
-    def __init__(self, name, fields):
+    def __init__(self, name, fields, **kwargs):
         self._name = name
         self._fields = fields
 
@@ -49,7 +49,7 @@ field.RestField(
     def name_rh(self):
         raise NotImplementedError()
 
-    def generate_spec(self, omit_kv_pairs = False):
+    def generate_spec(self, omit_kv_pairs=False):
         title = self._title_template.format(self.name_spec)
         if omit_kv_pairs:
             return title
@@ -75,10 +75,14 @@ field.RestField(
 
 class RestEndpointBuilder(object):
 
-    def __init__(self, name, namespace):
+    def __init__(self, name, namespace, **kwargs):
         self._name = name
         self._namespace = namespace
         self._entities = []
+        if 'conf_name' in kwargs:
+            self._conf_name = kwargs['conf_name']
+        else:
+            self._conf_name = None
 
     @property
     def name(self):
@@ -90,6 +94,8 @@ class RestEndpointBuilder(object):
 
     @property
     def conf_name(self):
+        if self._conf_name:
+            return self._conf_name
         return self.name.lower()
 
     @property
