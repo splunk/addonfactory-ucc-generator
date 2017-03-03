@@ -79,10 +79,7 @@ class RestEndpointBuilder(object):
         self._name = name
         self._namespace = namespace
         self._entities = []
-        if 'conf_name' in kwargs:
-            self._conf_name = kwargs['conf_name']
-        else:
-            self._conf_name = None
+        self._conf_name = kwargs.get('conf_name')
 
     @property
     def name(self):
