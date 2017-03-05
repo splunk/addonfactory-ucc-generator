@@ -79,7 +79,7 @@ class RestEndpointBuilder(object):
         self._name = name
         self._namespace = namespace
         self._entities = []
-        self._conf_name = kwargs.get('conf_name')
+        self._conf_name = kwargs.get('conf_name', name.lower())
 
     @property
     def name(self):
@@ -91,9 +91,7 @@ class RestEndpointBuilder(object):
 
     @property
     def conf_name(self):
-        if self._conf_name:
-            return self._conf_name
-        return self.name.lower()
+        return self._conf_name
 
     @property
     def rh_name(self):
