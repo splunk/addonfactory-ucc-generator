@@ -14,6 +14,7 @@ members = {endpoints}
 handlertype = python
 handlerfile = {rh_name}.py
 handleractions = {actions}
+handlerpersistentmode = true
 """
 
     @classmethod
