@@ -158,7 +158,8 @@ define([
                 {entity} = this.component;
 
             entity.forEach(d => {
-                if (content.get(d.field) === undefined && d.defaultValue) {
+                if (content.get(d.field) === undefined &&
+                        d.defaultValue !== undefined) {
                     content.set(d.field, d.defaultValue);
                 }
             });
@@ -281,7 +282,8 @@ define([
             _.each(entity, (e) => {
                 let controlWrapper, controlOptions, deferred;
                 if (this.mode === ENTITY_DIALOG_MODE_CREATE) {
-                    if (this.model.get(e.field) === undefined && e.defaultValue) {
+                    if (this.model.get(e.field) === undefined &&
+                        e.defaultValue !== undefined) {
                         this.model.set(e.field, e.defaultValue);
                     }
                 }
