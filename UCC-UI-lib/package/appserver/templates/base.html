@@ -27,14 +27,12 @@ app_js = app_root + '/js'
 app_js_build = app_root + '/js/build'
 app_css_build = app_root + '/css'
 
-pageJSName = page+'_page'
-
 # optimized js and css
 common_css = "%s/common.css" % app_css_build
 page_css ="%s/%s.css" % (app_css_build, page)
 bootstrap_enterprise_css = "%s/bootstrap-enterprise.css" % app_css_build
 
-page_js = "%s/%s.js" % (app_js_build ,pageJSName)
+entry_js = "%s/%s.js" % (app_js_build ,'entry_page')
 %>\
 
 <!doctype html>
@@ -66,14 +64,7 @@ page_js = "%s/%s.js" % (app_js_build ,pageJSName)
     </head>
     <body s:app="${app_name}">
         <div class="preload">
-            <div id="placeholder-splunk-bar">
-                <a href="/app/launcher/home" class="brand" title="splunk &gt; listen to your data">splunk<strong>
-                    &gt;</strong></a>
-            </div>
-            <div id="placeholder-app-bar">
-            </div>
         </div>
-        <div class="addonContainer"></div>
         <div class="dialog-placeholder"></div>
         <!--load require js for dynamic component loading-->
         <script src="${make_url('/static/js/contrib/require.js')}"></script>
@@ -89,6 +80,6 @@ page_js = "%s/%s.js" % (app_js_build ,pageJSName)
             __splunkd_partials__ = ${json_decode(splunkd)};
         </script>
         <script src="${make_url(app_js_build + '/common.js')}"></script>
-        <script src="${make_url(page_js)}"></script>
+        <script src="${make_url(entry_js)}"></script>
     </body>
 </html>
