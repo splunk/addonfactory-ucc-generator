@@ -22,6 +22,14 @@ define([
             });
         },
 
+        events: {
+            "click ul.nav-tabs > li > a":  function(e) {
+                e.preventDefault();
+                const tabId = e.currentTarget.id.slice(0, -3);
+                this.changeTab(tabId);
+            }
+        },
+
         render: function () {
             const {unifiedConfig: {pages: {configuration}}} = configManager;
 
@@ -111,11 +119,6 @@ define([
                 this.$(".nav-tabs").append(_.template(tabTitleTemplate)({title, token, active}));
                 this.$(".tab-content").append(_.template(tabContentTemplate)({token, active}));
                 this.$(this._generateTabId(tabs, title)).html(view.render().$el);
-            });
-            this.$('a').click((e) => {
-                e.preventDefault();
-                const tabId = e.currentTarget.id.slice(0, -3);
-                this.changeTab(tabId);
             });
         }
     });
