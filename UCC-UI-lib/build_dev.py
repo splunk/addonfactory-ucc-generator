@@ -79,20 +79,9 @@ def add_modular_input():
         _argument_template = j2_env.get_template(
                 os.path.join('templates', 'argument.template')
             )
-        for ent in entity:
-            if ent.get("field") in field_white_list:
-                continue
-            if ent.get("required"):
-                argument_list.append(_argument_template.render(
-                    field=ent.get("field"),
-                    required=True
-                ))
-            else:
-                argument_list.append(_argument_template.render(
-                    field=ent.get("field"),
-                    required=False
-                ))
-        argument_lines = '\n'.join(argument_list)
+        # filter fields in white list
+        entity = filter(lambda x: x.get("field") not in field_white_list, entity)
+        argument_lines = _argument_template.render(entity=entity)
         import_declare = 'import ' + import_declare_name
 
         content = j2_env.get_template(os.path.join('templates', 'input.template')).render(
