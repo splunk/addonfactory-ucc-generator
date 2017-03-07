@@ -41,10 +41,12 @@ define([
                     this._headerReady = true;
                 }
                 if (page === 'inputs') {
+                    this.setPageTitle(_('Inputs').t());
                     const inputsPageView = new InputsPageView();
                     inputsPageView.render();
                     $(".main-section-body").html(inputsPageView.el);
                 } else if (page === 'configuration') {
+                    this.setPageTitle(_('Configuration').t());
                     const configurationPageView = new ConfigurationPageView();
                     configurationPageView.render();
                     $(".main-section-body").html(configurationPageView.el);
