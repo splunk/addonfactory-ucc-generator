@@ -440,7 +440,7 @@
                             "field": "start_offset",
                             "label": "Start Offset",
                             "type": "text",
-                            "defaultValue": "0"
+                            "defaultValue": 0
                         },
                         {
                             "field": "interval",

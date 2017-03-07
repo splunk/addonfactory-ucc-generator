@@ -86,7 +86,8 @@ export default Backbone.View.extend({
             const {entity, name} = this.props;
             const refCollectionList = [];
             entity.forEach(d => {
-                if (content.get(d.field) === undefined && d.defaultValue) {
+                if (content.get(d.field) === undefined &&
+                        d.defaultValue !== undefined) {
                     this.stateModel.set(d.field, d.defaultValue);
                 } else if (content.get(d.field)) {
                     this.stateModel.set(d.field, content.get(d.field));
