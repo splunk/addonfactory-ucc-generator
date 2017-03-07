@@ -74,14 +74,9 @@ def add_modular_input():
         class_name = input_name.upper()
         description = service.get("title")
         entity = service.get("entity")
-        argument_list = []
         field_white_list = ["name", "index", "sourcetype"]
-        _argument_template = j2_env.get_template(
-                os.path.join('templates', 'argument.template')
-            )
         # filter fields in white list
         entity = filter(lambda x: x.get("field") not in field_white_list, entity)
-        argument_lines = _argument_template.render(entity=entity)
         import_declare = 'import ' + import_declare_name
 
         content = j2_env.get_template(os.path.join('templates', 'input.template')).render(
@@ -89,7 +84,7 @@ def add_modular_input():
             input_name=input_name,
             class_name=class_name,
             description=description,
-            argument_list=argument_lines
+            entity=entity
         )
         input_file_name = os.path.join(
             basedir,

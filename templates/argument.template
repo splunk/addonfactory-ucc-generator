@@ -1,8 +1,0 @@
-{% for ent in entity %}
-scheme.add_argument(
-    smi.Argument(
-        '{{ent.get("field")}}',
-        required_on_create={{True if ent.get("required") else False}},
-    )
-)
-{% endfor %}

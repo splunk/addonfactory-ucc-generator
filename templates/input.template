@@ -25,7 +25,14 @@ class {{class_name}}(smi.Script):
                 required_on_create=True
             )
         )
-        {{argument_list | indent(8, false)}}
+        {% for ent in entity %}
+        scheme.add_argument(
+            smi.Argument(
+                '{{ent.get("field")}}',
+                required_on_create={{True if ent.get("required") else False}},
+            )
+        )
+        {% endfor %}
         return scheme
 
     def validate_input(self, definition):
