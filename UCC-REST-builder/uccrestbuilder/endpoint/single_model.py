@@ -6,8 +6,8 @@ from .base import RestEntityBuilder, RestEndpointBuilder
 
 class SingleModelEntityBuilder(RestEntityBuilder):
 
-    def __init__(self, name, fields):
-        super(SingleModelEntityBuilder, self).__init__(name, fields)
+    def __init__(self, name, fields, **kwargs):
+        super(SingleModelEntityBuilder, self).__init__(name, fields, **kwargs)
 
     @property
     def name_spec(self):

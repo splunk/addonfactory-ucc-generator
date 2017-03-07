@@ -357,6 +357,7 @@
                 {
                     "name": "inputs_01",
                     "title": "Falcon Host Input",
+                    "conf": "aws_cloudwatch",
                     "entity": [
                         {
                             "field": "name",

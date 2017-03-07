@@ -73,14 +73,24 @@ class GlobalConfigBuilderSchema(GlobalConfigSchema):
     def _builder_inputs(self):
         # DataInput
         for input_item in self._inputs:
-            self._builder_entity(
-                None,
-                input_item['entity'],
-                input_item['name'],
-                DataInputEndpointBuilder,
-                DataInputEntityBuilder,
-                input_type=input_item['name'],
-            )
+            if 'conf' in input_item:
+                self._builder_entity(
+                    None,
+                    input_item['entity'],
+                    input_item['name'],
+                    SingleModelEndpointBuilder,
+                    SingleModelEntityBuilder,
+                    conf_name=input_item['conf'],
+                )
+            else:
+                self._builder_entity(
+                    None,
+                    input_item['entity'],
+                    input_item['name'],
+                    DataInputEndpointBuilder,
+                    DataInputEntityBuilder,
+                    input_type=input_item['name'],
+                )
 
     def _builder_entity(
             self,
