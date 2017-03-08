@@ -1,5 +1,8 @@
 import {getFormattedMessage} from 'app/util/messageUtil';
 
+const INPUT_PAGE = 'inputs';
+const CONFIGURATION_PAGE = 'configuration';
+
 define([
     'lodash',
     'jquery',
@@ -27,8 +30,6 @@ define([
             BaseRouter.prototype.initialize.apply(this, arguments);
             // flag that indicate whether header has been rendered
             this._headerReady = false;
-            this.INPUT_PAGE = 'inputs';
-            this.CONFIGURATION_PAGE = 'configuration';
         },
 
         _renderHeader: function() {
@@ -46,12 +47,12 @@ define([
                     this._renderHeader();
                     this._headerReady = true;
                 }
-                if (page === this.INPUT_PAGE) {
+                if (page === INPUT_PAGE) {
                     this.setPageTitle(getFormattedMessage(116));
                     const inputsPageView = new InputsPageView();
                     inputsPageView.render();
                     $(".main-section-body").html(inputsPageView.el);
-                } else if (page === this.CONFIGURATION_PAGE) {
+                } else if (page === CONFIGURATION_PAGE) {
                     this.setPageTitle(getFormattedMessage(117));
                     const configurationPageView = new ConfigurationPageView();
                     configurationPageView.render();
