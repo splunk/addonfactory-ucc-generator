@@ -57,6 +57,7 @@ class GlobalConfigBuilderSchema(GlobalConfigSchema):
                 config['name'],
                 SingleModelEndpointBuilder,
                 SingleModelEntityBuilder,
+                conf_name=config.get('conf')
             )
 
     def _builder_settings(self):
