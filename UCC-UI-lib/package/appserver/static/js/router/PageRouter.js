@@ -1,3 +1,5 @@
+import {getFormattedMessage} from 'app/util/messageUtil';
+
 define([
     'lodash',
     'jquery',
@@ -20,15 +22,19 @@ define([
             ':locale/app/:app/:page(/)': '_route',
             '*root/:locale/app/:app/:page(/)': '_routeRooted'
         },
+
         initialize: function () {
             BaseRouter.prototype.initialize.apply(this, arguments);
             // flag that indicate whether header has been rendered
             this._headerReady = false;
+            this.INPUT_PAGE = 'inputs';
+            this.CONFIGURATION_PAGE = 'configuration';
         },
 
         _renderHeader: function() {
             $('.preload').replaceWith(this.pageView.el);
         },
+
         /*
          THE ENTRY POINT
          */
@@ -40,13 +46,13 @@ define([
                     this._renderHeader();
                     this._headerReady = true;
                 }
-                if (page === 'inputs') {
-                    this.setPageTitle(_('Inputs').t());
+                if (page === this.INPUT_PAGE) {
+                    this.setPageTitle(getFormattedMessage(116));
                     const inputsPageView = new InputsPageView();
                     inputsPageView.render();
                     $(".main-section-body").html(inputsPageView.el);
-                } else if (page === 'configuration') {
-                    this.setPageTitle(_('Configuration').t());
+                } else if (page === this.CONFIGURATION_PAGE) {
+                    this.setPageTitle(getFormattedMessage(117));
                     const configurationPageView = new ConfigurationPageView();
                     configurationPageView.render();
                     $(".main-section-body").html(configurationPageView.el);
@@ -54,6 +60,7 @@ define([
                 }
             });
         },
+
         _routeRooted: function (root, locale, app, page, queryString) {
             this._route(locale, app, page, queryString);
         },
