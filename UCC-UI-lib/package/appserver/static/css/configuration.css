@@ -11,7 +11,7 @@ body {
     box-shadow: none;
 }
 
-.addonContainer .nav-tabs > .active {
+.main-section-body .nav-tabs > .active {
     border-bottom: none;
 }
 
