@@ -2,73 +2,17 @@ import shutil
 import errno
 import json
 import os
-import subprocess
-from StringIO import StringIO
+from jinja2 import Environment, FileSystemLoader
 
 from uccrestbuilder.global_config import GlobalConfigBuilderSchema, GlobalConfigPostProcessor
 from uccrestbuilder import build
 
-_input_template = '''
-{import_declare}
-import sys
-import json
-
-from splunklib import modularinput as smi
-
-
-class {class_name}(smi.Script):
-
-    def __init__(self):
-        super({class_name}, self).__init__()
-
-    def get_scheme(self):
-        scheme = smi.Scheme('{input_name}')
-        scheme.description = '{description}'
-        scheme.use_external_validation = True
-        scheme.streaming_mode_xml = True
-        scheme.use_single_instance = True
-
-        scheme.add_argument(
-            smi.Argument(
-                'name',
-                title='Name',
-                description='Name',
-                required_on_create=True
-            )
-        )
-        {argument_list}
-        return scheme
-
-    def validate_input(self, definition):
-        return
-
-    def stream_events(self, inputs, ew):
-        input_items = [{{'count': len(inputs.inputs)}}]
-        for input_name, input_item in inputs.inputs.iteritems():
-            input_item['name'] = input_name
-            input_items.append(input_item)
-        event = smi.Event(
-            data=json.dumps(input_items),
-            sourcetype='{input_name}',
-        )
-        ew.write_event(event)
-
-if __name__ == '__main__':
-    exit_code = {class_name}().run(sys.argv)
-    sys.exit(exit_code)
-'''
-
-_argument_template = '''
-        scheme.add_argument(
-            smi.Argument(
-                '{field}',
-                required_on_create={required},
-            )
-        )
-'''
-
 
 basedir = os.path.dirname(os.path.abspath(__file__))
+top_dir = os.path.dirname(basedir)
+
+# jinja2 environment
+j2_env = Environment(loader=FileSystemLoader(top_dir))
 
 # read schema from globalConfig.json
 root_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -107,26 +51,6 @@ def copy_directory(src, dest):
             print 'Directory %s not copied. Error: %s' % (src, exc)
 
 
-def indent(lines, spaces=1):
-    """
-    Indent code block.
-
-    :param lines:
-    :type lines: str
-    :param spaces: times of four
-    :return:
-    """
-    string_io = StringIO(lines)
-    indentation = spaces * 4
-    prefix = ' ' * indentation
-    lines = []
-    for line in string_io:
-        if line != '\n':
-            line = prefix + line
-        lines.append(line)
-    return ''.join(lines)
-
-
 def copy_libs():
     libs = ["splunktaucclib", "solnlib", "splunklib"]
 
@@ -150,29 +74,17 @@ def add_modular_input():
         class_name = input_name.upper()
         description = service.get("title")
         entity = service.get("entity")
-        argument_list = []
         field_white_list = ["name", "index", "sourcetype"]
-        for ent in entity:
-            if ent.get("field") in field_white_list:
-                continue
-            if ent.get("required"):
-                argument_list.append(_argument_template.format(
-                    field=ent.get("field"),
-                    required=True
-                ))
-            else:
-                argument_list.append(_argument_template.format(
-                    field=ent.get("field"),
-                    required=False
-                ))
-        argument_lines = ''.join(argument_list)
+        # filter fields in white list
+        entity = filter(lambda x: x.get("field") not in field_white_list, entity)
         import_declare = 'import ' + import_declare_name
-        content = _input_template.format(
+
+        content = j2_env.get_template(os.path.join('templates', 'input.template')).render(
             import_declare=import_declare,
             input_name=input_name,
             class_name=class_name,
             description=description,
-            argument_list=indent(argument_lines, spaces=0)
+            entity=entity
         )
         input_file_name = os.path.join(
             basedir,
