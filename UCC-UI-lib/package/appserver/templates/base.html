@@ -22,16 +22,11 @@ app_name = app
 splk_root = "/static"
 app_root = "/".join([splk_root,"app",app_name])
 
-app_js = app_root + '/js'
-
 app_js_build = app_root + '/js/build'
 app_css_build = app_root + '/css'
 
 # optimized js and css
-common_css = "%s/common.css" % app_css_build
-page_css ="%s/%s.css" % (app_css_build, page)
 bootstrap_enterprise_css = "%s/bootstrap-enterprise.css" % app_css_build
-
 entry_js = "%s/%s.js" % (app_js_build ,'entry_page')
 %>\
 
@@ -58,8 +53,6 @@ entry_js = "%s/%s.js" % (app_js_build ,'entry_page')
         <meta name="msapplication-TileImage" content="${make_url('/static/img/bookmark/ms-tileicon-144x144.png')}">
 
         <link rel="stylesheet" type="text/css" media="all" href="${make_url(bootstrap_enterprise_css)}" />
-        <link rel="stylesheet" type="text/css" media="all" href="${make_url(common_css)}" />
-        <link rel="stylesheet" type="text/css" media="all" href="${make_url(page_css)}" />
         <script src="${make_url('/static/js/i18n.js')}"></script>
     </head>
     <body s:app="${app_name}">
