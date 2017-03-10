@@ -3,6 +3,8 @@ import {generateModel, generateCollection} from 'app/util/backboneHelpers';
 import {getFormattedMessage} from 'app/util/messageUtil';
 import {sortAlphabetical} from 'app/util/sort';
 import restEndpointMap from 'app/constants/restEndpointMap';
+import 'appCssDir/common.css';
+import 'appCssDir/inputs.css';
 
 define([
     'jquery',

@@ -12,6 +12,7 @@ var appDir = path.join(rootDir, 'package');
 var requireToDefineLoader = 'splunk-require-to-define-loader!';
 
 var appJsDir = path.join(appDir, 'appserver', 'static', 'js');
+var appCssDir = path.join(appDir, 'appserver', 'static', 'css');
 var testesDir = path.join(rootDir, 'testes');
 
 var entries = fs.readdirSync(path.join(appDir, 'appserver', 'static', 'js', 'pages'))
@@ -31,12 +32,10 @@ module.exports = mergeConfigs(sharedConfig, postCssConfig({ loadTheme: 'enterpri
             alias: {
               app: appJsDir,
               'lib/lodash': path.join(rootDir, 'bower_components', 'lodash', 'dist', 'lodash'),
-              lib: path.join(appJsDir, 'lib'),
               lodash: path.join(appJsDir, 'shim', 'lodash'),
-              select2: path.join(rootDir, 'bower_components', 'select2', 'select2.min'),
               rootDir: rootDir,
               repoBaseDir: repoBaseDir,
-              bootstrap: path.join(rootDir, 'bower_components', 'SplunkWebCore', 'search_mrsparkle', 'exposed', 'js', 'contrib', 'bootstrap-2.3.1.min'),
+              appCssDir: appCssDir,
               numeral: path.join(appJsDir, 'shim', 'numeral') // this is to fix the i18m issues. The issue should be resolved in 6.5
             }
         },
@@ -51,6 +50,10 @@ module.exports = mergeConfigs(sharedConfig, postCssConfig({ loadTheme: 'enterpri
             filename: '[name].js',
             sourceMapFilename: '[file].map'
         },
-        entry: entries
+        entry: entries,
+        // use external requirejs to load dynamic components
+        externals: {
+            'requirejs': 'requirejs'
+        }
     }
 );

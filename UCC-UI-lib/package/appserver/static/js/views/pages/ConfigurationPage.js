@@ -1,5 +1,7 @@
 import {configManager} from 'app/util/configManager';
 import CustomizedTabView from 'app/views/configuration/CustomizedTabView';
+import 'appCssDir/common.css';
+import 'appCssDir/configuration.css';
 
 define([
     'jquery',
