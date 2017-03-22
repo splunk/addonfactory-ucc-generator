@@ -128,9 +128,9 @@ define([
                 switch (field) {
                     case 'disabled':
                         if (Util.parseBoolean(this.model.entity.entry.content.attributes.disabled, false)) {
-                            html = '<td class="col-status">' + _('Disabled').t() + '</td>';
+                            html = '<td class="col-disabled">' + _('Disabled').t() + '</td>';
                         } else {
-                            html = '<td class="col-status">' + _('Enabled').t() + '</td>';
+                            html = '<td class="col-disabled">' + _('Enabled').t() + '</td>';
                         }
                         break;
                     default:
