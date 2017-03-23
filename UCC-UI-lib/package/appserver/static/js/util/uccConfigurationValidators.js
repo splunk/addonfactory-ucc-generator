@@ -15,35 +15,47 @@ export function validateSchema(config) {
     };
 }
 
-function appendError(errors, err) {
-    if (err) {
-        errors.push(err);
+class Error {
+    constructor(err, postion) {
+        this.message = err;
+        this.property = postion;
+    }
+
+    toString() {
+        return `${this.property ? `${this.property}: ` : ''}${this.message}`;
     }
 }
 
-export function checkDupKeyValues(config, isInput) {
+function appendError(errors, err, position) {
+    if (err) {
+        errors.push(new Error(err, position));
+    }
+}
+
+export function checkDupKeyValues(config, isInput, position) {
     // Forbid dup name/title in services and tabs
     const servicesLikeArr = _.get(config, isInput ? 'services' : 'tabs');
     const errors = [];
     let error;
 
     if (servicesLikeArr) {
-        const rootFieldName = isInput ? 'inputs.services' : 'configuration.tabs';
+        position = `${position}.${isInput ? 'services' : 'tabs'}`;
+
 
         ['name', 'title'].forEach(d => {
-            error = parseArrForDupKeys(servicesLikeArr, d, rootFieldName);
-            appendError(errors, error);
+            error = parseArrForDupKeys(servicesLikeArr, d);
+            appendError(errors, error, position);
         });
 
         // Forbid dup value/label for items and autoCompleteFields
-        const checkEntityDupKeyValues = ({options}, objPosition) => {
+        const checkEntityDupKeyValues = ({options}, postion) => {
             if (options) {
                 const {items} = options;
                 let {autoCompleteFields} = options;
                 if (items) {
                     ['label', 'value'].forEach(d => {
-                        error = parseArrForDupKeys(items, d, `${objPosition}.options.items`);
-                        appendError(errors, error);
+                        error = parseArrForDupKeys(items, d);
+                        appendError(errors, error, `${postion}.options.items`);
                     });
                 }
 
@@ -54,26 +66,26 @@ export function checkDupKeyValues(config, isInput) {
                     const labelStoreList = isGroupType ?
                         autoCompleteFields.map(d => d.children) : [autoCompleteFields];
                     labelStoreList.forEach(d => {
-                        error = parseArrForDupKeys(d, 'label', `${objPosition}.options.autoCompleteFields`);
-                        appendError(errors, error);
+                        error = parseArrForDupKeys(d, 'label');
+                        appendError(errors, error, `${postion}.options.autoCompleteFields`);
                     });
 
                     if (isGroupType) {
                         autoCompleteFields = _.flatten(_.union(autoCompleteFields.map(d => d.children)));
                     }
-                    error = parseArrForDupKeys(autoCompleteFields, 'value', `${objPosition}.options.autoCompleteFields`);
-                    appendError(errors, error);
+                    error = parseArrForDupKeys(autoCompleteFields, 'value');
+                    appendError(errors, error, `${postion}.options.autoCompleteFields`);
                 }
             }
         };
 
         // Forbid dup field/label for entity
         servicesLikeArr.forEach((serviceLikeObj, i) => {
-            const entityPosition = `${rootFieldName}[${i}].entity`;
+            const entityPosition = `${position}[${i}].entity`;
             if (serviceLikeObj.entity) {
-                ['field', 'label'].forEach(d => {
-                    error = parseArrForDupKeys(serviceLikeObj.entity, d, entityPosition);
-                    appendError(errors, error);
+                ['field', 'label'].forEach((d, i) => {
+                    error = parseArrForDupKeys(serviceLikeObj.entity, d);
+                    appendError(errors, error, `${entityPosition}[${i}]`);
                 });
                 serviceLikeObj.entity.forEach((obj, i) => {
                     checkEntityDupKeyValues(obj, `${entityPosition}[${i}]`);
@@ -87,20 +99,20 @@ export function checkDupKeyValues(config, isInput) {
 
 // In this function, we can be sure that the config has already passed the basic schema validation
 function checkConfigDetails({pages: {configuration, inputs}}) {
-    let error, errors = [];
+    let error, errors = [], position = 'instantce.pages';
 
-    const checkBaseOptions = (options) => {
-        _.values(options).forEach(d => {
+    const checkBaseOptions = (options, position) => {
+        _.values(options).forEach((d, i) => {
             const {error} = parseFunctionRawStr(d);
-            appendError(errors, error);
+            appendError(errors, error, `${position}[${i}]`);
         });
     };
 
-    const checkEntity = (entity) => {
-        _.values(entity).forEach(item => {
+    const checkEntity = (entity, position) => {
+        _.values(entity).forEach((item, i) => {
             const {validators} = item;
 
-            _.values(validators).forEach(d => {
+            _.values(validators).forEach((d, j) => {
                 switch (d.type) {
                     case 'string':
                         error = parseStringValidator(d.minLength, d.maxLength).error;
@@ -113,28 +125,28 @@ function checkConfigDetails({pages: {configuration, inputs}}) {
                         break;
                     default:
                 }
-                appendError(errors, error);
+                appendError(errors, error, `${position}[${i}].validators[${j}]`);
             });
         });
     };
 
     if (inputs) {
         const {services} = inputs;
-        services.forEach(service => {
+        services.forEach((service, i) => {
             const {entity, options} = service;
-            checkBaseOptions(options);
-            checkEntity(entity);
+            checkBaseOptions(options, `${position}.inputs.services[${i}].options`);
+            checkEntity(entity, `${position}.inputs.services[${i}].entity`);
         });
-        errors = errors.concat(checkDupKeyValues(inputs, true));
+        errors = errors.concat(checkDupKeyValues(inputs, true, `${position}.inputs`));
     }
 
     if(configuration) {
-        configuration.tabs.forEach(tab => {
+        configuration.tabs.forEach((tab, i) => {
             const {entity, options} = tab;
-            checkBaseOptions(options);
-            checkEntity(entity);
+            checkBaseOptions(options, `${position}.configuration.tabs[${i}].options`);
+            checkEntity(entity, `${position}.configuration.tabs[${i}].entity`);
         });
-        errors = errors.concat(checkDupKeyValues(configuration, false));
+        errors = errors.concat(checkDupKeyValues(configuration, false, `${position}.configuration`));
     }
 
     return errors;
@@ -164,7 +176,7 @@ export function parseRegexRawStr(rawStr) {
     return {error, result};
 }
 
-export function parseArrForDupKeys(arr, targetField, entityName) {
+export function parseArrForDupKeys(arr, targetField) {
     const uniqFieldsLength = _.uniqBy(arr, d => {
         if (_.isString(d[targetField])) {
             return d[targetField].toLowerCase();
@@ -172,13 +184,8 @@ export function parseArrForDupKeys(arr, targetField, entityName) {
         return d[targetField];
     }).length;
     if (arr.length != uniqFieldsLength) {
-        return getFormattedMessage(21, targetField, entityName);
+        return getFormattedMessage(21, targetField);
     }
-}
-
-export function parseObjForDupKeys(obj, targetField, entityName) {
-    const pairs = _.toPairs(obj);
-    return parseArrForDupKeys(pairs, targetField, entityName);
 }
 
 export function parseNumberValidator(range) {
