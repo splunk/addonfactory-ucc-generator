@@ -32,6 +32,7 @@ field.RestField(
     def __init__(self, name, fields, **kwargs):
         self._name = name
         self._fields = fields
+        self._conf_name = kwargs.get('conf_name')
 
     @property
     def name(self):
@@ -63,7 +64,9 @@ field.RestField(
             field_line = field.generate_rh()
             fields.append(field_line)
         # add disabled field for data input
-        if self.__class__.__name__ == 'DataInputEntityBuilder':
+        entity_builder = self.__class__.__name__
+        if (entity_builder == 'DataInputEntityBuilder' or
+            entity_builder == 'SingleModelEntityBuilder' and self._conf_name):
             fields.append(self._disabled_feild_template)
         fields_lines = ', \n'.join(fields)
         return self._rh_template.format(
