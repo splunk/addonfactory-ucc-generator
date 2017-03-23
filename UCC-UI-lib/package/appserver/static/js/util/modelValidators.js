@@ -5,7 +5,7 @@ import {
   parseNumberValidator,
   parseRegexRawStr,
   parseStringValidator
-} from 'app/util/uccConfigvalidators';
+} from 'app/util/uccConfigurationValidators';
 import BaseModel from 'app/models/Base.Model';
 
 // Required fields will be checked by `nonEmptyString`, all other validators are generated in this method

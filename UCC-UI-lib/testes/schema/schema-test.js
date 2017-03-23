@@ -1,5 +1,5 @@
 import assert from 'assert';
-import {validateSchema} from 'app/util/uccConfigvalidators';
+import {validateSchema} from 'app/util/uccConfigurationValidators';
 import globalConfig from 'repoBaseDir/globalConfig.json';
 
 describe('Schema test', () => {

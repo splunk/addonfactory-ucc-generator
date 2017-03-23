@@ -1,7 +1,7 @@
-import _ from 'lodash';
+import {getFormattedMessage} from 'app/util/messageUtil';
 import schema from 'rootDir/schema/schema.json';
 import {Validator} from 'jsonschema';
-import {getFormattedMessage} from 'app/util/messageUtil';
+import _ from 'lodash';
 
 export function validateSchema(config) {
     const validator = new Validator();
