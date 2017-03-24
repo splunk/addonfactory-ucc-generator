@@ -26,7 +26,11 @@
                             },
                             {
                                 "field": "api_uuid",
-                                "label": "API UUID"
+                                "label": "API UUID",
+                                "mapping": {
+                                    "a": "A",
+                                    "b": "B"
+                                }
                             }
                         ],
                         "actions": [
@@ -317,7 +321,11 @@
                     },
                     {
                         "field": "disabled",
-                        "label": "Status"
+                        "label": "Status",
+                        "mapping": {
+                            "false": "Enabled",
+                            "true": "Disabled"
+                        }
                     }
                 ],
                 "moreInfo": [
@@ -343,7 +351,11 @@
                     },
                     {
                         "field": "disabled",
-                        "label": "Status"
+                        "label": "Status",
+                        "mapping": {
+                            "false": "Enabled",
+                            "true": "Disabled"
+                        }
                     }
                 ],
                 "actions": [
