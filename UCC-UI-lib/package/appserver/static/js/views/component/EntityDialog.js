@@ -246,7 +246,7 @@ define([
 
         _load_module: function(module, modelAttribute, model, index) {
             var deferred = $.Deferred();
-            requirejs([module],(CustomControl) => {
+            requirejs(['custom/' + module],(CustomControl) => {
                 let el = document.createElement("DIV");
                 let control = new CustomControl(el, modelAttribute, model);
                 this.children.splice(index, 0, control);
