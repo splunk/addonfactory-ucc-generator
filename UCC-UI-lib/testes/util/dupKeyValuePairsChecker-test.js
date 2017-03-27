@@ -1,5 +1,5 @@
 import assert from 'assert';
-import {checkDupKeyValues} from 'app/util/validators';
+import {checkDupKeyValues} from 'app/util/uccConfigurationValidators';
 import _, {cloneDeep} from 'lodash';
 
 _.mixin({

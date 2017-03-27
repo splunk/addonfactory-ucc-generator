@@ -2,7 +2,7 @@ import _ from 'lodash';
 import $C from 'splunk.config';
 import SplunkBaseModel from 'models/Base';
 import {loadGlobalConfig, getBuildDirPath} from 'app/util/script';
-import {validateSchema} from './validators';
+import {validateSchema} from './uccConfigurationValidators';
 import $ from 'jquery';
 import ErrorDialog from 'app/views/component/Error';
 import {getFormattedMessage} from 'app/util/messageUtil';

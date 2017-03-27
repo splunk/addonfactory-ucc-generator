@@ -6,7 +6,7 @@ import {
     ENTITY_DIALOG_MODE_EDIT
 } from 'app/constants/modes';
 import {generateModel} from 'app/util/backboneHelpers';
-import {generateValidators} from 'app/util/validators';
+import {generateValidators} from 'app/util/modelValidators';
 import {parseFuncRawStr} from 'app/util/script';
 import {
     addErrorMsg,

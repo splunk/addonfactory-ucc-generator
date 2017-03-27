@@ -20,7 +20,7 @@ export default {
     18: 'Length of {{args[0]}} should be less than or equal to {{args[1]}}',
     19: 'Field {{args[0]}} is not a valid {{args[1]}}',
     20: 'configuration file should be pure JSON',
-    21: 'duplicate {{args[0]}} keys in entity {{args[1]}} is not allowed',
+    21: 'duplicate {{args[0]}} keys is not allowed',
     22: 'Field "{{args[0]}}" must be less than 1024 characters',
 
     /* general messages, range [100, 499]*/

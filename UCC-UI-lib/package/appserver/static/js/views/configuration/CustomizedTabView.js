@@ -1,6 +1,6 @@
 import Backbone from 'backbone';
 import {generateModel} from 'app/util/backboneHelpers';
-import {generateValidators} from 'app/util/validators';
+import {generateValidators} from 'app/util/modelValidators';
 import {generateCollection} from 'app/util/backboneHelpers';
 import NormalTabView from './NormalTabView';
 import TableBasedTabView from './TableBasedTabView';
