@@ -244,12 +244,12 @@ define([
             return deffer;
         },
 
-        _load_module: function(module, modelAttribute, model) {
+        _load_module: function(module, modelAttribute, model, index) {
             var deferred = $.Deferred();
             requirejs([module],(CustomControl) => {
                 let el = document.createElement("DIV");
                 let control = new CustomControl(el, modelAttribute, model);
-                this.children.push(control);
+                this.children.splice(index, 0, control);
                 deferred.resolve(CustomControl);
             });
             return deferred.promise();
@@ -279,7 +279,7 @@ define([
 
             this.children = [];
             this.deferreds = [];
-            _.each(entity, (e) => {
+            _.each(entity, (e, index) => {
                 let controlWrapper, controlOptions, deferred;
                 if (this.mode === ENTITY_DIALOG_MODE_CREATE) {
                     if (this.model.get(e.field) === undefined &&
@@ -302,7 +302,8 @@ define([
                     deferred = this._load_module(
                         e.options.src,
                         controlOptions.modelAttribute,
-                        controlOptions.model
+                        controlOptions.model,
+                        index
                     );
                     this.deferreds.push(deferred);
                 } else {
