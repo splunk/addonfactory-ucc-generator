@@ -119,23 +119,15 @@ define([
             }
 
             var header = this.component.table.header;
-            _.each(header, ({field}) => {
+            _.each(header, ({field, mapping}) => {
                 let html,
                     fieldValue = field === 'name' ? this.model.entity.entry.attributes[field]
                         : this.model.entity.entry.content.attributes[field];
                 fieldValue = fieldValue === undefined ? '' : String(fieldValue);
-
-                switch (field) {
-                    case 'disabled':
-                        if (Util.parseBoolean(this.model.entity.entry.content.attributes.disabled, false)) {
-                            html = '<td class="col-disabled">' + _('Disabled').t() + '</td>';
-                        } else {
-                            html = '<td class="col-disabled">' + _('Enabled').t() + '</td>';
-                        }
-                        break;
-                    default:
-                        html = '<td  class="col-' + field + '">' + Util.encodeHTML(fieldValue) + '</td>';
+                if (mapping) {
+                    fieldValue = !_.isUndefined(mapping[fieldValue]) ? mapping[fieldValue] : fieldValue;
                 }
+                html = '<td  class="col-' + field + '">' + Util.encodeHTML(fieldValue) + '</td>';
                 this.$el.append(_.template(html));
             });
 
