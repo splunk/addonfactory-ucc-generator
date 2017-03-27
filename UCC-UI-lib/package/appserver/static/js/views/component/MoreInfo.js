@@ -34,7 +34,7 @@ define([
                 if (value !== undefined && value !== '') {
                     // prevent html injection
                     if (mapping) {
-                        value = mapping[value] ? mapping[value] : value;
+                        value = !_.isUndefined(mapping[value]) ? mapping[value] : value;
                     }
                     value = Util.encodeHTML(value);
                     this.$('.list-dotted').append(_.template(`

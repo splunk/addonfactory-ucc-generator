@@ -125,7 +125,7 @@ define([
                         : this.model.entity.entry.content.attributes[field];
                 fieldValue = fieldValue === undefined ? '' : String(fieldValue);
                 if (mapping) {
-                    fieldValue = mapping[fieldValue] ? mapping[fieldValue] : fieldValue;
+                    fieldValue = !_.isUndefined(mapping[fieldValue]) ? mapping[fieldValue] : fieldValue;
                 }
                 html = '<td  class="col-' + field + '">' + Util.encodeHTML(fieldValue) + '</td>';
                 this.$el.append(_.template(html));
