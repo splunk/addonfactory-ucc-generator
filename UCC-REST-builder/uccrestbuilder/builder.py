@@ -84,11 +84,13 @@ class RestBuilder(object):
 
     def build(self):
         for endpoint in self._schema.endpoints:
-            self.output.put(
-                self.output.default,
-                endpoint.conf_name + '.conf',
-                endpoint.generate_default(),
-            )
+            if endpoint._name == 'settings':
+                self.output.put(
+                    self.output.default,
+                    endpoint.conf_name + '.conf',
+                    endpoint.generate_default_conf(),
+                )
+
             self.output.put(
                 self.output.readme,
                 endpoint.conf_name + '.conf.spec',

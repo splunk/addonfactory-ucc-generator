@@ -4,6 +4,7 @@ import json
 TOKEN = '{version}'
 VERSION = ''
 
+
 def replace_version(file_path, token, version):
     lines = []
     with open(file_path, 'r') as infile:
@@ -24,7 +25,7 @@ try:
     build_number = os.environ['BUILDNUMBER']
     git_branch = os.environ['GITBRANCH']
 except KeyError:
-    print 'Could not get build number or git branch from bamboo env. Use default version.'
+    print 'Warning: Could not get build number or git branch from bamboo env. Use default version.'
 else:
     if git_branch and git_branch == 'develop':
         VERSION = VERSION + '-' + git_branch + '.' + build_number

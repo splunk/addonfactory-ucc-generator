@@ -29,9 +29,10 @@ field.RestField(
 )
 """
 
-    def __init__(self, name, fields):
+    def __init__(self, name, fields, **kwargs):
         self._name = name
         self._fields = fields
+        self._conf_name = kwargs.get('conf_name')
 
     @property
     def name(self):
@@ -49,15 +50,11 @@ field.RestField(
     def name_rh(self):
         raise NotImplementedError()
 
-    def generate_spec(self):
+    def generate_spec(self, omit_kv_pairs=False):
         title = self._title_template.format(self.name_spec)
+        if omit_kv_pairs:
+            return title
         lines = [field.generate_spec() for field in self._fields]
-        lines.insert(0, title)
-        return '\n'.join(lines)
-
-    def generate_default(self):
-        title = self._title_template.format(self.name_default)
-        lines = [field.generate_default() for field in self._fields]
         lines.insert(0, title)
         return '\n'.join(lines)
 
@@ -67,7 +64,9 @@ field.RestField(
             field_line = field.generate_rh()
             fields.append(field_line)
         # add disabled field for data input
-        if self.__class__.__name__ == 'DataInputEntityBuilder':
+        entity_builder = self.__class__.__name__
+        if (entity_builder == 'DataInputEntityBuilder' or
+            entity_builder == 'SingleModelEntityBuilder' and self._conf_name):
             fields.append(self._disabled_feild_template)
         fields_lines = ', \n'.join(fields)
         return self._rh_template.format(
@@ -79,10 +78,11 @@ field.RestField(
 
 class RestEndpointBuilder(object):
 
-    def __init__(self, name, namespace):
+    def __init__(self, name, namespace, **kwargs):
         self._name = name
         self._namespace = namespace
         self._entities = []
+        self._conf_name = kwargs.get('conf_name') if kwargs.get('conf_name') is not None else self.name.lower()
 
     @property
     def name(self):
@@ -94,7 +94,7 @@ class RestEndpointBuilder(object):
 
     @property
     def conf_name(self):
-        return self.name
+        return self._conf_name
 
     @property
     def rh_name(self):
@@ -114,9 +114,9 @@ class RestEndpointBuilder(object):
         specs = [entity.generate_spec() for entity in self._entities]
         return '\n\n'.join(specs)
 
-    def generate_default(self):
-        defaults = [entity.generate_default() for entity in self._entities]
-        return '\n\n'.join(defaults)
+    def generate_default_conf(self):
+        specs = [entity.generate_spec(True) for entity in self._entities]
+        return '\n\n'.join(specs)
 
     def generate_rh(self, handler):
         raise NotImplementedError()

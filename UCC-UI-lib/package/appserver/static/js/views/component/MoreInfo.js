@@ -24,22 +24,19 @@ define([
             this.$el.html(_.template(this.template)({cols: header.length + 1}));
 
             _.each(moreInfo, m => {
-                const {label, field} = m;
+                const {label, field, mapping} = m;
                 let value;
                 if (entry.content.attributes[field] != undefined) {
                     value = entry.content.attributes[field];
                 } else {
                     value = entry.attributes[field];
                 }
-                // built-in formater for field 'disabled'
-                if (field === 'disabled') {
-                    value = Util.parseBoolean(value, false) ?
-                        _('Disabled').t() : _('Enabled').t();
-                }
-                if (value !== undefined) {
+                if (value !== undefined && value !== '') {
                     // prevent html injection
+                    if (mapping) {
+                        value = !_.isUndefined(mapping[value]) ? mapping[value] : value;
+                    }
                     value = Util.encodeHTML(value);
-                    value = Util.encryptTableText(this.model.component, this.model.entity, field, value);
                     this.$('.list-dotted').append(_.template(`
                         <dt><%- _(label).t() %></dt>
                         <dd><%- value %></dd>

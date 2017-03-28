@@ -25,12 +25,6 @@ class RestFieldBuilder(object):
             value='',
         )
 
-    def generate_default(self):
-        return self._kv_template.format(
-            name=self._field.name,
-            value=self._field.default or '',
-        )
-
     def _indent_validator(self):
         validator = indent(self._validator)
         return validator[4:]

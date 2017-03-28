@@ -20,7 +20,7 @@ export default {
     18: 'Length of {{args[0]}} should be less than or equal to {{args[1]}}',
     19: 'Field {{args[0]}} is not a valid {{args[1]}}',
     20: 'configuration file should be pure JSON',
-    21: 'duplicate {{args[0]}} keys in entity {{args[1]}} is not allowed',
+    21: 'duplicate {{args[0]}} keys is not allowed',
     22: 'Field "{{args[0]}}" must be less than 1024 characters',
     23: '"name" feild must be provided for {{args[0]}} \'s entity in configuration file',
 
@@ -49,6 +49,9 @@ export default {
     113: 'IPV4 address',
     114: 'date in ISO 8601 format',
     115: 'Loading',
+    // Page title
+    116: 'Inputs',
+    117: 'Configuration',
 
     '__unknow__': 'An unknown error occurred'
 }

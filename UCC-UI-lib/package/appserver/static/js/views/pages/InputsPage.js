@@ -3,6 +3,8 @@ import {generateModel, generateCollection} from 'app/util/backboneHelpers';
 import {getFormattedMessage} from 'app/util/messageUtil';
 import {sortAlphabetical} from 'app/util/sort';
 import restEndpointMap from 'app/constants/restEndpointMap';
+import 'appCssDir/common.css';
+import 'appCssDir/inputs.css';
 
 define([
     'jquery',
@@ -14,7 +16,8 @@ define([
     'app/views/component/InputFilterMenu',
     'app/views/component/AddInputMenu',
     'app/views/component/EntityDialog',
-    'app/views/component/Table'
+    'app/views/component/Table',
+    'expose-loader?Lodash!lodash'
 ], function (
     $,
     _,

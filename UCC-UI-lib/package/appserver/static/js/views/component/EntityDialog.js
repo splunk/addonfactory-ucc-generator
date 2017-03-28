@@ -1,7 +1,12 @@
 import {configManager} from 'app/util/configManager';
 import restEndpointMap from 'app/constants/restEndpointMap';
-import {generateModel, generateCollection} from 'app/util/backboneHelpers';
-import {generateValidators} from 'app/util/validators';
+import {
+    ENTITY_DIALOG_MODE_CLONE,
+    ENTITY_DIALOG_MODE_CREATE,
+    ENTITY_DIALOG_MODE_EDIT
+} from 'app/constants/modes';
+import {generateModel} from 'app/util/backboneHelpers';
+import {generateValidators} from 'app/util/modelValidators';
 import {parseFuncRawStr} from 'app/util/script';
 import {
     addErrorMsg,
@@ -53,13 +58,6 @@ define([
                 }
             });
 
-            //Delete encrypted field in delete or clone mode
-            if (options.model && this.encryptedFields.length) {
-                _.each(this.encryptedFields, f => {
-                    delete options.model.entry.content.attributes[f];
-                });
-            }
-
             this.model = new Backbone.Model({});
 
             const {entity, name, options: comOpt} = this.component;
@@ -75,21 +73,27 @@ define([
             });
 
             if (!options.model) { //Create mode
-                this.mode = "create";
+                this.mode = ENTITY_DIALOG_MODE_CREATE;
                 this.model = new Backbone.Model({});
                 this.real_model = new InputType(null, {
                     appData: this.appData,
                     collection: this.collection
                 });
-            } else if (this.mode === "edit") { //Edit mode
+            } else if (this.mode === ENTITY_DIALOG_MODE_EDIT) {
                 this.model = options.model.entry.content.clone();
                 this.model.set({name: options.model.entry.get("name")});
                 this.real_model = options.model;
                 (validators || []).forEach(({fieldName, validator}) => {
                     this.real_model.addValidation(fieldName, validator);
                 });
-            } else if (this.mode === "clone") { //Clone mode
+            } else if (this.mode === ENTITY_DIALOG_MODE_CLONE) {
                 this.model = options.model.entry.content.clone();
+
+                // Clean encrypted fields
+                _.forEach(this.encryptedFields, d => {
+                    delete this.model.attributes[d];
+                });
+
                 //Unset the name attribute if the model is newly created
                 if (this.model.get("name")) {
                     this.model.unset("name");
@@ -147,11 +151,15 @@ define([
         },
 
         initModel: function() {
+            if (this.mode !== ENTITY_DIALOG_MODE_CREATE) {
+                return;
+            }
             const {content} = this.real_model.entry,
                 {entity} = this.component;
 
             entity.forEach(d => {
-                if (content.get(d.field) === undefined && d.defaultValue) {
+                if (content.get(d.field) === undefined &&
+                        d.defaultValue !== undefined) {
                     content.set(d.field, d.defaultValue);
                 }
             });
@@ -166,16 +174,21 @@ define([
                 attr_labels = {};
             _.each(entity, function (e) {
                 attr_labels[e.field] = e.label;
+
+                // Related JIRA ID: ADDON-12723
+                if(new_json[e.field] === undefined) {
+                    new_json[e.field] = '';
+                }
             });
             input.entry.content.set(new_json);
             input.attr_labels = attr_labels;
 
-            return this.save(input, original_json);
+            this.save(input, original_json);
         },
 
         save: function (input, original_json) {
             // when update, disable parameter should be removed from parameter
-            if (this.mode === 'edit' || this.mode === 'clone') {
+            if (this.mode === ENTITY_DIALOG_MODE_EDIT || this.mode === ENTITY_DIALOG_MODE_CLONE) {
                 input.entry.content.unset('disabled', {silent: true});
             }
             var deffer = input.save();
@@ -192,16 +205,8 @@ define([
                 addSavingMsg(this.curWinSelector, getFormattedMessage(108));
                 addClickListener(this.curWinSelector, 'msg-loading');
                 deffer.done(() => {
-                    //Delete encrypted field before adding to collection
-                    if (this.encryptedFields.length) {
-                        _.each(this.encryptedFields, f => {
-                            delete input.entry.content.attributes[f];
-                        });
-                    }
-                    this.collection.trigger('change');
-
                     //Add model to collection
-                    if (this.mode !== 'edit') {
+                    if (this.mode !== ENTITY_DIALOG_MODE_EDIT) {
                         if (this.collection.paging.get('total') !== undefined) {
                             _.each(this.collection.models, (model) => {
                                 model.paging.set(
@@ -218,8 +223,8 @@ define([
                             console.log('Could not get total count for collection');
                         }
                         this.collection.add(input);
-                        this.collection.trigger('change');
                     }
+                    this.collection.trigger('change');
                     this.$("[role=dialog]").modal('hide');
                     this.undelegateEvents();
                 }).fail((model, response) => {
@@ -239,14 +244,25 @@ define([
             return deffer;
         },
 
+        _load_module: function(module, modelAttribute, model) {
+            var deferred = $.Deferred();
+            requirejs([module],(CustomControl) => {
+                let el = document.createElement("DIV");
+                let control = new CustomControl(el, modelAttribute, model);
+                this.children.push(control);
+                deferred.resolve(CustomControl);
+            });
+            return deferred.promise();
+        },
+
         render: function () {
             var templateMap = {
-                    "create": AddDialogTemplate,
-                    "edit": EditDialogTemplate,
-                    "clone": CloneDialogTemplate
+                    [ENTITY_DIALOG_MODE_CREATE]: AddDialogTemplate,
+                    [ENTITY_DIALOG_MODE_EDIT]: EditDialogTemplate,
+                    [ENTITY_DIALOG_MODE_CLONE]: CloneDialogTemplate
                 },
                 template = _.template(templateMap[this.mode]),
-                jsonData = this.mode === "clone" ? {
+                jsonData = this.mode === ENTITY_DIALOG_MODE_CLONE ? {
                     name: this.cloneName,
                     title: this.component.title
                 } : {
@@ -262,10 +278,14 @@ define([
             });
 
             this.children = [];
+            this.deferreds = [];
             _.each(entity, (e) => {
-                var option, controlWrapper, controlOptions;
-                if (this.model.get(e.field) === undefined && e.defaultValue) {
-                    this.model.set(e.field, e.defaultValue);
+                let controlWrapper, controlOptions, deferred;
+                if (this.mode === ENTITY_DIALOG_MODE_CREATE) {
+                    if (this.model.get(e.field) === undefined &&
+                        e.defaultValue !== undefined) {
+                        this.model.set(e.field, e.defaultValue);
+                    }
                 }
 
                 controlOptions = {
@@ -278,32 +298,42 @@ define([
                 };
                 _.extend(controlOptions, e.options);
 
-                controlWrapper = new ControlWrapper({...e, controlOptions});
-
-                if (e.display !== undefined) {
-                    controlWrapper.$el.css("display", "none");
-                }
-                this.children.push(controlWrapper);
-            });
-
-            _.each(this.children, (child) => {
-                // prevent auto complete for password
-                if (child.controlOptions.password) {
-                    this.$('.modal-body').prepend(
-                        `<input type="password" id="${child.controlOptions.modelAttribute}" style="display: none"/>`
+                if(e.type === 'custom') {
+                    deferred = this._load_module(
+                        e.options.src,
+                        controlOptions.modelAttribute,
+                        controlOptions.model
                     );
+                    this.deferreds.push(deferred);
+                } else {
+                    controlWrapper = new ControlWrapper({...e, controlOptions});
+
+                    if (e.display !== undefined) {
+                        controlWrapper.$el.css("display", "none");
+                    }
+                    this.children.push(controlWrapper);
                 }
-                this.$('.modal-body').append(child.render().$el);
             });
+            $.when.apply($, this.deferreds).then(() => {
+                _.each(this.children, (child) => {
+                    // prevent auto complete for password
+                    if (child.controlOptions && child.controlOptions.password) {
+                        this.$('.modal-body').prepend(
+                            `<input type="password" id="${child.controlOptions.modelAttribute}" style="display: none"/>`
+                        );
+                    }
+                    let childComponent = child.render();
+                    this.$('.modal-body').append(childComponent.$el || childComponent.el);
+                });
 
-            //Disable the name field in edit mode
-            if (this.mode === 'edit') {
-                this.$("input[name=name]").attr("readonly", "readonly");
-            }
-            this.$("input[type=submit]").on("click", this.submitTask.bind(this));
-            //Add guid to current dialog
-            this.$(".modal-dialog").addClass(this.curWinId);
-
+                //Disable the name field in edit mode
+                if (this.mode === ENTITY_DIALOG_MODE_EDIT) {
+                    this.$("input[name=name]").attr("readonly", "readonly");
+                }
+                this.$("input[type=submit]").on("click", this.submitTask.bind(this));
+                //Add guid to current dialog
+                this.$(".modal-dialog").addClass(this.curWinId);
+            });
             return this;
         }
     });

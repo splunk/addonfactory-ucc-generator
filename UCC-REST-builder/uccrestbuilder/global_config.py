@@ -6,6 +6,7 @@ from __future__ import absolute_import
 
 import os
 import os.path as op
+import stat
 import shutil
 from solnlib.utils import is_true
 from splunktaucclib.global_config import GlobalConfigSchema
@@ -56,6 +57,7 @@ class GlobalConfigBuilderSchema(GlobalConfigSchema):
                 config['name'],
                 SingleModelEndpointBuilder,
                 SingleModelEntityBuilder,
+                conf_name=config.get('conf')
             )
 
     def _builder_settings(self):
@@ -72,14 +74,24 @@ class GlobalConfigBuilderSchema(GlobalConfigSchema):
     def _builder_inputs(self):
         # DataInput
         for input_item in self._inputs:
-            self._builder_entity(
-                None,
-                input_item['entity'],
-                input_item['name'],
-                DataInputEndpointBuilder,
-                DataInputEntityBuilder,
-                input_type=input_item['name'],
-            )
+            if 'conf' in input_item:
+                self._builder_entity(
+                    None,
+                    input_item['entity'],
+                    input_item['name'],
+                    SingleModelEndpointBuilder,
+                    SingleModelEntityBuilder,
+                    conf_name=input_item['conf'],
+                )
+            else:
+                self._builder_entity(
+                    None,
+                    input_item['entity'],
+                    input_item['name'],
+                    DataInputEndpointBuilder,
+                    DataInputEntityBuilder,
+                    input_type=input_item['name'],
+                )
 
     def _builder_entity(
             self,
@@ -382,3 +394,13 @@ sys.path = new_paths
             )
             self.import_declare(rh_file)
         self.default_to_local()
+
+        # add executable permission to files under bin folder
+        def add_executable_attribute(file_path):
+            if op.isfile(file_path):
+                st = os.stat(file_path)
+                os.chmod(file_path, st.st_mode | 0111)
+
+        bin_path = op.join(getattr(builder.output, '_path'), builder.output.bin)
+        items = os.listdir(bin_path)
+        map(add_executable_attribute, items)

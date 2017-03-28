@@ -1,10 +1,10 @@
 {
     "meta": {
-        "name": "Splunk_TA_crowdstrike",
+        "name": "Splunk_TA_UCCExample",
         "displayName": "AOB Test",
         "version": "1.0.0",
         "apiVersion": "3.0.0",
-        "restRoot": "splunk_ta_crowdstrike"
+        "restRoot": "splunk_ta_uccexample"
     },
     "pages": {
         "configuration":  {
@@ -26,7 +26,11 @@
                             },
                             {
                                 "field": "api_uuid",
-                                "label": "API UUID"
+                                "label": "API UUID",
+                                "mapping": {
+                                    "a": "A",
+                                    "b": "B"
+                                }
                             }
                         ],
                         "actions": [
@@ -71,13 +75,15 @@
                             "field": "api_uuid",
                             "label": "API UUID",
                             "type": "text",
-                            "required": true,
-                            "validators": [
-                                {
-                                    "type": "regex",
-                                    "pattern": "\\w{1,50}"
-                                }
-                            ]
+                            "required": false,
+                            "defaultValue": "123456789"
+                        },
+                        {
+                            "field": "api_uuid2",
+                            "label": "API UUID2",
+                            "type": "text",
+                            "required": false,
+                            "defaultValue": "123456789"
                         },
                         {
                             "field": "api_key",
@@ -85,6 +91,46 @@
                             "type": "text",
                             "required": true,
                             "encrypted": true
+                        },
+                        {
+                            "field": "test_optional_password",
+                            "label": "test_optional_password",
+                            "type": "text",
+                            "required": false,
+                            "encrypted": true
+                        },
+                        {
+                            "field": "f1",
+                            "label": "f1",
+                            "type": "text",
+                            "required": false,
+                            "encrypted": true
+                        },
+                        {
+                            "field": "f2",
+                            "label": "f2",
+                            "type": "text",
+                            "required": false,
+                            "encrypted": true
+                        },
+                        {
+                            "field": "f3",
+                            "label": "f3",
+                            "type": "text",
+                            "required": false,
+                            "encrypted": true
+                        },
+                        {
+                            "field": "f4",
+                            "label": "f4",
+                            "type": "text",
+                            "required": false
+                        },
+                        {
+                            "field": "f5",
+                            "label": "f5",
+                            "type": "text",
+                            "required": false
                         }
                     ]
                 },
@@ -275,7 +321,11 @@
                     },
                     {
                         "field": "disabled",
-                        "label": "Status"
+                        "label": "Status",
+                        "mapping": {
+                            "false": "Enabled",
+                            "true": "Disabled"
+                        }
                     }
                 ],
                 "moreInfo": [
@@ -301,7 +351,11 @@
                     },
                     {
                         "field": "disabled",
-                        "label": "Status"
+                        "label": "Status",
+                        "mapping": {
+                            "false": "Enabled",
+                            "true": "Disabled"
+                        }
                     }
                 ],
                 "actions": [
@@ -315,6 +369,7 @@
                 {
                     "name": "inputs_01",
                     "title": "Falcon Host Input",
+                    "conf": "aws_cloudwatch",
                     "entity": [
                         {
                             "field": "name",
@@ -322,6 +377,14 @@
                             "type": "text",
                             "help": "Enter a unique name for each crowdstrike falcon host data input.",
                             "required": true
+                        },
+                        {
+                            "field": "custom_field",
+                            "label": "Custom Field",
+                            "type": "custom",
+                            "options": {
+                                "src": "customcomponent/CustomControl"
+                            }
                         },
                         {
                             "field": "account",
@@ -390,7 +453,7 @@
                             "field": "start_offset",
                             "label": "Start Offset",
                             "type": "text",
-                            "defaultValue": "0"
+                            "defaultValue": 0
                         },
                         {
                             "field": "interval",

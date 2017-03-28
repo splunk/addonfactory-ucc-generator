@@ -19,14 +19,29 @@ from .credentials import RestCredentials
 __all__ = ['RestHandler']
 
 
-def _encode_request(existing=False):
+def _check_name_for_create(name):
+    if name == 'default':
+        raise RestError(
+            400,
+            '"%s" is not allowed for entity name' % name
+        )
+    if name.startswith("_"):
+        raise RestError(
+            400,
+            'Name starting with "_" is not allowed for entity'
+        )
+
+
+def _pre_request(existing):
     """
     Encode payload before request.
-    :param existing: if check existing needed
+    :param existing: 
+        if True: means must exist
+        if False: means must NOT exist
     :return:
     """
 
-    def _encode_request_wrapper(meth):
+    def _pre_request_wrapper(meth):
         """
 
         :param meth: RestHandler instance method
@@ -34,14 +49,30 @@ def _encode_request(existing=False):
         """
         def check_existing(self, name):
             if not existing:
-                return None
-            entities = list(self.get(name))
-            if len(entities) < 1:
+                # for create, check name
+                _check_name_for_create(name)
+            # check if the entity existed
+            entities = []
+            try:
+                entities = list(self.get(name))
+            except RestError:
+                pass
+
+            if existing and not entities:
                 raise RestError(
                     404,
-                    'name=%s' % name,
+                    '"%s" does not exist' % name,
                 )
-            return entities[0].content
+            elif not existing and entities:
+                raise RestError(
+                    409,
+                    'Name "%s" is already in use' % name,
+                )
+
+            if entities:
+                return entities[0].content
+            else:
+                return None
 
         @wraps(meth)
         def wrapper(self, name, data):
@@ -52,17 +83,11 @@ def _encode_request(existing=False):
             )
             self._endpoint.encode(name, data)
 
-            rest_credentials = RestCredentials(
-                self._splunkd_uri,
-                self._session_key,
-                self._endpoint,
-            )
-            rest_credentials.encrypt(name, data)
             return meth(self, name, data)
 
         return wrapper
 
-    return _encode_request_wrapper
+    return _pre_request_wrapper
 
 
 def _decode_response(meth):
@@ -98,7 +123,6 @@ def _decode_response(meth):
 
 
 class RestHandler(object):
-
     def __init__(
             self,
             splunkd_uri,
@@ -121,6 +145,12 @@ class RestHandler(object):
             host=splunkd_info.hostname,
             port=splunkd_info.port,
         )
+        self.rest_credentials = RestCredentials(
+            self._splunkd_uri,
+            self._session_key,
+            self._endpoint,
+        )
+        self.PASSWORD = u'********'
 
     @_decode_response
     def get(self, name, decrypt=False):
@@ -133,7 +163,7 @@ class RestHandler(object):
             ),
             output_mode='json',
         )
-        return self._flay_response(response, decrypt)
+        return self._format_response(response, get=True, decrypt=decrypt)
 
     @_decode_response
     def all(self, decrypt=False, **query):
@@ -144,23 +174,27 @@ class RestHandler(object):
             output_mode='json',
             **query
         )
-        return self._flay_response(response, decrypt)
+        return self._format_all_response(response, decrypt)
+
+    def get_encrypted_field_names(self, name, data):
+        return [x.name for x in self._endpoint.model(name, data).fields if x.encrypted]
 
     @_decode_response
-    @_encode_request()
+    @_pre_request(existing=False)
     def create(self, name, data):
-        self._check_name(name)
         data['name'] = name
+        self.rest_credentials.encrypt_for_create(name, data)
         response = self._client.post(
             self.path_segment(self._endpoint.internal_endpoint),
             output_mode='json',
             body=data
         )
-        return self._flay_response(response)
+        return self._format_response(response)
 
     @_decode_response
-    @_encode_request(existing=True)
+    @_pre_request(existing=True)
     def update(self, name, data):
+        self.rest_credentials.encrypt_for_update(name, data)
         response = self._client.post(
             self.path_segment(
                 self._endpoint.internal_endpoint,
@@ -169,7 +203,7 @@ class RestHandler(object):
             output_mode='json',
             body=data
         )
-        return self._flay_response(response)
+        return self._format_response(response)
 
     @_decode_response
     def delete(self, name):
@@ -246,9 +280,49 @@ class RestHandler(object):
         )
         return path.strip('/')
 
+    def _format_response(self, response, get=False, decrypt=False):
+        body = response.body.read()
+        try:
+            cont = json.loads(body)
+        except ValueError:
+            raise RestError(
+                500,
+                'Fail to load response, invalid JSON'
+            )
+        for entry in cont['entry']:
+            name = entry['name']
+            data = entry['content']
+            acl = entry['acl']
+            encrypted_field_names = self.get_encrypted_field_names(name, data)
+            # encrypt and get clear password for get request
+            if get:
+                masked = self.rest_credentials.decrypt_for_get(name, data)
+                if masked:
+                    self._client.post(
+                        self.path_segment(
+                            self._endpoint.internal_endpoint,
+                            name=name,
+                        ),
+                        body=masked
+                    )
+
+            if not decrypt:
+                # replace clear password with '********'
+                for field_name in encrypted_field_names:
+                    if field_name in data and data[field_name]:
+                        data[field_name] = self.PASSWORD
+
+            yield name, data, acl
+
     def _flay_response(self, response, decrypt=False):
         body = response.body.read()
-        cont = json.loads(body)
+        try:
+            cont = json.loads(body)
+        except ValueError:
+            raise RestError(
+                500,
+                'Fail to load response, invalid JSON'
+            )
         for entry in cont['entry']:
             name = entry['name']
             data = entry['content']
@@ -259,11 +333,33 @@ class RestHandler(object):
                 self._clean_credentials(name, data)
             yield name, data, acl
 
+    def _format_all_response(self, response, decrypt=False):
+        body = response.body.read()
+        try:
+            cont = json.loads(body)
+        except ValueError:
+            raise RestError(
+                500,
+                'Fail to load response, invalid JSON'
+            )
+        # cont['entry']: collection list, load credentials in one request
+        # if any(x.encrypted for x in self._endpoint.model(None, cont['entry']).fields):
+        if self.get_encrypted_field_names(None, cont['entry']):
+            self._encrypt_raw_credentials(cont['entry'])
+        if not decrypt:
+            self._clean_all_credentials(cont['entry'])
+
+        for entry in cont['entry']:
+            name = entry['name']
+            data = entry['content']
+            acl = entry['acl']
+            yield name, data, acl
+
     def _load_credentials(self, name, data):
         rest_credentials = RestCredentials(
             self._splunkd_uri,
             self._session_key,
-            self._endpoint,
+            self._endpoint
         )
         masked = rest_credentials.decrypt(name, data)
         if masked:
@@ -275,6 +371,33 @@ class RestHandler(object):
                 ),
                 **masked
             )
+
+    def _encrypt_raw_credentials(self, data):
+        rest_credentials = RestCredentials(
+            self._splunkd_uri,
+            self._session_key,
+            self._endpoint
+        )
+        # get clear passwords for response data and get the password change list
+        change_list = rest_credentials.decrypt_all(data)
+
+        field_names = {x.name for x in self._endpoint.model(None, data).fields if x.encrypted}
+        for model in change_list:
+            # only updates the defined fields in schema
+            masked = dict()
+            for field in field_names:
+                if field in model['content'] and model['content'][field] != '' \
+                        and model['content'][field] != self.PASSWORD:
+                    masked[field] = self.PASSWORD
+
+            if masked:
+                self._client.post(
+                    self.path_segment(
+                        self._endpoint.internal_endpoint,
+                        name=model['name'],
+                    ),
+                    body=masked
+                )
 
     def _need_decrypt(self, name, data, decrypt):
         # some encrypted-needed fields are plain text in *.conf.
@@ -299,19 +422,15 @@ class RestHandler(object):
         return False
 
     def _clean_credentials(self, name, data):
-        for field in self._endpoint.model(name, data).fields:
-            if field.encrypted is True and field.name in data:
-                del data[field.name]
+        encrypted_field_names = self.get_encrypted_field_names(name, data)
+        for field_name in encrypted_field_names:
+            if field_name in data:
+                del data[field_name]
 
-    @classmethod
-    def _check_name(cls, name):
-        if name == 'default':
-            raise RestError(
-                400,
-                '"%s" is not allowed for entity name' % name
-            )
-        if name.startswith("_"):
-            raise RestError(
-                400,
-                'Name starting with "_" is not allowed for entity'
-            )
+    def _clean_all_credentials(self, data):
+        encrypted_field_names = self.get_encrypted_field_names(None, data)
+        for model in data:
+            for field_name in encrypted_field_names:
+                if field_name in model['content'] and model['content'][field_name] != '':
+                    model['content'][field_name] = self.PASSWORD
+

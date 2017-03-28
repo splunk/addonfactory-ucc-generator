@@ -1,5 +1,7 @@
 import {configManager} from 'app/util/configManager';
 import CustomizedTabView from 'app/views/configuration/CustomizedTabView';
+import 'appCssDir/common.css';
+import 'appCssDir/configuration.css';
 
 define([
     'jquery',
@@ -22,32 +24,34 @@ define([
             });
         },
 
+        events: {
+            "click ul.nav-tabs > li > a":  function(e) {
+                e.preventDefault();
+                const tabId = e.currentTarget.id.slice(0, -3);
+                this.changeTab(tabId);
+            }
+        },
+
         render: function () {
             const {unifiedConfig: {pages: {configuration}}} = configManager;
 
             const header = this._parseHeader(configuration);
-            $(".addonContainer").append(_.template(PageTitleTemplate)(header));
-            $(".addonContainer").append(_.template(TabTemplate));
+            this.$el.append(_.template(PageTitleTemplate)(header));
+            this.$el.append(_.template(TabTemplate));
 
             const tabs = this._parseTabs(configuration);
             this.renderTabs(tabs);
-            //Router for each tab
-            let Router = Backbone.Router.extend({
-                routes: {
-                    '*filter': 'changeTab'
-                },
-                changeTab: params => {
-                    if (params === null) return;
-                    this.tabName = params;
-                    $('.nav-tabs li').removeClass('active');
-                    $('#' + this.tabName + '-li').parent().addClass('active');
-                    $('.tab-content div').removeClass('active');
-                    $(`#${params}-tab`).addClass('active');
-                    this.stateModel.set('selectedTabId', `#${params}-tab`);
-                }
-            });
-            var router = new Router();
-            Backbone.history.start();
+            return this;
+        },
+
+        changeTab: function (params) {
+            if (params === null) return;
+            this.tabName = params;
+            $('.nav-tabs li').removeClass('active');
+            $('#' + this.tabName + '-li').parent().addClass('active');
+            $('.tab-content div').removeClass('active');
+            $(`#${params}-tab`).addClass('active');
+            this.stateModel.set('selectedTabId', `#${params}-tab`);
         },
 
         _parseHeader({title, description}) {
@@ -97,7 +101,7 @@ define([
         renderTabs: function (tabs) {
             let tabTitleTemplate = `
                     <li <% if (active) { %> class="active" <% } %>>
-                        <a href="#<%- token %>" id="<%- token %>-li">
+                        <a href="#" id="<%- token %>-li">
                             <%- _(title).t() %>
                         </a>
                     </li>
@@ -114,9 +118,9 @@ define([
                 } else if (this.tabName && this.tabName === token) {
                     active = true;
                 }
-                $(".nav-tabs").append(_.template(tabTitleTemplate)({title, token, active}));
-                $(".tab-content").append(_.template(tabContentTemplate)({token, active}));
-                $(this._generateTabId(tabs, title)).html(view.render().$el);
+                this.$(".nav-tabs").append(_.template(tabTitleTemplate)({title, token, active}));
+                this.$(".tab-content").append(_.template(tabContentTemplate)({token, active}));
+                this.$(this._generateTabId(tabs, title)).html(view.render().$el);
             });
         }
     });

@@ -57,7 +57,15 @@ export default Backbone.View.extend({
         removeErrorMsg(this.msgContainerId);
         addSavingMsg(this.msgContainerId, getFormattedMessage(108));
         addClickListener(this.msgContainerId, 'msg-loading');
-        this.dataStore.entry.content.set(this.stateModel.toJSON());
+        const newConfig = this.stateModel.toJSON();
+        this.props.entity.forEach(d => {
+            // Related JIRA ID: ADDON-12723
+            if(newConfig[d.field] === undefined) {
+                newConfig[d.field] = '';
+            }
+        });
+
+        this.dataStore.entry.content.set(newConfig);
         this.dataStore.save(null, {
             success: () => removeSavingMsg(this.msgContainerId),
             error: (model, response) => {
@@ -78,7 +86,8 @@ export default Backbone.View.extend({
             const {entity, name} = this.props;
             const refCollectionList = [];
             entity.forEach(d => {
-                if (content.get(d.field) === undefined && d.defaultValue) {
+                if (content.get(d.field) === undefined &&
+                        d.defaultValue !== undefined) {
                     this.stateModel.set(d.field, d.defaultValue);
                 } else if (content.get(d.field)) {
                     this.stateModel.set(d.field, content.get(d.field));

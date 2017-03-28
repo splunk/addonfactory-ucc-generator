@@ -22,19 +22,12 @@ app_name = app
 splk_root = "/static"
 app_root = "/".join([splk_root,"app",app_name])
 
-app_js = app_root + '/js'
-
 app_js_build = app_root + '/js/build'
 app_css_build = app_root + '/css'
 
-pageJSName = page+'_page'
-
 # optimized js and css
-common_css = "%s/common.css" % app_css_build
-page_css ="%s/%s.css" % (app_css_build, page)
 bootstrap_enterprise_css = "%s/bootstrap-enterprise.css" % app_css_build
-
-page_js = "%s/%s.js" % (app_js_build ,pageJSName)
+entry_js = "%s/%s.js" % (app_js_build ,'entry_page')
 %>\
 
 <!doctype html>
@@ -60,28 +53,26 @@ page_js = "%s/%s.js" % (app_js_build ,pageJSName)
         <meta name="msapplication-TileImage" content="${make_url('/static/img/bookmark/ms-tileicon-144x144.png')}">
 
         <link rel="stylesheet" type="text/css" media="all" href="${make_url(bootstrap_enterprise_css)}" />
-        <link rel="stylesheet" type="text/css" media="all" href="${make_url(common_css)}" />
-        <link rel="stylesheet" type="text/css" media="all" href="${make_url(page_css)}" />
         <script src="${make_url('/static/js/i18n.js')}"></script>
     </head>
     <body s:app="${app_name}">
         <div class="preload">
-            <div id="placeholder-splunk-bar">
-                <a href="/app/launcher/home" class="brand" title="splunk &gt; listen to your data">splunk<strong>
-                    &gt;</strong></a>
-            </div>
-            <div id="placeholder-app-bar">
-            </div>
         </div>
-
-        <div class="addonContainer"></div>
         <div class="dialog-placeholder"></div>
+        <!--load require js for dynamic component loading-->
+        <script src="${make_url('/static/js/contrib/require.js')}"></script>
+        <script type="text/javascript">
+            require.config({
+                baseUrl: "${make_url(app_js_build)}"
+            });
+        </script>
+
         <script src="${make_url('/config', _qs=config_qs)}"></script>
         <script src="${make_url('/i18ncatalog?autoload=1')}"></script>
         <script>
             __splunkd_partials__ = ${json_decode(splunkd)};
         </script>
         <script src="${make_url(app_js_build + '/common.js')}"></script>
-        <script src="${make_url(page_js)}"></script>
+        <script src="${make_url(entry_js)}"></script>
     </body>
 </html>

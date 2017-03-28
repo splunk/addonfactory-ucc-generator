@@ -12,6 +12,7 @@ from .configuration import (
     Configs,
     Settings,
     GlobalConfigError,
+    Configuration
 )
 from .schema import GlobalConfigSchema
 
@@ -49,6 +50,7 @@ class GlobalConfig(object):
             host=splunkd_info.hostname,
             port=splunkd_info.port,
         )
+        self._configuration = Configuration(self._client, self._schema)
         self._inputs = Inputs(self._client, self._schema)
         self._configs = Configs(self._client, self._schema)
         self._settings = Settings(self._client, self._schema)
@@ -65,4 +67,6 @@ class GlobalConfig(object):
     def settings(self):
         return self._settings
 
-
+    # add support for batch save of configuration payload
+    def save(self, payload):
+        return self._configuration.save(payload)

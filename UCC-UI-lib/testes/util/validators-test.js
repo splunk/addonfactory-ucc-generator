@@ -1,5 +1,5 @@
 import assert from 'assert';
-import {generateValidators} from 'app/util/validators';
+import {generateValidators} from 'app/util/modelValidators';
 
 describe('Validators generator testes', () => {
     describe('generateValidators should works', () => {

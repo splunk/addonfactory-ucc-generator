@@ -29,6 +29,12 @@ class RestField(object):
         self.converter = converter
 
     def validate(self, data, existing=None):
+        # update case: check required field in data
+        if existing and self.name in data and not data.get(self.name) and self.required:
+            raise RestError(
+                    400,
+                    'Required field is missing: %s' % self.name
+                )
         value = data.get(self.name)
         if not value and existing is None:
             if self.required:

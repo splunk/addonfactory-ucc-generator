@@ -151,6 +151,8 @@ define([
             }
             this.$('.control-placeholder').prepend($control);
             this.$el.addClass('form-small');
+            // Add class for automatic testing
+            this.$el.addClass(this.controlOptions.modelAttribute);
             return this;
         },
 
