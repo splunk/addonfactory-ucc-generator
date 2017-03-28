@@ -213,3 +213,12 @@ tr.more-info > td.details {
 .delete-prompt {
     margin: 20px;
 }
+
+.control.btn-group.btn-group-radio.shared-controls-syntheticradiocontrol.control-default {
+  width: 450px;
+  height: auto;
+}
+
+.control.btn-group.btn-group-radio.shared-controls-syntheticradiocontrol.control-default > button {
+  float: left;
+}
