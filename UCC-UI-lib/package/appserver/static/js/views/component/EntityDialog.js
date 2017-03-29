@@ -116,6 +116,66 @@ define([
             // We can't set onChange-hook up in the data fetching model. Since it will only be updated when user save form data.
             this.model.on('change', this.onStateChange.bind(this));
             this.initModel();
+
+            //Dependency field list
+            this.dependencyMap = {};
+            /*
+            {
+                'account': {
+                    'clear': ['sqs_queue'],
+                    'load': {'field': 'region', 'dependency': ['account']}
+                }
+            }
+            */
+            _.each(this.component.entity, e => {
+                const fields = _.get(e, ['options', 'dependencies']);
+                _.each(fields, (field, index) => {
+                    if (index === fields.length - 1) {
+                        _.set(
+                            this.dependencyMap,
+                            [field, 'load'],
+                            {'field': e.field, 'dependency': fields}
+                        );
+
+                    } else {
+                        let clearFields = _.get(
+                            this.dependencyMap,
+                            [field, 'clear'],
+                            []
+                        );
+                        if (clearFields.indexOf(e.field) === -1) {
+                            clearFields.push(e.field);
+                            _.set(
+                                this.dependencyMap,
+                                [field, 'clear'],
+                                clearFields
+                            );
+                        }
+                    }
+                });
+            });
+            //Add event listener for dependency fields
+            _.each(this.dependencyMap, (value, key) => {
+                this.model.on('change:' + key, () => {
+                    if (value.clear) {
+                        _.each(value.clear, f => {
+                            this.model.set(f, '');
+                        });
+                    }
+                    if (value.load) {
+                        let controlWrapper = _.find(this.children, child => {
+                            return child.controlOptions.modelAttribute === value.load.field;
+                        });
+                        if (controlWrapper) {
+                            let data = {};
+                            _.each(value.load.dependency, dependency => {
+                                data[dependency] = this.model.get(dependency);
+                            });
+                            controlWrapper.collection.fetch({data});
+                        }
+                    }
+                });
+            });
         },
 
         onStateChange: function() {
