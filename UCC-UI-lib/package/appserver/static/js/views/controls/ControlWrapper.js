@@ -32,7 +32,7 @@ define([
             const {
                 referenceName,
                 endpointUrl,
-                dependency,
+                dependencies,
                 autoCompleteFields,
                 items
             } = this.controlOptions;
