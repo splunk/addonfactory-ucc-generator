@@ -1,9 +1,11 @@
 define([
+    'jquery',
     'views/shared/controls/Control',
     'splunk.util',
     'lodash',
     'select2/select2'
 ], function (
+    $,
     Control,
     splunkUtils,
     _
