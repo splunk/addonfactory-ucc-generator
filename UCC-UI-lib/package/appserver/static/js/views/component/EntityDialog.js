@@ -369,7 +369,7 @@ define([
                 } else {
                     controlWrapper = new ControlWrapper({...e, controlOptions});
 
-                    if (e.display !== undefined) {
+                    if (e.options && e.options.display === false) {
                         controlWrapper.$el.css("display", "none");
                     }
                     this.children.push(controlWrapper);

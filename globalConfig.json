@@ -131,8 +131,10 @@
                             "label": "f5",
                             "type": "text",
                             "required": false,
-                            "display": false,
-                            "defaultValue": "test_f5"
+                            "defaultValue": "test_f5",
+                            "options": {
+                                "display": false
+                            }
                         }
                     ]
                 },
