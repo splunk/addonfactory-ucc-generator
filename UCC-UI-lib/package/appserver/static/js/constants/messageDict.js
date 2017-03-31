@@ -22,6 +22,7 @@ export default {
     20: 'configuration file should be pure JSON',
     21: 'duplicate {{args[0]}} keys is not allowed',
     22: 'Field "{{args[0]}}" must be less than 1024 characters',
+    23: '"name" feild must be provided for {{args[0]}} \'s entity in configuration file',
 
     /* general messages, range [100, 499]*/
     100: 'Create New Input',
