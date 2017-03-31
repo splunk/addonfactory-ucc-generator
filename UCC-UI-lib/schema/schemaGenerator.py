@@ -92,6 +92,7 @@ class Entity(DocumentWithoutAddProp):
     )
     required = BooleanField()
     encrypted = BooleanField()
+    display = BooleanField()
     validators = ArrayField(AnyOfField([
         DocumentField(StringValidator, as_ref=True),
         DocumentField(NumberValidator, as_ref=True),

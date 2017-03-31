@@ -130,7 +130,9 @@
                             "field": "f5",
                             "label": "f5",
                             "type": "text",
-                            "required": false
+                            "required": false,
+                            "display": false,
+                            "defaultValue": "test_f5"
                         }
                     ]
                 },

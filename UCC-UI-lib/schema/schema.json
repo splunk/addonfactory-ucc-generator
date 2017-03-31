@@ -120,6 +120,9 @@
                 "encrypted": {
                     "type": "boolean"
                 }, 
+                "display": {
+                    "type": "boolean"
+                }, 
                 "validators": {
                     "type": "array", 
                     "items": {
@@ -415,6 +418,9 @@
                     "type": "boolean"
                 }, 
                 "encrypted": {
+                    "type": "boolean"
+                }, 
+                "display": {
                     "type": "boolean"
                 }, 
                 "validators": {
