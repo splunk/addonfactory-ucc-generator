@@ -304,11 +304,11 @@ define([
             return deffer;
         },
 
-        _load_module: function(module, modelAttribute, model, index) {
+        _load_module: function(module, modelAttribute, model, serviceName, index) {
             var deferred = $.Deferred();
             requirejs(['custom/' + module],(CustomControl) => {
                 let el = document.createElement("DIV");
-                let control = new CustomControl(el, modelAttribute, model);
+                let control = new CustomControl(el, modelAttribute, model, serviceName);
                 this.children.splice(index, 0, control);
                 deferred.resolve(CustomControl);
             });
@@ -363,6 +363,7 @@ define([
                         e.options.src,
                         controlOptions.modelAttribute,
                         controlOptions.model,
+                        this.component.name,
                         index
                     );
                     this.deferreds.push(deferred);

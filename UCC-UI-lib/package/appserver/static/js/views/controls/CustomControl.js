@@ -1,9 +1,10 @@
 define([window.Lodash], function(Lodash) {
     class CustomComponent {
-        constructor(el, field, model) {
+        constructor(el, field, model, serviceName) {
             this.el = el;
             this.field = field;
             this.model = model;
+            this.serviceName = serviceName;
         }
         render() {
             console.log('render is called');
