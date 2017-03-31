@@ -135,7 +135,7 @@ define([
                     return model.entry.attributes.name === value;
                 }.bind(this), this);
                 if (matches !== undefined) {
-                    return getFormattedMessage(2, nameFieldLabel);
+                    return getFormattedMessage(2, nameFieldLabel, value);
                 }
             }
 
