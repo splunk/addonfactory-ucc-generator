@@ -5,7 +5,7 @@ define([
 ], function (
     $,
     _,
-    SplunkDsBase,
+    SplunkDsBase
 ) {
     return SplunkDsBase.extend({
         initialize: function (attributes, options) {

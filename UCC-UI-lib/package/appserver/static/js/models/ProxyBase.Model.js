@@ -3,7 +3,7 @@ define([
     'models/SplunkDBase',
 ], function (
     _,
-    SplunkDBase,
+    SplunkDBase
 ) {
     /**
     If a different app needs to be used, it
