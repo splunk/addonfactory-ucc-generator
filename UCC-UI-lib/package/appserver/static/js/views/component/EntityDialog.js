@@ -284,7 +284,7 @@ define([
                         }
                         this.collection.add(input);
                     }
-                    this.collection.trigger('change');
+                    // this.collection.trigger('change');
                     this.$("[role=dialog]").modal('hide');
                     this.undelegateEvents();
                 }).fail((model, response) => {

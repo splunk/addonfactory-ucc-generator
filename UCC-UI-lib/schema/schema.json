@@ -227,6 +227,9 @@
                         ]
                     }
                 }, 
+                "customRow": {
+                    "type": "object"
+                }, 
                 "actions": {
                     "type": "array", 
                     "items": {
@@ -554,6 +557,9 @@
                             "label"
                         ]
                     }
+                }, 
+                "customRow": {
+                    "type": "object"
                 }, 
                 "actions": {
                     "type": "array", 
