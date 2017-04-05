@@ -116,6 +116,66 @@ define([
             // We can't set onChange-hook up in the data fetching model. Since it will only be updated when user save form data.
             this.model.on('change', this.onStateChange.bind(this));
             this.initModel();
+
+            //Dependency field list
+            this.dependencyMap = {};
+            /*
+            {
+                'account': {
+                    'clear': ['sqs_queue'],
+                    'load': {'field': 'region', 'dependency': ['account']}
+                }
+            }
+            */
+            _.each(this.component.entity, e => {
+                const fields = _.get(e, ['options', 'dependencies']);
+                _.each(fields, (field, index) => {
+                    if (index === fields.length - 1) {
+                        _.set(
+                            this.dependencyMap,
+                            [field, 'load'],
+                            {'field': e.field, 'dependency': fields}
+                        );
+
+                    } else {
+                        let clearFields = _.get(
+                            this.dependencyMap,
+                            [field, 'clear'],
+                            []
+                        );
+                        if (clearFields.indexOf(e.field) === -1) {
+                            clearFields.push(e.field);
+                            _.set(
+                                this.dependencyMap,
+                                [field, 'clear'],
+                                clearFields
+                            );
+                        }
+                    }
+                });
+            });
+            //Add event listener for dependency fields
+            _.each(this.dependencyMap, (value, key) => {
+                this.model.on('change:' + key, () => {
+                    if (value.clear) {
+                        _.each(value.clear, f => {
+                            this.model.set(f, '');
+                        });
+                    }
+                    if (value.load) {
+                        let controlWrapper = _.find(this.children, child => {
+                            return child.controlOptions.modelAttribute === value.load.field;
+                        });
+                        if (controlWrapper) {
+                            let data = {};
+                            _.each(value.load.dependency, dependency => {
+                                data[dependency] = this.model.get(dependency);
+                            });
+                            controlWrapper.collection.fetch({data});
+                        }
+                    }
+                });
+            });
         },
 
         onStateChange: function() {
@@ -244,12 +304,12 @@ define([
             return deffer;
         },
 
-        _load_module: function(module, modelAttribute, model) {
+        _load_module: function(module, modelAttribute, model, serviceName, index) {
             var deferred = $.Deferred();
-            requirejs([module],(CustomControl) => {
+            requirejs(['custom/' + module],(CustomControl) => {
                 let el = document.createElement("DIV");
-                let control = new CustomControl(el, modelAttribute, model);
-                this.children.push(control);
+                let control = new CustomControl(el, modelAttribute, model, serviceName);
+                this.children.splice(index, 0, control);
                 deferred.resolve(CustomControl);
             });
             return deferred.promise();
@@ -279,7 +339,7 @@ define([
 
             this.children = [];
             this.deferreds = [];
-            _.each(entity, (e) => {
+            _.each(entity, (e, index) => {
                 let controlWrapper, controlOptions, deferred;
                 if (this.mode === ENTITY_DIALOG_MODE_CREATE) {
                     if (this.model.get(e.field) === undefined &&
@@ -302,13 +362,15 @@ define([
                     deferred = this._load_module(
                         e.options.src,
                         controlOptions.modelAttribute,
-                        controlOptions.model
+                        controlOptions.model,
+                        this.component.name,
+                        index
                     );
                     this.deferreds.push(deferred);
                 } else {
                     controlWrapper = new ControlWrapper({...e, controlOptions});
 
-                    if (e.display !== undefined) {
+                    if (e.options && e.options.display === false) {
                         controlWrapper.$el.css("display", "none");
                     }
                     this.children.push(controlWrapper);

@@ -1,13 +1,13 @@
 define([
     'lodash',
+    'jquery',
     'views/shared/controls/Control',
-    'select2/select2',
-    'jquery'
+    'select2/select2'
 ], function (
     _,
+    $,
     Control,
-    Select2,
-    $
+    Select2
 ) {
     return Control.extend({
         /**

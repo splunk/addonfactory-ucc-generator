@@ -32,16 +32,22 @@ define([
             const {
                 referenceName,
                 endpointUrl,
+                dependencies,
                 autoCompleteFields,
                 items
             } = this.controlOptions;
             if(referenceName || endpointUrl) {
+                // Add loading message
+                this.control.startLoading();
                 if (!restEndpointMap[referenceName]) {
                     this.collection = generateCollection(referenceName, {endpointUrl});
                 } else {
                     this.collection = generateCollection('', {'endpointUrl': restEndpointMap[referenceName]});
                 }
-                this.collection.fetch();
+                // fetch the data only when there is no dependency
+                if (!dependencies) {
+                    this.collection.fetch();
+                }
 
                 this.listenTo(this.collection, 'sync', () => {
                     if (type === 'singleSelect' || type === 'multipleSelect') {
@@ -164,26 +170,14 @@ define([
         },
 
         _filterByWhiteList: function(fields) {
-            let whiteRegex;
-            try {
-                whiteRegex = new RegExp(this.controlOptions.whiteList);
-            } catch(e) {
-                console.log("Invalid regex for option whiteList");
-                return fields;
-            }
+            const whiteRegex = new RegExp(this.controlOptions.whiteList);
             return _.filter(fields, (field) => {
                 return whiteRegex.test(field.value);
             });
         },
 
         _filterByBlackList: function(fields) {
-            let blackRegex;
-            try {
-                blackRegex = new RegExp(this.controlOptions.blackList)
-            } catch(e) {
-                console.log("Invalid regex for option blackList");
-                return fields;
-            }
+            const blackRegex = new RegExp(this.controlOptions.blackList);
             return _.filter(fields, (field) => {
                 return !blackRegex.test(field.value);
             });

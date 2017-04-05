@@ -44,22 +44,12 @@
                 "options": {
                     "type": "object", 
                     "properties": {
-                        "blackList": {
-                            "type": "string", 
-                            "maxLength": 350
-                        }, 
-                        "delimiter": {
-                            "type": "string", 
-                            "maxLength": 1
-                        }, 
                         "enable": {
                             "type": "boolean"
                         }, 
-                        "items": {
-                            "type": "array", 
-                            "items": {
-                                "$ref": "#/definitions/ValueLabelPair"
-                            }
+                        "endpointUrl": {
+                            "type": "string", 
+                            "maxLength": 350
                         }, 
                         "autoCompleteFields": {
                             "oneOf": [
@@ -93,24 +83,37 @@
                                 }
                             ]
                         }, 
+                        "placeholder": {
+                            "type": "string", 
+                            "maxLength": 250
+                        }, 
+                        "items": {
+                            "type": "array", 
+                            "items": {
+                                "$ref": "#/definitions/ValueLabelPair"
+                            }
+                        }, 
                         "whiteList": {
                             "type": "string", 
                             "maxLength": 350
+                        }, 
+                        "disableSearch": {
+                            "type": "boolean"
+                        }, 
+                        "blackList": {
+                            "type": "string", 
+                            "maxLength": 350
+                        }, 
+                        "delimiter": {
+                            "type": "string", 
+                            "maxLength": 1
                         }, 
                         "referenceName": {
                             "type": "string", 
                             "maxLength": 250
                         }, 
-                        "placeholder": {
-                            "type": "string", 
-                            "maxLength": 250
-                        }, 
-                        "disableSearch": {
+                        "display": {
                             "type": "boolean"
-                        }, 
-                        "endpointUrl": {
-                            "type": "string", 
-                            "maxLength": 350
                         }
                     }
                 }, 
@@ -341,22 +344,12 @@
                 "options": {
                     "type": "object", 
                     "properties": {
-                        "blackList": {
-                            "type": "string", 
-                            "maxLength": 350
-                        }, 
-                        "delimiter": {
-                            "type": "string", 
-                            "maxLength": 1
-                        }, 
                         "enable": {
                             "type": "boolean"
                         }, 
-                        "items": {
-                            "type": "array", 
-                            "items": {
-                                "$ref": "#/definitions/ValueLabelPair"
-                            }
+                        "endpointUrl": {
+                            "type": "string", 
+                            "maxLength": 350
                         }, 
                         "autoCompleteFields": {
                             "oneOf": [
@@ -390,24 +383,37 @@
                                 }
                             ]
                         }, 
+                        "placeholder": {
+                            "type": "string", 
+                            "maxLength": 250
+                        }, 
+                        "items": {
+                            "type": "array", 
+                            "items": {
+                                "$ref": "#/definitions/ValueLabelPair"
+                            }
+                        }, 
                         "whiteList": {
                             "type": "string", 
                             "maxLength": 350
+                        }, 
+                        "disableSearch": {
+                            "type": "boolean"
+                        }, 
+                        "blackList": {
+                            "type": "string", 
+                            "maxLength": 350
+                        }, 
+                        "delimiter": {
+                            "type": "string", 
+                            "maxLength": 1
                         }, 
                         "referenceName": {
                             "type": "string", 
                             "maxLength": 250
                         }, 
-                        "placeholder": {
-                            "type": "string", 
-                            "maxLength": 250
-                        }, 
-                        "disableSearch": {
+                        "display": {
                             "type": "boolean"
-                        }, 
-                        "endpointUrl": {
-                            "type": "string", 
-                            "maxLength": 350
                         }
                     }
                 }, 

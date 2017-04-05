@@ -1,10 +1,12 @@
 define([
+    'jquery',
     'views/shared/controls/Control',
     'splunk.util',
     'lodash',
     'select2/select2',
     'jquery'
 ], function (
+    $,
     Control,
     splunkUtils,
     _,
@@ -30,6 +32,8 @@ define([
             if (this.options.modelAttribute) {
                 this.$el.attr('data-name', this.options.modelAttribute);
             }
+            this.options.placeholder = this.options.placeholder || "";
+            this.placeholder = this.options.placeholder;
             this.delimiter = this.options.delimiter || ',';
         },
 
@@ -37,18 +41,22 @@ define([
             this.$el.html(this.compiledTemplate({
                 items: this.options.items
             }));
-            this.$('select').select2({
-                placeholder: this.options.placeholder,
-                formatNoMatches: function () {
-                    return 'No matches found';
-                },
-                value: this._value,
-                dropdownCssClass: 'empty-results-allowed',
-                separator: DELIMITER,
-                // SPL-77050, this needs to be false for use inside popdowns/modals
-                openOnEnter: false
-            })
-                .select2('val', this.stringToFieldList(this._value || ''));
+            // Select2 initialised before the DOM is ready.
+            // Use defer method to wait until the stack is clear.
+            _.defer(() => {
+                this.$('select').select2({
+                    placeholder: this.options.placeholder,
+                    formatNoMatches: function () {
+                        return 'No matches found';
+                    },
+                    value: this._value,
+                    dropdownCssClass: 'empty-results-allowed',
+                    separator: DELIMITER,
+                    // SPL-77050, this needs to be false for use inside popdowns/modals
+                    openOnEnter: false
+                })
+                    .select2('val', this.stringToFieldList(this._value || ''));
+            });
             return this;
         },
 
@@ -58,8 +66,12 @@ define([
             }
             render = render === undefined ? true : render;
             this.options.items = items;
-            if (render) {
-                this.render();
+            // Change the placeholder if changed
+            if (this.options.placeholder !== this.placeholder) {
+                this.options.placeholder = this.placeholder;
+                if (render) {
+                    this.render();
+                }
             }
         },
 
@@ -119,6 +131,11 @@ define([
                 return output.join(this.delimiter);
             }
             return output.join(this.delimiter);
+        },
+
+        startLoading: function () {
+            this.options.placeholder = 'Loading ...';
+            this.render();
         },
 
         events: {

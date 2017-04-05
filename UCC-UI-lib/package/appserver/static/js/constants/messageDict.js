@@ -2,7 +2,7 @@ export default {
     /* validation messages, range [0, 99] */
     0: 'Field "{{args[0]}}" is required',
     1: 'Field "{{args[0]}}" must be a string',
-    2: '"{{args[0]}}" is already in use',
+    2: '"{{args[0]}}" {{args[1]}} is already in use',
     3: '"default", ".", "..", string started with "_" and string including any one of ["*", "\\", "[", "]", "(", ")", "?", ":"] are reserved value which cannot be used for field "{{args[0]}}"',
     5: 'Field {{args[0]}} should be a positive number',
     6: 'Field {{args[0]}} is required',
@@ -22,6 +22,7 @@ export default {
     20: 'configuration file should be pure JSON',
     21: 'duplicate {{args[0]}} keys is not allowed',
     22: 'Field "{{args[0]}}" must be less than 1024 characters',
+    23: '"name" feild must be provided for {{args[0]}} \'s entity in configuration file',
 
     /* general messages, range [100, 499]*/
     100: 'Create New Input',

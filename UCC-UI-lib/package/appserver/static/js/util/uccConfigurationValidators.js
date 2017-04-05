@@ -108,9 +108,9 @@ function checkConfigDetails({pages: {configuration, inputs}}) {
         });
     };
 
-    const checkEntity = (entity, position) => {
+    const checkEntity = (entity, rootName, position, isCollectionType = true) => {
         _.values(entity).forEach((item, i) => {
-            const {validators} = item;
+            const {validators, options} = item;
 
             _.values(validators).forEach((d, j) => {
                 switch (d.type) {
@@ -127,24 +127,39 @@ function checkConfigDetails({pages: {configuration, inputs}}) {
                 }
                 appendError(errors, error, `${position}[${i}].validators[${j}]`);
             });
+
+            // Details check for entity options.
+            _.forEach(['blackList', 'whiteList'], d => {
+                if (options && options[d]) {
+                    error = parseRegexRawStr(options[d]).error;
+                    appendError(errors, error, `${position}[${i}].options.${d}`);
+                }
+            });
         });
+
+        if (isCollectionType) {
+            // Name field should be provided
+            if (_.every(_.values(entity), ({field}) => field !== 'name')) {
+                appendError(errors, getFormattedMessage(23, rootName));
+            }
+        }
     };
 
     if (inputs) {
         const {services} = inputs;
         services.forEach((service, i) => {
-            const {entity, options} = service;
+            const {entity, options, name} = service;
             checkBaseOptions(options, `${position}.inputs.services[${i}].options`);
-            checkEntity(entity, `${position}.inputs.services[${i}].entity`);
+            checkEntity(entity, name, `${position}.inputs.services[${i}].entity`);
         });
         errors = errors.concat(checkDupKeyValues(inputs, true, `${position}.inputs`));
     }
 
     if(configuration) {
         configuration.tabs.forEach((tab, i) => {
-            const {entity, options} = tab;
+            const {entity, options, name} = tab;
             checkBaseOptions(options, `${position}.configuration.tabs[${i}].options`);
-            checkEntity(entity, `${position}.configuration.tabs[${i}].entity`);
+            checkEntity(entity, name, `${position}.configuration.tabs[${i}].entity`, false);
         });
         errors = errors.concat(checkDupKeyValues(configuration, false, `${position}.configuration`));
     }

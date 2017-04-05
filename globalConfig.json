@@ -130,7 +130,11 @@
                             "field": "f5",
                             "label": "f5",
                             "type": "text",
-                            "required": false
+                            "required": false,
+                            "defaultValue": "test_f5",
+                            "options": {
+                                "display": false
+                            }
                         }
                     ]
                 },
@@ -394,6 +398,24 @@
                                 "referenceName": "account"
                             },
                             "required": true
+                        },
+                        {
+                            "field": "region",
+                            "label": "Region",
+                            "type": "singleSelect",
+                            "options": {
+                                "endpointUrl": "splunk_ta_uccexample_region",
+                                "dependencies": ["account"]
+                            }
+                        },
+                        {
+                            "field": "sqs_queue",
+                            "label": "SQS Queue Name",
+                            "type": "singleSelect",
+                            "options": {
+                                "endpointUrl": "splunk_ta_uccexample_sqs_queue",
+                                "dependencies": ["account", "region"]
+                            }
                         },
                         {
                             "field": "singleSelectTest",
