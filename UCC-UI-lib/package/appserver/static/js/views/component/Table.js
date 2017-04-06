@@ -74,7 +74,7 @@ define([
 
         _load_module: function(module, component, model, index) {
             const deferred = $.Deferred();
-            requirejs(['custom/' + module],(CustomControl) => {
+            __non_webpack_require__(['custom/' + module],(CustomControl) => {
                 const el = document.createElement("tr");
                 // set className and style
                 el.className = 'more-info';
