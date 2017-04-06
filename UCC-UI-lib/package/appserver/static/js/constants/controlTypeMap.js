@@ -3,6 +3,7 @@ import CheckboxControl from 'views/shared/controls/SyntheticCheckboxControl';
 import RadioControl from 'views/shared/controls/SyntheticRadioControl';
 import SingleInputControl from 'app/views/controls/SingleInputControl';
 import MultiInputControl from 'app/views/controls/MultiSelectInputControl';
+import PlaceholderControl from 'app/views/controls/PlaceholderControl';
 
 export default {
     'text': TextControl,
@@ -11,5 +12,6 @@ export default {
     'checkbox': CheckboxControl,
     'radio': RadioControl,
     'singleSelect': SingleInputControl,
-    'multipleSelect': MultiInputControl
+    'multipleSelect': MultiInputControl,
+    'placeholder': PlaceholderControl
 };
