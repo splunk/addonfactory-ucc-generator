@@ -8,8 +8,7 @@ define([
     $,
     Control,
     splunkUtils,
-    _,
-    Select2
+    _
 ) {
     /**
      *

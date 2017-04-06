@@ -6,8 +6,7 @@ define([
 ], function (
     _,
     $,
-    Control,
-    Select2
+    Control
 ) {
     return Control.extend({
         /**
