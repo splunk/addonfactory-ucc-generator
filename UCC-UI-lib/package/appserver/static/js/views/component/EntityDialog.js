@@ -284,7 +284,7 @@ define([
                         }
                         this.collection.add(input);
                     }
-                    this.collection.trigger('change');
+                    // this.collection.trigger('change');
                     this.$("[role=dialog]").modal('hide');
                     this.undelegateEvents();
                 }).fail((model, response) => {
@@ -306,7 +306,7 @@ define([
 
         _load_module: function(module, modelAttribute, model, serviceName, index) {
             var deferred = $.Deferred();
-            requirejs(['custom/' + module],(CustomControl) => {
+            __non_webpack_require__(['custom/' + module],(CustomControl) => {
                 let el = document.createElement("DIV");
                 let control = new CustomControl(el, modelAttribute, model, serviceName);
                 this.children.splice(index, 0, control);

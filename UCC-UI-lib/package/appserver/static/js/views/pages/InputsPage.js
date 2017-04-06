@@ -256,6 +256,7 @@ define([
                     enableBulkActions: false,
                     showActions: true,
                     enableMoreInfo: true,
+                    customRow: this.unifiedConfig.pages.inputs.table.customRow,
                     component: this.unifiedConfig.pages.inputs
                 });
                 this.$el.append(_.template(InputsPageTemplate)(this.inputsPageTemplateData));

@@ -82,6 +82,7 @@ export default Backbone.View.extend({
                 collection: this.dataStore,
                 showActions: true,
                 enableMoreInfo: props.table.moreInfo ? true : false,
+                customRow: props.table.customRow,
                 component: props
             });
 

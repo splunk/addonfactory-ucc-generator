@@ -16,25 +16,24 @@ define([
 ) {
     return BaseView.extend({
         initialize: function (options) {
-            this.stateModel = options.stateModel;
-            this.collection = options.collection;
-            this.enableBulkActions = options.enableBulkActions;
-            this.enableMoreInfo = options.enableMoreInfo;
-            this.showActions = options.showActions;
-            this.dispatcher = options.dispatcher;
-            this.component = options.component;
-
+            _.extend(this, options);
+            this.expandRows = [];
             //Expand the detail row
-            this.children.tableRowToggle = new TableRowToggleView({el: this.el, collapseOthers: true });
+            this.children.tableRowToggle = new TableRowToggleView({
+                el: this.el,
+                collapseOthers: true
+            });
             //Table Header
             var tableHeaders = [],
-                // header,
                 TableHead;
             if (this.enableMoreInfo) {
-                tableHeaders.push({label: 'i', className: 'col-info', html: '<i class="icon-info"></i>'});
+                tableHeaders.push({
+                    label: 'i',
+                    className: 'col-info',
+                    html: '<i class="icon-info"></i>'
+                });
             }
 
-            // header = this.component.header;
             _.each(this.component.table.header, h => {
                 tableHeaders.push({
                     "label": _(h.label).t(),
@@ -42,18 +41,12 @@ define([
                     "sortKey": h.field
                 });
             });
-            // _.each(this.component.table.header, function (h) {
-            //     let item = {};
-            //     item.label = _(h.label).t();
-            //     item.className = 'col-' + h.field;
-            //     item.sortKey = h.field;
-            //     // if (h.sort) {
-            //     //     item.sortKey = h.field;
-            //     // }
-            //     tableHeaders.push(item);
-            // });
+
             if (this.showActions) {
-                tableHeaders.push({label: _('Actions').t(), className: 'col-action'});
+                tableHeaders.push({
+                    label: _('Actions').t(),
+                    className: 'col-action'
+                });
             }
             //TODO: implement bulk action
             TableHead = TableHeadView;
@@ -79,10 +72,31 @@ define([
             }
         },
 
+        _load_module: function(module, component, model, index) {
+            const deferred = $.Deferred();
+            __non_webpack_require__(['custom/' + module],(CustomControl) => {
+                const el = document.createElement("tr");
+                // set className and style
+                el.className = 'more-info';
+                el.className += (index % 2) ? ' even' : ' odd';
+                el.style.display = "none";
+                const cols = component.table.header.length + 1;
+                el.innerHTML = `
+                    <td class="details" colspan="${cols}">
+                    </td>
+                `;
+
+                const control = new CustomControl(el, component, model);
+                this.expandRows.push(control);
+                deferred.resolve(CustomControl);
+            });
+            return deferred.promise();
+        },
+
         rowsFromCollection: function () {
             return _.flattenDeep(
-                this.collection.map(function (model, i) {
-                    var result = [];
+                this.collection.map((model, i) => {
+                    let result = [];
                     result.push(new TableRow({
                         dispatcher: this.dispatcher,
                         model: {
@@ -97,32 +111,56 @@ define([
                         index: i
                     }));
                     if (this.enableMoreInfo) {
-                        result.push(new MoreInfo({
-                            dispatcher: this.dispatcher,
-                            model: {
-                                entity: model,
-                                stateModel: this.stateModel,
-                                component: this.component
-                            },
-                            index: i
-                        }));
+                        if (this.customRow) {
+                            this.deferred = this._load_module(
+                                this.customRow.src,
+                                this.component,
+                                model,
+                                i
+                            );
+                        } else {
+                            result.push(new MoreInfo({
+                                model: {
+                                    entity: model,
+                                    component: this.component
+                                },
+                                index: i
+                            }));
+                        }
                     }
                     return result;
-                }, this)
+                })
             );
         },
+
         _render: function () {
-            _(this.children.rows).each(row => {
-                this.$el.find('tbody:first').append(row.render().$el);
-            }, this);
+            $.when(this.deferred).done(() => {
+                // Merge table row and more info row
+                if (this.expandRows &&
+                        this.children.rows.length === this.expandRows.length) {
+                    this.children.rows = _.flattenDeep(_.map(this.children.rows, (row, i) => {
+                        return [row, this.expandRows[i]];
+                    }));
+                }
+
+                _.each(this.children.rows, row => {
+                    row = row.render();
+                    if (row.$el) {
+                        this.$el.find('tbody:first').append(row.$el);
+                    } else {
+                        this.$el.find('tbody:first').append(row.el);
+                    }
+                });
+            });
         },
+
         renderRows: function () {
-            _(this.children.rows).each(function (row) {
-                row.remove();
-            }, this);
+            this.$el.find('tbody:first').empty();
+            this.expandRows = [];
             this.children.rows = this.rowsFromCollection();
             this._render();
         },
+
         render: function () {
             if (!this.el.innerHTML) {
                 this.$el.append(this.compiledTemplate({}));
@@ -131,11 +169,11 @@ define([
             this._render();
             return this;
         },
+
         template: [
             '<table class="table table-chrome table-striped table-row-expanding table-listing">',
             '<tbody class="app-listings"></tbody>',
             '</table>'
         ].join('')
     });
-
 });

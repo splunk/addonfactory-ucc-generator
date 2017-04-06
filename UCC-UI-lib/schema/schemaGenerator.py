@@ -134,6 +134,7 @@ class Table(DocumentWithoutAddProp):
             "label": StringField(required=True, max_length=30)
         }
     ), required=True)
+    customRow = DictField(required=False)
 
 
 class InputsTable(Table):
