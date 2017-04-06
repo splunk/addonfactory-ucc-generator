@@ -391,6 +391,14 @@
                             }
                         },
                         {
+                            "field": "method",
+                            "label": "Method",
+                            "type": "placeholder",
+                            "options": {
+                                "defaultValue": "SQS"
+                            }
+                        },
+                        {
                             "field": "account",
                             "label": "Account",
                             "type": "singleSelect",

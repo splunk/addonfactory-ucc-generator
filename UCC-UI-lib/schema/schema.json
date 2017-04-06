@@ -20,7 +20,8 @@
                         "singleSelect", 
                         "checkbox", 
                         "multipleSelect", 
-                        "radio"
+                        "radio", 
+                        "placeholder"
                     ]
                 }, 
                 "help": {
@@ -320,7 +321,8 @@
                         "singleSelect", 
                         "checkbox", 
                         "multipleSelect", 
-                        "radio"
+                        "radio", 
+                        "placeholder"
                     ]
                 }, 
                 "help": {
