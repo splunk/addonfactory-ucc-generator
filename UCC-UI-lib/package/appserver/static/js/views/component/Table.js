@@ -18,6 +18,7 @@ define([
         initialize: function (options) {
             _.extend(this, options);
             this.expandRows = [];
+            this.deferreds = [];
             //Expand the detail row
             this.children.tableRowToggle = new TableRowToggleView({
                 el: this.el,
@@ -69,6 +70,8 @@ define([
         addWithOffsetChange: function () {
             if (this.collection._url === undefined) {
                 this.dispatcher.trigger('add-input');
+            } else {
+                this.renderRows();
             }
         },
 
@@ -85,8 +88,14 @@ define([
                     <td class="details" colspan="${cols}">
                     </td>
                 `;
+                let id_str = model.id.split('/');
+                let serviceName = null;
+                if (id_str.length >= 2 && this.restRoot) {
+                    serviceName = id_str[id_str.length - 2];
+                    serviceName = serviceName.replace(this.restRoot + '_', '');
+                }
 
-                const control = new CustomControl(el, component, model);
+                const control = new CustomControl(el, component, model, serviceName);
                 this.expandRows.push(control);
                 deferred.resolve(CustomControl);
             });
@@ -112,12 +121,12 @@ define([
                     }));
                     if (this.enableMoreInfo) {
                         if (this.customRow) {
-                            this.deferred = this._load_module(
+                            this.deferreds.push(this._load_module(
                                 this.customRow.src,
                                 this.component,
                                 model,
                                 i
-                            );
+                            ));
                         } else {
                             result.push(new MoreInfo({
                                 model: {
@@ -134,7 +143,7 @@ define([
         },
 
         _render: function () {
-            $.when(this.deferred).done(() => {
+            $.when(...this.deferreds).done(() => {
                 // Merge table row and more info row
                 if (this.expandRows &&
                         this.children.rows.length === this.expandRows.length) {
