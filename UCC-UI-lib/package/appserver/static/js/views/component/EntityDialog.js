@@ -57,7 +57,7 @@ define([
                     this.encryptedFields.push(e.field);
                 }
             });
-
+            this.customValidators = [];
             this.model = new Backbone.Model({});
 
             const {entity, name, options: comOpt} = this.component;
@@ -226,6 +226,15 @@ define([
         },
 
         saveModel: function () {
+            // add custom validation to real_model
+            (this.customValidators || []).forEach((obj) => {
+                for (let prop in obj) {
+                    if(obj.hasOwnProperty(prop)){
+                        this.real_model.addValidation(prop, obj[prop]);
+                    }
+                }
+            });
+
             var input = this.real_model,
                 new_json = this.model.toJSON(),
                 original_json = input.entry.content.toJSON(),
@@ -309,6 +318,12 @@ define([
             __non_webpack_require__(['custom/' + module],(CustomControl) => {
                 let el = document.createElement("DIV");
                 let control = new CustomControl(el, modelAttribute, model, serviceName);
+                // add custom validation
+                if (typeof control.validation === 'function') {
+                    this.customValidators.push({
+                        [control.field]: control.validation
+                    });
+                }
                 this.children.splice(index, 0, control);
                 deferred.resolve(CustomControl);
             });
