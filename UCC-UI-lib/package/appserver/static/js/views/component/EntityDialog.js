@@ -137,7 +137,6 @@ define([
                     let changeFields = this.dependencyMap.get(field);
                     if (changeFields) {
                         changeFields[e.field] = fields;
-                        this.dependencyMap.set(field, changeFields);
                     } else {
                         this.dependencyMap.set(field, {[e.field]: fields});
                     }
@@ -148,31 +147,33 @@ define([
             for (let [key, value] of this.dependencyMap) {
                 this.model.on('change:' + key, () => {
                     for (let loadField in value) {
-                        if (value.hasOwnProperty(loadField)) {
-                            let controlWrapper = _.find(this.children, child => {
-                                return child.controlOptions.modelAttribute === loadField;
-                            });
-                            if (controlWrapper) {
-                                let data = {},
-                                    load = true;
-                                _.each(value[loadField], dependency => {
-                                    let required = !!_.find(this.component.entity, e => {
-                                        return e.field === dependency;
-                                    }).required;
-                                    if (required && !this.model.get(dependency)) {
-                                        // clear the control
-                                        this.model.set(loadField, '');
-                                        load = false;
-                                    } else {
-                                        data[dependency] = this.model.get(dependency, '');
-                                    }
-                                });
-                                if (load) {
-                                    // Add loading message
-                                    controlWrapper.control.startLoading();
-                                    controlWrapper.collection.fetch({data});
-                                }
+                        if (!value.hasOwnProperty(loadField)) {
+                            continue;
+                        }
+                        let controlWrapper = _.find(this.children, child => {
+                            return child.controlOptions.modelAttribute === loadField;
+                        });
+                        if (!controlWrapper) {
+                            continue;
+                        }
+                        let data = {},
+                            load = true;
+                        _.each(value[loadField], dependency => {
+                            let required = !!_.find(this.component.entity, e => {
+                                return e.field === dependency;
+                            }).required;
+                            if (required && !this.model.get(dependency)) {
+                                // clear the control
+                                this.model.set(loadField, '');
+                                load = false;
+                            } else {
+                                data[dependency] = this.model.get(dependency, '');
                             }
+                        });
+                        if (load) {
+                            // Add loading message
+                            controlWrapper.control.startLoading();
+                            controlWrapper.collection.fetch({data});
                         }
                     }
                 });
