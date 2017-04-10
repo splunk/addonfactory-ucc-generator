@@ -88,6 +88,8 @@ define([
                     <td class="details" colspan="${cols}">
                     </td>
                 `;
+                // The serviceName is extracted from model id which comes from
+                // util/backboneHelpers.js: generateModel
                 let id_str = model.id.split('/');
                 let serviceName = null;
                 if (id_str.length >= 2 && this.restRoot) {
