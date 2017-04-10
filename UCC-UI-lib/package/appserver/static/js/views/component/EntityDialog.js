@@ -118,64 +118,65 @@ define([
             this.initModel();
 
             //Dependency field list
-            this.dependencyMap = {};
-            /*
-            {
+            this.dependencyMap = new Map();
+            /**
                 'account': {
-                    'clear': ['sqs_queue'],
-                    'load': {'field': 'region', 'dependency': ['account']}
+                    'region': [
+                        'account'
+                    ],
+                    'SQS': [
+                        'account',
+                        'region'
+                    ]
                 }
-            }
-            */
+            **/
             _.each(this.component.entity, e => {
                 const fields = _.get(e, ['options', 'dependencies']);
-                _.each(fields, (field, index) => {
-                    if (index === fields.length - 1) {
-                        _.set(
-                            this.dependencyMap,
-                            [field, 'load'],
-                            {'field': e.field, 'dependency': fields}
-                        );
 
+                _.each(fields, (field, index) => {
+                    let changeFields = this.dependencyMap.get(field);
+                    if (changeFields) {
+                        changeFields[e.field] = fields;
+                        this.dependencyMap.set(field, changeFields);
                     } else {
-                        let clearFields = _.get(
-                            this.dependencyMap,
-                            [field, 'clear'],
-                            []
-                        );
-                        if (clearFields.indexOf(e.field) === -1) {
-                            clearFields.push(e.field);
-                            _.set(
-                                this.dependencyMap,
-                                [field, 'clear'],
-                                clearFields
-                            );
-                        }
+                        this.dependencyMap.set(field, {[e.field]: fields});
                     }
                 });
             });
-            //Add event listener for dependency fields
-            _.each(this.dependencyMap, (value, key) => {
+
+            // Add change event listener
+            for (let [key, value] of this.dependencyMap) {
                 this.model.on('change:' + key, () => {
-                    if (value.clear) {
-                        _.each(value.clear, f => {
-                            this.model.set(f, '');
-                        });
-                    }
-                    if (value.load) {
-                        let controlWrapper = _.find(this.children, child => {
-                            return child.controlOptions.modelAttribute === value.load.field;
-                        });
-                        if (controlWrapper) {
-                            let data = {};
-                            _.each(value.load.dependency, dependency => {
-                                data[dependency] = this.model.get(dependency);
+                    for (let loadField in value) {
+                        if (value.hasOwnProperty(loadField)) {
+                            let controlWrapper = _.find(this.children, child => {
+                                return child.controlOptions.modelAttribute === loadField;
                             });
-                            controlWrapper.collection.fetch({data});
+                            if (controlWrapper) {
+                                let data = {},
+                                    load = true;
+                                _.each(value[loadField], dependency => {
+                                    let required = !!_.find(this.component.entity, e => {
+                                        return e.field === dependency;
+                                    }).required;
+                                    if (required && !this.model.get(dependency)) {
+                                        // clear the control
+                                        this.model.set(loadField, '');
+                                        load = false;
+                                    } else {
+                                        data[dependency] = this.model.get(dependency, '');
+                                    }
+                                });
+                                if (load) {
+                                    // Add loading message
+                                    controlWrapper.control.startLoading();
+                                    controlWrapper.collection.fetch({data});
+                                }
+                            }
                         }
                     }
                 });
-            });
+            }
         },
 
         onStateChange: function() {
