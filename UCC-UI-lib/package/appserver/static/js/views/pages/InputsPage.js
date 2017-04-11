@@ -257,7 +257,8 @@ define([
                     showActions: true,
                     enableMoreInfo: true,
                     customRow: this.unifiedConfig.pages.inputs.table.customRow,
-                    component: this.unifiedConfig.pages.inputs
+                    component: this.unifiedConfig.pages.inputs,
+                    restRoot: this.unifiedConfig.meta.restRoot
                 });
                 this.$el.append(_.template(InputsPageTemplate)(this.inputsPageTemplateData));
                 this.$el.append(this.caption.render().$el);

@@ -249,7 +249,7 @@ define([
                     new_json[e.field] = '';
                 }
             });
-            input.entry.content.set(new_json);
+            input.entry.content.set(new_json, {silent: true});
             input.attr_labels = attr_labels;
 
             this.save(input, original_json);
