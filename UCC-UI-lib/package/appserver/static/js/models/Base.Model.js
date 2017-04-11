@@ -105,9 +105,8 @@ define([
             return !!this._isClone;
         },
 
-        nameValidator: function (attr) {
-            var value, matches;
-            value = this.entry.content.attributes[attr];
+        nameValidator: function (attr, value) {
+            let matches;
             // name is immutable once created... at least as far as we're concerned
             if (!this.isNew()) {
                 return undefined;
@@ -167,7 +166,8 @@ define([
         _all_validator: function (validator, attr) {
             var ret, fn;
             if (_.isFunction(validator)) {
-                ret = validator(attr);
+                let value = this.entry.content.get(attr);
+                ret = validator(attr, value);
                 if (ret) {
                     return ret;
                 }
@@ -208,23 +208,22 @@ define([
             }
         },
 
-        positiveNumberValidator: function (attr) {
+        positiveNumberValidator: function (attr, value) {
             var ret = this.convertNumericAttr(attr);
             if (undefined === ret || isNaN(ret)) {
                 return getFormattedMessage(5, this._getAttrLabel(attr));
             }
         },
 
-        nonEmptyString: function (attr) {
-            var val = this.entry.content.get(attr);
-            if (!val || !String(val).replace(/^\s+|\s+$/gm, '')) {
+        nonEmptyString: function (attr, value) {
+            if (!value || !String(value).replace(/^\s+|\s+$/gm, '')) {
                 return getFormattedMessage(6, this._getAttrLabel(attr));
             }
         },
 
         addValidation: function (name, validator) {
             const {validation} = this.entry.content;
-            if(!validation[name]) {
+            if (!validation[name]) {
                 validation[name] = [validator.bind(this)];
             } else {
                 validation[name] = [...validation[name], validator.bind(this)];
@@ -235,12 +234,11 @@ define([
             delete this.entry.content.validation[name];
         },
 
-        validRegexString: function (attr) {
-            var val = this.entry.content.get(attr),
-                regex,
+        validRegexString: function (attr, value) {
+            var regex,
                 isValid;
             try {
-                regex = new RegExp(val);
+                regex = new RegExp(value);
                 if (regex !== undefined) {
                     isValid = true;
                 }
@@ -251,14 +249,6 @@ define([
             if (!isValid) {
                 return getFormattedMessage(7, this._getAttrLabel(attr));
             }
-        },
-
-        emptyOr: function (furtherValidator) {
-            return function (attr) {
-                if (!this.nonEmptyString(attr)) {
-                    return furtherValidator.bind(this)(attr);
-                }
-            }.bind(this);
         },
 
         validNumberInRange: function (start, end) {
