@@ -89,10 +89,22 @@ define([
         },
 
         _updateSelect: function() {
-            let dic = _.map(this.collection.models, model => ({
-                label: model.entry.attributes.name,
-                value: model.entry.attributes.name
-            }));
+            let dic = {};
+            if (this.collection.length === 1 &&
+                    this.collection.models[0].entry.attributes.name === '__response__') {
+                let response = this.collection.models[0].entry.content.attributes;
+                dic = _.map(_.filter(Object.entries(response), ([value, label]) => {
+                    return value && label;
+                }), ([value, label]) => {
+                    return {value, label};
+                });
+            } else {
+                dic = _.map(this.collection.models, model => ({
+                    label: model.entry.attributes.name,
+                    value: model.entry.attributes.name
+                }));
+            }
+
             // filter result with white list
             if (this.controlOptions.whiteList) {
                 dic = this._filterByWhiteList(dic);
