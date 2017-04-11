@@ -37,8 +37,6 @@ define([
                 items
             } = this.controlOptions;
             if(referenceName || endpointUrl) {
-                // Add loading message
-                this.control.startLoading();
                 if (!restEndpointMap[referenceName]) {
                     this.collection = generateCollection(referenceName, {endpointUrl});
                 } else {
@@ -46,6 +44,8 @@ define([
                 }
                 // fetch the data only when there is no dependency
                 if (!dependencies) {
+                    // Add loading message
+                    this.control.startLoading();
                     this.collection.fetch();
                 }
 
