@@ -91,12 +91,12 @@ define([
         _updateSelect: function() {
             let dic = _.map(this.collection.models, model => {
                 let labelField = this.controlOptions.labelField,
-                    value = model.entry.attributes.name,
+                    value = model.entry.get('name'),
                     label;
-                if (labelField && model.entry.content.attributes[labelField]) {
-                    label = model.entry.content.attributes[labelField];
+                if (labelField && model.entry.content.get(labelField)) {
+                    label = model.entry.content.get(labelField);
                 } else {
-                    label = model.entry.attributes.name;
+                    label = model.entry.get('name');
                 }
                 return {label, value};
             });
