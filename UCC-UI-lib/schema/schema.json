@@ -109,6 +109,10 @@
                             "type": "string", 
                             "maxLength": 1
                         }, 
+                        "labelField": {
+                            "type": "string", 
+                            "maxLength": 250
+                        }, 
                         "referenceName": {
                             "type": "string", 
                             "maxLength": 250
@@ -412,6 +416,10 @@
                         "delimiter": {
                             "type": "string", 
                             "maxLength": 1
+                        }, 
+                        "labelField": {
+                            "type": "string", 
+                            "maxLength": 250
                         }, 
                         "referenceName": {
                             "type": "string", 

@@ -416,7 +416,8 @@
                             "type": "singleSelect",
                             "options": {
                                 "endpointUrl": "splunk_ta_uccexample_region",
-                                "dependencies": ["account"]
+                                "dependencies": ["account"],
+                                "labelField": "region"
                             }
                         },
                         {
