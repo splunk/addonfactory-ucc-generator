@@ -88,7 +88,8 @@ class Entity(DocumentWithoutAddProp):
             "referenceName": StringField(max_length=250),
             "enable": BooleanField(),
             "placeholder": StringField(max_length=250),
-            "display": BooleanField()
+            "display": BooleanField(),
+            "labelField": StringField(max_length=250)
         }
     )
     required = BooleanField()

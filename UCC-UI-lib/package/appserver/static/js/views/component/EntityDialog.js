@@ -151,7 +151,8 @@ define([
                             continue;
                         }
                         let controlWrapper = _.find(this.children, child => {
-                            return child.controlOptions.modelAttribute === loadField;
+                            return child.controlOptions &&
+                                child.controlOptions.modelAttribute === loadField;
                         });
                         if (!controlWrapper) {
                             continue;

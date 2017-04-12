@@ -89,21 +89,17 @@ define([
         },
 
         _updateSelect: function() {
-            let dic = {};
-            if (this.collection.length === 1 &&
-                    this.collection.models[0].entry.attributes.name === '__response__') {
-                let response = this.collection.models[0].entry.content.attributes;
-                dic = _.map(_.filter(Object.entries(response), ([value, label]) => {
-                    return value && label;
-                }), ([value, label]) => {
-                    return {value, label};
-                });
-            } else {
-                dic = _.map(this.collection.models, model => ({
-                    label: model.entry.attributes.name,
-                    value: model.entry.attributes.name
-                }));
-            }
+            let dic = _.map(this.collection.models, model => {
+                let labelField = this.controlOptions.labelField,
+                    value = model.entry.get('name'),
+                    label;
+                if (labelField && model.entry.content.get(labelField)) {
+                    label = model.entry.content.get(labelField);
+                } else {
+                    label = model.entry.get('name');
+                }
+                return {label, value};
+            });
 
             // filter result with white list
             if (this.controlOptions.whiteList) {
