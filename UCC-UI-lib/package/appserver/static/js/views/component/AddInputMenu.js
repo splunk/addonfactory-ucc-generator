@@ -5,7 +5,7 @@ import {
     MODE_EDIT,
     MODE_DELETE
 } from 'app/constants/modes';
-import PAGE_STYLE from 'app/constants/pageStyle';
+import {PAGE_STYLE} from 'app/constants/pageStyle';
 
 define([
     'lodash',

@@ -8,7 +8,7 @@ import {
     MODE_CREATE,
     MODE_EDIT
 } from 'app/constants/modes';
-import PAGE_STYLE from 'app/constants/pageStyle';
+import {PAGE_STYLE} from 'app/constants/pageStyle';
 
 const INPUT_PAGE = 'inputs';
 const CONFIGURATION_PAGE = 'configuration';

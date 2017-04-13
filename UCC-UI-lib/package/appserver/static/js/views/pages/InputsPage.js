@@ -292,7 +292,7 @@ define([
                         this.editmenu = new AddInputMenu({
                             collection: this.inputs,
                             dispatcher: this.dispatcher,
-                            services: this.unifiedConfig.pages.inputs.services,
+                            services: this.services,
                             navModel: this.navModel
                         });
 
