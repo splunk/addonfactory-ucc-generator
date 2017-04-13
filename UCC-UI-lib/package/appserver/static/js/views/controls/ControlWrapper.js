@@ -149,6 +149,7 @@ define([
             this.$el.html(this.compiledTemplate({
                 label: this.label,
                 tooltip: this.tooltip,
+                required: this.required,
                 help: this.help
             }));
             if (this.tooltip) {
