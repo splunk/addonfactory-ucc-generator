@@ -17,6 +17,8 @@ import {
     addClickListener
 } from 'app/util/promptMsgController';
 import {getFormattedMessage} from 'app/util/messageUtil';
+import CreateInputPageTemplate from 'app/views/pages/CreateInputPage.html';
+import 'appCssDir/createInput.css';
 
 define([
     'jquery',
@@ -42,14 +44,17 @@ define([
     ControlWrapper
 ) {
     return Backbone.View.extend({
+        className: 'create-input-section',
+
         initialize: function (options) {
-            this.unifiedConfig = configManager.unifiedConfig;
             this.appData = configManager.getAppData();
+            // Component, navModel, mode, name
             _.extend(this, options);
 
             //guid of current dialog
             this.curWinId = Util.guid();
             this.curWinSelector = '.' + this.curWinId;
+
             //Encrypted field list
             this.encryptedFields = [];
             _.each(this.component.entity, e => {
@@ -57,7 +62,7 @@ define([
                     this.encryptedFields.push(e.field);
                 }
             });
-            this.customValidators = [];
+
             this.model = new Backbone.Model({});
 
             const {entity, name, options: comOpt} = this.component;
@@ -72,21 +77,22 @@ define([
                 validators
             });
 
-            if (!options.model) { //Create mode
+            if (this.mode === MODE_CREATE ||
+                    (this.mode === MODE_EDIT && !options.model) ||
+                    (this.mode === MODE_CLONE && !options.model)) {
                 this.mode = MODE_CREATE;
                 this.model = new Backbone.Model({});
                 this.real_model = new InputType(null, {
-                    appData: this.appData,
-                    collection: this.collection
+                    appData: this.appData
                 });
-            } else if (this.mode === MODE_EDIT) {
+            } else if (this.mode === MODE_EDIT && options.model) {
                 this.model = options.model.entry.content.clone();
                 this.model.set({name: options.model.entry.get("name")});
                 this.real_model = options.model;
                 (validators || []).forEach(({fieldName, validator}) => {
                     this.real_model.addValidation(fieldName, validator);
                 });
-            } else if (this.mode === MODE_CLONE) {
+            } else if (this.mode === MODE_CLONE && options.model) {
                 this.model = options.model.entry.content.clone();
 
                 // Clean encrypted fields
@@ -104,8 +110,7 @@ define([
                 }
                 this.cloneName = options.model.entry.get("name");
                 this.real_model = new InputType(null, {
-                    appData: this.appData,
-                    collection: this.collection
+                    appData: this.appData
                 });
             }
             this.real_model.on("invalid", err => {
@@ -113,74 +118,70 @@ define([
                 addClickListener(this.curWinSelector, 'msg-error');
             });
 
-            /*
-                We can't set onChange-hook up in the data fetching model.
-                Since it will only be updated when user save form data.
-            */
+            // We can't set onChange-hook up in the data fetching model.
+            // Since it will only be updated when user save form data.
             this.model.on('change', this.onStateChange.bind(this));
             this.initModel();
 
             //Dependency field list
-            this.dependencyMap = new Map();
-            /**
+            this.dependencyMap = {};
+            /*
+            {
                 'account': {
-                    'region': [
-                        'account'
-                    ],
-                    'SQS': [
-                        'account',
-                        'region'
-                    ]
+                    'clear': ['sqs_queue'],
+                    'load': {'field': 'region', 'dependency': ['account']}
                 }
-            **/
+            }
+            */
             _.each(this.component.entity, e => {
                 const fields = _.get(e, ['options', 'dependencies']);
-
                 _.each(fields, (field, index) => {
-                    let changeFields = this.dependencyMap.get(field);
-                    if (changeFields) {
-                        changeFields[e.field] = fields;
+                    if (index === fields.length - 1) {
+                        _.set(
+                            this.dependencyMap,
+                            [field, 'load'],
+                            {'field': e.field, 'dependency': fields}
+                        );
+
                     } else {
-                        this.dependencyMap.set(field, {[e.field]: fields});
+                        let clearFields = _.get(
+                            this.dependencyMap,
+                            [field, 'clear'],
+                            []
+                        );
+                        if (clearFields.indexOf(e.field) === -1) {
+                            clearFields.push(e.field);
+                            _.set(
+                                this.dependencyMap,
+                                [field, 'clear'],
+                                clearFields
+                            );
+                        }
                     }
                 });
             });
-
-            // Add change event listener
-            for (let [key, value] of this.dependencyMap) {
+            //Add event listener for dependency fields
+            _.each(this.dependencyMap, (value, key) => {
                 this.model.on('change:' + key, () => {
-                    for (let loadField in value) {
-                        if (!value.hasOwnProperty(loadField)) {
-                            continue;
-                        }
+                    if (value.clear) {
+                        _.each(value.clear, f => {
+                            this.model.set(f, '');
+                        });
+                    }
+                    if (value.load) {
                         let controlWrapper = _.find(this.children, child => {
-                            return child.controlOptions.modelAttribute === loadField;
+                            return child.controlOptions.modelAttribute === value.load.field;
                         });
-                        if (!controlWrapper) {
-                            continue;
-                        }
-                        let data = {},
-                            load = true;
-                        _.each(value[loadField], dependency => {
-                            let required = !!_.find(this.component.entity, e => {
-                                return e.field === dependency;
-                            }).required;
-                            if (required && !this.model.get(dependency)) {
-                                // clear the control
-                                this.model.set(loadField, '');
-                                load = false;
-                            } else {
-                                data[dependency] = this.model.get(dependency, '');
-                            }
-                        });
-                        if (load) {
-                            // Add loading message
-                            controlWrapper.control.startLoading();
+                        if (controlWrapper) {
+                            let data = {};
+                            _.each(value.load.dependency, dependency => {
+                                data[dependency] = this.model.get(dependency);
+                            });
                             controlWrapper.collection.fetch({data});
                         }
                     }
                 });
-            }
+            });
         },
 
         onStateChange: function() {
@@ -196,10 +197,6 @@ define([
                 const onChangeHook = parseFuncRawStr(onChangeHookRawStr);
                 onChangeHook(formData, changedField, widgetsIdDict);
             }
-        },
-
-        modal: function () {
-            this.$("[role=dialog]").modal({backdrop: 'static', keyboard: false});
         },
 
         submitTask: function () {
@@ -231,15 +228,6 @@ define([
         },
 
         saveModel: function () {
-            // add custom validation to real_model
-            (this.customValidators || []).forEach((obj) => {
-                for (let prop in obj) {
-                    if(obj.hasOwnProperty(prop)){
-                        this.real_model.addValidation(prop, obj[prop]);
-                    }
-                }
-            });
-
             var input = this.real_model,
                 new_json = this.model.toJSON(),
                 original_json = input.entry.content.toJSON(),
@@ -254,7 +242,7 @@ define([
                     new_json[e.field] = '';
                 }
             });
-            input.entry.content.set(new_json, {silent: true});
+            input.entry.content.set(new_json);
             input.attr_labels = attr_labels;
 
             this.save(input, original_json);
@@ -279,30 +267,10 @@ define([
                 addSavingMsg(this.curWinSelector, getFormattedMessage(108));
                 addClickListener(this.curWinSelector, 'msg-loading');
                 deffer.done(() => {
-                    //Add model to collection
-                    if (this.mode !== MODE_EDIT) {
-                        if (this.collection.paging.get('total') !== undefined) {
-                            _.each(this.collection.models, (model) => {
-                                model.paging.set(
-                                    'total',
-                                    this.collection.paging.get('total') + 1
-                                );
-                            });
-                            //Trigger collection page change event to refresh the count in table caption
-                            this.collection.paging.set(
-                                'total',
-                                this.collection.paging.get('total') + 1
-                            );
-                        } else {
-                            console.log('Could not get total count for collection');
-                        }
-                        this.collection.add(input);
-                    }
-                    // this.collection.trigger('change');
-                    this.$("[role=dialog]").modal('hide');
                     this.undelegateEvents();
+                    // Navigate to inputs table view
+                    this.navModel.navigator.navigateToRoot();
                 }).fail((model, response) => {
-                    console.log("error happended.");
                     input.entry.content.set(original_json);
                     input.trigger('change');
                     // re-enable when failed
@@ -323,12 +291,6 @@ define([
             __non_webpack_require__(['custom/' + module],(CustomControl) => {
                 let el = document.createElement("DIV");
                 let control = new CustomControl(el, modelAttribute, model, serviceName);
-                // add custom validation
-                if (typeof control.validation === 'function') {
-                    this.customValidators.push({
-                        [control.field]: control.validation
-                    });
-                }
                 this.children.splice(index, 0, control);
                 deferred.resolve(CustomControl);
             });
@@ -336,22 +298,26 @@ define([
         },
 
         render: function () {
-            var templateMap = {
-                    [MODE_CREATE]: AddDialogTemplate,
-                    [MODE_EDIT]: EditDialogTemplate,
-                    [MODE_CLONE]: CloneDialogTemplate
-                },
-                template = _.template(templateMap[this.mode]),
+            let entity = this.component.entity,
+                jsonData = {};
+            if (this.mode === MODE_CREATE) {
                 jsonData = {
-                    title: this.component.title
-                },
-                entity = this.component.entity;
-
+                    title: 'Create New Input',
+                    btnValue: 'Save'
+                }
+            } else if (this.mode === MODE_EDIT) {
+                jsonData = {
+                    title: 'Update Input',
+                    btnValue: 'Update'
+                }
+            } else if (this.mode === MODE_CLONE) {
+                jsonData = {
+                    title: 'Clone Input',
+                    btnValue: 'Save'
+                }
+            }
+            let template = _.template(CreateInputPageTemplate);
             this.$el.html(template(jsonData));
-
-            this.$("[role=dialog]").on('hidden.bs.modal', () => {
-                this.undelegateEvents();
-            });
 
             this.children = [];
             this.deferreds = [];
@@ -410,7 +376,11 @@ define([
                 }
                 this.$("input[type=submit]").on("click", this.submitTask.bind(this));
                 //Add guid to current dialog
-                this.$(".modal-dialog").addClass(this.curWinId);
+                this.$el.addClass(this.curWinId);
+            });
+
+            this.$(".cancel-btn").on("click", () => {
+                this.navModel.navigator.navigateToRoot();
             });
             return this;
         }

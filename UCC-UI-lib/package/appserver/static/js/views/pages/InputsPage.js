@@ -40,6 +40,8 @@ define([
             this.inputsPageTemplateData.singleInput = this.unifiedConfig.pages.inputs.services.length === 1;
             this.inputsPageTemplateData.buttonText = getFormattedMessage(100);
             this.addonName = this.unifiedConfig.meta.name;
+
+            this.navModel = options.navModel;
             //state model
             this.stateModel = new Backbone.Model();
             this.stateModel.set({
@@ -258,7 +260,8 @@ define([
                     enableMoreInfo: true,
                     customRow: this.unifiedConfig.pages.inputs.table.customRow,
                     component: this.unifiedConfig.pages.inputs,
-                    restRoot: this.unifiedConfig.meta.restRoot
+                    restRoot: this.unifiedConfig.meta.restRoot,
+                    navModel: this.navModel
                 });
                 this.$el.append(_.template(InputsPageTemplate)(this.inputsPageTemplateData));
                 this.$el.append(this.caption.render().$el);
@@ -274,8 +277,7 @@ define([
                         var dlg = new EntityDialog({
                             el: $(".dialog-placeholder"),
                             collection: this.inputs,
-                            component: this.unifiedConfig.pages.inputs.services[0],
-                            isInput: true
+                            component: this.unifiedConfig.pages.inputs.services[0]
                         }).render();
                         dlg.modal();
                     });
@@ -290,7 +292,8 @@ define([
                         this.editmenu = new AddInputMenu({
                             collection: this.inputs,
                             dispatcher: this.dispatcher,
-                            services: this.unifiedConfig.pages.inputs.services
+                            services: this.unifiedConfig.pages.inputs.services,
+                            navModel: this.navModel
                         });
 
                         $('body').append(this.editmenu.render().el);
@@ -298,6 +301,7 @@ define([
                     });
                 }
             });
+            return this;
         },
 
         fetchAllCollection: function () {

@@ -94,8 +94,7 @@ export default Backbone.View.extend({
                 new EntityDialog({
                     el: $('.dialog-placeholder'),
                     collection: this.dataStore,
-                    component: props,
-                    isInput: false
+                    component: props
                 }).render().modal();
             });
         };

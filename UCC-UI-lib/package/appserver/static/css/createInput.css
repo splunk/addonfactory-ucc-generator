@@ -1,0 +1,74 @@
+.create-input-section {
+    min-height: 500px;
+    position: relative;
+    background-color: #eee;
+}
+
+.create-input-header {
+    height: 50px;
+    padding-left: 20px;
+    padding-top: 20px;
+}
+
+.create-input-header > .title {
+    font-size: 20px;
+    font-weight: lighter
+}
+
+.create-input-body {
+    width: 100%;
+    white-space: nowrap;
+}
+
+.create-input-body > .blank-column {
+    display: inline-block;
+    margin-right: -3px;
+    margin-bottom: -3px;
+    width: 20%;
+    box-sizing: border-box;
+    min-height: 500px;
+}
+
+.create-input-body > .content {
+    display: inline-block;
+    vertical-align: top;
+    /* Dismiss the blank using inline-block*/
+    margin-right: -3px;
+    margin-bottom: -3px;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+    min-height: 500px;
+    width: 60%;
+    min-width: 665px;
+    box-sizing: border-box;
+    background-color: #fff;
+}
+
+.create-input-footer {
+    position: absolute;
+    width: 100%;
+    bottom: -50px;
+    height: 50px;
+    border-top: 1px solid #ccc;
+    background-color: #eee;
+}
+
+.create-input-footer > .buttons {
+    position: relative;
+    padding-top: 10px;
+}
+
+.create-input-footer > .buttons > .btn {
+    width: 65px;
+}
+
+.create-input-footer > .buttons > .cancel-btn {
+    position: absolute;
+    margin-left: 60%;
+}
+
+.create-input-footer > .buttons > .btn-primary {
+    position: absolute;
+    margin-left: calc(60% + 85px);
+}

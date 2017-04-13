@@ -3,7 +3,7 @@
     "main": "",
     "authors": [],
     "dependencies": {
-        "SplunkWebCore": "=6.5.0",
+        "SplunkWebCore": "=6.5.1612",
         "select2": "=3.5.3",
         "lodash": "4.16.4"
     }

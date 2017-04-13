@@ -1,0 +1,20 @@
+<div class="create-input-header">
+    <div class="title"><%- title %></div>
+</div>
+<form class="form form-horizontal form-small" role="form" onsubmit="return false;" autocomplete="off">
+    <div class="create-input-body">
+        <div class="blank-column"></div>
+        <div class="content">
+            <div class="modal-body">
+                <input type="password" style="display: none"/>
+            </div>
+        </div>
+        <div class="blank-column"></div>
+    </div>
+    <div class="create-input-footer">
+        <div class="buttons">
+            <button type="button" class="btn btn-default cancel-btn"><%- _("Cancel").t() %></button>
+            <input type="submit" class="btn btn-primary submit-btn submit-dialog" value=<%- _(btnValue).t() %> />
+        </div>
+    </div>
+</form>

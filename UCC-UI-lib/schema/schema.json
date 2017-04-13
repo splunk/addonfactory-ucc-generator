@@ -483,6 +483,13 @@
                     "items": {
                         "type": "object", 
                         "properties": {
+                            "style": {
+                                "type": "string", 
+                                "enum": [
+                                    "page", 
+                                    "dialog"
+                                ]
+                            }, 
                             "entity": {
                                 "type": "array", 
                                 "items": {

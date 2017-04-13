@@ -174,7 +174,8 @@ class InputsPage(DocumentWithoutAddProp):
             "name": StringField(required=True, pattern="^[0-9a-zA-Z][0-9a-zA-Z_-]*$", max_length=50),
             "title": StringField(required=True, max_length=100),
             "entity": ArrayField(DocumentField(InputsEntity, as_ref=True), required=True),
-            "options": DocumentField(Hooks, as_ref=True)
+            "options": DocumentField(Hooks, as_ref=True),
+            "style": StringField(required=False, enum=["page", "dialog"])
         }
     ), required=True)
 

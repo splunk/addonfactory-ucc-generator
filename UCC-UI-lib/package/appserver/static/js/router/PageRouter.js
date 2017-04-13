@@ -1,4 +1,14 @@
 import {getFormattedMessage} from 'app/util/messageUtil';
+import CreateInputPage from 'app/views/pages/CreateInputPage';
+import {configManager} from 'app/util/configManager';
+import {generateModel, generateCollection} from 'app/util/backboneHelpers';
+import NavigatorModel from 'app/models/NavigatorModel';
+import {
+    MODE_CLONE,
+    MODE_CREATE,
+    MODE_EDIT
+} from 'app/constants/modes';
+import PAGE_STYLE from 'app/constants/pageStyle';
 
 const INPUT_PAGE = 'inputs';
 const CONFIGURATION_PAGE = 'configuration';
@@ -30,17 +40,80 @@ define([
             BaseRouter.prototype.initialize.apply(this, arguments);
             // flag that indicate whether header has been rendered
             this._headerReady = false;
+
+            var navigatorModel = new NavigatorModel({
+                application: this.model.application
+            });
+            this.model = _.extend(this.model, {
+                application: this.model.application,
+                navigator: navigatorModel
+            });
+
+            // Navigator change event
+            this.model.navigator.on('change:url', (model, nextUrl) =>  {
+                this.navigate(nextUrl, {trigger: true, replace: false});
+            });
+
         },
 
-        _renderHeader: function() {
+        _renderHeader: function () {
             $('.preload').replaceWith(this.pageView.el);
+
+        },
+
+        _parseQueryString: function (queryString) {
+            let params = {};
+            if (!_.isString(queryString)){
+                return params;
+            }
+            let queryParts = decodeURI(queryString).split(/&/g);
+            _.each(queryParts, (value) => {
+                let parts = value.split('=');
+                if (parts.length >= 1) {
+                    let val;
+                    if (parts.length === 2){
+                        val = parts[1];
+                    }
+                    params[parts[0]] = val;
+                }
+            });
+            return params;
+        },
+
+        /*
+            Get input configuration
+        */
+        _getComponent: function (service) {
+            let services = configManager.unifiedConfig.pages.inputs.services;
+            return _.find(services, s => {
+                return s.name === service;
+            });
+        },
+
+        _getInputView: function (params) {
+            if (!_.isEmpty(params) && params.service && params.action) {
+                let component = this._getComponent(params.service);
+                if (!_.isUndefined(component) &&
+                        component['style'] === PAGE_STYLE) {
+                    return new CreateInputPage({
+                        component: component,
+                        navModel: this.model,
+                        mode: params.action,
+                        model: this.model.dataModel
+                    });
+                }
+            }
+            return new InputsPageView({
+                navModel: this.model
+            });
         },
 
         /*
          THE ENTRY POINT
          */
         _route: function (locale, app, page, queryString) {
-            var args = arguments;
+            let args = arguments,
+                params = this._parseQueryString(queryString);
             BaseRouter.prototype.page.apply(this, args);
             this.deferreds.pageViewRendered.done(() => {
                 if (!this._headerReady) {
@@ -49,9 +122,8 @@ define([
                 }
                 if (page === INPUT_PAGE) {
                     this.setPageTitle(getFormattedMessage(116));
-                    const inputsPageView = new InputsPageView();
-                    inputsPageView.render();
-                    $(".main-section-body").html(inputsPageView.el);
+                    this.currentView = this._getInputView(params);
+                    $(".main-section-body").html(this.currentView.render().$el);
                 } else if (page === CONFIGURATION_PAGE) {
                     this.setPageTitle(getFormattedMessage(117));
                     const configurationPageView = new ConfigurationPageView();
