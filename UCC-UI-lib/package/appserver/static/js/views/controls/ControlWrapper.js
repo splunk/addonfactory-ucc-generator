@@ -217,6 +217,9 @@ define([
                         <% if (tooltip) { %>
                             <a href="#" class="tooltip-link"><%- _("?").t() %></a>
                         <% } %>
+                        <% if (required) { %>
+                            <span class="required">*</span>
+                        <% } %>
                     </p>
                     </div>
                 <% } %>
