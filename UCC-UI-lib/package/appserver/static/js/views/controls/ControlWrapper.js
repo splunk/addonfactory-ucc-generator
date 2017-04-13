@@ -149,7 +149,6 @@ define([
             this.$el.html(this.compiledTemplate({
                 label: this.label,
                 tooltip: this.tooltip,
-                required: this.required,
                 help: this.help
             }));
             if (this.tooltip) {
@@ -217,9 +216,6 @@ define([
                         <%- _(label).t() %>
                         <% if (tooltip) { %>
                             <a href="#" class="tooltip-link"><%- _("?").t() %></a>
-                        <% } %>
-                        <% if (required) { %>
-                            <span class="required">*</span>
                         <% } %>
                     </p>
                     </div>

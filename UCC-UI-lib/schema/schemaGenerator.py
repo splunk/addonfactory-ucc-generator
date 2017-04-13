@@ -63,6 +63,7 @@ class Entity(DocumentWithoutAddProp):
     label = StringField(required=True, max_length=30)
     type = StringField(required=True, enum=["custom", "text", "singleSelect", "checkbox", "multipleSelect", "radio", "placeholder"])
     help = StringField(max_length=200)
+    tooltip = StringField(max_length=250)
     defaultValue = OneOfField([
         NumberField(),
         StringField(max_length=250),
