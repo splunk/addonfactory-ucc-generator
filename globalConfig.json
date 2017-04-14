@@ -317,7 +317,10 @@
                     },
                     {
                         "field": "interval",
-                        "label": "Interval"
+                        "label": "Interval",
+                        "customCell": {
+                            "src": "customCell"
+                        }
                     },
                     {
                         "field": "index",
@@ -348,9 +351,6 @@
                     {
                         "field": "interval",
                         "label": "Interval",
-                        "customCell": {
-                            "src": "customCell"
-                        }
                     },
                     {
                         "field": "index",
