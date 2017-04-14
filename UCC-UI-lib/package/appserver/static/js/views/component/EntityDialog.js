@@ -17,6 +17,7 @@ import {
     addClickListener
 } from 'app/util/promptMsgController';
 import {getFormattedMessage} from 'app/util/messageUtil';
+import GroupSection from 'app/views/component/GroupSection';
 
 define([
     'jquery',
@@ -398,12 +399,50 @@ define([
                 _.each(this.children, (child) => {
                     // prevent auto complete for password
                     if (child.controlOptions && child.controlOptions.password) {
-                        this.$('.modal-body').prepend(
-                            `<input type="password" id="${child.controlOptions.modelAttribute}" style="display: none"/>`
-                        );
+                        this.$('.modal-body').prepend(`
+                            <input type="password"
+                            id="${child.controlOptions.modelAttribute}"
+                            style="display: none"/>
+                        `);
                     }
+                });
+
+                // Group configuration
+                let groups = [];
+                if (this.component.groups) {
+                    _.each(this.component.groups, group => {
+                        const {label, options} = group;
+                        let controls = [];
+                        _.each(group.fields, field => {
+                            let control = _.find(this.children, child => {
+                                return child.controlOptions.modelAttribute ===
+                                    field;
+                            });
+                            if (control) {
+                                controls.push(control);
+                            }
+                            // Remove the control from this.children
+                            _.remove(this.children, child => {
+                                return child.controlOptions.modelAttribute ===
+                                    field;
+                            });
+                        })
+                        groups.push(new GroupSection({
+                            label,
+                            options,
+                            controls
+                        }));
+                    });
+                    _.each(groups, group => {
+                        this.$('.modal-body').append(group.render().$el);
+                    });
+                }
+                // Render the controls in this.children
+                _.each(this.children, (child) => {
                     let childComponent = child.render();
-                    this.$('.modal-body').append(childComponent.$el || childComponent.el);
+                    this.$('.modal-body').append(
+                        childComponent.$el || childComponent.el
+                    );
                 });
 
                 //Disable the name field in edit mode
