@@ -1,5 +1,6 @@
 /*global define*/
 define([
+    'jquery',
     'lodash',
     'app/views/component/TableRow',
     'app/views/component/MoreInfo',
@@ -7,6 +8,7 @@ define([
     'views/shared/TableHead',
     'views/shared/delegates/TableRowToggle'
 ], function (
+    $,
     _,
     TableRow,
     MoreInfo,

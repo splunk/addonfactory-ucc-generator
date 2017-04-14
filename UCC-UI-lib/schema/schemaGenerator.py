@@ -126,13 +126,16 @@ class Table(DocumentWithoutAddProp):
     moreInfo = ArrayField(DictField(
         properties={
             "field": StringField(required=True, pattern="^\w+$"),
-            "label": StringField(required=True, max_length=30)
+            "label": StringField(required=True, max_length=30),
+            "mapping": DictField(required=False)
         }
     ))
     header = ArrayField(DictField(
         properties={
             "field": StringField(required=True, pattern="^\w+$"),
-            "label": StringField(required=True, max_length=30)
+            "label": StringField(required=True, max_length=30),
+            "mapping": DictField(required=False),
+            "customCell": DictField(required=False)
         }
     ), required=True)
     customRow = DictField(required=False)
