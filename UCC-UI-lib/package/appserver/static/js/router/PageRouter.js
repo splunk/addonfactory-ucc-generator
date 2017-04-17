@@ -90,6 +90,10 @@ define([
             });
         },
 
+        _clearFooter: function () {
+            $("footer").remove();
+        },
+
         _getInputView: function (params) {
             if (!_.isEmpty(params) && params.service && params.action) {
                 let component = this._getComponent(params.service);
@@ -120,6 +124,7 @@ define([
                     this._renderHeader();
                     this._headerReady = true;
                 }
+                this._clearFooter();
                 if (page === INPUT_PAGE) {
                     this.setPageTitle(getFormattedMessage(116));
                     this.currentView = this._getInputView(params);
