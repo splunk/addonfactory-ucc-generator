@@ -17,7 +17,7 @@ export default Backbone.View.extend({
         let compiled = _.template(GroupSectionTemplate);
         this.$el.html(compiled({
             label: this.label,
-            isExpandable: this.isExpandable
+            isExpandable: this.isExpandable ? 'expandable' : ''
         }));
         this.renderContent();
         this._onHeaderClick();
@@ -36,23 +36,24 @@ export default Backbone.View.extend({
     },
 
     _onHeaderClick: function () {
-        if (this.isExpandable) {
-            if (this.expand) {
-                //hide section content
-                this.$('.section-header i')
-                    .removeClass('icon-chevron-down')
-                    .addClass('icon-chevron-right');
-                this.$('.section-body').hide();
-                this.expand = false;
-            }
-            else {
-                //show section content
-                this.$('.section-header i')
-                    .removeClass('icon-chevron-right')
-                    .addClass('icon-chevron-down');
-                this.$('.section-body').show();
-                this.expand = true;
-            }
+        if (!this.isExpandable) {
+            return;
+        }
+        if (this.expand) {
+            //hide section content
+            this.$('.section-header i')
+                .removeClass('icon-chevron-down')
+                .addClass('icon-chevron-right');
+            this.$('.section-body').hide();
+            this.expand = false;
+        }
+        else {
+            //show section content
+            this.$('.section-header i')
+                .removeClass('icon-chevron-right')
+                .addClass('icon-chevron-down');
+            this.$('.section-body').show();
+            this.expand = true;
         }
     }
 });

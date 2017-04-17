@@ -1,8 +1,4 @@
-<% if (isExpandable) { %>
-    <div class="section-header expandable">
-<% } else { %>
-    <div class="section-header">
-<% } %>
+<div class="section-header <%- isExpandable %>">
     <% if (label) { %>
     <p class="section-label">
         <% if (isExpandable) { %><i class="icon-chevron-right"></i><% } %>
