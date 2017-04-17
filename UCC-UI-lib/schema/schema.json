@@ -491,19 +491,27 @@
                     "items": {
                         "type": "object", 
                         "properties": {
-                            "entity": {
-                                "type": "array", 
-                                "items": {
-                                    "$ref": "#/definitions/InputsEntity"
-                                }
-                            }, 
-                            "options": {
-                                "$ref": "#/definitions/Hooks"
+                            "style": {
+                                "type": "string", 
+                                "enum": [
+                                    "page", 
+                                    "dialog"
+                                ]
                             }, 
                             "name": {
                                 "type": "string", 
                                 "pattern": "^[0-9a-zA-Z][0-9a-zA-Z_-]*$", 
                                 "maxLength": 50
+                            }, 
+                            "title": {
+                                "type": "string", 
+                                "maxLength": 100
+                            }, 
+                            "entity": {
+                                "type": "array", 
+                                "items": {
+                                    "$ref": "#/definitions/InputsEntity"
+                                }
                             }, 
                             "groups": {
                                 "type": "array", 
@@ -538,15 +546,14 @@
                                     ]
                                 }
                             }, 
-                            "title": {
-                                "type": "string", 
-                                "maxLength": 100
+                            "options": {
+                                "$ref": "#/definitions/Hooks"
                             }
                         }, 
                         "required": [
-                            "entity", 
                             "name", 
-                            "title"
+                            "title", 
+                            "entity"
                         ]
                     }
                 }

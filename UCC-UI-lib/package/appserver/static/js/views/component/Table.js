@@ -117,7 +117,8 @@ define([
                             enableMoreInfo: this.enableMoreInfo,
                             showActions: true,
                             collection: this.collection,
-                            component: this.component
+                            component: this.component,
+                            navModel: this.navModel
                         },
                         index: i
                     }));

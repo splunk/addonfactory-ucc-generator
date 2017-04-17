@@ -1,3 +1,12 @@
+import CreateInputPage from 'app/views/pages/CreateInputPage';
+import {
+    MODE_CREATE,
+    MODE_CLONE,
+    MODE_EDIT,
+    MODE_DELETE
+} from 'app/constants/modes';
+import {PAGE_STYLE} from 'app/constants/pageStyle';
+
 define([
     'lodash',
     'jquery',
@@ -16,9 +25,8 @@ define([
         initialize: function (options) {
             _.bindAll(this, 'create');
             PopTartView.prototype.initialize.apply(this, arguments);
-            this.collection = options.collection;
-            this.dispatcher = options.dispatcher;
-            this.services = options.services;
+            // collection, dispatcher, services, navModel
+            _.extend(this, options);
         },
 
         events: {
@@ -26,14 +34,11 @@ define([
         },
 
         render: function () {
-            var html = '<ul class="first-group">',
-                service;
-            for (service in this.services) {
-                if (this.services.hasOwnProperty(service)) {
-                    html += '<li><a href="#" class="' + service + '">' +
-                        _(this.services[service].title).t() + '</a></li>';
-                }
-            }
+            let html = '<ul class="first-group">';
+            _.each(this.services, service => {
+                html += '<li><a href="#" class="' + service.name + '">' +
+                        _(service.title).t() + '</a></li>';
+            });
             html += '</ul>';
 
             this.el.innerHTML = PopTartView.prototype.template_menu;
@@ -45,13 +50,22 @@ define([
 
         create: function (e) {
             this.serviceType = $(e.target).attr('class');
-            var dlg = new EntityDialog({
-                el: $(".dialog-placeholder"),
-                collection: this.collection,
-                component: this.services[this.serviceType],
-                isInput: true
-            }).render();
-            dlg.modal();
+            let component = _.find(this.services, service => {
+                return service.name === this.serviceType;
+            })
+            if (component && component.style === PAGE_STYLE) {
+                this.navModel.navigator.navigateToPage(
+                    this.serviceType,
+                    MODE_CREATE
+                );
+            } else {
+                let dlg = new EntityDialog({
+                    el: $(".dialog-placeholder"),
+                    collection: this.collection,
+                    component: component
+                }).render();
+                dlg.modal();
+            }
             this.hide();
         }
     });

@@ -188,6 +188,7 @@ class InputsPage(DocumentWithoutAddProp):
                     "field": ArrayField(StringField(required=True, pattern="^\w+$"))
                 }
             ), required=False),
+            "style": StringField(required=False, enum=["page", "dialog"])
         }
     ), required=True)
 
