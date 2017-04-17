@@ -29,14 +29,9 @@ define([
         initialize: function (options) {
             BaseView.prototype.initialize.apply(this, arguments);
             this.$el.addClass((this.options.index % 2) ? 'even' : 'odd');
-
-            this.collection = this.model.collection;
-            this.stateModel = this.model.stateModel;
-            this.allCollection = this.model.allCollection;
-            this.enableBulkActions = this.model.enableBulkActions;
-            this.enableMoreInfo = this.model.enableMoreInfo;
-            this.showActions = this.model.showActions;
-            this.component = this.model.component;
+            // collection, stateModel, allCollection, enableBulkActions,
+            // enableMoreInfo, showActions, component
+            _.extend(this, this.model);
 
             if (options.dispatcher) {
                 this.dispatcher = options.dispatcher;
@@ -79,7 +74,8 @@ define([
                 component: this.component,
                 dispatcher: this.dispatcher,
                 rowDispatcher: this.rowDispatcher,
-                deleteTag: ''
+                deleteTag: '',
+                navModel: this.navModel
             });
             $('body').append(this.editmenu.render().el);
             this.editmenu.show($target);

@@ -2,6 +2,13 @@ import {configManager} from 'app/util/configManager';
 import {
     parseErrorMsg
 } from 'app/util/promptMsgController';
+import {
+    MODE_CLONE,
+    MODE_EDIT,
+    MODE_DELETE
+} from 'app/constants/modes';
+import {PAGE_STYLE} from 'app/constants/pageStyle';
+import CreateInputPage from 'app/views/pages/CreateInputPage';
 
 define([
     'lodash',
@@ -25,14 +32,11 @@ define([
         initialize: function (options) {
             _.bindAll(this, ['edit', 'delete', 'clone']);
             PopTartView.prototype.initialize.apply(this, arguments);
-            this.collection = options.collection;
-            this.model = options.model;
-            this.stateModel = options.stateModel;
-            this.url = options.url;
-            this.component = options.component;
-            this.dispatcher = options.dispatcher;
-            this.rowDispatcher = options.rowDispatcher;
-            this.deleteTag = options.deleteTag;
+            /**
+                collection, model, stateModel, url, component,
+                dispatcher, rowDispatcher, deleteTag, navModel
+            **/
+            _.extend(this, options);
         },
 
         events: {
@@ -79,14 +83,23 @@ define([
         },
 
         edit: function (e) {
-            var editDialog = new EntityDialog({
-                el: $(".dialog-placeholder"),
-                collection: this.collection,
-                model: this.model,
-                mode: "edit",
-                component: this._getComponent()
-            });
-            editDialog.render().modal();
+            let component = this._getComponent();
+            if (component['style'] && component['style'] === PAGE_STYLE) {
+                this.navModel.dataModel = this.model;
+                this.navModel.navigator.navigateToPage(
+                    component.name,
+                    MODE_EDIT
+                )
+            } else {
+                let editDialog = new EntityDialog({
+                    el: $(".dialog-placeholder"),
+                    collection: this.collection,
+                    model: this.model,
+                    mode: MODE_EDIT,
+                    component: this._getComponent()
+                });
+                editDialog.render().modal();
+            }
             this.hide();
             e.preventDefault();
         },
@@ -169,14 +182,23 @@ define([
         },
 
         clone: function (e) {
-            var cloneDialog = new EntityDialog({
-                el: $(".dialog-placeholder"),
-                collection: this.collection,
-                model: this.model,
-                mode: "clone",
-                component: this._getComponent()
-            });
-            cloneDialog.render().modal();
+            let component = this._getComponent();
+            if (component['style'] && component['style'] === PAGE_STYLE) {
+                this.navModel.dataModel = this.model;
+                this.navModel.navigator.navigateToPage(
+                    component.name,
+                    MODE_CLONE
+                )
+            } else {
+                let cloneDialog = new EntityDialog({
+                    el: $(".dialog-placeholder"),
+                    collection: this.collection,
+                    model: this.model,
+                    mode: MODE_CLONE,
+                    component: this._getComponent()
+                });
+                cloneDialog.render().modal();
+            }
             this.hide();
             e.preventDefault();
         },

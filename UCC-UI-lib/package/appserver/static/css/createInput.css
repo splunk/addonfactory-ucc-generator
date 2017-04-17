@@ -1,0 +1,79 @@
+html, body, .shared-page {
+    height: 100%;
+}
+
+.main-section-body{
+    height: calc(100% - 65px);
+}
+
+.create-input-section {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: #eee;
+}
+
+.create-input-section > form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+}
+
+
+.create-input-header {
+    height: 50px;
+    padding-left: 20px;
+    padding-top: 20px;
+}
+
+.create-input-header > .title {
+    font-size: 20px;
+    font-weight: lighter
+}
+
+.create-input-body {
+    flex: 1;
+    display: flex;
+}
+
+.create-input-body > .blank-column {
+    flex: 1;
+}
+
+.create-input-body > .content {
+    flex: 3;
+    overflow: auto;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+    min-width: 665px;
+    box-sizing: border-box;
+    background-color: #fff;
+}
+
+.create-input-footer {
+    width: 100%;
+    height: 50px;
+    border-top: 1px solid #ccc;
+    background-color: #eee;
+}
+
+.create-input-footer > .buttons {
+    position: relative;
+    padding-top: 10px;
+}
+
+.create-input-footer > .buttons > .btn {
+    width: 65px;
+}
+
+.create-input-footer > .buttons > .cancel-btn {
+    position: absolute;
+    margin-left: 60%;
+}
+
+.create-input-footer > .buttons > .btn-primary {
+    position: absolute;
+    margin-left: calc(60% + 85px);
+}
