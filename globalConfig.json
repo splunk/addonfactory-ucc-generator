@@ -350,7 +350,7 @@
                     },
                     {
                         "field": "interval",
-                        "label": "Interval",
+                        "label": "Interval"
                     },
                     {
                         "field": "index",

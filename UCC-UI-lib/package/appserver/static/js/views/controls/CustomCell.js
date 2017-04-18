@@ -1,13 +1,13 @@
 define([], function() {
     class CustomCell {
-        constructor(el, field, model) {
+        constructor(el, field, model, serviceName) {
             this.el = el;
             this.field = field;
             this.model = model;
+            this.serviceName = serviceName;
         }
         render() {
-            const el = this.el.querySelector('td');
-            el.innerHTML = 'test custom cell';
+            this.el.innerHTML = 'test custom cell';
             return this;
         }
     }

@@ -1,4 +1,3 @@
-/*global define*/
 define([
     'jquery',
     'lodash',
@@ -33,13 +32,11 @@ define([
             BaseView.prototype.initialize.apply(this, arguments);
             this.$el.addClass((this.options.index % 2) ? 'even' : 'odd');
 
-            this.collection = this.model.collection;
-            this.stateModel = this.model.stateModel;
-            this.allCollection = this.model.allCollection;
-            this.enableBulkActions = this.model.enableBulkActions;
-            this.enableMoreInfo = this.model.enableMoreInfo;
-            this.showActions = this.model.showActions;
-            this.component = this.model.component;
+            /*
+                collection, stateModel, allCollection, enableBulkActions,
+                enableMoreInfo, showActions, component, restRoot
+            */
+            _.extend(this, this.model);
 
             if (options.dispatcher) {
                 this.dispatcher = options.dispatcher;
@@ -88,28 +85,26 @@ define([
             this.editmenu.show($target);
 
             //Listen to disable/enable action and update the status and display
-            this.rowDispatcher.on('disable-input', function () {
-                var self = this;
-                _.each(this.collection.models, function (model) {
-                    if (model.attributes.id === self.model.entity.attributes.id) {
-                        model.entry.content.attributes.disabled = true;
-                        self.model.entity.entry.content.attributes.disabled = true;
+            this.rowDispatcher.on('disable-input', () => {
+                _.each(this.collection.models, (model) => {
+                    if (model.get('id') === this.model.entity.get('id')) {
+                        model.entry.content.set('disabled', true);
+                        this.model.entity.entry.content.set('disabled', true);
                     }
                 });
 
                 this.collection.reset(this.collection.models);
-            }.bind(this));
+            });
 
-            this.rowDispatcher.on('enable-input', function () {
-                var self = this;
-                _.each(this.collection.models, function (model) {
-                    if (model.attributes.id === self.model.entity.attributes.id) {
-                        model.entry.content.attributes.disabled = false;
-                        self.model.entity.entry.content.attributes.disabled = false;
+            this.rowDispatcher.on('enable-input', () => {
+                _.each(this.collection.models, (model) => {
+                    if (model.get('id') === this.model.entity.get('id')) {
+                        model.entry.content.set('disabled', false);
+                        this.model.entity.entry.content.set('disabled', false);
                     }
                 });
                 this.collection.reset(this.collection.models);
-            }.bind(this));
+            });
         },
 
         _load_module: function(module, field, model, index) {
@@ -118,7 +113,15 @@ define([
                 const el = document.createElement("td");
                 el.className = 'col-' + field;
 
-                const customCell = new CustomCell(el, field, model);
+                // The serviceName is extracted from model id which comes from
+                // util/backboneHelpers.js: generateModel
+                let id_str = model.id.split('/');
+                let serviceName = null;
+                if (id_str.length >= 2 && this.restRoot) {
+                    serviceName = id_str[id_str.length - 2];
+                    serviceName = serviceName.replace(this.restRoot + '_', '');
+                }
+                const customCell = new CustomCell(el, field, model, serviceName);
                 this.cells[index] = customCell.render().el;
                 deferred.resolve(CustomCell);
             });
@@ -142,16 +145,18 @@ define([
                 if (!customCell) {
                     fieldValue = fieldValue === undefined ? '' : String(fieldValue);
                     if (mapping) {
-                        fieldValue = !_.isUndefined(mapping[fieldValue]) ? mapping[fieldValue] : fieldValue;
+                        fieldValue = !_.isUndefined(mapping[fieldValue]) ?
+                                     mapping[fieldValue] : fieldValue;
                     }
-                    let html = '<td  class="col-' + field + '">' + Util.encodeHTML(fieldValue) + '</td>';
+                    let html = `<td  class="col-${field}">
+                                ${Util.encodeHTML(fieldValue)}</td>`;
                     this.cells[index] = html;
                 } else {
                     this.deferreds.push(
                         this._load_module(
                             customCell.src,
                             field,
-                            this.model,
+                            this.model.entity,
                             index
                         )
                     );
@@ -161,26 +166,39 @@ define([
 
         render: function () {
             if (this.enableBulkActions) {
-                this.$el.append('<td class="box checkbox col-inline"></td>');
+                this.$el.append(`<td class="box checkbox col-inline"></td>`);
                 this.$('.box').append(this.bulkbox.render().el);
             }
             if (this.enableMoreInfo) {
-                this.$el.append('<td class="expands"><a href="#"><i class="icon-triangle-right-small"></i></a></td>');
+                this.$el.append(`
+                    <td class="expands">
+                        <a href="#">
+                            <i class="icon-triangle-right-small"></i>
+                        </a>
+                    </td>
+                `);
             }
 
             this._renderRow();
             $.when(...this.deferreds).done(() => {
-                _.each(this.cells, cell => {
-                    this.$el.append(cell);
-                });
+                 _.each(this.cells, cell => {
+                     this.$el.append(cell);
+                 });
 
                 if (this.showActions) {
-                    this.$el.append(
-                        '<td class="actions col-actions"><a class="dropdown-toggle" href="#">' +
-                        _("Action").t() + '<span class="caret"></span></a></td>');
+                    this.$el.append(`
+                        <td class="actions col-actions">
+                            <a class="dropdown-toggle" href="#">
+                                ${_("Action").t()}
+                                <span class="caret"></span>
+                            </a>
+                        </td>
+                    `);
                 }
-                if (this.model.entity.entry.attributes.name) {
-                    this.$el.addClass('row-' + this.model.entity.entry.attributes.name);
+                if (this.model.entity.entry.get('name')) {
+                    this.$el.addClass(
+                        'row-' + this.model.entity.entry.get('name')
+                    );
                 }
             });
             return this;

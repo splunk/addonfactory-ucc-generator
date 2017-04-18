@@ -119,7 +119,8 @@ define([
                             enableMoreInfo: this.enableMoreInfo,
                             showActions: true,
                             collection: this.collection,
-                            component: this.component
+                            component: this.component,
+                            restRoot: this.restRoot
                         },
                         index: i
                     }));
