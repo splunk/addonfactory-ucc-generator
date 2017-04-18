@@ -1,4 +1,3 @@
-/*global define*/
 define([
     'jquery',
     'lodash',
@@ -120,7 +119,8 @@ define([
                             showActions: true,
                             collection: this.collection,
                             component: this.component,
-                            restRoot: this.restRoot
+                            restRoot: this.restRoot,
+                            navModel: this.navModel
                         },
                         index: i
                     }));

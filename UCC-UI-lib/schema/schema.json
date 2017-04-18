@@ -500,14 +500,12 @@
                     "items": {
                         "type": "object", 
                         "properties": {
-                            "entity": {
-                                "type": "array", 
-                                "items": {
-                                    "$ref": "#/definitions/InputsEntity"
-                                }
-                            }, 
-                            "options": {
-                                "$ref": "#/definitions/Hooks"
+                            "style": {
+                                "type": "string", 
+                                "enum": [
+                                    "page", 
+                                    "dialog"
+                                ]
                             }, 
                             "name": {
                                 "type": "string", 
@@ -517,12 +515,54 @@
                             "title": {
                                 "type": "string", 
                                 "maxLength": 100
+                            }, 
+                            "entity": {
+                                "type": "array", 
+                                "items": {
+                                    "$ref": "#/definitions/InputsEntity"
+                                }
+                            }, 
+                            "groups": {
+                                "type": "array", 
+                                "items": {
+                                    "type": "object", 
+                                    "properties": {
+                                        "field": {
+                                            "type": "array", 
+                                            "items": {
+                                                "type": "string", 
+                                                "pattern": "^\\w+$"
+                                            }
+                                        }, 
+                                        "options": {
+                                            "type": "object", 
+                                            "properties": {
+                                                "isExpandable": {
+                                                    "type": "boolean"
+                                                }, 
+                                                "expand": {
+                                                    "type": "boolean"
+                                                }
+                                            }
+                                        }, 
+                                        "label": {
+                                            "type": "string", 
+                                            "maxLength": 100
+                                        }
+                                    }, 
+                                    "required": [
+                                        "label"
+                                    ]
+                                }
+                            }, 
+                            "options": {
+                                "$ref": "#/definitions/Hooks"
                             }
                         }, 
                         "required": [
-                            "entity", 
                             "name", 
-                            "title"
+                            "title", 
+                            "entity"
                         ]
                     }
                 }

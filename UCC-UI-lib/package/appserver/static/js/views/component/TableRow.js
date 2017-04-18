@@ -31,7 +31,7 @@ define([
         initialize: function (options) {
             BaseView.prototype.initialize.apply(this, arguments);
             this.$el.addClass((this.options.index % 2) ? 'even' : 'odd');
-
+            
             /*
                 collection, stateModel, allCollection, enableBulkActions,
                 enableMoreInfo, showActions, component, restRoot
@@ -79,7 +79,8 @@ define([
                 component: this.component,
                 dispatcher: this.dispatcher,
                 rowDispatcher: this.rowDispatcher,
-                deleteTag: ''
+                deleteTag: '',
+                navModel: this.navModel
             });
             $('body').append(this.editmenu.render().el);
             this.editmenu.show($target);
