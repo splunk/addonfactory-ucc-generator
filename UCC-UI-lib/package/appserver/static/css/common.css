@@ -225,3 +225,13 @@ tr.more-info > td.details {
 .control.btn-group.btn-group-radio.shared-controls-syntheticradiocontrol.control-default > button {
   float: left;
 }
+
+/* Group Section Style*/
+.section-group {
+    margin-left: 20px;
+}
+
+p.section-label {
+    font-size: 14px;
+    color: #65a637;
+}

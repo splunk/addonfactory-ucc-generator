@@ -176,6 +176,18 @@ class InputsPage(DocumentWithoutAddProp):
             "title": StringField(required=True, max_length=100),
             "entity": ArrayField(DocumentField(InputsEntity, as_ref=True), required=True),
             "options": DocumentField(Hooks, as_ref=True),
+            "groups": ArrayField(DictField(
+                properties={
+                    "options": DictField(
+                        properties={
+                            "isExpandable": BooleanField(),
+                            "expand": BooleanField()
+                        }
+                    ),
+                    "label": StringField(required=True, max_length=100),
+                    "field": ArrayField(StringField(required=True, pattern="^\w+$"))
+                }
+            ), required=False),
             "style": StringField(required=False, enum=["page", "dialog"])
         }
     ), required=True)

@@ -377,6 +377,24 @@
                     "name": "inputs_01",
                     "title": "Falcon Host Input",
                     "conf": "aws_cloudwatch",
+                    "groups": [
+                        {
+                            "label": "AWS Input Configuration",
+                            "options": {
+                                "expand": true,
+                                "isExpandable": true
+                            },
+                            "fields": ["name", "method", "account"]
+                        },
+                        {
+                            "label": "Settings",
+                            "options": {
+                                "expand": true,
+                                "isExpandable": true
+                            },
+                            "fields": ["singleSelectTest", "multipleSelectTest", "start_offset", "interval", "index"]
+                        }
+                    ],                    
                     "entity": [
                         {
                             "field": "name",
