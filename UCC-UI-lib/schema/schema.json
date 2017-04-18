@@ -201,6 +201,9 @@
                                 "type": "string", 
                                 "pattern": "^\\w+$"
                             }, 
+                            "mapping": {
+                                "type": "object"
+                            }, 
                             "label": {
                                 "type": "string", 
                                 "maxLength": 30
@@ -220,6 +223,12 @@
                             "field": {
                                 "type": "string", 
                                 "pattern": "^\\w+$"
+                            }, 
+                            "customCell": {
+                                "type": "object"
+                            }, 
+                            "mapping": {
+                                "type": "object"
                             }, 
                             "label": {
                                 "type": "string", 
@@ -577,6 +586,9 @@
                                 "type": "string", 
                                 "pattern": "^\\w+$"
                             }, 
+                            "mapping": {
+                                "type": "object"
+                            }, 
                             "label": {
                                 "type": "string", 
                                 "maxLength": 30
@@ -596,6 +608,12 @@
                             "field": {
                                 "type": "string", 
                                 "pattern": "^\\w+$"
+                            }, 
+                            "customCell": {
+                                "type": "object"
+                            }, 
+                            "mapping": {
+                                "type": "object"
                             }, 
                             "label": {
                                 "type": "string", 
