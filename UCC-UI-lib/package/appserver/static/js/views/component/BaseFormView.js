@@ -121,6 +121,10 @@ define([
             this.model.on('change', this.onStateChange.bind(this));
             this.initModel();
 
+            if (this.component.hook) {
+                this.hookDeferred = this._load_hook(this.component.hook.src);
+            }
+
             // Dependency field list
             this.dependencyMap = new Map();
             /**
@@ -275,9 +279,24 @@ define([
             } else {
                 addSavingMsg(this.curWinSelector, getFormattedMessage(108));
                 addClickListener(this.curWinSelector, 'msg-loading');
+
+                // Add onSave hook if it exists
+                if (this.hook) {
+                    this.hook.onSave();
+                }
+
                 deffer.done(() => {
+                    // Add onSaveSuccess hook if it exists
+                    if (this.hook) {
+                        this.hook.onSaveSuccess();
+                    }
                     this.successCallback(input);
                 }).fail((model, response) => {
+                    // Add onSaveSuccess hook if it exists
+                    if (this.hook) {
+                        this.hook.onSaveSuccess();
+                    }
+
                     input.entry.content.set(original_json);
                     // Re-enable buttons when failed
                     Util.enableElements(
@@ -292,9 +311,18 @@ define([
             return deffer;
         },
 
+        _load_hook: function (module) {
+            let deferred = $.Deferred();
+            __non_webpack_require__(['custom/' + module], (Hook) => {
+                this.hook = new Hook();
+                deferred.resolve(Hook);
+            });
+            return deferred.promise();
+        },
+
         _load_module: function(module, modelAttribute, model, serviceName, index) {
-            var deferred = $.Deferred();
-            __non_webpack_require__(['custom/' + module],(CustomControl) => {
+            let deferred = $.Deferred();
+            __non_webpack_require__(['custom/' + module], (CustomControl) => {
                 let el = document.createElement("DIV");
                 let control = new CustomControl(el, modelAttribute, model, serviceName);
                 // Add custom validation
@@ -376,7 +404,7 @@ define([
                                 });
                             let index = this.children.findIndex((child) => {
                                 return (controlDefinition &&
-                                    controlDefinition.type === 'custom' && 
+                                    controlDefinition.type === 'custom' &&
                                     child.field === field) ||
                                     ('controlOptions' in child &&
                                     child.controlOptions.modelAttribute ===
@@ -413,6 +441,12 @@ define([
                 // Add guid to current dialog
                 this.addGuid();
             });
+
+            if (this.hookDeferred) {
+                this.hookDeferred.then(() => {
+                    this.hook.onCreate();
+                });
+            }
             return this;
         }
     });

@@ -89,7 +89,9 @@ class Entity(DocumentWithoutAddProp):
             "enable": BooleanField(),
             "placeholder": StringField(max_length=250),
             "display": BooleanField(),
-            "labelField": StringField(max_length=250)
+            "labelField": StringField(max_length=250),
+            "src": StringField(max_length=250),
+            "defaultValue": StringField(max_length=250)
         }
     )
     required = BooleanField()
@@ -191,7 +193,8 @@ class InputsPage(DocumentWithoutAddProp):
                     "field": ArrayField(StringField(required=True, pattern="^\w+$"))
                 }
             ), required=False),
-            "style": StringField(required=False, enum=["page", "dialog"])
+            "style": StringField(required=False, enum=["page", "dialog"]),
+            "hook": DictField(required=False)
         }
     ), required=True)
 
