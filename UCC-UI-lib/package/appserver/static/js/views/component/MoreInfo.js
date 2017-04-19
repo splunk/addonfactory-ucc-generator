@@ -26,22 +26,20 @@ define([
             _.each(moreInfo, m => {
                 const {label, field, mapping} = m;
                 let value;
-                if (entry.content.attributes[field] != undefined) {
-                    value = entry.content.attributes[field];
+                if (entry.content.get(field) != undefined) {
+                    value = entry.content.get(field);
                 } else {
-                    value = entry.attributes[field];
+                    value = entry.get(field);
                 }
                 if (value !== undefined && value !== '') {
                     // prevent html injection
                     if (mapping) {
                         value = !_.isUndefined(mapping[value]) ? mapping[value] : value;
                     }
-                    value = Util.encodeHTML(value);
-                    this.$('.list-dotted').append(_.template(`
-                        <dt><%- _(label).t() %></dt>
-                        <dd><%- value %></dd>
-                        `)({label, value})
-                    );
+                    this.$('.list-dotted').append(`
+                        <dt>${_(label).t()}</dt>
+                        <dd>${Util.encodeHTML(value)}</dd>
+                    `);
                 }
             });
             return this;
