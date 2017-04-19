@@ -314,7 +314,11 @@ define([
         _load_hook: function (module) {
             let deferred = $.Deferred();
             __non_webpack_require__(['custom/' + module], (Hook) => {
-                this.hook = new Hook();
+                this.hook = new Hook(
+                    this.context,
+                    this.model,
+                    this.component.name
+                );
                 deferred.resolve(Hook);
             });
             return deferred.promise();

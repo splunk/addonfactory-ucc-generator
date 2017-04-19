@@ -1,7 +1,9 @@
 define([], function() {
     class Hook {
-        constructor() {
-
+        constructor(context, model, serviceName) {
+            this.context = context;
+            this.model = model;
+            this.serviceName = serviceName;
         }
         onCreate() {
             console.log('in Hook: onCreate');
