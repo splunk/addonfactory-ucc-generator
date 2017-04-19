@@ -183,6 +183,13 @@ define([
                     }
                 });
             }
+            // Context used to pass to custom component for displaying error msg
+            this.context = {
+                displayErrorMsg: (message) => {
+                    addErrorMsg(this.curWinSelector, message);
+                    addClickListener(this.curWinSelector, 'msg-error');
+                }
+            }
         },
 
         onStateChange: function() {
@@ -296,7 +303,7 @@ define([
             var deferred = $.Deferred();
             __non_webpack_require__(['custom/' + module],(CustomControl) => {
                 let el = document.createElement("DIV");
-                let control = new CustomControl(el, modelAttribute, model, serviceName);
+                let control = new CustomControl(this.context, el, modelAttribute, model, serviceName);
                 // Add custom validation
                 if (typeof control.validation === 'function') {
                     this.customValidators.push({
@@ -376,7 +383,7 @@ define([
                                 });
                             let index = this.children.findIndex((child) => {
                                 return (controlDefinition &&
-                                    controlDefinition.type === 'custom' && 
+                                    controlDefinition.type === 'custom' &&
                                     child.field === field) ||
                                     ('controlOptions' in child &&
                                     child.controlOptions.modelAttribute ===
