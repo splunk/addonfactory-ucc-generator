@@ -9,8 +9,10 @@ export default Backbone.View.extend({
     initialize: function (options) {
         // label, options, controls
         _.extend(this, options);
-        this.expand = !options.options.expand || false;
-        this.isExpandable = options.options.isExpandable || false;
+        if (options.options) {
+            this.expand = !options.options.expand || false;
+            this.isExpandable = options.options.isExpandable || false;
+        }
     },
 
     render: function () {

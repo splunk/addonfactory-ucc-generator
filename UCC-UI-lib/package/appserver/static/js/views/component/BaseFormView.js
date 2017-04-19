@@ -370,9 +370,17 @@ define([
                         const {label, options} = group;
                         let controls = [];
                         _.each(group.fields, field => {
+                            let controlDefinition =
+                                this.component.entity.find((e) => {
+                                    return e.field === field;
+                                });
                             let index = this.children.findIndex((child) => {
-                                return child.controlOptions.modelAttribute ===
-                                    field;
+                                return (controlDefinition &&
+                                    controlDefinition.type === 'custom' && 
+                                    child.field === field) ||
+                                    ('controlOptions' in child &&
+                                    child.controlOptions.modelAttribute ===
+                                    field);
                             });
                             if (index > -1) {
                                 controls.push(this.children[index]);
