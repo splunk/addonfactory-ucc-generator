@@ -178,7 +178,20 @@ define([
                         if (load) {
                             // Add loading message
                             controlWrapper.control.startLoading();
-                            controlWrapper.collection.fetch({data});
+                            controlWrapper.collection.fetch({
+                                data,
+                                error: (collection, response, options) => {
+                                    addErrorMsg(
+                                        this.curWinSelector,
+                                        response,
+                                        true
+                                    )
+                                    addClickListener(
+                                        this.curWinSelector,
+                                        'msg-error'
+                                    );
+                                }
+                            });
                         }
                     }
                 });
@@ -376,7 +389,7 @@ define([
                                 });
                             let index = this.children.findIndex((child) => {
                                 return (controlDefinition &&
-                                    controlDefinition.type === 'custom' && 
+                                    controlDefinition.type === 'custom' &&
                                     child.field === field) ||
                                     ('controlOptions' in child &&
                                     child.controlOptions.modelAttribute ===
