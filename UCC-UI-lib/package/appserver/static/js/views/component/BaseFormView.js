@@ -267,8 +267,7 @@ define([
 
             if (!deffer.done) {
                 input.entry.content.set(original_json);
-                input.trigger('change');
-                // Re-enable when failed
+                // Re-enable buttons when failed
                 Util.enableElements(
                     this.$("button[type=button]"),
                     this.$("input[type=submit]")
@@ -280,8 +279,7 @@ define([
                     this.successCallback(input);
                 }).fail((model, response) => {
                     input.entry.content.set(original_json);
-                    input.trigger('change');
-                    // Re-enable when failed
+                    // Re-enable buttons when failed
                     Util.enableElements(
                         this.$("button[type=button]"),
                         this.$("input[type=submit]")

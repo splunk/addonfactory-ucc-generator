@@ -64,7 +64,7 @@ define([
         startListening: function () {
             this.listenTo(this.collection, 'remove', this.renderRows);
             this.listenTo(this.collection, 'reset', this.renderRows);
-            this.listenTo(this.collection, 'change', this.renderRows);
+            this.listenTo(this.collection, 'sync', this.renderRows);
             this.listenTo(this.collection, 'add', this.addWithOffsetChange);
         },
 

@@ -29,7 +29,7 @@ define([
         },
 
         successCallback: function(input) {
-            //Add model to collection
+            // Add model to collection
             if (this.mode !== MODE_EDIT) {
                 if (this.collection.paging.get('total') !== undefined) {
                     _.each(this.collection.models, (model) => {
@@ -38,7 +38,10 @@ define([
                             this.collection.paging.get('total') + 1
                         );
                     });
-                    //Trigger collection page change event to refresh the count in table caption
+                    /*
+                        Trigger collection page change event to
+                        refresh the count in table caption
+                    */
                     this.collection.paging.set(
                         'total',
                         this.collection.paging.get('total') + 1
@@ -48,7 +51,6 @@ define([
                 }
                 this.collection.add(input);
             }
-            // this.collection.trigger('change');
             this.$("[role=dialog]").modal('hide');
             this.undelegateEvents();
         },
@@ -73,7 +75,7 @@ define([
         },
 
         addGuid: function () {
-            //Add guid to current dialog
+            // Add guid to current dialog
             this.$(".modal-dialog").addClass(this.curWinId);
         }
     });
