@@ -13,8 +13,7 @@ import {
     removeErrorMsg,
     addSavingMsg,
     removeSavingMsg,
-    displayValidationError,
-    addClickListener
+    displayValidationError
 } from 'app/util/promptMsgController';
 import {getFormattedMessage} from 'app/util/messageUtil';
 import GroupSection from 'app/views/component/GroupSection';
@@ -111,7 +110,6 @@ define([
             }
             this.real_model.on("invalid", err => {
                 displayValidationError(this.curWinSelector,  err);
-                addClickListener(this.curWinSelector, 'msg-error');
             });
 
             /*
@@ -186,15 +184,20 @@ define([
                                         response,
                                         true
                                     )
-                                    addClickListener(
-                                        this.curWinSelector,
-                                        'msg-error'
-                                    );
                                 }
                             });
                         }
                     }
                 });
+            }
+        },
+
+        events: {
+            'click button.close': (e) => {
+                if (e.target.hasAttribute('data-dismiss')) {
+                    return;
+                }
+                $(e.target).closest('.msg').remove();
             }
         },
 
@@ -287,7 +290,6 @@ define([
                 );
             } else {
                 addSavingMsg(this.curWinSelector, getFormattedMessage(108));
-                addClickListener(this.curWinSelector, 'msg-loading');
                 deffer.done(() => {
                     this.successCallback(input);
                 }).fail((model, response) => {
@@ -299,7 +301,6 @@ define([
                     );
                     removeSavingMsg(this.curWinSelector);
                     addErrorMsg(this.curWinSelector, model, true);
-                    addClickListener(this.curWinSelector, 'msg-error');
                 });
             }
             return deffer;
