@@ -13,8 +13,7 @@ import {
     removeErrorMsg,
     addSavingMsg,
     removeSavingMsg,
-    displayValidationError,
-    addClickListener
+    displayValidationError
 } from 'app/util/promptMsgController';
 import {getFormattedMessage} from 'app/util/messageUtil';
 import GroupSection from 'app/views/component/GroupSection';
@@ -111,7 +110,6 @@ define([
             }
             this.real_model.on("invalid", err => {
                 displayValidationError(this.curWinSelector,  err);
-                addClickListener(this.curWinSelector, 'msg-error');
             });
 
             /*
@@ -120,6 +118,10 @@ define([
             */
             this.model.on('change', this.onStateChange.bind(this));
             this.initModel();
+
+            if (this.component.hook) {
+                this.hookDeferred = this._load_hook(this.component.hook.src);
+            }
 
             // Dependency field list
             this.dependencyMap = new Map();
@@ -179,10 +181,28 @@ define([
                         if (load) {
                             // Add loading message
                             controlWrapper.control.startLoading();
-                            controlWrapper.collection.fetch({data});
+                            controlWrapper.collection.fetch({
+                                data,
+                                error: (collection, response, options) => {
+                                    addErrorMsg(
+                                        this.curWinSelector,
+                                        response,
+                                        true
+                                    )
+                                }
+                            });
                         }
                     }
                 });
+            }
+        },
+
+        events: {
+            'click button.close': (e) => {
+                if (e.target.hasAttribute('data-dismiss')) {
+                    return;
+                }
+                $(e.target).closest('.msg').remove();
             }
         },
 
@@ -275,10 +295,22 @@ define([
                 );
             } else {
                 addSavingMsg(this.curWinSelector, getFormattedMessage(108));
-                addClickListener(this.curWinSelector, 'msg-loading');
+                // Add onSave hook if it exists
+                if (this.hook) {
+                    this.hook.onSave();
+                }
                 deffer.done(() => {
+                    // Add onSaveSuccess hook if it exists
+                    if (this.hook) {
+                        this.hook.onSaveSuccess();
+                    }
                     this.successCallback(input);
                 }).fail((model, response) => {
+                    // Add onSaveSuccess hook if it exists
+                    if (this.hook) {
+                        this.hook.onSaveSuccess();
+                    }
+
                     input.entry.content.set(original_json);
                     // Re-enable buttons when failed
                     Util.enableElements(
@@ -287,15 +319,27 @@ define([
                     );
                     removeSavingMsg(this.curWinSelector);
                     addErrorMsg(this.curWinSelector, model, true);
-                    addClickListener(this.curWinSelector, 'msg-error');
                 });
             }
             return deffer;
         },
 
+        _load_hook: function (module) {
+            let deferred = $.Deferred();
+            __non_webpack_require__(['custom/' + module], (Hook) => {
+                this.hook = new Hook(
+                    this.context,
+                    this.model,
+                    this.component.name
+                );
+                deferred.resolve(Hook);
+            });
+            return deferred.promise();
+        },
+
         _load_module: function(module, modelAttribute, model, serviceName, index) {
-            var deferred = $.Deferred();
-            __non_webpack_require__(['custom/' + module],(CustomControl) => {
+            let deferred = $.Deferred();
+            __non_webpack_require__(['custom/' + module], (CustomControl) => {
                 let el = document.createElement("DIV");
                 let control = new CustomControl(
                     el,
@@ -417,7 +461,16 @@ define([
                 this.$("input[type=submit]").on("click", this.submitTask.bind(this));
                 // Add guid to current dialog
                 this.addGuid();
+
+                // Add button type to button element, ADDON-13632
+                this.$('.modal-body').find('button').prop('type', 'button');
             });
+
+            if (this.hookDeferred) {
+                this.hookDeferred.then(() => {
+                    this.hook.onCreate();
+                });
+            }
             return this;
         }
     });
