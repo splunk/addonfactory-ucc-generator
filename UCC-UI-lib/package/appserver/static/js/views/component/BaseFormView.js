@@ -13,8 +13,7 @@ import {
     removeErrorMsg,
     addSavingMsg,
     removeSavingMsg,
-    displayValidationError,
-    addClickListener
+    displayValidationError
 } from 'app/util/promptMsgController';
 import {getFormattedMessage} from 'app/util/messageUtil';
 import GroupSection from 'app/views/component/GroupSection';
@@ -111,7 +110,6 @@ define([
             }
             this.real_model.on("invalid", err => {
                 displayValidationError(this.curWinSelector,  err);
-                addClickListener(this.curWinSelector, 'msg-error');
             });
 
             /*
@@ -182,10 +180,28 @@ define([
                         if (load) {
                             // Add loading message
                             controlWrapper.control.startLoading();
-                            controlWrapper.collection.fetch({data});
+                            controlWrapper.collection.fetch({
+                                data,
+                                error: (collection, response, options) => {
+                                    addErrorMsg(
+                                        this.curWinSelector,
+                                        response,
+                                        true
+                                    )
+                                }
+                            });
                         }
                     }
                 });
+            }
+        },
+
+        events: {
+            'click button.close': (e) => {
+                if (e.target.hasAttribute('data-dismiss')) {
+                    return;
+                }
+                $(e.target).closest('.msg').remove();
             }
         },
 
@@ -278,13 +294,10 @@ define([
                 );
             } else {
                 addSavingMsg(this.curWinSelector, getFormattedMessage(108));
-                addClickListener(this.curWinSelector, 'msg-loading');
-
                 // Add onSave hook if it exists
                 if (this.hook) {
                     this.hook.onSave();
                 }
-
                 deffer.done(() => {
                     // Add onSaveSuccess hook if it exists
                     if (this.hook) {
@@ -305,7 +318,6 @@ define([
                     );
                     removeSavingMsg(this.curWinSelector);
                     addErrorMsg(this.curWinSelector, model, true);
-                    addClickListener(this.curWinSelector, 'msg-error');
                 });
             }
             return deffer;
