@@ -456,6 +456,9 @@ define([
                 this.$("input[type=submit]").on("click", this.submitTask.bind(this));
                 // Add guid to current dialog
                 this.addGuid();
+
+                // Add button type to button element, ADDON-13632
+                this.$('.modal-body').find('button').prop('type', 'button');
             });
 
             if (this.hookDeferred) {
