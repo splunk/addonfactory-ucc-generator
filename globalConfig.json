@@ -380,6 +380,9 @@
                     "name": "inputs_01",
                     "title": "Falcon Host Input",
                     "conf": "aws_cloudwatch",
+                    "hook": {
+                        "src": "Hook"
+                    },
                     "groups": [
                         {
                             "label": "AWS Input Configuration",
