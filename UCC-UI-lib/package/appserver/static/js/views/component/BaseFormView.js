@@ -126,6 +126,10 @@ define([
             // Dependency field list
             this.dependencyMap = new Map();
             /**
+                Example: 'account' change triggers load of 'region' and 'SQS'.
+                'region' depends on 'account' and
+                'SQS' depends on 'account' and 'region'.
+
                 'account': {
                     'region': [
                         'account'
@@ -156,10 +160,7 @@ define([
                         if (!value.hasOwnProperty(loadField)) {
                             continue;
                         }
-                        let controlWrapper = _.find(this.children, child => {
-                            return child.controlOptions &&
-                                child.controlOptions.modelAttribute === loadField;
-                        });
+                        let controlWrapper = this.fieldControlMap.get(loadField);
                         if (!controlWrapper) {
                             continue;
                         }
@@ -198,7 +199,6 @@ define([
             this.context = {
                 displayErrorMsg: (message) => {
                     addErrorMsg(this.curWinSelector, message);
-                    addClickListener(this.curWinSelector, 'msg-error');
                 }
             }
         },
@@ -312,9 +312,9 @@ define([
                     }
                     this.successCallback(input);
                 }).fail((model, response) => {
-                    // Add onSaveSuccess hook if it exists
+                    // Add onSaveFail hook if it exists
                     if (this.hook) {
-                        this.hook.onSaveSuccess();
+                        this.hook.onSaveFail();
                     }
 
                     input.entry.content.set(original_json);
@@ -347,7 +347,13 @@ define([
             let deferred = $.Deferred();
             __non_webpack_require__(['custom/' + module], (CustomControl) => {
                 let el = document.createElement("DIV");
-                let control = new CustomControl(this.context, el, modelAttribute, model, serviceName);
+                let control = new CustomControl(
+                    el,
+                    modelAttribute,
+                    model,
+                    serviceName
+                );
+                this.fieldControlMap.set(modelAttribute, control);
                 // Add custom validation
                 if (typeof control.validation === 'function') {
                     this.customValidators.push({
@@ -363,6 +369,9 @@ define([
         render: function () {
             this.renderTemplate();
 
+            // Used to store field to custom control or controlWrapper mapping
+            this.fieldControlMap = new Map();
+            // Used to store custom control or controlWrapper defined in entity
             this.children = [];
             this.deferreds = [];
             _.each(this.component.entity, (e, index) => {
@@ -399,6 +408,7 @@ define([
                     if (e.options && e.options.display === false) {
                         controlWrapper.$el.css("display", "none");
                     }
+                    this.fieldControlMap.set(e.field, controlWrapper);
                     this.children.push(controlWrapper);
                 }
             });
@@ -421,21 +431,15 @@ define([
                         const {label, options} = group;
                         let controls = [];
                         _.each(group.fields, field => {
-                            let controlDefinition =
-                                this.component.entity.find((e) => {
-                                    return e.field === field;
-                                });
-                            let index = this.children.findIndex((child) => {
-                                return (controlDefinition &&
-                                    controlDefinition.type === 'custom' &&
-                                    child.field === field) ||
-                                    ('controlOptions' in child &&
-                                    child.controlOptions.modelAttribute ===
-                                    field);
-                            });
-                            if (index > -1) {
-                                controls.push(this.children[index]);
-                                this.children.splice(index, 1);
+                            let control = this.fieldControlMap.get(field);
+                            if (control) {
+                                controls.push(control);
+                                let index = this.children.findIndex((child) => {
+                                    return child === control;
+                                })
+                                if (index > -1) {
+                                    this.children.splice(index, 1);
+                                }
                             }
                         })
                         groups.push(new GroupSection({
