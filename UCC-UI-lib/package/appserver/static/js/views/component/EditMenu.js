@@ -86,10 +86,10 @@ define([
             let component = this._getComponent();
             if (component['style'] && component['style'] === PAGE_STYLE) {
                 this.navModel.dataModel = this.model;
-                this.navModel.navigator.navigateToPage(
-                    component.name,
-                    MODE_EDIT
-                )
+                this.navModel.navigator.navigate({
+                    'service': component.name,
+                    'action': MODE_EDIT
+                });
             } else {
                 let editDialog = new EntityDialog({
                     el: $(".dialog-placeholder"),
@@ -185,10 +185,10 @@ define([
             let component = this._getComponent();
             if (component['style'] && component['style'] === PAGE_STYLE) {
                 this.navModel.dataModel = this.model;
-                this.navModel.navigator.navigateToPage(
-                    component.name,
-                    MODE_CLONE
-                )
+                this.navModel.navigator.navigate({
+                    'service': component.name,
+                    'action': MODE_CLONE
+                });
             } else {
                 let cloneDialog = new EntityDialog({
                     el: $(".dialog-placeholder"),

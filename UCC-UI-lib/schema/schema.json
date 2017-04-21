@@ -584,6 +584,9 @@
                             "entity"
                         ]
                     }
+                }, 
+                "menu": {
+                    "type": "object"
                 }
             }, 
             "required": [
