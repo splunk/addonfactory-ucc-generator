@@ -195,6 +195,12 @@ define([
                     }
                 });
             }
+            // Context used to pass to custom component for displaying error msg
+            this.context = {
+                displayErrorMsg: (message) => {
+                    addErrorMsg(this.curWinSelector, message);
+                }
+            }
         },
 
         events: {
@@ -306,9 +312,9 @@ define([
                     }
                     this.successCallback(input);
                 }).fail((model, response) => {
-                    // Add onSaveSuccess hook if it exists
+                    // Add onSaveFail hook if it exists
                     if (this.hook) {
-                        this.hook.onSaveSuccess();
+                        this.hook.onSaveFail();
                     }
 
                     input.entry.content.set(original_json);
