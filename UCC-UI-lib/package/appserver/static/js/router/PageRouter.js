@@ -140,7 +140,10 @@ define([
         },
 
         _routeRooted: function (root, locale, app, page, queryString) {
+            this.model.application.set({
+                root: root
+            }, {silent: true});
             this._route(locale, app, page, queryString);
-        },
+        }
     });
 });
