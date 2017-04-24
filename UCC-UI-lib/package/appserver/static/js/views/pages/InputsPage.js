@@ -326,10 +326,6 @@ define([
             let deferred = $.Deferred();
             __non_webpack_require__(['custom/' + module], (CustomMenu) => {
                 this.editmenu = new CustomMenu(target, navigator, services);
-                this.editmenu.hide = () => {
-                    this.editmenu.el.style.display = 'none';
-                    this.editmenu.shown = false;
-                };
                 deferred.resolve(CustomMenu);
             });
             return deferred.promise();
