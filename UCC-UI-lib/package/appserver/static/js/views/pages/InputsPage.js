@@ -282,32 +282,30 @@ define([
                         dlg.modal();
                     });
                 } else {
-                    this.$('#addInputBtn').on("click", e => {
-                        if (this.editmenu && this.editmenu.shown) {
-                            this.editmenu.hide();
-                            e.preventDefault();
-                            return;
-                        }
-                        let $target = $(e.currentTarget);
+                    let customMenu = this.unifiedConfig.pages.inputs.menu;
+                    if (customMenu) {
                         let services = {};
                         _.each(this.unifiedConfig.pages.inputs.services, service => {
                             _.extend(services, {
                                 [service.name] : service.title
                             });
                         });
-                        let customMenu = this.unifiedConfig.pages.inputs.menu;
-                        if (customMenu) {
-                            this._loadCustomMenu(
-                                customMenu.src,
-                                e.currentTarget,
-                                this.navModel.navigator,
-                                services
-                            ).then(() => {
-                                this.editmenu.render();
-                                this.editmenu.shown = true;
-                                $('body').append(this.editmenu.el);
-                            });
-                        } else {
+                        this._loadCustomMenu(
+                            customMenu.src,
+                            document.getElementById('addInputBtn'),
+                            this.navModel.navigator,
+                            services
+                        ).then(() => {
+                            this.editmenu.render();
+                        });
+                    } else {
+                        this.$('#addInputBtn').on("click", e => {
+                            let $target = $(e.currentTarget);
+                            if (this.editmenu && this.editmenu.shown) {
+                                this.editmenu.hide();
+                                e.preventDefault();
+                                return;
+                            }
                             this.editmenu = new AddInputMenu({
                                 collection: this.inputs,
                                 dispatcher: this.dispatcher,
@@ -317,8 +315,8 @@ define([
 
                             $('body').append(this.editmenu.render().el);
                             this.editmenu.show($target);
-                        }
-                    });
+                        });
+                    }
                 }
             });
             return this;
