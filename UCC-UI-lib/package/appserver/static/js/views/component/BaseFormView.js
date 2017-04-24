@@ -69,6 +69,7 @@ define([
                 endpointUrl,
                 formDataValidatorRawStr: comOpt ? comOpt.saveValidator : undefined,
                 onLoadRawStr: comOpt ? comOpt.onLoad : undefined,
+                shouldInvokeOnload: true,
                 validators
             });
 
