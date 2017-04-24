@@ -54,10 +54,10 @@ define([
                 return service.name === this.serviceType;
             })
             if (component && component.style === PAGE_STYLE) {
-                this.navModel.navigator.navigateToPage(
-                    this.serviceType,
-                    MODE_CREATE
-                );
+                this.navModel.navigator.navigate({
+                    'service': this.serviceType,
+                    'action': MODE_CREATE
+                });
             } else {
                 let dlg = new EntityDialog({
                     el: $(".dialog-placeholder"),

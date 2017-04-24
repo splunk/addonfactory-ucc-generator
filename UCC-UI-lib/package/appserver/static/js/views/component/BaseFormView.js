@@ -348,6 +348,7 @@ define([
             __non_webpack_require__(['custom/' + module], (CustomControl) => {
                 let el = document.createElement("DIV");
                 let control = new CustomControl(
+                    this.context,
                     el,
                     modelAttribute,
                     model,

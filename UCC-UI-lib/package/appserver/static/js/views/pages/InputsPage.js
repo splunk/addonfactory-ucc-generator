@@ -282,26 +282,53 @@ define([
                         dlg.modal();
                     });
                 } else {
-                    this.$('#addInputBtn').on("click", e => {
-                        var $target = $(e.currentTarget);
-                        if (this.editmenu && this.editmenu.shown) {
-                            this.editmenu.hide();
-                            e.preventDefault();
-                            return;
-                        }
-                        this.editmenu = new AddInputMenu({
-                            collection: this.inputs,
-                            dispatcher: this.dispatcher,
-                            services: this.services,
-                            navModel: this.navModel
+                    let customMenu = this.unifiedConfig.pages.inputs.menu;
+                    if (customMenu) {
+                        let services = {};
+                        _.each(this.unifiedConfig.pages.inputs.services, service => {
+                            _.extend(services, {
+                                [service.name] : service.title
+                            });
                         });
+                        this._loadCustomMenu(
+                            customMenu.src,
+                            document.getElementById('addInputBtn'),
+                            this.navModel.navigator,
+                            services
+                        ).then(() => {
+                            this.editmenu.render();
+                        });
+                    } else {
+                        this.$('#addInputBtn').on("click", e => {
+                            let $target = $(e.currentTarget);
+                            if (this.editmenu && this.editmenu.shown) {
+                                this.editmenu.hide();
+                                e.preventDefault();
+                                return;
+                            }
+                            this.editmenu = new AddInputMenu({
+                                collection: this.inputs,
+                                dispatcher: this.dispatcher,
+                                services: this.services,
+                                navModel: this.navModel
+                            });
 
-                        $('body').append(this.editmenu.render().el);
-                        this.editmenu.show($target);
-                    });
+                            $('body').append(this.editmenu.render().el);
+                            this.editmenu.show($target);
+                        });
+                    }
                 }
             });
             return this;
+        },
+
+        _loadCustomMenu: function(module, target, navigator, services) {
+            let deferred = $.Deferred();
+            __non_webpack_require__(['custom/' + module], (CustomMenu) => {
+                this.editmenu = new CustomMenu(target, navigator, services);
+                deferred.resolve(CustomMenu);
+            });
+            return deferred.promise();
         },
 
         fetchAllCollection: function () {

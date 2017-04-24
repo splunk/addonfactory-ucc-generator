@@ -197,6 +197,7 @@ class InputsPage(DocumentWithoutAddProp):
             "hook": DictField(required=False)
         }
     ), required=True)
+    menu = DictField(required=False)
 
 
 class Pages(DocumentWithoutAddProp):
