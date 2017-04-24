@@ -215,7 +215,7 @@ export function parseNumberValidator(range) {
 
 export function parseStringValidator(minLength, maxLength) {
     const error = maxLength >= minLength ? undefined :
-        getFormattedMessage(14, minLength, maxLength);
+        getFormattedMessage(14);
 
     return {error};
 }
