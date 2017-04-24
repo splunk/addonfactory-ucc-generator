@@ -8,8 +8,7 @@ import {
     removeErrorMsg,
     addSavingMsg,
     removeSavingMsg,
-    displayValidationError,
-    addClickListener
+    displayValidationError
 } from 'app/util/promptMsgController';
 import {parseFuncRawStr} from 'app/util/script';
 import {getFormattedMessage} from 'app/util/messageUtil';
@@ -23,12 +22,12 @@ export default Backbone.View.extend({
         this.msgContainerId = `${options.containerId}`;
         options.dataStore.on('invalid', err => {
             displayValidationError(this.msgContainerId,  err);
-            addClickListener(this.msgContainerId, 'msg-error');
         });
 
         this.stateModel = new Backbone.Model({});
 
-        // We can't set onChange-hook up in the data fetching model. Since it will only be updated when user save form data.
+        // We can't set onChange-hook up in the data fetching model.
+        // Since it will only be updated when user save form data.
         this.stateModel.on('change', this.onStateChange.bind(this));
 
         options.pageState.on('change', () => {
@@ -36,6 +35,12 @@ export default Backbone.View.extend({
                 (this.refCollectionList || []).map(d => d.fetch());
             }
         });
+    },
+
+    events: {
+        'click button.close': (e) => {
+            $(e.target).closest('.msg').remove();
+        }
     },
 
     onStateChange: function() {
@@ -53,10 +58,20 @@ export default Backbone.View.extend({
         }
     },
 
+    enableButtons: function () {
+        this.$("button[type=button]").removeAttr('disabled');
+        this.$("input[type=submit]").removeAttr('disabled');
+    },
+
+    disableButtons: function () {
+        this.$("button[type=button]").attr('disabled', true);
+        this.$("input[type=submit]").attr('disabled', true);
+    },
+
     saveData: function() {
         removeErrorMsg(this.msgContainerId);
         addSavingMsg(this.msgContainerId, getFormattedMessage(108));
-        addClickListener(this.msgContainerId, 'msg-loading');
+        this.disableButtons();
         const newConfig = this.stateModel.toJSON();
         this.props.entity.forEach(d => {
             // Related JIRA ID: ADDON-12723
@@ -66,14 +81,20 @@ export default Backbone.View.extend({
         });
 
         this.dataStore.entry.content.set(newConfig);
-        this.dataStore.save(null, {
-            success: () => removeSavingMsg(this.msgContainerId),
+        const valid = this.dataStore.save(null, {
+            success: () => {
+                removeSavingMsg(this.msgContainerId);
+                this.enableButtons();
+            },
             error: (model, response) => {
                 removeSavingMsg(this.msgContainerId);
                 addErrorMsg(this.msgContainerId, response, true);
-                addClickListener(this.msgContainerId, 'msg-error');
+                this.enableButtons();
             }
         });
+        if (!valid) {
+            this.enableButtons();
+        }
     },
 
     render: function() {
