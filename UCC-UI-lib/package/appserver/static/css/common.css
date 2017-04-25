@@ -236,3 +236,30 @@ p.section-label {
     color: #65a637;
     cursor: pointer;
 }
+
+/* Wait Spinner Style */
+.ta-wait-spinner {
+    margin-left: 5px;
+}
+.ta-spinner[data-color=gray] rect{
+    fill:#999;
+}
+.ta-spinner[data-color=brand] rect{
+    fill:#65a637;
+}
+.ta-spinner[data-size=small]{
+    width:12px;
+    height:12px
+}
+.ta-spinner[data-size=medium]{
+    width:19px;
+    height:19px
+}
+@keyframes ta_wait_spinner_animation{
+    to{
+        transform:rotate(1turn)
+    }
+}
+.ta-spinner{
+    animation: ta_wait_spinner_animation .8s steps(8) infinite;
+}
