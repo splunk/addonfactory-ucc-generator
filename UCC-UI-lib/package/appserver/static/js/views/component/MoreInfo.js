@@ -21,7 +21,9 @@ define([
             const {header, moreInfo} = this.options.model.component.table;
             const {entry} = this.options.model.entity;
 
-            this.$el.html(_.template(this.template)({cols: header.length + 1}));
+            this.$el.html(
+                _.template(this.template)({cols: header.length + 1})
+            );
 
             _.each(moreInfo, m => {
                 const {label, field, mapping} = m;
@@ -34,7 +36,8 @@ define([
                 if (value !== undefined && value !== '') {
                     // prevent html injection
                     if (mapping) {
-                        value = !_.isUndefined(mapping[value]) ? mapping[value] : value;
+                        value = !_.isUndefined(mapping[value]) ?
+                            mapping[value] : value;
                     }
                     this.$('.list-dotted').append(`
                         <dt>${_(label).t()}</dt>

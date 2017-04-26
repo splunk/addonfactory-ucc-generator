@@ -1,3 +1,4 @@
+/*global __non_webpack_require__*/
 define([
     'jquery',
     'lodash',
@@ -31,7 +32,7 @@ define([
         initialize: function (options) {
             BaseView.prototype.initialize.apply(this, arguments);
             this.$el.addClass((this.options.index % 2) ? 'even' : 'odd');
-            
+
             /*
                 collection, stateModel, allCollection, enableBulkActions,
                 enableMoreInfo, showActions, component, restRoot
@@ -122,7 +123,12 @@ define([
                     serviceName = id_str[id_str.length - 2];
                     serviceName = serviceName.replace(this.restRoot + '_', '');
                 }
-                const customCell = new CustomCell(el, field, model, serviceName);
+                const customCell = new CustomCell(
+                    el,
+                    field,
+                    model,
+                    serviceName
+                );
                 this.cells[index] = customCell.render().el;
                 deferred.resolve(CustomCell);
             });
@@ -144,7 +150,8 @@ define([
                     fieldValue = 'false';
                 }
                 if (!customCell) {
-                    fieldValue = fieldValue === undefined ? '' : String(fieldValue);
+                    fieldValue = fieldValue === undefined ?
+                                 '' : String(fieldValue);
                     if (mapping) {
                         fieldValue = !_.isUndefined(mapping[fieldValue]) ?
                                      mapping[fieldValue] : fieldValue;
@@ -171,13 +178,7 @@ define([
                 this.$('.box').append(this.bulkbox.render().el);
             }
             if (this.enableMoreInfo) {
-                this.$el.append(`
-                    <td class="expands">
-                        <a href="#">
-                            <i class="icon-triangle-right-small"></i>
-                        </a>
-                    </td>
-                `);
+                this.$el.append(_.template(this.expandTemplate));
             }
 
             this._renderRow();
@@ -187,22 +188,33 @@ define([
                  });
 
                 if (this.showActions) {
-                    this.$el.append(`
-                        <td class="actions col-actions">
-                            <a class="dropdown-toggle" href="#">
-                                ${_("Action").t()}
-                                <span class="caret"></span>
-                            </a>
-                        </td>
-                    `);
+                    this.$el.append(_.template(this.actionTemplate));
                 }
+                // For automation test
                 if (this.model.entity.entry.get('name')) {
                     this.$el.addClass(
-                        'row-' + this.model.entity.entry.get('name')
+                        `row-${this.model.entity.entry.get('name')}`
                     );
                 }
             });
             return this;
-        }
+        },
+
+        expandTemplate: `
+            <td class="expands">
+                <a href="#">
+                    <i class="icon-triangle-right-small"></i>
+                </a>
+            </td>
+        `,
+
+        actionTemplate: `
+            <td class="actions col-actions">
+                <a class="dropdown-toggle" href="#">
+                    <%- _("Action").t() %>
+                    <span class="caret"></span>
+                </a>
+            </td>
+        `
     });
 });

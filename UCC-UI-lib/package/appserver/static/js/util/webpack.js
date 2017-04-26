@@ -20,7 +20,9 @@ function make_url() {
         if (firstseg=='static' || firstseg=='modules') {
             var postfix = output.substring(firstseg.length+2, output.length);
             output = '/'+firstseg+'/@' + window.$C['BUILD_NUMBER'];
-            if (window.$C['BUILD_PUSH_NUMBER']) output += '.' + window.$C['BUILD_PUSH_NUMBER'];
+            if (window.$C['BUILD_PUSH_NUMBER']) {
+                output += '.' + window.$C['BUILD_PUSH_NUMBER'];
+            }
             if (segments[2] == 'app')
             output += ':'+ getConfigValue('APP_BUILD', 0);
             output += '/' + postfix;
@@ -33,7 +35,10 @@ function make_url() {
 
     var combinedPath = "";
     if (djangoRoot && output.substring(0, djangoRoot.length) === djangoRoot) {
-        combinedPath = output.replace(djangoRoot, djangoRoot + "/" + locale.toLowerCase());
+        combinedPath = output.replace(
+            djangoRoot,
+            djangoRoot + "/" + locale.toLowerCase()
+        );
     } else {
         combinedPath = "/" + locale + output;
     }
@@ -53,7 +58,9 @@ function getConfigValue(key, defaultValue) {
             return defaultValue;
         }
 
-        throw new Error('getConfigValue - ' + key + ' not set, no default provided');
+        throw new Error(
+            'getConfigValue - ' + key + ' not set, no default provided'
+        );
     }
 }
 

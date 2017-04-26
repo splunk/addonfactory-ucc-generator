@@ -25,7 +25,9 @@ define([
         },
 
         modal: function () {
-            this.$("[role=dialog]").modal({backdrop: 'static', keyboard: false});
+            this.$("[role=dialog]").modal(
+                {backdrop: 'static', keyboard: false}
+            );
         },
 
         successCallback: function(input) {

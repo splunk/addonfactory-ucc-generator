@@ -1,8 +1,5 @@
 import {getFormattedMessage} from 'app/util/messageUtil';
-import {
-    addErrorMsg,
-    addClickListener
-} from 'app/util/promptMsgController';
+import {addErrorMsg} from 'app/util/promptMsgController';
 
 define([
     'jquery',
@@ -19,16 +16,18 @@ define([
 ) {
     return Backbone.View.extend({
         events: {
-            "submit form": "delete"
+            "submit form": "delete",
+            "click button.close": (e) => {
+                if (e.target.hasAttribute('data-dismiss')) {
+                    return;
+                }
+                $(e.target).closest('.msg').remove();
+            }
         },
 
         initialize: function (options) {
-            this.collection = options.collection;
-            this.model = options.model;
-            this.stateModel = options.stateModel;
-            this.dispatcher = options.dispatcher;
-            this.inUse = options.inUse;
-            this.deleteTag = options.deleteTag;
+            // collection, model, stateModel, dispatcher, inUse, deleteTag
+            _.extend(this, options);
         },
 
         render: function () {
@@ -59,7 +58,8 @@ define([
             if (!collection) {
                 collection = this.collection;
             }
-            url =  this.model._url === undefined ? collection._url : this.model._url;
+            url =  this.model._url ===
+                   undefined ? collection._url : this.model._url;
             delete_url = [
                 collection.proxyUrl,
                 url,
@@ -70,11 +70,14 @@ define([
         },
 
         modal: function () {
-            this.$("[role=dialog]").modal({backdrop: 'static', keyboard: false});
+            this.$("[role=dialog]").modal(
+                {backdrop: 'static', keyboard: false}
+            );
         },
 
         encodeUrl: function (str) {
-            return encodeURIComponent(str).replace(/'/g, "%27").replace(/"/g, "%22");
+            return encodeURIComponent(str)
+                    .replace(/'/g, "%27").replace(/"/g, "%22");
         },
 
         _delete: function (delete_url) {
@@ -91,14 +94,13 @@ define([
                     this.dispatcher.trigger('delete-input');
                 }
                 this.$("[role=dialog]").modal('hide');
-            }).fail((model, response) => {
+            }).fail((model) => {
                 //Re-enable when failed
                 Util.enableElements(
                     this.$("button[type=button]"),
                     this.$("input[type=submit]")
                 );
                 addErrorMsg('.modal-dialog', model, true);
-                addClickListener('.modal-dialog', 'msg-error');
             });
         },
 
@@ -107,7 +109,10 @@ define([
                 _.each(this.collection.models, (model) => {
                     model.paging.set('total', model.paging.get('total') - 1);
                 });
-                //Trigger collection page change event to refresh the count in table caption
+                /*
+                    Trigger collection page change event to
+                    refresh the count in table caption
+                */
                 this.collection.paging.set(
                     'total',
                     this.collection.paging.get('total') - 1

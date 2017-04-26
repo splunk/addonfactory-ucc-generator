@@ -1,7 +1,5 @@
 import {configManager} from 'app/util/configManager';
-import {
-    parseErrorMsg
-} from 'app/util/promptMsgController';
+import {parseErrorMsg} from 'app/util/promptMsgController';
 import {
     MODE_CLONE,
     MODE_EDIT,
@@ -29,7 +27,7 @@ define([
     Util
 ) {
     return PopTartView.extend({
-        className: 'dropdown-menu',
+        className: 'dropdown-menu dropdown-menu-narrow',
         initialize: function (options) {
             _.bindAll(this, ['edit', 'delete', 'clone']);
             PopTartView.prototype.initialize.apply(this, arguments);
@@ -49,35 +47,35 @@ define([
         },
 
         render: function () {
-            var html = this.compiledTemplate({}),
-                actions;
-            this.el.innerHTML = PopTartView.prototype.template_menu;
-            this.$el.append(html);
-            this.$el.addClass('dropdown-menu-narrow');
-
-            actions = this.component.table.actions;
-            if (actions.indexOf('enable') > -1 || actions.indexOf('disable') > -1) {
-                let disabledVal = this.model.entry.content.attributes.disabled;
-                // load enable/disable menu based on disabled value, disable by default
+            this.$el.html(_.template(this.template));
+            let actions = this.component.table.actions;
+            if (actions.indexOf('enable') > -1 ||
+                    actions.indexOf('disable') > -1) {
+                let disabledVal = this.model.entry.content.get('disabled');
+                // Load enable/disable menu based on disabled value,
+                // disable by default
                 if (Util.parseBoolean(disabledVal, false)) {
                     this.$('.second-group').append(
-                        '<li><a href="#" class="enable">' +
-                        _("Enable").t() +
-                        '</a></li>'
+                        _.template(this.listTemplate)({
+                            'actionClass': 'enable',
+                            'actionLabel': "Enable"
+                        })
                     );
                 } else {
                     this.$('.second-group').append(
-                        '<li><a href="#" class="disable">' +
-                        _("Disable").t() +
-                        '</a></li>'
+                        _.template(this.listTemplate)({
+                            'actionClass': 'disable',
+                            'actionLabel': "Disable"
+                        })
                     );
                 }
             }
             if (actions.indexOf('clone') > -1) {
                 this.$('.second-group').append(
-                    '<li><a href="#" class="clone">' +
-                    _("Clone").t() +
-                    '</a></li>'
+                    _.template(this.listTemplate)({
+                        'actionClass': 'clone',
+                        'actionLabel': "Clone"
+                    })
                 );
             }
             return this;
@@ -106,10 +104,11 @@ define([
         },
 
         delete: function (e) {
-            var inUse = false,
+            let inUse = false,
                 deleteDialog;
-            if (this.model.entry.content.attributes.hasOwnProperty('refCount')) {
-                inUse = this.model.entry.content.attributes.refCount > 0 ? true : false;
+            if (this.model.entry.content.get('refCount')) {
+                inUse = this.model.entry.content.get('refCount') > 0 ?
+                    true : false;
             }
 
             deleteDialog = new DeleteDialog({
@@ -133,12 +132,13 @@ define([
         },
 
         _enable: function () {
-            var url, collection, enable_url;
+            let url, collection, enable_url;
             collection = this.model.collection;
             if (!collection) {
                 collection = this.collection;
             }
-            url =  this.model._url === undefined ? collection._url : this.model._url;
+            url =  this.model._url === undefined ?
+                collection._url : this.model._url;
             enable_url = [
                 collection.proxyUrl,
                 url,
@@ -151,7 +151,7 @@ define([
                 url: enable_url
             }).done(() => {
                 this.rowDispatcher.trigger('enable-input');
-            }).fail((model, response) => {
+            }).fail((model) => {
                 this._displayError(parseErrorMsg(model));
             }).always(() => {
                 this._removeLoading();
@@ -166,7 +166,8 @@ define([
             if (!collection) {
                 collection = this.collection;
             }
-            url =  this.model._url === undefined ? collection._url : this.model._url;
+            url =  this.model._url === undefined ?
+                collection._url : this.model._url;
             disable_url = [
                 collection.proxyUrl,
                 url,
@@ -185,6 +186,7 @@ define([
                 this._removeLoading();
                 this.hide();
             });
+            this.hide();
             e.preventDefault();
         },
 
@@ -223,8 +225,10 @@ define([
             if (this.component.services) {
                 const {unifiedConfig: {meta: {restRoot}}} = configManager;
                 component = _.find(this.component.services, service => {
-                    // In UCC 3.0, the "name" retrieved form model id is restRoot_originalName
-                    const name = this.model.id.split('/')[this.model.id.split('/').length - 2];
+                    // In UCC 3.0, the "name" retrieved from model id
+                    // which is restRoot_originalName
+                    const idStrings = this.model.id.split('/');
+                    const name = idStrings[idStrings.length - 2];
                     if (`${restRoot}_${service.name}` === name) {
                         return service;
                     }
@@ -253,7 +257,8 @@ define([
         },
 
         encodeUrl: function (str) {
-            return encodeURIComponent(str).replace(/'/g, "%27").replace(/"/g, "%22");
+            return encodeURIComponent(str)
+                .replace(/'/g, "%27").replace(/"/g, "%22");
         },
 
         isSearchHead: function (roles) {
@@ -262,13 +267,21 @@ define([
             });
         },
 
-        template: [
-            '<ul class="first-group">',
-            '<li><a href="#" class="edit"><%- _("Edit").t() %></a></li>',
-            '<li><a href="#" class="delete"><%- _("Delete").t() %></a></li>',
-            '</ul>',
-            '<ul class="second-group">',
-            '</ul>'
-        ].join('')
+        listTemplate: `
+            <li>
+                <a href="#" class="<%- actionClass %>">
+                    <%- _(actionLabel).t() %>
+                </a>
+            </li>
+        `,
+
+        template: `
+            <ul class="first-group">
+                <li><a href="#" class="edit"><%- _("Edit").t() %></a></li>
+                <li><a href="#" class="delete"><%- _("Delete").t() %></a></li>
+            </ul>
+            <ul class="second-group">
+            </ul>
+        `
     });
 });

@@ -5,7 +5,9 @@ import $ from 'jquery';
 define(function () {
     var APP_NAME = 'AddOns',
         APP_VERSION = 'released',
-        APP_PREFIX = encodeURIComponent('[' + APP_NAME + ':' + APP_VERSION + ']');
+        APP_PREFIX = encodeURIComponent(
+            '[' + APP_NAME + ':' + APP_VERSION + ']'
+        );
 
     return {
         /**
@@ -111,8 +113,12 @@ define(function () {
                 if (strArr.length < 2) {
                     return text;
                 }
-                const serviceName = strArr[strArr.length - 2].replace(`${restRoot}_`, '');
-                const entityList = _.get(_.find(serviceLikeArr, d => d.name === serviceName), 'entity');
+                const serviceName = strArr[strArr.length - 2]
+                    .replace(`${restRoot}_`, '');
+                const entityList = _.get(
+                    _.find(serviceLikeArr, d => d.name === serviceName),
+                    'entity'
+                );
                 if (!entityList) {
                     return text;
                 }

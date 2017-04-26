@@ -22,15 +22,14 @@ define([
             BaseFormView.prototype.initialize.apply(this, arguments);
         },
 
-        successCallback: function(input) {
+        successCallback: function() {
             this.undelegateEvents();
             // Navigate to inputs table view
             this.navModel.navigator.navigateToRoot();
         },
 
         renderTemplate: function () {
-            let entity = this.component.entity,
-                jsonData = {};
+            let jsonData = {};
             if (this.mode === MODE_CREATE) {
                 jsonData = {
                     title: 'Create New Input',

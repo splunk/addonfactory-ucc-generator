@@ -1,3 +1,4 @@
+/*global __non_webpack_require__*/
 import {configManager} from 'app/util/configManager';
 import {generateModel, generateCollection} from 'app/util/backboneHelpers';
 import {getFormattedMessage} from 'app/util/messageUtil';
@@ -40,7 +41,6 @@ define([
             this.inputsPageTemplateData.description = this.unifiedConfig.pages.inputs.description;
             this.inputsPageTemplateData.singleInput = this.unifiedConfig.pages.inputs.services.length === 1;
             this.inputsPageTemplateData.buttonText = getFormattedMessage(100);
-            this.addonName = this.unifiedConfig.meta.name;
 
             this.navModel = options.navModel;
             //state model
@@ -392,7 +392,6 @@ define([
         searchCollection: function (stateModel) {
             var search = stateModel.get('search'),
                 result = [],
-                a = stateModel.get('search'),
                 offset = this.stateModel.get('offset'),
                 count = this.stateModel.get('count'),
                 all_deferred,

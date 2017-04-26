@@ -25,7 +25,7 @@ define([
         },
 
         events: {
-            "click ul.nav-tabs > li > a":  function(e) {
+            "click ul.nav-tabs > li > a": function (e) {
                 e.preventDefault();
                 const tabId = e.currentTarget.id.slice(0, -3);
                 this.changeTab(tabId);
@@ -64,26 +64,19 @@ define([
         },
 
         _generateTabToken(tabs, title) {
-            const token = (title || tabs[0].title).toLowerCase().replace(/\s/g, '-');
-
-            return token;
+            return (title || tabs[0].title).toLowerCase().replace(/\s/g, '-');
         },
 
         _generateTabId(tabs, title) {
             if (!title) {
                 title = tabs[0].title;
             }
-            const tabId = `#${this._generateTabToken(tabs, title)}-tab`;
-
-            return tabId;
+            return `#${this._generateTabToken(tabs, title)}-tab`;
         },
 
         _parseTabs({tabs}) {
             return tabs.map((d, i) => {
-                const {title} = d,
-                    token = title.toLowerCase().replace(/\s/g, '-'),
-                    viewType = CustomizedTabView;
-
+                const {title} = d;
                 const view = new CustomizedTabView({
                     containerId: this._generateTabId(tabs, title),
                     pageState: this.stateModel,
@@ -99,29 +92,37 @@ define([
         },
 
         renderTabs: function (tabs) {
-            let tabTitleTemplate = `
-                    <li <% if (active) { %> class="active" <% } %>>
-                        <a href="#" id="<%- token %>-li">
-                            <%- _(title).t() %>
-                        </a>
-                    </li>
-                `,
-                tabContentTemplate = `
-                    <div id="<%- token %>-tab" class="tab-pane <% if (active){ %>active<% } %>">
-                    </div>
-                `;
             _.each(tabs, tab => {
                 const { title, token, view } = tab;
                 let active;
                 if (!this.tabName) {
-                    active = tab.active;
+                    active = tab.active ? 'active' : '';
                 } else if (this.tabName && this.tabName === token) {
-                    active = true;
+                    active = 'active';
                 }
-                this.$(".nav-tabs").append(_.template(tabTitleTemplate)({title, token, active}));
-                this.$(".tab-content").append(_.template(tabContentTemplate)({token, active}));
-                this.$(this._generateTabId(tabs, title)).html(view.render().$el);
+                this.$(".nav-tabs").append(
+                    _.template(this.tabTitleTemplate)({title, token, active})
+                );
+                this.$(".tab-content").append(
+                    _.template(this.tabContentTemplate)({token, active})
+                );
+                this.$(this._generateTabId(tabs, title)).html(
+                    view.render().$el
+                );
             });
-        }
+        },
+
+        tabTitleTemplate: `
+            <li class="<%- active %>">
+                <a href="#" id="<%- token %>-li">
+                    <%- _(title).t() %>
+                </a>
+            </li>
+        `,
+
+        tabContentTemplate: `
+            <div id="<%- token %>-tab" class="tab-pane <%- active %>">
+            </div>
+        `
     });
 });
