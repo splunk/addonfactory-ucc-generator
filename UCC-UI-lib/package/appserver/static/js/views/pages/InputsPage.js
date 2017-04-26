@@ -4,6 +4,7 @@ import {generateModel, generateCollection} from 'app/util/backboneHelpers';
 import {getFormattedMessage} from 'app/util/messageUtil';
 import {sortAlphabetical} from 'app/util/sort';
 import restEndpointMap from 'app/constants/restEndpointMap';
+import WaitSpinner from 'app/views/component/WaitSpinner';
 import 'appCssDir/common.css';
 import 'appCssDir/inputs.css';
 
@@ -127,23 +128,29 @@ define([
                 });
             });
 
-            //Change sort
-            this.listenTo(this.stateModel, 'change:sortDirection change:sortKey', _.debounce(function () {
+            //Change sort, debounce 10 milliseconds after the header render
+            this.listenTo(this.stateModel, 'change:sortDirection change:sortKey',
+                    _.debounce(() => {
+                const sortKey = this.stateModel.get('sortKey');
+                this._addWaitSpinner(`th[data-key='${sortKey}']`);
                 if (this.inputs._url === undefined) {
                     this.sortCollection(this.stateModel);
                 } else {
                     this.fetchListCollection(this.inputs, this.stateModel);
                 }
-            }.bind(this), 0));
+            }, 10));
 
             //Change search
-            this.listenTo(this.stateModel, 'change:search', _.debounce(function () {
+            this.listenTo(this.stateModel, 'change:search',
+                    _.debounce(() => {
                 if (this.inputs._url === undefined) {
                     this.searchCollection(this.stateModel);
                 } else {
+                    // Add wait spinner when fetch data from backend
+                    this._addWaitSpinner('.table-caption-inner');
                     this.fetchListCollection(this.inputs, this.stateModel);
                 }
-            }.bind(this), 0));
+            }, 0));
 
             //Change offset
             this.listenTo(this.stateModel, 'change:offset', _.debounce(function () {
@@ -377,6 +384,7 @@ define([
                 },
                 success: () => {
                     stateModel.set('fetching', false);
+                    this._removeWaitSpinner();
                 }
             });
         },
@@ -433,9 +441,13 @@ define([
                 });
 
                 this.pageCollection(newPageStateModel);
+                this._removeWaitSpinner();
             } else {
+                // Add wait spinner when fetch data from backend
+                this._addWaitSpinner('.table-caption-inner');
                 all_deferred = this.fetchAllCollection();
                 all_deferred.done(() => {
+                    this._removeWaitSpinner();
                     this.cachedInputs = this.combineCollection();
                     this.cachedSearchInputs = this.combineCollection();
                     this.inputs.paging.set('offset', offset);
@@ -489,6 +501,7 @@ define([
                 sortDir);
 
             allDeferred.done(() => {
+                this._removeWaitSpinner();
                 this.cachedInputs = this.combineCollection();
                 this.cachedSearchInputs = this.combineCollection();
                 this.inputs.paging.set('offset', offset);
@@ -515,6 +528,17 @@ define([
                 ).toLowerCase();
             } else {
                 return '';
+            }
+        },
+
+        _addWaitSpinner: function (selector) {
+            this.waitSpinner = new WaitSpinner();
+            $(selector).append(this.waitSpinner.render().$el);
+        },
+
+        _removeWaitSpinner: function () {
+            if (this.waitSpinner) {
+                this.waitSpinner.remove();
             }
         }
     });
