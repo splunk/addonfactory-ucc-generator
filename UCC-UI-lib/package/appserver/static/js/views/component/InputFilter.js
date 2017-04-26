@@ -1,4 +1,3 @@
-/*global define*/
 define([
     'jquery',
     'lodash',
@@ -9,7 +8,7 @@ define([
     PopTartView
 ) {
     return PopTartView.extend({
-        className: 'dropdown-menu',
+        className: 'dropdown-menu dropdown-menu-narrow',
 
         events: {
             'click a': 'changeFilter'
@@ -22,25 +21,33 @@ define([
         },
 
         render: function () {
-            var html = '<ul class="first-group">' +
-                '<li><a href="#" class="all"><%- _("All").t() %></a></li></ul>' +
-                '<ul class="second-group">';
-            _.each(this.services, service => {
-                html += '<li><a href="#" class="' + service.name + '">' +
-                    _(service.title).t() + '</a></li>';
-            });
-            html += '</ul>';
-
-            this.el.innerHTML = PopTartView.prototype.template_menu;
-            this.$el.append(_.template(html));
-            this.$el.addClass('dropdown-menu-narrow');
+            this.$el.html(
+                _.template(this.template)({services: this.services})
+            );
             return this;
         },
 
         changeFilter: function (e) {
+            e.preventDefault();
             this.hide();
-            var serviceType = $(e.target).attr('class');
+            const serviceType = $(e.target).attr('class');
             this.dispatcher.trigger('filter-change', serviceType);
-        }
+        },
+
+        template: `
+            <div class="arrow"></div>
+            <ul class="first-group">
+                <li><a href="#" class="all"><%- _("All").t() %></a></li>
+            </ul>
+            <ul class="second-group">
+                <% _.each(services, service => { %>
+                    <li>
+                        <a href="#" class="<%- service.name %>">
+                            <%- _(service.title).t() %>
+                        </a>
+                    </li>
+                <% }); %>
+            </ul>
+        `
     });
 });

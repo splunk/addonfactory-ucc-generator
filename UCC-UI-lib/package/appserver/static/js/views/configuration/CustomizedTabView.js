@@ -28,18 +28,23 @@ export default Backbone.View.extend({
                 endpointUrl: preDefinedUrl
             });
         } else {
-            const {entity, options} = this.props;
-            const validators = generateValidators(entity);
+            const {entity, options} = this.props,
+                validators = generateValidators(entity),
+                formValidator = options ? options.saveValidator : undefined;
 
-            this.dataStore = new (generateModel(preDefinedUrl ? undefined : 'settings', {
-                modelName: name,
-                fields: entity,
-                endpointUrl: preDefinedUrl,
-                formDataValidatorRawStr: options ? options.saveValidator : undefined,
-                onLoadRawStr: options ? options.onLoad : undefined,
-                shouldInvokeOnload: true,
-                validators
-            }))({name});
+            this.dataStore = new (generateModel(
+                    preDefinedUrl ? undefined : 'settings',
+                    {
+                        modelName: name,
+                        fields: entity,
+                        endpointUrl: preDefinedUrl,
+                        formDataValidatorRawStr: formValidator,
+                        onLoadRawStr: options ? options.onLoad : undefined,
+                        shouldInvokeOnload: true,
+                        validators
+                    }
+                )
+            )({name});
             this.dataStore.attr_labels = {};
             entity.forEach(({field, label}) => {
                 this.dataStore.attr_labels[field] = label;
@@ -51,9 +56,13 @@ export default Backbone.View.extend({
         const {dataStore, submitBtnId} = this;
         let view;
         if (this.isTableBasedView) {
-            view = new TableBasedTabView({...this.initOptions, dataStore, submitBtnId});
+            view = new TableBasedTabView(
+                {...this.initOptions, dataStore, submitBtnId}
+            );
         } else {
-            view = new NormalTabView({...this.initOptions, dataStore, submitBtnId});
+            view = new NormalTabView(
+                {...this.initOptions, dataStore, submitBtnId}
+            );
         }
         this.$el.html(view.render().$el);
 

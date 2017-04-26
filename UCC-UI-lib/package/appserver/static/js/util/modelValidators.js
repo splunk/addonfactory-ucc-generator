@@ -8,7 +8,8 @@ import {
 } from 'app/util/uccConfigurationValidators';
 import BaseModel from 'app/models/Base.Model';
 
-// Required fields will be checked by `nonEmptyString`, all other validators are generated in this method
+// Required fields will be checked by `nonEmptyString`,
+// all other validators are generated in this method
 function validatorFactory(validatorInfo, label) {
     const {type, errorMsg} = validatorInfo;
 

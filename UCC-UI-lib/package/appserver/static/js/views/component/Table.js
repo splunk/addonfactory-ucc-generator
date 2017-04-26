@@ -1,3 +1,4 @@
+/*global __non_webpack_require__*/
 define([
     'jquery',
     'lodash',
@@ -184,10 +185,10 @@ define([
             return this;
         },
 
-        template: [
-            '<table class="table table-chrome table-striped table-row-expanding table-listing">',
-            '<tbody class="app-listings"></tbody>',
-            '</table>'
-        ].join('')
+        template: `
+            <table class="table table-chrome table-striped table-row-expanding table-listing">
+                <tbody class="app-listings"></tbody>
+            </table>
+        `
     });
 });

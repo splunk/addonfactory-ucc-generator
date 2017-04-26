@@ -49,14 +49,6 @@ export function displayValidationError(containerSelector, {validationError}) {
     }
 }
 
-export function addClickListener(containerSelector, type) {
-    $(containerSelector + ' .' + type + ' .close').on('click', () => {
-        if ($(containerSelector + ' .' + type).length) {
-            $(containerSelector + ' .' + type).remove();
-        }
-    });
-}
-
 export function parseErrorMsg(data) {
     var error_msg = '', rsp, regex, msg, matches;
     try {

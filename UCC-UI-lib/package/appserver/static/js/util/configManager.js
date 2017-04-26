@@ -13,8 +13,11 @@ class ConfigManager {
             // TODO: display error message when validation failed
             const validationResult = validateSchema(this.unifiedConfig);
             if (validationResult.failed) {
-                // TODO: display multiple errors in the popup window,
-                // Currently, the ErrorDialog seems not support \n, that's why just display single error here.
+                /*
+                    TODO: display multiple errors in the popup window,
+                    Currently, the ErrorDialog seems not support \n.
+                    That's why just display single error here.
+                */
                 new ErrorDialog({
                     el: $('.dialog-placeholder'),
                     msg: getFormattedMessage(110, validationResult.errors[0])

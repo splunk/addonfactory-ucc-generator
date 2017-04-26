@@ -128,15 +128,5 @@ define([
         _getProxyUrl: function (appData) {
             return "splunkd/__raw";
         }
-        //_getProxyUrl: function (appData) {
-        //    if (this.options !== undefined && this.options.useRawProxy) {
-        //        return "splunkd/__raw";
-        //    }
-        //    return [
-        //        "custom",
-        //        appData.app,
-        //        "proxy"
-        //    ].join('/');
-        //}
     });
 });

@@ -15,10 +15,8 @@ import {getFormattedMessage} from 'app/util/messageUtil';
 
 export default Backbone.View.extend({
     initialize: function(options) {
-        this.props = options.props;
-
-        this.submitBtnId = options.submitBtnId;
-        this.dataStore = options.dataStore;
+        // submitBtnId, props, dataStore
+        _.extend(this, options);
         this.msgContainerId = `${options.containerId}`;
         options.dataStore.on('invalid', err => {
             displayValidationError(this.msgContainerId,  err);
@@ -31,7 +29,8 @@ export default Backbone.View.extend({
         this.stateModel.on('change', this.onStateChange.bind(this));
 
         options.pageState.on('change', () => {
-            if (options.pageState.get('selectedTabId') === options.containerId) {
+            const selectedTabId = options.pageState.get('selectedTabId');
+            if (selectedTabId === options.containerId) {
                 (this.refCollectionList || []).map(d => d.fetch());
             }
         });
@@ -98,10 +97,17 @@ export default Backbone.View.extend({
     },
 
     render: function() {
-        this.$el.html(`<div class="loading-msg-icon">${getFormattedMessage(115)}</div>`);
+        this.$el.html(
+            `<div class="loading-msg-icon">${getFormattedMessage(115)}</div>`
+        );
         this.dataStore.fetch().done(() => {
-            const tabContentDOMObj = $(_.template(NormalTabViewTemplate)({buttonId: this.submitBtnId}));
-            tabContentDOMObj.find('input[type=submit]').on('click', this.saveData.bind(this));
+            const tabContentDOMObj = $(_.template(NormalTabViewTemplate)({
+                buttonId: this.submitBtnId
+            }));
+            tabContentDOMObj.find('input[type=submit]').on(
+                'click',
+                this.saveData.bind(this)
+            );
             this.$el.html(tabContentDOMObj);
             const {content} = this.dataStore.entry;
             const {entity, name} = this.props;
@@ -121,7 +127,9 @@ export default Backbone.View.extend({
                     elementId: `${name}-${d.field}`
                 };
                 _.extend(controlOptions, d.options);
-                const controlWrapper = new ControlWrapper({...d, controlOptions});
+                const controlWrapper = new ControlWrapper(
+                    {...d, controlOptions}
+                );
                 if(controlWrapper.collection) {
                     refCollectionList.push(controlWrapper.collection);
                 }
@@ -129,7 +137,9 @@ export default Backbone.View.extend({
                 // prevent auto complete for password
                 if (d.encrypted) {
                     this.$('.modal-body').prepend(
-                        `<input type="password" id="${d.field}" style="display: none"/>`
+                        _.template(this.passwordInputTemplate)(
+                            {field: d.field}
+                        )
                     );
                 }
             });
@@ -137,5 +147,9 @@ export default Backbone.View.extend({
         });
 
         return this;
-    }
+    },
+
+    passwordInputTemplate: `
+        <input type="password" id="<%- field %>" style="display: none"/>
+    `
 });

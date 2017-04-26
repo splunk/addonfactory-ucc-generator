@@ -21,13 +21,21 @@ export function generateModel(name, options = {}) {
     const validateFormData = parseFuncRawStr(formDataValidatorRawStr);
     const onLoad = parseFuncRawStr(onLoadRawStr);
 
-    const optionsNeedMerge = {fields, modelName, onLoad, shouldInvokeOnload, validateFormData};
+    const optionsNeedMerge = {
+        fields,
+        modelName,
+        onLoad,
+        shouldInvokeOnload,
+        validateFormData
+    };
 
     const newModel = BaseModel.extend({
         url: name ? (meta.restRoot + '_' + name) : endpointUrl,
         initialize: function (attributes, options = {}) {
             options.appData = configManager.getAppData().toJSON();
-            BaseModel.prototype.initialize.call(this, attributes, {...options, ...optionsNeedMerge});
+            BaseModel.prototype.initialize.call(
+                this, attributes, {...options, ...optionsNeedMerge}
+            );
             (validators || []).forEach(({fieldName, validator}) => {
                 this.addValidation(fieldName, validator);
             });
@@ -74,7 +82,10 @@ export function fetchRefCollections(fetcherName) {
         const {name, entity} = collections;
         const dependencyList = entity
             .filter(d => _.get(d, ['options', 'referenceName']))
-            .map(({field, options: {referenceName}}) => ({targetField: field, referenceName}));
+            .map(
+                ({field, options: {referenceName}}) =>
+                ({targetField: field, referenceName})
+            );
 
         if (dependencyList.length) {
             collectionObjList.push({
@@ -87,7 +98,9 @@ export function fetchRefCollections(fetcherName) {
         }
     });
 
-    const calls = collectionObjList.map(({value}) => fetchListCollection(value));
+    const calls = collectionObjList.map(
+        ({value}) => fetchListCollection(value)
+    );
 
     return {deferred: $.when(...calls), collectionObjList};
 }
@@ -119,7 +132,10 @@ export function fetchConfigurationModels() {
             const {name, entity} = d;
             const dependencyList = entity
                 .filter(d => _.get(d, ['options', 'referenceName']))
-                .map(({field, options: {referenceName}}) => ({targetField: field, referenceName}));
+                .map(
+                    ({field, options: {referenceName}}) =>
+                    ({targetField: field, referenceName})
+                );
 
             modelObjList.push({
                 value: new (generateModel('settings', {

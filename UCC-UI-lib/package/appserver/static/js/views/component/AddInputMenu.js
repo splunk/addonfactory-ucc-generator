@@ -21,7 +21,7 @@ define([
     EntityDialog
 ) {
     return PopTartView.extend({
-        className: 'dropdown-menu',
+        className: 'dropdown-menu dropdown-menu-narrow',
         initialize: function (options) {
             _.bindAll(this, 'create');
             PopTartView.prototype.initialize.apply(this, arguments);
@@ -34,21 +34,14 @@ define([
         },
 
         render: function () {
-            let html = '<ul class="first-group">';
-            _.each(this.services, service => {
-                html += '<li><a href="#" class="' + service.name + '">' +
-                        _(service.title).t() + '</a></li>';
-            });
-            html += '</ul>';
-
-            this.el.innerHTML = PopTartView.prototype.template_menu;
-            this.$el.append(html);
-
-            this.$el.addClass('dropdown-menu-narrow');
+            this.$el.html(
+                _.template(this.template)({services: this.services})
+            );
             return this;
         },
 
         create: function (e) {
+            e.preventDefault();
             this.serviceType = $(e.target).attr('class');
             let component = _.find(this.services, service => {
                 return service.name === this.serviceType;
@@ -67,6 +60,19 @@ define([
                 dlg.modal();
             }
             this.hide();
-        }
+        },
+
+        template: `
+            <div class="arrow"></div>
+            <ul class="first-group">
+                <% _.each(services, service => { %>
+                    <li>
+                        <a href="#" class="<%- service.name %>">
+                            <%- _(service.title).t() %>
+                        </a>
+                    </li>
+                <% }); %>
+            </ul>
+        `
     });
 });

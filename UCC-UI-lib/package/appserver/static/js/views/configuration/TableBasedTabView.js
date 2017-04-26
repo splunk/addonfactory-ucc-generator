@@ -5,16 +5,17 @@ import CaptionView from 'views/shared/tablecaption/Master';
 import Table from 'app/views/component/Table';
 import EntityDialog from 'app/views/component/EntityDialog';
 import ButtonTemplate from 'app/templates/common/ButtonTemplate.html';
-import {fetchRefCollections, fetchConfigurationModels} from 'app/util/backboneHelpers';
+import {
+    fetchRefCollections,
+    fetchConfigurationModels
+} from 'app/util/backboneHelpers';
 import {setCollectionRefCount} from 'app/util/dependencyChecker';
 import {getFormattedMessage} from 'app/util/messageUtil';
 
 export default Backbone.View.extend({
     initialize: function (options) {
-        this.containerId = options.containerId;
-        this.submitBtnId = options.submitBtnId;
-        this.props = options.props;
-        this.dataStore = options.dataStore;
+        // containerId, submitBtnId, props, dataStore
+        _.extend(this, options);
 
         this.stateModel = new Backbone.Model({
             sortKey: 'name',
@@ -24,8 +25,11 @@ export default Backbone.View.extend({
             fetching: true
         });
 
-        this.listenTo(this.stateModel, 'change:search change:sortDirection change:sortKey', _.debounce(() => {
-            this.fetchListCollection(this.dataStore, this.stateModel);
+        this.listenTo(
+            this.stateModel,
+            'change:search change:sortDirection change:sortKey',
+            _.debounce(() => {
+                this.fetchListCollection(this.dataStore, this.stateModel);
         }, 0));
 
         // listen to offset change for paging
@@ -63,10 +67,20 @@ export default Backbone.View.extend({
                 buttonId: this.submitBtnId,
                 buttonValue: 'Add'
             },
-            {props, entitiesDeferred, serviceCollectionObjList, configModelObjList} = this,
-            deferred = this.fetchListCollection(this.dataStore, this.stateModel);
+            {
+                props,
+                entitiesDeferred,
+                serviceCollectionObjList,
+                configModelObjList
+            } = this,
+            deferred = this.fetchListCollection(
+                this.dataStore,
+                this.stateModel
+            );
 
-        this.$el.html(`<div class="loading-msg-icon">${getFormattedMessage(115)}</div>`);
+        this.$el.html(
+            `<div class="loading-msg-icon">${getFormattedMessage(115)}</div>`
+        );
         const renderTab = () => {
             this.$el.html('');
             const caption = new CaptionView({
@@ -88,7 +102,9 @@ export default Backbone.View.extend({
 
             this.$el.append(caption.render().$el);
             this.$el.append(table.render().$el);
-            $(`${this.containerId} .table-caption-inner`).prepend($(_.template(ButtonTemplate)(addButtonData)));
+            $(`${this.containerId} .table-caption-inner`).prepend(
+                $(_.template(ButtonTemplate)(addButtonData))
+            );
 
             $(`#${this.submitBtnId}`).on('click', () => {
                 new EntityDialog({
@@ -102,7 +118,12 @@ export default Backbone.View.extend({
         deferred.done(() => {
             if (entitiesDeferred) {
                 entitiesDeferred.done(() => {
-                    setCollectionRefCount(this.dataStore, serviceCollectionObjList, configModelObjList, props.name);
+                    setCollectionRefCount(
+                        this.dataStore,
+                        serviceCollectionObjList,
+                        configModelObjList,
+                        props.name
+                    );
                     renderTab();
                 });
             } else {
@@ -122,9 +143,9 @@ export default Backbone.View.extend({
                 count: stateModel.get('count'),
                 offset: stateModel.get('offset')
             },
-            success: function () {
+            success: () => {
                 stateModel.set('fetching', false);
-            }.bind(this)
+            }
         });
     }
 });

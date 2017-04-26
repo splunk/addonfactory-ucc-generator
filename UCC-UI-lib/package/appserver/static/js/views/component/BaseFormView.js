@@ -1,3 +1,4 @@
+/*global __non_webpack_require__*/
 import {configManager} from 'app/util/configManager';
 import restEndpointMap from 'app/constants/restEndpointMap';
 import {
@@ -23,22 +24,12 @@ define([
     'lodash',
     'backbone',
     'app/util/Util',
-    'app/models/Base.Model',
-    'app/templates/common/AddDialog.html',
-    'app/templates/common/EditDialog.html',
-    'app/templates/common/CloneDialog.html',
-    'app/templates/common/TabTemplate.html',
     'app/views/controls/ControlWrapper'
 ], function (
     $,
     _,
     Backbone,
     Util,
-    BaseModel,
-    AddDialogTemplate,
-    EditDialogTemplate,
-    CloneDialogTemplate,
-    TabTemplate,
     ControlWrapper
 ) {
     return Backbone.View.extend({
@@ -63,15 +54,19 @@ define([
             const {entity, name, options: comOpt} = this.component;
             const validators = generateValidators(entity);
             const endpointUrl = restEndpointMap[name];
-            const InputType = generateModel(endpointUrl ? '' : this.component.name, {
-                modelName: name,
-                fields: entity,
-                endpointUrl,
-                formDataValidatorRawStr: comOpt ? comOpt.saveValidator : undefined,
-                onLoadRawStr: comOpt ? comOpt.onLoad : undefined,
-                shouldInvokeOnload: true,
-                validators
-            });
+            const formValidator = comOpt ? comOpt.saveValidator : undefined;
+            const InputType = generateModel(
+                endpointUrl ? '' : this.component.name,
+                {
+                    modelName: name,
+                    fields: entity,
+                    endpointUrl,
+                    formDataValidatorRawStr: formValidator,
+                    onLoadRawStr: comOpt ? comOpt.onLoad : undefined,
+                    shouldInvokeOnload: true,
+                    validators
+                }
+            );
 
             if (this.mode === MODE_CREATE || !options.model) {
                 this.mode = MODE_CREATE;
@@ -144,7 +139,7 @@ define([
             _.each(this.component.entity, e => {
                 const fields = _.get(e, ['options', 'dependencies']);
 
-                _.each(fields, (field, index) => {
+                _.each(fields, field => {
                     let changeFields = this.dependencyMap.get(field);
                     if (changeFields) {
                         changeFields[e.field] = fields;
@@ -214,7 +209,9 @@ define([
         },
 
         onStateChange: function() {
-            const onChangeHookRawStr = _.get(this.component, ['options', 'onChange']);
+            const onChangeHookRawStr = _.get(
+                this.component, ['options', 'onChange']
+            );
             if (onChangeHookRawStr) {
                 const changedField = this.model.changedAttributes();
                 const widgetsIdDict = {};
@@ -312,7 +309,7 @@ define([
                         this.hook.onSaveSuccess();
                     }
                     this.successCallback(input);
-                }).fail((model, response) => {
+                }).fail((model) => {
                     // Add onSaveFail hook if it exists
                     if (this.hook) {
                         this.hook.onSaveFail();
@@ -344,7 +341,7 @@ define([
             return deferred.promise();
         },
 
-        _load_module: function(module, modelAttribute, model, serviceName, index) {
+        _load_module: function (module, modelAttribute, model, serviceName, index) {
             let deferred = $.Deferred();
             __non_webpack_require__(['custom/' + module], (CustomControl) => {
                 let el = document.createElement("DIV");
@@ -438,7 +435,7 @@ define([
                                 controls.push(control);
                                 let index = this.children.findIndex((child) => {
                                     return child === control;
-                                })
+                                });
                                 if (index > -1) {
                                     this.children.splice(index, 1);
                                 }
@@ -466,7 +463,9 @@ define([
                 if (this.mode === MODE_EDIT) {
                     this.$("input[name=name]").attr("readonly", "readonly");
                 }
-                this.$("input[type=submit]").on("click", this.submitTask.bind(this));
+                this.$("input[type=submit]").on(
+                    "click", this.submitTask.bind(this)
+                );
                 // Add guid to current dialog
                 this.addGuid();
 

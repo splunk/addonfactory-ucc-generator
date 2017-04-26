@@ -13,6 +13,7 @@ define([
 ) {
     return Backbone.View.extend({
         className: 'type-filter',
+
         events: {
             'mousedown a.dropdown-toggle': function (e) {
                 this.filter(e);
@@ -27,12 +28,13 @@ define([
                 e.preventDefault();
             }
         },
+
         initialize: function (options) {
             this.dispatcher = options.dispatcher;
             this.services = options.services;
-            this.dispatcher.on('filter-change', function (type) {
+            this.dispatcher.on('filter-change', (type) => {
                 this.changeType(type);
-            }.bind(this));
+            });
             this.inputFilterLabel = getFormattedMessage(106);
         },
 
@@ -47,11 +49,17 @@ define([
             const service = _.find(this.services, d => d.name === type);
             this.$('a.dropdown-toggle').empty();
             if (type === 'all') {
-                this.$('a.dropdown-toggle').append(_.template('<%- _("All").t() %>'));
+                this.$('a.dropdown-toggle').append(
+                    _.template(_("All").t())
+                );
             } else {
-                this.$('a.dropdown-toggle').append(_.template(_(service.title).t()));
+                this.$('a.dropdown-toggle').append(
+                    _.template(_(service.title).t())
+                );
             }
-            this.$('a.dropdown-toggle').append($('<span class="caret"></span>'));
+            this.$('a.dropdown-toggle').append(
+                $(`<span class="caret"></span>`)
+            );
         },
 
         filter: function (e) {

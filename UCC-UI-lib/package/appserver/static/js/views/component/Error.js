@@ -30,7 +30,9 @@ define([
 
         modal: function () {
             if (this.$("[role=dialog]").modal) {
-                this.$("[role=dialog]").modal({backdrop: 'static', keyboard: false});
+                this.$("[role=dialog]").modal(
+                    {backdrop: 'static', keyboard: false}
+                );
             }
         }
     });
