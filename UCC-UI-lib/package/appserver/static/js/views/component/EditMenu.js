@@ -9,6 +9,7 @@ import {
 } from 'app/constants/modes';
 import {PAGE_STYLE} from 'app/constants/pageStyle';
 import CreateInputPage from 'app/views/pages/CreateInputPage';
+import WaitSpinner from 'app/views/component/WaitSpinner';
 
 define([
     'lodash',
@@ -126,7 +127,7 @@ define([
         },
 
         enable: function (e) {
-            this.hide();
+            this._addLoading(e);
             this._enable();
             e.preventDefault();
         },
@@ -152,11 +153,14 @@ define([
                 this.rowDispatcher.trigger('enable-input');
             }).fail((model, response) => {
                 this._displayError(parseErrorMsg(model));
+            }).always(() => {
+                this._removeLoading();
+                this.hide();
             });
         },
 
         disable: function (e) {
-            this.hide();
+            this._addLoading(e);
             var url, collection, disable_url;
             collection = this.model.collection;
             if (!collection) {
@@ -177,6 +181,9 @@ define([
                 this.rowDispatcher.trigger('disable-input');
             }).fail((model, response) => {
                 this._displayError(parseErrorMsg(model));
+            }).always(() => {
+                this._removeLoading();
+                this.hide();
             });
             e.preventDefault();
         },
@@ -226,6 +233,23 @@ define([
                 component = this.component;
             }
             return component;
+        },
+
+        _addLoading: function (e) {
+            this.waitSpinner = new WaitSpinner();
+            let el = this.waitSpinner.render().$el;
+            el.css({
+                'position': 'absolute',
+                'right': '5px',
+                'top': '5px'
+            });
+            $(e.target.parentElement).append(el);
+        },
+
+        _removeLoading: function () {
+            if (this.waitSpinner) {
+                this.waitSpinner.remove();
+            }
         },
 
         encodeUrl: function (str) {
