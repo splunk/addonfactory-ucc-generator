@@ -384,7 +384,7 @@ define([
                 },
                 success: () => {
                     stateModel.set('fetching', false);
-                    this._removeWaitSpinner('span.ta-wait-spinner');
+                    this._removeWaitSpinner();
                 }
             });
         },
@@ -442,13 +442,13 @@ define([
                 });
 
                 this.pageCollection(newPageStateModel);
-                this._removeWaitSpinner('.table-caption-inner > span.ta-wait-spinner');
+                this._removeWaitSpinner();
             } else {
                 // Add wait spinner when fetch data from backend
                 this._addWaitSpinner('.table-caption-inner');
                 all_deferred = this.fetchAllCollection();
                 all_deferred.done(() => {
-                    this._removeWaitSpinner('.table-caption-inner > span.ta-wait-spinner');
+                    this._removeWaitSpinner();
                     this.cachedInputs = this.combineCollection();
                     this.cachedSearchInputs = this.combineCollection();
                     this.inputs.paging.set('offset', offset);
@@ -502,7 +502,7 @@ define([
                 sortDir);
 
             allDeferred.done(() => {
-                this._removeWaitSpinner('th > span.ta-wait-spinner');
+                this._removeWaitSpinner();
                 this.cachedInputs = this.combineCollection();
                 this.cachedSearchInputs = this.combineCollection();
                 this.inputs.paging.set('offset', offset);
@@ -533,13 +533,14 @@ define([
         },
 
         _addWaitSpinner: function (selector) {
-            $(selector).append(
-                (new WaitSpinner()).render().$el
-            );
+            this.waitSpinner = new WaitSpinner();
+            $(selector).append(this.waitSpinner.render().$el);
         },
 
-        _removeWaitSpinner: function (selector) {
-            $(selector).remove();
+        _removeWaitSpinner: function () {
+            if (this.waitSpinner) {
+                this.waitSpinner.remove();
+            }
         }
     });
 });

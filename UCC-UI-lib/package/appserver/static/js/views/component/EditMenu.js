@@ -236,7 +236,8 @@ define([
         },
 
         _addLoading: function (e) {
-            let el = (new WaitSpinner()).render().$el;
+            this.waitSpinner = new WaitSpinner();
+            let el = this.waitSpinner.render().$el;
             el.css({
                 'position': 'absolute',
                 'right': '5px',
@@ -246,7 +247,9 @@ define([
         },
 
         _removeLoading: function () {
-            this.$('.ta-wait-spinner').remove();
+            if (this.waitSpinner) {
+                this.waitSpinner.remove();
+            }
         },
 
         encodeUrl: function (str) {
