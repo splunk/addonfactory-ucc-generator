@@ -58,7 +58,6 @@ define([
 
         _renderHeader: function () {
             $('.preload').replaceWith(this.pageView.el);
-
         },
 
         _parseQueryString: function (queryString) {
