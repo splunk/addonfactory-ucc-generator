@@ -23,10 +23,15 @@ define([
         initialize: function (options) {
             Control.prototype.initialize.apply(this, arguments);
 
-            this.options.placeholder = this.options.placeholder || "";
+            this.options.placeholder = options.placeholder || "Select a value";
             this.placeholder = this.options.placeholder;
+            this.modelAttribute = options.modelAttribute;
             this.allowClear = options.allowClear ? true : false;
-            this.modelAttribute = this.options.modelAttribute;
+            if (options.allowClear === undefined || !!options.allowClear) {
+                this.allowClear = true;
+            } else {
+                this.allowClear = false;
+            }
         },
 
         render: function () {
