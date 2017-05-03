@@ -195,7 +195,8 @@ define([
             this.context = {
                 displayErrorMsg: (message) => {
                     addErrorMsg(this.curWinSelector, message);
-                }
+                },
+                navigator: this.navModel.navigator
             }
         },
 

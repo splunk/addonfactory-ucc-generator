@@ -118,6 +118,7 @@ define([
         _route: function (locale, app, page, queryString) {
             let args = arguments,
                 params = this._parseQueryString(queryString);
+            this.model.navigator.set({params}, {silent: true});
             BaseRouter.prototype.page.apply(this, args);
             this.deferreds.pageViewRendered.done(() => {
                 if (!this._headerReady) {
