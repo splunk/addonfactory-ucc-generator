@@ -20,47 +20,29 @@ export default Backbone.View.extend({
         'click a.breadcrumbs-inputs': function (e) {
             e.preventDefault();
             this.navModel.navigator.navigateToRoot();
-        },
-
-        'click a.breadcrumbs-action': function (e) {
-            e.preventDefault();
-            this.navModel.navigator.navigate({
-                service: this.service,
-                action: this.action
-            });
         }
     },
 
     initialize: function (options) {
-        this.navModel = options.navModel;
-        // service, action, component
-        _.extend(this, this.navModel.navigator.get('params'));
-        if (this.component) {
-            this.title = this.component;
-            this.actionNav = MAPPING[this.action];
-        } else {
-            this.title = MAPPING[this.action];
-            this.actionNav = '';
-        }
+        // component, navModel, mode
+        _.extend(this, options);
+        this.currentNav = MAPPING[this.mode] || '';
     },
 
     render: function () {
         this.$el.html(_.template(this.template)({
-            title: this.title,
-            actionNav: this.actionNav
+            serviceTitle: this.component.title,
+            currentNav: this.currentNav
         }));
         return this;
     },
 
     template: `
-        <div class="title"><%- _(title).t() %></div>
+        <div class="title"><%- _(serviceTitle).t() %></div>
         <div class="title-crumbs">
-            <a href="#" class="breadcrumbs-inputs">Inputs</a> &raquo
-            <% if (actionNav) { %>
-                <a href="#" class="breadcrumbs-action"><%- _(actionNav).t() %>
-                </a> &raquo
-            <% } %>
-            <span class="subtitle"><%- _(title).t() %></span>
+            <a href="#" class="breadcrumbs-inputs"><%- _('Inputs').t() %>
+            </a> &raquo
+            <span class="subtitle"><%- _(currentNav).t() %></span>
         </div>
     `
 });

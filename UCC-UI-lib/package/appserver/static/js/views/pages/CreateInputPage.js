@@ -45,7 +45,9 @@ define([
             );
             // render the form header including breadcrumbs
             let pageFormHeader = new PageFormHeader({
-                    navModel: this.navModel
+                    navModel: this.navModel,
+                    component: this.component,
+                    mode: this.mode
                 });
             this.$el.prepend(
                 pageFormHeader.render().$el
