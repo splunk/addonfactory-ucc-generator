@@ -1,10 +1,4 @@
-import CreateInputPage from 'app/views/pages/CreateInputPage';
-import {
-    MODE_CREATE,
-    MODE_CLONE,
-    MODE_EDIT,
-    MODE_DELETE
-} from 'app/constants/modes';
+import {MODE_CREATE} from 'app/constants/modes';
 import {PAGE_STYLE} from 'app/constants/pageStyle';
 
 define([
@@ -22,6 +16,7 @@ define([
 ) {
     return PopTartView.extend({
         className: 'dropdown-menu dropdown-menu-narrow',
+
         initialize: function (options) {
             _.bindAll(this, 'create');
             PopTartView.prototype.initialize.apply(this, arguments);

@@ -5,6 +5,7 @@ import {
 } from 'app/constants/modes';
 import CreateInputPageTemplate from 'app/views/pages/CreateInputPage.html';
 import 'appCssDir/createInput.css';
+import PageFormHeader from 'app/views/component/PageFormHeader';
 
 define([
     'jquery',
@@ -18,6 +19,12 @@ define([
     return BaseFormView.extend({
         className: 'create-input-section',
 
+        events: {
+            'click button.cancel-btn': function () {
+                this.navModel.navigator.navigateToRoot();
+            }
+        },
+
         initialize: function (options) {
             BaseFormView.prototype.initialize.apply(this, arguments);
         },
@@ -29,33 +36,26 @@ define([
         },
 
         renderTemplate: function () {
-            let jsonData = {};
-            if (this.mode === MODE_CREATE) {
-                jsonData = {
-                    title: 'Create New Input',
-                    btnValue: 'Save'
-                }
-            } else if (this.mode === MODE_EDIT) {
-                jsonData = {
-                    title: 'Update Input',
-                    btnValue: 'Update'
-                }
-            } else if (this.mode === MODE_CLONE) {
-                jsonData = {
-                    title: 'Clone Input',
-                    btnValue: 'Save'
-                }
+            let btnValue = 'Save';
+            if (this.mode === MODE_EDIT) {
+                btnValue = 'Update';
             }
-            let template = _.template(CreateInputPageTemplate);
-            this.$el.html(template(jsonData));
+            this.$el.html(
+                _.template(CreateInputPageTemplate)({btnValue})
+            );
+            // render the form header including breadcrumbs
+            let pageFormHeader = new PageFormHeader({
+                    navModel: this.navModel,
+                    component: this.component,
+                    mode: this.mode
+                });
+            this.$el.prepend(
+                pageFormHeader.render().$el
+            );
         },
 
         addGuid: function () {
             this.$el.addClass(this.curWinId);
-
-            this.$(".cancel-btn").on("click", () => {
-                this.navModel.navigator.navigateToRoot();
-            });
         }
     });
 });
