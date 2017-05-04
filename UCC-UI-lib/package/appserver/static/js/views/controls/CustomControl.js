@@ -3,7 +3,7 @@ define([window.Lodash], function(Lodash) {
         /**
          * Custom Component
          * @constructor
-         * @param {Object} context - {displayErrorMsg, navigator}.
+         * @param {Object} context - {displayErrorMsg}.
          * @param {element} el - The element of the custom component.
          * @param {model} model - Backbone model for current form.
          * @param {string} serviceName - Input service name.
