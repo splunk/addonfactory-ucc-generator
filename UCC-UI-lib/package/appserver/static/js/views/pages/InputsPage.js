@@ -148,6 +148,7 @@ define([
                 } else {
                     this.fetchListCollection(this.inputs, this.stateModel)
                         .done(() => {
+                            this._removeWaitSpinner();
                             this._enableSort();
                             this.stateModel.set('inSorting', false);
                         });
@@ -162,18 +163,21 @@ define([
                 } else {
                     // Add wait spinner when fetch data from backend
                     this._addWaitSpinner('.table-caption-inner');
-                    this.fetchListCollection(this.inputs, this.stateModel);
+                    this.fetchListCollection(this.inputs, this.stateModel)
+                        .done(() => {
+                            this._removeWaitSpinner();
+                        });
                 }
             }, 0));
 
             //Change offset
-            this.listenTo(this.stateModel, 'change:offset', _.debounce(function () {
+            this.listenTo(this.stateModel, 'change:offset', _.debounce(() => {
                 if (this.inputs._url === undefined) {
                     this.pageCollection(this.stateModel);
                 } else {
                     this.fetchListCollection(this.inputs, this.stateModel);
                 }
-            }.bind(this), 0));
+            }, 0));
 
             this.deferred = this.fetchAllCollection();
 
@@ -379,7 +383,10 @@ define([
                 fetching: true
             });
             var calls = _.map(this.services, service => {
-                return this.fetchListCollection(this[service.name], singleStateModel);
+                return this.fetchListCollection(
+                    this[service.name],
+                    singleStateModel
+                );
             });
             return $.when.apply(this, calls);
         },
@@ -416,7 +423,6 @@ define([
                 },
                 success: () => {
                     stateModel.set('fetching', false);
-                    this._removeWaitSpinner();
                 }
             });
         },
@@ -533,7 +539,6 @@ define([
                 sortDir);
 
             allDeferred.done(() => {
-                this._removeWaitSpinner();
                 this.cachedInputs = this.combineCollection();
                 this.cachedSearchInputs = this.combineCollection();
                 this.inputs.paging.set('offset', offset);
@@ -550,6 +555,8 @@ define([
                 this.inputs.reset(models);
                 this.inputs._url = undefined;
 
+                // Remove spinner, enable sort and change sort status
+                this._removeWaitSpinner();
                 this._enableSort();
                 this.stateModel.set('inSorting', false);
             });
