@@ -161,16 +161,16 @@ define([
                 _.each(this.children.rows, row => {
                     row = row.render();
                     if (row.$el) {
-                        this.$el.find('tbody:first').append(row.$el);
+                        this.$('tbody').append(row.$el);
                     } else {
-                        this.$el.find('tbody:first').append(row.el);
+                        this.$('tbody').append(row.el);
                     }
                 });
             });
         },
 
         renderRows: function () {
-            this.$el.find('tbody:first').empty();
+            this.$('tbody').empty();
             this.expandRows = [];
             this.children.rows = this.rowsFromCollection();
             this._render();

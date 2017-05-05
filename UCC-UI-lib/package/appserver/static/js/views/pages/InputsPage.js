@@ -3,6 +3,8 @@ import {configManager} from 'app/util/configManager';
 import {generateModel, generateCollection} from 'app/util/backboneHelpers';
 import {getFormattedMessage} from 'app/util/messageUtil';
 import {sortAlphabetical} from 'app/util/sort';
+import {MODE_CREATE} from 'app/constants/modes';
+import {PAGE_STYLE} from 'app/constants/pageStyle';
 import restEndpointMap from 'app/constants/restEndpointMap';
 import WaitSpinner from 'app/views/component/WaitSpinner';
 import 'appCssDir/common.css';
@@ -36,11 +38,13 @@ define([
         className: 'inputsContainer',
         initialize: function (options) {
             this.unifiedConfig = configManager.unifiedConfig;
-            this.inputsPageTemplateData = {};
-            this.inputsPageTemplateData.title = this.unifiedConfig.pages.inputs.title;
-            this.inputsPageTemplateData.description = this.unifiedConfig.pages.inputs.description;
-            this.inputsPageTemplateData.singleInput = this.unifiedConfig.pages.inputs.services.length === 1;
-            this.inputsPageTemplateData.buttonText = getFormattedMessage(100);
+            this.inputsConfig = this.unifiedConfig.pages.inputs;
+            this.inputsPageTemplateData = {
+                'title': this.inputsConfig.title,
+                'description': this.inputsConfig.description,
+                'singleInput': this.inputsConfig.services.length === 1,
+                'buttonText': getFormattedMessage(100)
+            };
 
             this.navModel = options.navModel;
             //state model
@@ -50,9 +54,10 @@ define([
                 sortDirection: 'asc',
                 count: 10,
                 offset: 0,
-                fetching: true
+                fetching: true,
+                inSorting: false
             });
-            this.services = this.unifiedConfig.pages.inputs.services;
+            this.services = this.inputsConfig.services;
             // filter keys for search
             this.filterKey = [];
             _.each(this.services, service =>
@@ -131,12 +136,21 @@ define([
             //Change sort, debounce 10 milliseconds after the header render
             this.listenTo(this.stateModel, 'change:sortDirection change:sortKey',
                     _.debounce(() => {
+                if (this.stateModel.get('inSorting')) {
+                    return;
+                }
+                this.stateModel.set('inSorting', true);
                 const sortKey = this.stateModel.get('sortKey');
                 this._addWaitSpinner(`th[data-key='${sortKey}']`);
+                this._disableSort();
                 if (this.inputs._url === undefined) {
                     this.sortCollection(this.stateModel);
                 } else {
-                    this.fetchListCollection(this.inputs, this.stateModel);
+                    this.fetchListCollection(this.inputs, this.stateModel)
+                        .done(() => {
+                            this._enableSort();
+                            this.stateModel.set('inSorting', false);
+                        });
                 }
             }, 10));
 
@@ -230,7 +244,11 @@ define([
         },
 
         render: function () {
-            this.$el.html(`<div class="loading-msg-icon">${getFormattedMessage(115)}</div>`);
+            this.$el.html(`
+                <div class="loading-msg-icon">
+                    ${getFormattedMessage(115)}
+                </div>
+            `);
             this.deferred.done(() => {
                 this.$el.html('');
                 this.stateModel.set('fetching', false);
@@ -239,7 +257,10 @@ define([
 
                 //Display the first page
                 this.inputs = this.combineCollection();
-                this.inputs.models = this.cachedInputs.models.slice(0, this.stateModel.get('count'));
+                this.inputs.models = this.cachedInputs.models.slice(
+                    0,
+                    this.stateModel.get('count')
+                );
 
                 if (this.inputs.length !== 0) {
                     _.each(this.inputs.models, model =>
@@ -249,7 +270,7 @@ define([
                 this.inputs.paging.set('total', this.inputs.length);
 
                 this.caption = new CaptionView({
-                    countLabel: _(this.unifiedConfig.pages.inputs.title).t(),
+                    countLabel: _(this.inputsConfig.title).t(),
                     model: {
                         state: this.stateModel
                     },
@@ -265,12 +286,14 @@ define([
                     enableBulkActions: false,
                     showActions: true,
                     enableMoreInfo: true,
-                    customRow: this.unifiedConfig.pages.inputs.table.customRow,
-                    component: this.unifiedConfig.pages.inputs,
+                    customRow: this.inputsConfig.table.customRow,
+                    component: this.inputsConfig,
                     restRoot: this.unifiedConfig.meta.restRoot,
                     navModel: this.navModel
                 });
-                this.$el.append(_.template(InputsPageTemplate)(this.inputsPageTemplateData));
+                this.$el.append(
+                    _.template(InputsPageTemplate)(this.inputsPageTemplateData)
+                );
                 this.$el.append(this.caption.render().$el);
                 // render input filter for multiple inputs
                 if (!this.inputsPageTemplateData.singleInput) {
@@ -279,20 +302,29 @@ define([
                 // render inputs table
                 this.$el.append(this.inputTable.render().$el);
 
+                // Single data input or multiple data inputs
                 if (this.inputsPageTemplateData.singleInput) {
+                    let serviceConfig = this.inputsConfig.services[0];
                     this.$('#addInputBtn').on('click', () => {
-                        var dlg = new EntityDialog({
-                            el: $(".dialog-placeholder"),
-                            collection: this.inputs,
-                            component: this.unifiedConfig.pages.inputs.services[0]
-                        }).render();
-                        dlg.modal();
+                        if (serviceConfig.style === PAGE_STYLE) {
+                            this.navModel.navigator.navigate({
+                                'service': serviceConfig.name,
+                                'action': MODE_CREATE
+                            });
+                        } else {
+                            let dlg = new EntityDialog({
+                                el: $(".dialog-placeholder"),
+                                collection: this.inputs,
+                                component: serviceConfig
+                            }).render();
+                            dlg.modal();
+                        }
                     });
                 } else {
-                    let customMenu = this.unifiedConfig.pages.inputs.menu;
+                    let customMenu = this.inputsConfig.menu;
                     if (customMenu) {
                         let services = {};
-                        _.each(this.unifiedConfig.pages.inputs.services, service => {
+                        _.each(this.inputsConfig.services, service => {
                             _.extend(services, {
                                 [service.name] : service.title
                             });
@@ -517,6 +549,9 @@ define([
                 });
                 this.inputs.reset(models);
                 this.inputs._url = undefined;
+
+                this._enableSort();
+                this.stateModel.set('inSorting', false);
             });
         },
 
@@ -540,6 +575,14 @@ define([
             if (this.waitSpinner) {
                 this.waitSpinner.remove();
             }
+        },
+
+        _disableSort: function () {
+            this.$('th').addClass('disabled');
+        },
+
+        _enableSort: function () {
+            this.$('th').removeClass('disabled');
         }
     });
 });
