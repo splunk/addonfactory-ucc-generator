@@ -166,6 +166,10 @@ define([
                         this.$('tbody').append(row.el);
                     }
                 });
+
+                // Clear this.children.rows and this.expandRows
+                this.children.rows = [];
+                this.expandRows = [];
             });
         },
 
