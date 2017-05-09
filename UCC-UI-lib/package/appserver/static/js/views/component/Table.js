@@ -165,6 +165,8 @@ define([
                 // Remove element
                 if (typeof row.remove === 'function') {
                     row.remove();
+                } else if (row.$el) {
+                    row.$el.remove();
                 } else if (row.el) {
                     row.el.remove();
                 }
