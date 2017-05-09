@@ -148,36 +148,50 @@ define([
             );
         },
 
-        _render: function () {
-            $.when(...this.deferreds).done(() => {
-                // Merge table row and more info row
-                if (this.expandRows &&
-                        this.children.rows.length === this.expandRows.length) {
-                    this.children.rows = _.flattenDeep(_.map(this.children.rows, (row, i) => {
-                        return [row, this.expandRows[i]];
-                    }));
+        _mergeRows: function () {
+            // Merge table row and more info row
+            if (this.expandRows &&
+                    this.children.rows.length === this.expandRows.length) {
+                return _.flattenDeep(_.map(this.children.rows, (row, i) => {
+                    return [row, this.expandRows[i]];
+                }));
+            } else {
+                return this.children.rows;
+            }
+        },
+
+        _render: function (rows) {
+            _.each(rows, row => {
+                // Remove element
+                if (typeof row.remove === 'function') {
+                    row.remove();
+                } else if (row.el) {
+                    row.el.remove();
                 }
-
-                _.each(this.children.rows, row => {
-                    row = row.render();
-                    if (row.$el) {
-                        this.$('tbody').append(row.$el);
-                    } else {
-                        this.$('tbody').append(row.el);
-                    }
-                });
-
-                // Clear this.children.rows and this.expandRows
-                this.children.rows = [];
-                this.expandRows = [];
+                row = row.render();
+                if (row.$el) {
+                    this.$('tbody').append(row.$el);
+                } else {
+                    this.$('tbody').append(row.el);
+                }
             });
+            // Clear this.children.rows and this.expandRows
+            this.children.rows = [];
+            this.expandRows = [];
         },
 
         renderRows: function () {
             this.$('tbody').empty();
             this.expandRows = [];
             this.children.rows = this.rowsFromCollection();
-            this._render();
+
+            if (this.deferreds.length > 0) {
+                $.when(...this.deferreds).done(() => {
+                    this._render(this._mergeRows());
+                });
+            } else {
+                this._render(this.children.rows);
+            }
         },
 
         render: function () {
@@ -185,7 +199,7 @@ define([
                 this.$el.append(this.compiledTemplate({}));
                 this.children.head.render().prependTo(this.$('> .table-chrome'));
             }
-            this._render();
+            this.renderRows();
             return this;
         },
 
