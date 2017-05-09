@@ -263,3 +263,9 @@ p.section-label {
 .ta-spinner{
     animation: ta_wait_spinner_animation .8s steps(8) infinite;
 }
+
+/* Column head field disable sort */
+th.disabled, th.disable > a {
+    cursor: default;
+    pointer-events: none;
+}
