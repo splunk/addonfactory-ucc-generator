@@ -90,7 +90,7 @@ define([
         },
 
         _clearFooter: function () {
-            $("footer").remove();
+            $("footer[role=contentinfo]").remove();
         },
 
         _getInputView: function (params) {
