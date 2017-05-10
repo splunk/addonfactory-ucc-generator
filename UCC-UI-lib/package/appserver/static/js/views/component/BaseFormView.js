@@ -369,7 +369,9 @@ define([
             // Execute the onCreate hook if defined
             if (this.hookDeferred) {
                 this.hookDeferred.then(() => {
-                    this.hook.onCreate();
+                    if (typeof this.hook.onCreate === 'function') {
+                        this.hook.onCreate();
+                    }
                 });
             }
             // Render template
