@@ -19,8 +19,6 @@ define([
     return BaseView.extend({
         initialize: function (options) {
             _.extend(this, options);
-            this.expandRows = [];
-            this.deferreds = [];
             //Expand the detail row
             this.children.tableRowToggle = new TableRowToggleView({
                 el: this.el,
@@ -35,6 +33,10 @@ define([
                     className: 'col-info',
                     html: '<i class="icon-info"></i>'
                 });
+                // Load custom row if defined
+                if (this.customRow) {
+                    this.crDeferred = this._loadCustomRow(this.customRow.src);
+                }
             }
 
             _.each(this.component.table.header, h => {
@@ -58,7 +60,6 @@ define([
                 model: this.stateModel,
                 columns: tableHeaders
             });
-            this.children.rows = this.rowsFromCollection();
             this.activate();
         },
 
@@ -77,33 +78,36 @@ define([
             }
         },
 
-        _load_module: function(module, component, model, index) {
+        _loadCustomRow: function(module) {
             const deferred = $.Deferred();
-            __non_webpack_require__(['custom/' + module],(CustomControl) => {
-                const el = document.createElement("tr");
-                // set className and style
-                el.className = 'more-info';
-                el.className += (index % 2) ? ' even' : ' odd';
-                el.style.display = "none";
-                const cols = component.table.header.length + 1;
-                el.innerHTML = `
-                    <td class="details" colspan="${cols}">
-                    </td>
-                `;
-                // The serviceName is extracted from model id which comes from
-                // util/backboneHelpers.js: generateModel
-                let id_str = model.id.split('/');
-                let serviceName = null;
-                if (id_str.length >= 2 && this.restRoot) {
-                    serviceName = id_str[id_str.length - 2];
-                    serviceName = serviceName.replace(this.restRoot + '_', '');
-                }
-
-                const control = new CustomControl(el, component, model, serviceName);
-                this.expandRows.push(control);
-                deferred.resolve(CustomControl);
+            __non_webpack_require__(['custom/' + module], (CustomRow) => {
+                this.CustomRow = CustomRow;
+                deferred.resolve(CustomRow);
             });
             return deferred.promise();
+        },
+
+        _newCustomRow: function(component, model, index) {
+            const el = document.createElement("tr");
+            // set className and style
+            el.className = 'more-info';
+            el.className += (index % 2) ? ' even' : ' odd';
+            el.style.display = "none";
+            const cols = component.table.header.length + 1;
+            el.innerHTML = `
+                <td class="details" colspan="${cols}">
+                </td>
+            `;
+            // The serviceName is extracted from model id which comes from
+            // util/backboneHelpers.js: generateModel
+            let id_str = model.id.split('/');
+            let serviceName = null;
+            if (id_str.length >= 2 && this.restRoot) {
+                serviceName = id_str[id_str.length - 2];
+                serviceName = serviceName.replace(this.restRoot + '_', '');
+            }
+
+            return new this.CustomRow(el, component, model, serviceName);
         },
 
         rowsFromCollection: function () {
@@ -127,8 +131,7 @@ define([
                     }));
                     if (this.enableMoreInfo) {
                         if (this.customRow) {
-                            this.deferreds.push(this._load_module(
-                                this.customRow.src,
+                            result.push(this._newCustomRow(
                                 this.component,
                                 model,
                                 i
@@ -148,50 +151,26 @@ define([
             );
         },
 
-        _mergeRows: function () {
-            // Merge table row and more info row
-            if (this.expandRows &&
-                    this.children.rows.length === this.expandRows.length) {
-                return _.flattenDeep(_.map(this.children.rows, (row, i) => {
-                    return [row, this.expandRows[i]];
-                }));
-            } else {
-                return this.children.rows;
-            }
-        },
-
         _render: function (rows) {
             _.each(rows, row => {
-                // Remove element
-                if (typeof row.remove === 'function') {
-                    row.remove();
-                } else if (row.$el) {
-                    row.$el.remove();
-                } else if (row.el) {
-                    row.el.remove();
-                }
-                row = row.render();
+                row.render();
                 if (row.$el) {
                     this.$('tbody').append(row.$el);
                 } else {
                     this.$('tbody').append(row.el);
                 }
             });
-            // Clear this.children.rows and this.expandRows
-            this.children.rows = [];
-            this.expandRows = [];
         },
 
         renderRows: function () {
             this.$('tbody').empty();
-            this.expandRows = [];
-            this.children.rows = this.rowsFromCollection();
-
-            if (this.deferreds.length > 0) {
-                $.when(...this.deferreds).done(() => {
-                    this._render(this._mergeRows());
+            if (this.customRow) {
+                $.when(this.crDeferred).done(() => {
+                    this.children.rows = this.rowsFromCollection();
+                    this._render(this.children.rows);
                 });
             } else {
+                this.children.rows = this.rowsFromCollection();
                 this._render(this.children.rows);
             }
         },
