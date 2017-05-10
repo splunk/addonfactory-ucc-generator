@@ -366,6 +366,13 @@ define([
         },
 
         render: function () {
+            // Execute the onCreate hook if defined
+            if (this.hookDeferred) {
+                this.hookDeferred.then(() => {
+                    this.hook.onCreate();
+                });
+            }
+            // Render template
             this.renderTemplate();
 
             // Used to store field to custom control or controlWrapper mapping
@@ -471,13 +478,16 @@ define([
 
                 // Add button type to button element, ADDON-13632
                 this.$('.modal-body').find('button').prop('type', 'button');
-            });
 
-            if (this.hookDeferred) {
-                this.hookDeferred.then(() => {
-                    this.hook.onCreate();
-                });
-            }
+                // Execute the onRender hook if defined
+                if (this.hookDeferred) {
+                    this.hookDeferred.then(() => {
+                        if (typeof this.hook.onRender === 'function') {
+                            this.hook.onRender();
+                        }
+                    });
+                }
+            });
             return this;
         }
     });

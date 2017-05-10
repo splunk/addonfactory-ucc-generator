@@ -8,6 +8,9 @@ define([], function() {
         onCreate() {
             console.log('in Hook: onCreate');
         }
+        onRender() {
+            console.log('in Hook: onRender');
+        }
         onSave() {
             console.log('in Hook: onSave');
         }
