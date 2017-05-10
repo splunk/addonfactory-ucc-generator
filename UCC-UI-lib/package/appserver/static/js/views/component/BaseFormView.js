@@ -301,18 +301,20 @@ define([
             } else {
                 addSavingMsg(this.curWinSelector, getFormattedMessage(108));
                 // Add onSave hook if it exists
-                if (this.hook) {
+                if (this.hook && typeof this.hook.onSave === 'function') {
                     this.hook.onSave();
                 }
                 deffer.done(() => {
                     // Add onSaveSuccess hook if it exists
-                    if (this.hook) {
+                    if (this.hook &&
+                            typeof this.hook.onSaveSuccess === 'function') {
                         this.hook.onSaveSuccess();
                     }
                     this.successCallback(input);
                 }).fail((model) => {
                     // Add onSaveFail hook if it exists
-                    if (this.hook) {
+                    if (this.hook &&
+                            typeof this.hook.onSaveFail === 'function') {
                         this.hook.onSaveFail();
                     }
 
