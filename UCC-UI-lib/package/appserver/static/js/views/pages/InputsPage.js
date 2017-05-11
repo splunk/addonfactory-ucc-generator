@@ -17,6 +17,7 @@ define([
     'app/util/Util',
     'app/views/pages/InputsPage.html',
     'views/shared/tablecaption/Master',
+    'views/shared/controls/SyntheticSelectControl',
     'app/views/component/InputFilterMenu',
     'app/views/component/AddInputMenu',
     'app/views/component/EntityDialog',
@@ -29,6 +30,7 @@ define([
     Util,
     InputsPageTemplate,
     CaptionView,
+    SyntheticSelectControl,
     InputFilter,
     AddInputMenu,
     EntityDialog,
@@ -170,14 +172,18 @@ define([
                 }
             }, 0));
 
-            //Change offset
-            this.listenTo(this.stateModel, 'change:offset', _.debounce(() => {
-                if (this.inputs._url === undefined) {
-                    this.pageCollection(this.stateModel);
-                } else {
-                    this.fetchListCollection(this.inputs, this.stateModel);
-                }
-            }, 0));
+            // Change offset or page count
+            this.listenTo(
+                this.stateModel,
+                'change:offset change:count',
+                _.debounce(() => {
+                    if (this.inputs._url === undefined) {
+                        this.pageCollection(this.stateModel);
+                    } else {
+                        this.fetchListCollection(this.inputs, this.stateModel);
+                    }
+                }, 0)
+            );
 
             this.deferred = this.fetchAllCollection();
 
@@ -283,6 +289,18 @@ define([
                     filterKey: this.filterKey
                 });
 
+                // Page count view
+                this.countSelect = new SyntheticSelectControl({
+                    modelAttribute: 'count',
+                    model: this.stateModel,
+                    items: [
+                        {label: _('10 Per Page').t(), value: 10},
+                        {label: _('25 Per Page').t(), value: 25},
+                        {label: _('50 Per Page').t(), value: 50}
+                    ],
+                    menuWidth: 'narrow'
+                });
+
                 this.inputTable = new Table({
                     stateModel: this.stateModel,
                     collection: this.inputs,
@@ -299,9 +317,11 @@ define([
                     _.template(InputsPageTemplate)(this.inputsPageTemplateData)
                 );
                 this.$el.append(this.caption.render().$el);
+
                 // render input filter for multiple inputs
                 if (!this.inputsPageTemplateData.singleInput) {
                     $('.table-caption-inner').append(this.filter.render().$el);
+                    $('.table-caption-inner').append(this.countSelect.render().$el);
                 }
                 // render inputs table
                 this.$el.append(this.inputTable.render().$el);

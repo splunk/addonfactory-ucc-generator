@@ -14,3 +14,8 @@
 .list-dotted dd {
     min-height: 20px;
 }
+
+.table-caption-inner > .shared-controls-syntheticselectcontrol {
+    float: right;
+    margin-top: 10px;
+}
