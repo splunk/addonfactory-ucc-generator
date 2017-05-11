@@ -195,7 +195,8 @@ define([
             this.context = {
                 displayErrorMsg: (message) => {
                     addErrorMsg(this.curWinSelector, message);
-                }
+                },
+                component: this.component
             }
         },
 
@@ -300,18 +301,20 @@ define([
             } else {
                 addSavingMsg(this.curWinSelector, getFormattedMessage(108));
                 // Add onSave hook if it exists
-                if (this.hook) {
+                if (this.hook && typeof this.hook.onSave === 'function') {
                     this.hook.onSave();
                 }
                 deffer.done(() => {
                     // Add onSaveSuccess hook if it exists
-                    if (this.hook) {
+                    if (this.hook &&
+                            typeof this.hook.onSaveSuccess === 'function') {
                         this.hook.onSaveSuccess();
                     }
                     this.successCallback(input);
                 }).fail((model) => {
                     // Add onSaveFail hook if it exists
-                    if (this.hook) {
+                    if (this.hook &&
+                            typeof this.hook.onSaveFail === 'function') {
                         this.hook.onSaveFail();
                     }
 
@@ -366,6 +369,15 @@ define([
         },
 
         render: function () {
+            // Execute the onCreate hook if defined
+            if (this.hookDeferred) {
+                this.hookDeferred.then(() => {
+                    if (typeof this.hook.onCreate === 'function') {
+                        this.hook.onCreate();
+                    }
+                });
+            }
+            // Render template
             this.renderTemplate();
 
             // Used to store field to custom control or controlWrapper mapping
@@ -471,13 +483,16 @@ define([
 
                 // Add button type to button element, ADDON-13632
                 this.$('.modal-body').find('button').prop('type', 'button');
-            });
 
-            if (this.hookDeferred) {
-                this.hookDeferred.then(() => {
-                    this.hook.onCreate();
-                });
-            }
+                // Execute the onRender hook if defined
+                if (this.hookDeferred) {
+                    this.hookDeferred.then(() => {
+                        if (typeof this.hook.onRender === 'function') {
+                            this.hook.onRender();
+                        }
+                    });
+                }
+            });
             return this;
         }
     });
