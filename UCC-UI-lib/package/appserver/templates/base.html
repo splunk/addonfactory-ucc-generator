@@ -26,7 +26,11 @@ app_js_build = app_root + '/js/build'
 app_css_build = app_root + '/css'
 
 # optimized js and css
-bootstrap_enterprise_css = "%s/bootstrap-enterprise.css" % app_css_build
+bootstrap_css = "%s/bootstrap-enterprise.css" % app_css_build
+
+if isLite:
+    bootstrap_css = "%s/bootstrap-lite.css" % app_css_build
+
 entry_js = "%s/%s.js" % (app_js_build ,'entry_page')
 %>\
 
@@ -52,7 +56,7 @@ entry_js = "%s/%s.js" % (app_js_build ,'entry_page')
         <meta name="msapplication-TileColor" content="#65A637">
         <meta name="msapplication-TileImage" content="${make_url('/static/img/bookmark/ms-tileicon-144x144.png')}">
 
-        <link rel="stylesheet" type="text/css" media="all" href="${make_url(bootstrap_enterprise_css)}" />
+        <link rel="stylesheet" type="text/css" media="all" href="${make_url(bootstrap_css)}" />
         <script src="${make_url('/static/js/i18n.js')}"></script>
     </head>
     <body s:app="${app_name}">
