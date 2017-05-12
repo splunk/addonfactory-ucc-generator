@@ -235,13 +235,13 @@ define([
         },
 
         addErrorToComponent: function (field) {
-            // Get the id for control
+            // Get the id for control, constructed in render(): controlOptions
             const selector = `#${this.component.name}-${field}`;
             $(selector).addClass('validation-error');
         },
 
         removeErrorFromComponent: function (field) {
-            // Get the id for control
+            // Get the id for control, constructed in render(): controlOptions
             const selector = `#${this.component.name}-${field}`;
             if ($(selector).hasClass('validation-error')) {
                 $(selector).addClass('validation-error');
