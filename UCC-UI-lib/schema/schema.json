@@ -28,6 +28,10 @@
                     "type": "string", 
                     "maxLength": 200
                 }, 
+                "tooltip": {
+                    "type": "string", 
+                    "maxLength": 250
+                }, 
                 "defaultValue": {
                     "oneOf": [
                         {
@@ -352,6 +356,10 @@
                 "help": {
                     "type": "string", 
                     "maxLength": 200
+                }, 
+                "tooltip": {
+                    "type": "string", 
+                    "maxLength": 250
                 }, 
                 "defaultValue": {
                     "oneOf": [
