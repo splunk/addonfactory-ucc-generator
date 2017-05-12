@@ -23,7 +23,7 @@ define([
             if (this.required === false || this.required === undefined) {
                 if (this.controlOptions.placeholder) {
                     this.controlOptions.placeholder =
-                        this.controlOptions.placeholder + '(optional)';
+                        _(this.controlOptions.placeholder + " (optional)").t();
                 } else {
                     this.controlOptions.placeholder = _("optional").t();
                 }
