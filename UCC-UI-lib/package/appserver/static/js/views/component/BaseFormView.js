@@ -105,7 +105,9 @@ define([
                 });
             }
             this.real_model.on("invalid", err => {
-                displayValidationError(this.curWinSelector,  err);
+                this._removeValidationErrorClass(err);
+                displayValidationError(this.curWinSelector, err);
+                this._highlightError(err);
             });
 
             /*
@@ -196,7 +198,9 @@ define([
                 displayErrorMsg: (message) => {
                     addErrorMsg(this.curWinSelector, message);
                 },
-                component: this.component
+                component: this.component,
+                addErrorToComponent: this.addErrorToComponent,
+                removeErrorFromComponent: this.removeErrorFromComponent,
             }
         },
 
@@ -206,6 +210,41 @@ define([
                     return;
                 }
                 $(e.target).closest('.msg').remove();
+            }
+        },
+
+        _removeValidationErrorClass: function(err) {
+            const {widgetsIdDict} = err;
+            _.each(Object.values(widgetsIdDict), selector => {
+                if ($(selector).length > 0 &&
+                        $(selector).hasClass('validation-error')) {
+                    $(selector).removeClass('validation-error');
+                }
+            });
+        },
+
+        _highlightError: function(err) {
+            const {validationError, widgetsIdDict} = err;
+            let errorAttribute, componentId;
+            if (typeof validationError === 'object' &&
+                    Object.keys(validationError).length > 0) {
+                errorAttribute = Object.keys(validationError)[0];
+                componentId = widgetsIdDict[errorAttribute];
+                $(componentId).addClass('validation-error');
+            }
+        },
+
+        addErrorToComponent: function (field) {
+            // Get the id for control
+            const selector = `#${this.component.name}-${field}`;
+            $(selector).addClass('validation-error');
+        },
+
+        removeErrorFromComponent: function (field) {
+            // Get the id for control
+            const selector = `#${this.component.name}-${field}`;
+            if ($(selector).hasClass('validation-error')) {
+                $(selector).addClass('validation-error');
             }
         },
 

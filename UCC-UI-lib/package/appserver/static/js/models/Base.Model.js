@@ -169,7 +169,8 @@ define([
                 let value = this.entry.content.get(attr);
                 ret = validator(attr, value);
                 if (ret) {
-                    return ret;
+                    // return object containing attributeName and error msg
+                    return {[attr]: ret}
                 }
             } else if (_.isArray(validator)) {
                 for (fn in validator) {

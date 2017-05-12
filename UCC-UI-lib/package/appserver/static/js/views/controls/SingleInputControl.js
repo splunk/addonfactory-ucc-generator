@@ -119,6 +119,11 @@ define([
                 });
             }
 
+            // Add id attribute to select2 control
+            if (this.options.elementId) {
+                this.$(".select2-choice").attr("id", this.options.elementId);
+            }
+
             $input.on("change", function (e) {
                 if (this.options.model && this.options.modelAttribute) {
                     if (!this.options.autoCompleteFields.some((field) => {
