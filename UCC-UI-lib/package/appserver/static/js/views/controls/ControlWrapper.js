@@ -20,10 +20,13 @@ define([
             _.extend(this, options);
 
             // Add 'optional' placeholder for optional field
-            // if placeholder option is not defined
-            if ((this.required === false || this.required === undefined) &&
-                    !this.controlOptions.placeholder) {
-                this.controlOptions.placeholder = _("optional").t();
+            if (this.required === false || this.required === undefined) {
+                if (this.controlOptions.placeholder) {
+                    this.controlOptions.placeholder =
+                        this.controlOptions.placeholder + '(optional)';
+                } else {
+                    this.controlOptions.placeholder = _("optional").t();
+                }
             }
 
             const {type} = options;
