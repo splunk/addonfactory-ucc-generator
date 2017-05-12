@@ -19,10 +19,12 @@ define([
     return BaseFormView.extend({
         className: 'create-input-section',
 
-        events: {
-            'click button.cancel-btn': function () {
-                this.navModel.navigator.navigateToRoot();
-            }
+        events: () => {
+            return _.extend({}, BaseFormView.prototype.events, {
+                'click button.cancel-btn': function () {
+                    this.navModel.navigator.navigateToRoot();
+                }
+            });
         },
 
         initialize: function (options) {

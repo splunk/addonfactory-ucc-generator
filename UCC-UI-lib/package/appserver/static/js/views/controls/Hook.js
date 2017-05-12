@@ -1,5 +1,17 @@
 define([], function() {
     class Hook {
+        /**
+         * From hook
+         * @constructor
+         * @param {object} context - {
+                    displayErrorMsg,
+                    component,
+                    addErrorToComponent,
+                    removeErrorFromComponent
+                }.
+         * @param {object} model - Backbone model for current form.
+         * @param {object} serviceName - Service name
+         */
         constructor(context, model, serviceName) {
             this.context = context;
             this.model = model;

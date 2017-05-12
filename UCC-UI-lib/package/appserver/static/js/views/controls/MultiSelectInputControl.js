@@ -53,6 +53,11 @@ define([
                     openOnEnter: false
                 })
                     .select2('val', this.stringToFieldList(this._value || ''));
+
+                // Add id attribute to select2 control
+                if (this.options.elementId) {
+                    this.$(".select2-choices").attr("id", this.options.elementId);
+                }
             });
             return this;
         },

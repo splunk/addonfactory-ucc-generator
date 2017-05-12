@@ -269,3 +269,9 @@ th.disabled, th.disable > a {
     cursor: default;
     pointer-events: none;
 }
+
+/* Input error style */
+input.validation-error, .select2-choice.validation-error,
+.select2-choices.validation-error, .btn-group-radio.validation-error > button {
+    border: 1px solid #d6563c !important;
+}

@@ -163,6 +163,12 @@ define([
             if (this.controlClass) {
                 $control.addClass(this.controlClass);
             }
+
+            // Add id to Radio group
+            if (this.type === 'radio' && this.controlOptions.elementId) {
+                $control.attr("id", this.controlOptions.elementId);
+            }
+
             this.$('.control-placeholder').prepend($control);
             this.$el.addClass('form-small');
             // Add class for automatic testing

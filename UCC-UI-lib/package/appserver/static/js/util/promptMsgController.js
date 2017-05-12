@@ -38,13 +38,21 @@ export function removeSavingMsg(containerSelector) {
     }
 }
 
-export function displayValidationError(containerSelector, {validationError}) {
+export function displayValidationError(containerSelector, error) {
+    const {validationError} = error;
+    let errorMsg;
+    if (typeof validationError === 'object' &&
+            Object.values(validationError).length > 0) {
+        errorMsg = Object.values(validationError)[0];
+    } else {
+        errorMsg = validationError;
+    }
     removeSavingMsg(containerSelector);
     if ($(containerSelector + ' .msg-text').length) {
-        $(containerSelector + ' .msg-text').text(validationError);
+        $(containerSelector + ' .msg-text').text(errorMsg);
     } else {
         $(containerSelector + ' .modal-body').prepend(
-            _.template(ErrorMsgTemplate)({msg: _.unescape(validationError)})
+            _.template(ErrorMsgTemplate)({msg: _.unescape(errorMsg)})
         );
     }
 }
