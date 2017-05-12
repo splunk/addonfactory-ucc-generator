@@ -19,7 +19,8 @@ define([
         initialize: function(options) {
             _.extend(this, options);
 
-            // placeholder
+            // Add 'optional' placeholder for optional field
+            // if placeholder option is not defined
             if ((this.required === false || this.required === undefined) &&
                     !this.controlOptions.placeholder) {
                 this.controlOptions.placeholder = _("optional").t();
