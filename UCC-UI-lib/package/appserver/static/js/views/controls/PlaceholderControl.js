@@ -1,12 +1,14 @@
 define([
+    'lodash',
     'views/shared/controls/Control'
 ], function (
+    _,
     Control
 ) {
     return Control.extend({
         initialize: function (options) {
             Control.prototype.initialize.apply(this, arguments);
-            this.defaultValue = options.defaultValue || '';
+            this.defaultValue = _(options.defaultValue || '').t();
             this.setValue(this.defaultValue, false);
         },
 

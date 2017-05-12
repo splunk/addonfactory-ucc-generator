@@ -18,7 +18,7 @@ export default Backbone.View.extend({
     render: function () {
         let compiled = _.template(GroupSectionTemplate);
         this.$el.html(compiled({
-            label: this.label,
+            label: _(this.label).t(),
             isExpandable: this.isExpandable ? 'expandable' : ''
         }));
         this.renderContent();

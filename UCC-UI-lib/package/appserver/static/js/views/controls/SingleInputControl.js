@@ -23,7 +23,8 @@ define([
         initialize: function (options) {
             Control.prototype.initialize.apply(this, arguments);
 
-            this.options.placeholder = options.placeholder || "Select a value";
+            this.options.placeholder = options.placeholder ||
+                                       _("Select a value").t();
             this.placeholder = this.options.placeholder;
             this.modelAttribute = options.modelAttribute;
             this.allowClear = options.allowClear ? true : false;

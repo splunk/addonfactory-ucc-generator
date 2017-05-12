@@ -19,6 +19,16 @@ define([
         initialize: function(options) {
             _.extend(this, options);
 
+            // Add 'optional' placeholder for optional field
+            if (this.required === false || this.required === undefined) {
+                if (this.controlOptions.placeholder) {
+                    this.controlOptions.placeholder =
+                        _(this.controlOptions.placeholder + " (optional)").t();
+                } else {
+                    this.controlOptions.placeholder = _("optional").t();
+                }
+            }
+
             const {type} = options;
             // Support both string mapping and raw component
             const controlType = _.isString(type) ? CONTROL_TYPE_MAP[type] : type;
@@ -149,7 +159,6 @@ define([
             this.$el.html(this.compiledTemplate({
                 label: this.label,
                 tooltip: this.tooltip,
-                required: this.required,
                 help: this.help
             }));
             if (this.tooltip) {
@@ -223,9 +232,6 @@ define([
                         <%- _(label).t() %>
                         <% if (tooltip) { %>
                             <a href="#" class="tooltip-link"><%- _("?").t() %></a>
-                        <% } %>
-                        <% if (required) { %>
-                            <span class="required">*</span>
                         <% } %>
                     </p>
                     </div>
