@@ -209,7 +209,7 @@ define([
             }
         },
 
-        positiveNumberValidator: function (attr, value) {
+        positiveNumberValidator: function (attr) {
             var ret = this.convertNumericAttr(attr);
             if (undefined === ret || isNaN(ret)) {
                 return getFormattedMessage(5, this._getAttrLabel(attr));

@@ -53,7 +53,7 @@ define([
         },
 
         delete: function () {
-            var url, collection, delete_url, self;
+            var url, collection, delete_url;
             collection = this.model.collection;
             if (!collection) {
                 collection = this.collection;

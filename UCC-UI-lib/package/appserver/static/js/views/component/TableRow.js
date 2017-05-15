@@ -1,4 +1,3 @@
-/*global __non_webpack_require__*/
 define([
     'jquery',
     'lodash',
@@ -62,9 +61,7 @@ define([
 
         openEdit: function (e) {
             e.preventDefault();
-            var $target = $(e.currentTarget),
-                deleteTag,
-                service;
+            var $target = $(e.currentTarget);
 
             if (this.editmenu) {
                 this.editmenu.remove();

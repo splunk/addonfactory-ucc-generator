@@ -5,7 +5,6 @@ import {
 } from 'app/constants/modes';
 import Backbone from 'backbone';
 import _ from 'lodash';
-import $ from 'jquery';
 
 const MAPPING = {
     [MODE_CREATE]: 'Create New Input',

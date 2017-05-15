@@ -1,13 +1,7 @@
 import {getFormattedMessage} from 'app/util/messageUtil';
 import CreateInputPage from 'app/views/pages/CreateInputPage';
 import {configManager} from 'app/util/configManager';
-import {generateModel, generateCollection} from 'app/util/backboneHelpers';
 import NavigatorModel from 'app/models/NavigatorModel';
-import {
-    MODE_CLONE,
-    MODE_CREATE,
-    MODE_EDIT
-} from 'app/constants/modes';
 import {PAGE_STYLE} from 'app/constants/pageStyle';
 
 const INPUT_PAGE = 'inputs';

@@ -1,8 +1,4 @@
-import {
-    MODE_CLONE,
-    MODE_CREATE,
-    MODE_EDIT
-} from 'app/constants/modes';
+import {MODE_EDIT} from 'app/constants/modes';
 import CreateInputPageTemplate from 'app/views/pages/CreateInputPage.html';
 import 'appCssDir/createInput.css';
 import PageFormHeader from 'app/views/component/PageFormHeader';
@@ -27,7 +23,7 @@ define([
             });
         },
 
-        initialize: function (options) {
+        initialize: function () {
             BaseFormView.prototype.initialize.apply(this, arguments);
         },
 

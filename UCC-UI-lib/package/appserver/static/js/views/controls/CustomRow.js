@@ -1,4 +1,4 @@
-define([window.Lodash], function(Lodash) {
+define([], function() {
     class ExpandRow {
         constructor(el, component, model, serviceName) {
             this.el = el;
