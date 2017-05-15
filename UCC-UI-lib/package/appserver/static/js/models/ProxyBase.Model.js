@@ -1,6 +1,6 @@
 define([
     'lodash',
-    'models/SplunkDBase',
+    'models/SplunkDBase'
 ], function (
     _,
     SplunkDBase

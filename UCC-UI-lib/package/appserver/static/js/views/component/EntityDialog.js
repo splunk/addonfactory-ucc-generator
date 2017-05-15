@@ -20,7 +20,7 @@ define([
     BaseFormView
 ) {
     return BaseFormView.extend({
-        initialize: function (options) {
+        initialize: function () {
             BaseFormView.prototype.initialize.apply(this, arguments);
         },
 
@@ -66,8 +66,7 @@ define([
                 template = _.template(templateMap[this.mode]),
                 jsonData = {
                     title: this.component.title
-                },
-                entity = this.component.entity;
+                };
 
             this.$el.html(template(jsonData));
 

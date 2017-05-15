@@ -17,7 +17,7 @@ define([
     TabTemplate
 ) {
     return Backbone.View.extend({
-        initialize: function(options) {
+        initialize: function() {
             const {unifiedConfig: {pages: {configuration}}} = configManager;
             this.stateModel = new Backbone.Model({
                 selectedTabId: this._generateTabId(configuration.tabs)

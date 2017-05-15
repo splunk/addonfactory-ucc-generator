@@ -1,7 +1,7 @@
 define([
     'jquery',
     'lodash',
-    'collections/SplunkDsBase',
+    'collections/SplunkDsBase'
 ], function (
     $,
     _,
@@ -125,7 +125,7 @@ define([
             options = $.extend(true, {data: {count: -1}}, options);
             return options;
         },
-        _getProxyUrl: function (appData) {
+        _getProxyUrl: function () {
             return "splunkd/__raw";
         }
     });

@@ -1,4 +1,3 @@
-/*global __non_webpack_require__*/
 import {configManager} from 'app/util/configManager';
 import {generateModel, generateCollection} from 'app/util/backboneHelpers';
 import {getFormattedMessage} from 'app/util/messageUtil';

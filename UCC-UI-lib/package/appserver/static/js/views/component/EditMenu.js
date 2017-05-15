@@ -2,11 +2,9 @@ import {configManager} from 'app/util/configManager';
 import {parseErrorMsg} from 'app/util/promptMsgController';
 import {
     MODE_CLONE,
-    MODE_EDIT,
-    MODE_DELETE
+    MODE_EDIT
 } from 'app/constants/modes';
 import {PAGE_STYLE} from 'app/constants/pageStyle';
-import CreateInputPage from 'app/views/pages/CreateInputPage';
 import WaitSpinner from 'app/views/component/WaitSpinner';
 
 define([
@@ -180,7 +178,7 @@ define([
                 url: disable_url
             }).done(() => {
                 this.rowDispatcher.trigger('disable-input');
-            }).fail((model, response) => {
+            }).fail((model) => {
                 this._displayError(parseErrorMsg(model));
             }).always(() => {
                 this._removeLoading();

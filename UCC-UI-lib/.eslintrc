@@ -1,4 +1,5 @@
 {
+    "extends": "eslint:recommended",
     "env": {
         "browser": true,
         "amd": true,
@@ -14,13 +15,14 @@
         }
     },
     "rules": {
-        "no-undef": 2
+        "no-undef": 2,
+        "no-console": "off"
     },
     "globals": {
+        "__non_webpack_require__": true,
         "__webpack_public_path__": true,
         "__CONFIG_FROM_FILE__": true,
         "Splunk": true,
-        "requirejs": true,
         "sprintf": true
     }
 }

@@ -2,7 +2,6 @@ import $ from 'jquery';
 import _ from 'lodash';
 import ErrorMsgTemplate from 'app/templates/messages/ErrorMsg.html';
 import SavingMsgTemplate from 'app/templates/messages/LoadingMsg.html';
-import WarningMsgTemplate from 'app/templates/messages/WarningMsg.html';
 
 // TODO: add UT
 export function addErrorMsg(containerSelector, text, needParse = false) {

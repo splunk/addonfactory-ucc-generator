@@ -1,4 +1,3 @@
-/*global __non_webpack_require__*/
 define([
     'jquery',
     'lodash',

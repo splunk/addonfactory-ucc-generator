@@ -1,4 +1,3 @@
-/*global __non_webpack_require__*/
 import {configManager} from 'app/util/configManager';
 import restEndpointMap from 'app/constants/restEndpointMap';
 import {
@@ -181,7 +180,7 @@ define([
                             controlWrapper.control.startLoading();
                             controlWrapper.collection.fetch({
                                 data,
-                                error: (collection, response, options) => {
+                                error: (collection, response) => {
                                     addErrorMsg(
                                         this.curWinSelector,
                                         response,
@@ -200,7 +199,7 @@ define([
                 },
                 component: this.component,
                 addErrorToComponent: this.addErrorToComponent,
-                removeErrorFromComponent: this.removeErrorFromComponent,
+                removeErrorFromComponent: this.removeErrorFromComponent
             }
         },
 

@@ -1,4 +1,4 @@
-define([window.Lodash], function(Lodash) {
+define([], function() {
     class CustomComponent {
         /**
          * Custom Component
