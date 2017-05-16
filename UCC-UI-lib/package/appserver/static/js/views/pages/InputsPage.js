@@ -276,10 +276,10 @@ define([
 
             // render input filter for multiple inputs
             if (!this.inputsPageTemplateData.singleInput) {
-                $('.table-caption-inner').append(
+                this.$('.table-caption-inner').append(
                     this.filter.render().$el
                 );
-                $('.table-caption-inner').append(
+                this.$('.table-caption-inner').append(
                     this.countSelect.render().$el
                 );
             }
