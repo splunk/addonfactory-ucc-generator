@@ -124,11 +124,6 @@ define([
 
             this.deferred = this.fetchAllCollection();
 
-            this.filter = new InputFilter({
-                dispatcher: this.dispatcher,
-                services: this.services
-            });
-
             this.emptySearchString =
                 this.filterKey.map(d => d + '=*')
                 .join(' OR ');
@@ -255,6 +250,11 @@ define([
                     {label: _('50 Per Page').t(), value: 50}
                 ],
                 menuWidth: 'narrow'
+            });
+
+            this.filter = new InputFilter({
+                dispatcher: this.dispatcher,
+                services: this.services
             });
 
             this.inputTable = new Table({
