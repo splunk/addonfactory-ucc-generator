@@ -3,15 +3,15 @@ define([], function() {
         /**
          * Custom Menu
          * @constructor
+         * @param {Object} globalConfig - Global configuration.
          * @param {element} target - Target element to hover.
          * @param {object} navigator - Navigator to navigate page.
                     navigator.navigate(params)
-         * @param {object} services - Object contains name - title key - value.
          */
-        constructor(target, navigator, services) {
+        constructor(globalConfig, target, navigator) {
+            this.globalConfig = globalConfig;
             this.target = target;
             this.navigator = navigator;
-            this.services = services;
         }
         render () {
             this.el = document.createElement('div');

@@ -27,7 +27,12 @@ define([
             BaseFormView.prototype.initialize.apply(this, arguments);
         },
 
-        successCallback: function() {
+        successCallback: function(input) {
+            if (this.mode === MODE_EDIT) {
+                this.dispatcher.trigger('edit-input', input);
+            } else {
+                this.dispatcher.trigger('add-input', input);
+            }
             this.undelegateEvents();
             // Navigate to inputs table view
             this.navModel.navigator.navigateToRoot();

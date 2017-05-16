@@ -3,6 +3,7 @@ define([
     'lodash',
     'app/views/component/TableRow',
     'app/views/component/MoreInfo',
+    'app/util/Util',
     'views/Base',
     'views/shared/TableHead',
     'views/shared/delegates/TableRowToggle'
@@ -11,6 +12,7 @@ define([
     _,
     TableRow,
     MoreInfo,
+    Util,
     BaseView,
     TableHeadView,
     TableRowToggleView
@@ -63,18 +65,8 @@ define([
         },
 
         startListening: function () {
-            this.listenTo(this.collection, 'remove', this.renderRows);
             this.listenTo(this.collection, 'reset', this.renderRows);
             this.listenTo(this.collection, 'sync', this.renderRows);
-            this.listenTo(this.collection, 'add', this.addWithOffsetChange);
-        },
-
-        addWithOffsetChange: function () {
-            if (this.collection._url === undefined) {
-                this.dispatcher.trigger('add-input');
-            } else {
-                this.renderRows();
-            }
         },
 
         _loadCustomRow: function(module) {
@@ -86,27 +78,24 @@ define([
             return deferred.promise();
         },
 
-        _newCustomRow: function(component, model, index) {
-            const el = document.createElement("tr");
+        _newCustomRow: function(model, index) {
+            const el = document.createElement("tr"),
+                  cols = this.component.table.header.length + 1,
+                  serviceName = Util.extractServiceName(model);
             // set className and style
             el.className = 'more-info';
             el.className += (index % 2) ? ' even' : ' odd';
             el.style.display = "none";
-            const cols = component.table.header.length + 1;
             el.innerHTML = `
                 <td class="details" colspan="${cols}">
                 </td>
             `;
-            // The serviceName is extracted from model id which comes from
-            // util/backboneHelpers.js: generateModel
-            let id_str = model.id.split('/');
-            let serviceName = null;
-            if (id_str.length >= 2 && this.restRoot) {
-                serviceName = id_str[id_str.length - 2];
-                serviceName = serviceName.replace(this.restRoot + '_', '');
-            }
-
-            return new this.CustomRow(el, component, model, serviceName);
+            return new this.CustomRow(
+                this.unifiedConfig,
+                serviceName,
+                el,
+                model
+            );
         },
 
         rowsFromCollection: function () {
@@ -122,8 +111,8 @@ define([
                             enableMoreInfo: this.enableMoreInfo,
                             showActions: true,
                             collection: this.collection,
+                            unifiedConfig: this.unifiedConfig,
                             component: this.component,
-                            restRoot: this.restRoot,
                             navModel: this.navModel
                         },
                         index: i
@@ -131,7 +120,6 @@ define([
                     if (this.enableMoreInfo) {
                         if (this.customRow) {
                             result.push(this._newCustomRow(
-                                this.component,
                                 model,
                                 i
                             ));

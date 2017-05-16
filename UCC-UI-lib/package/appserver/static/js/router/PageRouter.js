@@ -47,7 +47,6 @@ define([
             this.model.navigator.on('change:url', (model, nextUrl) =>  {
                 this.navigate(nextUrl, {trigger: true, replace: false});
             });
-
         },
 
         _renderHeader: function () {
@@ -56,7 +55,7 @@ define([
 
         _parseQueryString: function (queryString) {
             let params = {};
-            if (!_.isString(queryString)){
+            if (!_.isString(queryString)) {
                 return params;
             }
             let queryParts = decodeURI(queryString).split(/&/g);
@@ -96,13 +95,12 @@ define([
                         component: component,
                         navModel: this.model,
                         mode: params.action,
-                        model: this.model.dataModel
+                        model: this.model.dataModel,
+                        dispatcher: this.inputsPageView.dispatcher
                     });
                 }
             }
-            return new InputsPageView({
-                navModel: this.model
-            });
+            return this.inputsPageView;
         },
 
         /*
@@ -114,6 +112,11 @@ define([
             this.model.navigator.set({params}, {silent: true});
             BaseRouter.prototype.page.apply(this, args);
             this.deferreds.pageViewRendered.done(() => {
+                if (!this.inputsPageView) {
+                    this.inputsPageView = new InputsPageView({
+                        navModel: this.model
+                    });
+                }
                 if (!this._headerReady) {
                     this._renderHeader();
                     this._headerReady = true;
