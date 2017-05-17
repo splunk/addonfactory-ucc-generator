@@ -1,21 +1,22 @@
 define([], function() {
     class Hook {
         /**
-         * From hook
+         * Form hook
          * @constructor
-         * @param {object} context - {
+         * @param {Object} globalConfig - Global configuration.
+         * @param {object} serviceName - Service name
+         * @param {object} model - Backbone model for form, not Splunk model
+         * @param {object} util - {
                     displayErrorMsg,
-                    component,
                     addErrorToComponent,
                     removeErrorFromComponent
                 }.
-         * @param {object} model - Backbone model for current form.
-         * @param {object} serviceName - Service name
          */
-        constructor(context, model, serviceName) {
-            this.context = context;
-            this.model = model;
+        constructor(globalConfig, serviceName, model, util) {
+            this.globalConfig = globalConfig;
             this.serviceName = serviceName;
+            this.model = model;
+            this.util = util;
         }
         onCreate() {
             console.log('in Hook: onCreate');

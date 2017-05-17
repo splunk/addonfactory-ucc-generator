@@ -139,6 +139,24 @@ define(function () {
 
         decodeHTML: function(value) {
             return $('<div/>').html(value).text();
+        },
+
+        // The serviceName is extracted from model id which comes from
+        // util/backboneHelpers.js: generateModel
+        extractServiceName: function(model) {
+            let serviceName = null;
+            if (!model.id || !model.get('appData').stanzaPrefix) {
+                return serviceName;
+            }
+            let idStr = model.id.split('/');
+            if (idStr.length >= 2 && model.get('appData').stanzaPrefix) {
+                serviceName = idStr[idStr.length - 2];
+                serviceName = serviceName.replace(
+                    model.get('appData').stanzaPrefix + '_',
+                    ''
+                );
+            }
+            return serviceName;
         }
     };
 });

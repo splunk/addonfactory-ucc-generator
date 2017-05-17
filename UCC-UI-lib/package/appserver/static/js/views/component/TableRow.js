@@ -34,7 +34,7 @@ define([
 
             /*
                 collection, stateModel, allCollection, enableBulkActions,
-                enableMoreInfo, showActions, component, restRoot
+                enableMoreInfo, showActions, component, navModel
             */
             _.extend(this, this.model);
 
@@ -106,25 +106,18 @@ define([
             });
         },
 
-        _load_module: function(module, field, model, index) {
+        _loadCustomCell: function(module, field, model, index) {
             const deferred = $.Deferred();
-            __non_webpack_require__(['custom/' + module],(CustomCell) => {
+            __non_webpack_require__(['custom/' + module], (CustomCell) => {
                 const el = document.createElement("td");
                 el.className = 'col-' + field;
-
-                // The serviceName is extracted from model id which comes from
-                // util/backboneHelpers.js: generateModel
-                let id_str = model.id.split('/');
-                let serviceName = null;
-                if (id_str.length >= 2 && this.restRoot) {
-                    serviceName = id_str[id_str.length - 2];
-                    serviceName = serviceName.replace(this.restRoot + '_', '');
-                }
+                const serviceName = Util.extractServiceName(model);
                 const customCell = new CustomCell(
+                    this.unifiedConfig,
+                    serviceName,
                     el,
                     field,
-                    model,
-                    serviceName
+                    model
                 );
                 this.cells[index] = customCell.render().el;
                 deferred.resolve(CustomCell);
@@ -158,7 +151,7 @@ define([
                     this.cells[index] = html;
                 } else {
                     this.deferreds.push(
-                        this._load_module(
+                        this._loadCustomCell(
                             customCell.src,
                             field,
                             this.model.entity,

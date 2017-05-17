@@ -31,27 +31,10 @@ define([
         },
 
         successCallback: function(input) {
-            // Add model to collection
-            if (this.mode !== MODE_EDIT) {
-                if (this.collection.paging.get('total') !== undefined) {
-                    _.each(this.collection.models, (model) => {
-                        model.paging.set(
-                            'total',
-                            this.collection.paging.get('total') + 1
-                        );
-                    });
-                    /*
-                        Trigger collection page change event to
-                        refresh the count in table caption
-                    */
-                    this.collection.paging.set(
-                        'total',
-                        this.collection.paging.get('total') + 1
-                    );
-                } else {
-                    console.log('Could not get total count for collection');
-                }
-                this.collection.add(input);
+            if (this.mode === MODE_EDIT) {
+                this.dispatcher.trigger('edit-input', input);
+            } else {
+                this.dispatcher.trigger('add-input', input);
             }
             this.$("[role=dialog]").modal('hide');
             this.undelegateEvents();

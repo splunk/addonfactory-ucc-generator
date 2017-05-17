@@ -93,7 +93,8 @@ define([
                     collection: this.collection,
                     model: this.model,
                     mode: MODE_EDIT,
-                    component: this._getComponent()
+                    component: this._getComponent(),
+                    dispatcher: this.dispatcher
                 });
                 editDialog.render().modal();
             }
@@ -202,7 +203,8 @@ define([
                     collection: this.collection,
                     model: this.model,
                     mode: MODE_CLONE,
-                    component: this._getComponent()
+                    component: this._getComponent(),
+                    dispatcher: this.dispatcher
                 });
                 cloneDialog.render().modal();
             }

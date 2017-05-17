@@ -41,8 +41,8 @@ export function displayValidationError(containerSelector, error) {
     const {validationError} = error;
     let errorMsg;
     if (typeof validationError === 'object' &&
-            Object.values(validationError).length > 0) {
-        errorMsg = Object.values(validationError)[0];
+            Object.keys(validationError).length > 0) {
+        errorMsg = validationError[Object.keys(validationError)[0]];
     } else {
         errorMsg = validationError;
     }

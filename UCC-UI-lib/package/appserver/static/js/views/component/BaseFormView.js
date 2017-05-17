@@ -117,7 +117,7 @@ define([
             this.initModel();
 
             if (this.component.hook) {
-                this.hookDeferred = this._load_hook(this.component.hook.src);
+                this.hookDeferred = this._loadHook(this.component.hook.src);
             }
 
             // Dependency field list
@@ -192,12 +192,11 @@ define([
                     }
                 });
             }
-            // Context used to pass to custom component for displaying error msg
-            this.context = {
+            // Util used to pass to custom component for displaying error msg
+            this.util = {
                 displayErrorMsg: (message) => {
                     addErrorMsg(this.curWinSelector, message);
                 },
-                component: this.component,
                 addErrorToComponent: this.addErrorToComponent,
                 removeErrorFromComponent: this.removeErrorFromComponent
             }
@@ -214,7 +213,11 @@ define([
 
         _removeValidationErrorClass: function(err) {
             const {widgetsIdDict} = err;
-            _.each(Object.values(widgetsIdDict), selector => {
+            let selectors = [];
+            for (const key of Object.keys(widgetsIdDict)) {
+                selectors.push(widgetsIdDict[key]);
+            }
+            _.each(selectors, selector => {
                 if ($(selector).length > 0 &&
                         $(selector).hasClass('validation-error')) {
                     $(selector).removeClass('validation-error');
@@ -369,29 +372,31 @@ define([
             return deffer;
         },
 
-        _load_hook: function (module) {
+        _loadHook: function (module) {
             let deferred = $.Deferred();
             __non_webpack_require__(['custom/' + module], (Hook) => {
                 this.hook = new Hook(
-                    this.context,
+                    configManager.unifiedConfig,
+                    this.component.name,
                     this.model,
-                    this.component.name
+                    this.util
                 );
                 deferred.resolve(Hook);
             });
             return deferred.promise();
         },
 
-        _load_module: function (module, modelAttribute, model, serviceName, index) {
+        _loadCustomControl: function (module, modelAttribute, model, serviceName, index) {
             let deferred = $.Deferred();
             __non_webpack_require__(['custom/' + module], (CustomControl) => {
                 let el = document.createElement("DIV");
                 let control = new CustomControl(
-                    this.context,
+                    configManager.unifiedConfig,
+                    serviceName,
                     el,
                     modelAttribute,
                     model,
-                    serviceName
+                    this.util
                 );
                 this.fieldControlMap.set(modelAttribute, control);
                 // Add custom validation
@@ -443,7 +448,7 @@ define([
                 _.extend(controlOptions, e.options);
 
                 if(e.type === 'custom') {
-                    deferred = this._load_module(
+                    deferred = this._loadCustomControl(
                         e.options.src,
                         controlOptions.modelAttribute,
                         controlOptions.model,

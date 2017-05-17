@@ -50,7 +50,8 @@ define([
                 let dlg = new EntityDialog({
                     el: $(".dialog-placeholder"),
                     collection: this.collection,
-                    component: component
+                    component: component,
+                    dispatcher: this.dispatcher
                 }).render();
                 dlg.modal();
             }

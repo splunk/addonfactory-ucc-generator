@@ -3,21 +3,26 @@ define([], function() {
         /**
          * Custom Component
          * @constructor
-         * @param {Object} context - {displayErrorMsg}.
-         * @param {element} el - The element of the custom component.
-         * @param {model} model - Backbone model for current form.
-         * @param {string} serviceName - Input service name.
+         * @param {Object} globalConfig - Global configuration.
+         * @param {string} serviceName - Service name.
+         * @param {element} el - The element of the custom row.
+         * @param {string} modelAttribute - Backbone model attribute name.
+         * @param {object} model - Backbone model for form, not Splunk model
+         * @param {object} util - {
+                    displayErrorMsg,
+                    addErrorToComponent,
+                    removeErrorFromComponent
+                }.
          */
-        constructor(context, el, field, model, serviceName) {
-            this.context = context;
+        constructor(globalConfig, serviceName, el, modelAttribute, model, util) {
+            this.globalConfig = globalConfig;
             this.el = el;
-            this.field = field;
-            this.model = model;
             this.serviceName = serviceName;
+            this.modelAttribute = modelAttribute;
+            this.model = model;
+            this.util = util;
         }
         render() {
-            console.log('render is called');
-            console.log(window.Lodash.now());
             this.el.innerHTML = '<input id="mytext" type="text"></text>';
             var el = this.el.querySelector('#mytext');
             el.addEventListener('change', () => {

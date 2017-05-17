@@ -1,13 +1,14 @@
 import {configManager} from 'app/util/configManager';
-import {generateModel, generateCollection} from 'app/util/backboneHelpers';
+import {generateCollection} from 'app/util/backboneHelpers';
 import {getFormattedMessage} from 'app/util/messageUtil';
 import {sortAlphabetical} from 'app/util/sort';
 import {MODE_CREATE} from 'app/constants/modes';
 import {PAGE_STYLE} from 'app/constants/pageStyle';
 import restEndpointMap from 'app/constants/restEndpointMap';
-import WaitSpinner from 'app/views/component/WaitSpinner';
 import 'appCssDir/common.css';
 import 'appCssDir/inputs.css';
+
+const ALL_SERVICE = 'all';
 
 define([
     'jquery',
@@ -37,6 +38,7 @@ define([
 ) {
     return Backbone.View.extend({
         className: 'inputsContainer',
+
         initialize: function (options) {
             this.unifiedConfig = configManager.unifiedConfig;
             this.inputsConfig = this.unifiedConfig.pages.inputs;
@@ -49,14 +51,13 @@ define([
 
             this.navModel = options.navModel;
             //state model
-            this.stateModel = new Backbone.Model();
-            this.stateModel.set({
+            this.stateModel = new Backbone.Model({
                 sortKey: 'name',
                 sortDirection: 'asc',
                 count: 10,
                 offset: 0,
                 fetching: true,
-                inSorting: false
+                service: ALL_SERVICE
             });
             this.services = this.inputsConfig.services;
             // filter keys for search
@@ -80,176 +81,129 @@ define([
                 }
             });
             this.dispatcher = _.extend({}, Backbone.Events);
+            this.inputs = generateCollection();
 
-            //Change filter
+            // Change filter
             this.listenTo(this.dispatcher, 'filter-change', (type) => {
-                this.filterChange(type, this.stateModel);
+                // Trigger change:service event
+                this.stateModel.set('service', type);
             });
 
-            //Delete input
-            this.listenTo(this.dispatcher, 'delete-input', () => {
-                var all_deferred = this.fetchAllCollection();
-                all_deferred.done(() => {
-                    var offset = this.stateModel.get('offset'),
-                        count = this.stateModel.get('count'),
-                        models;
-                    this.cachedInputs = this.combineCollection();
-                    this.cachedSearchInputs = this.combineCollection();
-
-                    this.inputs.paging.set('offset', offset);
-                    this.inputs.paging.set('perPage', count);
-                    this.inputs.paging.set('total', this.cachedSearchInputs.length);
-                    models = this.cachedSearchInputs.models.slice(offset, offset + count);
-                    _.each(models, (model) => {
-                        model.paging.set('offset', offset);
-                        model.paging.set('perPage', count);
-                        model.paging.set('total', this.cachedSearchInputs.length);
-                    });
-                    this.inputs.reset(models);
-                    this.inputs._url = undefined;
+            // Delete input event
+            this.listenTo(this.dispatcher, 'delete-input', (model) => {
+                // Delete model from cache
+                this.cachedInputs.models = this.cachedInputs.models.filter(m => {
+                    return m.get('id') !== model.get('id');
                 });
+                this.stateChange();
             });
-
-            //Add input with offset change
-            this.listenTo(this.dispatcher, 'add-input', () => {
-                var all_deferred = this.fetchAllCollection();
-                all_deferred.done(() => {
-                    var offset = this.stateModel.get('offset'),
-                        count = this.stateModel.get('count'),
-                        models;
-                    this.cachedInputs = this.combineCollection();
-                    this.cachedSearchInputs = this.combineCollection();
-
-                    this.inputs.paging.set('offset', offset);
-                    this.inputs.paging.set('perPage', count);
-                    this.inputs.paging.set('total', this.cachedSearchInputs.length);
-                    models = this.cachedSearchInputs.models.slice(offset, offset + count);
-                    _.each(models, (model) => {
-                        model.paging.set('offset', offset);
-                        model.paging.set('perPage', count);
-                        model.paging.set('total', this.cachedSearchInputs.length);
-                    });
-                    this.inputs.reset(models);
-                    this.inputs._url = undefined;
+            // Edit input event
+            this.listenTo(this.dispatcher, 'edit-input', (model) => {
+                // Update model in cache
+                this.cachedInputs.models = this.cachedInputs.models.map(m => {
+                    if (m.get('id') !== model.get('id')) {
+                        return m;
+                    } else {
+                        return model;
+                    }
                 });
+                this.stateChange();
             });
-
-            //Change sort, debounce 10 milliseconds after the header render
-            this.listenTo(this.stateModel, 'change:sortDirection change:sortKey',
-                    _.debounce(() => {
-                if (this.stateModel.get('inSorting')) {
-                    return;
-                }
-                this.stateModel.set('inSorting', true);
-                const sortKey = this.stateModel.get('sortKey');
-                this._addWaitSpinner(`th[data-key='${sortKey}']`);
-                this._disableSort();
-                if (this.inputs._url === undefined) {
-                    this.sortCollection(this.stateModel);
-                } else {
-                    this.fetchListCollection(this.inputs, this.stateModel)
-                        .done(() => {
-                            this._removeWaitSpinner();
-                            this._enableSort();
-                            this.stateModel.set('inSorting', false);
-                        });
-                }
-            }, 10));
-
-            //Change search
-            this.listenTo(this.stateModel, 'change:search',
-                    _.debounce(() => {
-                if (this.inputs._url === undefined) {
-                    this.searchCollection(this.stateModel);
-                } else {
-                    // Add wait spinner when fetch data from backend
-                    this._addWaitSpinner('.table-caption-inner');
-                    this.fetchListCollection(this.inputs, this.stateModel)
-                        .done(() => {
-                            this._removeWaitSpinner();
-                        });
-                }
-            }, 0));
-
-            // Change offset or page count
+            // Add input event
+            this.listenTo(this.dispatcher, 'add-input', (model) => {
+                this.cachedInputs.models.push(model);
+                this.stateChange();
+            });
+            // State model change event
             this.listenTo(
                 this.stateModel,
-                'change:offset change:count',
-                _.debounce(() => {
-                    if (this.inputs._url === undefined) {
-                        this.pageCollection(this.stateModel);
-                    } else {
-                        this.fetchListCollection(this.inputs, this.stateModel);
-                    }
-                }, 0)
+                'change:sortDirection change:sortKey ' +
+                'change:search change:offset change:count change:service',
+                this.stateChange.bind(this)
             );
 
             this.deferred = this.fetchAllCollection();
-
-            this.filter = new InputFilter({
-                dispatcher: this.dispatcher,
-                services: this.services
-            });
 
             this.emptySearchString =
                 this.filterKey.map(d => d + '=*')
                 .join(' OR ');
         },
 
-        filterChange: function (type, stateModel) {
-            // Do not triger the change event
-            stateModel.set('offset', 0, {silent: true});
-            var search = this.stateModel.get('search'),
-                all_deferred,
-                models,
-                deferred;
+        stateChange: function () {
+            let models = this.adjustPaging(
+                this.filterSort(
+                    this.filterSearch(
+                        this.filterService(this.cachedInputs.models)
+                    )
+            ));
+            this.inputs.reset(models);
+        },
 
-            if (type === 'all') {
-                if (search !== undefined && search !== this.emptySearchString) {
-                    this.searchCollection(this.stateModel);
-                    this.inputs._url = undefined;
-                } else {
-                    all_deferred = this.fetchAllCollection();
-                    all_deferred.done(() => {
-                        var offset = this.stateModel.get('offset'),
-                            count = this.stateModel.get('count');
-                        this.cachedInputs = this.combineCollection();
-                        this.cachedSearchInputs = this.combineCollection();
-                        this.inputs.paging.set('offset', offset);
-                        this.inputs.paging.set('perPage', count);
-                        this.inputs.paging.set('total', this.cachedSearchInputs.length);
-                        models = this.cachedSearchInputs.models.slice(offset, offset + count);
-                        _.each(models, (model) => {
-                            model.paging.set('offset', offset);
-                            model.paging.set('perPage', count);
-                            model.paging.set('total', this.cachedSearchInputs.length);
-                        });
-                        this.inputs.reset(models);
-                        this.inputs._url = undefined;
-                    });
-                }
+        filterSearch: function(models) {
+            if (!this.stateModel.get('search') ||
+                    this.stateModel.get('search') === this.emptySearchString) {
+                return models;
+            }
+            const search = this.getRawSearch(this.stateModel.get('search'));
+            let result = models.filter(d =>
+                this.filterKey.some(field => {
+                    const entryValue = (d.entry.get(field) &&
+                        d.entry.get(field).toLowerCase()) || undefined;
+                    const contentValue = (d.entry.content.get(field) &&
+                        d.entry.content.get(field).toLowerCase()) || undefined;
+
+                    return (entryValue && entryValue.indexOf(search) > -1) ||
+                        (contentValue && contentValue.indexOf(search) > -1);
+                })
+            );
+            //make the filter work for field 'status'
+            if ("disabled".indexOf(search) > -1) {
+                result = result.concat(models.filter(model => {
+                    return model.entry.content.get('disabled') === true;
+                }));
+            } else if ("enabled".indexOf(search) > -1) {
+                result = result.concat(models.filter(model => {
+                    return model.entry.content.get('disabled') === false;
+                }));
+            }
+            return result;
+        },
+
+        filterSort: function (models) {
+            const sortKey = this.stateModel.get('sortKey'),
+                  sortDir = this.stateModel.get('sortDirection'),
+                  handler = (a, b) => sortAlphabetical(
+                      a.entry.get(sortKey) || a.entry.content.get(sortKey),
+                      b.entry.get(sortKey) || b.entry.content.get(sortKey),
+                  sortDir);
+            return models.sort(handler);
+        },
+
+        filterService: function (models) {
+            // Filter by service
+            const service = this.stateModel.get('service');
+            if (service === ALL_SERVICE) {
+                return models;
             } else {
-                deferred = this.fetchListCollection(this[type], this.stateModel);
-                deferred.done(() => {
-                    const service = _.find(this.services, d => d.name === type);
-                    if (!restEndpointMap[service.name]) {
-                        this.inputs.model = generateModel(service.name);
-                    } else {
-                        this.inputs.model = generateModel(
-                            '',
-                            {'endpointUrl': restEndpointMap[service.name]}
-                        );
-                    }
-                    this.inputs._url = this[type]._url;
-                    this.inputs.reset(this[type].models);
-
-                    var offset = this.stateModel.get('offset'),
-                        count = this.stateModel.get('count');
-                    this.inputs.paging.set('offset', offset);
-                    this.inputs.paging.set('perPage', count);
-                    this.inputs.paging.set('total', this[type].paging.get('total'));
+                return models.filter(model => {
+                    return Util.extractServiceName(model) === service;
                 });
             }
+        },
+
+        adjustPaging: function (models) {
+            const offset = this.stateModel.get('offset'),
+                  count = this.stateModel.get('count'),
+                  total = models.length;
+            this.inputs.paging.set('offset', offset);
+            this.inputs.paging.set('perPage', count);
+            this.inputs.paging.set('total', total);
+            _.each(models, (model) => {
+                model.paging.set('offset', offset);
+                model.paging.set('perPage', count);
+                model.paging.set('total', total);
+            });
+            return models.slice(offset, offset + count);
         },
 
         render: function () {
@@ -258,154 +212,148 @@ define([
                     ${getFormattedMessage(115)}
                 </div>
             `);
-            this.deferred.done(() => {
-                this.$el.html('');
-                this.stateModel.set('fetching', false);
-                this.cachedInputs = this.combineCollection();
-                this.cachedSearchInputs = this.combineCollection();
-
-                //Display the first page
-                this.inputs = this.combineCollection();
-                this.inputs.models = this.cachedInputs.models.slice(
-                    0,
-                    this.stateModel.get('count')
-                );
-
-                if (this.inputs.length !== 0) {
-                    _.each(this.inputs.models, model =>
-                        model.paging.set('total', this.inputs.length)
-                    );
-                }
-                this.inputs.paging.set('total', this.inputs.length);
-
-                this.caption = new CaptionView({
-                    countLabel: _(this.inputsConfig.title).t(),
-                    model: {
-                        state: this.stateModel
-                    },
-                    collection: this.inputs,
-                    noFilterButtons: true,
-                    filterKey: this.filterKey
+            if (this.cachedInputs) {
+                this._render();
+            } else {
+                this.deferred.done(() => {
+                    this._render();
                 });
-
-                // Page count view
-                this.countSelect = new SyntheticSelectControl({
-                    modelAttribute: 'count',
-                    model: this.stateModel,
-                    items: [
-                        {label: _('10 Per Page').t(), value: 10},
-                        {label: _('25 Per Page').t(), value: 25},
-                        {label: _('50 Per Page').t(), value: 50}
-                    ],
-                    menuWidth: 'narrow'
-                });
-
-                this.inputTable = new Table({
-                    stateModel: this.stateModel,
-                    collection: this.inputs,
-                    dispatcher: this.dispatcher,
-                    enableBulkActions: false,
-                    showActions: true,
-                    enableMoreInfo: true,
-                    customRow: this.inputsConfig.table.customRow,
-                    component: this.inputsConfig,
-                    restRoot: this.unifiedConfig.meta.restRoot,
-                    navModel: this.navModel
-                });
-                this.$el.append(
-                    _.template(InputsPageTemplate)(this.inputsPageTemplateData)
-                );
-                this.$el.append(this.caption.render().$el);
-
-                // render input filter for multiple inputs
-                if (!this.inputsPageTemplateData.singleInput) {
-                    $('.table-caption-inner').append(this.filter.render().$el);
-                    $('.table-caption-inner').append(this.countSelect.render().$el);
-                }
-                // render inputs table
-                this.$el.append(this.inputTable.render().$el);
-
-                // Single data input or multiple data inputs
-                if (this.inputsPageTemplateData.singleInput) {
-                    let serviceConfig = this.inputsConfig.services[0];
-                    this.$('#addInputBtn').on('click', () => {
-                        if (serviceConfig.style === PAGE_STYLE) {
-                            this.navModel.navigator.navigate({
-                                'service': serviceConfig.name,
-                                'action': MODE_CREATE
-                            });
-                        } else {
-                            let dlg = new EntityDialog({
-                                el: $(".dialog-placeholder"),
-                                collection: this.inputs,
-                                component: serviceConfig
-                            }).render();
-                            dlg.modal();
-                        }
-                    });
-                } else {
-                    let customMenu = this.inputsConfig.menu;
-                    if (customMenu) {
-                        let services = {};
-                        _.each(this.inputsConfig.services, service => {
-                            _.extend(services, {
-                                [service.name] : service.title
-                            });
-                        });
-                        this._loadCustomMenu(
-                            customMenu.src,
-                            document.getElementById('addInputBtn'),
-                            this.navModel.navigator,
-                            services
-                        ).then(() => {
-                            this.editmenu.render();
-                        });
-                    } else {
-                        this.$('#addInputBtn').on("click", e => {
-                            let $target = $(e.currentTarget);
-                            if (this.editmenu && this.editmenu.shown) {
-                                this.editmenu.hide();
-                                e.preventDefault();
-                                return;
-                            }
-                            this.editmenu = new AddInputMenu({
-                                collection: this.inputs,
-                                dispatcher: this.dispatcher,
-                                services: this.services,
-                                navModel: this.navModel
-                            });
-
-                            $('body').append(this.editmenu.render().el);
-                            this.editmenu.show($target);
-                        });
-                    }
-                }
-            });
+            }
             return this;
         },
 
-        _loadCustomMenu: function(module, target, navigator, services) {
+        _render: function () {
+            this.$el.html('');
+            this.stateModel.set('fetching', false);
+            this.cachedInputs = this.combineCollection();
+            this.inputs.models = this.cachedInputs.models;
+            this.stateChange();
+
+            // Table caption view
+            this.caption = new CaptionView({
+                countLabel: _(this.inputsConfig.title).t(),
+                model: {
+                    state: this.stateModel
+                },
+                collection: this.inputs,
+                noFilterButtons: true,
+                filterKey: this.filterKey
+            });
+
+            // Page count setting view
+            this.countSelect = new SyntheticSelectControl({
+                modelAttribute: 'count',
+                model: this.stateModel,
+                items: [
+                    {label: _('10 Per Page').t(), value: 10},
+                    {label: _('25 Per Page').t(), value: 25},
+                    {label: _('50 Per Page').t(), value: 50}
+                ],
+                menuWidth: 'narrow'
+            });
+
+            this.filter = new InputFilter({
+                dispatcher: this.dispatcher,
+                services: this.services
+            });
+
+            this.inputTable = new Table({
+                stateModel: this.stateModel,
+                collection: this.inputs,
+                dispatcher: this.dispatcher,
+                enableBulkActions: false,
+                showActions: true,
+                enableMoreInfo: true,
+                customRow: this.inputsConfig.table.customRow,
+                component: this.inputsConfig,
+                unifiedConfig: this.unifiedConfig,
+                navModel: this.navModel
+            });
+            this.$el.append(
+                _.template(InputsPageTemplate)(this.inputsPageTemplateData)
+            );
+            this.$el.append(this.caption.render().$el);
+
+            // render input filter for multiple inputs
+            if (!this.inputsPageTemplateData.singleInput) {
+                this.$('.table-caption-inner').append(
+                    this.filter.render().$el
+                );
+                this.$('.table-caption-inner').append(
+                    this.countSelect.render().$el
+                );
+            }
+            // render inputs table
+            this.$el.append(this.inputTable.render().$el);
+
+            // Single data input or multiple data inputs
+            if (this.inputsPageTemplateData.singleInput) {
+                let serviceConfig = this.inputsConfig.services[0];
+                this.$('#addInputBtn').on('click', () => {
+                    if (serviceConfig.style === PAGE_STYLE) {
+                        this.navModel.navigator.navigate({
+                            'service': serviceConfig.name,
+                            'action': MODE_CREATE
+                        });
+                    } else {
+                        let dlg = new EntityDialog({
+                            el: $(".dialog-placeholder"),
+                            collection: this.inputs,
+                            component: serviceConfig
+                        }).render();
+                        dlg.modal();
+                    }
+                });
+            } else {
+                let customMenu = this.inputsConfig.menu;
+                if (customMenu) {
+                    this._loadCustomMenu(
+                        customMenu.src,
+                        this.$('#addInputBtn').get(0),
+                        this.navModel.navigator
+                    ).then(() => {
+                        this.editmenu.render();
+                    });
+                } else {
+                    this.$('#addInputBtn').on("click", e => {
+                        let $target = $(e.currentTarget);
+                        if (this.editmenu && this.editmenu.shown) {
+                            this.editmenu.hide();
+                            e.preventDefault();
+                            return;
+                        }
+                        this.editmenu = new AddInputMenu({
+                            collection: this.inputs,
+                            dispatcher: this.dispatcher,
+                            services: this.services,
+                            navModel: this.navModel
+                        });
+
+                        $('body').append(this.editmenu.render().el);
+                        this.editmenu.show($target);
+                    });
+                }
+            }
+        },
+
+        _loadCustomMenu: function(module, target, navigator) {
             let deferred = $.Deferred();
             __non_webpack_require__(['custom/' + module], (CustomMenu) => {
-                this.editmenu = new CustomMenu(target, navigator, services);
+                this.editmenu = new CustomMenu(
+                    this.unifiedConfig,
+                    target,
+                    navigator
+                );
                 deferred.resolve(CustomMenu);
             });
             return deferred.promise();
         },
 
         fetchAllCollection: function () {
-            var singleStateModel = new Backbone.Model({
-                sortKey: 'name',
-                sortDirection: 'asc',
-                count: 0, // fetch all stanzas
-                offset: 0,
-                fetching: true
-            });
-            var calls = _.map(this.services, service => {
-                return this.fetchListCollection(
-                    this[service.name],
-                    singleStateModel
-                );
+            const calls = _.map(this.services, service => {
+                return this[service.name].fetch({
+                    count: 0 // fetch all stanzas
+                });
             });
             return $.when.apply(this, calls);
         },
@@ -418,169 +366,6 @@ define([
             return tempCollection;
         },
 
-        fetchListCollection: function (collection, stateModel) {
-            var rawSearch = '', searchString = '';
-            if (stateModel.get('search')) {
-                searchString = stateModel.get('search');
-                //make the filter work for field 'status'
-                rawSearch = this.getRawSearch(searchString);
-                if ("disabled".indexOf(rawSearch) > -1) {
-                    searchString += ' OR (disabled="*1*")';
-                }else if ("enabled".indexOf(rawSearch) > -1) {
-                    searchString += ' OR (disabled="*0*")';
-                }
-            }
-
-            stateModel.set('fetching', true);
-            return collection.fetch({
-                data: {
-                    sort_dir: stateModel.get('sortDirection'),
-                    sort_key: stateModel.get('sortKey'),
-                    search: searchString,
-                    count: stateModel.get('count'),
-                    offset: stateModel.get('offset')
-                },
-                success: () => {
-                    stateModel.set('fetching', false);
-                }
-            });
-        },
-
-        searchCollection: function (stateModel) {
-            var search = stateModel.get('search'),
-                result = [],
-                offset = this.stateModel.get('offset'),
-                count = this.stateModel.get('count'),
-                all_deferred,
-                models;
-
-            if (search !== this.emptySearchString) {
-                search = this.getRawSearch(search);
-                result = this.cachedInputs.models.filter(d =>
-                    this.filterKey.some(field => {
-                            const entryValue = (d.entry.get(field) &&
-                                d.entry.get(field).toLowerCase()) || undefined;
-                            const contentValue = (d.entry.content.get(field) &&
-                                d.entry.content.get(field).toLowerCase()) || undefined;
-
-                            return (entryValue && entryValue.indexOf(search) > -1) ||
-                                (contentValue && contentValue.indexOf(search) > -1);
-                        }
-                    )
-                );
-                //make the filter work for field 'status'
-                if ("disabled".indexOf(search) > -1) {
-                    result = result.concat(this.cachedInputs.models.filter(model => {
-                        return model.entry.content.get('disabled') === true;
-                    }));
-                } else if ("enabled".indexOf(search) > -1) {
-                    result = result.concat(this.cachedInputs.models.filter(model => {
-                        return model.entry.content.get('disabled') === false;
-                    }));
-                }
-
-                this.inputs.paging.set('offset', offset);
-                this.inputs.paging.set('perPage', count);
-                this.inputs.paging.set('total', result.length);
-                _.each(result, (model) => {
-                    model.paging.set('offset', offset);
-                    model.paging.set('perPage', count);
-                    model.paging.set('total', result.length);
-                });
-                this.cachedSearchInputs.reset(result);
-
-                const newPageStateModel = new Backbone.Model({
-                    sortKey: 'name',
-                    sortDirection: 'asc',
-                    count: 10,
-                    offset: 0,
-                    fetching: true
-                });
-
-                this.pageCollection(newPageStateModel);
-                this._removeWaitSpinner();
-            } else {
-                // Add wait spinner when fetch data from backend
-                this._addWaitSpinner('.table-caption-inner');
-                all_deferred = this.fetchAllCollection();
-                all_deferred.done(() => {
-                    this._removeWaitSpinner();
-                    this.cachedInputs = this.combineCollection();
-                    this.cachedSearchInputs = this.combineCollection();
-                    this.inputs.paging.set('offset', offset);
-                    this.inputs.paging.set('perPage', count);
-                    this.inputs.paging.set('total', this.cachedSearchInputs.length);
-                    models = this.cachedSearchInputs.models.slice(offset, offset + count);
-                    _.each(models, (model) => {
-                        model.paging.set('offset', offset);
-                        model.paging.set('perPage', count);
-                        model.paging.set('total', this.cachedSearchInputs.length);
-                    });
-                    this.inputs.reset(models);
-                    this.inputs._url = undefined;
-
-                    if (this.stateModel.get('search') !== this.emptySearchString) {
-                        this.searchCollection(this.stateModel);
-                    }
-                });
-            }
-        },
-
-        pageCollection: function (stateModel) {
-            var offset = stateModel.get('offset'),
-                count = stateModel.get('count'),
-                models;
-            this.inputs.paging.set('offset', offset);
-            this.inputs.paging.set('perPage', count);
-
-            this.inputs.paging.set('total', this.cachedSearchInputs.length);
-            models = this.cachedSearchInputs.models.slice(offset, offset + count);
-
-            _.each(models, (model) => {
-                model.paging.set('offset', offset);
-                model.paging.set('perPage', count);
-                model.paging.set('total', this.cachedSearchInputs.length);
-            });
-            this.inputs.reset(models);
-        },
-
-        sortCollection: function (stateModel) {
-            //TODO: changeme
-            var sortDir = stateModel.get('sortDirection'),
-                sortKey = stateModel.get('sortKey'),
-                allDeferred = this.fetchAllCollection(),
-                offset = stateModel.get('offset'),
-                count = stateModel.get('count'),
-                // TODO: support numerical sorting
-                handler = (a, b) => sortAlphabetical(
-                    a.entry.get(sortKey) || a.entry.content.get(sortKey),
-                    b.entry.get(sortKey) || b.entry.content.get(sortKey),
-                sortDir);
-
-            allDeferred.done(() => {
-                this.cachedInputs = this.combineCollection();
-                this.cachedSearchInputs = this.combineCollection();
-                this.inputs.paging.set('offset', offset);
-                this.inputs.paging.set('perPage', count);
-                this.inputs.paging.set('total', this.cachedSearchInputs.length);
-
-                this.cachedSearchInputs.models.sort(handler);
-                var models = this.cachedSearchInputs.models.slice(offset, offset + count);
-                _.each(models, (model) => {
-                    model.paging.set('offset', offset);
-                    model.paging.set('perPage', count);
-                    model.paging.set('total', this.cachedSearchInputs.length);
-                });
-                this.inputs.reset(models);
-                this.inputs._url = undefined;
-
-                // Remove spinner, enable sort and change sort status
-                this._removeWaitSpinner();
-                this._enableSort();
-                this.stateModel.set('inSorting', false);
-            });
-        },
-
         getRawSearch: function(searchString) {
             if (searchString) {
                 return searchString.substring(
@@ -590,25 +375,6 @@ define([
             } else {
                 return '';
             }
-        },
-
-        _addWaitSpinner: function (selector) {
-            this.waitSpinner = new WaitSpinner();
-            $(selector).append(this.waitSpinner.render().$el);
-        },
-
-        _removeWaitSpinner: function () {
-            if (this.waitSpinner) {
-                this.waitSpinner.remove();
-            }
-        },
-
-        _disableSort: function () {
-            this.$('th').addClass('disabled');
-        },
-
-        _enableSort: function () {
-            this.$('th').removeClass('disabled');
         }
     });
 });
