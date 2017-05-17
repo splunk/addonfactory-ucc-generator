@@ -309,7 +309,7 @@ define([
                 if (customMenu) {
                     this._loadCustomMenu(
                         customMenu.src,
-                        document.getElementById('addInputBtn'),
+                        this.$('#addInputBtn').get(0),
                         this.navModel.navigator
                     ).then(() => {
                         this.editmenu.render();
