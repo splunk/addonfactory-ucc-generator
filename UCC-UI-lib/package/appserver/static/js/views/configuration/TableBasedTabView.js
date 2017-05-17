@@ -1,44 +1,23 @@
 import $ from 'jquery';
 import _ from 'lodash';
-import Backbone from 'backbone';
 import CaptionView from 'views/shared/tablecaption/Master';
 import Table from 'app/views/component/Table';
 import EntityDialog from 'app/views/component/EntityDialog';
 import ButtonTemplate from 'app/templates/common/ButtonTemplate.html';
 import {
     fetchRefCollections,
-    fetchConfigurationModels
+    fetchConfigurationModels,
+    generateCollection
 } from 'app/util/backboneHelpers';
 import {setCollectionRefCount} from 'app/util/dependencyChecker';
 import {getFormattedMessage} from 'app/util/messageUtil';
+import Util from 'app/util/Util';
 
-export default Backbone.View.extend({
+import BaseTableView from 'app/views/BaseTableView';
+
+export default BaseTableView.extend({
     initialize: function (options) {
-        // containerId, submitBtnId, props, dataStore
-        _.extend(this, options);
-
-        this.stateModel = new Backbone.Model({
-            sortKey: 'name',
-            sortDirection: 'asc',
-            count: 10,
-            offset: 0,
-            fetching: true
-        });
-
-        this.listenTo(
-            this.stateModel,
-            'change:search change:sortDirection change:sortKey',
-            _.debounce(() => {
-                this.fetchListCollection(this.dataStore, this.stateModel);
-        }, 0));
-
-        // listen to offset change for paging
-        this.listenTo(this.stateModel, 'change:offset', _.debounce(() => {
-            if (this.stateModel.changed.offset !== undefined) {
-                this.fetchListCollection(this.dataStore, this.stateModel);
-            }
-        }, 0));
-
+        BaseTableView.prototype.initialize.apply(this, arguments);
         const {
             deferred: servicesDeferred,
             collectionObjList: serviceCollectionObjList
@@ -60,9 +39,46 @@ export default Backbone.View.extend({
             serviceCollectionObjList,
             configModelObjList
         });
+
+        this.cachedCollection = generateCollection();
+
+        // Table filter key and empty string
+        this.filterKey = _.map(this.props.entity, e => e.field);
+        this.emptySearchString = this.filterKey.map(d => d + '=*').join(' OR ');
+    },
+
+    stateChange: function () {
+        let models = this.adjustPaging(
+            this.dataStore,
+            this.filterSort(
+                this.filterSearch(this.cachedCollection.models)
+        ));
+        this.dataStore.reset(models);
+    },
+
+    filterSearch: function(models) {
+        if (!this.stateModel.get('search') ||
+                this.stateModel.get('search') === this.emptySearchString) {
+            return models;
+        }
+        const search = this.getRawSearch(this.stateModel.get('search'));
+        let result = models.filter(d =>
+            this.filterKey.some(field => {
+                const entryValue = (d.entry.get(field) &&
+                    d.entry.get(field).toLowerCase()) || undefined;
+                const contentValue = (d.entry.content.get(field) &&
+                    d.entry.content.get(field).toLowerCase()) || undefined;
+
+                return (entryValue && entryValue.indexOf(search) > -1) ||
+                    (contentValue && contentValue.indexOf(search) > -1);
+            })
+        );
+        return result;
     },
 
     render: function () {
+        Util.addLoadingMsg.apply(this);
+
         const addButtonData = {
                 buttonId: this.submitBtnId,
                 buttonValue: 'Add'
@@ -73,14 +89,7 @@ export default Backbone.View.extend({
                 serviceCollectionObjList,
                 configModelObjList
             } = this,
-            deferred = this.fetchListCollection(
-                this.dataStore,
-                this.stateModel
-            );
-
-        this.$el.html(
-            `<div class="loading-msg-icon">${getFormattedMessage(115)}</div>`
-        );
+            deferred = this.fetchListCollection(this.dataStore);
         const renderTab = () => {
             this.$el.html('');
             const caption = new CaptionView({
@@ -88,7 +97,7 @@ export default Backbone.View.extend({
                 model: {state: this.stateModel},
                 collection: this.dataStore,
                 noFilterButtons: true,
-                filterKey: _.map(props.entity, e => e.field)
+                filterKey: this.filterKey
             });
 
             const table = new Table({
@@ -97,7 +106,8 @@ export default Backbone.View.extend({
                 showActions: true,
                 enableMoreInfo: props.table.moreInfo ? true : false,
                 customRow: props.table.customRow,
-                component: props
+                component: props,
+                dispatcher: this.dispatcher
             });
 
             this.$el.append(caption.render().$el);
@@ -110,12 +120,15 @@ export default Backbone.View.extend({
                 new EntityDialog({
                     el: $('.dialog-placeholder'),
                     collection: this.dataStore,
-                    component: props
+                    component: props,
+                    dispatcher: this.dispatcher
                 }).render().modal();
             });
         };
 
         deferred.done(() => {
+            // Set cache models
+            this.cachedCollection.add(this.dataStore.models, {silent: true});
             if (entitiesDeferred) {
                 entitiesDeferred.done(() => {
                     setCollectionRefCount(
@@ -131,21 +144,5 @@ export default Backbone.View.extend({
             }
         });
         return this;
-    },
-
-    fetchListCollection: function (collection, stateModel) {
-        stateModel.set('fetching', true);
-        return collection.fetch({
-            data: {
-                sort_dir: stateModel.get('sortDirection'),
-                sort_key: stateModel.get('sortKey').split(','),
-                search: stateModel.get('search') ? stateModel.get('search') : '',
-                count: stateModel.get('count'),
-                offset: stateModel.get('offset')
-            },
-            success: () => {
-                stateModel.set('fetching', false);
-            }
-        });
     }
 });

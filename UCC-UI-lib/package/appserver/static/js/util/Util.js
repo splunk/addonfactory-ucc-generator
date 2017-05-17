@@ -1,6 +1,8 @@
 import {configManager} from 'app/util/configManager';
 import _ from 'lodash';
 import $ from 'jquery';
+import WaitSpinner from 'app/views/component/WaitSpinner';
+import {getFormattedMessage} from 'app/util/messageUtil';
 
 define(function () {
     var APP_NAME = 'AddOns',
@@ -157,6 +159,25 @@ define(function () {
                 );
             }
             return serviceName;
+        },
+
+        addLoadingMsg: function () {
+            this.$el.html(`
+                <div class="loading-msg-box">
+                </div>
+            `);
+            const waitSpinner = new WaitSpinner({
+                dataSize: 'medium',
+                dataColor: 'gray'
+            });
+            this.$('.loading-msg-box').append(
+                waitSpinner.render().$el
+            );
+            this.$('.loading-msg-box').append(`
+                <span class="loading-msg-text">
+                    ${getFormattedMessage(115)}
+                </span>
+            `);
         }
     };
 });

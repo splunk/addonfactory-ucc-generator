@@ -9,13 +9,15 @@
 .type-filter {
     float: left;
     margin-top: 10px;
+    margin-left: 30px;
 }
 
 .list-dotted dd {
     min-height: 20px;
 }
 
+/*Page count indicator*/
 .table-caption-inner > .shared-controls-syntheticselectcontrol {
-    float: right;
+    float: left;
     margin-top: 10px;
 }

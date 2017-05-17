@@ -31,10 +31,12 @@ define([
         },
 
         successCallback: function(input) {
-            if (this.mode === MODE_EDIT) {
-                this.dispatcher.trigger('edit-input', input);
-            } else {
-                this.dispatcher.trigger('add-input', input);
+            if (this.dispatcher) {
+                if (this.mode === MODE_EDIT) {
+                    this.dispatcher.trigger('edit-input', input);
+                } else {
+                    this.dispatcher.trigger('add-input', input);
+                }
             }
             this.$("[role=dialog]").modal('hide');
             this.undelegateEvents();
