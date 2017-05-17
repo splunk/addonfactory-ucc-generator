@@ -213,7 +213,11 @@ define([
 
         _removeValidationErrorClass: function(err) {
             const {widgetsIdDict} = err;
-            _.each(Object.values(widgetsIdDict), selector => {
+            let selectors = [];
+            for (const key of Object.keys(widgetsIdDict)) {
+                selectors.push(widgetsIdDict[key]);
+            }
+            _.each(selectors, selector => {
                 if ($(selector).length > 0 &&
                         $(selector).hasClass('validation-error')) {
                     $(selector).removeClass('validation-error');
