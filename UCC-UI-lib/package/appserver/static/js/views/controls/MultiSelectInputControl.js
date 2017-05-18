@@ -30,6 +30,7 @@ define([
                 this.$el.attr('data-name', this.options.modelAttribute);
             }
             this.options.placeholder = _(this.options.placeholder || "").t();
+            this.placeholder = this.options.placeholder;
             this.delimiter = this.options.delimiter || ',';
         },
 
@@ -67,6 +68,13 @@ define([
             }
             render = render === undefined ? true : render;
             this.options.items = items;
+            // Change the placeholder if changed
+            if (this.options.placeholder !== this.placeholder) {
+                this.options.placeholder = this.placeholder;
+                if (render) {
+                    this.render();
+                }
+            }
         },
 
         remove: function () {
