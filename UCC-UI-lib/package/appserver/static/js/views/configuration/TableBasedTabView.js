@@ -43,7 +43,7 @@ export default BaseTableView.extend({
         this.cachedCollection = generateCollection();
 
         // Table filter key and empty string
-        this.filterKey = _.map(this.props.entity, e => e.field);
+        this.filterKey = _.map(this.props.entity, 'field');
         this.emptySearchString = this.filterKey.map(d => d + '=*').join(' OR ');
     },
 
@@ -77,7 +77,7 @@ export default BaseTableView.extend({
     },
 
     render: function () {
-        Util.addLoadingMsg.apply(this);
+        Util.addLoadingMsg(this.$el);
 
         const addButtonData = {
                 buttonId: this.submitBtnId,

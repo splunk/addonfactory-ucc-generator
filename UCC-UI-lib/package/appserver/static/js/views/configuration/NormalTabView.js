@@ -98,7 +98,7 @@ export default Backbone.View.extend({
     },
 
     render: function() {
-        Util.addLoadingMsg.apply(this);
+        Util.addLoadingMsg(this.$el);
         this.dataStore.fetch().done(() => {
             const tabContentDOMObj = $(_.template(NormalTabViewTemplate)({
                 buttonId: this.submitBtnId

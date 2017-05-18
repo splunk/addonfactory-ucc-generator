@@ -146,7 +146,7 @@ define([
         },
 
         render: function () {
-            Util.addLoadingMsg.apply(this);
+            Util.addLoadingMsg(this.$el);
             if (this.cachedCollection) {
                 this._render();
             } else {
