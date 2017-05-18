@@ -77,10 +77,10 @@ html, body, .shared-page {
 
 .create-input-footer > .buttons > .cancel-btn {
     position: absolute;
-    margin-left: 60%;
+    margin-left: calc((100% - 900px)/2 + 700px);
 }
 
 .create-input-footer > .buttons > .btn-primary {
     position: absolute;
-    margin-left: calc(60% + 85px);
+    margin-left: calc((100% - 900px)/2 + 785px);
 }
