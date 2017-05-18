@@ -161,8 +161,8 @@ define(function () {
             return serviceName;
         },
 
-        addLoadingMsg: function (el) {
-            el.html(`
+        addLoadingMsg: function ($el) {
+            $el.html(`
                 <div class="loading-msg-box">
                 </div>
             `);
@@ -170,10 +170,10 @@ define(function () {
                 dataSize: 'medium',
                 dataColor: 'gray'
             });
-            el.find('.loading-msg-box').append(
+            $el.find('.loading-msg-box').append(
                 waitSpinner.render().$el
             );
-            el.find('.loading-msg-box').append(`
+            $el.find('.loading-msg-box').append(`
                 <span class="loading-msg-text">
                     ${getFormattedMessage(115)}
                 </span>
