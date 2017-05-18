@@ -130,6 +130,16 @@ define([
         startLoading: function () {
             this.options.placeholder = _('Loading ...').t();
             this.render();
+            this.$('select').prop('disabled', true);
+        },
+
+        enable: function() {
+            // Change the placeholder if changed
+            if (this.options.placeholder !== this.placeholder) {
+                this.options.placeholder = this.placeholder;
+                this.render();
+            }
+            this.$('select').prop('disabled', false);
         },
 
         events: {
