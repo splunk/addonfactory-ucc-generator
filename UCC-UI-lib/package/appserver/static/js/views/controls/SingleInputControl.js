@@ -183,7 +183,7 @@ define([
         },
 
         startLoading: function () {
-            this.options.placeholder = 'Loading ...';
+            this.options.placeholder = _('Loading ...').t();
             this.disable();
             this.render();
         },

@@ -150,6 +150,14 @@ define([
                 });
             });
 
+            // Current loading requests
+            this.curRequests = {};
+            for (let value of this.dependencyMap.values()) {
+                for (let loadField in value) {
+                    this.curRequests[loadField] = [];
+                }
+            }
+
             // Add change event listener
             for (let [key, value] of this.dependencyMap) {
                 this.model.on('change:' + key, () => {
@@ -176,9 +184,18 @@ define([
                             }
                         });
                         if (load) {
+                            if (this.curRequests[loadField].length > 0) {
+                                _.each(this.curRequests[loadField], request => {
+                                    if (request.state() === 'pending') {
+                                        request.abort();
+                                        console.log(this.fieldControlMap.get(loadField));
+                                        this.fieldControlMap.get(loadField).control.enable();
+                                    }
+                                });
+                            }
                             // Add loading message
                             controlWrapper.control.startLoading();
-                            controlWrapper.collection.fetch({
+                            const curRequest = controlWrapper.collection.fetch({
                                 data,
                                 error: (collection, response) => {
                                     addErrorMsg(
@@ -188,6 +205,7 @@ define([
                                     )
                                 }
                             });
+                            this.curRequests[loadField].push(curRequest);
                         }
                     }
                 });
