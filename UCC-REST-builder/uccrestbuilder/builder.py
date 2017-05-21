@@ -96,6 +96,19 @@ class RestBuilder(object):
                 endpoint.conf_name + '.conf.spec',
                 endpoint.generate_spec(),
             )
+
+            # Add data input of self defined conf to inputs.conf.spec
+            if endpoint._entities[0] and endpoint._entities[0]._conf_name:
+                lines = [
+                    '[' + endpoint._name + '://<name>]',
+                    'placeholder = placeholder'
+                ]
+                self.output.put(
+                    self.output.readme,
+                    'inputs.conf.spec',
+                    '\n'.join(lines)
+                )
+
             self.output.put(
                 self.output.bin,
                 endpoint.rh_name + '.py',
