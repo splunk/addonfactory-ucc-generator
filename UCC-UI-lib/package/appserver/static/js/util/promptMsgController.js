@@ -2,6 +2,7 @@ import $ from 'jquery';
 import _ from 'lodash';
 import ErrorMsgTemplate from 'app/templates/messages/ErrorMsg.html';
 import SavingMsgTemplate from 'app/templates/messages/LoadingMsg.html';
+import WaitSpinner from 'app/views/component/WaitSpinner';
 
 // TODO: add UT
 export function addErrorMsg(containerSelector, text, needParse = false) {
@@ -27,7 +28,13 @@ export function addSavingMsg(containerSelector, text) {
         $(containerSelector + ' .msg-text').text(text);
     } else {
         $(containerSelector + ' .modal-body')
-            .prepend(_.template(SavingMsgTemplate)({msg: _.unescape(text)}));
+            .prepend(_.template(SavingMsgTemplate)({
+                msg: _.unescape(text)
+            })
+        );
+        $(containerSelector + ' .modal-body .msg-icon').append(
+            (new WaitSpinner({})).render().$el
+        );
     }
 }
 

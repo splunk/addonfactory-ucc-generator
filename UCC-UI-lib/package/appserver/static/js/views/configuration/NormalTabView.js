@@ -12,6 +12,7 @@ import {
 } from 'app/util/promptMsgController';
 import {parseFuncRawStr} from 'app/util/script';
 import {getFormattedMessage} from 'app/util/messageUtil';
+import Util from 'app/util/Util';
 
 export default Backbone.View.extend({
     initialize: function(options) {
@@ -97,9 +98,7 @@ export default Backbone.View.extend({
     },
 
     render: function() {
-        this.$el.html(
-            `<div class="loading-msg-icon">${getFormattedMessage(115)}</div>`
-        );
+        Util.addLoadingMsg(this.$el);
         this.dataStore.fetch().done(() => {
             const tabContentDOMObj = $(_.template(NormalTabViewTemplate)({
                 buttonId: this.submitBtnId

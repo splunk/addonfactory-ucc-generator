@@ -50,12 +50,11 @@ html, body, .shared-page {
 }
 
 .create-input-body > .content {
-    flex: 3;
+    width: 900px;
     overflow: auto;
     border-left: 1px solid #ccc;
     border-right: 1px solid #ccc;
     border-top: 1px solid #ccc;
-    min-width: 680px;
     box-sizing: border-box;
     background-color: #fff;
 }
@@ -78,10 +77,10 @@ html, body, .shared-page {
 
 .create-input-footer > .buttons > .cancel-btn {
     position: absolute;
-    margin-left: 60%;
+    margin-left: calc((100% - 900px)/2 + 700px);
 }
 
 .create-input-footer > .buttons > .btn-primary {
     position: absolute;
-    margin-left: calc(60% + 85px);
+    margin-left: calc((100% - 900px)/2 + 785px);
 }

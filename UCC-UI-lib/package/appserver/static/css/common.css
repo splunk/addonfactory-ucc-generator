@@ -1,11 +1,15 @@
-.main-section-body {
+.main-section-body.inputs {
+    background-color: #eee;
+}
+
+.main-section-body.configuration {
     background-color: #fff;
 }
 
 /*Dialog width*/
 .higherWider {
-    width: 700px;
-    left: 45%;
+    width: 800px;
+    left: 40%;
 }
 
 /*Page header CSS*/
@@ -36,6 +40,7 @@
 .add-button {
     float: right;
     margin-right: 20px;
+    margin-top: 2px;
 }
 /*Modal body overflow*/
 .modal-body {
@@ -98,33 +103,33 @@
     clear: both;
 }
 
-/*Loading Message CSS*/
+/* Global loading msg*/
+.loading-msg-box {
+    padding: 10px 0;
+    width: 100px;
+    margin: 0 auto;
+}
+
+.loading-msg-text {
+    vertical-align: super;
+}
+
+/* Dialog Loading Message CSS*/
 .modal-body .msg-loading {
     background-color: #d1e5c6;
 }
-.modal-body .msg-loading .msg-icon,
-.loading-msg-icon {
-    background-image: url("../img/loading-24.gif");
-    background-repeat: no-repeat;
-    padding-left: 5px;
-    line-height: 25px;
-    float: left;
-    margin-right: 8px;
-    width: 25px;
-    height: 25px;
-}
 
-.loading-msg-icon {
-    margin: 20px auto;
-    float: none;
-    text-align: right;
-    width: 70px;
+.modal-body .msg-icon {
+    display: inline;
+    float: left;
+    margin-top: 4px;
 }
 
 .modal-body .msg-loading div.msg-text {
     display: inline;
     float: left;
     margin-top: 4px;
+    margin-left: 4px;
     word-wrap: break-word;
     word-break: normal;
 }
@@ -156,24 +161,24 @@
 
 /*Dialog input width*/
 .form-small .control-label {
-    width: 170px;
+    width: 260px;
 }
 .form-small .controls {
-    margin-left: 190px;
+    margin-left: 280px;
 }
 .form-small input[type=text], input[type=password] {
-    width: 417px;
+    width: 267px;
 }
 .form-small .uneditable-input {
-    width: 436px;
+    width: 286px;
 }
 .form-small .select2-container {
-    width: 450px;
+    width: 300px;
 }
 
 /*Help block width*/
 .form-horizontal .controls > .help-block {
-    width: 450px;
+    width: 300px;
 }
 
 /*Delete the top border in first cell of table*/
@@ -274,4 +279,9 @@ th.disabled, th.disable > a {
 input.validation-error, .select2-choice.validation-error,
 .select2-choices.validation-error, .btn-group-radio.validation-error > button {
     border: 1px solid #d6563c !important;
+}
+
+/* Override default blue border */
+.select2-choices {
+    border-color: #ccc !important;
 }

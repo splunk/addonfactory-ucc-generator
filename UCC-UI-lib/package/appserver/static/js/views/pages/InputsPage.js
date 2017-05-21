@@ -1,10 +1,10 @@
 import {configManager} from 'app/util/configManager';
 import {generateCollection} from 'app/util/backboneHelpers';
 import {getFormattedMessage} from 'app/util/messageUtil';
-import {sortAlphabetical} from 'app/util/sort';
 import {MODE_CREATE} from 'app/constants/modes';
 import {PAGE_STYLE} from 'app/constants/pageStyle';
 import restEndpointMap from 'app/constants/restEndpointMap';
+import BaseTableView from 'app/views/BaseTableView';
 import 'appCssDir/common.css';
 import 'appCssDir/inputs.css';
 
@@ -36,10 +36,12 @@ define([
     EntityDialog,
     Table
 ) {
-    return Backbone.View.extend({
+    return BaseTableView.extend({
         className: 'inputsContainer',
 
         initialize: function (options) {
+            BaseTableView.prototype.initialize.apply(this, arguments);
+
             this.unifiedConfig = configManager.unifiedConfig;
             this.inputsConfig = this.unifiedConfig.pages.inputs;
             this.inputsPageTemplateData = {
@@ -50,15 +52,10 @@ define([
             };
 
             this.navModel = options.navModel;
-            //state model
-            this.stateModel = new Backbone.Model({
-                sortKey: 'name',
-                sortDirection: 'asc',
-                count: 10,
-                offset: 0,
-                fetching: true,
-                service: ALL_SERVICE
-            });
+
+            // Set state model
+            this.stateModel.set('service', ALL_SERVICE, {'silent': true});
+
             this.services = this.inputsConfig.services;
             // filter keys for search
             this.filterKey = [];
@@ -80,7 +77,6 @@ define([
                     );
                 }
             });
-            this.dispatcher = _.extend({}, Backbone.Events);
             this.inputs = generateCollection();
 
             // Change filter
@@ -88,39 +84,6 @@ define([
                 // Trigger change:service event
                 this.stateModel.set('service', type);
             });
-
-            // Delete input event
-            this.listenTo(this.dispatcher, 'delete-input', (model) => {
-                // Delete model from cache
-                this.cachedInputs.models = this.cachedInputs.models.filter(m => {
-                    return m.get('id') !== model.get('id');
-                });
-                this.stateChange();
-            });
-            // Edit input event
-            this.listenTo(this.dispatcher, 'edit-input', (model) => {
-                // Update model in cache
-                this.cachedInputs.models = this.cachedInputs.models.map(m => {
-                    if (m.get('id') !== model.get('id')) {
-                        return m;
-                    } else {
-                        return model;
-                    }
-                });
-                this.stateChange();
-            });
-            // Add input event
-            this.listenTo(this.dispatcher, 'add-input', (model) => {
-                this.cachedInputs.models.push(model);
-                this.stateChange();
-            });
-            // State model change event
-            this.listenTo(
-                this.stateModel,
-                'change:sortDirection change:sortKey ' +
-                'change:search change:offset change:count change:service',
-                this.stateChange.bind(this)
-            );
 
             this.deferred = this.fetchAllCollection();
 
@@ -131,9 +94,10 @@ define([
 
         stateChange: function () {
             let models = this.adjustPaging(
+                this.inputs,
                 this.filterSort(
                     this.filterSearch(
-                        this.filterService(this.cachedInputs.models)
+                        this.filterService(this.cachedCollection.models)
                     )
             ));
             this.inputs.reset(models);
@@ -169,16 +133,6 @@ define([
             return result;
         },
 
-        filterSort: function (models) {
-            const sortKey = this.stateModel.get('sortKey'),
-                  sortDir = this.stateModel.get('sortDirection'),
-                  handler = (a, b) => sortAlphabetical(
-                      a.entry.get(sortKey) || a.entry.content.get(sortKey),
-                      b.entry.get(sortKey) || b.entry.content.get(sortKey),
-                  sortDir);
-            return models.sort(handler);
-        },
-
         filterService: function (models) {
             // Filter by service
             const service = this.stateModel.get('service');
@@ -191,31 +145,16 @@ define([
             }
         },
 
-        adjustPaging: function (models) {
-            const offset = this.stateModel.get('offset'),
-                  count = this.stateModel.get('count'),
-                  total = models.length;
-            this.inputs.paging.set('offset', offset);
-            this.inputs.paging.set('perPage', count);
-            this.inputs.paging.set('total', total);
-            _.each(models, (model) => {
-                model.paging.set('offset', offset);
-                model.paging.set('perPage', count);
-                model.paging.set('total', total);
-            });
-            return models.slice(offset, offset + count);
-        },
-
         render: function () {
-            this.$el.html(`
-                <div class="loading-msg-icon">
-                    ${getFormattedMessage(115)}
-                </div>
-            `);
-            if (this.cachedInputs) {
+            Util.addLoadingMsg(this.$el);
+            if (this.cachedCollection) {
                 this._render();
             } else {
                 this.deferred.done(() => {
+                    this.stateModel.set('fetching', false);
+                    this.cachedCollection = this.combineCollection();
+                    this.inputs.models = this.cachedCollection.models;
+                    this.stateChange();
                     this._render();
                 });
             }
@@ -224,11 +163,6 @@ define([
 
         _render: function () {
             this.$el.html('');
-            this.stateModel.set('fetching', false);
-            this.cachedInputs = this.combineCollection();
-            this.inputs.models = this.cachedInputs.models;
-            this.stateChange();
-
             // Table caption view
             this.caption = new CaptionView({
                 countLabel: _(this.inputsConfig.title).t(),
@@ -277,10 +211,10 @@ define([
             // render input filter for multiple inputs
             if (!this.inputsPageTemplateData.singleInput) {
                 this.$('.table-caption-inner').append(
-                    this.filter.render().$el
+                    this.countSelect.render().$el
                 );
                 this.$('.table-caption-inner').append(
-                    this.countSelect.render().$el
+                    this.filter.render().$el
                 );
             }
             // render inputs table
@@ -364,17 +298,6 @@ define([
                 tempCollection.add(this[service.name].models, {silent: true});
             });
             return tempCollection;
-        },
-
-        getRawSearch: function(searchString) {
-            if (searchString) {
-                return searchString.substring(
-                    searchString.indexOf('*') + 1,
-                    searchString.indexOf('*', searchString.indexOf('*') + 1)
-                ).toLowerCase();
-            } else {
-                return '';
-            }
         }
     });
 });

@@ -126,11 +126,13 @@ define([
                     this.setPageTitle(getFormattedMessage(116));
                     this.currentView = this._getInputView(params);
                     $(".main-section-body").html(this.currentView.render().$el);
+                    $(".main-section-body").addClass('inputs');
                 } else if (page === CONFIGURATION_PAGE) {
                     this.setPageTitle(getFormattedMessage(117));
                     const configurationPageView = new ConfigurationPageView();
                     configurationPageView.render();
                     $(".main-section-body").html(configurationPageView.el);
+                    $(".main-section-body").addClass('configuration');
                     configurationPageView.changeTab(queryString);
                 }
             });

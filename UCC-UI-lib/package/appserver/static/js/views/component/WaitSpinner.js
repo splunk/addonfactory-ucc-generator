@@ -1,4 +1,5 @@
 import Backbone from 'backbone';
+import _ from 'lodash';
 import Spinner from 'contrib/text!./WaitSpinner.svg';
 
 export default Backbone.View.extend({
@@ -6,8 +7,16 @@ export default Backbone.View.extend({
 
     className: 'ta-wait-spinner',
 
+    initialize(options) {
+        this.dataSize = options.dataSize || 'small';
+        this.dataColor = options.dataColor || 'gray';
+    },
+
     render() {
-        this.$el.html(Spinner);
+        this.$el.html(_.template(Spinner)({
+            dataSize: this.dataSize,
+            dataColor: this.dataColor
+        }));
         return this;
     }
 });
