@@ -240,7 +240,7 @@ define([
         },
 
         _addLoading: function (e) {
-            this.waitSpinner = new WaitSpinner();
+            this.waitSpinner = new WaitSpinner({});
             let el = this.waitSpinner.render().$el;
             el.css({
                 'position': 'absolute',
