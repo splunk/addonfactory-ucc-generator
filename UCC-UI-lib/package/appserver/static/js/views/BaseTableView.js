@@ -52,8 +52,10 @@ export default Backbone.View.extend({
 
         // Add input event
         this.listenTo(this.dispatcher, 'add-input', (model) => {
-            this.cachedCollection.models.push(model);
-            this.stateChange();
+            if(!_.isUndefined(this.cachedCollection)) {
+                this.cachedCollection.models.push(model);
+                this.stateChange();
+            }
         });
     },
 
