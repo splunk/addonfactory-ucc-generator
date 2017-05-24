@@ -20,7 +20,7 @@ export default Backbone.View.extend({
         this.listenTo(
             this.stateModel,
             'change:search change:sortDirection change:sortKey ' +
-            'change:offset change:service',
+            'change:offset change:count change:service',
             this.stateChange.bind(this)
         );
 
