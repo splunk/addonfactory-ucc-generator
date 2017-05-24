@@ -33,6 +33,9 @@ define([
             } else {
                 this.dispatcher.trigger('add-input', input);
             }
+            // Remove saving dialog
+            this.savingDialog.hide();
+
             this.undelegateEvents();
             // Navigate to inputs table view
             this.navModel.navigator.navigateToRoot();
