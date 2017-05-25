@@ -11,8 +11,8 @@ setup(
     packages=find_packages(exclude=['tests', 'examples']),
     package_data={'': ['LICENSE']},
     install_requires=[
-        "solnlib>=1.0.16-dev",
-        "splunktaucclib>=3.0.0",
+        "solnlib>=1.0.17-dev",
+        "splunktaucclib>=3.0.0-develop",
         "splunk-sdk>=1.6.0"
     ],
     classifiers=[
