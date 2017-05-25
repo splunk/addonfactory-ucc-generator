@@ -36,10 +36,6 @@ html, body, .shared-page {
     margin: 10px 0;
 }
 
-.title-crumbs > .subtitle {
-    color: #b3b3b3;
-}
-
 .create-input-body {
     flex: 1;
     display: flex;

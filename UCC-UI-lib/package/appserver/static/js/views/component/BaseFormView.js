@@ -5,6 +5,7 @@ import {
     MODE_CREATE,
     MODE_EDIT
 } from 'app/constants/modes';
+import {PAGE_STYLE} from 'app/constants/pageStyle';
 import {generateModel} from 'app/util/backboneHelpers';
 import {generateValidators} from 'app/util/modelValidators';
 import {parseFuncRawStr} from 'app/util/script';
@@ -23,13 +24,15 @@ define([
     'lodash',
     'backbone',
     'app/util/Util',
-    'app/views/controls/ControlWrapper'
+    'app/views/controls/ControlWrapper',
+    'app/views/component/SavingDialog'
 ], function (
     $,
     _,
     Backbone,
     Util,
-    ControlWrapper
+    ControlWrapper,
+    SavingDialog
 ) {
     return Backbone.View.extend({
         initialize: function (options) {
@@ -107,6 +110,9 @@ define([
                 this._removeValidationErrorClass(err);
                 displayValidationError(this.curWinSelector, err);
                 this._highlightError(err);
+                if (this.savingDialog) {
+                    this.savingDialog.hide();
+                }
             });
 
             /*
@@ -294,6 +300,15 @@ define([
             // Remove loading and error message
             removeErrorMsg(this.curWinSelector);
             removeSavingMsg(this.curWinSelector);
+
+            // Add saving dialog for page style
+            if (this.component.style && this.component.style === PAGE_STYLE) {
+                this.savingDialog = new SavingDialog();
+                this.savingDialog.show();
+            } else {
+                addSavingMsg(this.curWinSelector, getFormattedMessage(108));
+            }
+
             // Save the model
             this.saveModel();
         },
@@ -358,7 +373,6 @@ define([
                     this.$("input[type=submit]")
                 );
             } else {
-                addSavingMsg(this.curWinSelector, getFormattedMessage(108));
                 // Add onSave hook if it exists
                 if (this.hook && typeof this.hook.onSave === 'function') {
                     this.hook.onSave();
@@ -383,7 +397,12 @@ define([
                         this.$("button[type=button]"),
                         this.$("input[type=submit]")
                     );
-                    removeSavingMsg(this.curWinSelector);
+                    // Remove saving dialog or message
+                    if (this.savingDialog) {
+                        this.savingDialog.hide();
+                    } else {
+                        removeSavingMsg(this.curWinSelector);
+                    }
                     addErrorMsg(this.curWinSelector, model, true);
                 });
             }

@@ -115,7 +115,7 @@ define([
                 if (!this.inputsPageView) {
                     this.inputsPageView = new InputsPageView({
                         navModel: this.model
-                    });
+                    }).render();
                 }
                 if (!this._headerReady) {
                     this._renderHeader();

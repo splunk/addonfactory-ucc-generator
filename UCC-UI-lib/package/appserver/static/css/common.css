@@ -285,3 +285,8 @@ input.validation-error, .select2-choice.validation-error,
 .select2-choices {
     border-color: #ccc !important;
 }
+
+/* Actions color */
+.actions.col-actions {
+    color: #1e93c6;
+}

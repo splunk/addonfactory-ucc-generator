@@ -1,21 +1,32 @@
+import {configManager} from 'app/util/configManager';
+import {
+    MODE_CLONE,
+    MODE_EDIT
+} from 'app/constants/modes';
+import {PAGE_STYLE} from 'app/constants/pageStyle';
+
 define([
     'jquery',
     'lodash',
     'backbone',
     'views/Base',
-    'app/views/component/EditMenu',
     'app/util/Util',
     'views/shared/controls/ControlGroup',
-    'views/shared/controls/SyntheticCheckboxControl'
+    'views/shared/controls/SyntheticCheckboxControl',
+    'app/views/component/EntityDialog',
+    'app/views/component/DeleteDialog',
+    'app/views/component/SwitchButton'
 ], function (
     $,
     _,
     Backbone,
     BaseView,
-    EditMenu,
     Util,
     ControlGroup,
-    SyntheticCheckboxControl
+    SyntheticCheckboxControl,
+    EntityDialog,
+    DeleteDialog,
+    SwitchButton
 ) {
     return BaseView.extend({
         tagName: 'tr',
@@ -23,8 +34,19 @@ define([
         className: 'apps-table-tablerow',
 
         events: {
-            'click td.actions > a.dropdown-toggle': function (e) {
-                this.openEdit(e);
+            'click a.edit': function (e) {
+                e.preventDefault();
+                this.edit();
+            },
+
+            'click a.clone': function (e) {
+                e.preventDefault();
+                this.clone();
+            },
+
+            'click a.delete': function (e) {
+                e.preventDefault();
+                this.delete();
             }
         },
 
@@ -33,8 +55,11 @@ define([
             this.$el.addClass((this.options.index % 2) ? 'even' : 'odd');
 
             /*
-                collection, stateModel, allCollection, enableBulkActions,
-                enableMoreInfo, showActions, component, navModel
+                Attributes: collection, stateModel, allCollection,
+                enableBulkActions, enableMoreInfo, showActions,
+                component, navModel;
+                Splunk data model: this.model.entity;
+                Splunk data collection: this.model.collection;
             */
             _.extend(this, this.model);
 
@@ -59,51 +84,66 @@ define([
             this.activate();
         },
 
-        openEdit: function (e) {
-            e.preventDefault();
-            var $target = $(e.currentTarget);
-
-            if (this.editmenu) {
-                this.editmenu.remove();
-                e.preventDefault();
+        edit: function () {
+            let component = this._getComponent();
+            if (component['style'] && component['style'] === PAGE_STYLE) {
+                this.navModel.dataModel = this.model.entity;
+                this.navModel.navigator.navigate({
+                    'service': component.name,
+                    'action': MODE_EDIT
+                });
+            } else {
+                let editDialog = new EntityDialog({
+                    el: $(".dialog-placeholder"),
+                    collection: this.model.collection,
+                    model: this.model.entity,
+                    mode: MODE_EDIT,
+                    component: component,
+                    dispatcher: this.dispatcher
+                });
+                editDialog.render().modal();
             }
-            this.rowDispatcher = _.extend({}, Backbone.Events);
+        },
 
-            this.editmenu = new EditMenu({
+        clone: function () {
+            let component = this._getComponent();
+            if (component['style'] && component['style'] === PAGE_STYLE) {
+                this.navModel.dataModel = this.model.entity;
+                this.navModel.navigator.navigate({
+                    'service': component.name,
+                    'action': MODE_CLONE
+                });
+            } else {
+                let cloneDialog = new EntityDialog({
+                    el: $(".dialog-placeholder"),
+                    collection: this.model.collection,
+                    model: this.model.entity,
+                    mode: MODE_CLONE,
+                    component: component,
+                    dispatcher: this.dispatcher
+                });
+                cloneDialog.render().modal();
+            }
+        },
+
+        delete: function () {
+            let inUse = false,
+                deleteDialog;
+            if (this.model.entity.entry.content.get('refCount')) {
+                inUse = this.model.entity.entry.content.get('refCount') > 0 ?
+                    true : false;
+            }
+
+            deleteDialog = new DeleteDialog({
+                el: $(".dialog-placeholder"),
                 collection: this.model.collection,
                 model: this.model.entity,
                 stateModel: this.stateModel,
-                url: this.model.collectionURL,
-                component: this.component,
                 dispatcher: this.dispatcher,
-                rowDispatcher: this.rowDispatcher,
-                deleteTag: '',
-                navModel: this.navModel
+                inUse: inUse,
+                deleteTag: this.deleteTag
             });
-            $('body').append(this.editmenu.render().el);
-            this.editmenu.show($target);
-
-            //Listen to disable/enable action and update the status and display
-            this.rowDispatcher.on('disable-input', () => {
-                _.each(this.collection.models, (model) => {
-                    if (model.get('id') === this.model.entity.get('id')) {
-                        model.entry.content.set('disabled', true);
-                        this.model.entity.entry.content.set('disabled', true);
-                    }
-                });
-
-                this.collection.reset(this.collection.models);
-            });
-
-            this.rowDispatcher.on('enable-input', () => {
-                _.each(this.collection.models, (model) => {
-                    if (model.get('id') === this.model.entity.get('id')) {
-                        model.entry.content.set('disabled', false);
-                        this.model.entity.entry.content.set('disabled', false);
-                    }
-                });
-                this.collection.reset(this.collection.models);
-            });
+            deleteDialog.render().modal();
         },
 
         _loadCustomCell: function(module, field, model, index) {
@@ -136,19 +176,35 @@ define([
                 } else {
                     fieldValue = this.model.entity.entry.content.get(field);
                 }
-                if (field === 'disabled' && _.isUndefined(fieldValue)) {
-                    fieldValue = 'false';
-                }
+
                 if (!customCell) {
-                    fieldValue = fieldValue === undefined ?
-                                 '' : String(fieldValue);
-                    if (mapping) {
-                        fieldValue = !_.isUndefined(mapping[fieldValue]) ?
-                                     mapping[fieldValue] : fieldValue;
+                    // Add switch button for status column
+                    if (field === 'disabled') {
+                        if (_.isUndefined(fieldValue)) {
+                            fieldValue = false;
+                        }
+                        const el = document.createElement("td");
+                        el.className = 'col-' + field;
+
+                        const switchButton = new SwitchButton({
+                            el: el,
+                            enabled: fieldValue,
+                            name: this.model.entity.entry.get('name'),
+                            url: this.model.entity._url,
+                            app: this.model.entity.get('appData').app
+                        }).render();
+                        this.cells[index] = switchButton.el;
+                    } else {
+                        fieldValue = fieldValue === undefined ?
+                                     '' : String(fieldValue);
+                        if (mapping) {
+                            fieldValue = !_.isUndefined(mapping[fieldValue]) ?
+                                         mapping[fieldValue] : fieldValue;
+                        }
+                        const html = `<td  class="col-${field}">
+                                    ${Util.encodeHTML(fieldValue)}</td>`;
+                        this.cells[index] = html;
                     }
-                    let html = `<td  class="col-${field}">
-                                ${Util.encodeHTML(fieldValue)}</td>`;
-                    this.cells[index] = html;
                 } else {
                     this.deferreds.push(
                         this._loadCustomCell(
@@ -190,6 +246,25 @@ define([
             return this;
         },
 
+        _getComponent: function () {
+            let component;
+            if (this.component.services) {
+                const {unifiedConfig: {meta: {restRoot}}} = configManager;
+                component = _.find(this.component.services, service => {
+                    // In UCC 3.x, the "name" retrieved from model id
+                    // which is restRoot_originalName
+                    const idStrings = this.model.entity.id.split('/');
+                    const name = idStrings[idStrings.length - 2];
+                    if (`${restRoot}_${service.name}` === name) {
+                        return service;
+                    }
+                });
+            } else {
+                component = this.component;
+            }
+            return component;
+        },
+
         expandTemplate: `
             <td class="expands">
                 <a href="#">
@@ -200,10 +275,9 @@ define([
 
         actionTemplate: `
             <td class="actions col-actions">
-                <a class="dropdown-toggle" href="#">
-                    <%- _("Action").t() %>
-                    <span class="caret"></span>
-                </a>
+                <a class="edit"><%- _("Edit").t() %></a> |
+                <a class="clone"><%- _("Clone").t() %></a> |
+                <a class="delete"><%- _("Delete").t() %></a>
             </td>
         `
     });

@@ -20,7 +20,7 @@ export default Backbone.View.extend({
         this.listenTo(
             this.stateModel,
             'change:search change:sortDirection change:sortKey ' +
-            'change:offset change:service',
+            'change:offset change:count change:service',
             this.stateChange.bind(this)
         );
 
@@ -52,8 +52,10 @@ export default Backbone.View.extend({
 
         // Add input event
         this.listenTo(this.dispatcher, 'add-input', (model) => {
-            this.cachedCollection.models.push(model);
-            this.stateChange();
+            if(!_.isUndefined(this.cachedCollection)) {
+                this.cachedCollection.models.push(model);
+                this.stateChange();
+            }
         });
     },
 
