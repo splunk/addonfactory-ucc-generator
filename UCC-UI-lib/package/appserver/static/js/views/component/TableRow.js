@@ -188,7 +188,7 @@ define([
 
                         const switchButton = new SwitchButton({
                             el: el,
-                            enabled: fieldValue,
+                            enabled: !fieldValue, // disabled field value
                             name: this.model.entity.entry.get('name'),
                             url: this.model.entity._url,
                             app: this.model.entity.get('appData').app
