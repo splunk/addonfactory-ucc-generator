@@ -222,6 +222,9 @@ define([
                 displayErrorMsg: (message) => {
                     addErrorMsg(this.curWinSelector, message);
                 },
+                removeErrorMsg: () => {
+                    removeErrorMsg(this.curWinSelector);
+                },
                 addErrorToComponent: this.addErrorToComponent,
                 removeErrorFromComponent: this.removeErrorFromComponent
             }
