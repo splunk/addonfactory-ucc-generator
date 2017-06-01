@@ -1,6 +1,8 @@
+import $ from 'jquery';
 import CONTROL_TYPE_MAP from 'app/constants/controlTypeMap';
 import restEndpointMap from 'app/constants/restEndpointMap';
 import {generateCollection} from 'app/util/backboneHelpers';
+import {addErrorMsg} from 'app/util/promptMsgController';
 
 define([
     'views/Base',
@@ -48,15 +50,33 @@ define([
             } = this.controlOptions;
             if(referenceName || endpointUrl) {
                 if (!restEndpointMap[referenceName]) {
-                    this.collection = generateCollection(referenceName, {endpointUrl});
+                    this.collection = generateCollection(
+                        referenceName,
+                        {endpointUrl}
+                    );
                 } else {
-                    this.collection = generateCollection('', {'endpointUrl': restEndpointMap[referenceName]});
+                    this.collection = generateCollection(
+                        '',
+                        {'endpointUrl': restEndpointMap[referenceName]}
+                    );
                 }
                 // fetch the data only when there is no dependency
                 if (!dependencies) {
                     // Add loading message
                     this.control.startLoading();
-                    this.collection.fetch();
+                    this.collection.fetch({
+                        error: (collection, response) => {
+                            // Add error indicator to control
+                            const selector = `#${this.controlOptions.elementId}`;
+                            $(selector).addClass('validation-error');
+                            // Add error message
+                            addErrorMsg(
+                                this.controlOptions.curWinSelector,
+                                response,
+                                true
+                            )
+                        }
+                    });
                 }
 
                 this.listenTo(this.collection, 'sync', () => {
