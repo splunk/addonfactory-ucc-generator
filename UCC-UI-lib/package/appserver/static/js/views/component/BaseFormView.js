@@ -204,6 +204,7 @@ define([
                             const curRequest = controlWrapper.collection.fetch({
                                 data,
                                 error: (collection, response) => {
+                                    this.addErrorToComponent(loadField);
                                     addErrorMsg(
                                         this.curWinSelector,
                                         response,
@@ -220,6 +221,9 @@ define([
             this.util = {
                 displayErrorMsg: (message) => {
                     addErrorMsg(this.curWinSelector, message);
+                },
+                removeErrorMsg: () => {
+                    removeErrorMsg(this.curWinSelector);
                 },
                 addErrorToComponent: this.addErrorToComponent,
                 removeErrorFromComponent: this.removeErrorFromComponent
@@ -480,7 +484,8 @@ define([
                     password: e.encrypted ? true : false,
                     displayText: e.displayText,
                     helpLink: e.helpLink,
-                    elementId: `${this.component.name}-${e.field}`
+                    elementId: `${this.component.name}-${e.field}`,
+                    curWinSelector: this.curWinSelector
                 };
                 _.extend(controlOptions, e.options);
 
