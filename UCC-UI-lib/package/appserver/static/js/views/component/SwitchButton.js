@@ -46,7 +46,7 @@ define([
                 disabled: checked ? '0' : '1'
             }).done((response) => {
                 this._renderLabel(checked);
-                // Trigger edit input event to update the cached collection
+                // Trigger toggle input event to update the cached collection
                 if (response && response.entry && response.entry.length === 1) {
                     this.dispatcher.trigger('toggle-input', response.entry[0]);
                 }
