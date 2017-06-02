@@ -191,7 +191,8 @@ define([
                             enabled: !fieldValue, // disabled field value
                             name: this.model.entity.entry.get('name'),
                             url: this.model.entity._url,
-                            app: this.model.entity.get('appData').app
+                            app: this.model.entity.get('appData').app,
+                            dispatcher: this.dispatcher
                         }).render();
                         this.cells[index] = switchButton.el;
                     } else {
