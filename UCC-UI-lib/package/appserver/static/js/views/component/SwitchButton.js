@@ -19,6 +19,7 @@ define([
         initialize: function(options) {
             Backbone.View.prototype.initialize.apply(this, arguments);
 
+            this.dispatcher = options.dispatcher;
             this.enabled = options.enabled;
             this.app = options.app;
             this.baseUrl = `${options.url}/${options.name}?&output_mode=json`;
@@ -43,8 +44,12 @@ define([
 
             $.post(url, {
                 disabled: checked ? '0' : '1'
-            }).done(() => {
+            }).done((response) => {
                 this._renderLabel(checked);
+                // Trigger edit input event to update the cached collection
+                if (response && response.entry && response.entry.length === 1) {
+                    this.dispatcher.trigger('toggle-input', response.entry[0]);
+                }
             }).fail(() => {
                 this._renderLabel(!checked);
             }).always(() => {

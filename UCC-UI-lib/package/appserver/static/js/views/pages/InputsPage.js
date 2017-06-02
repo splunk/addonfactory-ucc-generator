@@ -85,6 +85,27 @@ define([
                 this.stateModel.set('service', type);
             });
 
+            // Enabled or disable input event
+            this.listenTo(this.dispatcher, 'toggle-input', (model) => {
+                /*
+                    Note: the param 'model 'is not a backbone model,
+                    but an object from response
+                */
+                // Update model in cache
+                this.cachedCollection.models = this.cachedCollection.models.map(
+                    m => {
+                        if (m.entry.get('name') === model.name) {
+                            m.entry.content.set(
+                                {'disabled': model.content.disabled},
+                                {silent: true}
+                            )
+                        }
+                        return m;
+                    }
+                );
+                // Does not trigger the stateChange
+            });
+
             this.deferred = this.fetchAllCollection();
 
             this.emptySearchString =
