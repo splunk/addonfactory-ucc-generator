@@ -150,6 +150,10 @@ define([
             this.$('select').prop('disabled', false);
         },
 
+        disable: function () {
+            this.$('select').prop('disabled', true);
+        },
+
         events: {
             'change select': function (e) {
                 var values = e.val || [];

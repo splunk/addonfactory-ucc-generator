@@ -125,6 +125,9 @@
                             "type": "string", 
                             "maxLength": 250
                         }, 
+                        "disableonEdit": {
+                            "type": "boolean"
+                        }, 
                         "referenceName": {
                             "type": "string", 
                             "maxLength": 250
@@ -453,6 +456,9 @@
                         "labelField": {
                             "type": "string", 
                             "maxLength": 250
+                        }, 
+                        "disableonEdit": {
+                            "type": "boolean"
                         }, 
                         "referenceName": {
                             "type": "string", 
