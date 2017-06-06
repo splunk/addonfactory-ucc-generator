@@ -34,7 +34,7 @@ define([
                 this.dispatcher.trigger('add-input', input);
             }
             // Remove saving dialog
-            this.savingDialog.hide();
+            this.savingDialog.remove();
 
             this.undelegateEvents();
             // Navigate to inputs table view
