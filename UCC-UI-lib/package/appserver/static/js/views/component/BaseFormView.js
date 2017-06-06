@@ -111,7 +111,7 @@ define([
                 displayValidationError(this.curWinSelector, err);
                 this._highlightError(err);
                 if (this.savingDialog) {
-                    this.savingDialog.hide();
+                    this.savingDialog.remove();
                 }
             });
 
@@ -403,7 +403,7 @@ define([
                     );
                     // Remove saving dialog or message
                     if (this.savingDialog) {
-                        this.savingDialog.hide();
+                        this.savingDialog.remove();
                     } else {
                         removeSavingMsg(this.curWinSelector);
                     }
@@ -555,6 +555,45 @@ define([
                         childComponent.$el || childComponent.el
                     );
                 });
+
+                // Load dependency endpoint in edit/clone mode
+                if (this.mode === MODE_CLONE || this.mode === MODE_EDIT) {
+                    _.each(this.component.entity, e => {
+                        const fields = _.get(e, ['options', 'dependencies']);
+                        if (!fields) return;
+                        let data = {};
+                        let load = _.every(fields, field => {
+                            let required = !!_.find(
+                                    this.component.entity,
+                                    e => {
+                                        return e.field === field;
+                                }).required;
+                            if (required && !this.model.get(field)) {
+                                return false;
+                            }
+                            // Set the rest required params
+                            data[field] = this.model.get(field, '');
+                            return true;
+                        });
+                        if (load) {
+                            let controlWrapper =
+                                this.fieldControlMap.get(e.field);
+                            // Add loading message
+                            controlWrapper.control.startLoading();
+                            controlWrapper.collection.fetch({
+                                data,
+                                error: (collection, response) => {
+                                    this.addErrorToComponent(e.field);
+                                    addErrorMsg(
+                                        this.curWinSelector,
+                                        response,
+                                        true
+                                    )
+                                }
+                            });
+                        }
+                    });
+                }
 
                 // Disable the name field in edit mode
                 if (this.mode === MODE_EDIT) {
