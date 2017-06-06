@@ -92,7 +92,8 @@ class Entity(DocumentWithoutAddProp):
             "display": BooleanField(),
             "labelField": StringField(max_length=250),
             "src": StringField(max_length=250),
-            "defaultValue": StringField(max_length=250)
+            "defaultValue": StringField(max_length=250),
+            "disableonEdit": BooleanField()
         }
     )
     required = BooleanField()

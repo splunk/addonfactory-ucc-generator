@@ -598,6 +598,23 @@ define([
                 // Disable the name field in edit mode
                 if (this.mode === MODE_EDIT) {
                     this.$("input[name=name]").attr("readonly", "readonly");
+                    _.each(this.component.entity, e => {
+                        const disable = _.get(e, ['options', 'disableonEdit']);
+                        if (!disable) {
+                            return;
+                        }
+                        if (e.type === 'singleSelect' ||
+                                e.type === 'multipleSelect') {
+                            let controlWrapper =
+                                this.fieldControlMap.get(e.field);
+                            controlWrapper.control.disable();
+                        } else {
+                            this.$(`input[name=${e.field}]`).attr(
+                                "readonly",
+                                "readonly"
+                            );
+                        }
+                    });
                 }
                 this.$("input[type=submit]").on(
                     "click", this.submitTask.bind(this)
