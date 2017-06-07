@@ -485,7 +485,8 @@ define([
                     displayText: e.displayText,
                     helpLink: e.helpLink,
                     elementId: `${this.component.name}-${e.field}`,
-                    curWinSelector: this.curWinSelector
+                    curWinSelector: this.curWinSelector,
+                    mode: this.mode
                 };
                 _.extend(controlOptions, e.options);
 
@@ -595,7 +596,7 @@ define([
                     });
                 }
 
-                // Disable the name field in edit mode
+                // Disable the name field and other configed fields in edit mode
                 if (this.mode === MODE_EDIT) {
                     this.$("input[name=name]").attr("readonly", "readonly");
                     _.each(this.component.entity, e => {
