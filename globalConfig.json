@@ -3,7 +3,7 @@
         "name": "Splunk_TA_UCCExample",
         "displayName": "AOB Test",
         "version": "1.0.0",
-        "apiVersion": "3.0.0",
+        "apiVersion": "3.1.0",
         "restRoot": "splunk_ta_uccexample"
     },
     "pages": {
