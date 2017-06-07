@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import CONTROL_TYPE_MAP from 'app/constants/controlTypeMap';
+import {MODE_EDIT} from 'app/constants/modes';
 import restEndpointMap from 'app/constants/restEndpointMap';
 import {generateCollection} from 'app/util/backboneHelpers';
 import {addErrorMsg} from 'app/util/promptMsgController';
@@ -82,6 +83,10 @@ define([
                 this.listenTo(this.collection, 'sync', () => {
                     if (type === 'singleSelect' || type === 'multipleSelect') {
                         this._updateSelect();
+                        if (this.controlOptions.mode === MODE_EDIT &&
+                                this.options.disableonEdit) {
+                            this.control.disable();
+                        }
                     }
                 });
             } else if (autoCompleteFields && this.existingValue) {

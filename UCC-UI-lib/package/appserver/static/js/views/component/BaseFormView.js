@@ -485,7 +485,8 @@ define([
                     displayText: e.displayText,
                     helpLink: e.helpLink,
                     elementId: `${this.component.name}-${e.field}`,
-                    curWinSelector: this.curWinSelector
+                    curWinSelector: this.curWinSelector,
+                    mode: this.mode
                 };
                 _.extend(controlOptions, e.options);
 
