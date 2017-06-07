@@ -83,6 +83,7 @@ define([
                 this.listenTo(this.collection, 'sync', () => {
                     if (type === 'singleSelect' || type === 'multipleSelect') {
                         this._updateSelect();
+                        // Disable field in edit mode if configed
                         if (this.controlOptions.mode === MODE_EDIT &&
                                 this.options.disableonEdit) {
                             this.control.disable();
