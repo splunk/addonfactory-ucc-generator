@@ -143,13 +143,22 @@ define([
             );
             //make the filter work for field 'status'
             if ("disabled".indexOf(search) > -1) {
-                result = result.concat(models.filter(model => {
+                _.each(models.filter(model => {
                     return model.entry.content.get('disabled') === true;
-                }));
-            } else if ("enabled".indexOf(search) > -1) {
-                result = result.concat(models.filter(model => {
+                }), (m) => {
+                    if (!_.includes(result, m)) {
+                        result.push(m);
+                    }
+                });
+            }
+            if ("enabled".indexOf(search) > -1) {
+                _.each(models.filter(model => {
                     return model.entry.content.get('disabled') === false;
-                }));
+                }), (m) => {
+                    if (!_.includes(result, m)) {
+                        result.push(m);
+                    }
+                });
             }
             return result;
         },
