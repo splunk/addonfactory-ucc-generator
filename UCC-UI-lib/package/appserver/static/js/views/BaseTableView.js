@@ -1,6 +1,6 @@
 import _ from 'lodash';
+import $ from 'jquery';
 import Backbone from 'backbone';
-import {sortAlphabetical} from 'app/util/sort';
 
 export default Backbone.View.extend({
     initialize: function (options) {
@@ -10,7 +10,9 @@ export default Backbone.View.extend({
             sortKey: 'name',
             sortDirection: 'asc',
             count: 10,
-            offset: 0,
+            // Prevent triggering stateChange two times when search
+            // Refer to FindInput.js
+            offset: '0',
             fetching: true
         });
         // Event dispatcher
@@ -59,18 +61,29 @@ export default Backbone.View.extend({
         });
     },
 
-    filterSort: function (models) {
-        const sortKey = this.stateModel.get('sortKey'),
-              sortDir = this.stateModel.get('sortDirection'),
-              handler = (a, b) => sortAlphabetical(
-                  a.entry.get(sortKey) || a.entry.content.get(sortKey),
-                  b.entry.get(sortKey) || b.entry.content.get(sortKey),
-              sortDir);
-        return models.sort(handler);
+    _getCompareText: function (model, attributeField, headerConfig) {
+        const cellDef = _.find(
+            headerConfig,
+            (cell) => {
+                return cell.field === attributeField;
+            }
+        );
+        const fieldValue = model.entry.get(attributeField) ||
+            model.entry.content.get(attributeField) || undefined;
+        if (cellDef && cellDef.mapping) {
+            return cellDef.mapping[fieldValue] || fieldValue;
+        } else if (cellDef && cellDef.customCell && cellDef.customCell.src) {
+            return $(`
+                tr.row-${model.entry.get('name')} td.col-${attributeField}
+            `).text() || undefined;
+        } else {
+            // Use model attribute value
+            return fieldValue;
+        }
     },
 
     adjustPaging: function (collection, models) {
-        const offset = this.stateModel.get('offset'),
+        const offset = Number(this.stateModel.get('offset')),
               count = this.stateModel.get('count'),
               total = models.length;
         collection.paging.set('offset', offset);

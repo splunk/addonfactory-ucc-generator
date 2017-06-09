@@ -5,6 +5,7 @@ import {MODE_CREATE} from 'app/constants/modes';
 import {PAGE_STYLE} from 'app/constants/pageStyle';
 import restEndpointMap from 'app/constants/restEndpointMap';
 import BaseTableView from 'app/views/BaseTableView';
+import {sortAlphabetical} from 'app/util/sort';
 import 'appCssDir/common.css';
 import 'appCssDir/inputs.css';
 
@@ -132,13 +133,12 @@ define([
             const search = this.getRawSearch(this.stateModel.get('search'));
             let result = models.filter(d =>
                 this.filterKey.some(field => {
-                    const entryValue = (d.entry.get(field) &&
-                        d.entry.get(field).toLowerCase()) || undefined;
-                    const contentValue = (d.entry.content.get(field) &&
-                        d.entry.content.get(field).toLowerCase()) || undefined;
-
-                    return (entryValue && entryValue.indexOf(search) > -1) ||
-                        (contentValue && contentValue.indexOf(search) > -1);
+                    const text = this._getCompareText(
+                        d,
+                        field,
+                        this.inputsConfig.table.header
+                    );
+                    return (text && text.toLowerCase().indexOf(search) > -1);
                 })
             );
             //make the filter work for field 'status'
@@ -152,6 +152,18 @@ define([
                 }));
             }
             return result;
+        },
+
+        filterSort: function (models) {
+            const sortKey = this.stateModel.get('sortKey'),
+                  sortDir = this.stateModel.get('sortDirection'),
+                  header = this.inputsConfig.table.header,
+                  handler = (a, b) => sortAlphabetical(
+                      this._getCompareText(a, sortKey, header),
+                      this._getCompareText(b, sortKey, header),
+                      sortDir
+                  );
+            return models.sort(handler);
         },
 
         filterService: function (models) {
