@@ -112,17 +112,17 @@ define([
             this.model.navigator.set({params}, {silent: true});
             BaseRouter.prototype.page.apply(this, args);
             this.deferreds.pageViewRendered.done(() => {
-                if (!this.inputsPageView) {
-                    this.inputsPageView = new InputsPageView({
-                        navModel: this.model
-                    }).render();
-                }
                 if (!this._headerReady) {
                     this._renderHeader();
                     this._headerReady = true;
                 }
                 this._clearFooter();
                 if (page === INPUT_PAGE) {
+                    if (!this.inputsPageView) {
+                        this.inputsPageView = new InputsPageView({
+                            navModel: this.model
+                        }).render();
+                    }
                     this.setPageTitle(getFormattedMessage(116));
                     this.currentView = this._getInputView(params);
                     $(".main-section-body").html(this.currentView.render().$el);
