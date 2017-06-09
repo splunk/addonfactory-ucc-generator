@@ -34,6 +34,8 @@ export default BaseTableView.extend({
         if (servicesDeferred) {
             defferedList.push(servicesDeferred);
         }
+        // Load custom cell if configed
+        defferedList.push(...this.loadCustomCell(this.props.table.header));
 
         _.extend(this, {
             entitiesDeferred: $.when(...defferedList),

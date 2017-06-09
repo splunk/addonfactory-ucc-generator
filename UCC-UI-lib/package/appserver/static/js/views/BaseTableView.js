@@ -18,6 +18,9 @@ export default Backbone.View.extend({
         // Event dispatcher
         this.dispatcher = _.extend({}, Backbone.Events);
 
+        // Mapping from field value to display value for CustomCell
+        this.fieldDisplayMapping = new Map();
+
         // State model change event
         this.listenTo(
             this.stateModel,
@@ -73,9 +76,9 @@ export default Backbone.View.extend({
         if (cellDef && cellDef.mapping) {
             return cellDef.mapping[fieldValue] || fieldValue;
         } else if (cellDef && cellDef.customCell && cellDef.customCell.src) {
-            return $(`
-                tr.row-${model.entry.get('name')} td.col-${attributeField}
-            `).text() || undefined;
+            const getDisplayValue =
+                this.fieldDisplayMapping.get(attributeField);
+            return getDisplayValue(fieldValue) || fieldValue;
         } else {
             // Use model attribute value
             return fieldValue;
@@ -118,5 +121,24 @@ export default Backbone.View.extend({
         } else {
             return '';
         }
+    },
+
+    loadCustomCell: function (headerConfig) {
+        return _.map(
+            _.filter(
+                headerConfig,
+                h => h.customCell && h.customCell.src
+            ),
+            hr => this._loadCustomCell(hr.customCell.src, hr.field)
+        );
+    },
+
+    _loadCustomCell: function(module, field) {
+        const deferred = $.Deferred();
+        __non_webpack_require__(['custom/' + module], (CustomCell) => {
+            this.fieldDisplayMapping.set(field, CustomCell.getDisplayValue);
+            deferred.resolve(CustomCell);
+        });
+        return deferred.promise();
     }
 });

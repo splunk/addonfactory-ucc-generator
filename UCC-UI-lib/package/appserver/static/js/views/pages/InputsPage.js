@@ -107,7 +107,14 @@ define([
                 // Does not trigger the stateChange
             });
 
-            this.deferred = this.fetchAllCollection();
+            // Load all collections and CustomCell if configed
+            this.deferred =
+                $.when.apply(
+                    this,
+                    this.fetchAllCollection().concat(
+                        this.loadCustomCell(this.inputsConfig.table.header)
+                    )
+                );
 
             this.emptySearchString =
                 this.filterKey.map(d => d + '=*')
@@ -317,12 +324,11 @@ define([
         },
 
         fetchAllCollection: function () {
-            const calls = _.map(this.services, service => {
+            return _.map(this.services, service => {
                 return this[service.name].fetch({
                     count: 0 // fetch all stanzas
                 });
             });
-            return $.when.apply(this, calls);
         },
 
         combineCollection: function () {
