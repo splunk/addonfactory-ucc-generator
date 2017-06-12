@@ -20,6 +20,16 @@ define([], function() {
             this.el.innerHTML = 'test custom cell';
             return this;
         }
+        /* This static method is required to get the display value for search*/
+        static getDisplayValue(value) {
+            if (value == 1) {
+                return 'aaaa';
+            } else if (value == 2) {
+                return 'yyyy';
+            } else if (value == 3) {
+                return 'zzzz';
+            }
+        }
     }
     return CustomCell;
 });

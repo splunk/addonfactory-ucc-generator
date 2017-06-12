@@ -78,7 +78,11 @@ export default Backbone.View.extend({
         } else if (cellDef && cellDef.customCell && cellDef.customCell.src) {
             const getDisplayValue =
                 this.fieldDisplayMapping.get(attributeField);
-            return getDisplayValue(fieldValue) || fieldValue;
+            if (typeof getDisplayValue === 'function') {
+                return getDisplayValue(fieldValue) || fieldValue;
+            } else {
+                return fieldValue;
+            }
         } else {
             // Use model attribute value
             return fieldValue;
