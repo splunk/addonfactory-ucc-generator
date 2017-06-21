@@ -44,10 +44,8 @@ define([
                     this.deleteTag || ''
                  ))
             }));
-
-            var dlg = this;
-            this.$("[role=dialog]").on('hidden.bs.modal', function () {
-                dlg.undelegateEvents();
+            this.$("[role=dialog]").on('hidden.bs.modal', () => {
+                this.undelegateEvents();
             });
             return this;
         },
