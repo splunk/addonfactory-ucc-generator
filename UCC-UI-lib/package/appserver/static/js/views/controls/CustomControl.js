@@ -27,10 +27,19 @@ define([], function() {
             var el = this.el.querySelector('#mytext');
             el.addEventListener('change', () => {
                 this.model.set(this.field, el.value);
-                console.log(`Set ${this.field} to ${el.value}`);
-                // this.context.displayErrorMsg(this.context.selector, el.value);
             });
             return this;
+        }
+
+        /*
+            Custom validation in custom control.
+            Note: do not use `this` context as this is executed in UCC context.
+        */
+        validation (field, value) {
+            // Validation logic for value. Return the error message if failed.
+            if (value < 5) {
+                return field + ' should be greater than 5.';
+            }
         }
     }
 
