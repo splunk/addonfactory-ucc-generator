@@ -1,4 +1,5 @@
 var webpack = require('webpack');
+var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
     debug: true,
@@ -12,6 +13,7 @@ module.exports = {
         }),
         // Use old watching plugin as the bug below
         // https://github.com/webpack/webpack/issues/675#issuecomment-224991459
-        new webpack.OldWatchingPlugin()
+        new webpack.OldWatchingPlugin(),
+        new BundleAnalyzerPlugin()
     ]
 };

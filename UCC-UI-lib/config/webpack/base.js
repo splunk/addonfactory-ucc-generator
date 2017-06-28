@@ -1,5 +1,4 @@
 var path = require('path');
-var fs = require('fs');
 
 var rootDir = path.join(__dirname, '../../');
 var repoBaseDir = path.join(__dirname, '../../..');
@@ -9,29 +8,15 @@ var mergeConfigs = require(path.join(webpackDir, '/util/mergeConfigs'));
 var sharedConfig = require(path.join(webpackDir, 'profiles/common/shared.config'));
 var postCssConfig = require(path.join(webpackDir, 'profiles/common/postcss.config'));
 var appDir = path.join(rootDir, 'package');
-var requireToDefineLoader = 'splunk-require-to-define-loader!';
-
 var appJsDir = path.join(appDir, 'appserver', 'static', 'js');
 var appCssDir = path.join(appDir, 'appserver', 'static', 'css');
-var testesDir = path.join(rootDir, 'testes');
-
-var entries = fs.readdirSync(path.join(appDir, 'appserver', 'static', 'js', 'pages'))
-    .filter(function(pageFile) {
-        return /\.js$/.test(pageFile);
-    })
-    .map(function(pageFile) {
-        return pageFile.slice(0, -3);
-    })
-    .reduce(function(accum, page) {
-        accum[page] = requireToDefineLoader + path.join(appJsDir, 'pages', page);
-        return accum;
-    }, {});
+var testsDir = path.join(rootDir, 'testes');
 
 module.exports = mergeConfigs(sharedConfig, postCssConfig({ loadTheme: 'enterprise' }), {
         resolve: {
             alias: {
               app: appJsDir,
-              'lib/lodash': path.join(rootDir, 'bower_components', 'lodash', 'dist', 'lodash'),
+              'lib/lodash': path.join(rootDir, 'bower_components', 'lodash', 'dist', 'lodash.min'),
               lodash: path.join(appJsDir, 'shim', 'lodash'),
               rootDir: rootDir,
               repoBaseDir: repoBaseDir,
@@ -41,8 +26,8 @@ module.exports = mergeConfigs(sharedConfig, postCssConfig({ loadTheme: 'enterpri
         },
         module: {
             loaders: [
-                { test: /\.js$/, include: [appJsDir, testesDir], loader: 'babel' },
-                { test: /\.html$/, include: [appJsDir, testesDir], loader: 'raw' }
+                { test: /\.js$/, include: [appJsDir, testsDir], loader: 'babel' },
+                { test: /\.html$/, include: [appJsDir, testsDir], loader: 'raw' }
             ]
         },
         output: {
@@ -50,7 +35,9 @@ module.exports = mergeConfigs(sharedConfig, postCssConfig({ loadTheme: 'enterpri
             filename: '[name].js',
             sourceMapFilename: '[file].map'
         },
-        entry: entries,
+        entry: {
+            entry_page: path.join(appJsDir, 'pages', 'entry_page')
+        },
         // use external requirejs to load dynamic components
         externals: {
             'requirejs': 'requirejs'

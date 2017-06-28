@@ -28,6 +28,7 @@
     "phantomjs-polyfill": "0.0.1",
     "raw-loader": "^0.5.1",
     "webpack": "^1.13.1",
+    "webpack-bundle-analyzer": "^2.8.2",
     "webpack-dev-server": "^1.14.1"
   },
   "scripts": {

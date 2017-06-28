@@ -1,4 +1,4 @@
-require([
+define([
     'app/util/webpack',
     'app/util/configManager',
     'app/router/PageRouter',
