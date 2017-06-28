@@ -165,6 +165,8 @@ class TabContent(DocumentWithoutAddProp):
     title = StringField(required=True, max_length=50)
     options = DocumentField(Hooks, as_ref=True)
     table = DocumentField(ConfigurationTable, as_ref=True)
+    conf = StringField(required=False, max_length=100)
+    restHandlerName = StringField(required=False, max_length=100)
 
 
 class ConfigurationPage(DocumentWithoutAddProp):
@@ -196,7 +198,9 @@ class InputsPage(DocumentWithoutAddProp):
                 }
             ), required=False),
             "style": StringField(required=False, enum=["page", "dialog"]),
-            "hook": DictField(required=False)
+            "hook": DictField(required=False),
+            "conf": StringField(required=False, max_length=100),
+            "restHandlerName": StringField(required=False, max_length=100)
         }
     ), required=True)
     menu = DictField(required=False)

@@ -57,7 +57,8 @@ class GlobalConfigBuilderSchema(GlobalConfigSchema):
                 config['name'],
                 SingleModelEndpointBuilder,
                 SingleModelEntityBuilder,
-                conf_name=config.get('conf')
+                conf_name=config.get('conf'),
+                rest_handler_name=config.get('restHandlerName'),
             )
 
     def _builder_settings(self):
@@ -74,6 +75,9 @@ class GlobalConfigBuilderSchema(GlobalConfigSchema):
     def _builder_inputs(self):
         # DataInput
         for input_item in self._inputs:
+            rest_handler_name = None
+            if 'restHandlerName' in input_item:
+                rest_handler_name = input_item['restHandlerName']
             if 'conf' in input_item:
                 self._builder_entity(
                     None,
@@ -82,6 +86,7 @@ class GlobalConfigBuilderSchema(GlobalConfigSchema):
                     SingleModelEndpointBuilder,
                     SingleModelEntityBuilder,
                     conf_name=input_item['conf'],
+                    rest_handler_name=rest_handler_name,
                 )
             else:
                 self._builder_entity(
@@ -91,6 +96,7 @@ class GlobalConfigBuilderSchema(GlobalConfigSchema):
                     DataInputEndpointBuilder,
                     DataInputEntityBuilder,
                     input_type=input_item['name'],
+                    rest_handler_name=rest_handler_name,
                 )
 
     def _builder_entity(

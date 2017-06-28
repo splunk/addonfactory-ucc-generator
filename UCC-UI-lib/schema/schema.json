@@ -530,6 +530,13 @@
                     "items": {
                         "type": "object", 
                         "properties": {
+                            "restHandlerName": {
+                                "type": "string", 
+                                "maxLength": 100
+                            }, 
+                            "hook": {
+                                "type": "object"
+                            }, 
                             "style": {
                                 "type": "string", 
                                 "enum": [
@@ -541,19 +548,6 @@
                                 "type": "string", 
                                 "pattern": "^[0-9a-zA-Z][0-9a-zA-Z_-]*$", 
                                 "maxLength": 50
-                            }, 
-                            "title": {
-                                "type": "string", 
-                                "maxLength": 100
-                            }, 
-                            "entity": {
-                                "type": "array", 
-                                "items": {
-                                    "$ref": "#/definitions/InputsEntity"
-                                }
-                            }, 
-                            "hook": {
-                                "type": "object"
                             }, 
                             "groups": {
                                 "type": "array", 
@@ -588,8 +582,22 @@
                                     ]
                                 }
                             }, 
+                            "title": {
+                                "type": "string", 
+                                "maxLength": 100
+                            }, 
+                            "conf": {
+                                "type": "string", 
+                                "maxLength": 100
+                            }, 
                             "options": {
                                 "$ref": "#/definitions/Hooks"
+                            }, 
+                            "entity": {
+                                "type": "array", 
+                                "items": {
+                                    "$ref": "#/definitions/InputsEntity"
+                                }
                             }
                         }, 
                         "required": [
@@ -848,6 +856,14 @@
                 }, 
                 "table": {
                     "$ref": "#/definitions/ConfigurationTable"
+                }, 
+                "conf": {
+                    "type": "string", 
+                    "maxLength": 100
+                }, 
+                "restHandlerName": {
+                    "type": "string", 
+                    "maxLength": 100
                 }
             }, 
             "required": [
