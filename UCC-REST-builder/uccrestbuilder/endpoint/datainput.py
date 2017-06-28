@@ -6,8 +6,8 @@ from .single_model import RestEndpointBuilder, RestEntityBuilder
 
 class DataInputEntityBuilder(RestEntityBuilder):
 
-    def __init__(self, name, fields, input_type):
-        super(DataInputEntityBuilder, self).__init__(name, fields)
+    def __init__(self, name, fields, input_type, **kwargs):
+        super(DataInputEntityBuilder, self).__init__(name, fields, **kwargs)
         self._input_type = input_type
 
     @property
@@ -53,8 +53,8 @@ if __name__ == '__main__':
     )
 """
 
-    def __init__(self, name, namespace, input_type):
-        super(DataInputEndpointBuilder, self).__init__(name, namespace)
+    def __init__(self, name, namespace, input_type, **kwargs):
+        super(DataInputEndpointBuilder, self).__init__(name, namespace, **kwargs)
         self.input_type = input_type
 
     @property

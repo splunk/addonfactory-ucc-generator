@@ -66,7 +66,7 @@ field.RestField(
         # add disabled field for data input
         entity_builder = self.__class__.__name__
         if (entity_builder == 'DataInputEntityBuilder' or
-            entity_builder == 'SingleModelEntityBuilder' and self._conf_name):
+                entity_builder == 'SingleModelEntityBuilder' and self._conf_name):
             fields.append(self._disabled_feild_template)
         fields_lines = ', \n'.join(fields)
         return self._rh_template.format(
@@ -83,6 +83,10 @@ class RestEndpointBuilder(object):
         self._namespace = namespace
         self._entities = []
         self._conf_name = kwargs.get('conf_name') if kwargs.get('conf_name') is not None else self.name.lower()
+        if kwargs.get('rest_handler_name') is not None:
+            self._rest_handler_name = kwargs.get('rest_handler_name')
+        else:
+            self._rest_handler_name = '{}_rh_{}'.format(self._namespace, self._name)
 
     @property
     def name(self):
@@ -98,7 +102,7 @@ class RestEndpointBuilder(object):
 
     @property
     def rh_name(self):
-        return '{}_rh_{}'.format(self._namespace, self._name)
+        return self._rest_handler_name
 
     @property
     def entities(self):
