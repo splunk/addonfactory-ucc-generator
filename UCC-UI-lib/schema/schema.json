@@ -896,8 +896,18 @@
             "type": "object", 
             "properties": {
                 "value": {
-                    "type": "string", 
-                    "maxLength": 50
+                    "oneOf": [
+                        {
+                            "type": "number"
+                        }, 
+                        {
+                            "type": "string", 
+                            "maxLength": 250
+                        }, 
+                        {
+                            "type": "boolean"
+                        }
+                    ]
                 }, 
                 "label": {
                     "type": "string", 
@@ -905,7 +915,6 @@
                 }
             }, 
             "required": [
-                "value", 
                 "label"
             ], 
             "additionalProperties": false

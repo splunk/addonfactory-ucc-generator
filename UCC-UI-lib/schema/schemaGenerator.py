@@ -10,7 +10,11 @@ class DocumentWithoutAddProp(Document):
 
 
 class ValueLabelPair(DocumentWithoutAddProp):
-    value = StringField(required=True, max_length=50)
+    value = OneOfField([
+        NumberField(),
+        StringField(max_length=250),
+        BooleanField()
+    ])
     label = StringField(required=True, max_length=100)
 
 
