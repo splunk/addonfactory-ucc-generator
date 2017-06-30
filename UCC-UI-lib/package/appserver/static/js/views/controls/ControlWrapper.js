@@ -265,7 +265,8 @@ define([
                 <div class="col-sm-10 controls control-placeholder">
                     <% if (help) { %>
                         <span class="help-block">
-                        <%- _(help).t() %></span>
+                            <%= _(help).t() %>
+                        </span>
                     <% } %>
                 </div>
             </div>
