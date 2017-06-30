@@ -89,7 +89,7 @@ export default Backbone.View.extend({
                 attributeField,
                 model
             );
-            return customCell.render().el.innerHTML;
+            return customCell.render().el.innerText;
         } else {
             // Use model attribute value
             return fieldValue;
