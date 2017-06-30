@@ -1,10 +1,13 @@
 import _ from 'lodash';
 import $ from 'jquery';
 import Backbone from 'backbone';
+import {configManager} from 'app/util/configManager';
 
 export default Backbone.View.extend({
     initialize: function (options) {
         _.extend(this, options);
+        // Global Config
+        this.unifiedConfig = configManager.unifiedConfig;
         // State model
         this.stateModel = new Backbone.Model({
             sortKey: 'name',
@@ -18,8 +21,8 @@ export default Backbone.View.extend({
         // Event dispatcher
         this.dispatcher = _.extend({}, Backbone.Events);
 
-        // Mapping from field value to display value for CustomCell
-        this.fieldDisplayMapping = new Map();
+        // Mapping from field to CustomCell
+        this.fieldCustomCellMapping = new Map();
 
         // State model change event
         this.listenTo(
@@ -76,13 +79,17 @@ export default Backbone.View.extend({
         if (cellDef && cellDef.mapping) {
             return cellDef.mapping[fieldValue] || fieldValue;
         } else if (cellDef && cellDef.customCell && cellDef.customCell.src) {
-            const getDisplayValue =
-                this.fieldDisplayMapping.get(attributeField);
-            if (typeof getDisplayValue === 'function') {
-                return getDisplayValue(fieldValue) || fieldValue;
-            } else {
-                return fieldValue;
-            }
+            const CustomCell = this.fieldCustomCellMapping.get(attributeField);
+            const el = document.createElement('div');
+            const service = this.stateModel.get('service') || null;
+            const customCell = new CustomCell(
+                this.unifiedConfig,
+                service,
+                el,
+                attributeField,
+                model
+            );
+            return customCell.render().el.innerText;
         } else {
             // Use model attribute value
             return fieldValue;
@@ -140,7 +147,7 @@ export default Backbone.View.extend({
     _loadCustomCell: function(module, field) {
         const deferred = $.Deferred();
         __non_webpack_require__(['custom/' + module], (CustomCell) => {
-            this.fieldDisplayMapping.set(field, CustomCell.getDisplayValue);
+            this.fieldCustomCellMapping.set(field, CustomCell);
             deferred.resolve(CustomCell);
         });
         return deferred.promise();

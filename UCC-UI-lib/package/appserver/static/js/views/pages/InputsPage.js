@@ -1,4 +1,3 @@
-import {configManager} from 'app/util/configManager';
 import {generateCollection} from 'app/util/backboneHelpers';
 import {getFormattedMessage} from 'app/util/messageUtil';
 import {MODE_CREATE} from 'app/constants/modes';
@@ -43,7 +42,6 @@ define([
         initialize: function (options) {
             BaseTableView.prototype.initialize.apply(this, arguments);
 
-            this.unifiedConfig = configManager.unifiedConfig;
             this.inputsConfig = this.unifiedConfig.pages.inputs;
             this.inputsPageTemplateData = {
                 'title': this.inputsConfig.title,
