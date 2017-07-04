@@ -221,7 +221,8 @@ class RestHandler(object):
             self._session_key,
             self._endpoint,
         )
-        rest_credentials.delete(name)
+        if rest_credentials.get_encrypted_field_names:
+            rest_credentials.delete(name)
         return self._flay_response(response)
 
     @_decode_response
