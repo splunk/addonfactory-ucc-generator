@@ -96,8 +96,8 @@ define([
                     autoCompleteFields
                 );
             } else if (items && this.existingValue) {
-                let delimiter = this.controlOptions.delimiter || ',';
-                let values = this.existingValue.split(delimiter);
+                const delimiter = this.controlOptions.delimiter || ',';
+                const values = this.existingValue.split(delimiter);
                 let newItems = items;
                 _.each(_.filter(values , (value) => {
                     return _.map(items, (d) => {
@@ -126,9 +126,9 @@ define([
 
         _updateSelect: function() {
             let dic = _.map(this.collection.models, model => {
-                let labelField = this.controlOptions.labelField,
-                    value = model.entry.get('name'),
-                    label;
+                const labelField = this.controlOptions.labelField,
+                    value = model.entry.get('name');
+                let label;
                 if (labelField && model.entry.content.get(labelField)) {
                     label = model.entry.content.get(labelField);
                 } else {
@@ -159,8 +159,8 @@ define([
             // set multipleSelect selection list
             if(this.control.setItems) {
                 if (this.existingValue) {
-                    let delimiter = this.controlOptions.delimiter || ',';
-                    let values = this.existingValue.split(delimiter);
+                    const delimiter = this.controlOptions.delimiter || ',';
+                    const values = this.existingValue.split(delimiter);
                     _.each(_.filter(values, (value) => {
                         return _.map(dic, (d) => {
                             return d.value;
@@ -241,7 +241,7 @@ define([
                     }
                     return field.value === fieldValue;
                 }) === undefined) {
-                let selectedItem = {
+                const selectedItem = {
                     label: fieldValue,
                     value: fieldValue
                 };

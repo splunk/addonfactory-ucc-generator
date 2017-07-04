@@ -31,8 +31,8 @@ export default Backbone.Model.extend({
 
         if (this.has('params')) {
             nextUrl += '?';
-            let params = [];
-            for (let [key, value] of Object.entries(this.get('params'))) {
+            const params = [];
+            for (const [key, value] of Object.entries(this.get('params'))) {
                 params.push(key + '=' + value);
             }
             nextUrl += params.join('&');

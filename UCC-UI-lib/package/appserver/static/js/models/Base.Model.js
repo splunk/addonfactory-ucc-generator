@@ -166,7 +166,7 @@ define([
         _all_validator: function (validator, attr) {
             var ret, fn;
             if (_.isFunction(validator)) {
-                let value = this.entry.content.get(attr);
+                const value = this.entry.content.get(attr);
                 ret = validator(attr, value);
                 if (ret) {
                     // return object containing attributeName and error msg

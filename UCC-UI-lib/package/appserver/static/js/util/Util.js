@@ -150,7 +150,7 @@ define(function () {
             if (!model.id || !model.get('appData').stanzaPrefix) {
                 return serviceName;
             }
-            let idStr = model.id.split('/');
+            const idStr = model.id.split('/');
             if (idStr.length >= 2 && model.get('appData').stanzaPrefix) {
                 serviceName = idStr[idStr.length - 2];
                 serviceName = serviceName.replace(

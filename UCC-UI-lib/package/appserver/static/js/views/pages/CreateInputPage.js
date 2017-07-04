@@ -50,7 +50,7 @@ define([
                 _.template(CreateInputPageTemplate)({btnValue})
             );
             // render the form header including breadcrumbs
-            let pageFormHeader = new PageFormHeader({
+            const pageFormHeader = new PageFormHeader({
                     navModel: this.navModel,
                     component: this.component,
                     mode: this.mode

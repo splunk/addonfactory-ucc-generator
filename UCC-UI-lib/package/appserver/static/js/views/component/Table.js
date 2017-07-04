@@ -101,7 +101,7 @@ define([
         rowsFromCollection: function () {
             return _.flattenDeep(
                 this.collection.map((model, i) => {
-                    let result = [];
+                    const result = [];
                     result.push(new TableRow({
                         dispatcher: this.dispatcher,
                         model: {

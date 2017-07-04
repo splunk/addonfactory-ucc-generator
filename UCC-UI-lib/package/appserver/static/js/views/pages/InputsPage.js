@@ -120,7 +120,7 @@ define([
         },
 
         stateChange: function () {
-            let models = this.adjustPaging(
+            const models = this.adjustPaging(
                 this.inputs,
                 this.filterSort(
                     this.filterSearch(
@@ -136,7 +136,7 @@ define([
                 return models;
             }
             const search = this.getRawSearch(this.stateModel.get('search'));
-            let result = models.filter(d =>
+            const result = models.filter(d =>
                 this.filterKey.some(field => {
                     const text = this._getCompareText(
                         d,
@@ -269,7 +269,7 @@ define([
 
             // Single data input or multiple data inputs
             if (this.inputsPageTemplateData.singleInput) {
-                let serviceConfig = this.inputsConfig.services[0];
+                const serviceConfig = this.inputsConfig.services[0];
                 this.$('#addInputBtn').on('click', () => {
                     if (serviceConfig.style === PAGE_STYLE) {
                         this.navModel.navigator.navigate({
@@ -277,7 +277,7 @@ define([
                             'action': MODE_CREATE
                         });
                     } else {
-                        let dlg = new EntityDialog({
+                        const dlg = new EntityDialog({
                             el: $(".dialog-placeholder"),
                             collection: this.inputs,
                             component: serviceConfig
@@ -286,7 +286,7 @@ define([
                     }
                 });
             } else {
-                let customMenu = this.inputsConfig.menu;
+                const customMenu = this.inputsConfig.menu;
                 if (customMenu) {
                     this._loadCustomMenu(
                         customMenu.src,
@@ -297,7 +297,7 @@ define([
                     });
                 } else {
                     this.$('#addInputBtn').on("click", e => {
-                        let $target = $(e.currentTarget);
+                        const $target = $(e.currentTarget);
                         if (this.editmenu && this.editmenu.shown) {
                             this.editmenu.hide();
                             e.preventDefault();
@@ -318,7 +318,7 @@ define([
         },
 
         _loadCustomMenu: function(module, target, navigator) {
-            let deferred = $.Deferred();
+            const deferred = $.Deferred();
             __non_webpack_require__(['custom/' + module], (CustomMenu) => {
                 this.editmenu = new CustomMenu(
                     this.unifiedConfig,
