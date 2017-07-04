@@ -63,9 +63,9 @@ class TestCreateFunction(unittest.TestCase):
             }
         ]
         """
-        self.endpoint = 'https://localhost:8089/servicesNS/nobody/Splunk_TA_crowdstrike/splunk_ta_crowdstrike_account'
-        self.conf_endpoint = 'https://localhost:8089/servicesNS/nobody/Splunk_TA_crowdstrike/' \
-                             'configs/conf-splunk_ta_crowdstrike_account'
+        self.endpoint = 'https://localhost:8089/servicesNS/nobody/Splunk_TA_UCCExample/splunk_ta_uccexample_account'
+        self.conf_endpoint = 'https://localhost:8089/servicesNS/nobody/Splunk_TA_UCCExample/' \
+                             'configs/conf-splunk_ta_uccexample_account'
         self.password_endpoint = 'https://localhost:8089/servicesNS/nobody/-/storage/passwords'
         self.test_item_name = '1'
         self.PASSWORD = '********'
@@ -147,19 +147,19 @@ class TestCreateFunction(unittest.TestCase):
 
     def testUpdateWithStars(self):
         self.create_item(
-            data='-d name={name} -d endpoint=1 -d test_optional_password=1'.format(
+            data='-d name={name} -d endpoint=1 -d api_key=1 -d test_optional_password=1'.format(
                 name=self.test_item_name
             )
         )
         # update with empty password
         self.update_item(
-            data='-d endpoint=1 -d endpoint=1 -d test_optional_password='
+            data='-d endpoint=1 -d endpoint=1 -d api_key=1 -d test_optional_password='
         )
         content = self.get_item_content(clear_password=True)
         self.assertEqual(content['test_optional_password'], '')
         # update with magic password '********'
         self.update_item(
-            data='-d endpoint=1 -d endpoint=1 -d test_optional_password=*******'
+            data='-d endpoint=1 -d endpoint=1 -d api_key=1 -d test_optional_password=*******'
         )
         content = self.get_item_content(clear_password=True)
         self.assertEqual(content['test_optional_password'], '*******')

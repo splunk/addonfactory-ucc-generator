@@ -79,10 +79,7 @@ class AdminExternalHandler(admin.MConfigHandler, object):
         actions = (admin.ACTION_LIST, admin.ACTION_REMOVE)
         if self.requestedAction in actions:
             return
-        model = self.endpoint.model(
-            self.callerArgs.id,
-            self.payload,
-        )
+        model = self.endpoint.model(self.callerArgs.id)
         if self.requestedAction == admin.ACTION_CREATE:
             for field in model.fields:
                 if field.required:

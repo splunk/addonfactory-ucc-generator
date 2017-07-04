@@ -100,8 +100,8 @@ class RestCredentials(object):
             endpoint=self._endpoint.internal_endpoint.strip('/')
         )
 
-    def get_encrypted_field_names(self, name, data):
-        return [x.name for x in self._endpoint.model(name, data).fields if x.encrypted]
+    def get_encrypted_field_names(self, name):
+        return [x.name for x in self._endpoint.model(name).fields if x.encrypted]
 
     def encrypt_for_create(self, name, data):
         """
@@ -111,7 +111,7 @@ class RestCredentials(object):
         :param data:
         :return:
         """
-        encrypted_field_names = self.get_encrypted_field_names(name, data)
+        encrypted_field_names = self.get_encrypted_field_names(name)
         encrypting = {}
         for field_name in encrypted_field_names:
             if field_name in data and data[field_name]:
@@ -132,7 +132,7 @@ class RestCredentials(object):
         :param data:
         :return:
         """
-        encrypted_field_names = self.get_encrypted_field_names(name, data)
+        encrypted_field_names = self.get_encrypted_field_names(name)
         encrypting = {}
         if not encrypted_field_names:
             # return if there are not encrypted fields
@@ -176,7 +176,7 @@ class RestCredentials(object):
         data_need_write_to_conf = dict()
         # password dict needs to be encrypted
         encrypting = dict()
-        encrypted_field_names = self.get_encrypted_field_names(name, data)
+        encrypted_field_names = self.get_encrypted_field_names(name)
         if not encrypted_field_names:
             return
         try:
@@ -226,7 +226,7 @@ class RestCredentials(object):
         :return:
         """
         # Check if encrypt is needed
-        model = self._endpoint.model(name, data)
+        model = self._endpoint.model(name)
         need_encrypting = all(field.encrypted for field in model.fields)
         if not need_encrypting:
             return
@@ -237,13 +237,13 @@ class RestCredentials(object):
             encrypted = {}
             existing = False
         encrypting = self._filter(name, data, encrypted)
-        self._merge(name, data, encrypted, encrypting)
+        self._merge(name, encrypted, encrypting)
         if existing or encrypting:
             # only save credential when the stanza is existing in
             # passwords.conf or encrypting data is not empty
             self._set(name, encrypting)
 
-    def decrypt(self, name, data, show_credentials=False):
+    def decrypt(self, name, data):
         """
 
         :param name:
@@ -260,7 +260,7 @@ class RestCredentials(object):
             existing = False
         # get fields to be encrypted
         encrypting = self._filter(name, data, encrypted)
-        self._merge(name, data, encrypted, encrypting)
+        self._merge(name, encrypted, encrypting)
         if existing or encrypting:
             # only save credential when the stanza is existing in
             # passwords.conf or encrypting data is not empty
@@ -331,7 +331,7 @@ class RestCredentials(object):
                         need_write_magic_pwd = True
                         need_write_back_pwd = True
                         clear_password[k] = existed_model['content'][k]
-                else: 
+                else:
                     # mark to delete it
                     clear_password[k] = ''
                     need_write_back_pwd = True
@@ -352,12 +352,12 @@ class RestCredentials(object):
         for other_model in not_encrypted_items:
             name = other_model['name']
             content = other_model['content']
-            fields = filter(lambda x: x.encrypted, self._endpoint.model(None, data).fields)
+            encrypted_field_names = self.get_encrypted_field_names(name)
             clear_password = {}
-            for field in fields:
+            for field_name in encrypted_field_names:
                 # make sure key exist in model content
-                if field.name in content and content[field.name] != '':
-                    clear_password[field.name] = content[field.name]
+                if field_name in content and content[field_name] != '':
+                    clear_password[field_name] = content[field_name]
             if clear_password:
                 self._set(name, clear_password)
 
@@ -392,7 +392,7 @@ class RestCredentials(object):
         return context.load(string)
 
     def _filter(self, name, data, encrypted_data):
-        model = self._endpoint.model(name, data)
+        model = self._endpoint.model(name)
         encrypting_data = {}
         for field in model.fields:
             if not field.encrypted:
@@ -414,8 +414,8 @@ class RestCredentials(object):
                     del encrypted_data[field.name]
         return encrypting_data
 
-    def _merge(self, name, data, encrypted, encrypting):
-        model = self._endpoint.model(name, data)
+    def _merge(self, name, encrypted, encrypting):
+        model = self._endpoint.model(name)
         for field in model.fields:
             if field.encrypted is False:
                 continue

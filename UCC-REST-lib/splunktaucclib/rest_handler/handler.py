@@ -35,7 +35,7 @@ def _check_name_for_create(name):
 def _pre_request(existing):
     """
     Encode payload before request.
-    :param existing: 
+    :param existing:
         if True: means must exist
         if False: means must NOT exist
     :return:
@@ -101,7 +101,7 @@ def _decode_response(meth):
         return RestEntity(
             name,
             data,
-            self._endpoint.model(name, data),
+            self._endpoint.model(name),
             self._endpoint.user,
             self._endpoint.app,
             acl=acl,
@@ -176,8 +176,8 @@ class RestHandler(object):
         )
         return self._format_all_response(response, decrypt)
 
-    def get_encrypted_field_names(self, name, data):
-        return [x.name for x in self._endpoint.model(name, data).fields if x.encrypted]
+    def get_encrypted_field_names(self, name):
+        return [x.name for x in self._endpoint.model(name).fields if x.encrypted]
 
     @_decode_response
     @_pre_request(existing=False)
@@ -214,14 +214,13 @@ class RestHandler(object):
             ),
             output_mode='json',
         )
-
-        # delete credentials
-        rest_credentials = RestCredentials(
-            self._splunkd_uri,
-            self._session_key,
-            self._endpoint,
-        )
-        if rest_credentials.get_encrypted_field_names:
+        # delete credentials if there are encrypted fields
+        if self.get_encrypted_field_names(name):
+            rest_credentials = RestCredentials(
+                self._splunkd_uri,
+                self._session_key,
+                self._endpoint,
+            )
             rest_credentials.delete(name)
         return self._flay_response(response)
 
@@ -294,7 +293,7 @@ class RestHandler(object):
             name = entry['name']
             data = entry['content']
             acl = entry['acl']
-            encrypted_field_names = self.get_encrypted_field_names(name, data)
+            encrypted_field_names = self.get_encrypted_field_names(name)
             # encrypt and get clear password for get request
             if get:
                 masked = self.rest_credentials.decrypt_for_get(name, data)
@@ -344,8 +343,7 @@ class RestHandler(object):
                 'Fail to load response, invalid JSON'
             )
         # cont['entry']: collection list, load credentials in one request
-        # if any(x.encrypted for x in self._endpoint.model(None, cont['entry']).fields):
-        if self.get_encrypted_field_names(None, cont['entry']):
+        if self.get_encrypted_field_names(None):
             self._encrypt_raw_credentials(cont['entry'])
         if not decrypt:
             self._clean_all_credentials(cont['entry'])
@@ -382,13 +380,14 @@ class RestHandler(object):
         # get clear passwords for response data and get the password change list
         change_list = rest_credentials.decrypt_all(data)
 
-        field_names = {x.name for x in self._endpoint.model(None, data).fields if x.encrypted}
+        field_names = self.get_encrypted_field_names(None)
         for model in change_list:
             # only updates the defined fields in schema
             masked = dict()
             for field in field_names:
-                if field in model['content'] and model['content'][field] != '' \
-                        and model['content'][field] != self.PASSWORD:
+                if field in model['content'] and \
+                        model['content'][field] != '' and \
+                        model['content'][field] != self.PASSWORD:
                     masked[field] = self.PASSWORD
 
             if masked:
@@ -403,7 +402,7 @@ class RestHandler(object):
     def _need_decrypt(self, name, data, decrypt):
         # some encrypted-needed fields are plain text in *.conf.
         encrypted_field = False
-        for field in self._endpoint.model(name, data).fields:
+        for field in self._endpoint.model(name).fields:
             if field.encrypted is False:
                 # ignore non-encrypted fields
                 continue
@@ -423,15 +422,16 @@ class RestHandler(object):
         return False
 
     def _clean_credentials(self, name, data):
-        encrypted_field_names = self.get_encrypted_field_names(name, data)
+        encrypted_field_names = self.get_encrypted_field_names(name)
         for field_name in encrypted_field_names:
             if field_name in data:
                 del data[field_name]
 
     def _clean_all_credentials(self, data):
-        encrypted_field_names = self.get_encrypted_field_names(None, data)
+        encrypted_field_names = self.get_encrypted_field_names(None)
         for model in data:
             for field_name in encrypted_field_names:
-                if field_name in model['content'] and model['content'][field_name] != '':
+                if field_name in model['content'] and \
+                        model['content'][field_name] != '':
                     model['content'][field_name] = self.PASSWORD
 
