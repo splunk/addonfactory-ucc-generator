@@ -61,22 +61,18 @@ class RestEndpoint(object):
         """
         raise NotImplementedError()
 
-    def model(self, name, data):
+    def model(self, name):
         """
-        Real model for given name & data.
+        Real model for given name.
 
         :param name:
-        :param data:
         :return:
         """
         raise NotImplementedError()
 
     def _loop_fields(self, meth, name, data, *args, **kwargs):
-        model = self.model(name, data)
-        return map(
-            lambda f: getattr(f, meth)(data, *args, **kwargs),
-            model.fields,
-        )
+        model = self.model(name)
+        return [getattr(f, meth)(data, *args, **kwargs) for f in model.fields]
 
     def validate(self, name, data, existing=None):
         self._loop_fields('validate', name, data, existing=existing)
@@ -122,7 +118,7 @@ class SingleModel(RestEndpoint):
     def internal_endpoint(self):
         return 'configs/conf-{}'.format(self.conf_name)
 
-    def model(self, name, data):
+    def model(self, name):
         return self._model
 
 
@@ -161,7 +157,7 @@ class MultipleModel(RestEndpoint):
     def internal_endpoint(self):
         return 'configs/conf-{}'.format(self.conf_name)
 
-    def model(self, name, data):
+    def model(self, name):
         try:
             return self.models[name]
         except KeyError:
@@ -192,5 +188,5 @@ class DataInputModel(RestEndpoint):
     def internal_endpoint(self):
         return 'data/inputs/{}'.format(self.input_type)
 
-    def model(self, name, data):
+    def model(self, name):
         return self._model

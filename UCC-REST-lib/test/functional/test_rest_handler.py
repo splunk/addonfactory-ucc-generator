@@ -103,9 +103,9 @@ class TestCreateFunction(unittest.TestCase):
             }
         ]        :return:
         """
-        self.endpoint = 'https://localhost:8089/servicesNS/nobody/Splunk_TA_crowdstrike/splunk_ta_crowdstrike_account'
-        self.conf_endpoint = 'https://localhost:8089/servicesNS/nobody/Splunk_TA_crowdstrike/' \
-                             'configs/conf-splunk_ta_crowdstrike_account'
+        self.endpoint = 'https://localhost:8089/servicesNS/nobody/Splunk_TA_UCCExample/splunk_ta_uccexample_account'
+        self.conf_endpoint = 'https://localhost:8089/servicesNS/nobody/Splunk_TA_UCCExample/' \
+                             'configs/conf-splunk_ta_uccexample_account'
         self.password_endpoint = 'https://localhost:8089/servicesNS/nobody/-/storage/passwords'
         self.test_item_name = '1'
         self.PASSWORD = '********'
@@ -792,7 +792,7 @@ class TestCreateFunction(unittest.TestCase):
         """
             Test: Delete an item with password. The encrypted fields in passwords.conf should be deleted too.
         """
-        realm = '#Splunk_TA_crowdstrike#configs/conf-splunk_ta_crowdstrike_account'
+        realm = '#Splunk_TA_UCCExample#configs/conf-splunk_ta_uccexample_account'
         passwords = self.get_all_passwords()
 
         for password in passwords['entry']:
