@@ -128,12 +128,13 @@ define([
             $input.on("change", function (e) {
                 if (this.options.model && this.options.modelAttribute) {
                     if (!this.options.autoCompleteFields.some((field) => {
+                        // field value should be 'string', 'number' or 'boolean'
                         if (field.children) {
                             return field.children.some((child) => {
-                                return child.value === e.val;
+                                return child.value.toString() === e.val;
                             });
                         }
-                        return field.value === e.val;
+                        return field.value.toString() === e.val;
                     })) {
                         this.options.autoCompleteFields.push({
                             label: e.val,
