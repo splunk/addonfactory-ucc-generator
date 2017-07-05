@@ -147,7 +147,7 @@ define([
                 const fields = _.get(e, ['options', 'dependencies']);
 
                 _.each(fields, field => {
-                    let changeFields = this.dependencyMap.get(field);
+                    const changeFields = this.dependencyMap.get(field);
                     if (changeFields) {
                         changeFields[e.field] = fields;
                     } else {
@@ -158,35 +158,42 @@ define([
 
             // Current loading requests
             this.curRequests = {};
-            for (let value of this.dependencyMap.values()) {
-                for (let loadField in value) {
+            for (const value of this.dependencyMap.values()) {
+                for (const loadField in value) {
                     this.curRequests[loadField] = [];
                 }
             }
 
             // Add change event listener
-            for (let [key, value] of this.dependencyMap) {
+            for (const [key, value] of this.dependencyMap) {
                 this.model.on('change:' + key, () => {
-                    for (let loadField in value) {
+                    for (const loadField in value) {
                         if (!value.hasOwnProperty(loadField)) {
                             continue;
                         }
-                        let controlWrapper = this.fieldControlMap.get(loadField);
+                        const controlWrapper = 
+                            this.fieldControlMap.get(loadField);
                         if (!controlWrapper) {
                             continue;
                         }
-                        let data = {},
-                            load = true;
+                        const data = {};
+                        let load = true;
                         _.each(value[loadField], dependency => {
-                            let required = !!_.find(this.component.entity, e => {
-                                return e.field === dependency;
-                            }).required;
+                            const required = !!_.find(
+                                this.component.entity,
+                                e => {
+                                    return e.field === dependency;
+                                }
+                            ).required;
                             if (required && !this.model.get(dependency)) {
                                 // Clear the control
                                 this.model.set(loadField, '');
                                 load = false;
                             } else {
-                                data[dependency] = this.model.get(dependency, '');
+                                data[dependency] = this.model.get(
+                                    dependency,
+                                    ''
+                                );
                             }
                         });
                         if (load) {
@@ -194,8 +201,9 @@ define([
                                 _.each(this.curRequests[loadField], request => {
                                     if (request.state() === 'pending') {
                                         request.abort();
-                                        console.log(this.fieldControlMap.get(loadField));
-                                        this.fieldControlMap.get(loadField).control.enable();
+                                        this.fieldControlMap
+                                            .get(loadField)
+                                            .control.enable();
                                     }
                                 });
                             }
@@ -241,7 +249,7 @@ define([
 
         _removeValidationErrorClass: function(err) {
             const {widgetsIdDict} = err;
-            let selectors = [];
+            const selectors = [];
             for (const key of Object.keys(widgetsIdDict)) {
                 selectors.push(widgetsIdDict[key]);
             }
@@ -335,7 +343,7 @@ define([
         saveModel: function () {
             // Add custom validation to real_model
             (this.customValidators || []).forEach((obj) => {
-                for (let prop in obj) {
+                for (const prop in obj) {
                     if(obj.hasOwnProperty(prop)){
                         this.real_model.addValidation(prop, obj[prop]);
                     }
@@ -414,7 +422,7 @@ define([
         },
 
         _loadHook: function (module) {
-            let deferred = $.Deferred();
+            const deferred = $.Deferred();
             __non_webpack_require__(['custom/' + module], (Hook) => {
                 this.hook = new Hook(
                     configManager.unifiedConfig,
@@ -427,11 +435,13 @@ define([
             return deferred.promise();
         },
 
-        _loadCustomControl: function (module, modelAttribute, model, serviceName, index) {
-            let deferred = $.Deferred();
+        _loadCustomControl: function (
+                module, modelAttribute, model, serviceName, index
+            ) {
+            const deferred = $.Deferred();
             __non_webpack_require__(['custom/' + module], (CustomControl) => {
-                let el = document.createElement("DIV");
-                let control = new CustomControl(
+                const el = document.createElement("DIV");
+                const control = new CustomControl(
                     configManager.unifiedConfig,
                     serviceName,
                     el,
@@ -470,7 +480,7 @@ define([
             this.children = [];
             this.deferreds = [];
             _.each(this.component.entity, (e, index) => {
-                let controlWrapper, controlOptions, deferred;
+                let controlWrapper, deferred;
                 if (this.mode === MODE_CREATE) {
                     if (this.model.get(e.field) === undefined &&
                         e.defaultValue !== undefined) {
@@ -478,7 +488,7 @@ define([
                     }
                 }
 
-                controlOptions = {
+                const controlOptions = {
                     model: this.model,
                     modelAttribute: e.field,
                     password: e.encrypted ? true : false,
@@ -522,16 +532,16 @@ define([
                 });
 
                 // Group configuration
-                let groups = [];
+                const groups = [];
                 if (this.component.groups) {
                     _.each(this.component.groups, group => {
                         const {label, options} = group;
-                        let controls = [];
+                        const controls = [];
                         _.each(group.fields, field => {
-                            let control = this.fieldControlMap.get(field);
+                            const control = this.fieldControlMap.get(field);
                             if (control) {
                                 controls.push(control);
-                                let index = this.children.findIndex((child) => {
+                                const index = this.children.findIndex((child) => {
                                     return child === control;
                                 });
                                 if (index > -1) {
@@ -551,7 +561,7 @@ define([
                 }
                 // Render the controls in this.children
                 _.each(this.children, (child) => {
-                    let childComponent = child.render();
+                    const childComponent = child.render();
                     this.$('.modal-body').append(
                         childComponent.$el || childComponent.el
                     );
@@ -562,9 +572,9 @@ define([
                     _.each(this.component.entity, e => {
                         const fields = _.get(e, ['options', 'dependencies']);
                         if (!fields) return;
-                        let data = {};
-                        let load = _.every(fields, field => {
-                            let required = !!_.find(
+                        const data = {};
+                        const load = _.every(fields, field => {
+                            const required = !!_.find(
                                     this.component.entity,
                                     e => {
                                         return e.field === field;
@@ -577,7 +587,7 @@ define([
                             return true;
                         });
                         if (load) {
-                            let controlWrapper =
+                            const controlWrapper =
                                 this.fieldControlMap.get(e.field);
                             // Add loading message
                             controlWrapper.control.startLoading();
@@ -606,7 +616,7 @@ define([
                         }
                         if (e.type === 'singleSelect' ||
                                 e.type === 'multipleSelect') {
-                            let controlWrapper =
+                            const controlWrapper =
                                 this.fieldControlMap.get(e.field);
                             controlWrapper.control.disable();
                         } else {

@@ -54,13 +54,13 @@ define([
         },
 
         _parseQueryString: function (queryString) {
-            let params = {};
+            const params = {};
             if (!_.isString(queryString)) {
                 return params;
             }
-            let queryParts = decodeURI(queryString).split(/&/g);
+            const queryParts = decodeURI(queryString).split(/&/g);
             _.each(queryParts, (value) => {
-                let parts = value.split('=');
+                const parts = value.split('=');
                 if (parts.length >= 1) {
                     let val;
                     if (parts.length === 2){
@@ -76,7 +76,7 @@ define([
             Get input configuration
         */
         _getComponent: function (service) {
-            let services = configManager.unifiedConfig.pages.inputs.services;
+            const services = configManager.unifiedConfig.pages.inputs.services;
             return _.find(services, s => {
                 return s.name === service;
             });
@@ -88,7 +88,7 @@ define([
 
         _getInputView: function (params) {
             if (!_.isEmpty(params) && params.service && params.action) {
-                let component = this._getComponent(params.service);
+                const component = this._getComponent(params.service);
                 if (!_.isUndefined(component) &&
                         component['style'] === PAGE_STYLE) {
                     return new CreateInputPage({
@@ -107,7 +107,7 @@ define([
          THE ENTRY POINT
          */
         _route: function (locale, app, page, queryString) {
-            let args = arguments,
+            const args = arguments,
                 params = this._parseQueryString(queryString);
             this.model.navigator.set({params}, {silent: true});
             BaseRouter.prototype.page.apply(this, args);

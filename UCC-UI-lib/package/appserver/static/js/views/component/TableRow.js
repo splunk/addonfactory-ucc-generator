@@ -85,7 +85,7 @@ define([
         },
 
         edit: function () {
-            let component = this._getComponent();
+            const component = this._getComponent();
             if (component['style'] && component['style'] === PAGE_STYLE) {
                 this.navModel.dataModel = this.model.entity;
                 this.navModel.navigator.navigate({
@@ -93,7 +93,7 @@ define([
                     'action': MODE_EDIT
                 });
             } else {
-                let editDialog = new EntityDialog({
+                const editDialog = new EntityDialog({
                     el: $(".dialog-placeholder"),
                     collection: this.model.collection,
                     model: this.model.entity,
@@ -106,7 +106,7 @@ define([
         },
 
         clone: function () {
-            let component = this._getComponent();
+            const component = this._getComponent();
             if (component['style'] && component['style'] === PAGE_STYLE) {
                 this.navModel.dataModel = this.model.entity;
                 this.navModel.navigator.navigate({
@@ -114,7 +114,7 @@ define([
                     'action': MODE_CLONE
                 });
             } else {
-                let cloneDialog = new EntityDialog({
+                const cloneDialog = new EntityDialog({
                     el: $(".dialog-placeholder"),
                     collection: this.model.collection,
                     model: this.model.entity,
@@ -127,14 +127,13 @@ define([
         },
 
         delete: function () {
-            let inUse = false,
-                deleteDialog;
+            let inUse = false;
             if (this.model.entity.entry.content.get('refCount')) {
                 inUse = this.model.entity.entry.content.get('refCount') > 0 ?
                     true : false;
             }
 
-            deleteDialog = new DeleteDialog({
+            const deleteDialog = new DeleteDialog({
                 el: $(".dialog-placeholder"),
                 collection: this.model.collection,
                 model: this.model.entity,

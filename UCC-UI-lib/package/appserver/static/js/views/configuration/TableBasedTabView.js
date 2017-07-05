@@ -51,7 +51,7 @@ export default BaseTableView.extend({
     },
 
     stateChange: function () {
-        let models = this.adjustPaging(
+        const models = this.adjustPaging(
             this.dataStore,
             this.filterSort(
                 this.filterSearch(this.cachedCollection.models)
@@ -65,7 +65,7 @@ export default BaseTableView.extend({
             return models;
         }
         const search = this.getRawSearch(this.stateModel.get('search'));
-        let result = models.filter(d =>
+        const result = models.filter(d =>
             this.filterKey.some(field => {
                 const text = this._getCompareText(
                     d,

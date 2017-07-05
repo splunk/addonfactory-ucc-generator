@@ -109,7 +109,8 @@ export function checkDupKeyValues(config, isInput, position) {
 
 // The config has already passed the basic schema validation
 function checkConfigDetails({pages: {configuration, inputs}}) {
-    let error, errors = [], position = 'instantce.pages';
+    let error, errors = [];
+    const position = 'instantce.pages';
 
     const checkBaseOptions = (options, position) => {
         _.values(options).forEach((d, i) => {

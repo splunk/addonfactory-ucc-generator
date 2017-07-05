@@ -72,7 +72,7 @@ export function parseErrorMsg(data) {
         matches = regex.exec(msg);
         if (matches && matches[1]) {
             try {
-                let innerMsgJSON = JSON.parse(matches[1]);
+                const innerMsgJSON = JSON.parse(matches[1]);
                 error_msg = String(innerMsgJSON.messages[0].text);
             } catch (error) {
                 error_msg = matches[1];

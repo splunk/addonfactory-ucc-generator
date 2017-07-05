@@ -16,7 +16,9 @@
     },
     "rules": {
         "no-undef": 2,
-        "no-console": "off"
+        "no-console": "off",
+        "prefer-const": "warn",
+        "no-const-assign": "warn"
     },
     "globals": {
         "__non_webpack_require__": true,

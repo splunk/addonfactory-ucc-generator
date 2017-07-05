@@ -38,7 +38,7 @@ define([
         create: function (e) {
             e.preventDefault();
             this.serviceType = $(e.target).attr('class');
-            let component = _.find(this.services, service => {
+            const component = _.find(this.services, service => {
                 return service.name === this.serviceType;
             })
             if (component && component.style === PAGE_STYLE) {
@@ -47,7 +47,7 @@ define([
                     'action': MODE_CREATE
                 });
             } else {
-                let dlg = new EntityDialog({
+                const dlg = new EntityDialog({
                     el: $(".dialog-placeholder"),
                     collection: this.collection,
                     component: component,

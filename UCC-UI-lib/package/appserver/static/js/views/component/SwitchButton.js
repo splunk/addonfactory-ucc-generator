@@ -33,9 +33,9 @@ define([
         },
 
         onSwitched: function(event) {
-            let checked = event.currentTarget.checked;
+            const checked = event.currentTarget.checked;
 
-            let url = splunkd_utils.fullpath(this.baseUrl, {
+            const url = splunkd_utils.fullpath(this.baseUrl, {
                 app: this.app,
                 sharing: 'app'
             });
