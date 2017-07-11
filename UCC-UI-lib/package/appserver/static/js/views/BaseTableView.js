@@ -2,6 +2,7 @@ import _ from 'lodash';
 import $ from 'jquery';
 import Backbone from 'backbone';
 import {configManager} from 'app/util/configManager';
+import Util from 'app/util/Util';
 
 export default Backbone.View.extend({
     initialize: function (options) {
@@ -81,7 +82,7 @@ export default Backbone.View.extend({
         } else if (cellDef && cellDef.customCell && cellDef.customCell.src) {
             const CustomCell = this.fieldCustomCellMapping.get(attributeField);
             const el = document.createElement('div');
-            const service = this.stateModel.get('service') || null;
+            const service = Util.extractServiceName(model);
             const customCell = new CustomCell(
                 this.unifiedConfig,
                 service,
