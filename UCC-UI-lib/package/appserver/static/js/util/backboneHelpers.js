@@ -136,17 +136,18 @@ export function fetchConfigurationModels() {
                     ({field, options: {referenceName}}) =>
                     ({targetField: field, referenceName})
                 );
-
-            modelObjList.push({
-                value: new (generateModel('settings', {
-                    modelName: name,
-                    fields: entity
-                }))({name}),
-                dependencyList
-            });
+            // Normal tab with referenced field
+            if (dependencyList.length != 0) {
+                modelObjList.push({
+                    value: new (generateModel('settings', {
+                        modelName: name,
+                        fields: entity
+                    }))({name}),
+                    dependencyList
+                });
+            }
         }
     });
-
     const calls = modelObjList.map(({value}) => value.fetch());
     return {deferred: $.when(...calls), modelObjList};
 }
