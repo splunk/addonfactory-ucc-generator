@@ -1,5 +1,6 @@
 import {configManager} from 'app/util/configManager';
 import CustomizedTabView from 'app/views/configuration/CustomizedTabView';
+import {fetchRefCollections} from 'app/util/backboneHelpers';
 import 'appCssDir/common.css';
 import 'appCssDir/configuration.css';
 
@@ -22,6 +23,10 @@ define([
             this.stateModel = new Backbone.Model({
                 selectedTabId: this._generateTabId(configuration.tabs)
             });
+
+            const refCollections = fetchRefCollections();
+            this.servicesDeferred = refCollections.deferred;
+            this.dependencyMapping = refCollections.dependencyMapping;
         },
 
         events: {
@@ -80,7 +85,9 @@ define([
                 const view = new CustomizedTabView({
                     containerId: this._generateTabId(tabs, title),
                     pageState: this.stateModel,
-                    props: d
+                    props: d,
+                    servicesDeferred: this.servicesDeferred,
+                    dependencyMapping: this.dependencyMapping
                 });
                 return {
                     active: i === 0,

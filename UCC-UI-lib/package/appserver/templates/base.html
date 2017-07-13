@@ -71,7 +71,8 @@ entry_js = "%s/%s.js" % (app_js_build ,'entry_page')
                 baseUrl: "${make_url('/static/js')}",
                 paths: {
                     "custom": "../app/${app_name}/js/build/custom"
-                }
+                },
+                waitSeconds : 0
             });
         </script>
 
