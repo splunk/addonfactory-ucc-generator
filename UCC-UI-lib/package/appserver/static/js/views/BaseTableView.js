@@ -76,12 +76,15 @@ export default Backbone.View.extend({
             }
         );
         let fieldValue = null;
-        if (model.entry.has(attributeField) || model.entry.content.has(attributeField)) {
-            fieldValue = model.entry.has(attributeField) ? model.entry.get(attributeField) : model.entry.content.get(attributeField);
+        if (model.entry.has(attributeField) || 
+                model.entry.content.has(attributeField)) {
+            fieldValue = model.entry.has(attributeField) ? 
+                model.entry.get(attributeField) : 
+                model.entry.content.get(attributeField);
         }
 
-        if (cellDef && cellDef.mapping) {
-            return _.toString(cellDef.mapping[fieldValue] || fieldValue);
+        if (cellDef && cellDef.mapping && fieldValue in cellDef.mapping) {
+            return _.toString(cellDef.mapping[fieldValue]);
         } else if (cellDef && cellDef.customCell && cellDef.customCell.src) {
             const CustomCell = this.fieldCustomCellMapping.get(attributeField);
             const el = document.createElement('div');
