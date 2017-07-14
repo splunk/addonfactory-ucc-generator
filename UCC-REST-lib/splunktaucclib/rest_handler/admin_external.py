@@ -48,11 +48,11 @@ def build_conf_info(meth):
     return wrapper
 
 def get_splunkd_endpoint():
-    if os.environ.get('__UCC_SPLUNKD_URI__'):
-        return os.environ['__UCC_SPLUNKD_URI__']
+    if os.environ.get('SPLUNKD_URI'):
+        return os.environ['SPLUNKD_URI']
     else:
         splunkd_uri = get_splunkd_uri()
-        os.environ['__UCC_SPLUNKD_URI__'] = splunkd_uri
+        os.environ['SPLUNKD_URI'] = splunkd_uri
         return splunkd_uri
 
 
