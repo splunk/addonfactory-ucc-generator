@@ -8,6 +8,7 @@ from solnlib.utils import is_true
 
 from .eai import EAI_FIELDS
 from .handler import RestHandler
+import os
 
 
 __all__ = [
@@ -46,6 +47,14 @@ def build_conf_info(meth):
 
     return wrapper
 
+def get_splunkd_endpoint():
+    if os.environ.get('SPLUNKD_URI'):
+        return os.environ['SPLUNKD_URI']
+    else:
+        splunkd_uri = get_splunkd_uri()
+        os.environ['SPLUNKD_URI'] = splunkd_uri
+        return splunkd_uri
+
 
 class AdminExternalHandler(admin.MConfigHandler, object):
 
@@ -64,7 +73,7 @@ class AdminExternalHandler(admin.MConfigHandler, object):
             **kwargs
         )
         self.handler = RestHandler(
-            get_splunkd_uri(),
+            get_splunkd_endpoint(),
             self.getSessionKey(),
             self.endpoint,
         )
