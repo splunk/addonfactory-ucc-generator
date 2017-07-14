@@ -62,20 +62,18 @@ export function generateCollection(name, options = {}) {
     });
 }
 
-export function fetchRefCollections(fetcherName) {
+export function fetchRefCollections() {
     const {
         unifiedConfig: {pages: {inputs, configuration: {tabs}}}
     } = configManager;
     if (!inputs && !tabs) {
         return {};
     }
-    const collectionObjList = [];
-    const refCollections = _.get(inputs, 'services') ? inputs.services : [];
-    tabs.forEach(d => {
-        const isTableBasedView = !!d.table;
-        if (d.name !== fetcherName && isTableBasedView) {
-            refCollections.push(d);
-        }
+    const refCollections = _.get(inputs, 'services', []);
+    // Construct configruation field to inputs mappping
+    const dependencyMapping = {};
+    tabs.filter(d => !!d.table).forEach(d => {
+        dependencyMapping[d.name] = [];
     });
 
     refCollections.forEach(collections => {
@@ -88,21 +86,31 @@ export function fetchRefCollections(fetcherName) {
             );
 
         if (dependencyList.length) {
-            collectionObjList.push({
-                value: generateCollection(
-                    restEndpointMap[name] ? '' : name,
-                    {endpointUrl: restEndpointMap[name]}
-                ),
-                dependencyList
+            dependencyList.forEach(({referenceName}) => {
+                if (!(referenceName in dependencyList)) {
+                    dependencyList[referenceName] = [];
+                }
+                dependencyMapping[referenceName].push({
+                    value: generateCollection(
+                        restEndpointMap[name] ? '' : name,
+                        {endpointUrl: restEndpointMap[name]}
+                    ),
+                    dependencyList
+                });
             });
         }
     });
 
-    const calls = collectionObjList.map(
+    const calls = _.unionWith(
+        ..._.values(dependencyMapping),
+        (arrVal, othVal) => {
+            return arrVal.value._url === othVal.value._url;
+        }
+    ).map(
         ({value}) => fetchListCollection(value)
     );
 
-    return {deferred: $.when(...calls), collectionObjList};
+    return {deferred: $.when(...calls), dependencyMapping};
 }
 
 function fetchListCollection(collection) {

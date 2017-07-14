@@ -5,7 +5,6 @@ import Table from 'app/views/component/Table';
 import EntityDialog from 'app/views/component/EntityDialog';
 import ButtonTemplate from 'app/templates/common/ButtonTemplate.html';
 import {
-    fetchRefCollections,
     fetchConfigurationModels,
     generateCollection
 } from 'app/util/backboneHelpers';
@@ -19,10 +18,9 @@ import BaseTableView from 'app/views/BaseTableView';
 export default BaseTableView.extend({
     initialize: function (options) {
         BaseTableView.prototype.initialize.apply(this, arguments);
-        const {
-            deferred: servicesDeferred,
-            collectionObjList: serviceCollectionObjList
-        } = fetchRefCollections(options.props.name);
+        const servicesDeferred = options.servicesDeferred;
+        const serviceCollectionObjList = 
+            _.get(options.dependencyMapping, options.props.name, []);
 
         const {
             deferred: configDeferred,
