@@ -214,7 +214,7 @@ define([
                                 error: (collection, response) => {
                                     this.addErrorToComponent(loadField);
                                     // Do not add errr msg when abort
-                                    if (response.statusText != 'abort') {
+                                    if (response.statusText !== 'abort') {
                                         addErrorMsg(
                                             this.curWinSelector,
                                             response,
