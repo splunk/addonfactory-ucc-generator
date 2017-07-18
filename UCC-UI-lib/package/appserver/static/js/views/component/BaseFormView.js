@@ -213,11 +213,14 @@ define([
                                 data,
                                 error: (collection, response) => {
                                     this.addErrorToComponent(loadField);
-                                    addErrorMsg(
-                                        this.curWinSelector,
-                                        response,
-                                        true
-                                    )
+                                    // Do not add errr msg when abort
+                                    if (response.statusText != 'abort') {
+                                        addErrorMsg(
+                                            this.curWinSelector,
+                                            response,
+                                            true
+                                        )
+                                    }
                                 }
                             });
                             this.curRequests[loadField].push(curRequest);
