@@ -44,7 +44,7 @@ define([
             });
 
             // Navigator change event
-            this.model.navigator.on('change:url', (model, nextUrl) =>  {
+            this.model.navigator.on('change:url', (model, nextUrl) => {
                 this.navigate(nextUrl, {trigger: true, replace: false});
             });
         },
@@ -109,7 +109,13 @@ define([
         _route: function (locale, app, page, queryString) {
             const args = arguments,
                 params = this._parseQueryString(queryString);
+            // Set the param of the navigator model even when it's empty
             this.model.navigator.set({params}, {silent: true});
+            // Keep navigator model url attribute consistent with current url
+            if (this.model.navigator.get('url') !== 
+                    this.model.navigator.getNextUrl()) {
+                this.model.navigator.updateUrl(true);
+            }
             BaseRouter.prototype.page.apply(this, args);
             this.deferreds.pageViewRendered.done(() => {
                 if (!this._headerReady) {
