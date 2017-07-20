@@ -9,7 +9,7 @@ export default Backbone.Model.extend({
 
     navigateToRoot: function () {
         this.unset('params', {silent: true});
-        this._updateUrl();
+        this.updateUrl();
     },
 
     /**
@@ -18,10 +18,14 @@ export default Backbone.Model.extend({
      */
     navigate: function(params) {
         this.set({params}, {silent: true});
-        this._updateUrl();
+        this.updateUrl();
     },
 
-    _updateUrl: function () {
+    updateUrl: function (silent=false) {
+        this.set('url', this.getNextUrl(), {'silent': silent});
+    },
+
+    getNextUrl: function () {
         let nextUrl = route.page(
             this.application.get('root'),
             this.application.get('locale'),
@@ -37,6 +41,6 @@ export default Backbone.Model.extend({
             }
             nextUrl += params.join('&');
         }
-        this.set('url', nextUrl);
+        return nextUrl;
     }
 });
