@@ -24,8 +24,14 @@ define([], function() {
         onRender() {
             console.log('in Hook: onRender');
         }
+        /* 
+            Put form validation logic here.
+            Return ture if validation pass, false otherwise.
+            Call displayErrorMsg when validtion failed.
+        */
         onSave() {
             console.log('in Hook: onSave');
+            return true;
         }
         onSaveSuccess() {
             console.log('in Hook: onSaveSuccess');

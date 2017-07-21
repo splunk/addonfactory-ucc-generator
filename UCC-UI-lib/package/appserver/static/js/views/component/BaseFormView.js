@@ -275,15 +275,15 @@ define([
             }
         },
 
-        addErrorToComponent: function (field) {
+        addErrorToComponent: function (componentName, field) {
             // Get the id for control, constructed in render(): controlOptions
-            const selector = `#${this.component.name}-${field}`;
+            const selector = `#${componentName}-${field}`;
             $(selector).addClass('validation-error');
         },
 
-        removeErrorFromComponent: function (field) {
+        removeErrorFromComponent: function (componentName, field) {
             // Get the id for control, constructed in render(): controlOptions
-            const selector = `#${this.component.name}-${field}`;
+            const selector = `#${componentName}-${field}`;
             if ($(selector).hasClass('validation-error')) {
                 $(selector).addClass('validation-error');
             }
@@ -307,6 +307,13 @@ define([
         },
 
         submitTask: function () {
+            // Add onSave hook if it exists
+            if (this.hook && typeof this.hook.onSave === 'function') {
+                const validationPass = this.hook.onSave();
+                if (!validationPass) {
+                    return;
+                }
+            }
             // Disable the button to prevent repeat submit
             Util.disableElements(
                 this.$("button[type=button]"),
@@ -388,10 +395,6 @@ define([
                     this.$("input[type=submit]")
                 );
             } else {
-                // Add onSave hook if it exists
-                if (this.hook && typeof this.hook.onSave === 'function') {
-                    this.hook.onSave();
-                }
                 deffer.done(() => {
                     // Add onSaveSuccess hook if it exists
                     if (this.hook &&
