@@ -35,7 +35,7 @@ export default {
     // Warning dialog title
     105: 'Warning',
     // Input table filter label
-    106: 'Services',
+    106: 'Input Type',
     // Configuration table count label
     107: 'Items',
     // Saving prompt message

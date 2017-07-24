@@ -53,6 +53,7 @@ html, body, .shared-page {
     border-top: 1px solid #ccc;
     box-sizing: border-box;
     background-color: #fff;
+    padding-bottom: 30px;
 }
 
 .create-input-footer {
