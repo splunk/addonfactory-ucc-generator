@@ -47,6 +47,10 @@
     padding: 0px;
 }
 
+.modal-dialog .modal-body {
+    overflow: auto;
+}
+
 .error-dialog .modal-body {
     padding-bottom: 80px;
 }

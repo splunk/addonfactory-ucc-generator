@@ -325,6 +325,8 @@ define([
 
             // Add saving dialog for page style
             if (this.component.style && this.component.style === PAGE_STYLE) {
+                // Scroll up to top to display msg
+                this.$('.create-input-body .content').scrollTop(0);
                 this.savingDialog = new SavingDialog();
                 this.savingDialog.show();
             } else {
