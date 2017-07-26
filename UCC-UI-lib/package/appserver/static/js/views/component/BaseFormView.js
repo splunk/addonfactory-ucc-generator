@@ -84,6 +84,9 @@ define([
                 (validators || []).forEach(({fieldName, validator}) => {
                     this.real_model.addValidation(fieldName, validator);
                 });
+                // Add saveValidator
+                this.real_model.validateFormData = 
+                    parseFuncRawStr(formValidator);
             } else if (this.mode === MODE_CLONE && options.model) {
                 this.model = options.model.entry.content.clone();
 
