@@ -113,6 +113,7 @@ class SingleModel(RestEndpoint):
 
         self._model = model
         self.conf_name = conf_name
+        self.config_name = kwargs.get('config_name')
 
     @property
     def internal_endpoint(self):
