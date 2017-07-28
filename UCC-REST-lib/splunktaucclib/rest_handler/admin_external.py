@@ -15,13 +15,9 @@ from .endpoint import (
 )
 
 try:
-    from action_hook import (
-        delete_hook,
-        create_hook,
-        edit_hook
-    )
+    from custom_hook_mixin import CustomHookMixin as HookMixin
 except ImportError:
-    pass
+    from .base_hook_mixin import BaseHookMixin as HookMixin
 
 
 __all__ = [
@@ -69,7 +65,7 @@ def get_splunkd_endpoint():
         return splunkd_uri
 
 
-class AdminExternalHandler(admin.MConfigHandler, object):
+class AdminExternalHandler(HookMixin, admin.MConfigHandler, object):
 
     # Leave it for setting REST model
     endpoint = None
@@ -134,15 +130,11 @@ class AdminExternalHandler(admin.MConfigHandler, object):
 
     @build_conf_info
     def handleCreate(self, confInfo):
-        # Execute create hook if defined
-        try:
-            create_hook(
-                name=self._get_name(),
-                id=self.callerArgs.id,
-                payload=self.payload
-            )
-        except NameError:
-            pass
+        self.create_hook(
+            config_name=self._get_name(),
+            stanza_id=self.callerArgs.id,
+            payload=self.payload
+        )
         return self.handler.create(
             self.callerArgs.id,
             self.payload,
@@ -152,15 +144,11 @@ class AdminExternalHandler(admin.MConfigHandler, object):
     def handleEdit(self, confInfo):
         disabled = self.payload.get('disabled')
         if disabled is None:
-            # Execute edit hook if defined
-            try:
-                edit_hook(
-                    name=self._get_name(),
-                    id=self.callerArgs.id,
-                    payload=self.payload
-                )
-            except NameError:
-                pass
+            self.edit_hook(
+                config_name=self._get_name(),
+                stanza_id=self.callerArgs.id,
+                payload=self.payload
+            )
             return self.handler.update(
                 self.callerArgs.id,
                 self.payload,
@@ -172,14 +160,10 @@ class AdminExternalHandler(admin.MConfigHandler, object):
 
     @build_conf_info
     def handleRemove(self, confInfo):
-        # Execute delete hook if defined
-        try:
-            delete_hook(
-                name=self._get_name(),
-                id=self.callerArgs.id
-            )
-        except NameError:
-            pass
+        self.delete_hook(
+            config_name=self._get_name(),
+            stanza_id=self.callerArgs.id
+        )
         return self.handler.delete(self.callerArgs.id)
 
     def _get_name(self):
