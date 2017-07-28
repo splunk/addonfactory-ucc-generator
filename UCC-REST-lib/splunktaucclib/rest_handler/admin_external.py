@@ -9,6 +9,15 @@ from solnlib.utils import is_true
 from .eai import EAI_FIELDS
 from .handler import RestHandler
 import os
+from .endpoint import (
+    SingleModel,
+    DataInputModel
+)
+
+try:
+    from custom_hook_mixin import CustomHookMixin as HookMixin
+except ImportError:
+    from .base_hook_mixin import BaseHookMixin as HookMixin
 
 
 __all__ = [
@@ -56,7 +65,7 @@ def get_splunkd_endpoint():
         return splunkd_uri
 
 
-class AdminExternalHandler(admin.MConfigHandler, object):
+class AdminExternalHandler(HookMixin, admin.MConfigHandler, object):
 
     # Leave it for setting REST model
     endpoint = None
@@ -121,6 +130,11 @@ class AdminExternalHandler(admin.MConfigHandler, object):
 
     @build_conf_info
     def handleCreate(self, confInfo):
+        self.create_hook(
+            config_name=self._get_name(),
+            stanza_id=self.callerArgs.id,
+            payload=self.payload
+        )
         return self.handler.create(
             self.callerArgs.id,
             self.payload,
@@ -130,6 +144,11 @@ class AdminExternalHandler(admin.MConfigHandler, object):
     def handleEdit(self, confInfo):
         disabled = self.payload.get('disabled')
         if disabled is None:
+            self.edit_hook(
+                config_name=self._get_name(),
+                stanza_id=self.callerArgs.id,
+                payload=self.payload
+            )
             return self.handler.update(
                 self.callerArgs.id,
                 self.payload,
@@ -141,7 +160,18 @@ class AdminExternalHandler(admin.MConfigHandler, object):
 
     @build_conf_info
     def handleRemove(self, confInfo):
+        self.delete_hook(
+            config_name=self._get_name(),
+            stanza_id=self.callerArgs.id
+        )
         return self.handler.delete(self.callerArgs.id)
+
+    def _get_name(self):
+        if isinstance(self.handler.get_endpoint(), DataInputModel):
+            name = self.handler.get_endpoint().input_type
+        elif isinstance(self.handler.get_endpoint(), SingleModel):
+            name = self.handler.get_endpoint().config_name
+        return name
 
     def _convert_payload(self):
         check_actions = (admin.ACTION_CREATE, admin.ACTION_EDIT)

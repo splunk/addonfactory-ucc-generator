@@ -41,6 +41,7 @@ util.remove_http_proxy_env_vars()
 endpoint = SingleModel(
     '{conf_name}',
     model,
+    config_name='{config_name}'
 )
 
 
@@ -61,4 +62,5 @@ if __name__ == '__main__':
             handler_name=handler.name,
             entity=entity.generate_rh(),
             conf_name=self.conf_name,
+            config_name=self._name
         )

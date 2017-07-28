@@ -256,6 +256,9 @@ class RestHandler(object):
             ),
         )
 
+    def get_endpoint(self):
+        return self._endpoint
+
     @classmethod
     def path_segment(cls, endpoint, name=None, action=None):
         """
