@@ -143,6 +143,7 @@ export default BaseTableView.extend({
         deferred.done(() => {
             // Set cache models
             this.cachedCollection.add(this.dataStore.models, {silent: true});
+            this.stateChange();
             if (entitiesDeferred) {
                 entitiesDeferred.done(() => {
                     setCollectionRefCount(
