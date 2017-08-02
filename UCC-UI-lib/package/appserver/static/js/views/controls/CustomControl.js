@@ -13,14 +13,16 @@ define([], function() {
                     addErrorToComponent,
                     removeErrorFromComponent
                 }.
+         * @param {string} action - action: create/edit/clone/delete
          */
-        constructor(globalConfig, serviceName, el, modelAttribute, model, util) {
+        constructor(globalConfig, serviceName, el, modelAttribute, model, util, action) {
             this.globalConfig = globalConfig;
             this.el = el;
             this.serviceName = serviceName;
             this.modelAttribute = modelAttribute;
             this.model = model;
             this.util = util;
+            this.action = action;
         }
         render() {
             this.el.innerHTML = '<input id="mytext" type="text"></text>';

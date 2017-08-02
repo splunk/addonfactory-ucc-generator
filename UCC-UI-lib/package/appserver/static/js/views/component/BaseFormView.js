@@ -458,7 +458,8 @@ define([
                     el,
                     modelAttribute,
                     model,
-                    this.util
+                    this.util,
+                    this.mode
                 );
                 this.fieldControlMap.set(modelAttribute, control);
                 // Add custom validation
