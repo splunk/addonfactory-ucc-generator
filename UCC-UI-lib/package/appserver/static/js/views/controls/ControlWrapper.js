@@ -148,7 +148,7 @@ define([
             // set singleSelect selection list
             if(this.control.setAutoCompleteFields) {
                 // add value to selection if it does not exist
-                if (this.existingValue) {
+                if (this.existingValue && this.controlOptions.createSearchChoice) {
                     dic = this._addValueToSelection(
                         this.existingValue,
                         dic
@@ -158,7 +158,7 @@ define([
             }
             // set multipleSelect selection list
             if(this.control.setItems) {
-                if (this.existingValue) {
+                if (this.existingValue && this.controlOptions.createSearchChoice) {
                     const delimiter = this.controlOptions.delimiter || ',';
                     const values = this.existingValue.split(delimiter);
                     _.each(_.filter(values, (value) => {
