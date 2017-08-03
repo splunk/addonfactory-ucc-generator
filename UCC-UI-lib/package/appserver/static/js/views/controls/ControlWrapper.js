@@ -31,6 +31,12 @@ define([
                     this.controlOptions.placeholder = _("optional").t();
                 }
             }
+            // Remove placeholder in edit mode when disableonEdit is configed
+            // to prevent confusion
+            if (this.controlOptions.mode === MODE_EDIT &&
+                    this.options.disableonEdit) {
+                delete this.controlOptions.placeholder;
+            }
 
             const {type} = options;
             // Support both string mapping and raw component

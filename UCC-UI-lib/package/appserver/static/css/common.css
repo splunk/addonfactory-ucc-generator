@@ -294,3 +294,14 @@ input.validation-error, .select2-choice.validation-error,
 .actions.col-actions {
     color: #1e93c6;
 }
+
+/* Select2 disabled cursor style*/
+div.select2-container-disabled > a {
+    cursor: not-allowed !important;
+}
+
+/* Multiple select background color*/
+.select2-container-disabled .select2-choices {
+    background: #eee !important;
+    cursor: not-allowed;
+}
