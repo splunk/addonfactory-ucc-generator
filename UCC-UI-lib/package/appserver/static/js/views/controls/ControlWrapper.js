@@ -154,7 +154,7 @@ define([
             // set singleSelect selection list
             if(this.control.setAutoCompleteFields) {
                 // add value to selection if it does not exist
-                if (this.existingValue && this.controlOptions.createSearchChoice) {
+                if (this.existingValue) {
                     dic = this._addValueToSelection(
                         this.existingValue,
                         dic
@@ -164,7 +164,7 @@ define([
             }
             // set multipleSelect selection list
             if(this.control.setItems) {
-                if (this.existingValue && this.controlOptions.createSearchChoice) {
+                if (this.existingValue) {
                     const delimiter = this.controlOptions.delimiter || ',';
                     const values = this.existingValue.split(delimiter);
                     _.each(_.filter(values, (value) => {
@@ -247,11 +247,18 @@ define([
                     }
                     return field.value === fieldValue;
                 }) === undefined) {
-                const selectedItem = {
-                    label: fieldValue,
-                    value: fieldValue
-                };
-                return fields.concat(selectedItem);
+                if (this.controlOptions.createSearchChoice) {
+                    const selectedItem = {
+                        label: fieldValue,
+                        value: fieldValue
+                    };
+                    return fields.concat(selectedItem);    
+                } else {
+                    // Unset the model attribute
+                    this.controlOptions.model.unset(
+                        this.controlOptions.modelAttribute
+                    );
+                }
             }
             return fields;
         },
