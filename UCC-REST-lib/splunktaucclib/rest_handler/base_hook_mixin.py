@@ -2,7 +2,7 @@
 class BaseHookMixin(object):
     """ Base Hook Mixin class
     """
-    def create_hook(self, config_name, stanza_id, payload):
+    def create_hook(self, sessionKey, config_name, stanza_id, payload):
         """Create hook called before the actual create action
 
         Args:
@@ -12,7 +12,7 @@ class BaseHookMixin(object):
         """
         pass
 
-    def edit_hook(self, config_name, stanza_id, payload):
+    def edit_hook(self, sessionKey, config_name, stanza_id, payload):
         """Edit hook called before the actual create action
 
         Args:
@@ -22,7 +22,7 @@ class BaseHookMixin(object):
         """
         pass
 
-    def delete_hook(self, config_name, stanza_id):
+    def delete_hook(self, sessionKey, config_name, stanza_id):
         """Delete hook called before the actual create action
 
         Args:

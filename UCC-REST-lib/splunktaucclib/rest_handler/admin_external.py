@@ -131,6 +131,7 @@ class AdminExternalHandler(HookMixin, admin.MConfigHandler, object):
     @build_conf_info
     def handleCreate(self, confInfo):
         self.create_hook(
+            sessionKey=self.getSessionKey(),
             config_name=self._get_name(),
             stanza_id=self.callerArgs.id,
             payload=self.payload
@@ -145,6 +146,7 @@ class AdminExternalHandler(HookMixin, admin.MConfigHandler, object):
         disabled = self.payload.get('disabled')
         if disabled is None:
             self.edit_hook(
+                sessionKey=self.getSessionKey(),
                 config_name=self._get_name(),
                 stanza_id=self.callerArgs.id,
                 payload=self.payload
@@ -161,6 +163,7 @@ class AdminExternalHandler(HookMixin, admin.MConfigHandler, object):
     @build_conf_info
     def handleRemove(self, confInfo):
         self.delete_hook(
+            sessionKey=self.getSessionKey(),
             config_name=self._get_name(),
             stanza_id=self.callerArgs.id
         )
