@@ -301,7 +301,11 @@ div.select2-container-disabled > a {
 }
 
 /* Multiple select background color*/
-.select2-container-disabled .select2-choices {
-    background: #eee !important;
+.select2-container.select2-container-disabled .select2-choices {
+    background-color: #eee !important;
     cursor: not-allowed;
+}
+
+.select2-container.select2-container-disabled .select2-choice {
+    background-color: #eee !important;
 }

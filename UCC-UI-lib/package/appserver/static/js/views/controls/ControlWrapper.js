@@ -180,6 +180,8 @@ define([
                 }
                 this.control.setItems(dic, true);
             }
+            // If unsetAttribute is true, do not set the control value
+            // This may happens when the value is not in the option list
             if (!this.unsetAttribute) {
                 this.control.setValue(this.existingValue, false);
             }
@@ -260,6 +262,7 @@ define([
                     this.controlOptions.model.unset(
                         this.controlOptions.modelAttribute
                     );
+                    // Flag to indicate whether to set this control value
                     this.unsetAttribute = true;
                 }
             }
