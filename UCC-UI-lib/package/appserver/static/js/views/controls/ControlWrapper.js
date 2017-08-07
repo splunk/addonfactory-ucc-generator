@@ -180,7 +180,11 @@ define([
                 }
                 this.control.setItems(dic, true);
             }
-            this.control.setValue(this.existingValue, false);
+            // If unsetAttribute is true, do not set the control value
+            // This may happens when the value is not in the option list
+            if (!this.unsetAttribute) {
+                this.control.setValue(this.existingValue, false);
+            }
         },
 
         validate: function() {
@@ -252,12 +256,14 @@ define([
                         label: fieldValue,
                         value: fieldValue
                     };
-                    return fields.concat(selectedItem);    
+                    return fields.concat(selectedItem);
                 } else {
                     // Unset the model attribute
                     this.controlOptions.model.unset(
                         this.controlOptions.modelAttribute
                     );
+                    // Flag to indicate whether to set this control value
+                    this.unsetAttribute = true;
                 }
             }
             return fields;
