@@ -105,7 +105,12 @@ define([
             if (this.options.disableSearch) {
                 $.extend(options, {minimumResultsForSearch: Infinity});
             }
-            $input.select2(options).select2('val', this._value || '');
+            // Show placeholder loading
+            if (this.options.placeholder == _('Loading ...').t()) {
+                $input.select2(options).select2('val', '');
+            } else {
+                $input.select2(options).select2('val', this._value || '');
+            }
             if (this.options.disabled) {
                 this.disable();
             }

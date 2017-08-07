@@ -180,7 +180,9 @@ define([
                 }
                 this.control.setItems(dic, true);
             }
-            this.control.setValue(this.existingValue, false);
+            if (!this.unsetAttribute) {
+                this.control.setValue(this.existingValue, false);
+            }
         },
 
         validate: function() {
@@ -252,12 +254,13 @@ define([
                         label: fieldValue,
                         value: fieldValue
                     };
-                    return fields.concat(selectedItem);    
+                    return fields.concat(selectedItem);
                 } else {
                     // Unset the model attribute
                     this.controlOptions.model.unset(
                         this.controlOptions.modelAttribute
                     );
+                    this.unsetAttribute = true;
                 }
             }
             return fields;
