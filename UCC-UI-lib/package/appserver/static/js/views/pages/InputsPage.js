@@ -232,10 +232,11 @@ define([
                 ],
                 menuWidth: 'narrow'
             });
-
+            // Input type filter
             this.filter = new InputFilter({
                 dispatcher: this.dispatcher,
-                services: this.services
+                services: this.services,
+                model: this.stateModel
             });
 
             this.inputTable = new Table({
