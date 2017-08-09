@@ -75,7 +75,7 @@ define([
 
         _getInputLabel: function (type) {
             const service = _.find(this.services, d => d.name === type);
-            if (type == 'all') {
+            if (type === 'all') {
                 return _("All").t();
             } else {
                 return _(service.title).t();
