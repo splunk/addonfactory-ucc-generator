@@ -32,6 +32,7 @@ define([
         initialize: function (options) {
             this.dispatcher = options.dispatcher;
             this.services = options.services;
+            this.model = options.model;
             this.dispatcher.on('filter-change', (type) => {
                 this.changeType(type);
             });
@@ -40,23 +41,17 @@ define([
 
         render: function () {
             this.$el.html(_.template(this.template)({
-                inputFilterLabel: this.inputFilterLabel
+                inputFilterLabel: this.inputFilterLabel,
+                service: this._getInputLabel(this.model.get('service'))
             }));
             return this;
         },
 
         changeType: function (type) {
-            const service = _.find(this.services, d => d.name === type);
             this.$('a.dropdown-toggle').empty();
-            if (type === 'all') {
-                this.$('a.dropdown-toggle').append(
-                    _.template(_("All").t())
-                );
-            } else {
-                this.$('a.dropdown-toggle').append(
-                    _.template(_(service.title).t())
-                );
-            }
+            this.$('a.dropdown-toggle').append(
+                _.template(this._getInputLabel(type))
+            );
             this.$('a.dropdown-toggle').append(
                 $(`<span class="caret"></span>`)
             );
@@ -78,10 +73,19 @@ define([
             this.inputFilter.show($target);
         },
 
+        _getInputLabel: function (type) {
+            const service = _.find(this.services, d => d.name === type);
+            if (type === 'all') {
+                return _("All").t();
+            } else {
+                return _(service.title).t();
+            }
+        },
+
         template: `
             <%- inputFilterLabel %> :
             <a class="dropdown-toggle" href="#">
-                <%- _("All").t() %><span class="caret"></span>
+                <%- service %><span class="caret"></span>
             </a>
         `
     });
