@@ -33,6 +33,7 @@ from splunktaucclib.rest_handler.endpoint import (
 )
 from splunktaucclib.rest_handler import admin_external, util
 from {handler_module} import {handler_name}
+import logging
 
 util.remove_http_proxy_env_vars()
 
@@ -46,6 +47,7 @@ endpoint = SingleModel(
 
 
 if __name__ == '__main__':
+    logging.getLogger().addHandler(logging.NullHandler())
     admin_external.handle(
         endpoint,
         handler={handler_name},
