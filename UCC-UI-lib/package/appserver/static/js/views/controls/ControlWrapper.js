@@ -200,7 +200,7 @@ define([
             if (this.tooltip) {
                 this.$('.tooltip-link').tooltip({
                     animation: false,
-                    title: this.options.tooltip,
+                    title: this.tooltip,
                     container: 'body'
                 });
             }
