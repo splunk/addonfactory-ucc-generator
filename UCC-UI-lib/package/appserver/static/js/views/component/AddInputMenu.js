@@ -61,7 +61,7 @@ define([
         template: `
             <div class="arrow"></div>
             <ul class="first-group">
-                <% _.each(services, service => { %>
+                <% _.each(services, function (service) { %>
                     <li>
                         <a href="#" class="<%- service.name %>">
                             <%- _(service.title).t() %>
