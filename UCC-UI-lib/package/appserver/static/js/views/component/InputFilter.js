@@ -40,7 +40,7 @@ define([
                 <li><a href="#" class="all"><%- _("All").t() %></a></li>
             </ul>
             <ul class="second-group">
-                <% _.each(services, service => { %>
+                <% _.each(services, function (service) { %>
                     <li>
                         <a href="#" class="<%- service.name %>">
                             <%- _(service.title).t() %>
