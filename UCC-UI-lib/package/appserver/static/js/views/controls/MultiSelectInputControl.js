@@ -63,9 +63,6 @@ define([
         },
 
         setItems: function (items, render) {
-            if (_.isEqualWith(this.options.items, items, (a, b) => _.isEqual(a, b))) {
-                return;
-            }
             render = render === undefined ? true : render;
             this.options.items = items;
             // Change the placeholder if changed
