@@ -11,7 +11,8 @@ from .handler import RestHandler
 import os
 from .endpoint import (
     SingleModel,
-    DataInputModel
+    DataInputModel,
+    MultipleModel
 )
 
 try:
@@ -170,10 +171,14 @@ class AdminExternalHandler(HookMixin, admin.MConfigHandler, object):
         return self.handler.delete(self.callerArgs.id)
 
     def _get_name(self):
+        name = None
         if isinstance(self.handler.get_endpoint(), DataInputModel):
             name = self.handler.get_endpoint().input_type
         elif isinstance(self.handler.get_endpoint(), SingleModel):
             name = self.handler.get_endpoint().config_name
+        elif isinstance(self.handler.get_endpoint(), MultipleModel):
+            # For multiple model, the configuraiton name is same with stanza id
+            name = self.callerArgs.id
         return name
 
     def _convert_payload(self):
