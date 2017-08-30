@@ -5,7 +5,8 @@ import {getFormattedMessage} from 'app/util/messageUtil';
 
 // NOTE: The callback will only be executed if the globalConfig exsit
 export function loadGlobalConfig(callback, errorHandler) {
-    $.getJSON(`${getBuildDirPath()}/globalConfig.json`)
+    // Get the configuraiton json file in sync mode
+    $.ajax({url: `${getBuildDirPath()}/globalConfig.json`, dataType: "json", async: false})
         .done(json => {
             window.__globalConfig = json;
             callback();
