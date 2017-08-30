@@ -21,3 +21,8 @@
     float: left;
     margin-top: 10px;
 }
+
+/*Input filter scroll style fix for Safari*/
+.dropdown-menu ul {
+    overflow-y: scroll !important;
+}
