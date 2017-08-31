@@ -4,6 +4,7 @@ html, body, .shared-page {
 
 .main-section-body{
     height: calc(100% - 65px);
+    overflow: auto;
 }
 
 .create-input-section {
@@ -80,4 +81,9 @@ html, body, .shared-page {
 .create-input-footer > .buttons > .btn-primary {
     position: absolute;
     margin-left: calc((100% - 900px)/2 + 785px);
+}
+
+/* Polyfill for scroll bar in IE*/
+ .create-input-section > .modal-body {
+    max-height: none !important;
 }
