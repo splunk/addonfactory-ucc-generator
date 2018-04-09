@@ -39,6 +39,9 @@ define([], function() {
         onSaveFail() {
             console.log('in Hook: onSaveFail');
         }
+        onEditLoad() {
+            console.log('in Hook: onEditLoad');
+        }
     }
     return Hook;
 });

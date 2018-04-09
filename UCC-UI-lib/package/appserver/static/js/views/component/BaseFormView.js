@@ -123,11 +123,13 @@ define([
                 Since it will only be updated when user save form data.
             */
             this.model.on('change', this.onStateChange.bind(this));
+
             this.initModel();
 
             if (this.component.hook) {
                 this.hookDeferred = this._loadHook(this.component.hook.src);
             }
+
 
             // Dependency field list
             this.dependencyMap = new Map();
@@ -483,6 +485,7 @@ define([
                     }
                 });
             }
+
             // Render template
             this.renderTemplate();
 
@@ -616,6 +619,13 @@ define([
                             });
                         }
                     });
+                    if (this.hookDeferred) {
+                        this.hookDeferred.then(() => {
+                            if (typeof this.hook.onEditLoad === 'function') {
+                                this.hook.onEditLoad();
+                            }
+                        });
+                    }
                 }
 
                 // Disable the name field and other configed fields in edit mode

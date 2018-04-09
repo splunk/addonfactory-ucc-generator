@@ -864,6 +864,9 @@
                 "restHandlerName": {
                     "type": "string", 
                     "maxLength": 100
+                },
+                "hook": {
+                    "type": "object"
                 }
             }, 
             "required": [
