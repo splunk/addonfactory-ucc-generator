@@ -171,6 +171,7 @@ class TabContent(DocumentWithoutAddProp):
     table = DocumentField(ConfigurationTable, as_ref=True)
     conf = StringField(required=False, max_length=100)
     restHandlerName = StringField(required=False, max_length=100)
+    # Provisioning tab level hook on configuration page
     hook = DocumentField(Hooks, as_ref=True)
 
 
