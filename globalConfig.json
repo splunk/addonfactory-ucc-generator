@@ -61,6 +61,58 @@
                             ]
                         },
                         {
+                            "type": "oAuth",
+                            "label": "OAuth",
+                            "field": "oAuth",
+                            "options": {
+                                "auth_type": ["basic", "oauth"],
+                                "basic": [
+                                     {
+                                        "oauth_field": "account_name",
+                                        "label": "Account Name",
+                                        "field": "account_name"
+                                    },
+                                    {
+                                        "oauth_field": "password",
+                                        "label": "Password",
+                                        "field": "password"
+                                    },
+                                    {
+                                        "oauth_field": "security_token",
+                                        "label": "Securtiy Token",
+                                        "field": "security_token"
+                                    }
+                                ],
+                                "oauth": [
+                                    {
+                                        "oauth_field": "account_name",
+                                        "label": "Account Name",
+                                        "field": "account_name"
+                                    },
+                                    {
+                                        "oauth_field": "client_id",
+                                        "label": "Client Id",
+                                        "field": "client_id"
+                                    },
+                                    {
+                                        "oauth_field":"client_secret",
+                                        "label": "Client Secret",
+                                        "field": "client_secret"
+                                    },
+                                    {
+                                        "oauth_field": "redirect_url",
+                                        "label": "Redirect url",
+                                        "field": "redirect_url"
+                                    },
+                                    {
+                                        "oauth_field": "endpoint",
+                                        "label": "Endpoint",
+                                        "field": "endpoint"
+                                    }
+                                ]
+                            }
+                        },
+                        {
                             "field": "endpoint",
                             "label": "Endpoint",
                             "type": "text",
