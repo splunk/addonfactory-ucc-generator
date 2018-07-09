@@ -18,10 +18,11 @@ class ValueLabelPair(DocumentWithoutAddProp):
     label = StringField(required=True, max_length=100)
 
 
-class OauthFields(DocumentWithoutAddProp):
+class OAuthFields(DocumentWithoutAddProp):
     oauth_field = StringField(max_length=100)
     label = StringField(max_length=100)
     field = StringField(max_length=100)
+    help = StringField(max_length=200)
 
 
 class ValidatorBase(DocumentWithoutAddProp):
@@ -72,8 +73,7 @@ class Entity(DocumentWithoutAddProp):
     field = StringField(required=True, pattern="^\w+$")
     label = StringField(required=True, max_length=30)
     type = StringField(required=True,
-                       enum=["custom", "text", "singleSelect", "checkbox", "multipleSelect", "radio", "placeholder",
-                             "oAuth"])
+                       enum=["custom", "text", "singleSelect", "checkbox", "multipleSelect", "radio", "placeholder", "oauth"])
     help = StringField(max_length=200)
     tooltip = StringField(max_length=250)
     defaultValue = OneOfField([
