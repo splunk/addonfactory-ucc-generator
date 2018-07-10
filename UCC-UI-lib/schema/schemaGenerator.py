@@ -106,8 +106,8 @@ class Entity(DocumentWithoutAddProp):
             "src": StringField(max_length=250),
             "defaultValue": StringField(max_length=250),
             "disableonEdit": BooleanField(),
-            "basic": ArrayField(DocumentField(OauthFields, as_ref=True)),
-            "oauth": ArrayField(DocumentField(OauthFields, as_ref=True)),
+            "basic": ArrayField(DocumentField(OAuthFields, as_ref=True)),
+            "oauth": ArrayField(DocumentField(OAuthFields, as_ref=True)),
             "auth_type": ArrayField(StringField(max_length=100))
         }
     )
