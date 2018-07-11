@@ -25,6 +25,10 @@ from .endpoint.datainput import (
     DataInputEndpointBuilder,
     DataInputEntityBuilder,
 )
+# model to get accesstoken for oauth
+from .endpoint.oauth_model import (
+    OAuthModelEndpointBuilder
+)
 from .endpoint.base import indent, quote_regex
 
 
@@ -60,6 +64,10 @@ class GlobalConfigBuilderSchema(GlobalConfigSchema):
                 conf_name=config.get('conf'),
                 rest_handler_name=config.get('restHandlerName'),
             )
+            # If we have have given oauth support then we have to add endpoint for accesstoken
+            for entity_element in config['entity']:
+                if entity_element["type"] == "oauth":
+                    self._get_endpoint("oauth", OAuthModelEndpointBuilder, app_name=self._meta['name'])
 
     def _builder_settings(self):
         # MultipleModel
@@ -98,7 +106,6 @@ class GlobalConfigBuilderSchema(GlobalConfigSchema):
                     input_type=input_item['name'],
                     rest_handler_name=rest_handler_name,
                 )
-
     def _builder_entity(
             self,
             name,
@@ -115,6 +122,28 @@ class GlobalConfigBuilderSchema(GlobalConfigSchema):
             *args,
             **kwargs
         )
+        # If the entity contains type oauth then we need to alter the content to generate proper entities to generate
+        # the rest handler with the oauth fields
+        for entity_element in content:
+            # Check if we have oauth type
+            if entity_element["type"] == "oauth":
+                # Check if we have both basic and oauth type authentication is required
+                if "basic" in entity_element["options"]["auth_type"] and "oauth" in entity_element["options"]["auth_type"]:
+                    # Append all the basic auth fields to the content
+                    content = content + entity_element["options"]["basic"]
+                    for oauth_element in entity_element["options"]["oauth"]:
+                        # Need to remove this as this will be alredy added by basic auth type
+                        if oauth_element["oauth_field"] == "account_name":
+                            entity_element["options"]["oauth"].remove(oauth_element)
+                    # Append oauth auth fields to the content
+                    content = content + entity_element["options"]["oauth"]
+                # If only oauth type authentication is required
+                elif "oauth" in entity_element["options"]["auth_type"]:
+                    # Append all the oauth auth fields to the content
+                    content = content + entity_element["options"]["oauth"]
+                # We will remove the oauth type entity as we have replaced it with all the entity fields
+                content.remove(entity_element)
+                break
         fields = self._parse_fields(content)
         entity = entity_builder(name, fields, *args, **kwargs)
         endpoint_obj.add_entity(entity)
