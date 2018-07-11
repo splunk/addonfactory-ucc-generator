@@ -23,6 +23,7 @@ class OAuthFields(DocumentWithoutAddProp):
     label = StringField(max_length=100)
     field = StringField(max_length=100)
     help = StringField(max_length=200)
+    encrypted = BooleanField()
 
 
 class ValidatorBase(DocumentWithoutAddProp):

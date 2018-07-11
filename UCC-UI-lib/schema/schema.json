@@ -827,6 +827,9 @@
                 "help": {
                     "type": "string", 
                     "maxLength": 200
+                }, 
+                "encrypted": {
+                    "type": "boolean"
                 }
             }, 
             "additionalProperties": false

@@ -78,13 +78,15 @@
                                         "oauth_field": "password",
                                         "label": "Password",
                                         "field": "password",
-                                        "help": "Enter Password."
+                                        "help": "Enter Password.",
+                                        "encrypted": true
                                     },
                                     {
                                         "oauth_field": "security_token",
                                         "label": "Securtiy Token",
                                         "field": "security_token",
-                                        "help": "Enter Security Token."
+                                        "help": "Enter Security Token.",
+                                        "encrypted": true
                                     }
                                 ],
                                 "oauth": [
@@ -104,7 +106,8 @@
                                         "oauth_field":"client_secret",
                                         "label": "Client Secret",
                                         "field": "client_secret",
-                                        "help": "Enter Client Secret."
+                                        "help": "Enter Client Secret.",
+                                        "encrypted": true
                                     },
                                     {
                                         "oauth_field": "redirect_url",
@@ -116,7 +119,7 @@
                                         "oauth_field": "endpoint",
                                         "label": "Endpoint",
                                         "field": "endpoint",
-                                        "help": "Enter Endpoint"
+                                        "help": "Enter Endpoint."
                                     }
                                 ]
                             }
