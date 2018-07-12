@@ -18,6 +18,14 @@ class ValueLabelPair(DocumentWithoutAddProp):
     label = StringField(required=True, max_length=100)
 
 
+class OAuthFields(DocumentWithoutAddProp):
+    oauth_field = StringField(max_length=100)
+    label = StringField(max_length=100)
+    field = StringField(max_length=100)
+    help = StringField(max_length=200)
+    encrypted = BooleanField()
+
+
 class ValidatorBase(DocumentWithoutAddProp):
     errorMsg = StringField(max_length=400)
 
@@ -65,7 +73,8 @@ class UrlValidator(ValidatorBase):
 class Entity(DocumentWithoutAddProp):
     field = StringField(required=True, pattern="^\w+$")
     label = StringField(required=True, max_length=30)
-    type = StringField(required=True, enum=["custom", "text", "singleSelect", "checkbox", "multipleSelect", "radio", "placeholder"])
+    type = StringField(required=True,
+                       enum=["custom", "text", "singleSelect", "checkbox", "multipleSelect", "radio", "placeholder", "oauth"])
     help = StringField(max_length=200)
     tooltip = StringField(max_length=250)
     defaultValue = OneOfField([
@@ -97,7 +106,10 @@ class Entity(DocumentWithoutAddProp):
             "labelField": StringField(max_length=250),
             "src": StringField(max_length=250),
             "defaultValue": StringField(max_length=250),
-            "disableonEdit": BooleanField()
+            "disableonEdit": BooleanField(),
+            "basic": ArrayField(DocumentField(OAuthFields, as_ref=True)),
+            "oauth": ArrayField(DocumentField(OAuthFields, as_ref=True)),
+            "auth_type": ArrayField(StringField(max_length=100))
         }
     )
     required = BooleanField()

@@ -21,7 +21,8 @@
                         "checkbox", 
                         "multipleSelect", 
                         "radio", 
-                        "placeholder"
+                        "placeholder", 
+                        "oauth"
                     ]
                 }, 
                 "help": {
@@ -49,12 +50,71 @@
                 "options": {
                     "type": "object", 
                     "properties": {
+                        "auth_type": {
+                            "type": "array", 
+                            "items": {
+                                "type": "string", 
+                                "maxLength": 100
+                            }
+                        }, 
+                        "src": {
+                            "type": "string", 
+                            "maxLength": 250
+                        }, 
                         "enable": {
                             "type": "boolean"
+                        }, 
+                        "items": {
+                            "type": "array", 
+                            "items": {
+                                "$ref": "#/definitions/ValueLabelPair"
+                            }
+                        }, 
+                        "whiteList": {
+                            "type": "string", 
+                            "maxLength": 350
+                        }, 
+                        "defaultValue": {
+                            "type": "string", 
+                            "maxLength": 250
                         }, 
                         "endpointUrl": {
                             "type": "string", 
                             "maxLength": 350
+                        }, 
+                        "display": {
+                            "type": "boolean"
+                        }, 
+                        "blackList": {
+                            "type": "string", 
+                            "maxLength": 350
+                        }, 
+                        "basic": {
+                            "type": "array", 
+                            "items": {
+                                "$ref": "#/definitions/OAuthFields"
+                            }
+                        }, 
+                        "delimiter": {
+                            "type": "string", 
+                            "maxLength": 1
+                        }, 
+                        "labelField": {
+                            "type": "string", 
+                            "maxLength": 250
+                        }, 
+                        "disableonEdit": {
+                            "type": "boolean"
+                        }, 
+                        "referenceName": {
+                            "type": "string", 
+                            "maxLength": 250
+                        }, 
+                        "oauth": {
+                            "type": "array", 
+                            "items": {
+                                "$ref": "#/definitions/OAuthFields"
+                            }
                         }, 
                         "autoCompleteFields": {
                             "oneOf": [
@@ -92,47 +152,7 @@
                             "type": "string", 
                             "maxLength": 250
                         }, 
-                        "src": {
-                            "type": "string", 
-                            "maxLength": 250
-                        }, 
-                        "items": {
-                            "type": "array", 
-                            "items": {
-                                "$ref": "#/definitions/ValueLabelPair"
-                            }
-                        }, 
-                        "whiteList": {
-                            "type": "string", 
-                            "maxLength": 350
-                        }, 
-                        "defaultValue": {
-                            "type": "string", 
-                            "maxLength": 250
-                        }, 
                         "disableSearch": {
-                            "type": "boolean"
-                        }, 
-                        "blackList": {
-                            "type": "string", 
-                            "maxLength": 350
-                        }, 
-                        "delimiter": {
-                            "type": "string", 
-                            "maxLength": 1
-                        }, 
-                        "labelField": {
-                            "type": "string", 
-                            "maxLength": 250
-                        }, 
-                        "disableonEdit": {
-                            "type": "boolean"
-                        }, 
-                        "referenceName": {
-                            "type": "string", 
-                            "maxLength": 250
-                        }, 
-                        "display": {
                             "type": "boolean"
                         }
                     }
@@ -353,7 +373,8 @@
                         "checkbox", 
                         "multipleSelect", 
                         "radio", 
-                        "placeholder"
+                        "placeholder", 
+                        "oauth"
                     ]
                 }, 
                 "help": {
@@ -381,12 +402,71 @@
                 "options": {
                     "type": "object", 
                     "properties": {
+                        "auth_type": {
+                            "type": "array", 
+                            "items": {
+                                "type": "string", 
+                                "maxLength": 100
+                            }
+                        }, 
+                        "src": {
+                            "type": "string", 
+                            "maxLength": 250
+                        }, 
                         "enable": {
                             "type": "boolean"
+                        }, 
+                        "items": {
+                            "type": "array", 
+                            "items": {
+                                "$ref": "#/definitions/ValueLabelPair"
+                            }
+                        }, 
+                        "whiteList": {
+                            "type": "string", 
+                            "maxLength": 350
+                        }, 
+                        "defaultValue": {
+                            "type": "string", 
+                            "maxLength": 250
                         }, 
                         "endpointUrl": {
                             "type": "string", 
                             "maxLength": 350
+                        }, 
+                        "display": {
+                            "type": "boolean"
+                        }, 
+                        "blackList": {
+                            "type": "string", 
+                            "maxLength": 350
+                        }, 
+                        "basic": {
+                            "type": "array", 
+                            "items": {
+                                "$ref": "#/definitions/OAuthFields"
+                            }
+                        }, 
+                        "delimiter": {
+                            "type": "string", 
+                            "maxLength": 1
+                        }, 
+                        "labelField": {
+                            "type": "string", 
+                            "maxLength": 250
+                        }, 
+                        "disableonEdit": {
+                            "type": "boolean"
+                        }, 
+                        "referenceName": {
+                            "type": "string", 
+                            "maxLength": 250
+                        }, 
+                        "oauth": {
+                            "type": "array", 
+                            "items": {
+                                "$ref": "#/definitions/OAuthFields"
+                            }
                         }, 
                         "autoCompleteFields": {
                             "oneOf": [
@@ -424,47 +504,7 @@
                             "type": "string", 
                             "maxLength": 250
                         }, 
-                        "src": {
-                            "type": "string", 
-                            "maxLength": 250
-                        }, 
-                        "items": {
-                            "type": "array", 
-                            "items": {
-                                "$ref": "#/definitions/ValueLabelPair"
-                            }
-                        }, 
-                        "whiteList": {
-                            "type": "string", 
-                            "maxLength": 350
-                        }, 
-                        "defaultValue": {
-                            "type": "string", 
-                            "maxLength": 250
-                        }, 
                         "disableSearch": {
-                            "type": "boolean"
-                        }, 
-                        "blackList": {
-                            "type": "string", 
-                            "maxLength": 350
-                        }, 
-                        "delimiter": {
-                            "type": "string", 
-                            "maxLength": 1
-                        }, 
-                        "labelField": {
-                            "type": "string", 
-                            "maxLength": 250
-                        }, 
-                        "disableonEdit": {
-                            "type": "boolean"
-                        }, 
-                        "referenceName": {
-                            "type": "string", 
-                            "maxLength": 250
-                        }, 
-                        "display": {
                             "type": "boolean"
                         }
                     }
@@ -767,6 +807,31 @@
                 "type", 
                 "range"
             ], 
+            "additionalProperties": false
+        }, 
+        "OAuthFields": {
+            "type": "object", 
+            "properties": {
+                "oauth_field": {
+                    "type": "string", 
+                    "maxLength": 100
+                }, 
+                "label": {
+                    "type": "string", 
+                    "maxLength": 100
+                }, 
+                "field": {
+                    "type": "string", 
+                    "maxLength": 100
+                }, 
+                "help": {
+                    "type": "string", 
+                    "maxLength": 200
+                }, 
+                "encrypted": {
+                    "type": "boolean"
+                }
+            }, 
             "additionalProperties": false
         }, 
         "Pages": {
