@@ -164,7 +164,7 @@ def rename_or_remove_oauth_templates():
             for elements in tab['entity']:
                 if elements['type'] == 'oauth':
                     auth_type = 'oauth'
-        break
+            break
     # if oauth is configured rename the templates with respect to addon name
     if auth_type == 'oauth':
         os.rename(redirect_js_src, redirect_js_dest)
