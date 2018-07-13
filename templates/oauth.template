@@ -1,3 +1,6 @@
+"""
+This module will be used to get oauth token from auth code
+"""
 {{import_declare}}
 import urllib
 
@@ -10,6 +13,7 @@ import json
 
 
 logger = log.get_cc_logger()
+# Map for available proxy type
 _PROXY_TYPE_MAP = {
     'http': socks.PROXY_TYPE_HTTP,
     'http_no_tunnel': socks.PROXY_TYPE_HTTP_NO_TUNNEL,
@@ -17,12 +21,17 @@ _PROXY_TYPE_MAP = {
     'socks5': socks.PROXY_TYPE_SOCKS5,
 }
 
+"""
+REST Endpoint of getting token by OAuth2 in Splunk Add-on UI Framework. T
+"""
 class {{app_name|lower}}_rh_oauth2_token(admin.MConfigHandler):
-    """REST Endpoint of getting token by OAuth2 in Splunk Add-on UI Framework.
-    """
 
+   """
+    This method checks which action is getting called and what parameters are required for the request.
+   """
     def setup(self):
         if self.requestedAction == admin.ACTION_LIST:
+            # Add required args in supported args
             for arg in ('url', 'method',
                         'grant_type', 'code',
                         'client_id', 'client_secret',
@@ -30,17 +39,23 @@ class {{app_name|lower}}_rh_oauth2_token(admin.MConfigHandler):
                 self.supportedArgs.addReqArg(arg)
         return
 
-    # This hander is to get access token from the auth code received
+    """
+    This handler is to get access token from the auth code received
+    It takes 'url', 'method', 'grant_type', 'code', 'client_id', 'client_secret', 'redirect_uri' as caller args and
+    Returns the confInfo dict object in response.
+    """
     def handleList(self, confInfo):
 
         try:
             logger.debug("In OAuth rest handler to get access token")
+            # Get args parameters from the request
             url = self.callerArgs.data['url'][0]
             logger.debug("oAUth url %s", url)
             proxy_info = self.getProxyDetails()
 
             http = Http(proxy_info=proxy_info)
             method = self.callerArgs.data['method'][0]
+            # Create payload from the arguments received
             payload = {
                 'grant_type': self.callerArgs.data['grant_type'][0],
                 'code': self.callerArgs.data['code'][0],
@@ -49,24 +64,33 @@ class {{app_name|lower}}_rh_oauth2_token(admin.MConfigHandler):
                 'redirect_uri': self.callerArgs.data['redirect_uri'][0],
             }
             headers = {"Content-Type": "application/x-www-form-urlencoded", }
+            # Send http request to get the accesstoken
             resp, content = http.request(url,
                                          method=method,
                                          headers=headers,
                                          body=urllib.urlencode(payload))
             content = json.loads(content)
+            # Check for any errors in response. If no error then add the content values in confInfo
             if resp.status == 200:
                 for key, val in content.iteritems():
                     confInfo['token'][key] = val
             else:
+                # Else add the error message in the confinfo
                 confInfo['token']['error'] = content['error_description']
             logger.info("Exiting OAuth rest handler after getting access token with response %s", resp.status)
         except Exception as exc:
-            logger.exception(exc)
-            raise BaseException()
+            logger.exception("Error occurred while getting accesstoken using auth code")
+            raise exc()
 
+    """
+    This method is to get proxy details stored in settings conf file
+    """
     def getProxyDetails(self):
+        # Create confmanger object for the app with realm
         cfm = conf_manager.ConfManager(self.getSessionKey(), {{app_name}}, realm="__REST_CREDENTIAL__#{{app_name}}#configs/conf-{{app_name|lower}}_settings")
+        # Get Conf object of apps settings
         conf = cfm.get_conf('{{app_name|lower}}_settings')
+        # Get proxy stanza from the settings
         proxy_config = conf.get("proxy", True)
         if not proxy_config or not is_true(proxy_config.get('proxy_enabled')):
             logger.info('Proxy is not enabled')
@@ -113,6 +137,11 @@ class {{app_name|lower}}_rh_oauth2_token(admin.MConfigHandler):
         )
         return proxy_info
 
+    """
+    Method to check if the given port is valid or not
+    :param port: port number to be validated
+    :type port: ``int``
+    """
     def is_valid_port(self, port):
         try:
             return 0 < int(port) <= 65535
