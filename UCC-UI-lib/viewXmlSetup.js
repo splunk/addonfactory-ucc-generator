@@ -1,7 +1,7 @@
 var fs = require('fs');
 var globalConfig = require('../globalConfig.json');
 
-var TARGET_FILE_NAME_ARR = ['configuration.xml', 'inputs.xml'];
+var TARGET_FILE_NAME_ARR = ['configuration.xml', 'inputs.xml', 'redirect.xml'];
 var BASE_DIR = './build/default/data/ui/views/';
 var PLACE_HOLDER = '${package.name}';
 
