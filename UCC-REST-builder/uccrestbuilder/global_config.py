@@ -124,26 +124,7 @@ class GlobalConfigBuilderSchema(GlobalConfigSchema):
         )
         # If the entity contains type oauth then we need to alter the content to generate proper entities to generate
         # the rest handler with the oauth fields
-        for entity_element in content:
-            # Check if we have oauth type
-            if entity_element["type"] == "oauth":
-                # Check if we have both basic and oauth type authentication is required
-                if "basic" in entity_element["options"]["auth_type"] and "oauth" in entity_element["options"]["auth_type"]:
-                    # Append all the basic auth fields to the content
-                    content = content + entity_element["options"]["basic"]
-                    for oauth_element in entity_element["options"]["oauth"]:
-                        # Need to remove this as this will be already added by basic auth type
-                        if oauth_element["oauth_field"] == "account_name":
-                            entity_element["options"]["oauth"].remove(oauth_element)
-                    # Append oauth auth fields to the content
-                    content = content + entity_element["options"]["oauth"]
-                # If only oauth type authentication is required
-                elif "oauth" in entity_element["options"]["auth_type"]:
-                    # Append all the oauth auth fields to the content
-                    content = content + entity_element["options"]["oauth"]
-                # We will remove the oauth type entity as we have replaced it with all the entity fields
-                content.remove(entity_element)
-                break
+        content = self._get_oauth_enitities(content)
         fields = self._parse_fields(content)
         entity = entity_builder(name, fields, *args, **kwargs)
         endpoint_obj.add_entity(entity)
@@ -181,6 +162,36 @@ class GlobalConfigBuilderSchema(GlobalConfigSchema):
     def _parse_validation(self, validation):
         global_config_validation = GlobalConfigValidation(validation)
         return global_config_validation.build()
+
+    """
+    If the entity contains type oauth then we need to alter the content to generate proper entities to generate
+    the rest handler with the oauth fields
+    :param content: json content of entity
+    :type content: `json`
+    """
+    def _get_oauth_enitities(self, content):
+        for entity_element in content:
+            # Check if we have oauth type
+            if entity_element["type"] == "oauth":
+                # Check if we have both basic and oauth type authentication is required
+                if "basic" in entity_element["options"]["auth_type"] \
+                        and "oauth" in entity_element["options"]["auth_type"]:
+                    # Append all the basic auth fields to the content
+                    content = content + entity_element["options"]["basic"]
+                    for oauth_element in entity_element["options"]["oauth"]:
+                        # Need to remove this as this will be already added by basic auth type
+                        if oauth_element["oauth_field"] == "account_name":
+                            entity_element["options"]["oauth"].remove(oauth_element)
+                    # Append oauth auth fields to the content
+                    content = content + entity_element["options"]["oauth"]
+                # If only oauth type authentication is required
+                elif "oauth" in entity_element["options"]["auth_type"]:
+                    # Append all the oauth auth fields to the content
+                    content = content + entity_element["options"]["oauth"]
+                # We will remove the oauth type entity as we have replaced it with all the entity fields
+                content.remove(entity_element)
+                break
+        return content
 
 
 class GlobalConfigValidation(object):
