@@ -3,89 +3,72 @@ import Backbone from 'backbone';
 
 export default Backbone.View.extend({
 
-    initialize: function (options) {
-        //initialize component with oauth options
-        _.extend(this, options);
-        this.options = options;
-    },
+	initialize: function (options) {
+		//initialize component with oauth options
+		_.extend(this, options);
+		this.options = options;
+	},
 
-    render: function () {
-        // render component if 'auth_type' is defined in globalConfig.json
-        // check provided auth types and render related controls
-        // display related controls on the basis of selected auth type
-        if (this.options.auth_type) {
-            let body_content = "",selected_auth_type="";
-            if(this.options.auth_type.selected!=undefined) {
-                selected_auth_type = this.options.auth_type.selected;
-            }
-            else {
-                if (this.options.auth_type.indexOf("basic") != -1) {
-                    selected_auth_type = "basic";
-                } else {
-                    selected_auth_type = "oauth";
-                }
-            }
-            if (this.options.auth_type.indexOf("basic") != -1) {
-                _.each(this.options.basic, (basic_fields) => {
-                    basic_fields["auth_type"] = "basic";
-                    basic_fields["selected_auth_type"] = selected_auth_type;
-                    if(basic_fields.field ==="password")
-                    {
-                        basic_fields["control_type"] = "password";
-                    } else {
-                        basic_fields["control_type"] = "text";
-                    }
-                    body_content += this._render_content(basic_fields);
-                });
-            }
-            if (this.options.auth_type.indexOf("oauth") != -1) {
-                _.each(this.options.oauth, (oauth_fields) => {
-                    oauth_fields["auth_type"] = "oauth";
-                    oauth_fields["selected_auth_type"] = selected_auth_type;
-                    if(oauth_fields.field ==="client_secret")
-                    {
-                        oauth_fields["control_type"] = "password";
-                    } else {
-                        oauth_fields["control_type"] = "text";
-                    }
-                    if (!(this.options.auth_type.indexOf("basic") != -1 && oauth_fields.field ==="account_name")) {
-                        body_content += this._render_content(oauth_fields);
-                    }
-                });
-            }
-            let content = [];
-            content["body_content"] = body_content;
-            content["auth_types"] = this.options.auth_type;
-            if(this.options.auth_type.selected!=undefined) {
-                content["selected_auth_type"] = this.options.auth_type.selected;
-            }
-            else {
-                if (this.options.auth_type.indexOf("basic") != -1) {
-                    content["selected_auth_type"] = "basic";
-                } else {
-                    content["selected_auth_type"] = "oauth";
-                }
-            }
-            this.$el.html(this._render_body(content));
-        }
-        return this;
-    },
-    _render_body: function (content) {
-        //get template of components  
-        return _.template(this._body_template)({ "content": content});
-    },
-    _render_content: function (fields) {
-        //get template of control
-        return _.template(this._content_template)({ "fields": fields});
-    },
-    //auth type change event binding 
-    events: {
-        'change .auth_type': '_onAuthTypeChange'
-    },
-    _onAuthTypeChange: function () { 
-        console.log("Clicked: AuthTypeClick");
-    },
-    _body_template: `
+	render: function () {
+		// render component if 'auth_type' is defined in globalConfig.json
+		// check provided auth types and render related controls
+		// display related controls on the basis of selected auth type
+		if (this.options.auth_type) {
+			let body_content = "",
+			selected_auth_type = "";
+			if (this.options.auth_type.selected !== undefined) {
+				selected_auth_type = this.options.auth_type.selected;
+			} else {
+				selected_auth_type = (this.options.auth_type.indexOf("basic") != -1) ? "basic" : "oauth";
+			}
+			if (this.options.auth_type.indexOf("basic") !== -1) {
+				_.each(this.options.basic, (basic_fields) => {
+					basic_fields["auth_type"] = "basic";
+					basic_fields["selected_auth_type"] = selected_auth_type;
+					basic_fields["control_type"] = (basic_fields.field === "password") ? "password" : "text";
+					body_content += this._render_content(basic_fields);
+				});
+			}
+			if (this.options.auth_type.indexOf("oauth") !== -1) {
+				_.each(this.options.oauth, (oauth_fields) => {
+					oauth_fields["auth_type"] = "oauth";
+					oauth_fields["selected_auth_type"] = selected_auth_type;
+					oauth_fields["control_type"] = (oauth_fields.field === "client_secret") ? "password" : "text";
+					body_content += (!(this.options.auth_type.indexOf("basic") != -1 && oauth_fields.field === "account_name")) ? this._render_content(oauth_fields) : "";
+				});
+			}
+			let content = [];
+			content["body_content"] = body_content;
+			content["auth_types"] = this.options.auth_type;
+			if (this.options.auth_type.selected !== undefined) {
+				content["selected_auth_type"] = this.options.auth_type.selected;
+			} else {
+				content["selected_auth_type"] = (this.options.auth_type.indexOf("basic") != -1) ? "basic" : "oauth";
+			}
+			this.$el.html(this._render_body(content));
+		}
+		return this;
+	},
+	_render_body: function (content) {
+		//get template of components
+		return _.template(this._body_template)({
+			"content": content
+		});
+	},
+	_render_content: function (fields) {
+		//get template of control
+		return _.template(this._content_template)({
+			"fields": fields
+		});
+	},
+	//auth type change event binding
+	events: {
+		'change .auth_type': '_onAuthTypeChange'
+	},
+	_onAuthTypeChange: function () {
+		console.log("Clicked: AuthTypeClick");
+	},
+	_body_template: `
     <div class="modal-body">
         <div class="form-horizontal form-small">
             <div class="form-group control-group">            
@@ -110,7 +93,7 @@ export default Backbone.View.extend({
         </div>
         <%= content.body_content %>
     </div>`,
-    _content_template: `
+	_content_template: `
             <div class="form-horizontal form-small <%= fields.field %> <%= fields.auth_type %>"
             <% if (fields.auth_type !== fields.selected_auth_type) { %>
                 style="display:none"
