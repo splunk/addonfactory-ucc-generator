@@ -84,30 +84,32 @@ class RestBuilder(object):
 
     def build(self):
         for endpoint in self._schema.endpoints:
-            if endpoint._name == 'settings':
-                self.output.put(
-                    self.output.default,
-                    endpoint.conf_name + '.conf',
-                    endpoint.generate_default_conf(),
-                )
+            # If the endpoint is oauth, which is for getting accesstoken. Conf file entries should not get created.
+            if endpoint._name != "oauth":
+                if endpoint._name == 'settings':
+                    self.output.put(
+                        self.output.default,
+                        endpoint.conf_name + '.conf',
+                        endpoint.generate_default_conf(),
+                    )
 
-            self.output.put(
-                self.output.readme,
-                endpoint.conf_name + '.conf.spec',
-                endpoint.generate_spec(),
-            )
-
-            # Add data input of self defined conf to inputs.conf.spec
-            if endpoint._entities[0] and endpoint._entities[0]._conf_name:
-                lines = [
-                    '[' + endpoint._name + '://<name>]',
-                    'placeholder = placeholder'
-                ]
                 self.output.put(
                     self.output.readme,
-                    'inputs.conf.spec',
-                    '\n'.join(lines)
+                    endpoint.conf_name + '.conf.spec',
+                    endpoint.generate_spec(),
                 )
+
+                # Add data input of self defined conf to inputs.conf.spec
+                if endpoint._entities[0] and endpoint._entities[0]._conf_name:
+                    lines = [
+                        '[' + endpoint._name + '://<name>]',
+                        'placeholder = placeholder'
+                    ]
+                    self.output.put(
+                        self.output.readme,
+                        'inputs.conf.spec',
+                        '\n'.join(lines)
+                    )
 
             self.output.put(
                 self.output.bin,
