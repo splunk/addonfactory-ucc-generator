@@ -8,7 +8,6 @@ from uccrestbuilder.global_config import GlobalConfigBuilderSchema, GlobalConfig
 from uccrestbuilder import build
 from jinja2 import Environment, FileSystemLoader
 
-
 basedir = os.path.dirname(os.path.abspath(__file__))
 top_dir = os.path.dirname(basedir)
 j2_env = Environment(loader=FileSystemLoader(top_dir))
@@ -118,17 +117,19 @@ def copy_res():
         os.path.join(basedir, 'res/app.conf'),
         os.path.join(basedir, 'output', ta_name, 'default')
     )
-    # copy redirect_page.js
-    ui_lib_dir_package = os.path.join(os.path.dirname(basedir), 'UCC-UI-lib', 'package')
-    shutil.copy(
-        os.path.join(basedir, 'res/redirect_page.js'),
-        os.path.join(basedir, 'output', ta_name, 'appserver/static/js/build')
-    )
-    # copy redirect.html
-    shutil.copy(
-        os.path.join(ui_lib_dir_package, 'appserver/templates/redirect.html'),
-        os.path.join(basedir, 'output', ta_name, 'appserver/templates')
-    )
+    # if oauth is configured copy oauth html and js templates
+    if is_oauth_configured():
+        # copy redirect_page.js
+        ui_lib_dir_package = os.path.join(os.path.dirname(basedir), 'UCC-UI-lib', 'package')
+        shutil.copy(
+            os.path.join(basedir, 'res/redirect_page.js'),
+            os.path.join(basedir, 'output', ta_name, 'appserver/static/js/build')
+        )
+        # copy redirect.html
+        shutil.copy(
+            os.path.join(ui_lib_dir_package, 'appserver/templates/redirect.html'),
+            os.path.join(basedir, 'output', ta_name, 'appserver/templates')
+        )
 
 
 def replace_oauth_html_template_token():
@@ -145,35 +146,26 @@ def replace_oauth_html_template_token():
         f.write(s)
 
 
-def rename_or_remove_oauth_templates():
-    redirect_js_src = os.path.join(basedir, 'output', ta_name, 'appserver/static/js/build/redirect_page.js')
-    redirect_js_dest = os.path.join(basedir, 'output', ta_name,
-                                    'appserver/static/js/build/') + ta_name.lower() + '_redirect_page.' + ta_version + '.js'
-    redirect_html_src = os.path.join(basedir, 'output', ta_name, 'appserver/templates/redirect.html')
-    redirect_html_dest = os.path.join(basedir, 'output', ta_name,
-                                      'appserver/templates/') + ta_name.lower() + '_redirect.html'
+def modify_and_replace_token_for_oauth_templates():
     redirect_xml_src = os.path.join(basedir, 'output', ta_name, 'default/data/ui/views/redirect.xml')
-    redirect_xml_dest = os.path.join(basedir, 'output', ta_name,
-                                     'default/data/ui/views/') + ta_name.lower() + '_redirect.xml'
+    # if oauth is configured replace token in html template and rename the templates with respect to addon name
+    if is_oauth_configured():
+        replace_oauth_html_template_token()
 
-    auth_type = 'basic'
+        redirect_js_src = os.path.join(basedir, 'output', ta_name, 'appserver/static/js/build/redirect_page.js')
+        redirect_js_dest = os.path.join(basedir, 'output', ta_name,
+                                        'appserver/static/js/build/') + ta_name.lower() + '_redirect_page.' + ta_version + '.js'
+        redirect_html_src = os.path.join(basedir, 'output', ta_name, 'appserver/templates/redirect.html')
+        redirect_html_dest = os.path.join(basedir, 'output', ta_name,
+                                          'appserver/templates/') + ta_name.lower() + '_redirect.html'
+        redirect_xml_dest = os.path.join(basedir, 'output', ta_name,
+                                         'default/data/ui/views/') + ta_name.lower() + '_redirect.xml'
 
-    # check if oauth is configured in globalConfig.json
-    for tab in ta_tabs:
-        if tab['name'] == 'account':
-            for elements in tab['entity']:
-                if elements['type'] == 'oauth':
-                    auth_type = 'oauth'
-            break
-    # if oauth is configured rename the templates with respect to addon name
-    if auth_type == 'oauth':
         os.rename(redirect_js_src, redirect_js_dest)
         os.rename(redirect_html_src, redirect_html_dest)
         os.rename(redirect_xml_src, redirect_xml_dest)
-    # if oauth is not configured remove the oauth templates
+    # if oauth is not configured remove the redirect.xml template
     else:
-        os.remove(redirect_js_src)
-        os.remove(redirect_html_src)
         os.remove(redirect_xml_src)
 
 
@@ -246,14 +238,24 @@ def add_executable_attr_to_files_under_bin():
     subprocess.check_output('chmod -R +x ' + bin_path, shell=True)
 
 
+def is_oauth_configured():
+    # check if oauth is configured in globalConfig.json
+    for tab in ta_tabs:
+        if tab['name'] == 'account':
+            for elements in tab['entity']:
+                if elements['type'] == 'oauth':
+                    return True
+            break
+        return False
+
+
 clean_before_build()
 generate_rest()
 generate_ui()
 copy_libs()
 replace_token()
 copy_res()
-replace_oauth_html_template_token()
-rename_or_remove_oauth_templates()
+modify_and_replace_token_for_oauth_templates()
 copy_global_config()
 add_modular_input()
 move_local_to_default()
