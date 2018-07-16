@@ -15,11 +15,11 @@ export default Backbone.View.extend({
 		// display related controls on the basis of selected auth type
 		if (this.options.auth_type) {
 			let body_content = "",
-			selected_auth_type = "";
+			selected_auth_type = "", content = [];
 			if (this.options.auth_type.selected !== undefined) {
 				selected_auth_type = this.options.auth_type.selected;
 			} else {
-				selected_auth_type = (this.options.auth_type.indexOf("basic") != -1) ? "basic" : "oauth";
+				selected_auth_type = (this.options.auth_type.indexOf("basic") !== -1) ? "basic" : "oauth";
 			}
 			if (this.options.auth_type.indexOf("basic") !== -1) {
 				_.each(this.options.basic, (basic_fields) => {
@@ -34,17 +34,12 @@ export default Backbone.View.extend({
 					oauth_fields["auth_type"] = "oauth";
 					oauth_fields["selected_auth_type"] = selected_auth_type;
 					oauth_fields["control_type"] = (oauth_fields.field === "client_secret") ? "password" : "text";
-					body_content += (!(this.options.auth_type.indexOf("basic") != -1 && oauth_fields.field === "account_name")) ? this._render_content(oauth_fields) : "";
+					body_content += (!(this.options.auth_type.indexOf("basic") !== -1 && oauth_fields.field === "account_name")) ? this._render_content(oauth_fields) : "";
 				});
 			}
-			let content = [];
 			content["body_content"] = body_content;
 			content["auth_types"] = this.options.auth_type;
-			if (this.options.auth_type.selected !== undefined) {
-				content["selected_auth_type"] = this.options.auth_type.selected;
-			} else {
-				content["selected_auth_type"] = (this.options.auth_type.indexOf("basic") != -1) ? "basic" : "oauth";
-			}
+			content["selected_auth_type"] = selected_auth_type;
 			this.$el.html(this._render_body(content));
 		}
 		return this;
