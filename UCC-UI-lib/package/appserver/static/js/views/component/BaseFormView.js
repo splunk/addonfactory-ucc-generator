@@ -18,6 +18,7 @@ import {
 } from 'app/util/promptMsgController';
 import {getFormattedMessage} from 'app/util/messageUtil';
 import GroupSection from 'app/views/component/GroupSection';
+import OAuth from 'app/views/component/OAuth';
 
 define([
     'jquery',
@@ -48,6 +49,22 @@ define([
             _.each(this.component.entity, e => {
                 if (e.encrypted) {
                     this.encryptedFields.push(e.field);
+                }
+                if(e.field === "oauth") {
+                    if (e.options.auth_type.indexOf("basic") != -1) {
+                        this.encryptedFields.push(
+                            e.options.basic.filter(function (basic_fields) {
+                                return basic_fields.field === "password";
+                            }).map(function (basic_fields) { return basic_fields.field})
+                        );
+                    }
+                    if (e.options.auth_type.indexOf("oauth") != -1) {
+                        this.encryptedFields.push(
+                            e.options.oauth.filter(function (oauth_fields) {
+                                return oauth_fields.field === "client_secret";
+                            }).map(function (oauth_fields) { return oauth_fields.field})
+                        );
+                    }
                 }
             });
             this.customValidators = [];
@@ -364,6 +381,10 @@ define([
                     }
                 }
             });
+             // oAuth
+            if(this.isAuth) {
+                this.oauth._load_model(this.model);
+            }
 
             var input = this.real_model,
                 new_json = this.model.toJSON(),
@@ -379,9 +400,9 @@ define([
                     new_json[e.field] = '';
                 }
             });
+
             input.entry.content.set(new_json, {silent: true});
             input.attr_labels = attr_labels;
-
             this.save(input, original_json);
         },
 
@@ -521,6 +542,14 @@ define([
                         index
                     );
                     this.deferreds.push(deferred);
+                } else if (e.type === 'oauth') {
+                    this.isAuth = true;
+                    if(this.oauth === undefined) {
+                        this.oauth = new OAuth(e.options,this.mode,this.model.attributes);
+                    }
+                    controlWrapper = new ControlWrapper({...e, controlOptions});
+                    this.fieldControlMap.set(e.field, controlWrapper);
+                    this.children.push(controlWrapper);
                 } else {
                     controlWrapper = new ControlWrapper({...e, controlOptions});
 
@@ -571,6 +600,7 @@ define([
                         this.$('.modal-body').append(group.render().$el);
                     });
                 }
+
                 // Render the controls in this.children
                 _.each(this.children, (child) => {
                     const childComponent = child.render();
@@ -655,6 +685,10 @@ define([
                             this.hook.onRender();
                         }
                     });
+                }
+
+                if(this.isAuth){
+                    this.$('.oauth').html(this.oauth.render().$el);
                 }
             });
             return this;
