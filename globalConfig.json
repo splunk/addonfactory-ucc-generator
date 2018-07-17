@@ -61,6 +61,70 @@
                             ]
                         },
                         {
+                            "type": "oauth",
+                            "label": "Authentication",
+                            "field": "oauth",
+                            "help": "Enter oauth details.",
+                            "options": {
+                                "auth_type": ["basic", "oauth"],
+                                "basic": [
+                                     {
+                                        "oauth_field": "account_name",
+                                        "label": "Account Name",
+                                        "field": "account_name",
+                                        "help": "Enter Account name."
+                                    },
+                                    {
+                                        "oauth_field": "password",
+                                        "label": "Password",
+                                        "field": "password",
+                                        "help": "Enter Password.",
+                                        "encrypted": true
+                                    },
+                                    {
+                                        "oauth_field": "security_token",
+                                        "label": "Securtiy Token",
+                                        "field": "security_token",
+                                        "help": "Enter Security Token.",
+                                        "encrypted": true
+                                    }
+                                ],
+                                "oauth": [
+                                    {
+                                        "oauth_field": "account_name",
+                                        "label": "Account Name",
+                                        "field": "account_name",
+                                        "help": "Enter Account Name."
+                                    },
+                                    {
+                                        "oauth_field": "client_id",
+                                        "label": "Client Id",
+                                        "field": "client_id",
+                                        "help": "Enter Client Id."
+                                    },
+                                    {
+                                        "oauth_field":"client_secret",
+                                        "label": "Client Secret",
+                                        "field": "client_secret",
+                                        "help": "Enter Client Secret.",
+                                        "encrypted": true
+                                    },
+                                    {
+                                        "oauth_field": "redirect_url",
+                                        "label": "Redirect url",
+                                        "field": "redirect_url",
+                                        "help": "Enter Redirect URL."
+                                    },
+                                    {
+                                        "oauth_field": "endpoint",
+                                        "label": "Endpoint",
+                                        "field": "endpoint",
+                                        "help": "Enter Endpoint."
+                                    }
+                                ]
+                            }
+                        },
+                        {
                             "field": "endpoint",
                             "label": "Endpoint",
                             "type": "text",
