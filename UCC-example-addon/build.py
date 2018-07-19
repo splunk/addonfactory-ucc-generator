@@ -8,7 +8,6 @@ from uccrestbuilder.global_config import GlobalConfigBuilderSchema, GlobalConfig
 from uccrestbuilder import build
 from jinja2 import Environment, FileSystemLoader
 
-
 basedir = os.path.dirname(os.path.abspath(__file__))
 top_dir = os.path.dirname(basedir)
 j2_env = Environment(loader=FileSystemLoader(top_dir))
@@ -22,6 +21,8 @@ with open(os.path.join(root_path, 'globalConfig.json')) as f:
 schema_content = json.loads(json_schema)
 scheme = GlobalConfigBuilderSchema(schema_content)
 ta_name = schema_content.get("meta").get("name")
+ta_version = schema_content.get("meta").get("version")
+ta_tabs = schema_content.get("pages").get("configuration").get("tabs")
 ta_namespace = schema_content.get("meta").get("restRoot")
 import_declare_name = 'import_declare_test'
 
@@ -56,9 +57,9 @@ def generate_ui():
 
     # copy appserver folder
     copy_directory(
-            os.path.join(ui_lib_dir, 'appserver'),
-            os.path.join(basedir, 'output', ta_name, 'appserver')
-        )
+        os.path.join(ui_lib_dir, 'appserver'),
+        os.path.join(basedir, 'output', ta_name, 'appserver')
+    )
 
     # copy locale folder
     copy_directory(
@@ -75,7 +76,7 @@ def generate_ui():
 
 def replace_token():
     # replace token in template
-    views = ["inputs.xml", "configuration.xml"]
+    views = ["inputs.xml", "configuration.xml", "redirect.xml"]
     for view in views:
         template_dir = os.path.join(
             basedir,
@@ -89,6 +90,8 @@ def replace_token():
         # Safely write the changed content, if found in the file
         with open(template_dir + "/" + view, 'w') as f:
             s = s.replace("${package.name}", ta_name)
+            if view == 'redirect.xml':
+                s = s.replace("${ta.name}", ta_name.lower())
             f.write(s)
 
 
@@ -114,6 +117,56 @@ def copy_res():
         os.path.join(basedir, 'res/app.conf'),
         os.path.join(basedir, 'output', ta_name, 'default')
     )
+    # if oauth is configured copy oauth html and js templates
+    if is_oauth_configured():
+        # copy redirect_page.js
+        ui_lib_dir_package = os.path.join(os.path.dirname(basedir), 'UCC-UI-lib', 'package')
+        shutil.copy(
+            os.path.join(basedir, 'res/redirect_page.js'),
+            os.path.join(basedir, 'output', ta_name, 'appserver/static/js/build')
+        )
+        # copy redirect.html
+        shutil.copy(
+            os.path.join(ui_lib_dir_package, 'appserver/templates/redirect.html'),
+            os.path.join(basedir, 'output', ta_name, 'appserver/templates')
+        )
+
+
+def replace_oauth_html_template_token():
+    html_template_path = os.path.join(basedir, 'output', ta_name, 'appserver/templates')
+    with open(os.path.join(html_template_path, 'redirect.html')) as f:
+        s = f.read()
+
+    # Safely write the changed content, if found in the file
+    with open(html_template_path + "/" + 'redirect.html', 'w') as f:
+        # replace addon name in html template
+        s = s.replace("${ta.name}", ta_name.lower())
+        # replace addon version in html template
+        s = s.replace("${ta.version}", ta_version)
+        f.write(s)
+
+
+def modify_and_replace_token_for_oauth_templates():
+    redirect_xml_src = os.path.join(basedir, 'output', ta_name, 'default/data/ui/views/redirect.xml')
+    # if oauth is configured replace token in html template and rename the templates with respect to addon name
+    if is_oauth_configured():
+        replace_oauth_html_template_token()
+
+        redirect_js_src = os.path.join(basedir, 'output', ta_name, 'appserver/static/js/build/redirect_page.js')
+        redirect_js_dest = os.path.join(basedir, 'output', ta_name,
+                                        'appserver/static/js/build/') + ta_name.lower() + '_redirect_page.' + ta_version + '.js'
+        redirect_html_src = os.path.join(basedir, 'output', ta_name, 'appserver/templates/redirect.html')
+        redirect_html_dest = os.path.join(basedir, 'output', ta_name,
+                                          'appserver/templates/') + ta_name.lower() + '_redirect.html'
+        redirect_xml_dest = os.path.join(basedir, 'output', ta_name,
+                                         'default/data/ui/views/') + ta_name.lower() + '_redirect.xml'
+
+        os.rename(redirect_js_src, redirect_js_dest)
+        os.rename(redirect_html_src, redirect_html_dest)
+        os.rename(redirect_xml_src, redirect_xml_dest)
+    # if oauth is not configured remove the redirect.xml template
+    else:
+        os.remove(redirect_xml_src)
 
 
 def add_modular_input():
@@ -185,12 +238,24 @@ def add_executable_attr_to_files_under_bin():
     subprocess.check_output('chmod -R +x ' + bin_path, shell=True)
 
 
+def is_oauth_configured():
+    # check if oauth is configured in globalConfig.json
+    for tab in ta_tabs:
+        if tab['name'] == 'account':
+            for elements in tab['entity']:
+                if elements['type'] == 'oauth':
+                    return True
+            break
+        return False
+
+
 clean_before_build()
 generate_rest()
 generate_ui()
 copy_libs()
 replace_token()
 copy_res()
+modify_and_replace_token_for_oauth_templates()
 copy_global_config()
 add_modular_input()
 move_local_to_default()
