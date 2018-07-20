@@ -51,20 +51,16 @@ define([
                     this.encryptedFields.push(e.field);
                 }
                 if(e.field === "oauth") {
-                    if (e.options.auth_type.indexOf("basic") != -1) {
-                        this.encryptedFields.push(
-                            e.options.basic.filter(function (basic_fields) {
-                                return basic_fields.field === "password";
-                            }).map(function (basic_fields) { return basic_fields.field})
-                        );
-                    }
-                    if (e.options.auth_type.indexOf("oauth") != -1) {
-                        this.encryptedFields.push(
-                            e.options.oauth.filter(function (oauth_fields) {
-                                return oauth_fields.field === "client_secret";
-                            }).map(function (oauth_fields) { return oauth_fields.field})
-                        );
-                    }
+                    let encryptedFieldDict = {"basic": "password", "oauth": "client_secret"}
+                    $.each(encryptedFieldDict, function(key, value) {
+                        if (e.options.auth_type.indexOf(key) != -1) {
+                            this.encryptedFields.push(
+                                e.options[key].filter(function (auth_fields) {
+                                    return auth_fields.field === value;
+                                }).map(function (auth_fields) { return auth_fields.field})
+                            );
+                        }
+                    }.bind(this));
                 }
             });
             this.customValidators = [];
@@ -381,7 +377,7 @@ define([
                     }
                 }
             });
-             // oAuth
+             // Load oAuth related field value into model
             if(this.isAuth) {
                 this.oauth._load_model(this.model);
             }
@@ -543,6 +539,7 @@ define([
                     );
                     this.deferreds.push(deferred);
                 } else if (e.type === 'oauth') {
+                    // loading and adding oauth related component in UI.
                     this.isAuth = true;
                     if(this.oauth === undefined) {
                         this.oauth = new OAuth(e.options,this.mode,this.model.attributes);
@@ -687,6 +684,7 @@ define([
                     });
                 }
 
+                // Rendering oauth UI component with provided options
                 if(this.isAuth){
                     this.$('.oauth').html(this.oauth.render().$el);
                 }
