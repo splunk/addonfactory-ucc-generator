@@ -4,11 +4,13 @@ from jsl import AnyOfField, ArrayField, BooleanField, DictField, Document
 from jsl import DocumentField, NumberField, OneOfField, StringField, UriField
 
 
+# Base Document Class with restricting properties population
 class DocumentWithoutAddProp(Document):
     class Options(object):
         additional_properties = False
 
 
+# Document Element with Label and Value element. Possible values are text, numeric and boolean types
 class ValueLabelPair(DocumentWithoutAddProp):
     value = OneOfField([
         NumberField(),
@@ -26,10 +28,13 @@ class OAuthFields(DocumentWithoutAddProp):
     encrypted = BooleanField()
 
 
+
+# Base Validator Wrapper component which is extension of DocumentWithoutAddProp Wrapper Component
 class ValidatorBase(DocumentWithoutAddProp):
     errorMsg = StringField(max_length=400)
 
 
+# MetaData component for detailing brief imformation of document/component
 class Meta(DocumentWithoutAddProp):
     displayName = StringField(required=True, max_length=200)
     name = StringField(required=True, pattern="^[^<>\:\"\/\\\|\?\*]+$")
@@ -38,38 +43,49 @@ class Meta(DocumentWithoutAddProp):
     version = StringField(required=True)
 
 
+# Text validator for the String Field Value input
 class StringValidator(ValidatorBase):
     type = StringField(required=True, enum=["string"])
     minLength = NumberField(required=True, minimum=0)
     maxLength = NumberField(required=True, minimum=0)
 
 
+# Numeric validator for the Number Field Value input
 class NumberValidator(ValidatorBase):
     type = StringField(required=True, enum=["number"])
     range = ArrayField(NumberField(), required=True)
 
 
+# Regex validator for the text Field Value input
 class RegexValidator(ValidatorBase):
     type = StringField(required=True, enum=["regex"])
     pattern = StringField(required=True)
 
 
+# Email validator for the text Field Value input
 class EmailValidator(ValidatorBase):
     type = StringField(required=True, enum=["email"])
 
 
+# Ipv4 represenation validator
 class Ipv4Validator(ValidatorBase):
     type = StringField(required=True, enum=["ipv4"])
 
 
+# Date Validator
 class DateValidator(ValidatorBase):
     type = StringField(required=True, enum=["date"])
 
 
+# URL Validator
 class UrlValidator(ValidatorBase):
     type = StringField(required=True, enum=["url"])
 
 
+##
+#  Entity Form Field Component Wrapper having field name, label, field types, help/tooltips support, default value
+#  Validators and UI Controls such as visibility etc
+##
 class Entity(DocumentWithoutAddProp):
     field = StringField(required=True, pattern="^\w+$")
     label = StringField(required=True, max_length=30)
@@ -114,6 +130,7 @@ class Entity(DocumentWithoutAddProp):
     )
     required = BooleanField()
     encrypted = BooleanField()
+    # List of inbuilt field validator
     validators = ArrayField(AnyOfField([
         DocumentField(StringValidator, as_ref=True),
         DocumentField(NumberValidator, as_ref=True),
@@ -125,6 +142,9 @@ class Entity(DocumentWithoutAddProp):
     ]))
 
 
+##
+# Input Entity is super class of Entity to restrict the predefined field name holding entity field
+##
 class InputsEntity(Entity):
     # Prevnet Splunk reserved inputs field keys being used in the user customized inputs
     # https://jira.splunk.com/browse/ADDON-13014#comment-1493170
@@ -135,6 +155,14 @@ class InputsEntity(Entity):
     )
 
 
+##
+# ConfigurationEntity is super class of Entity to restrict the predefined field name holding entity field such as
+# output_mode
+# output_field
+# owner
+# app
+# sharing
+# ##
 class ConfigurationEntity(Entity):
     field = StringField(
         required=True,
@@ -142,6 +170,9 @@ class ConfigurationEntity(Entity):
     )
 
 
+##
+# Table component schema with headers, additional info and customization row extension
+##
 class Table(DocumentWithoutAddProp):
     moreInfo = ArrayField(DictField(
         properties={
@@ -150,6 +181,7 @@ class Table(DocumentWithoutAddProp):
             "mapping": DictField(required=False)
         }
     ))
+    # Header field names needs to be display on UI
     header = ArrayField(DictField(
         properties={
             "field": StringField(required=True, pattern="^\w+$"),
@@ -158,23 +190,36 @@ class Table(DocumentWithoutAddProp):
             "customCell": DictField(required=False)
         }
     ), required=True)
+    # custom Row implementation if required for special cases
     customRow = DictField(required=False)
 
 
+##
+# Input table having all functions of table and edit|delete|clone|enable/disable actions for each row
+##
 class InputsTable(Table):
     actions = ArrayField(StringField(enum=["edit", "delete", "clone", "enable"]), required=True)
 
 
+##
+# Configuration table having all functions of table and edit|delete|clone|enable/disable actions for each row
+##
 class ConfigurationTable(Table):
     actions = ArrayField(StringField(enum=["edit", "delete", "clone"]), required=True)
 
 
+##
+# Hook attribute scheme to define custom Hook for various events such as on load, on save and on save
+##
 class Hooks(DocumentWithoutAddProp):
     saveValidator = StringField(max_length=3000)
     onLoad = StringField(max_length=3000)
     onChange = StringField(max_length=3000)
 
 
+##
+# Tab Content holding the wrapper of Table and Rest Handler Mapping
+##
 class TabContent(DocumentWithoutAddProp):
     entity = ArrayField(DocumentField(ConfigurationEntity, as_ref=True), required=True)
     name = StringField(required=True, pattern="^[\/\w]+$", max_length=250)
@@ -183,14 +228,23 @@ class TabContent(DocumentWithoutAddProp):
     table = DocumentField(ConfigurationTable, as_ref=True)
     conf = StringField(required=False, max_length=100)
     restHandlerName = StringField(required=False, max_length=100)
+    # Provisioning tab level hook on configuration page
+    hook = DocumentField(Hooks, as_ref=True)
 
 
+##
+# ConfigurationPage Component having tabbing pages for configuration of various module
+# Each tab is individual TabContent
+##
 class ConfigurationPage(DocumentWithoutAddProp):
     title = StringField(required=True, max_length=60)
     description = StringField(max_length=200)
     tabs = ArrayField(DocumentField(TabContent, as_ref=True), required=True, min_items=1)
 
 
+##
+# InputsPage Component having table and entity dialogue driven by service handler to add new entry
+##
 class InputsPage(DocumentWithoutAddProp):
     title = StringField(required=True, max_length=60)
     description = StringField(max_length=200)
@@ -222,15 +276,24 @@ class InputsPage(DocumentWithoutAddProp):
     menu = DictField(required=False)
 
 
+##
+# Main Page to holding configuration and input page
+##
 class Pages(DocumentWithoutAddProp):
     configuration = DocumentField(ConfigurationPage, as_ref=True, required=False)
     inputs = DocumentField(InputsPage, as_ref=True, required=False)
 
 
+##
+# Root Component holding all pages and meta information
+##
 class UCCConfig(DocumentWithoutAddProp):
     meta = DocumentField(Meta, as_ref=True, required=True)
     pages = DocumentField(Pages, as_ref=True, required=True)
 
+##
+# SchemaGenerator responsible to generate schema json file holding information of Flow of UI based on UCCConfig Object
+##
 if __name__ == "__main__":
     formated = json.dumps(UCCConfig.get_schema(ordered=True), indent=4)
     formated = formated.replace("__main__.", "")

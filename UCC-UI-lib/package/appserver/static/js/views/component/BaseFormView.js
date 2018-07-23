@@ -483,6 +483,7 @@ define([
                     }
                 });
             }
+
             // Render template
             this.renderTemplate();
 
@@ -616,6 +617,14 @@ define([
                             });
                         }
                     });
+                    // Execute the onEditLoad hook if defined
+                    if (this.hookDeferred) {
+                        this.hookDeferred.then(() => {
+                            if (typeof this.hook.onEditLoad === 'function') {
+                                this.hook.onEditLoad();
+                            }
+                        });
+                    }
                 }
 
                 // Disable the name field and other configed fields in edit mode

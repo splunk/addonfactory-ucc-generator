@@ -39,6 +39,12 @@ define([], function() {
         onSaveFail() {
             console.log('in Hook: onSaveFail');
         }
+        /*
+        Put logic here to execute javascript after loading edit UI.
+        */
+        onEditLoad() {
+            console.log('in Hook: onEditLoad');
+        }
     }
     return Hook;
 });
