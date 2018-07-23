@@ -15,4 +15,37 @@ cd ./UCC-UI-lib && npm install && bower install
 cd ./UCC-example-addon && python setup.py && source ${SPLUNK_HOME}/bin/setSplunkEnv && python build.py
 ```
 
-Note: Replace ${SPLUNK_HOME} with real Splunk home path.
+### Implementation of a hook feature.
+
+Step 1: Add hook in configuration tab at the entity level.
+
+```
+// adding hook in configuration tab
+
+"configuration": {
+     "title": "Configurations",
+     "description": "Configure your servers and templates.",
+      "tabs": [
+          {
+              "name": "templates",
+              "title": "Templates",
+               "table": {...
+          },
+          "entity": [...
+          ],
+           "hook": {
+               "src": "customHook"
+          }
+       }
+    ]
+}
+```
+
+Step 2: Create custom/customHook.js
+
+* Copy `./UCC-UI-lib/package/appserver/static/js/views/controls/Hook.js` to `${SPLUNK_HOME}/etc/apps/${UCC_GENERATED_APP}/appserver/static/js/build/custom/` folder and rename it to `customHook.js`
+* Add app-level business logic in custom code in `customHook.js`.
+
+Note:
+* Replace ${SPLUNK_HOME} with real Splunk home path.
+* Replace ${UCC_GENERATED_APP} with UCC Generated App name.
