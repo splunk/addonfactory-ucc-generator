@@ -52,7 +52,7 @@ define([
                 }
                 if(e.field === "oauth") {
                     let encryptedFieldDict = {"basic": "password", "oauth": "client_secret"}
-                    $.each(encryptedFieldDict, function(key, value) {
+                     _.each(encryptedFieldDict, (key, value) => {
                         if (e.options.auth_type.indexOf(key) != -1) {
                             this.encryptedFields.push(
                                 e.options[key].filter(function (auth_fields) {
@@ -60,7 +60,7 @@ define([
                                 }).map(function (auth_fields) { return auth_fields.field})
                             );
                         }
-                    }.bind(this));
+                    });
                 }
             });
             this.customValidators = [];
@@ -542,7 +542,7 @@ define([
                     // loading and adding oauth related component in UI.
                     this.isAuth = true;
                     if(this.oauth === undefined) {
-                        this.oauth = new OAuth(e.options,this.mode,this.model.attributes);
+                        this.oauth = new OAuth(e.options,this.mode,this.model);
                     }
                     controlWrapper = new ControlWrapper({...e, controlOptions});
                     this.fieldControlMap.set(e.field, controlWrapper);

@@ -3,29 +3,29 @@ import Backbone from 'backbone';
 
 export default Backbone.View.extend({
 
-	initialize: function (options, mode, attributes) {
+	initialize: function (options, mode, model) {
 		//initialize component with oauth options
 		_.extend(this, options);
 		this.options = options;
 		this.mode = mode;
-		this.attributes = attributes;
-		if (this.attributes["auth_type"] === undefined) {
-			this.attributes["auth_type"] = (this.options.auth_type.indexOf("basic") != -1) ? "basic" : "oauth";
+		this.model = model;
+		if (this.model.get("auth_type") === undefined) {
+			let auth_type = ((this.options.auth_type.indexOf("basic") != -1) ? "basic" : "oauth");
+			this.model.set("auth_type",auth_type);
 		}
-		var that = this;
 		if (this.options.auth_type.indexOf("basic") !== -1) {
-			this.options.basic.map(function (basic_fields) {
-				if(this.attributes[basic_fields.field] === undefined) {
-					this.attributes[basic_fields.field] = "";
+			this.options.basic.map((basic_fields) => {
+				if(this.model.get(basic_fields.field) === undefined) {
+					this.model.set(basic_fields.field,"");
 				}
-			}.bind(this));
+			});
 		}
 		if (this.options.auth_type.indexOf("oauth") !== -1) {
-			this.options.oauth.map(function (oauth_fields) {
-				if(this.attributes[oauth_fields.field] === undefined) {
-					this.attributes[oauth_fields.field] = "";
+			this.options.oauth.map((oauth_fields) => {
+				if(this.model.get(oauth_fields.field) === undefined) {
+					this.model.set(oauth_fields.field,"");
 				}
-			}.bind(this));
+			});
 		}
 	},
 
@@ -37,30 +37,26 @@ export default Backbone.View.extend({
 			return false;
 		}
 		let body_content = "";
-		let basic_content = [];
-		let oauth_content = [];
-
 		if (this.options.auth_type.indexOf("basic") !== -1) {
-			body_content += this.options.basic.map(function (basic_fields) {
+			body_content += this.options.basic.map((basic_fields) => {
 				basic_fields["auth_type"] = "basic";
-				basic_fields["attributes"] = this.attributes;
+				basic_fields["model"] = this.model;
 				basic_fields["control_type"] = (basic_fields.field === "password") ? "password" : "text";
 				return this._render_content(basic_fields);
-			}.bind(this)).join("");
+			}).join("");
 		}
 		if (this.options.auth_type.indexOf("oauth") !== -1) {
-
-			body_content += this.options.oauth.map(function (oauth_fields) {
+			body_content += this.options.oauth.map((oauth_fields) => {
 				oauth_fields["auth_type"] = "oauth";
-				oauth_fields["attributes"] = this.attributes;
+				oauth_fields["model"] = this.model;
 				oauth_fields["control_type"] = (oauth_fields.field === "client_secret") ? "password" : "text";
 				return (!(this.options.auth_type.indexOf("basic") != -1 && oauth_fields.field === "account_name")) ? this._render_content(oauth_fields) : "";
-			}.bind(this)).join("");
+			}).join("");
 		}
-		let content = [];
+		let content = {};
 		content["body_content"] = body_content;
 		content["auth_types"] = this.options.auth_type;
-		content["attributes"] = this.attributes;
+		content["model"] = this.model;
 		this.$el.html(this._render_body(content));
 		this._onAuthTypeChange();
 		return this;
@@ -84,29 +80,29 @@ export default Backbone.View.extend({
 	_load_model: function(model) {
 		model.set("auth_type",this.$(".auth_type").val());
 		if (this.$(".auth_type").val() === "basic") {
-			this.options.oauth.map(function (oauth_fields) {
-                this.set(oauth_fields.field,"")
-	        }.bind(model));
-			this.options.basic.map(function (basic_fields) {
+			this.options.oauth.map((oauth_fields) => {
+                model.set(oauth_fields.field,"")
+	        });
+			this.options.basic.map((basic_fields) => {
 				if(basic_fields.field === "account_name"){
-					this.set(basic_fields.field,$(".input_auth."+basic_fields.field).val())
+					model.set(basic_fields.field,$(".input_auth."+basic_fields.field).val())
 				}
 				else { 
-					this.set(basic_fields.field,$(".input_auth."+$(".auth_type").val()+"."+basic_fields.field).val()) 
+					model.set(basic_fields.field,$(".input_auth."+$(".auth_type").val()+"."+basic_fields.field).val())
 				}
-			}.bind(model));
+			});
 	    }
 	    if (this.$(".auth_type").val() === "oauth" ) {
-            this.options.basic.map(function (basic_fields) {
-				this.set(basic_fields.field,"")
-			}.bind(model));
-            this.options.oauth.map(function (oauth_fields) {
-            	if(oauth_fields.field === "account_name"){
-            		this.set(oauth_fields.field,$(".input_auth."+oauth_fields.field).val())
+            this.options.basic.map((basic_fields) => {
+				model.set(basic_fields.field,"")
+			});
+            this.options.oauth.map((oauth_fields) =>{
+				if(oauth_fields.field === "account_name") {
+					model.set(oauth_fields.field,$(".input_auth."+oauth_fields.field).val())
             	} else {
-	            	this.set(oauth_fields.field,$(".input_auth."+$(".auth_type").val()+"."+oauth_fields.field).val())
+					model.set(oauth_fields.field,$(".input_auth."+$(".auth_type").val()+"."+oauth_fields.field).val())
 	        	}
-            }.bind(model));
+            });
 	    }
 	},
 	_onAuthTypeChange: function () {
@@ -126,7 +122,7 @@ export default Backbone.View.extend({
                     <select class="control shared-controls-select control-default auth_type" name="auth_type">
                          <% _.each(content.auth_types, function(auth_type){ %>
                             <option value="<%= auth_type %>" 
-                            <% if (auth_type === content.attributes["auth_type"]) { %>
+                            <% if (content.model.get("auth_type") !== undefined && auth_type === content.model.get("auth_type")) { %>
                                 selected="selected"
                             <% } %> >
                                 <%= auth_type %>
@@ -150,7 +146,7 @@ export default Backbone.View.extend({
                     </div>
                     <div class="col-sm-10 controls control-placeholder">
                         <div class="control shared-controls-textcontrol control-default" data-name="<%= fields.field %>">
-                            <input type="<%= fields.control_type %>" class="input_auth <%= fields.auth_type %> <%= fields.field %>" value="<%= fields.attributes[fields.field] %>">
+                            <input type="<%= fields.control_type %>" class="input_auth <%= fields.auth_type %> <%= fields.field %>" value="<%= fields.model.get(fields.field) %>">
                         </div>
                         <span class="help-block">
                             <%= fields.help %>
