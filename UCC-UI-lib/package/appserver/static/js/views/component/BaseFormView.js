@@ -18,6 +18,7 @@ import {
 } from 'app/util/promptMsgController';
 import {getFormattedMessage} from 'app/util/messageUtil';
 import GroupSection from 'app/views/component/GroupSection';
+import OAuth from 'app/views/component/OAuth';
 
 define([
     'jquery',
@@ -48,6 +49,18 @@ define([
             _.each(this.component.entity, e => {
                 if (e.encrypted) {
                     this.encryptedFields.push(e.field);
+                }
+                if(e.field === "oauth") {
+                    let encryptedFieldDict = {"basic": "password", "oauth": "client_secret"}
+                     _.each(encryptedFieldDict, (key, value) => {
+                        if (e.options.auth_type.indexOf(key) != -1) {
+                            this.encryptedFields.push(
+                                e.options[key].filter(function (auth_fields) {
+                                    return auth_fields.field === value;
+                                }).map(function (auth_fields) { return auth_fields.field})
+                            );
+                        }
+                    });
                 }
             });
             this.customValidators = [];
@@ -364,6 +377,10 @@ define([
                     }
                 }
             });
+             // Load oAuth related field value into model
+            if(this.isAuth) {
+                this.oauth._load_model(this.model);
+            }
 
             var input = this.real_model,
                 new_json = this.model.toJSON(),
@@ -379,9 +396,9 @@ define([
                     new_json[e.field] = '';
                 }
             });
+
             input.entry.content.set(new_json, {silent: true});
             input.attr_labels = attr_labels;
-
             this.save(input, original_json);
         },
 
@@ -522,6 +539,15 @@ define([
                         index
                     );
                     this.deferreds.push(deferred);
+                } else if (e.type === 'oauth') {
+                    // loading and adding oauth related component in UI.
+                    this.isAuth = true;
+                    if(this.oauth === undefined) {
+                        this.oauth = new OAuth(e.options,this.mode,this.model);
+                    }
+                    controlWrapper = new ControlWrapper({...e, controlOptions});
+                    this.fieldControlMap.set(e.field, controlWrapper);
+                    this.children.push(controlWrapper);
                 } else {
                     controlWrapper = new ControlWrapper({...e, controlOptions});
 
@@ -572,6 +598,7 @@ define([
                         this.$('.modal-body').append(group.render().$el);
                     });
                 }
+
                 // Render the controls in this.children
                 _.each(this.children, (child) => {
                     const childComponent = child.render();
@@ -664,6 +691,11 @@ define([
                             this.hook.onRender();
                         }
                     });
+                }
+
+                // Rendering oauth UI component with provided options
+                if(this.isAuth){
+                    this.$('.oauth').html(this.oauth.render().$el);
                 }
             });
             return this;
