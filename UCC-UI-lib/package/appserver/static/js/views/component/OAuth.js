@@ -9,21 +9,21 @@ export default Backbone.View.extend({
 		this.options = options;
 		this.mode = mode;
 		this.model = model;
-		if (this.model.get("auth_type") === undefined) {
-			let auth_type = ((this.options.auth_type.indexOf("basic") != -1) ? "basic" : "oauth");
-			this.model.set("auth_type",auth_type);
+		if (!this.model.has("auth_type")) {
+			let auth_type = ((this.options.auth_type.indexOf("basic") !== -1) ? "basic" : "oauth");
+			this.model.set("auth_type", auth_type);
 		}
 		if (this.options.auth_type.indexOf("basic") !== -1) {
 			this.options.basic.map((basic_fields) => {
-				if(this.model.get(basic_fields.field) === undefined) {
-					this.model.set(basic_fields.field,"");
+				if(!this.model.has(basic_fields.field)) {
+					this.model.set(basic_fields.field, "");
 				}
 			});
 		}
 		if (this.options.auth_type.indexOf("oauth") !== -1) {
 			this.options.oauth.map((oauth_fields) => {
-				if(this.model.get(oauth_fields.field) === undefined) {
-					this.model.set(oauth_fields.field,"");
+				if(!this.model.has(oauth_fields.field)) {
+					this.model.set(oauth_fields.field, "");
 				}
 			});
 		}
@@ -50,7 +50,7 @@ export default Backbone.View.extend({
 				oauth_fields["auth_type"] = "oauth";
 				oauth_fields["model"] = this.model;
 				oauth_fields["control_type"] = (oauth_fields.field === "client_secret") ? "password" : "text";
-				return (!(this.options.auth_type.indexOf("basic") != -1 && oauth_fields.field === "account_name")) ? this._render_content(oauth_fields) : "";
+				return (!(this.options.auth_type.indexOf("basic") !== -1 && oauth_fields.field === "account_name")) ? this._render_content(oauth_fields) : "";
 			}).join("");
 		}
 		let content = {};
@@ -78,29 +78,29 @@ export default Backbone.View.extend({
 		'change .auth_type': '_onAuthTypeChange'
 	},
 	_load_model: function(model) {
-		model.set("auth_type",this.$(".auth_type").val());
+		model.set("auth_type", this.$(".auth_type").val());
 		if (this.$(".auth_type").val() === "basic") {
 			this.options.oauth.map((oauth_fields) => {
-                model.set(oauth_fields.field,"")
+                model.set(oauth_fields.field, "")
 	        });
 			this.options.basic.map((basic_fields) => {
-				if(basic_fields.field === "account_name"){
-					model.set(basic_fields.field,$(".input_auth."+basic_fields.field).val())
+				if(basic_fields.field === "account_name") {
+					model.set(basic_fields.field, $(".input_auth."+basic_fields.field).val())
 				}
 				else { 
-					model.set(basic_fields.field,$(".input_auth."+$(".auth_type").val()+"."+basic_fields.field).val())
+					model.set(basic_fields.field, $(".input_auth."+$(".auth_type").val()+"."+basic_fields.field).val())
 				}
 			});
 	    }
 	    if (this.$(".auth_type").val() === "oauth" ) {
             this.options.basic.map((basic_fields) => {
-				model.set(basic_fields.field,"")
+				model.set(basic_fields.field, "")
 			});
             this.options.oauth.map((oauth_fields) =>{
 				if(oauth_fields.field === "account_name") {
-					model.set(oauth_fields.field,$(".input_auth."+oauth_fields.field).val())
+					model.set(oauth_fields.field, $(".input_auth."+oauth_fields.field).val())
             	} else {
-					model.set(oauth_fields.field,$(".input_auth."+$(".auth_type").val()+"."+oauth_fields.field).val())
+					model.set(oauth_fields.field, $(".input_auth."+$(".auth_type").val()+"."+oauth_fields.field).val())
 	        	}
             });
 	    }
