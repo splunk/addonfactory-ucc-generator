@@ -4,6 +4,7 @@ import RadioControl from 'views/shared/controls/SyntheticRadioControl';
 import SingleInputControl from 'app/views/controls/SingleInputControl';
 import MultiInputControl from 'app/views/controls/MultiSelectInputControl';
 import PlaceholderControl from 'app/views/controls/PlaceholderControl';
+import OAuthControl from 'app/views/controls/OAuthControl';
 
 export default {
     'text': TextControl,
@@ -13,5 +14,6 @@ export default {
     'radio': RadioControl,
     'singleSelect': SingleInputControl,
     'multipleSelect': MultiInputControl,
-    'placeholder': PlaceholderControl
+    'placeholder': PlaceholderControl,
+    'oauth': OAuthControl
 };
