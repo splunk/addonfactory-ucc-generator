@@ -11,6 +11,7 @@ import shutil
 from solnlib.utils import is_true
 from splunktaucclib.global_config import GlobalConfigSchema
 from splunktaucclib.rest_handler.endpoint.field import RestField
+import json
 
 from .endpoint.field import RestFieldBuilder
 from .endpoint.single_model import (
@@ -184,10 +185,14 @@ class GlobalConfigBuilderSchema(GlobalConfigSchema):
                             entity_element["options"]["oauth"].remove(oauth_element)
                     # Append oauth auth fields to the content
                     content = content + entity_element["options"]["oauth"]
-                # If only oauth type authentication is required
+                    # Append auth_type, access_token, refresh_token & instance_url fields
+                    content = content + json.loads('[{"field": "access_token","encrypted": true},{"field": "refresh_token","encrypted":true},{"field": "instance_url"},{"field": "auth_type"}]')
+                # If only oauth type authentication is required0
                 elif "oauth" in entity_element["options"]["auth_type"]:
                     # Append all the oauth auth fields to the content
                     content = content + entity_element["options"]["oauth"]
+                    # Append access_token, refresh_token & instance_url fields
+                    content = content + json.loads('[{"field": "access_token","encrypted": true},{"field": "refresh_token","encrypted":true},{"field": "instance_url"}]')
                 # We will remove the oauth type entity as we have replaced it with all the entity fields
                 content.remove(entity_element)
                 break

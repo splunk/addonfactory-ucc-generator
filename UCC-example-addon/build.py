@@ -96,7 +96,7 @@ def replace_token():
 
 
 def copy_libs():
-    libs = ["splunktaucclib", "solnlib", "splunklib"]
+    libs = ["splunktaucclib", "solnlib", "splunklib","httplib2"]
 
     for lib in libs:
         lib_dest = os.path.join(

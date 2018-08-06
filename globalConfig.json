@@ -121,7 +121,9 @@
                                         "field": "endpoint",
                                         "help": "Enter Endpoint."
                                     }
-                                ]
+                                ],
+                                "auth_code_endpoint":"/services/oauth2/authorize",
+                                "access_token_endpoint":"/services/oauth2/token"
                             }
                         },
                         {

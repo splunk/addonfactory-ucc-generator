@@ -81,8 +81,8 @@ class RestCredentials(object):
     """
     Credential Management stored in passwords.conf
     """
-
-    PASSWORD = u'********'
+    # Changed password constant to six '*' to make it consistent with solnlib password constant
+    PASSWORD = u'******'
     EMPTY_VALUE = u''
 
     def __init__(
