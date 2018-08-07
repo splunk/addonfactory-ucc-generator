@@ -41,7 +41,7 @@ export default Backbone.View.extend({
 			body_content += this.options.basic.map((basic_fields) => {
 				basic_fields["auth_type"] = "basic";
 				basic_fields["model"] = this.model;
-				basic_fields["control_type"] = (basic_fields.field === "password") ? "password" : "text";
+				basic_fields["control_type"] = (basic_fields.encrypted) ? "password" : "text";
 				return this._render_content(basic_fields);
 			}).join("");
 		}
@@ -49,7 +49,7 @@ export default Backbone.View.extend({
 			body_content += this.options.oauth.map((oauth_fields) => {
 				oauth_fields["auth_type"] = "oauth";
 				oauth_fields["model"] = this.model;
-				oauth_fields["control_type"] = (oauth_fields.field === "client_secret") ? "password" : "text";
+				oauth_fields["control_type"] = (oauth_fields.encrypted) ? "password" : "text";
 				return (!(this.options.auth_type.indexOf("basic") !== -1 && oauth_fields.field === "account_name")) ? this._render_content(oauth_fields) : "";
 			}).join("");
 		}
@@ -80,11 +80,13 @@ export default Backbone.View.extend({
 	_load_model: function(model) {
 		model.set("auth_type", this.$(".auth_type").val());
 		if (this.$(".auth_type").val() === "basic") {
-			this.options.oauth.map((oauth_fields) => {
-                model.set(oauth_fields.field, "")
-	        });
+			if (this.options.oauth) {
+                this.options.oauth.map((oauth_fields) => {
+                    model.set(oauth_fields.field, "")
+	            });
+			}
 			this.options.basic.map((basic_fields) => {
-				if(basic_fields.field === "account_name") {
+				if (basic_fields.field === "account_name") {
 					model.set(basic_fields.field, $(".input_auth."+basic_fields.field).val())
 				}
 				else { 
@@ -93,11 +95,13 @@ export default Backbone.View.extend({
 			});
 	    }
 	    if (this.$(".auth_type").val() === "oauth" ) {
-            this.options.basic.map((basic_fields) => {
-				model.set(basic_fields.field, "")
-			});
+            if (this.options.basic) {
+                this.options.basic.map((basic_fields) => {
+                    model.set(basic_fields.field, "")
+                });
+            }
             this.options.oauth.map((oauth_fields) =>{
-				if(oauth_fields.field === "account_name") {
+				if (oauth_fields.field === "account_name") {
 					model.set(oauth_fields.field, $(".input_auth."+oauth_fields.field).val())
             	} else {
 					model.set(oauth_fields.field, $(".input_auth."+$(".auth_type").val()+"."+oauth_fields.field).val())

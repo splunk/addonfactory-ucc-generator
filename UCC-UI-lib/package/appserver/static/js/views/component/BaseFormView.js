@@ -350,7 +350,7 @@ define([
                 this.$("button[type=button]"),
                 this.$("input[type=submit]")
             );
-            //TODO add ui validation for auth flow
+            // TODO add ui validation for auth flow
             if (this.isAuth && this.model.attributes.auth_type === "oauth") {
                 const app_name = configManager.unifiedConfig.meta.name
                 // Get redirect URI from current window url
@@ -362,28 +362,27 @@ define([
                 var sfHost = "https://" + this.model.attributes.endpoint + this.authCodeEndpoint + parameters;
 				(async () => {
 					this.isCalled = false;
-					//Open a popup to make auth request
+					// Open a popup to make auth request
 					window.open(sfHost, app_name + " OAuth", "width=600, height=600");
 					var that = this;
-					//Callback to receive data from redirect url
-					window.getMessage = function (message) {
+					// Callback to receive data from redirect url
+					window.getMessage = function(message) {
 						that.isCalled = true;
-						//On Call back with Auth code this method will be called.
+						// On Call back with Auth code this method will be called.
 						that._handleOauthToken(message);
 
 					};
-					//Wait till we get auth_code from calling site through redirect url
+					// Wait till we get auth_code from calling site through redirect url
 					await this.waitForAuthentication(this, 0);
-					if( !this.isCalled ){
+					if (!this.isCalled) {
 						//Add timeout error message
-						//TODO add all error messages in constant files
 						addErrorMsg(this.curWinSelector, ERROR_REQUEST_TIMEOUT_TRY_AGAIN);
 						return false;
 					}
-					//Reset called flag as we have to wait till we get the access_token, refresh_token and instance_url
-					//Wait till we get the response
+					// Reset called flag as we have to wait till we get the access_token, refresh_token and instance_url
+					// Wait till we get the response
 					await this.waitForBackendResponse(this, 10);
-					if( !this.isResponse && !this.isError){
+					if (!this.isResponse && !this.isError) {
 					    //Set error message to prevent saving.
 					    this.isError = true;
 						//Add timeout error message
@@ -392,7 +391,7 @@ define([
 					}
 					return true;
 				})().then(() => {
-				    if( !this.isError){
+				    if (!this.isError) {
 				        // Remove loading and error message
                         removeErrorMsg(this.curWinSelector);
                         removeSavingMsg(this.curWinSelector);
@@ -457,7 +456,7 @@ define([
                     }
                 }
             });
-            //Prevent redirect url from getting stored in backend as it is not required
+            // Prevent redirect url from getting stored in backend as it is not required
             if (this.isAuth) {
 				  this.model.set("redirect_url", "");
 			}
@@ -794,15 +793,14 @@ define([
          */
         _handleOauthToken: function(message) {
 
-            //Check message for error. If error show error message.
+             // Check message for error. If error show error message.
 		     if (!message || (message && message.error) || message.code === undefined) {
                 this.util.displayErrorMsg(ERROR_OCCURRED_TRY_AGAIN, this.currentWindow);
                 this.isError = true;
                 return;
             }
             const app_name = configManager.unifiedConfig.meta.name
-            var state = message.state,
-                code = decodeURIComponent(message.code),
+            var code = decodeURIComponent(message.code),
                 grantType = "authorization_code",
                 clientId = this.model.attributes.client_id,
                 clientSecret = this.model.attributes.client_secret,
@@ -818,10 +816,10 @@ define([
                 };
 
 			var service = mvc.createService();
-			//Internal handler call to get the access token and other values
-			service.get("/services/" + app_name + "_oauth", data, ( err, response) => {
+			// Internal handler call to get the access token and other values
+			service.get("/services/" + app_name + "_oauth", data, (err, response) => {
 				 if (!err) {
-				    if(response.data.entry[0].content.error === undefined){
+				    if (response.data.entry[0].content.error === undefined) {
                         var access_token= response.data.entry[0].content.access_token;
                         var instance_url = response.data.entry[0].content.instance_url;
                         var refresh_token = response.data.entry[0].content.refresh_token;
@@ -849,19 +847,18 @@ define([
         /*
          * Function to wait for authentication call back in child window.
          */
-		waitForAuthentication: async function(that, count){
+		waitForAuthentication: async function(that, count) {
 			count++;
-			//Check if callback function called if called then exit from wait
-			if(that.isCalled === true){
+			// Check if callback function called if called then exit from wait
+			if (that.isCalled === true) {
 				return true;
-			}
-			else{
-			 //If callback function is not called and count is not reached to 20 then return error for timeout
-				if(count === 20){
+			} else {
+			    // If callback function is not called and count is not reached to 20 then return error for timeout
+				if (count === 20) {
 					that.isError = true;
 					return false;
 				}
-				//else call sleep and recall the same function
+				// else call sleep and recall the same function
 				await that.sleep(that.waitForAuthentication, that, count);
 			}
 		},
@@ -869,18 +866,17 @@ define([
 		/*
          * Function to wait for backend call get response from backend
          */
-		 waitForBackendResponse: async function(that, count){
+		 waitForBackendResponse: async function(that, count) {
 			count++;
-			//Check if callback function called if called then exit from wait
-			if(that.isResponse === true){
+			// Check if callback function called if called then exit from wait
+			if (that.isResponse === true) {
 				return true;
-			}
-			else{
-			 //If callback function is not called and count is not reached to 20 then return error for timeout
-				if(count === 20){
+			} else {
+			    // If callback function is not called and count is not reached to 20 then return error for timeout
+				if (count === 20) {
 					return false;
 				}
-				//else call sleep and recall the same function
+				// else call sleep and recall the same function
 				await that.sleep(that.waitForBackendResponse, that, count);
 			}
 		},
@@ -906,9 +902,9 @@ define([
 		getAuthEndpoint: function() {
 		    var ta_tabs = configManager.unifiedConfig.pages.configuration.tabs
             _.each(ta_tabs, (tab) => {
-                if (tab.name === 'account'){
+                if (tab.name === 'account') {
                     _.each(tab.entity, (elements) => {
-                        if (elements.type === 'oauth'){
+                        if (elements.type === 'oauth') {
                             this.authCodeEndpoint = elements.options.auth_code_endpoint;
                             this.accessTokenEndpoint = elements.options.access_token_endpoint;
                             return false;

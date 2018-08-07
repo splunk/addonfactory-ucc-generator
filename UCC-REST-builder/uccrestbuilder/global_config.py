@@ -187,7 +187,7 @@ class GlobalConfigBuilderSchema(GlobalConfigSchema):
                     content = content + entity_element["options"]["oauth"]
                     # Append auth_type, access_token, refresh_token & instance_url fields
                     content = content + json.loads('[{"field": "access_token","encrypted": true},{"field": "refresh_token","encrypted":true},{"field": "instance_url"},{"field": "auth_type"}]')
-                # If only oauth type authentication is required0
+                # If only oauth type authentication is required
                 elif "oauth" in entity_element["options"]["auth_type"]:
                     # Append all the oauth auth fields to the content
                     content = content + entity_element["options"]["oauth"]
