@@ -350,6 +350,21 @@ define([
                 this.$("button[type=button]"),
                 this.$("input[type=submit]")
             );
+
+            // Remove loading and error message
+            removeErrorMsg(this.curWinSelector);
+            removeSavingMsg(this.curWinSelector);
+
+            // Add saving dialog for page style
+            if (this.component.style && this.component.style === PAGE_STYLE) {
+                // Scroll up to top to display msg
+                this.$('.create-input-body .content').scrollTop(0);
+                this.savingDialog = new SavingDialog();
+                this.savingDialog.show();
+            } else {
+                addSavingMsg(this.curWinSelector, getFormattedMessage(108));
+            }
+
             // TODO add ui validation for auth flow
             if (this.isAuth && this.model.attributes.auth_type === "oauth") {
                 const app_name = configManager.unifiedConfig.meta.name
@@ -385,6 +400,7 @@ define([
 					if (!this.isResponse && !this.isError) {
 					    //Set error message to prevent saving.
 					    this.isError = true;
+					    removeSavingMsg(this.curWinSelector);
 						//Add timeout error message
 						addErrorMsg(this.curWinSelector, ERROR_REQUEST_TIMEOUT_ACCESS_TOKEN_TRY_AGAIN);
 						return false;
@@ -392,38 +408,12 @@ define([
 					return true;
 				})().then(() => {
 				    if (!this.isError) {
-				        // Remove loading and error message
-                        removeErrorMsg(this.curWinSelector);
-                        removeSavingMsg(this.curWinSelector);
-
-                        // Add saving dialog for page style
-                        if (this.component.style && this.component.style === PAGE_STYLE) {
-                            // Scroll up to top to display msg
-                            this.$('.create-input-body .content').scrollTop(0);
-                            this.savingDialog = new SavingDialog();
-                            this.savingDialog.show();
-                        } else {
-                            addSavingMsg(this.curWinSelector, getFormattedMessage(108));
-                        }
                         this.saveModel();
 					} else {
 					    Util.enableElements($("button[type=button]"), $("input[type=submit]"));
 					}
 				});
             } else {
-                // Remove loading and error message
-                removeErrorMsg(this.curWinSelector);
-                removeSavingMsg(this.curWinSelector);
-
-                // Add saving dialog for page style
-                if (this.component.style && this.component.style === PAGE_STYLE) {
-                    // Scroll up to top to display msg
-                    this.$('.create-input-body .content').scrollTop(0);
-                    this.savingDialog = new SavingDialog();
-                    this.savingDialog.show();
-                } else {
-                    addSavingMsg(this.curWinSelector, getFormattedMessage(108));
-                }
 
                 // Save the model
                 this.saveModel();
@@ -795,6 +785,7 @@ define([
 
              // Check message for error. If error show error message.
 		     if (!message || (message && message.error) || message.code === undefined) {
+		        removeSavingMsg(this.curWinSelector);
                 this.util.displayErrorMsg(ERROR_OCCURRED_TRY_AGAIN, this.currentWindow);
                 this.isError = true;
                 return;
@@ -831,6 +822,7 @@ define([
                         this.isResponse = true;
                         return true;
 				    } else {
+				        removeSavingMsg(this.curWinSelector);
 				        addErrorMsg(this.curWinSelector, response.data.entry[0].content.error);
                         this.isError = true;
                         return false;
