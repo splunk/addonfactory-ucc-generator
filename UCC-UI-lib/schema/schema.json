@@ -947,7 +947,7 @@
                     "maxLength": 100
                 },
                 "hook": {
-                    "$ref": "#/definitions/Hooks"
+                    "type": "object"
                 }
             }, 
             "required": [
