@@ -391,6 +391,7 @@ define([
 					await this.waitForAuthentication(this, 0);
 					if (!this.isCalled) {
 						//Add timeout error message
+						removeSavingMsg(this.curWinSelector);
 						addErrorMsg(this.curWinSelector, ERROR_REQUEST_TIMEOUT_TRY_AGAIN);
 						return false;
 					}
@@ -828,6 +829,7 @@ define([
                         return false;
 				    }
 				} else {
+				    removeSavingMsg(this.curWinSelector);
 				    addErrorMsg(this.curWinSelector, ERROR_OCCURRED_TRY_AGAIN);
 					this.isError = true;
 					return false;
