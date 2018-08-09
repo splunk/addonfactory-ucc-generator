@@ -22,7 +22,8 @@ import OAuth from 'app/views/component/OAuth';
 import {
     ERROR_REQUEST_TIMEOUT_TRY_AGAIN,
     ERROR_REQUEST_TIMEOUT_ACCESS_TOKEN_TRY_AGAIN,
-    ERROR_OCCURRED_TRY_AGAIN
+    ERROR_OCCURRED_TRY_AGAIN,
+    ERROR_AUTH_PROCESS_TERMINATED_TRY_AGAIN
 } from 'app/constants/oAuthErrorMessage';
 
 define([
@@ -345,6 +346,11 @@ define([
                     return;
                 }
             }
+            // Add basic validation for basic and oauth authentication if oauth type is included
+            if (this.isAuth && !this._validateAuthFields()) {
+                return;
+            }
+
             // Disable the button to prevent repeat submit
             Util.disableElements(
                 this.$("button[type=button]"),
@@ -365,7 +371,6 @@ define([
                 addSavingMsg(this.curWinSelector, getFormattedMessage(108));
             }
 
-            // TODO add ui validation for auth flow
             if (this.isAuth && this.model.attributes.auth_type === "oauth") {
                 const app_name = configManager.unifiedConfig.meta.name
                 // Get redirect URI from current window url
@@ -374,11 +379,12 @@ define([
                 var parameters = underscore.template(`?response_type=code&client_id=<%=client_id %>&redirect_uri=` + redirectUri, this.model.toJSON());
                 // Method to populate auth code endpoint & accesstoken endpoint variables
                 this.getAuthEndpoint();
-                var sfHost = "https://" + this.model.attributes.endpoint + this.authCodeEndpoint + parameters;
+                var host = "https://" + this.model.attributes.endpoint + this.authCodeEndpoint + parameters;
 				(async () => {
 					this.isCalled = false;
+					this.isError = false;
 					// Open a popup to make auth request
-					window.open(sfHost, app_name + " OAuth", "width=600, height=600");
+					this.childWin =  window.open(host, app_name + " OAuth", "width=600, height=600");
 					var that = this;
 					// Callback to receive data from redirect url
 					window.getMessage = function(message) {
@@ -387,8 +393,15 @@ define([
 						that._handleOauthToken(message);
 
 					};
-					// Wait till we get auth_code from calling site through redirect url
+					// Wait till we get auth_code from calling site through redirect url, we will wait for 3 mins
 					await this.waitForAuthentication(this, 0);
+					if (!this.isCalled && this.childWin.closed) {
+					    //Add error message if the user has close the authentication window without taking any action
+						removeSavingMsg(this.curWinSelector);
+						addErrorMsg(this.curWinSelector, ERROR_AUTH_PROCESS_TERMINATED_TRY_AGAIN);
+						return false;
+					}
+
 					if (!this.isCalled) {
 						//Add timeout error message
 						removeSavingMsg(this.curWinSelector);
@@ -396,7 +409,7 @@ define([
 						return false;
 					}
 					// Reset called flag as we have to wait till we get the access_token, refresh_token and instance_url
-					// Wait till we get the response
+					// Wait till we get the response, here we have added wait for 30 secs
 					await this.waitForBackendResponse(this, 10);
 					if (!this.isResponse && !this.isError) {
 					    //Set error message to prevent saving.
@@ -421,6 +434,75 @@ define([
             }
 
 
+        },
+
+        /*
+         * This function is to validate minimum fields that required for basic and oauth fields
+         */
+        _validateAuthFields: function() {
+            // Variable declaration
+            var isValid = true,
+                // Basic and oAUth fields that needs to be validate
+                basic_fields = ["username", "password"],
+                oauth_fields = ["client_id", "client_secret", "endpoint"],
+                fieldDict= [],
+                basic_fields_dict = [],
+                oauth_fields_dict = [];
+            // Iterate global config json to get label and field names for the fields for whom the validation is required
+            var ta_tabs = configManager.unifiedConfig.pages.configuration.tabs
+            _.each(ta_tabs, (tab) => {
+                if (tab.name === 'account') {
+                    _.each(tab.entity, (elements) => {
+                        if (elements.type === 'oauth') {
+                            if (elements.options.basic) {
+                                elements.options.basic.map((fields) => {
+                                    if ($.inArray(fields.oauth_field, basic_fields) >= 0) {
+                                        basic_fields_dict[fields.oauth_field] = fields.field;
+                                    }
+                                    fieldDict[fields.field] = fields.label;
+                                });
+                            }
+                            if (elements.options.oauth) {
+                                elements.options.oauth.map((fields) => {
+                                    if ($.inArray(fields.oauth_field, oauth_fields) >= 0) {
+                                        oauth_fields_dict[fields.oauth_field] = fields.field;
+                                    }
+                                    fieldDict[fields.field] = fields.label;
+                                });
+                            }
+                            return false;
+                        }
+                    });
+                    return false;
+                }
+            });
+            // Validate oauth fields if the auth type if oauth
+            if (this.model.attributes.auth_type === "oauth") {
+                _.each(oauth_fields, field => {
+                    if(isValid){
+                        var field_value = this.model.get(oauth_fields_dict[field]);
+                        if(field_value === undefined || field_value.trim().length === 0){
+                            var validate_message = fieldDict[oauth_fields_dict[field]] +" is a mandatory field";
+                            addErrorMsg(this.curWinSelector, validate_message);
+                            isValid = false;
+                            return false
+                        }
+                    }
+                 });
+            } else if (this.model.attributes.auth_type === "basic") { // Validate basic fields if the auth type is basic
+                 _.each(basic_fields, field => {
+                    if(isValid){
+                        var field_value = this.model.get(basic_fields_dict[field]);
+                        if(field_value === undefined || field_value.trim().length === 0){
+                            var validate_message = fieldDict[basic_fields_dict[field]] +" is a mandatory field";
+                            addErrorMsg(this.curWinSelector, validate_message);
+                            isValid = false;
+                            return false
+                        }
+                    }
+                 });
+            }
+            return isValid;
         },
 
         initModel: function() {
@@ -787,8 +869,9 @@ define([
              // Check message for error. If error show error message.
 		     if (!message || (message && message.error) || message.code === undefined) {
 		        removeSavingMsg(this.curWinSelector);
-                this.util.displayErrorMsg(ERROR_OCCURRED_TRY_AGAIN, this.currentWindow);
+                addErrorMsg(this.curWinSelector, ERROR_OCCURRED_TRY_AGAIN);
                 this.isError = true;
+                this.isResponse = true;
                 return;
             }
             const app_name = configManager.unifiedConfig.meta.name
@@ -806,10 +889,12 @@ define([
                     "code": code,
                     "redirect_uri": redirectUri
                 };
-
+            this.isResponse = false;
 			var service = mvc.createService();
 			// Internal handler call to get the access token and other values
 			service.get("/services/" + app_name + "_oauth", data, (err, response) => {
+			     // Set the isResponse to true as response is received
+                 this.isResponse = true;
 				 if (!err) {
 				    if (response.data.entry[0].content.error === undefined) {
                         var access_token= response.data.entry[0].content.access_token;
@@ -819,8 +904,6 @@ define([
                         this.model.set("instance_url", instance_url);
                         this.model.set("refresh_token", refresh_token);
                         this.model.set("access_token", access_token);
-                        // Set the isResponse to true as response is received
-                        this.isResponse = true;
                         return true;
 				    } else {
 				        removeSavingMsg(this.curWinSelector);
@@ -847,8 +930,8 @@ define([
 			if (that.isCalled === true) {
 				return true;
 			} else {
-			    // If callback function is not called and count is not reached to 20 then return error for timeout
-				if (count === 20) {
+			    // If callback function is not called and count is not reached to 180 then return error for timeout
+				if (count === 180 || that.childWin.closed) {
 					that.isError = true;
 					return false;
 				}
@@ -866,8 +949,8 @@ define([
 			if (that.isResponse === true) {
 				return true;
 			} else {
-			    // If callback function is not called and count is not reached to 20 then return error for timeout
-				if (count === 20) {
+			    // If callback function is not called and count is not reached to 60 then return error for timeout
+				if (count === 60) {
 					return false;
 				}
 				// else call sleep and recall the same function
@@ -876,10 +959,10 @@ define([
 		},
 
 		/*
-         * This function first add sleep for 3 secs and the call the function passed in argument
+         * This function first add sleep for 1 secs and the call the function passed in argument
          */
 		sleep: async function(fn, ...args) {
-			await this.timeout(3000);
+			await this.timeout(1000);
 			return fn(...args);
 		},
 

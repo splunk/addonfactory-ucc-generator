@@ -50,7 +50,7 @@ export default Backbone.View.extend({
 				oauth_fields["auth_type"] = "oauth";
 				oauth_fields["model"] = this.model;
 				oauth_fields["control_type"] = (oauth_fields.encrypted) ? "password" : "text";
-				return (!(this.options.auth_type.indexOf("basic") !== -1 && oauth_fields.field === "account_name")) ? this._render_content(oauth_fields) : "";
+				return this._render_content(oauth_fields);
 			}).join("");
 		}
 		let content = {};
@@ -80,39 +80,29 @@ export default Backbone.View.extend({
 	_load_model: function(model) {
 		model.set("auth_type", this.$(".auth_type").val());
 		if (this.$(".auth_type").val() === "basic") {
-			if (this.options.oauth) {
+			if(this.options.oauth) {
                 this.options.oauth.map((oauth_fields) => {
                     model.set(oauth_fields.field, "")
 	            });
 			}
 			this.options.basic.map((basic_fields) => {
-				if (basic_fields.field === "account_name") {
-					model.set(basic_fields.field, $(".input_auth."+basic_fields.field).val())
-				}
-				else { 
-					model.set(basic_fields.field, $(".input_auth."+$(".auth_type").val()+"."+basic_fields.field).val())
-				}
+				model.set(basic_fields.field, $(".input_auth."+$(".auth_type").val()+"."+basic_fields.field).val())
 			});
 	    }
 	    if (this.$(".auth_type").val() === "oauth" ) {
-            if (this.options.basic) {
+            if(this.options.basic) {
                 this.options.basic.map((basic_fields) => {
                     model.set(basic_fields.field, "")
                 });
             }
             this.options.oauth.map((oauth_fields) =>{
-				if (oauth_fields.field === "account_name") {
-					model.set(oauth_fields.field, $(".input_auth."+oauth_fields.field).val())
-            	} else {
-					model.set(oauth_fields.field, $(".input_auth."+$(".auth_type").val()+"."+oauth_fields.field).val())
-	        	}
+				model.set(oauth_fields.field, $(".input_auth."+$(".auth_type").val()+"."+oauth_fields.field).val());
             });
 	    }
 	},
 	_onAuthTypeChange: function () {
 		this.$(".auth").css("display","none");
 		this.$("."+this.$(".auth_type").val()).css("display","block");
-		this.$(".account_name").css("display","block");
 	},
 	_body_template: `
         <div class="form-horizontal form-small">

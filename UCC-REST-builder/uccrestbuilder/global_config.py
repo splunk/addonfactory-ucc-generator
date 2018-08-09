@@ -179,10 +179,6 @@ class GlobalConfigBuilderSchema(GlobalConfigSchema):
                         and "oauth" in entity_element["options"]["auth_type"]:
                     # Append all the basic auth fields to the content
                     content = content + entity_element["options"]["basic"]
-                    for oauth_element in entity_element["options"]["oauth"]:
-                        # Need to remove this as this will be already added by basic auth type
-                        if oauth_element["oauth_field"] == "account_name":
-                            entity_element["options"]["oauth"].remove(oauth_element)
                     # Append oauth auth fields to the content
                     content = content + entity_element["options"]["oauth"]
                     # Append auth_type, access_token, refresh_token & instance_url fields
