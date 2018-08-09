@@ -410,7 +410,7 @@ define([
 					}
 					// Reset called flag as we have to wait till we get the access_token, refresh_token and instance_url
 					// Wait till we get the response, here we have added wait for 30 secs
-					await this.waitForBackendResponse(this, 10);
+					await this.waitForBackendResponse(this, 30);
 					if (!this.isResponse && !this.isError) {
 					    //Set error message to prevent saving.
 					    this.isError = true;
@@ -479,10 +479,10 @@ define([
             // Validate oauth fields if the auth type if oauth
             if (this.model.attributes.auth_type === "oauth") {
                 _.each(oauth_fields, field => {
-                    if(isValid){
+                    if (isValid) {
                         var field_value = this.model.get(oauth_fields_dict[field]);
-                        if(field_value === undefined || field_value.trim().length === 0){
-                            var validate_message = fieldDict[oauth_fields_dict[field]] +" is a mandatory field";
+                        if (field_value === undefined || field_value.trim().length === 0) {
+                            var validate_message = fieldDict[oauth_fields_dict[field]] + " is a mandatory field";
                             addErrorMsg(this.curWinSelector, validate_message);
                             isValid = false;
                             return false
@@ -491,10 +491,10 @@ define([
                  });
             } else if (this.model.attributes.auth_type === "basic") { // Validate basic fields if the auth type is basic
                  _.each(basic_fields, field => {
-                    if(isValid){
+                    if (isValid) {
                         var field_value = this.model.get(basic_fields_dict[field]);
-                        if(field_value === undefined || field_value.trim().length === 0){
-                            var validate_message = fieldDict[basic_fields_dict[field]] +" is a mandatory field";
+                        if (field_value === undefined || field_value.trim().length === 0 ){
+                            var validate_message = fieldDict[basic_fields_dict[field]] + " is a mandatory field";
                             addErrorMsg(this.curWinSelector, validate_message);
                             isValid = false;
                             return false
