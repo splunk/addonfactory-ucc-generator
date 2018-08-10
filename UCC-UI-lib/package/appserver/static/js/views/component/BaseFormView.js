@@ -371,7 +371,7 @@ define([
                 addSavingMsg(this.curWinSelector, getFormattedMessage(108));
             }
 
-            if (this.isAuth && this.model.attributes.auth_type === "oauth") {
+            if (this.isAuth && this.model.get("auth_type") === "oauth") {
                 const app_name = configManager.unifiedConfig.meta.name
                 // Get redirect URI from current window url
 				var redirectUri = window.location.href.replace("configuration", app_name.toLowerCase() + "_redirect");
@@ -379,7 +379,7 @@ define([
                 var parameters = underscore.template(`?response_type=code&client_id=<%=client_id %>&redirect_uri=` + redirectUri, this.model.toJSON());
                 // Method to populate auth code endpoint & accesstoken endpoint variables
                 this.getAuthEndpoint();
-                var host = "https://" + this.model.attributes.endpoint + this.authCodeEndpoint + parameters;
+                var host = "https://" + this.model.get("endpoint") + this.authCodeEndpoint + parameters;
 				(async () => {
 					this.isCalled = false;
 					this.isError = false;
@@ -450,34 +450,26 @@ define([
                 oauth_fields_dict = [];
             // Iterate global config json to get label and field names for the fields for whom the validation is required
             var ta_tabs = configManager.unifiedConfig.pages.configuration.tabs
-            _.each(ta_tabs, (tab) => {
-                if (tab.name === 'account') {
-                    _.each(tab.entity, (elements) => {
-                        if (elements.type === 'oauth') {
-                            if (elements.options.basic) {
-                                elements.options.basic.map((fields) => {
-                                    if ($.inArray(fields.oauth_field, basic_fields) >= 0) {
-                                        basic_fields_dict[fields.oauth_field] = fields.field;
-                                    }
-                                    fieldDict[fields.field] = fields.label;
-                                });
-                            }
-                            if (elements.options.oauth) {
-                                elements.options.oauth.map((fields) => {
-                                    if ($.inArray(fields.oauth_field, oauth_fields) >= 0) {
-                                        oauth_fields_dict[fields.oauth_field] = fields.field;
-                                    }
-                                    fieldDict[fields.field] = fields.label;
-                                });
-                            }
-                            return false;
-                        }
-                    });
-                    return false;
-                }
-            });
+            var account_tab = _.filter(ta_tabs, (tab) => { return tab.name === "account"});
+            var auth_type_element = _.filter(account_tab[0].entity, (ele) => { return ele.type === "oauth"})[0];
+            if (auth_type_element.options.basic) {
+                auth_type_element.options.basic.map((fields) => {
+                    if ($.inArray(fields.oauth_field, basic_fields) >= 0) {
+                        basic_fields_dict[fields.oauth_field] = fields.field;
+                    }
+                    fieldDict[fields.field] = fields.label;
+                });
+            }
+            if (auth_type_element.options.oauth) {
+                auth_type_element.options.oauth.map((fields) => {
+                    if ($.inArray(fields.oauth_field, oauth_fields) >= 0) {
+                        oauth_fields_dict[fields.oauth_field] = fields.field;
+                    }
+                    fieldDict[fields.field] = fields.label;
+                });
+            }
             // Validate oauth fields if the auth type if oauth
-            if (this.model.attributes.auth_type === "oauth") {
+            if (this.model.get("auth_type") === "oauth") {
                 _.each(oauth_fields, field => {
                     if (isValid) {
                         var field_value = this.model.get(oauth_fields_dict[field]);
@@ -489,7 +481,7 @@ define([
                         }
                     }
                  });
-            } else if (this.model.attributes.auth_type === "basic") { // Validate basic fields if the auth type is basic
+            } else if (this.model.get("auth_type") === "basic") { // Validate basic fields if the auth type is basic
                  _.each(basic_fields, field => {
                     if (isValid) {
                         var field_value = this.model.get(basic_fields_dict[field]);
@@ -877,12 +869,12 @@ define([
             const app_name = configManager.unifiedConfig.meta.name
             var code = decodeURIComponent(message.code),
                 grantType = "authorization_code",
-                clientId = this.model.attributes.client_id,
-                clientSecret = this.model.attributes.client_secret,
+                clientId = this.model.get("client_id"),
+                clientSecret = this.model.get("client_secret"),
                 redirectUri = window.location.href.replace("configuration", app_name.toLowerCase() + "_redirect"),
                 data = {
 					"method":"POST",
-					"url":"https://"+ this.model.attributes.endpoint + this.accessTokenEndpoint,
+					"url":"https://"+ this.model.get("endpoint") + this.accessTokenEndpoint,
                     "grant_type": grantType,
                     "client_id": clientId,
                     "client_secret": clientSecret,
