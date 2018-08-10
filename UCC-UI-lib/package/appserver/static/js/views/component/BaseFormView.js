@@ -444,7 +444,7 @@ define([
             var isValid = true,
                 // Basic and oAUth fields that needs to be validate
                 basic_fields = ["username", "password"],
-                oauth_fields = ["client_id", "client_secret", "endpoint"],
+                oauth_fields = ["client_id", "client_secret"],
                 fieldDict= [],
                 basic_fields_dict = [],
                 oauth_fields_dict = [];
