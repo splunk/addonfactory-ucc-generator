@@ -3,7 +3,7 @@
         "name": "Splunk_TA_UCCExample",
         "displayName": "AOB Test",
         "version": "1.0.0",
-        "apiVersion": "3.1.0",
+        "apiVersion": "3.2.0",
         "restRoot": "splunk_ta_uccexample"
     },
     "pages": {
@@ -114,12 +114,6 @@
                                         "label": "Redirect url",
                                         "field": "redirect_url",
                                         "help": "Enter Redirect URL."
-                                    },
-                                    {
-                                        "oauth_field": "endpoint",
-                                        "label": "Endpoint",
-                                        "field": "endpoint",
-                                        "help": "Enter Endpoint."
                                     }
                                 ],
                                 "auth_code_endpoint":"/services/oauth2/authorize",
