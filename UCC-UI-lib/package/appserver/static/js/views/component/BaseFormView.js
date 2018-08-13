@@ -453,16 +453,16 @@ define([
             var account_tab = _.filter(ta_tabs, (tab) => { return tab.name === "account"});
             var auth_type_element = _.filter(account_tab[0].entity, (ele) => { return ele.type === "oauth"})[0];
             if (auth_type_element.options.basic) {
-                auth_type_element.options.basic.map((fields) => {
-                    if ($.inArray(fields.oauth_field, basic_fields) >= 0) {
+                _.each(auth_type_element.options.basic, fields => {
+                    if (basic_fields.indexOf(fields.oauth_field) >= 0) {
                         basic_fields_dict[fields.oauth_field] = fields.field;
                     }
                     fieldDict[fields.field] = fields.label;
                 });
             }
             if (auth_type_element.options.oauth) {
-                auth_type_element.options.oauth.map((fields) => {
-                    if ($.inArray(fields.oauth_field, oauth_fields) >= 0) {
+                _.each(auth_type_element.options.oauth, fields => {
+                    if (oauth_fields.indexOf(fields.oauth_field) >= 0) {
                         oauth_fields_dict[fields.oauth_field] = fields.field;
                     }
                     fieldDict[fields.field] = fields.label;
