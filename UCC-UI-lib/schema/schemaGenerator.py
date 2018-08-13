@@ -3,6 +3,11 @@ import os
 from jsl import AnyOfField, ArrayField, BooleanField, DictField, Document
 from jsl import DocumentField, NumberField, OneOfField, StringField, UriField
 
+###
+# TODO Need to fix this: Make sure schemagenerator generates proper element for hook
+# For time being do the following change in generated schema.json
+# replace: "hook": {"$ref": "#/definitions/Hooks"} with "hook": {"type": "object"}
+###
 
 # Base Document Class with restricting properties population
 class DocumentWithoutAddProp(Document):
@@ -125,7 +130,9 @@ class Entity(DocumentWithoutAddProp):
             "disableonEdit": BooleanField(),
             "basic": ArrayField(DocumentField(OAuthFields, as_ref=True)),
             "oauth": ArrayField(DocumentField(OAuthFields, as_ref=True)),
-            "auth_type": ArrayField(StringField(max_length=100))
+            "auth_type": ArrayField(StringField(max_length=100)),
+            "auth_code_endpoint": StringField(max_length=350),
+            "access_token_endpoint": StringField(max_length=350)
         }
     )
     required = BooleanField()
