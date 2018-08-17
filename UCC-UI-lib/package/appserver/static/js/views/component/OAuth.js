@@ -56,6 +56,8 @@ export default Backbone.View.extend({
 		let content = {};
 		content["body_content"] = body_content;
 		content["auth_types"] = this.options.auth_type;
+		content["auth_label"] = (this.options.auth_label) ? this.options.auth_label : "Auth Type";
+		content["auth_types_label"] = { "basic":"Basic Authentication", "oauth":"OAuth 2.0 Authentication" };
 		content["model"] = this.model;
 		this.$el.html(this._render_body(content));
 		this._onAuthTypeChange();
@@ -106,11 +108,11 @@ export default Backbone.View.extend({
 	},
 	_body_template: `
         <div class="form-horizontal form-small">
-            <div class="form-group control-group">            
+            <div class="form-group control-group" <% if (content.auth_types.length !== undefined && content.auth_types.length === 1 ) { %>
+                style="display:none;"
+            <% } %> >
                 <div class="control-label col-sm-2">
-                    <p>
-                        Auth Type <span class="required">*</span>
-                    </p>
+                    <p><%= content.auth_label %></p>
                 </div>
                 <div class="col-sm-10 controls control-placeholder">
                     <select class="control shared-controls-select control-default auth_type" name="auth_type">
@@ -119,7 +121,7 @@ export default Backbone.View.extend({
                             <% if (content.model.get("auth_type") !== undefined && auth_type === content.model.get("auth_type")) { %>
                                 selected="selected"
                             <% } %> >
-                                <%= auth_type %>
+                                <%= content.auth_types_label[auth_type] %>
                             </option>
                         <% }); %>
                     </select>

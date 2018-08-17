@@ -131,6 +131,7 @@ class Entity(DocumentWithoutAddProp):
             "basic": ArrayField(DocumentField(OAuthFields, as_ref=True)),
             "oauth": ArrayField(DocumentField(OAuthFields, as_ref=True)),
             "auth_type": ArrayField(StringField(max_length=100)),
+            "auth_label": StringField(max_length=250),
             "auth_code_endpoint": StringField(max_length=350),
             "access_token_endpoint": StringField(max_length=350)
         }
