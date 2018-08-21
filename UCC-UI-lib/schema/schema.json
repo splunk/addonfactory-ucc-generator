@@ -56,7 +56,11 @@
                                 "type": "string", 
                                 "maxLength": 100
                             }
-                        }, 
+                        },
+                        "auth_label": {
+                            "type": "string",
+                            "maxLength": 250
+                        },
                         "src": {
                             "type": "string", 
                             "maxLength": 250
@@ -416,6 +420,10 @@
                                 "type": "string",
                                 "maxLength": 100
                             }
+                        },
+                        "auth_label": {
+                            "type": "string",
+                            "maxLength": 250
                         },
                         "src": {
                             "type": "string",
