@@ -400,8 +400,8 @@ define([
 
 					};
 					// Wait till we get auth_code from calling site through redirect url, we will wait for 3 mins
-					var auth_timeout = (auth_type_element.options.oauth_timeout) ? auth_type_element.options.oauth_timeout : 3;
-					await this.waitForAuthentication(this, 60 * auth_timeout);
+					var auth_timeout = (auth_type_element.options.oauth_timeout) ? auth_type_element.options.oauth_timeout : 180;
+					await this.waitForAuthentication(this, auth_timeout);
 					if (!this.isCalled && this.childWin.closed) {
 					    //Add error message if the user has close the authentication window without taking any action
 						removeSavingMsg(this.curWinSelector);
