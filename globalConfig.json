@@ -121,7 +121,7 @@
                                 "access_token_endpoint": "/services/oauth2/token",
                                 "oauth_popup_width": 600,
                                 "oauth_popup_height": 600,
-                                "oauth_timeout": 3
+                                "oauth_timeout": 180
                             }
                         },
                         {
