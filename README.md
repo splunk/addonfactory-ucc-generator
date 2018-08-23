@@ -126,6 +126,10 @@ Below is the global config example for the same:
                                         "help": "Enter Endpoint"
                                     }
                                 ],
+                                "auth_label": "Auth Type",
+                                "oauth_popup_width": 600,
+                                "oauth_popup_height": 600,
+                                "oauth_timeout": 3
                                 "auth_code_endpoint":"/services/oauth2/authorize",
                                 "access_token_endpoint":"/services/oauth2/token"
                             }    
@@ -157,6 +161,10 @@ Below is the explanation of each field:
          This field is can be present as part of normal fields as there can be scenario that this is required in both basic and oauth authentication. But it should be present at any of the place to oauth to work.
      *  `auth_code_endpoint` this must be present and its value should be endpoint value for getting the auth_code using the app. If the url to get auth_code is `https://login.salesforce.com/services/oauth2/authorize` then this will have value `/services/oauth2/authorize` 
      *  `access_token_endpoint` this must be present and its value should be endpoint value for getting access_token using the auth_code received. If the url to get access token is `https://login.salesforce.com/services/oauth2/token` then this will have value `/services/oauth2/token`
+     *  `auth_label` this allow user to have custom label for Auth Type dropdown
+     *  `oauth_popup_width` width in pixels of the popup window that will open for oauth authentication
+     *  `oauth_popup_height` height in pixels of the popup window that will open for oauth authentication
+     *  `oauth_timeout` timeout in minutes for oauth authentication
 
 * This complete block should be removed if the user does not want this oauth support.
 

@@ -383,8 +383,14 @@ define([
 				(async () => {
 					this.isCalled = false;
 					this.isError = false;
+					// Get auth_type element from global config json
+					var ta_tabs = configManager.unifiedConfig.pages.configuration.tabs
+                    var account_tab = _.filter(ta_tabs, (tab) => { return tab.name === "account"});
+                    var auth_type_element = _.filter(account_tab[0].entity, (ele) => { return ele.type === "oauth"})[0];
+                    var popup_width = (auth_type_element.options.oauth_popup_width) ? auth_type_element.options.oauth_popup_width : 600
+                    var popup_height = (auth_type_element.options.oauth_popup_height) ? auth_type_element.options.oauth_popup_height : 600
 					// Open a popup to make auth request
-					this.childWin =  window.open(host, app_name + " OAuth", "width=600, height=600");
+					this.childWin =  window.open(host, app_name + " OAuth", "width=" + popup_width + ", height=" + popup_height);
 					var that = this;
 					// Callback to receive data from redirect url
 					window.getMessage = function(message) {
@@ -394,7 +400,8 @@ define([
 
 					};
 					// Wait till we get auth_code from calling site through redirect url, we will wait for 3 mins
-					await this.waitForAuthentication(this, 0);
+					var auth_timeout = (auth_type_element.options.oauth_timeout) ? auth_type_element.options.oauth_timeout : 3;
+					await this.waitForAuthentication(this, 60 * auth_timeout);
 					if (!this.isCalled && this.childWin.closed) {
 					    //Add error message if the user has close the authentication window without taking any action
 						removeSavingMsg(this.curWinSelector);
@@ -917,13 +924,13 @@ define([
          * Function to wait for authentication call back in child window.
          */
 		waitForAuthentication: async function(that, count) {
-			count++;
+			count--;
 			// Check if callback function called if called then exit from wait
 			if (that.isCalled === true) {
 				return true;
 			} else {
 			    // If callback function is not called and count is not reached to 180 then return error for timeout
-				if (count === 180 || that.childWin.closed) {
+				if (count === 0 || that.childWin.closed) {
 					that.isError = true;
 					return false;
 				}

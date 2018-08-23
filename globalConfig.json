@@ -116,8 +116,12 @@
                                         "help": "Enter Redirect URL."
                                     }
                                 ],
-                                "auth_code_endpoint":"/services/oauth2/authorize",
-                                "access_token_endpoint":"/services/oauth2/token"
+                                "auth_label": "Auth Type",
+                                "auth_code_endpoint": "/services/oauth2/authorize",
+                                "access_token_endpoint": "/services/oauth2/token",
+                                "oauth_popup_width": 600,
+                                "oauth_popup_height": 600,
+                                "oauth_timeout": 3
                             }
                         },
                         {
