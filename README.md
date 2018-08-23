@@ -129,7 +129,7 @@ Below is the global config example for the same:
                                 "auth_label": "Auth Type",
                                 "oauth_popup_width": 600,
                                 "oauth_popup_height": 600,
-                                "oauth_timeout": 3
+                                "oauth_timeout": 180
                                 "auth_code_endpoint":"/services/oauth2/authorize",
                                 "access_token_endpoint":"/services/oauth2/token"
                             }    
