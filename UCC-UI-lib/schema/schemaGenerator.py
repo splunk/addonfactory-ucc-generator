@@ -132,6 +132,9 @@ class Entity(DocumentWithoutAddProp):
             "oauth": ArrayField(DocumentField(OAuthFields, as_ref=True)),
             "auth_type": ArrayField(StringField(max_length=100)),
             "auth_label": StringField(max_length=250),
+            "oauth_popup_width": NumberField(),
+            "oauth_popup_height": NumberField(),
+            "oauth_timeout": NumberField(),
             "auth_code_endpoint": StringField(max_length=350),
             "access_token_endpoint": StringField(max_length=350)
         }

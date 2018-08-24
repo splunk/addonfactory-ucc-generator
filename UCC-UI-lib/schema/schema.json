@@ -57,6 +57,15 @@
                                 "maxLength": 100
                             }
                         },
+                        "oauth_popup_height": {
+                            "type": "number"
+                        },
+                        "oauth_timeout": {
+                            "type": "number"
+                        },
+                        "oauth_popup_width": {
+                            "type": "number"
+                        },
                         "auth_label": {
                             "type": "string",
                             "maxLength": 250
@@ -420,6 +429,15 @@
                                 "type": "string",
                                 "maxLength": 100
                             }
+                        },
+                        "oauth_popup_height": {
+                            "type": "number"
+                        },
+                        "oauth_timeout": {
+                            "type": "number"
+                        },
+                        "oauth_popup_width": {
+                            "type": "number"
                         },
                         "auth_label": {
                             "type": "string",
