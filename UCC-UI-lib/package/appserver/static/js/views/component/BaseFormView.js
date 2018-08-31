@@ -906,7 +906,7 @@ define([
                         return true;
 				    } else {
 				        removeSavingMsg(this.curWinSelector);
-				        addErrorMsg(this.curWinSelector, response.data.entry[0].content.error);
+				        addErrorMsg(this.curWinSelector, _.capitalize(response.data.entry[0].content.error));
                         this.isError = true;
                         return false;
 				    }
