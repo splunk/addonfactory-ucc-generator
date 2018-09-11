@@ -447,6 +447,7 @@ define([
          * This function is to validate minimum fields that required for basic and oauth fields
          */
         _validateAuthFields: function() {
+            $('input').removeClass('validation-error');
             // Variable declaration
             var isValid = true,
                 // Basic and oAUth fields that needs to be validate
@@ -481,7 +482,8 @@ define([
                     if (isValid) {
                         var field_value = this.model.get(oauth_fields_dict[field]);
                         if (field_value === undefined || field_value.trim().length === 0) {
-                            var validate_message = fieldDict[oauth_fields_dict[field]] + " is a mandatory field";
+                            var validate_message = "Field " + fieldDict[oauth_fields_dict[field]] + " is required";
+                            $("[data-name=" + oauth_fields_dict[field] + "]").find("input").addClass("validation-error");
                             addErrorMsg(this.curWinSelector, validate_message);
                             isValid = false;
                             return false
@@ -493,7 +495,8 @@ define([
                     if (isValid) {
                         var field_value = this.model.get(basic_fields_dict[field]);
                         if (field_value === undefined || field_value.trim().length === 0 ){
-                            var validate_message = fieldDict[basic_fields_dict[field]] + " is a mandatory field";
+                            var validate_message = "Field " + fieldDict[basic_fields_dict[field]] + " is required";
+                            $("[data-name=" + basic_fields_dict[field] + "]").find("input").addClass("validation-error");
                             addErrorMsg(this.curWinSelector, validate_message);
                             isValid = false;
                             return false
