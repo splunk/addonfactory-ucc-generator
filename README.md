@@ -1,15 +1,22 @@
 Table Of content
-1. [Prerequisite](#prerequisite)
-2. [Install bower and configure it](#Install-bower-and-configure-it)
-3. [Use the following command to build an example add-on](#Use-the-following-command-to-build-an-example-add-on)
-4. [Implementation of a hook feature](#Implementation-of-a-hook-feature)
-5. [OAuth support for UCC](#OAuth-support-for-UCC)
-6. [Show error message and Highlighting fields with Red border](#Show-error-message-and-Highlighting-fields-with-Red-border)
-7. [Adding tooltip on hover](#Adding-tooltip-on-hover)
-8. [Showing components depending on value of previous component
+1. [Release Notes](#Release-Notes)
+2. [Prerequisite](#prerequisite)
+3. [Install bower and configure it](#Install-bower-and-configure-it)
+4. [Use the following command to build an example add-on](#Use-the-following-command-to-build-an-example-add-on)
+5. [Implementation of a hook feature](#Implementation-of-a-hook-feature)
+6. [OAuth support for UCC](#OAuth-support-for-UCC)
+7. [Show error message and Highlighting fields with Red border](#Show-error-message-and-Highlighting-fields-with-Red-border)
+8. [Adding tooltip on hover](#Adding-tooltip-on-hover)
+9. [Showing components depending on value of previous component
 ](#Showing-components-depending-on-value-of-previous-component)
-9. [Populate dropdown using endpoint](#Populate-dropdown-using-endpoint)
-10. [Show alert icon](#show-alert-icon)
+10. [Populate dropdown using endpoint](#Populate-dropdown-using-endpoint)
+11. [Show alert icon](#show-alert-icon)
+
+### Release Notes
+#### 3.2.0
+##### Features:
+* OAuth2.0 support
+* Custom hook support in the configuration tab
 
 ### Prerequisite
 We uses bower, grunt and webpack to build the Universal Configuration Console.
