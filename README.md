@@ -1,3 +1,16 @@
+Table Of content
+1. [Prerequisite](#prerequisite)
+2. [Install bower and configure it](#Install-bower-and-configure-it)
+3. [Use the following command to build an example add-on](#Use-the-following-command-to-build-an-example-add-on)
+4. [Implementation of a hook feature](#Implementation-of-a-hook-feature)
+5. [OAuth support for UCC](#OAuth-support-for-UCC)
+6. [Show error message and Highlighting fields with Red border](#Show-error-message-and-Highlighting-fields-with-Red-border)
+7. [Adding tooltip on hover](#Adding-tooltip-on-hover)
+8. [Showing components depending on value of previous component
+](#Showing-components-depending-on-value-of-previous-component)
+9. [Populate dropdown using endpoint](#Populate-dropdown-using-endpoint)
+10. [Show alert icon](#show-alert-icon)
+
 ### Prerequisite
 We uses bower, grunt and webpack to build the Universal Configuration Console.
 
@@ -15,7 +28,7 @@ cd ./UCC-UI-lib && npm install && bower install
 cd ./UCC-example-addon && python setup.py && source ${SPLUNK_HOME}/bin/setSplunkEnv && python build.py
 ```
 
-### Implementation of a hook feature.
+### Implementation of a hook feature
 
 Step 1: Add hook in configuration tab at the entity level.
 
@@ -47,7 +60,7 @@ Step 2: Create custom/customHook.js
 * Add app-level business logic in custom code in `customHook.js`.
 
 
-### OAuth support for UCC:
+### OAuth support for UCC
 Out of the box support for oauth has been added to the UCC.<br/>
 Below is the global config example for the same:
 
@@ -177,7 +190,132 @@ Below is the explanation of each field:
     **No other fields apart from above mentioned fields are allowed as of now.**
     
 Once user create/changes globalconfig.json as per above guidance. 
-A build needs to be created which will be having support for oauth. 
+A build needs to be created which will be having support for oauth.
+
+### Show error message and Highlighting fields with Red border
+In UCC if you are doing some custom validation and want to provide custom error message then you can use this method if you are in hook.
+`this.util.displayErrorMsg(validate_message);`
+where, validate_message is the message you want to display.
+You can also add red border to the input field by adding the CSS class as below:
+```$(`[data-name="name"]`).find("input").addClass("validation-error");```
+
+### Adding tooltip on hover
+If you want to add a tooltip help for any field that can be added by adding tooltip parameter in entity as show below:
+```
+{
+    "type":"text",
+    "label":"Query Start Date",
+    "field":"start_date",
+    "tooltip": "Changing this parameter may result in gaps or duplication in data collection.",
+    "required":false
+}
+```
+### Providing a link to another configuration page dynamically
+If we want to provide link of configuration page to input page on can user a code snippet as below:
+```
+// This will create link for configuration page, which can be put on page.
+var account_config_url = window.location.href.replace("inputs", "configuration");
+// This will put the add the 
+$(`[data-name="account"]`).after(_.template(accountHelpText)({account_config_url:account_config_url}));
+
+// accountHelpText template
+<div class="help-block">
+	Select an account. Additional accounts may be configured from <a href="<%- account_config_url %>">here</a>
+</div>
+```
+
+### Showing components depending on value of previous component
+
+If we want to show-hide certain fields based on value of some other field, define the field as optional in globalconfig.json and then in the hook you can write your logic to do so.
+
+ex. I have one two fields.  "Reset Data input?" and "Query start date". Now I want to display the Query start date field only when the "Reset Date input?" value is selected as "Yes".
+
+globalconfig.json
+```
+{
+    "type":"radio",
+    "label":"Reset Data input?",
+    "field":"is_reset_date_input",
+    "defaultValue": "no",
+    "required":false,
+    "options": {
+        "items":[
+            {
+                "value":"yes",
+                "label":"Yes"
+            },
+            {
+                "value":"no",
+                "label":"No"
+            }
+        ]
+    }
+},
+{
+    "type":"text",
+    "label":"Query Start Date",
+    "field":"start_date",
+    "help":"The date and time, in \"YYYY-MM-DDThh:mm:ss.000z\" format, after which to query and index records. \nThe default is 90 days before today.",
+    "required":false,
+    "options": {
+                "display":false
+            }
+}
+```
+hook.js
+```
+onRender() {
+    // Bind on change method to the mode;
+    this.model.on("change:is_reset_date_input", this._checkpointChange, this);
+}
+
+_checkpointChange(){
+    if (this.model.get("is_reset_date_input") === "yes") {
+        $(`[data-name="start_date"]`).find("input").show();
+    } else {
+        $(`[data-name="start_date"]`).find("input").hide();
+    }
+}
+```
+### Populate dropdown using endpoint
+Below is example to populate one dropdown based on the value of other dropdown.
+globalconfig.json
+```
+ {
+    "type": "singleSelect",
+    "label": "Credentials",
+    "options": {
+        "referenceName": "account"
+    },
+    "field": "google_credentials_name",
+    "required": true
+},
+{
+    "type": "singleSelect",
+    "label": "Project",
+    "field": "google_project",
+    "required": true,
+    "options": {
+        "dependencies": ["google_credentials_name"],
+        "endpointUrl": "Splunk_TA_google_cloudplatform_projects",
+        "blackList": "^_.*$",
+        "createSearchChoice": true
+    }
+}
+```
+Here, `endpointUrl` is the url of python endpoint
+      `dependencies` value is the field on whose change this endpoint should trigger and populate the dropdown values.
+
+### Show alert icon
+When working with custom cells, you want to alert user when certain value encounter for that field value. You can use below html to show the alert icon.
+```
+<span class="conflict-alert alert alert-error">
+    <i class="icon-alert" title="<%- title %>" ></i>
+</span> <%- account %>
+```
+
+
+You can always refer: [ta-salesforce](https://git.splunk.com/projects/FINGALS/repos/ta-salesforce/browse) as reference for some of the UCC feature use case.
 
 
 Note:
