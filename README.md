@@ -1,34 +1,36 @@
-Table Of content
-1. [Release Notes](#Release-Notes)
-2. [Prerequisite](#prerequisite)
-3. [Install bower and configure it](#Install-bower-and-configure-it)
-4. [Use the following command to build an example add-on](#Use-the-following-command-to-build-an-example-add-on)
+Table of contents
+1. [Release notes](#Release-notes)
+2. [Prerequisites](#prerequisites)
+3. [Install and configure Bower](#Install-and-configure-Bower)
+4. [Command to build an example add-on](#Command-to-build-an-example-add-on)
 5. [Implementation of a hook feature](#Implementation-of-a-hook-feature)
 6. [OAuth support for UCC](#OAuth-support-for-UCC)
-7. [Show error message and Highlighting fields with Red border](#Show-error-message-and-Highlighting-fields-with-Red-border)
-8. [Adding tooltip on hover](#Adding-tooltip-on-hover)
-9. [Showing components depending on value of previous component
-](#Showing-components-depending-on-value-of-previous-component)
-10. [Populate dropdown using endpoint](#Populate-dropdown-using-endpoint)
-11. [Show alert icon](#show-alert-icon)
+7. [Display error messages and highlighted fields with red borders](#Display-error-messages-and-highlighted-fields-with-red-borders)
+8. [Add tooltip on hover](#Add-tooltip-on-hover)
+9. [Providing a link to another configuration page dynamically](#Providing-a-link-to-another-configuration-page-dynamically)
+10. [Show components depending on value of previous component](#Show-components-depending-on-value-of-previous-component)
+11. [Populate dropdown using endpoint](#Populate-dropdown-using-endpoint)
+12. [Show alert icon](#show-alert-icon)
 
-### Release Notes
+### Release notes
 #### 3.2.0
 ##### Features:
 * OAuth2.0 support
 * Custom hook support in the configuration tab
 
-### Prerequisite
-We uses bower, grunt and webpack to build the Universal Configuration Console.
+### Prerequisites
+We use Bower, Grunt, and Webpack to build the Universal Configuration Console.
 
-### Install bower and configure it
+### Install and configure Bower
+
 Follow the setup steps here: [http://repo.splunk.com/artifactory/webapp/#/artifacts/browse/tree/General/bower | bower setup]
 Note: you must install art-resolver to use splunk bower repo
 ```
 npm install -g bower-art-resolver
 ```
 
-### Use the following command to build an example add-on
+### Command to build an example add-on
+
 ```
 python update_version.py
 cd ./UCC-UI-lib && npm install && bower install
@@ -197,17 +199,18 @@ Below is the explanation of each field:
     **No other fields apart from above mentioned fields are allowed as of now.**
     
 Once user create/changes globalconfig.json as per above guidance. 
-A build needs to be created which will be having support for oauth.
+Generate a build after adjusting globalconfig.json following instructions above.
 
-### Show error message and Highlighting fields with Red border
+### Display error messages and highlighted fields with red borders
+
 In UCC if you are doing some custom validation and want to provide custom error message then you can use this method if you are in hook.
 `this.util.displayErrorMsg(validate_message);`
 where, validate_message is the message you want to display.
 You can also add red border to the input field by adding the CSS class as below:
 ```$(`[data-name="name"]`).find("input").addClass("validation-error");```
 
-### Adding tooltip on hover
-If you want to add a tooltip help for any field that can be added by adding tooltip parameter in entity as show below:
+### Add tooltip on hover
+To add a tooltip to any field, populate the parameter "tooltip" as shown below
 ```
 {
     "type":"text",
@@ -218,11 +221,11 @@ If you want to add a tooltip help for any field that can be added by adding tool
 }
 ```
 ### Providing a link to another configuration page dynamically
-If we want to provide link of configuration page to input page on can user a code snippet as below:
+Create a link for the configuration page with the following code snippet:
 ```
-// This will create link for configuration page, which can be put on page.
+// This creates a link for the configuration page.
 var account_config_url = window.location.href.replace("inputs", "configuration");
-// This will put the add the 
+// This adds the link using template 
 $(`[data-name="account"]`).after(_.template(accountHelpText)({account_config_url:account_config_url}));
 
 // accountHelpText template
@@ -231,11 +234,11 @@ $(`[data-name="account"]`).after(_.template(accountHelpText)({account_config_url
 </div>
 ```
 
-### Showing components depending on value of previous component
+### Show components depending on value of previous component
 
-If we want to show-hide certain fields based on value of some other field, define the field as optional in globalconfig.json and then in the hook you can write your logic to do so.
+To show or hide a field based on the value of another field, define the field in globalconfig.json. Then, in the hook, write the logic to do so.
 
-ex. I have one two fields.  "Reset Data input?" and "Query start date". Now I want to display the Query start date field only when the "Reset Date input?" value is selected as "Yes".
+ex. This example displays the “Query start date” field only when the "Reset Date input?" value is "Yes”:
 
 globalconfig.json
 ```
@@ -285,7 +288,8 @@ _checkpointChange(){
 }
 ```
 ### Populate dropdown using endpoint
-Below is example to populate one dropdown based on the value of other dropdown.
+The following example populates one dropdown based on the value of another dropdown:
+
 globalconfig.json
 ```
  {
@@ -311,10 +315,11 @@ globalconfig.json
 }
 ```
 Here, `endpointUrl` is the url of python endpoint
-      `dependencies` value is the field on whose change this endpoint should trigger and populate the dropdown values.
+      A change to the `dependencies` value triggers this endpoint to populate the dropdown values.
 
 ### Show alert icon
-When working with custom cells, you want to alert user when certain value encounter for that field value. You can use below html to show the alert icon.
+To show an alert icon for certain field values when working with custom cells, use the following html:
+
 ```
 <span class="conflict-alert alert alert-error">
     <i class="icon-alert" title="<%- title %>" ></i>
@@ -322,7 +327,7 @@ When working with custom cells, you want to alert user when certain value encoun
 ```
 
 
-You can always refer: [ta-salesforce](https://git.splunk.com/projects/FINGALS/repos/ta-salesforce/browse) as reference for some of the UCC feature use case.
+You can always refer to [ta-salesforce](https://git.splunk.com/projects/FINGALS/repos/ta-salesforce/browse) as a reference for featured UCC use cases.
 
 
 Note:
