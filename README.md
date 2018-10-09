@@ -1,21 +1,43 @@
-### Prerequisite
-We uses bower, grunt and webpack to build the Universal Configuration Console.
+Table of contents
+1. [Release notes](#Release-notes)
+2. [Prerequisites](#prerequisites)
+3. [Install and configure Bower](#Install-and-configure-Bower)
+4. [Command to build an example add-on](#Command-to-build-an-example-add-on)
+5. [Implementation of a hook feature](#Implementation-of-a-hook-feature)
+6. [OAuth support for UCC](#OAuth-support-for-UCC)
+7. [Display error messages and highlighted fields with red borders](#Display-error-messages-and-highlighted-fields-with-red-borders)
+8. [Add tooltip on hover](#Add-tooltip-on-hover)
+9. [Providing a link to another configuration page dynamically](#Providing-a-link-to-another-configuration-page-dynamically)
+10. [Show components depending on value of previous component](#Show-components-depending-on-value-of-previous-component)
+11. [Populate dropdown using endpoint](#Populate-dropdown-using-endpoint)
+12. [Show alert icon](#show-alert-icon)
 
-### Install bower and configure it
+### Release notes
+#### 3.2.0
+##### Features:
+* OAuth2.0 support
+* Custom hook support in the configuration tab
+
+### Prerequisites
+We use Bower, Grunt, and Webpack to build the Universal Configuration Console.
+
+### Install and configure Bower
+
 Follow the setup steps here: [http://repo.splunk.com/artifactory/webapp/#/artifacts/browse/tree/General/bower | bower setup]
 Note: you must install art-resolver to use splunk bower repo
 ```
 npm install -g bower-art-resolver
 ```
 
-### Use the following command to build an example add-on
+### Command to build an example add-on
+
 ```
 python update_version.py
 cd ./UCC-UI-lib && npm install && bower install
 cd ./UCC-example-addon && python setup.py && source ${SPLUNK_HOME}/bin/setSplunkEnv && python build.py
 ```
 
-### Implementation of a hook feature.
+### Implementation of a hook feature
 
 Step 1: Add hook in configuration tab at the entity level.
 
@@ -47,7 +69,7 @@ Step 2: Create custom/customHook.js
 * Add app-level business logic in custom code in `customHook.js`.
 
 
-### OAuth support for UCC:
+### OAuth support for UCC
 Out of the box support for oauth has been added to the UCC.<br/>
 Below is the global config example for the same:
 
@@ -177,7 +199,135 @@ Below is the explanation of each field:
     **No other fields apart from above mentioned fields are allowed as of now.**
     
 Once user create/changes globalconfig.json as per above guidance. 
-A build needs to be created which will be having support for oauth. 
+Generate a build after adjusting globalconfig.json following instructions above.
+
+### Display error messages and highlighted fields with red borders
+
+In UCC if you are doing some custom validation and want to provide custom error message then you can use this method if you are in hook.
+`this.util.displayErrorMsg(validate_message);`
+where, validate_message is the message you want to display.
+You can also add red border to the input field by adding the CSS class as below:
+```$(`[data-name="name"]`).find("input").addClass("validation-error");```
+
+### Add tooltip on hover
+To add a tooltip to any field, populate the parameter "tooltip" as shown below
+```
+{
+    "type":"text",
+    "label":"Query Start Date",
+    "field":"start_date",
+    "tooltip": "Changing this parameter may result in gaps or duplication in data collection.",
+    "required":false
+}
+```
+### Providing a link to another configuration page dynamically
+Create a link for the configuration page with the following code snippet:
+```
+// This creates a link for the configuration page.
+var account_config_url = window.location.href.replace("inputs", "configuration");
+// This adds the link using template 
+$(`[data-name="account"]`).after(_.template(accountHelpText)({account_config_url:account_config_url}));
+
+// accountHelpText template
+<div class="help-block">
+	Select an account. Additional accounts may be configured from <a href="<%- account_config_url %>">here</a>
+</div>
+```
+
+### Show components depending on value of previous component
+
+To show or hide a field based on the value of another field, define the field in globalconfig.json. Then, in the hook, write the logic to do so.
+
+ex. This example displays the “Query start date” field only when the "Reset Date input?" value is "Yes”:
+
+globalconfig.json
+```
+{
+    "type":"radio",
+    "label":"Reset Data input?",
+    "field":"is_reset_date_input",
+    "defaultValue": "no",
+    "required":false,
+    "options": {
+        "items":[
+            {
+                "value":"yes",
+                "label":"Yes"
+            },
+            {
+                "value":"no",
+                "label":"No"
+            }
+        ]
+    }
+},
+{
+    "type":"text",
+    "label":"Query Start Date",
+    "field":"start_date",
+    "help":"The date and time, in \"YYYY-MM-DDThh:mm:ss.000z\" format, after which to query and index records. \nThe default is 90 days before today.",
+    "required":false,
+    "options": {
+                "display":false
+            }
+}
+```
+hook.js
+```
+onRender() {
+    // Bind on change method to the mode;
+    this.model.on("change:is_reset_date_input", this._checkpointChange, this);
+}
+
+_checkpointChange(){
+    if (this.model.get("is_reset_date_input") === "yes") {
+        $(`[data-name="start_date"]`).find("input").show();
+    } else {
+        $(`[data-name="start_date"]`).find("input").hide();
+    }
+}
+```
+### Populate dropdown using endpoint
+The following example populates one dropdown based on the value of another dropdown:
+
+globalconfig.json
+```
+ {
+    "type": "singleSelect",
+    "label": "Credentials",
+    "options": {
+        "referenceName": "account"
+    },
+    "field": "google_credentials_name",
+    "required": true
+},
+{
+    "type": "singleSelect",
+    "label": "Project",
+    "field": "google_project",
+    "required": true,
+    "options": {
+        "dependencies": ["google_credentials_name"],
+        "endpointUrl": "Splunk_TA_google_cloudplatform_projects",
+        "blackList": "^_.*$",
+        "createSearchChoice": true
+    }
+}
+```
+Here, `endpointUrl` is the url of python endpoint
+      A change to the `dependencies` value triggers this endpoint to populate the dropdown values.
+
+### Show alert icon
+To show an alert icon for certain field values when working with custom cells, use the following html:
+
+```
+<span class="conflict-alert alert alert-error">
+    <i class="icon-alert" title="<%- title %>" ></i>
+</span> <%- account %>
+```
+
+
+You can always refer to [ta-salesforce](https://git.splunk.com/projects/FINGALS/repos/ta-salesforce/browse) as a reference for featured UCC use cases.
 
 
 Note:
