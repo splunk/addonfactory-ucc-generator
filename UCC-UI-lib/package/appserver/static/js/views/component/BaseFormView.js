@@ -576,6 +576,20 @@ define([
                             typeof this.hook.onSaveSuccess === 'function') {
                         this.hook.onSaveSuccess();
                     }
+                    //Reflect addition of new input for single service in input table
+                    if(this.mode !== "edit"){
+                        this.collection.add(input);
+                        this.collection.reset(this.collection.models);
+                        if (this.collection.length !== 0) {
+                            _.each(this.collection.models, function (model) {
+                                model.paging.set('total', this.collection.length);
+                            }.bind(this));
+                        }
+                        //Trigger collection page change event to refresh the count in table caption
+                        this.collection.paging.set('total', this.collection.models.length);
+                        //Rerender the table
+                        this.collection.reset(this.collection.models);
+                    }
                     this.successCallback(input);
                 }).fail((model) => {
                     // Add onSaveFail hook if it exists
