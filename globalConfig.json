@@ -672,7 +672,7 @@
                 "type":"text",
                 "label":"Name",
                 "field":"name",
-                "defaultValue": "Micheal",
+                "defaultValue": "xyz",
                 "required": true,
                 "help": "Please enter your name"
             },
@@ -682,7 +682,7 @@
                 "field":"all_incidents",
                 "defaultValue": 0,
                 "required": false,
-                "help": "Tick if you want to update all incidents"
+                "help": "Tick if you want to update all incidents/problems"
             },
             {
                 "type": "singleSelect",
@@ -690,8 +690,8 @@
                 "field": "table_list",
                 "options":{
                   "items": [{
-                               "value" : "Incidents",
-                                "label" : "incidents"
+                               "value" : "Incident",
+                                "label" : "incident"
                               },
                               {
                                 "value" : "Problem",
