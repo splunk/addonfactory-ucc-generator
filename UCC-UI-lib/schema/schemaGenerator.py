@@ -86,6 +86,27 @@ class DateValidator(ValidatorBase):
 class UrlValidator(ValidatorBase):
     type = StringField(required=True, enum=["url"])
 
+# Entity for Alert Actions
+class AlertEntity(DocumentWithoutAddProp):
+    field = StringField(required=True, pattern="^\w+$")
+    label = StringField(required=True, max_length=30)
+    type = StringField(required=True,
+                       enum=["text", "singleSelect", "checkbox", "radio", "dropdownlistSplunkSearch"])
+    help = StringField(max_length=200)
+    defaultValue = OneOfField([
+        NumberField(),
+        StringField(max_length=250),
+        BooleanField()
+    ])
+    required = BooleanField()
+    search = StringField(max_length=200)
+    valueField = StringField(max_length=200)
+    labelField = StringField(max_length=200)
+    options = DictField(
+        properties={
+            "items": ArrayField(DocumentField(ValueLabelPair, as_ref=True))
+        }
+    )
 
 ##
 #  Entity Form Field Component Wrapper having field name, label, field types, help/tooltips support, default value
@@ -95,7 +116,7 @@ class Entity(DocumentWithoutAddProp):
     field = StringField(required=True, pattern="^\w+$")
     label = StringField(required=True, max_length=30)
     type = StringField(required=True,
-                       enum=["custom", "text", "singleSelect", "checkbox", "multipleSelect", "radio", "placeholder", "oauth","dropdownlist_splunk_search"])
+                       enum=["custom", "text", "singleSelect", "checkbox", "multipleSelect", "radio", "placeholder", "oauth"])
     help = StringField(max_length=200)
     tooltip = StringField(max_length=250)
     defaultValue = OneOfField([
@@ -151,9 +172,6 @@ class Entity(DocumentWithoutAddProp):
         DocumentField(UrlValidator, as_ref=True),
         DocumentField(DateValidator, as_ref=True)
     ]))
-    search = StringField(max_length=200)
-    value_field = StringField(max_length=200)
-    label_field = StringField(max_length=200)
 
 
 ##
@@ -314,16 +332,16 @@ class Alerts(DocumentWithoutAddProp):
     name = StringField(required=True, pattern="^[a-zA-Z0-9_]+$", max_length=100)
     label = StringField(required=True, max_length=100)
     description = StringField(required=True)
-    active_response = DictField(properties={
+    activeResponse = DictField(properties={
                             "task": ArrayField(StringField(required=True), required=True, min_items=1),
-                            "supports_adhoc": BooleanField(required=True),
+                            "supportsAdhoc": BooleanField(required=True),
                             "subject": ArrayField(StringField(required=True), required=True, min_items=1),
                             "category": ArrayField(StringField(required=True), required=True, min_items=1),
                             "technology": ArrayField(DocumentField(Technology,as_ref=True),required=True, min_items=1),
-                            "drilldown_uri":StringField(required=False),
+                            "drilldownUri":StringField(required=False),
                             "sourcetype":StringField(required=False, pattern="^[a-zA-Z0-9:-_]+$", max_length=50)
                         }, required=False)
-    entity = ArrayField(DocumentField(Entity, as_ref=True))
+    entity = ArrayField(DocumentField(AlertEntity, as_ref=True))
 
 ##
 # Root Component holding all pages and meta information

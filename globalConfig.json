@@ -642,12 +642,12 @@
         "name": "test_alert",
         "label": "Test Alert",
         "description": "Description for test Alert Action",
-        "active_response": {
+        "activeResponse": {
           "task": [
             "Create",
             "Update"
           ],
-          "supports_adhoc": true,
+          "supportsAdhoc": true,
           "subject": [
             "endpoint"
           ],
@@ -664,7 +664,7 @@
               "vendor": "Splunk"
             }
           ],
-          "drilldown_uri": "search?q=search%20index%3D\"_internal\"&earliest=0&latest=",
+          "drilldownUri": "search?q=search%20index%3D\"_internal\"&earliest=0&latest=",
           "sourcetype": "test:incident"
         },
         "entity": [
@@ -724,12 +724,12 @@
             "defaultValue": "two"
           },
           {
-            "type": "dropdownlist_splunk_search",
+            "type": "dropdownlistSplunkSearch",
             "label": "Select Account",
             "field":"account",
             "search": "| rest /servicesNS/nobody/TA-SNOW/admin/TA_SNOW_account | dedup title",
-            "value_field": "title",
-            "label_field": "title",
+            "valueField": "title",
+            "labelField": "title",
             "help": "Select the account from the dropdown",
             "required": true
           }
