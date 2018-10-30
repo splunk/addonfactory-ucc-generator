@@ -77,8 +77,7 @@
             "required": [
                 "name",
                 "label",
-                "description",
-                "entity"
+                "description"
             ],
             "type": "object"
         },

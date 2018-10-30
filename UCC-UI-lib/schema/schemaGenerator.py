@@ -323,7 +323,7 @@ class Alerts(DocumentWithoutAddProp):
                             "drilldown_uri":StringField(required=False),
                             "sourcetype":StringField(required=False, pattern="^[a-zA-Z0-9:-_]+$", max_length=50)
                         }, required=False)
-    entity = ArrayField(DocumentField(Entity, as_ref=True), required=True)
+    entity = ArrayField(DocumentField(Entity, as_ref=True))
 
 ##
 # Root Component holding all pages and meta information
