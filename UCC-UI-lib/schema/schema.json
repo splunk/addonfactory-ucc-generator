@@ -1,6 +1,87 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#", 
     "definitions": {
+         "Alerts": {
+            "additionalProperties": false,
+            "properties": {
+                "active_response": {
+                    "properties": {
+                        "category": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "minItems": 1,
+                            "type": "array"
+                        },
+                        "drilldown_uri": {
+                            "type": "string"
+                        },
+                        "sourcetype": {
+                            "maxLength": 50,
+                            "pattern": "^[a-zA-Z0-9:-_]+$",
+                            "type": "string"
+                        },
+                        "subject": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "minItems": 1,
+                            "type": "array"
+                        },
+                        "supports_adhoc": {
+                            "type": "boolean"
+                        },
+                        "task": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "minItems": 1,
+                            "type": "array"
+                        },
+                        "technology": {
+                            "items": {
+                                "$ref": "#/definitions/Technology"
+                            },
+                            "minItems": 1,
+                            "type": "array"
+                        }
+                    },
+                    "required": [
+                        "category",
+                        "task",
+                        "supports_adhoc",
+                        "technology",
+                        "subject"
+                    ],
+                    "type": "object"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "entity": {
+                    "items": {
+                        "$ref": "#/definitions/Entity"
+                    },
+                    "type": "array"
+                },
+                "label": {
+                    "maxLength": 100,
+                    "type": "string"
+                },
+                "name": {
+                    "maxLength": 100,
+                    "pattern": "^[a-zA-Z0-9_]+$",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name",
+                "label",
+                "description",
+                "entity"
+            ],
+            "type": "object"
+        },
         "ConfigurationEntity": {
             "type": "object", 
             "properties": {
@@ -11,6 +92,10 @@
                 "label": {
                     "type": "string", 
                     "maxLength": 30
+                },
+                "label_field": {
+                    "maxLength": 200,
+                    "type": "string"
                 }, 
                 "type": {
                     "type": "string", 
@@ -22,7 +107,8 @@
                         "multipleSelect", 
                         "radio", 
                         "placeholder", 
-                        "oauth"
+                        "oauth",
+                        "dropdownlist_splunk_search"
                     ]
                 }, 
                 "help": {
@@ -181,6 +267,10 @@
                 "required": {
                     "type": "boolean"
                 },
+                "search": {
+                    "maxLength": 200,
+                    "type": "string"
+                },
                 "encrypted": {
                     "type": "boolean"
                 },
@@ -211,6 +301,10 @@
                             }
                         ]
                     }
+                },
+                "value_field": {
+                    "maxLength": 200,
+                    "type": "string"
                 }
             },
             "required": [
@@ -356,6 +450,238 @@
             ],
             "additionalProperties": false
         },
+        "Entity": {
+            "additionalProperties": false,
+            "properties": {
+                "defaultValue": {
+                    "oneOf": [
+                        {
+                            "type": "number"
+                        },
+                        {
+                            "maxLength": 250,
+                            "type": "string"
+                        },
+                        {
+                            "type": "boolean"
+                        }
+                    ]
+                },
+                "encrypted": {
+                    "type": "boolean"
+                },
+                "field": {
+                    "pattern": "^\\w+$",
+                    "type": "string"
+                },
+                "help": {
+                    "maxLength": 200,
+                    "type": "string"
+                },
+                "label": {
+                    "maxLength": 30,
+                    "type": "string"
+                },
+                "label_field": {
+                    "maxLength": 200,
+                    "type": "string"
+                },
+                "options": {
+                    "properties": {
+                        "access_token_endpoint": {
+                            "maxLength": 350,
+                            "type": "string"
+                        },
+                        "auth_code_endpoint": {
+                            "maxLength": 350,
+                            "type": "string"
+                        },
+                        "auth_label": {
+                            "maxLength": 250,
+                            "type": "string"
+                        },
+                        "auth_type": {
+                            "items": {
+                                "maxLength": 100,
+                                "type": "string"
+                            },
+                            "type": "array"
+                        },
+                        "autoCompleteFields": {
+                            "oneOf": [
+                                {
+                                    "items": {
+                                        "properties": {
+                                            "children": {
+                                                "items": {
+                                                    "$ref": "#/definitions/ValueLabelPair"
+                                                },
+                                                "type": "array"
+                                            },
+                                            "label": {
+                                                "maxLength": 150,
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "children",
+                                            "label"
+                                        ],
+                                        "type": "object"
+                                    },
+                                    "type": "array"
+                                },
+                                {
+                                    "items": {
+                                        "$ref": "#/definitions/ValueLabelPair"
+                                    },
+                                    "type": "array"
+                                }
+                            ]
+                        },
+                        "basic": {
+                            "items": {
+                                "$ref": "#/definitions/OAuthFields"
+                            },
+                            "type": "array"
+                        },
+                        "blackList": {
+                            "maxLength": 350,
+                            "type": "string"
+                        },
+                        "defaultValue": {
+                            "maxLength": 250,
+                            "type": "string"
+                        },
+                        "delimiter": {
+                            "maxLength": 1,
+                            "type": "string"
+                        },
+                        "disableonEdit": {
+                            "type": "boolean"
+                        },
+                        "disableSearch": {
+                            "type": "boolean"
+                        },
+                        "display": {
+                            "type": "boolean"
+                        },
+                        "enable": {
+                            "type": "boolean"
+                        },
+                        "endpointUrl": {
+                            "maxLength": 350,
+                            "type": "string"
+                        },
+                        "items": {
+                            "items": {
+                                "$ref": "#/definitions/ValueLabelPair"
+                            },
+                            "type": "array"
+                        },
+                        "labelField": {
+                            "maxLength": 250,
+                            "type": "string"
+                        },
+                        "oauth": {
+                            "items": {
+                                "$ref": "#/definitions/OAuthFields"
+                            },
+                            "type": "array"
+                        },
+                        "oauth_popup_height": {
+                            "type": "number"
+                        },
+                        "oauth_popup_width": {
+                            "type": "number"
+                        },
+                        "oauth_timeout": {
+                            "type": "number"
+                        },
+                        "placeholder": {
+                            "maxLength": 250,
+                            "type": "string"
+                        },
+                        "referenceName": {
+                            "maxLength": 250,
+                            "type": "string"
+                        },
+                        "src": {
+                            "maxLength": 250,
+                            "type": "string"
+                        },
+                        "whiteList": {
+                            "maxLength": 350,
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "required": {
+                    "type": "boolean"
+                },
+                "search": {
+                    "maxLength": 200,
+                    "type": "string"
+                },
+                "tooltip": {
+                    "maxLength": 250,
+                    "type": "string"
+                },
+                "type": {
+                    "enum": [
+                        "custom",
+                        "text",
+                        "singleSelect",
+                        "checkbox",
+                        "multipleSelect",
+                        "radio",
+                        "placeholder",
+                        "oauth",
+                        "dropdownlist_splunk_search"
+                    ],
+                    "type": "string"
+                },
+                "validators": {
+                    "items": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/definitions/StringValidator"
+                            },
+                            {
+                                "$ref": "#/definitions/NumberValidator"
+                            },
+                            {
+                                "$ref": "#/definitions/RegexValidator"
+                            },
+                            {
+                                "$ref": "#/definitions/EmailValidator"
+                            },
+                            {
+                                "$ref": "#/definitions/Ipv4Validator"
+                            },
+                            {
+                                "$ref": "#/definitions/UrlValidator"
+                            },
+                            {
+                                "$ref": "#/definitions/DateValidator"
+                            }
+                        ]
+                    },
+                    "type": "array"
+                },
+                "value_field": {
+                    "maxLength": 200,
+                    "type": "string"
+                }
+            },
+            "required": [
+                "field",
+                "label",
+                "type"
+            ],
+            "type": "object"
+        },
         "Hooks": {
             "type": "object",
             "properties": {
@@ -385,6 +711,10 @@
                     "type": "string",
                     "maxLength": 30
                 },
+                "label_field": {
+                    "maxLength": 200,
+                    "type": "string"
+                },
                 "type": {
                     "type": "string",
                     "enum": [
@@ -395,12 +725,17 @@
                         "multipleSelect",
                         "radio",
                         "placeholder",
-                        "oauth"
+                        "oauth",
+                        "dropdownlist_splunk_search"
                     ]
                 },
                 "help": {
                     "type": "string",
                     "maxLength": 200
+                },
+                "search": {
+                    "maxLength": 200,
+                    "type": "string"
                 },
                 "tooltip": {
                     "type": "string",
@@ -584,6 +919,10 @@
                             }
                         ]
                     }
+                },
+                "value_field": {
+                    "maxLength": 200,
+                    "type": "string"
                 }
             },
             "required": [
@@ -982,6 +1321,33 @@
                 "title"
             ], 
             "additionalProperties": false
+        },
+        "Technology": {
+            "additionalProperties": false,
+            "properties": {
+                "product": {
+                    "maxLength": 100,
+                    "type": "string"
+                },
+                "vendor": {
+                    "maxLength": 100,
+                    "type": "string"
+                },
+                "version": {
+                    "items": {
+                        "pattern": "^\\d+(?:\\.\\d+)*$",
+                        "type": "string"
+                    },
+                    "minItems": 1,
+                    "type": "array"
+                }
+            },
+            "required": [
+                "version",
+                "product",
+                "vendor"
+            ],
+            "type": "object"
         }, 
         "UrlValidator": {
             "type": "object", 
@@ -1032,6 +1398,13 @@
     }, 
     "type": "object", 
     "properties": {
+        "alerts": {
+            "items": {
+                "$ref": "#/definitions/Alerts"
+            },
+            "minItems": 1,
+            "type": "array"
+        },
         "meta": {
             "$ref": "#/definitions/Meta"
         }, 
