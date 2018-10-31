@@ -724,7 +724,7 @@
             "defaultValue": "two"
           },
           {
-            "type": "dropdownlistSplunkSearch",
+            "type": "singleSelectSplunkSearch",
             "label": "Select Account",
             "field":"account",
             "search": "| rest /servicesNS/nobody/TA-SNOW/admin/TA_SNOW_account | dedup title",

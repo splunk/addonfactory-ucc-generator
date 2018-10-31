@@ -58,7 +58,7 @@
                         "singleSelect",
                         "checkbox",
                         "radio",
-                        "dropdownlistSplunkSearch"
+                        "singleSelectSplunkSearch"
                     ],
                     "type": "string"
                 },

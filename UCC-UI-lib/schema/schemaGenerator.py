@@ -91,7 +91,7 @@ class AlertEntity(DocumentWithoutAddProp):
     field = StringField(required=True, pattern="^\w+$")
     label = StringField(required=True, max_length=30)
     type = StringField(required=True,
-                       enum=["text", "singleSelect", "checkbox", "radio", "dropdownlistSplunkSearch"])
+                       enum=["text", "singleSelect", "checkbox", "radio", "singleSelectSplunkSearch"])
     help = StringField(max_length=200)
     defaultValue = OneOfField([
         NumberField(),
