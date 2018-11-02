@@ -579,10 +579,9 @@ define([
                     //Reflect addition of new input for single service in input table
                     if(this.mode !== "edit"){
                         this.collection.add(input);
-                        this.collection.reset(this.collection.models);
-                        if (this.collection.length !== 0) {
+                        if (this.collection.size() !== 0) {
                             _.each(this.collection.models, function (model) {
-                                model.paging.set('total', this.collection.length);
+                                model.paging.set('total', this.collection.size());
                             }.bind(this));
                         }
                         //Trigger collection page change event to refresh the count in table caption
