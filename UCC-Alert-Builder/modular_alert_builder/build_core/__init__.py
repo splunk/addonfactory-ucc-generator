@@ -90,7 +90,7 @@ def prepare_ta_directory_tree(src, dest, logger, envs):
     return output_dir
 
 
-def move_file_replace_var(src, dest, logger, envs, process_list=None,
+def generate_alerts(src, dest, logger, envs, process_list=None,
                           skip_list=None):
     process_list = process_list or []
     skip_list = skip_list or []

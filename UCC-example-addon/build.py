@@ -3,6 +3,7 @@ import errno
 import json
 import os
 import subprocess
+import sys
 
 from uccrestbuilder.global_config import GlobalConfigBuilderSchema, GlobalConfigPostProcessor
 from uccrestbuilder import build
@@ -248,6 +249,12 @@ def is_oauth_configured():
             break
         return False
 
+def make_modular_alerts():
+    if schema_content.get("alerts"):
+        sys.path.append(os.path.join(top_dir, 'UCC-Alert-Builder'))
+        from start_alert_build import build
+        build({"alerts" : schema_content["alerts"]}, ta_name, ta_namespace, os.path.join(top_dir, "UCC-example-addon", "output"))
+
 
 clean_before_build()
 generate_rest()
@@ -258,5 +265,6 @@ copy_res()
 modify_and_replace_token_for_oauth_templates()
 copy_global_config()
 add_modular_input()
+make_modular_alerts()
 move_local_to_default()
 add_executable_attr_to_files_under_bin()
