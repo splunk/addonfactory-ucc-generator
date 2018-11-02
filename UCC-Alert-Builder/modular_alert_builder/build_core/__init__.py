@@ -4,9 +4,6 @@ import os
 from alert_actions_conf_gen import generate_alert_actions_conf
 from alert_actions_html_gen import generate_alert_actions_html_files
 from alert_actions_py_gen import generate_alert_actions_py_files
-# from ta_generator.ta_static_asset_generator import AssetGenerator
-# from arf_runner import ARFTestRunner
-# import alert_actions_helper as aah
 import traceback
 
 
@@ -109,7 +106,6 @@ def move_file_replace_var(src, dest, logger, envs, process_list=None,
         if dest:
             output_dir = prepare_ta_directory_tree(src, dest, logger, envs)
             package_dir = os.path.join(dest, envs["product_id"])
-            # prepare_libs(package_dir, logger, envs)
 
         build_components = envs["build_components"]
         if build_components["conf"]:
