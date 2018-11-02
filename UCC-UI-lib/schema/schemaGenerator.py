@@ -86,6 +86,27 @@ class DateValidator(ValidatorBase):
 class UrlValidator(ValidatorBase):
     type = StringField(required=True, enum=["url"])
 
+# Entity for Alert Actions
+class AlertEntity(DocumentWithoutAddProp):
+    field = StringField(required=True, pattern="^\w+$")
+    label = StringField(required=True, max_length=30)
+    type = StringField(required=True,
+                       enum=["text", "singleSelect", "checkbox", "radio", "singleSelectSplunkSearch"])
+    help = StringField(max_length=200)
+    defaultValue = OneOfField([
+        NumberField(),
+        StringField(max_length=250),
+        BooleanField()
+    ])
+    required = BooleanField()
+    search = StringField(max_length=200)
+    valueField = StringField(max_length=200)
+    labelField = StringField(max_length=200)
+    options = DictField(
+        properties={
+            "items": ArrayField(DocumentField(ValueLabelPair, as_ref=True))
+        }
+    )
 
 ##
 #  Entity Form Field Component Wrapper having field name, label, field types, help/tooltips support, default value
@@ -296,11 +317,39 @@ class Pages(DocumentWithoutAddProp):
 
 
 ##
+# Component holding Technology dict in active_response
+##
+class Technology(DocumentWithoutAddProp):
+    version = ArrayField(StringField(required=True, pattern="^\d+(?:\.\d+)*$"),required=True, min_items=1)
+    product = StringField(required=True, max_length=100)
+    vendor = StringField(required=True, max_length=100)
+
+
+##
+# Main Component holding the alert actions 
+##
+class Alerts(DocumentWithoutAddProp):
+    name = StringField(required=True, pattern="^[a-zA-Z0-9_]+$", max_length=100)
+    label = StringField(required=True, max_length=100)
+    description = StringField(required=True)
+    activeResponse = DictField(properties={
+                            "task": ArrayField(StringField(required=True), required=True, min_items=1),
+                            "supportsAdhoc": BooleanField(required=True),
+                            "subject": ArrayField(StringField(required=True), required=True, min_items=1),
+                            "category": ArrayField(StringField(required=True), required=True, min_items=1),
+                            "technology": ArrayField(DocumentField(Technology,as_ref=True),required=True, min_items=1),
+                            "drilldownUri":StringField(required=False),
+                            "sourcetype":StringField(required=False, pattern="^[a-zA-Z0-9:-_]+$", max_length=50)
+                        }, required=False)
+    entity = ArrayField(DocumentField(AlertEntity, as_ref=True))
+
+##
 # Root Component holding all pages and meta information
 ##
 class UCCConfig(DocumentWithoutAddProp):
     meta = DocumentField(Meta, as_ref=True, required=True)
     pages = DocumentField(Pages, as_ref=True, required=True)
+    alerts = ArrayField(DocumentField(Alerts, as_ref=True), required=False, min_items=1)
 
 ##
 # SchemaGenerator responsible to generate schema json file holding information of Flow of UI based on UCCConfig Object

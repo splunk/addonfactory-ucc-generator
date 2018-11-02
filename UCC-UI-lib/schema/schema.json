@@ -1,6 +1,159 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#", 
     "definitions": {
+         "AlertEntity": {
+            "additionalProperties": false,
+            "properties": {
+                "defaultValue": {
+                    "oneOf": [
+                        {
+                            "type": "number"
+                        },
+                        {
+                            "maxLength": 250,
+                            "type": "string"
+                        },
+                        {
+                            "type": "boolean"
+                        }
+                    ]
+                },
+                "field": {
+                    "pattern": "^\\w+$",
+                    "type": "string"
+                },
+                "help": {
+                    "maxLength": 200,
+                    "type": "string"
+                },
+                "label": {
+                    "maxLength": 30,
+                    "type": "string"
+                },
+                "labelField": {
+                    "maxLength": 200,
+                    "type": "string"
+                },
+                "options": {
+                    "properties": {
+                        "items": {
+                            "items": {
+                                "$ref": "#/definitions/ValueLabelPair"
+                            },
+                            "type": "array"
+                        }
+                    },
+                    "type": "object"
+                },
+                "required": {
+                    "type": "boolean"
+                },
+                "search": {
+                    "maxLength": 200,
+                    "type": "string"
+                },
+                "type": {
+                    "enum": [
+                        "text",
+                        "singleSelect",
+                        "checkbox",
+                        "radio",
+                        "singleSelectSplunkSearch"
+                    ],
+                    "type": "string"
+                },
+                "valueField": {
+                    "maxLength": 200,
+                    "type": "string"
+                }
+            },
+            "required": [
+                "field",
+                "label",
+                "type"
+            ],
+            "type": "object"
+        },
+        "Alerts": {
+            "additionalProperties": false,
+            "properties": {
+                "activeResponse": {
+                    "properties": {
+                        "category": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "minItems": 1,
+                            "type": "array"
+                        },
+                        "drilldownUri": {
+                            "type": "string"
+                        },
+                        "sourcetype": {
+                            "maxLength": 50,
+                            "pattern": "^[a-zA-Z0-9:-_]+$",
+                            "type": "string"
+                        },
+                        "subject": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "minItems": 1,
+                            "type": "array"
+                        },
+                        "supportsAdhoc": {
+                            "type": "boolean"
+                        },
+                        "task": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "minItems": 1,
+                            "type": "array"
+                        },
+                        "technology": {
+                            "items": {
+                                "$ref": "#/definitions/Technology"
+                            },
+                            "minItems": 1,
+                            "type": "array"
+                        }
+                    },
+                    "required": [
+                        "category",
+                        "task",
+                        "supportsAdhoc",
+                        "technology",
+                        "subject"
+                    ],
+                    "type": "object"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "entity": {
+                    "items": {
+                        "$ref": "#/definitions/AlertEntity"
+                    },
+                    "type": "array"
+                },
+                "label": {
+                    "maxLength": 100,
+                    "type": "string"
+                },
+                "name": {
+                    "maxLength": 100,
+                    "pattern": "^[a-zA-Z0-9_]+$",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name",
+                "label",
+                "description"
+            ],
+            "type": "object"
+        },
         "ConfigurationEntity": {
             "type": "object", 
             "properties": {
@@ -982,6 +1135,33 @@
                 "title"
             ], 
             "additionalProperties": false
+        },
+         "Technology": {
+            "additionalProperties": false,
+            "properties": {
+                "product": {
+                    "maxLength": 100,
+                    "type": "string"
+                },
+                "vendor": {
+                    "maxLength": 100,
+                    "type": "string"
+                },
+                "version": {
+                    "items": {
+                        "pattern": "^\\d+(?:\\.\\d+)*$",
+                        "type": "string"
+                    },
+                    "minItems": 1,
+                    "type": "array"
+                }
+            },
+            "required": [
+                "version",
+                "product",
+                "vendor"
+            ],
+            "type": "object"
         }, 
         "UrlValidator": {
             "type": "object", 
@@ -1032,6 +1212,13 @@
     }, 
     "type": "object", 
     "properties": {
+        "alerts": {
+            "items": {
+                "$ref": "#/definitions/Alerts"
+            },
+            "minItems": 1,
+            "type": "array"
+        },
         "meta": {
             "$ref": "#/definitions/Meta"
         }, 

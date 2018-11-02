@@ -637,5 +637,103 @@
                 }
             ]
         }
+    },
+    "alerts":[{
+        "name": "test_alert",
+        "label": "Test Alert",
+        "description": "Description for test Alert Action",
+        "activeResponse": {
+          "task": [
+            "Create",
+            "Update"
+          ],
+          "supportsAdhoc": true,
+          "subject": [
+            "endpoint"
+          ],
+          "category": [
+            "Information Conveyance",
+            "Information Portrayal"
+          ],
+          "technology": [
+            {
+              "version": [
+                "1.0.0"
+              ],
+              "product": "Test Incident Update",
+              "vendor": "Splunk"
+            }
+          ],
+          "drilldownUri": "search?q=search%20index%3D\"_internal\"&earliest=0&latest=",
+          "sourcetype": "test:incident"
+        },
+        "entity": [
+            {
+                "type":"text",
+                "label":"Name",
+                "field":"name",
+                "defaultValue": "xyz",
+                "required": true,
+                "help": "Please enter your name"
+            },
+            {
+                "type":"checkbox",
+                "label":"All Incidents",
+                "field":"all_incidents",
+                "defaultValue": 0,
+                "required": false,
+                "help": "Tick if you want to update all incidents/problems"
+            },
+            {
+                "type": "singleSelect",
+                "label": "Table List",
+                "field": "table_list",
+                "options":{
+                  "items": [{
+                               "value" : "Incident",
+                                "label" : "incident"
+                              },
+                              {
+                                "value" : "Problem",
+                                "label" : "problem"
+                              }
+                            ]
+                          },
+                "help": "Please select the table",
+                "required": false,
+                "defaultValue": "problem"
+            },
+          {
+            "type": "radio",
+            "label": "Action:",
+            "field": "action",
+            "options":{
+                "items": [
+                      {
+                        "value" : "Update",
+                        "label" : "update"
+                      },
+                      {
+                        "value" : "Delete",
+                        "label" : "delete"
+                      }
+            ]
+            },
+            "help": "Select the action you want to perform",
+            "required": true,
+            "defaultValue": "two"
+          },
+          {
+            "type": "singleSelectSplunkSearch",
+            "label": "Select Account",
+            "field":"account",
+            "search": "| rest /servicesNS/nobody/TA-SNOW/admin/TA_SNOW_account | dedup title",
+            "valueField": "title",
+            "labelField": "title",
+            "help": "Select the account from the dropdown",
+            "required": true
+          }
+        ]
     }
+  ]
 }
