@@ -19,7 +19,7 @@ mapping_keys = {
 
 mapping_values = {
     "singleSelect" : "dropdownlist",
-    "dropdownlistSplunkSearch" : "dropdownlist_splunk_search"
+    "singleSelectSplunkSearch" : "dropdownlist_splunk_search"
 }
 
 
