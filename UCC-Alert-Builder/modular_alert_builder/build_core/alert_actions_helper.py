@@ -3,7 +3,7 @@ import os.path as op
 from os import rename, remove, makedirs
 from alert_actions_merge import merge_conf_file
 
-from aob.aob_common.conf_parser import TABConfigParser
+from alert_utils.alert_utils_common.conf_parser import TABConfigParser
 
 
 def write_file(file_name, file_path, content, logger, merge="stanza_overwrite"):

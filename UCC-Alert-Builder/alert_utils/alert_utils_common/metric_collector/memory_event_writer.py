@@ -1,4 +1,4 @@
-from aob.aob_common.metric_collector.event_writer import *
+from alert_utils.alert_utils_common.metric_collector.event_writer import *
 import Queue
 
 class MemoryEventWriter(MetricEventWriter):

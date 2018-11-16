@@ -7,7 +7,7 @@ import time
 import threading
 import traceback
 
-from aob.aob_common import builder_constant
+from alert_utils.alert_utils_common import builder_constant
 from builder_exception import CommonException
 import solnlib.conf_manager
 import solnlib.splunk_rest_client
@@ -15,8 +15,8 @@ import solnlib.utils
 import solnlib.splunkenv
 from solnlib.packages.splunklib.binding import HTTPError
 
-from aob.aob_common import logger, conf_parser
-from aob.aob_common.metric_collector import metric_util
+from alert_utils.alert_utils_common import logger, conf_parser
+from alert_utils.alert_utils_common.metric_collector import metric_util
 
 _logger = logger.get_builder_util_logger()
 
@@ -26,7 +26,7 @@ AUTHORITY_PATTERN = re.compile(
     "^((?P<scheme>[\w]+)\:\/\/)?(?P<host>[\w\.\-_]+)(\:(?P<port>[\d]+))?$")
 
 
-from aob.aob_common.metric_collector import monitor
+from alert_utils.alert_utils_common.metric_collector import monitor
 m = monitor.Monitor()
 import time
 

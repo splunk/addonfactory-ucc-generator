@@ -4,7 +4,7 @@ import logging
 import threading
 import copy
 
-from aob.aob_common.metric_collector import metric_util
+from alert_utils.alert_utils_common.metric_collector import metric_util
 
 LOGS = {
     "validation": "ta_builder_validation",

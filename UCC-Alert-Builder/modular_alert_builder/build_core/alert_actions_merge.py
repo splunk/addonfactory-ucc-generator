@@ -6,7 +6,7 @@ from shutil import copy
 import alert_actions_exceptions as aae
 import arf_consts as ac
 
-from aob.aob_common.conf_parser import TABConfigParser
+from alert_utils.alert_utils_common.conf_parser import TABConfigParser
 
 merge_black_list = ['default.meta', 'README.txt']
 merge_mode_config = {
