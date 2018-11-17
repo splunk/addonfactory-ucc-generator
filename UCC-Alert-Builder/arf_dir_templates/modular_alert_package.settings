@@ -1,0 +1,18 @@
+{
+    "envs": {
+        "product_id": "product_id",
+		"product_description": "description"
+    },
+    "scan":
+        {
+            "skip": [
+                        "[\\/]README.txt$",
+                        "[\\/]metadata[\\/]",
+                        "[\\/]default[\\/]app.conf",
+                        "bin[\\/]\\w+_import_declare.py"
+                    ],
+			"process": [
+				"[\\/]default[\\/]alert_actions.conf"
+				]
+        }
+}

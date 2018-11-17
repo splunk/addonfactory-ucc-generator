@@ -1,0 +1,14 @@
+<%page args="mod_alert"/>
+<form class="form-horizontal form-complex">
+<table>
+    <tr>
+        % for param in mod_alert.parameters:
+            <td>
+            <%include file="/${param.type}.html" args="mod_alert=mod_alert, param=param"/>
+            </td>
+        % endfor
+
+    </tr>
+</table>
+
+</form>
