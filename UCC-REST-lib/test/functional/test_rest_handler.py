@@ -108,7 +108,7 @@ class TestCreateFunction(unittest.TestCase):
                              'configs/conf-splunk_ta_uccexample_account'
         self.password_endpoint = 'https://localhost:8089/servicesNS/nobody/-/storage/passwords'
         self.test_item_name = '1'
-        self.PASSWORD = '********'
+        self.PASSWORD = '******'
 
     def create_item(self, data, via_conf=False, name=None):
         if via_conf:
@@ -298,12 +298,12 @@ class TestCreateFunction(unittest.TestCase):
 
     def testCreateWithMagicPassword(self):
         """
-            Test: Create an item with '********' as password value
+            Test: Create an item with '******' as password value
 
         """
-        # create item with '*******' as value
+        # create item with '*****' as value
         self.create_item(
-            data='-d name={name} -d endpoint=1 -d api_key=******** -d test_optional_password=1'.format(
+            data='-d name={name} -d endpoint=1 -d api_key=****** -d test_optional_password=1'.format(
                 name=self.test_item_name
             )
         )
@@ -316,12 +316,12 @@ class TestCreateFunction(unittest.TestCase):
 
     def testCreateWithMultipleMagicPassword(self):
         """
-            Test: Create an item with '********' as password value
+            Test: Create an item with '******' as password value
 
         """
         # create item with '*******' as value
         self.create_item(
-            data='-d name={name} -d endpoint=1 -d api_key=******** -d test_optional_password=********'.format(
+            data='-d name={name} -d endpoint=1 -d api_key=****** -d test_optional_password=******'.format(
                 name=self.test_item_name
             )
         )
@@ -358,7 +358,7 @@ class TestCreateFunction(unittest.TestCase):
         )
 
         item_content = self.get_item_content()
-        # check the get request response contains only 'api_key=********'
+        # check the get request response contains only 'api_key=******'
         self.assertEqual(item_content['api_key'], self.PASSWORD)
         # check the get request response does not contain test_optional_password field
         self.assertFalse('test_optional_password' in item_content)
@@ -410,7 +410,7 @@ class TestCreateFunction(unittest.TestCase):
 
     def testUpdateWithMagicPassword(self):
         """
-            Test: Update existing password with '*******', the password should not change after update
+            Test: Update existing password with '******', the password should not change after update
         """
         # create a test item
         self.create_item(
@@ -418,8 +418,8 @@ class TestCreateFunction(unittest.TestCase):
                 name=self.test_item_name
             )
         )
-        # update with password = '********'
-        self.update_item(data='-d api_key=********')
+        # update with password = '******'
+        self.update_item(data='-d api_key=******')
 
         clear_item_content = self.get_item_content(clear_password=True)
         # check the clear password is unchanged
