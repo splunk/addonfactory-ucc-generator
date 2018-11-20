@@ -68,7 +68,7 @@ class TestCreateFunction(unittest.TestCase):
                              'configs/conf-splunk_ta_uccexample_account'
         self.password_endpoint = 'https://localhost:8089/servicesNS/nobody/-/storage/passwords'
         self.test_item_name = '1'
-        self.PASSWORD = '********'
+        self.PASSWORD = '******'
 
     def create_item(self, data, via_conf=False, name=None):
         if via_conf:
@@ -157,7 +157,7 @@ class TestCreateFunction(unittest.TestCase):
         )
         content = self.get_item_content(clear_password=True)
         self.assertEqual(content['test_optional_password'], '')
-        # update with magic password '********'
+        # update with magic password '******'
         self.update_item(
             data='-d endpoint=1 -d endpoint=1 -d api_key=1 -d test_optional_password=*******'
         )

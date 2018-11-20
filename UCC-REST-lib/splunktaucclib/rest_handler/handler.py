@@ -150,7 +150,7 @@ class RestHandler(object):
             self._session_key,
             self._endpoint,
         )
-        self.PASSWORD = u'********'
+        self.PASSWORD = u'******'
 
     @_decode_response
     def get(self, name, decrypt=False):
@@ -310,7 +310,7 @@ class RestHandler(object):
                     )
 
             if not decrypt:
-                # replace clear password with '********'
+                # replace clear password with '******'
                 for field_name in encrypted_field_names:
                     if field_name in data and data[field_name]:
                         data[field_name] = self.PASSWORD
