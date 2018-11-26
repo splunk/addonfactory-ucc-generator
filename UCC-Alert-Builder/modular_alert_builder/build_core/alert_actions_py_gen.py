@@ -7,7 +7,6 @@ from mako.lookup import TemplateLookup
 import alert_actions_exceptions as aae
 from alert_actions_template import AlertActionsTemplateMgr
 from alert_actions_helper import write_file
-from tabuilder_utility import common_util
 import re
 
 
@@ -23,7 +22,11 @@ class AlertActionsPyBase(object):
         self._current_alert = None
         self._alert_actions_setting = input_setting[ac.MODULAR_ALERTS]
         self._ta_name = self._all_setting.get(ac.SHORT_NAME)
-        self._lib_dir = common_util.get_python_lib_dir_name(self._ta_name)
+        self._lib_dir = self.get_python_lib_dir_name(self._ta_name)
+
+    def get_python_lib_dir_name(self, app_name):
+        space_replace = re.compile('[^\w]+')
+        return space_replace.sub('_', app_name.lower())
 
     def get_alert_py_name(self, helper=""):
         return self._current_alert[ac.SHORT_NAME] + helper + ".py"
