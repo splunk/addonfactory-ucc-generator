@@ -99,4 +99,4 @@ def normalize(schema_content, product_id, short_name):
     iterdict(schema_content, result)
     for alert in result["alerts"]:
         transform_params(alert["parameters"])
-    return form_main_dict(result["alerts"], product_id, short_name)
+    return json.loads(json.dumps(form_main_dict(result["alerts"], product_id, short_name)))
