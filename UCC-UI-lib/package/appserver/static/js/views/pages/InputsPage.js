@@ -7,6 +7,7 @@ import BaseTableView from 'app/views/BaseTableView';
 import {sortAlphabetical} from 'app/util/sort';
 import 'appCssDir/common.css';
 import 'appCssDir/inputs.css';
+import { MODE_EDIT } from 'app/constants/modes'
 
 const ALL_SERVICE = 'all';
 
@@ -180,8 +181,39 @@ define([
             return models.sort(handler);
         },
 
+        editPopup: function () {
+            let editModel;
+            let params = new URLSearchParams(location.search);
+            let record = params.get('record');
+           
+            if (record && this.cachedCollection.models.length > 0) {
+                this.cachedCollection.models.forEach(function (element) {
+                    if (record === element.entry.get("name")) {
+                        editModel = element;
+                    }
+                });
+           
+                if (editModel) {
+                    const serviceConfig = this.inputsConfig.services[0];
+                    const editDialog = new EntityDialog({
+                        el: $(".dialog-placeholder"),
+                        collection: this.inputs,
+                        model: editModel,
+                        mode: MODE_EDIT,
+                        component: serviceConfig,
+                        dispatcher: this.dispatcher
+                    });
+           
+                    editDialog.render().modal();
+                 }
+            }
+        },
+
         filterService: function (models) {
             // Filter by service
+            if (this.inputs.length > 0) {
+                this.editPopup();
+            }
             const service = this.stateModel.get('service');
             if (service === ALL_SERVICE) {
                 return models;
