@@ -52,7 +52,8 @@ def iterdict(dictionary, result):
     '''
     for key in dictionary:
         if key in mapping_keys:
-            result[mapping_keys[key]] = result.pop(key)
+            value = result.pop(key)
+            result[mapping_keys[key]] = value.encode('ascii','ignore') if isinstance(value,unicode) else value
             mapped_key = mapping_keys[key]
         else:
             mapped_key = key
@@ -99,4 +100,4 @@ def normalize(schema_content, product_id, short_name):
     iterdict(schema_content, result)
     for alert in result["alerts"]:
         transform_params(alert["parameters"])
-    return json.loads(json.dumps(form_main_dict(result["alerts"], product_id, short_name)))
+    return form_main_dict(result["alerts"], product_id, short_name)
