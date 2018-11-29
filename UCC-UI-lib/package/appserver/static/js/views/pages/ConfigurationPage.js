@@ -50,7 +50,21 @@ define([
         },
 
         changeTab: function (params) {
-            if (params === null) return;
+
+            const { unifiedConfig: { pages: { configuration } } } = configManager;
+            let queryParams = new URLSearchParams(location.search);
+            let tabName = queryParams.get('tab');
+            let isTabFound = false;
+
+            // Iterate tab list for loop to check url pass tab value is valid or not. set isTabFound value true if url tab value is available in tab list.
+            configuration.tabs.forEach(tab => {
+                if (tab.name === tabName) {
+                    isTabFound = true;
+                }
+            });
+
+            // Added an isTabFound condition to return if tabid mismatched.
+            if (params === null || !isTabFound) return;
             this.tabName = params;
             $('.nav-tabs li').removeClass('active');
             $('#' + this.tabName + '-li').parent().addClass('active');

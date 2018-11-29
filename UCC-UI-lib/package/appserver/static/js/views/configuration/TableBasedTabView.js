@@ -8,18 +8,21 @@ import {
     fetchConfigurationModels,
     generateCollection
 } from 'app/util/backboneHelpers';
-import {setCollectionRefCount} from 'app/util/dependencyChecker';
-import {getFormattedMessage} from 'app/util/messageUtil';
+import { setCollectionRefCount } from 'app/util/dependencyChecker';
+import { getFormattedMessage } from 'app/util/messageUtil';
 import Util from 'app/util/Util';
-import {sortAlphabetical} from 'app/util/sort';
+import { sortAlphabetical } from 'app/util/sort';
 
 import BaseTableView from 'app/views/BaseTableView';
+
+// import MODE_EDIT constant to get edit string
+import { MODE_EDIT } from 'app/constants/modes';
 
 export default BaseTableView.extend({
     initialize: function (options) {
         BaseTableView.prototype.initialize.apply(this, arguments);
         const servicesDeferred = options.servicesDeferred;
-        const serviceCollectionObjList = 
+        const serviceCollectionObjList =
             _.get(options.dependencyMapping, options.props.name, []);
 
         const {
@@ -53,13 +56,13 @@ export default BaseTableView.extend({
             this.dataStore,
             this.filterSort(
                 this.filterSearch(this.cachedCollection.models)
-        ));
+            ));
         this.dataStore.reset(models);
     },
 
-    filterSearch: function(models) {
+    filterSearch: function (models) {
         if (!this.stateModel.get('search') ||
-                this.stateModel.get('search') === this.emptySearchString) {
+            this.stateModel.get('search') === this.emptySearchString) {
             return models;
         }
         const search = this.getRawSearch(this.stateModel.get('search'));
@@ -78,25 +81,60 @@ export default BaseTableView.extend({
 
     filterSort: function (models) {
         const sortKey = this.stateModel.get('sortKey'),
-              sortDir = this.stateModel.get('sortDirection'),
-              handler = (a, b) => {
-                  const header = this.props.table.header;
-                  return sortAlphabetical(
-                      this._getCompareText(a, sortKey, header),
-                      this._getCompareText(b, sortKey, header),
-                      sortDir
-                  );
-              }
+            sortDir = this.stateModel.get('sortDirection'),
+            handler = (a, b) => {
+                const header = this.props.table.header;
+                return sortAlphabetical(
+                    this._getCompareText(a, sortKey, header),
+                    this._getCompareText(b, sortKey, header),
+                    sortDir
+                );
+            }
         return models.sort(handler);
+    },
+
+    /**
+     * Method to open the edit dialog box popup on tab based page
+     * This method will parse the URL Query Parameters e.g. ..../pageName?tab=mytab&record=myinput
+     * In the popup it will open the tab with tab-id specified in the query parameter e.g. mytab and tab input data with input name specified in the query parameter e.g. myinput in the edit mode
+     * If tab input name is incorrect, it will just open the tab page without any errors shown on the page but it will be logged in javascript console
+    */
+    editPopup: function () {
+        let editModel;
+        let params = new URLSearchParams(location.search);
+        let tabName = params.get('tab');
+        let record = params.get('record');
+
+        if (record && tabName && this.cachedCollection.models.length > 0 && "#" + tabName + "-tab" === this.containerId) {
+            this.cachedCollection.models.forEach(function (element) {
+                if (record === element.entry.get("name")) {
+                    editModel = element;
+                }
+            });
+
+            if (editModel) {
+                const editDialog = new EntityDialog({
+                    el: $(".dialog-placeholder"),
+                    collection: this.dataStore,
+                    model: editModel,
+                    mode: MODE_EDIT,
+                    component: this.props,
+                    dispatcher: this.dispatcher
+                });
+                editDialog.render().modal();
+            }
+        } else {
+            console.log(`No record found of name: '${record}'`)
+        }
     },
 
     render: function () {
         Util.addLoadingMsg(this.$el);
 
         const addButtonData = {
-                buttonId: this.submitBtnId,
-                buttonValue: 'Add'
-            },
+            buttonId: this.submitBtnId,
+            buttonValue: 'Add'
+        },
             {
                 props,
                 entitiesDeferred,
@@ -108,7 +146,7 @@ export default BaseTableView.extend({
             this.$el.html('');
             const caption = new CaptionView({
                 countLabel: getFormattedMessage(107),
-                model: {state: this.stateModel},
+                model: { state: this.stateModel },
                 collection: this.dataStore,
                 noFilterButtons: true,
                 filterKey: this.filterKey
@@ -138,11 +176,16 @@ export default BaseTableView.extend({
                     dispatcher: this.dispatcher
                 }).render().modal();
             });
+
+            /**
+             * call the editPopup event after rendering the page.
+             */
+            this.editPopup();
         };
 
         deferred.done(() => {
             // Set cache models
-            this.cachedCollection.add(this.dataStore.models, {silent: true});
+            this.cachedCollection.add(this.dataStore.models, { silent: true });
             this.stateChange();
             if (entitiesDeferred) {
                 entitiesDeferred.done(() => {
