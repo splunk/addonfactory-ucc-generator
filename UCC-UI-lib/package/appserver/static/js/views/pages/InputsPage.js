@@ -180,7 +180,8 @@ define([
                   );
             return models.sort(handler);
         },
-
+        
+        // Method to open the edit-popup dialog box on input page
         editPopup: function () {
             let editModel;
             let params = new URLSearchParams(location.search);
