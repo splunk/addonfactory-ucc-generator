@@ -139,6 +139,8 @@ define([
                     configurationPageView.render();
                     $(".main-section-body").html(configurationPageView.el);
                     $(".main-section-body").addClass('configuration');
+
+                    // Get tab value from query string tab key and pass that value in changeTab event.
                     let params = new URLSearchParams(location.search);
                     let tab = params.get('tab');
                     configurationPageView.changeTab(tab);
