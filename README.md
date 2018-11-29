@@ -1,16 +1,19 @@
 Table of contents
-1. [Release notes](#Release-notes)
-2. [Prerequisites](#prerequisites)
-3. [Install and configure Bower](#Install-and-configure-Bower)
-4. [Command to build an example add-on](#Command-to-build-an-example-add-on)
-5. [Implementation of a hook feature](#Implementation-of-a-hook-feature)
-6. [OAuth support for UCC](#OAuth-support-for-UCC)
-7. [Display error messages and highlighted fields with red borders](#Display-error-messages-and-highlighted-fields-with-red-borders)
-8. [Add tooltip on hover](#Add-tooltip-on-hover)
-9. [Providing a link to another configuration page dynamically](#Providing-a-link-to-another-configuration-page-dynamically)
-10. [Show components depending on value of previous component](#Show-components-depending-on-value-of-previous-component)
-11. [Populate dropdown using endpoint](#Populate-dropdown-using-endpoint)
-12. [Show alert icon](#show-alert-icon)
+- [Release notes](#release-notes)
+    - [3.2.0](#320)
+        - [Features:](#features)
+- [Prerequisites](#prerequisites)
+- [Install and configure Bower](#install-and-configure-bower)
+- [Command to build an example add-on](#command-to-build-an-example-add-on)
+- [Implementation of a hook feature](#implementation-of-a-hook-feature)
+- [OAuth support for UCC](#oauth-support-for-ucc)
+- [Display error messages and highlighted fields with red borders](#display-error-messages-and-highlighted-fields-with-red-borders)
+- [Add tooltip on hover](#add-tooltip-on-hover)
+- [Providing a link to another configuration page dynamically](#providing-a-link-to-another-configuration-page-dynamically)
+- [Show components depending on value of previous component](#show-components-depending-on-value-of-previous-component)
+- [Populate dropdown using endpoint](#populate-dropdown-using-endpoint)
+- [Show alert icon](#show-alert-icon)
+- [Deep link functionality for input page](#deep-link-functionality-for-input-page)
 
 ### Release notes
 #### 3.2.0
@@ -333,3 +336,13 @@ You can always refer to [ta-salesforce](https://git.splunk.com/projects/FINGALS/
 Note:
 * Replace ${SPLUNK_HOME} with real Splunk home path.
 * Replace ${UCC_GENERATED_APP} with UCC Generated App name.
+
+### Deep link functionality for input page
+Below are the steps to create deep link url:
+window.
+1. Get url upto input page using ```window.location.href```
+2. Append ```?record=<input-name>``` to URL from step 1.
+
+Example of a complete URL will look like:
+* ```https://10.0.11.47:8000/en-US/app/Splunk_TA_salesforce/inputs?record=myinput``` 
+
