@@ -1,16 +1,19 @@
 Table of contents
-1. [Release notes](#Release-notes)
-2. [Prerequisites](#prerequisites)
-3. [Install and configure Bower](#Install-and-configure-Bower)
-4. [Command to build an example add-on](#Command-to-build-an-example-add-on)
-5. [Implementation of a hook feature](#Implementation-of-a-hook-feature)
-6. [OAuth support for UCC](#OAuth-support-for-UCC)
-7. [Display error messages and highlighted fields with red borders](#Display-error-messages-and-highlighted-fields-with-red-borders)
-8. [Add tooltip on hover](#Add-tooltip-on-hover)
-9. [Providing a link to another configuration page dynamically](#Providing-a-link-to-another-configuration-page-dynamically)
-10. [Show components depending on value of previous component](#Show-components-depending-on-value-of-previous-component)
-11. [Populate dropdown using endpoint](#Populate-dropdown-using-endpoint)
-12. [Show alert icon](#show-alert-icon)
+- [Release notes](#release-notes)
+    - [3.2.0](#320)
+        - [Features:](#features)
+- [Prerequisites](#prerequisites)
+- [Install and configure Bower](#install-and-configure-bower)
+- [Command to build an example add-on](#command-to-build-an-example-add-on)
+- [Implementation of a hook feature](#implementation-of-a-hook-feature)
+- [OAuth support for UCC](#oauth-support-for-ucc)
+- [Display error messages and highlighted fields with red borders](#display-error-messages-and-highlighted-fields-with-red-borders)
+- [Add tooltip on hover](#add-tooltip-on-hover)
+- [Providing a link to another configuration page dynamically](#providing-a-link-to-another-configuration-page-dynamically)
+- [Show components depending on value of previous component](#show-components-depending-on-value-of-previous-component)
+- [Populate dropdown using endpoint](#populate-dropdown-using-endpoint)
+- [Show alert icon](#show-alert-icon)
+- [Deep link functionality for configuration or tab view based page](#deep-link-functionality-for-configuration-or-tab-view-based-page)
 
 ### Release notes
 #### 3.2.0
@@ -154,11 +157,11 @@ Below is the global config example for the same:
                                 "oauth_timeout": 180,
                                 "auth_code_endpoint":"/services/oauth2/authorize",
                                 "access_token_endpoint":"/services/oauth2/token"
-                            }    
+                            }
                    }
-              
+
               ],
-               
+
           }
      ]
 }
@@ -169,7 +172,7 @@ Below is the explanation of each field:
 * Options:
      * `auth_type` must be present. It can have either `["basic", "oauth"]` (if we want basic and oauth both support) or `["oauth"]` (if we want oauth support only).
      * `basic` this must be present only if `basic` is provided in `auth_type`. <br/>
-        This will have list of fields you want to add in basic authentication flow. <br/> 
+        This will have list of fields you want to add in basic authentication flow. <br/>
         In the given example, it is `username`, `password` and  `security token`. <br/>
         Please not that as of now, if you are selecting basic auth. `username` and `password` is mandatory field.
      * `oauth` this must be present if `oauth` is provided in `auth_type`. <br/>
@@ -181,7 +184,7 @@ Below is the explanation of each field:
         * `redirect_url` this will show redirect url which needs to be put in app's redirect url.<br/>
         * `endpoint` this will be endpoint for which we want to build oauth support. For example for salesforce that will be either "login.salesforce.com" or "test.salesforce.com" or any other custom endpoint.<br/>
          This field is can be present as part of normal fields as there can be scenario that this is required in both basic and oauth authentication. But it should be present at any of the place to oauth to work.
-     *  `auth_code_endpoint` this must be present and its value should be endpoint value for getting the auth_code using the app. If the url to get auth_code is `https://login.salesforce.com/services/oauth2/authorize` then this will have value `/services/oauth2/authorize` 
+     *  `auth_code_endpoint` this must be present and its value should be endpoint value for getting the auth_code using the app. If the url to get auth_code is `https://login.salesforce.com/services/oauth2/authorize` then this will have value `/services/oauth2/authorize`
      *  `access_token_endpoint` this must be present and its value should be endpoint value for getting access_token using the auth_code received. If the url to get access token is `https://login.salesforce.com/services/oauth2/token` then this will have value `/services/oauth2/token`
      *  `auth_label` this allow user to have custom label for Auth Type dropdown
      *  `oauth_popup_width` width in pixels of the popup window that will open for oauth authentication(Optional, defaults to 600)
@@ -197,8 +200,8 @@ Below is the explanation of each field:
      * `help` : This can be changed if user wants to change the help text displayed below field.
      * `encrypted` : This should be true if user wants that particular field encrypted else no need to have this parameter.<br/>
     **No other fields apart from above mentioned fields are allowed as of now.**
-    
-Once user create/changes globalconfig.json as per above guidance. 
+
+Once user create/changes globalconfig.json as per above guidance.
 Generate a build after adjusting globalconfig.json following instructions above.
 
 ### Display error messages and highlighted fields with red borders
@@ -225,7 +228,7 @@ Create a link for the configuration page with the following code snippet:
 ```
 // This creates a link for the configuration page.
 var account_config_url = window.location.href.replace("inputs", "configuration");
-// This adds the link using template 
+// This adds the link using template
 $(`[data-name="account"]`).after(_.template(accountHelpText)({account_config_url:account_config_url}));
 
 // accountHelpText template
@@ -325,6 +328,15 @@ To show an alert icon for certain field values when working with custom cells, u
     <i class="icon-alert" title="<%- title %>" ></i>
 </span> <%- account %>
 ```
+
+### Deep link functionality for configuration or tab view based page
+Below are the steps to create deep link url:
+
+1. Get url upto configuration page using ```window.location.href```
+2. Append ```?tab=<tab-id>&record=<configuration-name>``` to URL from step 1.
+
+Example of a complete URL will look like:
+* ```https://10.0.11.47:8000/en-US/app/Splunk_TA_salesforce/configuration?tab=tabid&record=myinput```
 
 
 You can always refer to [ta-salesforce](https://git.splunk.com/projects/FINGALS/repos/ta-salesforce/browse) as a reference for featured UCC use cases.
