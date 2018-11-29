@@ -7,7 +7,7 @@ import BaseTableView from 'app/views/BaseTableView';
 import {sortAlphabetical} from 'app/util/sort';
 import 'appCssDir/common.css';
 import 'appCssDir/inputs.css';
-import { MODE_EDIT } from 'app/constants/modes'
+import {MODE_EDIT} from 'app/constants/modes'
 
 const ALL_SERVICE = 'all';
 
@@ -181,7 +181,12 @@ define([
             return models.sort(handler);
         },
         
-        // Method to open the edit-popup dialog box on input page
+        /**
+         * Method to open the edit-popup dialog box on input page
+         * This method will parse the URL Query Parameters e.g. ..../inputs?record=myinput
+         * In the popup it will open the data input with input name specified in the query parameter e.g. myinput in the edit mode
+         * If input name is incorrect, it will just open the input page without any errors shown on the page but it will be logged in javascript console
+         */        
         editPopup: function () {
             let editModel;
             let params = new URLSearchParams(location.search);
@@ -206,7 +211,9 @@ define([
                     });
            
                     editDialog.render().modal();
-                 }
+                } else {
+                    console.log(`No input record found of name: '${record}'`)
+                }
             }
         },
 
