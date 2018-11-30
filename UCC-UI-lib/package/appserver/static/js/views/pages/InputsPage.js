@@ -7,6 +7,7 @@ import BaseTableView from 'app/views/BaseTableView';
 import {sortAlphabetical} from 'app/util/sort';
 import 'appCssDir/common.css';
 import 'appCssDir/inputs.css';
+import {MODE_EDIT} from 'app/constants/modes'
 
 const ALL_SERVICE = 'all';
 
@@ -179,9 +180,48 @@ define([
                   );
             return models.sort(handler);
         },
+        
+        /**
+         * Method to open the edit-popup dialog box on input page
+         * This method will parse the URL Query Parameters e.g. ..../inputs?record=myinput
+         * In the popup it will open the data input with input name specified in the query parameter e.g. myinput in the edit mode
+         * If input name is incorrect, it will just open the input page without any errors shown on the page but it will be logged in javascript console
+         */        
+        editPopup: function () {
+            let editModel;
+            let params = new URLSearchParams(location.search);
+            let record = params.get('record');
+           
+            if (record && this.cachedCollection.models.length > 0) {
+                this.cachedCollection.models.forEach(function (element) {
+                    if (record === element.entry.get("name")) {
+                        editModel = element;
+                    }
+                });
+           
+                if (editModel) {
+                    const serviceConfig = this.inputsConfig.services[0];
+                    const editDialog = new EntityDialog({
+                        el: $(".dialog-placeholder"),
+                        collection: this.inputs,
+                        model: editModel,
+                        mode: MODE_EDIT,
+                        component: serviceConfig,
+                        dispatcher: this.dispatcher
+                    });
+           
+                    editDialog.render().modal();
+                } else {
+                    console.log(`No input record found of name: '${record}'`)
+                }
+            }
+        },
 
         filterService: function (models) {
             // Filter by service
+            if (this.inputs.length > 0) {
+                this.editPopup();
+            }
             const service = this.stateModel.get('service');
             if (service === ALL_SERVICE) {
                 return models;
