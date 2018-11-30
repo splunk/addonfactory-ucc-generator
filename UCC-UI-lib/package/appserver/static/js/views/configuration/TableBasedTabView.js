@@ -16,7 +16,7 @@ import {sortAlphabetical} from 'app/util/sort';
 import BaseTableView from 'app/views/BaseTableView';
 
 // import MODE_EDIT constant to get edit string
-import { MODE_EDIT } from 'app/constants/modes';
+import {MODE_EDIT} from 'app/constants/modes';
 
 export default BaseTableView.extend({
     initialize: function (options) {
