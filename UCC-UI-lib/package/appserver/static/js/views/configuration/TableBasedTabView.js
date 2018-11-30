@@ -8,10 +8,10 @@ import {
     fetchConfigurationModels,
     generateCollection
 } from 'app/util/backboneHelpers';
-import { setCollectionRefCount } from 'app/util/dependencyChecker';
-import { getFormattedMessage } from 'app/util/messageUtil';
+import {setCollectionRefCount} from 'app/util/dependencyChecker';
+import {getFormattedMessage} from 'app/util/messageUtil';
 import Util from 'app/util/Util';
-import { sortAlphabetical } from 'app/util/sort';
+import {sortAlphabetical} from 'app/util/sort';
 
 import BaseTableView from 'app/views/BaseTableView';
 

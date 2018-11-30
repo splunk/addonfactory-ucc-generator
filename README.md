@@ -1,4 +1,5 @@
 Table of contents
+
 - [Release notes](#release-notes)
     - [3.2.0](#320)
         - [Features:](#features)
@@ -13,13 +14,15 @@ Table of contents
 - [Show components depending on value of previous component](#show-components-depending-on-value-of-previous-component)
 - [Populate dropdown using endpoint](#populate-dropdown-using-endpoint)
 - [Show alert icon](#show-alert-icon)
-- [Deep link functionality for configuration or tab view based page](#deep-link-functionality-for-configuration-or-tab-view-based-page)
+- [Deep link functionality for input page](#deep-link-functionality-for-input-page)
+- [Deep link functionality for tab view page](#deep-link-functionality-for-tab-view-page)
 
 ### Release notes
 #### 3.2.0
 ##### Features:
 * OAuth2.0 support
 * Custom hook support in the configuration tab
+* Deep link support for input and tab view page.
 
 ### Prerequisites
 We use Bower, Grunt, and Webpack to build the Universal Configuration Console.
@@ -329,14 +332,24 @@ To show an alert icon for certain field values when working with custom cells, u
 </span> <%- account %>
 ```
 
-### Deep link functionality for configuration or tab view based page
+### Deep link functionality for input page
 Below are the steps to create deep link url:
-
-1. Get url upto configuration page using ```window.location.href```
-2. Append ```?tab=<tab-id>&record=<configuration-name>``` to URL from step 1.
+window.
+1. Get url upto input page using ```window.location.href```
+2. Append ```?record=<record-name>``` to URL from step 1.
 
 Example of a complete URL will look like:
-* ```https://10.0.11.47:8000/en-US/app/Splunk_TA_salesforce/configuration?tab=tabid&record=myinput```
+* ```https://10.0.11.47:8000/en-US/app/Splunk_TA_salesforce/inputs?record=myrecord```
+
+
+### Deep link functionality for tab view page
+Below are the steps to create deep link url:
+
+1. Get url upto tab page using ```window.location.href```
+2. Append ```?tab=<tab-id>&record=<record-name>``` to URL from step 1.
+
+Example of a complete URL will look like:
+* ```https://10.0.11.47:8000/en-US/app/Splunk_TA_salesforce/configuration?tab=tabid&record=myrecord```
 
 
 You can always refer to [ta-salesforce](https://git.splunk.com/projects/FINGALS/repos/ta-salesforce/browse) as a reference for featured UCC use cases.
