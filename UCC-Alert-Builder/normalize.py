@@ -52,7 +52,8 @@ def iterdict(dictionary, result):
     '''
     for key in dictionary:
         if key in mapping_keys:
-            result[mapping_keys[key]] = result.pop(key)
+            value = result.pop(key)
+            result[mapping_keys[key]] = value.encode('ascii','ignore') if isinstance(value,unicode) else value
             mapped_key = mapping_keys[key]
         else:
             mapped_key = key
