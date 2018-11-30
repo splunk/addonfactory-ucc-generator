@@ -146,7 +146,7 @@ export default BaseTableView.extend({
             this.$el.html('');
             const caption = new CaptionView({
                 countLabel: getFormattedMessage(107),
-                model: { state: this.stateModel },
+                model: {state: this.stateModel},
                 collection: this.dataStore,
                 noFilterButtons: true,
                 filterKey: this.filterKey
@@ -185,7 +185,7 @@ export default BaseTableView.extend({
 
         deferred.done(() => {
             // Set cache models
-            this.cachedCollection.add(this.dataStore.models, { silent: true });
+            this.cachedCollection.add(this.dataStore.models, {silent: true});
             this.stateChange();
             if (entitiesDeferred) {
                 entitiesDeferred.done(() => {
