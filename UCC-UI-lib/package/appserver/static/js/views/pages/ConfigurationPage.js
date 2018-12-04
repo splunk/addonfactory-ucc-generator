@@ -50,13 +50,22 @@ define([
         },
 
         changeTab: function (params) {
-            if (params === null) return;
-            this.tabName = params;
-            $('.nav-tabs li').removeClass('active');
-            $('#' + this.tabName + '-li').parent().addClass('active');
-            $('.tab-content div').removeClass('active');
-            $(`#${params}-tab`).addClass('active');
-            this.stateModel.set('selectedTabId', `#${params}-tab`);
+
+            const { unifiedConfig: { pages: { configuration } } } = configManager;
+            let queryParams = new URLSearchParams(location.search);
+            let tabName = queryParams.get('tab');
+
+            for (var i = 0; i < configuration.tabs.length; i++) {
+                if (configuration.tabs[i].name === tabName) {
+                    this.tabName = params;
+                    $('.nav-tabs li').removeClass('active');
+                    $('#' + this.tabName + '-li').parent().addClass('active');
+                    $('.tab-content div').removeClass('active');
+                    $(`#${params}-tab`).addClass('active');
+                    this.stateModel.set('selectedTabId', `#${params}-tab`);
+                    break;
+                }
+            }
         },
 
         _parseHeader({title, description}) {

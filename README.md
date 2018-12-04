@@ -1,4 +1,5 @@
 Table of contents
+
 - [Release notes](#release-notes)
     - [3.2.0](#320)
         - [Features:](#features)
@@ -14,12 +15,14 @@ Table of contents
 - [Populate dropdown using endpoint](#populate-dropdown-using-endpoint)
 - [Show alert icon](#show-alert-icon)
 - [Deep link functionality for input page](#deep-link-functionality-for-input-page)
+- [Deep link functionality for tab view page](#deep-link-functionality-for-tab-view-page)
 
 ### Release notes
 #### 3.2.0
 ##### Features:
 * OAuth2.0 support
 * Custom hook support in the configuration tab
+* Deep link support for input and tab view page.
 
 ### Prerequisites
 We use Bower, Grunt, and Webpack to build the Universal Configuration Console.
@@ -157,11 +160,11 @@ Below is the global config example for the same:
                                 "oauth_timeout": 180,
                                 "auth_code_endpoint":"/services/oauth2/authorize",
                                 "access_token_endpoint":"/services/oauth2/token"
-                            }    
+                            }
                    }
-              
+
               ],
-               
+
           }
      ]
 }
@@ -172,7 +175,7 @@ Below is the explanation of each field:
 * Options:
      * `auth_type` must be present. It can have either `["basic", "oauth"]` (if we want basic and oauth both support) or `["oauth"]` (if we want oauth support only).
      * `basic` this must be present only if `basic` is provided in `auth_type`. <br/>
-        This will have list of fields you want to add in basic authentication flow. <br/> 
+        This will have list of fields you want to add in basic authentication flow. <br/>
         In the given example, it is `username`, `password` and  `security token`. <br/>
         Please not that as of now, if you are selecting basic auth. `username` and `password` is mandatory field.
      * `oauth` this must be present if `oauth` is provided in `auth_type`. <br/>
@@ -184,7 +187,7 @@ Below is the explanation of each field:
         * `redirect_url` this will show redirect url which needs to be put in app's redirect url.<br/>
         * `endpoint` this will be endpoint for which we want to build oauth support. For example for salesforce that will be either "login.salesforce.com" or "test.salesforce.com" or any other custom endpoint.<br/>
          This field is can be present as part of normal fields as there can be scenario that this is required in both basic and oauth authentication. But it should be present at any of the place to oauth to work.
-     *  `auth_code_endpoint` this must be present and its value should be endpoint value for getting the auth_code using the app. If the url to get auth_code is `https://login.salesforce.com/services/oauth2/authorize` then this will have value `/services/oauth2/authorize` 
+     *  `auth_code_endpoint` this must be present and its value should be endpoint value for getting the auth_code using the app. If the url to get auth_code is `https://login.salesforce.com/services/oauth2/authorize` then this will have value `/services/oauth2/authorize`
      *  `access_token_endpoint` this must be present and its value should be endpoint value for getting access_token using the auth_code received. If the url to get access token is `https://login.salesforce.com/services/oauth2/token` then this will have value `/services/oauth2/token`
      *  `auth_label` this allow user to have custom label for Auth Type dropdown
      *  `oauth_popup_width` width in pixels of the popup window that will open for oauth authentication(Optional, defaults to 600)
@@ -200,8 +203,8 @@ Below is the explanation of each field:
      * `help` : This can be changed if user wants to change the help text displayed below field.
      * `encrypted` : This should be true if user wants that particular field encrypted else no need to have this parameter.<br/>
     **No other fields apart from above mentioned fields are allowed as of now.**
-    
-Once user create/changes globalconfig.json as per above guidance. 
+
+Once user create/changes globalconfig.json as per above guidance.
 Generate a build after adjusting globalconfig.json following instructions above.
 
 ### Display error messages and highlighted fields with red borders
@@ -228,7 +231,7 @@ Create a link for the configuration page with the following code snippet:
 ```
 // This creates a link for the configuration page.
 var account_config_url = window.location.href.replace("inputs", "configuration");
-// This adds the link using template 
+// This adds the link using template
 $(`[data-name="account"]`).after(_.template(accountHelpText)({account_config_url:account_config_url}));
 
 // accountHelpText template
@@ -329,6 +332,25 @@ To show an alert icon for certain field values when working with custom cells, u
 </span> <%- account %>
 ```
 
+### Deep link functionality for input page
+Below are the steps to create deep link url:
+window.
+1. Get url upto input page using ```window.location.href```
+2. Append ```?record=<record-name>``` to URL from step 1.
+
+Example of a complete URL will look like:
+* ```https://10.0.11.47:8000/en-US/app/Splunk_TA_salesforce/inputs?record=myrecord```
+
+
+### Deep link functionality for tab view page
+Below are the steps to create deep link url:
+
+1. Get url upto tab page using ```window.location.href```
+2. Append ```?tab=<tab-id>&record=<record-name>``` to URL from step 1.
+
+Example of a complete URL will look like:
+* ```https://10.0.11.47:8000/en-US/app/Splunk_TA_salesforce/configuration?tab=tabid&record=myrecord```
+
 
 You can always refer to [ta-salesforce](https://git.splunk.com/projects/FINGALS/repos/ta-salesforce/browse) as a reference for featured UCC use cases.
 
@@ -336,13 +358,3 @@ You can always refer to [ta-salesforce](https://git.splunk.com/projects/FINGALS/
 Note:
 * Replace ${SPLUNK_HOME} with real Splunk home path.
 * Replace ${UCC_GENERATED_APP} with UCC Generated App name.
-
-### Deep link functionality for input page
-Below are the steps to create deep link url:
-window.
-1. Get url upto input page using ```window.location.href```
-2. Append ```?record=<input-name>``` to URL from step 1.
-
-Example of a complete URL will look like:
-* ```https://10.0.11.47:8000/en-US/app/Splunk_TA_salesforce/inputs?record=myinput``` 
-

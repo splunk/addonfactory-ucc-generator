@@ -112,7 +112,7 @@ define([
             // Set the param of the navigator model even when it's empty
             this.model.navigator.set({params}, {silent: true});
             // Keep navigator model url attribute consistent with current url
-            if (this.model.navigator.get('url') !== 
+            if (this.model.navigator.get('url') !==
                     this.model.navigator.getNextUrl()) {
                 this.model.navigator.updateUrl(true);
             }
@@ -139,7 +139,11 @@ define([
                     configurationPageView.render();
                     $(".main-section-body").html(configurationPageView.el);
                     $(".main-section-body").addClass('configuration');
-                    configurationPageView.changeTab(queryString);
+
+                    // Get tab value from query string tab key and pass that value in changeTab event.
+                    let params = new URLSearchParams(location.search);
+                    let tab = params.get('tab');
+                    configurationPageView.changeTab(tab);
                 }
             });
         },
