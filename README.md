@@ -354,6 +354,10 @@ Example of a complete URL will look like:
 
 You can always refer to [ta-salesforce](https://git.splunk.com/projects/FINGALS/repos/ta-salesforce/browse) as a reference for featured UCC use cases.
 
+Reference: 
+
+One can refere [UCC developemnt Guide](https://confluence.splunk.com/display/PROD/Splunk+UCC+3.X+Development+Guide#SplunkUCC3.XDevelopmentGuide-Optionsofeachcontroltypeforentityparameter), [UCC 3.1.0 configuration interface](https://confluence.splunk.com/display/PROD/UCC+3.1+Configuration+Interface) and resources mentioned there for advanced option like custom cell, custom row etc.
+
 
 Note:
 * Replace ${SPLUNK_HOME} with real Splunk home path.
