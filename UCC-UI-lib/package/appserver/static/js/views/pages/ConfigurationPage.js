@@ -51,21 +51,35 @@ define([
 
         changeTab: function (params) {
 
+            if (params === null) return;
             const { unifiedConfig: { pages: { configuration } } } = configManager;
             let queryParams = new URLSearchParams(location.search);
             let tabName = queryParams.get('tab');
 
-            for (var i = 0; i < configuration.tabs.length; i++) {
-                if (configuration.tabs[i].name === tabName) {
-                    this.tabName = params;
-                    $('.nav-tabs li').removeClass('active');
-                    $('#' + this.tabName + '-li').parent().addClass('active');
-                    $('.tab-content div').removeClass('active');
-                    $(`#${params}-tab`).addClass('active');
-                    this.stateModel.set('selectedTabId', `#${params}-tab`);
-                    break;
+            if(tabName && configuration.tabs.length>0) {
+                for (var i = 0; i < configuration.tabs.length; i++) {
+                    if (configuration.tabs[i].name === tabName) {
+                        this._activateTab(params);
+                        break;
+                    }
                 }
+            } else {
+                this._activateTab(params);
             }
+        },
+
+        /**
+         * Method to activate the tab based on params value or URL Query Parameters e.g. ..../pageName?tab=mytab
+         * If tab name is incorrect, it will open the first tab by default.
+         * @param params = Tab Name
+         */
+        _activateTab(params){
+            this.tabName = params;
+            $('.nav-tabs li').removeClass('active');
+            $('#' + this.tabName + '-li').parent().addClass('active');
+            $('.tab-content div').removeClass('active');
+            $(`#${params}-tab`).addClass('active');
+            this.stateModel.set('selectedTabId', `#${params}-tab`);
         },
 
         _parseHeader({title, description}) {
