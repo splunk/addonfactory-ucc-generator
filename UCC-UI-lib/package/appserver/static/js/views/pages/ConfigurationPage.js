@@ -55,17 +55,26 @@ define([
             let queryParams = new URLSearchParams(location.search);
             let tabName = queryParams.get('tab');
 
-            for (var i = 0; i < configuration.tabs.length; i++) {
-                if (configuration.tabs[i].name === tabName) {
-                    this.tabName = params;
-                    $('.nav-tabs li').removeClass('active');
-                    $('#' + this.tabName + '-li').parent().addClass('active');
-                    $('.tab-content div').removeClass('active');
-                    $(`#${params}-tab`).addClass('active');
-                    this.stateModel.set('selectedTabId', `#${params}-tab`);
-                    break;
+            if (params === null) return;
+            if(tabName && configuration.tabs.length>0) {
+                for (var i = 0; i < configuration.tabs.length; i++) {
+                    if (configuration.tabs[i].name === tabName) {
+                        this._activateTab(params);
+                        break;
+                    }
                 }
+            } else {
+                this._activateTab(params);
             }
+        },
+
+        _activateTab(params){
+            this.tabName = params;
+            $('.nav-tabs li').removeClass('active');
+            $('#' + this.tabName + '-li').parent().addClass('active');
+            $('.tab-content div').removeClass('active');
+            $(`#${params}-tab`).addClass('active');
+            this.stateModel.set('selectedTabId', `#${params}-tab`);
         },
 
         _parseHeader({title, description}) {
