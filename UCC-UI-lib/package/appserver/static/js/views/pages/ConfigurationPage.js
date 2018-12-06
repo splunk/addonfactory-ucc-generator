@@ -51,11 +51,11 @@ define([
 
         changeTab: function (params) {
 
+            if (params === null) return;
             const { unifiedConfig: { pages: { configuration } } } = configManager;
             let queryParams = new URLSearchParams(location.search);
             let tabName = queryParams.get('tab');
 
-            if (params === null) return;
             if(tabName && configuration.tabs.length>0) {
                 for (var i = 0; i < configuration.tabs.length; i++) {
                     if (configuration.tabs[i].name === tabName) {
