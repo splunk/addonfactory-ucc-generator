@@ -70,7 +70,7 @@ define([
 
         /**
          * Method to activate the tab based on params value or URL Query Parameters e.g. ..../pageName?tab=mytab
-         * If tab input name is incorrect, it will open the first tab by default.
+         * If tab name is incorrect, it will open the first tab by default.
          * @param params = Tab Name
          */
         _activateTab(params){
