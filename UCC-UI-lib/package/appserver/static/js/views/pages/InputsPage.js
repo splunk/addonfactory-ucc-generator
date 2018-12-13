@@ -321,7 +321,8 @@ define([
                         const dlg = new EntityDialog({
                             el: $(".dialog-placeholder"),
                             collection: this.inputs,
-                            component: serviceConfig
+                            component: serviceConfig,
+                            dispatcher: this.dispatcher
                         }).render();
                         dlg.modal();
                     }
