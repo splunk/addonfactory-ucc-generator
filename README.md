@@ -496,11 +496,11 @@ Following is a brief explanation for each field (All the fields mentioned below 
     * `options` are only valid for type **checkbox** and **radio**. The options available are:
         * `items`: A list of dictionaries consisting of value and label pair, which represents value and label of the option in the above types respectively. 
 
-You can always refer to [ta-salesforce](https://git.splunk.com/projects/FINGALS/repos/ta-salesforce/browse) as a reference for featured UCC use cases.
+You can always refer to [ta-salesforce](https://git.splunk.com/projects/FINGALS/repos/ta-salesforce/browse) for featured UCC use cases and [ta-snow](https://git.splunk.com/projects/SOLN/repos/ta-snow/browse) for alert actions.
 
 Reference: 
 
-One can refere [UCC developemnt Guide](https://confluence.splunk.com/display/PROD/Splunk+UCC+3.X+Development+Guide#SplunkUCC3.XDevelopmentGuide-Optionsofeachcontroltypeforentityparameter), [UCC 3.1.0 configuration interface](https://confluence.splunk.com/display/PROD/UCC+3.1+Configuration+Interface) and resources mentioned there for advanced option like custom cell, custom row etc.
+One can refer [UCC developemnt Guide](https://confluence.splunk.com/display/PROD/Splunk+UCC+3.X+Development+Guide#SplunkUCC3.XDevelopmentGuide-Optionsofeachcontroltypeforentityparameter), [UCC 3.1.0 configuration interface](https://confluence.splunk.com/display/PROD/UCC+3.1+Configuration+Interface) and resources mentioned there for advanced option like custom cell, custom row etc.
 
 
 Note:
