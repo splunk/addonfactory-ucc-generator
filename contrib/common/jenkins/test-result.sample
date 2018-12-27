@@ -1,4 +1,0 @@
-<?xml version="1.0"?>
-<testsuite time="0" tests="1" skipped="0" failures="0" errors="0" name="suite-template">
-    <testcase time="0" name="case-template" classname="case-template.testcase"/>
-</testsuite>

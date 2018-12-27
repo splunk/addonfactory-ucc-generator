@@ -1,0 +1,3 @@
+[submodule "contrib/common"]
+	path = contrib/common
+	url = ssh://git@git.splunk.com:7999/soln/common.git

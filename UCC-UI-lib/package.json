@@ -1,0 +1,54 @@
+{
+  "name": "UCC-UI-lib",
+  "version": "{version}",
+  "devDependencies": {
+    "babel-core": "^6.0.0",
+    "babel-loader": "^6.0.0",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-plugin-transform-es2015-parameters": "^6.9.0",
+    "babel-plugin-transform-object-rest-spread": "^6.8.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-polyfill": "^6.3.14",
+    "babel-preset-es2015": "^6.0.15",
+    "babel-preset-stage-0": "^6.5.0",
+    "babel-preset-es2017": "^6.24.1",
+    "chai": "^3.5.0",
+    "eslint": "^3.19.0",
+    "expose-loader": "^0.7.3",
+    "ext-grunt-basebuild": "1.0.32",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-webpack": "^1.0.11",
+    "karma": "^0.13.10",
+    "karma-cli": "^0.1.1",
+    "karma-mocha": "^0.2.0",
+    "karma-mocha-reporter": "^1.1.1",
+    "karma-phantomjs-launcher": "^0.2.1",
+    "karma-sourcemap-loader": "^0.3.5",
+    "karma-webpack": "^1.7.0",
+    "mocha": "^2.3.3",
+    "phantomjs": "^1.9.18",
+    "phantomjs-polyfill": "0.0.1",
+    "raw-loader": "^0.5.1",
+    "webpack": "^1.13.1",
+    "webpack-bundle-analyzer": "^2.8.2",
+    "webpack-dev-server": "^1.14.1"
+  },
+  "scripts": {
+    "build": "grunt copy:publish && grunt shell:style && grunt webpack:build",
+    "buildDev": "python build_dev.py && grunt copy:dev && grunt shell:style && npm start && grunt webpack:dev",
+    "fortify": "/usr/bin/fortify-scanner.py",
+    "copyConfig": "mkdir ./build/appserver/static/js/build && cp ../globalConfig.json ./build/appserver/static/js/build/globalConfig.json",
+    "test": "karma start ./config/karma/karma.conf.js",
+    "watchSchemaGenerator": "nodemon --exec python schema/schemaGenerator.py --watch schema/schemaGenerator.py",
+    "generateSchema": "python schema/schemaGenerator.py",
+    "setupXML": "node viewXmlSetup.js",
+    "start": "npm run setupXML && npm run copyConfig",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "jsonschema": "^1.1.0"
+  },
+  "publishConfig": {
+    "registry": "https://repo.splunk.com/artifactory/api/npm/npm-solutions-local"
+  }
+}

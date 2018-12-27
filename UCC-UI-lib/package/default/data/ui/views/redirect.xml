@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<view template="${package.name}:templates/${ta.name}_redirect.html" type="html" isDashboard="False">
+    <label>Redirect</label>
+</view>

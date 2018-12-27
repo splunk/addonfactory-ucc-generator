@@ -1,0 +1,1234 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#", 
+    "definitions": {
+         "AlertEntity": {
+            "additionalProperties": false,
+            "properties": {
+                "defaultValue": {
+                    "oneOf": [
+                        {
+                            "type": "number"
+                        },
+                        {
+                            "maxLength": 250,
+                            "type": "string"
+                        },
+                        {
+                            "type": "boolean"
+                        }
+                    ]
+                },
+                "field": {
+                    "pattern": "^\\w+$",
+                    "type": "string"
+                },
+                "help": {
+                    "maxLength": 200,
+                    "type": "string"
+                },
+                "label": {
+                    "maxLength": 30,
+                    "type": "string"
+                },
+                "labelField": {
+                    "maxLength": 200,
+                    "type": "string"
+                },
+                "options": {
+                    "properties": {
+                        "items": {
+                            "items": {
+                                "$ref": "#/definitions/ValueLabelPair"
+                            },
+                            "type": "array"
+                        }
+                    },
+                    "type": "object"
+                },
+                "required": {
+                    "type": "boolean"
+                },
+                "search": {
+                    "maxLength": 200,
+                    "type": "string"
+                },
+                "type": {
+                    "enum": [
+                        "text",
+                        "singleSelect",
+                        "checkbox",
+                        "radio",
+                        "singleSelectSplunkSearch"
+                    ],
+                    "type": "string"
+                },
+                "valueField": {
+                    "maxLength": 200,
+                    "type": "string"
+                }
+            },
+            "required": [
+                "field",
+                "label",
+                "type"
+            ],
+            "type": "object"
+        },
+        "Alerts": {
+            "additionalProperties": false,
+            "properties": {
+                "activeResponse": {
+                    "properties": {
+                        "category": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "minItems": 1,
+                            "type": "array"
+                        },
+                        "drilldownUri": {
+                            "type": "string"
+                        },
+                        "sourcetype": {
+                            "maxLength": 50,
+                            "pattern": "^[a-zA-Z0-9:-_]+$",
+                            "type": "string"
+                        },
+                        "subject": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "minItems": 1,
+                            "type": "array"
+                        },
+                        "supportsAdhoc": {
+                            "type": "boolean"
+                        },
+                        "task": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "minItems": 1,
+                            "type": "array"
+                        },
+                        "technology": {
+                            "items": {
+                                "$ref": "#/definitions/Technology"
+                            },
+                            "minItems": 1,
+                            "type": "array"
+                        }
+                    },
+                    "required": [
+                        "category",
+                        "task",
+                        "supportsAdhoc",
+                        "technology",
+                        "subject"
+                    ],
+                    "type": "object"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "entity": {
+                    "items": {
+                        "$ref": "#/definitions/AlertEntity"
+                    },
+                    "type": "array"
+                },
+                "label": {
+                    "maxLength": 100,
+                    "type": "string"
+                },
+                "name": {
+                    "maxLength": 100,
+                    "pattern": "^[a-zA-Z0-9_]+$",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name",
+                "label",
+                "description"
+            ],
+            "type": "object"
+        },
+        "ConfigurationEntity": {
+            "type": "object", 
+            "properties": {
+                "field": {
+                    "type": "string", 
+                    "pattern": "(?!^(?:output_mode|output_field|owner|app|sharing)$)(?:^\\w+$)"
+                }, 
+                "label": {
+                    "type": "string", 
+                    "maxLength": 30
+                }, 
+                "type": {
+                    "type": "string", 
+                    "enum": [
+                        "custom", 
+                        "text", 
+                        "singleSelect", 
+                        "checkbox", 
+                        "multipleSelect", 
+                        "radio", 
+                        "placeholder", 
+                        "oauth"
+                    ]
+                }, 
+                "help": {
+                    "type": "string", 
+                    "maxLength": 200
+                }, 
+                "tooltip": {
+                    "type": "string", 
+                    "maxLength": 250
+                }, 
+                "defaultValue": {
+                    "oneOf": [
+                        {
+                            "type": "number"
+                        }, 
+                        {
+                            "type": "string", 
+                            "maxLength": 250
+                        }, 
+                        {
+                            "type": "boolean"
+                        }
+                    ]
+                }, 
+                "options": {
+                    "type": "object", 
+                    "properties": {
+                        "auth_type": {
+                            "type": "array", 
+                            "items": {
+                                "type": "string", 
+                                "maxLength": 100
+                            }
+                        },
+                        "oauth_popup_height": {
+                            "type": "number"
+                        },
+                        "oauth_timeout": {
+                            "type": "number"
+                        },
+                        "oauth_popup_width": {
+                            "type": "number"
+                        },
+                        "auth_label": {
+                            "type": "string",
+                            "maxLength": 250
+                        },
+                        "src": {
+                            "type": "string", 
+                            "maxLength": 250
+                        }, 
+                        "enable": {
+                            "type": "boolean"
+                        }, 
+                        "auth_code_endpoint": {
+                            "type": "string",
+                            "maxLength": 350
+                        },
+                        "items": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ValueLabelPair"
+                            }
+                        },
+                        "whiteList": {
+                            "type": "string",
+                            "maxLength": 350
+                        },
+                        "defaultValue": {
+                            "type": "string",
+                            "maxLength": 250
+                        },
+                        "endpointUrl": {
+                            "type": "string",
+                            "maxLength": 350
+                        },
+                        "display": {
+                            "type": "boolean"
+                        },
+                        "blackList": {
+                            "type": "string",
+                            "maxLength": 350
+                        },
+                        "basic": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/OAuthFields"
+                            }
+                        },
+                        "delimiter": {
+                            "type": "string",
+                            "maxLength": 1
+                        },
+                        "labelField": {
+                            "type": "string",
+                            "maxLength": 250
+                        },
+                        "access_token_endpoint": {
+                            "type": "string",
+                            "maxLength": 350
+                        },
+                        "disableonEdit": {
+                            "type": "boolean"
+                        },
+                        "referenceName": {
+                            "type": "string",
+                            "maxLength": 250
+                        },
+                        "oauth": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/OAuthFields"
+                            }
+                        },
+                        "autoCompleteFields": {
+                            "oneOf": [
+                                {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "children": {
+                                                "type": "array",
+                                                "items": {
+                                                    "$ref": "#/definitions/ValueLabelPair"
+                                                }
+                                            },
+                                            "label": {
+                                                "type": "string",
+                                                "maxLength": 150
+                                            }
+                                        },
+                                        "required": [
+                                            "children",
+                                            "label"
+                                        ]
+                                    }
+                                },
+                                {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/ValueLabelPair"
+                                    }
+                                }
+                            ]
+                        },
+                        "placeholder": {
+                            "type": "string",
+                            "maxLength": 250
+                        },
+                        "disableSearch": {
+                            "type": "boolean"
+                        }
+                    }
+                },
+                "required": {
+                    "type": "boolean"
+                },
+                "encrypted": {
+                    "type": "boolean"
+                },
+                "validators": {
+                    "type": "array",
+                    "items": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/definitions/StringValidator"
+                            },
+                            {
+                                "$ref": "#/definitions/NumberValidator"
+                            },
+                            {
+                                "$ref": "#/definitions/RegexValidator"
+                            },
+                            {
+                                "$ref": "#/definitions/EmailValidator"
+                            },
+                            {
+                                "$ref": "#/definitions/Ipv4Validator"
+                            },
+                            {
+                                "$ref": "#/definitions/UrlValidator"
+                            },
+                            {
+                                "$ref": "#/definitions/DateValidator"
+                            }
+                        ]
+                    }
+                }
+            },
+            "required": [
+                "field",
+                "label",
+                "type"
+            ],
+            "additionalProperties": false
+        },
+        "ConfigurationPage": {
+            "type": "object",
+            "properties": {
+                "title": {
+                    "type": "string",
+                    "maxLength": 60
+                },
+                "description": {
+                    "type": "string",
+                    "maxLength": 200
+                },
+                "tabs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/TabContent"
+                    },
+                    "minItems": 1
+                }
+            },
+            "required": [
+                "title",
+                "tabs"
+            ],
+            "additionalProperties": false
+        },
+        "ConfigurationTable": {
+            "type": "object",
+            "properties": {
+                "moreInfo": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "field": {
+                                "type": "string",
+                                "pattern": "^\\w+$"
+                            },
+                            "mapping": {
+                                "type": "object"
+                            },
+                            "label": {
+                                "type": "string",
+                                "maxLength": 30
+                            }
+                        },
+                        "required": [
+                            "field",
+                            "label"
+                        ]
+                    }
+                },
+                "header": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "field": {
+                                "type": "string",
+                                "pattern": "^\\w+$"
+                            },
+                            "customCell": {
+                                "type": "object"
+                            },
+                            "mapping": {
+                                "type": "object"
+                            },
+                            "label": {
+                                "type": "string",
+                                "maxLength": 30
+                            }
+                        },
+                        "required": [
+                            "field",
+                            "label"
+                        ]
+                    }
+                },
+                "customRow": {
+                    "type": "object"
+                },
+                "actions": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "edit",
+                            "delete",
+                            "clone"
+                        ]
+                    }
+                }
+            },
+            "required": [
+                "header",
+                "actions"
+            ],
+            "additionalProperties": false
+        },
+        "DateValidator": {
+            "type": "object",
+            "properties": {
+                "errorMsg": {
+                    "type": "string",
+                    "maxLength": 400
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "date"
+                    ]
+                }
+            },
+            "required": [
+                "type"
+            ],
+            "additionalProperties": false
+        },
+        "EmailValidator": {
+            "type": "object",
+            "properties": {
+                "errorMsg": {
+                    "type": "string",
+                    "maxLength": 400
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "email"
+                    ]
+                }
+            },
+            "required": [
+                "type"
+            ],
+            "additionalProperties": false
+        },
+        "Hooks": {
+            "type": "object",
+            "properties": {
+                "saveValidator": {
+                    "type": "string",
+                    "maxLength": 3000
+                },
+                "onLoad": {
+                    "type": "string",
+                    "maxLength": 3000
+                },
+                "onChange": {
+                    "type": "string",
+                    "maxLength": 3000
+                }
+            },
+            "additionalProperties": false
+        },
+        "InputsEntity": {
+            "type": "object",
+            "properties": {
+                "field": {
+                    "type": "string",
+                    "pattern": "(?!^(?:persistentQueueSize|queueSize|start_by_shell|output_mode|output_field|owner|app|sharing)$)(?:^\\w+$)"
+                },
+                "label": {
+                    "type": "string",
+                    "maxLength": 30
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "custom",
+                        "text",
+                        "singleSelect",
+                        "checkbox",
+                        "multipleSelect",
+                        "radio",
+                        "placeholder",
+                        "oauth"
+                    ]
+                },
+                "help": {
+                    "type": "string",
+                    "maxLength": 200
+                },
+                "tooltip": {
+                    "type": "string",
+                    "maxLength": 250
+                },
+                "defaultValue": {
+                    "oneOf": [
+                        {
+                            "type": "number"
+                        },
+                        {
+                            "type": "string",
+                            "maxLength": 250
+                        },
+                        {
+                            "type": "boolean"
+                        }
+                    ]
+                },
+                "options": {
+                    "type": "object",
+                    "properties": {
+                        "auth_type": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "maxLength": 100
+                            }
+                        },
+                        "oauth_popup_height": {
+                            "type": "number"
+                        },
+                        "oauth_timeout": {
+                            "type": "number"
+                        },
+                        "oauth_popup_width": {
+                            "type": "number"
+                        },
+                        "auth_label": {
+                            "type": "string",
+                            "maxLength": 250
+                        },
+                        "src": {
+                            "type": "string",
+                            "maxLength": 250
+                        },
+                        "enable": {
+                            "type": "boolean"
+                        },
+                        "auth_code_endpoint": {
+                            "type": "string",
+                            "maxLength": 350
+                        },
+                        "items": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ValueLabelPair"
+                            }
+                        },
+                        "whiteList": {
+                            "type": "string",
+                            "maxLength": 350
+                        },
+                        "defaultValue": {
+                            "type": "string",
+                            "maxLength": 250
+                        },
+                        "endpointUrl": {
+                            "type": "string",
+                            "maxLength": 350
+                        },
+                        "display": {
+                            "type": "boolean"
+                        },
+                        "blackList": {
+                            "type": "string",
+                            "maxLength": 350
+                        },
+                        "basic": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/OAuthFields"
+                            }
+                        },
+                        "delimiter": {
+                            "type": "string",
+                            "maxLength": 1
+                        },
+                        "labelField": {
+                            "type": "string",
+                            "maxLength": 250
+                        },
+                        "access_token_endpoint": {
+                            "type": "string",
+                            "maxLength": 350
+                        },
+                        "disableonEdit": {
+                            "type": "boolean"
+                        },
+                        "referenceName": {
+                            "type": "string",
+                            "maxLength": 250
+                        },
+                        "oauth": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/OAuthFields"
+                            }
+                        },
+                        "autoCompleteFields": {
+                            "oneOf": [
+                                {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "children": {
+                                                "type": "array",
+                                                "items": {
+                                                    "$ref": "#/definitions/ValueLabelPair"
+                                                }
+                                            },
+                                            "label": {
+                                                "type": "string",
+                                                "maxLength": 150
+                                            }
+                                        },
+                                        "required": [
+                                            "children",
+                                            "label"
+                                        ]
+                                    }
+                                },
+                                {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/ValueLabelPair"
+                                    }
+                                }
+                            ]
+                        },
+                        "placeholder": {
+                            "type": "string",
+                            "maxLength": 250
+                        },
+                        "disableSearch": {
+                            "type": "boolean"
+                        }
+                    }
+                },
+                "required": {
+                    "type": "boolean"
+                },
+                "encrypted": {
+                    "type": "boolean"
+                },
+                "validators": {
+                    "type": "array",
+                    "items": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/definitions/StringValidator"
+                            },
+                            {
+                                "$ref": "#/definitions/NumberValidator"
+                            },
+                            {
+                                "$ref": "#/definitions/RegexValidator"
+                            },
+                            {
+                                "$ref": "#/definitions/EmailValidator"
+                            },
+                            {
+                                "$ref": "#/definitions/Ipv4Validator"
+                            },
+                            {
+                                "$ref": "#/definitions/UrlValidator"
+                            },
+                            {
+                                "$ref": "#/definitions/DateValidator"
+                            }
+                        ]
+                    }
+                }
+            },
+            "required": [
+                "field",
+                "label",
+                "type"
+            ],
+            "additionalProperties": false
+        },
+        "InputsPage": {
+            "type": "object",
+            "properties": {
+                "title": {
+                    "type": "string",
+                    "maxLength": 60
+                },
+                "description": {
+                    "type": "string",
+                    "maxLength": 200
+                },
+                "table": {
+                    "$ref": "#/definitions/InputsTable"
+                },
+                "services": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "restHandlerName": {
+                                "type": "string",
+                                "maxLength": 100
+                            },
+                            "hook": {
+                                "type": "object"
+                            },
+                            "style": {
+                                "type": "string",
+                                "enum": [
+                                    "page",
+                                    "dialog"
+                                ]
+                            },
+                            "name": {
+                                "type": "string",
+                                "pattern": "^[0-9a-zA-Z][0-9a-zA-Z_-]*$",
+                                "maxLength": 50
+                            },
+                            "groups": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "field": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "pattern": "^\\w+$"
+                                            }
+                                        },
+                                        "options": {
+                                            "type": "object",
+                                            "properties": {
+                                                "isExpandable": {
+                                                    "type": "boolean"
+                                                },
+                                                "expand": {
+                                                    "type": "boolean"
+                                                }
+                                            }
+                                        },
+                                        "label": {
+                                            "type": "string",
+                                            "maxLength": 100
+                                        }
+                                    },
+                                    "required": [
+                                        "label"
+                                    ]
+                                }
+                            },
+                            "title": {
+                                "type": "string",
+                                "maxLength": 100
+                            },
+                            "conf": {
+                                "type": "string",
+                                "maxLength": 100
+                            },
+                            "options": {
+                                "$ref": "#/definitions/Hooks"
+                            },
+                            "entity": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/InputsEntity"
+                                }
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "title",
+                            "entity"
+                        ]
+                    }
+                },
+                "menu": {
+                    "type": "object"
+                }
+            },
+            "required": [
+                "title",
+                "table",
+                "services"
+            ],
+            "additionalProperties": false
+        },
+        "InputsTable": {
+            "type": "object",
+            "properties": {
+                "moreInfo": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "field": {
+                                "type": "string",
+                                "pattern": "^\\w+$"
+                            },
+                            "mapping": {
+                                "type": "object"
+                            },
+                            "label": {
+                                "type": "string",
+                                "maxLength": 30
+                            }
+                        },
+                        "required": [
+                            "field",
+                            "label"
+                        ]
+                    }
+                },
+                "header": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "field": {
+                                "type": "string",
+                                "pattern": "^\\w+$"
+                            },
+                            "customCell": {
+                                "type": "object"
+                            },
+                            "mapping": {
+                                "type": "object"
+                            },
+                            "label": {
+                                "type": "string",
+                                "maxLength": 30
+                            }
+                        },
+                        "required": [
+                            "field",
+                            "label"
+                        ]
+                    }
+                },
+                "customRow": {
+                    "type": "object"
+                },
+                "actions": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "edit",
+                            "delete",
+                            "clone",
+                            "enable"
+                        ]
+                    }
+                }
+            },
+            "required": [
+                "header",
+                "actions"
+            ],
+            "additionalProperties": false
+        },
+        "Ipv4Validator": {
+            "type": "object",
+            "properties": {
+                "errorMsg": {
+                    "type": "string",
+                    "maxLength": 400
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "ipv4"
+                    ]
+                }
+            },
+            "required": [
+                "type"
+            ],
+            "additionalProperties": false
+        },
+        "Meta": {
+            "type": "object",
+            "properties": {
+                "displayName": {
+                    "type": "string",
+                    "maxLength": 200
+                },
+                "name": {
+                    "type": "string",
+                    "pattern": "^[^<>\\:\"\\/\\\\|\\?\\*]+$"
+                },
+                "restRoot": {
+                    "type": "string",
+                    "pattern": "^\\w+$"
+                },
+                "apiVersion": {
+                    "type": "string",
+                    "pattern": "^(?:\\d{1,3}\\.){2}\\d{1,3}$"
+                },
+                "version": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "displayName",
+                "name",
+                "restRoot",
+                "apiVersion",
+                "version"
+            ],
+            "additionalProperties": false
+        },
+        "NumberValidator": {
+            "type": "object",
+            "properties": {
+                "errorMsg": {
+                    "type": "string",
+                    "maxLength": 400
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "number"
+                    ]
+                },
+                "range": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                }
+            },
+            "required": [
+                "type",
+                "range"
+            ],
+            "additionalProperties": false
+        },
+        "OAuthFields": {
+            "type": "object",
+            "properties": {
+                "oauth_field": {
+                    "type": "string",
+                    "maxLength": 100
+                },
+                "label": {
+                    "type": "string",
+                    "maxLength": 100
+                },
+                "field": {
+                    "type": "string",
+                    "maxLength": 100
+                },
+                "help": {
+                    "type": "string",
+                    "maxLength": 200
+                },
+                "encrypted": {
+                    "type": "boolean"
+                }
+            },
+            "additionalProperties": false
+        },
+        "Pages": {
+            "type": "object",
+            "properties": {
+                "configuration": {
+                    "$ref": "#/definitions/ConfigurationPage"
+                },
+                "inputs": {
+                    "$ref": "#/definitions/InputsPage"
+                }
+            },
+            "additionalProperties": false
+        },
+        "RegexValidator": {
+            "type": "object",
+            "properties": {
+                "errorMsg": {
+                    "type": "string",
+                    "maxLength": 400
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "regex"
+                    ]
+                },
+                "pattern": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "type",
+                "pattern"
+            ],
+            "additionalProperties": false
+        },
+        "StringValidator": {
+            "type": "object",
+            "properties": {
+                "errorMsg": {
+                    "type": "string",
+                    "maxLength": 400
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "string"
+                    ]
+                },
+                "minLength": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "maxLength": {
+                    "type": "number",
+                    "minimum": 0
+                }
+            },
+            "required": [
+                "type",
+                "minLength",
+                "maxLength"
+            ],
+            "additionalProperties": false
+        },
+        "TabContent": {
+            "type": "object",
+            "properties": {
+                "entity": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ConfigurationEntity"
+                    }
+                },
+                "name": {
+                    "type": "string",
+                    "pattern": "^[\\/\\w]+$",
+                    "maxLength": 250
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 50
+                },
+                "options": {
+                    "$ref": "#/definitions/Hooks"
+                },
+                "table": {
+                    "$ref": "#/definitions/ConfigurationTable"
+                },
+                "conf": {
+                    "type": "string",
+                    "maxLength": 100
+                },
+                "restHandlerName": {
+                    "type": "string",
+                    "maxLength": 100
+                },
+                "hook": {
+                    "type": "object"
+                }
+            }, 
+            "required": [
+                "entity", 
+                "name", 
+                "title"
+            ], 
+            "additionalProperties": false
+        },
+         "Technology": {
+            "additionalProperties": false,
+            "properties": {
+                "product": {
+                    "maxLength": 100,
+                    "type": "string"
+                },
+                "vendor": {
+                    "maxLength": 100,
+                    "type": "string"
+                },
+                "version": {
+                    "items": {
+                        "pattern": "^\\d+(?:\\.\\d+)*$",
+                        "type": "string"
+                    },
+                    "minItems": 1,
+                    "type": "array"
+                }
+            },
+            "required": [
+                "version",
+                "product",
+                "vendor"
+            ],
+            "type": "object"
+        }, 
+        "UrlValidator": {
+            "type": "object", 
+            "properties": {
+                "errorMsg": {
+                    "type": "string", 
+                    "maxLength": 400
+                }, 
+                "type": {
+                    "type": "string", 
+                    "enum": [
+                        "url"
+                    ]
+                }
+            }, 
+            "required": [
+                "type"
+            ], 
+            "additionalProperties": false
+        }, 
+        "ValueLabelPair": {
+            "type": "object", 
+            "properties": {
+                "value": {
+                    "oneOf": [
+                        {
+                            "type": "number"
+                        }, 
+                        {
+                            "type": "string", 
+                            "maxLength": 250
+                        }, 
+                        {
+                            "type": "boolean"
+                        }
+                    ]
+                }, 
+                "label": {
+                    "type": "string", 
+                    "maxLength": 100
+                }
+            }, 
+            "required": [
+                "label"
+            ], 
+            "additionalProperties": false
+        }
+    }, 
+    "type": "object", 
+    "properties": {
+        "alerts": {
+            "items": {
+                "$ref": "#/definitions/Alerts"
+            },
+            "minItems": 1,
+            "type": "array"
+        },
+        "meta": {
+            "$ref": "#/definitions/Meta"
+        }, 
+        "pages": {
+            "$ref": "#/definitions/Pages"
+        }
+    }, 
+    "required": [
+        "meta", 
+        "pages"
+    ], 
+    "additionalProperties": false
+}

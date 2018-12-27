@@ -1,3 +1,0 @@
-eventtype=cisco_esa_authentication
-eventtype=cisco_esa_proxy
-index=* tag=authentication

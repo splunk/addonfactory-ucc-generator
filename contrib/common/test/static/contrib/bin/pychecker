@@ -1,6 +1,0 @@
-#! /bin/sh
-
-#/Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python /Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/pychecker/checker.py "$@"
-
-/Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python /usr/local/bamboo/src/splunk/current/test/tests/static/contrib/pychecker/pychecker/checker.py "$@"
-
