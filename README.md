@@ -1,8 +1,10 @@
 Table of contents
-
 - [Release notes](#release-notes)
-    - [3.2.0](#320)
-        - [Features:](#features)
+  - [3.3.0](#330)
+    - [Features:](#features)
+    - [Bug Fixes:](#bug-fixes)
+  - [3.2.0](#320)
+    - [Features:](#features-1)
 - [Prerequisites](#prerequisites)
 - [Install and configure Bower](#install-and-configure-bower)
 - [Command to build an example add-on](#command-to-build-an-example-add-on)
