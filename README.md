@@ -354,8 +354,16 @@ Example of a complete URL will look like:
 
 ### Alert actions integration with ta-ui-framework
 
-Alert actions can be generated directly by providing information in globalConfig.json. Following is an example which will generate all the files required for alert action. The details have to be provided at the root level (same level as pages and meta). As shown below, we can provide a list of dictionaries of alert actions to create multiple alert actions:
+Alert actions can be generated directly by providing information in globalConfig.json. Following is an example which will generate all the below files required for alert action:
+* default/alert_actions.conf
+* README/alert_actions.conf.spec 
+* default/data/ui/alerts/<alert_name>.html 
+* bin/<alert_name>.py
+* bin/<TA_Name>/modalert_<alert_name>_helper.py
 
+The main logic for alert action can be written in *bin/<TA_Name>/modalert_<alert_name>_helper.py*. The details have to be provided at the root level (same level as pages and meta). As shown below, we can provide a list of dictionaries of alert actions to create multiple alert actions:
+
+Example:
 globalConfig.json
 ```
 "alerts":[
@@ -460,33 +468,33 @@ globalConfig.json
     ]
 ```
 
-Following is a brief explanation for every field (All the parameters mentioned below are required unless specified otherwise):
+Following is a brief explanation for each field (All the fields mentioned below are required unless specified otherwise):
 * `name`, `label` and `description` denotes the name, friendly name and a brief description of the alert action respectively.
-* `activeResponse` field is required to provide support for **adaptive response action** in **Splunk Enterprise Security**. This field is required only if the support for **adaptive response action** is to be provided. Following are the parameters for the same (all the parameters mentioned below are required unless specified otherwise):
-    * For `task`, enter the functions performed by the action, such as "scan".
-    * Provide **true** in `supportsAdhoc` if the action supports ad hoc invocation from the Actions menu on the Incident Review dashboard in Splunk Enterprise Security.
-    * In `subject`, enter the objects that the action's tasks can be performed on, such as "endpoint.file".
-    * `category` should contain the categories that the action belongs to, such as **Information Gathering**.
-    * `technology` parameter contains `vendor`, `product` and `version` parameters which are explained below:
-        * `vendor` is the technology vendor that the action supports.
-        * In `product`, enter the product that the action supports.
-        * In `version`, enter the versions of the product that the action supports.
-    * Optionally, for `drillDownUri`, enter a URL to a custom drilldown or view for the link that appears in the detailed view of a notable event on the Incident Review dashboard in Splunk Enterprise Security. If you don't specify a URL, the default URL runs a search for the result events created by this response action.
-    * For `sourcetype`, enter the source type to which to assign the events produced as a result of this response action. It is an optional parameter.
-* `entity` field is a list of dictionaries, each containing details about the input fields available on the html form of the alert actions. The details about the various parameters of `entity` field are mentioned below (all the parameters mentioned below are required unless specified otherwise):
-    * `field` represents the name of the entity.
-    * `label` represents the friendly name of the entity.
-    * `type` parameter is used to specify different types of entities. Supported types are: **text, singleSelect, checkbox, radio,** and **singleSelectSplunkSearch**. 
-    * `defaultValue` represents the default value of the entity. It can be a number, string or boolean value, depending upon the type of entity. It is an optional parameter.
-    * `help` is useful for providing friendly help text to the user. It is an optional parameter.
-    * `required` parameter specifies whether the given input entity is required or not. It is an optional parameter. 
-    * `search`, `valueField`, and `labelField` parameters are only valid for type **singleSelectSplunkSearch**. They are explained below:
-        * `search` represents the query string to execute. It is useful for querying the REST API, a lookup table, or indexed data.
-        * `valueField` indicates the field name to use for drop-down option values that correspond to the option labels.
-        * `labelField` indicates  the field name to use for drop-down option labels. Labels generated from this field are visible in the drop-down interface.
-        All the above parameters are required.
+* `activeResponse` field is required to provide support for **adaptive response action** in **Splunk Enterprise Security**. This field is required only if the support for **adaptive response action** is to be provided. Following are the fields for the same (all the fields mentioned below are required unless specified otherwise):
+    * `task`: Enter the functions performed by the action, such as "scan".
+    * `supportsAdhoc`: Provide **true** if the action supports ad hoc invocation from the Actions menu on the Incident Review dashboard in Splunk Enterprise Security.
+    * `subject`: Enter the objects that the action's tasks can be performed on, such as "endpoint.file".
+    * `category`: It should contain the categories that the action belongs to, such as **Information Gathering**.
+    * `technology` field contains `vendor`, `product` and `version` fields which are explained below:
+        * `vendor`: The technology vendor that the action supports.
+        * `product`: Enter the product that the action supports.
+        * `version`: Enter the versions of the product that the action supports.
+    * `drillDownUri`: Enter a URL to a custom drilldown or view for the link that appears in the detailed view of a notable event on the Incident Review dashboard in Splunk Enterprise Security. If you don't specify a URL, the default URL runs a search for the result events created by this response action. It is an optional field.
+    * `sourcetype`: Enter the source type to which to assign the events produced as a result of this response action. It is an optional field.
+* `entity` field is a list of dictionaries, each containing details about the input fields available on the html form of the alert actions. The details about the various fields of `entity` are mentioned below (all the fields mentioned below are required unless specified otherwise):
+    * `field`: The name of the entity.
+    * `label`: The friendly name of the entity.
+    * `type`: *type* field is used to specify different types of entities. Supported types are: **text, singleSelect, checkbox, radio,** and **singleSelectSplunkSearch**. 
+    * `defaultValue`: The default value of the entity. It can be a number, string or boolean value, depending upon the type of entity. It is an optional field.
+    * `help`: It is useful for providing friendly help text to the user. It is an optional field.
+    * `required`: It specifies whether the given input entity is required or not. It is an optional field. 
+    * `search`, `valueField`, and `labelField` fields are only valid for type **singleSelectSplunkSearch**. They are explained below:
+        * `search`: It represents the query string to execute. It is useful for querying the REST API, a lookup table, or indexed data.
+        * `valueField`: It indicates the field name to use for drop-down option values that correspond to the option labels.
+        * `labelField`: It indicates  the field name to use for drop-down option labels. Labels generated from this field are visible in the drop-down interface.
+        All the above fields are required.
     * `options` are only valid for type **checkbox** and **radio**. The options available are:
-        * `items` is a list of dictionaries consisting of value and label pair, which represents value and label of the option in the above types respectively. 
+        * `items`: A list of dictionaries consisting of value and label pair, which represents value and label of the option in the above types respectively. 
 
 You can always refer to [ta-salesforce](https://git.splunk.com/projects/FINGALS/repos/ta-salesforce/browse) as a reference for featured UCC use cases.
 
