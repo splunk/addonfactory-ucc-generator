@@ -19,11 +19,17 @@ Table of contents
 - [Alert actions integration with ta-ui-framework](#alert-actions-integration-with-ta-ui-framework)
 
 ### Release notes
+#### 3.3.0
+##### Features:
+* Alert Action support
+* Deep link support for input and tab view page
+##### Bug Fixes:
+* Fixed input table not refreshed with a new input added when there is single service used (ADDON-19936)
+
 #### 3.2.0
 ##### Features:
 * OAuth2.0 support
 * Custom hook support in the configuration tab
-* Deep link support for input and tab view page.
 
 ### Prerequisites
 We use Bower, Grunt, and Webpack to build the Universal Configuration Console.
