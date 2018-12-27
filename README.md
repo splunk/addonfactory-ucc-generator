@@ -1,8 +1,10 @@
 Table of contents
-
 - [Release notes](#release-notes)
-    - [3.2.0](#320)
-        - [Features:](#features)
+  - [3.3.0](#330)
+    - [Features:](#features)
+    - [Bug Fixes:](#bug-fixes)
+  - [3.2.0](#320)
+    - [Features:](#features-1)
 - [Prerequisites](#prerequisites)
 - [Install and configure Bower](#install-and-configure-bower)
 - [Command to build an example add-on](#command-to-build-an-example-add-on)
@@ -16,13 +18,20 @@ Table of contents
 - [Show alert icon](#show-alert-icon)
 - [Deep link functionality for input page](#deep-link-functionality-for-input-page)
 - [Deep link functionality for tab view page](#deep-link-functionality-for-tab-view-page)
+- [Alert actions integration with ta-ui-framework](#alert-actions-integration-with-ta-ui-framework)
 
 ### Release notes
+#### 3.3.0
+##### Features:
+* Alert Action support
+* Deep link support for input and tab view page
+##### Bug Fixes:
+* Fixed input table not refreshed with a new input added when there is single service used (ADDON-19936)
+
 #### 3.2.0
 ##### Features:
 * OAuth2.0 support
 * Custom hook support in the configuration tab
-* Deep link support for input and tab view page.
 
 ### Prerequisites
 We use Bower, Grunt, and Webpack to build the Universal Configuration Console.
@@ -351,12 +360,155 @@ Below are the steps to create deep link url:
 Example of a complete URL will look like:
 * ```https://10.0.11.47:8000/en-US/app/Splunk_TA_salesforce/configuration?tab=tabid&record=myrecord```
 
+### Alert actions integration with ta-ui-framework
 
-You can always refer to [ta-salesforce](https://git.splunk.com/projects/FINGALS/repos/ta-salesforce/browse) as a reference for featured UCC use cases.
+Alert actions can be generated directly by providing information in globalConfig.json. Following is an example which will generate all the below files required for alert action:
+* default/alert_actions.conf
+* README/alert_actions.conf.spec 
+* default/data/ui/alerts/<alert_name>.html 
+* bin/<alert_name>.py
+* bin/<TA_Name>/modalert_<alert_name>_helper.py
+
+The main logic for alert action can be written in *bin/<TA_Name>/modalert_<alert_name>_helper.py*. The details have to be provided at the root level (same level as pages and meta). As shown below, we can provide a list of dictionaries of alert actions to create multiple alert actions:
+
+Example:
+globalConfig.json
+```
+"alerts":[
+        {
+            "name":"test_alert",
+            "label":"Test Alert",
+            "description":"Description for test Alert Action",
+            "activeResponse":{
+                "task":[
+                    "Create",
+                    "Update"
+                ],
+                "supportsAdhoc":true,
+                "subject":[
+                    "endpoint"
+                ],
+                "category":[
+                    "Information Conveyance",
+                    "Information Portrayal"
+                ],
+                "technology":[
+                    {
+                        "version":[
+                            "1.0.0"
+                        ],
+                        "product":"Test Incident Update",
+                        "vendor":"Splunk"
+                    }
+                ],
+                "drilldownUri":"search?q=search%20index%3D\"_internal\"&earliest=0&latest=",
+                "sourcetype":"test:incident"
+            },
+            "entity":[
+                {
+                    "type":"text",
+                    "label":"Name",
+                    "field":"name",
+                    "defaultValue":"xyz",
+                    "required":true,
+                    "help":"Please enter your name"
+                },
+                {
+                    "type":"checkbox",
+                    "label":"All Incidents",
+                    "field":"all_incidents",
+                    "defaultValue":0,
+                    "required":false,
+                    "help":"Tick if you want to update all incidents/problems"
+                },
+                {
+                    "type":"singleSelect",
+                    "label":"Table List",
+                    "field":"table_list",
+                    "options":{
+                        "items":[
+                            {
+                                "value":"Incident",
+                                "label":"incident"
+                            },
+                            {
+                                "value":"Problem",
+                                "label":"problem"
+                            }
+                        ]
+                    },
+                    "help":"Please select the table",
+                    "required":false,
+                    "defaultValue":"problem"
+                },
+                {
+                    "type":"radio",
+                    "label":"Action:",
+                    "field":"action",
+                    "options":{
+                        "items":[
+                            {
+                                "value":"Update",
+                                "label":"update"
+                            },
+                            {
+                                "value":"Delete",
+                                "label":"delete"
+                            }
+                        ]
+                    },
+                    "help":"Select the action you want to perform",
+                    "required":true,
+                    "defaultValue":"two"
+                },
+                {
+                    "type":"singleSelectSplunkSearch",
+                    "label":"Select Account",
+                    "field":"account",
+                    "search":"| rest /servicesNS/nobody/TA-SNOW/admin/TA_SNOW_account | dedup title",
+                    "valueField":"title",
+                    "labelField":"title",
+                    "help":"Select the account from the dropdown",
+                    "required":true
+                }
+            ]
+        }
+    ]
+```
+
+Following is a brief explanation for each field (All the fields mentioned below are required unless specified otherwise):
+* `name`, `label` and `description` denotes the name, friendly name and a brief description of the alert action respectively.
+* `activeResponse` field is required to provide support for **adaptive response action** in **Splunk Enterprise Security**. This field is required only if the support for **adaptive response action** is to be provided. Following are the fields for the same (all the fields mentioned below are required unless specified otherwise):
+    * `task`: Enter the functions performed by the action, such as "scan".
+    * `supportsAdhoc`: Provide **true** if the action supports ad hoc invocation from the Actions menu on the Incident Review dashboard in Splunk Enterprise Security.
+    * `subject`: Enter the objects that the action's tasks can be performed on, such as "endpoint.file".
+    * `category`: It should contain the categories that the action belongs to, such as **Information Gathering**.
+    * `technology` field contains `vendor`, `product` and `version` fields which are explained below:
+        * `vendor`: The technology vendor that the action supports.
+        * `product`: Enter the product that the action supports.
+        * `version`: Enter the versions of the product that the action supports.
+    * `drillDownUri`: Enter a URL to a custom drilldown or view for the link that appears in the detailed view of a notable event on the Incident Review dashboard in Splunk Enterprise Security. If you don't specify a URL, the default URL runs a search for the result events created by this response action. It is an optional field.
+    * `sourcetype`: Enter the source type to which to assign the events produced as a result of this response action. It is an optional field.
+* `entity` field is a list of dictionaries, each containing details about the input fields available on the html form of the alert actions. The details about the various fields of `entity` are mentioned below (all the fields mentioned below are required unless specified otherwise):
+    * `field`: The name of the entity.
+    * `label`: The friendly name of the entity.
+    * `type`: *type* field is used to specify different types of entities. Supported types are: **text, singleSelect, checkbox, radio,** and **singleSelectSplunkSearch**. 
+    * `defaultValue`: The default value of the entity. It can be a number, string or boolean value, depending upon the type of entity. It is an optional field.
+    * `help`: It is useful for providing friendly help text to the user. It is an optional field.
+    * `required`: It specifies whether the given input entity is required or not. It is an optional field. 
+    * `search`, `valueField`, and `labelField` fields are only valid for type **singleSelectSplunkSearch**. They are explained below:
+        * `search`: It represents the query string to execute. It is useful for querying the REST API, a lookup table, or indexed data.
+        * `valueField`: It indicates the field name to use for drop-down option values that correspond to the option labels.
+        * `labelField`: It indicates  the field name to use for drop-down option labels. Labels generated from this field are visible in the drop-down interface.
+        All the above fields are required.
+    * `options` are only valid for type **checkbox** and **radio**. The options available are:
+        * `items`: A list of dictionaries consisting of value and label pair, which represents value and label of the option in the above types respectively. 
+
+You can always refer to [ta-salesforce](https://git.splunk.com/projects/FINGALS/repos/ta-salesforce/browse) for featured UCC use cases and [ta-snow](https://git.splunk.com/projects/SOLN/repos/ta-snow/browse) for alert actions.
 
 Reference: 
 
-One can refere [UCC developemnt Guide](https://confluence.splunk.com/display/PROD/Splunk+UCC+3.X+Development+Guide#SplunkUCC3.XDevelopmentGuide-Optionsofeachcontroltypeforentityparameter), [UCC 3.1.0 configuration interface](https://confluence.splunk.com/display/PROD/UCC+3.1+Configuration+Interface) and resources mentioned there for advanced option like custom cell, custom row etc.
+One can refer [UCC developemnt Guide](https://confluence.splunk.com/display/PROD/Splunk+UCC+3.X+Development+Guide#SplunkUCC3.XDevelopmentGuide-Optionsofeachcontroltypeforentityparameter), [UCC 3.1.0 configuration interface](https://confluence.splunk.com/display/PROD/UCC+3.1+Configuration+Interface) and resources mentioned there for advanced option like custom cell, custom row etc.
 
 
 Note:
