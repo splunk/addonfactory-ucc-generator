@@ -200,7 +200,7 @@ define([
                         var service_input_id_list = service_input_id_path.split("/");
                         var service_input_id = service_input_id_list[service_input_id_list.length - 2];
                         var service_id = service_input_id.replace(this.model.entity.attributes.appData.stanzaPrefix + "_", "");
-                        var service_title = null;
+                        var service_title = "";
                         _.each(this.model.component.services, function(service_obj) {
                             if (service_obj.name === service_id) {
                                 service_title = service_obj.title;
