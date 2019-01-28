@@ -1,10 +1,12 @@
 Table of contents
 - [Release notes](#release-notes)
-  - [3.3.0](#330)
+  - [3.4.0](#340)
     - [Features:](#features)
+  - [3.3.0](#330)
+    - [Features:](#features-1)
     - [Bug Fixes:](#bug-fixes)
   - [3.2.0](#320)
-    - [Features:](#features-1)
+    - [Features:](#features-2)
 - [Prerequisites](#prerequisites)
 - [Install and configure Bower](#install-and-configure-bower)
 - [Command to build an example add-on](#command-to-build-an-example-add-on)
@@ -22,6 +24,9 @@ Table of contents
 - [Service name and Appname as column in table](#service-name-and-appname-as-column-in-table)
 
 ### Release notes
+#### 3.4.0
+##### Features:
+* Support of Service name and Appname as a column in table
 #### 3.3.0
 ##### Features:
 * Alert Action support
