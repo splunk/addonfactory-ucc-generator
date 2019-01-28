@@ -194,6 +194,21 @@ define([
                             dispatcher: this.dispatcher
                         }).render();
                         this.cells[index] = switchButton.el;
+                    } else if (field === '_input_service') {
+                        // Sample Id: /servicesNS/nobody/Addon-name/service_name/stanza_name
+                        var service_input_id_path = this.model.entity.attributes.id;
+                        var service_input_id_list = service_input_id_path.split("/");
+                        var service_input_id = service_input_id_list[service_input_id_list.length - 2];
+                        var service_id = service_input_id.replace(this.model.entity.attributes.appData.stanzaPrefix + "_", "");
+                        var service_title = "";
+                        _.each(this.model.component.services, function(service_obj) {
+                            if (service_obj.name === service_id) {
+                                service_title = service_obj.title;
+                            }
+                        });
+                        this.cells[index] = '<td>' + service_title + '</td>';
+					} else if (field === '_app_name') {
+                        this.cells[index] = '<td>' + this.model.entity.attributes.targetApp + '</td>';
                     } else {
                         fieldValue = fieldValue === undefined ?
                                      '' : String(fieldValue);

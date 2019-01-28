@@ -3,10 +3,12 @@ Table of contents
   - [3.4.0](#340)
     - [Features:](#features)
   - [3.3.0](#330)
-    - [Features:](#features)
+    - [Features:](#features-1)
+  - [3.3.0](#330)
+    - [Features:](#features-2)
     - [Bug Fixes:](#bug-fixes)
   - [3.2.0](#320)
-    - [Features:](#features-1)
+    - [Features:](#features-3)
 - [Prerequisites](#prerequisites)
 - [Install and configure Bower](#install-and-configure-bower)
 - [Command to build an example add-on](#command-to-build-an-example-add-on)
@@ -22,11 +24,14 @@ Table of contents
 - [Deep link functionality for tab view page](#deep-link-functionality-for-tab-view-page)
 - [Alert actions integration with ta-ui-framework](#alert-actions-integration-with-ta-ui-framework)
 - [Help link component](#help-link-component)
+- [Service name and Appname as column in table](#service-name-and-appname-as-column-in-table)
 
 ### Release notes
 #### 3.4.0
 ##### Features:
 * Added help link component
+* Support of Service name and Appname as a column in table
+
 #### 3.3.0
 ##### Features:
 * Alert Action support
@@ -532,6 +537,44 @@ globalconfig.json
 Here text refers to the text which will be displayed to the user and link refers to the page where user will be redirected after clicking on the text.
 
 Note: If any of the field "text" or "link" is not provided, the component will not appear.
+
+### Service name and Appname as column in table
+If one of these 2 field are mentioned as header in corresponding mentioned table, the value will be populated automatically.
+* _input_service:
+    * The title of the service for which the stanza was created.
+    * It is only supported in inputs configuration page.
+    * In order to show the service name as a column, developer had to provide "field": "_input_service" as a table header.
+* _app_name:
+    * The name of the app from which the particular stanza was fetched.
+    * Supported in inputs & account configuration page
+    * In order to show the service name as a column, developer had to provide "field": "_app_name" as a table header.
+
+GlobalConfig.json example for a table:
+
+```
+"header":[
+    {
+        "label":"Name",
+        "field":"name"
+    },
+    {
+        "field": "account",
+        "label": "Account"
+    },
+    {
+        "field": "_input_service",
+        "label": "Service"
+    },
+    {
+        "field": "_app_name",
+        "label": "App"
+    },
+    {
+        "label":"Status",
+        "field":"disabled"
+    }
+] 
+```
 
 Reference: 
 
