@@ -1,5 +1,7 @@
 Table of contents
 - [Release notes](#release-notes)
+  - [3.4.0](#340)
+    - [Features:](#features)
   - [3.3.0](#330)
     - [Features:](#features)
     - [Bug Fixes:](#bug-fixes)
@@ -22,6 +24,9 @@ Table of contents
 - [Help link component](#help-link-component)
 
 ### Release notes
+#### 3.4.0
+##### Features:
+* Added help link component
 #### 3.3.0
 ##### Features:
 * Alert Action support

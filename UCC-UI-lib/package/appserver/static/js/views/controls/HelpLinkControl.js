@@ -13,7 +13,7 @@ define([
         },
 
         render: function () {
-            if (this.link === undefined || this.text === undefined)
+            if (this.link === undefined || this.text === undefined || this.link === "" || this.text === "")
             {
                 this.$el.html(
                     `<div style="margin-top: 5px;"></div>`
