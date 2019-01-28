@@ -116,7 +116,7 @@ class Entity(DocumentWithoutAddProp):
     field = StringField(required=True, pattern="^\w+$")
     label = StringField(required=True, max_length=30)
     type = StringField(required=True,
-                       enum=["custom", "text", "singleSelect", "checkbox", "multipleSelect", "radio", "placeholder", "oauth"])
+                       enum=["custom", "text", "singleSelect", "checkbox", "multipleSelect", "radio", "placeholder", "oauth", "helpLink"])
     help = StringField(max_length=200)
     tooltip = StringField(max_length=250)
     defaultValue = OneOfField([
@@ -157,7 +157,9 @@ class Entity(DocumentWithoutAddProp):
             "oauth_popup_height": NumberField(),
             "oauth_timeout": NumberField(),
             "auth_code_endpoint": StringField(max_length=350),
-            "access_token_endpoint": StringField(max_length=350)
+            "access_token_endpoint": StringField(max_length=350),
+            "text": StringField(max_length=50),
+            "link": StringField()
         }
     )
     required = BooleanField()

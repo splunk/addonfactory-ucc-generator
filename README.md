@@ -4,9 +4,11 @@ Table of contents
     - [Features:](#features)
   - [3.3.0](#330)
     - [Features:](#features-1)
+  - [3.3.0](#330)
+    - [Features:](#features-2)
     - [Bug Fixes:](#bug-fixes)
   - [3.2.0](#320)
-    - [Features:](#features-2)
+    - [Features:](#features-3)
 - [Prerequisites](#prerequisites)
 - [Install and configure Bower](#install-and-configure-bower)
 - [Command to build an example add-on](#command-to-build-an-example-add-on)
@@ -21,12 +23,15 @@ Table of contents
 - [Deep link functionality for input page](#deep-link-functionality-for-input-page)
 - [Deep link functionality for tab view page](#deep-link-functionality-for-tab-view-page)
 - [Alert actions integration with ta-ui-framework](#alert-actions-integration-with-ta-ui-framework)
+- [Help link component](#help-link-component)
 - [Service name and Appname as column in table](#service-name-and-appname-as-column-in-table)
 
 ### Release notes
 #### 3.4.0
 ##### Features:
+* Added help link component
 * Support of Service name and Appname as a column in table
+
 #### 3.3.0
 ##### Features:
 * Alert Action support
@@ -511,6 +516,27 @@ Following is a brief explanation for each field (All the fields mentioned below 
         * `items`: A list of dictionaries consisting of value and label pair, which represents value and label of the option in the above types respectively. 
 
 You can always refer to [ta-salesforce](https://git.splunk.com/projects/FINGALS/repos/ta-salesforce/browse) for featured UCC use cases and [ta-snow](https://git.splunk.com/projects/SOLN/repos/ta-snow/browse) for alert actions.
+
+### Help Link component
+
+Following example populates the help link in the input or configuration page
+
+globalconfig.json
+```
+{
+    "field": "help",
+    "type": "helpLink",
+    "label": "",
+    "options": {
+        "text": "Learn more",
+        "link": "<link to some page>"
+    }
+}
+```
+
+Here text refers to the text which will be displayed to the user and link refers to the page where user will be redirected after clicking on the text.
+
+Note: If any of the field "text" or "link" is not provided, the component will not appear.
 
 ### Service name and Appname as column in table
 If one of these 2 field are mentioned as header in corresponding mentioned table, the value will be populated automatically.
