@@ -56,21 +56,20 @@ define([
             const { unifiedConfig: { pages: { configuration } } } = configManager;
             let queryParams = new URLSearchParams(location.search);
             let tabName = queryParams.get('tab');
-            let isTabFound = false;
             // For the first time, this.tabNameUsed will be false.
             // From the next time onwards, it will be true. So condition will be false.
             // So when the tab is changed by the user, this condition will be false and else part will be executed
             if(tabName && configuration.tabs.length>0 && !this.tabNameUsed) {
-                this.tabNameUsed = true;
                 for (var i = 0; i < configuration.tabs.length; i++) {
                     if (configuration.tabs[i].title.toLowerCase().replace(/ /g, '-') === tabName) {
-                        isTabFound = true;
+                        this.tabNameUsed = true;
                         this._activateTab(params);
                         break;
                     }
                 }
                 // If no tab is matched with the tab name provided, activate first tab by default
-                if (!isTabFound) {
+                if (!this.tabNameUsed) {
+                    this.tabNameUsed = true;
                     this._activateTab(configuration.tabs[0].title.toLowerCase().replace(/ /g, '-'));
                 }
             } else {
