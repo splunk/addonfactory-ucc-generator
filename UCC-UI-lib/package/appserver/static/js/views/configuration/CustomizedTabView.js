@@ -14,7 +14,7 @@ export default Backbone.View.extend({
         this.props = options.props;
 
         // This id will be used by QA team for testes
-        this.submitBtnId = `add${this.props.title.replace(' ', '')}Btn`;
+        this.submitBtnId = `add${this.props.title.replace(/ /g, '')}Btn`;
 
         this.initDataBinding();
     },

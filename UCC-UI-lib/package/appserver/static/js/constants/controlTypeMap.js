@@ -5,6 +5,7 @@ import SingleInputControl from 'app/views/controls/SingleInputControl';
 import MultiInputControl from 'app/views/controls/MultiSelectInputControl';
 import PlaceholderControl from 'app/views/controls/PlaceholderControl';
 import OAuthControl from 'app/views/controls/OAuthControl';
+import HelpLinkControl from 'app/views/controls/HelpLinkControl';
 
 export default {
     'text': TextControl,
@@ -15,5 +16,6 @@ export default {
     'singleSelect': SingleInputControl,
     'multipleSelect': MultiInputControl,
     'placeholder': PlaceholderControl,
-    'oauth': OAuthControl
+    'oauth': OAuthControl,
+    'helpLink': HelpLinkControl
 };

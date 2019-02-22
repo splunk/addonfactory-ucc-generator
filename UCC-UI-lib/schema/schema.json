@@ -175,7 +175,8 @@
                         "multipleSelect", 
                         "radio", 
                         "placeholder", 
-                        "oauth"
+                        "oauth",
+                        "helpLink"
                     ]
                 }, 
                 "help": {
@@ -328,6 +329,13 @@
                         },
                         "disableSearch": {
                             "type": "boolean"
+                        },
+                        "text": {
+                            "type": "string",
+                            "maxLength": 50
+                        },
+                        "link": {
+                            "type": "string"
                         }
                     }
                 },
@@ -548,7 +556,8 @@
                         "multipleSelect",
                         "radio",
                         "placeholder",
-                        "oauth"
+                        "oauth",
+                        "helpLink"
                     ]
                 },
                 "help": {
@@ -701,6 +710,13 @@
                         },
                         "disableSearch": {
                             "type": "boolean"
+                        },
+                        "text": {
+                            "type": "string",
+                            "maxLength": 50
+                        },
+                        "link": {
+                            "type": "string"
                         }
                     }
                 },
