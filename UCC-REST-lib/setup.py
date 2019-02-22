@@ -13,7 +13,7 @@ setup(
     packages=find_packages(exclude=['tests', 'examples']),
     package_data={'': ['LICENSE']},
     install_requires=[
-        "solnlib>=1.0.16-dev"
+        "solnlib>=1.0.18"
     ],
     classifiers=[
         'Programming Language :: Python',
