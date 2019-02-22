@@ -31,6 +31,10 @@ Table of contents
 ##### Features:
 * Added help link component
 * Support of Service name and Appname as a column in table
+##### Bug Fixes:
+* Add button stops working in configuration tab when tab title is having more than 2 words
+* Deep link not working while opening configuration 
+* Upgraded the solnlib to version 1.0.18 after fixing requests vulnerabilities.
 
 #### 3.3.0
 ##### Features:
