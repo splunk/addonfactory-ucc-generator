@@ -24,6 +24,10 @@ class Entity(BaseComponent):
         self.browser = browser
         super(Entity, self).__init__(browser, container)
         self.elements.update({
+            "add_button": {
+                "by": By.CSS_SELECTOR,
+                "select": ".add-button"
+            },
             "input_list": {
                 "by": By.CSS_SELECTOR,
                 "select": ".dropdown-menu.open li a"
@@ -59,7 +63,7 @@ class Entity(BaseComponent):
         self.cancel_btn = Button(browser, {"by": By.CSS_SELECTOR, "select": container["select"] + " button.cancel-btn" })
         self.close_btn = Button(browser, {"by": By.CSS_SELECTOR, "select": container["select"] + " button.close" })
         # self.error_close = Button(browser, {"by": By.CSS_SELECTOR, "select": container["select"] + " .msg-error button.close" })
-        self.wait_for = wait_for
+        self.wait_for_seconds = wait_for
         self.create_new_input = Dropdown(browser, {"by": By.CSS_SELECTOR, "select": " .add-button"})
         
 
@@ -104,9 +108,10 @@ class Entity(BaseComponent):
         """
         Open the entity by click on "New" button. 
         """
+        self.wait_for("add_button")
         self.add_btn.click()
         self.save_btn.wait_to_display()
-        time.sleep(self.wait_for)
+        time.sleep(self.wait_for_seconds)
         return True
 
     def learn_more(self):

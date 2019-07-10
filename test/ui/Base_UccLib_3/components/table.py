@@ -40,6 +40,11 @@ class Table(BaseComponent):
                 "by": By.CSS_SELECTOR,
                 "select": container["select"] + " td.col-{column}"
             },
+            "col-number": {
+                "by": By.CSS_SELECTOR,
+                "select": container["select"] + " td:nth-child({col_number})"
+            },
+
             # "action": {
             #     "by": By.CSS_SELECTOR,
             #     "select": container["select"] + " a.dropdown-toggle"
@@ -194,6 +199,8 @@ class Table(BaseComponent):
         Get whole table in dictionary form. The row_name will will be the key and all header:values will be it's value.
         {row_1 : {header_1: value_1, . . .}, . . .}
         """
+        time.sleep(7)
+
         table = dict()
         headers = self.get_headers()
         for each_row in self._get_rows():
@@ -310,13 +317,23 @@ class Table(BaseComponent):
         :param row: the webElement of the row
         :param column: the header name of the column
         """
-        col = self.elements["col"].copy()
-        if column.lower() in self.header_mapping:
-            column = self.header_mapping[column.lower()]
-        col["select"] = col["select"].format(column=column.lower().replace(" ","_"))
-        self.wait_for("app_listings")
-        # print row.find_element(*col.values()).text
-        return row.find_element(*col.values()).text
+        find_by_col_number = False
+        if column.lower().replace(" ","_") in self.header_mapping:
+            column = self.header_mapping[column.lower().replace(" ","_")]
+            find_by_col_number = isinstance(column, int)
+
+        if not find_by_col_number:
+            col = self.elements["col"].copy()
+            col["select"] = col["select"].format(column=column.lower().replace(" ","_"))
+            self.wait_for("app_listings")
+            # print row.find_element(*col.values()).text
+            return row.find_element(*col.values()).text
+        else:
+            col = self.elements["col-number"].copy()
+            col["select"] = col["select"].format(col_number=column)
+            self.wait_for("app_listings")
+            return row.find_element(*col.values()).text
+            
 
     def _get_rows(self):
         """

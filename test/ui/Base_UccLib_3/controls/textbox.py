@@ -29,10 +29,10 @@ class TextBox(BaseComponent):
         return self.container.get_attribute('value')
 
     def is_editable(self):
-        if self.container.value_of_css_property("disabled"):
-            return True
-        else:
+        if self.container.get_attribute("disabled"):
             return False
+        else:
+            return True
 
     def clear_text(self):
         self.container.clear()

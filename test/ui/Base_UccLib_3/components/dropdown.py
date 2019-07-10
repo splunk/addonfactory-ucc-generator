@@ -81,6 +81,7 @@ class Dropdown(BaseComponent):
     def select(self, value):
         
         self.add_input.click()
+        # self.save_btn.wait_to_display()
         for each in self.get_elements('type_list'):
             if each.text.strip().lower() == value.lower():
                 each.click()
