@@ -8,12 +8,9 @@ def get_orca_deployment_urls():
     try:
         with open("orca_deployment.json", "r") as f:
             data = f.read()
-        print "FILE READ DONE out of class"
         json_data = json.loads(data)
-        print "======================="
 
     except Exception as e:
-        print "------------"
         print str(e)
         
     web_url = json_data['server_roles']['standalone'][0]['splunk']['web_url']

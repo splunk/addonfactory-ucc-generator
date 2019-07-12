@@ -10,7 +10,7 @@ import time
 import traceback
 import logging
 import os
-requests.urllib3.disable_warnings()
+# requests.urllib3.disable_warnings()
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
@@ -156,7 +156,7 @@ class SeleniumHelper(object):
                     command_executor = 'https://ondemand.saucelabs.com:443/wd/hub',
                     desired_capabilities = self.get_sauce_safari_opts())
             else:
-                raise Exception("No valid browser found.! expected=[firefox, chrome, IE], got={}".format(browser))
+                raise Exception("No valid browser found.! expected=[firefox, chrome, IE, safari], got={}".format(browser))
         except Exception as e:
             raise e
 
@@ -189,7 +189,7 @@ class SeleniumHelper(object):
             'seleniumVersion': '3.141.0',
             # best practices involve setting a build number for version control
             'build': self.jenkins_build,
-            'name': self.test_case or 'MSCS UI Automation',
+            'name': self.test_case,
             'username': self.sauce_username,
             'accessKey': self.sauce_access_key,
             # setting sauce-runner specific parameters such as timeouts helps
@@ -205,7 +205,7 @@ class SeleniumHelper(object):
     def get_sauce_ie_opts(self):
         sauce_options = {
             'build': self.jenkins_build,
-            'name': self.test_case or 'MSCS UI Automation',
+            'name': self.test_case,
             'username': self.sauce_username,
             'accessKey': self.sauce_access_key,
             'tunnelIdentifier': 'sauce-ha-tunnel',

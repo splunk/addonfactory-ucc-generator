@@ -48,9 +48,29 @@ class Entity(BaseComponent):
                 "by": By.CSS_SELECTOR,
                 "select": "a.mscs_azure_resource"
             },
-            "help_link":{
+            "storage_account_help_link":{
                 "by": By.CSS_SELECTOR,
                 "select": ".storage_account_help_link a"
+            },
+            "app_account_help_link":{
+                "by": By.CSS_SELECTOR,
+                "select": ".app_account_help_link a"
+            },
+            "blob_input_help_link":{
+                "by": By.CSS_SELECTOR,
+                "select": ".blob_input_help_link a"
+            },
+            "storage_input_help_link":{
+                "by": By.CSS_SELECTOR,
+                "select": ".storage_input_help_link a"
+            },
+            "azure_input_help_link":{
+                "by": By.CSS_SELECTOR,
+                "select": ".audit_help_link a"
+            },
+            "resource_input_help_link":{
+                "by": By.CSS_SELECTOR,
+                "select": ".resource_help_link a"
             }
         })
         
@@ -114,11 +134,11 @@ class Entity(BaseComponent):
         time.sleep(self.wait_for_seconds)
         return True
 
-    def learn_more(self):
-        self.help_link.click()
-        time.sleep(5)
-        window_after = self.browser.window_handles[1]
-        self.browser.switch_to.window(window_after)
-        time.sleep(5)
-        return self.browser.current_url
+    # def learn_more(self):
+    #     self.djdhjhfja.click()
+    #     time.sleep(5)
+    #     window_after = self.browser.window_handles[1]
+    #     self.browser.switch_to.window(window_after)
+    #     time.sleep(5)
+    #     return self.browser.current_url
 

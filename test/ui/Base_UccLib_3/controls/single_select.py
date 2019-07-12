@@ -101,6 +101,9 @@ class SingleSelect(BaseComponent):
         return self.dropdown.text
 
     def cancel_selected_value(self):
+        '''
+        Cancels the currently selected value in the SingleSelect
+        '''
         try:
             self.cancel_selected.click()
             return True
@@ -109,9 +112,10 @@ class SingleSelect(BaseComponent):
 
     def list_of_values(self):
         """
-        
+        Get the list of value from the Single Select
         """
         selected_val = self.get_value()
+        selected_val = ''
         self.dropdown.click()
         first_element = None
         for each in self.get_elements('values'):
@@ -125,6 +129,12 @@ class SingleSelect(BaseComponent):
         elif first_element:
             self.select(first_element.text, open_dropdown=False)
         self.wait_for("internal_container")
+
+    def get_list_count(self):
+        '''
+        Get the total count of the SingleSelect list
+        '''
+        return len(list(self.list_of_values()))
 
 
     

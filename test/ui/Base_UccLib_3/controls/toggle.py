@@ -13,9 +13,13 @@ class Toggle(BaseComponent):
         super(Toggle, self).__init__(browser, container)
         self.elements.update({
         "toggle_btn": {
-                "by": By.CSS_SELECTOR,
-                "select": container["select"] + " .btn"
+            "by": By.CSS_SELECTOR,
+            "select": container["select"] + " .btn"
         },
+        "selected": {
+            "by": By.CSS_SELECTOR,
+            "select": container["select"] + " .active"
+        }
     })
 
 
@@ -28,3 +32,5 @@ class Toggle(BaseComponent):
             raise ValueError("{} not found".format(value))
         return True
     
+    def get_value(self):
+        return self.selected.text.strip()

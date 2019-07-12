@@ -1,6 +1,6 @@
 from utils import backend_retry
 import requests
-requests.urllib3.disable_warnings()
+# requests.urllib3.disable_warnings()
 import urllib
 
 class BackendConf(object):

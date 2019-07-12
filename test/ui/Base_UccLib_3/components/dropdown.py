@@ -10,7 +10,7 @@ class Dropdown(BaseComponent):
     Component: Dropdown
     Base class of Input & Configuration table
     """
-    def __init__(self, browser, container, mapping=dict()):
+    def __init__(self, browser, container, mapping=dict(), wait_for=10):
         """
             :param browser: The selenium webdriver
             :param container: Container in which the table is located. Of type dictionary: {"by":..., "select":...}
@@ -40,7 +40,7 @@ class Dropdown(BaseComponent):
             },
             "add_input": {
                 "by": By.CSS_SELECTOR,
-                "select": ".add-button"
+                "select":" .add-button"
             },
             "type_filter_list":{
                 "by": By.CSS_SELECTOR,
@@ -61,9 +61,11 @@ class Dropdown(BaseComponent):
             "mscs_azure_resource": {
                 "by": By.CSS_SELECTOR,
                 "select": "a.mscs_azure_resource"
-            },
+            }
         })
 
+
+        self.wait_for_seconds = wait_for
 
     def select_page_option(self, value, open_dropdown=True):
         if open_dropdown:
@@ -81,10 +83,10 @@ class Dropdown(BaseComponent):
     def select(self, value):
         
         self.add_input.click()
-        # self.save_btn.wait_to_display()
         for each in self.get_elements('type_list'):
             if each.text.strip().lower() == value.lower():
                 each.click()
+                time.sleep(self.wait_for_seconds)
                 return True
         else:
             raise ValueError("{} not found in select list".format(value))

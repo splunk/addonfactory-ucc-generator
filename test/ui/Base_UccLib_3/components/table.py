@@ -107,7 +107,7 @@ class Table(BaseComponent):
         """
         Get the count mentioned in the table title
         """
-        return self.count.text
+        return self.count.text.strip()
 
     def get_row_count(self):
         """
@@ -359,3 +359,9 @@ class Table(BaseComponent):
         _row = self._get_row(name)
         # _row.find_element(*self.elements["action"].values()).click()
         return [each.text for each in self.get_elements("action_values")]
+
+    def get_count_number(self):
+        # self.total_rows = self.count.text.strip()
+        row_count = self.get_count_title()
+        return int(re.search(r'\d+', row_count).group())
+        
