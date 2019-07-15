@@ -148,12 +148,12 @@ class Table(BaseComponent):
         for each_header in self.get_elements("header"):
             if re.search(r"\basc\b", each_header.get_attribute("class")):
                 return {
-                    "header": each_header.text.lower(),
+                    "header": each_header.text.strip().lower(),
                     "ascending": True
                 }
             elif re.search(r"\bdesc\b", each_header.get_attribute("class")):
                 return {
-                    "header": each_header.text.lower(),
+                    "header": each_header.text.strip().lower(),
                     "ascending": False
                 }
 
@@ -165,7 +165,7 @@ class Table(BaseComponent):
         """
         for each_header in self.get_elements("header"):
             
-            if each_header.text.lower() == column.lower():
+            if each_header.text.strip().lower() == column.lower():
                 if "asc" in each_header.get_attribute("class") and ascending:
                     # If the column is already in ascending order, do nothing
                     return
@@ -254,7 +254,7 @@ class Table(BaseComponent):
         """
         _row = self._get_row(name)
         _row.find_element(*self.elements["action_values"].values())
-        return [each_element.text for each_element in self.get_elements("action_values")]
+        return [each_element.text.strip() for each_element in self.get_elements("action_values")]
 
     def edit_row(self, name):
         """
@@ -297,7 +297,7 @@ class Table(BaseComponent):
             self.wait_until("delete_close")
             return True  
         elif prompt_msg:
-            return self.delete_prompt.text         
+            return self.delete_prompt.text.strip()    
         else:
             self.delete_btn.click()
             self.wait_for("app_listings")
@@ -369,7 +369,7 @@ class Table(BaseComponent):
     def get_action_values(self, name):
         _row = self._get_row(name)
         # _row.find_element(*self.elements["action"].values()).click()
-        return [each.text for each in self.get_elements("action_values")]
+        return [each.text.strip() for each in self.get_elements("action_values")]
 
     def get_count_number(self):
         # self.total_rows = self.count.text.strip()

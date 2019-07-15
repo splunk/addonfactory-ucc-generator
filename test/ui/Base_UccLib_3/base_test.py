@@ -259,9 +259,9 @@ class SeleniumHelper(object):
         sauce_opts = self.get_sauce_opts()
         sauce_opts["screenResolution"] = "1024x768"
         safari_opts = {
-            'platformName': 'macOS 10.12',
+            'platformName': 'macOS 10.14',
             'browserName': 'safari',
-            'browserVersion': 'latest',
+            'browserVersion': '12',
             'sauce:options': sauce_opts
         }
         return safari_opts

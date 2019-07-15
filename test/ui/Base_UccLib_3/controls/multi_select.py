@@ -101,7 +101,7 @@ class MultiSelect(BaseComponent):
         """
         get list selected values
         """
-        return [each.text for each in self.get_child_elements("selected")]
+        return [each.text.strip() for each in self.get_child_elements("selected")]
 
     def list_of_values(self):
         """

@@ -103,15 +103,15 @@ class Dropdown(BaseComponent):
 
     def get_inputs_list(self):
         self.add_input.click()
-        return [each.text for each in self.get_elements("type_list")]
+        return [each.text.strip() for each in self.get_elements("type_list")]
 
     def get_pagination_list(self):
         self.pagination_dropdown.click()
-        return [each.text for each in self.get_elements("page_list")]
+        return [each.text.strip() for each in self.get_elements("page_list")]
 
     def get_input_type_list(self):
         self.type_dropdown.click()
-        return [each.text for each in self.get_elements("type_filter_list")]
+        return [each.text.strip() for each in self.get_elements("type_filter_list")]
 
         
         

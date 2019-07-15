@@ -26,7 +26,7 @@ class TextBox(BaseComponent):
         """
         get value from the textbox
         """
-        return self.container.get_attribute('value')
+        return self.container.get_attribute('value').strip()
 
     def is_editable(self):
        return not bool(self.container.get_attribute("readonly") or self.container.get_attribute("disabled"))

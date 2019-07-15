@@ -30,7 +30,7 @@ class Message(BaseComponent):
         '''
         Returns the error message
         '''
-        return self.msg_text.text
+        return self.msg_text.text.strip()
 
     def close_msg(self):
         """

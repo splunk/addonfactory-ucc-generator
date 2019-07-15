@@ -98,7 +98,7 @@ class SingleSelect(BaseComponent):
         """
         get the selected value
         """
-        return self.dropdown.text
+        return self.dropdown.text.strip()
 
     def cancel_selected_value(self):
         '''
@@ -121,13 +121,13 @@ class SingleSelect(BaseComponent):
         for each in self.get_elements('values'):
             if not first_element:
                 first_element = each
-            yield each.text
+            yield each.text.strip()
         if selected_val.strip():
             self.select(selected_val, open_dropdown=False)
         elif self.searchable:
             self.input.send_keys(Keys.ESCAPE)
         elif first_element:
-            self.select(first_element.text, open_dropdown=False)
+            self.select(first_element.text.strip(), open_dropdown=False)
         self.wait_for("internal_container")
 
     def get_list_count(self):
