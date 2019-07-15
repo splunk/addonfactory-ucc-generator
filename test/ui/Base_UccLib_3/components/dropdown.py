@@ -10,7 +10,7 @@ class Dropdown(BaseComponent):
     Component: Dropdown
     Base class of Input & Configuration table
     """
-    def __init__(self, browser, container, mapping=dict(), wait_for=10):
+    def __init__(self, browser, container, mapping=dict(), wait_for_seconds=10):
         """
             :param browser: The selenium webdriver
             :param container: Container in which the table is located. Of type dictionary: {"by":..., "select":...}
@@ -65,7 +65,7 @@ class Dropdown(BaseComponent):
         })
 
 
-        self.wait_for_seconds = wait_for
+        self.wait_for_seconds = wait_for_seconds
 
     def select_page_option(self, value, open_dropdown=True):
         if open_dropdown:

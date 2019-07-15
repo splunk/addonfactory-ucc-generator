@@ -27,6 +27,9 @@ class Message(BaseComponent):
 
 
     def get_msg(self):
+        '''
+        Returns the error message
+        '''
         return self.msg_text.text
 
     def close_msg(self):

@@ -72,8 +72,7 @@ class InputTable(Table):
                 status_button = _row.find_element(*self.elements["status_toggle"].values())
                 status_button.click()
                 self.wait_until("switch_button_status")
-                if status == "enabled":
-                    return True
+                return True
         else:
             if status == "disabled":
                 raise Exception("The input is already {}".format(input_status.text.strip()))
@@ -81,61 +80,6 @@ class InputTable(Table):
                 status_button = _row.find_element(*self.elements["status_toggle"].values())
                 status_button.click()
                 self.wait_until("switch_button_status")
-                if status == "disabled":
-                    return True
-
-    def get_more_info(self, name, cancel=True):
-        _row = self._get_row(name)
-        _row.find_element(*self.elements["more_info"].values()).click()
-        keys = self.more_info_row.find_elements(*self.elements["more_info_key"].values())
-        values = self.more_info_row.find_elements(*self.elements["more_info_value"].values())        
-        more_info = {key.text: value.text for key, value in zip(keys, values)}
-
-        if cancel:
-            _row = self._get_row(name)
-            _row.find_element(*self.elements["more_info"].values()).click()
-
-        return more_info
-
-    def switch_to_page(self, value):
-        for each in self.get_elements('switch_to_page'):
-            if each.text.strip().lower() not in ['prev','next'] and int(each.text.strip()) == value:
-                each.click()
                 return True
-        else:
-            raise ValueError("{} not found".format(value))
+            
 
-    def switch_to_prev(self):
-        for page_prev in self.get_elements('switch_to_page'):
-            if page_prev.text.strip().lower() == "prev":
-                page_prev.click()
-                return True
-        else:
-            raise ValueError("{} not found".format(page_prev))
-
-    def switch_to_next(self):
-        for page_next in self.get_elements('switch_to_page'):
-            if page_next.text.strip().lower() == "next":
-                page_next.click()
-                return True
-        else:
-            raise ValueError("{} not found".format(page_next))
-
-    def enable(self):
-        try:    
-            for _ in range(15):
-                for each in self.get_elements("status"):
-                    if each.text.strip().lower() == "disabled":
-                        self.update.click()
-        except:
-            raise Exception("Input already enabled")
-                
-
-    def disable(self):
-        for _ in range(15):
-            try:
-                for each in self.get_elements("status"):
-                    if each.text.strip().lower() == "disabled":
-                        self.update.click()
-            except:
-                raise Exception("Input already enabled")

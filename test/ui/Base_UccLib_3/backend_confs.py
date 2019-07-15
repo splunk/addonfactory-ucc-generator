@@ -25,7 +25,19 @@ class BackendConf(object):
         res = requests.get(url, headers=self.header, verify=False)
         assert res.status_code == 200, "url={}, status_code={}, error_msg={}".format(url,res.status_code, res.text)
         return res.json()
+    
+    def rest_call_post(self, url, kwargs):
+        """
+        rest call to the splunk rest-endpoint
+            :param url: url to call
+            :returns : json result of the request
 
+            :param kwargs: body of request method
+            :returns : json result of the request
+        """
+        res = requests.post(url, kwargs, headers=self.header, verify=False)
+        assert res.status_code == 200 or res.status_code == 201, "url={}, status_code={}, error_msg={}".format(url,res.status_code, res.text)
+        return res.json()
 
     def parse_conf(self, json_res):
         """
@@ -72,6 +84,17 @@ class ListBackendConf(BackendConf):
         url = "{}/{}?count=0&output_mode=json".format(self.url, urllib.quote_plus(stanza))
         res = self.rest_call(url)
         return self.parse_conf(res)
+    
+    def post_stanza(self, url, kwargs):
+        """
+        Create a specific stanza of the configuration.
+            :param url: url to call
+            :returns : json result of the request
+
+            :param kwargs: body of request method
+            :returns : json result of the request
+        """
+        return self.rest_call_post(url, kwargs)
 
     def get_stanza_value(self, stanza, param):
         """

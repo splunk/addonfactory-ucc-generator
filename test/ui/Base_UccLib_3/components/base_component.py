@@ -21,7 +21,7 @@ class BaseComponent(object):
         """   
         self.elements = dict()
         self.browser = browser
-        self.wait = WebDriverWait(self.browser, 40)
+        self.wait = WebDriverWait(self.browser, 120)
         self.elements["container"] = container
 
     def get_element(self, key):

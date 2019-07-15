@@ -33,7 +33,7 @@ class SingleSelect(BaseComponent):
             },
             "cancel_selected": {
                 "by": By.CSS_SELECTOR,
-                "select": ' .select2-search-choice-close'
+                "select": container["select"] + ' .select2-search-choice-close'
             }
             
             # To update

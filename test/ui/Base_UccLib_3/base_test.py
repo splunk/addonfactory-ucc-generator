@@ -156,7 +156,7 @@ class SeleniumHelper(object):
                     command_executor = 'https://ondemand.saucelabs.com:443/wd/hub',
                     desired_capabilities = self.get_sauce_safari_opts())
             else:
-                raise Exception("No valid browser found.! expected=[firefox, chrome, IE, safari], got={}".format(browser))
+                raise Exception("No valid browser found.! expected=[firefox, chrome, safari], got={}".format(browser))
         except Exception as e:
             raise e
 

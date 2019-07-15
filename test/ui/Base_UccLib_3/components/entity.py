@@ -47,42 +47,16 @@ class Entity(BaseComponent):
             "azure_resource":{
                 "by": By.CSS_SELECTOR,
                 "select": "a.mscs_azure_resource"
-            },
-            "storage_account_help_link":{
-                "by": By.CSS_SELECTOR,
-                "select": ".storage_account_help_link a"
-            },
-            "app_account_help_link":{
-                "by": By.CSS_SELECTOR,
-                "select": ".app_account_help_link a"
-            },
-            "blob_input_help_link":{
-                "by": By.CSS_SELECTOR,
-                "select": ".blob_input_help_link a"
-            },
-            "storage_input_help_link":{
-                "by": By.CSS_SELECTOR,
-                "select": ".storage_input_help_link a"
-            },
-            "azure_input_help_link":{
-                "by": By.CSS_SELECTOR,
-                "select": ".audit_help_link a"
-            },
-            "resource_input_help_link":{
-                "by": By.CSS_SELECTOR,
-                "select": ".resource_help_link a"
             }
         })
         
         # Controls
         self.save_btn = Button(browser, {"by": By.CSS_SELECTOR, "select": container["select"] + " input.submit-btn" })
         self.loading = Message(browser, {"by": By.CSS_SELECTOR,"select": container["select"] + " .msg-loading"})
-        # self.error_msg = Message(browser, {"by": By.CSS_SELECTOR,"select": container["select"] + " .msg-text"})
         self.add_btn = add_btn
         self.msg = Message(browser, {"by": By.CSS_SELECTOR,"select": " .msg-error"})
         self.cancel_btn = Button(browser, {"by": By.CSS_SELECTOR, "select": container["select"] + " button.cancel-btn" })
         self.close_btn = Button(browser, {"by": By.CSS_SELECTOR, "select": container["select"] + " button.close" })
-        # self.error_close = Button(browser, {"by": By.CSS_SELECTOR, "select": container["select"] + " .msg-error button.close" })
         self.wait_for_seconds = wait_for
         self.create_new_input = Dropdown(browser, {"by": By.CSS_SELECTOR, "select": " .add-button"})
         
@@ -134,11 +108,4 @@ class Entity(BaseComponent):
         time.sleep(self.wait_for_seconds)
         return True
 
-    # def learn_more(self):
-    #     self.djdhjhfja.click()
-    #     time.sleep(5)
-    #     window_after = self.browser.window_handles[1]
-    #     self.browser.switch_to.window(window_after)
-    #     time.sleep(5)
-    #     return self.browser.current_url
 

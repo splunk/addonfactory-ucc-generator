@@ -4,7 +4,7 @@ import time
 
 class LearnMore(BaseComponent):
     """
-    Entity_Component : Button
+    Entity_Component : Learn More
     """
     def __init__(self, browser, container):
         """

@@ -11,14 +11,16 @@ class Table(BaseComponent):
     Component: Table
     Base class of Input & Configuration table
     """
-    def __init__(self, browser, container, mapping=dict()):
+    def __init__(self, browser, container, mapping=dict(),wait_for_seconds = 10):
         """
             :param browser: The selenium webdriver
             :param container: Container in which the table is located. Of type dictionary: {"by":..., "select":...}
             :param mapping= If the table headers are different from it's html-label, provide the mapping as dictionary. For ex, {"Status": "disabled"}
         """
+        
         super(Table, self).__init__(browser, container)
         self.header_mapping = mapping
+        
         self.elements.update({
             "rows": {
                 "by": By.CSS_SELECTOR,
@@ -44,15 +46,6 @@ class Table(BaseComponent):
                 "by": By.CSS_SELECTOR,
                 "select": container["select"] + " td:nth-child({col_number})"
             },
-
-            # "action": {
-            #     "by": By.CSS_SELECTOR,
-            #     "select": container["select"] + " a.dropdown-toggle"
-            # },
-            # "action_list": {
-            #     "by": By.CSS_SELECTOR,
-            #     "select": ".dropdown-menu.open li a"
-            # },
             "edit": {
                 "by": By.CSS_SELECTOR,
                 "select": "a.edit"
@@ -100,8 +93,33 @@ class Table(BaseComponent):
             "filter_clear": {
                 "by": By.CSS_SELECTOR,
                 "select": container["select"] + " a.control-clear"
+            },
+            "more_info": {
+                "by": By.CSS_SELECTOR,
+                "select": container["select"] + " td.expands"
+            },
+            "more_info_row": {
+                "by": By.CSS_SELECTOR,
+                "select": container["select"] + " tr.expanded + tr"
+            },
+            "more_info_key": {
+                "by": By.CSS_SELECTOR,
+                "select":  "dt"
+            },
+            "more_info_value": {
+                "by": By.CSS_SELECTOR,
+                "select":  "dd"
+            },
+            "input_list": {
+                "by": By.CSS_SELECTOR,
+                "select": ".dropdown-menu.open li a"
+            },
+            "switch_to_page": {
+                "by": By.CSS_SELECTOR,
+                "select": container["select"] + " .pull-right li a"
             }
         })
+        self.wait_for_seconds = wait_for_seconds
 
     def get_count_title(self):
         """
@@ -244,11 +262,8 @@ class Table(BaseComponent):
             :param name: row_name of the table
         """
         _row = self._get_row(name)
-        action_values = _row.find_elements(*self.elements["action_values"].values())
-        for each_action_value in action_values:
-            if each_action_value.text.strip() == self.edit.text.strip():
-                each_action_value.click()
-        
+        _row.find_element(*self.elements["edit"].values()).click()
+        time.sleep(self.wait_for_seconds)    
 
     def clone_row(self, name):
         """
@@ -256,12 +271,10 @@ class Table(BaseComponent):
             :param name: row_name of the table
         """
         _row = self._get_row(name)
-        action_values = _row.find_elements(*self.elements["action_values"].values())
-        for each_action_value in action_values:
-            if each_action_value.text.strip() == self.clone.text.strip():
-                each_action_value.click()
+        _row.find_element(*self.elements["clone"].values()).click()
+        time.sleep(self.wait_for_seconds)     
 
-    def delete_row(self, name, cancel=False, close=False):
+    def delete_row(self, name, cancel=False, close=False, prompt_msg=False):
         """
         Delete the specified row. Clicking on delete will open a pop-up. Delete the row if neither of (cancel, close) specified.
             :param name: row_name of the table
@@ -271,11 +284,8 @@ class Table(BaseComponent):
 
         # Click on action
         _row = self._get_row(name)
-        action_values = _row.find_elements(*self.elements["action_values"].values())
-        for each_action_value in action_values:
-            if each_action_value.text.strip() == self.delete.text.strip():
-                each_action_value.click()
-        
+        _row.find_element(*self.elements["delete"].values()).click()        
+
         self.wait_for("delete_prompt")
 
         if cancel:
@@ -285,7 +295,9 @@ class Table(BaseComponent):
         elif close:
             self.delete_close.click()
             self.wait_until("delete_close")
-            return True           
+            return True  
+        elif prompt_msg:
+            return self.delete_prompt.text         
         else:
             self.delete_btn.click()
             self.wait_for("app_listings")
@@ -324,7 +336,7 @@ class Table(BaseComponent):
 
         if not find_by_col_number:
             col = self.elements["col"].copy()
-            col["select"] = col["select"].format(column=column.lower().replace(" ","_"))
+            col["select"] = col["select"].format(column=column.lower().strip().replace(" ","_"))
             self.wait_for("app_listings")
             # print row.find_element(*col.values()).text
             return row.find_element(*col.values()).text
@@ -350,7 +362,6 @@ class Table(BaseComponent):
         for each_row in self._get_rows():
             # print self._get_column_value(each_row, "name").strip()
             if self._get_column_value(each_row, "name").strip() == name:
-
                 return each_row
         else:
             raise ValueError("{} row not found in table".format(name)) 
@@ -364,4 +375,42 @@ class Table(BaseComponent):
         # self.total_rows = self.count.text.strip()
         row_count = self.get_count_title()
         return int(re.search(r'\d+', row_count).group())
+
+    def get_more_info(self, name, cancel=True):
+        _row = self._get_row(name)
+        _row.find_element(*self.elements["more_info"].values()).click()
+        keys = self.more_info_row.find_elements(*self.elements["more_info_key"].values())
+        values = self.more_info_row.find_elements(*self.elements["more_info_value"].values())        
+        more_info = {key.text: value.text for key, value in zip(keys, values)}
+
+        if cancel:
+            _row = self._get_row(name)
+            _row.find_element(*self.elements["more_info"].values()).click()
+
+        return more_info
+
+    def switch_to_page(self, value):
+        for each in self.get_elements('switch_to_page'):
+            if each.text.strip().lower() not in ['prev','next'] and int(each.text.strip()) == value:
+                each.click()
+                return True
+        else:
+            raise ValueError("{} not found".format(value))
+
+    def switch_to_prev(self):
+        for page_prev in self.get_elements('switch_to_page'):
+            if page_prev.text.strip().lower() == "prev":
+                page_prev.click()
+                return True
+        else:
+            raise ValueError("{} not found".format(page_prev))
+
+    def switch_to_next(self):
+        for page_next in self.get_elements('switch_to_page'):
+            if page_next.text.strip().lower() == "next":
+                page_next.click()
+                return True
+        else:
+            raise ValueError("{} not found".format(page_next))
+
         

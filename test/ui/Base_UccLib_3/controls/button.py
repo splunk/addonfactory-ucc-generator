@@ -18,21 +18,4 @@ class Button(BaseComponent):
         """
         self.container.click()
 
-    def learn_more(self):
-        self.container.click()
-        time.sleep(5)
-        window_after = self.browser.window_handles[1]
-        self.browser.switch_to.window(window_after)
-        time.sleep(5)
-        return self.browser.current_url
     
- 
-    # def __getattr__(self, key):
-    #     """
-    #     Button does not contain child elements. Hence, override the attribute method
-    #     """
-    #     try:
-    #         element = self.elements[key]
-    #         return self._get_element(element['by'], element['select'])
-    #     except KeyError:
-    #         raise
