@@ -50,9 +50,11 @@ class SingleSelect(BaseComponent):
     def select(self, value, open_dropdown=True):
         if open_dropdown:
             self.dropdown.click()
-
+        
         for each in self.get_elements('values'):
-            if each.text.strip().lower() == value.lower():
+            if each.text.strip() == "Select a value":
+                pass
+            elif each.text.strip().lower() == value.lower():
                 each.click()
                 self.wait_for('internal_container')
                 return True
@@ -115,7 +117,8 @@ class SingleSelect(BaseComponent):
         Get the list of value from the Single Select
         """
         selected_val = self.get_value()
-        selected_val = ''
+        if selected_val == "Select a value":  # Singleselect considers the placeholder "Select a value" as a default selected value therefore clearing it
+            selected_val = ''
         self.dropdown.click()
         first_element = None
         for each in self.get_elements('values'):
