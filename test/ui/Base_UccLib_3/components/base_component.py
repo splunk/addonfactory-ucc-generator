@@ -1,5 +1,6 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import re
 
 class BaseComponent(object):
     """
@@ -23,6 +24,9 @@ class BaseComponent(object):
         self.browser = browser
         self.wait = WebDriverWait(self.browser, 120)
         self.elements["container"] = container
+
+    def get_clear_text(self, web_element):
+        return re.sub('\s+', ' ', web_element.text).strip()
 
     def get_element(self, key):
         """

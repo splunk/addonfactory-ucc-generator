@@ -125,7 +125,7 @@ class Table(BaseComponent):
         """
         Get the count mentioned in the table title
         """
-        return self.count.text.strip()
+        return self.get_clear_text(self.count) 
 
     def get_row_count(self):
         """
@@ -137,7 +137,7 @@ class Table(BaseComponent):
         """
         Get list of headers from the table
         """
-        return [each.text for each in self.get_elements("header")]
+        return [self.get_clear_text(each) for each in self.get_elements("header")]
 
     def get_sort_order(self):
         """
@@ -148,12 +148,12 @@ class Table(BaseComponent):
         for each_header in self.get_elements("header"):
             if re.search(r"\basc\b", each_header.get_attribute("class")):
                 return {
-                    "header": each_header.text.strip().lower(),
+                    "header": self.get_clear_text(each_header),
                     "ascending": True
                 }
             elif re.search(r"\bdesc\b", each_header.get_attribute("class")):
                 return {
-                    "header": each_header.text.strip().lower(),
+                    "header": self.get_clear_text(each_header),
                     "ascending": False
                 }
 
@@ -165,7 +165,7 @@ class Table(BaseComponent):
         """
         for each_header in self.get_elements("header"):
             
-            if each_header.text.strip().lower() == column.lower():
+            if self.get_clear_text(each_header).lower() == column.lower():
                 if "asc" in each_header.get_attribute("class") and ascending:
                     # If the column is already in ascending order, do nothing
                     return
@@ -220,14 +220,20 @@ class Table(BaseComponent):
         time.sleep(7)
 
         table = dict()
-        headers = self.get_headers()
+        headers = list(self.get_headers())
+        
+        print "Starting get_table"
+        print "LIST_OF_HEADERS :: {}".format(str(headers))
         for each_row in self._get_rows():
             row_name = self._get_column_value(each_row, "name")
+            print "ROW_NAME :: {}".format(row_name)
             table[row_name] = dict()
             for each_col in headers:
                 each_col = each_col.lower()
                 if each_col:
                         table[row_name][each_col] = self._get_column_value(each_row, each_col) 
+                        print("CELL_VALUE :: {}".format(table[row_name][each_col]))
+        print table
         return table
 
     def get_cell_value(self, name, column):
@@ -236,7 +242,7 @@ class Table(BaseComponent):
             :param name: row_name of the table
             :param column: column header of the table
         """
-        _row = self._get_row(name).strip()
+        _row = self._get_row(name)
         return self._get_column_value(_row, column)
     
     def get_column_values(self, column):
@@ -254,7 +260,7 @@ class Table(BaseComponent):
         """
         _row = self._get_row(name)
         _row.find_element(*self.elements["action_values"].values())
-        return [each_element.text.strip() for each_element in self.get_elements("action_values")]
+        return [self.get_clear_text(each_element) for each_element in self.get_elements("action_values")]
 
     def edit_row(self, name):
         """
@@ -297,7 +303,7 @@ class Table(BaseComponent):
             self.wait_until("delete_close")
             return True  
         elif prompt_msg:
-            return self.delete_prompt.text.strip()    
+            return self.get_clear_text(self.delete_prompt)    
         else:
             self.delete_btn.click()
             self.wait_for("app_listings")
@@ -335,18 +341,19 @@ class Table(BaseComponent):
             find_by_col_number = isinstance(column, int)
 
         if not find_by_col_number:
+            # String value 
             col = self.elements["col"].copy()
-            col["select"] = col["select"].format(column=column.lower().strip().replace(" ","_"))
+            col["select"] = col["select"].format(column=column.lower().replace(" ","_"))
             self.wait_for("app_listings")
             # print row.find_element(*col.values()).text
-            return row.find_element(*col.values()).text
+            return self.get_clear_text(row.find_element(*col.values()))
         else:
+            # Int value 
             col = self.elements["col-number"].copy()
             col["select"] = col["select"].format(col_number=column)
             self.wait_for("app_listings")
-            return row.find_element(*col.values()).text
+            return self.get_clear_text(row.find_element(*col.values()))
             
-
     def _get_rows(self):
         """
         Get list of rows
@@ -361,7 +368,7 @@ class Table(BaseComponent):
         """
         for each_row in self._get_rows():
             # print self._get_column_value(each_row, "name").strip()
-            if self._get_column_value(each_row, "name").strip() == name:
+            if self._get_column_value(each_row, "name") == name:
                 return each_row
         else:
             raise ValueError("{} row not found in table".format(name)) 
@@ -369,7 +376,7 @@ class Table(BaseComponent):
     def get_action_values(self, name):
         _row = self._get_row(name)
         # _row.find_element(*self.elements["action"].values()).click()
-        return [each.text.strip() for each in self.get_elements("action_values")]
+        return [self.get_clear_text(each) for each in self.get_elements("action_values")]
 
     def get_count_number(self):
         # self.total_rows = self.count.text.strip()
@@ -381,7 +388,7 @@ class Table(BaseComponent):
         _row.find_element(*self.elements["more_info"].values()).click()
         keys = self.more_info_row.find_elements(*self.elements["more_info_key"].values())
         values = self.more_info_row.find_elements(*self.elements["more_info_value"].values())        
-        more_info = {key.text: value.text for key, value in zip(keys, values)}
+        more_info = {self.get_clear_text(key): self.get_clear_text(value) for key, value in zip(keys, values)}
 
         if cancel:
             _row = self._get_row(name)
@@ -391,7 +398,7 @@ class Table(BaseComponent):
 
     def switch_to_page(self, value):
         for each in self.get_elements('switch_to_page'):
-            if each.text.strip().lower() not in ['prev','next'] and int(each.text.strip()) == value:
+            if self.get_clear_text(each) not in ['prev','next'] and int(self.get_clear_text(each)) == value:
                 each.click()
                 return True
         else:
@@ -399,7 +406,7 @@ class Table(BaseComponent):
 
     def switch_to_prev(self):
         for page_prev in self.get_elements('switch_to_page'):
-            if page_prev.text.strip().lower() == "prev":
+            if self.get_clear_text(page_prev).lower() == "prev":
                 page_prev.click()
                 return True
         else:
@@ -407,7 +414,7 @@ class Table(BaseComponent):
 
     def switch_to_next(self):
         for page_next in self.get_elements('switch_to_page'):
-            if page_next.text.strip().lower() == "next":
+            if self.get_clear_text(page_next).lower() == "next":
                 page_next.click()
                 return True
         else:
