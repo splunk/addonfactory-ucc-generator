@@ -27,6 +27,10 @@ class SingleSelect(BaseComponent):
                 "by": By.CSS_SELECTOR,
                 "select": container["select"] + " .select2-choice"
             },
+            "selected": {
+                "by": By.CSS_SELECTOR,
+                "select": container["select"] + " .select2-choice:not(.select2-default)"
+            },
             "values": {
                 "by": By.CSS_SELECTOR,
                 "select": '.select2-drop-active[style*="display: block;"] .select2-result-selectable'
@@ -100,7 +104,10 @@ class SingleSelect(BaseComponent):
         """
         get the selected value
         """
-        return self.dropdown.text.strip()
+        try:
+            return self.selected.text.strip()
+        except:
+            return False
 
     def cancel_selected_value(self):
         '''
@@ -117,15 +124,13 @@ class SingleSelect(BaseComponent):
         Get the list of value from the Single Select
         """
         selected_val = self.get_value()
-        if selected_val == "Select a value":  # Singleselect considers the placeholder "Select a value" as a default selected value therefore clearing it
-            selected_val = ''
         self.dropdown.click()
         first_element = None
         for each in self.get_elements('values'):
             if not first_element:
                 first_element = each
             yield each.text.strip()
-        if selected_val.strip():
+        if selected_val:
             self.select(selected_val, open_dropdown=False)
         elif self.searchable:
             self.input.send_keys(Keys.ESCAPE)
