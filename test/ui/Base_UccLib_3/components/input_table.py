@@ -13,10 +13,6 @@ class InputTable(Table):
         super(InputTable, self).__init__(browser, container, mapping)
 
         self.elements.update({
-            "status": {
-                "by": By.CSS_SELECTOR,
-                "select": " .switch-label"
-            },
             "switch_button_status": {
                 "by": By.CSS_SELECTOR,
                 "select": " td.col-disabled .disabled"
@@ -24,26 +20,6 @@ class InputTable(Table):
             "status_toggle": {
                 "by": By.CSS_SELECTOR,
                 "select": " .switch-button .round"
-            },
-            "more_info": {
-                "by": By.CSS_SELECTOR,
-                "select": container["select"] + " td.expands"
-            },
-            "more_info_row": {
-                "by": By.CSS_SELECTOR,
-                "select": container["select"] + " tr.expanded + tr"
-            },
-            "more_info_key": {
-                "by": By.CSS_SELECTOR,
-                "select":  "dt"
-            },
-            "more_info_value": {
-                "by": By.CSS_SELECTOR,
-                "select":  "dd"
-            },
-            "input_list": {
-                "by": By.CSS_SELECTOR,
-                "select": ".dropdown-menu.open li a"
             },
             "switch_to_page": {
                 "by": By.CSS_SELECTOR,
@@ -57,13 +33,8 @@ class InputTable(Table):
 
 
     def input_status_toggle(self, name, enable):
-        # status = "enable" if enable else "disable"
-        # negative_status = "disable" if enable else "enable"
-
         _row = self._get_row(name)
         input_status = _row.find_element(*self.elements["input_status"].values())
-        # print _row.text.strip()
-        # print input_status.text.strip()
         status = input_status.text.strip().lower()
         if enable:
             if status == "enabled":

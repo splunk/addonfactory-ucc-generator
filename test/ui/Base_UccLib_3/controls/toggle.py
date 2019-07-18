@@ -30,7 +30,6 @@ class Toggle(BaseComponent):
                 return True
         else:
             raise ValueError("{} not found".format(value))
-        return True
     
     def get_value(self):
         return self.selected.text.strip()

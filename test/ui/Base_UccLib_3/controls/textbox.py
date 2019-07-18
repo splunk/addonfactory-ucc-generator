@@ -29,8 +29,14 @@ class TextBox(BaseComponent):
         return self.container.get_attribute('value').strip()
 
     def is_editable(self):
-       return not bool(self.container.get_attribute("readonly") or self.container.get_attribute("disabled"))
+        '''
+        Returns True if the Textbox is editable, False otherwise
+        '''
+        return not bool(self.container.get_attribute("readonly") or self.container.get_attribute("disabled"))
 
 
     def clear_text(self):
+        '''
+        Clears the textbox value
+        '''
         self.container.clear()

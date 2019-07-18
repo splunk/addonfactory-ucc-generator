@@ -74,7 +74,7 @@ class MultiSelect(BaseComponent):
         try:
             self.input.click()
         except:
-            print("dropdown not found")
+            raise Exception("dropdown not found")
 
         for each in self.get_elements('values'):
             if each.text.strip().lower() == value.lower():

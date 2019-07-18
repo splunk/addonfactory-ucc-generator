@@ -1,6 +1,5 @@
 from ..pages.page import Page
 from selenium.webdriver.common.by import By
-# from ..controls.textbox import TextBox
 from abc import abstractmethod
 from ..controls.button import Button
 from ..controls.message import Message
@@ -23,32 +22,6 @@ class Entity(BaseComponent):
         """
         self.browser = browser
         super(Entity, self).__init__(browser, container)
-        self.elements.update({
-            "add_button": {
-                "by": By.CSS_SELECTOR,
-                "select": ".add-button"
-            },
-            "input_list": {
-                "by": By.CSS_SELECTOR,
-                "select": ".dropdown-menu.open li a"
-            },
-            "storage_table":{
-                "by": By.CSS_SELECTOR,
-                "select": "a.mscs_storage_table"
-            },
-            "storage_blob":{
-                "by": By.CSS_SELECTOR,
-                "select": "a.mscs_storage_blob"
-            },
-            "azure_audit":{
-                "by": By.CSS_SELECTOR,
-                "select": "a.mscs_azure_audit"
-            },
-            "azure_resource":{
-                "by": By.CSS_SELECTOR,
-                "select": "a.mscs_azure_resource"
-            }
-        })
         
         # Controls
         self.save_btn = Button(browser, {"by": By.CSS_SELECTOR, "select": container["select"] + " input.submit-btn" })
@@ -102,7 +75,6 @@ class Entity(BaseComponent):
         """
         Open the entity by click on "New" button. 
         """
-        self.wait_for("add_button")
         self.add_btn.click()
         self.save_btn.wait_to_display()
         time.sleep(self.wait_for_seconds)

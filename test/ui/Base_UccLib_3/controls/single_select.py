@@ -1,7 +1,6 @@
 import time
 from ..components.base_component import BaseComponent
 from selenium.webdriver.common.by import By
-# from selenium.webdriver.support.
 from selenium.webdriver.common.keys import Keys
 
 class SingleSelect(BaseComponent):
@@ -56,9 +55,7 @@ class SingleSelect(BaseComponent):
             self.dropdown.click()
         
         for each in self.get_elements('values'):
-            if each.text.strip() == "Select a value":
-                pass
-            elif each.text.strip().lower() == value.lower():
+            if each.text.strip().lower() == value.lower():
                 each.click()
                 self.wait_for('internal_container')
                 return True
@@ -94,7 +91,7 @@ class SingleSelect(BaseComponent):
 
     def _list_visible_values(self):
         """
-        Get list of values which are visible. Used while filtering 
+            Gets list of values which are visible. Used while filtering 
         """
         for each in self.get_elements('values'):
             yield each.get_attribute('textContent')
@@ -102,7 +99,7 @@ class SingleSelect(BaseComponent):
 
     def get_value(self):
         """
-        get the selected value
+            Gets the selected value
         """
         try:
             return self.selected.text.strip()
@@ -111,7 +108,7 @@ class SingleSelect(BaseComponent):
 
     def cancel_selected_value(self):
         '''
-        Cancels the currently selected value in the SingleSelect
+            Cancels the currently selected value in the SingleSelect
         '''
         try:
             self.cancel_selected.click()
@@ -121,7 +118,7 @@ class SingleSelect(BaseComponent):
 
     def list_of_values(self):
         """
-        Get the list of value from the Single Select
+            Gets the list of value from the Single Select
         """
         selected_val = self.get_value()
         self.dropdown.click()
@@ -140,7 +137,7 @@ class SingleSelect(BaseComponent):
 
     def get_list_count(self):
         '''
-        Get the total count of the SingleSelect list
+            Gets the total count of the SingleSelect list
         '''
         return len(list(self.list_of_values()))
 

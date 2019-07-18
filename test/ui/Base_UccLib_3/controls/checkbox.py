@@ -29,9 +29,15 @@ class Checkbox(BaseComponent):
 
     
     def toggle(self):
+        '''
+        Toggles the checkbox value
+        '''
         self.checkbox.click()
 
     def check(self):
+        '''
+        Checks the checkbox if unchecked
+        '''
         try:
             if self.is_checked() == False:
                 self.toggle()
@@ -40,6 +46,9 @@ class Checkbox(BaseComponent):
             return "Checkbox is already checked"
 
     def uncheck(self):
+        '''
+        Unchecks the checkbox if checked
+        '''
         try:
             if self.is_checked() == True:
                 self.toggle()
@@ -48,6 +57,9 @@ class Checkbox(BaseComponent):
             return "Checkbox is already unchecked"
 
     def is_checked(self):
+        '''
+        Returns True if the checkbox is already checked, otherwise False
+        '''
         element = self.get_element("checkbox_enabled")
         a = element.value_of_css_property("display")
         if a =="inline-block":

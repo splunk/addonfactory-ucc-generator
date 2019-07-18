@@ -110,10 +110,6 @@ class Table(BaseComponent):
                 "by": By.CSS_SELECTOR,
                 "select":  "dd"
             },
-            "input_list": {
-                "by": By.CSS_SELECTOR,
-                "select": ".dropdown-menu.open li a"
-            },
             "switch_to_page": {
                 "by": By.CSS_SELECTOR,
                 "select": container["select"] + " .pull-right li a"
@@ -217,23 +213,17 @@ class Table(BaseComponent):
         Get whole table in dictionary form. The row_name will will be the key and all header:values will be it's value.
         {row_1 : {header_1: value_1, . . .}, . . .}
         """
-        time.sleep(7)
 
         table = dict()
         headers = list(self.get_headers())
-        
-        print "Starting get_table"
-        print "LIST_OF_HEADERS :: {}".format(str(headers))
+
         for each_row in self._get_rows():
             row_name = self._get_column_value(each_row, "name")
-            print "ROW_NAME :: {}".format(row_name)
             table[row_name] = dict()
             for each_col in headers:
                 each_col = each_col.lower()
                 if each_col:
                         table[row_name][each_col] = self._get_column_value(each_row, each_col) 
-                        print("CELL_VALUE :: {}".format(table[row_name][each_col]))
-        print table
         return table
 
     def get_cell_value(self, name, column):
@@ -341,11 +331,9 @@ class Table(BaseComponent):
             find_by_col_number = isinstance(column, int)
 
         if not find_by_col_number:
-            # String value 
             col = self.elements["col"].copy()
             col["select"] = col["select"].format(column=column.lower().replace(" ","_"))
             self.wait_for("app_listings")
-            # print row.find_element(*col.values()).text
             return self.get_clear_text(row.find_element(*col.values()))
         else:
             # Int value 
@@ -367,7 +355,6 @@ class Table(BaseComponent):
         :param name: row name 
         """
         for each_row in self._get_rows():
-            # print self._get_column_value(each_row, "name").strip()
             if self._get_column_value(each_row, "name") == name:
                 return each_row
         else:
@@ -375,11 +362,9 @@ class Table(BaseComponent):
 
     def get_action_values(self, name):
         _row = self._get_row(name)
-        # _row.find_element(*self.elements["action"].values()).click()
         return [self.get_clear_text(each) for each in self.get_elements("action_values")]
 
     def get_count_number(self):
-        # self.total_rows = self.count.text.strip()
         row_count = self.get_count_title()
         return int(re.search(r'\d+', row_count).group())
 
@@ -398,7 +383,7 @@ class Table(BaseComponent):
 
     def switch_to_page(self, value):
         for each in self.get_elements('switch_to_page'):
-            if self.get_clear_text(each).lower() not in ['prev','next'] and int(self.get_clear_text(each)) == value:
+            if self.get_clear_text(each).lower() not in ['prev','next'] and self.get_clear_text(each) == str(value):
                 each.click()
                 return True
         else:
