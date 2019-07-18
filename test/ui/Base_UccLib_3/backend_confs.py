@@ -39,7 +39,7 @@ class BackendConf(object):
         assert res.status_code == 200 or res.status_code == 201, "url={}, status_code={}, error_msg={}".format(url,res.status_code, res.text)
         return res.json()
 
-    def parse_conf(self, json_res):
+    def parse_conf(self, json_res, single_stanza=False):
         """
         Parse the json result in to the configuration dictionary
             :param json_res: the json_res got from the request
@@ -55,7 +55,7 @@ class BackendConf(object):
                     continue
                 stanzas_map[stanza_name][each_param] = param_value
 
-        if len(stanzas_map) == 1:
+        if single_stanza:
             return stanzas_map[stanzas_map.keys()[0]]
         return stanzas_map
 
@@ -83,7 +83,7 @@ class ListBackendConf(BackendConf):
         """
         url = "{}/{}?count=0&output_mode=json".format(self.url, urllib.quote_plus(stanza))
         res = self.rest_call(url)
-        return self.parse_conf(res)
+        return self.parse_conf(res, single_stanza=True)
     
     def post_stanza(self, url, kwargs):
         """
@@ -112,7 +112,7 @@ class SingleBackendConf(BackendConf):
     def get_stanza(self):
         url = self.url + "?output_mode=json"
         res = self.rest_call(url)
-        return self.parse_conf(res)
+        return self.parse_conf(res, single_stanza=True)
 
     def get_parameter(self, param):
         """

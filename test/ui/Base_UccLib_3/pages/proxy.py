@@ -6,7 +6,7 @@ from ..components.entity import Entity
 from ..controls.checkbox import Checkbox
 from ..controls.button import Button
 from ..controls.textbox import TextBox
-from ..backend_confs import ListBackendConf
+from ..backend_confs import SingleBackendConf
 from selenium.webdriver.common.by import By
 import time
 
@@ -37,7 +37,7 @@ class Proxy(Entity):
         self.type = SingleSelect(
             browser, {"by": By.CSS_SELECTOR, "select": ".proxy_type"})
        
-        self.backend_conf = ListBackendConf(self._get_proxy_endpoint(), session_key)
+        self.backend_conf = SingleBackendConf(self._get_proxy_endpoint(), session_key)
 
     def open(self):
         """
@@ -53,4 +53,4 @@ class Proxy(Entity):
         """
         get rest endpoint for the configuration
         """
-        return '{}/servicesNS/nobody/Splunk_TA_microsoft-cloudservices/configs/conf-splunk_ta_mscs_settings'.format(self.mgmt_url)
+        return '{}/servicesNS/nobody/Splunk_TA_microsoft-cloudservices/configs/conf-splunk_ta_mscs_settings/proxy'.format(self.mgmt_url)
