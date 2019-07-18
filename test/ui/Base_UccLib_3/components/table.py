@@ -398,7 +398,7 @@ class Table(BaseComponent):
 
     def switch_to_page(self, value):
         for each in self.get_elements('switch_to_page'):
-            if self.get_clear_text(each) not in ['prev','next'] and int(self.get_clear_text(each)) == value:
+            if self.get_clear_text(each).lower() not in ['prev','next'] and int(self.get_clear_text(each)) == value:
                 each.click()
                 return True
         else:
