@@ -15,8 +15,10 @@ class LearnMore(BaseComponent):
 
     def go_to_link(self):
         self.container.click()
-        time.sleep(20)
-        window_after = self.browser.window_handles[1]
-        self.browser.switch_to.window(window_after)
-        time.sleep(20)
+        time.sleep(10)
+        print self.browser.name
+        if self.browser.name == "Safari":
+            self.browser.switch_to.window(self.browser.window_handles[0])
+        else:
+            self.browser.switch_to.window(self.browser.window_handles[1])
         return self.browser.current_url
