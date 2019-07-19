@@ -67,6 +67,7 @@ class Dropdown(BaseComponent):
 
     def select(self, value):
 
+        self.add_btn.click()
         for each in self.get_elements('type_list'):
             if each.text.strip().lower() == value.lower():
                 each.click()
