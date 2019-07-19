@@ -1,11 +1,11 @@
 
 from ..components.tabs import Tab
 from ..components.entity import Entity
-from ..controls.single_select import SingleSelect
+from ..components.controls.single_select import SingleSelect
 from ..components.entity import Entity
-from ..controls.checkbox import Checkbox
-from ..controls.button import Button
-from ..controls.textbox import TextBox
+from ..components.controls.checkbox import Checkbox
+from ..components.controls.button import Button
+from ..components.controls.textbox import TextBox
 from ..backend_confs import SingleBackendConf
 from selenium.webdriver.common.by import By
 import time

@@ -1,6 +1,6 @@
 from ..components.base_component import BaseComponent
 from selenium.webdriver.common.by import By
-from ..controls.button import Button
+from button import Button
 
 class Message(BaseComponent):
     """

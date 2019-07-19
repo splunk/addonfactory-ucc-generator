@@ -1,7 +1,7 @@
 
 from ..components.tabs import Tab
 from ..components.entity import Entity
-from ..controls.single_select import SingleSelect
+from ..components.controls.single_select import SingleSelect
 from ..backend_confs import SingleBackendConf
 from selenium.webdriver.common.by import By
 import time

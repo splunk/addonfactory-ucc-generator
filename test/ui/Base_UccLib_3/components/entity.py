@@ -1,8 +1,8 @@
 from ..pages.page import Page
 from selenium.webdriver.common.by import By
 from abc import abstractmethod
-from ..controls.button import Button
-from ..controls.message import Message
+from controls.button import Button
+from controls.message import Message
 from base_component import BaseComponent
 from dropdown import Dropdown
 import time
