@@ -1,5 +1,5 @@
 import time
-from ..components.base_component import BaseComponent
+from ..base_component import BaseComponent
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
