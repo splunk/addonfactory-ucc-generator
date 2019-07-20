@@ -1,3 +1,3 @@
 import components
 import pages
-import controls
+import components.controls
