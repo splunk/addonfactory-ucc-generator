@@ -217,6 +217,7 @@ class Table(BaseComponent):
         table = dict()
         headers = list(self.get_headers())
 
+        time.sleep(10)
         for each_row in self._get_rows():
             row_name = self._get_column_value(each_row, "name")
             table[row_name] = dict()
@@ -297,6 +298,7 @@ class Table(BaseComponent):
         else:
             self.delete_btn.click()
             self.wait_for("app_listings")
+            time.sleep(20)
             
             
     def set_filter(self, filter_query):
