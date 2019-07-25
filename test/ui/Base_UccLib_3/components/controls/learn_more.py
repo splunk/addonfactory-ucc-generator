@@ -19,6 +19,9 @@ class LearnMore(BaseComponent):
         '''
         self.container.click()
         time.sleep(10)
+        # For Safari window_handles works opposite as compared to Firefox and Chrome 
+        # In Safari window_handles[1] represents the current window.
+        # And in other browsers window_handels[0] represents the current window.
         if self.browser.name == "Safari":
             self.browser.switch_to.window(self.browser.window_handles[0])
         else:
