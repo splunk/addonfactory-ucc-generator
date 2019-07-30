@@ -53,7 +53,7 @@ def copy_directory(src, dest):
 
 
 def generate_ui():
-    subprocess.call("cd ../UCC-UI-lib;npm run buildDev", shell=True)
+    subprocess.call("cd ../UCC-UI-lib;npm run build", shell=True)
     ui_lib_dir = os.path.join(os.path.dirname(basedir), 'UCC-UI-lib', 'build')
 
     # copy appserver folder
