@@ -4,6 +4,8 @@ Converters for Splunk configuration.
 
 from __future__ import absolute_import
 
+from past.builtins import basestring
+from builtins import object
 import base64
 import json
 
@@ -188,7 +190,7 @@ class Unifier(Normaliser):
         self._case_sensitive = case_sensitive
         self._default = default
         self._value_map = {}
-        for val_new, val_old_list in value_map.iteritems():
+        for val_new, val_old_list in value_map.items():
             for val_old in val_old_list:
                 val_old = val_old if case_sensitive else val_old.lower()
                 assert val_old not in self._value_map, \
@@ -248,7 +250,7 @@ class Mapping(Converter):
         super(Mapping, self).__init__()
         self._case_sensitive = case_sensitive
         self._map_interface, self._map_storage = {}, {}
-        for interface, storage in value_map.iteritems():
+        for interface, storage in value_map.items():
             self._check_and_set(interface, storage)
 
     def _check_and_set(self, interface, storage):

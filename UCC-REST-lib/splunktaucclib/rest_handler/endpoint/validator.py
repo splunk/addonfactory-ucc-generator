@@ -4,6 +4,9 @@ Validators for Splunk configuration.
 
 from __future__ import absolute_import
 
+from builtins import str
+from past.builtins import basestring
+from builtins import object
 import re
 import json
 from inspect import isfunction
@@ -268,7 +271,7 @@ class Number(Validator):
         :param is_int: the value should be integer or not
         """
         def check(val):
-            return val is None or isinstance(val, (int, long, float))
+            return val is None or isinstance(val, (int, int, float))
         assert check(min_val) and check(max_val), \
             '%(min_val)s & %(max_val)s should be numbers' % {
                 'min_val': min_val,
@@ -282,7 +285,7 @@ class Number(Validator):
 
     def validate(self, value, data):
         try:
-            value = long(value) if self._is_int else float(value)
+            value = int(value) if self._is_int else float(value)
         except ValueError:
             self.put_msg(
                 'Invalid format for %s value' % ('integer' if self._is_int else 'numeric')
@@ -329,7 +332,7 @@ class String(Validator):
         def check(val):
             if val is None:
                 return True
-            return isinstance(val, (int, long)) and val >= 0
+            return isinstance(val, (int, int)) and val >= 0
 
         assert check(min_len) and check(max_len), \
             '%(min_len)s & %(max_len)s should be numbers' % {
@@ -385,7 +388,7 @@ class Datetime(Validator):
         import datetime
         try:
             datetime.datetime.strptime(value, self._format)
-        except ValueError, exc:
+        except ValueError as exc:
             error = 'Wrong datetime with format "%s": %s' % (self._format, str(exc))
             self.put_msg(error)
             return False
