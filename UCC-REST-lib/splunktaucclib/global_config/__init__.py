@@ -4,10 +4,7 @@ Global Config Module
 
 from __future__ import absolute_import
 
-from future import standard_library
-standard_library.install_aliases()
-from builtins import object
-from urllib.parse import urlparse
+from urlparse import urlparse
 from solnlib.splunk_rest_client import SplunkRestClient
 
 from .configuration import (

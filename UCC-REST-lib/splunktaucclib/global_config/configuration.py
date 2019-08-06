@@ -1,8 +1,6 @@
 
 from __future__ import absolute_import
 
-from builtins import str
-from builtins import object
 import copy
 import json
 from multiprocessing.pool import ThreadPool
@@ -93,7 +91,7 @@ class Configuration(object):
         """
         # expand the payload to task_list
         task_list = []
-        for type_name, configurations in payload.items():
+        for type_name, configurations in payload.iteritems():
             task_list.extend([(type_name, configuration) for configuration in configurations])
         task_len = len(task_list)
         # return empty error list if task list is empty
@@ -162,7 +160,7 @@ class Configuration(object):
 
     @classmethod
     def _filter_fields(cls, entity):
-        for (k, v) in list(entity.items()):
+        for (k, v) in entity.items():
             if k in cls.FILTERS:
                 del entity[k]
 

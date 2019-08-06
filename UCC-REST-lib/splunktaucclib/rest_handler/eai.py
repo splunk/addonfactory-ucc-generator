@@ -2,7 +2,6 @@
 from __future__ import absolute_import
 
 # EAI fields
-from builtins import object
 EAI_ACL = 'eai:acl'
 EAI_ATTRIBUTES = 'eai:attributes'
 EAI_USER = 'eai:userName'
