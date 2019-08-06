@@ -1,7 +1,8 @@
-import normalize
+from __future__ import absolute_import
+from . import normalize
 import logging
 import os
-from modular_alert_builder.build_core import generate_alerts
+from .modular_alert_builder.build_core import generate_alerts
 import traceback
 
 class LoggerAdapter(logging.LoggerAdapter):

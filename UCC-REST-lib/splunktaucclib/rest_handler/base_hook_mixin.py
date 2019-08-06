@@ -1,4 +1,5 @@
 
+from builtins import object
 class BaseHookMixin(object):
     """ Base Hook Mixin class
     """

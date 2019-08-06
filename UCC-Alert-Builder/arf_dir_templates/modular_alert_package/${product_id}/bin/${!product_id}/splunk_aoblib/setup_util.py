@@ -1,3 +1,6 @@
+from builtins import str
+from builtins import range
+from builtins import object
 import json
 import os
 
@@ -132,7 +135,7 @@ class Setup_Util(object):
             # format the settings, the setting from env is from global_setting
             # meta
             self.__cached_global_settings = {}
-            for s_k, s_v in global_settings.iteritems():
+            for s_k, s_v in global_settings.items():
                 if s_k == PROXY_SETTINGS:
                     proxy_enabled = s_v.get(PROXY_ENABLE_KEY)
                     proxy_rdns = s_v.get(PROXY_RDNS_KEY)

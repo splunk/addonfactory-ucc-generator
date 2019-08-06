@@ -1,6 +1,7 @@
+from __future__ import absolute_import
 from ..base_component import BaseComponent
 from selenium.webdriver.common.by import By
-from button import Button
+from .button import Button
 
 class Message(BaseComponent):
     """

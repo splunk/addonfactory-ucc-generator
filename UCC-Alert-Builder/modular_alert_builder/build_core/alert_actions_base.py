@@ -1,3 +1,6 @@
+from __future__ import print_function
+from __future__ import absolute_import
+from builtins import str
 import csv
 import gzip
 import sys
@@ -8,7 +11,7 @@ except ImportError:
     from splunk.appserver.mrsparkle.lib.util import make_splunkhome_path
 sys.path.append(make_splunkhome_path(["etc", "apps", "Splunk_SA_CIM", "lib"]))
 
-from cim_actions import ModularAction
+from .cim_actions import ModularAction
 from solnlib.log import Logs
 
 
@@ -39,7 +42,7 @@ class ModularAlertBase(ModularAction):
     def run(self, argv):
         if len(argv) < 2 or argv[1] != "--execute":
             msg = 'Error: argv="{}", expected="--execute"'.format(argv)
-            print >> sys.stderr, msg
+            print(msg, file=sys.stderr)
             sys.exit(1)
 
         try:

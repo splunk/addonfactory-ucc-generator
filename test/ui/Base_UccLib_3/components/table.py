@@ -1,5 +1,9 @@
-from base_component import BaseComponent
-from dropdown import Dropdown
+from __future__ import print_function
+from __future__ import absolute_import
+from builtins import str
+from builtins import zip
+from .base_component import BaseComponent
+from .dropdown import Dropdown
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 import re
@@ -250,7 +254,7 @@ class Table(BaseComponent):
         :param name: The name of the row
         """
         _row = self._get_row(name)
-        _row.find_element(*self.elements["action_values"].values())
+        _row.find_element(*list(self.elements["action_values"].values()))
         return [self.get_clear_text(each_element) for each_element in self.get_elements("action_values")]
 
     def edit_row(self, name):
@@ -259,7 +263,7 @@ class Table(BaseComponent):
             :param name: row_name of the table
         """
         _row = self._get_row(name)
-        _row.find_element(*self.elements["edit"].values()).click()
+        _row.find_element(*list(self.elements["edit"].values())).click()
         time.sleep(self.wait_for_seconds)    
 
     def clone_row(self, name):
@@ -268,7 +272,7 @@ class Table(BaseComponent):
             :param name: row_name of the table
         """
         _row = self._get_row(name)
-        _row.find_element(*self.elements["clone"].values()).click()
+        _row.find_element(*list(self.elements["clone"].values())).click()
         time.sleep(self.wait_for_seconds)     
 
     def delete_row(self, name, cancel=False, close=False, prompt_msg=False):
@@ -281,7 +285,7 @@ class Table(BaseComponent):
 
         # Click on action
         _row = self._get_row(name)
-        _row.find_element(*self.elements["delete"].values()).click()        
+        _row.find_element(*list(self.elements["delete"].values())).click()        
 
         self.wait_for("delete_prompt")
 
@@ -335,13 +339,13 @@ class Table(BaseComponent):
             col = self.elements["col"].copy()
             col["select"] = col["select"].format(column=column.lower().replace(" ","_"))
             self.wait_for("app_listings")
-            return self.get_clear_text(row.find_element(*col.values()))
+            return self.get_clear_text(row.find_element(*list(col.values())))
         else:
             # Int value 
             col = self.elements["col-number"].copy()
             col["select"] = col["select"].format(col_number=column)
             self.wait_for("app_listings")
-            return self.get_clear_text(row.find_element(*col.values()))
+            return self.get_clear_text(row.find_element(*list(col.values())))
             
     def _get_rows(self):
         """
@@ -371,14 +375,14 @@ class Table(BaseComponent):
 
     def get_more_info(self, name, cancel=True):
         _row = self._get_row(name)
-        _row.find_element(*self.elements["more_info"].values()).click()
-        keys = self.more_info_row.find_elements(*self.elements["more_info_key"].values())
-        values = self.more_info_row.find_elements(*self.elements["more_info_value"].values())        
+        _row.find_element(*list(self.elements["more_info"].values())).click()
+        keys = self.more_info_row.find_elements(*list(self.elements["more_info_key"].values()))
+        values = self.more_info_row.find_elements(*list(self.elements["more_info_value"].values()))        
         more_info = {self.get_clear_text(key): self.get_clear_text(value) for key, value in zip(keys, values)}
 
         if cancel:
             _row = self._get_row(name)
-            _row.find_element(*self.elements["more_info"].values()).click()
+            _row.find_element(*list(self.elements["more_info"].values())).click()
 
         return more_info
 

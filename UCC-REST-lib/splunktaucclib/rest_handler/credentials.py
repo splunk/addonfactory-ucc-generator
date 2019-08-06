@@ -3,8 +3,11 @@
 
 from __future__ import absolute_import
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
 import json
-from urlparse import urlparse
+from urllib.parse import urlparse
 from solnlib.credentials import (
     CredentialManager,
     CredentialNotExistException,
@@ -285,12 +288,12 @@ class RestCredentials(object):
 
         all_passwords = credential_manager._get_all_passwords()
         # filter by realm
-        realm_passwords = filter(lambda x: x['realm'] == self._realm, all_passwords)
+        realm_passwords = [x for x in all_passwords if x['realm'] == self._realm]
         return self._merge_passwords(data, realm_passwords)
 
     @staticmethod
     def _delete_empty_value_for_dict(dct):
-        empty_value_names = [k for k, v in dct.iteritems() if v == '']
+        empty_value_names = [k for k, v in dct.items() if v == '']
         for k in empty_value_names:
             del dct[k]
 
@@ -303,10 +306,10 @@ class RestCredentials(object):
 
         password_dict = {pwd['username']: json.loads(pwd['clear_password']) for pwd in passwords}
         # existed passwords models: previously has encrypted value
-        existing_encrypted_items = filter(lambda x: x['name'] in password_dict, data)
+        existing_encrypted_items = [x for x in data if x['name'] in password_dict]
 
         # previously has no encrypted value
-        not_encrypted_items = filter(lambda x: x['name'] not in password_dict, data)
+        not_encrypted_items = [x for x in data if x['name'] not in password_dict]
 
         # For model that password existed
         # 1.Password changed: Update it and add to changed_item_list
@@ -316,7 +319,7 @@ class RestCredentials(object):
             clear_password = password_dict[name]
             need_write_magic_pwd = False
             need_write_back_pwd = False
-            for k, v in clear_password.iteritems():
+            for k, v in clear_password.items():
                 # make sure key exist in model content
                 if k in existed_model['content']:
                     if existed_model['content'][k] == self.PASSWORD:

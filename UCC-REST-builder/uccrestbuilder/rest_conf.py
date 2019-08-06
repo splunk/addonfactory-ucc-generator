@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 
 
+from builtins import object
 class RestmapConf(object):
 
     _admin_template = """

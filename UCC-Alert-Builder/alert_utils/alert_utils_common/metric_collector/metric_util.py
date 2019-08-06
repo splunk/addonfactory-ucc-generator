@@ -1,8 +1,11 @@
+from __future__ import absolute_import
 # encoding = utf-8
 
+from builtins import str
+from past.builtins import basestring
 import functools
 
-import monitor
+from . import monitor
 import time
 
 __all__ = ['initialize_metric_collector', 'function_run_time']
@@ -31,7 +34,7 @@ def mask_credentials(data):
     masked_str = '******'
     if isinstance(data, dict):
         new_data = {}
-        for k in data.keys():
+        for k in list(data.keys()):
             if isinstance(k, str):
                 _key = k.lower()
                 sensitive_word = False
@@ -76,9 +79,9 @@ def function_run_time(tags=[]):
             ev = {'action': 'invoke'}
             ev.update(func_attr)
             m.write_event(ev, tags)
-            before_invoke = long(time.time() * 1000)
+            before_invoke = int(time.time() * 1000)
             ret = func(*args, **kwargs)
-            after_invoke = long(time.time() * 1000)
+            after_invoke = int(time.time() * 1000)
             ev = {'action': 'done',
                   'time_cost': (after_invoke - before_invoke)}
             ev.update(func_attr)

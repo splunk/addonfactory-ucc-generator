@@ -1,5 +1,6 @@
 # encoding = utf-8
 
+from builtins import object
 import time
 import logging
 import json
@@ -50,7 +51,7 @@ class MetricEventWriter(object):
         self._flush_event(ev, tags)
 
     def _flush_event(self, ev, tags):
-        ctime = long(time.time() * 1000)  # ms
+        ctime = int(time.time() * 1000)  # ms
         self._flush_msg(message(self._app, ctime, ev, tags))
 
     def _flush_msg(self, msg):

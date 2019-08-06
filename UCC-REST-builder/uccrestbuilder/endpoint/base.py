@@ -1,7 +1,11 @@
 
 from __future__ import absolute_import
 
-from StringIO import StringIO
+from future import standard_library
+standard_library.install_aliases()
+from past.builtins import basestring
+from builtins import object
+from io import StringIO
 from splunktaucclib.rest_handler.schema import RestSchema
 
 __all__ = [
