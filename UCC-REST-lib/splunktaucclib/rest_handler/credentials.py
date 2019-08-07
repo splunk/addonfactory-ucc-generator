@@ -7,7 +7,10 @@ from future import standard_library
 standard_library.install_aliases()
 from builtins import object
 import json
-from urllib.parse import urlparse
+try:
+    from urllib.parse import urlparse
+except ImportError:
+    from urlparse import urlparse
 from solnlib.credentials import (
     CredentialManager,
     CredentialNotExistException,

@@ -9,7 +9,10 @@ standard_library.install_aliases()
 from builtins import object
 import json
 import traceback
-from urllib.parse import urlparse
+try:
+    from urllib.parse import urlparse
+except ImportError:
+    from urlparse import urlparse
 from functools import wraps
 from solnlib.packages.splunklib import binding
 from solnlib.splunk_rest_client import SplunkRestClient
