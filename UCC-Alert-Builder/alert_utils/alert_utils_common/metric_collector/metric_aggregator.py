@@ -1,5 +1,7 @@
 # encode=utf-8
 
+from builtins import range
+from builtins import object
 import time
 
 
@@ -47,7 +49,7 @@ class NumberMetricArregator(object):
             return
         low_water_mark = timestamp - self.m_span
         if low_water_mark > self.oldest_metric_time:
-            for ts in xrange(self.oldest_metric_time, low_water_mark):
+            for ts in range(self.oldest_metric_time, low_water_mark):
                 metric = self.buckets.get(ts, None)
                 if metric:
                     self.event_writer.write_event(self.get_formatted_metric(ts, metric), self.metric_tags)
@@ -55,7 +57,7 @@ class NumberMetricArregator(object):
             self.oldest_metric_time = low_water_mark
 
     def flush_all_event(self):
-        for ts, metric in self.buckets.iteritems():
+        for ts, metric in self.buckets.items():
             self.event_writer.write_event(self.get_formatted_metric(ts, metric), self.metric_tags)
 
 

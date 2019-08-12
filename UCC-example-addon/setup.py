@@ -1,3 +1,4 @@
+from __future__ import print_function
 import os
 import shutil
 import errno
@@ -18,7 +19,7 @@ def install_3rdlibs():
     if StrictVersion(pip_version) > StrictVersion("1.5.6"):
         install_cmd += " --trusted-host repo.splunk.com"
 
-    print "command: " + install_cmd
+    print("command: " + install_cmd)
     os.system(install_cmd)
     os.system("rm -rf " + target + "/*.egg-info")
 
@@ -30,7 +31,7 @@ def copy_directory(src, dest):
         if exc.errno == errno.ENOTDIR:
             shutil.copy(src, dest)
         else:
-            print'Directory %s not copied. Error: %s' % (src, exc)
+            print('Directory %s not copied. Error: %s' % (src, exc))
 
 
 def copy_ucc_files():

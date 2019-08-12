@@ -1,4 +1,5 @@
 
+from builtins import object
 class Page(object):
     """
     Instance of a Page class holds all the components inside the page. To access the component, just do page.component.action_method()

@@ -1,3 +1,4 @@
+from builtins import zip
 import json
 import sys
 import copy
@@ -53,7 +54,7 @@ def iterdict(dictionary, result):
     for key in dictionary:
         if key in mapping_keys:
             value = result.pop(key)
-            result[mapping_keys[key]] = value.encode('ascii','ignore') if isinstance(value,unicode) else value
+            result[mapping_keys[key]] = value.encode('ascii','ignore') if isinstance(value,str) else value
             mapped_key = mapping_keys[key]
         else:
             mapped_key = key
@@ -62,7 +63,7 @@ def iterdict(dictionary, result):
         if isinstance(dictionary[key], dict):
             iterdict(dictionary[key], result[mapped_key])
         elif isinstance(dictionary[key], list):
-            for dictionary_item,result_item in itertools.izip(dictionary[key],result[mapped_key]):
+            for dictionary_item,result_item in zip(dictionary[key],result[mapped_key]):
                 if isinstance(dictionary_item,dict):
                     iterdict(dictionary_item, result_item)
         else:

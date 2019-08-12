@@ -10,7 +10,10 @@ There are a lot of legacy codes here. If you want to see our changes,
 please search: ######## tab_update ########
 """
 
-import ConfigParser
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+import configparser
 
 try:
     from collections import OrderedDict as _default_dict
@@ -22,13 +25,13 @@ except ImportError:
 COMMENT_PREFIX = ";#*"
 COMMENT_KEY = "__COMMENTS__"
 
-class TABConfigParser(ConfigParser.RawConfigParser):
+class TABConfigParser(configparser.RawConfigParser):
 
     def _read(self, fp, fpname):
         """
         Override the built-in _read() method to read comments
         """
-        from ConfigParser import DEFAULTSECT, MissingSectionHeaderError, ParsingError
+        from configparser import DEFAULTSECT, MissingSectionHeaderError, ParsingError
 
         cursect = None                        # None, or a dictionary
         optname = None
@@ -144,9 +147,9 @@ class TABConfigParser(ConfigParser.RawConfigParser):
 
         # join the multi-line values collected while reading
         all_sections = [self._defaults]
-        all_sections.extend(self._sections.values())
+        all_sections.extend(list(self._sections.values()))
         for options in all_sections:
-            for name, val in options.items():
+            for name, val in list(options.items()):
                 if isinstance(val, list):
                     options[name] = '\n'.join(val)
 
@@ -169,12 +172,12 @@ class TABConfigParser(ConfigParser.RawConfigParser):
 
         if self._defaults:
             fp.write("[%s]\n" % DEFAULTSECT)
-            for (key, value) in self._defaults.items():
+            for (key, value) in list(self._defaults.items()):
                 fp.write("%s = %s\n" % (key, str(value).replace('\n', '\n\t')))
             fp.write("\n")
         for section in self._sections:
             fp.write("[%s]\n" % section)
-            for (key, value) in self._sections[section].items():
+            for (key, value) in list(self._sections[section].items()):
                 if key == "__name__":
                     continue
 
@@ -202,7 +205,7 @@ class TABConfigParser(ConfigParser.RawConfigParser):
         """
         Override the items() method to filter out the comments
         """
-        items = ConfigParser.RawConfigParser.items(self, section)
+        items = configparser.RawConfigParser.items(self, section)
 
         res = []
         for k,v in items:
@@ -212,7 +215,7 @@ class TABConfigParser(ConfigParser.RawConfigParser):
         return res
 
     def options(self, section):
-        options = ConfigParser.RawConfigParser.options(self, section)
+        options = configparser.RawConfigParser.options(self, section)
 
         res = []
         for opt in options:
@@ -225,9 +228,9 @@ class TABConfigParser(ConfigParser.RawConfigParser):
     def item_dict(self):
         res = {}
         sections = dict(self._sections)
-        for section, key_values in sections.items():
+        for section, key_values in list(sections.items()):
             kv = {}
-            for k,v in key_values.items():
+            for k,v in list(key_values.items()):
                 if not isinstance(k, str) or k.startswith(COMMENT_KEY) or k == "__name__":
                     continue
                 kv[k] = v

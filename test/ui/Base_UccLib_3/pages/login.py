@@ -1,4 +1,5 @@
-from page import Page
+from __future__ import absolute_import
+from .page import Page
 from ..components.login import Login
 from selenium.webdriver.common.by import By
 

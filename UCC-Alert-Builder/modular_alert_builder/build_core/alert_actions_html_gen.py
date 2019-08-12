@@ -1,15 +1,17 @@
-import arf_consts as ac
+from __future__ import absolute_import
+from builtins import object
+from . import arf_consts as ac
 import os
 from os import path as op
 from os import linesep
-import alert_actions_exceptions as aae
+from . import alert_actions_exceptions as aae
 from munch import Munch
 from mako.template import Template
 from mako.lookup import TemplateLookup
 from lxml import etree, html
 from re import search
-from alert_actions_template import AlertActionsTemplateMgr
-from alert_actions_helper import write_file
+from .alert_actions_template import AlertActionsTemplateMgr
+from .alert_actions_helper import write_file
 
 
 class AlertHtmlBase(object):

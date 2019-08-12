@@ -1,3 +1,4 @@
+from __future__ import print_function
 import json
 import os.path as op
 
@@ -22,6 +23,6 @@ builder = build(
     post_process=GlobalConfigPostProcessor(),
     import_declare_name='import_decalare_test',
 )
-print builder.requirements
-print builder.restmap_admin
-print builder.restmap_admin_externals
+print(builder.requirements)
+print(builder.restmap_admin)
+print(builder.restmap_admin_externals)

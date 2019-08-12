@@ -1,3 +1,4 @@
+from __future__ import print_function
 import json
 import os
 from splunktaucclib.global_config import GlobalConfig, GlobalConfigSchema
@@ -18,7 +19,7 @@ global_config = GlobalConfig(
 
 # manage the inputs
 inputs = global_config.inputs
-print inputs.load()
+print(inputs.load())
 payload = {
     'modinput_02': [
         {
@@ -36,15 +37,15 @@ payload = {
         },
     ]
 }
-print inputs.save(payload)
+print(inputs.save(payload))
 
 # manage the configs: (account etc.)
 configs = global_config.configs
-print configs.load()
+print(configs.load())
 
 # manage the settings (logging, proxy etc.)
 settings = global_config.settings
-print settings.load()
+print(settings.load())
 payload = {
     'settings': [
         {
@@ -58,4 +59,4 @@ payload = {
         }
     ]
 }
-print settings.save(payload)
+print(settings.save(payload))

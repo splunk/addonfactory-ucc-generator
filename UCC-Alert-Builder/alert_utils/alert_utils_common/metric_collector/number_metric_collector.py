@@ -1,10 +1,14 @@
+from __future__ import absolute_import
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
 import threading
-import Queue
+import queue
 import time
 
 from solnlib import log
-from metric_exception import MetricException
-import metric_aggregator
+from .metric_exception import MetricException
+from . import metric_aggregator
 
 __all__ = ['NumberMetricCollector']
 
@@ -32,7 +36,7 @@ class NumberMetricCollector(object):
 
     def __init__(self, event_writer):
         self.event_writer = event_writer
-        self.record_queue = Queue.Queue()
+        self.record_queue = queue.Queue()
         self.aggregators = dict()
         self.worker = None
 
@@ -102,7 +106,7 @@ class NumberMetricCollector(object):
         record = None
         try:
             record = self.record_queue.get(timeout=1)
-        except Queue.Empty:
+        except queue.Empty:
             pass
         if record:
             if record['type'] == 'stop':
@@ -116,11 +120,11 @@ class NumberMetricCollector(object):
 
     def _flush_events(self, skip_metrics=[]):
         ts = int(time.time())
-        for k, aggr in self.aggregators.iteritems():
+        for k, aggr in self.aggregators.items():
             if k in skip_metrics:
                 continue
             aggr._flush_buckets(ts)
 
     def flush_all_event(self):
-        for k, v in self.aggregators.iteritems():
+        for k, v in self.aggregators.items():
             v.flush_all_event()

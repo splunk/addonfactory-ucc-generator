@@ -1,7 +1,9 @@
 
+from future import standard_library
+standard_library.install_aliases()
 import json
 import traceback
-from urlparse import urlparse
+from urllib.parse import urlparse
 from solnlib.splunkenv import get_splunkd_uri
 from solnlib.splunk_rest_client import SplunkRestClient
 from solnlib.conf_manager import ConfManager
@@ -129,8 +131,8 @@ class ConfigMigrationHandler(AdminExternalHandler):
             return
 
         additional_parameters = {}
-        for stanza_name, stanza in stanzas.iteritems():
-            for key, val in stanza.iteritems():
+        for stanza_name, stanza in stanzas.items():
+            for key, val in stanza.items():
                 if key == 'type':
                     continue
                 else:
@@ -159,7 +161,7 @@ class ConfigMigrationHandler(AdminExternalHandler):
         conf_file_name = self.base_app_name + '_credential'
         conf_file, stanzas = self._load_conf(conf_file_name)
 
-        for stanza_name, stanza in stanzas.iteritems():
+        for stanza_name, stanza in stanzas.items():
             stanza['username'] = stanza_name
             response = self.handler.create(
                 stanza_name,
@@ -175,19 +177,19 @@ class ConfigMigrationHandler(AdminExternalHandler):
             return None, {}
         conf_file = self.conf_mgr.get_conf(conf_file_name)
         stanzas = conf_file.get_all()
-        for stanza_name, stanza in stanzas.iteritems():
+        for stanza_name, stanza in stanzas.items():
             pwd = self.get_legacy_passwords().get(stanza_name)
             if pwd:
                 pwd_cont = json.loads(pwd.clear_password)
                 stanza.update(pwd_cont)
-            for key in stanza.keys():
+            for key in list(stanza.keys()):
                 if key.startswith('eai:') or key == 'disabled':
                     del stanza[key]
 
         return conf_file, stanzas
 
     def _delete_legacy(self, conf_file, stanzas):
-        for stanza_name, _ in stanzas.iteritems():
+        for stanza_name, _ in stanzas.items():
             try:
                 # delete stanza from related conf file
                 conf_file.delete(stanza_name)

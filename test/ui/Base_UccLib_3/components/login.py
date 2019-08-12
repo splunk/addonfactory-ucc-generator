@@ -1,5 +1,6 @@
+from __future__ import absolute_import
 import time
-from base_component import BaseComponent
+from .base_component import BaseComponent
 from selenium.webdriver.common.by import By
 
 class Login(BaseComponent):

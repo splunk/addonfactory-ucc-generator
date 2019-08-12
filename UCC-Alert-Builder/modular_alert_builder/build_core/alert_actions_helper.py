@@ -1,7 +1,8 @@
+from __future__ import absolute_import
 import sys
 import os.path as op
 from os import rename, remove, makedirs
-from alert_actions_merge import merge_conf_file
+from .alert_actions_merge import merge_conf_file
 
 from alert_utils.alert_utils_common.conf_parser import TABConfigParser
 
@@ -87,7 +88,7 @@ def convert_custom_setting(parameters):
         return formated
 
     for param in parameters:
-        if param.get("format_type") not in GLOBAL_SETTING_TYPE_MAP.keys():
+        if param.get("format_type") not in list(GLOBAL_SETTING_TYPE_MAP.keys()):
             msg = 'format_type="{}" is not support for global setting'.format(
                 param.get("format_type"))
             raise Exception(msg)
@@ -158,7 +159,7 @@ def convert_global_setting(global_settings):
     if not global_settings:
         return converted
 
-    for type, settings in global_settings.iteritems():
+    for type, settings in global_settings.items():
         if type == "proxy_settings":
             proxy = {
                 "title": "Proxy",
@@ -281,7 +282,7 @@ def get_test_parameter_type(param):
     if not param:
         return None
 
-    if param.get("format_type") in GLOBAL_SETTING_TYPE_MAP.keys():
+    if param.get("format_type") in list(GLOBAL_SETTING_TYPE_MAP.keys()):
         return GLOBAL_SETTING_TYPE_MAP.get(param.get("format_type"))
     return None
 
@@ -339,7 +340,7 @@ def convert_test_global_settings(test_global_settings, logger):
         return {}
 
     converted = {}
-    for type, settings in test_global_settings.iteritems():
+    for type, settings in test_global_settings.items():
         if type == "customized_settings":
             converted["customized_settings"] = {}
             for setting in settings:

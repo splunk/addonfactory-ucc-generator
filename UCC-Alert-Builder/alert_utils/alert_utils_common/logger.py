@@ -1,5 +1,6 @@
+from __future__ import absolute_import
 import solnlib.log as log
-import builder_constant
+from . import builder_constant
 import logging
 import threading
 import copy
@@ -112,7 +113,7 @@ def set_log_level(level, name=None):
         logger = _get_logger(name)
         logger.setLevel(level)
     else:
-        for name in LOGS.values():
+        for name in list(LOGS.values()):
             logger = _get_logger(name)
             logger.setLevel(level)
 
@@ -147,7 +148,7 @@ HIDDEN_FIELDS = ['password', 'credential', 'value']
 def hide_sensitive_field(raw):
     if isinstance(raw, dict):
         cloned = dict(raw)
-        for k in raw.keys():
+        for k in list(raw.keys()):
             lower_key = k.lower()
             if any([i in lower_key for i in HIDDEN_FIELDS]):
                 cloned[k] = '*******'
