@@ -4,7 +4,7 @@ Converters for Splunk configuration.
 
 from __future__ import absolute_import
 
-from past.builtins import basestring
+from six import string_types as basestring
 from builtins import object
 import base64
 import json
