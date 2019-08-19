@@ -4,6 +4,7 @@ This module will be used to get oauth token from auth code
 {{import_declare}}
 import urllib
 
+import httplib2_helper
 from httplib2 import Http, ProxyInfo, socks
 import splunk.admin as admin
 from solnlib import log
