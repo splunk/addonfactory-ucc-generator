@@ -129,6 +129,21 @@ def copy_libs():
         )
 
 
+def copy_httplib2_helper():
+    lib = "httplib2_helper"
+    lib_dest = os.path.join(
+        'output',
+        ta_name,
+        'bin',
+        ta_namespace,
+        lib
+    )
+    copy_directory(
+        os.path.join(top_dir,"UCC-REST-builder", lib),
+        lib_dest
+    )
+
+
 def copy_res():
     shutil.copy(
         os.path.join(basedir, 'res/app.conf'),
@@ -276,6 +291,7 @@ clean_before_build()
 generate_rest()
 generate_ui()
 copy_libs()
+copy_httplib2_helper()
 replace_token()
 copy_res()
 modify_and_replace_token_for_oauth_templates()
