@@ -99,6 +99,8 @@ def replace_token():
 
 def copy_libs():
     libs = ["splunktaucclib", "solnlib", "splunklib", "future",
+            "future.egg-info",
+            "past",
             "libfuturize",
             "libpasteurize",
             "builtins",
