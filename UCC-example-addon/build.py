@@ -98,7 +98,24 @@ def replace_token():
 
 
 def copy_libs():
-    libs = ["splunktaucclib", "solnlib", "splunklib", "httplib2"]
+    libs = ["splunktaucclib", "solnlib", "splunklib", "future",
+            "future.egg-info",
+            "past",
+            "libfuturize",
+            "libpasteurize",
+            "builtins",
+            "copyreg",
+            "html",
+            "http",
+            "queue",
+            "reprlib",
+            "socketserver",
+            "tkinter",
+            "winreg",
+            "xmlrpc",
+            "_dummy_thread",
+            "_markupbase",
+            "_thread",]
 
     for lib in libs:
         lib_dest = os.path.join(
@@ -112,6 +129,21 @@ def copy_libs():
             os.path.join(basedir, lib),
             lib_dest
         )
+
+
+def copy_httplib2_helper():
+    lib = "httplib2_helper"
+    lib_dest = os.path.join(
+        'output',
+        ta_name,
+        'bin',
+        ta_namespace,
+        lib
+    )
+    copy_directory(
+        os.path.join(top_dir,"UCC-REST-lib", lib),
+        lib_dest
+    )
 
 
 def copy_res():
@@ -261,6 +293,7 @@ clean_before_build()
 generate_rest()
 generate_ui()
 copy_libs()
+copy_httplib2_helper()
 replace_token()
 copy_res()
 modify_and_replace_token_for_oauth_templates()
