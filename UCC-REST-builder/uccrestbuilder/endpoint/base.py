@@ -4,7 +4,8 @@ from __future__ import absolute_import
 from splunktaucclib.rest_handler.schema import RestSchema
 from io import StringIO
 from builtins import object
-from past.builtins import basestring
+from six import string_types as basestring
+import six
 from future import standard_library
 standard_library.install_aliases()
 

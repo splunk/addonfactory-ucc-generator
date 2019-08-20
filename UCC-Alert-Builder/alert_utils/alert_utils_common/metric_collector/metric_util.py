@@ -2,7 +2,7 @@ from __future__ import absolute_import
 # encoding = utf-8
 
 from builtins import str
-from past.builtins import basestring
+from six import string_types as basestring
 import functools
 
 from . import monitor
@@ -23,10 +23,14 @@ def initialize_metric_collector(config, update_config=False):
     m = monitor.Monitor().configure(config, force_update=update_config)
     m.start()
 
+
 def write_event(ev, tags=[]):
     monitor.Monitor().write_event(ev, tags)
 
+
 CREDENTIAL_KEYS = ['password', 'passwords', 'token']
+
+
 def mask_credentials(data):
     '''
     The argument will be cloned
@@ -45,7 +49,7 @@ def mask_credentials(data):
                 if sensitive_word:
                     new_data[k] = masked_str
                 else:
-                    new_data[k] =mask_credentials(data[k])
+                    new_data[k] = mask_credentials(data[k])
             else:
                 new_data[k] = mask_credentials(data[k])
         return new_data
@@ -67,7 +71,10 @@ def mask_credentials(data):
         return 'Class:' + data.__class__.__name__
     return data
 
+
 max_length = 2048
+
+
 def function_run_time(tags=[]):
     def apm_decorator(func):
         @functools.wraps(func)
@@ -93,8 +100,7 @@ def function_run_time(tags=[]):
     return apm_decorator
 
 
-
-#TODO: should put this into unit test
+# TODO: should put this into unit test
 # class A(object):
 #     def __init__(self):
 #         self.password = 'abc'

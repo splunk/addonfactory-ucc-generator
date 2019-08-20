@@ -1,7 +1,8 @@
 from builtins import str
 from builtins import next
 from builtins import range
-from past.builtins import basestring
+from six import string_types as basestring
+import six
 from builtins import object
 import collections
 import csv
