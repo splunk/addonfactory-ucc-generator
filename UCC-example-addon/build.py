@@ -101,7 +101,7 @@ def copy_libs():
     libs = ["splunktaucclib", "solnlib", "splunklib", "future",
             "future.egg-info",
             "past",
-            "six",
+            "six.py",
             "libfuturize",
             "libpasteurize",
             "builtins",
