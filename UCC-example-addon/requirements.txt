@@ -5,4 +5,4 @@ mako==1.0.4
 munch==2.0.4
 future==0.17.1
 configparser
-six=1.12.0
+six==1.12.0
