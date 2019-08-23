@@ -7,10 +7,7 @@ from __future__ import absolute_import
 from future import standard_library
 standard_library.install_aliases()
 from builtins import object
-try:
-    from urllib.parse import urlparse
-except ImportError:
-    from urlparse import urlparse
+import urllib.parse
 from solnlib.splunk_rest_client import SplunkRestClient
 
 from .configuration import (
@@ -48,7 +45,7 @@ class GlobalConfig(object):
         self._session_key = session_key
         self._schema = schema
 
-        splunkd_info = urlparse(self._splunkd_uri)
+        splunkd_info = urllib.parse.urlparse(self._splunkd_uri)
         self._client = SplunkRestClient(
             self._session_key,
             self._schema.product,
