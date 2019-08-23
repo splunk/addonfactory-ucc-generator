@@ -5,7 +5,6 @@ Validators for Splunk configuration.
 from __future__ import absolute_import
 
 import sys
-basestring = str if sys.version[0] == 3 else basestring
 
 from builtins import str
 from builtins import object
@@ -31,6 +30,7 @@ __all__ = [
     'Email',
     'JsonString',
 ]
+basestring = str if sys.version[0] == 3 else basestring
 
 
 class Validator(object):
