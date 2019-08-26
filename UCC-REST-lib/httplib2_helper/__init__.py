@@ -1,4 +1,3 @@
-import httplib2
 import sys
 import os
 if sys.version_info[0] < 3:
