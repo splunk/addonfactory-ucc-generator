@@ -1,15 +1,16 @@
 """
 This module will be used to get oauth token from auth code
 """
-import json
-from solnlib.utils import is_true
-from solnlib import conf_manager
-from solnlib import log
-import splunk.admin as admin
-from httplib2 import Http, ProxyInfo, socks
-import httplib2_helper
-import urllib
 {{import_declare}}
+import urllib
+
+import httplib2_helper
+from httplib2 import Http, ProxyInfo, socks
+import splunk.admin as admin
+from solnlib import log
+from solnlib import conf_manager
+from solnlib.utils import is_true
+import json
 
 
 log.Logs.set_context()
