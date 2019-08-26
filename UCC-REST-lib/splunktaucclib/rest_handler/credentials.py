@@ -7,10 +7,7 @@ from future import standard_library
 standard_library.install_aliases()
 from builtins import object
 import json
-try:
-    from urllib.parse import urlparse
-except ImportError:
-    from urlparse import urlparse
+import urllib.parse
 from solnlib.credentials import (
     CredentialManager,
     CredentialNotExistException,
@@ -98,7 +95,7 @@ class RestCredentials(object):
             endpoint
     ):
         self._splunkd_uri = splunkd_uri
-        self._splunkd_info = urlparse(self._splunkd_uri)
+        self._splunkd_info = urllib.parse.urlparse(self._splunkd_uri)
         self._session_key = session_key
         self._endpoint = endpoint
         self._realm = '__REST_CREDENTIAL__#{base_app}#{endpoint}'.format(
