@@ -1,8 +1,7 @@
-{{import_declare}}
-import sys
-import json
-
 from splunklib import modularinput as smi
+import json
+import sys
+{{import_declare}}
 
 
 class {{class_name}}(smi.Script):
@@ -25,14 +24,14 @@ class {{class_name}}(smi.Script):
                 required_on_create=True
             )
         )
-        {% for ent in entity %}
+        { % for ent in entity % }
         scheme.add_argument(
             smi.Argument(
                 '{{ent.get("field")}}',
                 required_on_create={{True if ent.get("required") else False}},
             )
         )
-        {% endfor %}
+        { % endfor % }
         return scheme
 
     def validate_input(self, definition):
@@ -40,7 +39,7 @@ class {{class_name}}(smi.Script):
 
     def stream_events(self, inputs, ew):
         input_items = [{'count': len(inputs.inputs)}]
-        for input_name, input_item in inputs.inputs.iteritems():
+        for input_name, input_item in inputs.inputs.items():
             input_item['name'] = input_name
             input_items.append(input_item)
         event = smi.Event(
@@ -48,6 +47,7 @@ class {{class_name}}(smi.Script):
             sourcetype='{{input_name}}',
         )
         ew.write_event(event)
+
 
 if __name__ == '__main__':
     exit_code = {{class_name}}().run(sys.argv)
