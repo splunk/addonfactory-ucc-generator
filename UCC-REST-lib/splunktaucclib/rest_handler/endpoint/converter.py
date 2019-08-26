@@ -4,10 +4,12 @@ Converters for Splunk configuration.
 
 from __future__ import absolute_import
 
-from six import string_types as basestring
+import sys
 from builtins import object
 import base64
 import json
+
+basestring = str if sys.version[0] == 3 else basestring
 
 __all__ = [
     'Converter',

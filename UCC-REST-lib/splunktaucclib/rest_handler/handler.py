@@ -9,10 +9,7 @@ standard_library.install_aliases()
 from builtins import object
 import json
 import traceback
-try:
-    from urllib.parse import urlparse
-except ImportError:
-    from urlparse import urlparse
+import urllib.parse
 from functools import wraps
 from solnlib.packages.splunklib import binding
 from solnlib.splunk_rest_client import SplunkRestClient
@@ -143,7 +140,7 @@ class RestHandler(object):
         self._args = args
         self._kwargs = kwargs
 
-        splunkd_info = urlparse(self._splunkd_uri)
+        splunkd_info = urllib.parse.urlparse(self._splunkd_uri)
         self._client = SplunkRestClient(
             self._session_key,
             self._endpoint.app,
