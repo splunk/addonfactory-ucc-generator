@@ -1,4 +1,4 @@
-solnlib>=1.0.19
+solnlib==2.0.0
 splunk-sdk==1.6.6
 jinja2==2.9
 mako==1.0.4
