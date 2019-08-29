@@ -2,6 +2,7 @@ from __future__ import absolute_import
 from builtins import object
 from . import arf_consts as ac
 import os
+import sys
 from os import path as op
 from os import linesep
 from . import alert_actions_exceptions as aae
@@ -64,16 +65,21 @@ class AlertHtmlGenerator(AlertHtmlBase):
                           self._html_template,
                           self._html_home)
 
-
     def handle_one_alert(self, one_alert_setting):
         self._current_alert = one_alert_setting
         alert_obj = Munch.fromDict(one_alert_setting)
         final_form = self._template.render(mod_alert=alert_obj,
                                            home_page=self._html_home)
         final_form = html.fromstring(final_form)
-        final_string = etree.tostring(final_form, encoding='unicode',
-                                      pretty_print=True)
-        text = linesep.join([s for s in final_string.splitlines() if not search(r'^\s*$', s)])
+# Checking python version before converting and encoding XML Tree to string.
+        if sys.version_info < (3, 0):
+            final_string = etree.tostring(final_form, encoding='unicode',
+                                          pretty_print=True)
+        else:
+            final_string = etree.tostring(
+                final_form, encoding='str', pretty_print=True)
+        text = linesep.join(
+            [s for s in final_string.splitlines() if not search(r'^\s*$', s)])
 
         self._logger.debug('operation="Write", object_type="File", object="%s"',
                            self.get_alert_html_path())
@@ -124,4 +130,3 @@ def generate_alert_actions_html_files(input_setting=None, package_path=None,
                                   )
     html_gen.handle()
     return None
-

@@ -111,12 +111,14 @@ if __name__ == "__main__":
             )
             self.assertEqual(
                 "/fred?bar=%E2%98%9A#%E2%98%84",
-                iri2uri(iri2uri(u"/fred?bar=\N{BLACK LEFT POINTING INDEX}#\N{COMET}")),
+                iri2uri(
+                    iri2uri(u"/fred?bar=\N{BLACK LEFT POINTING INDEX}#\N{COMET}")),
             )
             self.assertNotEqual(
                 "/fred?bar=%E2%98%9A#%E2%98%84",
                 iri2uri(
-                    u"/fred?bar=\N{BLACK LEFT POINTING INDEX}#\N{COMET}".encode("utf-8")
+                    u"/fred?bar=\N{BLACK LEFT POINTING INDEX}#\N{COMET}".encode(
+                        "utf-8")
                 ),
             )
 
