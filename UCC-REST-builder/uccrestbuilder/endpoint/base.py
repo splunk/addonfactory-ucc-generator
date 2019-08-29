@@ -166,7 +166,7 @@ def indent(lines, spaces=1):
     :param spaces: times of four
     :return:
     """
-    string_io = StringIO(str(lines))
+    string_io = StringIO(six.text_type(lines))
     indentation = spaces * 4
     prefix = ' ' * indentation
     lines = []
