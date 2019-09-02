@@ -1,7 +1,11 @@
-from utils import backend_retry
+from __future__ import absolute_import
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
+from .utils import backend_retry
 import requests
 # requests.urllib3.disable_warnings()
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 class BackendConf(object):
     """
@@ -50,13 +54,13 @@ class BackendConf(object):
             stanza_name = each_stanzas["name"]
             stanzas_map[stanza_name] = dict()
 
-            for each_param, param_value in each_stanzas["content"].items():                
+            for each_param, param_value in list(each_stanzas["content"].items()):                
                 if each_param.startswith("eai:"):
                     continue
                 stanzas_map[stanza_name][each_param] = param_value
 
         if single_stanza:
-            return stanzas_map[stanzas_map.keys()[0]]
+            return stanzas_map[list(stanzas_map.keys())[0]]
         return stanzas_map
 
 class ListBackendConf(BackendConf):
@@ -81,7 +85,7 @@ class ListBackendConf(BackendConf):
             :param stanza: stanza to fetch
             :returns : dictionary {param: value, ... }
         """
-        url = "{}/{}?count=0&output_mode=json".format(self.url, urllib.quote_plus(stanza))
+        url = "{}/{}?count=0&output_mode=json".format(self.url, urllib.parse.quote_plus(stanza))
         res = self.rest_call(url)
         return self.parse_conf(res, single_stanza=True)
     

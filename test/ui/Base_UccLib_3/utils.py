@@ -1,3 +1,6 @@
+from __future__ import print_function
+from builtins import str
+from builtins import range
 import json
 
 def get_orca_deployment_urls():
@@ -11,7 +14,7 @@ def get_orca_deployment_urls():
         json_data = json.loads(data)
 
     except Exception as e:
-        print str(e)
+        print(str(e))
         
     web_url = json_data['server_roles']['standalone'][0]['splunk']['web_url']
     mgmt_url = json_data['server_roles']['standalone'][0]['splunk']['management_url']

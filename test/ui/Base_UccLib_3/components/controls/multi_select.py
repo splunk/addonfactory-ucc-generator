@@ -91,7 +91,7 @@ class MultiSelect(BaseComponent):
         """
         for each in self.get_child_elements('selected'):
             if each.text.strip().lower() == value.lower():
-                each.find_element(*self.elements["deselect"].values()).click()
+                each.find_element(*list(self.elements["deselect"].values())).click()
                 self.wait_for("internal_container")
                 return True
         else:

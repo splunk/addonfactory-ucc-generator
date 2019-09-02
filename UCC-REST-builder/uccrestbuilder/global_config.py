@@ -4,6 +4,8 @@ Global config schema.
 
 from __future__ import absolute_import
 
+from builtins import map
+from builtins import object
 import os
 import os.path as op
 import stat
@@ -46,7 +48,7 @@ class GlobalConfigBuilderSchema(GlobalConfigSchema):
 
     @property
     def endpoints(self):
-        return [endpoint for _, endpoint in self._endpoints.iteritems()]
+        return [endpoint for _, endpoint in self._endpoints.items()]
 
     def _parse_builder_schema(self):
         self._builder_configs()
@@ -232,10 +234,10 @@ class GlobalConfigValidation(object):
     def _arguments(cls, **kwargs):
         if not kwargs:
             return ''
-        args = map(
-            lambda (k, v): '{}={}, '.format(k, v),
-            kwargs.items(),
-        )
+        args = list(map(
+            lambda k_v: '{}={}, '.format(k_v[0], k_v[1]),
+            list(kwargs.items()),
+        ))
         args.insert(0, '')
         args.append('')
         return indent('\n'.join(args))
@@ -446,8 +448,8 @@ sys.path = new_paths
         def add_executable_attribute(file_path):
             if op.isfile(file_path):
                 st = os.stat(file_path)
-                os.chmod(file_path, st.st_mode | 0111)
+                os.chmod(file_path, st.st_mode | 0o111)
 
         bin_path = op.join(getattr(builder.output, '_path'), builder.output.bin)
         items = os.listdir(bin_path)
-        map(add_executable_attribute, items)
+        list(map(add_executable_attribute, items))

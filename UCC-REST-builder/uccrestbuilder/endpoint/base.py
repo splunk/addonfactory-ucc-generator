@@ -1,8 +1,13 @@
 
 from __future__ import absolute_import
 
-from StringIO import StringIO
 from splunktaucclib.rest_handler.schema import RestSchema
+from io import StringIO
+from builtins import object
+from six import string_types as basestring
+import six
+from future import standard_library
+standard_library.install_aliases()
 
 __all__ = [
     'RestEntityBuilder',
@@ -82,11 +87,13 @@ class RestEndpointBuilder(object):
         self._name = name
         self._namespace = namespace
         self._entities = []
-        self._conf_name = kwargs.get('conf_name') if kwargs.get('conf_name') is not None else self.name.lower()
+        self._conf_name = kwargs.get('conf_name') if kwargs.get(
+            'conf_name') is not None else self.name.lower()
         if kwargs.get('rest_handler_name') is not None:
             self._rest_handler_name = kwargs.get('rest_handler_name')
         else:
-            self._rest_handler_name = '{}_rh_{}'.format(self._namespace, self._name)
+            self._rest_handler_name = '{}_rh_{}'.format(
+                self._namespace, self._name)
 
     @property
     def name(self):
@@ -159,7 +166,7 @@ def indent(lines, spaces=1):
     :param spaces: times of four
     :return:
     """
-    string_io = StringIO(lines)
+    string_io = StringIO(six.text_type(lines))
     indentation = spaces * 4
     prefix = ' ' * indentation
     lines = []

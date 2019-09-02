@@ -1,3 +1,4 @@
+from __future__ import print_function
 import shutil
 import errno
 import json
@@ -49,7 +50,7 @@ def copy_directory(src, dest):
         if exc.errno == errno.ENOTDIR:
             shutil.copy(src, dest)
         else:
-            print 'Directory %s not copied. Error: %s' % (src, exc)
+            print('Directory %s not copied. Error: %s' % (src, exc))
 
 
 def generate_ui():
@@ -97,7 +98,25 @@ def replace_token():
 
 
 def copy_libs():
-    libs = ["splunktaucclib", "solnlib", "splunklib", "httplib2"]
+    libs = ["splunktaucclib", "solnlib", "splunklib", "future",
+            "future.egg-info",
+            "past",
+            "six.py",
+            "libfuturize",
+            "libpasteurize",
+            "builtins",
+            "copyreg",
+            "html",
+            "http",
+            "queue",
+            "reprlib",
+            "socketserver",
+            "tkinter",
+            "winreg",
+            "xmlrpc",
+            "_dummy_thread",
+            "_markupbase",
+            "_thread",]
 
     for lib in libs:
         lib_dest = os.path.join(
@@ -111,6 +130,21 @@ def copy_libs():
             os.path.join(basedir, lib),
             lib_dest
         )
+
+
+def copy_httplib2_helper():
+    lib = "httplib2_helper"
+    lib_dest = os.path.join(
+        'output',
+        ta_name,
+        'bin',
+        ta_namespace,
+        lib
+    )
+    copy_directory(
+        os.path.join(top_dir,"UCC-REST-lib", lib),
+        lib_dest
+    )
 
 
 def copy_res():
@@ -179,7 +213,7 @@ def add_modular_input():
         entity = service.get("entity")
         field_white_list = ["name", "index", "sourcetype"]
         # filter fields in white list
-        entity = filter(lambda x: x.get("field") not in field_white_list, entity)
+        entity = [x for x in entity if x.get("field") not in field_white_list]
         import_declare = 'import ' + import_declare_name
 
         content = j2_env.get_template(os.path.join('templates', 'input.template')).render(
@@ -260,6 +294,7 @@ clean_before_build()
 generate_rest()
 generate_ui()
 copy_libs()
+copy_httplib2_helper()
 replace_token()
 copy_res()
 modify_and_replace_token_for_oauth_templates()

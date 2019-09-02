@@ -1,3 +1,11 @@
+from __future__ import print_function
+from splunk_aoblib.setup_util import Setup_Util
+from splunk_aoblib.rest_helper import TARestHelper
+import logging
+from logging_helper import get_logger
+from cim_actions import ModularAction
+import requests
+from builtins import str
 import csv
 import gzip
 import sys
@@ -7,14 +15,8 @@ try:
 except ImportError:
     from splunk.appserver.mrsparkle.lib.util import make_splunkhome_path
 
-sys.path.insert(0, make_splunkhome_path(["etc", "apps", "Splunk_SA_CIM", "lib"]))
-
-import requests
-from cim_actions import ModularAction
-from logging_helper import get_logger
-import logging
-from splunk_aoblib.rest_helper import TARestHelper
-from splunk_aoblib.setup_util import Setup_Util
+sys.path.insert(0, make_splunkhome_path(
+    ["etc", "apps", "Splunk_SA_CIM", "lib"]))
 
 
 class ModularAlertBase(ModularAction):
@@ -30,7 +32,8 @@ class ModularAlertBase(ModularAction):
         self.result_handle = None
         self.ta_name = ta_name
         self.splunk_uri = self.settings.get('server_uri')
-        self.setup_util = Setup_Util(self.splunk_uri, self.session_key, self._logger)
+        self.setup_util = Setup_Util(
+            self.splunk_uri, self.session_key, self._logger)
 
         self.rest_helper = TARestHelper(self._logger)
 
@@ -121,6 +124,7 @@ class ModularAlertBase(ModularAction):
 
     def build_http_connection(self, config, timeout=120,
                               disable_ssl_validation=False):
+        import httplib2_helper
         from httplib2 import (socks, ProxyInfo, Http)
         """
         :config: dict like, proxy and account information are in the following
@@ -191,7 +195,8 @@ class ModularAlertBase(ModularAction):
             return (self.pre_handle(num, result) for num, result in enumerate(csv.DictReader(self.result_handle)))
         except IOError:
             msg = "Error: {}."
-            self.log_error(msg.format("No search result. Cannot send alert action."))
+            self.log_error(msg.format(
+                "No search result. Cannot send alert action."))
             sys.exit(2)
 
     def prepare_meta_for_cam(self):
@@ -206,7 +211,7 @@ class ModularAlertBase(ModularAction):
         status = 0
         if len(argv) < 2 or argv[1] != "--execute":
             msg = 'Error: argv="{}", expected="--execute"'.format(argv)
-            print >> sys.stderr, msg
+            print(msg, file=sys.stderr)
             sys.exit(1)
 
         # prepare meta first for permission lack error handling: TAB-2455
@@ -216,7 +221,7 @@ class ModularAlertBase(ModularAction):
             if level:
                 self._logger.setLevel(level)
         except Exception as e:
-            if e.message and '403' in e.message:
+            if str(e) and '403' in str(e):  # Handled e.message with str(e)
                 self.log_error('User does not have permissions')
             else:
                 self.log_error('Unable to set log level')
@@ -226,12 +231,13 @@ class ModularAlertBase(ModularAction):
             status = self.process_event()
         except IOError:
             msg = "Error: {}."
-            self.log_error(msg.format("No search result. Cannot send alert action."))
+            self.log_error(msg.format(
+                "No search result. Cannot send alert action."))
             sys.exit(2)
         except Exception as e:
             msg = "Unexpected error: {}."
-            if e.message:
-                self.log_error(msg.format(e.message))
+            if str(e):  # e.message handled
+                self.log_error(msg.format(str(e)))  # e.message handled
             else:
                 import traceback
                 self.log_error(msg.format(traceback.format_exc()))

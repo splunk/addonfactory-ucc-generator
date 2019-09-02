@@ -1,9 +1,13 @@
+from __future__ import absolute_import
+from builtins import str
+from builtins import range
+from builtins import object
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from pages.login import LoginPage
-from utils import get_orca_deployment_urls, backend_retry
+from .pages.login import LoginPage
+from .utils import get_orca_deployment_urls, backend_retry
 import pytest
 import requests
 import time

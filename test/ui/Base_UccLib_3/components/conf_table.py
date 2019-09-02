@@ -1,4 +1,5 @@
-from table import Table
+from __future__ import absolute_import
+from .table import Table
 
 class ConfigurationTable(Table):
     """

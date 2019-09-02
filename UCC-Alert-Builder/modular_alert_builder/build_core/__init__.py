@@ -1,9 +1,10 @@
+from __future__ import absolute_import
 import re
 import shutil
 import os
-from alert_actions_conf_gen import generate_alert_actions_conf
-from alert_actions_html_gen import generate_alert_actions_html_files
-from alert_actions_py_gen import generate_alert_actions_py_files
+from .alert_actions_conf_gen import generate_alert_actions_conf
+from .alert_actions_html_gen import generate_alert_actions_html_files
+from .alert_actions_py_gen import generate_alert_actions_py_files
 import traceback
 
 
@@ -141,7 +142,7 @@ def generate_alerts(src, dest, logger, envs, process_list=None,
             """
             Which means the previous output_dir already there
             """
-            import alert_actions_merge
+            from . import alert_actions_merge
             alert_actions_merge.merge(
                 os.path.join(output_dir, envs["product_id"]),
                 os.path.join(dest, envs["product_id"]))

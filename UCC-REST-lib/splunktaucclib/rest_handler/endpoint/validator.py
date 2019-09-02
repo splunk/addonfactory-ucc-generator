@@ -4,6 +4,9 @@ Validators for Splunk configuration.
 
 from __future__ import absolute_import
 
+import sys
+
+from builtins import object
 import re
 import json
 from inspect import isfunction
@@ -26,6 +29,7 @@ __all__ = [
     'Email',
     'JsonString',
 ]
+basestring = str if sys.version[0] == 3 else basestring
 
 
 class Validator(object):
@@ -268,7 +272,10 @@ class Number(Validator):
         :param is_int: the value should be integer or not
         """
         def check(val):
-            return val is None or isinstance(val, (int, long, float))
+            try:
+                return val is None or isinstance(val, (int, long, float))
+            except NameError:
+                return val is None or isinstance(val, (int, float))
         assert check(min_val) and check(max_val), \
             '%(min_val)s & %(max_val)s should be numbers' % {
                 'min_val': min_val,
@@ -282,7 +289,10 @@ class Number(Validator):
 
     def validate(self, value, data):
         try:
-            value = long(value) if self._is_int else float(value)
+            try:
+                value = long(value) if self._is_int else float(value)
+            except NameError:
+                value = int(value) if self._is_int else float(value)
         except ValueError:
             self.put_msg(
                 'Invalid format for %s value' % ('integer' if self._is_int else 'numeric')
@@ -329,7 +339,10 @@ class String(Validator):
         def check(val):
             if val is None:
                 return True
-            return isinstance(val, (int, long)) and val >= 0
+            try:
+                return isinstance(val, (int, long)) and val >= 0
+            except NameError:
+                return isinstance(val, (int)) and val >= 0
 
         assert check(min_len) and check(max_len), \
             '%(min_len)s & %(max_len)s should be numbers' % {

@@ -1,15 +1,17 @@
+from __future__ import absolute_import
+from builtins import object
 from os import path as op
 import os
-import arf_consts as ac
-import alert_actions_exceptions as aae
+from . import arf_consts as ac
+from . import alert_actions_exceptions as aae
 from shutil import copy
 from os import linesep
 from mako.template import Template
 from munch import Munch
-from alert_actions_template import AlertActionsTemplateMgr
+from .alert_actions_template import AlertActionsTemplateMgr
 from json import loads as jloads
-from alert_actions_helper import write_file
-from alert_actions_merge import remove_alert_from_conf_file
+from .alert_actions_helper import write_file
+from .alert_actions_merge import remove_alert_from_conf_file
 
 
 class AlertActionsConfBase(object):
@@ -191,10 +193,10 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
             default_settings = jloads(df.read())
 
         for alert in self._alert_settings:
-            if ac.ALERT_PROPS not in alert.keys():
+            if ac.ALERT_PROPS not in list(alert.keys()):
                 alert[ac.ALERT_PROPS] = {}
-            for k, v in default_settings.iteritems():
-                if k in alert[ac.ALERT_PROPS].keys():
+            for k, v in default_settings.items():
+                if k in list(alert[ac.ALERT_PROPS].keys()):
                     continue
 
                 alert[ac.ALERT_PROPS][k] = v

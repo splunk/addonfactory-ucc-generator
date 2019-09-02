@@ -4,6 +4,7 @@ This module will be used to get oauth token from auth code
 {{import_declare}}
 import urllib
 
+import httplib2_helper
 from httplib2 import Http, ProxyInfo, socks
 import splunk.admin as admin
 from solnlib import log
@@ -26,11 +27,14 @@ _PROXY_TYPE_MAP = {
 """
 REST Endpoint of getting token by OAuth2 in Splunk Add-on UI Framework. T
 """
-class {{app_name|lower}}_rh_oauth2_token(admin.MConfigHandler):
+
+
+class {{app_name | lower}}_rh_oauth2_token(admin.MConfigHandler):
 
     """
     This method checks which action is getting called and what parameters are required for the request.
     """
+
     def setup(self):
         if self.requestedAction == admin.ACTION_LIST:
             # Add required args in supported args
@@ -46,6 +50,7 @@ class {{app_name|lower}}_rh_oauth2_token(admin.MConfigHandler):
     It takes 'url', 'method', 'grant_type', 'code', 'client_id', 'client_secret', 'redirect_uri' as caller args and
     Returns the confInfo dict object in response.
     """
+
     def handleList(self, confInfo):
 
         try:
@@ -74,22 +79,26 @@ class {{app_name|lower}}_rh_oauth2_token(admin.MConfigHandler):
             content = json.loads(content)
             # Check for any errors in response. If no error then add the content values in confInfo
             if resp.status == 200:
-                for key, val in content.iteritems():
+                for key, val in content.items():
                     confInfo['token'][key] = val
             else:
                 # Else add the error message in the confinfo
                 confInfo['token']['error'] = content['error_description']
-            logger.info("Exiting OAuth rest handler after getting access token with response %s", resp.status)
+            logger.info(
+                "Exiting OAuth rest handler after getting access token with response %s", resp.status)
         except Exception as exc:
-            logger.exception("Error occurred while getting accesstoken using auth code")
+            logger.exception(
+                "Error occurred while getting accesstoken using auth code")
             raise exc()
 
     """
     This method is to get proxy details stored in settings conf file
     """
+
     def getProxyDetails(self):
         # Create confmanger object for the app with realm
-        cfm = conf_manager.ConfManager(self.getSessionKey(), "{{app_name}}", realm="__REST_CREDENTIAL__#{{app_name}}#configs/conf-{{app_name|lower}}_settings")
+        cfm = conf_manager.ConfManager(self.getSessionKey(
+        ), "{{app_name}}", realm="__REST_CREDENTIAL__#{{app_name}}#configs/conf-{{app_name|lower}}_settings")
         # Get Conf object of apps settings
         conf = cfm.get_conf('{{app_name|lower}}_settings')
         # Get proxy stanza from the settings
@@ -144,6 +153,7 @@ class {{app_name|lower}}_rh_oauth2_token(admin.MConfigHandler):
     :param port: port number to be validated
     :type port: ``int``
     """
+
     def is_valid_port(self, port):
         try:
             return 0 < int(port) <= 65535
@@ -151,4 +161,4 @@ class {{app_name|lower}}_rh_oauth2_token(admin.MConfigHandler):
             return False
 
 if __name__ == "__main__":
-    admin.init({{app_name|lower}}_rh_oauth2_token, admin.CONTEXT_APP_AND_USER)
+    admin.init({{app_name | lower}}_rh_oauth2_token, admin.CONTEXT_APP_AND_USER)
