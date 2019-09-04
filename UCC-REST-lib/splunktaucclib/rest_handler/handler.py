@@ -118,7 +118,7 @@ def _decode_response(meth):
         except RestError:
             raise
         except binding.HTTPError as exc:
-            raise RestError(exc.status, exc.message)
+            raise RestError(exc.status, str(exc))
         except Exception:
             raise RestError(500, traceback.format_exc())
 

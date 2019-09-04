@@ -9,7 +9,7 @@ from builtins import object
 import base64
 import json
 
-basestring = str if sys.version[0] == 3 else basestring
+basestring = str if sys.version_info[0] == 3 else basestring
 
 __all__ = [
     'Converter',

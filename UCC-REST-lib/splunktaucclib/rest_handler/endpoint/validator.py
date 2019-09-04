@@ -29,7 +29,7 @@ __all__ = [
     'Email',
     'JsonString',
 ]
-basestring = str if sys.version[0] == 3 else basestring
+basestring = str if sys.version_info[0] == 3 else basestring
 
 
 class Validator(object):
@@ -398,7 +398,7 @@ class Datetime(Validator):
         import datetime
         try:
             datetime.datetime.strptime(value, self._format)
-        except ValueError, exc:
+        except ValueError as exc:
             error = 'Wrong datetime with format "%s": %s' % (self._format, str(exc))
             self.put_msg(error)
             return False
