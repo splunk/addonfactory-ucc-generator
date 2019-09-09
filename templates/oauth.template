@@ -3,7 +3,10 @@ This module will be used to get oauth token from auth code
 """
 {{import_declare}}
 import urllib
-
+try:
+    from urllib import urlencode
+except:
+    from urllib.parse import urlencode
 import httplib2_helper
 from httplib2 import Http, ProxyInfo, socks
 import splunk.admin as admin
