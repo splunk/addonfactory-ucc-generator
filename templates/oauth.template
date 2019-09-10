@@ -3,7 +3,10 @@ This module will be used to get oauth token from auth code
 """
 {{import_declare}}
 import urllib
-
+try:
+    from urllib import urlencode
+except:
+    from urllib.parse import urlencode
 import httplib2_helper
 from httplib2 import Http, ProxyInfo, socks
 import splunk.admin as admin
@@ -75,7 +78,7 @@ class {{app_name | lower}}_rh_oauth2_token(admin.MConfigHandler):
             resp, content = http.request(url,
                                          method=method,
                                          headers=headers,
-                                         body=urllib.urlencode(payload))
+                                         body=urlencode(payload))
             content = json.loads(content)
             # Check for any errors in response. If no error then add the content values in confInfo
             if resp.status == 200:
