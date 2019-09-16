@@ -43,12 +43,12 @@ import time
 import urllib.parse
 import zlib
 
-try:
-    import socks
-except ImportError:
-    # TODO: remove this fallback and copypasted socksipy module upon py2/3 merge,
-    # idea is to have soft-dependency on any compatible module called socks
-    from . import socks
+# try:
+#     import socks
+# except ImportError:
+#     # TODO: remove this fallback and copypasted socksipy module upon py2/3 merge,
+#     # idea is to have soft-dependency on any compatible module called socks
+from . import socks
 from .iri2uri import iri2uri
 
 
