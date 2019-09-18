@@ -48,7 +48,7 @@ import zlib
 # except ImportError:
 #     # TODO: remove this fallback and copypasted socksipy module upon py2/3 merge,
 #     # idea is to have soft-dependency on any compatible module called socks
-# Since py3 does not support implicit relative imports, we need '.' to specify imports based on the relative path w.r.t. current file.
+# Pysocks doesn't support HTTP-proxying. Thus, using httplib2's socks which has full support for HTTP-proxying.
 from . import socks
 from .iri2uri import iri2uri
 
