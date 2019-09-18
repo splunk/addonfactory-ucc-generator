@@ -206,13 +206,7 @@ class socksocket(socket.socket):
         return "\r\n".join(hdrs)
 
     def __getauthheader(self):
-        username = self.__proxy[4]
-        password = self.__proxy[5]
-        if isinstance(username, str):
-            username = username.encode()
-        if isinstance(password, str):
-            password = password.encode()
-        auth = username + b":" + password
+        auth = self.__proxy[4] + b":" + self.__proxy[5]
         return "Proxy-Authorization: Basic " + base64.b64encode(auth).decode()
 
     def setproxy(

@@ -43,12 +43,13 @@ import time
 import urllib.parse
 import zlib
 
-try:
-    import socks
-except ImportError:
-    # TODO: remove this fallback and copypasted socksipy module upon py2/3 merge,
-    # idea is to have soft-dependency on any compatible module called socks
-    from . import socks
+# try:
+#     import socks
+# except ImportError:
+#     # TODO: remove this fallback and copypasted socksipy module upon py2/3 merge,
+#     # idea is to have soft-dependency on any compatible module called socks
+# Pysocks doesn't support HTTP-proxying. Thus, using httplib2's socks which has full support for HTTP-proxying.
+from . import socks
 from .iri2uri import iri2uri
 
 
@@ -999,6 +1000,10 @@ class ProxyInfo(object):
           proxy_headers: Additional or modified headers for the proxy connect
           request.
         """
+        if isinstance(proxy_user, str):
+            proxy_user = proxy_user.encode()
+        if isinstance(proxy_pass, str):
+            proxy_pass = proxy_pass.encode()
         self.proxy_type, self.proxy_host, self.proxy_port, self.proxy_rdns, self.proxy_user, self.proxy_pass, self.proxy_headers = (
             proxy_type,
             proxy_host,
