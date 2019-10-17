@@ -1,14 +1,20 @@
 Table of contents
 - [Release notes](#release-notes)
-  - [3.4.0](#340)
+  - [3.4.3](#343)
     - [Features:](#features)
-  - [3.3.0](#330)
+  - [3.4.2](#342)
     - [Features:](#features-1)
-  - [3.3.0](#330)
+  - [3.4.1](#341)
     - [Features:](#features-2)
+  - [3.4.0](#340)
+    - [Features:](#features-3)
+  - [3.3.0](#330)
+    - [Features:](#features-4)
+  - [3.3.0](#330)
+    - [Features:](#features-5)
     - [Bug Fixes:](#bug-fixes)
   - [3.2.0](#320)
-    - [Features:](#features-3)
+    - [Features:](#features-6)
 - [Prerequisites](#prerequisites)
 - [Install and configure Bower](#install-and-configure-bower)
 - [Command to build an example add-on](#command-to-build-an-example-add-on)
@@ -27,6 +33,24 @@ Table of contents
 - [Service name and Appname as column in table](#service-name-and-appname-as-column-in-table)
 
 ### Release notes
+#### 3.4.3
+##### Features:
+* Upgraded solnlib from 2.0.0 to latest after 2.0.0
+
+#### 3.4.2
+##### Features:
+* Python 3 migration of UCC framework
+* Upgraded solnlib from 1.0.19 to 2.0.0
+* Upgraded splunk-sdk from 1.6.0 to 1.6.6
+* Added future-0.17.1 Python library
+* Added six-1.12.0 Python library
+* Added configparser-3.8.1 Python library
+* UI Automation framework has been added so that the UCC based addon can clone the framework from repo and extends based on the addon requirements.
+
+#### 3.4.1
+##### Features:
+* Upgraded solnlib from 1.0.18 to 1.0.19
+
 #### 3.4.0
 ##### Features:
 * Added help link component
