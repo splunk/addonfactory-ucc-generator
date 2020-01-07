@@ -62,6 +62,20 @@ export function generateCollection(name, options = {}) {
     });
 }
 
+function getURL(endpointURL) {
+    return Splunk.util.make_url([
+        "splunkd/__raw",
+        endpointURL
+    ].join('/'));
+}
+
+function getServerInfo() {
+    return $.ajax({
+        type: "GET",
+        url: getURL("services/server/info?output_mode=json")
+    });
+}
+
 export function fetchRefCollections() {
     const {
         unifiedConfig: {pages: {inputs, configuration: {tabs}}}
@@ -69,48 +83,70 @@ export function fetchRefCollections() {
     if (!inputs && !tabs) {
         return {};
     }
-    const refCollections = _.get(inputs, 'services', []);
-    // Construct configruation field to inputs mappping
-    const dependencyMapping = {};
-    tabs.filter(d => !!d.table).forEach(d => {
-        dependencyMapping[d.name] = [];
-    });
 
-    refCollections.forEach(collections => {
-        const {name, entity} = collections;
-        const dependencyList = entity
-            .filter(d => _.get(d, ['options', 'referenceName']))
-            .map(
-                ({field, options: {referenceName}}) =>
-                ({targetField: field, referenceName})
-            );
+    return getServerInfo().then((res) => {
 
-        if (dependencyList.length) {
-            dependencyList.forEach(({referenceName}) => {
-                if (!(referenceName in dependencyList)) {
-                    dependencyList[referenceName] = [];
+        let is_search_head = false;
+        const searchHeadArr = ['search_head','search_peer', 'cluster_search_head'];
+
+        if (res && res.entry && res.entry.length) {
+            res.entry.forEach((val) => {
+                if (val && val.name == 'server-info') {
+                    var roles = val.content.server_roles;
+                    roles.forEach((role) => {
+                        if (searchHeadArr.indexOf(role) != -1) {
+                            is_search_head = true;
+                        }
+                    })
                 }
-                dependencyMapping[referenceName].push({
-                    value: generateCollection(
-                        restEndpointMap[name] ? '' : name,
-                        {endpointUrl: restEndpointMap[name]}
-                    ),
-                    dependencyList
-                });
             });
         }
+
+        const refCollections = _.get(inputs, 'services', []);
+        // Construct configruation field to inputs mappping
+        const dependencyMapping = {};
+        tabs.filter(d => !!d.table).forEach(d => {
+            dependencyMapping[d.name] = [];
+        });
+
+        if (inputs && inputs.title.toLowerCase() == 'inputs' && is_search_head) return;
+        
+        refCollections.forEach(collections => {
+            const {name, entity} = collections;
+            const dependencyList = entity
+                .filter(d => _.get(d, ['options', 'referenceName']))
+                .map(
+                    ({field, options: {referenceName}}) =>
+                    ({targetField: field, referenceName})
+                );
+
+            if (dependencyList.length) {
+                dependencyList.forEach(({referenceName}) => {
+                    if (!(referenceName in dependencyList)) {
+                        dependencyList[referenceName] = [];
+                    }
+                    dependencyMapping[referenceName].push({
+                        value: generateCollection(
+                            restEndpointMap[name] ? '' : name,
+                            {endpointUrl: restEndpointMap[name]}
+                        ),
+                        dependencyList
+                    });
+                });
+            }
+        });
+
+        const calls = _.unionWith(
+            ..._.values(dependencyMapping),
+            (arrVal, othVal) => {
+                return arrVal.value._url === othVal.value._url;
+            }
+        ).map(
+            ({value}) => fetchListCollection(value)
+        );
+
+        return {deferred: $.when(...calls), dependencyMapping};
     });
-
-    const calls = _.unionWith(
-        ..._.values(dependencyMapping),
-        (arrVal, othVal) => {
-            return arrVal.value._url === othVal.value._url;
-        }
-    ).map(
-        ({value}) => fetchListCollection(value)
-    );
-
-    return {deferred: $.when(...calls), dependencyMapping};
 }
 
 function fetchListCollection(collection) {
