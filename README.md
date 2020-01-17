@@ -1,5 +1,7 @@
 Table of contents
 - [Release notes](#release-notes)
+  - [3.4.4](#344)
+    - [Bug Fixes:](#bug-fixes)
   - [3.4.3](#343)
     - [Features:](#features)
   - [3.4.2](#342)
@@ -33,6 +35,10 @@ Table of contents
 - [Service name and Appname as column in table](#service-name-and-appname-as-column-in-table)
 
 ### Release notes
+#### 3.4.4
+##### Bug Fixes:
+* Fixed configuration page not loaded when the server role is search_head, search_peer or cluster_search_head (ADDON-22233)
+
 #### 3.4.3
 ##### Features:
 * Upgraded solnlib from 2.0.0 to latest after 2.0.0
