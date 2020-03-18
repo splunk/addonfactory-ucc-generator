@@ -25,7 +25,7 @@ class OAuthModelEndpointBuilder(RestEndpointBuilder):
     Action will return the possible action for the endpoint
     """
     def actions(self):
-        return ['list']
+        return ['edit']
 
     """
     This will actually populate the jinja template with the token values and return it

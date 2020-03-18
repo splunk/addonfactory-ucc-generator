@@ -39,7 +39,7 @@ class {{app_name | lower}}_rh_oauth2_token(admin.MConfigHandler):
     """
 
     def setup(self):
-        if self.requestedAction == admin.ACTION_LIST:
+        if self.requestedAction == admin.ACTION_EDIT:
             # Add required args in supported args
             for arg in ('url', 'method',
                         'grant_type', 'code',
@@ -54,7 +54,7 @@ class {{app_name | lower}}_rh_oauth2_token(admin.MConfigHandler):
     Returns the confInfo dict object in response.
     """
 
-    def handleList(self, confInfo):
+    def handleEdit(self, confInfo):
 
         try:
             logger.debug("In OAuth rest handler to get access token")
