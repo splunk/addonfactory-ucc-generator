@@ -1,5 +1,7 @@
 Table of contents
 - [Release notes](#release-notes)
+  - [3.4.5](#345)
+    - [Bug Fixes:](#bug-fixes)
   - [3.4.4](#344)
     - [Bug Fixes:](#bug-fixes)
   - [3.4.3](#343)
@@ -35,6 +37,10 @@ Table of contents
 - [Service name and Appname as column in table](#service-name-and-appname-as-column-in-table)
 
 ### Release notes
+#### 3.4.5
+##### Bug Fixes:
+* Fixed CSRF vulnerability with OAuth by changing GET request to a POST request. (ADDON-25548 and ADDON-25549)
+
 #### 3.4.4
 ##### Bug Fixes:
 * Fixed configuration page not loaded when the server role is search_head, search_peer or cluster_search_head (ADDON-22233)
