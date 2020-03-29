@@ -892,13 +892,14 @@ define([
                     "redirect_uri": redirectUri
                 };
             this.isResponse = false;
-			var service = mvc.createService();
-			// Internal handler call to get the access token and other values
-			service.get("/services/" + app_name + "_oauth", data, (err, response) => {
-			     // Set the isResponse to true as response is received
-                 this.isResponse = true;
-				 if (!err) {
-				    if (response.data.entry[0].content.error === undefined) {
+
+            var service = mvc.createService();
+            // Internal handler call to get the access token and other values
+            service.post("/services/" + app_name + "_oauth/oauth", data, (err, response) => {
+                // Set the isResponse to true as response is received
+                this.isResponse = true;
+                if (!err) {
+                    if (response.data.entry[0].content.error === undefined) {
                         var access_token= response.data.entry[0].content.access_token;
                         var instance_url = response.data.entry[0].content.instance_url;
                         var refresh_token = response.data.entry[0].content.refresh_token;
@@ -907,20 +908,19 @@ define([
                         this.model.set("refresh_token", refresh_token);
                         this.model.set("access_token", access_token);
                         return true;
-				    } else {
-				        removeSavingMsg(this.curWinSelector);
-				        addErrorMsg(this.curWinSelector, _.capitalize(response.data.entry[0].content.error));
+                    } else {
+                        removeSavingMsg(this.curWinSelector);
+                        addErrorMsg(this.curWinSelector, _.capitalize(response.data.entry[0].content.error));
                         this.isError = true;
                         return false;
-				    }
-				} else {
-				    removeSavingMsg(this.curWinSelector);
-				    addErrorMsg(this.curWinSelector, ERROR_OCCURRED_TRY_AGAIN);
-					this.isError = true;
-					return false;
-				}
-			});
-
+                    }
+                } else {
+                    removeSavingMsg(this.curWinSelector);
+                    addErrorMsg(this.curWinSelector, ERROR_OCCURRED_TRY_AGAIN);
+                    this.isError = true;
+                    return false;
+                }
+            });
         },
 
         /*
