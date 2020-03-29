@@ -1,5 +1,7 @@
 Table of contents
 - [Release notes](#release-notes)
+  - [3.4.6](#346)
+    - [Bug Fixes:](#bug-fixes)
   - [3.4.5](#345)
     - [Bug Fixes:](#bug-fixes)
   - [3.4.4](#344)
@@ -37,6 +39,10 @@ Table of contents
 - [Service name and Appname as column in table](#service-name-and-appname-as-column-in-table)
 
 ### Release notes
+#### 3.4.6
+##### Bug Fixes:
+* Fixed issue of able to delete the configuration account even if it is linked with an input of an add-on (ADDON-25360)
+
 #### 3.4.5
 ##### Bug Fixes:
 * Fixed CSRF vulnerability with OAuth by changing GET request to a POST request. (ADDON-25548 and ADDON-25549)
