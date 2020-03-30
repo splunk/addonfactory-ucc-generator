@@ -103,7 +103,7 @@ export function fetchRefCollections() {
         }
 
         if (inputs && inputs.title.toLowerCase() == 'inputs' && is_search_head) {
-            return {deferred: Promise.resolve('success')}
+            return {deferred: Promise.resolve('Trying to load Inputs page on SeachHead')}
         }
 
         const refCollections = _.get(inputs, 'services', []);
