@@ -83,7 +83,7 @@ export function fetchRefCollections() {
     if (!inputs && !tabs) {
         return {};
     }
-
+ 
     return getServerInfo().then((res) => {
 
         let is_search_head = false;
@@ -102,14 +102,16 @@ export function fetchRefCollections() {
             });
         }
 
+        if (inputs && inputs.title.toLowerCase() == 'inputs' && is_search_head) {
+            return {deferred: Promise.resolve('Trying to load Inputs page on SeachHead')}
+        }
+
         const refCollections = _.get(inputs, 'services', []);
         // Construct configruation field to inputs mappping
         const dependencyMapping = {};
         tabs.filter(d => !!d.table).forEach(d => {
             dependencyMapping[d.name] = [];
         });
-
-        if (inputs && inputs.title.toLowerCase() == 'inputs' && is_search_head) return;
         
         refCollections.forEach(collections => {
             const {name, entity} = collections;

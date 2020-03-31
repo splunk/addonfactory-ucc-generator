@@ -23,11 +23,6 @@ define([
             this.stateModel = new Backbone.Model({
                 selectedTabId: this._generateTabId(configuration.tabs)
             });
-
-            const refCollections = fetchRefCollections();
-            this.servicesDeferred = refCollections.deferred;
-            this.dependencyMapping = refCollections.dependencyMapping;
-            this.tabNameUsed = false;
         },
 
         events: {
@@ -39,15 +34,23 @@ define([
         },
 
         render: function () {
-            const {unifiedConfig: {pages: {configuration}}} = configManager;
 
-            const header = this._parseHeader(configuration);
-            this.$el.append(_.template(PageTitleTemplate)(header));
-            this.$el.append(_.template(TabTemplate));
+            fetchRefCollections().then((refCollections) => {
 
-            const tabs = this._parseTabs(configuration);
-            this.renderTabs(tabs);
-            return this;
+                this.servicesDeferred = refCollections.deferred;
+                this.dependencyMapping = refCollections.dependencyMapping;
+                this.tabNameUsed = false;
+                
+                const {unifiedConfig: {pages: {configuration}}} = configManager;
+
+                const header = this._parseHeader(configuration);
+                this.$el.append(_.template(PageTitleTemplate)(header));
+                this.$el.append(_.template(TabTemplate));
+
+                const tabs = this._parseTabs(configuration);
+                this.renderTabs(tabs);
+                return this;
+            });
         },
 
         changeTab: function (params) {
