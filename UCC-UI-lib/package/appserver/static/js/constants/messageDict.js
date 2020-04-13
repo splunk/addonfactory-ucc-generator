@@ -29,7 +29,7 @@ export default {
     // Delete dialog title
     101: 'Delete Confirmation',
     102: '"{{args[0]}}" cannot be deleted because it is in use',
-    103: 'Are you sure you want to delete "{{args[0]}}" {{args[1]}}?',
+    103: 'Confirm the "{{args[0]}}" {{args[1]}} is not linked to any input before deletion.',
     // Error dialog title
     104: 'Error Message',
     // Warning dialog title
