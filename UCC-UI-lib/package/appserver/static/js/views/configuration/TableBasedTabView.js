@@ -8,22 +8,22 @@ import {
     fetchConfigurationModels,
     generateCollection
 } from 'app/util/backboneHelpers';
-import {setCollectionRefCount} from 'app/util/dependencyChecker';
-import {getFormattedMessage} from 'app/util/messageUtil';
+// import {setCollectionRefCount} from 'app/util/dependencyChecker';
+import { getFormattedMessage } from 'app/util/messageUtil';
 import Util from 'app/util/Util';
-import {sortAlphabetical} from 'app/util/sort';
+import { sortAlphabetical } from 'app/util/sort';
 
 import BaseTableView from 'app/views/BaseTableView';
 
 // import MODE_EDIT constant to get edit string
-import {MODE_EDIT} from 'app/constants/modes';
+import { MODE_EDIT } from 'app/constants/modes';
 
 export default BaseTableView.extend({
-    initialize: function (options) {
+    initialize: function() {
         BaseTableView.prototype.initialize.apply(this, arguments);
-        const servicesDeferred = options.servicesDeferred;
-        const serviceCollectionObjList =
-            _.get(options.dependencyMapping, options.props.name, []);
+        // const servicesDeferred = options.servicesDeferred;
+        // const serviceCollectionObjList =
+        // _.get(options.dependencyMapping, options.props.name, []);
 
         const {
             deferred: configDeferred,
@@ -32,15 +32,15 @@ export default BaseTableView.extend({
 
         // servicesDeferred may not exist
         const defferedList = [configDeferred];
-        if (servicesDeferred) {
-            defferedList.push(servicesDeferred);
-        }
+        // if (servicesDeferred) {
+        //     defferedList.push(servicesDeferred);
+        // }
         // Load custom cell if configed
         defferedList.push(...this.loadCustomCell(this.props.table.header));
 
         _.extend(this, {
             entitiesDeferred: $.when(...defferedList),
-            serviceCollectionObjList,
+            // serviceCollectionObjList,
             configModelObjList
         });
 
@@ -51,7 +51,7 @@ export default BaseTableView.extend({
         this.emptySearchString = this.filterKey.map(d => d + '=*').join(' OR ');
     },
 
-    stateChange: function () {
+    stateChange: function() {
         const models = this.adjustPaging(
             this.dataStore,
             this.filterSort(
@@ -60,7 +60,7 @@ export default BaseTableView.extend({
         this.dataStore.reset(models);
     },
 
-    filterSearch: function (models) {
+    filterSearch: function(models) {
         if (!this.stateModel.get('search') ||
             this.stateModel.get('search') === this.emptySearchString) {
             return models;
@@ -79,7 +79,7 @@ export default BaseTableView.extend({
         return result;
     },
 
-    filterSort: function (models) {
+    filterSort: function(models) {
         const sortKey = this.stateModel.get('sortKey'),
             sortDir = this.stateModel.get('sortDirection'),
             handler = (a, b) => {
@@ -98,15 +98,15 @@ export default BaseTableView.extend({
      * This method will parse the URL Query Parameters e.g. ..../pageName?tab=mytab&record=myinput
      * In the popup it will open the tab with tab-id specified in the query parameter e.g. mytab and tab input data with input name specified in the query parameter e.g. myinput in the edit mode
      * If tab input name is incorrect, it will just open the tab page without any errors shown on the page but it will be logged in javascript console
-    */
-    editPopup: function () {
+     */
+    editPopup: function() {
         let editModel;
         let params = new URLSearchParams(location.search);
         let tabName = params.get('tab');
         let record = params.get('record');
 
         if (record && tabName && this.cachedCollection.models.length > 0 && "#" + tabName + "-tab" === this.containerId) {
-            this.cachedCollection.models.forEach(function (element) {
+            this.cachedCollection.models.forEach(function(element) {
                 if (record === element.entry.get("name")) {
                     editModel = element;
                 }
@@ -128,13 +128,13 @@ export default BaseTableView.extend({
         }
     },
 
-    render: function () {
+    render: function() {
         Util.addLoadingMsg(this.$el);
 
         const addButtonData = {
-            buttonId: this.submitBtnId,
-            buttonValue: 'Add'
-        },
+                buttonId: this.submitBtnId,
+                buttonValue: 'Add'
+            },
             {
                 props,
                 entitiesDeferred,
@@ -146,7 +146,7 @@ export default BaseTableView.extend({
             this.$el.html('');
             const caption = new CaptionView({
                 countLabel: getFormattedMessage(107),
-                model: {state: this.stateModel},
+                model: { state: this.stateModel },
                 collection: this.dataStore,
                 noFilterButtons: true,
                 filterKey: this.filterKey
@@ -185,16 +185,16 @@ export default BaseTableView.extend({
 
         deferred.done(() => {
             // Set cache models
-            this.cachedCollection.add(this.dataStore.models, {silent: true});
+            this.cachedCollection.add(this.dataStore.models, { silent: true });
             this.stateChange();
             if (entitiesDeferred) {
                 entitiesDeferred.done(() => {
-                    setCollectionRefCount(
-                        this.dataStore,
-                        serviceCollectionObjList,
-                        configModelObjList,
-                        props.name
-                    );
+                    // setCollectionRefCount(
+                    //     this.dataStore,
+                    //     serviceCollectionObjList,
+                    //     configModelObjList,
+                    //     props.name
+                    // );
                     renderTab();
                 });
             } else {
