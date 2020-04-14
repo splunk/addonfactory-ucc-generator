@@ -178,7 +178,8 @@ define([
                         changeFields[e.field] = fields;
                     } else {
                         this.dependencyMap.set(field, {
-                            [e.field]: fields });
+                            [e.field]: fields
+                        });
                     }
                 });
             });
@@ -379,7 +380,7 @@ define([
                 // Populate the parameter string with client_id, redirect_url and response_type
                 var parameters = underscore.template(`?response_type=code&client_id=<%=client_id %>&redirect_uri=` + redirectUri, this.model.toJSON());
                 // Get the value for state_enabled
-                var state_enabled = this.model.get("state_enabled");
+                var state_enabled = this.model.get("oauth_state_enabled");
                 if (state_enabled === "true") {
                     this.state_enabled = true;
                     // Generating a random string of length 10
