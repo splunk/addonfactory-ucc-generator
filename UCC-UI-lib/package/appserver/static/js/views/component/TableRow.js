@@ -127,11 +127,6 @@ define([
         },
 
         delete: function() {
-            // let inUse = false;
-            // if (this.model.entity.entry.content.get('refCount')) {
-            //     inUse = this.model.entity.entry.content.get('refCount') > 0 ?
-            //         true : false;
-            // }
 
             const deleteDialog = new DeleteDialog({
                 el: $(".dialog-placeholder"),
@@ -139,7 +134,6 @@ define([
                 model: this.model.entity,
                 stateModel: this.stateModel,
                 dispatcher: this.dispatcher,
-                // inUse: inUse,
                 deleteTag: this.deleteTag
             });
             deleteDialog.render().modal();

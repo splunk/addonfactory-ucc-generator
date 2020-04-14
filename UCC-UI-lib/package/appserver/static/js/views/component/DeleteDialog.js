@@ -33,11 +33,6 @@ define([
         render: function() {
             this.$el.html(_.template(DeleteDialog)({
                 title: getFormattedMessage(101),
-                // inUse: this.inUse,
-                // inUseMsg: _.unescape(getFormattedMessage(
-                //     102,
-                //     this.model.entry.attributes.name
-                // )),
                 confirmMsg: _.unescape(getFormattedMessage(
                     103,
                     this.model.entry.attributes.name,
