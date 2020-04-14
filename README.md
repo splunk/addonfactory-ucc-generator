@@ -39,6 +39,11 @@ Table of contents
 - [Service name and Appname as column in table](#service-name-and-appname-as-column-in-table)
 
 ### Release notes
+#### 3.5.0
+* Reverted changes made in version 3.4.4  regarding the issue where configuration page is not loaded when the server role is search_head, search_peer or cluster_search_head (ADDON-22233)
+* Changed the default landing page for addons to the configuration page.
+* Removed the dependency between the input page and the configuration page.
+
 #### 3.4.6
 ##### Bug Fixes:
 * Fixed issue of able to delete the configuration account even if it is linked with an input of an add-on (ADDON-25360)
