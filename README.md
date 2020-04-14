@@ -1,5 +1,7 @@
 Table of contents
 - [Release notes](#release-notes)
+  - [3.5.0](#350)
+    - [Features:](#features)
   - [3.4.6](#346)
     - [Bug Fixes:](#bug-fixes)
   - [3.4.5](#345)
@@ -39,7 +41,8 @@ Table of contents
 - [Service name and Appname as column in table](#service-name-and-appname-as-column-in-table)
 
 ### Release notes
-#### 3.5.0
+#### 3.5.0  
+##### Features:
 * Reverted changes made in version 3.4.4  regarding the issue where configuration page is not loaded when the server role is search_head, search_peer or cluster_search_head (ADDON-22233)
 * Changed the default landing page for addons to the configuration page.
 * Removed the dependency between the input page and the configuration page.
