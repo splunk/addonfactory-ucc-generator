@@ -1,5 +1,5 @@
-import {getFormattedMessage} from 'app/util/messageUtil';
-import {addErrorMsg} from 'app/util/promptMsgController';
+import { getFormattedMessage } from 'app/util/messageUtil';
+import { addErrorMsg } from 'app/util/promptMsgController';
 
 define([
     'jquery',
@@ -7,7 +7,7 @@ define([
     'backbone',
     'app/util/Util',
     'app/views/component/DeleteDialog.html'
-], function (
+], function(
     $,
     _,
     Backbone,
@@ -25,19 +25,19 @@ define([
             }
         },
 
-        initialize: function (options) {
+        initialize: function(options) {
             // collection, model, stateModel, dispatcher, inUse, deleteTag
             _.extend(this, options);
         },
 
-        render: function () {
+        render: function() {
             this.$el.html(_.template(DeleteDialog)({
                 title: getFormattedMessage(101),
                 confirmMsg: _.unescape(getFormattedMessage(
                     103,
                     this.model.entry.attributes.name,
                     this.deleteTag || ''
-                 ))
+                ))
             }));
             this.$("[role=dialog]").on('hidden.bs.modal', () => {
                 this.undelegateEvents();
@@ -45,14 +45,14 @@ define([
             return this;
         },
 
-        delete: function () {
+        delete: function() {
             var url, collection, delete_url;
             collection = this.model.collection;
             if (!collection) {
                 collection = this.collection;
             }
-            url =  this.model._url ===
-                   undefined ? collection._url : this.model._url;
+            url = this.model._url ===
+                undefined ? collection._url : this.model._url;
             delete_url = [
                 collection.proxyUrl,
                 url,
@@ -62,18 +62,16 @@ define([
             this._delete(delete_url);
         },
 
-        modal: function () {
-            this.$("[role=dialog]").modal(
-                {backdrop: 'static', keyboard: false}
-            );
+        modal: function() {
+            this.$("[role=dialog]").modal({ backdrop: 'static', keyboard: false });
         },
 
-        encodeUrl: function (str) {
+        encodeUrl: function(str) {
             return encodeURIComponent(str)
-                    .replace(/'/g, "%27").replace(/"/g, "%22");
+                .replace(/'/g, "%27").replace(/"/g, "%22");
         },
 
-        _delete: function (delete_url) {
+        _delete: function(delete_url) {
             Util.disableElements(
                 this.$("button[type=button]"),
                 this.$("input[type=submit]")

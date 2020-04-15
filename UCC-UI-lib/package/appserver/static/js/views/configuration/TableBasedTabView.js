@@ -8,14 +8,18 @@ import {
     fetchConfigurationModels,
     generateCollection
 } from 'app/util/backboneHelpers';
+<<<<<<< HEAD
 import {getFormattedMessage} from 'app/util/messageUtil';
+=======
+import { getFormattedMessage } from 'app/util/messageUtil';
+>>>>>>> c1ce5c162f986d49d79babe53c7a63f0cc2838bb
 import Util from 'app/util/Util';
-import {sortAlphabetical} from 'app/util/sort';
+import { sortAlphabetical } from 'app/util/sort';
 
 import BaseTableView from 'app/views/BaseTableView';
 
 // import MODE_EDIT constant to get edit string
-import {MODE_EDIT} from 'app/constants/modes';
+import { MODE_EDIT } from 'app/constants/modes';
 
 export default BaseTableView.extend({
     initialize: function() {
@@ -43,7 +47,7 @@ export default BaseTableView.extend({
         this.emptySearchString = this.filterKey.map(d => d + '=*').join(' OR ');
     },
 
-    stateChange: function () {
+    stateChange: function() {
         const models = this.adjustPaging(
             this.dataStore,
             this.filterSort(
@@ -52,7 +56,7 @@ export default BaseTableView.extend({
         this.dataStore.reset(models);
     },
 
-    filterSearch: function (models) {
+    filterSearch: function(models) {
         if (!this.stateModel.get('search') ||
             this.stateModel.get('search') === this.emptySearchString) {
             return models;
@@ -71,7 +75,7 @@ export default BaseTableView.extend({
         return result;
     },
 
-    filterSort: function (models) {
+    filterSort: function(models) {
         const sortKey = this.stateModel.get('sortKey'),
             sortDir = this.stateModel.get('sortDirection'),
             handler = (a, b) => {
@@ -90,15 +94,15 @@ export default BaseTableView.extend({
      * This method will parse the URL Query Parameters e.g. ..../pageName?tab=mytab&record=myinput
      * In the popup it will open the tab with tab-id specified in the query parameter e.g. mytab and tab input data with input name specified in the query parameter e.g. myinput in the edit mode
      * If tab input name is incorrect, it will just open the tab page without any errors shown on the page but it will be logged in javascript console
-    */
-    editPopup: function () {
+     */
+    editPopup: function() {
         let editModel;
         let params = new URLSearchParams(location.search);
         let tabName = params.get('tab');
         let record = params.get('record');
 
         if (record && tabName && this.cachedCollection.models.length > 0 && "#" + tabName + "-tab" === this.containerId) {
-            this.cachedCollection.models.forEach(function (element) {
+            this.cachedCollection.models.forEach(function(element) {
                 if (record === element.entry.get("name")) {
                     editModel = element;
                 }
@@ -120,13 +124,13 @@ export default BaseTableView.extend({
         }
     },
 
-    render: function () {
+    render: function() {
         Util.addLoadingMsg(this.$el);
 
         const addButtonData = {
-            buttonId: this.submitBtnId,
-            buttonValue: 'Add'
-        },
+                buttonId: this.submitBtnId,
+                buttonValue: 'Add'
+            },
             {
                 props,
                 entitiesDeferred,
@@ -138,7 +142,7 @@ export default BaseTableView.extend({
             this.$el.html('');
             const caption = new CaptionView({
                 countLabel: getFormattedMessage(107),
-                model: {state: this.stateModel},
+                model: { state: this.stateModel },
                 collection: this.dataStore,
                 noFilterButtons: true,
                 filterKey: this.filterKey
@@ -177,7 +181,7 @@ export default BaseTableView.extend({
 
         deferred.done(() => {
             // Set cache models
-            this.cachedCollection.add(this.dataStore.models, {silent: true});
+            this.cachedCollection.add(this.dataStore.models, { silent: true });
             this.stateChange();
             if (entitiesDeferred) {
                 entitiesDeferred.done(() => {
