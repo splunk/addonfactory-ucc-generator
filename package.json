@@ -1,23 +1,23 @@
 {
-  "name": "ta-ui-framework",
-  "version": "3.4.6",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "update-version": "python update_version.py",
-    "build-ui-lib": "cd ./UCC-UI-lib && npm install && bower install && npm run build && npm publish",
-    "upload-uccrestlib": "cd UCC-REST-lib && python setup.py sdist upload -r pypisolutionslocal",
-    "upload-uccrestbuilder": "cd UCC-REST-builder && python setup.py sdist upload -r pypisolutionslocal",
-    "build-example-addon": "cd ./UCC-example-addon && python setup.py && source ${SPLUNK_HOME}/bin/setSplunkEnv && python build.py ",
-    "build": "npm run update-version && npm run build-ui-lib && npm run upload-uccrestlib && npm run upload-uccrestbuilder && npm run build-example-addon",
-    "build-dev": "npm run update-version && cd ./UCC-UI-lib && npm run buildDev",
-    "fortify": "/usr/bin/fortify-scanner.py"
-  },
-  "repository": {
-    "type": "git",
-    "url": "ssh://git@git.splunk.com:7999/soln/ta-ui-framework.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+    "name": "ta-ui-framework",
+    "version": "3.5.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "update-version": "python update_version.py",
+        "build-ui-lib": "cd ./UCC-UI-lib && npm install && bower install && npm run build && npm publish",
+        "upload-uccrestlib": "cd UCC-REST-lib && python setup.py sdist upload -r pypisolutionslocal",
+        "upload-uccrestbuilder": "cd UCC-REST-builder && python setup.py sdist upload -r pypisolutionslocal",
+        "build-example-addon": "cd ./UCC-example-addon && python setup.py && source ${SPLUNK_HOME}/bin/setSplunkEnv && python build.py ",
+        "build": "npm run update-version && npm run build-ui-lib && npm run upload-uccrestlib && npm run upload-uccrestbuilder && npm run build-example-addon",
+        "build-dev": "npm run update-version && cd ./UCC-UI-lib && npm run buildDev",
+        "fortify": "/usr/bin/fortify-scanner.py"
+    },
+    "repository": {
+        "type": "git",
+        "url": "ssh://git@git.splunk.com:7999/soln/ta-ui-framework.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC"
 }
