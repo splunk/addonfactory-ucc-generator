@@ -1,4 +1,4 @@
-import { configManager } from 'app/util/configManager';
+import {configManager} from 'app/util/configManager';
 import CustomizedTabView from 'app/views/configuration/CustomizedTabView';
 import 'appCssDir/common.css';
 import 'appCssDir/configuration.css';
@@ -9,7 +9,7 @@ define([
     'backbone',
     'app/templates/common/PageTitle.html',
     'app/templates/common/TabTemplate.html'
-], function(
+], function (
     $,
     _,
     Backbone,
@@ -18,26 +18,23 @@ define([
 ) {
     return Backbone.View.extend({
         initialize: function() {
-            const { unifiedConfig: { pages: { configuration } } } = configManager;
+            const {unifiedConfig: {pages: {configuration}}} = configManager;
             this.stateModel = new Backbone.Model({
                 selectedTabId: this._generateTabId(configuration.tabs)
             });
 
-            // const refCollections = fetchRefCollections();
-            // this.servicesDeferred = refCollections.deferred;
-            // this.dependencyMapping = refCollections.dependencyMapping;
             this.tabNameUsed = false;
         },
 
         events: {
-            "click ul.nav-tabs > li > a": function(e) {
+            "click ul.nav-tabs > li > a": function (e) {
                 e.preventDefault();
                 const tabId = e.currentTarget.id.slice(0, -3);
                 this.changeTab(tabId);
             }
         },
 
-        render: function() {
+        render: function () {
             const { unifiedConfig: { pages: { configuration } } } = configManager;
 
             const header = this._parseHeader(configuration);
@@ -49,7 +46,7 @@ define([
             return this;
         },
 
-        changeTab: function(params) {
+        changeTab: function (params) {
 
             if (params === null) return;
             const { unifiedConfig: { pages: { configuration } } } = configManager;
@@ -58,7 +55,7 @@ define([
             // For the first time, this.tabNameUsed will be false.
             // From the next time onwards, it will be true. So condition will be false.
             // So when the tab is changed by the user, this condition will be false and else part will be executed
-            if (tabName && configuration.tabs.length > 0 && !this.tabNameUsed) {
+            if(tabName && configuration.tabs.length>0 && !this.tabNameUsed) {
                 for (var i = 0; i < configuration.tabs.length; i++) {
                     if (configuration.tabs[i].title.toLowerCase().replace(/ /g, '-') === tabName) {
                         this.tabNameUsed = true;
@@ -81,7 +78,7 @@ define([
          * If tab name is incorrect, it will open the first tab by default.
          * @param params = Tab Name
          */
-        _activateTab(params) {
+        _activateTab(params){
             this.tabName = params;
             $('.nav-tabs li').removeClass('active');
             $('#' + this.tabName + '-li').parent().addClass('active');
@@ -90,7 +87,7 @@ define([
             this.stateModel.set('selectedTabId', `#${params}-tab`);
         },
 
-        _parseHeader({ title, description }) {
+        _parseHeader({title, description}) {
             return {
                 title: title ? title : '',
                 description: description ? description : '',
@@ -110,9 +107,9 @@ define([
             return `#${this._generateTabToken(tabs, title)}-tab`;
         },
 
-        _parseTabs({ tabs }) {
+        _parseTabs({tabs}) {
             return tabs.map((d, i) => {
-                const { title } = d;
+                const {title} = d;
                 const view = new CustomizedTabView({
                     containerId: this._generateTabId(tabs, title),
                     pageState: this.stateModel,
@@ -127,7 +124,7 @@ define([
             }).filter(d => !!d);
         },
 
-        renderTabs: function(tabs) {
+        renderTabs: function (tabs) {
             _.each(tabs, tab => {
                 const { title, token, view } = tab;
                 let active;
@@ -137,10 +134,10 @@ define([
                     active = 'active';
                 }
                 this.$(".nav-tabs").append(
-                    _.template(this.tabTitleTemplate)({ title, token, active })
+                    _.template(this.tabTitleTemplate)({title, token, active})
                 );
                 this.$(".tab-content").append(
-                    _.template(this.tabContentTemplate)({ token, active })
+                    _.template(this.tabContentTemplate)({token, active})
                 );
                 this.$(this._generateTabId(tabs, title)).html(
                     view.render().$el

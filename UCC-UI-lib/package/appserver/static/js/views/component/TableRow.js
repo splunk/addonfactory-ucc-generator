@@ -1,9 +1,9 @@
-import { configManager } from 'app/util/configManager';
+import {configManager} from 'app/util/configManager';
 import {
     MODE_CLONE,
     MODE_EDIT
 } from 'app/constants/modes';
-import { PAGE_STYLE } from 'app/constants/pageStyle';
+import {PAGE_STYLE} from 'app/constants/pageStyle';
 
 define([
     'jquery',
@@ -16,7 +16,7 @@ define([
     'app/views/component/EntityDialog',
     'app/views/component/DeleteDialog',
     'app/views/component/SwitchButton'
-], function(
+], function (
     $,
     _,
     Backbone,
@@ -34,23 +34,23 @@ define([
         className: 'apps-table-tablerow',
 
         events: {
-            'click a.edit': function(e) {
+            'click a.edit': function (e) {
                 e.preventDefault();
                 this.edit();
             },
 
-            'click a.clone': function(e) {
+            'click a.clone': function (e) {
                 e.preventDefault();
                 this.clone();
             },
 
-            'click a.delete': function(e) {
+            'click a.delete': function (e) {
                 e.preventDefault();
                 this.delete();
             }
         },
 
-        initialize: function(options) {
+        initialize: function (options) {
             BaseView.prototype.initialize.apply(this, arguments);
             this.$el.addClass((this.options.index % 2) ? 'even' : 'odd');
 
@@ -84,7 +84,7 @@ define([
             this.activate();
         },
 
-        edit: function() {
+        edit: function () {
             const component = this._getComponent();
             if (component['style'] && component['style'] === PAGE_STYLE) {
                 this.navModel.dataModel = this.model.entity;
@@ -105,7 +105,7 @@ define([
             }
         },
 
-        clone: function() {
+        clone: function () {
             const component = this._getComponent();
             if (component['style'] && component['style'] === PAGE_STYLE) {
                 this.navModel.dataModel = this.model.entity;
@@ -126,7 +126,7 @@ define([
             }
         },
 
-        delete: function() {
+        delete: function () {
 
             const deleteDialog = new DeleteDialog({
                 el: $(".dialog-placeholder"),
@@ -158,11 +158,11 @@ define([
             return deferred.promise();
         },
 
-        _renderRow: function() {
+        _renderRow: function () {
             this.deferreds = [];
             this.cells = [];
             const header = this.component.table.header;
-            _.each(header, ({ field, mapping, customCell }, index) => {
+            _.each(header, ({field, mapping, customCell}, index) => {
                 let fieldValue;
                 if (field === 'name') {
                     fieldValue = this.model.entity.entry.get(field);
@@ -201,14 +201,14 @@ define([
                             }
                         });
                         this.cells[index] = '<td>' + service_title + '</td>';
-                    } else if (field === '_app_name') {
+					} else if (field === '_app_name') {
                         this.cells[index] = '<td>' + this.model.entity.attributes.targetApp + '</td>';
                     } else {
                         fieldValue = fieldValue === undefined ?
-                            '' : String(fieldValue);
+                                     '' : String(fieldValue);
                         if (mapping) {
                             fieldValue = !_.isUndefined(mapping[fieldValue]) ?
-                                mapping[fieldValue] : fieldValue;
+                                         mapping[fieldValue] : fieldValue;
                         }
                         const html = `<td  class="col-${field}">
                                     ${Util.encodeHTML(fieldValue)}</td>`;
@@ -227,7 +227,7 @@ define([
             });
         },
 
-        render: function() {
+        render: function () {
             if (this.enableBulkActions) {
                 this.$el.append(`<td class="box checkbox col-inline"></td>`);
                 this.$('.box').append(this.bulkbox.render().el);
@@ -238,9 +238,9 @@ define([
 
             this._renderRow();
             $.when(...this.deferreds).done(() => {
-                _.each(this.cells, cell => {
-                    this.$el.append(cell);
-                });
+                 _.each(this.cells, cell => {
+                     this.$el.append(cell);
+                 });
 
                 if (this.showActions) {
                     this.$el.append(_.template(this.actionTemplate));
@@ -255,10 +255,10 @@ define([
             return this;
         },
 
-        _getComponent: function() {
+        _getComponent: function () {
             let component;
             if (this.component.services) {
-                const { unifiedConfig: { meta: { restRoot } } } = configManager;
+                const {unifiedConfig: {meta: {restRoot}}} = configManager;
                 component = _.find(this.component.services, service => {
                     // In UCC 3.x, the "name" retrieved from model id
                     // which is restRoot_originalName
