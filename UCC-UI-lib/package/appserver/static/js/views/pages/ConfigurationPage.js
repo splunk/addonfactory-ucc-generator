@@ -23,12 +23,9 @@ define([
                 selectedTabId: this._generateTabId(configuration.tabs)
             });
 
-<<<<<<< HEAD
-=======
             // const refCollections = fetchRefCollections();
             // this.servicesDeferred = refCollections.deferred;
             // this.dependencyMapping = refCollections.dependencyMapping;
->>>>>>> c1ce5c162f986d49d79babe53c7a63f0cc2838bb
             this.tabNameUsed = false;
         },
 
@@ -40,11 +37,7 @@ define([
             }
         },
 
-<<<<<<< HEAD
-        render: function () {
-=======
         render: function() {
->>>>>>> c1ce5c162f986d49d79babe53c7a63f0cc2838bb
             const { unifiedConfig: { pages: { configuration } } } = configManager;
 
             const header = this._parseHeader(configuration);

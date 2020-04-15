@@ -8,11 +8,7 @@ import {
     fetchConfigurationModels,
     generateCollection
 } from 'app/util/backboneHelpers';
-<<<<<<< HEAD
 import {getFormattedMessage} from 'app/util/messageUtil';
-=======
-import { getFormattedMessage } from 'app/util/messageUtil';
->>>>>>> c1ce5c162f986d49d79babe53c7a63f0cc2838bb
 import Util from 'app/util/Util';
 import { sortAlphabetical } from 'app/util/sort';
 

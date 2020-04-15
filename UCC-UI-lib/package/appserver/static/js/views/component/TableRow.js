@@ -126,11 +126,7 @@ define([
             }
         },
 
-<<<<<<< HEAD
-        delete: function () {
-=======
         delete: function() {
->>>>>>> c1ce5c162f986d49d79babe53c7a63f0cc2838bb
 
             const deleteDialog = new DeleteDialog({
                 el: $(".dialog-placeholder"),
