@@ -1,6 +1,5 @@
 import {configManager} from 'app/util/configManager';
 import CustomizedTabView from 'app/views/configuration/CustomizedTabView';
-import {fetchRefCollections} from 'app/util/backboneHelpers';
 import 'appCssDir/common.css';
 import 'appCssDir/configuration.css';
 
@@ -23,6 +22,8 @@ define([
             this.stateModel = new Backbone.Model({
                 selectedTabId: this._generateTabId(configuration.tabs)
             });
+
+            this.tabNameUsed = false;
         },
 
         events: {
@@ -34,23 +35,15 @@ define([
         },
 
         render: function () {
+            const { unifiedConfig: { pages: { configuration } } } = configManager;
 
-            fetchRefCollections().then((refCollections) => {
+            const header = this._parseHeader(configuration);
+            this.$el.append(_.template(PageTitleTemplate)(header));
+            this.$el.append(_.template(TabTemplate));
 
-                this.servicesDeferred = refCollections.deferred;
-                this.dependencyMapping = refCollections.dependencyMapping;
-                this.tabNameUsed = false;
-                
-                const {unifiedConfig: {pages: {configuration}}} = configManager;
-
-                const header = this._parseHeader(configuration);
-                this.$el.append(_.template(PageTitleTemplate)(header));
-                this.$el.append(_.template(TabTemplate));
-
-                const tabs = this._parseTabs(configuration);
-                this.renderTabs(tabs);
-                return this;
-            });
+            const tabs = this._parseTabs(configuration);
+            this.renderTabs(tabs);
+            return this;
         },
 
         changeTab: function (params) {
@@ -120,9 +113,7 @@ define([
                 const view = new CustomizedTabView({
                     containerId: this._generateTabId(tabs, title),
                     pageState: this.stateModel,
-                    props: d,
-                    servicesDeferred: this.servicesDeferred,
-                    dependencyMapping: this.dependencyMapping
+                    props: d
                 });
                 return {
                     active: i === 0,

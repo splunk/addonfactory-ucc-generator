@@ -122,10 +122,6 @@ define([
                 if (this.model.get("name")) {
                     this.model.unset("name");
                 }
-                // Unset the refCount attribute
-                if (this.model.get("refCount")) {
-                    this.model.unset("refCount");
-                }
                 this.cloneName = options.model.entry.get("name");
                 this.real_model = new InputType(null, {
                     appData: this.appData,
