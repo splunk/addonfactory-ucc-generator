@@ -381,10 +381,10 @@ define([
                 var parameters = underscore.template(`?response_type=code&client_id=<%=client_id %>&redirect_uri=` + redirectUri, this.model.toJSON());
                 // Get the value for state_enabled
                 var state_enabled = this.model.get("oauth_state_enabled");
-                if (state_enabled === "true") {
+                if (state_enabled === "true" || state_enabled === true) {
                     this.state_enabled = true;
-                    // Generating a random string of length 10
-                    this.state = Math.random().toString(36).substring(10);
+                    // Generating a cryptographically strong random string of length 10
+                    this.state = this._generateRandomStateValue(10);
                     // Appending the state in the headers
                     parameters = parameters + '&state=' + this.state;
                 }
@@ -871,6 +871,22 @@ define([
             return this;
         },
 
+        /*
+         * Function to generate a cryptographically strong state value
+         * using crypto module
+         */
+        _generateRandomStateValue: function(arrayLength) {
+            const validChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            if (typeof arrayLength != 'number'){
+                arrayLength = 10;
+            }
+            let array = new Uint8Array(arrayLength);
+            window.crypto.getRandomValues(array);
+            array = array.map(x => validChars.charCodeAt(x % validChars.length));
+            const randomState = String.fromCharCode.apply(null, array);
+            return randomState;
+
+        },
 
         /*
          * Function to get access token, refresh token and instance url
