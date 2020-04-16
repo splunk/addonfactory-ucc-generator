@@ -46,9 +46,9 @@ define([
             return this;
         },
 
-        changeTab: function (params) {
+        changeTab: function (tabId) {
 
-            if (params === null) return;
+            if (tabId === null) return;
             const { unifiedConfig: { pages: { configuration } } } = configManager;
             let queryParams = new URLSearchParams(location.search);
             let tabName = queryParams.get('tab');
@@ -59,7 +59,7 @@ define([
                 for (var i = 0; i < configuration.tabs.length; i++) {
                     if (configuration.tabs[i].title.toLowerCase().replace(/ /g, '-') === tabName) {
                         this.tabNameUsed = true;
-                        this._activateTab(params);
+                        this._activateTab(tabId);
                         break;
                     }
                 }
@@ -69,7 +69,7 @@ define([
                     this._activateTab(configuration.tabs[0].title.toLowerCase().replace(/ /g, '-'));
                 }
             } else {
-                this._activateTab(params);
+                this._activateTab(tabId);
             }
         },
 
@@ -78,13 +78,13 @@ define([
          * If tab name is incorrect, it will open the first tab by default.
          * @param params = Tab Name
          */
-        _activateTab(params){
-            this.tabName = params;
+        _activateTab(tabId){
+            this.tabName = tabId;
             $('.nav-tabs li').removeClass('active');
             $('#' + this.tabName + '-li').parent().addClass('active');
             $('.tab-content div').removeClass('active');
-            $(`#${params}-tab`).addClass('active');
-            this.stateModel.set('selectedTabId', `#${params}-tab`);
+            $(`#${tabId}-tab`).addClass('active');
+            this.stateModel.set('selectedTabId', `#${tabId}-tab`);
         },
 
         _parseHeader({title, description}) {
