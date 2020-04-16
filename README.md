@@ -41,8 +41,11 @@ Table of contents
 - [Service name and Appname as column in table](#service-name-and-appname-as-column-in-table)
 
 ### Release notes
-#### 3.5.0
+#### 3.5.0  
 ##### Features:
+* Reverted changes made in version 3.4.4 and 3.4.5  regarding the issue where the configuration page was not loading on splunk search head in cloud (ADDON-22233)
+* Changed the default landing page for addons to the configuration page.
+* Removed the dependency between the input page and the configuration page.
 * Adding support for state parameter in OAuth headers
 #### 3.4.6
 ##### Bug Fixes:

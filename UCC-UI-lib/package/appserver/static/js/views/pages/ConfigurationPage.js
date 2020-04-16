@@ -1,6 +1,5 @@
 import {configManager} from 'app/util/configManager';
 import CustomizedTabView from 'app/views/configuration/CustomizedTabView';
-import {fetchRefCollections} from 'app/util/backboneHelpers';
 import 'appCssDir/common.css';
 import 'appCssDir/configuration.css';
 
@@ -23,6 +22,8 @@ define([
             this.stateModel = new Backbone.Model({
                 selectedTabId: this._generateTabId(configuration.tabs)
             });
+
+            this.tabNameUsed = false;
         },
 
         events: {
@@ -34,28 +35,20 @@ define([
         },
 
         render: function () {
+            const { unifiedConfig: { pages: { configuration } } } = configManager;
 
-            fetchRefCollections().then((refCollections) => {
+            const header = this._parseHeader(configuration);
+            this.$el.append(_.template(PageTitleTemplate)(header));
+            this.$el.append(_.template(TabTemplate));
 
-                this.servicesDeferred = refCollections.deferred;
-                this.dependencyMapping = refCollections.dependencyMapping;
-                this.tabNameUsed = false;
-                
-                const {unifiedConfig: {pages: {configuration}}} = configManager;
-
-                const header = this._parseHeader(configuration);
-                this.$el.append(_.template(PageTitleTemplate)(header));
-                this.$el.append(_.template(TabTemplate));
-
-                const tabs = this._parseTabs(configuration);
-                this.renderTabs(tabs);
-                return this;
-            });
+            const tabs = this._parseTabs(configuration);
+            this.renderTabs(tabs);
+            return this;
         },
 
-        changeTab: function (params) {
+        changeTab: function (tabId) {
 
-            if (params === null) return;
+            if (tabId === null) return;
             const { unifiedConfig: { pages: { configuration } } } = configManager;
             let queryParams = new URLSearchParams(location.search);
             let tabName = queryParams.get('tab');
@@ -66,7 +59,7 @@ define([
                 for (var i = 0; i < configuration.tabs.length; i++) {
                     if (configuration.tabs[i].title.toLowerCase().replace(/ /g, '-') === tabName) {
                         this.tabNameUsed = true;
-                        this._activateTab(params);
+                        this._activateTab(tabId);
                         break;
                     }
                 }
@@ -76,7 +69,7 @@ define([
                     this._activateTab(configuration.tabs[0].title.toLowerCase().replace(/ /g, '-'));
                 }
             } else {
-                this._activateTab(params);
+                this._activateTab(tabId);
             }
         },
 
@@ -85,13 +78,13 @@ define([
          * If tab name is incorrect, it will open the first tab by default.
          * @param params = Tab Name
          */
-        _activateTab(params){
-            this.tabName = params;
+        _activateTab(tabId){
+            this.tabName = tabId;
             $('.nav-tabs li').removeClass('active');
             $('#' + this.tabName + '-li').parent().addClass('active');
             $('.tab-content div').removeClass('active');
-            $(`#${params}-tab`).addClass('active');
-            this.stateModel.set('selectedTabId', `#${params}-tab`);
+            $(`#${tabId}-tab`).addClass('active');
+            this.stateModel.set('selectedTabId', `#${tabId}-tab`);
         },
 
         _parseHeader({title, description}) {
@@ -120,9 +113,7 @@ define([
                 const view = new CustomizedTabView({
                     containerId: this._generateTabId(tabs, title),
                     pageState: this.stateModel,
-                    props: d,
-                    servicesDeferred: this.servicesDeferred,
-                    dependencyMapping: this.dependencyMapping
+                    props: d
                 });
                 return {
                     active: i === 0,

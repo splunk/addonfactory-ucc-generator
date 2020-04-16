@@ -8,7 +8,6 @@ import {
     fetchConfigurationModels,
     generateCollection
 } from 'app/util/backboneHelpers';
-import {setCollectionRefCount} from 'app/util/dependencyChecker';
 import {getFormattedMessage} from 'app/util/messageUtil';
 import Util from 'app/util/Util';
 import {sortAlphabetical} from 'app/util/sort';
@@ -19,11 +18,8 @@ import BaseTableView from 'app/views/BaseTableView';
 import {MODE_EDIT} from 'app/constants/modes';
 
 export default BaseTableView.extend({
-    initialize: function (options) {
+    initialize: function() {
         BaseTableView.prototype.initialize.apply(this, arguments);
-        const servicesDeferred = options.servicesDeferred;
-        const serviceCollectionObjList =
-            _.get(options.dependencyMapping, options.props.name, []);
 
         const {
             deferred: configDeferred,
@@ -32,15 +28,11 @@ export default BaseTableView.extend({
 
         // servicesDeferred may not exist
         const defferedList = [configDeferred];
-        if (servicesDeferred) {
-            defferedList.push(servicesDeferred);
-        }
         // Load custom cell if configed
         defferedList.push(...this.loadCustomCell(this.props.table.header));
 
         _.extend(this, {
             entitiesDeferred: $.when(...defferedList),
-            serviceCollectionObjList,
             configModelObjList
         });
 
@@ -189,12 +181,6 @@ export default BaseTableView.extend({
             this.stateChange();
             if (entitiesDeferred) {
                 entitiesDeferred.done(() => {
-                    setCollectionRefCount(
-                        this.dataStore,
-                        serviceCollectionObjList,
-                        configModelObjList,
-                        props.name
-                    );
                     renderTab();
                 });
             } else {
