@@ -1,6 +1,6 @@
 Table of contents
 - [Release notes](#release-notes)
-  - [3.5.0](#350)
+ - [3.5.0](#350)
     - [Features:](#features)
   - [3.4.6](#346)
     - [Bug Fixes:](#bug-fixes)
@@ -46,7 +46,7 @@ Table of contents
 * Reverted changes made in version 3.4.4 and 3.4.5  regarding the issue where the configuration page was not loading on splunk search head in cloud (ADDON-22233)
 * Changed the default landing page for addons to the configuration page.
 * Removed the dependency between the input page and the configuration page.
-
+* Adding support for state parameter in OAuth headers
 #### 3.4.6
 ##### Bug Fixes:
 * Fixed issue of able to delete the configuration account even if it is linked with an input of an add-on (ADDON-25360)
