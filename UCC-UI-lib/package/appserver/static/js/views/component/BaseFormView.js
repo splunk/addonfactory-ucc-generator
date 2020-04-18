@@ -380,7 +380,7 @@ define([
                 if (state_enabled === "true" || state_enabled === true) {
                     this.state_enabled = true;
                     // Generating a cryptographically strong random string of length 10
-                    this.state = this._generateRandomStateValue(10);
+                    this.state = this._generateRandomStateValue(36);
                     // Appending the state in the headers
                     parameters = parameters + '&state=' + this.state;
                 }
@@ -874,7 +874,7 @@ define([
         _generateRandomStateValue: function(arrayLength) {
             const validChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
             if (typeof arrayLength != 'number'){
-                arrayLength = 10;
+                arrayLength = 40;
             }
             let array = new Uint8Array(arrayLength);
             window.crypto.getRandomValues(array);
