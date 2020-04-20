@@ -31,10 +31,14 @@ define([
         },
 
         render: function () {
+            let msgNum = 103;
+            if (!this.isInput){
+                msgNum = 102;
+            }
             this.$el.html(_.template(DeleteDialog)({
                 title: getFormattedMessage(101),
                 confirmMsg: _.unescape(getFormattedMessage(
-                    103,
+                    msgNum,
                     this.model.entry.attributes.name,
                     this.deleteTag || ''
                  ))
