@@ -127,13 +127,17 @@ define([
         },
 
         delete: function () {
-
+            let isInput = false;
+            if (this.component.title.toLowerCase()==="inputs") {
+                isInput = true;     
+            }
             const deleteDialog = new DeleteDialog({
                 el: $(".dialog-placeholder"),
                 collection: this.model.collection,
                 model: this.model.entity,
                 stateModel: this.stateModel,
                 dispatcher: this.dispatcher,
+                isInput: isInput,
                 deleteTag: this.deleteTag
             });
             deleteDialog.render().modal();

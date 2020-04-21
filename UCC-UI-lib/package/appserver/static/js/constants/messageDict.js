@@ -28,8 +28,8 @@ export default {
     100: 'Create New Input',
     // Delete dialog title
     101: 'Delete Confirmation',
-    102: '"{{args[0]}}" cannot be deleted because it is in use',
-    103: 'Are you sure you want to delete "{{args[0]}}" {{args[1]}}? Ensure that no input is configured with account "{{args[0]}}" as this will stop data collection for that input.',
+    102: 'Are you sure you want to delete "{{args[0]}}" {{args[1]}}? Ensure that no input is configured with "{{args[0]}}" as this will stop data collection for that input.',
+    103: 'Are you sure you want to delete "{{args[0]}}" {{args[1]}}?',
     // Error dialog title
     104: 'Error Message',
     // Warning dialog title
