@@ -19,6 +19,7 @@ import {
 import { getFormattedMessage } from 'app/util/messageUtil';
 import GroupSection from 'app/views/component/GroupSection';
 import OAuth from 'app/views/component/OAuth';
+import { v4 as uuidv4 } from 'uuid';
 import {
     ERROR_REQUEST_TIMEOUT_TRY_AGAIN,
     ERROR_REQUEST_TIMEOUT_ACCESS_TOKEN_TRY_AGAIN,
@@ -379,8 +380,9 @@ define([
                 var state_enabled = this.model.get("oauth_state_enabled");
                 if (state_enabled === "true" || state_enabled === true) {
                     this.state_enabled = true;
-                    // Generating a cryptographically strong random string of length 10
-                    this.state = this._generateRandomStateValue(10);
+                    // Generating a cryptographically strong state parameter, which will be used ONLY during configuration
+                    this.state = uuidv4().replace(/-/g,"");
+
                     // Appending the state in the headers
                     parameters = parameters + '&state=' + this.state;
                 }
@@ -865,23 +867,6 @@ define([
                 }
             });
             return this;
-        },
-
-        /*
-         * Function to generate a cryptographically strong state value
-         * using crypto module
-         */
-        _generateRandomStateValue: function(arrayLength) {
-            const validChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            if (typeof arrayLength != 'number'){
-                arrayLength = 10;
-            }
-            let array = new Uint8Array(arrayLength);
-            window.crypto.getRandomValues(array);
-            array = array.map(x => validChars.charCodeAt(x % validChars.length));
-            const randomState = String.fromCharCode.apply(null, array);
-            return randomState;
-
         },
 
         /*
