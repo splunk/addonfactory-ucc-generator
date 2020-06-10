@@ -1,6 +1,8 @@
 Table of contents
 - [Release notes](#release-notes)
- - [3.5.0](#350)
+  - [3.5.1](#351)
+    - [Bug Fixes:](#bug-fixes)
+  - [3.5.0](#350)
     - [Features:](#features)
   - [3.4.6](#346)
     - [Bug Fixes:](#bug-fixes)
@@ -41,6 +43,10 @@ Table of contents
 - [Service name and Appname as column in table](#service-name-and-appname-as-column-in-table)
 
 ### Release notes
+#### 3.5.1
+##### Bug Fixes:
+* Fixed the vulnerability of httplib2 CVE-2020-11078 found while whitesourcing.
+
 #### 3.5.0  
 ##### Features:
 * Reverted changes made in version 3.4.4 and 3.4.5  regarding the issue where the configuration page was not loading on splunk search head in cloud (ADDON-22233)
