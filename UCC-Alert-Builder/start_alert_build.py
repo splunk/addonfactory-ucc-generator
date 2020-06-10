@@ -46,12 +46,12 @@ def validate(alert, logger):
         raise
 
 
-def build(schema_content, product_id, short_name, output_dir):
+def build(schema_content, product_id, output_dir):
 
     # Initializing logger
     logging.basicConfig()
     logger = logging.getLogger('Alert Logger')
-    logger = LoggerAdapter('ta="{}" Creating Alerts'.format(short_name),
+    logger = LoggerAdapter('ta="{}" Creating Alerts'.format(product_id),
                            logger)
 
     # Validation
@@ -59,7 +59,7 @@ def build(schema_content, product_id, short_name, output_dir):
         validate(alert, logger)
 
     # Get the alert schema with required structure
-    envs = normalize.normalize(schema_content, product_id, short_name)
+    envs = normalize.normalize(schema_content, product_id)
 
     # The path to basic file structure required for alerts
     pack_folder = os.path.join(os.path.dirname(os.path.realpath(

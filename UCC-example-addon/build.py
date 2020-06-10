@@ -314,7 +314,7 @@ def make_modular_alerts():
     if schema_content.get("alerts"):
         sys.path.append(os.path.join(top_dir, 'UCC-Alert-Builder'))
         from start_alert_build import build
-        build({"alerts" : schema_content["alerts"]}, ta_name, ta_namespace, os.path.join(top_dir, "UCC-example-addon", "output"))
+        build({"alerts" : schema_content["alerts"]}, ta_name, os.path.join(top_dir, "UCC-example-addon", "output"))
 
 
 clean_before_build()
