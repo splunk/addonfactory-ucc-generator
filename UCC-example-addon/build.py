@@ -99,7 +99,6 @@ def replace_token():
 
 def copy_py2_libs():
     libs = ["future",
-            "future.egg-info",
             "past",
             "six.py",
             "libfuturize",
