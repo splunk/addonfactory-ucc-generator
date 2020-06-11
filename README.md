@@ -1,6 +1,7 @@
 Table of contents
 - [Release notes](#release-notes)
-   - [3.6.0](#360)(feature)
+  - [3.6.0](#360)
+    - [Feature:](#feature)
   - [3.5.1](#351)
     - [Bug Fixes:](#bug-fixes)
   - [3.5.0](#350)
