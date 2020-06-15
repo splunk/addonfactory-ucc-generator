@@ -75,13 +75,13 @@ def iterdict(dictionary, result):
                 result[mapped_key] = mapping_values[result[mapped_key]]
 
 
-def form_main_dict(alert, product_id):
+def form_main_dict(alert, product_id, short_name):
     '''
     Forms the final dictionary required by add-on alert generator
     '''
     return {
         "product_id": product_id,
-        "short_name": product_id,
+        "short_name": short_name,
         "global_settings": "",
         "html_setting": None,
         "build_components": {
@@ -91,13 +91,13 @@ def form_main_dict(alert, product_id):
         },
         "schema.content": {
             "product_id": product_id,
-            "short_name": product_id,
+            "short_name": short_name,
             "modular_alerts": alert
         }
     }
 
 
-def normalize(schema_content, product_id):
+def normalize(schema_content, product_id, short_name):
     '''
     Process the globalConfig alert schema to generate structure required by add-on alert generator
     '''
@@ -105,4 +105,4 @@ def normalize(schema_content, product_id):
     iterdict(schema_content, result)
     for alert in result["alerts"]:
         transform_params(alert["parameters"])
-    return form_main_dict(result["alerts"], product_id)
+    return form_main_dict(result["alerts"], product_id, short_name)
