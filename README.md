@@ -1,5 +1,7 @@
 Table of contents
 - [Release notes](#release-notes)
+  - [3.6.0](#360)
+    - [Feature:](#feature)
   - [3.5.1](#351)
     - [Bug Fixes:](#bug-fixes)
   - [3.5.0](#350)
@@ -41,6 +43,11 @@ Table of contents
 - [Alert actions integration with ta-ui-framework](#alert-actions-integration-with-ta-ui-framework)
 - [Help link component](#help-link-component)
 - [Service name and Appname as column in table](#service-name-and-appname-as-column-in-table)
+
+### Release notes
+#### 3.6.0
+##### Feature:
+* Restructured the Python2 and Python3 3rd party libraries into new structure along with alert actions.
 
 ### Release notes
 #### 3.5.1

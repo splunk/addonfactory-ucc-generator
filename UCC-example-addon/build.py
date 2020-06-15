@@ -97,9 +97,8 @@ def replace_token():
             f.write(s)
 
 
-def copy_libs():
-    libs = ["splunktaucclib", "solnlib", "splunklib", "future",
-            "future.egg-info",
+def copy_py2_libs():
+    libs = ["future",
             "past",
             "six.py",
             "libfuturize",
@@ -122,8 +121,8 @@ def copy_libs():
         lib_dest = os.path.join(
             'output',
             ta_name,
-            'bin',
-            ta_namespace,
+            'lib',
+            'ucc_py2',
             lib
         )
         copy_directory(
@@ -131,20 +130,47 @@ def copy_libs():
             lib_dest
         )
 
-
-def copy_httplib2_helper():
-    lib = "httplib2_helper"
+    lib = "httplib2"
     lib_dest = os.path.join(
         'output',
         ta_name,
-        'bin',
-        ta_namespace,
+        'lib',
+        'ucc_py2',
         lib
     )
     copy_directory(
-        os.path.join(top_dir,"UCC-REST-lib", lib),
+        os.path.join(top_dir,"UCC-REST-lib", "httplib2_helper", "httplib2_py2", "httplib2"),
         lib_dest
     )
+
+def copy_py3_libs():
+    lib = "httplib2"
+    lib_dest = os.path.join(
+        'output',
+        ta_name,
+        'lib',
+        'ucc_py3',
+        lib
+    )
+    copy_directory(
+        os.path.join(top_dir,"UCC-REST-lib", "httplib2_helper", "httplib2_py3", "httplib2"),
+        lib_dest
+    )
+
+def copy_dual_libs():
+    libs = ["splunktaucclib", "solnlib", "splunklib"]
+    
+    for lib in libs:
+        lib_dest = os.path.join(
+            'output',
+            ta_name,
+            'lib',
+            lib
+        )
+        copy_directory(
+            os.path.join(basedir, lib),
+            lib_dest
+        )
 
 
 def copy_res():
@@ -293,8 +319,9 @@ def make_modular_alerts():
 clean_before_build()
 generate_rest()
 generate_ui()
-copy_libs()
-copy_httplib2_helper()
+copy_py2_libs()
+copy_py3_libs()
+copy_dual_libs()
 replace_token()
 copy_res()
 modify_and_replace_token_for_oauth_templates()
