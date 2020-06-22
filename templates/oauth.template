@@ -7,7 +7,6 @@ try:
     from urllib import urlencode
 except:
     from urllib.parse import urlencode
-import httplib2_helper
 from httplib2 import Http, ProxyInfo, socks
 import splunk.admin as admin
 from solnlib import log
