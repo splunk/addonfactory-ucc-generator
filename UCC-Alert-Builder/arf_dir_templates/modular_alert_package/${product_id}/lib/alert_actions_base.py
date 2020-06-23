@@ -124,7 +124,6 @@ class ModularAlertBase(ModularAction):
 
     def build_http_connection(self, config, timeout=120,
                               disable_ssl_validation=False):
-        import httplib2_helper
         from httplib2 import (socks, ProxyInfo, Http)
         """
         :config: dict like, proxy and account information are in the following
