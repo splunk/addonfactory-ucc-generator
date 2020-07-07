@@ -1,5 +1,7 @@
 Table of contents
 - [Release notes](#release-notes)
+  - [3.6.2](#361)
+    - [Bug Fixes:](#bug-fixes)
   - [3.6.1](#361)
     - [Bug Fixes:](#bug-fixes)
   - [3.6.0](#360)
@@ -45,6 +47,11 @@ Table of contents
 - [Alert actions integration with ta-ui-framework](#alert-actions-integration-with-ta-ui-framework)
 - [Help link component](#help-link-component)
 - [Service name and Appname as column in table](#service-name-and-appname-as-column-in-table)
+
+### Release notes
+#### 3.6.2
+##### Bug Fixes:
+* Fixed basedir for globalConfig.json in splunk_aoblib (ADDON-27349)
 
 ### Release notes
 #### 3.6.1
