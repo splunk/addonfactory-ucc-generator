@@ -106,7 +106,7 @@ class Setup_Util(object):
             self.log_error("Global config JSON file not found!")
             self.__global_config = None
         else:
-            with open(get_schema_path()) as f:
+            with open(get_schema_path(self.ta_name)) as f:
                 json_schema = ''.join([l for l in f])
             self.__global_config = GlobalConfig(self.__uri, self.__session_key,
                                                 GlobalConfigSchema(json.loads(json_schema)))
