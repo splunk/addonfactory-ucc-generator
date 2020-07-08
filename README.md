@@ -51,7 +51,7 @@ Table of contents
 ### Release notes
 #### 3.6.2
 ##### Bug Fixes:
-* Fixed basedir for globalConfig.json in splunk_aoblib (ADDON-27349)
+* Fixed basedir for globalConfig.json in splunk_aoblib (ADDON-27495)
 
 ### Release notes
 #### 3.6.1
