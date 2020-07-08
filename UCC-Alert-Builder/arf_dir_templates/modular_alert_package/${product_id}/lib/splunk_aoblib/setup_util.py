@@ -81,7 +81,7 @@ ALL_SETTING_TYPES = ['text', 'password', 'checkbox', 'dropdownlist', 'multi_drop
 
 def get_schema_path():
     dirname = os.path.dirname
-    basedir = dirname(dirname(dirname((dirname(__file__)))))
+    basedir = dirname(dirname((dirname(__file__))))
     return os.path.join(basedir, 'appserver', 'static', 'js', 'build', 'globalConfig.json')
 
 
@@ -94,6 +94,7 @@ class Setup_Util(object):
             self.__uri)
         self.__cached_global_settings = {}
         self.__global_config = None
+
 
     def init_global_config(self):
         if self.__global_config is not None:
