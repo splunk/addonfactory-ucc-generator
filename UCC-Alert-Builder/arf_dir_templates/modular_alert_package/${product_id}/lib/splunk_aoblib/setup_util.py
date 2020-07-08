@@ -79,16 +79,14 @@ TYPE_CHECKBOX = "checkbox"
 ALL_SETTING_TYPES = ['text', 'password', 'checkbox', 'dropdownlist', 'multi_dropdownlist', 'radiogroup']
 
 
-def get_schema_path(ta_name=None):
+def get_schema_path():
     dirname = os.path.dirname
-    basedir = dirname(dirname(dirname((dirname(__file__)))))
-    if ta_name and ta_name not in basedir:
-        basedir = os.path.join(basedir, ta_name)
+    basedir = dirname(dirname((dirname(__file__))))
     return os.path.join(basedir, 'appserver', 'static', 'js', 'build', 'globalConfig.json')
 
 
 class Setup_Util(object):
-    def __init__(self, uri, session_key, logger=None, ta_name=None):
+    def __init__(self, uri, session_key, logger=None):
         self.__uri = uri
         self.__session_key = session_key
         self.__logger = logger
@@ -96,17 +94,17 @@ class Setup_Util(object):
             self.__uri)
         self.__cached_global_settings = {}
         self.__global_config = None
-        self.ta_name = ta_name
+
 
     def init_global_config(self):
         if self.__global_config is not None:
             return
-        schema_file = get_schema_path(self.ta_name)
+        schema_file = get_schema_path()
         if not os.path.isfile(schema_file):
             self.log_error("Global config JSON file not found!")
             self.__global_config = None
         else:
-            with open(get_schema_path(self.ta_name)) as f:
+            with open(get_schema_path()) as f:
                 json_schema = ''.join([l for l in f])
             self.__global_config = GlobalConfig(self.__uri, self.__session_key,
                                                 GlobalConfigSchema(json.loads(json_schema)))

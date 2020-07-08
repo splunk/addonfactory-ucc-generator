@@ -33,7 +33,7 @@ class ModularAlertBase(ModularAction):
         self.ta_name = ta_name
         self.splunk_uri = self.settings.get('server_uri')
         self.setup_util = Setup_Util(
-            self.splunk_uri, self.session_key, self._logger, self.ta_name)
+            self.splunk_uri, self.session_key, self._logger)
 
         self.rest_helper = TARestHelper(self._logger)
 
