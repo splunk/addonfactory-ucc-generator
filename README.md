@@ -1,6 +1,8 @@
 Table of contents
 - [Release notes](#release-notes)
-  - [3.6.2](#361)
+  - [3.6.3](#363)
+    - [Bug Fixes:](#bug-fixes)
+  - [3.6.2](#362)
     - [Bug Fixes:](#bug-fixes)
   - [3.6.1](#361)
     - [Bug Fixes:](#bug-fixes)
@@ -47,6 +49,11 @@ Table of contents
 - [Alert actions integration with ta-ui-framework](#alert-actions-integration-with-ta-ui-framework)
 - [Help link component](#help-link-component)
 - [Service name and Appname as column in table](#service-name-and-appname-as-column-in-table)
+
+### Release notes
+#### 3.6.3
+##### Bug Fixes:
+* Upgraded jinja2 version from 2.9 to 2.10.1 due to whitesource vulnerabiity (ADDON-27875)
 
 ### Release notes
 #### 3.6.2
