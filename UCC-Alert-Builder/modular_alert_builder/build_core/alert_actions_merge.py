@@ -1,10 +1,11 @@
+from __future__ import absolute_import
 import os
 import os.path as op
 from os.path import dirname as dn
 from os.path import basename as bn
 from shutil import copy
-import alert_actions_exceptions as aae
-import arf_consts as ac
+from . import alert_actions_exceptions as aae
+from . import arf_consts as ac
 
 from alert_utils.alert_utils_common.conf_parser import TABConfigParser
 
@@ -27,7 +28,7 @@ def remove_alert_from_conf_file(alert, conf_file, logger):
     parser.read(conf_file)
     conf_dict = parser.item_dict()
 
-    for stanza, key_values in conf_dict.items():
+    for stanza, key_values in list(conf_dict.items()):
         if stanza == alert[ac.SHORT_NAME] or \
             stanza == alert[ac.SHORT_NAME] + "_modaction_result" or \
                 stanza == "eventtype=" + alert[ac.SHORT_NAME] + "_modaction_result":
@@ -55,21 +56,21 @@ def merge_conf_file(src_file, dst_file, merge_mode="stanza_overwrite"):
     dst_dict = parser.item_dict()
 
     if merge_mode == "stanza_overwrite":
-        for stanza, key_values in src_dict.items():
+        for stanza, key_values in list(src_dict.items()):
             if stanza not in dst_dict:
                 parser.add_section(stanza)
             else:
                 parser.remove_section(stanza)
                 parser.add_section(stanza)
 
-            for k, v in key_values.items():
+            for k, v in list(key_values.items()):
                 parser.set(stanza, k, v)
     elif merge_mode == "item_overwrite":
-        for stanza, key_values in src_dict.items():
+        for stanza, key_values in list(src_dict.items()):
             if stanza not in dst_dict:
                 parser.add_section(stanza)
 
-            for k, v in key_values.items():
+            for k, v in list(key_values.items()):
                 if v:
                     parser.set(stanza, k, v)
                 else:
@@ -99,7 +100,7 @@ def merge(src, dst, no_black_list=True):
             if file.endswith("pyo") or file.endswith("pyc"):
                 continue
             if file in dst_files and (file.endswith('.conf') or file.endswith('.conf.spec')):
-                if file in merge_mode_config.keys():
+                if file in list(merge_mode_config.keys()):
                     merge_mode = merge_mode_config[file]
                 merge_conf_file(f_path, op.join(dst, file), merge_mode)
             else:

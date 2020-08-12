@@ -6,28 +6,19 @@
                     <span aria-hidden="true">&times;</span>
                     <span class="sr-only">Close</span>
                 </button>
-                <h4 class="modal-title"><%- _(title).t() %></h4>
+                <h4 class="modal-title">
+                    <%- _(title).t() %>
+                </h4>
             </div>
             <form class="form form-horizontal" role="form" onsubmit="return false;" autocomplete="off">
                 <div class="modal-body">
                     <div class="delete-prompt">
-                        <% if (inUse) { %>
-                            <div class="alert alert-error">
-                                <i class="icon-alert"></i>
-                                <%- _(inUseMsg).t() %>
-                            </div>
-                        <% } else { %>
-                            <%- _(notinUseMsg).t() %>
-                        <% } %>
+                        <%- _(confirmMsg).t() %>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <% if (inUse) { %>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal"><%- _("OK").t() %></button>
-                    <% } else { %>
-                        <button type="button" class="btn btn-default cancel-btn" data-dismiss="modal"><%- _("Cancel").t() %></button>
-                        <input type="submit" class="btn btn-primary submit-btn submit-dialog" value="<%- _('Delete').t() %>"/>
-                    <% } %>
+                    <button type="button" class="btn btn-default cancel-btn" data-dismiss="modal"><%- _("Cancel").t() %></button>
+                    <input type="submit" class="btn btn-primary submit-btn submit-dialog" value="<%- _('Delete').t() %>" />
                 </div>
             </form>
         </div>

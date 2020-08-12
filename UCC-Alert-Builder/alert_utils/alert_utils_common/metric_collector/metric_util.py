@@ -1,8 +1,11 @@
+from __future__ import absolute_import
 # encoding = utf-8
 
+from builtins import str
+from six import string_types as basestring
 import functools
 
-import monitor
+from . import monitor
 import time
 
 __all__ = ['initialize_metric_collector', 'function_run_time']
@@ -20,10 +23,14 @@ def initialize_metric_collector(config, update_config=False):
     m = monitor.Monitor().configure(config, force_update=update_config)
     m.start()
 
+
 def write_event(ev, tags=[]):
     monitor.Monitor().write_event(ev, tags)
 
+
 CREDENTIAL_KEYS = ['password', 'passwords', 'token']
+
+
 def mask_credentials(data):
     '''
     The argument will be cloned
@@ -31,7 +38,7 @@ def mask_credentials(data):
     masked_str = '******'
     if isinstance(data, dict):
         new_data = {}
-        for k in data.keys():
+        for k in list(data.keys()):
             if isinstance(k, str):
                 _key = k.lower()
                 sensitive_word = False
@@ -42,7 +49,7 @@ def mask_credentials(data):
                 if sensitive_word:
                     new_data[k] = masked_str
                 else:
-                    new_data[k] =mask_credentials(data[k])
+                    new_data[k] = mask_credentials(data[k])
             else:
                 new_data[k] = mask_credentials(data[k])
         return new_data
@@ -64,7 +71,10 @@ def mask_credentials(data):
         return 'Class:' + data.__class__.__name__
     return data
 
+
 max_length = 2048
+
+
 def function_run_time(tags=[]):
     def apm_decorator(func):
         @functools.wraps(func)
@@ -76,9 +86,9 @@ def function_run_time(tags=[]):
             ev = {'action': 'invoke'}
             ev.update(func_attr)
             m.write_event(ev, tags)
-            before_invoke = long(time.time() * 1000)
+            before_invoke = int(time.time() * 1000)
             ret = func(*args, **kwargs)
-            after_invoke = long(time.time() * 1000)
+            after_invoke = int(time.time() * 1000)
             ev = {'action': 'done',
                   'time_cost': (after_invoke - before_invoke)}
             ev.update(func_attr)
@@ -90,8 +100,7 @@ def function_run_time(tags=[]):
     return apm_decorator
 
 
-
-#TODO: should put this into unit test
+# TODO: should put this into unit test
 # class A(object):
 #     def __init__(self):
 #         self.password = 'abc'

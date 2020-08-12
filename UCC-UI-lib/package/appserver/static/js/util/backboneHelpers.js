@@ -5,7 +5,6 @@ import BaseModel from 'app/models/Base.Model';
 import BaseCollection from 'app/collections/ProxyBase.Collection';
 import {getAddonName} from 'app/util/Util';
 import {parseFuncRawStr} from 'app/util/script';
-import restEndpointMap from 'app/constants/restEndpointMap';
 
 export function generateModel(name, options = {}) {
     const {
@@ -59,69 +58,6 @@ export function generateCollection(name, options = {}) {
     return new collectionModel([], {
         targetApp: getAddonName(),
         targetOwner: 'nobody'
-    });
-}
-
-export function fetchRefCollections() {
-    const {
-        unifiedConfig: {pages: {inputs, configuration: {tabs}}}
-    } = configManager;
-    if (!inputs && !tabs) {
-        return {};
-    }
-    const refCollections = _.get(inputs, 'services', []);
-    // Construct configruation field to inputs mappping
-    const dependencyMapping = {};
-    tabs.filter(d => !!d.table).forEach(d => {
-        dependencyMapping[d.name] = [];
-    });
-
-    refCollections.forEach(collections => {
-        const {name, entity} = collections;
-        const dependencyList = entity
-            .filter(d => _.get(d, ['options', 'referenceName']))
-            .map(
-                ({field, options: {referenceName}}) =>
-                ({targetField: field, referenceName})
-            );
-
-        if (dependencyList.length) {
-            dependencyList.forEach(({referenceName}) => {
-                if (!(referenceName in dependencyList)) {
-                    dependencyList[referenceName] = [];
-                }
-                dependencyMapping[referenceName].push({
-                    value: generateCollection(
-                        restEndpointMap[name] ? '' : name,
-                        {endpointUrl: restEndpointMap[name]}
-                    ),
-                    dependencyList
-                });
-            });
-        }
-    });
-
-    const calls = _.unionWith(
-        ..._.values(dependencyMapping),
-        (arrVal, othVal) => {
-            return arrVal.value._url === othVal.value._url;
-        }
-    ).map(
-        ({value}) => fetchListCollection(value)
-    );
-
-    return {deferred: $.when(...calls), dependencyMapping};
-}
-
-function fetchListCollection(collection) {
-    return collection.fetch({
-        data: {
-            sort_dir: 'asc',
-            sort_key: 'name',
-            count: 100,
-            offset: 0,
-            search: ''
-        }
     });
 }
 

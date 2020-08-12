@@ -1,3 +1,4 @@
+from __future__ import print_function
 import os
 import json
 
@@ -25,7 +26,7 @@ try:
     build_number = os.environ['BUILDNUMBER']
     git_branch = os.environ['GITBRANCH']
 except KeyError:
-    print 'Warning: Could not get build number or git branch from bamboo env. Use default version.'
+    print('Warning: Could not get build number or git branch from bamboo env. Use default version.')
 else:
     if git_branch and git_branch == 'develop':
         VERSION = VERSION + '-' + git_branch + '.' + build_number

@@ -1,14 +1,38 @@
 Table of contents
 - [Release notes](#release-notes)
-  - [3.4.0](#340)
+  - [3.6.3](#363)
+    - [Bug Fixes:](#bug-fixes)
+  - [3.6.2](#362)
+    - [Bug Fixes:](#bug-fixes)
+  - [3.6.1](#361)
+    - [Bug Fixes:](#bug-fixes)
+  - [3.6.0](#360)
+    - [Feature:](#feature)
+  - [3.5.1](#351)
+    - [Bug Fixes:](#bug-fixes)
+  - [3.5.0](#350)
     - [Features:](#features)
-  - [3.3.0](#330)
+  - [3.4.6](#346)
+    - [Bug Fixes:](#bug-fixes)
+  - [3.4.5](#345)
+    - [Bug Fixes:](#bug-fixes)
+  - [3.4.4](#344)
+    - [Bug Fixes:](#bug-fixes)
+  - [3.4.3](#343)
+    - [Features:](#features)
+  - [3.4.2](#342)
     - [Features:](#features-1)
-  - [3.3.0](#330)
+  - [3.4.1](#341)
     - [Features:](#features-2)
+  - [3.4.0](#340)
+    - [Features:](#features-3)
+  - [3.3.0](#330)
+    - [Features:](#features-4)
+  - [3.3.0](#330)
+    - [Features:](#features-5)
     - [Bug Fixes:](#bug-fixes)
   - [3.2.0](#320)
-    - [Features:](#features-3)
+    - [Features:](#features-6)
 - [Prerequisites](#prerequisites)
 - [Install and configure Bower](#install-and-configure-bower)
 - [Command to build an example add-on](#command-to-build-an-example-add-on)
@@ -27,6 +51,66 @@ Table of contents
 - [Service name and Appname as column in table](#service-name-and-appname-as-column-in-table)
 
 ### Release notes
+#### 3.6.3
+##### Bug Fixes:
+* Upgraded jinja2 version from 2.9 to 2.10.1 due to whitesource vulnerabiity (ADDON-27875)
+
+### Release notes
+#### 3.6.2
+##### Bug Fixes:
+* Fixed basedir for globalConfig.json in splunk_aoblib (ADDON-27495)
+
+### Release notes
+#### 3.6.1
+##### Bug Fixes:
+* Fixed import httplib2_helper related issues. (ADDON-27349)
+
+### Release notes
+#### 3.6.0
+##### Feature:
+* Restructured the Python2 and Python3 3rd party libraries into new structure along with alert actions.
+
+### Release notes
+#### 3.5.1
+##### Bug Fixes:
+* Fixed the vulnerability of httplib2 CVE-2020-11078 found while whitesourcing.
+
+#### 3.5.0  
+##### Features:
+* Reverted changes made in version 3.4.4 and 3.4.5  regarding the issue where the configuration page was not loading on splunk search head in cloud (ADDON-22233)
+* Changed the default landing page for addons to the configuration page.
+* Removed the dependency between the input page and the configuration page.
+* Adding support for state parameter in OAuth headers
+#### 3.4.6
+##### Bug Fixes:
+* Fixed issue of able to delete the configuration account even if it is linked with an input of an add-on (ADDON-25360)
+
+#### 3.4.5
+##### Bug Fixes:
+* Fixed CSRF vulnerability with OAuth by changing GET request to a POST request. (ADDON-25548 and ADDON-25549)
+
+#### 3.4.4
+##### Bug Fixes:
+* Fixed configuration page not loaded when the server role is search_head, search_peer or cluster_search_head (ADDON-22233)
+
+#### 3.4.3
+##### Features:
+* Upgraded solnlib from 2.0.0 to latest after 2.0.0
+
+#### 3.4.2
+##### Features:
+* Python 3 migration of UCC framework
+* Upgraded solnlib from 1.0.19 to 2.0.0
+* Upgraded splunk-sdk from 1.6.0 to 1.6.6
+* Added future-0.17.1 Python library
+* Added six-1.12.0 Python library
+* Added configparser-3.8.1 Python library
+* UI Automation framework has been added so that the UCC based addon can clone the framework from repo and extends based on the addon requirements.
+
+#### 3.4.1
+##### Features:
+* Upgraded solnlib from 1.0.18 to 1.0.19
+
 #### 3.4.0
 ##### Features:
 * Added help link component

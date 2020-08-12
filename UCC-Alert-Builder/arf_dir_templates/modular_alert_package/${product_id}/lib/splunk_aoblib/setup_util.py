@@ -1,3 +1,6 @@
+from builtins import str
+from builtins import range
+from builtins import object
 import json
 import os
 
@@ -78,7 +81,7 @@ ALL_SETTING_TYPES = ['text', 'password', 'checkbox', 'dropdownlist', 'multi_drop
 
 def get_schema_path():
     dirname = os.path.dirname
-    basedir = dirname(dirname(dirname((dirname(__file__)))))
+    basedir = dirname(dirname((dirname(__file__))))
     return os.path.join(basedir, 'appserver', 'static', 'js', 'build', 'globalConfig.json')
 
 
@@ -91,6 +94,7 @@ class Setup_Util(object):
             self.__uri)
         self.__cached_global_settings = {}
         self.__global_config = None
+
 
     def init_global_config(self):
         if self.__global_config is not None:
@@ -132,7 +136,7 @@ class Setup_Util(object):
             # format the settings, the setting from env is from global_setting
             # meta
             self.__cached_global_settings = {}
-            for s_k, s_v in global_settings.iteritems():
+            for s_k, s_v in global_settings.items():
                 if s_k == PROXY_SETTINGS:
                     proxy_enabled = s_v.get(PROXY_ENABLE_KEY)
                     proxy_rdns = s_v.get(PROXY_RDNS_KEY)

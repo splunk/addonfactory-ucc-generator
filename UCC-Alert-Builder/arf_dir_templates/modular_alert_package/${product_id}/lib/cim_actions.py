@@ -1,3 +1,9 @@
+from builtins import str
+from builtins import next
+from builtins import range
+from six import string_types as basestring
+import six
+from builtins import object
 import collections
 import csv
 import json
@@ -145,7 +151,7 @@ class ModularAction(object):
         if self.info_file:
             try:
                 with open(self.info_file, 'rU') as fh:
-                    self.info = csv.DictReader(fh).next()
+                    self.info = next(csv.DictReader(fh))
             except Exception as e:
                 self.message('Could not retrieve info.csv', level=logging.WARN)
 
@@ -450,7 +456,7 @@ class ModularAction(object):
                             get_string(source, ''))
             ## process event chunks
             for chunk in (self.events[x:x+ModularAction.DEFAULT_CHUNK]
-                          for x in xrange(0, len(self.events), ModularAction.DEFAULT_CHUNK)):
+                          for x in range(0, len(self.events), ModularAction.DEFAULT_CHUNK)):
                 ## initialize output string
                 default_breaker = '\n' + ModularAction.DEFAULT_BREAKER
                 fout            = header_line + default_breaker + (default_breaker).join(chunk)

@@ -1,6 +1,7 @@
 
 from __future__ import absolute_import
 
+from builtins import object
 import os
 import os.path as op
 from .rest_conf import RestmapConf, WebConf
@@ -39,7 +40,7 @@ class _RestBuilderOutput(object):
         self._content[full_name].append(content)
 
     def save(self):
-        for full_name, contents in self._content.iteritems():
+        for full_name, contents in self._content.items():
             full_content = '\n\n'.join(contents)
             with open(full_name, 'w') as f:
                 f.writelines(full_content)

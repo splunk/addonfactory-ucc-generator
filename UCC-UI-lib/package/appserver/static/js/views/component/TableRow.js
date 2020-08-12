@@ -127,19 +127,17 @@ define([
         },
 
         delete: function () {
-            let inUse = false;
-            if (this.model.entity.entry.content.get('refCount')) {
-                inUse = this.model.entity.entry.content.get('refCount') > 0 ?
-                    true : false;
+            let isInput = false;
+            if (this.component.title.toLowerCase()==="inputs") {
+                isInput = true;     
             }
-
             const deleteDialog = new DeleteDialog({
                 el: $(".dialog-placeholder"),
                 collection: this.model.collection,
                 model: this.model.entity,
                 stateModel: this.stateModel,
                 dispatcher: this.dispatcher,
-                inUse: inUse,
+                isInput: isInput,
                 deleteTag: this.deleteTag
             });
             deleteDialog.render().modal();

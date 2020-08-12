@@ -1,5 +1,7 @@
+from future import standard_library
+standard_library.install_aliases()
 from alert_utils.alert_utils_common.metric_collector.event_writer import *
-import Queue
+import queue
 
 class MemoryEventWriter(MetricEventWriter):
     '''
@@ -10,7 +12,7 @@ class MemoryEventWriter(MetricEventWriter):
     def __init__(self, app, config):
         super(MemoryEventWriter, self).__init__(app, config)
         max_queue_size = config.get('max_queue_size', 0)
-        self.q = Queue.Queue(maxsize=max_queue_size)
+        self.q = queue.Queue(maxsize=max_queue_size)
 
     def _flush_msg(self, msg):
         self.q.put(msg)

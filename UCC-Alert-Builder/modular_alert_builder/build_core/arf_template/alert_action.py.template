@@ -48,12 +48,12 @@ class AlertActionWorker${mod_alert.short_name}(ModularAlertBase):
                 return 3
             status = ${helper_name}.process_event(self, *args, **kwargs)
         except (AttributeError, TypeError) as ae:
-            self.log_error("Error: {}. Please double check spelling and also verify that a compatible version of Splunk_SA_CIM is installed.".format(ae.message))
+            self.log_error("Error: {}. Please double check spelling and also verify that a compatible version of Splunk_SA_CIM is installed.".format(str(ae)))#ae.message replaced with str(ae)
             return 4
         except Exception as e:
             msg = "Unexpected error: {}."
-            if e.message:
-                self.log_error(msg.format(e.message))
+            if str(e):
+                self.log_error(msg.format(str(e)))#e.message replaced with str(ae)
             else:
                 import traceback
                 self.log_error(msg.format(traceback.format_exc()))
