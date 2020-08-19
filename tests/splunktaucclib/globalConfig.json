@@ -1,0 +1,695 @@
+{
+    "meta": {
+        "name": "Splunk_TA_UCCExample",
+        "displayName": "AOB Test",
+        "version": "1.0.0",
+        "apiVersion": "3.0.0",
+        "restRoot": "splunk_ta_uccexample"
+    },
+    "pages": {
+        "configuration":  {
+            "title": "Configurations",
+            "description": "Configure your account, proxy and logging level.",
+            "tabs": [
+                {
+                    "name": "account",
+                    "title": "Account",
+                    "table": {
+                        "header": [
+                            {
+                                "field": "name",
+                                "label": "Name"
+                            },
+                            {
+                                "field": "endpoint",
+                                "label": "Endpoint"
+                            },
+                            {
+                                "field": "api_uuid",
+                                "label": "API UUID"
+                            }
+                        ],
+                        "actions": [
+                            "edit",
+                            "delete",
+                            "clone"
+                        ]
+                    },
+                    "entity": [
+                        {
+                            "field": "name",
+                            "label": "Name",
+                            "type": "text",
+                            "required": true,
+                            "help": "Enter a unique name for each Crowdstrike falcon host account.",
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 50,
+                                    "errorMsg": "Length of Name is restricted from 1 to 50."
+                                },
+                                {
+                                    "type": "regex",
+                                    "pattern": "^\\w+$",
+                                    "errorMsg": "Characters of Name should match regex ^\\w+$ ."
+                                }
+                            ]
+                        },
+                        {
+                            "field": "endpoint",
+                            "label": "Endpoint",
+                            "type": "text",
+                            "required": true,
+                            "defaultValue": "https://firehose.crowdstrike.com/sensors/entities/datafeed/v1",
+                            "options": {
+                                "enabled": false,
+                                "placeholder": "https://firehose.crowdstrike.com/sensors/entities/datafeed/v1"
+                            }
+                        },
+                        {
+                            "field": "api_uuid",
+                            "label": "API UUID",
+                            "type": "text",
+                            "required": false,
+                            "defaultValue": "123456789"
+                        },
+                        {
+                            "field": "api_uuid2",
+                            "label": "API UUID2",
+                            "type": "text",
+                            "required": false,
+                            "defaultValue": "123456789"
+                        },
+                        {
+                            "field": "api_key",
+                            "label": "API Key",
+                            "type": "text",
+                            "required": true,
+                            "encrypted": true
+                        },
+                        {
+                            "field": "test_optional_password",
+                            "label": "test_optional_password",
+                            "type": "text",
+                            "required": false,
+                            "encrypted": true
+                        },
+                        {
+                            "field": "f1",
+                            "label": "f1",
+                            "type": "text",
+                            "required": false,
+                            "encrypted": true
+                        },
+                        {
+                            "field": "f2",
+                            "label": "f2",
+                            "type": "text",
+                            "required": false,
+                            "encrypted": true
+                        },
+                        {
+                            "field": "f3",
+                            "label": "f3",
+                            "type": "text",
+                            "required": false,
+                            "encrypted": true
+                        },
+                        {
+                            "field": "f4",
+                            "label": "f4",
+                            "type": "text",
+                            "required": false
+                        },
+                        {
+                            "field": "f5",
+                            "label": "f5",
+                            "type": "text",
+                            "required": false
+                        }
+                    ]
+                },
+ 		        {
+                    "name": "test_password",
+                    "title": "Password",
+                    "table": {
+                        "header": [
+                            {
+                                "field": "name",
+                                "label": "Name"
+                            },
+                            {
+                                "field": "user_name",
+                                "label": "User Name"
+                            },
+                            {
+                                "field": "required_password",
+                                "label": "Required Password"
+                            },
+                            {
+                                "field": "required_password2",
+                                "label": "Required Password2"
+                            },
+                            {
+                                "field": "optional_password",
+                                "label": "Optional Password"
+                            },
+                            {
+                                "field": "optional_password2",
+                                "label": "Optional Password2"
+                            }
+                        ],
+                         "moreInfo": [
+                           {
+                                "field": "name",
+                                "label": "Name"
+                            },
+                            {
+                                "field": "user_name",
+                                "label": "User Name"
+                            },
+                            {
+                                "field": "required_password",
+                                "label": "Required Password"
+                            },
+                            {
+                                "field": "required_password2",
+                                "label": "Required Password2"
+                            },
+                            {
+                                "field": "optional_password",
+                                "label": "Optional Password"
+                            },
+                            {
+                                "field": "optional_password2",
+                                "label": "Optional Password2"
+                            }
+                        ],
+                        "actions": [
+                            "edit",
+                            "delete",
+                            "clone"
+                        ]
+                    },
+                    "entity": [
+                        {
+                            "field": "name",
+                            "label": "Name",
+                            "type": "text",
+                            "required": true
+                        },
+                        {
+                            "field": "user_name",
+                            "label": "User Name",
+                            "type": "text",
+                            "required": true,
+                            "defaultValue": "Jing"
+                        },
+                        {
+                            "field": "required_password",
+                            "label": "Required Password",
+                            "type": "text",
+                            "required": true,
+                            "encrypted": true
+                        },
+                         {
+                            "field": "required_password2",
+                            "label": "Required Password2",
+                            "type": "text",
+                            "required": true,
+                            "encrypted": true
+                        },
+                        {
+                            "field": "optional_password",
+                            "label": "Optional Password",
+                            "type": "text",
+                            "required": false,
+                            "encrypted": true
+                        },
+                         {
+                            "field": "optional_password2",
+                            "label": "Optional Password2",
+                            "type": "text",
+                            "required": false,
+                            "encrypted": true
+                        }
+                    ]
+                },
+ 		    {
+                    "name": "test_password2",
+                    "title": "Password2",
+                    "table": {
+                        "header": [
+                            {
+                                "field": "name",
+                                "label": "Name"
+                            },
+                            {
+                                "field": "optional_password",
+                                "label": "Optional Password"
+                            }
+                        ],
+                         "moreInfo": [
+                           {
+                                "field": "name",
+                                "label": "Name"
+                            },
+                            {
+                                "field": "optional_password",
+                                "label": "Optional Password"
+                            }
+                        ],
+                        "actions": [
+                            "edit",
+                            "delete",
+                            "clone"
+                        ]
+                    },
+                    "entity": [
+                        {
+                            "field": "name",
+                            "label": "Name",
+                            "type": "text",
+                            "required": true
+                        },
+                        {
+                            "field": "optional_password",
+                            "label": "Optional Password",
+                            "type": "text",
+                            "required": false,
+                            "encrypted": true
+                        }
+                    ]
+                },
+                {
+                    "name": "logging",
+                    "title": "Logging",
+                    "entity": [
+                        {
+                            "field": "loglevel",
+                            "label": "Log Level",
+                            "type": "singleSelect",
+                            "options": {
+                                "disableSearch": true,
+                                "autoCompleteFields": [
+                                    {"label": "INFO", "value": "INFO"},
+                                    {"label": "DEBUG", "value": "DEBUG"},
+                                    {"label": "ERROR", "value": "ERROR"}
+                                ]
+                            },
+                            "defaultValue": "INFO"
+                        }
+                    ]
+                },
+                {
+                    "name": "proxy",
+                    "title": "Proxy",
+                    "entity": [
+                        {
+                            "field": "proxy_enabled",
+                            "label": "Enable",
+                            "type": "checkbox"
+                        },
+                        {
+                            "field": "proxy_type",
+                            "label": "Proxy Type",
+                            "type": "singleSelect",
+                            "options": {
+                                "disableSearch": true,
+                                "autoCompleteFields": [
+                                    {"label": "http", "value": "http"},
+                                    {"label": "socks4", "value": "socks4"},
+                                    {"label": "socks5", "value": "socks5"}
+                                ]
+                            },
+                            "defaultValue": "http"
+                        },
+                        {
+                            "field": "proxy_url",
+                            "label": "Host",
+                            "type": "text",
+                            "validators": [
+                                {
+                                    "type": "url"
+                                }
+                            ]
+                        },
+                        {
+                            "field": "proxy_port",
+                            "label": "Port",
+                            "type": "text",
+                            "validators": [
+                                {
+                                    "type": "number",
+                                    "range": [1, 65535]
+                                }
+                            ]
+                        },
+                        {"field": "proxy_username", "label": "Username", "type": "text"},
+                        {
+                            "field": "proxy_password",
+                            "label": "Password",
+                            "type": "text",
+                            "encrypted": true
+                        }
+                    ],
+                    "options": {
+                        "saveValidator": "function(formData) { if(!formData.proxy_enabled || formData.proxy_enabled === '0') {return true; } if(!formData.proxy_url) { return 'Input of Host can not be empty'; } if(!formData.proxy_port) { return 'Input of Port can not be empty'; } return true; }"
+                    }
+                },
+                {
+                    "name": "custom_abc",
+                    "title": "Customized tab",
+                    "entity": [
+                        {
+                            "field": "testString",
+                            "label": "Test String",
+                            "type": "text",
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "maxLength": 10,
+                                    "minLength": 5
+                                }
+                            ]
+                        },
+                        {
+                            "field": "testNumber",
+                            "label": "Test number",
+                            "type": "text",
+                            "validators": [
+                                {
+                                    "type": "number",
+                                    "range": [1, 10]
+                                }
+                            ]
+                        },
+                        {
+                            "field": "testRegex",
+                            "label": "Test regex",
+                            "type": "text",
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "pattern": "^\\w+$",
+                                    "errorMsg": "Characters of Name should match regex ^\\w+$ ."
+                                }
+                            ]
+                        },
+                        {
+                            "field": "testEmail",
+                            "label": "Test Email",
+                            "type": "text",
+                            "validators": [
+                                {
+                                    "type": "email"
+                                }
+                            ]
+                        },
+                        {
+                            "field": "testIpv4",
+                            "label": "Test ipv4",
+                            "type": "text",
+                            "validators": [
+                                {
+                                    "type": "ipv4"
+                                }
+                            ]
+                        },
+                        {
+                            "field": "testDate",
+                            "label": "Test date",
+                            "type": "text",
+                            "validators": [
+                                {
+                                    "type": "date"
+                                }
+                            ]
+                        },
+                        {
+                            "field": "testUrl",
+                            "label": "Test url",
+                            "type": "text",
+                            "validators": [
+                                {
+                                    "type": "url"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+
+        },
+        "inputs": {
+            "title": "Inputs",
+            "description": "This is description",
+            "table": {
+                "header": [
+                    {
+                        "field": "name",
+                        "label": "Name"
+                    },
+                    {
+                        "field": "account",
+                        "label": "Account"
+                    },
+                    {
+                        "field": "start_offset",
+                        "label": "Start Offset"
+                    },
+                    {
+                        "field": "interval",
+                        "label": "Interval"
+                    },
+                    {
+                        "field": "index",
+                        "label": "Index"
+                    },
+                    {
+                        "field": "disabled",
+                        "label": "Status",
+                        "mapping": {
+                            "false": "Enabled",
+                            "true": "Disabled"
+                        }
+                    }
+                ],
+                "moreInfo": [
+                    {
+                        "field": "name",
+                        "label": "Name"
+                    },
+                    {
+                        "field": "account",
+                        "label": "Account"
+                    },
+                    {
+                        "field": "start_offset",
+                        "label": "Start Offset"
+                    },
+                    {
+                        "field": "multipleSelectTest",
+                        "label": "Multiple Select Test"
+                    },
+                    {
+                        "field": "interval",
+                        "label": "Interval"
+                    },
+                    {
+                        "field": "index",
+                        "label": "Index"
+                    },
+                    {
+                        "field": "disabled",
+                        "label": "Status",
+                        "mapping": {
+                            "false": "Enabled",
+                            "true": "Disabled"
+                        }
+                    }
+                ],
+                "actions": [
+                    "edit",
+                    "enable",
+                    "delete",
+                    "clone"
+                ]
+            },
+            "services": [
+                {
+                    "name": "inputs_01",
+                    "title": "Falcon Host Input",
+                    "conf": "aws_cloudwatch",
+                    "entity": [
+                        {
+                            "field": "name",
+                            "label": "Name",
+                            "type": "text",
+                            "help": "Enter a unique name for each crowdstrike falcon host data input.",
+                            "required": true
+                        },
+                        {
+                            "field": "account",
+                            "label": "Account",
+                            "type": "singleSelect",
+                            "options": {
+                                "referenceName": "account"
+                            },
+                            "required": true
+                        },
+                        {
+                            "field": "singleSelectTest",
+                            "label": "Single Select Group Test",
+                            "type": "singleSelect",
+                            "options": {
+                                "createSearchChoice": true,
+                                "autoCompleteFields": [
+                                    {
+                                        "label": "Group1",
+                                        "children": [
+                                            {
+                                                "value": "one",
+                                                "label": "One"
+                                            },
+                                            {
+                                                "value": "two",
+                                                "label": "Two"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "label": "Group2",
+                                        "children": [
+                                            {
+                                                "value": "three",
+                                                "label": "Three"
+                                            },
+                                            {
+                                                "value": "four",
+                                                "label": "Four"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        },
+                          {
+                            "field": "required_password2",
+                            "label": "Required Password2",
+                            "type": "text",
+                            "required": true,
+                            "encrypted": true
+                        },
+                        {
+                            "field": "optional_password",
+                            "label": "Optional Password",
+                            "type": "text",
+                            "required": false,
+                            "encrypted": true
+                        },
+                        {
+                            "field": "multipleSelectTest",
+                            "label": "Multiple Select Test",
+                            "type": "multipleSelect",
+                            "options": {
+                                "delimiter": "|",
+                                "items": [
+                                    {
+                                        "value": "a",
+                                        "label": "A"
+                                    },
+                                    {
+                                        "value": "b",
+                                        "label": "B"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "field": "start_offset",
+                            "label": "Start Offset",
+                            "type": "text",
+                            "defaultValue": 0
+                        },
+                        {
+                            "field": "interval",
+                            "label": "Interval",
+                            "type": "text",
+                            "defaultValue": "60",
+                            "help": "Time interval of input in seconds.",
+                            "required": true
+                        },
+                        {
+                            "field": "index",
+                            "label": "Index",
+                            "type": "singleSelect",
+                            "defaultValue": "default",
+                            "options": {
+                                "createSearchChoice": true,
+                                "endpointUrl": "data/indexes",
+                                "blackList": "^_.*$",
+                                "whiteList": "^.*g$"
+                            },
+                            "required": true
+                        }
+                    ]
+                },
+                {
+                    "name": "inputs_02",
+                    "title": "Falcon Host Input test",
+                    "entity": [
+                        {
+                            "field": "name",
+                            "label": "Name",
+                            "type": "text",
+                            "help": "Enter a unique name for each crowdstrike falcon host data input."
+                        },
+                        {
+                            "field": "account",
+                            "label": "Account",
+                            "type": "singleSelect",
+                            "options": {
+                                "endpointUrl": "splunk_ta_uccexample_account"
+                            }
+                        },
+                        {
+                            "field": "start_offset",
+                            "label": "Start Offset",
+                            "type": "text",
+                            "defaultValue": "0"
+                        },
+                         {
+                            "field": "single_fields",
+                            "label": "Single Fields",
+                            "type": "singleSelect",
+                            "options": {
+                                "createSearchChoice": true,
+                                "endpointUrl": "data/fields"
+                            },
+                            "required": true
+                        },
+                        {
+                            "field": "multipleSelectTest",
+                            "label": "Multiple Select Test",
+                            "type": "multipleSelect",
+                            "options": {
+                                "createSearchChoice": true,
+                                "endpointUrl": "data/fields"
+                            },
+                            "required": true
+                        },
+                        {
+                            "field": "interval",
+                            "label": "Interval",
+                            "type": "text",
+                            "defaultValue": "60",
+                            "help": "Time interval of input in seconds."
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

@@ -6,37 +6,7 @@
 package/.idea
 .idea/
 
-### Files for Add-on local data
-package/local/
-package/metadata/local.meta
 
-### 3rd libs
-package/bin/solnlib/
-package/bin/splunklib/
-package/bin/sortedcontainers/
-package/bin/requests/
 
-### Files for Temporary Output
-cached_build_info.properties
-bower_components
-node_modules
-npm-debug.log
-pypi_modules
-stage
-*.spl
-
-### libs and output under UCC-example-addon
-UCC-example-addon/output
-UCC-example-addon/solnlib
-UCC-example-addon/splunklib
-UCC-example-addon/splunktaucclib
-UCC-example-addon/uccrestbuilder
-UCC-example-addon/jinja2
-UCC-example-addon/markupsafe
-
-### libs and output under UCC-UI-lib
-UCC-UI-lib/build
-UCC-UI-lib/solnlib
-UCC-UI-lib/splunklib
-UCC-UI-lib/splunktaucclib
-UCC-UI-lib/uccrestbuilder
+splunk_add_on_sdk2_python.egg-info
+output
