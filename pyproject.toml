@@ -12,13 +12,13 @@ jinja2 = "^2"
 mako= "^1"
 munch= "^2"
 lxml = "^4.5"
+future = "^0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6"
 
-[build-system]
+[tool.poetry.scripts]
+ucc-gen = "splunk_add_on_ucc_framework:main"
 requires = ["setuptools >= 40.6.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
-[tool.poetry.scripts]
-ucc-gen = "splunk_add_on_ucc_framework:main"
