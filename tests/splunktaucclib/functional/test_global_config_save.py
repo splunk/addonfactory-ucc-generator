@@ -1,7 +1,7 @@
 import unittest
 import json
 import os
-from splunk_add_on_sdk2_python.splunktaucclib.global_config import (
+from splunk_add_on_ucc_framework.splunktaucclib.global_config import (
     GlobalConfig,
     GlobalConfigSchema,
 )

@@ -7,7 +7,7 @@ from shutil import copy
 from . import alert_actions_exceptions as aae
 from . import arf_consts as ac
 
-from splunk_add_on_sdk2_python.alert_utils.alert_utils_common.conf_parser import TABConfigParser
+from splunk_add_on_ucc_framework.alert_utils.alert_utils_common.conf_parser import TABConfigParser
 
 merge_black_list = ['default.meta', 'README.txt']
 merge_mode_config = {

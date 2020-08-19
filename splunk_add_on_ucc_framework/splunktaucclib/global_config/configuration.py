@@ -73,7 +73,7 @@ class Configuration(object):
         :return:
 
         Usage::
-        >>> from splunk_add_on_sdk2_python.splunktaucclib.global_config import GlobalConfig
+        >>> from splunk_add_on_ucc_framework.splunktaucclib.global_config import GlobalConfig
         >>> global_config = GlobalConfig()
         >>> payload = {
         >>>    'settings': [
@@ -246,7 +246,7 @@ class Inputs(Configuration):
         :return:
 
         Usage::
-        >>> from splunk_add_on_sdk2_python.splunktaucclib.global_config import GlobalConfig
+        >>> from splunk_add_on_ucc_framework.splunktaucclib.global_config import GlobalConfig
         >>> global_config = GlobalConfig()
         >>> inputs = global_config.inputs.load()
         """
@@ -316,7 +316,7 @@ class Configs(Configuration):
         :return:
 
          Usage::
-        >>> from splunk_add_on_sdk2_python.splunktaucclib.global_config import GlobalConfig
+        >>> from splunk_add_on_ucc_framework.splunktaucclib.global_config import GlobalConfig
         >>> global_config = GlobalConfig()
         >>> configs = global_config.configs.load()
         """
@@ -344,7 +344,7 @@ class Settings(Configuration):
         :return:
 
          Usage::
-        >>> from splunk_add_on_sdk2_python.splunktaucclib.global_config import GlobalConfig
+        >>> from splunk_add_on_ucc_framework.splunktaucclib.global_config import GlobalConfig
         >>> global_config = GlobalConfig()
         >>> settings = global_config.settings.load()
         """
