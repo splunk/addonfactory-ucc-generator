@@ -1,2 +1,0 @@
-<%page args="mod_alert, home_page"/>
-<%include file="/${home_page}" args="mod_alert=mod_alert"/>
