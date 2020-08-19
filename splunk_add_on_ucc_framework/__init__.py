@@ -231,6 +231,10 @@ def main():
 
     copy_package_template(args, ta_name)
     copy_package_source(args, ta_name)
+    install_libs(args, ta_name)
+    install_libs_py2(args, ta_name)
+    copy_splunktaucclib(args, ta_name)
+
     shutil.copyfile(args.config,(os.path.join(outputdir, ta_name, 'appserver/static/js/build/globalConfig.json')))
     replace_token(args, ta_name)
 
@@ -238,6 +242,3 @@ def main():
     modify_and_replace_token_for_oauth_templates(args, ta_name, ta_tabs, "1.0.0")
     add_modular_input(args, ta_name,schema_content,import_declare_name,j2_env )
     make_modular_alerts(args, ta_name,ta_namespace,schema_content)
-    # install_libs(args, ta_name)
-    # install_libs_py2(args, ta_name)
-    # copy_splunktaucclib(args, ta_name)
