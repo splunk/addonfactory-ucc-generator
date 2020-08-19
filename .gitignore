@@ -8,5 +8,5 @@ package/.idea
 
 
 
-splunk_add_on_ucc_framework.egg-info
+*.egg-info
 output

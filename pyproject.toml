@@ -10,7 +10,7 @@ solnlib = '>=2.0.8a3'
 splunk-sdk = "^1.6"
 jinja2 = "^2"
 mako= "^1"
-munch= "^1"
+munch= "^2"
 lxml = "^4.5"
 
 [tool.poetry.dev-dependencies]
