@@ -1,0 +1,9 @@
+<%inherit file="basecontrol.html"/>
+<%namespace file="helper.html" import="expand_ctrl_props"/>
+<%block name="control" args="mod_alert, param">
+		<%
+		format_param = param
+		format_param["ctrl_props"] = { prop_name.replace("_", "-"):prop_value for prop_name, prop_value in param.ctrl_props.items() }
+		%>
+		<splunk-search-dropdown name="action.${mod_alert.short_name}.param.${param.name}" id="${mod_alert.short_name}_${param.name}" ${expand_ctrl_props(format_param)} />
+</%block>
