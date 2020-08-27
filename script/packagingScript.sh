@@ -1,7 +1,5 @@
 #!/bin/sh
 
-rm -rf packagingTool
-
 echo "Initializing Packaging tool."
 
 # mkdir -p packagingTool
@@ -53,7 +51,7 @@ sudo apt install python-pip
 sudo apt-get install -y libxml2-dev libxslt-dev lib32z1-dev python-lxml 
 pip3 install poetry 
 
-# cd splunk-add-on-sdk-python
+cd splunk-add-on-sdk-python
 pip3 install -r splunk_add_on_ucc_framework/requirements.txt
 # pip3 install solnlib
 pip3 install future
