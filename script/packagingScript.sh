@@ -24,8 +24,8 @@ then
     sudo wget https://www.python.org/ftp/python/3.7.9/Python-3.7.9.tgz
     sudo tar xzf Python-3.7.9.tgz 
     cd Python-3.7.9 
-    sudo ./configure --enable-optimizations 
-    sudo make altinstall 
+    sudo ./configure --enable-optimizations > /dev/null
+    sudo make altinstall > /dev/null
     sudo rm -f /usr/src/Python-3.7.9.tgz
     # sudo ln -s /usr/bin/python3.7 /usr/bin/python3
     # sudo ln -s /usr/bin/pip3.7 /usr/bin/pip3
@@ -40,7 +40,7 @@ then
 fi
 
 echo "Installing Virtual Environment"
-pip3 -q install virtualenv
+pip3 -q install "virtualenv<17.0.0,>=16.7.9"
 python3 -m virtualenv .venv -p python3
 . .venv/bin/activate
 echo "Virtual Environment Installed and Activated"
@@ -59,6 +59,9 @@ pip3 -q install future
 # pip3 install munch
 # pip3 install lxml
 # pip3 install jinja2
+
+echo "Checking python version"
+python --version
 
 echo "Building package"
 
