@@ -10,7 +10,7 @@ echo "Initializing Packaging tool."
 # git clone "$repository"
 
 # cd splunk-add-on-sdk-python
-git checkout test/python-module-branch-with-ucc-fix
+# git checkout test/python-module-branch-with-ucc-fix
 # cd ..
 
 echo " Checking for python 3"
@@ -24,16 +24,16 @@ then
     sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev curl libbz2-dev
     cd /usr/src
     sudo wget https://www.python.org/ftp/python/3.7.9/Python-3.7.9.tgz
-    sudo tar xzf Python-3.7.9.tgz >> logfile
-    cd Python-3.7.9 >> logfile
-    sudo ./configure --enable-optimizations >> logfile
-    sudo make altinstall >> logfile
+    sudo tar xzf Python-3.7.9.tgz 
+    cd Python-3.7.9 
+    sudo ./configure --enable-optimizations 
+    sudo make altinstall 
     sudo rm -f /usr/src/Python-3.7.9.tgz
     # sudo ln -s /usr/bin/python3.7 /usr/bin/python3
     # sudo ln -s /usr/bin/pip3.7 /usr/bin/pip3
     alias python3='python3.7'
     alias pip3='pip3.7'
-    source ~/.bashrc
+    . ~/.bashrc
     if python3 -v &> /dev/null
     then
         echo "Python Installed"
@@ -41,15 +41,17 @@ then
     cd $pwd_var
 fi
 
+echo "Installing Virtual Environment"
 pip3 install virtualenv
 python3 -m virtualenv .venv -p python3
 . .venv/bin/activate
+echo "Virtual Environment Installed and Activated"
 
 echo "Installing Dependencies"
 # sudo yum -y install libxslt-devel libxml2-devel
-sudo apt install python-pip >> logfile
-sudo apt-get install -y libxml2-dev libxslt-dev lib32z1-dev python-lxml >> logfile
-pip3 install poetry >> logfile
+sudo apt install python-pip 
+sudo apt-get install -y libxml2-dev libxslt-dev lib32z1-dev python-lxml 
+pip3 install poetry 
 
 # cd splunk-add-on-sdk-python
 pip3 install -r splunk_add_on_ucc_framework/requirements.txt
