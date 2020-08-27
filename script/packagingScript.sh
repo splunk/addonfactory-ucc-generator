@@ -40,7 +40,7 @@ then
 fi
 
 echo "Installing Virtual Environment"
-pip3 install virtualenv
+pip3 -q install virtualenv
 python3 -m virtualenv .venv -p python3
 . .venv/bin/activate
 echo "Virtual Environment Installed and Activated"
@@ -49,12 +49,12 @@ echo "Installing Dependencies"
 # sudo yum -y install libxslt-devel libxml2-devel
 sudo apt-get -qq install python-pip 
 sudo apt-get -qq install -y libxml2-dev libxslt-dev lib32z1-dev python-lxml 
-pip3 install poetry 
+pip3 -q install poetry 
 
 cd splunk-add-on-sdk-python
-pip3 install -r splunk_add_on_ucc_framework/requirements.txt
+pip3 -q install -r splunk_add_on_ucc_framework/requirements.txt
 # pip3 install solnlib
-pip3 install future
+pip3 -q install future
 # pip3 install mako
 # pip3 install munch
 # pip3 install lxml
