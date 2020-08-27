@@ -77,21 +77,21 @@ echo "Check output folder for the addon package."
 
 echo "Extracting Appserver Files"
 mkdir -p package/appserver/static/css
-cp -r packagingTool/splunk-add-on-sdk-python/output/*/appserver/static/css/. package/appserver/static/css
+cp -r splunk-add-on-sdk-python/output/*/appserver/static/css/. package/appserver/static/css
 mkdir -p package/appserver/static/styles
-cp -r packagingTool/splunk-add-on-sdk-python/output/*/appserver/static/styles/. package/appserver/static/styles
+cp -r splunk-add-on-sdk-python/output/*/appserver/static/styles/. package/appserver/static/styles
 mkdir -p package/appserver/static/js/build
-cp -r packagingTool/splunk-add-on-sdk-python/output/*/appserver/static/js/build/*.js package/appserver/static/js/build
+cp -r splunk-add-on-sdk-python/output/*/appserver/static/js/build/*.js package/appserver/static/js/build
 mkdir -p package/appserver/templates
-cp -r packagingTool/splunk-add-on-sdk-python/output/*/appserver/templates/. package/appserver/templates
+cp -r splunk-add-on-sdk-python/output/*/appserver/templates/. package/appserver/templates
 
 echo "Extracting User Interface"
 mkdir -p package/default/data
-cp -r packagingTool/splunk-add-on-sdk-python/output/*/default/data/. package/default/data
+cp -r splunk-add-on-sdk-python/output/*/default/data/. package/default/data
 
 echo "Extracting Lib"
 mkdir -p package/lib
-cp -r packagingTool/splunk-add-on-sdk-python/output/*/lib/. package/lib
+cp -r splunk-add-on-sdk-python/output/*/lib/. package/lib
 
 cat package/package_using_script
 
