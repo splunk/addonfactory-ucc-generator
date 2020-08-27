@@ -47,8 +47,8 @@ echo "Virtual Environment Installed and Activated"
 
 echo "Installing Dependencies"
 # sudo yum -y install libxslt-devel libxml2-devel
-sudo apt-get -qq install python-pip 
-sudo apt-get -qq install -y libxml2-dev libxslt-dev lib32z1-dev python-lxml 
+sudo apt-get -qq install python-pip > /dev/null
+sudo apt-get -qq install -y libxml2-dev libxslt-dev lib32z1-dev python-lxml > /dev/null
 pip3 -q install poetry 
 
 cd splunk-add-on-sdk-python
