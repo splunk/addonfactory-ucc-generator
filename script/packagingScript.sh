@@ -89,3 +89,5 @@ echo "Extracting Lib"
 mkdir -p package/lib
 cp -r packagingTool/splunk-add-on-sdk-python/output/*/lib/. package/lib
 
+cat package/package_using_script
+
