@@ -18,8 +18,8 @@ then
     echo "Installing python 3"
     pwd_var=`pwd`
     # sudo yum -y install gcc openssl-devel bzip2-devel libffi-devel
-    sudo apt-get -qq update
-    sudo apt-get -qq install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev curl libbz2-dev
+    sudo apt-get -qq update > /dev/null
+    sudo apt-get -qq install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev curl libbz2-dev > /dev/null
     cd /usr/src
     sudo wget https://www.python.org/ftp/python/3.7.9/Python-3.7.9.tgz
     sudo tar xzf Python-3.7.9.tgz 
@@ -40,8 +40,8 @@ then
 fi
 
 echo "Installing Virtual Environment"
-pip3 -q install "virtualenv<17.0.0,>=16.7.9"
-python3 -m virtualenv .venv -p python3
+pip3 install "virtualenv<17.0.0,>=16.7.9" --upgrade
+python3 -m virtualenv .venv -p python3 > /dev/null
 . .venv/bin/activate
 echo "Virtual Environment Installed and Activated"
 
@@ -49,6 +49,7 @@ echo "Installing Dependencies"
 # sudo yum -y install libxslt-devel libxml2-devel
 sudo apt-get -qq install python-pip > /dev/null
 sudo apt-get -qq install -y libxml2-dev libxslt-dev lib32z1-dev python-lxml > /dev/null
+pip2 install "virtualenv<17.0.0,>=16.7.9" --upgrade
 pip3 -q install poetry 
 
 cd splunk-add-on-sdk-python
