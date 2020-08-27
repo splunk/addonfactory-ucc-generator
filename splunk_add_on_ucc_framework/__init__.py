@@ -79,7 +79,7 @@ def install_libs(args, ta_name):
     os.makedirs(lib_dest)
     install_cmd = (
         "pip3 install -r"
-        + os.path.join(sourcedir, "../../../package/requirements.txt")
+        + os.path.join(sourcedir, "../../requirements.txt")
         + " --no-compile --no-binary :all: --target "
         + lib_dest
     )
