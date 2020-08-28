@@ -93,5 +93,8 @@ echo "Extracting Lib"
 mkdir -p package/lib
 cp -r splunk-add-on-sdk-python/output/*/lib/. package/lib
 
+##testing code
+rm -r package/default/props.conf
+
 touch package/package_using_script
 
