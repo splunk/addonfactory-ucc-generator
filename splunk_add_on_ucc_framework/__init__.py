@@ -17,7 +17,9 @@ from jinja2 import Environment, FileSystemLoader
 outputdir = os.path.join(os.getcwd(), "output")
 sourcedir = os.path.dirname(os.path.realpath(__file__))
 
-j2_env = Environment(loader=FileSystemLoader(os.path.join(sourcedir, "templates")))
+j2_env = Environment(
+    loader=FileSystemLoader(os.path.join(sourcedir, "templates"))
+)
 
 
 def recursive_overwrite(src, dest, ignore=None):
@@ -31,9 +33,13 @@ def recursive_overwrite(src, dest, ignore=None):
             ignored = set()
         for f in files:
             if f not in ignored:
-                recursive_overwrite(os.path.join(src, f), os.path.join(dest, f), ignore)
+                recursive_overwrite(
+                    os.path.join(src, f), os.path.join(dest, f), ignore
+                )
     else:
-        shutil.copyfile(src, dest)
+        if os.path.exists(dest):
+            os.remove(dest)
+        shutil.copy(src, dest)
 
 
 def clean_before_build(args):
@@ -48,6 +54,10 @@ def copy_package_source(args, ta_name):
     logging.warning("Copy package directory " + args.source)
     recursive_overwrite(args.source, os.path.join(outputdir, ta_name))
 
+def export_package(args, ta_name):
+    logging.warning("Exporting package")
+    recursive_overwrite(os.path.join(outputdir, ta_name), args.source)
+
 
 def copy_package_template(args, ta_name):
     logging.warning("Copy template directory ")
@@ -61,7 +71,9 @@ def replace_token(args, ta_name):
     logging.warning("Replace tokens in views")
     views = ["inputs.xml", "configuration.xml", "redirect.xml"]
     for view in views:
-        template_dir = os.path.join(outputdir, ta_name, "default/data/ui/views")
+        template_dir = os.path.join(
+            outputdir, ta_name, "default/data/ui/views"
+        )
         with open(os.path.join(template_dir, view)) as f:
             s = f.read()
 
@@ -94,10 +106,14 @@ def install_libs_py2(args, ta_name):
     lib_dest = os.path.join(outputdir, ta_name, "lib/ucc_py2")
     os.makedirs(lib_dest)
     os.system(
-        "pip2 install future" + " --no-compile --no-binary :all: --target " + lib_dest
+        "pip2 install future"
+        + " --no-compile --no-binary :all: --target "
+        + lib_dest
     )
     os.system(
-        "pip2 install six" + " --no-compile --no-binary :all: --target " + lib_dest
+        "pip2 install six"
+        + " --no-compile --no-binary :all: --target "
+        + lib_dest
     )
 
     os.system("rm -rf " + lib_dest + "/*.egg-info")
@@ -121,43 +137,68 @@ def generate_rest(args, ta_name, scheme, import_declare_name):
         post_process=GlobalConfigPostProcessor(),
         import_declare_name=import_declare_name,
     )
+
+
 def is_oauth_configured(ta_tabs):
     # check if oauth is configured in globalConfig.json
     for tab in ta_tabs:
-        if tab['name'] == 'account':
-            for elements in tab['entity']:
-                if elements['type'] == 'oauth':
+        if tab["name"] == "account":
+            for elements in tab["entity"]:
+                if elements["type"] == "oauth":
                     return True
             break
         return False
 
-def replace_oauth_html_template_token(args, ta_name,ta_version):
-    html_template_path = os.path.join(outputdir, ta_name, 'appserver/templates')
-    with open(os.path.join(html_template_path, 'redirect.html')) as f:
+
+def replace_oauth_html_template_token(args, ta_name, ta_version):
+    html_template_path = os.path.join(
+        outputdir, ta_name, "appserver/templates"
+    )
+    with open(os.path.join(html_template_path, "redirect.html")) as f:
         s = f.read()
 
     # Safely write the changed content, if found in the file
-    with open(html_template_path + "/" + 'redirect.html', 'w') as f:
+    with open(html_template_path + "/" + "redirect.html", "w") as f:
         # replace addon name in html template
         s = s.replace("${ta.name}", ta_name.lower())
         # replace addon version in html template
         s = s.replace("${ta.version}", ta_version)
         f.write(s)
 
-def modify_and_replace_token_for_oauth_templates(args, ta_name,ta_tabs, ta_version):
-    redirect_xml_src = os.path.join(outputdir, ta_name, 'default/data/ui/views/redirect.xml')
+
+def modify_and_replace_token_for_oauth_templates(
+    args, ta_name, ta_tabs, ta_version
+):
+    redirect_xml_src = os.path.join(
+        outputdir, ta_name, "default/data/ui/views/redirect.xml"
+    )
     # if oauth is configured replace token in html template and rename the templates with respect to addon name
     if is_oauth_configured(ta_tabs):
-        replace_oauth_html_template_token(args, ta_name,ta_version)
+        replace_oauth_html_template_token(args, ta_name, ta_version)
 
-        redirect_js_src = os.path.join(outputdir, ta_name, 'appserver/static/js/build/redirect_page.js')
-        redirect_js_dest = os.path.join(outputdir, ta_name,
-                                        'appserver/static/js/build/') + ta_name.lower() + '_redirect_page.' + ta_version + '.js'
-        redirect_html_src = os.path.join(outputdir, ta_name, 'appserver/templates/redirect.html')
-        redirect_html_dest = os.path.join(outputdir, ta_name,
-                                          'appserver/templates/') + ta_name.lower() + '_redirect.html'
-        redirect_xml_dest = os.path.join(outputdir, ta_name,
-                                         'default/data/ui/views/') + ta_name.lower() + '_redirect.xml'
+        redirect_js_src = os.path.join(
+            outputdir, ta_name, "appserver/static/js/build/redirect_page.js"
+        )
+        redirect_js_dest = (
+            os.path.join(outputdir, ta_name, "appserver/static/js/build/")
+            + ta_name.lower()
+            + "_redirect_page."
+            + ta_version
+            + ".js"
+        )
+        redirect_html_src = os.path.join(
+            outputdir, ta_name, "appserver/templates/redirect.html"
+        )
+        redirect_html_dest = (
+            os.path.join(outputdir, ta_name, "appserver/templates/")
+            + ta_name.lower()
+            + "_redirect.html"
+        )
+        redirect_xml_dest = (
+            os.path.join(outputdir, ta_name, "default/data/ui/views/")
+            + ta_name.lower()
+            + "_redirect.xml"
+        )
 
         os.rename(redirect_js_src, redirect_js_dest)
         os.rename(redirect_html_src, redirect_html_dest)
@@ -166,8 +207,11 @@ def modify_and_replace_token_for_oauth_templates(args, ta_name,ta_tabs, ta_versi
     else:
         os.remove(redirect_xml_src)
 
-def add_modular_input(args, ta_name,schema_content,import_declare_name, j2_env):
-    
+
+def add_modular_input(
+    args, ta_name, schema_content, import_declare_name, j2_env
+):
+
     services = schema_content.get("pages").get("inputs").get("services")
     for service in services:
         input_name = service.get("name")
@@ -177,27 +221,32 @@ def add_modular_input(args, ta_name,schema_content,import_declare_name, j2_env):
         field_white_list = ["name", "index", "sourcetype"]
         # filter fields in white list
         entity = [x for x in entity if x.get("field") not in field_white_list]
-        import_declare = 'import ' + import_declare_name
+        import_declare = "import " + import_declare_name
 
-        content = j2_env.get_template('input.template').render(
+        content = j2_env.get_template("input.template").render(
             import_declare=import_declare,
             input_name=input_name,
             class_name=class_name,
             description=description,
-            entity=entity
+            entity=entity,
         )
         input_file_name = os.path.join(
-            outputdir, ta_name,
-            'bin',
-            input_name + '.py'
+            outputdir, ta_name, "bin", input_name + ".py"
         )
         with open(input_file_name, "w") as input_file:
             input_file.write(content)
 
-def make_modular_alerts(args, ta_name,ta_namespace,schema_content):
+
+def make_modular_alerts(args, ta_name, ta_namespace, schema_content):
     if schema_content.get("alerts"):
-        
-        alert_build({"alerts" : schema_content["alerts"]}, ta_name, ta_namespace, outputdir,sourcedir)
+
+        alert_build(
+            {"alerts": schema_content["alerts"]},
+            ta_name,
+            ta_namespace,
+            outputdir,
+            sourcedir,
+        )
 
 
 def main():
@@ -209,15 +258,18 @@ def main():
         default="package",
     )
     parser.add_argument(
-        "--config", type=str, help="Path to configuration file", required=True,
+        "--config",
+        type=str,
+        help="Path to configuration file",
+        required=True,
     )
     args = parser.parse_args()
 
     clean_before_build(args)
 
-    with open(os.path.join(args.source, "app.manifest"),"r") as f:
+    with open(os.path.join(args.source, "app.manifest"), "r") as f:
         data = json.load(f)
-    with open(args.config,"r") as f:
+    with open(args.config, "r") as f:
         schema_content = json.load(f)
 
     scheme = GlobalConfigBuilderSchema(schema_content, j2_env)
@@ -230,15 +282,26 @@ def main():
     logging.warning("Package ID is " + ta_name)
 
     copy_package_template(args, ta_name)
-    copy_package_source(args, ta_name)
     install_libs(args, ta_name)
     install_libs_py2(args, ta_name)
     copy_splunktaucclib(args, ta_name)
 
-    shutil.copyfile(args.config,(os.path.join(outputdir, ta_name, 'appserver/static/js/build/globalConfig.json')))
+    shutil.copyfile(
+        args.config,
+        os.path.join(
+            outputdir, ta_name, "appserver/static/js/build/globalConfig.json",
+        ),
+    )
     replace_token(args, ta_name)
 
     generate_rest(args, ta_name, scheme, import_declare_name)
-    modify_and_replace_token_for_oauth_templates(args, ta_name, ta_tabs, "1.0.0")
-    add_modular_input(args, ta_name,schema_content,import_declare_name,j2_env )
-    make_modular_alerts(args, ta_name,ta_namespace,schema_content)
+    modify_and_replace_token_for_oauth_templates(
+        args, ta_name, ta_tabs, "1.0.0"
+    )
+    add_modular_input(
+        args, ta_name, schema_content, import_declare_name, j2_env
+    )
+    make_modular_alerts(args, ta_name, ta_namespace, schema_content)
+    copy_package_source(args, ta_name)
+    export_package(args, ta_name)
+
