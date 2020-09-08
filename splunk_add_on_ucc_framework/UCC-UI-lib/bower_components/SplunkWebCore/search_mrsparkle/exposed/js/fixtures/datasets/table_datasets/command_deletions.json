@@ -1,0 +1,114 @@
+{
+    "links": {
+        "create": "/servicesNS/admin/search/datamodel/model/_new",
+        "_reload": "/servicesNS/admin/search/datamodel/model/_reload",
+        "_acl": "/servicesNS/admin/search/datamodel/model/_acl"
+    },
+    "origin": "https://localhost:8000/servicesNS/admin/search/datamodel/model",
+    "updated": "2016-06-02T17:50:04-07:00",
+    "generator": {
+        "build": "cc1777599d6fddac62e80012673d6e7be3f86db9",
+        "version": "20160602"
+    },
+    "entry": [
+        {
+            "name": "Test Command Deletions",
+            "id": "https://localhost:8000/servicesNS/admin/search/datamodel/model/Test%20Command%20Deletions",
+            "updated": "2016-06-02T17:50:04-07:00",
+            "links": {
+                "alternate": "/servicesNS/admin/search/datamodel/model/Test%20Command%20Deletions",
+                "list": "/servicesNS/admin/search/datamodel/model/Test%20Command%20Deletions",
+                "_reload": "/servicesNS/admin/search/datamodel/model/Test%20Command%20Deletions/_reload",
+                "edit": "/servicesNS/admin/search/datamodel/model/Test%20Command%20Deletions",
+                "remove": "/servicesNS/admin/search/datamodel/model/Test%20Command%20Deletions",
+                "move": "/servicesNS/admin/search/datamodel/model/Test%20Command%20Deletions/move",
+                "disable": "/servicesNS/admin/search/datamodel/model/Test%20Command%20Deletions/disable"
+            },
+            "author": "admin",
+            "acl": {
+                "app": "search",
+                "can_change_perms": true,
+                "can_list": true,
+                "can_share_app": true,
+                "can_share_global": true,
+                "can_share_user": true,
+                "can_write": true,
+                "modifiable": true,
+                "owner": "admin",
+                "perms": null,
+                "removable": true,
+                "sharing": "user"
+            },
+            "fields": {
+                "required": [],
+                "optional": [
+                    "acceleration",
+                    "acceleration.backfill_time",
+                    "acceleration.cron_schedule",
+                    "acceleration.earliest_time",
+                    "acceleration.hunk.compression_codec",
+                    "acceleration.hunk.dfs_block_size",
+                    "acceleration.hunk.file_format",
+                    "acceleration.manual_rebuilds",
+                    "acceleration.max_concurrent",
+                    "acceleration.max_time",
+                    "acceleration.schedule_priority",
+                    "dataset.description",
+                    "concise",
+                    "dataset.commands",
+                    "dataset.fields",
+                    "dataset.page.dataset.diversity",
+                    "dataset.page.table.currentCommand",
+                    "dataset.type",
+                    "description",
+                    "dataset.display.sample_ratio",
+                    "dataset.display.datasummary.earliestTime",
+                    "dataset.display.datasummary.latestTime",
+                    "dataset.display.mode",
+                    "provisional",
+                    "search",
+                    "displayName"
+                ],
+                "wildcard": []
+            },
+            "content": {
+                "acceleration": "{\"enabled\":false,\"earliest_time\":\"\",\"cron_schedule\":\"\",\"max_time\":3600,\"backfill_time\":\"\",\"manual_rebuilds\":false,\"max_concurrent\":2,\"schedule_priority\":\"default\",\"hunk.file_format\":\"\",\"hunk.dfs_block_size\":0,\"hunk.compression_codec\":\"\"}",
+                "acceleration.backfill_time": "",
+                "acceleration.cron_schedule": "*/5 * * * *",
+                "acceleration.earliest_time": "",
+                "acceleration.hunk.compression_codec": "",
+                "acceleration.hunk.dfs_block_size": "",
+                "acceleration.hunk.file_format": "",
+                "acceleration.manual_rebuilds": "false",
+                "acceleration.max_concurrent": "2",
+                "acceleration.max_time": "3600",
+                "acceleration.schedule_priority": "default",
+                "dataset.display.sample_ratio": "1",
+                "dataset.description": "",
+                "dataset.type": "table",
+                "description": "{\"modelName\":\"Test Command Deletions\",\"displayName\":\"Test Command Deletions\",\"description\":\"\",\"objectSummary\":{\"Event-Based\":0,\"Transaction-Based\":0,\"Search-Based\":1},\"objects\":[{\"objectName\":\"RootObject\",\"displayName\":\"Search Object\",\"parentName\":\"BaseSearch\",\"fields\":[{\"fieldName\":\"RootObject\",\"owner\":\"RootObject\",\"type\":\"objectCount\",\"fieldSearch\":\"\",\"required\":false,\"multivalue\":false,\"hidden\":false,\"editable\":false,\"displayName\":\"Search Object\",\"comment\":\"\"}],\"calculations\":[],\"constraints\":[],\"lineage\":\"RootObject\",\"objectSearchNoFields\":\" | search ((index=\\\"_internal\\\") (sourcetype=\\\"*\\\")) | fields \\\"_raw\\\", \\\"_time\\\", \\\"active_realtime_searches\\\", \\\"average_kbps\\\", \\\"bytes\\\" | search   \",\"objectSearch\":\" | search ((index=\\\"_internal\\\") (sourcetype=\\\"*\\\")) | fields \\\"_raw\\\", \\\"_time\\\", \\\"active_realtime_searches\\\", \\\"average_kbps\\\", \\\"bytes\\\" | search    | fields RootObject\",\"autoextractSearch\":\" | search ((index=\\\"_internal\\\") (sourcetype=\\\"*\\\")) | fields \\\"_raw\\\", \\\"_time\\\", \\\"active_realtime_searches\\\", \\\"average_kbps\\\", \\\"bytes\\\" | search  \",\"previewSearch\":\" | search ((index=\\\"_internal\\\") (sourcetype=\\\"*\\\")) | fields \\\"_raw\\\", \\\"_time\\\", \\\"active_realtime_searches\\\", \\\"average_kbps\\\", \\\"bytes\\\" | search   \",\"baseSearch\":\"((index=\\\"_internal\\\") (sourcetype=\\\"*\\\")) | fields \\\"_raw\\\", \\\"_time\\\", \\\"active_realtime_searches\\\", \\\"average_kbps\\\", \\\"bytes\\\"\",\"tsidxNamespace\":\"\"}],\"objectNameList\":[\"RootObject\"]}",
+                "disabled": false,
+                "dataset.display.mode": "table",
+                "displayName": "Test Command Deletions",
+                "eai:acl": null,
+                "eai:appName": "search",
+                "eai:digest": "7bec2eb2350e212f6b9b8e619be85e4a",
+                "eai:type": "datamodel",
+                "eai:userName": "admin",
+                "dataset.commands": "[{\"type\":\"initialdata\",\"selectedMethod\":\"sourcetype\",\"app\":\"search\",\"owner\":\"admin\",\"isComplete\":true,\"spl\":\"((index=\\\"_internal\\\") (sourcetype=\\\"*\\\")) | fields \\\"_raw\\\", \\\"_time\\\"\",\"columns\":[{\"name\":\"_raw\",\"type\":\"raw\",\"id\":\"4f797aca-9ca7-44d6-b20e-f460a19a4b5e\"},{\"type\":\"timestamp\",\"name\":\"_time\",\"id\":\"7df24707-2329-49d8-b63c-30abfbd5b68f\"}],\"requiredColumns\":[],\"selectedValues\":[],\"selectedSourcetypes\":[{\"sourcetype\":\"*\",\"index\":\"_internal\"}]},{\"type\":\"extractDateTime\",\"newFieldName\":\"luke\",\"formatPattern\":\"%B %e\",\"newColumnGuid\":\"d743881e-8de4-4807-9c26-aed301ef6b7b\",\"isComplete\":true,\"spl\":\"eval luke=strftime('_time', \\\"%B %e\\\")\",\"columns\":[{\"name\":\"_raw\",\"type\":\"raw\",\"id\":\"4f797aca-9ca7-44d6-b20e-f460a19a4b5e\"},{\"type\":\"timestamp\",\"name\":\"_time\",\"id\":\"7df24707-2329-49d8-b63c-30abfbd5b68f\"},{\"name\":\"luke\",\"type\":\"string\",\"id\":\"d743881e-8de4-4807-9c26-aed301ef6b7b\"}],\"requiredColumns\":[{\"id\":\"7df24707-2329-49d8-b63c-30abfbd5b68f\"}],\"selectedValues\":[]},{\"type\":\"sort\",\"isComplete\":true,\"spl\":\"sort -\\\"luke\\\"\",\"columns\":[{\"name\":\"_raw\",\"type\":\"raw\",\"id\":\"4f797aca-9ca7-44d6-b20e-f460a19a4b5e\"},{\"type\":\"timestamp\",\"name\":\"_time\",\"id\":\"7df24707-2329-49d8-b63c-30abfbd5b68f\"},{\"name\":\"luke\",\"type\":\"string\",\"id\":\"d743881e-8de4-4807-9c26-aed301ef6b7b\"}],\"requiredColumns\":[{\"id\":\"d743881e-8de4-4807-9c26-aed301ef6b7b\",\"order\":\"descending\"}],\"selectedValues\":[]},{\"type\":\"rename\",\"newFieldName\":\"han\",\"guidUsed\":\"d743881e-8de4-4807-9c26-aed301ef6b7b\",\"isComplete\":true,\"spl\":\"rename \\\"luke\\\" AS \\\"han\\\"\",\"columns\":[{\"name\":\"_raw\",\"type\":\"raw\",\"id\":\"4f797aca-9ca7-44d6-b20e-f460a19a4b5e\"},{\"type\":\"timestamp\",\"name\":\"_time\",\"id\":\"7df24707-2329-49d8-b63c-30abfbd5b68f\"},{\"name\":\"han\",\"type\":\"string\",\"id\":\"d743881e-8de4-4807-9c26-aed301ef6b7b\"}],\"requiredColumns\":[{\"id\":\"d743881e-8de4-4807-9c26-aed301ef6b7b\"}],\"selectedValues\":[]},{\"type\":\"sort\",\"isComplete\":true,\"spl\":\"sort \\\"han\\\"\",\"columns\":[{\"name\":\"_raw\",\"type\":\"raw\",\"id\":\"4f797aca-9ca7-44d6-b20e-f460a19a4b5e\"},{\"type\":\"timestamp\",\"name\":\"_time\",\"id\":\"7df24707-2329-49d8-b63c-30abfbd5b68f\"},{\"name\":\"han\",\"type\":\"string\",\"id\":\"d743881e-8de4-4807-9c26-aed301ef6b7b\"}],\"requiredColumns\":[{\"id\":\"d743881e-8de4-4807-9c26-aed301ef6b7b\",\"order\":\"ascending\"}],\"selectedValues\":[]},{\"type\":\"sort\",\"isComplete\":true,\"spl\":\"sort -\\\"han\\\"\",\"columns\":[{\"name\":\"_raw\",\"type\":\"raw\",\"id\":\"4f797aca-9ca7-44d6-b20e-f460a19a4b5e\"},{\"type\":\"timestamp\",\"name\":\"_time\",\"id\":\"7df24707-2329-49d8-b63c-30abfbd5b68f\"},{\"name\":\"han\",\"type\":\"string\",\"id\":\"d743881e-8de4-4807-9c26-aed301ef6b7b\"}],\"requiredColumns\":[{\"id\":\"d743881e-8de4-4807-9c26-aed301ef6b7b\",\"order\":\"descending\"}],\"selectedValues\":[]},{\"type\":\"remove\",\"isComplete\":true,\"spl\":\"fields - \\\"_raw\\\"\",\"columns\":[{\"type\":\"timestamp\",\"name\":\"_time\",\"id\":\"7df24707-2329-49d8-b63c-30abfbd5b68f\"},{\"name\":\"han\",\"type\":\"string\",\"id\":\"d743881e-8de4-4807-9c26-aed301ef6b7b\"}],\"requiredColumns\":[{\"id\":\"4f797aca-9ca7-44d6-b20e-f460a19a4b5e\"}],\"selectedValues\":[]},{\"type\":\"sort\",\"isComplete\":true,\"spl\":\"sort -\\\"han\\\"\",\"columns\":[{\"type\":\"timestamp\",\"name\":\"_time\",\"id\":\"7df24707-2329-49d8-b63c-30abfbd5b68f\"},{\"name\":\"han\",\"type\":\"string\",\"id\":\"d743881e-8de4-4807-9c26-aed301ef6b7b\"}],\"requiredColumns\":[{\"id\":\"d743881e-8de4-4807-9c26-aed301ef6b7b\",\"order\":\"descending\"}],\"selectedValues\":[]},{\"type\":\"rename\",\"newFieldName\":\"darth\",\"guidUsed\":\"d743881e-8de4-4807-9c26-aed301ef6b7b\",\"isComplete\":true,\"spl\":\"rename \\\"han\\\" AS \\\"darth\\\"\",\"columns\":[{\"type\":\"timestamp\",\"name\":\"_time\",\"id\":\"7df24707-2329-49d8-b63c-30abfbd5b68f\"},{\"name\":\"darth\",\"type\":\"string\",\"id\":\"d743881e-8de4-4807-9c26-aed301ef6b7b\"}],\"requiredColumns\":[{\"id\":\"d743881e-8de4-4807-9c26-aed301ef6b7b\"}],\"selectedValues\":[]},{\"type\":\"sort\",\"isComplete\":true,\"spl\":\"sort -\\\"darth\\\"\",\"columns\":[{\"type\":\"timestamp\",\"name\":\"_time\",\"id\":\"7df24707-2329-49d8-b63c-30abfbd5b68f\"},{\"name\":\"darth\",\"type\":\"string\",\"id\":\"d743881e-8de4-4807-9c26-aed301ef6b7b\"}],\"requiredColumns\":[{\"id\":\"d743881e-8de4-4807-9c26-aed301ef6b7b\",\"order\":\"descending\"}],\"selectedValues\":[]},{\"type\":\"sort\",\"isComplete\":true,\"spl\":\"sort \\\"darth\\\"\",\"columns\":[{\"type\":\"timestamp\",\"name\":\"_time\",\"id\":\"7df24707-2329-49d8-b63c-30abfbd5b68f\"},{\"name\":\"darth\",\"type\":\"string\",\"id\":\"d743881e-8de4-4807-9c26-aed301ef6b7b\"}],\"requiredColumns\":[{\"id\":\"d743881e-8de4-4807-9c26-aed301ef6b7b\",\"order\":\"ascending\"}],\"selectedValues\":[]}]",
+                "dataset.fields": "[{\"name\":\"_time\"},{\"name\":\"darth\"},{\"name\":\"han\"},{\"name\":\"luke\"}]",
+                "dataset.display.currentCommand": "10",
+                "dataset.display.datasummary.earliestTime": "",
+                "dataset.display.datasummary.latestTime": "",
+                "dataset.display.diversity": "latest",
+                "displayName": "Test Command Deletions"
+            }
+        }
+    ],
+    "paging": {
+        "total": 1,
+        "perPage": 30,
+        "offset": 0
+    },
+    "messages": []
+}

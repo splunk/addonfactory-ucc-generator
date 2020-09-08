@@ -1,0 +1,55 @@
+/*  Splunk: Component: Schedule PDF */
+/*  =============================== */
+/*  schedule pdf modal dialog */
+
+/*
+	markup missing ...
+*/
+
+.schedule-pdf {
+    /* TODO potentially need to remove / change these with ivory UI changes */
+    /*
+    email-priority-app and no-max-hieght are assigned in code
+    app-schedule is assigned inside it's declaration
+    */
+    .email-priority-app {
+        div.control.btn-group.shared-controls-syntheticselectcontrol {
+            padding-top: 5px;
+        }
+    }
+
+    .app-schedule {
+        width: 100%;
+        span {
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+    }
+	.help-block {
+		line-height: 1.2em;
+	}
+	.preview-actions {
+		clear: both;
+
+		/*
+			We need to do this to overcome a bug in Firefox where it disregards the bottom padding when
+			scrolling occurs with overflow. This is modeled after the same padding added to ControlGroups
+			when used within a form (SPL-124782)
+		*/
+		margin-bottom: 10px;
+		a {
+		    display: inline-block;
+			padding-right: 15px;
+		}
+		.test-email {
+			.error {
+				color: $red;
+			}
+		}
+	}
+}
+
+a[disabled] {
+    color: #a3daf1;
+    pointer-events: none;
+}

@@ -1,0 +1,248 @@
+body {
+	overflow: hidden;
+}
+
+/* Enables the ability to have new lines in bootstrap tooltips 
+ * http://stackoverflow.com/questions/13338780/how-to-make-twitter-bootstrap-tooltips-have-multiple-lines
+*/
+.tooltip-inner {
+	white-space: pre-wrap;
+	}
+
+.conf-main-header.tall-header {
+	padding-bottom: 5px;
+}
+
+.section-body {
+	overflow: hidden;
+	left: 0;
+	top: 130px;
+	right: 0;
+	bottom: 0;
+	background-color: $white;
+	border-top: 1px solid $borderColor;
+	position: fixed;
+
+	&.section-with-details {
+        &.single-node-body {
+            top: 200px;
+        }
+
+        &.custom-group-body {
+            top: 180px;
+        }
+
+		&.app-body {
+       top: 200px;
+     }
+
+    &.all-forwarders-group-body {
+       top: 180px;
+     }
+
+    &.deploy-status-show-details {
+       text-decoration: none;
+     }
+  }
+}
+
+.input_list {
+	width: $sideNavWidth;
+    overflow-y: auto;
+	border-right: 1px solid $borderColor;
+    position: absolute;
+    left:0;
+    top:0;
+    bottom: 0;
+
+	.input_item.selected:after {
+		content: ""
+	}
+
+	.link-wrap:not(.link-title) .input_item {
+		padding-left: 40px;
+	}
+
+	.link-wrap.link-title {
+		cursor: default;
+		color: $grayDark;
+
+		&:hover {
+			background-color: inherit;
+		}
+
+		&:focus {
+			background-color: inherit;
+			outline: inherit;
+
+			/* Should never be .selected */
+		}
+	}
+
+	.item-count {
+		display: inline-block;
+		font-size: $baseFontSize;
+		float: right;
+		color: $grayLight;
+		max-width: 100px;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+	}
+}
+
+.dmc-stanzas {
+	overflow: auto;
+    position: absolute;
+    left: $sideNavWidth;
+    top: 0;
+    right: 0;
+    bottom: 0;
+
+	.dmc-stanzas-empty {
+	  	text-align: center;
+		color: $textGray;
+		font-size: 20px;
+		margin-top: 80px;
+		font-weight: 200;
+	}
+
+	.section-header {
+		text-align: left;
+		padding-left: 20px;
+	}
+
+	.dmc-stanzas-body {
+		.table-control-container {
+		  	margin-top: 10px;
+
+            .expand-collapse-placeholder {
+                margin-left: 10px;
+            }
+
+			.new-stanza-button {
+				margin-left: 20px;
+			}
+
+			.select-page-count-placeholder {
+				margin-right: 10px;
+			}
+
+			.table-caption {
+
+			  	h3 {
+			  		min-width: inherit;
+			  	}
+
+          .stanza-filter-text-control{
+              margin-top: 5px;
+          }
+			}
+		}
+
+		.table-chrome {
+			border-left: 1px solid $borderColor;
+
+			td {
+				word-wrap: break-word;
+			}
+
+			.more-info {
+				.wide-list{
+					dt {
+						width: 300px;
+						text-overflow: ellipsis;
+
+						&:after {
+							content: "....................................................................................................................................";
+						}
+					}
+					dd {
+						margin-left: 305px;
+					}
+				}
+			}
+		}
+	}
+
+	.bundle-groups-icon {
+		color: $linkColor;
+	}
+}
+
+.managementconsole-configuration-group-createdialog {
+	&:not(.modal-wide) {
+		width: 510px;
+
+		.attribute-list tbody.attrs {
+			width: 480px;
+		}
+	}
+
+	&.modal-wide .attribute-list table {
+		width: 100%;
+	}
+
+  	.modal-body-scrolling {
+	  	overflow-y: hidden;
+	  	max-height: 510px;
+	}
+
+  	.title-section {
+		height: 60px;
+
+		&.tall {
+			height: 120px;
+		}
+	}
+
+	.import-switcher {
+		width: 50%;
+		margin: auto;
+		height: 40px;
+	}
+
+	.stanza-name.conf-type {
+		margin-right: 30px;
+	}
+
+	.attribute-list {
+	  	thead tr th:not(:last-child) {
+			width: 215px;
+		  	display: inline-block;
+		  	font-weight: normal;
+		  	text-align: left;
+		}
+
+	  	tbody.attrs {
+		  	display: block;
+		  	max-height: 300px;
+		  	overflow: auto;
+		  	overflow-x: hidden;
+		}
+
+	  	table tr.attr input {
+		  	width: 200px;
+
+		  	&.input-key {
+		  		padding: 4px 6px;
+		  	}
+		}
+
+		.value, .default {
+			padding-left: 10px;
+		}
+
+		.actions {
+			display: inline-block;
+		}
+	}
+
+	.text-area-control textarea {
+		min-height: 10em;
+	}
+}
+
+.col-actions, .col-pending {
+	width: 200px;
+}

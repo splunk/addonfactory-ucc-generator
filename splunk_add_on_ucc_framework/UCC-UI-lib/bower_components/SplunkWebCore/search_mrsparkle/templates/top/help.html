@@ -1,0 +1,153 @@
+<%doc>
+Redirects the client to the appropriate online help resource.  If the client is
+not connected to the internet, then it will fallback to local help.
+
+URI params
+----------
+
+license: {free | pro} the product license level
+
+versionNumber: <string> the textual product version label, i.e. 3.4.6
+
+location: <string> the keyword identifier for the requesting asset, i.e. 'documentation'
+
+installType: {trial | prod} the license type, i.e. unpaid trial or fully licensed
+
+skin: <string> the current skin theme
+
+locale: <string> the user's locale, i.e., en-US
+
+product: <string> the server info product_type, i.e., splunk, enterprise, hunk, etc...
+
+The splunk.com help system uses URI segments to identify the request:
+
+    https://quickdraw.splunk.com/help/<license>/<versionNumber/<location>/<installType>/<skin>?locale=<locale>
+    
+This page will attempt to populate the params from left to right.  If it encounters
+a missing param, then it will stop building the URI and redirect with what it has.
+
+
+(Ported from the 3.x branch)
+
+Docs redirection system worked out between Ashley and Nick, detailed in SPL-7796. 
+
+Besides providing the ability for splunk.com to redirect to version specific docs
+It's also intended to provide fallback to offline docs that we package up and ship with
+for this purpose alone. 
+So people with internet access get latest greatest docs for *their* version
+and people with no internet access get the docs for *their* version that we shipped with. 
+</%doc>
+
+<%inherit file="//layout/base.html" />
+<%!
+title = 'Help'
+%>
+
+<%
+import json
+%>
+
+<%def name="css()">
+    <style type="text/css">
+    #magicVeil {
+        position:absolute;
+        top:0px;
+        left:0px;
+        width:100%;
+        z-index:99;
+        background-color:#fff;
+        text-align:center;
+        padding-top:20%;
+        height:80%;
+    }
+    </style>
+</%def>
+
+<script language="Javascript1.3">
+
+// define the base URI that will return the appropriate redirect
+var DOCS_BASE_REDIRECTOR_URI = '${cherrypy.config.get('docsCheckerBaseURL', 'https://quickdraw.splunk.com/help')}';
+
+// define the set of args that the redirector expects; the sequence here is
+// important because these args are embedded as URI segments, not params
+var REDIRECTOR_ARGS = ['license', 'versionNumber', 'location', 'installType', 'skin'];
+
+// define the failsafe URI for generic splunk help
+var FALLBACK_HELP_URI = 'http://www.splunk.com/r/help';
+
+// define the max wait time (in milliseconds) for the client to resolve splunk.com
+var MAX_CONNECT_TIMEOUT = 10000;
+
+var HAS_FIREBUG = (window.console && window.console.firebug);
+
+/**
+ * Callback fired via the JSON response from quickdraw.splunk.com
+ */
+function showHelp(helpParams) { 
+    if (helpParams.hasOwnProperty('url') && helpParams['url']) {
+        document.location.href = helpParams["url"];
+    } else {
+        document.location.href = FALLBACK_HELP_URI;
+    }
+}
+
+
+/**
+ * Attempts to contact splunk.com to obtain a proper help redirect that is
+ * appropriate for the current request.  If the client is unable to resolve
+ * splunk.com within the timeout defined in MAX_CONNECT_TIMEOUT, then the
+ * local version of the docs will be displayed instead.
+ */
+function checkForOnlineVersion() {
+    
+    window.setTimeout("unveilOfflineVersion();", MAX_CONNECT_TIMEOUT);
+    
+    var args = ${json_decode(help_args)};
+    var scriptlet = document.createElement("SCRIPT");
+    
+    var scriptletSegments = [];
+    for (var i=0,L=REDIRECTOR_ARGS.length; i<L; i++) {
+        if (args.hasOwnProperty(REDIRECTOR_ARGS[i])) {
+            scriptletSegments.push(args[REDIRECTOR_ARGS[i]]);
+        } else {
+            if (HAS_FIREBUG) {
+                window.console.warn(
+                    "Using partial help redirector link.  Help content may only be partially relevant. Missing arg: " 
+                    + REDIRECTOR_ARGS[i]);
+            }
+            break;
+        }
+    }
+
+    var src = DOCS_BASE_REDIRECTOR_URI + '/' + scriptletSegments.join('/');
+    var params = {};
+    if (args.hasOwnProperty('locale')) {
+        params.locale = args.locale;
+    }
+    params.product = args.product;
+    scriptlet.src =  src + "?" + Splunk.util.propToQueryString(params);
+    document.getElementsByTagName('head')[0].appendChild(scriptlet);
+}
+
+
+/**
+ * Displays the local installed version of the docs.  Currently shows an error
+ * message that splunk.com cannot be contacted.
+ */
+function unveilOfflineVersion() {
+    if (HAS_FIREBUG) {
+        console.info('Could not contact online help at ' + DOCS_BASE_REDIRECTOR_URI + '; using offline version');
+    }
+    $("#magicVeil").hide().css("left:-2000px");
+}
+
+
+// main
+checkForOnlineVersion();
+
+</script>
+
+<div id="magicVeil">${_('Loading...')}</div>
+<div style="text-align:center;padding-top:20%;height:80%;">
+    ${_('Unable to access online documentation. Please ensure docsCheckerBaseURL in web.conf is correct.')}
+</div>

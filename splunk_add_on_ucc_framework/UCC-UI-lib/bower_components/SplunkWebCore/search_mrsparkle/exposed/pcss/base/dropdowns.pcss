@@ -1,0 +1,484 @@
+/*  Splunk: Dropdown arrow/caret */
+/*  =========================== */
+
+
+.dropup,
+.dropdown {
+  position: relative;
+}
+
+.dropdown-toggle:active,
+.open .dropdown-toggle {
+  outline: 0;
+}
+
+
+
+/*  Caret / arrow */
+/*  ----------- */
+
+/* icon for caret
+
+	<span class="caret"></span>
+*/
+
+.caret {
+  display: inline-block;
+  content: "";
+  border:none;
+  width: auto;
+  height: auto;
+  line-height: inherit;
+  font-size: inherit;
+  margin: 0;
+  padding-left: 0.3em;
+  text-decoration: none;
+  vertical-align: baseline; /*  normally top or middle but this seems to break alignment and btn height */
+  font-family: "Splunk Icons";
+  font-weight: normal;
+
+  /*  generated font icon */
+  &:before {
+    content: "\02C5";
+    font-size: inherit;
+    text-decoration: none;
+  }
+}
+
+.icon-no-underline + .caret {
+    padding-left: 0;
+}
+
+.caret-char {
+  font-weight: normal;
+  font-family: "Splunk Icons";
+  font-weight: normal;
+  &:before {
+    content: "\25BE";
+  }
+}
+
+/*  Dropdowns */
+/*  --------- */
+
+.dropdown-menu  {
+    float: left;
+    min-width: 160px;
+    list-style: none;
+    word-wrap: break-word;
+    width: 20em;
+    line-height: calc(1em * 4 / 3);
+    padding: 0;
+    background-clip: padding-box;
+
+    .open > & {
+            display: block;
+    }
+
+    @mixin popdown-dialog;
+
+    /*  Dividers (basically an hr) within the dropdown */
+    .divider {
+        @mixin nav-divider;
+    }
+
+    li {
+        position: relative;
+    }
+
+    /*  link style */
+    li > a {
+        display: block;
+        clear: both;
+        font-weight: normal;
+        line-height: $baseLineHeight;
+        position: relative;
+        border-top: 1px dotted $borderColor;
+        color: $linkColor;
+        padding: 5px 10px ;
+        white-space: normal;
+        text-decoration: none;
+    }
+
+    /* link info style */
+    .info, .title {
+        color: $textGray;
+    }
+
+    ul li.info:not(:first-child) {
+        border-top: 1px solid $borderColor;
+    }
+
+    li.info {
+        padding: 5px 10px;
+    }
+
+    li > a > .info  {
+        display: block;
+        font-size: $fontSizeSmall;
+    }
+
+    li > span.field-value {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+        word-wrap: normal;
+    }
+
+    li.title {
+        text-transform: uppercase;
+        padding: 3px 10px;
+    }
+
+    /*  menu lists */
+    ul {
+        list-style: none;
+        @mixin popdown-dialog-body; /*  FIXME: this should be separate from popdown */
+        overflow-x: hidden;
+        overflow-y: auto;
+        /* in rare cases that long strings increase the container size, this will minimize the issues */
+        max-width: 100%;
+        max-height: 270px;
+        box-sizing: border-box;
+        border-radius:0;
+    }
+    /*  give spacing to double lists */
+    ul + ul {
+        margin-top: -1px;
+
+        li:first-child > a, li.title:first-child {
+            border-top: 1px solid $interactiveBorderTopColor;
+        }
+    }
+    /*  rounding for first and last items */
+    .arrow + ul, .arrow + ul > li:first-child > a {
+        border-top-left-radius: $containerInnerBorderRadius;
+        border-top-right-radius: $containerInnerBorderRadius;
+        border-top: none;
+    }
+
+    ul:last-child, ul:last-child > li:last-child > a {
+        border-bottom-left-radius: $containerInnerBorderRadius;
+        border-bottom-right-radius: $containerInnerBorderRadius;
+    }
+
+    /*  for selectable lists */
+    a .icon-check {
+        position: absolute;
+        left: 5px;
+        top: 5px;
+    }
+    [class^="icon-"], [class*=" icon-"] {
+        width: 1.25em;
+        text-align: center;
+    }
+
+    /*  focus state */
+    li > a:focus {
+        @mixin focus-pill;
+    }
+
+    /*  hover state */
+    li > a:hover{
+        color: $linkColorHover;
+        background: $pillBackgroundColorHover;
+        @mixin gradient-vertical $pillBackgroundColorHover, $pillBackgroundColorHover;
+    }
+
+    /*  disabled state */
+    > .disabled > a,
+    li > a.disabled {
+        &,
+        &:hover,
+        &:focus {
+            color: $textDisabledColor;
+            cursor: not-allowed;
+        }
+
+        &:hover,
+        &:focus {
+            text-decoration: none;
+            background-color: transparent;
+            background-image: none; /*  Remove CSS gradient */
+            @mixin reset-filter;
+            cursor: default;
+        }
+    }
+
+
+    /*  items with secondary action icons */
+    li > a.primary-link {
+        margin-right: 40px;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-right: 1px dotted  $borderColor;
+    }
+
+    li > a.secondary-link {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 40px;
+        padding-left:0;
+        padding-right: 0;
+        font-size: 16px;
+        text-align: center;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+
+    li > a > .link-description {
+        color: $textGray;
+        display: block;
+        font-size: 0.85em;
+    }
+
+    li.message {
+        padding: 5px 10px;
+    }
+
+    /*  divider style */
+    .divider {
+        margin: 0;
+        border: none;
+        border-top: 1px solid $interactiveBorderTopColor;
+        margin-top: 0;
+        height: 0;
+    }
+    /*  remove top border when there is already a divider */
+    .divider + li > a {
+        border-top: none;
+    }
+
+    /* Searchable popdown's width */
+    .search-query {
+        margin-left: 2px;
+        width: 195px;
+    }
+
+    .footer-counter {
+        text-align: center;
+        border-top: 1px solid $interactiveBorderTopColor;
+        line-height: 2em;
+    }
+}
+
+/*  truncated dropdown text */
+.dropdown-truncated li > a {
+    /*  wrapping */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/*  Sizes */
+/*  ------------------- */
+
+
+.dropdown-menu-narrow {
+	width: 10em;
+}
+
+.dropdown-menu-medium {
+    width: 25em;
+}
+
+.dropdown-menu-wide {
+	width: 30em;
+}
+
+.dropdown-menu-width-auto {
+	width: auto;
+	max-width: 20em;
+
+	&.dropdown-menu-narrow {
+		max-width: 10em;
+	}
+
+	&.dropdown-menu-medium {
+		max-width: 25em;
+	}
+
+	&.dropdown-menu-wide {
+		max-width: 30em;
+	}
+
+}
+
+
+/*  Selectable dropdown */
+/*  ------------------- */
+
+.dropdown-menu-selectable li > a { /*   BS 2.2 scoped */
+	padding-left: 24px;
+}
+
+
+/*  Bootstrap Override */
+/*  ------------------ */
+
+
+.navbar .nav > li > .dropdown-menu:before,
+.navbar .nav > li > .dropdown-menu:after
+{
+	display: none;
+}
+
+/*  hover state of dropdown submenu */
+.dropdown-submenu:hover > a,
+.dropdown-submenu:focus > a {
+ 	text-decoration: none;
+ 	color: $linkColorHover;
+ 	background: $pillBackgroundColorHover;
+    @mixin gradient-vertical $pillBackgroundColorHover, $pillBackgroundColorHover;
+}
+
+.dropdown-submenu > ul {
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.dropdown-header {
+	display: block;
+	padding: 3px 20px;
+	font-size: 12px;
+	line-height: 1.42857143;
+	color: $textGray;
+}
+
+
+/*  fixed height dropdowns & popdowns */
+/*  --------------------------------- */
+
+.dropdown-menu-tall ul {
+    max-height: 20em;
+    overflow: auto;
+}
+
+.dropdown-menu-short ul {
+    max-height: 10em;
+    overflow: auto;
+}
+
+/*  disable scrolling */
+.dropdown-menu-noscroll ul {
+	max-height: none;
+}
+
+
+/*  Allow for dropdowns to go bottom up (aka, dropup-menu) */
+/*  ------------------------------------------------------ */
+/*  Just add .dropup after the standard .dropdown class and you're set, bro. */
+/*  TODO: abstract this so that the navbar fixed styles are not placed here? */
+.dropup,
+.navbar-fixed-bottom .dropdown {
+    /*  Reverse the caret */
+    .caret {
+        border-top: 0;
+        border-bottom: 4px solid $black;
+        content: "";
+    }
+    /*  Different positioning for bottom up menu */
+    .dropdown-menu {
+        top: auto;
+        bottom: 100%;
+        margin-bottom: 1px;
+    }
+}
+
+/*  Sub menus */
+/*  --------------------------- */
+.dropdown-submenu {
+    position: relative;
+}
+/*  Default dropdowns */
+.dropdown-submenu > .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -6px;
+    margin-left: -1px;
+    border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover > .dropdown-menu {
+    display: block;
+}
+
+/*  Dropups */
+.dropup .dropdown-submenu > .dropdown-menu {
+    top: auto;
+    bottom: 0;
+    margin-top: 0;
+    margin-bottom: -2px;
+    border-radius: 5px 5px 5px 0;
+}
+
+/*  Caret to indicate there is a submenu */
+li.dropdown-submenu > a {
+    padding-right: 20px;
+
+    &:after {
+        display: block;
+        content: " ";
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-color: transparent;
+        border-style: solid;
+        border-width: 5px 0 5px 5px;
+        border-left-color: color($white l(-20%));
+        top: 50%;
+        right: 10px;
+        transform: translate(0, -50%);
+    }
+}
+
+/*  Left aligned submenus */
+.dropdown-submenu.pull-left {
+    /*  Undo the float */
+    /*  Yes, this is awkward since .pull-left adds a float, but it sticks to our conventions elsewhere. */
+    float: none;
+
+    /*  Positioning the submenu */
+    > .dropdown-menu {
+        left: -100%;
+        margin-left: 10px;
+        border-radius: 6px 0 6px 6px;
+    }
+}
+
+/*  Tweak nav headers */
+/*  ----------------- */
+/*  Increase padding from 15px to 20px on sides */
+.dropdown .dropdown-menu .nav-header {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+/*  Typeahead */
+/*  --------- */
+.typeahead {
+    z-index: 1051;
+    margin-top: 2px; /*  give it some space to breathe */
+    border-radius: $baseBorderRadius;
+}
+
+
+/*  Lite UI */
+/*  ================ */
+@if $theme == lite {
+	.dropdown-menu {
+		li > a {
+			border-color: $borderColor;
+		}
+		ul + ul li:first-child > a {
+			border-color: $borderColor;
+		}
+		.divider {
+			border-top-color: $borderColor;
+		}
+
+	}
+}

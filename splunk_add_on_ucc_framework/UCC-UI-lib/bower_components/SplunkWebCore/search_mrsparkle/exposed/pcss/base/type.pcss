@@ -1,0 +1,339 @@
+/*  Splunk: Typography */
+/*  =================== */
+/*  Headings, body text, lists, code, and more for a versatile and durable typography system */
+
+
+/*  Fonts */
+/*  ----------- */
+
+@if $theme == 'enterprise' {
+	/*  Regular */
+	@font-face {
+		font-family: 'Roboto';
+		src: url('$staticFontPath/roboto-regular-webfont.woff') format('woff');
+		font-weight: normal;
+		font-style: normal;
+	}
+
+	/*  Bold */
+	@font-face {
+		font-family: 'Roboto';
+		src: url('$staticFontPath/roboto-bold-webfont.woff') format('woff');
+		font-weight: bold;
+		font-style: normal;
+	}
+
+	/*  light */
+	@font-face {
+		font-family: 'Roboto';
+		src: url('$staticFontPath/roboto-light-webfont.woff') format('woff');
+		font-weight: 200;
+		font-style: normal;
+	}
+}
+
+/*  Monospace */
+@font-face {
+	font-family: 'Droid Sans Mono';
+	src: url('$staticFontPath/droid-sans-mono-webfont.woff') format('woff');
+	font-weight: 400;
+	font-style: normal;
+}
+
+@if $theme == lite {
+	/*  Ubuntu */
+	@font-face {
+	  font-family: 'Ubuntu';
+	  font-style: normal;
+	  font-weight: 400;
+	  src: url('$staticFontPath/ubuntu-regular.ttf') format('truetype');
+	}
+	@font-face {
+	  font-family: 'Ubuntu';
+	  font-style: normal;
+	  font-weight: 300;
+	  src: url('$staticFontPath/ubuntu-light.ttf') format('truetype');
+	}
+	@font-face {
+	  font-family: 'Ubuntu';
+	  font-style: normal;
+	  font-weight: 700;
+	  src: url('$staticFontPath/ubuntu-medium.ttf') format('truetype');
+	}
+}
+@font-face {
+  font-family: 'Architects Daughter';
+  font-style: normal;
+  font-weight: normal;
+  src: url('$staticFontPath/ArchitectsDaughter.ttf') format('truetype');
+}
+
+
+
+/*  Body text */
+/*  ------------------------- */
+
+p {
+  margin: 0 0 calc($baseLineHeight / 2);
+}
+.lead {
+  margin-bottom: $baseLineHeight;
+  font-size: calc($baseFontSize * 1.5);
+  font-weight: 200;
+  line-height: calc($baseLineHeight * 1.5);
+}
+
+
+/*  Emphasis & misc */
+/*  ------------------------- */
+
+/*  Ex: 14px base font * 85% = about 12px */
+small   { font-size: 85%; }
+
+strong  { font-weight: bold; }
+em      { font-style: italic; }
+cite    { font-style: normal; }
+
+/*  Utility classes */
+.muted               { color: $grayLight; }
+a.muted:hover,
+a.muted:focus        { color: color($grayLight l(-10%)); }
+
+.text-warning        { color: $warningText; }
+a.text-warning:hover,
+a.text-warning:focus { color: color($warningText l(-10%)); }
+
+.text-error          { color: $errorText; }
+a.text-error:hover,
+a.text-error:focus   { color: color($errorText l(-10%)); }
+
+.text-info           { color: $infoText; }
+a.text-info:hover,
+a.text-info:focus    { color: color($infoText l(-10%)); }
+
+.text-success        { color: $successText; }
+a.text-success:hover,
+a.text-success:focus { color: color($successText l(-10%)); }
+
+.text-left           { text-align: left; }
+.text-right          { text-align: right; }
+.text-center         { text-align: center; }
+
+
+
+/*  Font Families */
+/*  ------------- */
+
+/* monospace for code and raw
+
+
+	<p>normal</p>
+	<p class="mono-space">mono space</p>
+
+*/
+.mono-space {
+	font-family: $monoFontFamily;
+}
+
+
+/*  Headings */
+/*  ------------------------- */
+
+h1, h2, h3, h4, h5, h6 {
+  margin: calc($baseLineHeight / 2) 0;
+  font-family: $headingsFontFamily;
+  font-weight: $headingsFontWeight;
+  line-height: $baseLineHeight;
+  color: $headingsColor;
+  text-rendering: optimizelegibility; /*  Fix the character spacing for headings */
+  small {
+    font-weight: normal;
+    line-height: 1;
+    color: $grayLight;
+  }
+}
+
+h1{ line-height: calc($baseLineHeight * 2); }
+h2, h3 {line-height:normal;}
+
+h1 { font-size: calc($baseFontSize * 2.75); } /*  ~38px */
+h2 { font-size: calc($baseFontSize * 2.25); } /*  ~32px */
+h3 {
+    font-size: $baseFontSizeLarge;
+    font-weight: normal;
+}
+h4 { font-size: calc($baseFontSize * 1.25); } /*  ~18px */
+h5 {
+	font-size: $baseFontSize;
+	color: $textColor;
+	font-weight: bold;
+	margin: 0;
+}
+h6 { font-size: calc($baseFontSize * 0.85); } /*  ~12px */
+
+h1 small { font-size: calc($baseFontSize * 1.75); } /*  ~24px */
+h2 small { font-size: calc($baseFontSize * 1.25); } /*  ~18px */
+h3 small { font-size: $baseFontSize; }
+h4 small { font-size: $baseFontSize; }
+
+
+
+
+/*  Page header */
+/*  ------------------------- */
+
+.page-header {
+  padding-bottom: calc(($baseLineHeight / 2) - 1px);
+  margin: $baseLineHeight 0 calc($baseLineHeight * 1.5);
+  border-bottom: 1px solid $grayLighter;
+}
+
+
+
+/*  Lists */
+/*  -------------------------------------------------- */
+
+/*  Unordered and Ordered lists */
+ul, ol {
+  padding: 0;
+  margin: 0 0 calc($baseLineHeight / 2) 25px;
+}
+ul ul,
+ul ol,
+ol ol,
+ol ul {
+  margin-bottom: 0;
+}
+li {
+  line-height: $baseLineHeight;
+}
+
+/*  Remove default list styles */
+ul.unstyled,
+ol.unstyled {
+  margin-left: 0;
+  list-style: none;
+}
+
+/*  Single-line list items */
+ul.inline,
+ol.inline {
+  margin-left: 0;
+  list-style: none;
+  > li {
+    display: inline-block;
+
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+}
+
+/*  Description Lists */
+dl {
+  margin-bottom: $baseLineHeight;
+}
+dt,
+dd {
+  line-height: $baseLineHeight;
+}
+dt {
+  font-weight: bold;
+}
+dd {
+  margin-left: calc($baseLineHeight / 2);
+}
+/*  Horizontal layout (like forms) */
+.dl-horizontal {
+  @mixin clearfix; /*  Ensure dl clears floats if empty dd elements present */
+  dt {
+    float: left;
+    width: calc($horizontalComponentOffset - 20px);
+    clear: left;
+    text-align: right;
+    @mixin text-overflow;
+  }
+  dd {
+    margin-left: $horizontalComponentOffset;
+  }
+}
+
+/*  MISC */
+/*  ---- */
+
+/*  Horizontal rules */
+hr {
+  margin: $baseLineHeight 0;
+  border: 0;
+  border-top: 1px solid $hrBorder;
+  border-bottom: 1px solid $white;
+}
+
+/*  Abbreviations and acronyms */
+abbr[title],
+/*  Added data-* attribute to help out our tooltip plugin, per https://github.com/twitter/bootstrap/issues/5257 */
+abbr[data-original-title] {
+  cursor: help;
+  border-bottom: 1px dotted $grayLight;
+}
+abbr.initialism {
+  font-size: 90%;
+  text-transform: uppercase;
+}
+
+/*  Blockquotes */
+blockquote {
+  padding: 0 0 0 15px;
+  margin: 0 0 $baseLineHeight;
+  border-left: 5px solid $grayLighter;
+  p {
+    margin-bottom: 0;
+    font-size: calc($baseFontSize * 1.25);
+    font-weight: 300;
+    line-height: 1.25;
+  }
+  small {
+    display: block;
+    line-height: $baseLineHeight;
+    color: $grayLight;
+    &:before {
+      content: '\2014 \00A0';
+    }
+  }
+
+  /*  Float right with text-align: right */
+  &.pull-right {
+    float: right;
+    padding-right: 15px;
+    padding-left: 0;
+    border-right: 5px solid $grayLighter;
+    border-left: 0;
+    p,
+    small {
+      text-align: right;
+    }
+    small {
+      &:before {
+        content: '';
+      }
+      &:after {
+        content: '\00A0 \2014';
+      }
+    }
+  }
+}
+
+/*  Quotes */
+q:before,
+q:after,
+blockquote:before,
+blockquote:after {
+  content: "";
+}
+
+/*  Addresses */
+address {
+  display: block;
+  margin-bottom: $baseLineHeight;
+  font-style: normal;
+  line-height: $baseLineHeight;
+}

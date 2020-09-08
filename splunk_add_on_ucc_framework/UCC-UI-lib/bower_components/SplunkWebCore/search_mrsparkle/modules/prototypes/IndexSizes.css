@@ -1,0 +1,13 @@
+.IndexSizes .eventCountWrapper {
+    font-size: 14px;
+}
+
+.IndexSizes .eventCountDetail th,
+.IndexSizes .eventCountDetail td {
+    text-align: left;
+    padding: 3px;
+}
+
+.IndexSizes .eventCountDetail .numeric {
+    text-align: right;
+}

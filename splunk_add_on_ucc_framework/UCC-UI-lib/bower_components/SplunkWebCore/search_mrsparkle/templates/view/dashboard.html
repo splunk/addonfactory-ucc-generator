@@ -1,0 +1,126 @@
+<%inherit file="//layout/view.html" />
+<%namespace file="//view/_helpers.html" import="*"/>
+<%namespace name="lib" file="//lib.html" import="*"/>
+<%!
+import math
+
+headerPanels = ["appHeader", "navigationHeader", "liteHeader"]
+
+upperPanels = ["viewHeader", "splSearchControls-inline", "mainSearchControls"]
+
+renderingErrors = []
+%>
+
+<%def name="css()">
+    <% parent.css() %>
+    <%lib:stylesheet_tags files="${['/static/css/dashboard.css']}" />
+</%def>
+
+<%def name="js()">
+    <% parent.js() %>
+</%def>
+
+<%def name="getTitleForPanel(modules, panelName)">
+    % for module in modules[panelName]:
+        % if module.has_key('params'):
+            % if module["params"].has_key("group") :
+                <div class="splHeader splHeader-dashboard">
+                    <h2 title="${module["params"]["groupLabel"] | h}" s:group="${module["params"]["group"] | h}">${module["params"]["groupLabel"] | h}</h2>
+                </div>
+                <%
+                break
+                %>
+            % endif
+        % endif
+    % endfor
+</%def>
+
+<%doc>
+    Takes an array of layoutPanel strings, all of which are assumed to be for a particular row N and column M
+    In other words, everything within a particular rounded-corner panel. 
+    There will be so called 'ungrouped' layout panels as well as 'grouped' ones. 
+</%doc>
+<%def name="getDashboardPanel(modules, panelGroup)">
+    % if VIEW.get('nativeObjectMode','')=='SimpleDashboard' and VIEW['canWrite'] is True and VIEW['hasRowGrouping'] is False:
+        <div class="layoutCellInner dashboardCell dashboardCellEditable">
+           <div class="meta">
+               % if len(panelGroup) > 0:
+                    % for module in modules[panelGroup[0]]:
+                        % if module.get('intersect'):
+                            <a href="#" 
+                            class="paneledit splButton-tertiary" 
+                            data-sequence="${module.get('sequence', '')|h}" 
+                            data-intersect-x="${module['intersect'][0]|h}" 
+                            data-intersect-y="${module['intersect'][1]|h}" 
+                            data-dashboard-id="${VIEW.get('editUrlPath')|h}" 
+                            data-app="${APP['id']|h}"
+                            data-paneltype="${module.get('panelType', '')|h}"
+                            style=""
+                            >
+                            	<span class="splButtonIcon"></span>
+                            	<span>${_('Edit')}</span>
+                            	<span class="splMenuIcon"></span>
+                            </a>
+                        % endif
+                    % endfor
+                % endif
+            </div>
+    % else:
+        <div class="layoutCellInner dashboardCell">
+        <div class="meta"></div>
+    % endif
+      % if (len(panelGroup) > 0 ) :
+                <%call expr="getTitleForPanel(modules, panelGroup[0])"></%call>
+        % else :
+            <%
+            renderingErrors.append("unable to find a group");
+            %>
+            Error - this should not occur
+        % endif
+
+        <div class="dashboardContent">
+            % for groupName in panelGroup :
+                % if (groupName.find("_grp") == -1) :
+                    <%call expr="parent.buildPanelContents(modules, groupName)"></%call>
+                % endif
+            % endfor
+            
+<%
+            numberOfGroups = 0; 
+            groupWidth=100
+            for groupName in panelGroup :
+                if (groupName.find("_grp") != -1) :
+                    numberOfGroups = numberOfGroups+1;
+            if (numberOfGroups):groupWidth = math.floor(100 / numberOfGroups)
+%>
+            % for groupName in panelGroup :
+                % if (groupName.find("_grp") != -1) :
+                    <div style="float:left;_width:150px; width:${groupWidth}%; overflow:hidden;">
+                        <%call expr="parent.buildPanelContents(modules, groupName)"></%call>
+                    </div>
+                % endif 
+            % endfor
+            <!-- modules "groups" are floated left so this is necessary to give the panelContainer proper height.  -->
+            <div style="clear:both"></div>
+        </div>
+    </div>
+</%def>
+
+% if "messaging" in modules :
+    <%call expr="parent.buildSimplePanelContainer(modules, 'messaging')"></%call>
+% endif
+
+<div class="appHeaderWrapper">
+    % for panelName in headerPanels : 
+        <%call expr="parent.buildSimplePanelContainer(modules, panelName)"></%call>
+    % endfor    
+</div>
+
+% for panelName in upperPanels : 
+    <%call expr="parent.buildSimplePanelContainer(modules, panelName)"></%call>
+% endfor
+## the maximum number of rows a dashboard can have is 50
+% for rowNumber in range(1,51): 
+    <%call expr="parent.getFloatLayoutRow(modules, rowNumber)"></%call>
+% endfor
+

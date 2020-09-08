@@ -1,0 +1,3450 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <start>
+    <a:documentation>
+Simple XML RelaxNG Schema
+</a:documentation>
+    <choice>
+      <ref name="Dashboard"/>
+      <ref name="Form"/>
+    </choice>
+  </start>
+  <define name="Dashboard">
+    <a:documentation>
+Dashboard
+</a:documentation>
+    <element name="dashboard">
+      <interleave>
+        <ref name="BaseViewAttributes"/>
+        <zeroOrMore>
+          <ref name="SearchNode"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="Row"/>
+        </zeroOrMore>
+        <optional>
+          <element name="label">
+            <text/>
+          </element>
+        </optional>
+        <optional>
+          <element name="description">
+            <text/>
+          </element>
+        </optional>
+      </interleave>
+    </element>
+  </define>
+  <define name="BaseViewAttributes">
+    <interleave>
+      <optional>
+        <attribute name="refresh">
+          <data type="integer"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="onunloadCancelJobs">
+          <ref name="Boolean"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="isVisible">
+          <ref name="Boolean"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="isDashboard">
+          <ref name="Boolean"/>
+        </attribute>
+      </optional>
+      <optional>
+        <!-- Comma separated lists of custom scripts to load -->
+        <attribute name="script"/>
+      </optional>
+      <optional>
+        <!-- Comma separated lists of custom stylesheets to load -->
+        <attribute name="stylesheet"/>
+      </optional>
+      <optional>
+        <!-- when truthy the header and footer won't show up. -->
+        <attribute name="hideChrome">
+          <ref name="Boolean"/>
+        </attribute>
+      </optional>
+      <optional>
+        <!-- when truthy the splunk bar won't show up. -->
+        <attribute name="hideSplunkBar">
+          <ref name="Boolean"/>
+        </attribute>
+      </optional>
+      <optional>
+        <!-- when truthy the app bar (nav) won't show up. -->
+        <attribute name="hideAppBar">
+          <ref name="Boolean"/>
+        </attribute>
+      </optional>
+      <optional>
+        <!-- when truthy the footer won't show up. -->
+        <attribute name="hideFooter">
+          <ref name="Boolean"/>
+        </attribute>
+      </optional>
+      <optional>
+        <!-- when truthy the title and descript won't show up. -->
+        <attribute name="hideTitle">
+          <ref name="Boolean"/>
+        </attribute>
+      </optional>
+      <optional>
+        <!-- when truthy the  won't show up. -->
+        <attribute name="hideEdit">
+          <ref name="Boolean"/>
+        </attribute>
+      </optional>
+    </interleave>
+  </define>
+  <define name="TokenDependencies">
+    <interleave>
+      <optional>
+        <attribute name="depends"/>
+      </optional>
+      <optional>
+        <attribute name="rejects"/>
+      </optional>
+    </interleave>
+  </define>
+  <define name="Row">
+    <element name="row">
+      <interleave>
+        <optional>
+          <attribute name="id">
+            <ref name="Identifier"/>
+          </attribute>
+        </optional>
+        <optional>
+          <attribute name="grouping"/>
+        </optional>
+        <ref name="TokenDependencies"/>
+        <choice>
+          <zeroOrMore>
+            <ref name="Element"/>
+          </zeroOrMore>
+          <zeroOrMore>
+            <ref name="Panel"/>
+          </zeroOrMore>
+        </choice>
+      </interleave>
+    </element>
+  </define>
+  <define name="Panel">
+    <a:documentation>
+Dashboard Panel
+</a:documentation>
+    <choice>
+      <ref name="InlinePanel"/>
+      <ref name="PanelRef"/>
+    </choice>
+  </define>
+  <define name="InlinePanel">
+    <element name="panel">
+      <interleave>
+        <!-- Optional panel-level title (in addition to the element-level title) -->
+        <attribute name="id">
+          <ref name="Identifier"/>
+        </attribute>
+        <optional>
+          <element name="title">
+            <text/>
+          </element>
+        </optional>
+        <zeroOrMore>
+          <ref name="SearchNode"/>
+        </zeroOrMore>
+        <ref name="TokenDependencies"/>
+        <zeroOrMore>
+          <!-- Inline panel elements -->
+          <ref name="Element"/>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="PanelRef">
+    <element name="panel">
+      <interleave>
+        <!-- Name of the referenced panel -->
+        <attribute name="ref"/>
+        <optional>
+          <!--
+            Optionally override the app the panel definition is loaded from. By default it's loaded from the app
+            the dashboard is defined in.
+          -->
+          <attribute name="app"/>
+        </optional>
+        <ref name="TokenDependencies"/>
+      </interleave>
+    </element>
+  </define>
+  <define name="Element">
+    <a:documentation>
+Dashboard Elements
+</a:documentation>
+    <choice>
+      <ref name="Chart"/>
+      <ref name="Table"/>
+      <ref name="Single"/>
+      <ref name="Map"/>
+      <ref name="Event"/>
+      <ref name="Html"/>
+      <ref name="List"/>
+    </choice>
+  </define>
+  <define name="BaseElementAttributes">
+    <interleave>
+      <optional>
+        <attribute name="id">
+          <ref name="Identifier"/>
+        </attribute>
+      </optional>
+      <ref name="TokenDependencies"/>
+    </interleave>
+  </define>
+  <define name="ElementTitle">
+    <element name="title">
+      <text/>
+    </element>
+  </define>
+  <define name="ElementSearch">
+    <a:documentation>
+Searches
+</a:documentation>
+    <choice>
+      <ref name="InlineSearch"/>
+      <ref name="InlineSearchTemplate"/>
+      <ref name="PostProcessSearch"/>
+      <ref name="SavedSearch"/>
+    </choice>
+  </define>
+  <define name="InlineSearch">
+    <interleave>
+      <element name="searchString">
+        <ref name="SearchString"/>
+      </element>
+      <optional>
+        <element name="earliestTime">
+          <ref name="RelativeTimeExpression"/>
+        </element>
+      </optional>
+      <optional>
+        <element name="latestTime">
+          <ref name="RelativeTimeExpression"/>
+        </element>
+      </optional>
+    </interleave>
+  </define>
+  <define name="InlineSearchTemplate">
+    <interleave>
+      <element name="searchTemplate">
+        <ref name="SearchString"/>
+      </element>
+      <optional>
+        <element name="earliestTime">
+          <ref name="RelativeTimeExpression"/>
+        </element>
+      </optional>
+      <optional>
+        <element name="latestTime">
+          <ref name="RelativeTimeExpression"/>
+        </element>
+      </optional>
+    </interleave>
+  </define>
+  <define name="PostProcessSearch">
+    <element name="searchPostProcess">
+      <ref name="SearchString"/>
+    </element>
+  </define>
+  <define name="SavedSearch">
+    <element name="searchName">
+      <text/>
+    </element>
+  </define>
+  <define name="SearchNodeInline">
+    <element name="Search">
+      <interleave>
+        <optional>
+          <attribute name="id">
+            <ref name="Identifier"/>
+          </attribute>
+        </optional>
+        <!-- SPL search query -->
+        <element name="query">
+          <text/>
+        </element>
+        <!-- earliest time of search -->
+        <element name="earliest">
+          <ref name="RelativeTimeExpression"/>
+        </element>
+        <!-- latest time of search -->
+        <element name="latest">
+          <ref name="RelativeTimeExpression"/>
+        </element>
+      </interleave>
+    </element>
+  </define>
+  <define name="SearchNodeSaved">
+    <element name="Search">
+      <interleave>
+        <optional>
+          <attribute name="id">
+            <ref name="Identifier"/>
+          </attribute>
+        </optional>
+        <!-- the name of a saved search to load -->
+        <attribute name="ref"/>
+        <!-- optional app namespace to find the search -->
+        <attribute name="app"/>
+        <!-- earliest time of search -->
+        <element name="earliest">
+          <ref name="RelativeTimeExpression"/>
+        </element>
+        <!-- latest time of search -->
+        <element name="latest">
+          <ref name="RelativeTimeExpression"/>
+        </element>
+      </interleave>
+    </element>
+  </define>
+  <define name="SearchNodePostProcess">
+    <element name="Search">
+      <interleave>
+        <optional>
+          <attribute name="id">
+            <ref name="Identifier"/>
+          </attribute>
+        </optional>
+        <!-- the id of another search to post process -->
+        <attribute name="base">
+          <ref name="Identifier"/>
+        </attribute>
+        <!-- the query to alter the original search -->
+        <element name="query">
+          <text/>
+        </element>
+      </interleave>
+    </element>
+  </define>
+  <define name="SearchNode">
+    <choice>
+      <ref name="SearchNodeInline"/>
+      <ref name="SearchNodePostProcess"/>
+      <ref name="SearchNodeSaved"/>
+    </choice>
+  </define>
+  <define name="Drilldown">
+    <a:documentation>
+Drilldown
+</a:documentation>
+    <element name="drilldown">
+      <optional>
+        <attribute name="target"/>
+      </optional>
+      <optional>
+        <choice>
+          <zeroOrMore>
+            <choice>
+              <ref name="LinkAction"/>
+              <ref name="SetToken"/>
+              <ref name="UnsetToken"/>
+            </choice>
+          </zeroOrMore>
+          <zeroOrMore>
+            <ref name="Condition"/>
+          </zeroOrMore>
+        </choice>
+      </optional>
+    </element>
+  </define>
+  <define name="Condition">
+    <element name="condition">
+      <optional>
+        <!--
+          The field attribute specifies the field to scope the actions to for this condition. If not specified, a
+          wildcard (field="*") is assumed.
+        -->
+        <attribute name="field"/>
+      </optional>
+      <zeroOrMore>
+        <choice>
+          <ref name="LinkAction"/>
+          <ref name="SetToken"/>
+          <ref name="UnsetToken"/>
+        </choice>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="LinkAction">
+    <element name="link">
+      <interleave>
+        <optional>
+          <choice>
+            <attribute name="field"/>
+            <attribute name="series"/>
+          </choice>
+        </optional>
+        <optional>
+          <!-- 'target' determines where drilldown results will open (set target to '_blank' to open in new window). -->
+          <attribute name="target"/>
+        </optional>
+        <!--
+          'link' value must be in one of the following formats:
+          1.) relative path to connect to a dashboard: [path/viewname]
+          2.) relative path to connect to a form with token: [path/viewname?form.token=$dest_value$]
+          3.) pass earliest/latest time range: [path/viewname?form.token=$dest_value$&earliest=$earliest$&latest=$latest$]
+          4.) URL and query argument to pass value to destination page: [URL?q=$dest_value$]
+        -->
+        <text/>
+      </interleave>
+    </element>
+  </define>
+  <define name="SetToken">
+    <element name="set">
+      <interleave>
+        <attribute name="token">
+          <ref name="TokenName"/>
+        </attribute>
+        <optional>
+          <attribute name="prefix"/>
+        </optional>
+        <optional>
+          <attribute name="suffix"/>
+        </optional>
+        <text/>
+      </interleave>
+    </element>
+  </define>
+  <define name="UnsetToken">
+    <element name="unset">
+      <attribute name="token">
+        <ref name="TokenName"/>
+      </attribute>
+    </element>
+  </define>
+  <define name="Selection">
+    <element name="selection">
+      <zeroOrMore>
+        <choice>
+          <ref name="LinkAction"/>
+          <ref name="SetToken"/>
+          <ref name="UnsetToken"/>
+        </choice>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="Chart">
+    <a:documentation>
+Chart Element
+</a:documentation>
+    <element name="chart">
+      <interleave>
+        <ref name="BaseElementAttributes"/>
+        <optional>
+          <ref name="ElementTitle"/>
+        </optional>
+        <optional>
+          <choice>
+            <ref name="ElementSearch"/>
+            <ref name="SearchNode"/>
+          </choice>
+        </optional>
+        <zeroOrMore>
+          <choice>
+            <ref name="ChartOption"/>
+            <ref name="RefreshTimeOption"/>
+            <ref name="LinkOption"/>
+            <ref name="AnyOption"/>
+          </choice>
+        </zeroOrMore>
+        <optional>
+          <ref name="Drilldown"/>
+        </optional>
+        <optional>
+          <ref name="Selection"/>
+        </optional>
+      </interleave>
+    </element>
+  </define>
+  <define name="ChartOption">
+    <choice>
+      <!-- The height of the chart -->
+      <element name="option">
+        <attribute name="name">
+          <value>height</value>
+        </attribute>
+        <text/>
+      </element>
+      <ref name="Charting.Chart"/>
+      <ref name="Charting.Axis"/>
+      <ref name="Charting.AxisLabels"/>
+      <ref name="Charting.GridLines"/>
+      <ref name="Charting.Legend"/>
+      <ref name="Charting.Data"/>
+      <!-- The label of the X-Axis -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisTitleX.text</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- The label of the Y-Axis -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisTitleY.text</value>
+        </attribute>
+        <text/>
+      </element>
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisTitleY2.text</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Visibility of the X-Axis label -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisTitleX.visibility</value>
+        </attribute>
+        <choice>
+          <value>visible</value>
+          <value>collapsed</value>
+        </choice>
+      </element>
+      <!-- Visibility of the Y-Axis label -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisTitleY.visibility</value>
+        </attribute>
+        <choice>
+          <value>visible</value>
+          <value>collapsed</value>
+        </choice>
+      </element>
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisTitleY2.visibility</value>
+        </attribute>
+        <choice>
+          <value>visible</value>
+          <value>collapsed</value>
+        </choice>
+      </element>
+      <!-- Colors used for the series.  The format is a JSON array like: [0xFF0000,0xFFFF00,0x00FF00] -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.seriesColors</value>
+        </attribute>
+        <text/>
+      </element>
+      <!--
+        The default used depends on your browser and the chart type being used. If your browser is IE 8 or less, the
+        default value is 1000 objects. If you're using a different browser, the default is 1200 for column and bar charts
+        and 2000 for line and area charts.
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.resultTruncationLimit</value>
+        </attribute>
+        <data type="integer"/>
+      </element>
+      <!-- Same as "charting.resultTruncationLimit". -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.chart.resultTruncationLimit</value>
+        </attribute>
+        <data type="integer"/>
+      </element>
+      <!--
+        This is a special switch that splits a multi-series chart into separate charts that are stacked from top to
+        bottom, one for each series. It is most applicable to area, bar, column, and line charts (it may produce confusing
+        results with other chart types). 
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.layout.splitSeries</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!--
+        A list of hexadecimal color values from which the range band colors are generated. Colors display in the order
+        indicated in the array. For example, you can reverse the default green-yellow-red sequence by changing the
+        gaugeColors value to [0xBF3030,0xFFE800,0x84E900]. You can specify any number of colors. If your gauge has more or
+        less range intervals (either specified via the search language or the rangeValues parameter) than the number of
+        rangeColors, Splunk will interpolate the colors as necessary.
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.gaugeColors</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- A map of hexadecimal color values to use for each field, where the map is a comma-delimited list of key/value pairs, enclosed in curly braces. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.fieldColors</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Dash style for all line series in the chart. Defaults to solid. Supports all dashStyle options supported by HighCharts. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.lineDashStyle</value>
+        </attribute>
+        <choice>
+          <value>solid</value>
+          <value>shortDash</value>
+          <value>shortDot</value>
+          <value>shortDashDot</value>
+          <value>shortDashDotDot</value>
+          <value>dot</value>
+          <value>dash</value>
+          <value>longDash</value>
+          <value>dashDot</value>
+          <value>longDashDot</value>
+          <value>longDashDotDot</value>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="Charting.Data">
+    <choice>
+      <!-- The search job ID. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.data.jobID</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- The offset of the first retrieved result. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.data.offset</value>
+        </attribute>
+        <data type="integer"/>
+      </element>
+      <!-- The number of results to retrieve. Set 0 to get all results. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.data.count</value>
+        </attribute>
+        <data type="integer"/>
+      </element>
+      <!-- The post-processing search to apply to the results, if necessary. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.data.search</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Whether or not results are previewed. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.data.preview</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!-- The order in which to apply the fieldShowList and fieldHideList filters. Valid values are show_hide and hide_show. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.data.fieldListMode</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- The list of fields to explicitly show in the results. JSON array format -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.data.fieldShowList</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- The list of fields to explicitly hide from the results -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.data.fieldHideList</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- The table from which to create a view -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.data.table</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- The list of slices indicating which rows of the table to include in the view. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.data.rows</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- The list of slices indicating which columns from the table to include in the view -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.data.columns</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- The number of results to retrieve (per series). Set 0 to get all results. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.data.count</value>
+        </attribute>
+        <data type="integer"/>
+      </element>
+    </choice>
+  </define>
+  <define name="Charting.Axis">
+    <choice>
+      <!--
+        - - - - - - - - - - - - - - - - - - - - - - - -Numeric Axis - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+        For numeric axes, this represents the type of scale that Splunk applies to a numerical axis. Potential values
+        are linear and log (for a logarithmic scale). It's only supported for the Y-axis (charting.axisY.scale) and Y2-axis (charting.axisY2.scale) in most
+        chart types, with the exception of scatter charts, where it also applies to the X-axis (charting.axisY.scale).
+        Enable a second Y-axis.
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisY2.enabled</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!-- Specify a field or a space/comma-delimited list of fields that should be mapped to the second Y-axis. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisY2.fields</value>
+        </attribute>
+        <text/>
+      </element>
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisY.scale</value>
+        </attribute>
+        <choice>
+          <value>linear</value>
+          <value>log</value>
+        </choice>
+      </element>
+      <!-- Second Y-axis can set its own scale or inherit its scale from the first Y-axis. Defaults to "inherit". -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisY2.scale</value>
+        </attribute>
+        <choice>
+          <value>inherit</value>
+          <value>linear</value>
+          <value>log</value>
+        </choice>
+      </element>
+      <!-- Sets the minimum number for the visible axis range. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisY.minimumNumber</value>
+        </attribute>
+        <choice>
+          <data type="integer"/>
+          <value>auto</value>
+        </choice>
+      </element>
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisY2.minimumNumber</value>
+        </attribute>
+        <choice>
+          <data type="integer"/>
+          <value>auto</value>
+        </choice>
+      </element>
+      <!-- Sets the maximum number for the visible axis range. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisY.maximumNumber</value>
+        </attribute>
+        <choice>
+          <data type="integer"/>
+          <value>auto</value>
+        </choice>
+      </element>
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisY2.maximumNumber</value>
+        </attribute>
+        <choice>
+          <data type="integer"/>
+          <value>auto</value>
+        </choice>
+      </element>
+      <!--
+        For numeric axes, this represents the type of scale that Splunk applies to a numerical axis. Potential values
+        are linear and log (for a logarithmic scale). It's only supported for the Y-axis (charting.axisX.scale) and Y2-axis (charting.axisY2.scale) in most
+        chart types, with the exception of scatter charts, where it also applies to the X-axis (charting.axisX.scale).
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisX.scale</value>
+        </attribute>
+        <choice>
+          <value>linear</value>
+          <value>log</value>
+        </choice>
+      </element>
+      <!-- Sets the minimum number for the visible axis range. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisX.minimumNumber</value>
+        </attribute>
+        <choice>
+          <data type="integer"/>
+          <value>auto</value>
+        </choice>
+      </element>
+      <!-- Sets the maximum number for the visible axis range. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisX.maximumNumber</value>
+        </attribute>
+        <choice>
+          <data type="integer"/>
+          <value>auto</value>
+        </choice>
+      </element>
+      <!-- Determines whether chart's X-axis range includes zero. Defaults to false. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisX.includeZero</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!-- Determines whether chart's Y-axis range includes zero. Defaults to false. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisY.includeZero</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisY2.includeZero</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+    </choice>
+  </define>
+  <define name="Charting.AxisLabels">
+    <choice>
+      <!--
+        Controls the visibility of the major tick mark labels. Valid values are auto (automatically shows or hides
+        individual major labels to maintain readability in the available space without overlapping), show (forces all
+        major labels to be visible even when there isn't enough space to display them without overlapping), and hide
+        (hides all major labels). Set majorLabelVisibility to show if you always want labels to appear, even when a large
+        number of results are displayed.
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisLabelsX.majorLabelVisibility</value>
+        </attribute>
+        <choice>
+          <value>auto</value>
+          <value>show</value>
+          <value>hide</value>
+        </choice>
+      </element>
+      <!-- Determines the rotation of the axis label in degrees. Defaults to 0. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisLabelsX.majorLabelStyle.rotation</value>
+        </attribute>
+        <choice>
+          <value>-90</value>
+          <value>-45</value>
+          <value>0</value>
+          <value>45</value>
+          <value>90</value>
+        </choice>
+      </element>
+      <!-- Determines whether the axis label is ellipsized to the tick spacing. Defaults to 'ellipsisNone'. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisLabelsX.majorLabelStyle.overflowMode</value>
+        </attribute>
+        <choice>
+          <value>ellipsisMiddle</value>
+          <value>ellipsisNone</value>
+        </choice>
+      </element>
+      <!--
+        - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Numeric Axis Labels - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+        Indicates whether the major unit should be rounded to the nearest integer. 
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisLabelsX.integerUnits</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!--
+        Controls the visibility of the major tick mark labels. Valid values are auto (automatically shows or hides
+        individual major labels to maintain readability in the available space without overlapping), show (forces all
+        major labels to be visible even when there isn't enough space to display them without overlapping), and hide
+        (hides all major labels). Set majorLabelVisibility to show if you always want labels to appear, even when a large
+        number of results are displayed.
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisLabelsY.majorLabelVisibility</value>
+        </attribute>
+        <choice>
+          <value>auto</value>
+          <value>show</value>
+          <value>hide</value>
+        </choice>
+      </element>
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisLabelsY2.majorLabelVisibility</value>
+        </attribute>
+        <choice>
+          <value>auto</value>
+          <value>show</value>
+          <value>hide</value>
+        </choice>
+      </element>
+      <!--
+        - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Numeric Axis Labels - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+        The spacing unit at which to place major tick marks along the numeric axis. By default, this value is
+        automatically calculated based on the scale of the related axis. 
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisLabelsY.majorUnit</value>
+        </attribute>
+        <choice>
+          <data type="integer"/>
+          <value>auto</value>
+        </choice>
+      </element>
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisLabelsY2.majorUnit</value>
+        </attribute>
+        <choice>
+          <data type="integer"/>
+          <value>auto</value>
+        </choice>
+      </element>
+      <!--
+        - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Numeric Axis Labels - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+        The spacing unit at which to place major tick marks along the numeric axis. By default, this value is
+        automatically calculated based on the scale of the related axis. 
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisLabelsX.majorUnit</value>
+        </attribute>
+        <choice>
+          <data type="integer"/>
+          <value>auto</value>
+        </choice>
+      </element>
+      <!-- Determines whether or not X-axis line is visible. Defaults to 'show'. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisLabelsX.axisVisibility</value>
+        </attribute>
+        <choice>
+          <value>show</value>
+          <value>hide</value>
+        </choice>
+      </element>
+      <!-- Determines whether or not Y-axis line is visible. Defaults to 'show'. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisLabelsY.axisVisibility</value>
+        </attribute>
+        <choice>
+          <value>show</value>
+          <value>hide</value>
+        </choice>
+      </element>
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisLabelsY2.axisVisibility</value>
+        </attribute>
+        <choice>
+          <value>show</value>
+          <value>hide</value>
+        </choice>
+      </element>
+      <!-- Determines whether major tick marks on the X-axis are visible, where auto only shows a major tick if the corresponding label is visible, show always shows all major ticks and hide hides all major ticks. Defaults to 'auto'. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisLabelsX.majorTickVisibility</value>
+        </attribute>
+        <choice>
+          <value>auto</value>
+          <value>show</value>
+          <value>hide</value>
+        </choice>
+      </element>
+      <!-- Determines whether major tick marks on the Y-axis are visible, where auto only shows a major tick if the corresponding label is visible, show always shows all major ticks and hide hides all major ticks. Defaults to 'auto'. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisLabelsY.majorTickVisibility</value>
+        </attribute>
+        <choice>
+          <value>auto</value>
+          <value>show</value>
+          <value>hide</value>
+        </choice>
+      </element>
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisLabelsY2.majorTickVisibility</value>
+        </attribute>
+        <choice>
+          <value>auto</value>
+          <value>show</value>
+          <value>hide</value>
+        </choice>
+      </element>
+      <!-- Determines whether minor tick marks on the X-axis are visible, where auto only shows a minor tick if the corresponding label is visible, show always shows all minor ticks and hide hides all minor ticks. Defaults to 'auto'. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisLabelsX.minorTickVisibility</value>
+        </attribute>
+        <choice>
+          <value>auto</value>
+          <value>show</value>
+          <value>hide</value>
+        </choice>
+      </element>
+      <!-- Determines whether minor tick marks on the Y-axis are visible, where auto only shows a minor tick if the corresponding label is visible, show always shows all minor ticks and hide hides all minor ticks. Defaults to 'auto'. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisLabelsY.minorTickVisibility</value>
+        </attribute>
+        <choice>
+          <value>auto</value>
+          <value>show</value>
+          <value>hide</value>
+        </choice>
+      </element>
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisLabelsY2.minorTickVisibility</value>
+        </attribute>
+        <choice>
+          <value>auto</value>
+          <value>show</value>
+          <value>hide</value>
+        </choice>
+      </element>
+      <!-- Determines the size in pixels of major tick marks on the X-axis. Defaults to 6. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisLabelsX.majorTickSize</value>
+        </attribute>
+        <data type="integer"/>
+      </element>
+      <!-- Determines the size in pixels of major tick marks on the Y-axis. Defaults to 6. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisLabelsY.majorTickSize</value>
+        </attribute>
+        <data type="integer"/>
+      </element>
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisLabelsY2.majorTickSize</value>
+        </attribute>
+        <data type="integer"/>
+      </element>
+      <!-- Determines the size in pixels of minor tick marks on the X-axis. Defaults to 6. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisLabelsX.minorTickSize</value>
+        </attribute>
+        <data type="integer"/>
+      </element>
+      <!-- Determines the size in pixels of minor tick marks on the Y-axis. Defaults to 6. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisLabelsY.minorTickSize</value>
+        </attribute>
+        <data type="integer"/>
+      </element>
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisLabelsY2.minorTickSize</value>
+        </attribute>
+        <data type="integer"/>
+      </element>
+      <!-- Determines the visibility of major tick mark labels on the X-axis. Defaults to 'auto'. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisLabelsX.majorLabelVisibility</value>
+        </attribute>
+        <choice>
+          <value>auto</value>
+          <value>show</value>
+          <value>hide</value>
+        </choice>
+      </element>
+      <!-- Determines the visibility of major tick mark labels on the Y-axis. Defaults to 'auto'. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisLabelsY.majorLabelVisibility</value>
+        </attribute>
+        <choice>
+          <value>auto</value>
+          <value>show</value>
+          <value>hide</value>
+        </choice>
+      </element>
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisLabelsY2.majorLabelVisibility</value>
+        </attribute>
+        <choice>
+          <value>auto</value>
+          <value>show</value>
+          <value>hide</value>
+        </choice>
+      </element>
+      <!-- Determines whether the Y-axis should be extended to snap to whole major tick marks. Defaults to true. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisLabelsY.extendsAxisRange</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!-- Determines whether the major unit is rounded to the nearest integer. Defaults to false. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisLabelsY.integerUnits</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisLabelsY2.integerUnits</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!--
+        Extend the axis range of the X axis to show the first tickmark out of range. Only applies for numeric
+        axis values. (true by default)
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisLabelsX.extendsAxisRange</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!--
+        Extend the axis range of the Y axis to show the first tickmark out of range. Only applies for numeric
+        axis values. (true by default)
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.axisLabelsY.extendsAxisRange</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+    </choice>
+  </define>
+  <define name="Charting.GridLines">
+    <choice>
+      <!-- Determines whether major grid lines are visible. Defaults to 'true'. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.gridLinesX.showMajorLines</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!-- Determines whether major grid lines are visible. Defaults to 'true'. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.gridLinesY.showMajorLines</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!-- Determines whether major grid lines are visible. Defaults to 'false'. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.gridLinesY2.showMajorLines</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!-- Determines whether minor grid lines are visible on the X-axis. Defaults to 'true'. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.gridLinesX.showMinorLines</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!-- Determines whether minor grid lines are visible on the Y-axis. Defaults to 'true'. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.gridLinesY.showMinorLines</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <element name="option">
+        <attribute name="name">
+          <value>charting.gridLinesY2.showMinorLines</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+    </choice>
+  </define>
+  <define name="Charting.Legend">
+    <choice>
+      <element name="option">
+        <attribute name="name">
+          <value>charting.legend.labels</value>
+        </attribute>
+        <text/>
+      </element>
+      <element name="option">
+        <attribute name="name">
+          <value>charting.legend.placement</value>
+        </attribute>
+        <choice>
+          <value>top</value>
+          <value>left</value>
+          <value>bottom</value>
+          <value>right</value>
+          <value>none</value>
+        </choice>
+      </element>
+      <element name="option">
+        <attribute name="name">
+          <value>charting.legend.labelStyle.overflowMode</value>
+        </attribute>
+        <choice>
+          <value>ellipsisEnd</value>
+          <value>ellipsisMiddle</value>
+          <value>ellipsisStart</value>
+          <value>ellipsisNone</value>
+        </choice>
+      </element>
+      <!-- If set to "null", disables color synchronization of the chart (i.e. the same chart legend value is by default the same color across charts, but any charts with masterLegend set to "null" does not maintain those same chart legend colors) -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.legend.masterLegend</value>
+        </attribute>
+        <value>null</value>
+      </element>
+    </choice>
+  </define>
+  <define name="Charting.Chart">
+    <choice>
+      <!-- What type of chart do you want -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.chart</value>
+        </attribute>
+        <choice>
+          <value>area</value>
+          <value>bar</value>
+          <value>column</value>
+          <value>fillerGauge</value>
+          <value>line</value>
+          <value>markerGauge</value>
+          <value>pie</value>
+          <value>radialGauge</value>
+          <value>scatter</value>
+          <value>bubble</value>
+        </choice>
+      </element>
+      <!-- Enable or disable drilldown for the chart. -->
+      <element name="option">
+        <attribute name="name">
+          <value>drilldown</value>
+        </attribute>
+        <choice>
+          <value>all</value>
+          <value>none</value>
+        </choice>
+      </element>
+      <!-- Enable or disable drilldown for the chart. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.drilldown</value>
+        </attribute>
+        <choice>
+          <value>all</value>
+          <value>none</value>
+          <ref name="Boolean"/>
+        </choice>
+      </element>
+      <!-- Indicates whether or not lines should be painted in area charts. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.chart.showLines</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!-- Used to set up stacked area, bar, and column charts. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.chart.stackMode</value>
+        </attribute>
+        <choice>
+          <value>default</value>
+          <value>stacked</value>
+          <value>stacked100</value>
+        </choice>
+      </element>
+      <!-- Determines how the area chart handles null values. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.chart.nullValueMode</value>
+        </attribute>
+        <choice>
+          <value>gaps</value>
+          <value>zero</value>
+          <value>connect</value>
+        </choice>
+      </element>
+      <!-- Controls the spacing between bars in a bar chart. Whether this property is measured in pixels or is relative to the -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.chart.barSpacing</value>
+        </attribute>
+        <data type="integer"/>
+      </element>
+      <!-- Controls the spacing between columns in a column chart -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.chart.columnSpacing</value>
+        </attribute>
+        <data type="integer"/>
+      </element>
+      <!--
+        Enables the choice between two basic gauge appearances. The shiny style is a graphically stylized version of the
+        gauge with with chrome, shading, and so on so that it mimics those in the real world. The minimal style is a
+        stripped-down "just the basics" version of the gauge.
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.chart.style</value>
+        </attribute>
+        <choice>
+          <value>minimal</value>
+          <value>shiny</value>
+        </choice>
+      </element>
+      <!--
+        A numeric array that represents the overall numerical range represented by the gauge, and the relative size of the
+        color-coded subranges within that overall range. For example, a range of [0,30,70,100] would indicate that the
+        gauge starts at zero, ends at 100, and has three subranges that are each identified by another filler color. If
+        the search returns a value of 71, the filler rises to that value on the gauge and takes on the color assigned to
+        the top range (71-100).
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.chart.rangeValues</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Determines whether the gauge/pie chart should display labels. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.chart.showLabels</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!-- Determines whether the gauge should show its value. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.chart.showValue</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!-- Indicates whether or not markers should be painted in line charts. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.chart.showMarkers</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!-- Determines the scatter chart's marker size. Defaults to 4. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.chart.markerSize</value>
+        </attribute>
+        <data type="integer"/>
+      </element>
+      <!-- Determines whether the gauge uses percentage range. Defaults to false. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.chart.usePercentageRange</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!-- Determines whether the gauge uses percentage value. Defaults to false. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.chart.usePercentageValue</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!-- Determines the radial gauge's range start angle. Defaults to 45. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.chart.rangeStartAngle</value>
+        </attribute>
+        <data type="integer"/>
+      </element>
+      <!-- Determines the radial gauge's range arc angle. Defaults to 270. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.chart.rangeArcAngle</value>
+        </attribute>
+        <data type="integer"/>
+      </element>
+      <!-- Determines the gauge's major unit -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.chart.majorUnit</value>
+        </attribute>
+        <data type="integer"/>
+      </element>
+      <!-- Determines whether the gauge shows major ticks. Defaults to true. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.chart.showMajorTicks</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!-- Determines whether the gauge shows minor ticks. Defaults to true. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.chart.showMinorTicks</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!-- Determines the markerGauge or fillerGauge orientation. Defaults to "y". -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.chart.orientation</value>
+        </attribute>
+        <choice>
+          <value>x</value>
+          <value>y</value>
+        </choice>
+      </element>
+      <!-- Determines in pixels the spacing between clustered series in a bar chart when 'stackMode = default' -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.chart.seriesSpacing</value>
+        </attribute>
+        <data type="integer"/>
+      </element>
+      <!-- Determines the pie chart's threshold at which smaller slices collapse into a consolidated slice. Valid values are between 0 (no collapsing) and 1 (all slices are collapsed into a single pie). Defaults to "0.01", which collapses slices smaller than 1% of the whole pie. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.chart.sliceCollapsingThreshold</value>
+        </attribute>
+        <data type="decimal"/>
+      </element>
+      <!-- Determines the pie chart's label for the consolidated slice. Defaults to 'Other'. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.chart.sliceCollapsingLabel</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Determines whether to display percentage values with the labels. Defaults to false. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.chart.showPercent</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!-- Specify a field or a space/comma-delimited list of fields that should be overlaid -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.chart.overlayFields</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- The opacity of the filled region in an area chart. Values can range from 0 (transparent) to 1 (opaque). The default value is 0.75. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.areaFillOpacity</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Determines the maximum size of each bubble. Defaults to 10. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.chart.bubbleMaximumSize</value>
+        </attribute>
+        <data type="integer"/>
+      </element>
+      <!-- Determines the minimum size of each bubble. Defaults to 50. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.chart.bubbleMinimumSize</value>
+        </attribute>
+        <data type="integer"/>
+      </element>
+      <!-- Determines whether bubble size is set by area or diameter. Defaults to area. -->
+      <element name="option">
+        <attribute name="name">
+          <value>charting.chart.bubbleSizeBy</value>
+        </attribute>
+        <choice>
+          <value>area</value>
+          <value>diameter</value>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="Table">
+    <a:documentation>
+Table Element
+</a:documentation>
+    <element name="table">
+      <interleave>
+        <ref name="BaseElementAttributes"/>
+        <optional>
+          <ref name="ElementTitle"/>
+        </optional>
+        <optional>
+          <choice>
+            <ref name="ElementSearch"/>
+            <ref name="SearchNode"/>
+          </choice>
+        </optional>
+        <zeroOrMore>
+          <choice>
+            <ref name="TableOption"/>
+            <ref name="RefreshTimeOption"/>
+            <ref name="LinkOption"/>
+            <ref name="AnyOption"/>
+          </choice>
+        </zeroOrMore>
+        <optional>
+          <ref name="ElementFieldList"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="TableFormat"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="Drilldown"/>
+        </optional>
+      </interleave>
+    </element>
+  </define>
+  <define name="TableOption">
+    <choice>
+      <!-- Number of rows to display. Defaults to "10" -->
+      <element name="option">
+        <attribute name="name">
+          <value>count</value>
+        </attribute>
+        <data type="integer"/>
+      </element>
+      <!-- Enable or disable the row numbers column in the results table. Defaults to "False" -->
+      <element name="option">
+        <attribute name="name">
+          <value>rowNumbers</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!-- DEPRECATED: please use rowNumbers instead -->
+      <element name="option">
+        <attribute name="name">
+          <value>displayRowNumbers</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!-- Enable or disable wrapping of text in the results table. Defaults to "True" -->
+      <element name="option">
+        <attribute name="name">
+          <value>wrap</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!-- The data overlay to show, currently either "heatmap" or "highlow". Defaults to None (no data overlay)  -->
+      <element name="option">
+        <attribute name="name">
+          <value>dataOverlayMode</value>
+        </attribute>
+        <choice>
+          <value>heatmap</value>
+          <value>highlow</value>
+          <value>none</value>
+        </choice>
+      </element>
+      <!-- Enable the paginator. Defaults to "True" (defined in BasePanel) -->
+      <element name="option">
+        <attribute name="name">
+          <value>showPager</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!-- Enable preview of results before the search job is complete. Defaults to "True" -->
+      <element name="option">
+        <attribute name="name">
+          <value>previewResults</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!-- Enable drilldown for the table on row- or cell (same as "all") level. Or use "none" to disable drilldown -->
+      <element name="option">
+        <attribute name="name">
+          <value>drilldown</value>
+        </attribute>
+        <choice>
+          <value>all</value>
+          <value>cell</value>
+          <value>row</value>
+          <value>none</value>
+        </choice>
+      </element>
+      <!-- DEPRECATED: the list of fields to display in the table. Use the <fields> element instead. -->
+      <element name="option">
+        <attribute name="name">
+          <value>fields</value>
+        </attribute>
+        <text/>
+      </element>
+    </choice>
+  </define>
+  <define name="TableFormat">
+    <element name="format">
+      <interleave>
+        <attribute name="type">
+          <value>sparkline</value>
+        </attribute>
+        <attribute name="field"/>
+        <zeroOrMore>
+          <ref name="SparklineFormatOptions"/>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="SparklineFormatOptions">
+    <choice>
+      <!--
+        === Common Options === 
+        One of 'line' (default), 'bar', 'tristate', 'discrete', 'bullet', 'pie' or 'box' 
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>type</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Width of the chart - Defaults to 'auto' - May be any valid css width - 1.5em, 20px, etc (using a number without a unit specifier won't do what you want) - This option does nothing for bar and tristate chars (see barWidth) -->
+      <element name="option">
+        <attribute name="name">
+          <value>width</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Height of the chart - Defaults to 'auto' (line height of the containing tag) -->
+      <element name="option">
+        <attribute name="name">
+          <value>height</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Used by line and discrete charts to specify the colour of the line drawn as a CSS values string -->
+      <element name="option">
+        <attribute name="name">
+          <value>lineColor</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Specify the colour used to fill the area under the graph as a CSS value. Set to false to disable fill -->
+      <element name="option">
+        <attribute name="name">
+          <value>fillColor</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Specify the minimum value to use for the range of Y values of the chart - Defaults to the minimum value supplied -->
+      <element name="option">
+        <attribute name="name">
+          <value>chartRangeMin</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Specify the maximum value to use for the range of Y values of the chart - Defaults to the maximum value supplied -->
+      <element name="option">
+        <attribute name="name">
+          <value>chartRangeMax</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- If true then don't erase any existing chart attached to the tag, but draw another chart over the top - Note that width and height are ignored if an existing chart is detected. Note: You'll usually want to lock the axis on both charts using chartRangeMin and chartRangeMax if you want the same value on each chart to occupy the same point. -->
+      <element name="option">
+        <attribute name="name">
+          <value>composite</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- If true then options can be specified as attributes on each tag to be transformed into a sparkline, as well as passed to the sparkline() function. See also tagOptionPrefix -->
+      <element name="option">
+        <attribute name="name">
+          <value>enableTagOptions</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- String that each option passed as an attribute on a tag must begin with. Defaults to 'spark' -->
+      <element name="option">
+        <attribute name="name">
+          <value>tagOptionPrefix</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- The name of the tag attribute to fetch values from, if present - Defaults to 'values' -->
+      <element name="option">
+        <attribute name="name">
+          <value>tagValuesAttribute</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Set to true to disable checking for hidden sparklines. This can be beneficial if you know you'll never attempt to draw a sparkline into a hidden parent element as it avoids a browser reflow for the test, increasing rendering performance. Defaults to false - New in 2.0 -->
+      <element name="option">
+        <attribute name="name">
+          <value>disableHiddenCheck</value>
+        </attribute>
+        <text/>
+      </element>
+      <!--
+        === Line Charts === 
+        Defaults to 3 pixels of width for each value in the chart 
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>defaultPixelsPerValue</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- The CSS colour of the final value marker. Set to false or an empty string to hide it -->
+      <element name="option">
+        <attribute name="name">
+          <value>spotColor</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- The CSS colour of the marker displayed for the mimum value. Set to false or an empty string to hide it -->
+      <element name="option">
+        <attribute name="name">
+          <value>minSpotColor</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- The CSS colour of the marker displayed for the maximum value. Set to false or an empty string to hide it -->
+      <element name="option">
+        <attribute name="name">
+          <value>maxSpotColor</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Radius of all spot markers, In pixels (default: 1.5) - Integer -->
+      <element name="option">
+        <attribute name="name">
+          <value>spotRadius</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Specifies which points to draw spots on, and with which colour. Accepts a range. For example, to render green spots on all values less than 50 and red on values higher use {':49': 'green, '50:': 'red'} - New in 2.0 -->
+      <element name="option">
+        <attribute name="name">
+          <value>valueSpots</value>
+        </attribute>
+        <zeroOrMore>
+          <ref name="AnyOption"/>
+        </zeroOrMore>
+      </element>
+      <!-- Specifies a colour for the spot that appears on a value when moused over. Set to null to disable. Defaults to # f5f - New in 2.0 -->
+      <element name="option">
+        <attribute name="name">
+          <value>highlightSpotColor</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Specifies a colour for the vertical line that appears through a value when moused over. Set to null to disable. Defaults to # f22 - New in 2.0 -->
+      <element name="option">
+        <attribute name="name">
+          <value>highlightLineColor</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- In pixels (default: 1) - Integer -->
+      <element name="option">
+        <attribute name="name">
+          <value>lineWidth</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Specify threshold values between which to draw a bar to denote the "normal" or expected range of values. For example the green bar here 80,85,84,88,98,114,116,104,95,85,84 might denote a normal operating temperature range -->
+      <element name="option">
+        <attribute name="name">
+          <value>normalRangeMin, normalRangeMax</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- By default the normal range is drawn behind the fill area of the chart. Setting this option to true causes it to be drawn over the top of the fill area -->
+      <element name="option">
+        <attribute name="name">
+          <value>drawNormalOnTop</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- See below -->
+      <element name="option">
+        <attribute name="name">
+          <value>xvalues</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- If true then the y values supplied to plot will be clipped to fall between chartRangeMin and chartRangeMax - By default chartRangeMin/Max just ensure that the chart spans at least that range of values, but does not constrain it -->
+      <element name="option">
+        <attribute name="name">
+          <value>chartRangeClip</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Specifies the minimum value to use for the X value of the chart -->
+      <element name="option">
+        <attribute name="name">
+          <value>chartRangeMinX</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Specifies the maximum value to use for the X value of the chart -->
+      <element name="option">
+        <attribute name="name">
+          <value>chartRangeMaxX</value>
+        </attribute>
+        <text/>
+      </element>
+      <!--
+        === Bar Charts === 
+        CSS colour used for postive values 
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>barColor</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- CSS colour used for negative values -->
+      <element name="option">
+        <attribute name="name">
+          <value>negBarColor</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- CSS colour used for values equal to zero -->
+      <element name="option">
+        <attribute name="name">
+          <value>zeroColor</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- CSS colour used for values equal to null - By default null values are omitted entirely, but setting this adds a thin marker for the entry - This can be useful if your chart is pretty sparse; perhaps try setting it to a light grey or something equally unobtrusive -->
+      <element name="option">
+        <attribute name="name">
+          <value>nullColor</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Width of each bar, in pixels (integer) -->
+      <element name="option">
+        <attribute name="name">
+          <value>barWidth</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Space between each bar, in pixels (integer) -->
+      <element name="option">
+        <attribute name="name">
+          <value>barSpacing</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Centers the y-axis at zero if true (default) -->
+      <element name="option">
+        <attribute name="name">
+          <value>zeroAxis</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- A range map to map specific values to selected colours. For example if you want all values of -2 to appear yellow, use colorMap: { '-2': '# ff0' }. As of version 1.5 you may also pass an array of values here instead of a mapping to specifiy a color for each individual bar. For example if your chart has three values 1,3,1 you can set colorMap=["red", "green", "blue"] As of version 2.0, objects will be automatically be converted to range maps so you can specify colours for a range of values -->
+      <element name="option">
+        <attribute name="name">
+          <value>colorMap</value>
+        </attribute>
+        <zeroOrMore>
+          <ref name="AnyOption"/>
+        </zeroOrMore>
+      </element>
+      <!-- An array of colours to use for stacked bar charts. The first series will use the first value in the array, the second series will use the second, etc. New in 2.0 -->
+      <element name="option">
+        <attribute name="name">
+          <value>stackedBarColor</value>
+        </attribute>
+        <text/>
+      </element>
+      <!--
+        === Tristate Charts === 
+        CSS colour for positive (win) values 
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>posBarColor</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- CSS colour for negative (lose) values -->
+      <element name="option">
+        <attribute name="name">
+          <value>negBarColor</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- CSS colour for zero (draw) values -->
+      <element name="option">
+        <attribute name="name">
+          <value>zeroBarColor</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Width of each bar, in pixels (integer) -->
+      <element name="option">
+        <attribute name="name">
+          <value>barWidth</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Space between each bar, in pixels (integer) -->
+      <element name="option">
+        <attribute name="name">
+          <value>barSpacing</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- A range map to map specific values to selected colours. For example if you want all values of -2 to appear yellow, use colorMap: { '-2': '# ff0' }. As of version 1.5 you may also pass an array of values here instead of a mapping to specifiy a color for each individual bar. For example if your chart has three values 1,3,1 you can set colorMap=["red", "green", "blue"] As of version 2.0, objects will be automatically be converted to range maps so you can specify colours for a range of values. -->
+      <element name="option">
+        <attribute name="name">
+          <value>colorMap</value>
+        </attribute>
+        <text/>
+      </element>
+      <!--
+        === Discrete Charts === 
+        Height of each line in pixels - Defaults to 30% of the graph height 
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>lineHeight</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Values less than this value will be drawn using thresholdColor instead of lineColor -->
+      <element name="option">
+        <attribute name="name">
+          <value>thresholdValue</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Colour to use in combination with thresholdValue -->
+      <element name="option">
+        <attribute name="name">
+          <value>thresholdColor</value>
+        </attribute>
+        <text/>
+      </element>
+      <!--
+        === Bullet Graphs === 
+        The CSS colour of the vertical target marker 
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>targetColor</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- The width of the target marker in pixels (integer) -->
+      <element name="option">
+        <attribute name="name">
+          <value>targetWidth</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- The CSS color of the performance measure horizontal bar -->
+      <element name="option">
+        <attribute name="name">
+          <value>performanceColor</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Colors to use for each qualitative range background color - This must be a javascript array. eg ['red','green', '# 22f'] -->
+      <element name="option">
+        <attribute name="name">
+          <value>rangeColors</value>
+        </attribute>
+        <text/>
+      </element>
+      <!--
+        === Pie Charts === 
+        An array of CSS colors to use for pie slices 
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>sliceColors</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Angle in degrees to offset the first slice - Try -90 or +90 -->
+      <element name="option">
+        <attribute name="name">
+          <value>offset</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Width of the border to draw around the whole pie chart, in pixels. Defaults to 0 (no border) - New in 2.0 -->
+      <element name="option">
+        <attribute name="name">
+          <value>borderWidth</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- CSS color to use to draw the pie border. Defaults to # 000 - New in 2.0 -->
+      <element name="option">
+        <attribute name="name">
+          <value>borderColor</value>
+        </attribute>
+        <text/>
+      </element>
+      <!--
+        === Box Plots === 
+        If set to false (default) then the values supplied are used to caculate the box data points for you. If true then you must pre-calculate the points (see below) 
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>raw</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- If true (default) then outliers (values > 1.5x the IQR) are marked with circles and the whiskers are placed at Q1 and Q3 instead of the least and greatest value -->
+      <element name="option">
+        <attribute name="name">
+          <value>showOutliers</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Set the inter-quartile range multipler used to calculate values that qualify as an outlier - Defaults to 1.5 -->
+      <element name="option">
+        <attribute name="name">
+          <value>outlierIQR</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- CSS line colour used to outline the box -->
+      <element name="option">
+        <attribute name="name">
+          <value>boxLineColor</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- CSS fill colour used for the box -->
+      <element name="option">
+        <attribute name="name">
+          <value>boxFillColor</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- CSS colour used to draw the whiskers -->
+      <element name="option">
+        <attribute name="name">
+          <value>whiskerColor</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- CSS colour used to draw the outlier circles -->
+      <element name="option">
+        <attribute name="name">
+          <value>outlierLineColor</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- CSS colour used to fill the outlier circles -->
+      <element name="option">
+        <attribute name="name">
+          <value>outlierFillColor</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Radius in pixels to draw the outlier circles -->
+      <element name="option">
+        <attribute name="name">
+          <value>spotRadius</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- CSS colour used to draw the median line -->
+      <element name="option">
+        <attribute name="name">
+          <value>medianColor</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- If set to a value, then a small crosshair is drawn at that point to represent a target value -->
+      <element name="option">
+        <attribute name="name">
+          <value>target</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- CSS colour used to draw the target crosshair, if set -->
+      <element name="option">
+        <attribute name="name">
+          <value>targetColor</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- If minvalue and maxvalue are set then the scale of the plot is fixed. By default minValue and maxValue are deduced from the values supplied -->
+      <element name="option">
+        <attribute name="name">
+          <value>minValue</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- See minValue -->
+      <element name="option">
+        <attribute name="name">
+          <value>maxValue</value>
+        </attribute>
+        <text/>
+      </element>
+      <!--
+        === Interactive Sparklines === 
+        Set to true to disable all sparkline interactivity, making the plugin behave in much the same way as it did in 1.x Defaults to false 
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>disableInteraction</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Set to true to disable mouseover tooltips. Defaults to false -->
+      <element name="option">
+        <attribute name="name">
+          <value>disableTooltips</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Set to true to disable the highlighting of individual values when mousing over a sparkline. Defaults to false -->
+      <element name="option">
+        <attribute name="name">
+          <value>disableHighlight</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Controls the amount to lighten or darken a value when moused over. A value of 1.5 will lighten by 50%, 0.5 will darken by 50%. Defaults to 1.4 -->
+      <element name="option">
+        <attribute name="name">
+          <value>highlightLighten</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- If specified, then values that are moused over will be changed to this colour instead of being lightend -->
+      <element name="option">
+        <attribute name="name">
+          <value>highlightColor</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Specifies the DOM element that tooltips should be rendered into. Defaults to document.body -->
+      <element name="option">
+        <attribute name="name">
+          <value>tooltipContainer</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Specifies a CSS class name to apply to tooltips to override the default built-in style. -->
+      <element name="option">
+        <attribute name="name">
+          <value>tooltipClassname</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Specifies how many pixels away from the mouse pointer to render the tooltip on the X-axis -->
+      <element name="option">
+        <attribute name="name">
+          <value>tooltipOffsetX</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Specifies how many pixels away from the mouse pointer to render the tooltip on the Y-axis -->
+      <element name="option">
+        <attribute name="name">
+          <value>tooltipOffsetY</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Pass a javascript function to use as a callback to override the HTML used to generate tooltips. The callback will be passed arguments of (sparkline, options, fields). sparkline is the sparkline object being rendered, "options" is the key:value mapping of options set for this sparkline - use options.get(key, default) to fetch an individual option. "fields" is an array of fields to render for the sparkline. This will be a single element array unless its a box plot. -->
+      <element name="option">
+        <attribute name="name">
+          <value>tooltipFormatter</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- If specified then the tooltip uses the string specified by this setting as a title -->
+      <element name="option">
+        <attribute name="name">
+          <value>tooltipChartTitle</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- A format string or spformat object (or an array thereof for multiple entries) to control the format of the tooltip -->
+      <element name="option">
+        <attribute name="name">
+          <value>tooltipFormat</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- A string to prepend to each field displayed in a tooltip -->
+      <element name="option">
+        <attribute name="name">
+          <value>tooltipPrefix</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- A string to append to each field displayed in a tooltip -->
+      <element name="option">
+        <attribute name="name">
+          <value>tooltipSuffix</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- If true then null values will not have a tooltip displayed Defaults to true -->
+      <element name="option">
+        <attribute name="name">
+          <value>tooltipSkipNull</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- An object or range map to map field values to tooltip strings. For example you may want to map -1, 0 and 1 to the strings "Lost", "Draw", "Won" -->
+      <element name="option">
+        <attribute name="name">
+          <value>tooltipValueLookups</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- An array of values specifying which fields to display in a tooltip and in what order. Currently only useful for box plots. See below for more details -->
+      <element name="option">
+        <attribute name="name">
+          <value>tooltipFormatFieldlist</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Specifies which key holds the field name to reference above. For box plots this should be "field" -->
+      <element name="option">
+        <attribute name="name">
+          <value>tooltipFormatFieldlistKey</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Pass a javascript function to control how numbers are formatted in tooltips. The callback will be passwd a number to format and must return a string. Default behaviour is to format numbers to western conventions. -->
+      <element name="option">
+        <attribute name="name">
+          <value>numberFormatter</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Character to use for group separator in numbers "1,234" for l10n purposes. Defaults to the comma - "," -->
+      <element name="option">
+        <attribute name="name">
+          <value>numberDigitGroupSep</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Character to use for the decimal point in numbers for l10n purposes. Defaults to the period - "." -->
+      <element name="option">
+        <attribute name="name">
+          <value>numberDecimalMark</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Number of digits between the group seperator in numbers for l10n purposes. Defaults to 3. -->
+      <element name="option">
+        <attribute name="name">
+          <value>numberDigitGroupCount</value>
+        </attribute>
+        <text/>
+      </element>
+    </choice>
+  </define>
+  <define name="Single">
+    <a:documentation>
+Single Value Element
+</a:documentation>
+    <element name="single">
+      <interleave>
+        <ref name="BaseElementAttributes"/>
+        <optional>
+          <ref name="ElementTitle"/>
+        </optional>
+        <optional>
+          <choice>
+            <ref name="ElementSearch"/>
+            <ref name="SearchNode"/>
+          </choice>
+        </optional>
+        <zeroOrMore>
+          <choice>
+            <ref name="SingleOption"/>
+            <ref name="RefreshTimeOption"/>
+            <ref name="LinkOption"/>
+            <ref name="AnyOption"/>
+          </choice>
+        </zeroOrMore>
+        <optional>
+          <ref name="Drilldown"/>
+        </optional>
+      </interleave>
+    </element>
+  </define>
+  <define name="SingleOption">
+    <choice>
+      <!-- Static class added to containing div -->
+      <element name="option">
+        <attribute name="name">
+          <value>additionalClass</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Target view which user is redirected to when clicking on the result -->
+      <element name="option">
+        <attribute name="name">
+          <value>linkView</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- field that holds the value to display -->
+      <element name="option">
+        <attribute name="name">
+          <value>field</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- CSV list containing: result, beforelabel, underlabel, afterlabel turning that portion into a link -->
+      <element name="option">
+        <attribute name="name">
+          <value>linkFields</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- additional class added to containing div based on the field specified -->
+      <element name="option">
+        <attribute name="name">
+          <value>classField</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- label that appears to the left of the value -->
+      <element name="option">
+        <attribute name="name">
+          <value>beforeLabel</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- label that appears to the right of the value -->
+      <element name="option">
+        <attribute name="name">
+          <value>afterLabel</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- label that appears below the value -->
+      <element name="option">
+        <attribute name="name">
+          <value>underLabel</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- optional search that is passed to the linked view -->
+      <element name="option">
+        <attribute name="name">
+          <value>linkSearch</value>
+        </attribute>
+        <text/>
+      </element>
+      <!--
+        enable or disable automatic drilldown for the single value visualization. By default it is disabled ("none") for
+        backwards compatibility.
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>drilldown</value>
+        </attribute>
+        <choice>
+          <value>all</value>
+          <value>none</value>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="Map">
+    <a:documentation>
+Map Element
+</a:documentation>
+    <element name="map">
+      <interleave>
+        <ref name="BaseElementAttributes"/>
+        <optional>
+          <ref name="ElementTitle"/>
+        </optional>
+        <optional>
+          <choice>
+            <ref name="ElementSearch"/>
+            <ref name="SearchNode"/>
+          </choice>
+        </optional>
+        <zeroOrMore>
+          <choice>
+            <ref name="MapOption"/>
+            <ref name="RefreshTimeOption"/>
+            <ref name="LinkOption"/>
+            <ref name="AnyOption"/>
+          </choice>
+        </zeroOrMore>
+        <optional>
+          <ref name="Drilldown"/>
+        </optional>
+      </interleave>
+    </element>
+  </define>
+  <define name="MapOption">
+    <choice>
+      <!--
+        The maximum number of clusters to render. Use caution when setting this property, as rendering a large number of
+        clusters can significantly degrade performance. It's recommended to use values below 1000. The default value is
+        100.
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>mapping.data.maxClusters</value>
+        </attribute>
+        <data type="integer"/>
+      </element>
+      <!--
+        {<field>:<hex>,...,<field>:<hex>} - A map of field names to hexadecimal color values (0xRRGGBB) to define colors
+        for specific series. The default value is none.
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>mapping.fieldColors</value>
+        </attribute>
+        <text/>
+      </element>
+      <!--
+        [<hex>,...,<hex>] - A list of hexadecimal color values (0xRRGGBB) from which to sample colors for series with no
+        specific colors assigned via the fieldColors property. The default value is
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>mapping.seriesColors</value>
+        </attribute>
+        <text/>
+      </element>
+      <!--
+        (<latitude>,<longitude>) - The initial center point of the map. Latitude values can range from -85 to 85, with
+        values outside of this range being clipped. Longitude values can range from -180 to 180, with values outside of
+        this range being wrapped to fall within it. The default value is none (auto).
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>mapping.map.center</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- The initial zoom level of the map. The default value is none (auto). -->
+      <element name="option">
+        <attribute name="name">
+          <value>mapping.map.zoom</value>
+        </attribute>
+        <data type="integer"/>
+      </element>
+      <!--
+        (<south-latitude>,<west-longitude>,<north-latitude>,<east-longitude>) - The initial bounds to fit within the map
+        view area. Latitude values can range from -85 to 85, with values outside of this range being clipped. Longitude
+        values can range from -180 to 180, with values outside of this range being wrapped to fall within it. Values
+        assigned to this property effectively override any values assigned to the center or zoom properties. The default
+        value is none (auto).
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>mapping.map.fitBounds</value>
+        </attribute>
+        <text/>
+      </element>
+      <!--
+        The url template to use for requesting tiles. The template can contain {x}, {y}, {z}, and {s} tokens to be
+        replaced with the x coordinate, y coordinate, zoom level, and subdomain, respectively, for each tile. The default
+        value is currently http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png (likely to change before release).
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>mapping.tileLayer.url</value>
+        </attribute>
+        <text/>
+      </element>
+      <!--
+        [<string>,...,<string>] - A list of subdomains to distribute tile requests over. More subdomains allows more tiles
+        to be requested simultaneously. The default value is [a,b,c].
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>mapping.tileLayer.subdomains</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- The minimum zoom level of the tileset. The default value is 0. -->
+      <element name="option">
+        <attribute name="name">
+          <value>mapping.tileLayer.minZoom</value>
+        </attribute>
+        <data type="integer"/>
+      </element>
+      <!-- The maximum zoom level of the tileset. The default value is currently 18 (likely to change before release). -->
+      <element name="option">
+        <attribute name="name">
+          <value>mapping.tileLayer.maxZoom</value>
+        </attribute>
+        <data type="integer"/>
+      </element>
+      <!--
+        Whether to invert the y coordinate for tile requests (TMS servers use inverse y-axis numbering). The default value
+        is false.
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>mapping.tileLayer.invertY</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!--
+        A copyright attribution to be displayed in the bottom right corner of the map. The default value is currently Map
+        data (c) 2012 OpenStreetMap contributors, CC-BY-SA. (likely to change before release).
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>mapping.tileLayer.attribution</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- The opacity of the markers. Values can range from 0 (transparent) to 1 (opaque). The default value is 0.8. -->
+      <element name="option">
+        <attribute name="name">
+          <value>mapping.markerLayer.markerOpacity</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- The minimum size of the markers, in pixels. The default value is 10. -->
+      <element name="option">
+        <attribute name="name">
+          <value>Layer.markerMinSize</value>
+        </attribute>
+        <data type="integer"/>
+      </element>
+      <!-- The maximum size of the markers, in pixels. The default value is 50. -->
+      <element name="option">
+        <attribute name="name">
+          <value>mapping.markerLayer.markerMaxSize</value>
+        </attribute>
+        <data type="integer"/>
+      </element>
+      <!-- Enable drilldown for the map. -->
+      <element name="option">
+        <attribute name="name">
+          <value>drilldown</value>
+        </attribute>
+        <choice>
+          <value>all</value>
+          <value>none</value>
+          <ref name="Boolean"/>
+        </choice>
+      </element>
+      <!-- Determines the map's height in pixels. -->
+      <element name="option">
+        <attribute name="name">
+          <value>height</value>
+        </attribute>
+        <data type="integer"/>
+      </element>
+    </choice>
+  </define>
+  <define name="Event">
+    <a:documentation>
+Event Element
+</a:documentation>
+    <element name="event">
+      <interleave>
+        <ref name="BaseElementAttributes"/>
+        <optional>
+          <ref name="ElementTitle"/>
+        </optional>
+        <optional>
+          <choice>
+            <ref name="ElementSearch"/>
+            <ref name="SearchNode"/>
+          </choice>
+        </optional>
+        <zeroOrMore>
+          <choice>
+            <ref name="EventOption"/>
+            <ref name="RefreshTimeOption"/>
+            <ref name="LinkOption"/>
+            <ref name="AnyOption"/>
+          </choice>
+        </zeroOrMore>
+        <optional>
+          <ref name="ElementFieldList"/>
+        </optional>
+        <optional>
+          <ref name="Drilldown"/>
+        </optional>
+      </interleave>
+    </element>
+  </define>
+  <define name="EventOption">
+    <choice>
+      <!-- The maximum number of rows to display. -->
+      <element name="option">
+        <attribute name="name">
+          <value>count</value>
+        </attribute>
+        <data type="integer"/>
+      </element>
+      <!-- Toggle display of row numbers to the left of results. -->
+      <element name="option">
+        <attribute name="name">
+          <value>rowNumbers</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!-- DEPRECATED: please use rowNumbers instead -->
+      <element name="option">
+        <attribute name="name">
+          <value>displayRowNumbers</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!-- Toggle whether to show events or results. Events are individual events, while results are created by statistical operators. Defaults to events. -->
+      <element name="option">
+        <attribute name="name">
+          <value>entityName</value>
+        </attribute>
+        <choice>
+          <value>events</value>
+          <value>results</value>
+        </choice>
+      </element>
+      <!-- The maximum number of lines to display for each result/event. -->
+      <element name="option">
+        <attribute name="name">
+          <value>maxLines</value>
+        </attribute>
+        <data type="integer"/>
+      </element>
+      <!-- Toggle pagination on or off. -->
+      <element name="option">
+        <attribute name="name">
+          <value>showPager</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!-- Set the segmentation of events displayed. This affects what you can and can't click on within the event. This only applies to raw and list event panel types. -->
+      <element name="option">
+        <attribute name="name">
+          <value>segmentation</value>
+        </attribute>
+        <choice>
+          <value>none</value>
+          <value>inner</value>
+          <value>outer</value>
+          <value>full</value>
+        </choice>
+      </element>
+      <element name="option">
+        <attribute name="name">
+          <value>softWrap</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!-- - - New for 6.0 - - -->
+      <element name="option">
+        <attribute name="name">
+          <value>type</value>
+        </attribute>
+        <choice>
+          <value>list</value>
+          <value>raw</value>
+          <value>table</value>
+        </choice>
+      </element>
+      <!--
+        A "virtual" option to bulk-set all of the type-specific drilldown options. Enabling this causes the default
+        values for the following settings to change (<segmentation> is the value of the segementation option):
+        * raw.drilldown = <segmentation>|"full"
+        * list.drilldown = <segmentation>|"full"
+        * table.drilldown = "1"
+        Type-specific options take precedence if they are provided as well.
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>drilldown</value>
+        </attribute>
+        <choice>
+          <value>all</value>
+          <value>none</value>
+        </choice>
+      </element>
+      <element name="option">
+        <attribute name="name">
+          <value>raw.drilldown</value>
+        </attribute>
+        <choice>
+          <value>full</value>
+          <value>inner</value>
+          <value>outer</value>
+          <value>none</value>
+        </choice>
+      </element>
+      <element name="option">
+        <attribute name="name">
+          <value>list.wrap</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <element name="option">
+        <attribute name="name">
+          <value>list.drilldown</value>
+        </attribute>
+        <choice>
+          <value>full</value>
+          <value>inner</value>
+          <value>outer</value>
+          <value>none</value>
+        </choice>
+      </element>
+      <element name="option">
+        <attribute name="name">
+          <value>table.wrap</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <element name="option">
+        <attribute name="name">
+          <value>table.drilldown</value>
+        </attribute>
+        <choice>
+          <value>all</value>
+          <value>none</value>
+          <ref name="Boolean"/>
+        </choice>
+      </element>
+      <element name="option">
+        <attribute name="name">
+          <value>table.sortDirection</value>
+        </attribute>
+        <choice>
+          <value>asc</value>
+          <value>desc</value>
+        </choice>
+      </element>
+      <element name="option">
+        <attribute name="name">
+          <value>table.sortColumn</value>
+        </attribute>
+        <text/>
+      </element>
+      <element name="option">
+        <attribute name="name">
+          <value>pagerPosition</value>
+        </attribute>
+        <choice>
+          <value>top</value>
+          <value>bottom</value>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="Html">
+    <a:documentation>
+HTML Element
+</a:documentation>
+    <element name="html">
+      <interleave>
+        <ref name="BaseElementAttributes"/>
+        <optional>
+          <!--
+            Filename to load the HTML content from (from appserver/static of the same app). If specified, the content of 
+            the node is ignored.
+          -->
+          <attribute name="src"/>
+        </optional>
+        <optional>
+          <!-- If enabled, the text content of the node is interpreted as the HTML source -->
+          <attribute name="encoded">
+            <ref name="Boolean"/>
+          </attribute>
+        </optional>
+        <optional>
+          <!-- Disable token replacement for the HTML element by setting tokens="false" (default is "true") -->
+          <attribute name="tokens">
+            <ref name="Boolean"/>
+          </attribute>
+        </optional>
+        <zeroOrMore>
+          <ref name="Anything"/>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="List">
+    <a:documentation>
+List Element (DEPRECATED)
+</a:documentation>
+    <element name="list">
+      <interleave>
+        <ref name="BaseElementAttributes"/>
+        <optional>
+          <ref name="ElementTitle"/>
+        </optional>
+        <optional>
+          <choice>
+            <ref name="ElementSearch"/>
+            <ref name="SearchNode"/>
+          </choice>
+        </optional>
+        <zeroOrMore>
+          <choice>
+            <ref name="ListOption"/>
+            <ref name="RefreshTimeOption"/>
+            <ref name="LinkOption"/>
+            <ref name="AnyOption"/>
+          </choice>
+        </zeroOrMore>
+        <optional>
+          <ref name="Drilldown"/>
+        </optional>
+      </interleave>
+    </element>
+  </define>
+  <define name="ListOption">
+    <choice>
+      <!-- the field name for the first column -->
+      <element name="option">
+        <attribute name="name">
+          <value>labelField</value>
+        </attribute>
+        <text/>
+      </element>
+      <!--
+        the field name for the second column 
+        <option name="">count</option>
+      -->
+      <element name="option">
+        <attribute name="name">
+          <value>valueField</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- the field that will be sorted initially. -->
+      <element name="option">
+        <attribute name="name">
+          <value>initialSort</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- direction for the initial sorting direction - desc | asc -->
+      <element name="option">
+        <attribute name="name">
+          <value>initialSortDir</value>
+        </attribute>
+        <choice>
+          <value>asc</value>
+          <value>desc</value>
+        </choice>
+      </element>
+      <!-- The name of the view to be directed to on click.  Must be used with labelFieldSearch. -->
+      <element name="option">
+        <attribute name="name">
+          <value>labelFieldTarget</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- search to be sent to the new view on click.  Must be used with labelFieldTarget -->
+      <element name="option">
+        <attribute name="name">
+          <value>labelFieldSearch</value>
+        </attribute>
+        <text/>
+      </element>
+    </choice>
+  </define>
+  <define name="ElementFieldList">
+    <a:documentation>
+Common Element Configuration
+</a:documentation>
+    <!--
+      A list of fields to display in the given visualization. This list is a JSON encoded array, or as a fallback a
+      comma separated list of optionally quoted field names.
+    -->
+    <element name="fields">
+      <text/>
+    </element>
+  </define>
+  <define name="AnyOption">
+    <element name="option">
+      <attribute name="name"/>
+      <text/>
+    </element>
+  </define>
+  <define name="LinkOption">
+    <choice>
+      <!-- Show the link buttons at the bottom of the panel. Defaults to "true", except for single value elements, where it defaults to "false" -->
+      <element name="option">
+        <attribute name="name">
+          <value>link.visible</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!-- Show the "Open in Search" button at the bottom of the panel. Defaults to the value of link.visible -->
+      <element name="option">
+        <attribute name="name">
+          <value>link.openSearch.visible</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!-- Show the "Open in Pivot" button at the bottom of the panel. Defaults to the value of link.visible -->
+      <element name="option">
+        <attribute name="name">
+          <value>link.openPivot.visible</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!-- The label for the "Open in Search" button. Defaults to "Open in Search" -->
+      <element name="option">
+        <attribute name="name">
+          <value>link.openSearch.text</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- The target view used when clicking on the "Open in Search" button. Defaults to "search" -->
+      <element name="option">
+        <attribute name="name">
+          <value>link.openSearch.viewTarget</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- An alternative search to use when clicking on the "Open in Search" button. Defaults to the search used by this panel -->
+      <element name="option">
+        <attribute name="name">
+          <value>link.openSearch.search</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- The earliest time to use for the alternative search specified by link.openSearch.search. Defaults to the earliest time used by this panel -->
+      <element name="option">
+        <attribute name="name">
+          <value>link.openSearch.searchEarliestTime</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- The latest time to use for the alternative search specified by link.openSearch.search. Defaults to the latest time used by this panel -->
+      <element name="option">
+        <attribute name="name">
+          <value>link.openSearch.searchLatestTime</value>
+        </attribute>
+        <text/>
+      </element>
+      <!-- Show the "Export" button at the bottom of the panel. Defaults to the value of link.visible -->
+      <element name="option">
+        <attribute name="name">
+          <value>link.exportResults.visible</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!-- Show the "Inspect" button at the bottom of the panel. Defaults to the value of link.visible -->
+      <element name="option">
+        <attribute name="name">
+          <value>link.inspectSearch.visible</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+    </choice>
+  </define>
+  <define name="RefreshTimeOption">
+    <choice>
+      <!-- Show the refresh time indicator: default True -->
+      <element name="option">
+        <attribute name="name">
+          <value>refresh.time.visible</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!-- Show the refresh link: default True -->
+      <element name="option">
+        <attribute name="name">
+          <value>refresh.link.visible</value>
+        </attribute>
+        <ref name="Boolean"/>
+      </element>
+      <!-- time in seconds to refresh this panel.  If not a positive integer panel will not refresh. Default: 0 -->
+      <element name="option">
+        <attribute name="name">
+          <value>refresh.auto.interval</value>
+        </attribute>
+        <data type="integer"/>
+      </element>
+    </choice>
+  </define>
+  <define name="Form">
+    <a:documentation>
+Forms
+</a:documentation>
+    <element name="form">
+      <interleave>
+        <ref name="BaseViewAttributes"/>
+        <optional>
+          <attribute name="class"/>
+        </optional>
+        <optional>
+          <element name="label">
+            <text/>
+          </element>
+        </optional>
+        <optional>
+          <element name="description">
+            <text/>
+          </element>
+        </optional>
+        <optional>
+          <choice>
+            <ref name="InlineSearchTemplate"/>
+            <interleave>
+              <ref name="SearchNode"/>
+              <optional>
+                <element name="fieldForValue">
+                  <text/>
+                </element>
+              </optional>
+              <optional>
+                <element name="fieldFormLabel">
+                  <text/>
+                </element>
+              </optional>
+            </interleave>
+          </choice>
+        </optional>
+        <optional>
+          <ref name="Fieldset"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="Row"/>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="Fieldset">
+    <element name="fieldset">
+      <optional>
+        <attribute name="autoRun">
+          <ref name="Boolean"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="submitButton">
+          <ref name="Boolean"/>
+        </attribute>
+      </optional>
+      <zeroOrMore>
+        <choice>
+          <ref name="Input"/>
+          <ref name="Html"/>
+        </choice>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="Input">
+    <a:documentation>
+Input types
+</a:documentation>
+    <choice>
+      <ref name="TextInput"/>
+      <ref name="DropdownInput"/>
+      <ref name="RadioInput"/>
+      <ref name="MultiSelectInput"/>
+      <ref name="CheckboxInput"/>
+      <ref name="TimeInput"/>
+    </choice>
+  </define>
+  <define name="BaseInputAttributes">
+    <attribute name="token">
+      <ref name="TokenName"/>
+    </attribute>
+    <attribute name="id">
+      <ref name="Identifier"/>
+    </attribute>
+    <optional>
+      <attribute name="searchWhenChanged">
+        <ref name="Boolean"/>
+      </attribute>
+    </optional>
+    <ref name="TokenDependencies"/>
+  </define>
+  <define name="InputLabel">
+    <element name="label">
+      <text/>
+    </element>
+  </define>
+  <define name="InputSearch">
+    <choice>
+      <ref name="PopulatingSearch"/>
+      <ref name="PopulatingSavedSearch"/>
+      <interleave>
+        <ref name="SearchNode"/>
+        <element name="fieldForValue">
+          <text/>
+        </element>
+        <element name="fieldForLabel">
+          <text/>
+        </element>
+      </interleave>
+    </choice>
+  </define>
+  <define name="InputChoice">
+    <element name="choice">
+      <interleave>
+        <optional>
+          <attribute name="value"/>
+        </optional>
+        <text/>
+      </interleave>
+    </element>
+  </define>
+  <define name="PopulatingSearch">
+    <element name="populatingSearch">
+      <interleave>
+        <attribute name="fieldForValue"/>
+        <attribute name="fieldForLabel"/>
+        <optional>
+          <attribute name="earliest"/>
+        </optional>
+        <optional>
+          <attribute name="latest"/>
+        </optional>
+        <text/>
+      </interleave>
+    </element>
+  </define>
+  <define name="PopulatingSavedSearch">
+    <element name="populatingSavedSearch">
+      <interleave>
+        <attribute name="fieldForValue"/>
+        <attribute name="fieldForLabel"/>
+        <text/>
+      </interleave>
+    </element>
+  </define>
+  <define name="InputMetadata">
+    <choice>
+      <element name="default">
+        <text/>
+      </element>
+      <element name="prefix">
+        <text/>
+      </element>
+      <element name="suffix">
+        <text/>
+      </element>
+      <element name="seed">
+        <text/>
+      </element>
+    </choice>
+  </define>
+  <define name="MultiValueInputMetadata">
+    <choice>
+      <ref name="InputMetadata"/>
+      <element name="valuePrefix">
+        <text/>
+      </element>
+      <element name="valueSuffix">
+        <text/>
+      </element>
+      <element name="delimiter">
+        <text/>
+      </element>
+    </choice>
+  </define>
+  <define name="InputChangeHandler">
+    <element name="change">
+      <optional>
+        <choice>
+          <zeroOrMore>
+            <choice>
+              <ref name="LinkAction"/>
+              <ref name="SetToken"/>
+              <ref name="UnsetToken"/>
+            </choice>
+          </zeroOrMore>
+          <zeroOrMore>
+            <ref name="InputChangeCondition"/>
+          </zeroOrMore>
+        </choice>
+      </optional>
+    </element>
+  </define>
+  <define name="InputChangeCondition">
+    <element name="condition">
+      <optional>
+        <choice>
+          <attribute name="value"/>
+          <attribute name="label"/>
+        </choice>
+      </optional>
+      <zeroOrMore>
+        <choice>
+          <ref name="LinkAction"/>
+          <ref name="SetToken"/>
+          <ref name="UnsetToken"/>
+        </choice>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="TextInput">
+    <element name="input">
+      <interleave>
+        <ref name="BaseInputAttributes"/>
+        <optional>
+          <attribute name="type">
+            <value>text</value>
+          </attribute>
+        </optional>
+        <optional>
+          <ref name="InputLabel"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="InputMetadata"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="InputChangeHandler"/>
+        </optional>
+      </interleave>
+    </element>
+  </define>
+  <define name="DropdownInput">
+    <element name="input">
+      <interleave>
+        <ref name="BaseInputAttributes"/>
+        <attribute name="type">
+          <value>dropdown</value>
+        </attribute>
+        <optional>
+          <!-- The first element is automatically selected. Overrides any choice made with <seed> -->
+          <element name="selectFirstChoice">
+            <ref name="Boolean"/>
+          </element>
+        </optional>
+        <optional>
+          <ref name="InputLabel"/>
+        </optional>
+        <optional>
+          <ref name="InputSearch"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="InputChoice"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="InputMetadata"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="InputChangeHandler"/>
+        </optional>
+      </interleave>
+    </element>
+  </define>
+  <define name="RadioInput">
+    <element name="input">
+      <interleave>
+        <ref name="BaseInputAttributes"/>
+        <attribute name="type">
+          <value>radio</value>
+        </attribute>
+        <optional>
+          <!-- The first element is automatically selected. Overrides any choice made with <seed> -->
+          <element name="selectFirstChoice">
+            <ref name="Boolean"/>
+          </element>
+        </optional>
+        <optional>
+          <ref name="InputLabel"/>
+        </optional>
+        <optional>
+          <ref name="InputSearch"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="InputChoice"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="InputMetadata"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="InputChangeHandler"/>
+        </optional>
+      </interleave>
+    </element>
+  </define>
+  <define name="MultiSelectInput">
+    <element name="input">
+      <interleave>
+        <attribute name="type">
+          <value>multiselect</value>
+        </attribute>
+        <ref name="BaseInputAttributes"/>
+        <optional>
+          <ref name="InputSearch"/>
+        </optional>
+        <optional>
+          <ref name="InputLabel"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="MultiValueInputMetadata"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="InputChangeHandler"/>
+        </optional>
+      </interleave>
+    </element>
+  </define>
+  <define name="CheckboxInput">
+    <element name="input">
+      <interleave>
+        <attribute name="type">
+          <value>checkbox</value>
+        </attribute>
+        <ref name="BaseInputAttributes"/>
+        <optional>
+          <ref name="InputSearch"/>
+        </optional>
+        <optional>
+          <ref name="InputLabel"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="MultiValueInputMetadata"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="InputChangeHandler"/>
+        </optional>
+      </interleave>
+    </element>
+  </define>
+  <define name="TimeInput">
+    <element name="input">
+      <interleave>
+        <attribute name="type">
+          <value>time</value>
+        </attribute>
+        <optional>
+          <attribute name="token">
+            <ref name="TokenName"/>
+          </attribute>
+        </optional>
+        <optional>
+          <attribute name="searchWhenChanged">
+            <ref name="Boolean"/>
+          </attribute>
+        </optional>
+        <ref name="TokenDependencies"/>
+        <optional>
+          <ref name="InputLabel"/>
+        </optional>
+        <optional>
+          <element name="default">
+            <choice>
+              <interleave>
+                <element name="earliestTime">
+                  <ref name="RelativeTimeExpression"/>
+                </element>
+                <element name="latestTime">
+                  <ref name="RelativeTimeExpression"/>
+                </element>
+              </interleave>
+              <text/>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <ref name="InputChangeHandler"/>
+        </optional>
+      </interleave>
+    </element>
+  </define>
+  <define name="Anything">
+    <a:documentation>
+Common data type definitions
+</a:documentation>
+    <zeroOrMore>
+      <choice>
+        <element>
+          <anyName/>
+          <zeroOrMore>
+            <attribute>
+              <anyName/>
+            </attribute>
+          </zeroOrMore>
+          <ref name="Anything"/>
+        </element>
+        <text/>
+      </choice>
+    </zeroOrMore>
+  </define>
+  <define name="Boolean">
+    <choice>
+      <value>true</value>
+      <value>false</value>
+      <value>True</value>
+      <value>False</value>
+      <value>1</value>
+      <value>0</value>
+    </choice>
+  </define>
+  <!-- Identifier defines allowed characters for the id attributes -->
+  <define name="Identifier">
+    <data type="string">
+      <param name="pattern">[a-zA-Z][a-zA-Z0-9_]*</param>
+    </data>
+  </define>
+  <define name="TokenName">
+    <data type="string" datatypeLibrary=""/>
+  </define>
+  <define name="RelativeTimeExpression">
+    <text/>
+  </define>
+  <define name="SearchString">
+    <text/>
+  </define>
+</grammar>

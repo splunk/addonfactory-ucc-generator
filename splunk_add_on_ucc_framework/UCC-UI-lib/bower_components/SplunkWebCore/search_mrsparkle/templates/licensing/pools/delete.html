@@ -1,0 +1,74 @@
+<%inherit file="//layout/admin_lite_dialog.html"/>
+<%namespace name="formset" file="//formset.html" />
+<%namespace name="lib" file="//lib.html" />
+
+<%def name="title()">${_('Delete pool')} - ${parent.title()}</%def>
+<%def name="get_breadcrumbs()">
+    <%
+        return [
+            [_('Manager'), ['manager']],
+            [_('Licensing'), ['manager','system','licensing']],
+            [_('Delete pool'), None]
+        ]       
+    %>
+</%def>
+
+
+##
+## render content
+##
+
+% if controller_exception:
+
+    <div class="error">
+        % if isinstance(controller_exception, splunk.ResourceNotFound):
+            ${_('The license pool <strong>%s</strong> could not be deleted because it does not appear to exist on the server.') % h(pool_name)}
+            ${_('Either the pool was just deleted or the name of the pool was mistyped.')}
+        % elif controller_exception == splunk.AuthorizationFailed:
+            ${_('You do not have permission to edit this pool:')} ${controller_exception | h}
+        % else:
+            <%lib:render_exception e="${controller_exception}" />
+        % endif 
+    </div>
+
+% elif was_deleted:
+
+    <div class="message_block_success"><span class="message_block_success_text">${_('Delete successful')}</span></div>
+    <p>${_('The %s pool has been deleted.') % h(pool.name)}</p>
+
+% else:
+
+    <p class="question">
+        ${_('Are you sure you want to delete the license pool:')} ${pool.name | h}?
+    </p>
+    <p>
+        ${_('Once the pool is deleted, all of the indexers in the pool will lose their shared indexing volumes. Do you still want to delete this pool?')}
+    </p>
+    <p><strong>${_('Affected indexers:')}</strong></p>
+    % if len(slave_table) == 0:
+        <p>${_('No associated indexers found.')}</p>
+    % else:
+        <ul>
+            % for item in slave_table:
+                <li>${item | h}</li>
+            % endfor
+        </ul>
+    % endif
+% endif
+
+
+##
+## render gutter
+##
+
+<%def name="gutter()">
+    <div class="admin-dialog-tray">
+    % if controller_exception or was_deleted:
+        ${formset.button(_('OK'), is_primary=True, href=return_to)}
+    % else:
+        ${formset.button(_('Cancel'), href=return_to)}
+        ${formset.button(_('Delete'), is_primary=True, is_submit=True)}
+    % endif
+    </div>
+</%def>
+

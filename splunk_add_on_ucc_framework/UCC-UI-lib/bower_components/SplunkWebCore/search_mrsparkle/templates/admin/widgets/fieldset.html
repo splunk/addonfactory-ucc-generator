@@ -1,0 +1,20 @@
+<%page args="element, eaiAttributes, form_defaults" />
+<%namespace file="../_helpers.html" import="generateFormRow"/>
+
+
+<div class="fieldsetWrapper ${element['class'] if 'class' in element else ''} ${'multiColumnFieldset' if 'multiColumn' in element else ''}" ${'id="item-'+element['elementName']+'"' if element.has_key('elementName') else ''}>
+    <fieldset id="${element['fieldsetId'] if element.has_key('fieldsetId') else ''}">
+        % if element.get('helpText'):
+            % if element.has_key('legend'):
+                <legend class="hasHelpText">${_(element['legend'])|h}</legend>
+            % endif
+            <p class="fieldsetHelpText">${_(element.get('helpText', ''))}</p>
+        % elif 'legend' in element:
+            <legend>${_(element['legend'])|h}</legend>
+        % endif
+        % for child in element['elements']:
+            <% if element.get('disabled'): child['disabled'] = '1' %>
+            <%call expr="generateFormRow(child, eaiAttributes, form_defaults)"></%call>
+        % endfor
+    </fieldset>
+</div>

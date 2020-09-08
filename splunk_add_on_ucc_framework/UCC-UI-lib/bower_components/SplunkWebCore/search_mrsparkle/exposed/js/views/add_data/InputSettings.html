@@ -1,0 +1,77 @@
+<div class="input-settings-main input-settings-form-horizontal">
+
+    <div class="header">
+        <span class="input-settings-title"><%= _('Input Settings').t() %></span>
+        <p class="input-settings-desc"><%= _('Optionally set additional input parameters for this data input as follows: ').t() %></p>
+    </div>
+
+    <div class="input-settings-subheader sourcetype-subheader">
+        <div class="input-settings-subheader-title">
+            <%= _('Source type').t() %>
+        </div>
+        <div class="input-settings-subheader-body">
+            <div class="input-settings-subheader-desc">
+                <%= _("The source type is one of the default fields that Splunk assigns to all incoming data. It tells Splunk what kind of data you've got, so that Splunk can format the data intelligently during indexing. And it's a way to categorize your data, so that you can search it easily.").t() %>
+            </div>
+            <div class="input-settings-subheader-props">
+                <div id="sourcetype_placeholder"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="input-settings-subheader appcontext-subheader">
+        <div class="input-settings-subheader-title">
+            <%= _('App context').t() %>
+        </div>
+        <div class="input-settings-subheader-body">
+            <div class="input-settings-subheader-desc">
+                <%= _("Application contexts are folders within a Splunk instance that contain configurations for a specific use case or domain of data. App contexts improve manageability of input and source type definitions. Splunk loads all app contexts based on precedence rules.").t() %>
+                <a class="external" href="<%= appLink %>" target="_blank"> <%= _("Learn More").t() %></a>
+            </div>
+            <div class="input-settings-subheader-props">
+                <div id="context_placeholder"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="input-settings-subheader host-subheader">
+        <div class="input-settings-subheader-title">
+            <%= _('Host').t() %>
+        </div>
+        <div class="input-settings-subheader-body">
+            <div class="input-settings-subheader-desc">
+                <%= _("When Splunk indexes data, each event receives a \"host\" value. The host value should be the name of the machine from which the event originates. The type of input you choose determines the available configuration options.").t() %>
+                <a class="external" href="<%= hostLink %>" target="_blank"> <%= _("Learn More").t() %></a>
+            </div>
+            <div class="input-settings-subheader-props">
+                <div id="host_placeholder"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="input-settings-subheader index-subheader">
+        <div class="input-settings-subheader-title">
+            <%= _('Index').t() %>
+        </div>
+        <div class="input-settings-subheader-body">
+            <div class="input-settings-subheader-desc">
+                <%= _("Splunk stores incoming data as events in the selected index. Consider using a \"sandbox\" index as a destination if you have problems determining a source type for your data. A sandbox index lets you troubleshoot your configuration without impacting production indexes. You can always change this setting later.").t() %>
+                <a class="external" href="<%= indexLink %>" target="_blank"> <%= _("Learn More").t() %></a>
+            </div>
+            <div class="input-settings-subheader-props">
+                <div class="index_section">
+                    <div id="allowed_indexes_placeholder" />
+                    <div id="index_placeholder">
+                        <div class="newindex_link">
+                            <% if (canCreateIndex) { %>
+                                <a class="create-index-link"><%= _('Create a new index').t() %></a>
+                            <% } %>
+                            <!--<a id="indexRefreshLink"><i class="icon-rotate"></i> <%= _('Refresh').t() %></a>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

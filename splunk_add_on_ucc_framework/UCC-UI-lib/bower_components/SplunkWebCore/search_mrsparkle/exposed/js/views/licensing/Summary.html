@@ -1,0 +1,84 @@
+<div class="manager-header">
+    <h1>Licensing</h1>
+    <% if (isLicenseManager) { %>
+        <p class="license-header"><%= _('Explore Splunk License options and add capacity on').t() %><a class="splButton-tertiary orange inline-btn" target="_blank" href="http://www.splunk.com/goto/estore"><%=_('e-Store').t() %></a></p>
+    <% } %>
+
+    <% if (messages.length > 0) { %>
+        <div class="alerts-violations-outer">
+            <% if (messages.length <= 3) { messages.each(function(message) { %>
+                <div class="alert alert-error"><i class="icon-alert"></i>
+                    <span><%= _(message.entry.content.get('description')).t() %></span><br/>
+                </div>
+            <% })} else { %>
+                    <% for (var i = 0; i < 3; i++) { %>
+                        <div class="alert alert-error"><i class="icon-alert"></i>
+                            <span><%= _(messages.models[i].entry.content.get('description')).t() %></span><br/>
+                        </div>
+                    <% } %>
+                    <a class="show-all-alerts-violations" href="#"><%=_('Show all license violations and alerts').t() %></a>
+            <% } %>
+        </div>
+    <% } %>
+</div>
+
+<div class="manager-container">
+    <table class="manager-table">
+        <% if (isLicenseManager) { %>
+            <tr>
+                <td class="license-table-left"><%= _('License group').t() %></td>
+                <td class="license-group">
+                    <% if (serverInfo.isLitePaid()) { %>
+                        <%= _('Splunk Light').t() %>
+                    <% } else { %>
+                        <%= _('Splunk Light Free').t() %>
+                    <% } %>
+                </td>
+            </tr>
+        <% } %>
+        <tr>
+            <td class="license-table-left"><%= _('Daily volume licensed').t() %></td>
+            <td class="license-daily-volume-licensed">
+               <%= numberUtils.bytesToFileSize(stackQuota) %>
+            </td>
+        </tr>
+        <tr>
+            <td class="license-table-left"><%= _('Volume used today').t() %></td>
+            <td class="license-table-volume-used-today">
+            </td>
+        </tr>
+        <tr>
+            <td class="license-table-left"></td>
+            <td class="license-progress-bar">
+                <div class="license-progress-bar-outer">
+                    <div class="license-progress-bar-inner">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="license-table-left"><%= _('Daily usage in 30 days').t() %></td>
+            <td class="license-usage-chart-split-picker">
+            </td>
+        </tr>
+        <tr>
+            <td class="license-table-left"></td>
+            <td class="license-usage-chart">
+            </td>
+        </tr>
+        <% if (isLicenseManager) { %>
+            <tr>
+                <td class="license-table-left license-listing-table-label"><%= _('Licenses').t() %></td>
+                <td>
+                    <div class="license-listing-table"></div>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <a class="splButton-tertiary black inline-btn add-license-btn" href="#"><%= _('Add License').t() %></a>
+                </td>
+            </tr>
+        <% } %>
+    </table>
+</div>

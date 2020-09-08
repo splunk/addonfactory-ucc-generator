@@ -1,0 +1,77 @@
+<%inherit file="//layout/view.html" />
+<%namespace file="//view/_helpers.html" import="*"/>
+<%namespace name="lib" file="//lib.html" import="*"/>
+<%!
+import logging
+logger = logging.getLogger('splunk.appserver.templates.view.dashboard')
+from splunk.appserver.mrsparkle.lib import util
+isLite = util.isLite()
+headerPanels = ["appHeader", "navigationHeader"]
+
+lowerPanels = ["resultsArea"]
+
+renderingErrors = []
+%>
+
+<%def name="css()">
+    <% parent.css() %>
+    <%lib:stylesheet_tags files="${['/static/css/jobs.css']}" />
+</%def>
+
+<%def name="buildPanelContents(modules, groupName)">
+    <%call expr="parent.buildPanelContents(modules, groupName)"></%call>
+</%def>
+
+<%def name="buildSimplePanelContainer(modules, panelName)">
+    <%call expr="parent.buildSimplePanelContainer(modules, panelName)"></%call>
+</%def>
+
+<%def name="getFloatLayoutRow(modules, rowNumber)">
+    <%call expr="parent.getFloatLayoutRow(modules, rowNumber)"></%call>
+</%def>
+
+<%def name="getDashboardPanel(modules, panelGroup)">
+    % for groupName in panelGroup :
+        <%call expr="buildPanelContents(modules, groupName)"></%call>
+    % endfor    
+</%def>
+
+<div class="layout jobs ${VIEW['displayView'] | h}">
+    <div class="jobsHeader">
+        % if isLite:
+            <div class="appHeaderWrapper">
+                <%call expr="parent.buildSimplePanelContainer(modules, 'liteHeader')"></%call>
+            </div>
+        % else:
+            % if "messaging" in modules :
+                <%call expr="parent.buildSimplePanelContainer(modules, 'messaging')"></%call>
+            % endif
+            
+            <div class="appHeaderWrapper">
+                % for panelName in headerPanels : 
+                    <%call expr="parent.buildSimplePanelContainer(modules, panelName)"></%call>
+                % endfor    
+            </div>
+        % endif
+
+        <div class="filterControls splClearfix">
+            <div class="filterControlRight">
+                <%call expr="parent.buildPanelContents(modules, 'filterControlRight')"></%call>
+            </div>
+            <div class="filterControlLeft">
+                <%call expr="parent.buildPanelContents(modules, 'filterControlLeft')"></%call>
+            </div>
+        </div>
+        % for rowNumber in range(1,10): 
+            % if 'panel_row' + str(rowNumber) + '_col1' in modules : 
+                <%call expr="parent.getFloatLayoutRow(modules, rowNumber)"></%call>
+            % endif
+        % endfor
+    
+    </div>
+    
+    % for panelName in lowerPanels : 
+        <%call expr="buildSimplePanelContainer(modules, panelName)"></%call>
+    % endfor
+
+</div>

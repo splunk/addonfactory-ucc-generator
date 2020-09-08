@@ -1,0 +1,108 @@
+<%page args="element, widgetstyle" />
+<%namespace file="../_helpers.html" import="wireElementEvents"/>
+<%
+from splunk.appserver.mrsparkle.lib import eai
+import splunk.util as util
+
+
+option_map = util.OrderedDict()
+selected_options = []
+fetch_error = False
+elementName = element.get('elementName')
+
+try:
+    caseSensitive = True if 'caseSensitiveMatch' in element and element['caseSensitiveMatch'].lower() == 'true' else False
+    
+    # Ensure that only valid options can be selected
+    option_values = set([ (caseSensitive and option['value'] or option['value'].lower()) for option in element['options'] ])
+    
+    if elementName in form_defaults and \
+       isinstance(form_defaults[elementName], (tuple, list)): 
+        selected_options = [ val for val in form_defaults[elementName] if (caseSensitive and val or val.lower()) in option_values ]
+        
+        # if only * is among selected elements, assume all elements selected
+        if len(selected_options) == 0 and \
+           len(form_defaults[elementName]) == 1 and form_defaults[elementName][0] == '*':
+            selected_options = [option.get('label') for option in element["options"]]
+
+    for option in element["options"]:
+        option_map[option['value']] = option['label']
+        
+except eai.EAIFetchError, e:
+    fetch_error = e
+except splunk.RESTException, e:
+    #  Throw a more specific exception if the disk quota has been exceeded.  
+    #  TODO: Searching for the phrase 'disk space' in the message text  is currently how we detect that the exception is related to the disk quota.  This is lame.  Fix this.  
+    msg_txt = e.get_message_text()
+    if e.statusCode == 503 and 'disk space' in msg_txt:
+        raise splunk.QuotaExceededException(msg_txt)
+    raise
+
+for selection in selected_options:
+    if selection not in option_map:
+        option_map[selection] = selection
+
+option_list = option_map.items()
+if 'sort' in element:
+    sortMethod = element.get('sort').lower() 
+    if sortMethod != 'none':
+        option_list.sort(key=(lambda x: x[1].lower()))
+
+available_heading = _("Available %(fields)s") % { 'fields': _(element.get('label', '')) or _(element.get('elementName', ''))}
+selected_heading = _("Selected %(fields)s") % { 'fields': _(element.get('label', '')) or _(element.get('elementName', ''))}
+
+if fetch_error:
+    fetch_error = _("Failed to fetch data: ") + str(fetch_error)
+    if elementName in ['srchIndexesDefault', 'srchIndexesAllowed']:
+        fetch_error += _(" Clicking save when no indexes are listed will remove all the previously selected indexes.")
+%>
+
+## Note: onChange events are wired up by initAccumulators() in admin.js
+
+    <div id="item-${elementName|h}" class="accumulator splClearfix ${'accDisabled' if element.get('disabled') else ''}" ${widgetstyle}>
+        <div>
+            <div class="widgeterror"><form:error name="${elementName|h}"/></div>
+            % if fetch_error:
+                <div class="widgeterror widgetinlineerror">${str(fetch_error)|h}</div>
+            % endif
+              
+            <div class="availableOptionsContainer">
+                % if element.get('disabled') is None:
+                    <a href="#" class="addAllLink">${_('add all')} &raquo;</a>
+                % endif
+                <h4 class="availableOptionsHeader">${available_heading|h}</h4>
+                ## This ul contains all options that are NOT currently selected
+                <ul class="availableOptions ${element['class'] if 'class' in element else ''|h}">
+                % for (value, label) in option_list:
+                    <li ${value in selected_options and 'class="selected"' or ''} name="${value|h}"><span class="splIcon splIcon-arrow-e"></span>${label | h}</li>
+                % endfor
+                </ul>
+            </div>
+            
+            <div class="selectedOptionsContainer">
+                % if element.get('disabled') is None:
+                    <a href="#" class="removeAllLink">&laquo; ${_('clear all')}</a>
+                % endif
+                <h4 class="selectedOptionsHeader">${selected_heading|h}</h4>
+                ## This ul contains all options that are ARE currently selected
+                <ul class="selectedOptions ${element['class'] if 'class' in element else ''}">
+                % for (value, label) in option_list:
+                    % if value in selected_options:
+                        <li name="${value|h}"><span class="splIcon splIcon-arrow-w"></span>${label | h}</li>
+                    % endif
+                % endfor
+                </ul>
+            </div>
+            
+            <select multiple="multiple" ${'disabled="disabled"' if element.get('disabled') else ''} class="hiddenSelectedOptions ${element['class'] if 'class' in element else ''|h}" name="${elementName|h}">
+            % for (value, label) in option_list:
+                % if value in selected_options:
+                    <option value="${value|h}">${label | h}</option>
+                % endif
+            % endfor
+            </select>
+        </div>
+        % if 'exampleText' in element:
+            <p class="exampleText"><em>${_(element['exampleText']) | extract_help_links }</em></p>
+        % endif          
+    </div>

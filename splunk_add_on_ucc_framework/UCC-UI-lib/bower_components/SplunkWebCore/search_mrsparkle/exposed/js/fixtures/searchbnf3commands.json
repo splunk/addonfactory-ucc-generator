@@ -1,0 +1,705 @@
+{
+    "links": {
+        "create": "/services/configs/conf-searchbnf/_new",
+        "_reload": "/services/configs/conf-searchbnf/_reload",
+        "_acl": "/services/configs/conf-searchbnf/_acl"
+    },
+    "origin": "https://localhost:8300/services/configs/conf-searchbnf",
+    "updated": "2016-06-02T10:26:29-07:00",
+    "generator": {
+        "build": "52bb35c9b5b25c1185df14f49091ad0c61c8e689",
+        "version": "20160512"
+    },
+    "entry": [
+        {
+            "name": "abstract-command",
+            "id": "https://localhost:8300/servicesNS/nobody/system/configs/conf-searchbnf/abstract-command",
+            "updated": "2016-06-02T10:26:29-07:00",
+            "links": {
+                "alternate": "/servicesNS/nobody/system/configs/conf-searchbnf/abstract-command",
+                "list": "/servicesNS/nobody/system/configs/conf-searchbnf/abstract-command",
+                "_reload": "/servicesNS/nobody/system/configs/conf-searchbnf/abstract-command/_reload",
+                "edit": "/servicesNS/nobody/system/configs/conf-searchbnf/abstract-command",
+                "disable": "/servicesNS/nobody/system/configs/conf-searchbnf/abstract-command/disable"
+            },
+            "author": "nobody",
+            "acl": {
+                "app": "system",
+                "can_change_perms": true,
+                "can_list": true,
+                "can_share_app": true,
+                "can_share_global": true,
+                "can_share_user": false,
+                "can_write": true,
+                "modifiable": true,
+                "owner": "nobody",
+                "perms": {
+                    "read": [
+                        "*"
+                    ],
+                    "write": [
+                        "admin"
+                    ]
+                },
+                "removable": false,
+                "sharing": "system"
+            },
+            "content": {
+                "alias": "excerpt",
+                "appears-in": "3.0",
+                "category": "formatting",
+                "commentcheat": "Show a summary of up to 5 lines for each search result.",
+                "description": "Produce an abstract -- a summary or brief representation -- of the text of search results.  The original text is replaced by the summary, which is produced by a scoring mechanism.  If the event is larger than the selected maxlines, those with more terms and more terms on adjacent lines are preferred over those with fewer terms.  If a line has a search term, its neighboring lines also partially match, and may be returned to provide context. When there are gaps between the selected lines, lines are prefixed with \"...\". \\p\\\n\t    If the text of a result has fewer lines or an equal number of lines to maxlines, no change will occur.\\i\\\n\t    * <maxlines> accepts values from 1 - 500. \\i\\\n\t    * <maxterms> accepts values from 1 - 1000.",
+                "disabled": false,
+                "eai:acl": null,
+                "eai:appName": "search",
+                "eai:userName": "admin",
+                "examplecheat": "... |abstract maxlines=5",
+                "maintainer": "david",
+                "related": "highlight",
+                "shortdesc": "Shortens the text of results to a brief summary representation",
+                "syntax": "abstract (maxterms=<int>)? (maxlines=<int>)?",
+                "tags": "condense summarize summary outline pare prune shorten skim snip sum trim",
+                "usage": "public"
+            }
+        },
+        {
+            "name": "convert-auto",
+            "id": "https://localhost:8300/servicesNS/nobody/system/configs/conf-searchbnf/convert-auto",
+            "updated": "2016-06-02T10:26:29-07:00",
+            "links": {
+                "alternate": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-auto",
+                "list": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-auto",
+                "_reload": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-auto/_reload",
+                "edit": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-auto",
+                "disable": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-auto/disable"
+            },
+            "author": "nobody",
+            "acl": {
+                "app": "system",
+                "can_change_perms": true,
+                "can_list": true,
+                "can_share_app": true,
+                "can_share_global": true,
+                "can_share_user": false,
+                "can_write": true,
+                "modifiable": true,
+                "owner": "nobody",
+                "perms": {
+                    "read": [
+                        "*"
+                    ],
+                    "write": [
+                        "admin"
+                    ]
+                },
+                "removable": false,
+                "sharing": "system"
+            },
+            "content": {
+                "description": "Automatically convert the field(s) to a number using the best conversion. \n\t      Note that if not all values of a particular field can be converted using a known conversion type, \n\t      the field is left untouched and no conversion at all in done for that field.",
+                "disabled": false,
+                "eai:acl": null,
+                "eai:appName": "search",
+                "eai:userName": "admin",
+                "example1": "... | convert auto(*)",
+                "example2": "... | convert auto",
+                "example3": "... | convert auto()",
+                "example4": "... | convert auto(delay) auto(xdelay)",
+                "example5": "... | convert auto(delay) as delay_secs",
+                "example6": "... | convert auto(*delay) as *delay_secs",
+                "example7": "... | convert auto(*) as  *_num",
+                "syntax": "auto(\"(\" (<wc-field>)? \")\")?"
+            }
+        },
+        {
+            "name": "convert-command",
+            "id": "https://localhost:8300/servicesNS/nobody/system/configs/conf-searchbnf/convert-command",
+            "updated": "2016-06-02T10:26:29-07:00",
+            "links": {
+                "alternate": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-command",
+                "list": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-command",
+                "_reload": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-command/_reload",
+                "edit": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-command",
+                "disable": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-command/disable"
+            },
+            "author": "nobody",
+            "acl": {
+                "app": "system",
+                "can_change_perms": true,
+                "can_list": true,
+                "can_share_app": true,
+                "can_share_global": true,
+                "can_share_user": false,
+                "can_write": true,
+                "modifiable": true,
+                "owner": "nobody",
+                "perms": {
+                    "read": [
+                        "*"
+                    ],
+                    "write": [
+                        "admin"
+                    ]
+                },
+                "removable": false,
+                "sharing": "system"
+            },
+            "content": {
+                "appears-in": "3.0",
+                "category": "fields::convert",
+                "commentcheat1": "Convert every field value to a number value except for values in the field \"foo\" (use the \"none\" argument to specify fields to ignore).",
+                "commentcheat2": "Change all memory values in the \"virt\" field to Kilobytes.",
+                "commentcheat3": "Change the sendmail syslog duration format (D+HH:MM:SS) to seconds. For example, if \"delay=\"00:10:15\"\", the resulting value will be \"delay=\"615\"\".",
+                "commentcheat4": "Convert values of the \"duration\" field into number value by removing string values in the field value. For example,  if \"duration=\"212 sec\"\", the resulting value will be \"duration=\"212\"\".",
+                "description": "Converts the values of fields into numerical values. When renaming a field using \"as\", the original field is left intact. The timeformat option is used by ctime and mktime conversions.  Default = \"%m/%d/%Y %H:%M:%S\".",
+                "disabled": false,
+                "eai:acl": null,
+                "eai:appName": "search",
+                "eai:userName": "admin",
+                "examplecheat1": "... | convert auto(*) none(foo)",
+                "examplecheat2": "... | convert memk(virt)",
+                "examplecheat3": "... | convert dur2sec(delay)",
+                "examplecheat4": "... | convert rmunit(duration)",
+                "maintainer": "steveyz",
+                "related": "eval",
+                "shortdesc": "Converts field values into numerical values.",
+                "simplesyntax": "convert (timeformat=<string>)? ( (auto|dur2sec|mstime|memk|none|num|rmunit|rmcomma|ctime|mktime) \"(\" <field>? \")\" (as <field>)?)+",
+                "syntax": "convert (timeformat=<string>)? (<convert-function> (as <wc-field>)?)+",
+                "tags": "interchange transform translate convert ctime mktime dur2sec mstime memk",
+                "usage": "public"
+            }
+        },
+        {
+            "name": "convert-ctime",
+            "id": "https://localhost:8300/servicesNS/nobody/system/configs/conf-searchbnf/convert-ctime",
+            "updated": "2016-06-02T10:26:29-07:00",
+            "links": {
+                "alternate": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-ctime",
+                "list": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-ctime",
+                "_reload": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-ctime/_reload",
+                "edit": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-ctime",
+                "disable": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-ctime/disable"
+            },
+            "author": "nobody",
+            "acl": {
+                "app": "system",
+                "can_change_perms": true,
+                "can_list": true,
+                "can_share_app": true,
+                "can_share_global": true,
+                "can_share_user": false,
+                "can_write": true,
+                "modifiable": true,
+                "owner": "nobody",
+                "perms": {
+                    "read": [
+                        "*"
+                    ],
+                    "write": [
+                        "admin"
+                    ]
+                },
+                "removable": false,
+                "sharing": "system"
+            },
+            "content": {
+                "description": "Convert an epoch time to an ascii human readable time.  Use timeformat option to specify exact format to convert to.",
+                "disabled": false,
+                "eai:acl": null,
+                "eai:appName": "search",
+                "eai:userName": "admin",
+                "example1": "... | convert timeformat=\"%H:%M:%S\" ctime(_time) as timestr",
+                "syntax": "ctime\"(\"<wc-field>?\")\""
+            }
+        },
+        {
+            "name": "convert-dur2sec",
+            "id": "https://localhost:8300/servicesNS/nobody/system/configs/conf-searchbnf/convert-dur2sec",
+            "updated": "2016-06-02T10:26:29-07:00",
+            "links": {
+                "alternate": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-dur2sec",
+                "list": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-dur2sec",
+                "_reload": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-dur2sec/_reload",
+                "edit": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-dur2sec",
+                "disable": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-dur2sec/disable"
+            },
+            "author": "nobody",
+            "acl": {
+                "app": "system",
+                "can_change_perms": true,
+                "can_list": true,
+                "can_share_app": true,
+                "can_share_global": true,
+                "can_share_user": false,
+                "can_write": true,
+                "modifiable": true,
+                "owner": "nobody",
+                "perms": {
+                    "read": [
+                        "*"
+                    ],
+                    "write": [
+                        "admin"
+                    ]
+                },
+                "removable": false,
+                "sharing": "system"
+            },
+            "content": {
+                "description": "Convert a duration format \"[D+]HH:MM:SS\" to seconds.",
+                "disabled": false,
+                "eai:acl": null,
+                "eai:appName": "search",
+                "eai:userName": "admin",
+                "example1": "... | convert dur2sec(xdelay)",
+                "example2": "... | convert dur2sec(*delay)",
+                "syntax": "dur2sec\"(\"<wc-field>?\")\""
+            }
+        },
+        {
+            "name": "convert-function",
+            "id": "https://localhost:8300/servicesNS/nobody/system/configs/conf-searchbnf/convert-function",
+            "updated": "2016-06-02T10:26:29-07:00",
+            "links": {
+                "alternate": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-function",
+                "list": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-function",
+                "_reload": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-function/_reload",
+                "edit": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-function",
+                "disable": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-function/disable"
+            },
+            "author": "nobody",
+            "acl": {
+                "app": "system",
+                "can_change_perms": true,
+                "can_list": true,
+                "can_share_app": true,
+                "can_share_global": true,
+                "can_share_user": false,
+                "can_write": true,
+                "modifiable": true,
+                "owner": "nobody",
+                "perms": {
+                    "read": [
+                        "*"
+                    ],
+                    "write": [
+                        "admin"
+                    ]
+                },
+                "removable": false,
+                "sharing": "system"
+            },
+            "content": {
+                "disabled": false,
+                "eai:acl": null,
+                "eai:appName": "search",
+                "eai:userName": "admin",
+                "syntax": "<convert-auto>|<convert-dur2sec>|<convert-mstime>|<convert-memk>|<convert-none>|<convert-num>|<convert-rmunit>|<convert-rmcomma>|<convert-ctime>|<convert-mktime>"
+            }
+        },
+        {
+            "name": "convert-memk",
+            "id": "https://localhost:8300/servicesNS/nobody/system/configs/conf-searchbnf/convert-memk",
+            "updated": "2016-06-02T10:26:29-07:00",
+            "links": {
+                "alternate": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-memk",
+                "list": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-memk",
+                "_reload": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-memk/_reload",
+                "edit": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-memk",
+                "disable": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-memk/disable"
+            },
+            "author": "nobody",
+            "acl": {
+                "app": "system",
+                "can_change_perms": true,
+                "can_list": true,
+                "can_share_app": true,
+                "can_share_global": true,
+                "can_share_user": false,
+                "can_write": true,
+                "modifiable": true,
+                "owner": "nobody",
+                "perms": {
+                    "read": [
+                        "*"
+                    ],
+                    "write": [
+                        "admin"
+                    ]
+                },
+                "removable": false,
+                "sharing": "system"
+            },
+            "content": {
+                "description": "Convert a {KB, MB, GB} denominated size quantity into a KB",
+                "disabled": false,
+                "eai:acl": null,
+                "eai:appName": "search",
+                "eai:userName": "admin",
+                "example1": "... | convert memk(VIRT)",
+                "syntax": "memk\"(\" <wc-field>? \")\""
+            }
+        },
+        {
+            "name": "convert-mktime",
+            "id": "https://localhost:8300/servicesNS/nobody/system/configs/conf-searchbnf/convert-mktime",
+            "updated": "2016-06-02T10:26:29-07:00",
+            "links": {
+                "alternate": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-mktime",
+                "list": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-mktime",
+                "_reload": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-mktime/_reload",
+                "edit": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-mktime",
+                "disable": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-mktime/disable"
+            },
+            "author": "nobody",
+            "acl": {
+                "app": "system",
+                "can_change_perms": true,
+                "can_list": true,
+                "can_share_app": true,
+                "can_share_global": true,
+                "can_share_user": false,
+                "can_write": true,
+                "modifiable": true,
+                "owner": "nobody",
+                "perms": {
+                    "read": [
+                        "*"
+                    ],
+                    "write": [
+                        "admin"
+                    ]
+                },
+                "removable": false,
+                "sharing": "system"
+            },
+            "content": {
+                "description": "Convert an human readable time string to an epoch time.  Use timeformat option to specify exact format to convert from.",
+                "disabled": false,
+                "eai:acl": null,
+                "eai:appName": "search",
+                "eai:userName": "admin",
+                "example1": "... | convert mktime(timestr)",
+                "syntax": "mktime\"(\"<wc-field>?\")\""
+            }
+        },
+        {
+            "name": "convert-mstime",
+            "id": "https://localhost:8300/servicesNS/nobody/system/configs/conf-searchbnf/convert-mstime",
+            "updated": "2016-06-02T10:26:29-07:00",
+            "links": {
+                "alternate": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-mstime",
+                "list": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-mstime",
+                "_reload": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-mstime/_reload",
+                "edit": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-mstime",
+                "disable": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-mstime/disable"
+            },
+            "author": "nobody",
+            "acl": {
+                "app": "system",
+                "can_change_perms": true,
+                "can_list": true,
+                "can_share_app": true,
+                "can_share_global": true,
+                "can_share_user": false,
+                "can_write": true,
+                "modifiable": true,
+                "owner": "nobody",
+                "perms": {
+                    "read": [
+                        "*"
+                    ],
+                    "write": [
+                        "admin"
+                    ]
+                },
+                "removable": false,
+                "sharing": "system"
+            },
+            "content": {
+                "description": "Convert a MM:SS.SSS format to seconds.",
+                "disabled": false,
+                "eai:acl": null,
+                "eai:appName": "search",
+                "eai:userName": "admin",
+                "syntax": "mstime\"(\" <wc-field>? \")\""
+            }
+        },
+        {
+            "name": "convert-none",
+            "id": "https://localhost:8300/servicesNS/nobody/system/configs/conf-searchbnf/convert-none",
+            "updated": "2016-06-02T10:26:29-07:00",
+            "links": {
+                "alternate": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-none",
+                "list": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-none",
+                "_reload": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-none/_reload",
+                "edit": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-none",
+                "disable": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-none/disable"
+            },
+            "author": "nobody",
+            "acl": {
+                "app": "system",
+                "can_change_perms": true,
+                "can_list": true,
+                "can_share_app": true,
+                "can_share_global": true,
+                "can_share_user": false,
+                "can_write": true,
+                "modifiable": true,
+                "owner": "nobody",
+                "perms": {
+                    "read": [
+                        "*"
+                    ],
+                    "write": [
+                        "admin"
+                    ]
+                },
+                "removable": false,
+                "sharing": "system"
+            },
+            "content": {
+                "description": "In the presence of other wildcards, indicates that the matching fields should not be converted.",
+                "disabled": false,
+                "eai:acl": null,
+                "eai:appName": "search",
+                "eai:userName": "admin",
+                "example1": "... | convert auto(*) none(foo)",
+                "syntax": "none\"(\" <wc-field>? \")\""
+            }
+        },
+        {
+            "name": "convert-num",
+            "id": "https://localhost:8300/servicesNS/nobody/system/configs/conf-searchbnf/convert-num",
+            "updated": "2016-06-02T10:26:29-07:00",
+            "links": {
+                "alternate": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-num",
+                "list": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-num",
+                "_reload": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-num/_reload",
+                "edit": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-num",
+                "disable": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-num/disable"
+            },
+            "author": "nobody",
+            "acl": {
+                "app": "system",
+                "can_change_perms": true,
+                "can_list": true,
+                "can_share_app": true,
+                "can_share_global": true,
+                "can_share_user": false,
+                "can_write": true,
+                "modifiable": true,
+                "owner": "nobody",
+                "perms": {
+                    "read": [
+                        "*"
+                    ],
+                    "write": [
+                        "admin"
+                    ]
+                },
+                "removable": false,
+                "sharing": "system"
+            },
+            "content": {
+                "description": "Like auto(), except non-convertible values are removed.",
+                "disabled": false,
+                "eai:acl": null,
+                "eai:appName": "search",
+                "eai:userName": "admin",
+                "syntax": "num\"(\"<wc-field>? \")\""
+            }
+        },
+        {
+            "name": "convert-rmcomma",
+            "id": "https://localhost:8300/servicesNS/nobody/system/configs/conf-searchbnf/convert-rmcomma",
+            "updated": "2016-06-02T10:26:29-07:00",
+            "links": {
+                "alternate": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-rmcomma",
+                "list": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-rmcomma",
+                "_reload": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-rmcomma/_reload",
+                "edit": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-rmcomma",
+                "disable": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-rmcomma/disable"
+            },
+            "author": "nobody",
+            "acl": {
+                "app": "system",
+                "can_change_perms": true,
+                "can_list": true,
+                "can_share_app": true,
+                "can_share_global": true,
+                "can_share_user": false,
+                "can_write": true,
+                "modifiable": true,
+                "owner": "nobody",
+                "perms": {
+                    "read": [
+                        "*"
+                    ],
+                    "write": [
+                        "admin"
+                    ]
+                },
+                "removable": false,
+                "sharing": "system"
+            },
+            "content": {
+                "description": "Removes all commas from value, e.g. '1,000,000.00' -> '1000000.00'",
+                "disabled": false,
+                "eai:acl": null,
+                "eai:appName": "search",
+                "eai:userName": "admin",
+                "syntax": "rmcomma\"(\"<wc-field>? \")\""
+            }
+        },
+        {
+            "name": "convert-rmunit",
+            "id": "https://localhost:8300/servicesNS/nobody/system/configs/conf-searchbnf/convert-rmunit",
+            "updated": "2016-06-02T10:26:29-07:00",
+            "links": {
+                "alternate": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-rmunit",
+                "list": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-rmunit",
+                "_reload": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-rmunit/_reload",
+                "edit": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-rmunit",
+                "disable": "/servicesNS/nobody/system/configs/conf-searchbnf/convert-rmunit/disable"
+            },
+            "author": "nobody",
+            "acl": {
+                "app": "system",
+                "can_change_perms": true,
+                "can_list": true,
+                "can_share_app": true,
+                "can_share_global": true,
+                "can_share_user": false,
+                "can_write": true,
+                "modifiable": true,
+                "owner": "nobody",
+                "perms": {
+                    "read": [
+                        "*"
+                    ],
+                    "write": [
+                        "admin"
+                    ]
+                },
+                "removable": false,
+                "sharing": "system"
+            },
+            "content": {
+                "description": "Looks for numbers at the beginning of the value and removes trailing text.",
+                "disabled": false,
+                "eai:acl": null,
+                "eai:appName": "search",
+                "eai:userName": "admin",
+                "example1": "... | convert rmunit(duration)",
+                "syntax": "rmunit\"(\" <wc-field>? \")\""
+            }
+        },
+        {
+            "name": "top-command",
+            "id": "https://localhost:8300/servicesNS/nobody/system/configs/conf-searchbnf/top-command",
+            "updated": "2016-06-02T10:26:29-07:00",
+            "links": {
+                "alternate": "/servicesNS/nobody/system/configs/conf-searchbnf/top-command",
+                "list": "/servicesNS/nobody/system/configs/conf-searchbnf/top-command",
+                "_reload": "/servicesNS/nobody/system/configs/conf-searchbnf/top-command/_reload",
+                "edit": "/servicesNS/nobody/system/configs/conf-searchbnf/top-command",
+                "disable": "/servicesNS/nobody/system/configs/conf-searchbnf/top-command/disable"
+            },
+            "author": "nobody",
+            "acl": {
+                "app": "system",
+                "can_change_perms": true,
+                "can_list": true,
+                "can_share_app": true,
+                "can_share_global": true,
+                "can_share_user": false,
+                "can_write": true,
+                "modifiable": true,
+                "owner": "nobody",
+                "perms": {
+                    "read": [
+                        "*"
+                    ],
+                    "write": [
+                        "admin"
+                    ]
+                },
+                "removable": false,
+                "sharing": "system"
+            },
+            "content": {
+                "alias": "common",
+                "appears-in": "3.0",
+                "category": "reporting",
+                "comment1": "Return top URL values.",
+                "comment2": "Return top \"user\" values for each \"host\".",
+                "commentcheat": "Return the 20 most common values of the \"url\" field.",
+                "description": "Finds the most frequent tuple of values of all fields in the field list, along with a count and percentage.\n\t    If a the optional by-clause is provided, finds the most frequent values\n\t    for each distinct tuple of values of the group-by fields.",
+                "disabled": false,
+                "eai:acl": null,
+                "eai:appName": "search",
+                "eai:userName": "admin",
+                "example1": "... | top url",
+                "example2": "... | top user by host",
+                "examplecheat": "... | top limit=20 url",
+                "maintainer": "steveyz",
+                "related": "rare, sitop, stats",
+                "shortdesc": "Displays the most common values of a field.",
+                "supports-multivalue": "1",
+                "syntax": "top <top-command-opt>",
+                "tags": "top popular common many frequent typical",
+                "usage": "public"
+            }
+        },
+        {
+            "name": "top-opt",
+            "id": "https://localhost:8300/servicesNS/nobody/system/configs/conf-searchbnf/top-opt",
+            "updated": "2016-06-02T10:26:29-07:00",
+            "links": {
+                "alternate": "/servicesNS/nobody/system/configs/conf-searchbnf/top-opt",
+                "list": "/servicesNS/nobody/system/configs/conf-searchbnf/top-opt",
+                "_reload": "/servicesNS/nobody/system/configs/conf-searchbnf/top-opt/_reload",
+                "edit": "/servicesNS/nobody/system/configs/conf-searchbnf/top-opt",
+                "disable": "/servicesNS/nobody/system/configs/conf-searchbnf/top-opt/disable"
+            },
+            "author": "nobody",
+            "acl": {
+                "app": "system",
+                "can_change_perms": true,
+                "can_list": true,
+                "can_share_app": true,
+                "can_share_global": true,
+                "can_share_user": false,
+                "can_write": true,
+                "modifiable": true,
+                "owner": "nobody",
+                "perms": {
+                    "read": [
+                        "*"
+                    ],
+                    "write": [
+                        "admin"
+                    ]
+                },
+                "removable": false,
+                "sharing": "system"
+            },
+            "content": {
+                "description": "Top arguments:\n\t      showcount: Whether to create a field called \"count\" (see countfield option) with the count of that tuple. (T) \n\t      showperc: Whether to create a field called \"percent\" (see percentfield option) with the relative prevalence of that tuple. (T) \n\t      limit: Specifies how many tuples to return, 0 returns all values. (10) \n\t      countfield: Name of new field to write count to (default is \"count\") \n\t      percentfield: Name of new field to write percentage to (default is \"percent\") \n\t      useother: If true, adds a row, if necessary, to represent all values not included \n\t                due to the limit cutoff. (default is false) \n\t      otherstr: If useother is true, the value that is written into the row representing \n\t                all other values (default is \"OTHER\")",
+                "disabled": false,
+                "eai:acl": null,
+                "eai:appName": "search",
+                "eai:userName": "admin",
+                "syntax": "(showcount=<bool>)|(showperc=<bool>)|(limit=<int>)|(countfield=<string>)|(percentfield=<string>)|(useother=<bool>)|(otherstr=<string>)"
+            }
+        }
+    ],
+    "paging": {
+        "total": 15,
+        "perPage": 10000000,
+        "offset": 0
+    },
+    "messages": []
+}

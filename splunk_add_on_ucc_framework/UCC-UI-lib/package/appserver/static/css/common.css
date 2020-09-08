@@ -1,0 +1,311 @@
+.main-section-body.inputs {
+    background-color: #eee;
+}
+
+.main-section-body.configuration {
+    background-color: #fff;
+}
+
+/*Dialog width*/
+.higherWider {
+    width: 800px;
+    left: 40%;
+}
+
+/*Page header CSS*/
+.tool-bar {
+    position: relative;
+    padding-top: 10px;
+    padding-left: 20px;
+    padding-bottom: 20px;
+    background-color: #eee;
+}
+.tool-title {
+    float: left;
+    font-size: 24px;
+    font-weight: lighter;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.tool-button {
+    float: right;
+    margin-top: 20px;
+    margin-right: 20px;
+}
+.tool-description {
+    clear: both;
+}
+
+/*Add button CSS*/
+.add-button {
+    float: right;
+    margin-right: 20px;
+    margin-top: 2px;
+}
+/*Modal body overflow*/
+.modal-body {
+    padding: 0px;
+}
+
+.modal-dialog .modal-body {
+    overflow: auto;
+}
+
+.error-dialog .modal-body {
+    padding-bottom: 80px;
+}
+
+/*Modal footer cancel button CSS*/
+.modal-footer .cancel-btn {
+    float: left;
+}
+
+/*Modal footer blank gap*/
+.modal-footer {
+    margin-bottom: -16px !important;
+    padding: 10px 20px;
+}
+
+/*Placeholder for msg*/
+.modal-body .form-horizontal {
+    margin-top: 15px;
+}
+.modal-body .form-horizontal ~ .form-horizontal {
+    margin-top: 0px;
+}
+
+/*Message CSS*/
+.modal-body .msg {
+    min-height: 20px;
+    overflow: hidden;
+    width: 100%;
+}
+
+.modal-body .msg .msg-body {
+    padding-left: 20px;
+}
+
+/*Error Message CSS*/
+.modal-body .msg-error {
+    background-color: #faeae6;
+    color: #d85d3c;
+}
+.modal-body .msg-error i.icon {
+    display: inline;
+    font-size: 14px;
+    line-height: 25px;
+    width: 18px;
+    margin-right: 8px;
+}
+.modal-body .msg-error div.msg-text {
+    display: inline;
+    margin-top: 4px;
+    word-wrap: break-word;
+    word-break: normal;
+}
+.modal-body .msg-error div.msg-text:after {
+    clear: both;
+}
+
+/* Global loading msg*/
+.loading-msg-box {
+    padding: 10px 0;
+    width: 100px;
+    margin: 0 auto;
+}
+
+.loading-msg-text {
+    vertical-align: super;
+}
+
+/* Dialog Loading Message CSS*/
+.modal-body .msg-loading {
+    background-color: #d1e5c6;
+}
+
+.modal-body .msg-icon {
+    display: inline;
+    float: left;
+    margin-top: 4px;
+}
+
+.modal-body .msg-loading div.msg-text {
+    display: inline;
+    float: left;
+    margin-top: 4px;
+    margin-left: 4px;
+    word-wrap: break-word;
+    word-break: normal;
+}
+
+/*Warning Message CSS*/
+.modal-body .msg-warning{
+    background-color: #fdf4de;
+}
+
+.modal-body .msg-warning i.icon{
+    display: inline;
+    font-size: 14px;
+    line-height: 25px;
+    width: 18px;
+    margin-right: 8px;
+}
+
+.modal-body .msg-warning div.msg-text{
+    display: inline;
+    margin-top: 4px;
+    width: 500px;
+    word-wrap: break-word;
+    word-break: normal;
+}
+
+.modal-body .msg-warning div.msg-text:after{
+    clear:both
+}
+
+/*Dialog input width*/
+.form-small .control-label {
+    width: 260px;
+}
+.form-small .controls {
+    margin-left: 280px;
+}
+.form-small input[type=text], input[type=password] {
+    width: 267px;
+}
+.form-small .uneditable-input {
+    width: 286px;
+}
+.form-small .select2-container {
+    width: 300px;
+}
+
+/*Help block width*/
+.form-horizontal .controls > .help-block {
+    width: 300px;
+}
+
+/*Delete the top border in first cell of table*/
+.table-chrome > thead > tr > th {
+    position: inherit !important;
+}
+
+.table-chrome .sorts a {
+    white-space: normal;
+}
+
+/*Table column width*/
+.list-dotted dt {
+    width: 200px;
+}
+.list-dotted dt:after {
+    content: " ...........................................................";
+}
+.list-dotted dd{
+    margin-left: 210px;
+}
+
+thead th {
+    /*Force line break when too long*/
+    word-wrap: break-word;
+    word-break: normal;
+}
+
+tbody tr td {
+    word-wrap: break-word;
+    word-break: normal;
+}
+
+tr.more-info > td.details {
+    word-wrap: break-word;
+    word-break: normal;
+}
+
+/*Delete dialog message margin*/
+.delete-prompt {
+    margin: 20px;
+}
+
+.control.btn-group.btn-group-radio.shared-controls-syntheticradiocontrol.control-default {
+  width: 450px;
+  height: auto;
+}
+
+.control.btn-group.btn-group-radio.shared-controls-syntheticradiocontrol.control-default > button {
+  float: left;
+}
+
+/* Group Section Style*/
+.section-group {
+    margin-left: 20px;
+}
+
+p.section-label {
+    font-size: 18px;
+    color: #65a637;
+    cursor: pointer;
+}
+
+/* Wait Spinner Style */
+.ta-wait-spinner {
+    margin-left: 5px;
+}
+.ta-spinner[data-color=gray] rect{
+    fill:#999;
+}
+.ta-spinner[data-color=brand] rect{
+    fill:#65a637;
+}
+.ta-spinner[data-size=small]{
+    width:12px;
+    height:12px
+}
+.ta-spinner[data-size=medium]{
+    width:19px;
+    height:19px
+}
+@keyframes ta_wait_spinner_animation{
+    to{
+        transform:rotate(1turn)
+    }
+}
+.ta-spinner{
+    animation: ta_wait_spinner_animation .8s steps(8) infinite;
+}
+
+/* Column head field disable sort */
+th.disabled, th.disable > a {
+    cursor: default;
+    pointer-events: none;
+}
+
+/* Input error style */
+input.validation-error, .select2-choice.validation-error,
+.select2-choices.validation-error, .btn-group-radio.validation-error > button {
+    border: 1px solid #d6563c !important;
+}
+
+/* Override default blue border */
+.select2-choices {
+    border-color: #ccc !important;
+}
+
+/* Actions color */
+.actions.col-actions {
+    color: #1e93c6;
+}
+
+/* Select2 disabled cursor style*/
+div.select2-container-disabled > a {
+    cursor: not-allowed !important;
+}
+
+/* Multiple select background color*/
+.select2-container.select2-container-disabled .select2-choices {
+    background-color: #eee !important;
+    cursor: not-allowed;
+}
+
+.select2-container.select2-container-disabled .select2-choice {
+    background-color: #eee !important;
+}

@@ -1,0 +1,153 @@
+<%inherit file="//qunit/template.html" />
+
+<%def name="title()">Module Loader -- QUnit tests</%def>
+
+<script type="text/javascript" src="/en-US/static/js/contrib/swfobject.js"></script>
+<script type="text/javascript" src="/en-US/static/js/contrib/deprecated/jquery-ui-1.8.5.custom.min.js"></script>
+<script type="text/javascript" src="/en-US/static/js/contrib/doT.js"></script>
+<script type="text/javascript" src="/en-US/static/js/jobber.js"></script>
+<script type="text/javascript" src="/en-US/static/js/job.js"></script>
+<script type="text/javascript" src="/en-US/static/js/context.js"></script>
+<script type="text/javascript" src="/en-US/static/js/search.js"></script>
+<script type="text/javascript" src="/en-US/static/js/menu_builder.js"></script>
+<script type="text/javascript" src="/en-US/static/js/time_range.js"></script>
+<script type="text/javascript" src="/en-US/static/js/module_loader.js"></script>
+<script type="text/javascript" src="/en-US/static/js/popup.js"></script>
+<script type="text/javascript" src="/en-US/static/js/page_status.js"></script>
+<script type="text/javascript" src="/en-US/static/js/field_summary.js"></script>
+
+<script type="text/javascript" src="/en-US/static/js/test_utils.js"></script>
+
+<script language="javascript">
+    // important to disable the chatty debug that the tests spew.
+    Splunk.Logger.mode.Default = Splunk.Logger.mode.None
+</script>
+
+
+
+<!--  Now the modules  -->
+<script type="text/javascript" src="/en-US/modules/AbstractModule.js"></script>
+<script type="text/javascript" src="/en-US/modules/DispatchingModule.js"></script>
+
+<script type="text/javascript" src="/en-US/modules/paginator/paginator.js"></script>
+<script type="text/javascript" src="/en-US/modules/results/page_controls/Count.js"></script>
+
+<div id="test_area"></div>
+
+<!-- 1) we insert this script BEFORE init.js,  so that we can mock up the page HTML.  -->
+<script language="javascript">
+    function generateModuleContainer(className) {
+        var container = $("<div>")
+            .addClass("SplunkModule")
+            .addClass(className);
+            
+        return container;
+    }
+    
+    var paginatorContainer = generateModuleContainer("Paginator");
+    var countContainer     = generateModuleContainer("Count");
+    
+    Splunk.Module.loadParams = {
+        ourCountModule: {"count": 50, "options": [{"text": "10", "value": "10"}, {"text": "20", "value": "20"}, {"text": "50", "selected": "True", "value": "50"}]}
+    }
+    Splunk.Module.paramConfig = {"persistable": {"ourCountModule": ["count"]}, "sticky":{}};
+
+
+    paginatorContainer
+        .attr("id", "ourPaginatorModule")
+        .attr("s:parentmodule", "#ourCountModule")
+        .appendTo(document.body)
+    countContainer
+        .attr("id", "ourCountModule")
+        .appendTo($('#test_area'));
+
+/**
+ * wire up handlers to capture the sequence of ModuleLoader's events in time.
+ */
+window._EVENT_SEQUENCE = [];
+$(document).bind("moduleLoadStatusChange", function(event, module, statusInt) {
+    window._EVENT_SEQUENCE.push(module.moduleId + " " + statusInt);
+})
+$(document).bind("allModulesInitialized", function() {
+    window._EVENT_SEQUENCE.push("allModulesInitialized");
+})
+$(document).bind("allModulesInHierarchy", function() {
+    window._EVENT_SEQUENCE.push("allModulesInHierarchy");
+})
+
+// LEGACY Event that is gone but we check for anyway.  
+// CONSTANT VIGILANCE!
+$(document).bind("allModulesLoaded", function() {
+    window._EVENT_SEQUENCE.push("allModulesLoaded");
+})
+ 
+</script>    
+
+<!--  2) now we can include init and it will create ModuleLoader  -->
+<script type="text/javascript" src="/en-US/static/js/init.js"></script>
+
+<!--  3) away we go for testing -->
+<script language="javascript">
+
+    // mocks are cool, but jsMock appears to suck. At least you cant pass arguments to the constructor of mocked objects.
+    // we are not using jsMock, instead just making regular instances, treating one as moduleUnderTest, and the other as 
+    // mockedModule,  then clobbering methods on mockedModule as necessary to verify things.
+    //var mockControl = new MockControl();
+
+    var logger = Splunk.Logger.getLogger("modules.html", Splunk.Logger.mode.Firebug);
+    var stopwatch = new Splunk.util.StopWatch();
+    var moduleTypes = getModuleTypes();
+    
+    
+
+    function setUp() {
+        // Need to mock $.ajax to get this test working correctly
+        window.__jQueryAjax = $.ajax;
+        
+        
+        
+        
+        // VERY IMPORTANT.  In certain cases Jobs will get automatically dispatched
+        // whenever addChild is called.  
+        // test harness mode short-circuits default behaviour.
+        Splunk._testHarnessMode = true;
+
+        
+
+        
+        // we time every testrun in here, so we can keep an eye on which ones are taking the most time. 
+        stopwatch.start();
+    }
+    
+    function tearDown() {
+        stopwatch.stop();
+        logger.debug("FINISHED in ", stopwatch.time())
+
+        stopwatch.reset();
+        $.ajax = window.__jQueryAjax;
+        window.__jQueryAjax = null
+        $("#test_area").html("");
+    }
+
+
+    function test_loadSequence() {
+        var expectedSequence = [
+            "ourCountModule " + Splunk.util.moduleLoadStates.WAITING_FOR_HIERARCHY, 
+            "ourPaginatorModule " + Splunk.util.moduleLoadStates.WAITING_FOR_HIERARCHY,
+            "allModulesInitialized",
+            "ourCountModule " + Splunk.util.moduleLoadStates.WAITING_FOR_CONTEXT,
+            "ourPaginatorModule " + Splunk.util.moduleLoadStates.WAITING_FOR_CONTEXT,
+            "allModulesInHierarchy",
+            "ourCountModule " + Splunk.util.moduleLoadStates.HAS_CONTEXT
+            // actually since the paginator module is configured to be a dispatchingModule, it will get deliberately left in WAITING_FOR_CONTEXT
+            //"ourPaginatorModule " + Splunk.util.moduleLoadStates.HAS_CONTEXT,
+        ];
+        assertEquals("check that the load sequence is correct",  expectedSequence.join(" "), window._EVENT_SEQUENCE.join(" "));
+        
+        //var countModule = Splunk.Globals["ModuleLoader"].getModuleInstanceById("ourCountModule");
+        //countModule.pushContextToChildren();
+        
+    }
+
+    
+</script>

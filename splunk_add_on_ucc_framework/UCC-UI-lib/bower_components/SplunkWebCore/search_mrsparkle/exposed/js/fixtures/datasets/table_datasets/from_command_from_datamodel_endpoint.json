@@ -1,0 +1,116 @@
+{
+    "links": {
+        "create": "/servicesNS/admin/search/datamodel/model/_new",
+        "_reload": "/servicesNS/admin/search/datamodel/model/_reload",
+        "_acl": "/servicesNS/admin/search/datamodel/model/_acl"
+    },
+    "origin": "https://localhost:8089/servicesNS/admin/search/datamodel/model",
+    "updated": "2016-06-15T12:55:14-07:00",
+    "generator": {
+        "build": "62496f6c577935781b59a0a311be4bfec8f4a2da",
+        "version": "20160614"
+    },
+    "entry": [
+        {
+            "name": "a_geo_table_test",
+            "id": "https://localhost:8089/servicesNS/admin/search/datamodel/model/a_geo_table_test",
+            "updated": "2016-06-15T12:55:14-07:00",
+            "links": {
+                "alternate": "/servicesNS/admin/search/datamodel/model/a_geo_table_test",
+                "list": "/servicesNS/admin/search/datamodel/model/a_geo_table_test",
+                "_reload": "/servicesNS/admin/search/datamodel/model/a_geo_table_test/_reload",
+                "edit": "/servicesNS/admin/search/datamodel/model/a_geo_table_test",
+                "remove": "/servicesNS/admin/search/datamodel/model/a_geo_table_test",
+                "move": "/servicesNS/admin/search/datamodel/model/a_geo_table_test/move",
+                "disable": "/servicesNS/admin/search/datamodel/model/a_geo_table_test/disable"
+            },
+            "author": "admin",
+            "acl": {
+                "app": "search",
+                "can_change_perms": true,
+                "can_list": true,
+                "can_share_app": true,
+                "can_share_global": true,
+                "can_share_user": true,
+                "can_write": true,
+                "modifiable": true,
+                "owner": "admin",
+                "perms": null,
+                "removable": true,
+                "sharing": "user"
+            },
+            "fields": {
+                "required": [],
+                "optional": [
+                    "acceleration",
+                    "acceleration.backfill_time",
+                    "acceleration.cron_schedule",
+                    "acceleration.earliest_time",
+                    "acceleration.hunk.compression_codec",
+                    "acceleration.hunk.dfs_block_size",
+                    "acceleration.hunk.file_format",
+                    "acceleration.manual_rebuilds",
+                    "acceleration.max_concurrent",
+                    "acceleration.max_time",
+                    "acceleration.schedule_priority",
+                    "concise",
+                    "dataset.commands",
+                    "dataset.description",
+                    "dataset.display.currentCommand",
+                    "dataset.display.datasummary.earliestTime",
+                    "dataset.display.datasummary.latestTime",
+                    "dataset.display.diversity",
+                    "dataset.display.limiting",
+                    "dataset.display.mode",
+                    "dataset.display.sample_ratio",
+                    "dataset.fields",
+                    "dataset.type",
+                    "description",
+                    "provisional",
+                    "search",
+                    "displayName"
+                ],
+                "wildcard": []
+            },
+            "content": {
+                "acceleration": "{\"enabled\":false,\"earliest_time\":\"\",\"cron_schedule\":\"\",\"max_time\":3600,\"backfill_time\":\"\",\"manual_rebuilds\":false,\"max_concurrent\":2,\"schedule_priority\":\"default\",\"hunk.file_format\":\"\",\"hunk.dfs_block_size\":0,\"hunk.compression_codec\":\"\"}",
+                "acceleration.backfill_time": "",
+                "acceleration.cron_schedule": "*/5 * * * *",
+                "acceleration.earliest_time": "",
+                "acceleration.hunk.compression_codec": "",
+                "acceleration.hunk.dfs_block_size": "",
+                "acceleration.hunk.file_format": "",
+                "acceleration.manual_rebuilds": "false",
+                "acceleration.max_concurrent": "2",
+                "acceleration.max_time": "3600",
+                "acceleration.schedule_priority": "default",
+                "dataset.commands": "[{\"baseSPL\":\"| from inputlookup:\\\"geo_attr_countries\\\"\",\"selectedMethod\":\"dataset\",\"type\":\"initialdata\",\"isComplete\":true,\"selectedDatasetId\":\"/servicesNS/nobody/search/data/transforms/lookups/geo_attr_countries\",\"selectedDatasetName\":\"geo_attr_countries\",\"selectedDatasetType\":\"inputlookup-transform\",\"selectedDatasetFromType\":\"inputlookup\",\"selectedDatasetFromName\":\"geo_attr_countries\",\"selectedDatasetEAIType\":\"inputlookup-transform\",\"selectedDatasetApp\":\"search\",\"selectedDatasetOwner\":\"nobody\",\"spl\":\"| from inputlookup:\\\"geo_attr_countries\\\" | fields \\\"country\\\", \\\"region_wb\\\", \\\"region_un\\\", \\\"subregion\\\", \\\"continent\\\", \\\"iso2\\\", \\\"iso3\\\"\",\"columns\":[{\"name\":\"country\",\"type\":\"string\",\"id\":\"fbb97867-cfb3-416b-8bf9-a6f5a02b00f7\"},{\"name\":\"region_wb\",\"type\":\"string\",\"id\":\"034c6c2b-ff17-4172-aadd-1599419c84b1\"},{\"name\":\"region_un\",\"type\":\"string\",\"id\":\"464eee9e-8753-4d5a-916c-697c2f629bb6\"},{\"name\":\"subregion\",\"type\":\"string\",\"id\":\"ec073790-11aa-450a-929a-f43f843a2ef0\"},{\"name\":\"continent\",\"type\":\"string\",\"id\":\"af1aa6c0-268e-40dc-b61a-ac4142a01cbf\"},{\"name\":\"iso2\",\"type\":\"string\",\"id\":\"d3b9ec3d-389e-4466-8b28-1e3f3a43b4f3\"},{\"name\":\"iso3\",\"type\":\"string\",\"id\":\"53d86334-d954-4070-827b-ec89a696ee1c\"}],\"requiredColumns\":[],\"editorValues\":[],\"selectedSourcetypes\":[]}]",
+                "dataset.description": "",
+                "dataset.display.currentCommand": "0",
+                "dataset.display.datasummary.earliestTime": "",
+                "dataset.display.datasummary.latestTime": "",
+                "dataset.display.diversity": "latest",
+                "dataset.display.limiting": "100000",
+                "dataset.display.mode": "table",
+                "dataset.display.sample_ratio": "1",
+                "dataset.fields": "[{\"name\":\"continent\"},{\"name\":\"country\"},{\"name\":\"iso2\"},{\"name\":\"iso3\"},{\"name\":\"region_un\"},{\"name\":\"region_wb\"},{\"name\":\"subregion\"}]",
+                "dataset.type": "table",
+                "description": "{\"modelName\":\"a_geo_table_test\",\"displayName\":\"a_geo_table_test\",\"description\":\"\",\"objectSummary\":{\"Event-Based\":0,\"Transaction-Based\":0,\"Search-Based\":1},\"objects\":[{\"objectName\":\"RootObject\",\"displayName\":\"Search Object\",\"parentName\":\"BaseSearch\",\"fields\":[{\"fieldName\":\"RootObject\",\"owner\":\"RootObject\",\"type\":\"objectCount\",\"fieldSearch\":\"\",\"required\":false,\"multivalue\":false,\"hidden\":false,\"editable\":false,\"displayName\":\"Search Object\",\"comment\":\"\"}],\"calculations\":[],\"constraints\":[],\"lineage\":\"RootObject\",\"objectSearchNoFields\":\" | search from inputlookup:\\\"geo_attr_countries\\\" | fields \\\"country\\\", \\\"region_wb\\\", \\\"region_un\\\", \\\"subregion\\\", \\\"continent\\\", \\\"iso2\\\", \\\"iso3\\\" | search   \",\"objectSearch\":\" | search from inputlookup:\\\"geo_attr_countries\\\" | fields \\\"country\\\", \\\"region_wb\\\", \\\"region_un\\\", \\\"subregion\\\", \\\"continent\\\", \\\"iso2\\\", \\\"iso3\\\" | search    | fields RootObject\",\"autoextractSearch\":\" | search from inputlookup:\\\"geo_attr_countries\\\" | fields \\\"country\\\", \\\"region_wb\\\", \\\"region_un\\\", \\\"subregion\\\", \\\"continent\\\", \\\"iso2\\\", \\\"iso3\\\" | search  \",\"previewSearch\":\" | search from inputlookup:\\\"geo_attr_countries\\\" | fields \\\"country\\\", \\\"region_wb\\\", \\\"region_un\\\", \\\"subregion\\\", \\\"continent\\\", \\\"iso2\\\", \\\"iso3\\\" | search   \",\"baseSearch\":\"from inputlookup:\\\"geo_attr_countries\\\" | fields \\\"country\\\", \\\"region_wb\\\", \\\"region_un\\\", \\\"subregion\\\", \\\"continent\\\", \\\"iso2\\\", \\\"iso3\\\"\",\"tsidxNamespace\":\"\"}],\"objectNameList\":[\"RootObject\"]}",
+                "disabled": false,
+                "displayName": "a_geo_table_test",
+                "eai:acl": null,
+                "eai:appName": "search",
+                "eai:digest": "7ca1fed81dde92bec5c01ff85e2949fc",
+                "eai:type": "datamodel",
+                "eai:userName": "admin",
+                "displayName": "a_geo_table_test"
+            }
+        }
+    ],
+    "paging": {
+        "total": 1,
+        "perPage": 30,
+        "offset": 0
+    },
+    "messages": []
+}

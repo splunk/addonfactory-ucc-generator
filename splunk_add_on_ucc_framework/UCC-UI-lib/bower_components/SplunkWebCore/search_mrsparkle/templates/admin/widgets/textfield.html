@@ -1,0 +1,45 @@
+<%page args="element, eaiAttributes, widgetstyle" />
+<%namespace file="../_helpers.html" import="wireElementEvents"/>
+
+
+    <div id="item-${element['elementName'] | h}" class="widget ${element['class'] if 'class' in element else '' | h}" ${widgetstyle}>
+        % if 'label' in element:
+            <label for="${element['elementName'] | h}_id" class="${'disabledLabel ' if element.get('disabled') else ''}">${_(element['label']) | h}
+            % if element.get('elementName') in eaiAttributes['requiredFields'] or element.has_key('requiredIfVisible'):
+                <span class="requiredAsterisk">*</span>
+            % endif
+            </label>
+        % endif
+        % if 'helpText' in element:
+            <p class="helpText">${_(element['helpText']) | h}</p>
+        % endif
+        <div>
+            <input type="text" \
+                class="${element['class'] if 'class' in element else '' | h} \
+                    ${'withbutton' if element.get('displayButton') else ''}" \
+                name="${element["elementName"] | h}" \
+                ${'readonly="readonly"' if element.get('readonly') else ''} ${'disabled="disabled"' if element.get('disabled') else ''}\
+                ${wireElementEvents(element, 'text') if not element.get('displayButton') else ''}\
+                id="${element['elementName'] | h}_id"\
+                />
+            <div class="widgeterror"><form:error name="${element["elementName"] | h}"/></div>
+            
+
+            % if element.get('displayButton'):
+                <input type="button" \
+                    class="${element['class'] if 'class' in element else 'short' | h}" \
+                    name="spl-ctrl-${element["elementName"] | h}-button" \
+                    value="${_(element.get('buttonLabel', 'Ok')) | h}"
+                    ${wireElementEvents(element, 'button')}\
+                    />
+            % endif
+
+            % if element.get('deleteable'):
+                <a href="#" class="delete">${_('Delete') | h}</a>
+            % endif
+            
+            % if 'exampleText' in element:
+                <p class="exampleText"><em>${_(element['exampleText']) | extract_help_links }</em></p>
+            % endif
+        </div>
+    </div>

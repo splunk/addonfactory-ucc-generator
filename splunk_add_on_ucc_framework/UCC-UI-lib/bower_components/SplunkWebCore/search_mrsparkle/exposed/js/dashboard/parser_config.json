@@ -1,0 +1,4475 @@
+{
+    "structure": [
+        {
+            "name": "dashboard",
+            "alias": "form",
+            "layoutContainer": true,
+            "settings": [
+                {
+                    "name": "label",
+                    "description": "Optional header text for a dashboard or form",
+                    "type": "node",
+                    "dataType": "string"
+                },
+                {
+                    "name": "description",
+                    "description": "Text that displays beneath a dashboard or form",
+                    "type": "node",
+                    "dataType": "string"
+                },
+                {
+                    "name": "isVisible",
+                    "description": "Indicates if the dashboard is listed in the Dashboards listing in an app and the navigation menus for an app",
+                    "type": "attribute",
+                    "dataType": "boolean",
+                    "default": true
+                },
+                {
+                    "name": "isDashboard",
+                    "description": "Indicates if a view is a dashboard or a view implemented with advanced XML that is not a dashboard",
+                    "type": "attribute",
+                    "dataType": "boolean",
+                    "default": true
+                },
+                {
+                    "name": "refresh",
+                    "description": "Sets the dashboard refresh interval, in seconds. The dashboard reloads after the specified refresh interval",
+                    "type": "attribute",
+                    "dataType": "integer",
+                    "default": 0
+                },
+                {
+                    "name": "cancelOnUnload",
+                    "attributeName": "onunloadCancelJobs",
+                    "description": "Specifies whether to cancel search jobs when a user navigates away from a dashboard",
+                    "type": "attribute",
+                    "dataType": "boolean",
+                    "default": true
+                },
+                {
+                    "name": "script",
+                    "description": "Comma separated lists of custom scripts to load",
+                    "type": "attribute",
+                    "dataType": "app-resources"
+                },
+                {
+                    "name": "stylesheet",
+                    "description": "Comma separated lists of custom stylesheets to load",
+                    "type": "attribute",
+                    "dataType": "app-resources"
+                },
+                {
+                    "name": "hideChrome",
+                    "description": "When truthy the header and footer won't show up",
+                    "type": "attribute",
+                    "dataType": "boolean"
+                },
+                {
+                    "name": "hideFilters",
+                    "description": "When truthy the global fieldset will be hidden",
+                    "type": "attribute",
+                    "dataType": "boolean"
+                },
+                {
+                    "name": "hideAppBar",
+                    "description": "When truthy the app bar (nav) won't show up",
+                    "type": "attribute",
+                    "dataType": "boolean"
+                },
+                {
+                    "name": "hideEdit",
+                    "description": "When truthy the edit won't show up",
+                    "type": "attribute",
+                    "dataType": "boolean"
+                },
+                {
+                    "name": "hideFooter",
+                    "description": "When truthy the footer won't show up",
+                    "type": "attribute",
+                    "dataType": "boolean"
+                },
+                {
+                    "name": "hideSplunkBar",
+                    "description": "When truthy the splunk bar won't show up",
+                    "type": "attribute",
+                    "dataType": "boolean"
+                },
+                {
+                    "name": "hideTitle",
+                    "description": "When truthy the title won't show up",
+                    "type": "attribute",
+                    "dataType": "boolean"
+                }
+            ],
+            "children": [
+                {
+                    "type": "fieldset",
+                    "max": 1
+                },
+                {
+                    "type": "globalSearchTemplate",
+                    "max": 1
+                },
+                {
+                    "type": "globalEarliestTime",
+                    "max": 1
+                },
+                {
+                    "type": "globalLatestTime",
+                    "max": 1
+                },
+                {
+                    "type": "globalSearchName",
+                    "max": 1
+                },
+                {
+                    "type": "base-search"
+                },
+                {
+                    "type": "row"
+                },
+                {
+                    "type": "init-event-handler"
+                }
+            ]
+        },
+        {
+            "name": "globalSearchTemplate",
+            "tagName": "searchTemplate",
+            "settings": [
+                {
+                    "name": "query",
+                    "type": "content",
+                    "dataType": "search-string"
+                }
+            ],
+            "validation": {
+                "legacy": true
+            },
+            "normalization": {
+                "convertTo": {
+                    "type": "inline-search",
+                    "id": "global"
+                }
+            }
+        },
+        {
+            "name": "searchTemplate",
+            "extends": "legacySearch",
+            "settings": [
+                {
+                    "name": "query",
+                    "type": "content",
+                    "dataType": "search-string"
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "inline-search"
+                }
+            }
+        },
+        {
+            "name": "searchPostProcess",
+            "extends": "legacySearch",
+            "settings": [
+                {
+                    "name": "postprocess",
+                    "type": "content",
+                    "dataType": "search-string"
+                },
+                {
+                    "name": "base",
+                    "type": "static",
+                    "dataType": "identifier",
+                    "default": "global"
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "postprocess-search"
+                }
+            }
+        },
+        {
+            "name": "searchString",
+            "extends": "legacySearch",
+            "settings": [
+                {
+                    "name": "query",
+                    "type": "content",
+                    "dataType": "search-string"
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "inline-search"
+                }
+            }
+        },
+        {
+            "name": "globalSearchName",
+            "tagName": "searchName",
+            "validation": {
+                "legacy": true
+            },
+            "normalization": {
+                "convertTo": {
+                    "type": "saved-search",
+                    "id": "global"
+                }
+            }
+        },
+        {
+            "name": "searchName",
+            "extends": "legacySearch",
+            "settings": [
+                {
+                    "name": "name",
+                    "type": "content",
+                    "dataType": "string"
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "saved-search"
+                }
+            }
+        },
+        {
+            "name": "globalEarliestTime",
+            "tagName": "earliestTime",
+            "validation": {
+                "legacy": true
+            },
+            "settings": [
+                {
+                    "name": "earliest",
+                    "type": "content",
+                    "dataType": "string"
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "inline-search",
+                    "id": "global"
+                }
+            }
+        },
+        {
+            "name": "searchStringEarliestTime",
+            "extends": "legacySearch",
+            "tagName": "earliestTime",
+            "match": "earliestTime+searchString",
+            "settings": [
+                {
+                    "name": "earliest",
+                    "type": "content",
+                    "dataType": "string"
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "inline-search"
+                }
+            }
+        },
+        {
+            "name": "searchNameEarliestTime",
+            "extends": "legacySearch",
+            "tagName": "earliestTime",
+            "match": "earliestTime+searchName",
+            "settings": [
+                {
+                    "name": "earliest",
+                    "type": "content",
+                    "dataType": "string"
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "saved-search"
+                }
+            }
+        },
+        {
+            "name": "searchTemplateEarliestTime",
+            "extends": "legacySearch",
+            "tagName": "earliestTime",
+            "match": "earliestTime+searchTemplate",
+            "settings": [
+                {
+                    "name": "earliest",
+                    "type": "content",
+                    "dataType": "string"
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "inline-search"
+                }
+            }
+        },
+        {
+            "name": "globalLatestTime",
+            "tagName": "latestTime",
+            "validation": {
+                "legacy": true
+            },
+            "settings": [
+                {
+                    "name": "latest",
+                    "type": "content",
+                    "dataType": "string"
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "inline-search",
+                    "id": "global"
+                }
+            }
+        },
+        {
+            "name": "searchStringLatestTime",
+            "extends": "legacySearch",
+            "tagName": "latestTime",
+            "match": "latestTime+searchString",
+            "settings": [
+                {
+                    "name": "latest",
+                    "type": "content",
+                    "dataType": "string"
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "inline-search"
+                }
+            }
+        },
+        {
+            "name": "searchTemplateLatestTime",
+            "extends": "legacySearch",
+            "tagName": "latestTime",
+            "match": "latestTime+searchTemplate",
+            "settings": [
+                {
+                    "name": "latest",
+                    "type": "content",
+                    "dataType": "string"
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "inline-search"
+                }
+            }
+        },
+        {
+            "name": "searchNameLatestTime",
+            "extends": "legacySearch",
+            "tagName": "latestTime",
+            "match": "latestTime+searchName",
+            "settings": [
+                {
+                    "name": "latest",
+                    "type": "content",
+                    "dataType": "string"
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "saved-search"
+                }
+            }
+        },
+        {
+            "name": "legacySearch",
+            "abstract": true,
+            "validation": {
+                "legacy": true
+            }
+        },
+        {
+            "name": "row",
+            "settings": [
+                {
+                    "name": "id",
+                    "type": "attribute",
+                    "dataType": "identifier"
+                },
+                {
+                    "name": "grouping",
+                    "type": "attribute",
+                    "dataType": "string",
+                    "legacy": true
+                },
+                {
+                    "name": "depends",
+                    "parentObj": "tokenDependencies",
+                    "attributeName": "depends",
+                    "type": "attribute",
+                    "dataType": "string"
+                },
+                {
+                    "name": "rejects",
+                    "parentObj": "tokenDependencies",
+                    "attributeName": "rejects",
+                    "type": "attribute",
+                    "dataType": "string"
+                }
+            ],
+            "validation": {
+                "hasChildren": true
+            },
+            "normalization": {
+                "autoId": "row%d",
+                "rowGrouping": "panel"
+            },
+            "retainRawXML": true,
+            "children": [
+                {
+                    "type": "base-panel"
+                },
+                {
+                    "type": "element"
+                },
+                {
+                    "type": "html"
+                }
+            ]
+        },
+        {
+            "name": "base-panel",
+            "abstract": true,
+            "retainRawXML": true
+        },
+        {
+            "name": "panelref",
+            "extends": "base-panel",
+            "tagName": "panel",
+            "match": "panel[ref]",
+            "settings": [
+                {
+                    "name": "id",
+                    "type": "attribute",
+                    "dataType": "identifier"
+                },
+                {
+                    "name": "ref",
+                    "type": "attribute",
+                    "dataType": "string",
+                    "allowEmpty": false
+                },
+                {
+                    "name": "app",
+                    "type": "attribute",
+                    "dataType": "string"
+                },
+                {
+                    "name": "depends",
+                    "parentObj": "tokenDependencies",
+                    "attributeName": "depends",
+                    "type": "attribute",
+                    "dataType": "string"
+                },
+                {
+                    "name": "rejects",
+                    "parentObj": "tokenDependencies",
+                    "attributeName": "rejects",
+                    "type": "attribute",
+                    "dataType": "string"
+                }
+            ],
+            "normalization": {
+                "autoId": "panel%d"
+            }
+        },
+        {
+            "name": "panel",
+            "extends": "base-panel",
+            "tagName": "panel",
+            "settings": [
+                {
+                    "name": "id",
+                    "type": "attribute",
+                    "dataType": "identifier"
+                },
+                {
+                    "name": "title",
+                    "type": "node",
+                    "dataType": "string"
+                },
+                {
+                    "name": "description",
+                    "type": "node",
+                    "dataType": "string"
+                },
+                {
+                    "name": "depends",
+                    "parentObj": "tokenDependencies",
+                    "attributeName": "depends",
+                    "type": "attribute",
+                    "dataType": "string"
+                },
+                {
+                    "name": "rejects",
+                    "parentObj": "tokenDependencies",
+                    "attributeName": "rejects",
+                    "type": "attribute",
+                    "dataType": "string"
+                }
+            ],
+            "children": [
+                {
+                    "type": "element"
+                },
+                {
+                    "type": "base-input"
+                },
+                {
+                    "type": "time-input"
+                },
+                {
+                    "type": "base-search"
+                },
+                {
+                    "type": "html"
+                }
+            ],
+            "validation": {
+                "hasChildren": true
+            },
+            "normalization": {
+                "autoId": "panel%d"
+            }
+        }
+    ],
+    "elements": [
+        {
+            "name": "element",
+            "abstract": true,
+            "settings": [
+                {
+                    "name": "id",
+                    "type": "attribute",
+                    "dataType": "identifier"
+                },
+                {
+                    "reportProperty": "dashboard.element.title",
+                    "name": "title",
+                    "description": "The element title as shown above the visualization",
+                    "type": "node",
+                    "dataType": "string"
+                },
+                {
+                    "name": "depends",
+                    "parentObj": "tokenDependencies",
+                    "attributeName": "depends",
+                    "type": "attribute",
+                    "dataType": "string"
+                },
+                {
+                    "name": "rejects",
+                    "parentObj": "tokenDependencies",
+                    "attributeName": "rejects",
+                    "type": "attribute",
+                    "dataType": "string"
+                },
+                {
+                    "reportProperty": "dashboard.element.link.visible",
+                    "description": "Show the link buttons at the bottom of the panel. Defaults to true",
+                    "name": "link.visible",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": true
+                },
+                {
+                    "reportProperty": "dashboard.element.link.openSearch.visible",
+                    "name": "link.openSearch.visible",
+                    "description": "Show the 'Open in Search' button at the bottom of the panel. Defaults to the value of link.visible",
+                    "type": "option",
+                    "dataType": "boolean"
+                },
+                {
+                    "reportProperty": "dashboard.element.link.openPivot.visible",
+                    "name": "link.openPivot.visible",
+                    "description": "Show the 'Open in Pivot' button at the bottom of the panel. Defaults to the value of link.visible",
+                    "type": "option",
+                    "dataType": "boolean"
+                },
+                {
+                    "reportProperty": "dashboard.element.link.openSearch.text",
+                    "name": "link.openSearch.text",
+                    "description": "The label for the 'Open in Search' button. Defaults to 'Open in Search'",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "reportProperty": "dashboard.element.link.openSearch.viewTarget",
+                    "name": "link.openSearch.viewTarget",
+                    "description": "The target view used when clicking on the 'Open in Search' button. Defaults to 'search'",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "reportProperty": "dashboard.element.link.openSearch.search",
+                    "name": "link.openSearch.search",
+                    "description": "An alternative search to use when clicking on the 'Open in Search' button. Defaults to the search used by this panel",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "reportProperty": "dashboard.element.link.openSearch.searchEarliestTime",
+                    "description": "The earliest time to use for the alternative search specified by link.openSearch.search. Defaults to the earliest time used by this panel",
+                    "name": "link.openSearch.searchEarliestTime",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "reportProperty": "dashboard.element.link.openSearch.searchLatestTime",
+                    "name": "link.openSearch.searchLatestTime",
+                    "description": "The latest time to use for the alternative search specified by link.openSearch.search. Defaults to the latest time used by this panel",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "reportProperty": "dashboard.element.link.exportResults.visible",
+                    "name": "link.exportResults.visible",
+                    "description": "Show the 'Export' button at the bottom of the panel. Defaults to the value of link.visible",
+                    "type": "option",
+                    "dataType": "boolean"
+                },
+                {
+                    "reportProperty": "dashboard.element.link.inspectSearch.visible",
+                    "name": "link.inspectSearch.visible",
+                    "description": "Show the 'Inspect' button at the bottom of the panel. Defaults to the value of link.visible",
+                    "type": "option",
+                    "dataType": "boolean"
+                },
+                {
+                    "reportProperty": "dashboard.element.link.stopSearch.visible",
+                    "name": "link.stopSearch.visible",
+                    "description": "Show the 'Stop' button at the bottom of the panel. Defaults to the value of link.visible",
+                    "type": "option",
+                    "dataType": "boolean"
+                },
+                {
+                    "reportProperty": "dashboard.element.refresh.time.visible",
+                    "name": "refresh.time.visible",
+                    "description": "Show the refresh time indicator: default True",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": true
+                },
+                {
+                    "reportProperty": "dashboard.element.refresh.link.visible",
+                    "name": "refresh.link.visible",
+                    "description": "Show the refresh link: default True",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": true
+                },
+                {
+                    "reportProperty": "dashboard.element.refresh.auto.interval",
+                    "name": "refresh.auto.interval",
+                    "description": "time in seconds to refresh this panel.  If not a positive integer panel will not refresh. Defaults to 0",
+                    "type": "option",
+                    "dataType": "integer",
+                    "default": 0,
+                    "legacy": true
+                },
+                {
+                    "reportProperty": "dashboard.element.refresh.display",
+                    "name": "refresh.display",
+                    "description": "Define how search refresh is displayed to the user in terms of showing preview data, messaging and the progressbar",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": ["preview", "progressbar", "none"],
+                    "default": "progressbar"
+                }
+            ],
+            "normalization": {
+                "autoId": "element%d"
+            },
+            "retainRawXML": true,
+            "children": [
+                {
+                    "type": "legacySearch"
+                },
+                {
+                    "type": "base-search",
+                    "max": 1
+                },
+                {
+                    "type": "drilldown",
+                    "max": 1
+                }
+            ]
+        },
+        {
+            "name": "chart",
+            "extends": "element",
+            "reportPropertyPrefix": "display.visualizations.",
+            "settings": [
+                {
+                    "name": "charting.chart",
+                    "description": "Set the chart type. Defaults to column",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "area",
+                        "bar",
+                        "bubble",
+                        "column",
+                        "fillerGauge",
+                        "line",
+                        "markerGauge",
+                        "pie",
+                        "radialGauge",
+                        "scatter"
+                    ],
+                    "default": "column"
+                },
+                {
+                    "name": "charting.chart.stackMode",
+                    "description": "Used to set up stacked for area, bar, and column charts. Defaults to default",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "default",
+                        "stacked",
+                        "stacked100"
+                    ],
+                    "default": "default"
+                },
+                {
+                    "name": "charting.chart.nullValueMode",
+                    "description": "Determines how the area and line charts handles null values. Defaults to gaps",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "gaps",
+                        "zero",
+                        "connect"
+                    ],
+                    "default": "gaps"
+                },
+                {
+                    "name": "charting.chart.barSpacing",
+                    "description": "Controls the spacing between bars in a bar chart",
+                    "type": "option",
+                    "dataType": "integer"
+                },
+                {
+                    "name": "charting.chart.columnSpacing",
+                    "description": "Controls the spacing between bars in a column chart",
+                    "type": "option",
+                    "dataType": "integer"
+                },
+                {
+                    "name": "height",
+                    "description": "The height of the chart",
+                    "reportProperty": "display.visualizations.chartHeight",
+                    "type": "option",
+                    "dataType": "height",
+                    "min": 100,
+                    "max": 1000,
+                    "default": 250 
+                },
+                {
+                    "name": "charting.axisTitleX.text",
+                    "description": "Specifies the title of the X-Axis",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "charting.axisTitleY.text",
+                    "description": "Specifies the title of the Y-Axis",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "charting.axisTitleY2.text",
+                    "description": "Specifies the title of the Y2-Axis",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "charting.axisTitleX.visibility",
+                    "description": "Indicates whether to show the title of the X-Axis. Defaults to visible",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "visible",
+                        "collapsed"
+                    ],
+                    "default": "visible" 
+                },
+                {
+                    "name": "charting.axisTitleY.visibility",
+                    "description": "Indicates whether to show the title of the Y-Axis. Defaults to visible",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "visible",
+                        "collapsed"
+                    ],
+                    "default": "visible" 
+                },
+                {
+                    "name": "charting.axisTitleY2.visibility",
+                    "description": "Indicates whether to show the title of the Y2-Axis. Defaults to visible",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "visible",
+                        "collapsed"
+                    ],
+                    "default": "visible" 
+                },
+                {
+                    "name": "charting.seriesColors",
+                    "description": "Colors used for the series. The format is a JSON array like: [0xFF0000,0xFFFF00,0x00FF00]",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "charting.resultTruncationLimit",
+                    "description": "The default used depends on your browser and the chart type being used",
+                    "type": "option",
+                    "dataType": "integer",
+                    "legacy": true
+                },
+                {
+                    "name": "charting.chart.resultTruncationLimit",
+                    "description": "The default used depends on your browser and the chart type being used",
+                    "type": "option",
+                    "dataType": "integer"
+                },
+                {
+                    "name": "charting.layout.splitSeries",
+                    "description": "This is a special switch that splits a multi-series chart into separate charts",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": false
+                },
+                {
+                    "name": "charting.layout.splitSeries.allowIndependentYRanges",
+                    "description": "Specifies whether to allow split series charts to have independent y-ranges. Defaults to false",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": false
+                },
+                {
+                    "name": "charting.gaugeColors",
+                    "description": "Colors used for the gauges. The format is a JSON array like: [0xFF0000,0xFFFF00,0x00FF00]",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "charting.fieldColors",
+                    "description": "Colors used for each field. The format is a JSON array like: [0xFF0000,0xFFFF00,0x00FF00]",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "charting.lineDashStyle",
+                    "description": "Dash style for all line series in the chart. Defaults to solid. Applies for line chart",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "solid",
+                        "shortDash",
+                        "shortDot",
+                        "shortDashDot",
+                        "shortDashDotDot",
+                        "dot",
+                        "dash",
+                        "longDash",
+                        "dashDot",
+                        "longDashDot",
+                        "longDashDotDot"
+                    ],
+                    "default": "solid"
+                },
+                {
+                    "name": "charting.data.count",
+                    "description": "The number of results to retrieve. Set 0 to get all results",
+                    "type": "option",
+                    "dataType": "integer"
+                },
+                {
+                    "name": "charting.data.fieldListMode",
+                    "description": "The order in which to apply the fieldShowList and fieldHideList filters. Defaults to hide_show",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "show_hide",
+                        "hide_show"
+                    ],
+                    "default": "hide_show"
+                },
+                {
+                    "name": "charting.data.fieldShowList",
+                    "description": "The list of fields to explicitly show in the results. JSON array format",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "charting.data.fieldHideList",
+                    "description": "The list of fields to explicitly hide from the results. JSON array format",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "charting.axisY2.enabled",
+                    "description": "Enables a second Y-Axis for chart overlays. Defaults to false",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": false
+                },
+                {
+                    "name": "charting.axisY2.fields",
+                    "description": "Specify a field or a space/comma-delimited list of fields that should be mapped to the second Y-Axis",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "charting.axisY.scale",
+                    "description": "For numeric axes Y, this represents the type of scale that Splunk applies to a numerical axis",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "linear",
+                        "log"
+                    ],
+                    "default": "linear"
+                },
+                {
+                    "name": "charting.axisY2.scale",
+                    "description": "For numeric axes Y2, this represents the type of scale that Splunk applies to a numerical axis",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "linear",
+                        "log",
+                        "inherit"
+                    ],
+                    "default": "linear"
+                },
+                {
+                    "name": "charting.axisY.minimumNumber",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "charting.axisY2.minimumNumber",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "charting.axisY.maximumNumber",
+                    "validate": "validate( isnum(value) OR match(value, \"^(auto)$\"), \"Value of argument 'axisY.maximumNumber' must be either a number or 'auto'\")",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "charting.axisY2.maximumNumber",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "charting.axisX.scale",
+                    "description": "For numeric axes X, this represents the type of scale that Splunk applies to a numerical axis",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "linear",
+                        "log"
+                    ],
+                    "default": "linear"
+                },
+                {
+                    "name": "charting.axisX.minimumNumber",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "charting.axisX.maximumNumber",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "charting.axisX.includeZero",
+                    "description": "Determines whether chart's X-Axis range includes zero. Defaults to false",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": false
+                },
+                {
+                    "name": "charting.axisY.includeZero",
+                    "description": "Determines whether chart's Y-Axis range includes zero. Defaults to false",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": false
+                },
+                {
+                    "name": "charting.axisY2.includeZero",
+                    "description": "Determines whether chart's Y2-Axis range includes zero. Defaults to false",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": false
+                },
+                {
+                    "name": "charting.axisLabelsX.majorLabelVisibility",
+                    "description": "Controls the visibility of the major tick mark labels of X-Axis",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "auto",
+                        "show",
+                        "hide"
+                    ],
+                    "default": "auto"
+                },
+                {
+                    "name": "charting.axisLabelsX.majorLabelStyle.rotation",
+                    "description": "Determines the rotation of the axis label in degrees. Defaults to 0",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "-90",
+                        "-45",
+                        "0",
+                        "45",
+                        "90"
+                    ],
+                    "default": "0"
+                },
+                {
+                    "name": "charting.axisLabelsX.majorLabelStyle.overflowMode",
+                    "description": "Determines whether the axis label is ellipsized to the tick spacing. Defaults to ellipsisNone",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "ellipsisNone",
+                        "ellipsisMiddle"
+                    ],
+                    "default": "ellipsisNone"
+                },
+                {
+                    "name": "charting.axisLabelsX.integerUnits",
+                    "description": "Indicates whether the major unit should be rounded to the nearest integer. Defaults to false",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": false
+                },
+                {
+                    "name": "charting.axisLabelsY.majorLabelVisibility",
+                    "description": "Controls the visibility of the major tick mark labels of Y-Axis",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "auto",
+                        "show",
+                        "hide"
+                    ],
+                    "legacy": true,
+                    "default": "auto"
+                },
+                {
+                    "name": "charting.axisLabelsY2.majorLabelVisibility",
+                    "description": "Controls the visibility of the major tick mark labels of Y2-Axis",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "auto",
+                        "show",
+                        "hide"
+                    ],
+                    "default": "auto"
+                },
+                {
+                    "name": "charting.axisLabelsY.majorUnit",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "charting.axisLabelsY2.majorUnit",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "charting.axisLabelsX.majorUnit",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "charting.axisLabelsX.axisVisibility",
+                    "description": "Determines whether or not X-Axis line is visible",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "show",
+                        "hide"
+                    ],
+                    "default": "hide"
+                },
+                {
+                    "name": "charting.axisLabelsY.axisVisibility",
+                    "description": "Determines whether or not Y-Axis line is visible",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "show",
+                        "hide"
+                    ],
+                    "default": "hide"
+                },
+                {
+                    "name": "charting.axisLabelsY2.axisVisibility",
+                    "description": "Determines whether or not Y2-Axis line is visible",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "show",
+                        "hide"
+                    ],
+                    "default": "hide"
+                },
+                {
+                    "name": "charting.axisLabelsX.majorTickVisibility",
+                    "description": "Determines whether major tick marks on the X-Axis are visible",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "auto",
+                        "show",
+                        "hide"
+                    ],
+                    "default": "auto"
+                },
+                {
+                    "name": "charting.axisLabelsY.majorTickVisibility",
+                    "description": "Determines whether major tick marks on the Y-Axis are visible",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "auto",
+                        "show",
+                        "hide"
+                    ],
+                    "default": "auto"
+                },
+                {
+                    "name": "charting.axisLabelsY2.majorTickVisibility",
+                    "description": "Determines whether major tick marks on the Y2-Axis are visible",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "auto",
+                        "show",
+                        "hide"
+                    ],
+                    "default": "auto"
+                },
+                {
+                    "name": "charting.axisLabelsX.minorTickVisibility",
+                    "description": "Determines whether minor tick marks on the X-Axis are visible",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "auto",
+                        "show",
+                        "hide"
+                    ],
+                    "default": "auto"
+                },
+                {
+                    "name": "charting.axisLabelsY.minorTickVisibility",
+                    "description": "Determines whether minor tick marks on the Y-Axis are visible",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "auto",
+                        "show",
+                        "hide"
+                    ],
+                    "default": "auto"
+                },
+                {
+                    "name": "charting.axisLabelsY2.minorTickVisibility",
+                    "description": "Determines whether minor tick marks on the Y2-Axis are visible",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "auto",
+                        "show",
+                        "hide"
+                    ],
+                    "default": "auto"
+                },
+                {
+                    "name": "charting.axisLabelsX.majorTickSize",
+                    "description": "Determines the size in pixels of major tick marks on the X-Axis. Defaults to 6",
+                    "type": "option",
+                    "dataType": "integer",
+                    "default": 6
+                },
+                {
+                    "name": "charting.axisLabelsY.majorTickSize",
+                    "description": "Determines the size in pixels of major tick marks on the Y-Axis. Defaults to 6",
+                    "type": "option",
+                    "dataType": "integer",
+                    "legacy": true,
+                    "default": 6
+                },
+                {
+                    "name": "charting.axisLabelsY2.majorTickSize",
+                    "description": "Determines the size in pixels of major tick marks on the Y2-Axis. Defaults to 6",
+                    "type": "option",
+                    "dataType": "integer",
+                    "default": 6
+                },
+                {
+                    "name": "charting.axisLabelsX.minorTickSize",
+                    "description": "Determines the size in pixels of minor tick marks on the X-Axis. Defaults to 6",
+                    "type": "option",
+                    "dataType": "integer",
+                    "default": 6
+                },
+                {
+                    "name": "charting.axisLabelsY.minorTickSize",
+                    "description": "Determines the size in pixels of minor tick marks on the Y-Axis. Defaults to 6",
+                    "type": "option",
+                    "dataType": "integer",
+                    "default": 6
+                },
+                {
+                    "name": "charting.axisLabelsY2.minorTickSize",
+                    "description": "Determines the size in pixels of minor tick marks on the Y2-Axis. Defaults to 6",
+                    "type": "option",
+                    "dataType": "integer",
+                    "default": 6
+                },
+                {
+                    "name": "charting.axisLabelsY.extendsAxisRange",
+                    "description": "Determines whether the Y-Axis should be extended to snap to whole major tick marks. Defaults to true",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": true
+                },
+                {
+                    "name": "charting.axisLabelsY.integerUnits",
+                    "description": "Determines whether the major unit of Y-Axis is rounded to the nearest integer. Defaults to false",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": false
+                },
+                {
+                    "name": "charting.axisLabelsY2.integerUnits",
+                    "description": "Determines whether the major unit of second Y-Axis is rounded to the nearest integer. Defaults to false",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": false
+                },
+                {
+                    "name": "charting.axisLabelsX.extendsAxisRange",
+                    "description": "Extend the axis range of the X-Axis to show the first tickmark out of range. Only applies for numeric axis values. Defaults to true",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": true
+                },
+                {
+                    "name": "charting.gridLinesX.showMajorLines",
+                    "description": "Determines whether major grid lines on X-Axis are visible. Defaults to false",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": false
+                },
+                {
+                    "name": "charting.gridLinesY.showMajorLines",
+                    "description": "Determines whether major grid lines on Y-Axis are visible. Defaults to true",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": true
+                },
+                {
+                    "name": "charting.gridLinesY2.showMajorLines",
+                    "description": "Determines whether major grid lines on the second Y-Axis are visible. Defaults to false",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": false
+                },
+                {
+                    "name": "charting.gridLinesX.showMinorLines",
+                    "description": "Determines whether minor grid lines are visible on the X-axis. Defaults to false",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": false
+                },
+                {
+                    "name": "charting.gridLinesY.showMinorLines",
+                    "description": "Determines whether minor grid lines are visible on the Y-axis. Defaults to false",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": false
+                },
+                {
+                    "name": "charting.gridLinesY2.showMinorLines",
+                    "description": "Determines whether minor grid lines are visible on the second Y-Axis. Defaults to false",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": false
+                },
+                {
+                    "name": "charting.legend.labels",
+                    "description": "A list of labels with which to pre-populate the legend",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "charting.legend.placement",
+                    "descripton": "Location of legend on the panel. Defaults to right",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "top",
+                        "right",
+                        "bottom",
+                        "left",
+                        "none"
+                    ],
+                    "default": "right"
+                },
+                {
+                    "name": "charting.legend.labelStyle.overflowMode",
+                    "descripton": "Determines how to display labels of legend that overflow layout bounds by replacing elided text with an ellipsis (...)",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "ellipsisEnd",
+                        "ellipsisMiddle",
+                        "ellipsisStart",
+                        "ellipsisNone"
+                    ],
+                    "default": "ellipsisMiddle"
+                },
+                {
+                    "name": "charting.legend.masterLegend",
+                    "descripton": "If attribute is present, disables legend color synchronization with other panels in the dashboard. The only valid value is an empty tag. If a value is specified, the attribute is ignored",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "charting.drilldown",
+                    "descripton": "Enable or disable drilldown for the chart. Defaults to all",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "all",
+                        "none",
+                        "true",
+                        "false",
+                        "1",
+                        "0",
+                        "True",
+                        "False"
+                    ],
+                    "default": "all"
+                },
+                {
+                    "name": "charting.chart.showLines",
+                    "description": "Indicates whether or not lines should be painted in area charts",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": true
+                },
+                {
+                    "name": "charting.chart.style",
+                    "description": "Enables the choice between two basic gauge appearances. The shiny style is a graphically stylized version of the gauge with with chrome, shading, and so on so that it mimics those in the real world. The minimal style is a stripped-down \"just the basics\" version of the gauge.",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "minimal",
+                        "shiny"
+                    ],
+                    "default": "shiny"
+                },
+                {
+                    "name": "charting.chart.rangeValues",
+                    "description": "A numeric array that represents the overall numerical range represented by the gauge, and the relative size of the color-coded subranges within that overall range. For example, a range of [0,30,70,100] would indicate that the gauge starts at zero, ends at 100, and has three subranges that are each identified by another filler color. If the search returns a value of 71, the filler rises to that value on the gauge and takes on the color assigned to the top range (71-100).",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "charting.chart.showLabels",
+                    "description": "Determines whether pie or gauge should display labels",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": true
+                },
+                {
+                    "name": "charting.chart.showDataLabels",
+                    "description": "Determines whether line, column, bar or area should display labels",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "all",
+                        "none",
+                        "minmax"
+                    ],
+                    "default": "none"
+                },
+                {
+                    "name": "charting.chart.showValue",
+                    "description": "Determines whether the gauge should show its value",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": true
+                },
+                {
+                    "name": "charting.chart.showMarkers",
+                    "description": "Indicates whether or not markers should be painted in line charts",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": false
+                },
+                {
+                    "name": "charting.chart.markerSize",
+                    "description": "Determines the scatter chart's marker size. Defaults to 4",
+                    "type": "option",
+                    "dataType": "integer",
+                    "default": 4
+                },
+                {
+                    "name": "charting.chart.usePercentageRange",
+                    "description": "Determines whether the gauge uses percentage range. Defaults to false",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": false
+                },
+                {
+                    "name": "charting.chart.usePercentageValue",
+                    "description": "Determines whether the gauge uses percentage value. Defaults to false",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": false
+                },
+                {
+                    "name": "charting.chart.rangeStartAngle",
+                    "description": "Determines the radial gauge's range start angle. Defaults to 45",
+                    "type": "option",
+                    "dataType": "integer",
+                    "default": 45
+                },
+                {
+                    "name": "charting.chart.rangeArcAngle",
+                    "description": "Determines the radial gauge's range arc angle. Defaults to 270",
+                    "type": "option",
+                    "dataType": "integer",
+                    "default": 270
+                },
+                {
+                    "name": "charting.chart.showRangeBand",
+                    "description": "Determines whether the gauge shows a color band (applies to radial and marker gauges)",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": true
+                },
+                {
+                    "name": "charting.chart.majorUnit",
+                    "description": "Determines the gauge's major unit",
+                    "type": "option",
+                    "dataType": "integer"
+                },
+                {
+                    "name": "charting.chart.showMajorTicks",
+                    "description": "Determines whether the gauge shows major ticks. Defaults to true",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": true
+                },
+                {
+                    "name": "charting.chart.showMinorTicks",
+                    "description": "Determines whether the gauge shows minor ticks. Defaults to false for radial gauge and true for filler and marker gauges",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": false
+                },
+                {
+                    "name": "charting.chart.orientation",
+                    "description": "Determines the markerGauge or fillerGauge orientation. Defaults to y",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "x",
+                        "y"
+                    ],
+                    "default": "y"
+                },
+                {
+                    "name": "charting.chart.seriesSpacing",
+                    "description": "Determines in pixels the spacing between clustered series in column and bar charts",
+                    "type": "option",
+                    "dataType": "integer"
+                },
+                {
+                    "name": "charting.chart.sliceCollapsingThreshold",
+                    "description": "Determines the pie chart's threshold at which smaller slices collapse into a consolidated slice",
+                    "type": "option",
+                    "dataType": "float",
+                    "min": 0,
+                    "max": 1,
+                    "default": 0.01
+                },
+                {
+                    "name": "charting.chart.sliceCollapsingLabel",
+                    "description": "Determines the pie chart's label for the consolidated slice. Defaults to Other",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "charting.chart.showPercent",
+                    "description": "Determines whether to display percentage values with the labels. Defaults to false",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": false
+                },
+                {
+                    "name": "charting.chart.overlayFields",
+                    "description": "Specify a field or a space/comma-delimited list of fields that should be overlaid",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "charting.areaFillOpacity",
+                    "description": "The opacity of the filled region in an area chart",
+                    "type": "option",
+                    "dataType": "float",
+                    "min": 0,
+                    "max": 1,
+                    "default": 0.75
+                },
+                {
+                    "name": "charting.chart.bubbleMaximumSize",
+                    "description": "Determines the maximum size of each bubble. Defaults to 50",
+                    "type": "option",
+                    "dataType": "integer",
+                    "min": 1,
+                    "default": 50
+                },
+                {
+                    "name": "charting.chart.bubbleMinimumSize",
+                    "description": "Determines the minimum size of each bubble. Defaults to 10",
+                    "type": "option",
+                    "dataType": "integer",
+                    "min": 1,
+                    "default": 10
+                },
+                {
+                    "name": "charting.chart.bubbleSizeBy",
+                    "description": "Determines whether bubble size is set by area or diameter. Defaults to area",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "area",
+                        "diameter"
+                    ],
+                    "default": "area"
+                },
+                {
+                    "name": "charting.backgroundColor",
+                    "description": "Colors used for background",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "charting.foregroundColor",
+                    "description": "Colors used for foreground",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "charting.fontColor",
+                    "description": "Colors used for font axis labels, legends",
+                    "type": "option",
+                    "dataType": "string"
+                }
+            ],
+            "children": [
+                {
+                    "type": "selection",
+                    "max": 1
+                }
+            ]
+        },
+        {
+            "name": "selection",
+            "children": [
+                {
+                    "type": "action"
+                }
+            ],
+            "normalization": {
+                "autoId": "selection%d",
+                "inlineChildren": [
+                    {
+                        "type": "action",
+                        "setting": "actions"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "table",
+            "extends": "element",
+            "reportPropertyPrefix": "display.statistics.",
+            "wildcardOptions": {
+                "prefix": [
+                    "format."
+                ]
+            },
+            "settings": [
+                {
+                    "name": "count",
+                    "description": "Number of rows to display. Defaults to 10",
+                    "reportProperty": "display.prefs.statistics.count",
+                    "type": "option",
+                    "dataType": "integer",
+                    "min": 1,
+                    "max": 100
+                },
+                {
+                    "name": "rowNumbers",
+                    "description": "Enable or disable the row numbers column in the results table. Defaults to false",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": false
+                },
+                {
+                    "name": "overlay",
+                    "alias": "dataOverlayMode",
+                    "description": "Indicates which type of overlay to display. Defaults to none",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "none",
+                        "heatmap",
+                        "highlow"
+                    ],
+                    "default": "none"
+                },
+                {
+                    "name": "totalsRow",
+                    "description": "Enable or disable the totals summary row in the results table. Defaults to false",
+                    "reportProperty": "display.statistics.totalsRow",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": false
+                },
+                {
+                    "name": "percentagesRow",
+                    "description": "Enable or disable the percentages summary row in the results table. Defaults to false",
+                    "reportProperty": "display.statistics.percentagesRow",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": false
+                },
+                {
+                    "name": "showPager",
+                    "description": "Toggle pagination on or off. Defaults to true",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": true
+                },
+                {
+                    "name": "drilldown",
+                    "description": "Enables drilldown on row or cell level, or disables drilldown. Defaults to cell",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "all",
+                        "cell",
+                        "row",
+                        "none"
+                    ],
+                    "default": "cell",
+                    "mapBool": {
+                        "true": "cell",
+                        "false": "none"
+                    }
+                },
+                {
+                    "name": "fields",
+                    "description": "The list of fields to display in the table",
+                    "type": "option",
+                    "dataType": "fields-list",
+                    "legacy": true
+                },
+                {
+                    "name": "fields",
+                    "description": "The list of fields to display in the table",
+                    "type": "node",
+                    "dataType": "fields-list"
+                },
+                {
+                    "name": "wrap",
+                    "description": "Enable or disable wrapping of text in the results table. Defaults to true",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": true
+                },
+                {
+                    "name": "format",
+                    "type": "legacySparkline"
+                }
+            ],
+            "children": [
+                {
+                    "type": "format"
+                }
+            ],
+            "normalization": {
+                "inlineChildren": [
+                    {
+                        "type": "format",
+                        "reportProperty": "format.",
+                        "autoIndex": true
+                    }
+                ]
+            }
+        },
+        {
+            "name": "map",
+            "extends": "element",
+            "reportPropertyPrefix": "display.visualizations.",
+            "settings": [
+                {
+                    "name": "mapping.type",
+                    "description": "The type of map to render.  Allowed values are \"marker\" and \"choropleth\".  Default is \"marker\".",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "marker",
+                        "choropleth"
+                    ],
+                    "default": "marker"
+                },
+                {
+                    "name": "mapping.data.maxClusters",
+                    "description": "The maximum number of clusters to render. Use caution when setting this property, as rendering a large number of clusters can significantly degrade performance. It's recommended to use values below 1000. The default value is 100",
+                    "type": "option",
+                    "dataType": "integer",
+                    "min": 0,
+                    "default": 100
+                },
+                {
+                    "name": "mapping.fieldColors",
+                    "description": "{<field>:<hex>,...,<field>:<hex>} - A map of field names to hexadecimal color values (0xRRGGBB) to define colors for specific series. The default value is none.",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "mapping.seriesColors",
+                    "description": "[<hex>,...,<hex>] - A list of hexadecimal color values (0xRRGGBB) from which to sample colors for series with no specific colors assigned via the fieldColors property. The default value is",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "mapping.map.center",
+                    "description": "(<latitude>,<longitude>) - The initial center point of the map. Latitude values can range from -85 to 85, with values outside of this range being clipped. Longitude values can range from -180 to 180, with values outside of this range being wrapped to fall within it. The default value is none (auto).",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "mapping.map.zoom",
+                    "description": "The initial zoom level of the map",
+                    "type": "option",
+                    "dataType": "integer",
+                    "min": 0,
+                    "default": 2
+                },
+                {
+                    "name": "mapping.map.scrollZoom",
+                    "description": "Whether or not a mouse scroll will zoom the map. The default is false",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": false
+                },
+                {
+                    "name": "mapping.map.panning",
+                    "description": "Whether or not a user can pan the map. The default is true",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": true
+                },
+                {
+                    "name": "mapping.map.fitBounds",
+                    "description": "(<south-latitude>,<west-longitude>,<north-latitude>,<east-longitude>) - The initial bounds to fit within the map view area. Latitude values can range from -85 to 85, with values outside of this range being clipped. Longitude values can range from -180 to 180, with values outside of this range being wrapped to fall within it. Values assigned to this property effectively override any values assigned to the center or zoom properties. The default value is none (auto).",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "mapping.showTiles",
+                    "description": "Determines whether the map tiles are shown.  The default is true.",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": true
+                },
+                {
+                    "name": "mapping.tileLayer.tileOpacity",
+                    "description": "The opacity of the tiles. Values can range from 0 (transparent) to 1 (opaque). The default value is 1.",
+                    "type": "option",
+                    "dataType": "float",
+                    "min": 0,
+                    "max": 1,
+                    "default": 1
+                },
+                {
+                    "name": "mapping.tileLayer.url",
+                    "description": "The url template to use for requesting tiles. The template can contain {x}, {y}, {z}, and {s} tokens to be replaced with the x coordinate, y coordinate, zoom level, and subdomain, respectively, for each tile. The default value is currently http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png (likely to change before release).",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "mapping.tileLayer.subdomains",
+                    "description": "[<string>,...,<string>] - A list of subdomains to distribute tile requests over. More subdomains allows more tiles to be requested simultaneously. The default value is [a,b,c]",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "mapping.tileLayer.minZoom",
+                    "description": "The minimum zoom level of the tileset. The default value is 0",
+                    "type": "option",
+                    "dataType": "integer",
+                    "default": 0,
+                    "min": 0
+                },
+                {
+                    "name": "mapping.tileLayer.maxZoom",
+                    "description": "The maximum zoom level of the tileset. The default value is currently 7",
+                    "type": "option",
+                    "dataType": "integer",
+                    "default": 7,
+                    "min": 0
+                },
+                {
+                    "name": "mapping.tileLayer.invertY",
+                    "description": "Whether to invert the y coordinate for tile requests (TMS servers use inverse y-axis numbering). The default value is false",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": false
+                },
+                {
+                    "name": "mapping.tileLayer.attribution",
+                    "description": "A copyright attribution to be displayed in the bottom right corner of the map. The default value is currently Map data (c) 2012 OpenStreetMap contributors, CC-BY-SA",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "mapping.choroplethLayer.colorMode",
+                    "description": "The color mode to use for the choropleth shapes. Possible modes are 'sequential', 'divergent', or 'categorical'. If set to 'auto', the mode will be chosen by inspecting the data. The default is 'auto'.",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "auto",
+                        "sequential",
+                        "divergent",
+                        "categorical"
+                    ],
+                    "default": "auto"
+                },
+                {
+                    "name": "mapping.choroplethLayer.maximumColor",
+                    "description": "The color to use for the highest value shapes. The default is 0xDB5800.",
+                    "type": "option",
+                    "dataType": "string",
+                    "default": "0xDB5800"
+                },
+                {
+                    "name": "mapping.choroplethLayer.minimumColor",
+                    "description": "Only used when the color mode is divergent. The color to use for the lowest value shapes. The default is 0x2F25BA.",
+                    "type": "option",
+                    "dataType": "string",
+                    "default": "0x2F25BA"
+                },
+                {
+                    "name": "mapping.choroplethLayer.colorBins",
+                    "description": "The number of color bins to use. The default 5.",
+                    "type": "option",
+                    "dataType": "integer",
+                    "default": 5,
+                    "min": 3,
+                    "max": 9
+                },
+                {
+                    "name": "mapping.choroplethLayer.neutralPoint",
+                    "description": "Only used when the color mode is divergent. The value where the color palette should switch from using the minimum color to the maximum color. The default 0.",
+                    "type": "option",
+                    "dataType": "float",
+                    "default": 0
+                },
+                {
+                    "name": "mapping.choroplethLayer.shapeOpacity",
+                    "description": "The opacity of the shapes. Values can range from 0 (transparent) to 1 (opaque). The default value is 0.75.",
+                    "type": "option",
+                    "dataType": "float",
+                    "min": 0,
+                    "max": 1,
+                    "default": 0.75
+                },
+                {
+                    "name": "mapping.choroplethLayer.showBorder",
+                    "description": "Whether to show borders around each shape. The default value is true.",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": true
+                },
+                {
+                    "name": "mapping.markerLayer.markerOpacity",
+                    "description": "The opacity of the markers. Values can range from 0 (transparent) to 1 (opaque). The default value is 0.8",
+                    "type": "option",
+                    "dataType": "float",
+                    "min": 0,
+                    "max": 1,
+                    "default": 0.8
+
+                },
+                {
+                    "name": "mapping.markerLayer.markerMinSize",
+                    "description": "The minimum size of the markers, in pixels. The default value is 10",
+                    "type": "option",
+                    "dataType": "integer",
+                    "default": 10,
+                    "min": 1
+                },
+                {
+                    "name": "mapping.markerLayer.markerMaxSize",
+                    "description": "The maximum size of the markers, in pixels. The default value is 50",
+                    "type": "option",
+                    "dataType": "integer",
+                    "default": 50,
+                    "min": 1
+                },
+                {
+                    "name": "mapping.legend.placement",
+                    "description": "The placement of the map legend. The default value is 'bottomright'",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "bottomright",
+                        "none"
+                    ]
+                },
+                {
+                    "name": "height",
+                    "description": "Determines the map's height",
+                    "reportProperty": "display.visualizations.mapHeight",
+                    "type": "option",
+                    "dataType": "height",
+                    "min": 200,
+                    "max": 1000,
+                    "default": 400
+                },
+                {
+                    "name": "drilldown",
+                    "alias": "mapping.drilldown",
+                    "description": "Enable drilldown for the map. Defaults to all",
+                    "reportProperty": "display.visualizations.mapping.drilldown",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "all",
+                        "none",
+                        "true",
+                        "false",
+                        "1",
+                        "0",
+                        "True",
+                        "False"
+                    ],
+                    "default": "all",
+                    "mapBool": {
+                        "true": "all",
+                        "false": "none"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "single",
+            "extends": "element",
+            "reportPropertyPrefix": "display.visualizations.singlevalue.",
+            "settings": [
+                {
+                    "name": "additionalClass",
+                    "description": "Static class added to containing div",
+                    "type": "option",
+                    "dataType": "string",
+                    "legacy": true
+                },
+                {
+                    "name": "linkView",
+                    "description": "Target view which user is redirected to when clicking on the result",
+                    "type": "option",
+                    "dataType": "string",
+                    "legacy": true
+                },
+                {
+                    "name": "field",
+                    "description": "field that holds the value to display",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "linkFields",
+                    "description": "CSV list containing: result, beforelabel, underlabel, afterlabel turning that portion into a link",
+                    "type": "option",
+                    "dataType": "string",
+                    "legacy": true
+                },
+                {
+                    "name": "classField",
+                    "description": "additional class added to containing div based on the field specified",
+                    "type": "option",
+                    "dataType": "string",
+                    "legacy": true
+                },
+                {
+                    "name": "unit",
+                    "description": "label that represents unit for single value",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "unitPosition",
+                    "description": "option that determines if unit appears before or after single value",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "before",
+                        "after"
+                    ],
+                    "default": "after"
+                },
+                {
+                    "name": "beforeLabel",
+                    "description": "label that appears to the left of the value",
+                    "type": "option",
+                    "dataType": "string",
+                    "legacy": true
+                },
+                {
+                    "name": "afterLabel",
+                    "description": "label that appears to the right of the value",
+                    "type": "option",
+                    "dataType": "string",
+                    "legacy": true
+                },
+                {
+                    "name": "underLabel",
+                    "description": "label that appears below the value",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "colorMode",
+                    "description": "The display style of the background element",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "block",
+                        "none"
+                    ],
+                    "default": "none"
+                },
+                {
+                    "name": "rangeValues",
+                    "description": "An array of range limits for different severities",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "rangeColors",
+                    "description": "An array of color hex values to map to rangeValues",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "trendInterval",
+                    "description": "A relative time modifier that indicates time amount in past to calculate the delta value from",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "trendColorInterpretation",
+                    "description": "The display mode for the trend indicator - whether a positive metric signifies a positive development or not",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "standard",
+                        "inverse"
+                    ],
+                    "default": "standard"
+                },
+                {
+                    "name": "showTrendIndicator",
+                    "description": "A boolean flag whether or not to show the trend indicator",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": true
+                },
+                {
+                    "name": "showSparkline",
+                    "description": "A boolean flag whether or not to show the sparkline",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": true
+                },
+                {
+                    "name": "trendDisplayMode",
+                    "description": "The formatting for the trend indicator - whether the trend amount is displayed as a percentage or an absolute count",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "percent",
+                        "absolute"
+                    ],
+                    "default": "absolute"
+                },
+                {
+                    "name": "colorBy",
+                    "description": "A boolean flag whether to color by the range value or trend indicator",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "value",
+                        "trend"
+                    ],
+                    "default": "value"
+                },
+                {
+                    "name": "useColors",
+                    "description": "A boolean flag whether or not to show colors",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": false
+                },
+                {
+                    "name": "numberPrecision",
+                    "description": "How many decimal places to display in the single result label",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "0",
+                        "0.0",
+                        "0.00",
+                        "0.000",
+                        "0.0000"
+                    ],
+                    "default": "0"
+                },
+                {
+                    "name": "useThousandSeparators",
+                    "description": "A boolean flag whether or not to show thousand separators in the single result label",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": true
+                },
+                {
+                    "name": "linkSearch",
+                    "description": "optional search that is passed to the linked view",
+                    "type": "option",
+                    "dataType": "search-string",
+                    "legacy": true
+                },
+                {
+                    "name": "drilldown",
+                    "description": "enable or disable automatic drilldown for the single value visualization. By default it is disabled (\"none\") for backwards compatibility.",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "all",
+                        "none"
+                    ],
+                    "default": "none",
+                    "mapBool": {
+                        "true": "all",
+                        "false": "none"
+                    }
+                },
+                {
+                    "name": "height",
+                    "reportProperty": "display.visualizations.singlevalueHeight",
+                    "type": "option",
+                    "dataType": "height",
+                    "min": 50,
+                    "max": 1000,
+                    "default": 115
+                }
+            ]
+        },
+        {
+            "name": "event",
+            "extends": "element",
+            "reportPropertyPrefix": "display.events.",
+            "settings": [
+                {
+                    "name": "count",
+                    "reportProperty": "display.prefs.events.count",
+                    "description": "The maximum number of rows to display",
+                    "type": "option",
+                    "dataType": "integer",
+                    "min": 1,
+                    "max": 100,
+                    "default": 10
+                },
+                {
+                    "name": "rowNumbers",
+                    "description": "Toggle display of row numbers to the left of results. Defaults to false. Supports for \"type\": \"list\" and \"table\"",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": false
+                },
+                {
+                    "name": "entityName",
+                    "description": "Toggle whether to show events or results. Events are individual events, while results are created by statistical operators. Defaults to events",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "events",
+                        "results"
+                    ],
+                    "legacy": true,
+                    "default": "events"
+                },
+                {
+                    "name": "maxLines",
+                    "description": "The maximum number of lines to display for each result/event",
+                    "type": "option",
+                    "dataType": "integer",
+                    "default": 5,
+                    "min": 0
+                },
+                {
+                    "name": "showPager",
+                    "description": "Toggle pagination on or off",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": true
+                },
+                {
+                    "name": "segmentation",
+                    "description": "Set the segmentation of events displayed. This affects what you can and can't click on within the event. This only applies to raw and list event panel types",
+                    "type": "option",
+                    "dataType": "enum",
+                    "legacy": true,
+                    "values": [
+                        "none",
+                        "inner",
+                        "outer",
+                        "full"
+                    ]
+                },
+                {
+                    "name": "softWrap",
+                    "description": "Enables wrapping of events. Defaults to true",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "legacy": true,
+                    "default": true
+                },
+                {
+                    "name": "type",
+                    "description": "Indicates the format for displaying events. Defaults to list",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "list",
+                        "raw",
+                        "table"
+                    ],
+                    "default": "list"
+                },
+                {
+                    "name": "drilldown",
+                    "description": "A \"virtual\" option to bulk-set all of the type-specific drilldown options. Enabling this causes the default values for the following settings to change (<segmentation> is the value of the segementation option):",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "legacy": true,
+                    "mapBool": {
+                        "all": true,
+                        "none": false
+                    }
+                },
+                {
+                    "name": "raw.drilldown",
+                    "description": "Specifies how drilldown operates in the raw event listing. Defaults to full",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "full",
+                        "inner",
+                        "outer",
+                        "none"
+                    ],
+                    "default": "full",
+                    "mapBool": {
+                        "false": "none"
+                    }
+                },
+                {
+                    "name": "list.drilldown",
+                    "description": "Specifies how drilldown operates in the list event listing. Defaults to full",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "full",
+                        "inner",
+                        "outer",
+                        "none"
+                    ],
+                    "default": "full",
+                    "mapBool": {
+                        "false": "none"
+                    }
+                },
+                {
+                    "name": "table.drilldown",
+                    "description": "Specifies how drilldown operates in the table event listing. Defaults to all",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "1",
+                        "0"
+                    ],
+                    "default": "all",
+                    "mapBool": {
+                        "true": "1",
+                        "false": "0",
+                        "all": "1",
+                        "none": "0"
+                    }
+                },
+                {
+                    "name": "list.wrap",
+                    "description": "Indicates whether to wrap the contents of the event listing. Defaults to true",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": true
+                },
+                {
+                    "name": "table.wrap",
+                    "description": "Indicates whether text in the table wraps. Defaults to true",
+                    "type": "option",
+                    "dataType": "boolean",
+                    "default": true
+                },
+                {
+                    "name": "table.sortColumn",
+                    "description": "Specifies the column on which to sort for the table",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "table.sortDirection",
+                    "description": "Indicates the sort direction for items in the table. Defaults to asc",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "asc",
+                        "desc"
+                    ],
+                    "default": "asc"
+                },
+                {
+                    "name": "fields",
+                    "description": "The list of fields to display",
+                    "type": "node",
+                    "dataType": "fields-list"
+                }
+            ]
+        },
+        {
+            "name": "viz",
+            "extends": "element",
+            "reportPropertyPrefix": "display.visualizations.custom.",
+            "wildcardOptions": {
+                "prefixReportProperty": "display.visualizations.custom.type"
+            },
+            "settings": [
+                {
+                    "name": "type",
+                    "type": "attribute",
+                    "attributeName": "type",
+                    "dataType": "string"
+                },
+                {
+                    "name": "height",
+                    "type": "option",
+                    "dataType": "height",
+                    "min": 1
+                }
+            ]
+        },
+        {
+            "name": "html",
+            "retainRawXML": true,
+            "settings": [
+                {
+                    "name": "id",
+                    "type": "attribute",
+                    "dataType": "identifier"
+                },
+                {
+                    "name": "serverSideInclude",
+                    "attributeName": "src",
+                    "type": "attribute",
+                    "dataType": "app-resource"
+                },
+                {
+                    "name": "useTokens",
+                    "attributeName": "tokens",
+                    "type": "attribute",
+                    "dataType": "boolean",
+                    "default": true
+                },
+                {
+                    "name": "depends",
+                    "parentObj": "tokenDependencies",
+                    "attributeName": "depends",
+                    "type": "attribute",
+                    "dataType": "string"
+                },
+                {
+                    "name": "rejects",
+                    "parentObj": "tokenDependencies",
+                    "attributeName": "rejects",
+                    "type": "attribute",
+                    "dataType": "string"
+                },
+                {
+                    "name": "encoded",
+                    "type": "attribute",
+                    "dataType": "boolean",
+                    "default": false
+                },
+                {
+                    "name": "content",
+                    "type": "content",
+                    "raw": true,
+                    "dataType": "html"
+                }
+            ],
+            "normalization": {
+                "autoId": "element%d"
+            }
+        }
+    ],
+    "searches": [
+        {
+            "name": "base-search",
+            "retainRawXML": true,
+            "settings": [
+                {
+                    "name": "id",
+                    "type": "attribute",
+                    "dataType": "identifier"
+                },
+                {
+                    "name": "depends",
+                    "parentObj": "tokenDependencies",
+                    "attributeName": "depends",
+                    "type": "attribute",
+                    "dataType": "string"
+                },
+                {
+                    "name": "rejects",
+                    "parentObj": "tokenDependencies",
+                    "attributeName": "rejects",
+                    "type": "attribute",
+                    "dataType": "string"
+                }
+            ],
+            "children": [
+                {
+                    "type": "search-eventhandler"
+                }
+            ],
+            "normalization": {
+                "autoId": "search%d"
+            }
+        },
+        {
+            "name": "postprocess-search",
+            "extends": "base-search",
+            "tagName": "search",
+            "match": "search[base]",
+            "settings": [
+                {
+                    "name": "base",
+                    "type": "attribute",
+                    "dataType": "string",
+                    "description": "Reference to the base search"
+                },
+                {
+                    "name": "description",
+                    "type": "node",
+                    "dataType": "string"
+                },
+                {
+                    "name": "query",
+                    "type": "node",
+                    "dataType": "search-string"
+                }
+            ]
+        },
+        {
+            "name": "inline-search",
+            "extends": "base-search",
+            "tagName": "search",
+            "match": "search>query",
+            "settings": [
+                {
+                    "name": "description",
+                    "type": "node",
+                    "dataType": "string"
+                },
+                {
+                    "name": "query",
+                    "type": "node",
+                    "dataType": "search-string"
+                },
+                {
+                    "name": "earliest",
+                    "type": "node",
+                    "dataType": "string"
+                },
+                {
+                    "name": "latest",
+                    "type": "node",
+                    "dataType": "string"
+                },
+                {
+                    "name": "sampleRatio",
+                    "type": "node",
+                    "dataType": "integer",
+                    "min": 1
+                },
+                {
+                    "name": "refresh",
+                    "type": "node",
+                    "dataType": "relative-time"
+                },
+                {
+                    "name": "refreshType",
+                    "type": "node",
+                    "dataType": "enum",
+                    "values": [
+                        "interval",
+                        "delay"
+                    ],
+                    "default": "delay"
+                }
+            ]
+        },
+        {
+            "name": "saved-search",
+            "extends": "base-search",
+            "tagName": "search",
+            "match": "search[ref]",
+            "settings": [
+                {
+                    "name": "description",
+                    "type": "node"
+                },
+                {
+                    "name": "ref",
+                    "type": "attribute"
+                },
+                {
+                    "name": "app",
+                    "type": "attribute"
+                },
+                {
+                    "name": "earliest",
+                    "type": "node",
+                    "dataType": "string"
+                },
+                {
+                    "name": "latest",
+                    "type": "node",
+                    "dataType": "string"
+                },
+                {
+                    "name": "cache",
+                    "type": "node",
+                    "dataType": "string",
+                    "default": "scheduled"
+                },
+                {
+                    "name": "refresh",
+                    "type": "node",
+                    "dataType": "relative-time"
+                },
+                {
+                    "name": "refreshType",
+                    "type": "node",
+                    "dataType": "enum",
+                    "values": [
+                        "interval",
+                        "delay"
+                    ],
+                    "default": "delay"
+                }
+            ]
+        },
+        {
+            "name": "search-eventhandler",
+            "abstract": true,
+            "normalization": {
+                "inlineChildren": [
+                    {
+                        "type": "condition",
+                        "setting": "conditions"
+                    },
+                    {
+                        "type": "action",
+                        "setting": "actions"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "search-progress",
+            "extends": "search-eventhandler",
+            "tagName": "progress",
+            "match": "progress>condition",
+            "children": [
+                {
+                    "type": "wildcard-condition"
+                },
+                {
+                    "type": "eval-condition"
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "search-eventhandler",
+                    "merge": false
+                }
+            },
+            "settings": [
+                {
+                    "type": "static",
+                    "name": "event",
+                    "default": "progress"
+                }
+            ]
+        },
+        {
+            "name": "search-progress-implict",
+            "extends": "search-eventhandler",
+            "tagName": "progress",
+            "match": "progress",
+            "children": [
+                {
+                    "type": "action",
+                    "min": 1
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "search-eventhandler",
+                    "merge": false
+                }
+            },
+            "settings": [
+                {
+                    "type": "static",
+                    "name": "event",
+                    "default": "progress"
+                }
+            ]
+        },
+        {
+            "name": "search-done",
+            "extends": "search-eventhandler",
+            "tagName": "done",
+            "match": "done>condition",
+            "children": [
+                {
+                    "type": "wildcard-condition"
+                },
+                {
+                    "type": "eval-condition"
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "search-eventhandler",
+                    "merge": false
+                }
+            },
+            "settings": [
+                {
+                    "type": "static",
+                    "name": "event",
+                    "default": "done"
+                }
+            ]
+        },
+        {
+            "name": "search-done-implicit",
+            "extends": "search-eventhandler",
+            "tagName": "done",
+            "match": "done",
+            "children": [
+                {
+                    "type": "action",
+                    "min": 1
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "search-eventhandler",
+                    "merge": false
+                }
+            },
+            "settings": [
+                {
+                    "type": "static",
+                    "name": "event",
+                    "default": "done"
+                }
+            ]
+        },
+        {
+            "name": "search-preview",
+            "extends": "search-eventhandler",
+            "tagName": "preview",
+            "match": "preview>condition",
+            "children": [
+                {
+                    "type": "wildcard-condition"
+                },
+                {
+                    "type": "eval-condition"
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "search-eventhandler",
+                    "merge": false
+                }
+            },
+            "settings": [
+                {
+                    "type": "static",
+                    "name": "event",
+                    "default": "preview"
+                }
+            ]
+        },
+        {
+            "name": "search-preview-implicit",
+            "extends": "search-eventhandler",
+            "tagName": "preview",
+            "match": "preview",
+            "children": [
+                {
+                    "type": "action",
+                    "min": 1
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "search-eventhandler",
+                    "merge": false
+                }
+            },
+            "settings": [
+                {
+                    "type": "static",
+                    "name": "event",
+                    "default": "preview"
+                }
+            ]
+        },
+        {
+            "name": "search-finalized",
+            "extends": "search-eventhandler",
+            "tagName": "finalized",
+            "match": "finalized>condition",
+            "children": [
+                {
+                    "type": "wildcard-condition"
+                },
+                {
+                    "type": "eval-condition"
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "search-eventhandler",
+                    "merge": false
+                }
+            },
+            "settings": [
+                {
+                    "type": "static",
+                    "name": "event",
+                    "default": "finalized"
+                }
+            ]
+        },
+        {
+            "name": "search-finalized-implicit",
+            "extends": "search-eventhandler",
+            "tagName": "finalized",
+            "match": "finalized",
+            "children": [
+                {
+                    "type": "action",
+                    "min": 1
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "search-eventhandler",
+                    "merge": false
+                }
+            },
+            "settings": [
+                {
+                    "type": "static",
+                    "name": "event",
+                    "default": "finalized"
+                }
+            ]
+        },
+        {
+            "name": "search-error",
+            "extends": "search-eventhandler",
+            "tagName": "error",
+            "match": "error>condition",
+            "children": [
+                {
+                    "type": "wildcard-condition"
+                },
+                {
+                    "type": "eval-condition"
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "search-eventhandler",
+                    "merge": false
+                }
+            },
+            "settings": [
+                {
+                    "type": "static",
+                    "name": "event",
+                    "default": "error"
+                }
+            ]
+        },
+        {
+            "name": "search-error-implicit",
+            "extends": "search-eventhandler",
+            "tagName": "error",
+            "match": "error",
+            "children": [
+                {
+                    "type": "action",
+                    "min": 1
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "search-eventhandler",
+                    "merge": false
+                }
+            },
+            "settings": [
+                {
+                    "type": "static",
+                    "name": "event",
+                    "default": "error"
+                }
+            ]
+        },
+        {
+            "name": "search-fail",
+            "extends": "search-eventhandler",
+            "tagName": "fail",
+            "match": "fail>condition",
+            "children": [
+                {
+                    "type": "wildcard-condition"
+                },
+                {
+                    "type": "eval-condition"
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "search-eventhandler",
+                    "merge": false
+                }
+            },
+            "settings": [
+                {
+                    "type": "static",
+                    "name": "event",
+                    "default": "fail"
+                }
+            ]
+        },
+        {
+            "name": "search-fail-implicit",
+            "extends": "search-eventhandler",
+            "tagName": "fail",
+            "match": "fail",
+            "children": [
+                {
+                    "type": "action",
+                    "min": 1
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "search-eventhandler",
+                    "merge": false
+                }
+            },
+            "settings": [
+                {
+                    "type": "static",
+                    "name": "event",
+                    "default": "fail"
+                }
+            ]
+        },
+        {
+            "name": "search-cancelled",
+            "extends": "search-eventhandler",
+            "tagName": "cancelled",
+            "match": "cancelled>condition",
+            "children": [
+                {
+                    "type": "wildcard-condition"
+                },
+                {
+                    "type": "eval-condition"
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "search-eventhandler",
+                    "merge": false
+                }
+            },
+            "settings": [
+                {
+                    "type": "static",
+                    "name": "event",
+                    "default": "cancelled"
+                }
+            ]
+        },
+        {
+            "name": "search-cancelled-implicit",
+            "extends": "search-eventhandler",
+            "tagName": "cancelled",
+            "match": "cancelled",
+            "children": [
+                {
+                    "type": "action",
+                    "min": 1
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "search-eventhandler",
+                    "merge": false
+                }
+            },
+            "settings": [
+                {
+                    "type": "static",
+                    "name": "event",
+                    "default": "cancelled"
+                }
+            ]
+        }
+    ],
+    "drilldown": [
+        {
+            "name": "drilldown",
+            "abstract": true,
+            "tagName": "drilldown",
+            "settings": [
+                {
+                    "name": "target",
+                    "type": "attribute",
+                    "dataType": "string"
+                }
+            ],
+            "normalization": {
+                "autoId": "drilldown%d",
+                "inlineChildren": [
+                    {
+                        "type": "condition",
+                        "setting": "conditions"
+                    },
+                    {
+                        "type": "action",
+                        "setting": "actions"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "conditional-drilldown",
+            "extends": "drilldown",
+            "match": "drilldown>condition",
+            "children": [
+                {
+                    "type": "field-condition"
+                },
+                {
+                    "type": "wildcard-condition"
+                },
+                {
+                    "type": "eval-condition"
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "drilldown"
+                }
+            }
+        },
+        {
+            "name": "unconditional-drilldown",
+            "extends": "drilldown",
+            "children": [
+                {
+                    "type": "action",
+                    "min": 1
+                }
+            ],
+            "settings": [
+                {
+                    "name": "allowImplicitConditions",
+                    "type": "static",
+                    "default": {
+                        "actions": [
+                            "link"
+                        ],
+                        "attributes": [
+                            "field",
+                            "series"
+                        ],
+                        "attr": "field"
+                    }
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "drilldown"
+                }
+            }
+        },
+        {
+            "name": "condition",
+            "tagName": "condition",
+            "abstract": "true",
+            "settings": [
+                {
+                    "name": "value",
+                    "attributeName": "field",
+                    "type": "attribute",
+                    "dataType": "string"
+                },
+                {
+                    "name": "attr",
+                    "type": "static",
+                    "dataType": "string",
+                    "default": "field"
+                }
+            ],
+            "children": [
+                {
+                    "type": "action"
+                }
+            ],
+            "normalization": {
+                "inlineChildren": [
+                    {
+                        "type": "action",
+                        "setting": "actions"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "field-condition",
+            "extends": "condition",
+            "match": "condition[field]",
+            "settings": [
+                {
+                    "name": "value",
+                    "type": "attribute",
+                    "attributeName": "field",
+                    "dataType": "string"
+                },
+                {
+                    "name": "attr",
+                    "type": "static",
+                    "default": "field"
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "condition"
+                }
+            }
+        },
+        {
+            "name": "value-condition",
+            "extends": "condition",
+            "match": "condition[value]",
+            "settings": [
+                {
+                    "name": "value",
+                    "type": "attribute",
+                    "attributeName": "value",
+                    "dataType": "string"
+                },
+                {
+                    "name": "attr",
+                    "type": "static",
+                    "default": "value"
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "condition"
+                }
+            }
+        },
+        {
+            "name": "label-condition",
+            "extends": "condition",
+            "match": "condition[label]",
+            "settings": [
+                {
+                    "name": "value",
+                    "type": "attribute",
+                    "attributeName": "label",
+                    "dataType": "string"
+                },
+                {
+                    "name": "attr",
+                    "type": "static",
+                    "default": "label"
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "condition"
+                }
+            }
+        },
+        {
+            "name": "eval-condition",
+            "extends": "condition",
+            "match": "condition[match]",
+            "settings": [
+                {
+                    "name": "value",
+                    "type": "attribute",
+                    "attributeName": "match",
+                    "dataType": "string"
+                },
+                {
+                    "name": "attr",
+                    "type": "static",
+                    "default": "match"
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "condition"
+                }
+            }
+        },
+        {
+            "name": "wildcard-condition",
+            "extends": "condition",
+            "settings": [
+                {
+                    "name": "value",
+                    "type": "static",
+                    "default": "*"
+                },
+                {
+                    "name": "attr",
+                    "type": "static",
+                    "default": "any"
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "condition"
+                }
+            }
+        },
+        {
+            "name": "action",
+            "abstract": true
+        },
+        {
+            "name": "set",
+            "extends": "action",
+            "settings": [
+                {
+                    "name": "type",
+                    "type": "static",
+                    "dataType": "string",
+                    "default": "set"
+                },
+                {
+                    "name": "value",
+                    "type": "content",
+                    "dataType": "string"
+                },
+                {
+                    "name": "token",
+                    "type": "attribute",
+                    "dataType": "token-name"
+                },
+                {
+                    "name": "prefix",
+                    "type": "attribute",
+                    "dataType": "string",
+                    "trim": false
+                },
+                {
+                    "name": "suffix",
+                    "type": "attribute",
+                    "dataType": "string",
+                    "trim": false
+                },
+                {
+                    "name": "delimiter",
+                    "type": "attribute",
+                    "dataType": "string",
+                    "trim": false
+                }
+            ]
+        },
+        {
+            "name": "unset",
+            "extends": "action",
+            "settings": [
+                {
+                    "name": "type",
+                    "type": "static",
+                    "dataType": "string",
+                    "default": "unset"
+                },
+                {
+                    "name": "token",
+                    "type": "attribute",
+                    "dataType": "token-name"
+                }
+            ]
+        },
+        {
+            "name": "link",
+            "extends": "action",
+            "settings": [
+                {
+                    "name": "type",
+                    "type": "static",
+                    "dataType": "string",
+                    "default": "link"
+                },
+                {
+                    "name": "value",
+                    "type": "content",
+                    "dataType": "string"
+                },
+                {
+                    "name": "target",
+                    "type": "attribute",
+                    "dataType": "string"
+                },
+                {
+                    "name": "field",
+                    "type": "attribute",
+                    "dataType": "string",
+                    "legacy": true
+                },
+                {
+                    "name": "series",
+                    "type": "attribute",
+                    "dataType": "string",
+                    "legacy": true
+                }
+            ]
+        },
+        {
+            "name": "eval",
+            "extends": "action",
+            "settings": [
+                {
+                    "name": "type",
+                    "type": "static",
+                    "dataType": "string",
+                    "default": "eval"
+                },
+                {
+                    "name": "value",
+                    "type": "content",
+                    "dataType": "string"
+                },
+                {
+                    "name": "token",
+                    "type": "attribute",
+                    "dataType": "token-name"
+                }
+            ]
+        }
+    ],
+    "dashboard-events": [
+        {
+            "name": "init-event-handler",
+            "tagName": "init",
+            "match": "init",
+            "children": [
+                {
+                    "type": "action"
+                },
+                {
+                    "type": "condition"
+                }
+            ],
+            "normalization": {
+                "inlineChildren": [
+                    {
+                        "type": "condition",
+                        "setting": "conditions"
+                    },
+                    {
+                        "type": "action",
+                        "setting": "actions"
+                    }
+                ]
+            },
+            "settings": [
+                {
+                    "type": "static",
+                    "name": "event",
+                    "default": "init"
+                }
+            ]
+        }
+    ],
+    "table-format": [
+        {
+            "name": "format",
+            "abstract": true,
+            "tagName": "format",
+            "reportPropertyPrefix": ".",
+            "settings": [
+                {
+                    "name": "fields",
+                    "type": "attribute",
+                    "dataType": "fields-list",
+                    "encode": true
+                },
+                {
+                    "name": "field",
+                    "type": "attribute",
+                    "dataType": "string"
+                },
+                {
+                    "reportProperty": "",
+                    "name": "type",
+                    "type": "attribute",
+                    "dataType": "enum",
+                    "values": [
+                        "color",
+                        "sparkline",
+                        "number"
+                    ],
+                    "required": true
+                }
+            ]
+        },
+        {
+            "name": "format-color",
+            "extends": "format",
+            "match": "format[type=color]",
+            "settings": [
+                {
+                    "name": "scale",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "threshold",
+                        "sharedCategory",
+                        "category",
+                        "linear",
+                        "log",
+                        "minMidMax"
+                    ]
+                },
+                {
+                    "name": "scale.categories",
+                    "type": "option",
+                    "dataType": "fields-list",
+                    "encode": true
+                },
+                {
+                    "name": "scale.maxType",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "scale.maxValue",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "scale.midType",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "scale.midValue",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "scale.minValue",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "scale.minType",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "scale.thresholds",
+                    "type": "option",
+                    "dataType": "fields-list",
+                    "encode": true
+                },
+                {
+                    "name": "colorPalette",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "expression",
+                        "list",
+                        "map",
+                        "minMidMax",
+                        "sharedList"
+                    ]
+                },
+                {
+                    "name": "colorPalette.rule",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "colorPalette.colors",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "colorPalette.interpolate",
+                    "type": "option",
+                    "dataType": "boolean"
+                },
+                {
+                    "name": "colorPalette.minColor",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "colorPalette.midColor",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "colorPalette.maxColor",
+                    "type": "option",
+                    "dataType": "string"
+                }
+            ],
+            "children": [
+                {
+                    "type": "scale",
+                    "max": 1
+                },
+                {
+                    "type": "colorPalette",
+                    "max": 1
+                }
+            ],
+            "normalization": {
+                "inlineChildren": [
+                    {
+                        "type": "scale",
+                        "reportProperty": "scale"
+                    },
+                    {
+                        "type": "colorPalette",
+                        "reportProperty": "colorPalette"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "scale",
+            "abstract": true,
+            "tagName": "scale",
+            "reportPropertyPrefix": ".",
+            "settings": [
+                {
+                    "name": "type",
+                    "reportProperty": "",
+                    "type": "attribute",
+                    "dataType": "enum",
+                    "values": [
+                        "threshold",
+                        "sharedCategory",
+                        "category",
+                        "linear",
+                        "log",
+                        "minMidMax"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "scale-sharedCategory",
+            "extends": "scale",
+            "match": "scale[type=sharedCategory]"
+        },
+        {
+            "name": "scale-minMidMax",
+            "extends": "scale",
+            "match": "scale[type=minMidMax]",
+            "settings": [
+                {
+                    "name": "maxType",
+                    "type": "attribute",
+                    "dataType": "enum",
+                    "values": [
+                        "percent",
+                        "number",
+                        "percentile"
+                    ]
+                },
+                {
+                    "name": "maxValue",
+                    "type": "attribute",
+                    "dataType": "string"
+                },
+                {
+                    "name": "midType",
+                    "type": "attribute",
+                    "dataType": "enum",
+                    "values": [
+                        "percent",
+                        "number",
+                        "percentile"
+                    ]
+                },
+                {
+                    "name": "midValue",
+                    "type": "attribute",
+                    "dataType": "string"
+                },
+                {
+                    "name": "minType",
+                    "type": "attribute",
+                    "dataType": "enum",
+                    "values": [
+                        "percent",
+                        "number",
+                        "percentile"
+                    ]
+                },
+                {
+                    "name": "minValue",
+                    "type": "attribute",
+                    "dataType": "string"
+                }
+            ]
+        },
+        {
+            "name": "scale-category",
+            "extends": "scale",
+            "match": "scale[type=category]",
+            "settings": [
+                {
+                    "name": "categories",
+                    "type": "content",
+                    "dataType": "fields-list",
+                    "encode": true
+                }
+            ]
+        },
+        {
+            "name": "scale-threshold",
+            "extends": "scale",
+            "match": "scale[type=threshold]",
+            "settings": [
+                {
+                    "name": "thresholds",
+                    "type": "content",
+                    "dataType": "fields-list",
+                    "encode": true
+                }
+            ]
+        },
+        {
+            "name": "scale-linear",
+            "extends": "scale",
+            "match": "scale[type=linear]"
+        },
+        {
+            "name": "scale-log",
+            "extends": "scale",
+            "match": "scale[type=log]"
+        },
+        {
+            "name": "colorPalette",
+            "abstract": true,
+            "tagName": "colorPalette",
+            "reportPropertyPrefix": ".",
+            "settings": [
+                {
+                    "name": "type",
+                    "reportProperty": "",
+                    "type": "attribute",
+                    "dataType": "enum",
+                    "values": [
+                        "expression",
+                        "list",
+                        "map",
+                        "minMidMax",
+                        "sharedList"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "colorPalette-expression",
+            "extends": "colorPalette",
+            "match": "colorPalette[type=expression]",
+            "settings": [
+                {
+                    "name": "rule",
+                    "type": "content",
+                    "dataType": "string"
+                }
+            ]
+        },
+        {
+            "name": "colorPalette-list",
+            "extends": "colorPalette",
+            "match": "colorPalette[type=list]",
+            "settings": [
+                {
+                    "name": "interpolate",
+                    "type": "attribute",
+                    "dataType": "boolean"
+                },
+                {
+                    "name": "colors",
+                    "type": "content",
+                    "dataType": "string"
+                }
+            ]
+        },
+        {
+            "name": "colorPalette-map",
+            "extends": "colorPalette",
+            "match": "colorPalette[type=map]",
+            "settings": [
+                {
+                    "name": "colors",
+                    "type": "content",
+                    "dataType": "string"
+                }
+            ]
+        },
+        {
+            "name": "colorPalette-minMidMax",
+            "extends": "colorPalette",
+            "match": "colorPalette[type=minMidMax]",
+            "settings": [
+                {
+                    "name": "maxColor",
+                    "type": "attribute",
+                    "dataType": "string"
+                },
+                {
+                    "name": "midColor",
+                    "type": "attribute",
+                    "dataType": "string"
+                },
+                {
+                    "name": "minColor",
+                    "type": "attribute",
+                    "dataType": "string"
+                }
+            ]
+        },
+        {
+            "name": "colorPalette-sharedList",
+            "extends": "colorPalette",
+            "match": "colorPalette[type=sharedList]"
+        },
+        {
+            "name": "format-number",
+            "extends": "format",
+            "match": "format[type=number]",
+            "settings": [
+                {
+                    "name": "useThousandSeparators",
+                    "type": "option",
+                    "dataType": "boolean"
+                },
+                {
+                    "name": "unit",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "unitPosition",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "precision",
+                    "type": "option",
+                    "dataType": "integer",
+                    "min": 0,
+                    "max": 20
+                }
+            ]
+        },
+        {
+            "name": "format-sparkline",
+            "extends": "format",
+            "match": "format[type=sparkline]",
+            "settings": [
+                {
+                    "name": "type",
+                    "description": "Specifies the type of sparkline. Defaults to line",
+                    "type": "option",
+                    "dataType": "enum",
+                    "values": [
+                        "bar",
+                        "discrete",
+                        "line"
+                    ],
+                    "default": "line"
+                },
+                {
+                    "name": "height",
+                    "type": "option",
+                    "dataType": "string"
+                },
+                {
+                    "name": "tooltipPrefix",
+                    "type": "option",
+                    "dataType": "boolean"
+                },
+                {
+                    "name": "tooltipSuffix",
+                    "type": "option",
+                    "dataType": "boolean"
+                },
+                {
+                    "name": "colorMap",
+                    "type": "option",
+                    "dataType": "color-map"
+                }
+            ]
+        }
+    ],
+    "form": [
+        {
+            "name": "fieldset",
+            "retainRawXML": true,
+            "settings": [
+                {
+                    "name": "autoRun",
+                    "description": "Indicates whether to run the search when the page loads. Defaults to false",
+                    "type": "attribute",
+                    "dataType": "boolean",
+                    "default": false
+                },
+                {
+                    "name": "submitButton",
+                    "description": "Indicates whether to display a Submit button. Defaults to true",
+                    "type": "attribute",
+                    "dataType": "boolean",
+                    "default": true
+                }
+            ],
+            "children": [
+                {
+                    "type": "base-input"
+                },
+                {
+                    "type": "time-input"
+                },
+                {
+                    "type": "html"
+                }
+            ]
+        },
+        {
+            "name": "input-search",
+            "abstract": true,
+            "retainRawXML": true,
+            "validation": {
+                "legacy": true
+            },
+            "settings": [
+                {
+                    "name": "labelField",
+                    "attributeName": "fieldForLabel",
+                    "type": "attribute",
+                    "dataType": "string"
+                },
+                {
+                    "name": "valueField",
+                    "attributeName": "fieldForValue",
+                    "type": "attribute",
+                    "dataType": "string"
+                }
+            ],
+            "normalization": {
+                "pullOutSettings": [
+                    "labelField",
+                    "valueField"
+                ]
+            }
+        },
+        {
+            "name": "populatingSearch",
+            "extends": "input-search",
+            "settings": [
+                {
+                    "name": "query",
+                    "type": "content",
+                    "dataType": "search-string"
+                },
+                {
+                    "name": "earliest",
+                    "type": "attribute",
+                    "dataType": "string"
+                },
+                {
+                    "name": "latest",
+                    "type": "attribute",
+                    "dataType": "string"
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "inline-search"
+                }
+            }
+        },
+        {
+            "name": "populatingSavedSearch",
+            "extends": "input-search",
+            "settings": [
+                {
+                    "name": "name",
+                    "type": "content",
+                    "dataType": "string"
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "saved-search"
+                }
+            }
+        },
+        {
+            "name": "base-input",
+            "tagName": "input",
+            "abstract": true,
+            "retainRawXML": true,
+            "settings": [
+                {
+                    "name": "id",
+                    "type": "attribute",
+                    "dataType": "identifier"
+                },
+                {
+                    "name": "type",
+                    "type": "attribute",
+                    "omit": true
+                },
+                {
+                    "name": "token",
+                    "type": "attribute",
+                    "dataType": "token-name"
+                },
+                {
+                    "name": "searchWhenChanged",
+                    "type": "attribute",
+                    "dataType": "boolean"
+                },
+                {
+                    "name": "label",
+                    "type": "node",
+                    "dataType": "string"
+                },
+                {
+                    "name": "default",
+                    "type": "node"
+                },
+                {
+                    "name": "seed",
+                    "type": "node",
+                    "legacy": true,
+                    "trim": false
+                },
+                {
+                    "name": "initialValue",
+                    "type": "node",
+                    "trim": false
+                },
+                {
+                    "name": "prefix",
+                    "type": "node",
+                    "trim": false
+                },
+                {
+                    "name": "suffix",
+                    "type": "node",
+                    "trim": false
+                },
+                {
+                    "name": "depends",
+                    "parentObj": "tokenDependencies",
+                    "attributeName": "depends",
+                    "type": "attribute",
+                    "dataType": "string"
+                },
+                {
+                    "name": "rejects",
+                    "parentObj": "tokenDependencies",
+                    "attributeName": "rejects",
+                    "type": "attribute",
+                    "dataType": "string"
+                }
+            ],
+            "normalization": {
+                "autoId": "input%d"
+            }
+        },
+        {
+            "name": "input-choice",
+            "tagName": "choice",
+            "settings": [
+                {
+                    "name": "value",
+                    "type": "attribute",
+                    "dataType": "string"
+                },
+                {
+                    "name": "label",
+                    "type": "content",
+                    "dataType": "string"
+                }
+            ]
+        },
+        {
+            "name": "dropdown-input",
+            "match": "input[type=dropdown]",
+            "extends": "base-input",
+            "children": [
+                {
+                    "type": "input-choice"
+                },
+                {
+                    "type": "input-search"
+                },
+                {
+                    "type": "base-search"
+                },
+                {
+                    "type": "input-change"
+                }
+            ],
+            "normalization": {
+                "inlineChildren": [
+                    {
+                        "type": "input-choice",
+                        "setting": "choices"
+                    }
+                ]
+            },
+            "settings": [
+                {
+                    "name": "labelField",
+                    "nodeName": "fieldForLabel",
+                    "type": "node"
+                },
+                {
+                    "name": "valueField",
+                    "nodeName": "fieldForValue",
+                    "type": "node"
+                },
+                {
+                    "name": "selectFirstChoice",
+                    "type": "node",
+                    "dataType": "boolean"
+                },
+                {
+                    "name": "showClearButton",
+                    "type": "node",
+                    "dataType": "boolean",
+                    "default": true
+                },
+                {
+                    "name": "allowCustomValues",
+                    "type": "node",
+                    "dataType": "boolean",
+                    "default": false
+                }
+            ]
+        },
+        {
+            "name": "radio-input",
+            "match": "input[type=radio]",
+            "extends": "base-input",
+            "children": [
+                {
+                    "type": "input-choice"
+                },
+                {
+                    "type": "input-search"
+                },
+                {
+                    "type": "base-search"
+                },
+                {
+                    "type": "input-change"
+                }
+            ],
+            "normalization": {
+                "inlineChildren": [
+                    {
+                        "type": "input-choice",
+                        "setting": "choices"
+                    }
+                ]
+            },
+            "settings": [
+                {
+                    "name": "labelField",
+                    "nodeName": "fieldForLabel",
+                    "type": "node"
+                },
+                {
+                    "name": "valueField",
+                    "nodeName": "fieldForValue",
+                    "type": "node"
+                },
+                {
+                    "name": "selectFirstChoice",
+                    "type": "node",
+                    "dataType": "boolean"
+                }
+            ]
+        },
+        {
+            "name": "link-input",
+            "match": "input[type=link]",
+            "extends": "base-input",
+            "children": [
+                {
+                    "type": "input-choice"
+                },
+                {
+                    "type": "input-search"
+                },
+                {
+                    "type": "base-search"
+                },
+                {
+                    "type": "input-change"
+                }
+            ],
+            "normalization": {
+                "inlineChildren": [
+                    {
+                        "type": "input-choice",
+                        "setting": "choices"
+                    }
+                ]
+            },
+            "settings": [
+                {
+                    "name": "labelField",
+                    "nodeName": "fieldForLabel",
+                    "type": "node"
+                },
+                {
+                    "name": "valueField",
+                    "nodeName": "fieldForValue",
+                    "type": "node"
+                },
+                {
+                    "name": "selectFirstChoice",
+                    "type": "node",
+                    "dataType": "boolean"
+                }
+            ]
+        },
+        {
+            "name": "multiselect-input",
+            "match": "input[type=multiselect]",
+            "extends": "base-input",
+            "children": [
+                {
+                    "type": "input-choice"
+                },
+                {
+                    "type": "input-search"
+                },
+                {
+                    "type": "base-search"
+                },
+                {
+                    "type": "input-change"
+                }
+            ],
+            "normalization": {
+                "inlineChildren": [
+                    {
+                        "type": "input-choice",
+                        "setting": "choices"
+                    }
+                ]
+            },
+            "settings": [
+                {
+                    "name": "valuePrefix",
+                    "type": "node",
+                    "trim": false
+                },
+                {
+                    "name": "valueSuffix",
+                    "type": "node",
+                    "trim": false
+                },
+                {
+                    "name": "labelField",
+                    "nodeName": "fieldForLabel",
+                    "type": "node"
+                },
+                {
+                    "name": "valueField",
+                    "nodeName": "fieldForValue",
+                    "type": "node"
+                },
+                {
+                    "name": "delimiter",
+                    "type": "node",
+                    "trim": false,
+                    "default": " "
+                },
+                {
+                    "name": "default",
+                    "type": "node",
+                    "dataType": "csv-string"
+                },
+                {
+                    "name": "initialValue",
+                    "type": "node",
+                    "dataType": "csv-string"
+                },
+                {
+                    "name": "allowCustomValues",
+                    "type": "node",
+                    "dataType": "boolean",
+                    "default": false
+                }
+            ]
+        },
+        {
+            "name": "checkbox-input",
+            "match": "input[type=checkbox]",
+            "extends": "base-input",
+            "children": [
+                {
+                    "type": "input-choice"
+                },
+                {
+                    "type": "input-search"
+                },
+                {
+                    "type": "base-search"
+                },
+                {
+                    "type": "input-change"
+                }
+            ],
+            "normalization": {
+                "inlineChildren": [
+                    {
+                        "type": "input-choice",
+                        "setting": "choices"
+                    }
+                ]
+            },
+            "settings": [
+                {
+                    "name": "valuePrefix",
+                    "type": "node",
+                    "trim": false
+                },
+                {
+                    "name": "valueSuffix",
+                    "type": "node",
+                    "trim": false
+                },
+                {
+                    "name": "labelField",
+                    "nodeName": "fieldForLabel",
+                    "type": "node"
+                },
+                {
+                    "name": "valueField",
+                    "nodeName": "fieldForValue",
+                    "type": "node"
+                },
+                {
+                    "name": "delimiter",
+                    "type": "node",
+                    "trim": false,
+                    "default": " "
+                },
+                {
+                    "name": "default",
+                    "type": "node",
+                    "dataType": "csv-string"
+                },
+                {
+                    "name": "initialValue",
+                    "type": "node",
+                    "dataType": "csv-string"
+                }
+            ]
+        },
+        {
+            "name": "time-input",
+            "tagName": "input",
+            "match": "input[type=time]",
+            "retainRawXML": true,
+            "settings": [
+                {
+                    "name": "id",
+                    "type": "attribute",
+                    "dataType": "identifier"
+                },
+                {
+                    "name": "type",
+                    "type": "attribute",
+                    "omit": true
+                },
+                {
+                    "name": "token",
+                    "type": "attribute",
+                    "dataType": "token-name"
+                },
+                {
+                    "name": "searchWhenChanged",
+                    "type": "attribute",
+                    "dataType": "boolean"
+                },
+                {
+                    "name": "label",
+                    "type": "node",
+                    "dataType": "string"
+                },
+                {
+                    "name": "depends",
+                    "parentObj": "tokenDependencies",
+                    "attributeName": "depends",
+                    "type": "attribute",
+                    "dataType": "string"
+                },
+                {
+                    "name": "rejects",
+                    "parentObj": "tokenDependencies",
+                    "attributeName": "rejects",
+                    "type": "attribute",
+                    "dataType": "string"
+                }
+            ],
+            "children": [
+                {
+                    "type": "default-time-value",
+                    "max": 1
+                },
+                {
+                    "type": "default-time-preset",
+                    "max": 1
+                },
+                {
+                    "type": "input-change"
+                }
+            ],
+            "normalization": {
+                "autoId": "input%d",
+                "inlineChildren": [
+                    {
+                        "type": "default-time-value",
+                        "setting": "default",
+                        "single": true
+                    }
+                ]
+            }
+        },
+        {
+            "name": "text-input",
+            "extends": "base-input",
+            "tagName": "input",
+            "children": [
+                {
+                    "type": "input-change"
+                }
+            ]
+        },
+        {
+            "name": "default-time-value",
+            "tagName": "default",
+            "match": "default>earliestTime,default>latestTime,default>earliest,default>latest",
+            "settings": [
+                {
+                    "name": "earliest_time",
+                    "nodeName": "earliestTime",
+                    "type": "node",
+                    "dataType": "string"
+                },
+                {
+                    "name": "earliest_time",
+                    "nodeName": "earliest",
+                    "type": "node",
+                    "dataType": "string"
+                },
+                {
+                    "name": "latest_time",
+                    "nodeName": "latestTime",
+                    "type": "node",
+                    "dataType": "string"
+                },
+                {
+                    "name": "latest_time",
+                    "nodeName": "latest",
+                    "type": "node",
+                    "dataType": "string"
+                }
+            ]
+        },
+        {
+            "name": "default-time-preset",
+            "tagName": "default",
+            "settings": [
+                {
+                    "name": "preset",
+                    "type": "content",
+                    "dataType": "string"
+                }
+            ],
+            "normalization": {
+                "pullOutSettings": [
+                    "preset"
+                ],
+                "omitFromResults": true
+            }
+        },
+        {
+            "name": "input-change",
+            "tagName": "change",
+            "abstract": true,
+            "normalization": {
+                "inlineChildren": [
+                    {
+                        "type": "condition",
+                        "setting": "conditions"
+                    },
+                    {
+                        "type": "action",
+                        "setting": "actions"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "conditional-input-change",
+            "extends": "input-change",
+            "match": "change>condition",
+            "children": [
+                {
+                    "type": "value-condition"
+                },
+                {
+                    "type": "label-condition"
+                },
+                {
+                    "type": "wildcard-condition"
+                },
+                {
+                    "type": "eval-condition"
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "input-change"
+                }
+            }
+        },
+        {
+            "name": "unconditional-input-change",
+            "extends": "input-change",
+            "children": [
+                {
+                    "type": "action",
+                    "min": 1
+                }
+            ],
+            "normalization": {
+                "convertTo": {
+                    "type": "input-change"
+                }
+            }
+        }
+    ]
+}

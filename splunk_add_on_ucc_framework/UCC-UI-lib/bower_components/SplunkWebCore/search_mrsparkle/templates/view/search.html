@@ -1,0 +1,191 @@
+<%inherit file="//layout/view.html" />
+<%namespace file="//view/_helpers.html" import="*"/>
+<%namespace name="lib" file="//lib.html" import="*"/>
+<%!
+
+layoutPanels = [
+    "messaging", 
+    "appHeader",
+    "navigationHeader", 
+    "splSearchControls-inline",
+    "mainSearchControls", 
+    "fullWidthControls", 
+    "graphArea", 
+    "resultsHeaderPanel", 
+    "pageControls", 
+    "resultsAreaLeft", 
+    "resultsAreaRight", 
+    "pageControls2",
+    "resultsOptions"
+]
+from splunk.appserver.mrsparkle.lib import util
+isLite = util.isLite()
+%>
+
+<%
+nonStandardPanels = ["messaging", "appHeader", "navigationHeader", "liteHeader", "viewHeader", "resultsAreaLeft", "resultsAreaRight", "resultsHeaderPanel", "sidebar", "pageControls", "pageControls2", "resultsOptions"]
+
+headerPanels = ["appHeader", "navigationHeader", "liteHeader"]
+%>
+
+<% 
+## messaging ##
+%>
+% if "messaging" in modules :
+    <%call expr="parent.buildSimplePanelContainer(modules, 'messaging')"></%call>
+% endif
+
+<%
+## App Header area ##
+%>
+<div class="appHeaderWrapper">
+    % if isLite:
+        % if 'liteHeader' in modules:
+            <%call expr="parent.buildSimplePanelContainer(modules, 'liteHeader')"></%call>
+        % else:
+            <span class="splunk-components"> 
+                <div class="lite-bar empty-nav">
+                    <span class="brand" title="splunk > listen to your data"><a href="/">splunk<strong>&gt;</strong><span class="sub-brand">&#xF003;</span></a></span>
+                </div>
+            </span>
+        % endif
+    % else: 
+        % for panelName in headerPanels : 
+            <%call expr="parent.buildSimplePanelContainer(modules, panelName)"></%call>
+        % endfor
+    % endif    
+</div>
+
+<% 
+## View Header Area ##
+%>
+<%call expr="parent.buildSimplePanelContainer(modules, 'viewHeader')"></%call>
+
+<%
+## Standard panels ##
+%>
+% for panelName in layoutPanels : 
+    % if panelName in modules and panelName not in nonStandardPanels : 
+        <%call expr="parent.buildSimplePanelContainer(modules, panelName)"></%call>
+    % endif
+% endfor            
+
+<%
+## Results area ##
+%>
+% if "sidebar" in modules : 
+    <div class="layoutRow withSidebar resultsArea splClearfix">
+        <div class="layoutCell sidebar">
+            <%call expr="parent.buildPanelContents(modules, 'sidebar')"></%call>
+        </div>
+% else :
+    <div class="layoutRow noSidebar resultsArea splClearfix">
+% endif
+    % if "resultsHeaderPanel" in modules :
+        <div class="layoutRow oneColRow resultsHeaderPanel">
+            <%call expr="parent.buildPanelContents(modules, 'resultsHeaderPanel')"></%call>
+        </div>
+    % endif  
+
+    % if "pageControls" in modules :
+        <div class="layoutRow oneColRow pageControls">
+            <%call expr="parent.buildPanelContents(modules, 'pageControls')"></%call>
+            % if "resultsOptions" in modules :
+                <div class="resultsOptionsActWrapper">
+                <a href="#" class="resultsOptionsActivator splIconicLink"><span class="splIconicLinkIcon splIcon-options"></span><span class="splIconicLinkLabel">${_('Options')}</span></a>
+                </div>
+            % endif
+        </div>
+    % endif
+
+    % if "resultsAreaRight" in modules :
+        % if "resultsAreaLeft" in modules :
+            <div class="layoutRow twoColRow">
+                <div class="layoutCell">
+
+                % if "pageControls_1" in modules :
+                    <div class="layoutCellHeader pageControls">
+                        <%call expr="parent.buildPanelContents(modules, 'pageControls_1')"></%call>
+                    </div>
+                % endif 
+
+                    <%call expr="parent.buildPanelContents(modules, 'resultsAreaLeft')"></%call>
+                </div>
+
+                <div class="layoutCell">
+
+                % if "pageControls2" in modules : 
+                    <div class="layoutCellHeader pageControls">
+                        <%call expr="parent.buildPanelContents(modules, 'pageControls2')"></%call>
+                    </div>
+                % endif
+
+                    <%call expr="parent.buildPanelContents(modules, 'resultsAreaRight')"></%call>
+                </div>
+            </div>
+        % else :
+            <%
+                ## BAD CONDITION - cant have results area 2 without 1, freak out.
+            %>
+        % endif
+    % elif "resultsAreaLeft" in modules :
+        <div class="layoutRow oneColRow">
+        % if "pageControls_1" in modules :
+            <div class="layoutRow pageControls">
+                <%call expr="parent.buildPanelContents(modules, 'pageControls_1')"></%call>
+            </div>
+        % endif
+        % if 'panel_row1_col1' in modules:
+            <div class="layoutRow equalHeightRow splClearfix splSearchFormatChartType">
+	            <div class="layoutCell">
+	            <%call expr="parent.buildPanelContents(modules, 'panel_row1_col1')"></%call>
+	            </div>
+            </div>
+            <div class="splSearchFormatChart">
+	            <div class="splSearchFormatChart-tabs">
+	            <%call expr="parent.buildPanelContents(modules, 'panel_row1_col2')"></%call>
+	            </div>
+	
+	            <div class="splSearchFormatChart-column">
+	            <%call expr="parent.buildPanelContents(modules, 'panel_row2_col1')"></%call>
+	            <%call expr="parent.buildPanelContents(modules, 'panel_row2_col3')"></%call>
+	            </div>
+	            <div class="splSearchFormatChart-column">
+	            <%call expr="parent.buildPanelContents(modules, 'panel_row2_col2')"></%call>
+	            </div>
+	            <div class="splClearfix"></div>
+            </div>
+        % endif
+
+            <%call expr="parent.buildPanelContents(modules, 'resultsAreaLeft')"></%call>
+        </div>
+
+    % endif
+          
+</div>
+
+## Results area page controls popup ##   
+    % if "resultsOptions" in modules :
+        <div class="popupContainer resultsOptions">
+            <div class="splHeader splHeader-popup"><a href="#" class="splIcon splIcon-close"></a><h2>${_("Results display options")}</h2></div>
+            <div class="popupContent">
+                <%call expr="parent.buildPanelContents(modules, 'resultsOptions')"></%call>
+            </div>
+            <div class="popupFooter">
+                <button class="splButton-primary">
+                    <span>${_("Done")}</span>
+                </button>
+            </div>
+        </div>
+    % endif
+
+% for panelName in modules : 
+    % if ((panelName not in nonStandardPanels) and (panelName not in layoutPanels) and (not panelName.startswith('panel_row'))) :
+         <%call expr="lib.add_script_block()">
+            this.messenger = Splunk.Messenger.System.getInstance();
+            this.messenger.send("error", "splunk", sprintf(_("found an invalid value for layoutPanel - '%s'."), "${panelName}"));
+            // a misconfigured hierarchy can often derail the module loading, so the 'Loading' string can get stuck there.
+            $("#loading").hide();
+        </%call>
+    % endif
+% endfor

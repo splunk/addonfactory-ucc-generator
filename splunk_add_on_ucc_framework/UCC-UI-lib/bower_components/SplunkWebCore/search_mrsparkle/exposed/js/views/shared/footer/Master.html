@@ -1,0 +1,8 @@
+<div class="<%-css.nav%>">
+    <a href="#" id="about" data-action="about-splunk"><%= _('About').t() %></a>
+    <a href="http://www.splunk.com/r/support" target="_blank" data-action="support"><%= _('Support').t() %></a>
+    <a href="http://www.splunk.com/r/bugs" target="_blank" data-action="file-a-bug"><%= _('File a Bug').t() %></a>
+    <a href="<%- docLink %>" target="_blank" data-action="docs"><%- _("Documentation").t() %></a>
+    <a href="http://www.splunk.com/r/privacy" target="_blank" data-action="privacy-policy"><%= _('Privacy Policy').t() %></a>
+</div>
+<div class="<%-css.copyright%>" data-role="copyright">&copy; 2005-<%=new Date().getFullYear()%> <%= _('Splunk Inc. All rights reserved.').t() %></div>

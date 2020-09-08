@@ -1,0 +1,185 @@
+<%!
+    use_html5 = True
+%>
+<%inherit file="//layout/base.html" />
+<%namespace name="lib" file="//lib.html" />
+<%namespace name="helpers" file="//admin/_helpers.html" import="renderBreadcrumbs"/>
+
+<%def name="title()">${_('Manager')} - ${parent.title()}</%def>
+
+<%def name="get_breadcrumbs()">
+    <%
+        return []
+    %>
+</%def>
+
+<%
+    from splunk.appserver.mrsparkle.lib import cached
+    import time
+    app = APP
+    if not app:
+        app = {'id':'search', 'label':'Search'}
+
+    year = time.strftime('%Y')
+
+    appListing = [ {'label': appList[x]['label'], 'uri':make_url(['/app', x]), 'id': x} for x in appList if x!='launcher']
+    # Sort app list by label, ignoring case
+    appListing.sort(lambda a, b: cmp(a['label'].lower(), b['label'].lower()))
+
+    # launcher/Home is displayed at the end of the menu if it's available
+    if 'launcher' in appList:
+        launcherApp = {'label': appList['launcher']['label'], 'uri':make_url(['/app', 'launcher']), 'id': 'launcher'}
+    else:
+        launcherApp = None
+
+    endpoints = set(cached.getEntities('data/ui/manager', count=-1, namespace='search'))
+    canInstallApps = 'data_inputs_monitor' in endpoints
+%>
+<div class="layout">
+    <div class="header">
+        <div class="appHeaderWrapper">
+            <div class="layoutRow oneColRow splClearfix appHeader">
+                <div class="SplunkModule AccountBar">
+
+                </div>
+            </div>
+        </div>
+
+        <div class="layoutRow oneColRow navigationHeader splClearfix">
+            <div class="ManagerBar">
+                <%helpers:renderBreadcrumbs breadcrumb="${self.get_breadcrumbs()}" />
+            </div>
+        </div>
+
+        % if hasattr(self, 'header'):
+            ${self.header()}
+        % endif
+    </div>
+
+
+    % if hasattr(self, 'leftColumnContainer') and hasattr(self, 'rightColumnContainer'):
+        <div class="colmask holygrail">
+            <div class="colmid">
+                <div class="colleft">
+                    <div class="col1wrap">
+                        <div class="col1">
+                            ${next.body()}
+                        </div>
+                    </div>
+                    <div class="col2">
+                        ${next.leftColumnContainer()}
+                    </div>
+                    <div class="col3">
+                        ${next.rightColumnContainer()}
+                    </div>
+                </div>
+            </div>
+        </div>
+    % elif hasattr(self, 'leftColumnContainer'):
+        <div class="colmask leftmenu">
+            <div class="colright">
+                <div class="col1wrap">
+                    <div class="col1">
+                        ${next.body()}
+                    </div>
+                </div>
+                <div class="col2">
+                    ${next.leftColumnContainer()}
+                </div>
+            </div>
+        </div>
+    % else:
+        ${next.body()}
+    % endif
+
+</div>
+    <div class="aboutPopupContainer">
+        <div class="aboutPopupSplunkLogo"></div>
+        <p>
+            ${ _("Copyright &copy; 2005-%(year)s Splunk Inc. All rights reserved.") % dict(year=year)}
+            <br/>
+            ${_('version %(version)s, build %(build_number)s') % dict(version=cherrypy.config.get('version_label'), build_number=cherrypy.config.get('build_number'))}
+        </p>
+        <ul>
+            <li><a href="http://www.splunk.com/r/support" target="_blank" class="spl-icon-external-link-xsm">${_("Support")}</a></li>
+            <li><a href="http://www.splunk.com/r/bugs" target="_blank" class="spl-icon-external-link-xsm">${_("File a Bug")}</a></li>
+            <li><a href="http://www.splunk.com/r/docs" target="_blank" class="spl-icon-external-link-xsm">${_("Documentation")}</a></li>
+            <li><a href="http://www.splunk.com/r/privacy" target="_blank" class="spl-icon-external-link-xsm">${_("Privacy policy")}</a></li>
+        </ul>
+    ##    <ul>
+    ##        <li><a href="/debug/status" target="_blank" class="spl-icon-external-link-xsm">${_("System information")}</a></li>
+    ##    </ul>
+    </div>
+
+
+##
+## base overrides
+##
+
+## js needs to be included in head of page due to admin architecture for re-use.
+<%def name="head()">
+    <%lib:script_tags files="${['/static/js/contrib/jquery.cookie.js', '/static/js/splunk.jquery.csrf_protection.js']}" />
+    <% parent.head() %>
+</%def>
+
+<%def name="js()">
+    ${parent.js()}
+
+    ${lib.script_tags(files=[
+        "/static/js/contrib/lowpro_for_jquery.js",
+        "/static/js/contrib/json2.js",
+        "/static/js/contrib/swfobject.js",
+        "/static/js/contrib/deprecated/jquery-ui-1.9.0.min.js",
+        "/static/js/contrib/jquery.form.js",
+        "/static/js/contrib/jquery.trap.min.js",
+        "/static/js/contrib/jquery.bgiframe.min.js",
+        "/static/js/contrib/strftime.js",
+
+        # splunk packages
+        "/static/js/logger.js",
+        "/static/js/error.js",
+        "/static/js/session.js",
+        "/static/js/messenger.js",
+        "/static/js/menu_builder.js",
+        "/static/js/admin.js",
+        "/static/js/admin_lite.js",
+        "/static/js/time_range.js",
+        "/static/js/popup.js",
+        "/static/js/textarea_resize.js",
+        "/static/js/window.js",
+        "/static/js/util.js",
+
+        # patch the draggables lib for ios support
+        "/static/js/splunk.jquery.ios-drag-patch.js",
+
+        "/static/js/init.js",
+        "/static/build/modules_nav/lite/index.js" if isLite else "/static/build/modules_nav/enterprise/index.js"
+    ])}
+</%def>
+
+<%def name="css()">
+    <%coreCSSFiles = [
+        '/static/css/view.css',
+        '/static/css/tipTip.css',
+        '/static/css/skins/default/default.css',
+        '/static/css/print.css',
+        '/static/css/admin.css',
+        '/static/css/admin_lite.css',
+        '/modules/nav/ManagerBar.css',
+        '/modules/messaging/Message.css',
+        '/modules/paginator/paginator.css'
+    ] %>
+    
+    <%
+        from splunk.appserver.mrsparkle.lib import util
+        if util.isLite():
+            coreCSSFiles.append('/static/build/css/splunk-components-lite.css')
+        else:
+    	    coreCSSFiles.append('/static/build/css/splunk-components-enterprise.css')
+        endif
+    %>
+
+    <%lib:stylesheet_tags files="${coreCSSFiles}" />
+</%def>
+
+<%lib:generate_splunk_header />

@@ -1,0 +1,11 @@
+<div class="<%-css.messagesHeader%>">
+    <div class="<%-css.messagesTitle%>">
+        <%= _('Messages').t() %>
+        <span class="<%-css.messageNotification%>" data-role="message-notification"></span>
+    </div>
+    <a href="#" class="<%-css.deleteAllMessages%>" data-action="delete-all"><%= _('Clear all').t() %></a>
+</div>
+<div class="<%-css.messageList%>" data-role="messages-list">
+    <div class="<%-css.noMessages%>" data-role="no-messages"><%- _("You have no messages.").t() %></div>
+    <div class="<%-css.splunkMessagesDivider%>" data-role="messages-list-divider"></div>
+</div>

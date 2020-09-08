@@ -1,0 +1,209 @@
+<%inherit file="//qunit/template.html" />
+
+<%def name="title()">Splunk.paginator.Google -- QUnit tests</%def>
+
+ <script type="text/javascript" src="/en-US/static/js/paginator.js"></script>
+    
+<!-- get the file to test -->
+<script type="text/javascript">
+var logger = Splunk.Logger.getLogger("paginator.html");
+var Google = Splunk.paginator.Google;
+
+function test_OnePage(){
+    var pagination = new Google(9)
+ 
+    assertEquals(pagination.page_range.length, 0)
+    assertEquals(pagination.total_pages, 1)
+    assertFalse(pagination.next_exists())
+    assertFalse(pagination.previous_exists())
+    assertTrue(pagination.is_active_page(1))
+    
+    var pagination = new Google(10)
+    assertEquals(pagination.page_range.length, 0)
+    assertEquals(pagination.total_pages, 1)
+    assertFalse(pagination.next_exists())
+    assertFalse(pagination.previous_exists())
+    assertTrue(pagination.is_active_page(1))
+}
+
+function test_TwoPages(){
+    pagination = new Google(11)
+    assertEquals(pagination.page_range.length, 2)
+    assertEquals(pagination.page_range[0], 1)
+    assertEquals(pagination.page_range[pagination.page_range.length-1], 2)
+    assertEquals(pagination.total_pages, 2)
+    assertTrue(pagination.next_exists())
+    assertFalse(pagination.previous_exists())
+    assertTrue(pagination.is_active_page(1))
+    
+    pagination = new Google(11, {item_offset: 9})
+    assertEquals(pagination.page_range.length, 2)
+    assertEquals(pagination.page_range[0], 1)
+    assertEquals(pagination.page_range[pagination.page_range.length-1], 2)
+    assertTrue(pagination.is_active_page(1))
+    
+    pagination = new Google(11, {item_offset: 10})
+    assertEquals(pagination.page_range.length, 2)
+    assertEquals(pagination.page_range[0], 1)
+    assertEquals(pagination.page_range[pagination.page_range.length-1], 2)
+    assertTrue(pagination.is_active_page(2))
+}
+
+function test_GreaterThanTwoPages(){
+    pagination = new Google(99)
+    assertEquals(pagination.page_range.length, 10)
+    assertEquals(pagination.page_range[0], 1)
+    assertEquals(pagination.page_range[pagination.page_range.length-1], 10)
+    assertEquals(pagination.total_pages, 10)
+    assertTrue(pagination.next_exists())
+    assertFalse(pagination.previous_exists())
+    assertTrue(pagination.is_active_page(1))
+
+    pagination = new Google(100)
+    assertEquals(pagination.page_range.length, 10)
+    assertEquals(pagination.page_range[0], 1)
+    assertEquals(pagination.page_range[pagination.page_range.length-1], 10)
+    assertEquals(pagination.total_pages, 10)
+    assertTrue(pagination.next_exists())
+    assertFalse(pagination.previous_exists())
+    assertTrue(pagination.is_active_page(1))
+
+    pagination = new Google(101)           
+    assertEquals(pagination.page_range.length, 10)
+    assertEquals(pagination.page_range[0], 1)
+    assertEquals(pagination.page_range[pagination.page_range.length-1], 10)
+    assertEquals(pagination.total_pages, 11)
+    assertTrue(pagination.next_exists())
+    assertEquals(pagination.next_offset(), 10)
+    assertFalse(pagination.previous_exists())
+    assertTrue(pagination.is_active_page(1))
+    
+    pagination = new Google(101, {item_offset: 9})
+    assertEquals(pagination.page_range.length, 10)
+    assertEquals(pagination.page_range[0], 1)
+    assertEquals(pagination.page_range[pagination.page_range.length-1], 10)
+    assertEquals(pagination.total_pages, 11)
+    assertTrue(pagination.is_active_page(1))
+    
+    pagination = new Google(101, {item_offset: 10})
+    assertEquals(pagination.page_range.length, 10)
+    assertEquals(pagination.page_range[0], 1)
+    assertEquals(pagination.page_range[pagination.page_range.length-1], 10)
+    assertEquals(pagination.total_pages, 11)
+    assertTrue(pagination.is_active_page(2))
+    
+    pagination = new Google(101, {item_offset: 99})
+    assertEquals(pagination.page_range.length, 10)
+    assertEquals(pagination.page_range[0], 2)
+    assertEquals(pagination.page_range[pagination.page_range.length-1], 11)
+    assertEquals(pagination.total_pages, 11)
+    assertTrue(pagination.is_active_page(10))
+    
+    pagination = new Google(101, {item_offset: 100})
+    assertEquals(pagination.page_range.length, 10)
+    assertEquals(pagination.page_range[0], 2)
+    assertEquals(pagination.page_range[pagination.page_range.length-1], 11)
+    assertEquals(pagination.total_pages, 11)
+    assertTrue(pagination.is_active_page(11))
+    
+    pagination = new Google(53, {item_offset: 50})
+    assertEquals(pagination.page_range.length, 6)
+    assertEquals(pagination.page_range[0], 1)
+    assertEquals(pagination.page_range[pagination.page_range.length-1], 6)
+    assertEquals(pagination.total_pages, 6)
+    assertTrue(pagination.is_active_page(6))            
+     
+}
+
+function test_Flow(){
+    item_count = 1001
+    pagination = new Google(item_count)
+    assertEquals(pagination.page_range.length, 10)
+    assertEquals(pagination.page_range[0], 1)
+    assertEquals(pagination.page_range[pagination.page_range.length-1], 10)
+    assertFalse(pagination.previous_exists())
+    assertEquals(pagination.previous_offset(), -1)
+    assertTrue(pagination.next_exists())
+    assertEquals(pagination.next_offset(), 10)
+    assertTrue(pagination.is_active_page(1))
+    
+    pagination = new Google(item_count, {item_offset: 10})
+    assertEquals(pagination.page_range.length, 10)
+    assertEquals(pagination.page_range[0], 1)
+    assertEquals(pagination.page_range[pagination.page_range.length-1], 10)
+    assertTrue(pagination.previous_exists())
+    assertEquals(pagination.previous_offset(), 0)
+    assertTrue(pagination.next_exists())
+    assertEquals(pagination.next_offset(), 20)            
+    assertTrue(pagination.is_active_page(2))
+    
+    pagination = new Google(item_count, {item_offset: 40})
+    assertEquals(pagination.page_range.length, 10)
+    assertEquals(pagination.page_range[0], 1)
+    assertEquals(pagination.page_range[pagination.page_range.length-1], 10)
+    assertTrue(pagination.previous_exists())
+    assertEquals(pagination.previous_offset(), 30)
+    assertTrue(pagination.next_exists())
+    assertEquals(pagination.next_offset(), 50)            
+    assertTrue(pagination.is_active_page(5))
+    
+    pagination = new Google(item_count, {item_offset: 50})
+    assertEquals(pagination.page_range.length, 10)
+    assertEquals(pagination.page_range[0], 2)
+    assertEquals(pagination.page_range[pagination.page_range.length-1], 11)
+    assertTrue(pagination.previous_exists())
+    assertEquals(pagination.previous_offset(), 40)
+    assertTrue(pagination.next_exists())
+    assertEquals(pagination.next_offset(), 60)  
+    assertTrue(pagination.is_active_page(6))
+
+    pagination = new Google(item_count, {item_offset: 60})
+    assertEquals(pagination.page_range.length, 10)
+    assertEquals(pagination.page_range[0], 3)
+    assertEquals(pagination.page_range[pagination.page_range.length-1], 12)
+    assertTrue(pagination.previous_exists())
+    assertEquals(pagination.previous_offset(), 50)
+    assertTrue(pagination.next_exists())
+    assertEquals(pagination.next_offset(), 70)  
+    assertTrue(pagination.is_active_page(7))
+    
+    pagination = new Google(item_count, {item_offset: 990})
+    assertEquals(pagination.page_range.length, 10)
+    assertEquals(pagination.page_range[0], 92)
+    assertEquals(pagination.page_range[pagination.page_range.length-1], 101)
+    assertTrue(pagination.previous_exists())
+    assertEquals(pagination.previous_offset(), 980)
+    assertTrue(pagination.next_exists())
+    assertEquals(pagination.next_offset(), 1000)  
+    assertTrue(pagination.is_active_page(100))
+
+    pagination = new Google(item_count, {item_offset: 1000})
+    assertEquals(pagination.page_range.length, 10)
+    assertEquals(pagination.page_range[0], 92)
+    assertEquals(pagination.page_range[pagination.page_range.length-1], 101)
+    assertTrue(pagination.previous_exists())
+    assertEquals(pagination.previous_offset(), 990)
+    assertFalse(pagination.next_exists())
+    assertEquals(pagination.next_offset(), -1)  
+    assertTrue(pagination.is_active_page(101))
+}
+
+function test_Offset(){
+    pagination = new Google(11)
+    assertEquals(pagination.page_item_offset(1), 0)
+    assertEquals(pagination.page_item_offset(2), 10)
+    assertEquals(pagination.previous_offset(), -1)
+    assertEquals(pagination.next_offset(), 10)
+    assertTrue(pagination.is_active_page(1))
+    
+    pagination = new Google(200, {item_offset: 199})
+    assertEquals(pagination.previous_offset(), 180)
+    assertEquals(pagination.next_offset(), -1)
+    assertTrue(pagination.is_active_page(20))
+              
+    pagination = new Google(200, {item_offset: 189})
+    assertEquals(pagination.previous_offset(), 170)
+    assertEquals(pagination.next_offset(), 190)
+    assertTrue(pagination.is_active_page(19))
+}
+</script>

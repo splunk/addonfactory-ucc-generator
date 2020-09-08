@@ -1,0 +1,140 @@
+<%!
+import pprint
+
+pp = pprint.PrettyPrinter(indent=1)
+title = 'Status'
+
+%>
+<%inherit file="//layout/base.html" />
+
+<%def name="renderTable(D, sort=False)">
+    % if len(D) == 0:
+        <p>No data</p>
+    % endif
+    <%
+        keys = D.keys()
+        if sort: keys.sort()
+    %>
+    <table>
+        % for key in keys:
+            <tr>
+                <td class="k">${key | h}</td>
+                <td class="v">${pp.pformat(D[key])|h}</td>
+            </tr>
+        % endfor
+    </table>
+</%def>
+
+<%def name="css()">
+    <style type="text/css">
+        * { margin: 0; padding: 0; border: 0; }
+        body { font-family: helvetica, arial, sans-serif; }
+        p, h1, h2, ol, ul { margin-bottom: 1em; }
+        h1, h2 { margin-bottom: 1em; letter-spacing: -1px; color: #444; }
+        h1 { font-size: 22px; }
+        h2 { font-size: 18px; }
+        p, li, td { font-size: 12px; }
+        li    { margin-left: 1.5em; margin-bottom: .2em; }
+        table { border-collapse: collapse; }
+        td { padding: 2px; vertical-align: top; border-bottom: 1px solid #eee; }
+        .k { font-weight: bold; }
+        .v { white-space: pre; font: 11px monaco, courier new, monospace; }
+
+        #header { background-color: #ddd; border-bottom: 1px solid #666; padding: 5px; }
+        #menu { width: 180px; float: left; padding: 5px; background-color: #ddd; }
+        #content { margin-left: 200px; padding-top: 10px; overflow: auto;}
+        .contentPanel { display: none; }
+        tr.rowHighlight td { background-color: rgb(246,255,227); }
+    </style>
+</%def>
+
+<div id="header">
+    <h1>Splunk system info</h1>
+    <p>Generated on: ${appserverTime | h}</p>
+</div>
+
+<div id="menu">
+    <h2>Overview</h2>
+    <ul>
+        <li><a href="#general">general</a></li>
+    </ul>
+
+    <h2>Splunkd</h2>
+    <ul>
+        % for panelName in splunkdPanels:
+            <li><a href="#${panelName | h}">${panelName | h}</a></li>
+        % endfor
+    </ul>
+
+    <h2>Appserver</h2>
+    <ul>
+        % for panelName in uiPanels:
+        <li><a href="#${panelName | h}">${panelName | h}</a></li>
+        % endfor
+    </ul>
+
+</div>
+
+<div id="content">
+
+    % if hasReadPerms:
+        <div class="contentPanel" id="general" style="display: block">
+            <%call expr="renderTable(general)"></%call>
+        </div>
+
+        % for panelName in splunkdPanels:
+            <div class="contentPanel" id="${panelName | h}">
+                % if isinstance(splunkdPanels[panelName], dict):
+                    <%call expr="renderTable(splunkdPanels[panelName], sort=True)"></%call>
+                % else:
+                    <pre>${splunkdPanels[panelName] | h}</pre>
+                % endif
+            </div>
+        % endfor
+
+        % for panelName in uiPanels:
+            <div class="contentPanel" id="${panelName | h}">
+                <%call expr="renderTable(uiPanels[panelName], sort=True)"></%call>
+            </div>
+        % endfor
+    % else:
+        <h2>${_('Invalid permissions') | h}</h2>
+        <p>
+            ${_("We're sorry you do not have appropriate permissions to view this page. Contact your system administrator for help to resolve this issue.")}
+        </p>
+    % endif
+
+</div>
+
+<%def name="js()">
+    <script type="text/javascript" src="${make_url('/static/js/contrib/deprecated/jquery-1.8.3.js')}"></script>
+    <script type="text/javascript">
+        $('#menu').click(function(evt) {
+            var target = evt.target;
+            if (target.tagName != 'A') return true;
+            var cname = $(target).attr('key') || $(target).text();
+            $('.contentPanel').each(function() {
+                if ($(this).attr('id') == cname) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+            return false;
+        })
+
+        function handleRowMouseover(evt) {
+            var el = evt.target;
+            if (el.tagName != 'TD') return false;
+            $(el).parent().addClass('rowHighlight');
+        }
+
+        function handleRowMouseout(evt) {
+            var el = evt.target;
+            if (el.tagName != 'TD') return false;
+            $(el).parent().removeClass('rowHighlight');
+        }
+
+        $('#content').bind('mouseover', handleRowMouseover).bind('mouseout', handleRowMouseout);
+    </script>
+</%def>

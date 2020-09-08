@@ -1,0 +1,18 @@
+<%inherit file="/layout/wizard.html"/>
+
+<div class="content alertStep2">
+    <%include file="_steps.html" args="step=1"/>
+    <form method="post" action="${make_url(['alertswizardv2', app, 'step1', 'create']) | h}">
+        <%include file="_step1.html"/>
+        <input type="submit" class="visuallyhidden" />
+    </form>
+</div>
+
+<ul class="buttons splClearfix">
+    <li class="left">
+        <a href="${make_url(['alertswizardv2', app, 'step1', 'new'])}" class="splButton-secondary cancel">${_('Cancel')}</a>
+    </li>
+    <li class="right">
+        <button class="splButton-primary" type="submit" onclick="$(document.forms[0]).trigger('submit');"><span>${_('Next &#187;')}</span></button>
+    </li>
+</ul>

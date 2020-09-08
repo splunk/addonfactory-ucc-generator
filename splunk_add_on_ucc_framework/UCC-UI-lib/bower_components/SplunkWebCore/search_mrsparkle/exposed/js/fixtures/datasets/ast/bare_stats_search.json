@@ -1,0 +1,32 @@
+{
+    "spl": "| stats",
+    "ast": {
+        "command": "stats",
+        "raw": "",
+        "type": "SP_STREAMREPORT",
+        "fields_and_properties": [
+            {
+                "name": "*",
+                "referenced": true,
+                "removed": true
+            }
+        ],
+        "partitions": 1,
+        "allnum": false,
+        "delim": " ",
+        "aggregates": [],
+        "by": [],
+        "pipeline": "streamreport",
+        "annotations": {
+            "interesting_fields": []
+        }
+    },
+    "actions": [
+        {
+            "name": "get_interesting_fields"
+        },
+        {
+            "name": "annotate_datasets"
+        }
+    ]
+}

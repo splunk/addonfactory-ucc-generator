@@ -1,0 +1,110 @@
+<%inherit file="//qunit/template.html" />
+
+<%def name="title()">Results Header -- QUnit tests</%def>
+
+<script type="text/javascript" src="/en-US/static/js/job.js"></script>
+<script type="text/javascript" src="/en-US/static/js/context.js"></script>
+<script type="text/javascript" src="/en-US/static/js/search.js"></script>
+<script type="text/javascript" src="/en-US/static/js/time_range.js"></script>
+<script type="text/javascript" src="/en-US/static/js/jobber.js"></script>
+<script type="text/javascript" src="/en-US/static/js/page_status.js"></script>
+<script type="text/javascript" src="/en-US/static/js/test_utils.js"></script>
+<script language="javascript">
+    // important to disable the chatty debug that the tests spew.
+    //Splunk.Logger.mode.Default = Splunk.Logger.mode.None
+</script>
+<script type="text/javascript" src="/en-US/static/js/init.js"></script>
+
+
+<!--  Now the modules  -->
+<script type="text/javascript" src="/en-US/modules/AbstractModule.js"></script>
+<script type="text/javascript" src="/en-US/modules/DispatchingModule.js"></script>
+<script type="text/javascript" src="/en-US/modules/results/SimpleResultsHeader.js"></script>
+<script type="text/javascript" src="/en-US/modules/results/ResultsHeader.js"></script>
+
+
+<script type="text/javascript">
+
+    function generateResultsHeader(entityName, entityLabel) {
+        var container = $("<div id='ResultsHeaderFixture'>");
+        container.append($('<h1><span class="numberOfEvents"></span><span class="entityLabelStr"></span><span class="timeRangeStr"></span></h1>'));
+        container.appendTo(document);
+
+        Splunk.namespace("Splunk.Module.loadParams.ResultsHeaderFixture");
+        Splunk.Module.loadParams.ResultsHeaderFixture = {
+            entityName: entityName,
+            prefix: "PREFIX_NAME",
+            entityLabel: entityLabel
+        };
+
+        return new Splunk.Module.ResultsHeader(container);
+    }
+    
+    function test_onJobProgress() {
+        var testCases = [
+            ["events", "Chickens", "987654"],
+            ["results", "Unexploded Remnants of Home Rocketry Kit", "123456"]
+        ];
+
+        for (var i=0; i<testCases.length; i++) {
+            
+            var testCase = testCases[i];
+
+            // SETUP
+
+            var moduleUnderTest = generateResultsHeader(testCase[0], testCase[1]);
+            var mockContext = addMockContext(moduleUnderTest, testCase[2]);
+
+            // sneakily getting a reference so we can mock it in place.
+            var mockJob     = mockContext._root["search"].job;
+            var expectedNumber = (testCase[0] == "events") ? 777 : 666;
+            mockJob.getEventCount = function()  {return 777};
+            mockJob.getResultCount = function() {return 666};
+
+            Splunk.Globals['Jobber'].addJob(mockJob);
+            var job = Splunk.Globals['Jobber'].getJob(mockJob.getSID());
+            
+            var moduleJob = moduleUnderTest.getContext().get("search").job;
+            assertEquals("sanity checking -- mockContext.job.getResultCount() should be correct", 666, moduleJob.getResultCount());
+            assertEquals("sanity checking -- mockContext.job.getEventCount() should be correct",  777, moduleJob.getEventCount());
+
+            
+            moduleUnderTest.baseContext = mockContext;
+            moduleUnderTest.onContextChange();
+
+            
+            var eventCountHeader    = $(".numberOfEvents", moduleUnderTest.container);
+            var entityLabelHeader    = $(".entityLabelStr", moduleUnderTest.container);
+
+            
+            $(document).trigger('jobProgress', [job]);
+               
+            // we cant test the HTML directly because of the animation.  
+            // Instead we test the _target gets set, 
+            // and then that the animation converges to the counter.
+            assertEquals("check that after the triggering we have " + expectedNumber + " " + testCase[0], expectedNumber.toString(), $(moduleUnderTest._eventCountHeader).text().substring(2));
+            assertEquals("check after the trigger, we are displaying the right label", testCase[1], entityLabelHeader.text());
+        }
+    }
+
+    function test_contextChangePushesCorrectDisplay() {
+        var moduleUnderTest = generateResultsHeader("events", "Chickens");
+        
+        var mockContext = addMockContext(moduleUnderTest, "123456");
+
+        // TODO use context.setTimeRange(), and test that the timerange gets printed out correctly. 
+        // TODO test a running job and make sure there's a >= on it.
+        
+        var mockSearch = mockContext._root["search"];
+
+        mockSearch.job.setSearchId("123456");
+        mockSearch.job._isDone = 1;
+        mockSearch.job._eventCount = 12;
+
+        moduleUnderTest.baseContext = mockContext;
+        moduleUnderTest.onContextChange();
+        assertEquals("the number of events should be accurate", 12, parseInt($(".numberOfEvents", moduleUnderTest.container).text(), 10));
+
+    }
+
+</script>

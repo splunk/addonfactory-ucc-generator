@@ -1,0 +1,15 @@
+<%inherit file="base.html"/>
+<%!
+from splunk.appserver.mrsparkle.lib import util
+%>
+<div class="preload">
+    % if not util.isLite():
+        <div id="placeholder-splunk-bar"> 
+            <a href="${make_url([])}" class="brand" title="splunk &gt; listen to your data">splunk<strong>&gt;</strong></a>
+        </div>
+    % endif
+    <div id="placeholder-app-bar"></div>
+    <div id="placeholder-main-section-body"> 
+    ${_('Loading...')}
+    </div>               
+</div>

@@ -1,0 +1,37 @@
+<%doc>
+
+    This is a general template for non-view type pages
+    
+</%doc>
+<%inherit file="/layout/base.html" />
+<%namespace name="lib" file="/lib.html" import="*" />
+<%!
+    import splunk, datetime
+%>
+<%
+def getServerInfo():
+    
+    appHost = cherrypy.request.headers.get('host', 'UNKNOWN_HOST')
+    splunkdHost = splunk.mergeHostPath()
+    versionLabel = cherrypy.config.get('version_label', 'UNKNOWN_BUILD')
+    currentTime = str(datetime.datetime.now().ctime())
+    
+    return '%s, %s, %s' % (versionLabel, appHost, currentTime)
+
+def getUserInfo() :
+    return cherrypy.session.get('user', {'name': 'UNKNOWN_USER'})['name']
+
+%>    
+<%def name="css()">
+    <%lib:stylesheet_tags files="${['/static/css/message.css', '/static/css/skins/default/default.css']}" />
+</%def>
+
+<%def name="header()"></%def>
+<%def name="footer()"></%def>
+
+<div class="masterHeader"><%self:header/></div>
+<div class="masterContainer">${next.body()}</div>
+<div class="masterFooter">
+<%self:footer/>
+<p class="byline"><strong>${_("Server info")}:</strong> Splunk ${getServerInfo()|h}  <strong>${_("User")}:</strong> ${getUserInfo()|h}</p>
+</div>

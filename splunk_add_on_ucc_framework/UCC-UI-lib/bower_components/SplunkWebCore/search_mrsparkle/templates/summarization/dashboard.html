@@ -1,0 +1,397 @@
+<%inherit file="//layout/admin_lite.html"/>
+<%page expression_filter="h"/>
+<%namespace name="lib" file="//lib.html" />
+<%namespace name="lib" file="/lib.html" import="stylesheet_tags, add_script_block, csrf_hidden_input, sort_link, get_summarization_status" />
+
+<%def name="title()">${_('Report Acceleration Summaries')} - ${parent.title()}</%def>
+<%def name="get_breadcrumbs()">
+    <%
+        if selection: 
+            return [
+                [_('Manager'), ['manager']],
+                [_('Report Acceleration Summaries'), ['manager','system','summarization']],
+                [selection, ''],
+            ]
+        else: 
+            return [
+                [_('Manager'), ['manager']],
+                [_('Report Acceleration Summaries'), ''],
+            ]
+    %>
+</%def>
+
+<%
+    import time
+    from splunk.appserver.mrsparkle.lib import util  
+    from splunk.appserver.mrsparkle.lib.eai import cpQuoteEntity
+
+    search = kwargs.get("search", "")
+    pwnr = kwargs.get("pwnr", "-")
+    offset = kwargs.get("offset",0)
+    numItems  = kwargs.get("numItems",0)
+    ns = kwargs.get("ns", "-")
+    countPerPage = kwargs.get("count",25)
+    appOptionList = None 
+    pwnrOptionList = None 
+%>
+
+<script src="${make_url('/static/js/summarization.js')}"></script>
+
+<script type="text/javascript">
+
+  function doObjectAction(ctrl, link) {
+    $('#ctrl').val(ctrl);
+    $('#ctrl_link').val(link);
+
+    okToPost = true; 
+    if (ctrl == "remove"){
+        okToPost = confirm("${_('Are you sure you want to delete this summary?')}"); 
+    }
+    
+    if (okToPost)
+        document.actionControl.submit();
+    else 
+        return false; 
+  }
+ 
+    $(document).ready(function(){
+                $(".showLink").each(function() {
+                    $(this).click(function() { 
+                        update_searches_display(this)
+                    }); 
+                });
+                
+                $("#expand_all").click(function() { expand_all_searches(this)}); 
+        });
+
+    // enable the hide/show of the master/slave configuration options 
+    function update_searches_display(expandLink) {
+        var searches_id = "#searches_" + $(expandLink).attr('id');
+        var searchTable = $(searches_id);
+        if($(searchTable).is(":visible")){
+            $(searchTable).hide(); 
+            $(expandLink).css("backgroundPosition","-65px -341px");
+        } else {
+            $(expandLink).css("backgroundPosition","-65px -320px");
+            $(searchTable).show(); 
+        } 
+    }
+   
+    function showHiddenSearches(showLink, tsumHash) {
+        var mySelector = "." + tsumHash; 
+        $(mySelector).each(function() { 
+            $(mySelector).show(); 
+        
+        }); 
+        $(showLink).hide(); 
+    }     
+
+
+    function expand_all_searches() {
+        $("#expand_all").text("${_('Minimize')}");
+        $("#expand_all").click(function() { minimize_searches(this)}); 
+
+        $(".hiddenSearch").each(function() { 
+            $(this).show();    
+        }); 
+
+        $(".showSearchesLink").each(function() { 
+            $(this).hide();    
+        }); 
+   }
+
+    function show_verification_wizard(verifyLink, total_buckets) {
+        Splunk.Popup.SummarizationVerificationWizard(verifyLink, total_buckets);
+    } 
+
+    function show_verification_result(isSuccess, result) {
+        Splunk.Popup.SummarizationVerificationResultsPopup(isSuccess, result);
+    } 
+
+
+    function minimize_searches() {
+        $("#expand_all").text("${_('Show All')}");
+        $("#expand_all").click(function() { expand_all_searches(this)}); 
+
+        $(".hiddenSearch").each(function() { 
+            $(this).hide();    
+        }); 
+
+        
+        $(".showSearchesLink").each(function() { 
+            $(this).show();    
+        }); 
+   }
+
+setInterval(updateSummarizationStatus, 10000); 
+
+</script>
+
+
+
+<style>
+
+.question_mark {
+margin-right: 5px;
+margin-left: 5px;
+background: url(/static/img/skins/default/icon-help-12.png) no-repeat left center;
+_background: url(/static/img/skins/default/icon-help-12-grey-ie6.png) no-repeat left center;
+padding-left: 16px;
+
+}
+
+.question_mark:hover{
+    text-decoration:none;
+}
+
+
+.savedSearch {
+   line-height: 22px;
+}
+
+.pageContentWrapper, td {
+     font-size:13px;
+}
+
+.showLink {
+    background-color:#FFFFFF;
+    display: inline-block;
+    _float:right; 
+}
+
+.showVerificationResults {
+    color:#000000; 
+    text-decoration: none; 
+}
+table.splTable th {
+    text-align:left;
+    color:#000000;
+    border-bottom:solid 1px black;
+}
+
+table.splTable tr, table.splTable td {
+    text-align:left;
+    border-collapse: collapse;
+    border-bottom-width: 1px;
+    padding-right:20px; 
+}
+
+table.splTable th {
+    padding-right:20px;
+}
+
+table.splTable {
+    width:100%;
+}
+
+table.splTable th, table.splTable tr {
+    line-height:18px; 
+}
+
+table.searches_list { 
+    width:100%;        
+}
+
+table.searches_list th{
+    text-align:center;
+    background-color:#CCCCCC;
+    border-bottom:solid 2px white;
+}
+
+table.splTable .number{
+    text-align:right;
+}
+
+
+table.searches_list .dark{
+    background-color:#EEEEEE;
+} 
+
+table.searches_list .insideCol{
+    border-right: solid 1px black; 
+    width: 25%;
+}
+
+.complete {
+    background-image: url("/static/img/skins/default/check-green.png"); 
+    background-repeat: no-repeat;
+    padding-left: 20px; 
+}
+
+.running {
+    background-image: url("/static/img/skins/default/loader_green_on_grey.gif"); 
+    background-repeat: no-repeat;
+    padding-left: 20px; 
+    background-size: 15px; 
+}
+
+.failure {
+    font-style: bold; 
+    color: #F00; 
+    font-size: 15px; 
+}
+
+.expandLink {
+ text-decoration:none; 
+ padding-left:20px; 
+ font-size: 11px; 
+}
+
+.triangleShow {
+    background-position:-65px -320px; 
+}
+
+
+.triangleHide {
+    background-position:-65px -341px; 
+}
+
+.hiddenSearch {
+    display:none; 
+}
+
+
+.access_time { 
+    color:#868686;
+    padding-left:10px; 
+    font-size:11px; 
+}
+
+</style>
+
+<div>
+<%lib:generate_searchbar search="${search}" pwnr="${pwnr}" ns="${ns}" countPerPage="${countPerPage}" appOptionList="${appOptionList}" pwnrOptionList="${pwnrOptionList}" pwnr="${pwnr}"/>
+</div>
+<div class="pageContentWrapper">
+
+% if controller_exception:
+    <div class="error">
+        <%lib:render_exception e="${controller_exception}" />
+    </div>
+% endif
+
+        % if len(tsumList) == 0: 
+            <br/>
+            <br/>
+            <% 
+                message = _("There are no report acceleration summaries that match your search query.") if search else _("There are no report acceleration summaries.")
+            %>
+            <div class="empty_results">${message}
+                <a href="${generateSelfHelpLink('learnmore.search.acceleration')}" class="spl-icon-external-link-xsm" target="_blank">${_('Learn more.')}</a>
+           </div>
+        % else: 
+
+    <%lib:generate_master_pagination countPerPage="${countPerPage}" offset="${offset}" numItems="${numItems}" search="${search}" ns="${ns}" pwnr="${pwnr}"/>
+
+<div>
+<%!
+def prettyInt(num):
+    s = '%d' % num
+    groups = []
+    while s and s[-1].isdigit():
+        groups.append(s[-3:])
+        s = s[:-3]
+    return s + ','.join(reversed(groups))
+%>
+
+<form name="actionControl"  method="post">
+    ${csrf_hidden_input()}
+    <input type="hidden" name="ctrl" id="ctrl" value=""/>
+    <input type="hidden" name="ctrl_link" id="ctrl_link" value=""/>
+        <table class="splTable">
+            <tr>
+                <th>${sort_link(_('Summary ID'), ['manager','system','summarization'], cherrypy.request.params, 'summary.complete')}</th>
+                % if detailed_dashboard:
+                <th>${sort_link(_('Normalized Summary ID'), ['manager', 'system', 'summarization'], cherrypy.request.params, 'summary.complete')}</th>
+                % endif
+
+                <% 
+                    hideExpandLink = True
+                    for tsum in tsumList:
+                        if len(tsum.saved_searches.values()) > 4:
+                            hideExpandLink = False
+                            break
+                %>
+                    
+                <th>${_('Reports Using Summary')}  <a href="javascript:void(0)" class="expandLink" style= ${' display:none' if isAutoExpand or hideExpandLink else 'color:#1A7996'} id="expand_all"> ${_('Show All')} </a>   </th>
+                <th>${sort_link(_('Summarization Load'), ['manager','system','summarization'], cherrypy.request.params, 'summary.load_factor')}
+                 <a class="question_mark" href="${generateSelfHelpLink('learnmore.search.acceleration')}"   target="_blank" title="${_('Splunk help')}">&nbsp;</a> </th>
+                 </span>     
+                <th>${sort_link(_('Access Count'), ['manager','system','summarization'], cherrypy.request.params, 'summary.access_count')}</th>
+                <th>${sort_link(_('Summary Status'), ['manager','system','summarization'], cherrypy.request.params, 'summary.complete')}</th>
+            </tr>
+               % for tsum in tsumList: 
+                   <% 
+                       try: 
+                           complete = int(float(tsum.complete)*100)
+                           timeDeltaDays = (int(tsum.latest_time) - int(tsum.earliest_time))/(60*60*24) 
+                           timeDeltaString = '-' + str(timeDeltaDays) + 'd' if timeDeltaDays > 0 else _('N/A')
+                           access_time = util.timeToAgoStr(int(tsum.access_time))
+                           mod_time    = util.timeToAgoStr(int(tsum.mod_time))
+                           access_count = prettyInt(int(tsum.access_count))
+
+                       except TypeError:
+                           complete = None
+                           timeDeltaString = None
+                           access_time = None
+                           mod_time = None
+                           access_count = None
+                   %>
+
+            <tr>
+                   % if detailed_dashboard:
+                       <%
+                           urirs = tsum.id
+                           urirs = urirs.replace(tsum.hash, tsum.regularHash)
+
+                           urins = tsum.id
+                           urins = urins.replace(tsum.hash, tsum.normHash)
+                       %>
+                <td><a href="${make_url(['manager','system','summarization','details',tsum.regularHash], _qs=dict(uri=urirs))}">${tsum.regularHash}</a></td>
+                <td><a href="${make_url(['manager','system','summarization','details',tsum.normHash   ], _qs=dict(uri=urins))}">${tsum.normHash}</a></td>
+                   % else:
+                <td><a href="${make_url(['manager','system','summarization','details',tsum.hash], _qs=dict(uri=tsum.id))}">${tsum.hash}</a></td>
+                   % endif
+
+                 <td>
+                   % for i in range(len(tsum.saved_searches.values())):
+                       <%    
+                           saved_search = tsum.saved_searches.values()[i]
+                           qs = {'app':saved_search['app'], 'owner':saved_search['owner'], 'search':'"' + cpQuoteEntity(saved_search['name'], urlquote=False) + '"'}
+                                 
+                           hiddenClass  = 'hiddenSearch' if i >= 4 else ""
+                       %>
+                       <div class="savedSearch ${tsum.hash} ${hiddenClass}">   
+                           <a href="${make_url(['manager', saved_search['app'], 'saved', 'searches'], _qs=qs)}">${saved_search['name']}</a>
+                       </div>
+                            
+                   % endfor
+                        
+                       <% 
+                           numHiddenSearches = len(tsum.saved_searches.values()) - 4
+                       %>
+                       % if numHiddenSearches > 0: 
+                           <div> <a href="javascript:void(0)" class="showSearchesLink" onclick="showHiddenSearches(this,'${tsum.hash}')">${numHiddenSearches}${_(" more...")}</a> </div>
+                       % endif
+                        
+
+                </td>
+                <td> ${tsum.load_factor} </td>
+                <td>${access_count} <span class="access_time">${_("Last Access: ")}${access_time}</span></td>
+                <td id="${util.remove_special_chars(tsum.id)}">${get_summarization_status(tsum) | n}</td>
+            </tr>
+               % endfor
+        </table>
+</form>
+</div>
+    <%lib:generate_slave_pagination countPerPage="${countPerPage}" offset="${offset}" numItems="${numItems}" search="${search}" ns="${ns}" pwnr="${pwnr}"/>
+
+    %endif
+
+<br/>
+<br/>
+<br/>
+<br/>
+
+
+</div>

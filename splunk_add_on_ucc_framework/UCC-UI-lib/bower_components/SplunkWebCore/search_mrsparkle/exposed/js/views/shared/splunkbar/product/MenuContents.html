@@ -1,0 +1,6 @@
+
+    <li><a data-action="instances" data-link-external="external" href="<%=productMenuUriPrefix%>apex/RMEC_InstancePage" target="productlink"><%- _("Instances").t() %> </a></li>
+    <% if(isAdmin) {%>
+        <li><a data-action="upgrade" data-link-external="external" href="<%=productMenuUriPrefix%>apex/RMEC_InstancePage" target="productlink"><%- _("Upgrade").t() %> </a></li>
+        <li><a data-action="invite" data-link-external="external" href="<%=productMenuUriPrefix%>apex/RMEC_InvitePage" target="productlink"><%- _("Invite Users").t() %> </a></li>
+    <% }%>

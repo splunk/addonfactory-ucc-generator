@@ -1,0 +1,87 @@
+/* splunk 4.3 patch for SplunkforPaloAltoNetworks version 1.2.0 */
+
+/* GENERAL */
+.AppBar .auxLinks a {
+    color:#fff;
+}
+
+.appHeaderWrapper .splIcon-triangle-3-s {
+    background-position: -47px -367px;
+}
+
+.splView-flashtimeline .ResultsHeader .splHeader-primary {
+    background-color:#DBE6E9;
+}
+.DisableRequiredFieldsButton {
+    background-color:#DBE6E9;
+}
+
+div.sidebarCollapsed .sidebarControl {
+    background-color:#DBE6E9;
+}
+
+/* SEARCHBAR */
+table.mainSearchControlsTable .TimeRangePicker .timeRangeActivatorWrapper {
+    background-color:#6694C7;
+    border-color:#6694C7;
+}
+
+table.mainSearchControlsTable .TimeRangePicker .timeRangeActivatorWrapper:hover, 
+table.mainSearchControlsTable .TimeRangePicker .timeRangeActivatorWrapper:focus {
+    background-color: #6694C7; 
+}
+
+table.mainSearchControlsTable input.searchButton {
+    border-color: #6694C7;
+}
+
+input.searchButton {
+    background-color: #6694C7;
+    background-position: right center;
+}
+input.searchButton:hover,
+input.searchButton:focus {
+    background-color: #6694C7;  
+}
+
+table.mainSearchControlsTable .SearchBar .searchFieldWrapper {
+    border-color:#6694C7;
+    background-color:#6694C7;
+}
+
+/* BUTTONS */
+div.FlashTimeline a, 
+div.FlashTimeline a:visited, 
+.JobStatus a
+{
+    color: #fff;
+}
+
+.splButton-primary,
+.splButton-primary:hover,
+.splButton-primary:focus {
+    background-color: #6694C7;
+    border-color: #6694C7;
+}
+
+.splButton-secondary {
+    background-color: #6694C7;
+    color:#fff;
+}
+
+/* SIDEBAR */
+.fieldValuePopup table td, 
+.fieldValuePopup table th {
+    color: #333;
+}
+
+.sidebar .selected a
+{
+    background-color: #277991;
+    color:#fff !important;
+}
+
+.DashboardTitleBar .splHeader-primary {
+    background-image:none;
+}
+

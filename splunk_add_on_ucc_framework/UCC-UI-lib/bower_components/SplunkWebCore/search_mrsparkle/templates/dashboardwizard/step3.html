@@ -1,0 +1,191 @@
+<%inherit file="/layout/wizard.html"/>
+<%namespace file="/lib.html" import="csrf_hidden_input, wizard_cancel_delete, wizard_errors, wizard_schedules, acceleration_options"/>
+<%
+    def is_selected(model_value, option_value, none_value=None):
+        if model_value is None and option_value == none_value:
+            return True
+        if model_value == option_value:
+            return True
+        return False
+%>
+<div class="content">
+    <%include file="_steps.html" args="step=3"/>
+    <form method="post" action="${make_url(['dashboardwizard', app, 'step3', 'update']) | h}" class="dashboardStep2">
+        ${wizard_errors(header='Your dashboard settings could not be saved.', errors=saved_search.errors+dashboard.errors)}
+        ${csrf_hidden_input()}
+        <input type="hidden" name="id" value="${saved_search.id | h}"/>
+        <input type="hidden" name="dashboard_id" value="${dashboard.id | h}"/>
+        <input type="hidden" name="dashboard_action" value="${dashboard_action | h}"/>
+        <table>
+            <tbody>
+                <tr>
+                    <td class="col1">
+                    	<label for="panel_title">${_('Panel title')}</label>
+                    </td>
+                    <td class="col2">
+                        <input name="panel_title" id="panel_title" type="text" value="${panel_title or saved_search.name or ''|h}" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        <label for="panel_type">${_('Visualization')}</label>
+                    </td>
+                    <td class="col2">
+                        <% panel_types = [ ('table', _('Table')), ('event', _('Event Listing')), ('bar', _('Bar')), ('area', _('Area')), ('column', _('Column')), ('pie', _('Pie')), ('scatter', _('Scatter')), ('line', _('Line')), ('single', _('Single value')), ('radialGauge', _('Radial Gauge')), ('fillerGauge', _('Filler Gauge')), ('markerGauge', _('Marker Gauge'))] %>
+                        <select name="panel_type" id="panel_type" class="width_medium">
+                            % for panel in panel_types:
+                                   <option value="${panel[0]|h}"${' selected="selected"' if panel[0]==panel_type else ''}>${panel[1]|h}</option>
+                            % endfor
+                        </select>
+                        <a href="${generateSelfHelpLink('learnmore.dash.paneltype')}" class="spl-icon-external-link-xsm" target="_blank">${_('Learn more')}</a>
+                    </td>
+                </tr>
+                % if saved_search.is_mutable('schedule.is_scheduled'):
+                    <tr>
+                        <td class="col1"><span class="orphanLabel">${_('Schedule')}</span></td>
+                        <td class="col2">
+                        % if saved_search.is_realtime():
+                            <ul>
+                                <li>
+                                    <input type="radio" class="typeRadio" name="schedule_type" id="onload" value="never" ${'' if saved_search.schedule.is_scheduled else 'checked="checked"'}/>
+                                    <label for="onload">${_('Start the search when the dashboard loads')}</label>
+                                    <div class="indent">
+                                        <span class="note">${_('May cause a brief resource usage spike.')}</span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <input type="radio" class="typeRadio" name="schedule_type" id="continuous" value="continuous" ${'checked="checked"' if saved_search.schedule.is_scheduled else ''}/>
+                                    <label for="continuous">${_('Run the search in the background')}</label>
+                                    <div class="indent">
+                                        <span class="note">${_('Running multiple backgrounded real-time searches can cause system performance issues.')}</span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <a href="${generateSelfHelpLink('learnmore.dash.performance')}" class="spl-icon-external-link-xsm" target="_blank">${_('Learn more about system performance implications')}</a>
+                                </li>
+                            </ul>
+                        % else:
+                            <ul>
+                                <li>
+                                    <input type="radio" class="typeRadio" name="schedule_type" id="refreshLoad" value="never"${'' if saved_search.schedule.is_scheduled else ' checked="checked"'}/>
+                                    <label for="refreshLoad">${_('Run search each time dashboard loads')}</label>
+                                    <% saved_search.setSummarizationDetails() %>
+                                    % if saved_search.auto_summarize.enabled is not None and saved_search.auto_summarize.can_summarize: 
+                                    <div id="acceleration_container" style="margin-left:20px;">
+                                        ${acceleration_options()}
+                                    </div>
+                                    % endif
+                                </li>
+                                <li>
+                                    <input type="radio" class="typeRadio" name="schedule_type" id="refreshSchedule" value="preset"${' checked="checked"' if saved_search.schedule.is_scheduled else ''}/>
+                                    <label for="refreshSchedule">${_('Run scheduled search')}</label>
+                                    <label for="alert_preset" class="hiddenLabel">${_('Scheduled Search Times')}</label>
+                                    <div class="indent" id="scheduled">
+                                        <select name="alert_preset" class="medium" id="alert_preset">
+                                            <optgroup label="${_('Every')}">
+                                            <% has_selected = False %>
+                                            % for option in wizard_schedules():
+                                                <% 
+                                                if is_selected(saved_search.schedule.cron_schedule, option[0], none_value='0 */12 * * *'):
+                                                    has_selected = True
+                                                %>
+                                                <option value="${option[0] | h}"${' selected="selected"' if is_selected(saved_search.schedule.cron_schedule, option[0], none_value='0 0 * * *') else ''}>${option[1] | h}</option>
+                                            % endfor
+                                            </optgroup>
+                                            <option value="cron"${'' if has_selected else ' selected="selected"'}>${_('Custom schedule (Cron schedule)')}</option>
+                                        </select>
+                                        <div class="indent" id="cron_schedule">
+                                            <ul>
+                                                <li>
+                                                    <input type="text" name="alert_cron" value="${'' if has_selected else saved_search.schedule.cron_schedule | h}" id="alert_schedule_cron_value" />
+                                                </li>
+                                                <li class="note">
+                                                    <em>
+                                                        ${_('0 21 * * * (every day at 9 PM)')}
+                                                    </em>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <p class="note">${_('The dashboard loads results from the most recent run of the scheduled search.')}</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        % endif
+                        </td>
+                    </tr>
+                % else:
+                    <input type="hidden" name="schedule_type" value="never"/>
+                % endif
+            </tbody>
+        </table>
+    </form>
+</div>
+<ul class="buttons splClearfix">
+    % if dashboard_action=='new':
+        <li class="left">${wizard_cancel_delete(make_url(['dashboardwizard', app, 'delete']), saved_search.id, dashboard.id)}</li>
+    % else:
+        <li class="left">${wizard_cancel_delete(make_url(['dashboardwizard', app, 'delete']), saved_search.id)}</li>
+    % endif
+    <li class="right"><button class="splButton-primary" type="submit" onclick="$(document.forms[0]).trigger('submit');"><span>${_('Finish &#187;')}</span></button></li>
+    <li class="right"><a href="${make_url(['dashboardwizard', app, 'step2', 'edit'], _qs=dict(dashboard_id=dashboard.id, dashboard_action=dashboard_action, id=saved_search.id)) | h}" class="splButton-secondary"><span>${_('&#171;Back')}</span></a></li>
+</ul>
+<script type="text/javascript">
+    (function(){
+        //form behavior
+        //refresh
+        var frameWindow = document.parentWindow || document.defaultView;
+        var frame = $(frameWindow.frameElement);
+        var panel_type = frame.attr("panel_type") || "table";
+
+        // clear the frame attr once we support going from step3, to step2, back to step 3
+        //frame.attr("panel_type", null);
+
+        $("#panel_type option[value='" + panel_type + "']").prop("selected", true);
+
+        if (panel_type == 'event') {
+            $("#panel_type option[value='bar'], #panel_type option[value='area'], #panel_type option[value='column'], #panel_type option[value='pie'], #panel_type option[value='scatter'],  #panel_type option[value='line'], #panel_type option[value='single'], #panel_type option[value='radialGauge'], #panel_type option[value='fillerGauge'], #panel_type option[value='markerGauge']").prop("disabled",true);
+        } else {
+            $("#panel_type option[value='event']").prop("disabled",true);
+        }
+        var scheduled = $("#scheduled");
+        var refreshSelector = "input[name='schedule_type']";
+        $(refreshSelector).change(function(){
+            if($(refreshSelector + ":checked").val()=="preset"){
+            	scheduled.find("select").prop("disabled", false);
+            	scheduled.find("input").prop("disabled", false);
+            	scheduled.removeClass("disabled");
+            	scheduled.show();
+            }
+            else {
+                scheduled.find("select").prop("disabled", true);
+                scheduled.find("input").prop("disabled", true);
+                scheduled.addClass("disabled");
+                scheduled.hide();
+            }
+        }).trigger("change");
+        
+        //schedule
+        var alertPreset = $("select[name='alert_preset']");
+        var cronSchedule = $("#cron_schedule");
+        $(alertPreset).change(function(){
+            if(alertPreset.val()=="cron"){
+                cronSchedule.show();
+            }else{
+                cronSchedule.hide();
+            }
+        }).trigger("change");
+    })()
+    $(document).ready(function(){
+        $('input[name="schedule_type"]').click(toggle_acceleration_container); 
+        toggle_acceleration_container(); 
+    });
+
+    function toggle_acceleration_container(){
+        if ($('input[name="schedule_type"]:checked').val() == 'never') {
+             $('#acceleration_container').show(); 
+        } else {
+             $('#acceleration_container').hide(); 
+        }
+            
+    }
+</script>

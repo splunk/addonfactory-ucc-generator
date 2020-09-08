@@ -1,0 +1,26 @@
+<%page args="element, widgetstyle" />
+<%namespace file="../_helpers.html" import="wireElementEvents"/>
+
+    <div id="item-${element['elementName'] | h}" class="${element['class'] if 'class' in element else '' | h}" ${widgetstyle}>
+        % if 'label' in element:
+            <label for="${element['elementName'] | h}_id" class="${'disabledLabel ' if element.get('disabled') else '' | h}">${_(element['label'])}
+            % if element.get('elementName') not in eaiAttributes['optionalFields'] or element.has_key('requiredIfVisible'):
+                <span class="requiredAsterisk">*</span>
+            % endif
+            </label>
+        % endif
+        % if 'helpText' in element:
+            <p class="helpText">${_(element['helpText'])}</p>
+        % endif
+        <div>
+            <div class="widgeterror"><form:error name="${element["elementName"]}"/></div>
+            <select id="${element['elementName'] | h}_id" multiple="multiple" class=" regular ${element['class'] if 'class' in element else '' | h}" name="${element["elementName"] | h}" ${wireElementEvents(element)}>
+            % for option in element["options"]:
+                <option value="${option["value"] | h}">${option["label"] | h}</option>
+            % endfor
+            </select>
+            % if 'exampleText' in element:
+                <p class="exampleText"><em>${_(element['exampleText']) | extract_help_links }</em></p>
+            % endif
+        </div>
+    </div>

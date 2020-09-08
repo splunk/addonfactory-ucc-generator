@@ -1,0 +1,78 @@
+@import '../variables.pcss';
+
+.table-header {
+    background-color: $grayLighter;
+    display: flex;
+    flex: 0 0 calc($titleBarHeight - 1px);
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+
+    h1 {
+        margin-left: 8px;
+        font-size: 24px;
+        font-weight: 200;
+    }
+
+    .table-header-tablename {
+        padding-left: 10px;
+    }
+
+    .btn-container {
+        padding-right: 10px;
+        display: flex;
+    }
+
+    .open-in-pivot {
+        padding-right: 2px;
+    }
+    
+    .save, .save-as, .pivot-btn {
+        font-size: 12px;
+        user-select: none;
+    }
+}
+
+.modal-btn-cancel.pull-right {
+    margin-right: 10px;
+}
+
+.table-header-dialogs-pivot-save {
+    ul.save-warning-text {
+        list-style-type: none;
+        li:first-child {
+            padding-bottom: 10px;
+        }
+    }
+    .alert {
+        margin-bottom: 0px;
+        padding-bottom: 0px;
+        padding-left: 10px;
+    }
+}
+
+.btn-group-tabs {
+    align-self: flex-end;
+    .btn {
+        border: none;
+        border-bottom: transparent 4px solid;
+        background: none;
+        line-height: 16px;
+        box-shadow: none;
+        position: relative;
+        &.active, &.active:focus, &.active:hover, &:hover {
+            box-shadow: none;
+            background: none;
+            border-top-left-radius: 0px;
+            border-top-right-radius: 0px;
+            border-bottom-left-radius: 0px;
+            border-bottom-right-radius: 0px;
+        }
+        &:hover {
+            border-bottom: $grayLight 4px solid;
+        }
+        &.active {
+            border-bottom: $blue 4px solid;
+        }
+    }
+}

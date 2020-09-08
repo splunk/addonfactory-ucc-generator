@@ -1,0 +1,233 @@
+$wizardHeight: 80px;
+$wizardColor: $primaryBorderColor;
+$stepContainerPadding: 1.25em;
+$connectorHeight: 3px;
+$connectorOffsetTop: 30px;
+$incompleteConnectorColor: $textDisabledColor;
+
+@define-mixin circle-mixin $diameter, $borderWidth:0 {
+    height: $diameter;
+    width: $diameter;
+    top: calc((($diameter - (2 * $borderWidth) - $connectorOffsetTop - $connectorHeight) / 2) + 1px);
+}
+
+.step-wizard {
+    .wizard-label {
+        font-size: 20px;
+        float: left;
+        line-height: $wizardHeight;
+    }
+
+    .step-container {
+        min-height: $wizardHeight;
+        float: left;
+        margin: 0;
+        padding: 0;
+        font-size: 12px;
+        width: -moz-min-content;
+
+
+        .step-indicator {
+            position: relative;
+            margin-left: -2%;
+            width: 102%;
+            margin-top: $connectorOffsetTop;
+            padding-bottom: 1em;
+
+            .connector {
+                float: left;
+                box-sizing: border-box;
+            }
+
+            .connector > div {
+                background-color: $incompleteConnectorColor;
+                height: $connectorHeight;
+
+                &:first-child {
+                    float: left;
+                }
+            }
+
+            .connector.left {
+                width: 50%;
+
+                & > div:first-child {
+                    width: $stepContainerPadding;
+                }
+
+                & > div:last-child {
+                    margin-left: $stepContainerPadding;
+                    width: calc(100% - $(stepContainerPadding));
+                }
+            }
+
+            .connector.right {
+                width: 51%;
+                margin-left: -1%;
+
+                & > div:first-child {
+                    width: calc(100% - $(stepContainerPadding));
+                }
+
+                & > div:last-child {
+                    margin-left: calc(100% - $(stepContainerPadding));
+                    width: $stepContainerPadding;
+                }
+            }
+
+            .circle {
+                float: left;
+                position: absolute;
+                margin: 0 auto;
+                left: 0;
+                right: 0;
+                box-sizing: content-box;
+                text-align: center;
+            }
+        }
+
+        .step-label {
+            color: $textGray;
+            padding: 4px $stepContainerPadding 0;
+            max-width: 150px;
+            display: inline-block;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            width: -moz-max-content;
+        }
+
+        &.active {
+
+            .connector.left > div {
+                background-color: $wizardColor;
+            }
+
+            .circle {
+                @mixin circle-mixin 17px;
+                border-radius: 10px;
+                background-color: $wizardColor;
+            }
+
+            .step-label {
+                color: $wizardColor;
+            }
+        }
+
+        &.first {
+
+            .connector.left > div:first-child {
+                background-color: transparent;
+                width: $stepContainerPadding;
+            }
+
+        }
+
+        &.last {
+
+            .connector.right {
+
+                & > div {
+                    background-color: transparent;
+                }
+
+                & > div:first-child {
+                    width: calc(100% - $(stepContainerPadding));
+                }
+
+                & > div:last-child {
+                    margin-left: calc(100% - $(stepContainerPadding));
+                    width: $stepContainerPadding;
+                }
+            }
+
+            .connector.left {
+
+                & > div:first-child {
+                    width: calc(50% - 2px);
+                }
+
+                & > div:last-child {
+                    width: calc(100% - 21px);
+                    margin-left: calc($(stepContainerPadding) - 3px)
+                }
+            }
+
+            .circle {
+                @mixin circle-mixin 16px, 3px;
+                border-radius: 13px;
+                border: 3px solid $incompleteConnectorColor;
+                background-color: transparent;
+            }
+
+            .finished-icon {
+                font-size: 16px;
+                color: $white;
+                display: none;
+            }
+
+        }
+
+        &.last.active {
+
+            .circle {
+                background-color: $wizardColor;
+                border-color: $wizardColor;
+            }
+
+            .finished-icon {
+                display: block;
+            }
+
+        }
+
+        &.completed {
+
+            .connector > div {
+                background-color: $wizardColor
+            }
+
+            .step-label {
+                opacity: 0.60;
+                color: $wizardColor;
+            }
+        }
+    }
+
+    .nav-buttons {
+        $height: calc((2 * $connectorOffsetTop) + $connectorHeight);
+        float: left;
+        height: $height;
+        line-height: $height;
+        margin-left: 10px;
+
+        .btn {
+            font-size: 14px;
+        }
+
+        .next-button {
+            margin-left: 3px;
+        }
+
+        .exit-button {
+            margin-left: 10px;
+        }
+    }
+}
+/* Lite */
+@if $theme == lite  {
+    .step-wizard {
+        .step-container.active .connector.left > div,
+        .step-container.completed .connector > div,
+        .step-container.active .circle,
+        .step-container.last.active .circle {
+            background-color: $splunkLiteBlack;
+        }
+        .step-container.last.active .circle {
+            border-color: $splunkLiteBlack;
+        }
+        .step-container.active .step-label,
+        .step-container.completed .step-label {
+            color: $splunkLiteBlack;
+        }
+    }
+}

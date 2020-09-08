@@ -1,0 +1,60 @@
+<%!
+    title = 'App Install'
+    %>
+    <%namespace name="lib" file="//lib.html" import="*"/>
+    <%inherit file="//layout/admin.html" />
+    <%
+    import splunk
+    from splunk.appserver.mrsparkle.lib import util, i18n
+%>
+
+<script language="JavaScript">
+    $(function() {
+        $('.splButton-secondary').click(function() {
+            window.location = ${jsonify(make_url(breadcrumbs[-2][1] if len(breadcrumbs)>1 else state['return_to']))};
+            return false;
+        });
+        $('.splButton-primary').click(function() {
+            window.location = ${jsonify(make_url(['manager', 'appinstall', '_upload'], _qs=dict(state=state.serialize())))};
+            return false;
+        });
+    });
+</script>
+
+
+
+<div class="spl-gdi-wrapper spl-prompt-message-layout"> 
+	<div class="jmFormOptions">
+	    <h2 class="spl-page-hdr spl-icon-attention-md" > 
+	        <span> 
+	            <!-- replace with page title --> 
+	            ${_('App not found')}
+	            <!-- end replace with page title --> 
+	        </span> 
+	    </h2> 
+	    <span class="spl-hr-solid-lite"></span> 
+	    <!-- start prompt message --> 
+	    <form method="GET" action="">
+	    <div class="spl-prompt-message-wrapper"> 
+	        <h3 class="spl-main-description-hdr"> 
+	            ${_('App not listed on SplunkApps')}
+	        </h3> 
+	        <p class="spl-main-description"> 
+	           ${_('The requested app could not be found on SplunkApps.')}<br>
+	           ${_('If you have a copy of the app stored locally, you may upload it by clicking the link below.')}
+	        </p> 
+	    </div> 
+	</div>
+    
+    <!-- Start button bar --> 
+    <div class="jmFormActions"> 
+        <button class="splButton-secondary">
+            <span>${_('Cancel')}</span> 
+        </button> 
+        <button class="splButton-primary">
+            <span>${_('Upload')}</span> 
+        </button> 
+    </div> 
+    </form>
+</div> 
+

@@ -1,0 +1,48 @@
+<%inherit file="//qunit/template.html" />
+
+<%def name="title()">JA Bridge Serializer -- QUnit tests</%def>
+
+<script type="text/javascript" src="/en-US/static/js/ja_bridge.js"></script>
+
+<script language="javascript">
+    // req for the testing
+    Splunk._testHarnessMode = true;
+
+    function test_Serializer() {
+        //number
+        var numbers = [0, 1, 1.0, 1.1, -1, -1.0, -1.1];
+        for(var i=0; i<numbers.length; i++){
+            assertEquals(Splunk.JABridge.Cerealizer.deserialize(Splunk.JABridge.Cerealizer.serialize(numbers[i])), numbers[i]);
+        }
+        //string
+        var strings = ["s", "", " ", "ss", "s s"];
+        for(var i=0; i<strings.length; i++){
+            assertEquals(Splunk.JABridge.Cerealizer.deserialize(Splunk.JABridge.Cerealizer.serialize(strings[i])), strings[i]);
+        }
+        //boolean
+        var bools = [true, false];
+        assertEquals(Splunk.JABridge.Cerealizer.deserialize(Splunk.JABridge.Cerealizer.serialize(true)), true);
+        assertEquals(Splunk.JABridge.Cerealizer.deserialize(Splunk.JABridge.Cerealizer.serialize(false)), false);
+        //array 
+        var arr = [];
+        assertEquals(JSON.stringify(Splunk.JABridge.Cerealizer.deserialize(Splunk.JABridge.Cerealizer.serialize(arr))), JSON.stringify(arr));
+        assertEquals(JSON.stringify(Splunk.JABridge.Cerealizer.deserialize(Splunk.JABridge.Cerealizer.serialize(numbers))), JSON.stringify(numbers));
+        assertEquals(JSON.stringify(Splunk.JABridge.Cerealizer.deserialize(Splunk.JABridge.Cerealizer.serialize(strings))), JSON.stringify(strings));
+        assertEquals(JSON.stringify(Splunk.JABridge.Cerealizer.deserialize(Splunk.JABridge.Cerealizer.serialize(bools))), JSON.stringify(bools));
+        //object
+        assertEquals(JSON.stringify(Splunk.JABridge.Cerealizer.deserialize(Splunk.JABridge.Cerealizer.serialize({}))), JSON.stringify({}));
+        var obj = {
+            numbers: numbers,
+            strings: strings,
+            bools: bools,
+        }
+        assertEquals(JSON.stringify(Splunk.JABridge.Cerealizer.deserialize(Splunk.JABridge.Cerealizer.serialize(obj))), JSON.stringify(obj));
+        var obj2 = {
+            numbers: numbers,
+            strings: strings,
+            bools: bools,
+            obj: obj
+        }
+        assertEquals(JSON.stringify(Splunk.JABridge.Cerealizer.deserialize(Splunk.JABridge.Cerealizer.serialize(obj2))), JSON.stringify(obj2));
+    }
+</script>

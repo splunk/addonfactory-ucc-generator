@@ -1,0 +1,41 @@
+.ResultsActionButtons {
+    padding: 8px 10px;   
+}
+
+.ResultsActionButtons a,
+.ResultsActionButtons .splPipe {
+    margin-left:0px;   
+    margin-right: 20px;
+}
+
+.ResultsActionButtons .exportResultsForm,
+.ResultsActionButtons .shareLinkForm,
+.ResultsActionButtons .savedSearchForm,
+.ResultsActionButtons .splViewEvents,
+.ResultsActionButtons .editButton,
+.ResultsActionButtons .previousRunsLink {
+    display: none;
+}
+.ResultsActionButtons .saveButton span {
+    _margin-bottom:0px !important;  
+    position:relative; 
+}
+.ResultsActionButtons .saveButton span p.splIcon {
+    position: absolute;
+    top:10px;
+    right:5px;
+}
+.resultsActionsMenu ul div.innerMenuWrapper,
+.resultsActionsMenu ul li {
+    width:250px;   
+}
+.resultsActionsMenu ul li {
+    _width: auto;
+}
+.resultsActionsMenu ul li a {
+    width: 230px;
+    *width:auto;   
+}
+.TitleBarSavedSearchPopup .popupContent .savedSearchForm {
+    width:600px;   
+}

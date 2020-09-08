@@ -1,0 +1,445 @@
+/**
+ * home.pcss
+ * styles for home view
+ */
+
+$sidebarColor: #c3c3c3;
+$defaultAppColor: #aaa;
+$addDashboardColor: #777;
+$navBarHeight: 25px;
+$sideBarWidth: 200px;
+$sideBarTitleHeight: 35px;
+
+body {
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.navbar-splunkbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.navbar .brand.active {
+    cursor: default;
+    background: none !important;
+}
+
+.section-home {
+    border-top: none;
+    
+    .apps{
+        position: absolute;
+        top: $navBarHeight;
+        left: 0;
+        bottom: 0;
+        width: $sideBarWidth;
+    }
+    .app-title {
+        padding-left: 20px;
+        padding-top: 2px;
+        height: $sideBarTitleHeight;
+        box-sizing: border-box;
+        color: $textColor;
+        background-color: $sidebarColor;
+        
+        h3 {
+            margin-top: 3px;
+        }
+    }
+    
+    .list-apps {
+        text-align: center;
+    }
+    .scrolling-bar {
+        overflow-y: auto;
+        width: $sideBarWidth;
+        position: absolute;
+        top: $sideBarTitleHeight;
+        left: 0px;
+        right: 0px;
+        bottom: 0px;
+        background-color: $sidebarColor;
+    }
+    .scrolling-bar-dashboard {
+        overflow-y: auto;
+        overflow-x: auto; 
+    }
+    .dashboard {
+        border: 0;
+        float: left;
+        position: absolute;
+        top: $navBarHeight;
+        left: $sideBarWidth;
+        right: 0px;
+        bottom: 0px;
+        background-color: $bodyBackgroundColor;
+        border-left: 1px solid $borderColor;
+    }
+    .dashboard-error {
+        position: absolute;
+        left: 30%;
+        top: 30%;
+        right: 0;
+        height: 0;
+    }
+    .icon-error {
+        display:inline-block;
+    }
+    .app {
+        position: relative;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+        background-color: $defaultAppColor;
+        @mixin clearfix;
+
+        &:first-child {
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        a {
+            color: $white;
+            text-decoration: none;
+            @mixin clearfix;
+            display: block;
+            padding: 20px 10px 20px 10px;
+            position: relative;
+            transition: background-color 0.15s linear;
+            background-color: color($white a(0%));
+            position: relative;
+
+            .drag-handle {
+                position: absolute;
+                left: 4px;
+                top: 4px;
+                width: 8px;
+                bottom: 4px;
+                opacity: 0;
+                background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAJCAYAAAAPU20uAAAAFElEQVQYlWP4TwAwEMJEKRj6VgAAEuPvEVHP/EIAAAAASUVORK5CYII=');
+                transition: opacity 0.15s linear;
+                cursor: more;
+                cursor: ns-resize;
+            }
+
+            &:hover {
+                background-color: color($white a(15%));
+                
+                .drag-handle {
+                    opacity: 0.4;
+                }
+            }
+            
+            
+            &:focus {
+                box-shadow: inset 0 0 5px 2px  rgba(255,255,255,0.6);
+                outline: none;
+            }
+                
+                
+        }
+        .app-update-link {
+            color: color($white a(60%));
+            font-size: 11px;
+            text-transform: uppercase;
+            text-align: center;
+            line-height: 20px;
+            padding: 0;
+            background-color: color($white a(10%));
+            text-decoration: none;
+            margin: -1px 0px;
+            transition: background-color 0.15s linear;
+            
+            &:hover {
+                background-color: color($white a(30%));
+            }
+        }
+        img {
+            height: 36px;
+            width: 36px;
+        }
+    }
+    .app-icon {
+        width: 72px;
+        height: 72px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .add-more-apps {
+        padding-top: 10px;
+        padding-bottom: 35px;
+        .add-more-apps-link {
+            text-decoration: none;
+            padding: 23px 0;
+            border: 2px dashed $white;
+            display: block;
+            margin: 10px 20px;
+            transition: opacity 0.15s linear;
+            opacity: 0.65;
+            
+            &:hover {
+                opacity: 1.0
+            }
+            
+   
+            &:focus {
+                @mixin focus-button;
+            }
+        }
+        
+        svg {
+            display: block;
+            margin: 0 auto;
+      
+        }
+        
+          path {
+              fill: $white;
+          }
+    }
+    .add-more-apps-icon {
+        text-align: center;
+    }
+    .helper {
+        display: inline-block;
+        height: 100%;
+        vertical-align: middle;
+    }
+    .app-icon img {
+        vertical-align: middle;
+    }
+    .app-name {
+        padding-top: 10px;
+        padding-left: 10px;
+        padding-right: 10px;
+        font-size: 14px;
+    }
+    .home-dashboard {
+        height: 100%;
+        min-width: 960px; 
+    }
+} /*  .section-home */
+
+.home-dashboard-empty {
+    padding: 50px 100px; 
+    .alert {
+        text-align: center;
+        font-size: 14px; 
+        i {
+            left: auto;
+            margin-left: -27px;
+        }
+    }
+    
+    a {
+        font-size: 24px;
+        font-weight: 200;
+        display:block;
+        border: 2px dashed $borderColor;
+        padding: 120px 0 80px 0;
+        text-align: center;
+        line-height: 60px;
+        text-decoration: none;
+        background: rgba(255,255,255,0.4);
+        color: color($addDashboardColor a(92%));
+        opacity: 0.8;
+        transition: color 0.1s linear, opacity 0.1s linear, background 0.1s linear;
+        
+        &:hover {
+            opacity: 1;
+            color: $addDashboardColor;
+            background: rgba(255,255,255,0.6);
+        }
+        
+        &:focus {
+            @mixin focus-button;
+        }
+    }
+    
+    svg {
+        display: block;
+        margin: 0 auto  20px auto;
+    }
+    
+    path.stroke {
+        stroke: $addDashboardColor;
+        stroke-width: 3px;
+    }
+    
+    circle, rect, path:not(.stroke) {
+        fill: $addDashboardColor;
+    }
+}
+
+.home-gettingstarted {
+    @mixin clearfix;
+    position: relative;
+    min-width:934px; /*960px minus the padding-right of 26px*/
+    padding: 2px 0 2px 26px;
+    border-bottom: 1px solid $borderColor;
+    background-color: $white;
+    h3 {
+        padding-bottom: 8px;
+    }
+    .close {
+        position: absolute;
+        top: 7px;
+        right: 9px;
+    }
+    .toggle {
+        position: absolute;
+        right: 170px;
+        bottom: -29px;
+        padding: 6px 20px;
+        text-align: center;
+        background: $white;
+        border-bottom-left-radius: $baseBorderRadius;
+        border-bottom-right-radius: $baseBorderRadius;
+        border-left: 1px solid $borderColor;
+        border-bottom: 1px solid $borderColor;
+        border-right: 1px solid $borderColor;
+        color: $textColor;
+        text-decoration: none;
+        
+        &:focus {
+            @mixin focus-button;
+        }
+    }
+}
+.home-gettingstarted-shared-item {
+    width: 240px;
+    max-width: 25%;
+    box-sizing: border-box;
+    text-align: center;
+    padding-bottom: 34px;
+    padding-left: 20px;
+    padding-right: 20px;
+    display: inline-block;
+    white-space: normal;
+    vertical-align: top;
+    
+    .hoverable-area {
+        display: block;
+        padding: 10px 0px 7px 0px;
+        margin-bottom: 3px;
+        position: relative; 
+        color: $splunkGreen;
+        font-size: 14px;
+        text-decoration: none;
+        @mixin clearfix;
+    }
+    
+    svg {
+        display:block;
+        padding-bottom: 12px;
+        margin: 0 auto;
+    }
+
+    .description {
+        font-size: 11px; 
+        
+        a {
+            color: $linkColor; 
+            white-space: nowrap;
+        }
+    }
+}
+
+.mask {
+    position:absolute;
+    top:0;
+    bottom:0;
+    left: 0;
+    right: 0;
+    opacity:0;
+    border-radius: $baseBorderRadius;
+    cursor: pointer;
+    background-color: $splunkGreen;
+    transition: opacity 0.15s linear;
+    &:hover {
+        opacity:0.1;
+    }
+}
+
+.home-gettingstarted-admin, .home-gettingstarted-user {
+   padding: 0 ;
+   margin-left: -20px; 
+   text-align:center;
+   white-space: nowrap;
+   overflow-y:hidden;
+   overflow-x:hidden;
+   @mixin clearfix;
+
+}
+
+.home-dashboard-title {
+    padding-left:20px; 
+    padding-top:10px; 
+
+    h3 {
+        font-weight:normal;
+        font-size: 16px; 
+        margin: 10px 0 0 0 ; 
+    }
+    .dashboard-title {
+        padding-right: 10px;
+    }
+    p {
+        margin: 0px;
+    }
+}
+
+.home-dashboard-shared-dashboardselector-autosuggest {
+     position: relative; 
+     width: 310px;
+     
+     input {
+        width: 318px;
+
+     }
+    
+    .selected {
+        width: 300px; 
+        padding-left:24px; 
+        background: url("/static/img/icon_dashboard.png") no-repeat 7px 6px;
+    } 
+
+    .btn {
+        position: absolute;
+        top: 0px;
+        right: -21px;
+        width: 15px;
+        height: 16px;
+        padding: 4px;
+        margin: 0px;
+    }
+
+    .caret {
+        padding: 0px; 
+    }
+    
+}
+
+.home-dashboard-autosuggest {
+    width: 330px;
+    .truncated {
+        padding: 5px 10px;
+        text-align: center; 
+    }
+
+    .icon-dashboard {
+        margin-right: 3px;
+    }
+    .no-results {
+        line-height: 26px; 
+        text-align: center; 
+        background-color: white; 
+    }
+    ul {
+        max-height:400px;
+    }
+}

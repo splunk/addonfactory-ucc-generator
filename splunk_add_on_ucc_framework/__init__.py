@@ -2,6 +2,7 @@ __version__ = "0.1.0"
 
 import logging
 import os
+from os import system
 import shutil
 import argparse
 import json
@@ -53,6 +54,7 @@ def clean_before_build(args):
 def copy_package_source(args, ta_name):
     logging.warning("Copy package directory " + args.source)
     recursive_overwrite(args.source, os.path.join(outputdir, ta_name))
+
 
 def export_package(args, ta_name):
     logging.warning("Exporting package")
@@ -116,6 +118,19 @@ def install_libs_py2(args, ta_name):
         + lib_dest
     )
 
+    os.system("rm -rf " + lib_dest + "/*.egg-info")
+    os.system("rm -rf " + lib_dest + "/*.dist-info")
+
+
+def install_libs_py3(args, ta_name):
+
+    lib_dest = os.path.join(outputdir, ta_name, "lib/ucc_py3")
+    os.makedirs(lib_dest)
+    os.system(
+        "pip3 install httplib2"
+        + " --no-compile --no-binary :all: --target "
+        + lib_dest
+    )
     os.system("rm -rf " + lib_dest + "/*.egg-info")
     os.system("rm -rf " + lib_dest + "/*.dist-info")
 
@@ -284,6 +299,7 @@ def main():
     copy_package_template(args, ta_name)
     install_libs(args, ta_name)
     install_libs_py2(args, ta_name)
+    install_libs_py3(args, ta_name)
     copy_splunktaucclib(args, ta_name)
 
     shutil.copyfile(
@@ -304,4 +320,32 @@ def main():
     make_modular_alerts(args, ta_name, ta_namespace, schema_content)
     copy_package_source(args, ta_name)
     export_package(args, ta_name)
+
+
+def setup_env():
+    logging.info("Setting up Environment")
+    install_npm_dependencies = "npm install -g bower"
+    os.system(install_npm_dependencies)
+
+
+def generate_static_files():
+    logging.info("Generating Static files")
+    os.chdir(os.path.join(sourcedir, "UCC-UI-lib"))
+    os.system("npm install")
+    os.system("bower install")
+    os.system("npm run build")
+
+
+def migrate_package():
+    logging.info("Exporting generated Package.")
+    src = os.path.join(os.path.join(sourcedir, "UCC-UI-lib", "package"))
+    dest = os.path.join(os.path.join(sourcedir, "package"))
+    os.makedirs(dest)
+    recursive_overwrite(src, dest)
+
+
+def build_ucc():
+    setup_env()
+    generate_static_files()
+    migrate_package()
 

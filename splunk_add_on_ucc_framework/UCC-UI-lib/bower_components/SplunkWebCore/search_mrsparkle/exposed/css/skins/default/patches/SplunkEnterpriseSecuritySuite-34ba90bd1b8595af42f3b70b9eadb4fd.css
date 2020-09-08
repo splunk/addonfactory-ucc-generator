@@ -1,0 +1,39 @@
+/* CSS Patch for ESS 1.1.2 on Splunk 4.3 */
+
+/* Remove duplicate horizontal line around paginator */
+.splView-incident_review div.pageControls {
+	border-bottom-style: hidden;
+}
+
+/* Move paginator back to middle of screen */
+.splView-incident_review .pageControls .Paginator, .splView-incident_review .splView-flashtimeline .Paginator {
+	float: left;
+}
+
+/* Resize search button on all applicable views. */
+button.splButton-primary, button.splButton-secondary, button.splButton-tertiary {
+	height: 24px;
+}
+
+/* Move dropdown input selectors behind any other floating divs, including search help */
+.ui-dropdownchecklist-selector-wrapper {
+	z-index: 0;
+}
+
+/* Fix incomplete border around search time range picker. */
+.splView-search_auditing table.mainSearchControlsTable .TimeRangePicker .timeRangeActivatorWrapper {
+	border-width: 1px 1px 1px 1px;
+}
+
+
+/* Fix justification of links in this view. */
+.splView-index_auditing .ViewRedirectorLink a {
+	float: none;
+}
+
+/* Remove drop shadows around single values in some views - IE, Chrome. */
+.splView-all_indexed_data .SingleValueHolder,
+.splView-ess_security_posture .SingleValueHolder,
+.splView-ess_view_auditing .SingleValueHolder {
+	box-shadow: none;
+}

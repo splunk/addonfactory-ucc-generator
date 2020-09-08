@@ -1,0 +1,262 @@
+<%inherit file="//qunit/template.html" />
+
+<%def name="title()">Search Field -- QUnit tests</%def>
+
+<script type="text/javascript" src="/en-US/static/js/contrib/deprecated/jquery-ui-1.8.5.custom.min.js"></script>
+<script type="text/javascript" src="/en-US/static/js/job.js"></script>
+<script type="text/javascript" src="/en-US/static/js/context.js"></script>
+<script type="text/javascript" src="/en-US/static/js/search.js"></script>
+<script type="text/javascript" src="/en-US/static/js/time_range.js"></script>
+<script type="text/javascript" src="/en-US/static/js/page_status.js"></script>
+<script type="text/javascript" src="/en-US/static/js/textarea_resize.js"></script>
+<script type="text/javascript" src="/en-US/static/js/test_utils.js"></script>
+<script language="javascript">
+    // important to disable the chatty debug that the tests spew.
+    Splunk.Logger.mode.Default = Splunk.Logger.mode.None
+</script>
+<script type="text/javascript" src="/en-US/static/js/init.js"></script>
+
+<!--  Now the base module classes-->
+<script type="text/javascript" src="/en-US/modules/AbstractModule.js"></script>
+<script type="text/javascript" src="/en-US/modules/DispatchingModule.js"></script>
+
+<!--  Now the modules we'll be testing -->
+<script type="text/javascript" src="/en-US/modules/search/FieldSearch.js"></script>
+<script type="text/javascript" src="/en-US/modules/search/SearchBar.js"></script>
+<script type="text/javascript" src="/en-US/modules/search/RadioButtonSearch.js"></script>
+
+<script type="text/javascript">
+    Splunk._testHarnessMode = true;
+    // utility function used in a couple tests.
+    function generateFieldSearch(fieldName, fieldValue) {
+        var container = $("<fieldset><label>" + fieldName + "</label><input type='text' name='" + fieldName + "'/></fieldset>");
+        if (fieldValue) $("input",container).attr('value',fieldValue);
+        container.appendTo(document.body);
+        return new Splunk.Module.FieldSearch(container);
+    }
+    function generateSearchBar() {
+        var container = $('<div id="SearchBar_0_0_0" s:q="*" class="SplunkModule SearchBar"><form action="/en-US/search" method="get"><fieldset><input type="button" value="" class="cancelButton"/><input type="button" value="" class="stopButton"/><input type="submit" value="" class="searchButton"/><div class="searchFieldWrapper"><div style="margin: 0pt; overflow: hidden; position: relative; width: auto; height: 23px; top: 0px; left: 0px; padding-bottom: 6px;" class="ui-wrapper ui-resizable-autohide"><textarea name="q" class="ui-resizable" style="margin: 0pt; position: static; display: block; height: 21px; width: 100%;">*</textarea><div style="overflow: hidden; position: absolute; -moz-user-select: none; display: none;" class="ui-resizable-handle ui-resizable-s" unselectable="on"/></div></div></fieldset></form></div>');
+        //container.appendTo(document.body);
+        return new Splunk.Module.SearchBar(container);
+    }
+    var nonMatchingIntentions = [{
+        "name" : 'addterm', 
+        "arg" : {"host" : "baz"}
+    },
+    {
+        "name" : 'negateterm', 
+        "arg" : {"host" : "bar"}
+    },
+    {
+        "name" : 'toggleterm', 
+        "arg" : {"sourcetype" : "bar"}
+    },
+    {
+        "name" : 'addterm', 
+        "arg" : "random_string"
+    }];
+
+
+    /////////////////////////////
+    // Intentions that this module doesnt care about, should pass up and through the module to its parents.  
+    /////////////////////////////
+    function test_FieldSearch_handleContextFromChild_negatives() {
+        var moduleUnderTest = generateFieldSearch("sourcetype");
+        var ignoredIntentions = [
+            {"name":"toggleterm", "arg": {"_host" : "localhost"}},
+            {"name":"toggleterm", "arg": {"host_" : "localhost"}},
+            {"name":"toggleterm", "arg": "fred"},
+            {"name":"wildlyDifferent", "arg" : {"host" : "localhost"}},
+            {"name":"wildlyDifferent", "arg" : ""}
+        ];
+        var mockedParentModule = new Splunk.Module();
+        mockedParentModule.applyContext = function() {this.__wasCalled=true;};
+        mockedParentModule.addChild(moduleUnderTest);
+
+        mockedChildModule = new Splunk.Module();
+        moduleUnderTest.addChild(mockedChildModule);
+
+        for (var i=0; i<ignoredIntentions.length; i++) {
+            mockedParentModule.__wasCalled = false;
+            var testContext = generateContextWithIntention(ignoredIntentions[i]);
+            mockedChildModule.passContextToParent(testContext);
+            assertEquals("there should be nothing in the input field.","",$("input",moduleUnderTest.container).attr("value"));
+            assertEquals("the mocked parent's apply method should have been called.",true,mockedParentModule.__wasCalled);
+        }
+    }
+    /////////////////////////////
+    // test the intentions that this module is supposed to absorb. 
+    /////////////////////////////
+    function test_FieldSearch_handleContextFromChild_positives() {
+        var moduleUnderTest = generateFieldSearch("sourcetype");
+        moduleUnderTest.markPageLoadComplete();
+        var absorbedIntentions = [];
+        absorbedIntentions.push({"name":"addterm", "arg" : {"sourcetype" : "twiki"}});
+        absorbedIntentions.push({"name":"addterm", "arg" : {"sourcetype" : "i has a space"}});
+
+        for (var i=0; i<absorbedIntentions.length; i++) {
+            var firstContext = new Splunk.Context();
+            var firstSearch  = new Splunk.Search("*");
+            firstSearch.addIntention(absorbedIntentions[i]);
+            firstContext.set("search", firstSearch);
+
+            moduleUnderTest.applyContext(firstContext);
+            assertEquals("there should be the given value in the input field.",absorbedIntentions[i]["arg"]["sourcetype"],$("input",moduleUnderTest.container).attr("value"));
+
+            var secondContext = new Splunk.Context();
+            var secondSearch  = new Splunk.Search("*");
+            secondSearch.addIntention(absorbedIntentions[i]);
+            secondContext.set("search", secondSearch);
+
+            moduleUnderTest.applyContext(secondContext)
+            
+            assertEquals("the second identical intention absorption should have removed the term.","",$("input",moduleUnderTest.container).attr("value"));
+        }
+    }
+    /////////////////////////////
+    // test that we get the correct searchTerms out.
+    /////////////////////////////
+    function test_FieldSearch_getIntentionArg() {
+        var moduleUnderTest = generateFieldSearch("sourcetype","baz");
+        var intention = moduleUnderTest.getIntentionArg();
+        assertEquals('getIntentionArg should return an intention with a "sourcetype" key', true, intention.hasOwnProperty("sourcetype"));
+        assertEquals('getIntentionArg should return an intention with a "baz" value for the "sourcetype" key', "baz", intention["sourcetype"]);
+        var moduleUnderTest = generateFieldSearch("sourcetype");
+        assertEquals('when the field is empty, getIntentionArg should return false', false, moduleUnderTest.getIntentionArg());
+    }
+    function test_FieldSearch_getModifiedContext_positive() {
+        var moduleUnderTest = generateFieldSearch("sourcetype","baz");
+        var mockContext = addMockContext(moduleUnderTest);
+
+        moduleUnderTest.onContextChange();
+        var modifiedSearch = moduleUnderTest.getModifiedContext().get("search")
+        // TODO - do not access underscore properties directly.  Not even in test code.  Probably my bad. --ncm
+        var intentions = modifiedSearch._intentions;
+        
+        assertEquals("getModifiedContext should return a context with 1 intention", 1, intentions.length)        ;
+        assertEquals("getModifiedContext should return a context with an addterm intention", 'addterm', intentions[0]["name"]);
+        assertEquals("getModifiedContext should return a context with an addterm intention, with the correct term", 'baz', intentions[0]["arg"]["sourcetype"]);
+    }
+
+    function test_FieldSearch_getModifiedContext_negative() {
+        var moduleUnderTest = generateFieldSearch("sourcetype");
+        var context = addMockContext(moduleUnderTest, "cannon_fodder", "somebody redispatched us which would be REALLY wrong");
+
+        moduleUnderTest.onContextChange();
+        var receivedSearch = moduleUnderTest.getModifiedContext().get("search");
+        assertEquals("getModifiedContext for this module should return a context with the same search", 'foo bar', receivedSearch.toString());
+        assertEquals("since we have null input, the search coming out of getModifiedContext should still have the same searchId.", "cannon_fodder", receivedSearch.job.getSearchId());
+    }
+
+    function test_FieldSearch_applyContext_positive() {
+        var moduleUnderTest = generateFieldSearch("sourcetype","foo");
+        
+        var oneIntentionContext = generateContextWithIntention({
+            "name" : 'addterm', 
+            "arg" : {"sourcetype" : "baz"}
+        });
+        
+        // SANITY CHECKING.
+        var modifiedSearch = moduleUnderTest.getModifiedContext().get("search");
+        assertEquals("our context should have 1 intention", 1, oneIntentionContext.get("search")._intentions.length);
+        assertEquals("getModifiedContext should return a context with an intention with the old value.", 'foo', modifiedSearch._intentions[0]["arg"]["sourcetype"]);
+
+        // test that applyContext strips out the intention.
+        moduleUnderTest.applyContext(oneIntentionContext);
+        modifiedSearch2 = oneIntentionContext.get("search");
+        assertEquals("after applyContext with a matching context, returned context should have 0 intentions", 0, modifiedSearch2._intentions.length);
+        assertEquals("after applyContext the module should have set its ui state properly", "baz", moduleUnderTest.input.attr('value'));
+        
+        // test that getModifiedContext now returns the same intention that was absorbed.
+        var modifiedContext = moduleUnderTest.getModifiedContext();
+        assertEquals("when no baseContext is set, getModifiedContext should still return a context with 1 intention", 1, modifiedSearch._intentions.length);
+        // test a case where there is a baseContext.
+        var someContext = addMockContext(moduleUnderTest);
+        moduleUnderTest.onContextChange();
+        
+        modifiedSearch = moduleUnderTest.getModifiedContext().get("search");
+        assertEquals("getModifiedContext should return a context whose search has an addterm intention", 'addterm', modifiedSearch._intentions[0]["name"]);
+        assertEquals("getModifiedContext should return a context whose search's addterm intention arg has a 'sourcetype' key. (phew)", true, modifiedSearch._intentions[0]["arg"].hasOwnProperty("sourcetype"));
+        assertEquals("getModifiedContext should return a context whose search's addterm intention has the correct term", 'baz', modifiedSearch._intentions[0]["arg"]["sourcetype"]);
+    }
+  
+    function test_FieldSearch_applyContext_negative() {
+        var moduleUnderTest = generateFieldSearch("sourcetype","foo");
+        for (var i=0; i<nonMatchingIntentions.length; i++) {
+            // test that applyContext does NOT strip out the intention.
+            var nonMatchingContext = generateContextWithIntention(nonMatchingIntentions[i]);
+            moduleUnderTest.applyContext(nonMatchingContext);
+            var searchInstanceAfterApply = nonMatchingContext.get("search");
+            assertEquals("after applyContext with a non-matching context, the context should still have 1 intention", 1, searchInstanceAfterApply._intentions.length);
+            
+            assertEquals("after a failed applyContext the module should have a null ui state", "", moduleUnderTest.input.attr('value'));
+            
+            var modifiedSearch = moduleUnderTest.getModifiedContext().get("search");
+            assertEquals("after a failed applyContext getModifiedContext should add no intentions",  0, modifiedSearch._intentions.length);
+        }
+    }
+    
+    function simulate_SearchBar_applyContext(isResurrected) {
+        // to test this meaningfully I have to actually turn off testHarnessMode, and instead do some clever surgery
+        Splunk._testHarnessMode = false;
+        var moduleUnderTest = generateSearchBar();
+        if (!isResurrected) {
+            moduleUnderTest.markPageLoadComplete();
+            moduleUnderTest.setLoadState(Splunk.util.moduleLoadStates.HAS_CONTEXT);
+        }
+
+        // create a mock child so we can verify calls to pushContext without altering the moduleUnderTest.
+        var childModule = generateFieldSearch();
+        childModule.__wasCalled = false;
+        childModule.pushContextToChildren = function() {
+            this.__wasCalled = true;
+        }
+        moduleUnderTest.addChild(childModule);
+
+        var myIntention = {
+            "name" : 'addterm', 
+            "arg" : {"sourcetype" : "foo"}
+        }
+        var workerContext = generateContextWithIntention(myIntention);
+        var workerSearch = workerContext.get("search");
+        // take all that brainbending web 2.0 asynchronous code and beat it with the 
+        // mock stick until it thinks it's 1999. 
+        workerSearch.absorbIntentions = function(onSuccess, onFailure) {
+            this.parserCallback({"search" : "sourcetype=foo"}, onSuccess, onFailure);          
+        }
+        // NOTE: we have to defeat the clone-on-set and clone-on-get behaviours or they'll bleach away our mocked methods.
+        workerSearch.clone = function() {return this};
+        
+        workerContext.set("search", workerSearch);
+        assertEquals("sanity check pushContextToChildren should not have been called", false, childModule.__wasCalled);
+        
+        moduleUnderTest.applyContext(workerContext);
+        if (isResurrected) {    
+            assertEquals("since this is simulating permalink/sid resurrection, pushContextToChildren should not have been called", false, childModule.__wasCalled);
+        } else {
+            assertEquals("since this is simulating a click interaction, SearchBar.pushContextToChildren should have been called. ", true, childModule.__wasCalled);
+        }
+        assertEquals("When we simulated the click the term should have been put into the textarea", "sourcetype=foo", $("textarea", moduleUnderTest.container).val());
+        
+        // turn the mode back on.
+        Splunk._testHarnessMode = true;
+    }
+    /////////////////////////////
+    // verifies that the framework methods used to add/remove searchterms from the SearchBar 
+    // function correctly. Specifically that the module makes a call to the server to absorb the 
+    // intention and get a new search string, that it writes that searchstring back into its
+    // textarea, and that it then calls pushContextToChildren (which will automatically redispatch the search
+    // as necessary).  
+    /////////////////////////////
+    function test_SearchBar_applyContext_click_behaviour() {
+        simulate_SearchBar_applyContext(false);
+    }
+    /////////////////////////////
+    // verifies that the SearchBar is able to take decomposed searches in their contexts 
+    // and flatten them into a single searchstring.  
+    // This is used when pages with permalinks or sids are loaded.
+    /////////////////////////////
+    function test_SearchBar_applyContext_permalink_loading() {
+        simulate_SearchBar_applyContext(true);
+    }
+</script>

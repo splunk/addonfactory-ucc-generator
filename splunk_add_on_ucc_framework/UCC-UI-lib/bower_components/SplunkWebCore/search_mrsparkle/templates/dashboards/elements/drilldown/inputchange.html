@@ -1,0 +1,42 @@
+<%page args="input,url=str" />\
+% if hasattr(input, 'inputChange') and len(input.inputChange) > 0:
+
+        ${input.id}.on("valueChange", function(e) {
+<% cond = 'if' %>\
+% for condition in input.inputChange:
+    % if condition.attr == 'match':
+            ${cond} (EventHandler.evaluateCondition(${condition.value|json_decode}, e.data)) {
+    % elif condition.value == '*':
+        % if cond != 'if':
+            } else {
+        % else:
+            if (e.${condition.attr} !== undefined) {
+        % endif
+    % else:
+            ${cond} (e.${condition.attr} === ${condition.value|json_decode}) {
+    % endif
+    % for item in condition.actions:
+        % if item.type == 'link':
+                var url = TokenUtils.replaceTokenNames(${url(str(item.link))|json_decode}, _.extend(submittedTokenModel.toJSON(), e.data), TokenUtils.getEscaper('url'));
+            % if item.target is None:
+                utils.redirect(url);
+            % else:
+                utils.redirect(url, false, ${item.target|json_decode});
+            % endif
+        % elif item.type == 'settoken':
+                EventHandler.setToken(${item.name|json_decode}, ${item.template|json_decode}, ${json_decode(dict((k,v) for k,v in dict(prefix=item.prefix, suffix=item.suffix, delimiter=item.delimiter).items() if v is not None))|n}, e.data);
+        % elif item.type == 'unsettoken':
+                EventHandler.unsetToken(${item.name|json_decode});
+        % elif item.type == 'eval':
+                EventHandler.evalToken(${item.name|json_decode}, ${item.expr|json_decode}, e.data);
+        % endif
+    % endfor
+<%
+    cond = '} else if'
+    if condition.value == '*':
+        break
+%>\
+% endfor
+            }
+        });
+% endif

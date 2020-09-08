@@ -1,0 +1,43 @@
+/*  App Bar */
+/*  ========== */
+/*  Note, the menus that open from the app bar are in a separate file navs-app */
+
+
+.view {
+    margin: 0;
+    line-height: 40px;
+    font-weight:200;
+    font-size:18px;
+    height: 40px;
+    font-weight: 200;
+    overflow: hidden;
+    float: right;
+
+}
+
+.link {
+    color: $white;
+    display: block;
+    padding: 0 20px;
+    position: relative;
+    text-decoration: none;
+
+    &:hover {
+        color: $white;
+        display: block;
+        text-decoration: none;
+        background-color: transparent; /*  fallback */
+        background: rgba(255,255,255,0.07);
+    }
+
+    &:focus {
+        box-shadow: inset 0 0 8px 0 rgba(255,255,255,0.07);
+        background: rgba(255,255,255,0.11);
+        text-decoration: none;
+    }
+}
+
+.image {
+    max-height: 40px;
+    display:block;
+}

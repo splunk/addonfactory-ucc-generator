@@ -1,0 +1,15 @@
+<tr class='more-info'>
+    <td class="expands"></td>
+    <td colspan="6">
+        <dl class="list-dotted">
+            <dt><%= _('Generation id').t() %></dt>
+            <dd><%-generationModel.entry.content.get('generation_id')%></dd>
+            <dt><%= _('Peers').t() %></dt>
+            <dd><%-numPeers%></dd>
+            <% if (generationModel.entry.content.get('generation_error')) { %>
+                <dt><%= _('Generation error').t() %></dt>
+                <dd><%-generationModel.entry.content.get('generation_error')%></dd>
+            <% } %>
+        </dl>
+    </td>
+</tr>

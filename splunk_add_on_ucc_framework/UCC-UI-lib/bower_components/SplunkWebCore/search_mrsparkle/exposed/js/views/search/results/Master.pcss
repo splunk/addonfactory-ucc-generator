@@ -1,0 +1,202 @@
+/*  Splunk: Component: Search results container */
+/*  =========================================== */
+
+
+/* search results container
+    State: getting started, waiting for results, no results
+    Sub-Components: ???
+
+
+    FIXME: missing markup
+
+*/
+.search-results {
+
+    .search-results-actions {
+    	margin-right: 20px;
+    }
+
+    .table-disabled {
+    	position: relative;
+    }
+
+    .table-disabled .sorts th::after {
+    	display: none;
+    }
+
+    .table-disabled .table-disabled-screen {
+    	position: absolute;
+    	top: 0;
+    	bottom: 0;
+    	left: 0;
+    	right: 0;
+    	background-color: $grayLightMedium;
+    	opacity: 0.50;
+    }
+
+    .tab-content {
+    	padding-top: 20px; /*  FIXME: why do we set this then override it with negative margins ;_; */
+        background-color: $white;
+        min-height: 400px;
+    }
+    .field-tab {
+        margin-right: 20px;
+    }
+
+    .none {
+        padding:10px 20px;
+    }
+
+
+    .row {
+        @mixin clearfix;
+        width: 100%;
+        margin-left: 0; /*  override BS -20px on row */
+    }
+
+    .no-stats-wrapper {
+    	padding-bottom: 20px;
+
+    	.alert-info {
+    		margin-left: 20px;
+    	}
+    }
+
+    .no-stats {
+    	table-layout: fixed;
+    	margin-bottom: 20px;
+    	text-align: center;
+    	padding-top: 30px;
+
+    	h3 {
+    		color: $splunkGreen;
+    		margin-bottom: 0;
+
+    	}
+
+    	.no-stats-column {
+    		vertical-align: top;
+    		display: inline-block;
+    		width: 200px;
+    	}
+
+    	.no-stats-link {
+	    	display: block;
+	    	color: $textColor;
+	    	text-decoration: none;
+	    	border-radius:8px;
+	    	padding: 15px 0 15px 0;
+	    	margin-bottom: 5px;
+    	}
+
+    	.no-stats-column:not(:last-child) {
+    		margin-right: 120px;
+    	}
+
+    	svg {
+    		.circle-main, path, rect, polygon, line {
+	    		stroke:$splunkGreen;
+	    		stroke-width:2;
+	    		stroke-linejoin:round;
+	    		fill:none;
+    		}
+
+    		.stroke-thin {
+    			stroke-width:1;
+    		}
+
+    		.fill {
+    			fill:$splunkGreen;
+    		}
+
+    		.fill-inverse {
+    			fill:$white;
+    		}
+
+    		.stroke-none {
+    			stroke-width:0;
+    		}
+
+    		rect.stroke-thin {
+    			shape-rendering : crispEdges;
+    		}
+    	}
+
+    	a.no-stats-link:hover {
+    		background:color($splunkGreen l(+50%));
+    		.circle-main, .fill-inverse {
+    			fill:color($splunkGreen l(+50%));
+    		}
+
+    	}
+
+
+    	/*
+    	a.no-stats-link:hover {
+	    	.circle-main {
+	    		fill:$splunkGreen;
+	    	}
+
+	    	path, rect, polygon, line {
+	    		stroke:$white;
+	    	}
+
+	    	.fill {
+	    		fill:$white;
+	    	}
+
+	    	.fill-inverse {
+	    		fill:$splunkGreen;
+	    	}
+    	}
+
+    	*/
+
+    }
+
+
+    .help-stats-commands {
+        margin-left: 666px;
+    }
+
+    ul.unstyled {
+        font-family: monospace;
+        margin-left: 20px;
+    }
+    /*  TODO: make this more standard */
+    h3 {
+        color: $textColor;
+        margin-bottom: 10px;
+    }
+}
+
+/* Lite */
+@if $theme == lite {
+    .search-results {
+        .no-stats {
+            h3 {
+                color: $splunkLiteOrange;
+            }
+            svg {
+                .circle-main,
+                path,
+                rect,
+                polygon,
+                line {
+                    stroke: $splunkLiteOrange;
+                }
+                .fill {
+                    fill:$splunkLiteOrange;
+                }
+            }
+            a.no-stats-link:hover {
+            	background: color($splunkLiteOrange l(+39%));
+            	.circle-main, .fill-inverse {
+            		fill: color($splunkLiteOrange l(+39%));
+            	}
+
+            }
+        }
+
+    }
+}

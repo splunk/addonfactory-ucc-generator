@@ -1,0 +1,176 @@
+.authenticationusers-table {
+	.toolbar-left > * {
+		float: left;
+	}
+
+	.toolbar-right > * {
+		float: right;
+	}
+
+	.page-label {
+		margin-left: 12px;
+		margin-right: 12px;
+	}
+
+}
+
+/*  Lite */
+/*  ------------------------------- */
+@if $theme == lite {
+	.authenticationusers-tiles {
+		background-color: $grayLighter;
+		color: $textColor;
+	}
+
+	.section-header {
+		padding-left: 20px;
+		padding-right: 30px;
+
+		.add-new {
+			margin-top: 20px;
+		}
+	}
+
+	.authenticationusers-tiles-usertilelist {
+		position: relative;
+
+		.authenticationusers-tiles-scrollbutton {
+			position: absolute;
+			top: 0px;
+			bottom: 0px;
+			width: 60px;
+			text-align: center;
+
+			.scroll-arrow {
+				margin-top: 62px;
+			}
+		}
+
+		.authenticationusers-tiles-scrollbutton.scroll-button-left {
+			left: 0px;
+		}
+
+		.authenticationusers-tiles-scrollbutton.scroll-button-right {
+			right: 0px;
+		}
+
+		.tile-list-wrapper {
+			overflow: hidden;
+			margin: 0px 60px;
+
+			.tile-list-container {
+				position: relative;
+				overflow-x: scroll;
+				white-space: nowrap;
+				margin: 0px -30px -30px -30px;
+				padding-bottom: 30px;
+
+				.highlighter {
+					position: absolute;
+					bottom: 0px;
+					width: 120px;
+					height: 2px;
+					margin: 0px 30px 30px 30px;
+					background-color: $grayDark;
+				}
+			}
+		}
+	}
+
+	.authenticationusers-tiles-usertile {
+		display: inline-block;
+		vertical-align: top;
+		margin: 20px 30px 10px 30px;
+		cursor: pointer;
+		&.active {
+			cursor: default;
+		}
+
+		.tile-shape {
+			width: 120px;
+			height: 120px;
+			border-radius: 2px;
+			background-color: $grayDark;
+			color: $white;
+		}
+
+		.tile-icon {
+			display: inline-block;
+			width: 120px;
+			line-height: 120px;
+			font-size: 50px;
+			text-align: center;
+			vertical-align: middle;
+		}
+
+		.tile-name {
+			width: 120px;
+			margin: 25px 0px 0px 0px;
+			font-size: 18px;
+			text-align: center;
+			white-space: normal;
+		}
+	}
+
+	.authenticationusers-tiles-emptytile {
+		display: inline-block;
+		vertical-align: top;
+		margin: 20px 30px 10px 30px;
+		cursor: pointer;
+
+		.tile-shape {
+			width: 120px;
+			height: 120px;
+			background-image: url("./empty_tile_bg_small.png");
+			background-position: center center;
+			background-repeat: no-repeat;
+		}
+
+		.tile-name {
+			width: 120px;
+			margin: 25px 0px 0px 0px;
+			font-size: 18px;
+			text-align: center;
+			white-space: normal;
+			color: $textGray;
+		}
+	}
+
+	.authenticationusers-tiles-userform {
+		padding: 25px 60px 35px 60px;
+		background-color: $white;
+
+		.detail-table {
+			.detail-messages {
+				padding: 8px 10px;
+
+				.alert {
+					margin: 0px;
+				}
+			}
+
+			.detail-name {
+				padding: 8px 20px;
+				text-align: right;
+			}
+
+			.detail-value {
+				padding: 8px 10px;
+			}
+
+			.detail-pair-timezone {
+				.dropdown-toggle {
+					min-width: 213px;
+				}
+			}
+
+			.detail-buttons {
+				padding: 16px 6px;
+
+				.btn {
+					margin: 0px 4px;
+				}
+			}
+		}
+	}
+}

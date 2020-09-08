@@ -1,0 +1,240 @@
+<%inherit file="//qunit/template.html" />
+
+<%def name="title()">Splunk.Job -- QUnit tests</%def>
+
+<script type="text/javascript" src="/en-US/static/js/job.js"></script>
+<script type="text/javascript" src="/en-US/static/js/time_range.js"></script>
+<script type="text/javascript" src="/en-US/static/js/jobber.js"></script>
+<script type="text/javascript" src="/en-US/static/js/page_status.js"></script>
+
+<script language="javascript">
+    // important to disable the chatty debug that the tests spew.
+    Splunk.Logger.mode.Default = Splunk.Logger.mode.None
+</script>
+<script type="text/javascript" src="/en-US/static/js/init.js"></script>
+
+
+<script type="text/javascript">
+
+
+    // jow that there's no parsing, this is probably not useful.  
+    // TODO: Delete it if it doesnt fail once in the next few weeks.
+    function test_initialize() {
+        var values = [
+            ["foo",    "bar", "foo bar"],
+            ["foo | baz", "bar", "foo bar | baz"]
+        ];
+        for (var i=0; i<values.length; i++) {
+            var search = values[i][0];
+            var job = new Splunk.Job(search);
+            assertEquals("getSearch should return the same string we gave it", job.getSearch(), values[i][0]);
+        }
+    }
+    
+    function test_cancel() {
+        // build up
+        var eventName = 'jobCanceled';
+        
+        window.__jobCallback = 0;
+        window.__jobSId = '';
+        
+        $(document).bind(eventName, function(event, sid) {
+            window.__jobCallback += 1;
+            window.__jobSId = sid;
+        });
+        
+        var job = jobStateTestSetup();
+        job.cancel();
+
+        assertTrue("Job's isCanceled flag should be set to true", job.isCanceled());
+        assertEquals("jobCanceled event should only have been called once.", 1, window.__jobCallback);
+        assertEquals("SId passed to the jobCanceled event should be that of the job canceled.", 1234, window.__jobSId);
+        
+        // teardown
+        jobStateTestTeardown();
+        window.__jobCallback = null;
+        window.__jobSId = null;
+    }
+    
+    function jobStateTestSetup() {
+        // setup some globals for later use
+        window.__jobAction = '';
+        window.__postCounter = 0;
+        window.__jQueryPost = null;
+        
+        var job = new Splunk.Job('*');
+        job._sid = 1234;
+        
+        // mock for job._callJobEndpoint
+        var tmp_callJobEndpoint = job._callJobEndpoint;
+        job._callJobEndpoint = function(action, callback) {
+            window.__jobAction = action;
+            tmp_callJobEndpoint.call(job, action, callback);
+        };
+
+        // mock for $.post
+        window.__jQueryPost = $.ajax;
+        window.__postCounter = 0;
+        $.ajax = function(options) {
+            window.__postCounter += 1;
+            if(options['success']) options['success']({success:true});
+        };
+
+        return job;
+    }
+    
+    function jobStateTestTeardown() {
+        // teardown
+        $.post = window.__jQueryPost;
+        window.__jQueryPost  = null;
+        window.__jobAction   = null;
+        window.__postCounter = null;
+    }
+    
+    function test_pause() {
+        var job = jobStateTestSetup();
+        
+        job._isPaused = true;
+        assertFalse("#pause should not be able to pause a paused job.", job.pause());
+        
+        job._isPaused = false;
+        job._isDone = true;
+        assertFalse("#pause should not be able to pause a finished job.", job.pause());
+        job._isDone = false;
+        
+        job.pause();
+    
+        assertEquals("#pause should make a pause request to splunkd", 'pause', window.__jobAction);
+        assertEquals("Appserver should only be called once for setting pause", 1, window.__postCounter);        
+        
+        jobStateTestTeardown();
+    }
+    
+    function test_unpause() {
+        var job = jobStateTestSetup();
+        assertFalse("Should not be able to unpause a job that is not paused.", job.unpause());
+        
+        job._isPaused = true;
+        job._isDone = true;
+        assertFalse("Should not be able to unpause a job that is done.", job.unpause());
+        
+        job._isDone = false;
+        job.unpause();
+        assertEquals("#unpause should make a pause request to the appserver.", 'unpause', window.__jobAction);
+        assertEquals("Appserver should only be called once for setting finalize.", 1, window.__postCounter);
+        
+        jobStateTestTeardown();
+    }
+    
+    function test_finalize() {
+        var job = jobStateTestSetup();
+    
+        job.finalize();
+    
+        assertEquals("#finalize should make a pause request to splunkd", 'finalize', window.__jobAction);
+        assertEquals("Appserver should only be called once for setting finalize", 1, window.__postCounter);        
+        
+        jobStateTestTeardown();
+    }
+
+    function test_set_ttl() {
+        var job = jobStateTestSetup();
+
+        job.setTTL(12345);
+
+        assertEquals("#ttl should make a ttl request to splunkd", 'ttl', window.__jobAction);
+        assertEquals("Appserver should only be called once for setting ttl", 1, window.__postCounter);
+
+        jobStateTestTeardown();
+    }
+    
+    function test_build_job_from_sid_with_job_present() {
+
+        var primitive = {
+            'sid': '12321',
+            'eventCount': 10,
+            'resultCount': 20,
+            'scanCount': 30,
+            'doneProgress': 0.4,
+            'eventAvailableCount': 10,
+            'isDone': 1
+        };
+
+        var jobber = Splunk.Globals['Jobber'];
+        var job = new Splunk.Job('*');
+        job.updateByTicketValues(primitive);
+        jobber.addJob(job);
+
+        window.__successCount = 0;
+        window.__failureCount = 0;
+
+        var cleanUp = function() {
+            assertEquals('onSuccess should be called once.', 1, window.__successCount);
+            assertEquals('onFailure should not be called.', 0, window.__failureCount);
+            window.__successCount = null;
+            window.__failureCount = null;
+        };
+
+        var onSuccess = function(sameJob) {
+            window.__successCount++;
+            assert('When a job is already available in jobber, jobber should just return a reference to that job.', sameJob == job);
+            cleanUp();
+        }
+
+        var onFailure = function() {
+            window.__failureCount++;
+            cleanUp();
+        }
+
+        Splunk.Job.buildJobFromSID(primitive['sid'], onSuccess, onFailure);
+    }
+
+    function test_build_job_from_sid_waits_for_jobber_to_update() {
+        var primitive = {
+            'sid': '123',
+            'eventCount': 10,
+            'resultCount': 20,
+            'scanCount': 30,
+            'doneProgress': 0.4,
+            'eventAvailableCount': 10,
+            'isDone': 1
+        };
+
+        var jobber = Splunk.Globals['Jobber'];
+        jobber.stop();
+        jobber.ticketsLoaded = false;
+        jobber._jobManifest = {};
+
+        window.__successCount = 0;
+        window.__failureCount = 0;
+
+        assert("Jobber's tickets should be set as not loaded.", jobber.ticketsLoaded == false);
+
+        var cleanUp = function() {
+            assertEquals('onSuccess should be called once.', 1, window.__successCount);
+            assertEquals('onFailure should not be called.', 0, window.__failureCount);
+            window.__successCount = null;
+            window.__failureCount = null;
+        };
+
+        var onSuccess = function(job) {
+            window.__successCount++;
+            //for (var prop in primitive) {
+            //    assertEquals('Property ' + prop + ' should be the same in the job and the ticket.', primitive[prop], job['_'+prop]);
+            //}
+            cleanUp();
+        }
+
+        var onFailure = function() {
+            window.__failureCount++;
+            cleanUp();
+        }
+
+        Splunk.Job.buildJobFromSID(primitive['sid'], onSuccess, onFailure);
+
+        assertEquals('onSuccess and onFailure should not be called yet.', 0, (window.__successCount+ window.__failureCount));
+
+        $(document).trigger('jobberTicketsRefreshed');
+    }
+
+</script>

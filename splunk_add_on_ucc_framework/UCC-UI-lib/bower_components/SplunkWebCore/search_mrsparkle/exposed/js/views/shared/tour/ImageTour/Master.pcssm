@@ -1,0 +1,35 @@
+.view {
+    composes: view from '../../ModalLocalClassNames.pcssm';
+    width: 960px;
+    margin-left: -480px;
+}
+
+.body {
+    max-height: calc(100vh);
+}
+.bodyPadded {
+    composes: body;
+    padding: 20px;
+}
+.bodyScrolling {
+    composes: body;
+    overflow-y: auto;
+}
+.bodyScrollingPadded {
+    composes: bodyPadded;
+    overflow-y: auto;
+}
+
+.backdrop {
+    composes: backdrop from '../../ModalLocalClassNames.pcssm';
+    background-color: $grayDark;
+
+    &[data-modal-state=open] {
+        opacity: 1;
+    }
+}
+
+.closeWrapper {
+    composes: closeWrapper from '../../ModalLocalClassNames.pcssm';
+    top: 3px;
+}

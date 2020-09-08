@@ -1,0 +1,208 @@
+/* General */
+
+
+.info .remove {
+	background-color: #235171;
+}
+
+.splHeader-primary {
+	border-top-width: 0;
+}
+
+.splMenu-secondary, .splMenu-secondary a {
+	color: #333;
+}
+
+.layoutCell {
+	border-left-width: 0;
+}
+
+
+a.splButton-tertiary,
+a.splButton-primary,
+.splButton-tertiary,
+.splButton-primary,
+#loading {
+    background-color: #2f76a7;
+	border-color: #1e5a83;
+}
+
+a.splButton-tertiary:hover {
+	background-color: #2B6D9A;
+}
+
+a.splButton-disabled,
+a.splButton-disabled:hover {
+    background-color: #bbb;
+	border-color: #999;
+}
+
+
+/* Search Bar */
+
+
+div.withSidebar div.oneColRow {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+input.searchButton {
+	border-color: #1e5a83;
+	margin-top: 0;
+}
+.layoutCell input.searchButton {
+	background-position: -52px center;
+}
+
+.SearchBar textarea {
+	box-shadow: none;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	background-color: #fff;
+}
+
+.SearchBar .assistantWrapperEnabled {
+	border-top-color: #1e5a83;
+}
+
+.SearchBar h4, .intro code {
+	color: #666;
+}
+
+table.mainSearchControlsTable .SearchBar .searchFieldWrapper {
+	border-color: #1e5a83;
+	background-color: #2F76A7;
+}
+
+.SearchBar .searchFieldWrapperInner {
+	border-color: #2F76A7;
+}
+
+table.mainSearchControlsTable {
+	border-collapse:collapse;
+	border-spacing: 0;
+}
+
+table.mainSearchControlsTable input.searchButton {
+	border-left-color: #76a7c9;
+}
+
+table.mainSearchControlsTable .TimeRangePicker .timeRangeActivatorWrapper {
+	border-color: #1e5a83;
+	background-color: #2F76A7;
+	display: block;
+}
+
+table.mainSearchControlsTable .TimeRangePicker .timeRangeActivatorWrapper:hover {
+	background-color: #2B6D9A;
+}
+
+
+/* Job Status */
+
+.splView-flashtimeline .JobStatus, .JobStatus {
+	background-color: #F7F7F7;
+	padding-left: 10px;
+}
+
+.JobStatus .output .running h2,
+.JobStatus .output .runningReport h2,
+.JobStatus .output .finalizing h2 {
+    background: url(/static/img/skins/default/patches/loader_blue_on_grey.gif) left no-repeat;
+}
+
+.JobStatus .output .complete h2 {
+	background-position: left 5px;
+	line-height: 28px;
+}
+
+/* Timeline */
+
+div.FlashTimeline {
+	background-color: #fff;
+	margin-top: 0;
+}
+
+div.FlashTimeline .controlLinks {
+	margin-left: 0;
+	margin-right: 0;
+}
+
+
+/* Results */
+.resultsArea .sidebar {
+	margin-left: 0;
+	margin-right: 0;
+}
+.resultsArea .sidebar {
+	background-color: #F7F7F7;
+	border-top-width: 0;
+}
+.resultsArea .sidebar h4 {
+	font-size: 12px;
+}
+
+.DisableRequiredFieldsButton {
+	background-color: #F7F7F7;	
+}
+
+.splView-flashtimeline .resultsArea {
+	background-color: #fff;
+}
+
+.splView-flashtimeline .ResultsHeader .splHeader-primary {
+	background-color: #F7F7F7;
+	border-top-width: 1px;
+}
+
+.resultsArea, .SplunkModule.ResultsHeader {
+	margin-top: 0;
+}
+
+.FieldPicker {
+	margin-bottom: 0;
+}
+
+.pageControls {
+	background-color: fff;
+}
+
+/* Other Views */
+
+
+.ResultsActionButtons {
+	background-color: #F7F7F7;	
+}
+
+.reportBuilder .graphArea,
+.reportBuilder .resultsArea,
+.reportBuilder .reportThirdPanel,
+.reportBuilder .equalHeightRow {
+    padding: 0px;
+    margin: 0px 10px;
+}
+
+.splView-flashtimeline .graphArea,
+.splView-flashtimeline .splSearchControls-inline,
+.splView-flashtimeline .resultsArea {
+    padding: 0px;
+}
+
+
+.splView-compare_searches .print,
+.splView-compare_searches .save,
+.splView-compare_searches .create,
+.splView-search_two_timeranges .print,
+.splView-search_two_timeranges .save,
+.splView-search_two_timeranges .create,
+.splView-report_two_timeranges .print,
+.splView-report_two_timeranges .save,
+.splView-report_two_timeranges .create {
+	display: none;
+}
+
+.splView-compare_searches .nextSteps, 
+.splView-search_two_timeranges .nextSteps {
+	padding-right: 5px;
+}
+

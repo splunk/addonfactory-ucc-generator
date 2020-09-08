@@ -1,0 +1,9 @@
+{
+    "name": "addon_template",
+    "main": "",
+    "authors": [],
+    "dependencies": {
+        "SplunkWebCore": "=6.5.1612",
+        "lodash": "4.16.4"
+    }
+}

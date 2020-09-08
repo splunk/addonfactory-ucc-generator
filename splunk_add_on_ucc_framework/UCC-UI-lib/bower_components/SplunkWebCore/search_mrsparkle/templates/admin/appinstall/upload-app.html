@@ -1,0 +1,79 @@
+<%!
+    title = 'App Install'
+%>
+<%namespace name="lib" file="//lib.html" import="*"/>
+<%namespace name="helpers" file="//admin/_helpers.html"/>
+<%inherit file="//layout/admin.html" />
+<%
+    import splunk
+    from splunk.appserver.mrsparkle.lib import util, i18n
+%>
+
+% if error:
+    <%helpers:message content="${error}" level="error"/>
+% endif
+
+<script language="JavaScript">
+    $(function() {
+        $('#installform').submit(function() {
+            $('button').attr('disabled', 'disabled');
+            $('.splButton-primary').text(${_('Processing...')|jsonify});
+            return true;
+        });
+        $('.splButton-secondary').click(function() {
+            window.location = ${jsonify(make_url(breadcrumbs[-2][1] if len(breadcrumbs)>1 else state['return_to']))};
+            return false;
+        });
+    });
+</script>
+
+<div class="spl-gdi-wrapper spl-prompt-message-layout"> 
+    <h2 class="spl-page-hdr spl-no-icon-no-padding" > 
+        <span> ${_('Upload an app')} </span> 
+    </h2> 
+	    
+	<div class="jmFormOptions">
+	    <span class="spl-hr-solid-lite"></span> 
+	    <!-- start prompt message --> 
+	    <form id="installform" method="post" action="${make_url(['/manager/appinstall/_upload'])}" enctype="multipart/form-data">
+	    <input type="hidden" name="state" value="${state.serialize()|h}">
+        ${csrf_hidden_input()}
+	    <div class="spl-prompt-message-wrapper"> 
+<!--
+	        <h3 class="spl-main-description-hdr"> 
+	            ${_('Upload an app')}
+	        </h3> 
+-->
+	        <p class="spl-main-description spl-dotted-border-bottom"> 
+	           ${_('If you have a .spl or .tar.gz app file to install, you can upload it using this form.')}<br/> 
+	        </p> 
+	        <p class="spl-main-description spl-dotted-border-bottom"> 
+	            ${_('You can replace an existing app via the Splunk CLI.')} <a href="${generateSelfHelpLink('appinstall.upload.existing')}" target="_blank" class="spl-icon-external-link-xsm" title="${_('Splunk help')}">${_("Learn more.")}</a>
+	        </p>
+	        <div class="adminFormItem"> 
+	            <label for="appfile"> 
+	                ${_('File')}
+	            </label> 
+	            <input type="file" value="" size="30" name="appfile" id="appfile" /> 
+	        </div> 
+            <div style="padding: 0px 0px 10px;"> 
+	            <input type="checkbox" name="force" value="0" id="force" onclick="$(this).is(':checked') ? $(this).val(1) : $(this).val(0);" /> 
+                <label for="force">${_('Upgrade app. Checking this will overwrite the app if it already exists.')}</label> 
+	        </div>             
+	    </div> 
+	</div>
+	
+    <!-- Start button bar --> 
+    <div class="jmFormActions splClearfix"> 
+        <button type="submit" class="splButton-primary"> 
+            <span>${_('Upload')}</span> 
+        </button> 
+        % if state['return_to']:
+            <a class="splButton-secondary" href="#">
+                <span>${_('Cancel')}</span> 
+            </a> 
+        % endif
+    </div> 
+    </form>
+</div> 
+

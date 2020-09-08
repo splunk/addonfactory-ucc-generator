@@ -1,0 +1,53 @@
+<%inherit file="//layout/view.html" />
+<%namespace name="lib" file="//lib.html" import="*" />
+<%namespace name="helper" file="//admin/_helpers.html" import="header" />
+<%isEmbedded = splunk.util.normalizeBoolean(cherrypy.request.params.get('embedded'))%>
+<%! 
+from splunk.appserver.mrsparkle.lib import util
+isLite = util.isLite()
+%>
+
+## Load the nav module(s) if required
+%if not isEmbedded:
+    % if isLite:
+        <div class="appHeaderWrapper">
+            <%call expr="parent.buildSimplePanelContainer(modules, 'liteHeader')"></%call>
+        </div>
+    % elif 'appHeader' in modules:
+        <%call expr="parent.buildSimplePanelContainer(modules, 'messaging')"></%call>
+        <div class="appHeaderWrapper">
+            <%call expr="parent.buildSimplePanelContainer(modules, 'appHeader')"></%call>
+        </div>
+    % endif
+    <%helper:header namespace="${namespace}"/>
+% endif
+
+<div class="adminContent">
+    ${next.body()} 
+</div>
+
+<%def name="title()">
+    ${_('Settings | Splunk') | h} 
+</%def>
+
+<%def name="css()">
+    <% parent.css() %>
+    <% coreCSSFiles = [
+        '/static/css/view.css',
+        '/modules/nav/ManagerBar.css',
+        '/modules/messaging/Message.css',
+        '/modules/paginator/paginator.css',
+        '/static/css/admin.css',
+        '/static/css/print.css',
+        '/static/css/codemirror.css'
+    ]
+    %> 
+
+    <%lib:stylesheet_tags files="${coreCSSFiles}" />
+</%def>
+
+## js needs to be included in head of page due to admin architecture for re-use.
+<%def name="head()">
+    <%lib:script_tags files="${['/static/js/contrib/jquery.cookie.js', '/static/js/splunk.jquery.csrf_protection.js']}" />
+    <% parent.head(enable_viewport=False) %>
+</%def>

@@ -1,0 +1,95 @@
+<%!
+    title = 'Splunk Admin Server Control'
+%>
+<%namespace name="lib" file="//lib.html" import="*"/>
+<%namespace name="helpers" file="_helpers.html"/>
+<%inherit file="//layout/admin.html" />
+<%
+import splunk
+from splunk.appserver.mrsparkle.lib import util, i18n
+sessionId = cherrypy.session.id
+from splunk.appserver.mrsparkle.lib.msg_pool import MsgPoolMgr, UI_MSG_POOL
+
+isLite = util.isLite()
+isCloud = util.isCloud()
+%>
+
+<style type="text/css">
+    td.input_name {
+        width: 70%;
+    }
+</style>
+
+<script type="text/javascript">
+    function enableLWF() {
+        doEnable = confirm("${_('CAUTION: This will turn off Splunk Web.\\nYou will have to use the CLI to access this Splunk instance.\\nDo you want to proceed?')}");
+        if (doEnable) {
+            document.actionControl.submit();
+        } else {
+            return false;
+        }
+    }
+</script>
+
+<div class="dataInputsWrapper forwardReceive">
+<!--     <div class="forwardReceiveHelp">${_('Set up forwarding and receiving between two or more Splunk instances.')}</div> -->
+    % if (not isLite) and (can_edit_tcp_defaults or can_edit_tcp_server):
+    <div class="fieldsetWrapper">
+        <h1>${_('Forward data')}</h1>
+        <div class="dataInputsDesc">${_('Set up forwarding between two or more Splunk instances.')}</div>
+        
+        <table class="splTable">
+            <tr>
+                <th></th>
+                <th>${_('Actions')}</th>
+            </tr>
+            % if can_edit_tcp_defaults:
+            <tr>
+                <td class="input_name">
+                    <a href="${make_url(['manager', namespace, 'data', 'outputs', 'tcp', 'default', 'tcpout'], _qs=dict(action='edit'))}">${_('Forwarding defaults')}</a>
+                </td>
+                <td></td>
+            </tr>
+            % endif
+            % if can_edit_tcp_server:
+            <tr>
+                <td class="input_name">
+                    <a href="${make_url(['manager', namespace, 'data', 'outputs', 'tcp', 'server'])}">${_('Configure forwarding')}</a>
+                </td>
+                <td>
+                    <a href="${make_url(['manager', namespace, 'data', 'outputs', 'tcp', 'server', '_new'], _qs=dict(action='edit'))}">${_('Add new')}</a>
+                </td>
+            </tr>
+            % endif
+        </table>
+    </div>
+    % endif
+    
+    % if can_edit_tcp_inputs:
+    <div class="fieldsetWrapper">
+        % if not isLite:
+            <h1>${_('Receive data')}</h1>
+            <div class="dataInputsDesc">${_('Configure this instance to receive data forwarded from other instances.')}</div>
+        % else:
+            <h1>${_('Receive Splunk Data')}</h1>
+            <div class="dataInputsDesc">${_('Set up a receiving port to get data from Splunk Forwarders.')}</div>
+        % endif
+            
+        <table class="splTable">
+            <tr>
+                <th></th>
+                <th>${_('Actions')}</th>
+            </tr>
+            <tr>
+                <td class="input_name">
+                    <a href="${make_url(['manager', namespace, 'data', 'inputs', 'tcp', 'cooked'])}">${_('Configure receiving')}</a>
+                </td>
+                <td>
+                    <a href="${make_url(['manager', namespace, 'data', 'inputs', 'tcp', 'cooked', '_new'], _qs=dict(action='edit'))}">${_('Add new')}</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    % endif
+
+</div>

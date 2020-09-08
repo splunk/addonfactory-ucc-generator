@@ -1,0 +1,16 @@
+<%!
+import logging 
+%>
+<%page args="module" />
+<%namespace name="helpers" file="//module/_helpers.html" />
+<div class="splHeader splHeader-primary">
+<h2>${VIEW["label"]|h}<em><!-- Slot for saved search name. --></em></h2>
+% if (module.get('showActionsMenu') == 'True'):
+<span class="splPipe">|</span>
+<a href="#" class="actionsMenu">${_("Actions")} <span class="splIcon splIcon-triangle-4-s dropDown">${_("Dropdown")}</span></a>
+  <%helpers:export className="exportPopupContainer" />
+  <%helpers:share />
+  <div class="savedSearchForm"><div class="loading">${_("Loading...")}</div></div>
+  <div class="pdfPopup"></div>
+% endif
+</div>

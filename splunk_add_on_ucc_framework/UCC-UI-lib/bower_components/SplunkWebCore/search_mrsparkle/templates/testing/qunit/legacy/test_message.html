@@ -1,0 +1,219 @@
+<%inherit file="//qunit/template.html" />
+
+<%def name="title()">Message -- QUnit tests</%def>
+
+<script type="text/javascript" src="/en-US/static/js/job.js"></script>
+<script type="text/javascript" src="/en-US/static/js/time_range.js"></script>
+<script type="text/javascript" src="/en-US/static/js/context.js"></script>
+<script type="text/javascript" src="/en-US/static/js/search.js"></script>
+<script type="text/javascript" src="/en-US/static/js/page_status.js"></script>
+<script type="text/javascript" src="/en-US/static/js/init.js"></script>
+
+<!--  Now the base module classes-->
+<script type="text/javascript" src="/en-US/modules/AbstractModule.js"></script>
+<script type="text/javascript" src="/en-US/modules/DispatchingModule.js"></script>
+
+<!--  Now the modules we'll be testing -->
+<script type="text/javascript" src="/en-US/modules/messaging/Message.js"></script>
+
+<script language="javascript">
+    // req for the testing
+    Splunk._testHarnessMode = true;
+    var logger = Splunk.Logger.getLogger("message.html");
+    var $messageHolder;
+
+    /** 
+     * setup function that returns an instance of the SoftWrap class
+     * @return Splunk.Module.Message
+     */ 
+    function generateMessage(maxSize, clearOnJobDispatch, filter) {
+        var container = $("<div id='MessageFixture'/>")
+        container.append($('<ol class="MessageList"></ol>'));
+        Splunk.namespace("Splunk.Module.loadParams.MessageFixture");
+        Splunk.Module.loadParams.MessageFixture = {
+            maxSize: maxSize,
+            clearOnJobDispatch: clearOnJobDispatch,
+            filter: filter
+        };
+        container.appendTo(document.body);
+        var moduleUnderTest = new Splunk.Module.Message(container);
+        var context = new Splunk.Context();
+        var search  = new Splunk.Search("foo bar");
+        context.set("search", search);
+        moduleUnderTest.baseContext = context;
+
+        moduleUnderTest.onContextChange();
+        $messageHolder = $('#MessageFixture');
+        return moduleUnderTest;
+    }
+    var mockMessages = [
+        {level:"info", content:"This is a message1!"},
+        {level:"info", content:"This is a message2!"},
+        {level:"info", content:"This is a message3!"},
+        {level:"error", content:"This is a message4!"},
+        {level:"info", content:"This is a message5!"}
+    ];
+
+    function getMockJob() {
+        var job = new Splunk.Job("foo bar");
+        job.setSearchId('i am a search id');
+        return job;
+    }
+    
+    function doAssert(liNum, messageIndex) {
+   		assertEquals($("li:eq("+liNum+")", $messageHolder).find("div:eq(0)").text(), mockMessages[messageIndex].content);
+   	}
+    
+    
+    // here you put any setup code you want to run before each test function.
+    function setUp() {
+        
+    }
+    // here you put any tearDown code you want to run after each test.
+    function tearDown() {
+        $("#MessageFixture").remove();
+    }
+
+    
+    /** 
+     * Message test.
+     */
+    function test_single_message() {
+        var moduleUnderTest = generateMessage(5, true, "*");
+        moduleUnderTest.unshift(mockMessages[0]);
+        assertEquals(mockMessages[0].content, $("li", $messageHolder).find("div:eq(0)").text());
+        assertTrue($("li", $messageHolder).hasClass(mockMessages[0].level));
+   }
+
+   function test_multiple_messages() {
+        var moduleUnderTest = generateMessage(5, true, "*");
+        
+        moduleUnderTest.unshift(mockMessages[0], mockMessages[1], mockMessages[2], mockMessages[3], mockMessages[4]);
+        
+        // verify we only show the first three
+        assertEquals(3, $("li.message", $messageHolder).length);
+        
+        // verify expand
+        moduleUnderTest.onShowAll();
+        assertEquals(5, $("li.message", $messageHolder).length);
+        
+        doAssert(0, 0);
+        doAssert(1, 1);
+        doAssert(2, 2);
+        doAssert(3, 3);
+        doAssert(4, 4);
+        
+        //verify clear()
+        moduleUnderTest.clear();
+        assertEquals(0, $("li.message", $messageHolder).length);
+        
+    }
+
+    //Remove with exclusion test
+    function test_remove_with_exclusion() {
+        var moduleUnderTest = generateMessage(5, true, "*");
+        moduleUnderTest.unshift(mockMessages[0], mockMessages[1], mockMessages[2], mockMessages[3], mockMessages[4]);
+        moduleUnderTest.clear(['info']);
+        
+        moduleUnderTest.onShowAll();
+        
+        doAssert(0, 0);
+        doAssert(1, 1);
+        doAssert(2, 2);
+        doAssert(3, 4);
+        
+    }
+
+    //flushOnJobDispatch (true) test
+    function test_flushOnJobDispatch_true() {
+        var moduleUnderTest = generateMessage(5, true, "*");
+        moduleUnderTest.unshift(mockMessages[0], mockMessages[1], mockMessages[2], mockMessages[3], mockMessages[4]);
+        
+        $(document).trigger("jobDispatched", [getMockJob()]);
+        assertEquals($("li.message", $messageHolder).length, 0);
+    }
+
+    //flushOnJobDispatch (false) test        
+    function test_flushOnJobDispatch_false() {
+        var moduleUnderTest = generateMessage(5, false, "*");
+        moduleUnderTest.unshift(mockMessages[0], mockMessages[1], mockMessages[2], mockMessages[3], mockMessages[4]);
+        $(document).trigger("jobDispatched", [getMockJob()]);
+        moduleUnderTest.onShowAll();
+        
+        assertEquals($("li.message", $messageHolder).length, 5);
+    }
+
+    //Dupe test under limit
+    function test_dupe_under_limit() {
+        var moduleUnderTest = generateMessage(4, false, "*");
+        moduleUnderTest.unshift(mockMessages[0], mockMessages[0], mockMessages[1], mockMessages[2], mockMessages[3]);
+        moduleUnderTest.onShowAll();
+        
+        assertEquals($("li.message", $messageHolder).length, 4); 
+        
+        doAssert(0,0);
+        doAssert(1,1);
+        doAssert(2,2);
+        doAssert(3,3);
+        
+    }
+
+    //Dupe test over limit
+    function test_dupe_over_limit() {
+        var moduleUnderTest = generateMessage(3, false, "*");
+        moduleUnderTest.unshift(mockMessages[0], mockMessages[0], mockMessages[1], mockMessages[2], mockMessages[3]);
+        
+        doAssert(0,0);
+        doAssert(1,1);
+        doAssert(2,2);
+        
+    }
+    
+    //Dupe test under limit re-order 1                 
+    function test_dupe_under_limit_reorder_1() {    
+        var moduleUnderTest = generateMessage(4, false, "*");
+        moduleUnderTest.unshift(mockMessages[0], mockMessages[1], mockMessages[2], mockMessages[3], mockMessages[0]);
+        moduleUnderTest.onShowAll();
+        
+        assertEquals($("li.message", $messageHolder).length, 4);
+        
+        doAssert(0,0);
+        doAssert(1,1);
+        doAssert(2,2);
+        doAssert(3,3);
+    }
+    
+    //Dupe test under limit re-order 2               
+    function test_dupe_under_limit_reorder_2() {
+        var moduleUnderTest = generateMessage(4, false, "*");
+        moduleUnderTest.unshift(mockMessages[0], mockMessages[1], mockMessages[0], mockMessages[2], mockMessages[3]);
+		moduleUnderTest.onShowAll();
+        
+        assertEquals($("li.message", $messageHolder).length, 4);
+        
+        doAssert(0,0);
+        doAssert(1,1);
+        doAssert(2,2);
+        doAssert(3,3);
+    }
+    
+    function test_wiki_formatting() {
+        var moduleUnderTest = generateMessage(4, false, "*");
+        assertEquals('<a href="http://www.google.com">Google Search</a>', moduleUnderTest.getWikiTranform("[http://www.google.com Google Search]"));
+        assertEquals('<a href="/en-US/manager/settings">Edit server settings</a>', moduleUnderTest.getWikiTranform("[[/manager/settings|Edit server settings]]"));
+        assertEquals('<a href="http://www.google.com" target="_blank">Google Search</a>', moduleUnderTest.getWikiTranform("[!http://www.google.com Google Search]"));
+        assertEquals('<a href="/en-US/manager/settings"target="_blank">Edit server settings</a>', moduleUnderTest.getWikiTranform("[[!/manager/settings|Edit server settings]]"));
+    }
+
+    //check control message handling specifically clear
+    function test_control_message_clearing() {        
+        var controlMessage = {level:"info", content:"CLEAR", control:true};
+        var moduleUnderTest = generateMessage(4, false, "*");
+        moduleUnderTest.unshift(mockMessages[0], mockMessages[1], controlMessage, mockMessages[2], mockMessages[3]);
+        assertEquals($("li.message", $messageHolder).length, 2);
+        
+        doAssert(0,0);
+        doAssert(1,1);
+        
+    }
+</script>

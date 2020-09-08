@@ -1,0 +1,17 @@
+diff --git a/web/search_mrsparkle/exposed/js/contrib/deprecated/jquery-ui-1.9.0.js b/web/search_mrsparkle/exposed/js/contrib/deprecated/jquery-ui-1.9.0.js
+index 8864efb..aaa3234 100644
+--- a/web/search_mrsparkle/exposed/js/contrib/deprecated/jquery-ui-1.9.0.js
++++ b/web/search_mrsparkle/exposed/js/contrib/deprecated/jquery-ui-1.9.0.js
+@@ -14446,7 +14446,11 @@ $.widget( "ui.tooltip", {
+        version: "1.9.0",
+        options: {
+                content: function() {
+-                       return $( this ).attr( "title" );
++                       // support: IE<9, Opera in jQuery <1.7
++                       // .text() can't accept undefined, so coerce to a string
++                       var title = $( this ).attr( "title" ) || "";
++                       // Escape title, since we're going from an attribute to raw HTML
++                       return $( "<a>" ).text( title ).html();
+                },
+                hide: true,
+                items: "[title]",

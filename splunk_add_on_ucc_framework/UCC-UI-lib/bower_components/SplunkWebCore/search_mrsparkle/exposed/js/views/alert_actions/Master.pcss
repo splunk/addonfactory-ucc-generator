@@ -1,0 +1,81 @@
+.alertactions-caption {
+  padding: 3px 0 4px 0;
+  border-top: 1px solid $grayLightMedium;
+  .table-caption-inner {
+    text-align: left;
+    padding-left: 20px;
+  }
+  .msg {
+    display: inline-block;
+    padding: 5px 5px 5px 0;
+  }
+  .count-control {
+    display: inline-block;
+    padding-top: 5px;
+    &.hidden {
+      display: none;
+    }
+    .shared-controls-syntheticselectcontrol {
+      display: inline-block;
+      padding-top: 2px;
+      margin-right: 5px;
+    }
+  }
+  .search-query-control {
+    display: inline-block;
+    .search-query {
+      width: 206px;
+    }
+  }
+  .loading-indicator {
+    display: inline-block;
+    padding-top: 5px;
+    &.hidden {
+      display: none;
+    }
+    .shared-waitspinner {
+      display: inline-block;
+      margin-top: 6px;
+    }
+  }
+}
+
+.alertactions-table-tablerow .title {
+  img {
+    width: 24px;
+    height: 24px;
+    float: left;
+  }
+  .action-description {
+    color: $textGray;
+    margin: 0 0 0 30px;
+    font-size: 0.85em;
+  }
+  .action-name {
+    display: block;
+    margin-left: 30px;
+  }
+}
+
+.alertactions-title p {
+  margin: 0;
+}
+
+.alertactions-table {
+  table {
+    width: 100%;
+  }
+  .col-app { width: 157px; }
+  .app { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .col-sharing { width: 115px; }
+  .col-status { width: 115px; }
+  .col-usage { width: 110px; }
+  .col-log { width: 110px; }
+  .col-setup { width: 120px; }
+}
+
+@media all and (max-width: 1024px) {
+  .alertactions-table {
+    .col-app { width: 90px; }
+  }
+}

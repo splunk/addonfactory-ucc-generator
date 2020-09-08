@@ -1,0 +1,132 @@
+<%inherit file="/layout/wizard.html"/>
+<%namespace file="/lib.html" import="csrf_hidden_input, manager_save_search_link, wizard_cancel_delete, wizard_errors"/>
+<div class="content alertStep3">
+    <%include file="_steps.html" args="step=3"/>
+    <form method="post" action="${make_url(['alertswizard', app, 'step3', 'update']) | h}">
+        ${wizard_errors(header=_('Your alert actions could not be saved.'), errors=saved_search.errors)}
+        ${csrf_hidden_input()}
+        <input type="hidden" name="id" value="${saved_search.id | h}"/>
+        <table>
+            <tbody>
+                <tr>
+                    <td class="col1"><label for="send_email_enable">${_('Send email')}</label></td>
+                    <td class="col2 sendEmail">
+                        <input type="checkbox" class="typeCheckbox" name="action.email.enabled" value="1" id="send_email_enable"${' checked="checked"' if saved_search.action.email.enabled else ''}/>
+                        <label for="send_email_enable">${_('Enable')}</label>
+                        <div class="indent emailEnabled disabled">
+                            <ul>
+                                <li>
+                                    <label class="hiddenLabel" for="emailSubject">${_('Email Subject')}</label>
+                                    <input type="text" name="action.email.subject" value="${saved_search.action.email.subject or '' | h}" class="emailSubject" id="emailSubject" placeholder="${_('Email subject')}"/>
+                                </li>
+                                <li>
+                                    <label class="hiddenLabel" for="emailTo">${_('Comma or semi-colon separated list of email addresses')}</label>
+                                    <textarea name="action.email.to" placeholder="${_('Comma or semi-colon separated list of email addresses')}" id="emailTo">${saved_search.action.email.to or '' | h }</textarea>
+                                </li>
+                                <li class="note">
+                                    ${_('<em>To send email you must set a valid MTA in <a href="%s" class="spl-icon-external-link-xsm" target="_blank">Email settings</a>.</em>') % generateSelfHelpLink('learnmore.alert.email')}
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="typeCheckbox" id="email_results"${' checked="checked"' if email_results_type is not None else ''}/>
+                                    <label for="email_results">${_('Include search results:')}</label>
+                                    <select name="email_results_type" style="width:75px;">
+                                        % if saved_search.action.email.format not in ['csv', 'inline', 'pdf']:
+                                            <option value="${saved_search.action.email.format}" selected="selected">${saved_search.action.email.format}</option>
+                                        % endif
+                                        <option value="csv"${' selected="selected"'if email_results_type=='csv' else ''}>${_('as CSV')}</option>
+                                        <option value="inline"${' selected="selected"'if email_results_type=='inline' else ''}>${_('inline')}</option>
+                                        <option value="pdf"${' selected="selected"'if email_results_type=='pdf' else ''}>${_('as PDF')}</option>
+                                    </select>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1"><label for="rss">${_('Add to RSS')}</label></td>
+                    <td class="col2 rss">
+                        <input type="checkbox" class="typeCheckbox" name="action.rss.enabled" value="1" id="rss"${' checked="checked"' if saved_search.action.rss.enabled else ''}/>
+                        <label for="rss">${_('Enable')}</label>
+                        <div class="indent">
+                            <em class="note">${_('RSS link displays after alert is created.')}</em>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1"><label for="enable_script">${_('Run a script')}</label></td>
+                    <td class="col2 runScript">
+                        <p>
+                            <input type="checkbox" class="typeCheckbox" name="action.script.enabled" value="1" id="enable_script"${' checked="checked"' if saved_search.action.script.enabled else ''}/>
+                            <label for="enable_script">${_('Enable')}</label>
+                        </p>
+                        <div class="indent">
+                            <label for="script">${_('$SPLUNK_HOME/bin/scripts/')}</label>
+                            <input type="text" name="action.script.filename" id="script" value="${saved_search.action.script.filename or '' | h}" placeholder="${_('Script filename')}"/>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1"><span class="orphanLabel">${_('Tracking')}</span></td>
+                    <td class="col2">
+                        <input type="hidden" name="controller_action" value="update"/>
+                        <input type="checkbox" class="typeCheckbox" name="alert.track" id="alert_track"${'checked="checked"' if saved_search.alert.track else ''}/>
+                        <label for="alert_track">${_('List  in<a href="%s" class="spl-icon-external-link-xsm" onclick="Splunk.window.openAerts(this.href); return false;">Triggered Alerts</a>') % make_url(['alerts', app])}</label> 
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+<ul class="buttons splClearfix">
+    <li class="left">${wizard_cancel_delete(make_url(['alertswizard', app, 'delete']), saved_search.id)}</li>
+    <li class="right"><button class="splButton-primary" type="submit" onclick="$(document.forms[0]).trigger('submit');"><span>${_('Finish &#187;')}</span></button></li>
+    <li class="right"><a href="${make_url(['alertswizard', app, 'step2'], _qs=dict(id=saved_search.id)) | h}" class="splButton-secondary"><span>${_('&#171; Back')}</span></a></li>
+</ul> 
+<script type="text/javascript">
+(function(){
+    //form behavior
+    //include results
+    var emailResults = $("#email_results");
+    var emailInclude = $(".emailEnabled select");
+    emailResults.change(function(){
+        if(emailResults.is(":checked")){
+            emailInclude.prop('disabled', false);
+        }else{
+            emailInclude.prop('disabled', true);
+        }
+    }).trigger("change");
+    //send email
+    var emailEnable = $("#send_email_enable");
+    var emailFields = $(".emailEnabled input, .emailEnabled textarea, .emailEnabled select");
+    var emailOptions = $(".emailEnabled");
+    function emailEnableHandler(){
+        if(emailEnable.is(":checked")){
+            emailOptions.prop("disabled", false);
+            emailFields.each(function(){
+                var emailField = $(this);
+                if(emailField.hasClass("disabled")){
+                    return true;
+                }
+                emailField.prop("disabled", false);
+                //trigger change on include search results observer.
+                emailResults.trigger("change");
+            });
+        }else{
+            emailFields.prop("disabled", true);
+            emailOptions.addClass("disabled");
+        }
+    }
+    emailEnableHandler();
+    emailEnable.bind('click', emailEnableHandler);//onchange is not guaranteed to fire on ie's due to focus blur requirement
+    //script
+    var enableScript = $("#enable_script");
+    var script = $("#script");
+    enableScript.change(function(){
+        if(enableScript.is(":checked")){
+            script.prop("disabled", false);
+        }else{
+            script.prop("disabled", true);
+        }
+    }).trigger("change");
+})()
+</script>

@@ -1,0 +1,106 @@
+{
+    "links": {
+        "create": "/servicesNS/admin/search/datamodel/model/_new",
+        "_reload": "/servicesNS/admin/search/datamodel/model/_reload",
+        "_acl": "/servicesNS/admin/search/datamodel/model/_acl"
+    },
+    "origin": "https://localhost:8089/servicesNS/admin/search/datamodel/model",
+    "updated": "2016-06-03T11:47:11-07:00",
+    "generator": {
+        "build": "946790c872a25de14de695fc624e143263fabe47",
+        "version": "20160603"
+    },
+    "entry": [
+        {
+            "name": "_new",
+            "id": "https://localhost:8089/servicesNS/admin/search/datamodel/model/_new",
+            "updated": "2016-06-03T11:47:11-07:00",
+            "links": {
+                "alternate": "/servicesNS/admin/search/datamodel/model/_new",
+                "list": "/servicesNS/admin/search/datamodel/model/_new",
+                "_reload": "/servicesNS/admin/search/datamodel/model/_new/_reload",
+                "edit": "/servicesNS/admin/search/datamodel/model/_new",
+                "remove": "/servicesNS/admin/search/datamodel/model/_new",
+                "move": "/servicesNS/admin/search/datamodel/model/_new/move"
+            },
+            "author": "admin",
+            "acl": {
+                "app": "search",
+                "can_change_perms": true,
+                "can_list": true,
+                "can_share_app": true,
+                "can_share_global": true,
+                "can_share_user": true,
+                "can_write": true,
+                "modifiable": true,
+                "owner": "admin",
+                "perms": {
+                    "read": [
+                        "*"
+                    ],
+                    "write": [
+                        "*"
+                    ]
+                },
+                "removable": true,
+                "sharing": "user"
+            },
+            "fields": {
+                "required": [
+                    "name"
+                ],
+                "optional": [
+                    "acceleration",
+                    "acceleration.backfill_time",
+                    "acceleration.cron_schedule",
+                    "acceleration.earliest_time",
+                    "acceleration.hunk.compression_codec",
+                    "acceleration.hunk.dfs_block_size",
+                    "acceleration.hunk.file_format",
+                    "acceleration.manual_rebuilds",
+                    "acceleration.max_concurrent",
+                    "acceleration.max_time",
+                    "acceleration.schedule_priority",
+                    "dataset.description",
+                    "concise",
+                    "dataset.commands",
+                    "dataset.fields",
+                    "dataset.page.dataset.diversity",
+                    "dataset.page.table.currentCommand",
+                    "dataset.type",
+                    "description",
+                    "dataset.display.sample_ratio",
+                    "dataset.display.datasummary.earliestTime",
+                    "dataset.display.datasummary.latestTime",
+                    "dataset.display.mode",
+                    "provisional",
+                    "search",
+                    "displayName"
+                ],
+                "wildcard": []
+            },
+            "content": {
+                "acceleration": "{\"enabled\":false,\"earliest_time\":\"\",\"cron_schedule\":\"*/5 * * * *\",\"max_time\":3600,\"backfill_time\":\"\",\"manual_rebuilds\":false,\"max_concurrent\":2,\"schedule_priority\":\"default\",\"hunk.file_format\":\"\",\"hunk.dfs_block_size\":0,\"hunk.compression_codec\":\"\"}",
+                "dataset.display.sample_ratio": "1",
+                "dataset.description": "",
+                "dataset.commands": "",
+                "dataset.fields": "",
+                "dataset.type": "datamodel",
+                "dataset.display.diversity": "latest",
+                "dataset.display.currentCommand": 0,
+                "dataset.display.datasummary.earliestTime": "",
+                "dataset.display.datasummary.latestTime": "",
+                "dataset.display.mode": "table",
+                "eai:acl": null,
+                "name": "",
+                "displayName": ""
+            }
+        }
+    ],
+    "paging": {
+        "total": 0,
+        "perPage": 30,
+        "offset": 0
+    },
+    "messages": []
+}

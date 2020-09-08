@@ -1,0 +1,19 @@
+<div class="section-padded">
+    <div class="success-info">
+        <h3><%= _('Last Push:').t() %>
+            <%if (typeof pushSuccess !== "undefined") {%>
+                <%if (pushSuccess) {%>
+                <i class="icon-check"></i> <%= _('Successful').t() %>
+                <%} else {%>
+                <i class="icon-alert"></i> <%= _('Unsuccessful').t() %>
+                <%} %>
+            <%} %>
+        </h3>
+        <dl class="list-dotted">
+            <dt style=""><%= _('Time').t() %></dt>
+            <dd><%-timeLastPush%></dd>
+            <dt style=""><%= _('Bundle ID').t() %><sup><a href="#" class="tooltip-link" rel="tooltip" data-title="<%= _('The Bundle ID denotes the active configuration bundle used by all peers.').t() %>">?</a></sup></dt>
+            <dd><%-bundleId%></dd>
+        </dl>
+   </div>
+</div>

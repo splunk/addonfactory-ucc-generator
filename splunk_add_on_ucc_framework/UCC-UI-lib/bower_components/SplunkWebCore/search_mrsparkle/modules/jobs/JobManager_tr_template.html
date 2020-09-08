@@ -1,0 +1,66 @@
+<%
+isLite = (cherrypy.config['product_type'] == 'lite' or cherrypy.config['product_type'] == 'lite_free')
+%>
+
+<%def name="jobActionControls(job)">
+
+<a href="${job.get('inpsectUri')}" class="inspectJob" target="_blank">${_('Inspect')}</a>
+<span class="splPipe">|</span>
+
+% if not job.get('isSaved'):
+<a href="#" class="saveJob">${_('Save')}</a>
+<span class="splPipe">|</span>
+% endif
+% if not job.get('isDone') and not job.get('isFinalized'):
+	% if job.get('isPaused'):
+		<a href="#" class="unpauseJob">${_('Unpause')}</a>
+	% else:
+		<a href="#" class="pauseJob">${_('Pause')}</a>
+	% endif
+    <span class="splPipe">|</span>
+	<a href="#" class="finalizeJob">${_('Finalize')}</a>
+    <span class="splPipe">|</span>
+% endif
+	<a href="#" class="cancelJob">${_('Delete')}</a>
+</%def>
+
+% for job in data:
+<tr class="parentRow" sid="${job.get('sid') | h}">
+    <td><input type="checkbox" value="${job.get('sid') | h}" name="sid" /></td>
+    <td class="createTimeCell" nowrap>${job.get('createTime') | h}</td>
+    <td>${job.get('user') | h}</td>
+    % if not isLite:
+        <td>${job.get('app') | h}</td>
+    % endif
+    <td>${job.get('diskUsage') | h}</td>
+    <td>${job.get('eventCount') | h}</td>
+    <td>${job.get('runtime') | h}</td>
+    <td class="expires">${job.get('expires') | h}</td>
+    % if job.get('status') != 'Done' and job.get('expires') != 'Saved':
+	<td class="status"><strong>${job.get('status') | h}</strong></td>
+    % else:
+	<td class="status">${job.get('status') | h}</td>
+    % endif
+    <td nowrap>
+    ${jobActionControls(job)}
+    </td>
+</tr>
+
+<tr class="childRow" sid="${job.get('sid') | h}">
+    <td colspan="1"></td>
+    <td colspan="${8 if isLite else 9}" class="jobSearchString">
+        % if job['uri'] == None or job.get('export'):
+            <span class="searchString">${job.get('search') | h} (This job cannot be viewed in the UI)</span> <span class="timeTerms">[${_('earliest time=%s, latest time=%s') % (job.get('earliestTime'), job.get('latestTime')) | h}]</span>
+        % elif job.get('isSavedSearch') and job.get('label'):
+            <span class="searchString"><a href="${job.get('uri') | h}" class="viewJob viewJobLabel">${job.get('label') | h}</a></span> <span class="timeTerms">[${_('earliest time%s, latest time%s') % ('' if job.get('earliestEpoch') else '='+job.get('earliestTime'), '' if (job.get('latestEpoch') or job.get('latestTime') == None) else '='+job.get('latestTime')) | h}]</span>
+        % elif job.get('isRealTimeSearch'):
+            <span class="searchString"><a href="${job.get('uri') | h}" class="viewJob">${job.get('search') | h}</a></span> <span class="timeTerms">[${_('real-time')}]</span>
+        % elif job.get('earliestEpoch') and job.get('latestEpoch'):
+            <span class="searchString"><a href="${job.get('uri') | h}" class="viewJob">${job.get('search') | h}</a></span>
+        % else:
+            <span class="searchString"><a href="${job.get('uri') | h}" class="viewJob">${job.get('search') | h}</a></span> <span class="timeTerms">[${_('earliest time%s, latest time%s') % ('' if job.get('earliestEpoch') else '='+job.get('earliestTime'), '' if (job.get('latestEpoch') or job.get('latestTime') == None) else '='+job.get('latestTime')) | h}]</span>
+        % endif
+    </td>
+</tr>
+
+% endfor

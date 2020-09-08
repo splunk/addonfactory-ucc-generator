@@ -1,0 +1,57 @@
+<div class="section-header section-padded">
+    <div class="create-button-container pull-right">
+        <a class="btn btn-primary new-archive-button" disabled><%- _("New Archive").t() %></a>
+    </div>
+    <h1 class="section-title"><%- _("Archives").t() %></h1>
+    <div class="block-text"><%- _("Archives let you store data in AWS S3 buckets.").t() %>
+        <a href="<%- docUrl %>" target="_blank" class="help-link"><%- _("Learn More").t() %> <i class="icon-external"></i></a>
+    </div>
+</div><!-- .section-header -->
+<div class="main-section">
+    <div class="table-toolbar">
+        <div class="filter-container">
+            <div class="collection-count">
+                <span class="disabled"><%= _('0 archives').t() %></span>
+            </div><!-- .collection-count -->
+            <div class="text-name-filter">
+                <div class="control shared-controls-textcontrol">
+                    <input type="text" class="search-query" placeholder="<%= _('filter').t() %>" disabled>
+                </div>
+            </div><!-- .text-name-filter -->
+            <div class="select-page-count">
+                <div class="control btn-group shared-dataenrichment-preview-components-selectpagecount">
+                    <a class="dropdown-toggle btn-pill disabled">
+                        <i class="icon-large"></i>
+                        <span class="link-label"><%= _('20 per page').t() %></span>
+                        <span class="caret"></span>
+                    </a>
+                </div>
+            </div><!-- .select-page-count-->
+        </div><!-- .filter-container -->
+        <div class="paginator-container"></div>
+    </div><!-- .table-toolbar -->
+    <div class="archives-grid archives-shared-archivesgrid archives-grid-disabled">
+        <table class="table table-chrome table-striped">
+            <thead>
+                <tr>
+                    <th class="sorts">
+                        <%= _('Name').t() %>
+                        <i class="icon-sorts"></i>
+                    </th>
+                    <th class="sorts">
+                        <%= _('AWS S3 Path').t() %>
+                        <i class="icon-sorts"></i>
+                    </th>
+                    <th>
+                        <%= _('Actions').t() %>
+                    </th>
+                </tr>
+            </thead>
+        </table>
+        <div class="table-disabled-screen"></div>
+        <div class="section-header disabled-message">
+            <h1 class="section-title"><%= _('Now you can archive data from Splunk Cloud to AWS S3!').t() %></h1>
+            <h3 class="learn-more-link"><a href="<%- docUrl %>" target="_blank" class="help-link"><%- _("Learn More").t() %> <i class="icon-external"></i></a></h3>
+        </div>
+    </div><!-- .archives-grid -->
+</div><!-- .main-section -->

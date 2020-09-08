@@ -1,0 +1,73 @@
+{
+  "spl": "rex field=\"client_ip\" \"From (?<from>.*)\" | search client_ip=\"undefined\"",
+  "ast": {
+    "command": "search",
+    "raw": " client_ip=\"undefined\"",
+    "type": "SP_STREAM",
+    "fields_and_properties": [
+      {
+        "name": "client_ip",
+        "referenced": true
+      }
+    ],
+    "function": "AND",
+    "args": [{
+      "type": "function",
+      "value": "==",
+      "args": [{
+        "type": "field",
+        "value": "client_ip"
+      }, {
+        "type": "string",
+        "value": "undefined"
+      }],
+      "is_negated": false,
+      "is_numeric": false,
+      "is_indexed": false,
+      "is_case_sensitive": false,
+      "is_literal_term": false
+    }],
+    "pipeline": "streaming",
+    "sources": [{
+      "command": "rex",
+      "raw": " field=\"client_ip\" \"From (?<from>.*)\" ",
+      "type": "SP_STREAM",
+      "fields_modified": [{
+        "name": "from"
+      }],
+      "fields_referenced": [{
+        "name": "client_ip"
+      }],
+      "fields_removed": [],
+      "field": "client_ip",
+      "sed_mode": false,
+      "max_match": 1,
+      "offset_field": "",
+      "regex_expression": "From (?<from>.*)",
+      "pipeline": "streaming",
+      "annotations": {
+        "interesting_fields": [{
+          "name": "*"
+        }, {
+          "name": "client_ip"
+        }, {
+          "name": "from"
+        }]
+      }
+    }],
+    "annotations": {
+      "interesting_fields": [{
+        "name": "*"
+      }, {
+        "name": "client_ip"
+      }, {
+        "name": "from"
+      }]
+    }
+  },
+  "actions": [{
+    "name": "get_interesting_fields"
+  }, {
+    "name": "annotate_datasets"
+  }]
+}

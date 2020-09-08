@@ -1,0 +1,96 @@
+/* toggle */
+
+$color:                     #bbb;
+$colorCaret:                $textGray;
+$backgroundHover:           #444;
+$backgroundActive:          #555;
+$backgroundFocus:           #666;
+
+.view {
+    padding: 0 10px; /*  can't use vertical padding since badges/labels push this out */
+    color: $color;
+    background: transparent;
+    border: none;
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent;
+    line-height: $navbarHeight;
+    height: $navbarHeight;
+    white-space: nowrap;
+    display: block;
+    text-decoration: none;
+
+    &:hover {
+        color: $white;
+        background: $backgroundHover;
+        outline: none;
+        text-decoration: none;
+    }
+    &.active {
+        color: $white;
+        background: $backgroundActive;
+    }
+    &:focus {
+        color: $white;
+        background: $backgroundFocus;
+        outline: none;
+    }
+}
+
+
+
+.label {
+    composes: label from "../Button.pcssm";
+
+    &:not(:first-child) {
+        padding-left: 5px;
+    }
+}
+
+.truncateLabel {
+    composes: label;
+    max-width: calc((100vw - 860px) / 2);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.optionalLabel {
+    composes: label;
+}
+
+@media only screen and (max-width: 1300px) {
+  .optionalLabel {
+    display: none;
+  }
+
+  .optionalLabel:not(:first-child):not(:last-child) {
+    /* still needs to create margin between the icon and the caret */
+    color: transparent;
+    width: 3px;
+    padding: 0;
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: middle;
+  }
+}
+
+
+
+.badge {
+    display: inline-block;
+    vertical-align: baseline;
+
+    padding: 1px 4px 0 4px;
+    line-height: 17px;
+
+    border-radius: 4px;
+
+    white-space: nowrap;
+
+    font-size: 11px;
+    font-weight: normal;
+
+    background: rgb(229, 104, 21);
+    color: #fff;
+}

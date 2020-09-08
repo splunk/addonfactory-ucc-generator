@@ -1,0 +1,174 @@
+/* JIRA: DVPL-3315 */
+header.splunk-ace-header {
+    background: #000 url(/en-US/static/img/skins/default/bg_appHeaderWrapper.png) repeat-x;
+	color: #666;
+	font-family: Arial,Helvetica,sans-serif;
+	font-size: 11px;
+}
+
+header.splunk-ace-header a {
+	color: #CCC;
+	text-decoration: none;
+}
+
+header.splunk-ace-header .splunk-account-bar-items {
+	display: block;
+	float: right;
+	margin: 3px 5px 0 0;
+	padding: 0;
+	list-style: none none;
+}
+
+header.splunk-ace-header .splunk-account-bar-items li {
+	margin: 0;
+	float: left;
+	padding-right: 5px;
+	line-height: 22px;
+}
+
+header.splunk-ace-header .splunk-account-bar-items li a:hover {
+	text-decoration: underline;
+}
+
+header.splunk-ace-header .splunk-account-bar-items li.splunk-account-divider {
+	margin: 0 6px 0 1px;
+	padding: 0;
+} 
+
+header.splunk-ace-header .splunk-app-logo-container {
+	padding-left: 10px;
+}
+
+header.splunk-ace-header .splunk-app-logo-container a.splunk-app-logo {
+	display: inline-block;
+	float: left;
+	height: 43px;
+	width: 80px;
+	background: url(/en-US/static/img/skins/default/splunk_logo_black.png) no-repeat 0 0;
+}
+
+header.splunk-ace-header .splunk-app-logo-container h1 {
+	display: inline-block;
+	float: left;
+	color: #73a550;
+	line-height: 43px;
+	font-size: 18px;
+	font-weight: normal;
+	margin: 0;
+}
+
+div.splunk-clear {
+	clear: both;
+}
+
+header.splunk-ace-header .splunk-navigation-header {
+	background-image: none;
+	height: 28px;
+	padding: 0;
+}
+
+header.splunk-ace-header .splunk-navigation-header ul {
+	list-style: none none;
+	margin: 0;
+	padding: 0;
+}
+
+header.splunk-ace-header .splunk-navigation-header ul li {
+	float: left;
+	padding-bottom: 0;
+	padding-left: 0;
+	margin-bottom: 0;
+	margin-left: 0;
+	line-height: 28px;
+}
+
+ header.splunk-ace-header .splunk-navigation-header ul li a {
+ 	display: block;
+ 	padding: 0 10px;
+ 	font-size: 11px;
+ 	font-weight: bold;
+    outline: none;
+}
+
+header.splunk-ace-header .splunk-navigation-header ul li.splunk-has-menu a {
+    padding-right: 23px;
+    position: relative;
+}
+
+header.splunk-ace-header .splunk-user-full-name {
+	font-weight: bold;
+}
+
+header.splunk-ace-header .splunk-dropdown-icon {
+	background-repeat: no-repeat;
+	cursor: pointer;
+	display: block;
+	background-image: url(/en-US/static/img/skins/default/splIcons.gif);
+	background-color: transparent;
+}
+
+header.splunk-ace-header .splunk-dropdown-icon.splunk-triangle-1 {
+	width: 5px;
+	height: 5px;
+	background-position: -47px -367px;
+	float: right;
+	margin: 10px 0 0 5px;
+}
+
+header.splunk-ace-header .splunk-dropdown-icon.splunk-triangle-2 {
+	position: absolute;
+	right: 10px;
+	top: 13px;
+	background-position: -27px -367px;
+	text-indent: -10000px;
+	width: 6px;
+	height: 6px;
+	overflow: hidden;
+}
+
+header.splunk-ace-header .splunk-navigation-header ul li a:hover,
+header.splunk-ace-header .splunk-navigation-header ul li a.menuOpen {
+    background: url(/en-US/static/img/skins/default/overlay_white_28.png) repeat-x 0 0;
+}
+
+header.splunk-ace-header .splunk-navigation-header ul.menu-list li {
+    float: none;
+}
+
+header.splunk-ace-header #splunk-applicationsMenuActivator {
+    cursor: pointer;
+}
+
+header.splunk-ace-header #splunk-applicationsMenuActivator:hover {
+    text-decoration: underline;
+}
+
+div.splunk-splMenu-primary.splunk-app-menu {
+    background: none !important;
+}
+div.splunk-splMenu-primary.splunk-app-menu ul {
+    background-color: transparent;
+    border: 1px solid #333;
+
+}
+div.splunk-splMenu-primary.splunk-app-menu ul li a {
+    z-index: 9999;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    line-height: 14px;
+    color: #CCC;
+}
+
+div.splunk-splMenu-primary.splunk-app-menu .splunk-innerMenuWrapper {
+    background-color: black;
+}
+
+div.splunk-splMenu-primary.splunk-app-menu ul li a:hover {
+    background: #7b9059;
+    color: #fff;
+}
+
+div.splunk-splMenu-primary.splunk-app-menu ul .actionsMenuDivider {
+    margin: 0;
+    padding: 0;
+}

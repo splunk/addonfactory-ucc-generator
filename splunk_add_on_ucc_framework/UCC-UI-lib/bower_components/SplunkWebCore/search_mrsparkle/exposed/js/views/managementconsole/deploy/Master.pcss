@@ -1,0 +1,63 @@
+body {
+	overflow: hidden;
+}
+
+.btn-cancel-pending {
+    margin-right:10px;
+}
+
+.main-section {
+	overflow: auto;
+	left: 0;
+	top: 148px;
+	right: 0;
+	bottom: 0;
+	background-color: $white;
+	position: fixed;
+
+	.dmc-changes-body {
+		overflow: hidden;
+		min-height: 500px;
+
+		.table-control-container {
+			margin-top: 10px;
+
+			.checkbox-expand-placeholder {
+				margin-left: 10px;
+			}
+
+			.deployment-progress {
+                margin-left: 10px;
+            }
+
+			.table-caption {
+				.shared-controls-textcontrol {
+					float: left;
+					margin-top: 5px;
+				}
+			}
+
+			.select-page-count-placeholder {
+				margin-right: 20px;
+			}
+		}
+
+		.table-chrome td {
+			word-wrap: break-word;
+		}
+
+		.table-fixed {
+			background-color: inherit;
+			width: 800px;
+			max-width: 100%;
+			min-width: 800px;
+			margin-left: -10px;
+
+			td {
+				padding-left: 10px;
+				padding-right: 10px;
+				word-wrap: break-word;
+			}
+		}
+	}
+}

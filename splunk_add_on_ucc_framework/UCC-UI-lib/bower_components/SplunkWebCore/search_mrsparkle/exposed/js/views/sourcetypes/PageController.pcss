@@ -1,0 +1,45 @@
+/*  Overriding imported Settings accordion */
+.accordion-toggle{
+  background: none !important;
+}
+.accordion .accordion-group:first-child .accordion-toggle {
+  border-top: 1px solid $borderColor;
+}
+.accordion .accordion-heading .accordion-toggle{
+  font-size: 12px;
+  font-weight: bold;
+}
+.accordion .accordion-inner{
+  padding: 0px;
+  padding-top: 15px;
+}
+.copyToClipboardDialog textarea {
+  width: 85%;
+  height: 200px;
+}
+.datapreview-settings-advanced {
+  margin-left: 20px;
+}
+.btn.applySettings {
+  /*  we enabled autoupdate, so don't need it */
+  display: none;
+}
+
+
+/*  copy to clipboard dialog */
+.copyToClipboard {
+  display: none;
+}
+.copyToClipboardDialog {
+  top: 110px !important;
+}
+.copyToClipboardDialog textarea {
+  cursor: default;
+}
+
+.pulldown-toggle {
+  display: inline-block;
+  vertical-align: middle;
+  padding-bottom: 4px;
+  padding-left: 10px;
+}

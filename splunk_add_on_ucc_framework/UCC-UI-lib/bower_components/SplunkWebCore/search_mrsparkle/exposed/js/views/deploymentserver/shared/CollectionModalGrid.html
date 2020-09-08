@@ -1,0 +1,14 @@
+<table class="table table-chrome table-striped table-hover">
+    <tbody>
+
+		       <%
+                           collection.each(function(model){
+                       %>
+			       <tr class="">
+				 <td><%- model.entry.get("name")%></td>
+			       </tr>
+		       <% }) %>
+    </tbody>
+</table>
+
+

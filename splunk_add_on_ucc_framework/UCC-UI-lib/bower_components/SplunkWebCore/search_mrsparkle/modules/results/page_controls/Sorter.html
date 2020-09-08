@@ -1,0 +1,41 @@
+<%page args="module"/>
+
+<% import cgi %>
+
+<%def name="sorter_link(text, value, sortDir=None)">
+    <span class="${value | h}">
+        <a href="#" class="${value | h}" title="${_(text) | h}">${_(text) | h}</a>
+        % if sortDir:
+        <span class="sortDir">(${_(sortDir) | h})</span>
+        % endif
+    </span>
+</%def>
+
+<%
+delimiter = ''.join([' ', cgi.escape(module['delimiter']), ' '])
+sortDir = module.get('sortDir')
+
+# sortKey defaults to the first field value or label if no value is provided
+sortKey = module.get('sortKey')
+if not sortKey:
+    field = module['fields'][0]
+    if field.get('value'):
+        sortKey = field.get('value')
+    else:
+        sortKey = field.get('label')
+
+field_labels = []
+for field in module['fields']:
+    
+    field_label = field.get('label')
+    field_value = field.get('value')
+    
+    if not field_value:
+        field_value = field_label
+    
+    if sortKey == field_value:
+        field_labels.append(capture(sorter_link, field_label, field_value, sortDir))
+    else:
+        field_labels.append(capture(sorter_link, field_label, field_value))
+%>
+${delimiter.join(field_labels)}

@@ -1,0 +1,41 @@
+<%!
+    title = 'Lookups'
+%>
+<%namespace name="lib" file="//lib.html" import="*"/>
+<%inherit file="//layout/admin.html" />
+<%
+import splunk
+from splunk.appserver.mrsparkle.lib import util, i18n
+%>
+
+<div class="dataInputsWrapper">
+    <div class="dataInputsDesc">${_('Create and configure lookups.')}</div>
+
+    <table class="splTable" id="dataInputs">
+        <tr>
+            <th>${_('')}</th>
+            <th>${_('Actions')}</th>
+        </tr>
+        <tr>
+            <td class="input_name"><a href="${make_url(['manager', namespace, 'data', 'lookup-table-files'])}">${_('Lookup table files')}</a></td>
+            <td><a href="${make_url(['manager', namespace, 'data', 'lookup-table-files', '_new'], _qs=dict(action='edit'))}">${_('Add new')}</a></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="input_description">${_('List existing lookup tables or upload a new file.')}</td>
+        </tr>
+        <tr>
+            <td class="input_name"><a href="${make_url(['manager', namespace, 'data', 'transforms', 'lookups'])}">${_('Lookup definitions')}</a></td>
+            <td><a href="${make_url(['manager', namespace, 'data', 'transforms', 'lookups', '_new'], dict(action='edit'))}">${_('Add new')}</a></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="input_description">${_('Edit existing lookup definitions or define a new file-based or external lookup.')}</td>
+        </tr>
+        <tr>
+            <td class="input_name"><a href="${make_url(['manager', namespace, 'data', 'props', 'lookups'])}">${_('Automatic lookups')}</a></td>
+            <td><a href="${make_url(['manager', namespace, 'data', 'props', 'lookups', '_new'], _qs=dict(action='edit'))}">${_('Add new')}</a></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="input_description">${_('Edit existing automatic lookups or configure a new lookup to run automatically.')}</td>
+        </tr>
+    </table>
+</div>

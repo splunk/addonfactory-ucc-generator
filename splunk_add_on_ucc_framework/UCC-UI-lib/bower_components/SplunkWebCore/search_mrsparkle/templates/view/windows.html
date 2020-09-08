@@ -1,0 +1,185 @@
+<%inherit file="windows-view.html" />
+<%namespace file="//view/_helpers.html" import="*"/>
+<%namespace name="lib" file="//lib.html" import="*"/>
+<%!
+
+headerPanels = ["appHeader", "navigationHeader", "liteHeader"]
+
+upperPanels = ["viewHeader", "splSearchControls-inline", "mainSearchControls"]
+
+renderingErrors = []
+%>
+
+<%def name="custom_css()">
+    <%lib:stylesheet_tags files="${['/static/app/windows/theme/application.css','/static/app/windows/theme/jquery.treeview.css']}" />
+</%def>
+
+<%def name="js()">
+<% parent.js() %>
+<%lib:script_tags files="${['/static/app/windows/theme/js/ui-1.7.1.custom.js','/static/app/windows/theme/js/jquery.layout.js','/static/app/windows/theme/js/jquery.treeview.min.js']}" />
+</%def> 
+
+<%def name="head()">
+    <% parent.head() %>
+	<script type="text/javascript">
+
+	var outerLayout; // init global vars
+
+	$(document).ready( function() {
+
+		// PAGE LAYOUT
+		outerLayout = $('body').layout({
+			applyDefaultStyles:     true
+			// AUTO-RESIZE Accordion widget when west pane resizes
+		,	west__onresize:         function () { $("#accordion").accordion("resize"); }
+		,	west__size:             250
+		,	west__minSize:          150
+		,	west__spacing:          10  
+		
+		
+		,	north__size:            50
+		,	north__closable:        false
+		,	north__spacing_open:	0
+		
+		
+		,	south__size:            28
+		,	south__closable:        false
+		,	south__resizable:       false
+		,	south__spacing_open:	0
+		});
+
+		// ACCORDION - inside the West pane
+		$("#accordion").accordion({
+			fillSpace: true
+		});
+		
+	});
+
+	
+	
+    $(document).ready(function(){
+		
+
+	$("#browser").treeview();
+	$("#add").click(function() {
+		var branches = $("<li><span class='folder'>New Sublist</span><ul>" + 
+			"<li><span class='file'>Item1</span></li>" + 
+			"<li><span class='file'>Item2</span></li></ul></li>").appendTo("#browser");
+		
+    });
+	
+	
+    });
+	
+	</script>
+	
+	
+	
+	
+
+        </%def>
+
+        <%def name="custom_body()" >
+
+<div class="ui-layout-west">
+
+
+	<div id="accordion" class="basic">
+	
+		<div class="drawer"><a href="#">Recent Items</a></div>
+    		<div>
+            <ul id="browser" class="filetree">
+            		<li><span class="folder">Errors</span>
+            			<ul>
+            				<li><span class="file search"><a href="">An item</a></span></li>
+            			</ul>
+            		</li>
+            		<li><span class="folder">Windows Errors</span>
+            			<ul>
+            				<li><span class="folder">Bad Errors</span>
+            					<ul id="folder21">
+            						<li><span class="file search"><a href="">Some saved search</a></span></li>
+            						<li><span class="file report"><a href="">Some saved report</a></span></li>
+            					</ul>
+            				</li>
+            				
+            				<li><span class="folder">Really Bad Windows Errors</span>
+            					<ul id="folder21">
+            						<li><span class="file search"><a href="">Some saved search</a></span></li>
+            						<li><span class="file report"><a href="">Some saved report</a></span></li>
+            					</ul>
+            				</li>
+            				<li><span class="file search"><a href="">Some saved search</a></span></li>
+            			</ul>
+            		</li>
+            		<li class="closed"><span class="folder">Horrific Errors DNW!</span>
+            			<ul>
+            				<li><span class="file search"><a href="">Some saved search</a></span></li>
+            			</ul>
+            		</li>
+            		<li><span class="file report"><a href="">Some saved report</a></span></li>
+            	</ul><!-- browser -->
+    		</div>
+
+		<div class="drawer"><a href="#">Systems Management</a></div>
+    		<div>
+    
+    
+    
+                
+    		</div>
+
+		<div class="drawer"><a href="#">Performance Management</a></div>
+    		<div>
+    
+            	
+    
+    		</div>
+
+		<div class="drawer"><a href="#">Change Management</a></div>
+    		<div>
+    			<p>Cras dictum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aenean lacinia mauris vel est. </p><p>Suspendisse eu nisl. Nullam ut libero. Integer dignissim consequat lectus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. </p>
+    		</div>
+    
+	</div><!-- /accordion -->
+</div><!--/ui-layout-west -->
+
+<div class="ui-layout-center">
+
+	 <div id="layout-workspace" class="layout">
+	 [put an actions bar here]
+<%call expr="parent.buildPanelContents(modules, 'messaging')"></%call>
+<%call expr="parent.buildPanelContents(modules, 'appHeader')"></%call>
+<%call expr="parent.buildPanelContents(modules, 'navigationHeader')"></%call>
+	 <br />
+	 
+    app contents here
+	 
+<%call expr="parent.buildPanelContents(modules, 'splSearchControls-inline')"></%call>
+<%call expr="parent.buildPanelContents(modules, 'mainSearchControls')"></%call>
+<%call expr="parent.buildPanelContents(modules, 'mainViewPane')"></%call>
+	               	
+        	
+	 </div><!-- /workspace -->
+	 
+</div><!--/ui-layout-center -->
+
+<div class="ui-layout-north">
+    <div  id="layout-header">
+    
+        <img src="${parent.make_app_url('theme/app_Logo.png')}" alt="app_Logo" />
+    
+    
+    </div><!--/header -->
+</div><!--/ui-layout-north -->
+
+<div class="ui-layout-south">
+
+    <div id="loading">
+     C'mon, hurry up already.
+     </div><!--/status -->
+
+</div><!--/ui-layout-south -->
+
+
+</%def>

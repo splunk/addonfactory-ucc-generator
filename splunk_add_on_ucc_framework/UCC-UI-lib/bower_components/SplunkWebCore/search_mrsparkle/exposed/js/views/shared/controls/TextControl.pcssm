@@ -1,0 +1,90 @@
+
+
+.view {
+    width: 230px;
+    flex: 1 1 230px; /* shrink or grow is fine */
+    display: flex;
+    position: relative;
+}
+
+
+
+
+
+.input {
+    /* needed for composition */
+}
+
+/* Some of these need greater specificity than input[type=text] */
+.uneditableInput, .input[type=text] {
+    box-sizing: border-box;
+    display: inline-block;
+
+    margin: 0;
+    height: calc($baseLineHeight + 8px);
+    line-height: $baseLineHeight;
+    padding: 4px 6px;
+
+    font-size: $baseFontSize;
+    color: $textColor;
+
+    border-radius: $inputBorderRadius;
+    background-color: $inputBackground;
+    border: 1px solid $inputBorder;
+
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    transition: border linear .2s, box-shadow linear .2s;
+
+    width: 100%;
+
+    ::placeholder {
+        color:$placeholderText;
+        opacity:1;
+    }
+
+
+    /*  Focus state */
+    &:focus {
+        @mixin focus-field;
+    }
+
+    /* Don't show IE clear button when an artificial one is shown. */
+    &.text-clear::-ms-clear {
+        display: none;
+        width: 0;  /* IE 11 on windows 8 */ 
+        height: 0; /* IE 11 on windows 8 */
+    }
+};
+
+.inputCanClear {
+    composes: input;
+    &[type=text] {
+        padding-right: 30px;
+    }
+}
+
+.inputSearch {
+    composes: inputCanClear;
+
+    &[type=text] {
+        border-radius: 100px;
+    }
+}
+
+.clear {
+    position: absolute;
+    right: 8px;
+    top: 2px;
+    line-height: 22px;
+    font-size: 18px;
+    color: $textGray;
+}
+
+.placeholder {
+    color: $placeholderText;
+    position: absolute;
+    max-width: 100%;
+    top: 3px;
+    left: 6px;
+    font-size: $baseFontSize;
+}

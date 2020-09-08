@@ -1,0 +1,28 @@
+<%page args="module"/>
+
+
+
+<%
+inputValue = ""
+if "default" in module : 
+    inputValue = module["default"]
+%>
+<div class="SearchBar PostProcessFilter">
+  <form method="get">
+    <fieldset>        
+      <div class="searchFieldWrapper">
+      <table><tr>
+%if "beforeLabel" in module:
+        <td>
+	   <span align=left class="singleLabel singleLabelBefore">${module["beforeLabel"]|h}<span>
+        </td>
+%endif
+	<td>
+          <input type="text" name="q" value="${inputValue|h}" />
+	</td>
+      </tr>
+      </table>
+      </div>
+    </fieldset>
+  </form>
+</div>

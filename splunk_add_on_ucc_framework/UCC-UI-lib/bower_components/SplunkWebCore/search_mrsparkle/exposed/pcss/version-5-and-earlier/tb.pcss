@@ -1,0 +1,227 @@
+
+
+h2 { 
+    font-size: 14px; 
+    font-weight: bold; 
+    margin-bottom: 1em;
+}
+pre {
+    margin:0;   
+}
+pre, .rulesetList	{ 
+    line-height: 150%;
+}
+
+.hidden { 
+    display: none;
+ }
+
+#control { 
+    padding: 0px 15px 10px 15px; 
+    border-bottom: 1px solid $borderColor; 
+    background-image: url(/static/img/skins/default/searchform_bg.gif); 
+    background-repeat: repeat-x;
+    background-position: bottom left;
+}
+
+#sampleEvent	{ 
+    border: 1px solid $borderColor; 
+    padding: 3px; 
+    overflow: auto;
+    max-height: 100px; 
+    height:expression(this.scrollHeight > 100? '100px' : 'auto' );
+}
+
+option 		{ padding-right: 10px; }
+
+.highlight { background-color: #FFED89; }
+
+p.error, p.warn, p.success, p.message, p.empty, p.info {
+    margin-top:0px;   
+}
+.success { display:none; }
+
+.empty	{
+   color: $textGray;
+ }
+
+#results {
+    clear: both;
+}
+
+#ruleset { 
+    width: 300px; 
+    float:left; 
+    border-right: 1px solid $borderColor;
+    padding: 10px 10px 0 10px;
+}
+#ruleset h3 { 
+    border-top: 1px dotted $borderColor;
+    margin-top: 4px;
+    padding: 8px 0;
+}
+#ruleset div {
+    padding: 3px 0;
+}
+ul.rulesetList {
+    list-style-type: none;
+    padding: 0;
+}
+.rulesetList li {
+    padding: 3px;
+}
+
+.rulesetList li img {
+    background-image: url('/static/img/skins/default/icon_circle_delete.png'); 
+    background-position: center left; 
+    background-repeat: no-repeat;
+    width: 20px;
+    height: 12px;
+    border: 0;
+    vertical-align: middle;
+}
+
+.rulesetList li.excluded img {
+    background-image: url('/static/img/skins/default/icon_circle_add.png'); 
+}
+.rulesetList li.excluded span {
+    text-decoration: line-through;
+    color: #888;
+}
+
+.rulesetList a.noclick {
+    background-image: none !important;
+}
+
+#events a.term		{ 
+    padding: 0px 16px 0px 1px;  
+    background-image: url('/static/img/skins/default/icon_circle_delete.png'); 
+    background-position: center right; 
+    background-repeat: no-repeat;
+    color: black;
+    text-decoration: none;
+}
+.m { padding: 1px 2px; }
+.munmarked	{ border: 1px solid red; }
+#events pre	{ padding-left: 5px; }
+
+#events .help { 
+    background: #ffc; 
+    padding: 4px; 
+    border: 1px solid $borderColor; 
+    margin-left: 28px; 
+}
+
+.searchdesc	{
+    font-size: 13px;
+    font-weight: bold;
+ }
+#help { 
+    font-size: $baseFontSizeSmall; 
+}
+
+#events .help { 
+    display: block; 
+}
+
+/* new */
+
+#search {
+    float:left;   
+}
+input.searchButton {
+    margin-top:4px;  
+    margin-left: 10px;
+}
+.valueInputDiv {
+    padding-top:5px;
+    margin-bottom: 0px;   
+ }
+.valueInputDiv .splButton-primary {
+    margin-left: 0px;
+ }
+
+/* results */
+
+#results {
+    overflow:hidden;  
+}
+
+.transactionButtons .splButton-secondary span {
+    min-width: 63px;
+ }
+
+/* events section */
+#events	{ 
+    padding-top: 10px;
+    margin-left: 321px; 
+
+}
+#events h2 {
+    margin-left:12px; 
+}
+#events .info {
+    margin-bottom:0px;   
+}
+#events .splTable {
+    margin-bottom:0px;
+    display:block;   
+}
+#eventListing {
+    padding-bottom:0px;
+}
+#events .splTable tbody {
+    display: block;   
+    overflow-x:auto;
+}
+
+/* popups */
+
+.popupContainer {
+    visibility: visible;
+    top:50%;
+    margin-top:-100px;
+    left:50%;
+    margin-left:-200px;  
+    display:none;          
+ }
+.entityEditForm .popupContainer {
+    padding-bottom:0px;   
+ }
+.popupContent {
+    width:450px;   
+ }
+
+input.smallinput {
+  width:5em;
+  size:5; 
+  maxlength:7;
+}
+ 
+.popupContent p {
+    margin-top: 0px;
+}
+
+.entityEditForm .popupContainer div {
+    padding-bottom:0px;   
+}
+.entityEditForm .popupContainer div.entityEditForm { /* contortions to get padding right in this context */
+    padding-bottom: 20px;
+}
+#testAlertLayer div.popupContent {
+    padding: 20px;
+}
+
+label {
+    /*display:block;*/
+    margin-top:5px;   
+}
+
+/* save success */
+#saveSuccessLayer div.popupContent {
+    text-align: center;
+    padding-top: 34px;
+    font-size: $baseFontSizeLarge;
+}
+
+

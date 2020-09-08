@@ -1,0 +1,34 @@
+<div class="control-group col-1 timeinput earliest">
+    <label for="earliest_<%- cid %>" class="control-label" title="<%- _("Earliest:").t() %>"><%- _("Earliest:").t() %></label>
+    <div class="controls">
+        <div class="input-append">
+            <input type="text" size="5" value="<%- time %>" class="earliest_input timerangepicker-relative-earliest-time" id="earliest_<%- cid %>"/>
+        </div>
+        <label for="earliest_no_snap_to_<%- cid %>" class="radio">
+            <input type="radio" name="earliest_snap" class="earliest_snap" id="earliest_no_snap_to_<%- cid %>" value="0" checked="checked"/>
+             <%- _("No Snap-to").t() %>
+        </label>
+        <label class="earliest_snap_label radio" for="earliest_snap_to_<%- cid %>">
+            <input type="radio" name="earliest_snap" class="earliest_snap" id="earliest_snap_to_<%- cid %>" value="1"/>
+        <span class="text"><%= rangeMap[selectedRange].earliest %></span></label>
+
+        <span id="earliest_hint_<%- cid %>" class="help-block help-block-timestamp"></span>
+    </div>
+</div><!-- /.control-group -->
+
+<div class="control-group col-2 timeinput latest">
+    <label class="control-label" for="<%- cid %>" title="<%- _("Latest:").t() %>"><%- _("Latest:").t() %></label>
+    <div class="controls">
+        <label for="latest_no_snap_to_<%- cid %>" class="radio">
+            <input type="radio" name="latest_snap" class="latest_snap" id="latest_no_snap_to_<%- cid %>" value="0" checked="checked"/>
+            <%- _("Now").t() %>
+        </label>
+        <label class="latest_snap_label radio" for="latest_snap_to_<%- cid %>">
+            <input type="radio" name="latest_snap" class="latest_snap" id="latest_snap_to_<%- cid %>" value="1"/>
+        <span class="text"><%= rangeMap[selectedRange].latest %></span></label>
+
+         <span id="latest_hint_<%- cid %>" class="help-block help-block-timestamp"></span>
+    </div>
+</div><!-- /.control-group -->
+
+<button class="apply btn" id="apply_<%- cid %>"><%- _("Apply").t() %></button>

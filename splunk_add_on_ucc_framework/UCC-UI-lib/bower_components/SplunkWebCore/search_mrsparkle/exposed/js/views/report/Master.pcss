@@ -1,0 +1,225 @@
+/*  Splunk: Page: Report */
+/*  ==================== */
+/*  report page layout and overrides */
+
+
+.report-header-title > h2 {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding-right: 300px;
+	margin-bottom: 10px
+}
+
+.report-scheduleinfo {
+    margin: 20px 0px;
+
+    .icon-clock:before {
+        font-size: 24px;
+        vertical-align: middle;
+        padding-right: 5px;
+        color: $grayLight;
+    }
+}
+
+.report-disabled {
+    position: relative;
+    opacity: 0.3;
+}
+
+.report-disabled:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 500;
+}
+
+.view-report-page {
+    position: relative;
+}
+
+.chart-viewer {
+    background-color: $white;
+}
+
+.single-value {
+  display: block;
+}
+
+.results-table {
+    margin-bottom: -1px;
+}
+
+.table-caption-inner .dropdown-toggle {
+    margin-top:5px;
+    margin-left: 10px;
+}
+
+.table-caption-inner {
+  text-align: left;
+  &.affix-top  {
+    background-color: $white;
+    &.disabled .table-caption-inner-cover {
+      position: absolute;
+      top: 0px;
+      right: 0px;
+      bottom: 0px;
+      left: 0px;
+      opacity: 0.30;
+      background-color: $gray;
+      z-index: 404;
+    }
+  }
+}
+
+.section-header {
+    min-height: 60px;
+    padding-bottom: 0;
+    @mixin clearfix;
+
+    > .controls.shared-timerangepicker {
+        padding-top: 4px;
+    }
+
+}
+
+.section-description{
+    margin: 10px 0px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.job-bar {
+    min-height: 33px;
+}
+.shared-jobstatus {
+    margin-top: 0px;
+}
+
+.shared-jobstatus-count{
+    margin-top: 2px;
+}
+
+.export-print-group {
+    margin-right: 0;
+}
+
+.chart-viewer + .table-caption {
+    padding-top: 0;
+}
+
+.shared-reportcontrols-details > .list-dotted {
+    margin: 10px 0 0 0 ;
+}
+
+.events-viewer-wrapper {
+    clear:both;
+}
+
+.results-wrapper, .report-statemessage {
+    min-height: 397px;
+    background-color: $white;
+    border-top:1px solid $borderColor;
+    @mixin clearfix;
+}
+
+.report-statemessage {
+    min-height: 430px;
+    color: $grayDark;
+    text-align: center;
+
+    h2 {
+        font-weight: 200;
+        font-size: 24px;
+        margin-top: 80px;
+    }
+    
+    a {
+        margin-top: 20px;
+        &:first-child {
+            margin-right: 20px;
+        }
+    }
+}
+
+.report-actionbar {
+    padding-left: 20px;
+    padding-top: 2px;
+}
+
+.report-statisticscontrols,
+.report-eventscontrols {
+    margin: 10px 20px 5px 20px;
+    @mixin clearfix;
+}
+
+.more-info {
+    > .popdown-dialog {
+        width: 400px;
+    }
+    .popdown-dialog-body {
+        padding: 10px 20px 20px 20px;
+    }
+}
+
+/*  special case for timerange button but not children */
+.timerange > .controls > .btn {
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.message-single,
+.lazy-results-table.loading,
+.shared-reportvisualizer .loading,
+.shared-reportvisualizer .visualization-message {
+    padding: 60px 20px;
+}
+
+.shared-flashmessagesv2 {
+    clear: left;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+.report-message.shared-flashmessages {
+    padding-bottom: 20px;
+    padding-top: 40px;
+}
+
+.results-message.shared-flashmessages {
+    padding: 20px;
+}
+
+.alert-error {
+    margin-bottom: 0px;
+}
+
+.report-tablecontrols-resultscount {
+  float: left;
+  padding: 10px;
+  padding-left: 20px;
+}
+
+/*  Print */
+/*  -------------------------------------------------- */
+@media print {
+    .report-actionbar {
+        @mixin print-hide;
+    }
+    
+    .table-caption-inner {
+        :not(.report-tablecontrols-resultscount) {
+            @mixin print-hide;
+        }
+        /* SPL-127643: prevent result count from overlapping with table */
+        &.affix-top {
+            position: static;
+        }
+    }
+
+    .results-wrapper, .results-table {
+        @mixin print-width-100-percent;
+    }
+}

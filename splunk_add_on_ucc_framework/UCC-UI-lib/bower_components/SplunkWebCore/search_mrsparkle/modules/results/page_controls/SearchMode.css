@@ -1,0 +1,94 @@
+/* SEARCH MODE - aka bunny button */
+
+/*module wrapper*/
+.SearchMode {
+    position:relative;
+}
+
+.SearchMode .search-mode-activator {
+    position:relative;
+    display:inline-block;
+    padding-right:10px;
+    margin-right:5px;
+    line-height:20px;
+    color:#000;
+    white-space: nowrap;
+    /*inline-block for IE*/
+    zoom: 1;
+    *display: inline;
+}
+
+.SearchMode .dropDown {
+    position:absolute;
+    top:7px;
+    right:0;
+}
+.SearchMode .icon {
+    float:left;
+    margin-right:5px;
+    display:block;
+    width:20px;
+    height:20px;
+    background: url(/static/img/skins/default/sprite-search-modes-small.png) no-repeat 0 0;
+    _background: url(/static/img/skins/default/sprite-search-modes-small.gif) no-repeat 0 0;
+}
+
+.SearchMode .icon-fast{background-position:0 0;}
+.SearchMode .icon-verbose{background-position:-20px 0;}
+.SearchMode .icon-smart{background-position:-40px 0;}
+
+
+/*select menu*/
+.search-mode-select .innerMenuWrapper,
+.search-mode-select ul li
+{
+    width: auto !important; /*override default splMenu width*/
+}
+.search-mode-select ul li a
+{
+    width:auto ; /*override default splMenu link width taking padding into account*/
+}
+.search-mode-select .innerMenuWrapper {
+    padding:0 !important; /*override default splMenu inner padding*/
+}
+
+.search-mode-select li strong {
+    display:block;
+    color:#000;
+    font-size:12px;
+    font-weight:normal;
+    margin-left:35px;
+}
+
+.search-mode-select .icon {
+    background: url(/static/img/skins/default/sprite-search-modes-large.png) no-repeat 0 0;
+    _background: url(/static/img/skins/default/sprite-search-modes-large.gif) no-repeat 0 0;
+    display:block;
+    float:left;
+    width:30px;
+    height:30px;
+}
+
+.search-mode-select .smart .icon{background-position:0 0;}
+.search-mode-select .fast .icon{background-position:0 -30px;}
+.search-mode-select .verbose .icon{background-position:0 -60px;}
+
+.search-mode-select li span {
+    margin-left:35px;
+    font-size:11px;
+    white-space:nowrap;
+    color:#a7a5a6;
+    display:block;
+    /* SPL-61031 - truncate long text */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.search-mode-select .item:hover,
+.search-mode-select .item:active,
+.search-mode-select .item:focus
+{background-color:#F3ECBB}
+
+.search-mode-select .item {overflow:hidden;}
+
+

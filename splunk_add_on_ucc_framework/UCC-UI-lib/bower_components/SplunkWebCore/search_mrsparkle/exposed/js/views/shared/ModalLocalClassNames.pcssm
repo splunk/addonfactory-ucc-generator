@@ -1,0 +1,135 @@
+/*  Splunk: Modals */
+/*  ============== */
+
+
+/*  Background */
+.backdrop {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: $zindexModalBackdrop;
+  background-color: $black;
+  opacity: 0;
+
+  &[data-modal-state=open] {
+      opacity: 0.40;
+  }
+}
+
+ /*  modal container */
+.view {
+    all: initial;
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    width: 450px;
+    margin-left: -225px;
+    z-index: $zindexModal;
+    background-color: $white;
+    border: none;
+    border-radius: 6px;
+    box-shadow: 0 3px 7px rgba(0,0,0,0.3);
+    background-clip: padding-box;
+    outline: none;
+    transition: opacity .2s linear, top .2s ease-out;
+    opacity: 0;
+    font-size: $baseFontSize;
+    font-family: $baseFontFamily;
+
+
+    @if $theme == lite {
+        border: 1px solid $splunkLiteBlack;
+        border-radius: 0;
+    }
+
+    /*  SPL-68751 - IE10 box shadow animation artifacts fix */
+    &:after {
+        content: "";
+        font-size: 0;
+        display: inline;
+        overflow: hidden;
+    }
+
+    &[data-modal-state=open] {
+        top: 40px;
+        opacity: 1;
+    }
+
+}/*  modal */
+
+/*  Header
+/*  =============== */
+
+.headerWrapper {
+    border-bottom: 1px solid $borderColor;
+    background: $formActionsBackground;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+
+    &:empty {
+        display: none;
+    }
+}
+
+.header {
+    composes: headerWrapper;
+    position: relative;
+    padding: 15px 0 15px 20px;
+}
+
+.title {
+    font-size: $baseFontSizeLarge;
+    line-height: 22px;
+    margin: 0;
+    overflow-wrap: break-word;
+    padding-right: 40px;
+}
+
+.closeWrapper {
+    top: 13px;
+    right: 15px;
+    position: absolute;
+}
+
+/*  Body
+/*  =============== */
+
+.body {
+    max-height: calc(100vh - 200px);
+}
+.bodyPadded {
+    composes: body;
+    padding: 20px;
+}
+.bodyScrolling {
+    composes: body;
+    overflow-y: auto;
+}
+.bodyScrollingPadded {
+    composes: bodyPadded;
+    overflow-y: auto;
+}
+
+/*  Footer
+/*  =============== */
+
+.footer {
+    padding: 10px;
+    margin-bottom: 0;
+    text-align: right; /*  right align buttons */
+    background: $formActionsBackground;
+    border-top: 1px solid $borderColor;
+    border-radius: 0 0 8px 8px;
+    @mixin clearfix;
+}
+
+.buttonsLeft {
+    float: left;
+}
+
+.buttonsRight {
+    float: right;
+}

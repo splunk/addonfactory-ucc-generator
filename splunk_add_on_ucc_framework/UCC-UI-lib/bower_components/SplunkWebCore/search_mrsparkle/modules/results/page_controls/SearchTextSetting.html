@@ -1,0 +1,9 @@
+<%page args="module"/>
+
+<%def name="id()">${module['id']}_text</%def>
+
+% if module['params'].get('label'):
+<label for="${id()}" class="searchTextSetting"><img src="${make_url('/static/img/skins/default/mag_glass_icon_transparent.png')}" /></label>
+% endif
+<input type='text' name="${module['params']['elementName'] | h}" id="${id()}" autocomplete="off" />
+

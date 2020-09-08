@@ -1,0 +1,153 @@
+/*  Splunk: Component: paginator */
+/*  ============================ */
+/*  TODO: should this be in base? */
+
+/* pagination styles and overrides
+
+    <div class="pagination">
+        <ul>
+            <li><a href="#">Prev</a></li>
+            <li><a href="#">1</a></li>
+            <li><a href="#">2</a></li>
+            <li><a href="#">3</a></li>
+            <li><a href="#">4</a></li>
+            <li><a href="#">Next</a></li>
+        </ul>
+    </div>
+
+*/
+
+.pagination {
+    height: auto;
+    > ul {
+        display: inline-block;
+        /*  Reset default ul styles */
+        margin-left: 0;
+        margin-bottom: 0;
+        list-style: none;
+
+        > li {
+            float: left;
+        }
+
+        > li > span,
+        > li > a {
+            float: left;
+            text-decoration: none;
+            border: 1px solid transparent;
+            line-height: 20px;
+            min-width: 10px;
+            padding: 2px 8px;
+            text-align: center;
+             border-radius: $interactiveBorderRadius;
+
+	 		&:focus {
+	 		  @mixin focus-pill;
+	 		}
+        }
+        /*  hover & active state */
+        & > li > a:hover,
+        .active > a
+        {
+            background-color: $pillBackgroundColorHover;
+        }
+
+        .active > a {
+            cursor: default;
+        }
+
+        .icon-chevron-left, .icon-triangle-left-small {
+            padding-right: 3px;
+        }
+        .icon-chevron-right, .icon-triangle-right-small {
+            padding-left: 3px;
+        }
+
+        > .disabled {
+            > span,
+            > a,
+            > a:hover,
+            > a:focus {
+                background-color: transparent;
+                color: $textDisabledColor;
+                cursor: default;
+            }
+        }
+
+    }
+
+    .max-events-per-bucket {
+        color: $yellow;
+        font-size: 18px;
+    }
+    /*  missing sequence dots */
+    .dots,
+    .dots:hover {
+        width: 20px;
+        padding: 0px;
+    }
+
+}/*  .pagination */
+
+
+
+/*  Alignment */
+/*  -------------------------------------------------- */
+
+.pagination-centered {
+  text-align: center;
+}
+.pagination-right {
+  text-align: right;
+}
+
+/*  Large */
+/*  -------------------------------------------------- */
+.pagination-large {
+  ul > li > a,
+  ul > li > span {
+    padding: $paddingLarge;
+    font-size: $fontSizeLarge;
+  }
+  ul > li:first-child > a,
+  ul > li:first-child > span {
+    @mixin border-left-radius $borderRadiusLarge;
+  }
+  ul > li:last-child > a,
+  ul > li:last-child > span {
+    @mixin border-right-radius $borderRadiusLarge;
+  }
+}
+
+/*  Small and mini */
+/*  -------------------------------------------------- */
+.pagination-mini,
+.pagination-small {
+  ul > li:first-child > a,
+  ul > li:first-child > span {
+    @mixin border-left-radius $borderRadiusSmall;
+  }
+  ul > li:last-child > a,
+  ul > li:last-child > span {
+    @mixin border-right-radius $borderRadiusSmall;
+  }
+}
+
+/*  Small */
+/*  -------------------------------------------------- */
+.pagination-small {
+  ul > li > a,
+  ul > li > span {
+    padding: $paddingSmall;
+    font-size: $fontSizeSmall;
+  }
+}
+/*  Mini */
+/*  -------------------------------------------------- */
+.pagination-mini {
+  ul > li > a,
+  ul > li > span {
+    padding: $paddingMini;
+    font-size: $fontSizeMini;
+  }
+}

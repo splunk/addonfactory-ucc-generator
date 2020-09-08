@@ -1,0 +1,61 @@
+<%page args="element, eaiAttributes, widgetstyle" />
+<%namespace file="../_helpers.html" import="wireElementEvents"/>
+
+<%
+import splunk.util as util
+from splunk.appserver.mrsparkle.lib import eai
+option_map = util.OrderedDict()
+try:
+    fetch_error = False
+    for option in element["options"]:
+        option_map[option['value']] = option['label']
+except eai.EAIFetchError, e:
+    fetch_error = e
+
+selected_value = form_defaults.get(element.get('elementName'), None)
+if isinstance(selected_value, str) and selected_value not in option_map:
+   option_map[selected_value] = selected_value
+
+option_list = option_map.items()
+
+if 'sort' in element:
+    method = element.get('sort').lower() 
+    if method != 'none':
+        option_list.sort(key=(lambda x: x[1].lower()))
+
+top_item = None
+if 'topItem' in element:
+    top_item = element.get('topItem')
+        
+%>
+
+    <div id="item-${element['elementName'] | h}" class="selectWidget widget ${element['class'] if 'class' in element else '' | h}" ${widgetstyle}>
+        % if 'label' in element:
+            <label for="${element['elementName'] | h}_id" class="${'disabledLabel ' if element.get('disabled') else ''}">${_(element['label']) | h}
+             % if element.get('elementName') in eaiAttributes['requiredFields'] or element.has_key('requiredIfVisible'):
+                <span class="requiredAsterisk">*</span>
+            % endif
+            </label>
+        % endif
+        % if 'helpText' in element:
+            <p class="helpText">(${_(element['helpText']) | h})</p>
+        % endif
+        <div class="selectInputContainer">
+            % if fetch_error:
+                <div class="widgeterror widgetinlineerror">${_('Failed to fetch data: ') | h}${str(fetch_error)|h}</div>
+            % endif
+            <select id="${element['elementName'] | h}_id" class="regular ${element['class'] if 'class' in element else '' | h}" name="${element["elementName"] | h}" ${'disabled="disabled"' if element.get('disabled') else ''} ${wireElementEvents(element)}>
+            % if top_item:
+                <option value="">${top_item | h}</option>
+            % endif
+            % for (value, label) in option_list:
+                <option value="${value | h}">${label | h}</option>
+            % endfor
+            </select>
+            <div class="widgeterror"><form:error name="${element["elementName"] | h}"/></div>
+            % if 'exampleText' in element:
+                <p class="exampleText"><em>${_(element['exampleText']) | extract_help_links }</em></p>
+            % endif
+        </div>
+    </div>
+

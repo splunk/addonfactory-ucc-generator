@@ -1,0 +1,9 @@
+.view {
+    text-align: center;
+}
+
+.spinnerWrapper {
+    margin: 10px 0 10px 50%;
+    float:left;
+    transform: translateX(-50%);
+}

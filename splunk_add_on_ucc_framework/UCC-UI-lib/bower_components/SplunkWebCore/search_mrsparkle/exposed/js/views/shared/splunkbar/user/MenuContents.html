@@ -1,0 +1,13 @@
+<li><a href="<%-accountLink%>" data-action="edit">
+    <% if (isCloud) { %>
+        <%- _("User Settings").t() %>
+    <% } else { %>
+        <%- _("Account Settings").t() %>
+    <% } %>
+</a></li>
+<% if (logoutLink) { %>
+    <li><a href="<%-logoutLink%>" data-action="logout"><%- _("Logout").t() %></a></li>
+<% } %>
+<% if (showUserMenuProfile) { %>
+    <li><a href="<%=productMenuUriPrefix%>apex/CP_ProfilePage" class="<%-css.linkProfile%>" target="productlink" data-action="profile"><%- _("Profile").t() %></a></li>
+<% } %>

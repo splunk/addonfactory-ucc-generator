@@ -1,0 +1,80 @@
+/*  Splunk: Page: Deployment Server Edit */
+/*  ==================================== */
+
+/*  only for server class btn-group */
+.deploymentserver-edit-editserverclasseslink {
+    display: inline-block;
+
+    .btn {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-right: none;
+    }
+}
+
+/*  Common */
+.section-header {
+	@mixin clearfix;
+    position: relative;
+    padding-bottom: 0;
+
+    .btn-toolbar {
+    	float: right;
+    }
+}
+
+/*  FIXME: this should be shared by default; */
+.dashboard-container {
+	padding-top: 0;
+
+	.dashboard-panel {
+		margin-right: 0;
+		margin-bottom: 10px;
+
+		/*  add header to contain edit link */
+		.dashboard-header {
+			margin: -20px -20px 10px;
+			padding: 15px 20px 10px 20px;
+			border-bottom: 1px solid $tableBorder;
+		}
+		.dashboard-title {
+			font-size: $baseFontSizeLarge;
+			font-weight: normal;
+			color: $textColor;
+			display: inline-block;
+			margin: 0 1em 0 0;
+			line-height: 27px;
+		}
+	}
+}
+
+/*  TODO: add this to common */
+.btn > .icon-large:before {
+	margin-right: 0.5em;
+}
+
+/*  FIXME: can't use push-margins because this is shared and sometimes in a padded panel and sometimes in an unpadded tab-content */
+#appsGridContainer,
+#clientsGridContainer
+{
+	margin-left: -20px;
+	margin-right: -20px;
+}
+
+.searchFilterContainer {
+	form {
+		margin-bottom: 10px;
+	}
+}
+
+.searchFilterContainer {
+	display: inline-block;
+}
+
+.deploymentserver-shared-dspaginator {
+	padding-left: 20px;
+}
+
+.deployment_filter .btn-group {
+	margin-right: 5px;
+}

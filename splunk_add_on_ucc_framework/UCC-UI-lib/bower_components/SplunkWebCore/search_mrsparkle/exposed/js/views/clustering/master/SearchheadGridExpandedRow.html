@@ -1,0 +1,12 @@
+<tr class="more-info">
+    <td class="expands"></td>
+    <td colspan="2">
+        <span class="expands"></span>
+        <dl class="list-dotted">
+            <dt><%= _('Location').t() %></dt>
+            <dd><%- model.entry.content.get('host_port_pair') || _('N/A').t()%></dd>
+            <dt><%= _('GUID').t() %></dt>
+            <dd><%- model.entry.get('name') || _('N/A').t()%></dd>
+        </dl>
+    </td>
+</tr>

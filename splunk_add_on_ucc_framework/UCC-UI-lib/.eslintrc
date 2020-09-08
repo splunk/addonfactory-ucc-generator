@@ -1,0 +1,30 @@
+{
+    "extends": "eslint:recommended",
+    "env": {
+        "browser": true,
+        "amd": true,
+        "es6": true,
+        "node": true,
+        "mocha": true
+    },
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "experimentalObjectRestSpread": true
+        }
+    },
+    "rules": {
+        "no-undef": 2,
+        "no-console": "off",
+        "prefer-const": "warn",
+        "no-const-assign": "warn"
+    },
+    "globals": {
+        "__non_webpack_require__": true,
+        "__webpack_public_path__": true,
+        "__CONFIG_FROM_FILE__": true,
+        "Splunk": true,
+        "sprintf": true
+    }
+}

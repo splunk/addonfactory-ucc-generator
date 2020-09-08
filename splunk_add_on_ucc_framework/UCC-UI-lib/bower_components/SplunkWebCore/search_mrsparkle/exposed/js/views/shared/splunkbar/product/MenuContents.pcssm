@@ -1,0 +1,3 @@
+.view {
+    composes: menu from '../../MenuDialog.pcssm';
+}

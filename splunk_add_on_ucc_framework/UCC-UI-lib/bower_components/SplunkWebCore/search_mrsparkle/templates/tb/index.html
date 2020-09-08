@@ -1,0 +1,182 @@
+<%inherit file="//layout/base.html" />
+<%namespace name="lib" file="//lib.html" import="*" />
+
+
+<%def name="js()">
+<script type="text/javascript" src="${make_url('/static/js/tb.js')}"></script>
+<script>
+  % if len(successmessage) > 0:
+    openSuccess();
+  % endif
+</script>
+
+</%def>    
+
+<%def name="css()">  
+    <%coreCSSFiles = ["/static/css/view.css", "/static/css/skins/default/default.css", '/modules/nav/AccountBar.css', '/static/css/print.css', '/static/css/tb.css'] %>
+    <%lib:stylesheet_tags files="${coreCSSFiles}" />
+</%def>
+
+<%def name="body_element_open()">
+    <body>
+</%def>
+
+<div class="appHeaderWrapper">
+    <div class="layoutRow oneColRow splClearfix appHeader">       
+        <div class="SplunkModule AccountBar">                        
+            <a href="#" class="splIcon splIcon-close"></a>
+            <div class="appLogoContainer popupAppLogoContainer">
+                <a href="javascript:void()" class="appLogo notLinked"></a>
+                <h1>${_('Build transaction type')}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+% for msgtype, msgs in messages.items():
+  % for msg in msgs:
+     <p class="${msgtype|h}">${msg|h}</p>
+  % endfor
+% endfor
+ 
+<form method="POST" id="iterate" class="entityEditForm">
+
+  ${csrf_hidden_input()}
+  <input type="hidden" name="namespace"         value="${namespace|h}" />  
+  <input type="hidden" name="oldsearch"         value="${search|h}" />
+  <input type="hidden" name="fieldsstr"         value="${fieldsstr|h}" />
+  
+
+  <div id="control">
+    <label>${_('Search')}</label>
+    <input maxlength=100 id="search" name="search" value="${search|h}" />
+    <input type="submit" class="searchButton" value="" name="searchbutton"  />
+    <p class="exampleText">
+      ${_('Enter a simple search whose results will be used to discover transactions.')}
+    </p>
+
+    <br/>    <br/>
+
+    <label>${_('Common fields')}</label>
+    <ul>
+    % for i, field in enumerate(fields):
+       % if i+1 % 10 == 0:
+          <br/>
+       % endif
+       <% checked = '' %>
+       <% if field in checkedFields: checked = 'checked="checked"' %>
+       <input type=checkbox name="check${field|h}" VALUE="True" ${checked}' /> ${field|h}
+
+       <!-- <li style="list-style-type: none"><input type=checkbox name="check${field|h}" VALUE="True" ${checked}' /> ${field|h}</li> -->
+    % endfor
+    <br/>
+    Others: <input type=text class="smallinput" name="optionalFields" value="${optionalFields|h}" />
+    </ul>
+    <p class="exampleText">${_('Select fields that cannot have differing values in the same transaction.')}</p>
+
+    <br/>    <br/>
+
+    <label title="${_('Specify the maximum time between any two events for them no longer to be considered in the same transaction.')}">
+      ${_('Max pause')}
+    </label>
+    <input class="smallinput" type=text name="maxpause" value="${maxpause|h}" />
+
+    <label title="${_('Specify the maximum time between the first event and the most recent for them no longer to be considered in the same transaction.')}">
+      ${_('Max span')}
+    </label>
+    <input class="smallinput" type=text name="maxspan" value="${maxspan|h}" />
+
+    <label title="${_('Specify the maximum number of events allowed in a transaction.')}">
+      ${_('Max events')}
+    </label>
+    <input class="smallinput"  type=text name="maxevents" value="${maxevents|h}" />
+
+    <br/>    <br/>
+
+    <label>${_('Starts with')}</label>
+    <input type=text name="startswith" value="${startswith|h}" />
+    <p class="exampleText">${_('Specify a search (e.g., "login") or eval filtering expression (e.g., "eval(delay>timeout/60)"),<br/>which if satisfied by an event marks the beginning of a new transaction.')}</p>
+
+
+    <label>${_('Ends with')}</label>
+    <input type=text name="endswith" value="${endswith|h}" />
+    <p class="exampleText">${_('Specify a search (e.g., "logout") or eval filtering expression (e.g., "eval(delay<timeout/60)"),<br/>which if satisfied by an event marks the end of a new transaction.')}</p>
+
+															     
+    <br/><br/>
+
+    <div class="transactionButtons">
+           % if len(messages['error']) == 0:
+            	   <button class="splButton-secondary" onclick="openSave(); return false;" ><span><%doc>TRANS: Save Button</%doc>${_('Save')}</span></button>
+            % endif
+      </div>
+    </div>
+</div>
+% if len(testingsearch) > 0:
+  <div id="results splClearfix">
+    <div id="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX------------------events">
+      <h2>${_('Sample transactions')}</h2>
+      <p class="info">
+	       ${_('Based on the selections above, the following search was run:')} 
+               <a target="testing" href="${testingurl|h}"><code>${testingsearch|h}</code></a>
+      </p>
+      <div id="eventListing">
+          <table class="splTable">
+            <tbody>
+            	  % for event in events:
+                    <tr>
+                        <td><pre class="splFont-mono">${event | h}</pre></td>
+                    </tr>
+            	  % endfor
+            </tbody>
+          </table> 
+      </div>
+
+      <br style="clear:both" />			
+
+    </div>
+  </div>
+% endif
+  <div id="saveLayer" class="popupContainer">
+    <div class="splHeader splHeader-popup">
+        <h2>${_('Save event type')}</h2>
+    </div>
+    
+    <div class="popupContent">
+        <div class="entityEditForm">
+            <div class="fieldsetWrapper">
+                <fieldset>
+                	    <p class="helpText"><b>Note:</b> To ensure the transaction works properly, test before saving.</p>                
+                    <label for="saveName">
+            	    <%doc>TRANS: Name to give to event type</%doc>
+            	    ${_('Name')}</label>
+            	   <div>
+                	   <input type="text"  name="objectName" id="objectName" maxlength="100" />
+            	   </div>
+                </fieldset>
+            </div>
+        </div>
+     </div>
+    <div class="popupFooter">
+	       <button class="splButton-secondary" type="button" onclick="closeSave(event)" ><span><%doc>TRANS: Cancel</%doc>${_('Cancel')}</span></button>
+	       <button class="splButton-primary" type="submit" name="savesearch" ><%doc>TRANS: Save search</%doc><span>${_('Save Search')}</span></button>
+	       <button class="splButton-primary" type="submit" name="savetransaction" ><%doc>TRANS: Save transaction</%doc><span>${_('Save Transaction')}</span></button>
+    </div>
+  </div>
+ 
+ <div id="saveSuccessLayer" class="popupContainer">
+    <div class="splHeader splHeader-popup">
+        <h2>${_('Successfully saved transaction information')}</h2>
+    </div>
+    <div class="popupContent">
+        <p>
+	       ${_('Your transaction information has been saved.')}
+        </p>
+    </div>
+    <div class="popupFooter">
+        <button class="splButton-primary" name="ok" onclick="saveSuccessClose()" ><span>${_('Close')}</span></button>
+    </div>
+  </div> 
+
+  <div class="splOverlay">&nbsp;</div>
+</form>

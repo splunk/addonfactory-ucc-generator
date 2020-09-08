@@ -1,0 +1,116 @@
+/*  Splunk: Mixins */
+/*  ================== */
+/*  Snippets of reusable CSS to develop faster and keep code readable */
+
+@import "mixins-shared.pcss";
+
+/*  Interactive */
+/*  -------------------------------------------------- */
+/*  These are by any element that can be clicked, such as buttons, menus and table headings. */
+@define-mixin interactive  {
+	background: $interactiveBackgroundColor;
+	border: 1px solid $interactiveBorderColor;
+
+	color: $textColor;
+	box-shadow: none;
+	text-shadow: none;
+	border-radius: $interactiveBorderRadius;
+}
+
+/*  Hover state */
+@define-mixin interactive-hover  {
+	background: $interactiveBackgroundColorHover;
+	border-color: $interactiveBorderColorHover;
+	border-top-color: $interactiveBorderTopColorHover;
+	border-bottom-color: $interactiveBorderBottomColorHover;
+	background-position: 0 0;
+    text-decoration:none;
+}
+
+/*  Interactive Error */
+/*  These are by any interactive element that is is in an error state */
+@define-mixin interactive-error  {
+	border-color: $interactiveErrorBorderColor;
+	color: $interactiveErrorTextColor;
+}
+@define-mixin interactive-error-hover  {
+
+}
+
+/*  primary */
+@define-mixin interactive-primary  {
+	background: $splunkLiteBlack;
+	border: 1px solid $splunkLiteBlack;
+
+	color: $white;
+	box-shadow: none;
+	text-shadow: none;
+	border-radius: $interactiveBorderRadius;
+}
+
+/*  primary hover state */
+@define-mixin interactive-primary-hover  {
+	background-color: $primaryBackgroundColorHover;
+	color: $primaryTextColor;
+    text-decoration:none;
+}
+
+/* Overlays (Modal, Popdown, Search Assistant) */
+@define-mixin overlay-box-shadow  {
+	box-shadow: 0 3px 7px rgba(0,0,0,0.3);
+}
+
+/*  Focus States */
+/*  ----------------------------- */
+
+/*  Text entry boxes change their border color and glow */
+@define-mixin focus-field  {
+	border-color: color($focusColor a(80%));
+	outline: 0;
+}
+
+/*  Clickable buttons change their border color and glow */
+@define-mixin focus-button  {
+	@mixin focus-field;
+	background-position: 0;  /*  bootstrap tries to animate this on hover & focus */
+	background-color:$white;
+	border-collapse: separate; /* Fix IE9 Issue with box-shadow */
+	box-shadow: none;
+}
+
+/*  Block elements change the background color */
+@define-mixin focus-pill  {
+	outline: 0;
+	text-decoration: none;
+	background: $pillBackgroundColorFocus;
+	box-shadow: none; /* override default focus-link() */
+}
+/*  Block elements change the background color and spread via box-shadow */
+@define-mixin focus-link  {
+	box-shadow: 0 0 0 2px $pillBackgroundColorFocus;
+	background-color: $pillBackgroundColorFocus;
+	outline: 0;
+}
+
+/*  Docking Elements */
+/*  ------------------ */
+@define-mixin affix-top-shadow {
+	box-shadow: 0 4px 8px rgba(0,0,0,0.11)
+}
+
+/*  Webkit-style focus */
+/*  ------------------ */
+@define-mixin tab-focus  {
+	/*  Default */
+	outline: thin dotted $grayDark;
+	/*  Webkit */
+	outline: 3px auto -webkit-focus-ring-color;
+	outline-offset: -2px;
+}
+
+/*  Draggable Handle */
+@define-mixin draggable-handle-background  {
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAG0lEQVQIW2M0Njb+f/bsWUYYzciABuAyOFUAAKKMEAXhn6ySAAAAAElFTkSuQmCC) repeat;
+	opacity: 0.5;
+	cursor: move;
+}

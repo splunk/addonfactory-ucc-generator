@@ -1,0 +1,127 @@
+<%inherit file="/layout/wizard.html"/>
+<%namespace file="/lib.html" import="csrf_hidden_input, wizard_cancel_delete, wizard_errors"/>
+<div class="content">
+    <%include file="_steps.html" args="step=2"/>
+    <form method="post" action="${make_url(['dashboardwizard', app, 'step2', 'create']) | h}" class="dashboardStep2">
+        ${wizard_errors(header=_('Your dashboard settings could not be saved.'), errors=saved_search.errors+dashboard.errors)}
+        ${csrf_hidden_input()}
+        <input type="hidden" name="id" value="${saved_search.id | h}"/>
+        <table>
+            <tbody>
+                <tr>
+                    <td class="col1"><span class="orphanLabel">${_('Select')}</span></td>
+                    <td class="col2">
+                        <ul>
+                            <li>
+                                <input type="radio" class="typeRadio" name="dashboard.action" value="new" id="select_dashboard_new"${'' if dashboard_action=='get' else 'checked="checked"'}/>
+                                <label for="select_dashboard_new">${_('New dashboard name')}</label>
+                                <label for="dashboardName" class="hiddenLabel">${_('Dashboard name')}</label>                                
+                                <div class="indent" id="newDashboard">
+                                    <ul>
+                                        <li>
+                                            <% dashboard_label_value = dashboard.label or '' if dashboard_action=='new' else '' %>
+                                            <input type="text" name="dashboard.label" id="dashboardName" value="${dashboard_label_value | h}"/><span class="required">*</span>
+                                            <% dashboard_name_value = dashboard.name or '' if dashboard_action=='new' else '' %>
+                                            <input type="hidden" name="dashboard.name" id="dashboardId" value="${dashboard_name_value | h}"/>
+                                        </li>
+                                        % if saved_search.metadata.can_share_app:
+                                            <li class="shareDashboard">
+                                                <span class="orphanLabel">${_('Share dashboard')}</span>
+                                            </li>
+                                            <li>
+                                                <input type="radio" class="typeRadio" name="sharing" value="user" id="private" ${'checked="checked"' if dashboard.metadata.sharing=='user' else ''}/>
+                                                <label for="private">${_('Keep dashboard private')}</label>
+                                                <br />
+                                                <input type="radio" class="typeRadio" name="sharing" value="app" id="share" ${'checked="checked"' if dashboard.metadata.sharing=='app' else ''}/>
+                                                <label for="share">${_('Share as read-only to all users of current app')}</label>
+                                                <div class="note">
+                                                	${_('<em>Additional permission settings available in </em><strong>Settings &raquo; Searches, reports, and alerts</strong>')}
+                                                </div>
+                                            </li>
+                                        % endif
+                                    </ul>
+                                </div>
+                            </li>
+                            <li>
+                                <input type="radio" class="typeRadio" name="dashboard.action" value="get" id="dashboardExisting"${'checked="checked"' if dashboard_action=='get' else ''} ${'' if len(dashboards) > 0 else 'disabled="disabled"'}/>
+                                <label for="dashboardExisting" ${'' if len(dashboards) > 0 else 'class="disabled"'}>${_('Existing dashboard')}</label>
+                                <label for="dashboardList" class="hiddenLabel">${_('Existing Dashboard List')}</label> 
+                                <div class="indent">
+                                    <select name="dashboard.id" id="dashboardList" ${'' if len(dashboards) > 0 else 'disabled="disabled"'}>
+                                        <option value="">${_('Choose...')}</option>
+                                        % for dashboard_item in dashboards:
+                                            <option value="${dashboard_item.id | h}"${' selected="selected"' if dashboard.id==dashboard_item.id else ""}>${dashboard_item.label | h} (${'/app/%s/%s' % (dashboard_item.namespace, dashboard_item.name)})</option>
+                                        % endfor
+                                    </select>
+                                </div>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+<ul class="buttons splClearfix">
+    <li class="left">${wizard_cancel_delete(make_url(['dashboardwizard', app, 'delete']), saved_search.id)}</li>
+    <li class="right"><button class="splButton-primary" type="submit" onclick="$(document.forms[0]).trigger('submit');"><span>${_('Next &#187;')}</span></button></li>
+    <li class="right"><a href="${make_url(['dashboardwizard', app, 'step1', 'edit'], _qs=dict(id=saved_search.id)) | h}" class="splButton-secondary"><span>${_('&#171;Back')}</span></a></li>
+</ul>
+<script type="text/javascript">
+    (function(){
+        //form behavior
+        //focus on first element
+        //$("input:visible:enabled:first").focus();
+        //dashboard
+        var newDashboardDiv = $("#newDashboard");
+        var newDashboard = $("#newDashboard input");
+        var dashboardSelector = "input[name='dashboard.action']";
+        var dashboardList = $('#dashboardList');
+        $(dashboardSelector).change(function(){
+            if($(dashboardSelector+":checked").val()=="new"){
+                newDashboard.prop("disabled", false);
+                newDashboardDiv.removeClass("disabled");
+                newDashboardDiv.show();
+                dashboardList.prop("disabled", true);
+                dashboardList.parent().hide();
+            }else{
+                newDashboard.prop("disabled", true);
+                newDashboardDiv.addClass("disabled");
+                dashboardList.prop("disabled", false);
+                dashboardList.parent().show();
+                newDashboardDiv.hide();
+            }
+        }).trigger("change");
+        //refresh
+        var scheduled = $("#scheduled input, #scheduled select")
+        var refreshSelector = "input[name='refresh']";
+        var defaultSchedule = $("#refreshInterval");
+        $(refreshSelector).change(function(){
+            if($(refreshSelector + ":checked").val()=="schedule"){
+                scheduled.prop("disabled", false);
+                if(!$("input[name='schedule_type']:checked").val()){
+                    defaultSchedule.prop('checked', true);
+                }
+            }else{
+                scheduled.prop("disabled", true);
+            }
+        }).trigger("change");
+        //schedule
+        var scheduleSelector = "input[name='schedule_type']";
+        var alertPreset = $("select[name='alert_preset']");
+        var cronSchedule = $("#alert_schedule_cron_value");
+        $(scheduleSelector).change(function(){
+            if($(scheduleSelector + ":checked").val()=='preset'){
+                alertPreset.prop("disabled", false);
+                cronSchedule.prop("disabled", true);
+            }else{
+                alertPreset.prop("disabled", true);
+                cronSchedule.prop("disabled", false);
+            }
+        }).trigger("change");
+        var dashboardId = document.getElementById("dashboardId");
+        $("#dashboardName").keyup(function(){
+            dashboardId.value = this.value.toLowerCase().replace(/\s/g, '_')
+        });
+    })()
+</script>

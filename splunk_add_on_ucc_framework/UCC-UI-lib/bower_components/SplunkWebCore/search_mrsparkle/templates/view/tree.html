@@ -1,0 +1,237 @@
+<%page expression_filter="h"/>
+<%namespace name="lib" file="//lib.html" import="*" />
+<%namespace name="helpers" file="//admin/_helpers.html"/>
+<%!
+    from splunk.appserver.mrsparkle.lib import util
+    import splunk
+    import json
+    import re
+    import urllib
+    
+    def normalize_path(path):
+        return re.sub(r'\\+', r'\\', urllib.unquote(path))
+%>
+
+<%inherit file="//layout/base.html" />
+<%def name="css()">
+    <%lib:stylesheet_tags files="${['/static/css/jquery.treeview.css', 
+                                    '/static/css/view.css',
+                                    '/static/css/wizard.css',
+                                    '/static/css/skins/default/default.css'
+                                    ]}" />
+    <style type="text/css">
+        body { font-family: helvetica, arial, sans-serif; font-size: 12px; color: #333;  }
+        .wizard .content { padding: 0px; }
+        #treebody { padding: 0px 10px; width : 680px; height : 350px; overflow-x: hidden; overflow-y: auto; }
+        #selector { padding: 10px 10px; line-height: 130%; width: 680px; border-width: 1px; border-style: solid; display: block;}
+        li.disabled { color: #C0C0C0; font-style:italic; }
+        .MessageList { display: none; }
+    </style>
+</%def>
+
+<%def name="body_element_open()">
+    <body class="wizard">
+</%def>
+
+% if len(errors)>0:
+    % for e in errors:
+        <div class="error">${e}</div>
+    % endfor
+    <% return '' %>
+% endif
+
+<div class="content">
+    <ul class="MessageList"></ul>
+
+    <ul id="treebody" tabindex="1" root="${start_node}"></ul>
+
+    <div id="selector">
+        <b>${selected_text}</b><span id="selected">${normalize_path(start_node)}</span>
+    </div>
+</div>    
+
+<ul class="splClearfix buttons">
+    <li class="left"><a href="#" class="splButton-secondary cancel" tabindex="3">${_("Cancel")}</a></li>
+    <li class="right"><button id="btSubmit" class="splButton-primary" type="submit" tabindex="2"><span>${_('Select')}</span></button></li>
+</ul>
+
+<%def name="js()">
+    <%lib:script_tags files="${['/static/js/splunk.jquery.csrf_protection.js',
+                                '/static/js/contrib/jquery.cookie.js',
+                                '/static/js/contrib/jquery.treeview.js',
+                                '/static/js/contrib/jquery.treeview.edit.js',
+                                '/static/js/contrib/jquery.treeview.async.js'
+                                ]}" />
+    
+    <script type="text/javascript">
+        var selectedId = "";
+        var selectionIdx = -1;
+        var itemHeight = -1;
+        var visibleItems = -1;
+        var messageList = $('.MessageList');
+        
+        function toggler() {
+            $('li span').removeClass('selected')
+            $('span:first', this).addClass('selected');
+            
+            if ($(this).hasClass('showmore')) {
+                return;
+            }
+            
+            if ($(this).hasClass('noSelection')) {
+                $('#btSubmit').prop('disabled', true).removeClass().addClass('splButton-primary splButton-disabled');
+            } else {
+                $('#btSubmit').prop('disabled', false).removeClass().addClass('splButton-primary');
+            }
+            selectedId = unescape($(this).attr('id'));
+            $('#selected').text(selectedId);
+            
+            selectionIdx = $(this).index('.treeview li:visible');
+            
+            hideMessage();
+        }
+        
+        function navigate(key) {
+            var li;
+            if (itemHeight < 0) {
+                itemHeight = $('.treeview li:not(.collapsable):first').outerHeight();
+                visibleItems = Math.floor($('.treeview').height() / itemHeight);
+            }
+            switch(key) {
+                case 38: // up
+                    if(selectionIdx-- <= 0) {
+                        selectionIdx = 0;
+                        return;
+                    }
+                    li = $('.treeview li:visible').eq(selectionIdx);
+                    if (li.position().top < 0) {
+                        $('.treeview').scrollTop($('.treeview').scrollTop() - itemHeight);
+                    }
+                    break;
+                case 40: // down
+                    if(selectionIdx++ == $('.treeview li:visible').size()-1) {
+                        selectionIdx--;
+                        return;
+                    }                                
+                    li = $('.treeview li:visible').eq(selectionIdx);
+                    if (li.position().top + itemHeight > $('.treeview').height()) {
+                        $('.treeview').scrollTop($('.treeview').scrollTop() + itemHeight);
+                    }
+                    break;
+                case 37: // left
+                    li = $('.treeview li:visible').eq(selectionIdx);
+                    if (li.hasClass('collapsable')) {
+                        navigate(13); // enter
+                    } else {
+                        li = li.parents('li')[0] || li;
+                        selectionIdx = $(this).index(li);
+                    }                
+                    break;                        
+                case 39: // right
+                    li = $('.treeview li:visible').eq(selectionIdx);
+                    if (li.hasClass('expandable')) {
+                        return navigate(13); // enter
+                    } else if (li.hasClass('collapsable')) {
+                        return navigate(40); // down
+                    }
+                    break;
+                case 13: // enter
+                case 32: // space
+                    li = $('.treeview li:visible').eq(selectionIdx);
+                    if (li.hasClass('showmore')) {
+                        $('span:first', li).click();
+                    }
+                    else {
+                        $('div:first', li).click();
+                        if (li.hasClass('leaf')) {
+                            $('#btSubmit').click();
+                        }
+                    }
+                    break;
+                case 33: // page up
+                    selectionIdx -= visibleItems+1;
+                    if (selectionIdx < visibleItems) {
+                        selectionIdx = 0;
+                    }
+                    li = $('.treeview li:visible').eq(selectionIdx);
+                    $('.treeview').scrollTop($('.treeview').scrollTop() + li.position().top);
+                    break;
+                case 34: // page down
+                    li = $('.treeview li:visible').eq(selectionIdx);
+                    $('.treeview').scrollTop($('.treeview').scrollTop() + li.position().top);
+                    selectionIdx += visibleItems-1;
+                    if (selectionIdx > $('.treeview li:visible').size()-1) {
+                        selectionIdx = $('.treeview li:visible').size()-1
+                    }
+                    li = $('.treeview li:visible').eq(selectionIdx);
+                    break;
+                case 35: // end
+                    selectionIdx = $('.treeview li:visible').size()-1;
+                    li = $('.treeview li:visible').eq(selectionIdx);
+                    $('.treeview').scrollTop($('.treeview').scrollTop() + li.position().top);
+                    break;
+                case 36: // home
+                    selectionIdx = 0;
+                    li = $('.treeview li:visible').eq(selectionIdx);
+                    $('.treeview').scrollTop($('.treeview').scrollTop() + li.position().top);
+                    break;
+                default:
+                    return;
+            }
+            toggler.call(li);
+        }
+        
+        function showMessage(msg) {
+            $('<li>').addClass('error').text(msg).appendTo(messageList);
+            messageList.show();
+        }
+        
+        function hideMessage() {
+            messageList.empty().hide();
+        }
+        
+        function disableCurrentNode() {
+            var $selected = $(document.getElementById(escape(selectedId)));
+            if ($selected.length > 0) {
+                $selected.removeClass('collapsable').addClass('disabled noSelection').children('ul,div').remove();
+                $('#btSubmit').prop('disabled', true).removeClass().addClass('splButton-secondary');
+                return;
+            }
+        }
+        
+        $(function() {
+            $('#treebody').treeview({
+                url: '${proxy_path}',
+                ajax: {
+                    data: ${json_decode(data_args) | n},
+                    type: "GET",
+                    error: function(xhr, textStatus, errorThrown) {
+                        var message = "";
+                        try {
+                            var response = $.parseJSON(xhr.responseText);
+                            message = response.messages[0].message;
+                        } catch(e) { 
+                            message = _('Unable to parse server response.')
+                        }
+                        showMessage(message);
+                    }
+                },
+                toggle: toggler,
+                showMessage: showMessage,
+                disableCurrentNode: disableCurrentNode,
+                startNode: '', // '${start_node}', // to be uncommented in Flava (SPL-44651)
+                separate_children: ${'true' if separate_children else 'false'}
+            });
+            
+            $('#treebody').focus();
+            
+            $(document).keydown(function(event) {
+                navigate(event.keyCode);
+                event.preventDefault();
+            });
+        })
+    </script>
+</%def>
+
+
+

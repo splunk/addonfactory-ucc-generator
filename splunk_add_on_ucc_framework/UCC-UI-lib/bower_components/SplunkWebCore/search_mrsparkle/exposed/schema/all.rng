@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" xmlns="http://relaxng.org/ns/structure/1.0">
+  <start>
+    <a:documentation>
+Splunk combined RelaxNG schema 
+</a:documentation>
+    <choice>
+      <externalRef href="view.rng"/>
+      <externalRef href="simplexml.rng"/>
+      <externalRef href="nav.rng"/>
+      <externalRef href="manager.rng"/>
+      <externalRef href="setup.rng"/>
+      <externalRef href="quickstart.rng"/>
+    </choice>
+  </start>
+</grammar>

@@ -1,0 +1,65 @@
+{
+  "spl": "regex \"activity\"=\".*\" | search activity=\"Download\"",
+  "ast": {
+    "command": "search",
+    "raw": " activity=\"Download\"",
+    "type": "SP_STREAM",
+    "fields_and_properties": [
+      {
+        "name": "activity",
+        "referenced": true
+      }
+    ],
+    "function": "AND",
+    "args": [{
+      "type": "function",
+      "value": "==",
+      "args": [{
+        "type": "field",
+        "value": "activity"
+      }, {
+        "type": "string",
+        "value": "download"
+      }],
+      "is_negated": false,
+      "is_numeric": false,
+      "is_indexed": false,
+      "is_case_sensitive": false,
+      "is_literal_term": false
+    }],
+    "pipeline": "streaming",
+    "sources": [{
+      "command": "regex",
+      "raw": " \"activity\"=\".*\" ",
+      "type": "SP_STREAM",
+      "fields_modified": [],
+      "fields_referenced": [{
+        "name": "activity"
+      }],
+      "fields_removed": [],
+      "op": "=",
+      "field": "activity",
+      "regex_expresion": ".*",
+      "pipeline": "streaming",
+      "annotations": {
+        "interesting_fields": [{
+          "name": "*"
+        }, {
+          "name": "activity"
+        }]
+      }
+    }],
+    "annotations": {
+      "interesting_fields": [{
+        "name": "*"
+      }, {
+        "name": "activity"
+      }]
+    }
+  },
+  "actions": [{
+    "name": "get_interesting_fields"
+  }, {
+    "name": "annotate_datasets"
+  }]
+}

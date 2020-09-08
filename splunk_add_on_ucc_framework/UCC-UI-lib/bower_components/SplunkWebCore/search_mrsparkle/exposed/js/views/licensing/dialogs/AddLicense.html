@@ -1,0 +1,60 @@
+<div class="browser-warning">
+    <div class="alert alert-error">
+        <i class="icon-alert"></i><%= _('Your browser does not support file uploads. Please download and install the latest version or use another supported browser to access this feature.').t() %> <a class="external" href="<%- helpLinkBrowser %>" target="_blank"> <%= _('Learn More').t() %></a>
+    </div>
+</div>
+
+<p class="license-progress-control">
+    <%= _('Validating.. ').t() %>
+</p>
+
+<div class="progress">
+    <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+</div>
+
+<div class="uploadControlWrapper">
+    <p><%= _('Upload a .lic file to add a license: ').t() %></p>
+
+    <div class="license-validation-error">
+        <div class="alert alert-error">
+            <i class="icon-alert"></i><%= _('Validation failed. Please double check your license file.').t() %>
+        </div>
+    </div>
+
+    <div class="dropzone">
+        <svg class="dropzone-icon" width="72px" height="88px" viewBox="0 0 72 88" version="1.1" xmlns="http://www.w3.org/2000/svg">
+            <g class="fill">
+                <path d="M50,27 L68.0005854,27 C70.2022516,27 72,28.7919267 72,31.0023804 L72,83.9976196 C72,86.2074215 70.2094011,88 68.0005854,88 L3.99941455,88 C1.79774843,88 0,86.2080733 0,83.9976196 L0,31.0023804 C0,28.7925785 1.79059889,27 3.99941455,27 L21,27 L21,32 L5.99898406,32 C5.4472604,32 5,32.4408979 5,32.9958767 L5,82.0041233 C5,82.5541308 5.44605521,83 5.99898406,83 L66.0010159,83 C66.5527396,83 67,82.5591021 67,82.0041233 L67,32.9958767 C67,32.4458692 66.5539448,32 66.0010159,32 L50,32 L50,27 Z"></path>
+                <path d="M41.9634682,10 L41.9634682,28 L46.9634682,28 L46.9634682,5 L44.4634682,5 L23.9634682,5 L23.9634682,10 L41.9634682,10 Z" transform="translate(35.463468, 16.500000) rotate(-45.000000) translate(-35.463468, -16.500000) "></path>
+                <rect x="33" y="3" width="5" height="51"></rect>
+            </g>
+        </svg>
+        <svg class="dropzone-box" width="580px" height="170px" viewBox="0 0 580 170" version="1.1" xmlns="http://www.w3.org/2000/svg">
+             <rect class="dashed" x="1" y="1" rx="10" ry="10" width="578" height="168"></rect>
+        </svg>
+        <div class="dropzone-text"><h2><%= _('Drop your license file here').t() %> </h2></div>
+    </div>
+
+    <div class="multiple-files-error">
+        <div class="alert alert-error">
+            <i class="icon-alert"></i><%= _('Multiple files selected. Try again, with only one file selected.').t() %>
+        </div>
+    </div>
+
+    <p class="license-select-control"><%= _('Or').t() %>
+        <a href="#" class="btn select-file-button"><%= _('Select a file').t() %></a>
+        <input type="file" class="license-file-input" name="spl-file" />
+        <span class="license-file-name"></span>
+    </p>
+
+    <p class="license-paste-control"><%= _('Or').t() %>
+        <a href="#" class="license-paste-xml-link"><%= _('copy & paste the license XML directly...').t() %></a>
+    </p>
+    <div class="license-pastebin">
+        <textarea class="license-pastebin-textarea" rows="20" cols="90"></textarea>
+    </div>
+
+    <p class="get-new-license"><%= _('Don\'t have a license yet? ').t() %>
+        <a href="http://www.splunk.com/goto/estore" class="external"><%= _('Get a new license').t() %></a>
+    </p>
+</div>

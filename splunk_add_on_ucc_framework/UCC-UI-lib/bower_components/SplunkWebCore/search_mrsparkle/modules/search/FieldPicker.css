@@ -1,0 +1,277 @@
+
+.FieldPicker {
+    margin: 0;
+    padding: 0px;
+}
+.FieldPicker .inlineHeader {
+    display:none;
+    _margin-left: 5px;
+    width:165px;
+    _width:150px;
+    line-height: 120%;
+    margin-top:8px;
+    margin-bottom: 6px;
+}
+.FieldPicker span.fpDivider {
+    margin:0px 4px;
+}
+.FieldPickerPopup {
+    line-height: 23px;
+    background:#FFF;
+}
+.FieldPicker .fpPopupContainer,
+.FieldPickerPopup .fpPopupContainer {
+    height: 452px;
+    width: 640px;
+    display: none;
+}
+.FieldPickerPopup .FieldPickerWarn {
+    font-weight: bold;
+    padding: 10px;
+    margin-top: 0px;
+}
+.FieldPickerPopup .fpUpdateFields {
+    position:absolute;
+    top: -26px;
+    right: 54px;
+    display: none;
+}
+.FieldPickerPopup .fpUpdateFieldsUpdate {
+    text-decoration:underline;
+}
+/* all fields */
+.FieldPickerPopup .fpAllFieldsContainer {
+    width: 350px;
+    height: 452px;
+    float: left;
+}
+
+/* selected fields */
+.FieldPickerPopup .fpSelectedFieldsContainer {
+    float: left;
+    width: 288px;
+    height: 452px;
+    _height: 458px;
+}
+
+.FieldPickerPopup .fpSelectedFields {
+    margin: 10px;
+    padding: 0;
+    list-style: none none;
+}
+
+.FieldPickerPopup .fpSelectedFields li {
+    padding:0px 0px 3px 0px;
+    cursor: move;
+    _width:260px;
+}
+
+.FieldPickerPopup .fpSelectedFields span.splIcon-arrow-w {
+    margin:5px 8px 0 0;
+    display: block;
+    float: left; 
+}
+
+/*-- Filter fields input --*/
+
+.FieldPickerPopup .fpFilterFields {
+    height: 72px;
+    padding: 3px 10px;
+    position: relative;
+    z-index: 1;
+}
+
+.FieldPickerPopup .fpFilterFields fieldset, .FieldPickerPopup .fpFilterFields label {
+    margin: 0;
+    padding: 0;
+}
+
+.FieldPickerPopup .fpFilterFields label {
+    display: block;
+}
+
+.FieldPickerPopup .fpFilterFields div.fpFilter {
+    float: left;
+}
+
+.FieldPickerPopup .fpFilterFields .fpTypeFilter {
+    width: 90px;
+}
+
+.FieldPickerPopup .fpFilterFields .fpKeywordFilter {
+    width: 155px;
+}
+
+.FieldPickerPopup .fpFilterFields .fpFrequencyFilter {
+    width: 85px;
+}
+
+.FieldPickerPopup .fpFilterFields input, .FieldPickerPopup .fpFilterFields select {
+    height: 17px;
+    padding: 2px 0px 2px 5px;
+    margin: 0;
+}
+
+.FieldPickerPopup .fpFilterFields .fpFrequencyFilter input {
+    width: 68px;
+}
+
+.FieldPickerPopup .fpFilterFields .fpKeywordFilter input {
+    width: 138px;
+}
+
+.FieldPickerPopup .fpFilterFields .fpTypeFilter select {
+    width: 90px;
+    display: block;
+    height: auto;
+    padding: 1px 0px 2px;
+}
+
+.FieldPickerPopup .fpFilterFields .fpKeywordFilterClear,
+.FieldPickerPopup .fpFilterFields .fpFrequencyFilterClear {
+    position: absolute;
+    z-index: 10;
+    top: 32px;
+    *top 33px;
+}
+
+.FieldPickerPopup .fpFilterFields .fpKeywordFilterClear {
+    right: 200px;
+}
+
+.FieldPickerPopup .fpFilterFields .fpFrequencyFilterClear {
+    right: 115px;
+}
+
+.FieldPickerPopup .fpAddAllLink {
+    display: block;
+    margin-top: 6px;
+}
+
+/*-- scrolling table with fixed header --*/
+
+.FieldPickerPopup .fpFieldListContainerOuter {
+    width:350px;
+    position: relative;
+    padding-top: 20px;
+}
+
+.FieldPickerPopup .fpFieldListContainerInner {
+    width: 350px;
+    height: 325px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.FieldPickerPopup .fpSelectedFieldsContainer .fpFieldListContainerInner {
+    width: 289px;
+    height: 382px;
+    _height: 388px;
+}
+
+.FieldPickerPopup .fpClearSelectedFields {
+    margin:5px 10px;
+    padding-bottom: 3px;
+    display: block;
+}
+
+.FieldPickerPopup .fpFieldList {
+    border-collapse: collapse;
+    width: 100%;
+    ?width:auto;
+}
+
+.FieldPickerPopup .fpFieldList a {
+    text-decoration: none;
+}
+
+.FieldPickerPopup .fpFieldListContainerOuter thead tr {
+    position: absolute;
+    top:0px;
+    left: 0px;
+    height: 20px;
+    line-height: 20px;
+}
+
+.FieldPickerPopup .fpFieldListContainerOuter th {
+    height: 20px;
+    line-height: 20px;
+    padding: 0;
+}
+
+.FieldPickerPopup .fpFieldListContainerOuter th span {
+    display: block;
+    _display:inline;
+    height:20px;
+    width:10px;
+    float: right;
+    margin-right: 5px;
+}
+
+.FieldPickerPopup .fpFieldListContainerOuter table.fpFieldList td {
+    padding: 1px 0px;
+}
+
+.FieldPickerPopup .fpFieldListContainerOuter table.fpFieldList td, .FieldPickerPopup .fpFieldListContainerOuter table.fpFieldList th {
+    text-align: left;
+}
+
+.FieldPickerPopup .fpFieldListContainerOuter table.fpFieldList .fpBlankHeader {
+    width:23px;
+}
+
+.FieldPickerPopup .fpFieldListContainerOuter table.fpFieldList .fpAddTermCell {
+    width:23px;
+}
+
+.FieldPickerPopup .fpFieldListContainerOuter table.fpFieldList .fpFieldListFirstHeader {
+    width: 153px;
+    padding-left: 7px;
+}
+
+.FieldPickerPopup .fpFieldListContainerOuter table.fpFieldList .fpFieldListFirst {
+    width: 160px;
+}
+
+.FieldPickerPopup .fpFieldListContainerOuter table.fpFieldList .fpFieldListSecondHeader {
+    width: 56px;
+    padding-left: 10px;
+}
+
+.FieldPickerPopup .fpFieldListContainerOuter table.fpFieldList .fpFieldListSecond {
+    width:56px;
+    padding-left: 10px;
+}
+
+.FieldPickerPopup .fpFieldListContainerOuter table.fpFieldList .fpFieldListThirdHeader {
+    width: 89px;
+    padding-left: 10px;
+}
+
+.FieldPickerPopup .fpFieldListContainerOuter table.fpFieldList .fpFieldListThird {
+    text-align: left;
+    padding-left: 10px;
+}
+
+.FieldPickerPopup .fpFieldTerm div {
+    overflow: hidden;
+    width: 148px;
+    margin: 0 0 0 7px;
+    cursor: pointer;
+}
+
+.FieldPickerPopup .fpAddTermCell span.splIcon-arrow-e {
+    margin-left: 9px;
+    display: block;
+}
+
+/* graph popup action */
+.FieldPickerPopup .fpFieldListSecond a {
+    padding: 5px 20px 5px 0px;
+}
+     
+
+
+
+
+
+

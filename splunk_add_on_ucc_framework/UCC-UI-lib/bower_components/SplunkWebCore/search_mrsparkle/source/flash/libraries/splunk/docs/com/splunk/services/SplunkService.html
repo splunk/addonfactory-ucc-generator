@@ -1,0 +1,445 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="../../../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../../../print.css" type="text/css" media="print">
+<meta content="SplunkService,com.splunk.services.SplunkService,basePath,hostPath,isConnected,sessionKey,authenticate,close,loadSession" name="keywords">
+<title>com.splunk.services.SplunkService</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'SplunkService - Splunk Library Documentation';
+				var baseRef = '../../../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">Splunk Library Documentation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?com/splunk/services/SplunkService.html&amp;com/splunk/services/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;SplunkService</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#eventSummary">Events</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class SplunkService"); titleBar_setSubNav(false,true,false,false,true,false,true,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">com.splunk.services</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class SplunkService</td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Inheritance</td><td class="inheritanceList">SplunkService <img class="inheritArrow" alt="Inheritance" title="Inheritance" src="../../../images/inherit-arrow.gif"> flash.events.EventDispatcher</td>
+</tr>
+</table>
+<p></p>
+  The SplunkService class connects to a Splunkd server. The default
+  assumption is that this class is connecting to the Splunk UI server, and
+  not directly to the Splunkd engine.
+  <p></p>
+<br>
+<hr>
+</div>
+<a name="propertySummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Properties</div>
+<table id="summaryTableProperty" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#basePath">basePath</a> : String<div class="summaryTableDescription">[read-only]
+   The base URI path to prepend to relative URIs.</div>
+</td><td class="summaryTableOwnerCol">SplunkService</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#hostPath">hostPath</a> : String<div class="summaryTableDescription">[read-only]
+   The complete host URI (excluding path) of the Splunk server with
+   which to connect.</div>
+</td><td class="summaryTableOwnerCol">SplunkService</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#isConnected">isConnected</a> : Boolean<div class="summaryTableDescription">[read-only]
+   Indicates whether this SplunkService object is currently connected.</div>
+</td><td class="summaryTableOwnerCol">SplunkService</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#sessionKey">sessionKey</a> : String<div class="summaryTableDescription">[read-only]
+   The session identifier for a currently connected SplunkService
+   object.</div>
+</td><td class="summaryTableOwnerCol">SplunkService</td>
+</tr>
+</table>
+</div>
+<a name="methodSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Methods</div>
+<table id="summaryTableMethod" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#SplunkService()">SplunkService</a>(hostPath:String = "http://localhost:8000", basePath:String = "/splunkd/services")</div>
+<div class="summaryTableDescription">
+   Creates a new SplunkService object.</div>
+</td><td class="summaryTableOwnerCol">SplunkService</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#authenticate()">authenticate</a>(username:String, password:String):void</div>
+<div class="summaryTableDescription">
+   Authenticates with the Splunk server specified in the hostPath
+   property, using login credentials.</div>
+</td><td class="summaryTableOwnerCol">SplunkService</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#close()">close</a>():void</div>
+<div class="summaryTableDescription">
+   Closes the service connection.</div>
+</td><td class="summaryTableOwnerCol">SplunkService</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#loadSession()">loadSession</a>(sessionKey:String, validate:Boolean = true):void</div>
+<div class="summaryTableDescription">
+   Connects to an existing authenticated session.</div>
+</td><td class="summaryTableOwnerCol">SplunkService</td>
+</tr>
+</table>
+</div>
+<a name="eventSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Events</div>
+<table id="summaryTableEvent" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Event</th><th>Summary</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#event:close">close</a>
+</div>
+</td><td class="summaryTableDescription summaryTableCol">
+  Dispatched when the service connection is closed.</td><td class="summaryTableOwnerCol">SplunkService</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#event:connect">connect</a>
+</div>
+</td><td class="summaryTableDescription summaryTableCol">
+  Dispatched when a service connection has been established.</td><td class="summaryTableOwnerCol">SplunkService</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#event:error">error</a>
+</div>
+</td><td class="summaryTableDescription summaryTableCol">
+  Dispatched if an error occurs that terminates the service connection.</td><td class="summaryTableOwnerCol">SplunkService</td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<a name="propertyDetail"></a>
+<div class="detailSectionHeader">Property detail</div>
+<a name="basePath"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">basePath</td><td class="detailHeaderType">property</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>basePath:String</code>&nbsp;&nbsp;[read-only]<p>
+   The base URI path to prepend to relative URIs. This value corresponds
+   to the value of the basePath parameter specified in the constructor.
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get basePath():String</code>
+<br>
+</div>
+<a name="hostPath"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">hostPath</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>hostPath:String</code>&nbsp;&nbsp;[read-only]<p>
+   The complete host URI (excluding path) of the Splunk server with
+   which to connect. This value corresponds to the value of the hostPath
+   parameter specified in the constructor.
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get hostPath():String</code>
+<br>
+</div>
+<a name="isConnected"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">isConnected</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>isConnected:Boolean</code>&nbsp;&nbsp;[read-only]<p>
+   Indicates whether this SplunkService object is currently connected.
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get isConnected():Boolean</code>
+<br>
+</div>
+<a name="sessionKey"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">sessionKey</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>sessionKey:String</code>&nbsp;&nbsp;[read-only]<p>
+   The session identifier for a currently connected SplunkService
+   object.
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get sessionKey():String</code>
+<br>
+</div>
+<a name="constructorDetail"></a>
+<div class="detailSectionHeader">Constructor detail</div>
+<a name="SplunkService()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">SplunkService</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">constructor</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function SplunkService(hostPath:String = "http://localhost:8000", basePath:String = "/splunkd/services")</code><p>
+   Creates a new SplunkService object.
+   
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">hostPath</span>:String</code> (default = "<code>http://localhost:8000</code>")<code></code> &mdash; The complete host URI (excluding path) of the Splunk
+   server with which to connect.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">basePath</span>:String</code> (default = "<code>/splunkd/services</code>")<code></code> &mdash; The base URI path to prepend to relative URIs.
+   </td>
+</tr>
+</table>
+</div>
+<a name="methodDetail"></a>
+<div class="detailSectionHeader">Method detail</div>
+<a name="authenticate()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">authenticate</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function authenticate(username:String, password:String):void</code><p>
+   Authenticates with the Splunk server specified in the hostPath
+   property, using login credentials. If a service is already connected,
+   the connection is closed.
+   
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">username</span>:String</code> &mdash; The username of a Splunk user.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">password</span>:String</code> &mdash; The password associated with the username.
+   
+   </td>
+</tr>
+</table>
+<br>
+<span class="label">Throws</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code></code> &mdash; The value of the username or password parameter is
+   null.
+   </td>
+</tr>
+</table>
+</div>
+<a name="close()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">close</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function close():void</code><p>
+   Closes the service connection.
+   </p></div>
+<a name="loadSession()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">loadSession</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function loadSession(sessionKey:String, validate:Boolean = true):void</code><p>
+   Connects to an existing authenticated session. This method is used if
+   there is a managing service that has already obtained a session key.
+   If a service is already connected, the connection is closed.
+   
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">sessionKey</span>:String</code> &mdash; The authentication token to use.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">validate</span>:Boolean</code> (default = <code>true</code>)<code></code> &mdash; Whether to validate the sessionKey by sending a
+   request to the server.
+   </td>
+</tr>
+</table>
+</div>
+<div class="detailSectionHeader">Event detail</div>
+<a name="event:close"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">close</td><td class="detailHeaderType">event&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<span class="label">Event object type: </span><a href="events/ServiceEvent.html"><code>com.splunk.services.events.ServiceEvent</code></a>
+<br>
+<span class="label">ServiceEvent.type property = </span><a href="events/ServiceEvent.html#CLOSE"><code>com.splunk.services.events.ServiceEvent.CLOSE</code></a>
+<br><p>
+  Dispatched when the service connection is closed.
+  
+  </p><p>
+   Defines the value of the <code>type</code> property of a
+   <code>close</code> event object.
+   
+   </p><p>This event has the following properties:</p>
+   <table class=innertable>
+   <tr><th>Property</th><th>Value</th></tr>
+   <tr><td><code>bubbles</code></td><td><code>false</code></td></tr>
+   <tr><td><code>cancelable</code></td><td><code>false</code>; there is no default behavior to cancel.</td></tr>
+   <tr><td><code>currentTarget</code></td><td>The object that is actively processing the Event object with an event listener.</td></tr>
+   <tr><td><code>target</code></td><td>The object whose connection has been closed.</td></tr>
+   </table>
+   
+   <p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../services/SplunkService.html#close()" target="">close()</a>
+</div>
+</div>
+<a name="event:connect"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">connect</td><td class="detailHeaderType">event&nbsp;</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<span class="label">Event object type: </span><a href="events/ServiceEvent.html"><code>com.splunk.services.events.ServiceEvent</code></a>
+<br>
+<span class="label">ServiceEvent.type property = </span><a href="events/ServiceEvent.html#CONNECT"><code>com.splunk.services.events.ServiceEvent.CONNECT</code></a>
+<br><p>
+  Dispatched when a service connection has been established.
+  
+  </p><p>
+   Defines the value of the <code>type</code> property of a
+   <code>connect</code> event object.
+   
+   </p><p>This event has the following properties:</p>
+   <table class=innertable>
+   <tr><th>Property</th><th>Value</th></tr>
+   <tr><td><code>bubbles</code></td><td><code>false</code></td></tr>
+   <tr><td><code>cancelable</code></td><td><code>false</code>; there is no default behavior to cancel.</td></tr>
+   <tr><td><code>currentTarget</code></td><td>The object that is actively processing the Event object with an event listener.</td></tr>
+   <tr><td><code>target</code></td><td>The object that has established a connection.</td></tr>
+   </table>
+   
+   <p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../services/SplunkService.html#authenticate()" target="">authenticate()</a>
+<br>
+<a href="../services/SplunkService.html#loadSession()" target="">loadSession()</a>
+</div>
+</div>
+<a name="event:error"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">error</td><td class="detailHeaderType">event&nbsp;</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<span class="label">Event object type: </span><a href="events/ServiceErrorEvent.html"><code>com.splunk.services.events.ServiceErrorEvent</code></a>
+<br>
+<span class="label">ServiceErrorEvent.type property = </span><a href="events/ServiceErrorEvent.html#ERROR"><code>com.splunk.services.events.ServiceErrorEvent.ERROR</code></a>
+<br><p>
+  Dispatched if an error occurs that terminates the service connection.
+  
+  </p><p>
+   Defines the value of the <code>type</code> property of an
+   <code>error</code> event object.
+   
+   </p><p>This event has the following properties:</p>
+   <table class=innertable>
+   <tr><th>Property</th><th>Value</th></tr>
+   <tr><td><code>bubbles</code></td><td><code>false</code></td></tr>
+   <tr><td><code>cancelable</code></td><td><code>false</code>; there is no default behavior to cancel.</td></tr>
+   <tr><td><code>currentTarget</code></td><td>The object that is actively processing the Event object with an event listener.</td></tr>
+   <tr><td><code>target</code></td><td>The object experiencing an error.</td></tr>
+   <tr><td><code>text</code></td><td>Text to be displayed as an error message.</td></tr>
+   <tr><td><code>errorType</code></td><td>The specific type of error that occurred.</td></tr>
+   </table>
+   
+   <p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../services/SplunkService.html#authenticate()" target="">authenticate()</a>
+<br>
+<a href="../services/SplunkService.html#loadSession()" target="">loadSession()</a>
+</div>
+</div>
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright"></center>
+</div>
+</body>
+</html>
+<!---->

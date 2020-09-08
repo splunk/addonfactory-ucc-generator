@@ -1,0 +1,34 @@
+<table class="table table-chrome table-striped table-hover">
+    <thead>
+       <tr>
+		<th class="sorts"><a href="#"><%-_("Matched").t()%></a></th>
+		<th class="sorts"><a href="#"><%-_("Host Name").t()%></a></th>
+		<th class="sorts"><a href="#"><%-_("DNS Name").t()%></a></th>
+		<th class="sorts"><a href="#"><%-_("Client Name").t()%></a></th>
+		<th class="sorts"><a href="#"><%-_("IP Address").t()%></a></th>
+		<th class="sorts"><a href="#"><%-_("Machine Type").t()%></a></th>
+		<th class="sorts"><a href="#"><%-_("Phone Home").t()%></a></th>
+       </tr>
+    </thead>
+    <tbody>
+		       <% collection.each(function(model){ %>
+			       <tr class="">
+				 <td>
+                                     <% if (areAllClientsSelected == true) { %>
+                                         <i class="icon-check"></i>
+                                     <% } else if (model.entry.content.get("selected") == true) { %>
+                                         <i class="icon-check"></i>
+                                     <% } %>
+				 </td>
+				 <td><%- model.entry.content.get("hostname") %> </td>
+				 <td><%- model.entry.content.get("dns") %> </td>
+				 <td><%- model.entry.content.get("name") %> </td>
+				 <td><%- model.entry.content.get("ip") %> </td>
+				 <td><%- model.entry.content.get("utsname") %> </td>
+                                 <% var lastPhoneHomeTime = new Date(model.entry.content.get("lastPhoneHomeTime")); %>
+				 <td><%- convertToRelativeTime(lastPhoneHomeTime) %> </td>
+			       </tr>
+		       <% }) %>
+    </tbody>
+</table>
+

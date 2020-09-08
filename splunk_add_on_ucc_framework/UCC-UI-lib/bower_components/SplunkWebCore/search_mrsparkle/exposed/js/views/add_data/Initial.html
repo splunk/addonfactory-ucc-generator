@@ -1,0 +1,204 @@
+<div id="gdi-overview-main-container">
+    <div class="section-padded section-header">
+        <h1 class="section-title"><%=_("Add Data").t()%></h1>
+        <p class="section-description">
+            <%=_("How do you want to add data?").t()%>
+        </p>
+    </div>
+
+    <div class="text-center" id="top">
+        <div class="inner-container">
+            <% if (model.user.canUploadData()){ %>
+            <div class="type-container">
+                <div id="btn-upload" class="type-btn link-wrap" tabIndex="0">
+                    <svg width="102px" height="102px" viewBox="0 0 102 102" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                        <circle class="stroke stroke-thick" cx="51" cy="51" r="50"/></circle>
+                        <g class="fill">
+                            <path transform="translate(30.000000, 21.000000)" d="M30,16 L39.5,16 C41.4334271,16 43,17.5665729 43,19.5 L43,48.5 C43,50.4334271 41.4334271,52 39.5,52 L3.5,52 C1.56657288,52 0,50.4334271 0,48.5 L0,19.5 C0,17.5665729 1.56657288,16 3.5,16 L12,16 L12,19 L3.5,19 C3.22342712,19 3,19.2234271 3,19.5 L3,48.5 C3,48.7765729 3.22342712,49 3.5,49 L39.5,49 C39.7765729,49 40,48.7765729 40,48.5 L40,19.5 C40,19.2234271 39.7765729,19 39.5,19 L30,19 L30,16 Z"></path>
+                            <polygon transform="translate(42.000000, 21.000000)" points="9.5,0 0,9.5 1.929,11.327 8,5.423 8,32 11,32 11,5.423 16.865,11.432 19,9.5 9.5,0" class="fill"></polygon>
+                        </g>
+                    </svg>
+                    <div class="type-text1"><%=_("upload").t()%></div>
+                    <div class="type-text2"><%=_("files from my computer").t()%></div>
+                </div>
+                <div class="type-text3"><%=_("Local log files").t()%></div>
+                <div class="type-text3"><%=_("Local structured files (e.g. CSV)").t()%></div>
+                <div class="type-text3">
+                    <a class="external" href="<%- addDataTutorialLink %>" target="_blank"> <%= _("Tutorial for adding data").t() %></a>
+                </div>
+            </div>
+            <% } %>
+            <% if (model.user.canMonitorData() || hasModularInputs){ %>
+                <div class="type-container">
+                    <div id="btn-monitor" class="type-btn link-wrap" tabIndex="0">
+                        <svg width="102px" height="102px" viewBox="0 0 102 102" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                            <circle class="stroke stroke-thick" cx="51" cy="51" r="50"/></circle>
+                            <g class="fill" transform="translate(-9.000000, -6.000000)" >
+                                <path d="M87.942,59.638c-0.018-0.069-0.008-0.143-0.035-0.211c-0.01-0.027-0.035-0.043-0.046-0.069
+                                  c-0.017-0.04-0.013-0.083-0.035-0.122C82.923,50.103,72.255,43.559,61,43.559c-11.256,0-21.924,6.533-26.827,15.666
+                                  c-0.021,0.039-0.018,0.082-0.035,0.122c-0.012,0.026-0.036,0.042-0.046,0.069c-0.026,0.067-0.017,0.141-0.033,0.21
+                                  C34.03,59.75,34,59.869,34,59.994s0.03,0.244,0.059,0.368c0.016,0.069,0.007,0.143,0.033,0.21
+                                  c0.01,0.027,0.035,0.043,0.046,0.069c0.017,0.04,0.013,0.084,0.035,0.122C39.077,69.897,49.744,76.441,61,76.441
+                                  c11.255,0,21.923-6.533,26.827-15.666c0.021-0.039,0.018-0.082,0.035-0.122c0.011-0.026,0.036-0.042,0.046-0.069
+                                  c0.027-0.068,0.017-0.141,0.035-0.211C87.97,60.25,88,60.131,88,60.006C88,59.88,87.97,59.761,87.942,59.638z M61,74.104
+                                  c-9.907,0-19.607-5.633-24.441-14.108c4.86-8.487,14.546-14.1,24.441-14.1c9.907,0,19.607,5.633,24.44,14.108
+                                  C80.581,68.491,70.895,74.104,61,74.104z"/>
+                                <path d="M61,52.946c-0.004,0-0.007,0.002-0.007,0.002c-3.893,0.007-7.046,3.16-7.046,7.051
+                                  c0,0.488,0.395,0.882,0.882,0.882c0.486,0,0.88-0.395,0.88-0.882c0-2.916,2.29-5.289,5.29-5.289v-0.002
+                                  c0,0,0.881-0.395,0.881-0.881C61.881,53.341,61.486,52.946,61,52.946z"/>
+                                <path d="M60.959,47.654c-6.822,0-12.352,5.53-12.352,12.352s5.53,12.352,12.352,12.352s12.352-5.53,12.352-12.352
+                                  S67.781,47.654,60.959,47.654z M60.959,70.594c-5.838,0-10.588-4.749-10.588-10.588s4.749-10.588,10.588-10.588
+                                  s10.588,4.749,10.588,10.588S66.797,70.594,60.959,70.594z"/>
+                            </g>
+                        </svg>
+                        <div class="type-text1"><%=_("monitor").t()%></div>
+                        <div class="type-text2"><%=_("files and ports on this Splunk indexer").t()%></div>
+                    </div>
+                    <div class="type-text3"><%=_("Files - WMI - TCP/UDP - Scripts").t()%></div>
+                    <div class="type-text3"><%=_("Modular inputs for external data sources").t()%></div>
+                </div>
+            <% } %>
+            <% if (model.user.canForwardData()){ %>
+            <div class="type-container">
+                <div id="btn-forward" class="type-btn link-wrap" tabIndex="0">
+                    <svg width="102px" height="102px" viewBox="0 0 102 102" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                        <circle class="stroke stroke-thick" cx="51" cy="51" r="50"/></circle>
+                        <g class="fill" transform="translate(-8.000000, -7.000000)">
+                            <polygon points="63,47 45.631,47 43.417,45 63,45 		"/>
+                            <polygon points="68,54 38.987,54 36.773,52 68,52 		"/>
+                            <polygon points="74,61 45.631,61 43.417,59 74,59 		"/>
+                            <polygon points="70,68 41.202,68 38.987,66 70,66 		"/>
+                            <polygon points="63,75 47.846,75 45.631,73 63,73 		"/>
+                            <polygon points="80.234,60 63.125,40 66.118,40 83.227,60 66.118,80 63.125,80 		"/>
+                        </g>
+                    </svg>
+                    <div class="type-text1"><%=_("forward").t()%></div>
+                    <div class="type-text2"><%=_("data from Splunk forwarder").t()%></div>
+                </div>
+                <div class="type-text3"><%=_("Files - TCP/UDP - Scripts").t()%></div>
+            </div>
+            <% } %>
+        </div>
+    </div>
+
+    <div id="bottom">
+        <div class="inner-container">
+            <div id="examples">
+                <div id="examples-title"><%=_("Splunk can index any machine data.  Common data sources are:").t()%></div>
+                <div class="example-row">
+                    <div class="example-group">
+                        <div class="example1"></div>
+                        <div class="example-group-header"> <%= _("Structured Data").t() %> </div>
+                        <div class="example-group-item"> <%= _("CSV").t() %> </div>
+                        <div class="example-group-item"> <%= _("JSON").t() %> </div>
+                        <div class="example-group-item"> <%= _("XML").t() %> </div>
+                    </div>
+                    <div class="example-group">
+                        <div class="example2"></div>
+                        <div class="example-group-header"> <%= _("Microsoft Infrastructure").t() %> </div>
+                        <div class="example-group-item"> <%= _("Exchange").t() %> </div>
+                        <div class="example-group-item"> <%= _("Active Directory").t() %> </div>
+                        <div class="example-group-item"> <%= _("Sharepoint").t() %> </div>
+                    </div>
+                    <div class="example-group">
+                        <div class="example3"></div>
+                        <div class="example-group-header"> <%= _("Network & Security").t() %> </div>
+                        <div class="example-group-item"> <%= _("Syslog & SNMP").t() %> </div>
+                        <div class="example-group-item"> <%= _("Cisco Devices").t() %> </div>
+                        <div class="example-group-item"> <%= _("Snort").t() %> </div>
+                    </div>
+                </div>
+                <div class="example-row">
+                    <div class="example-group">
+                        <div class="example4"></div>
+                        <div class="example-group-header"> <%= _("Web Services").t() %> </div>
+                        <div class="example-group-item"> <%= _("Apache").t() %> </div>
+                        <div class="example-group-item"> <%= _("IIS").t() %> </div>
+                    </div>
+                    <div class="example-group">
+                        <div class="example5"></div>
+                        <div class="example-group-header"> <%= _("Database Services").t() %> </div>
+                        <div class="example-group-item"> <%= _("Oracle").t() %> </div>
+                        <div class="example-group-item"> <%= _("MySQL").t() %> </div>
+                        <div class="example-group-item"> <%= _("Microsoft SQL Server").t() %> </div>
+                    </div>
+                    <div class="example-group">
+                        <div class="example6"></div>
+                        <div class="example-group-header"> <%= _("Cloud").t() %> </div>
+                        <div class="example-group-item"> <%= _("AWS Cloudtrail").t() %> </div>
+                        <div class="example-group-item"> <%= _("Amazon S3").t() %> </div>
+                        <div class="example-group-item"> <%= _("Azure").t() %> </div>
+                    </div>
+                </div>
+                <div class="example-row">
+                    <div class="example-group">
+                        <div class="example7"></div>
+                        <div class="example-group-header"> <%= _("IT Operations").t() %> </div>
+                        <div class="example-group-item"> <%= _("Nagios").t() %> </div>
+                        <div class="example-group-item"> <%= _("NetApp").t() %> </div>
+                        <div class="example-group-item"> <%= _("Cisco UCS").t() %> </div>
+                    </div>
+                    <div class="example-group">
+                        <div class="example8"></div>
+                        <div class="example-group-header"> <%= _("Virtualization").t() %> </div>
+                        <div class="example-group-item"> <%= _("VMWare").t() %> </div>
+                        <div class="example-group-item"> <%= _("Xen Desktop").t() %> </div>
+                        <div class="example-group-item"> <%= _("XenApp").t() %> </div>
+                        <div class="example-group-item"> <%= _("Hyper-V").t() %> </div>
+                    </div>
+                    <div class="example-group">
+                        <div class="example9"></div>
+                        <div class="example-group-header"> <%= _("Application Services").t() %> </div>
+                        <div class="example-group-item"> <%= _("JMX & JMS").t() %> </div>
+                        <div class="example-group-item"> <%= _("WebLogic").t() %> </div>
+                        <div class="example-group-item"> <%= _("WebSphere").t() %> </div>
+                        <div class="example-group-item"> <%= _("Tomcat").t() %> </div>
+                        <div class="example-group-item"> <%= _("JBOSS").t() %> </div>
+                    </div>
+                </div>
+            </div>
+            <div id="sources-and-faq">
+                <% if (isLite) { %>
+                    <% if (!isCloud) { %>
+                        <div id="sources-title"><%=_("Manage add-ons").t()%></div>
+                        <div class="sources-and-faq-description"><%=_("Extend the capabilities of Splunk Light.").t()%></div>
+                        <div class="apps-row">
+                            <a id="unix-app" class="app" href="<%- stewieAppsLink %>" target="_blank" title="<%=_("Splunk App for Unix and Linux").t()%>"></a>
+                            <a id="windows-app" class="app" href="<%- stewieAppsLink %>" target="_blank" title="<%=_("Splunk App for Windows Infrastructure").t()%>"></a>
+                        </div>
+                        <div class="apps-row">
+                            <a id="juniper-firewall-app" class="app" href="<%- stewieAppsLink %>" target="_blank" title="<%=_("Juniper Firewalls").t()%>"></a>
+                            <a id="cisco-security-app" class="app" href="<%- stewieAppsLink %>" target="_blank" title="<%=_("Cisco Security Suite").t()%>"></a>
+                        </div>
+                    <% } %>
+                <% } else { %>
+                <div id="sources-title"><%=_("Featured apps").t()%></div>
+                <div class="sources-and-faq-description"><%=_("Many Splunk apps and add-ons will add data for you").t()%></div>
+                <div class="sources-and-faq-help">
+                    <a class="external" href="http://apps.splunk.com" target="_blank"> <%= _("See more Splunk Apps").t() %></a>
+                </div>
+                <div class="apps-row">
+                    <a id="unix-app" class="app" href="http://apps.splunk.com/app/273/" target="_blank" title="<%=_("Splunk App for Unix and Linux").t()%>"></a>
+                    <a id="windows-app" class="app" href="http://apps.splunk.com/app/1680/" target="_blank" title="<%=_("Splunk App for Windows Infrastructure").t()%>"></a>
+                    <a id="dbconnect-app" class="app" href="http://apps.splunk.com/app/958/" target="_blank" title="<%=_("Splunk DB Connect").t()%>"></a>
+                </div>
+                <div class="apps-row">
+                    <a id="rest-api-app" class="app" href="http://apps.splunk.com/app/1546/" target="_blank" title="<%=_("REST API Input").t()%>"></a>
+                    <a id="jmx-app" class="app" href="http://apps.splunk.com/app/668/" target="_blank" title="<%=_("Monitoring of Java Virtual Machines with JMX").t()%>"></a>
+                    <a id="cisco-security-app" class="app" href="http://apps.splunk.com/app/525/" target="_blank" title="<%=_("Cisco Security Suite").t()%>"></a>
+                </div>
+                <% } %>
+                <div id="faq-title"><%=_("Did you know?").t()%></div>
+                <div class="sources-and-faq-description"><%=_("You can index just about anything with Splunk.").t()%></div>
+                <div class="sources-and-faq-help">
+                    <a class="sources-and-faq-help external" href="<%- monitorLink %>" target="_blank"> <%= _("Learn More").t() %></a>
+                </div>
+                <div class="sources-and-faq-description"><%=_("Having trouble finding data you added in Splunk?").t()%></div>
+                <div class="sources-and-faq-help">
+                    <a class="sources-and-faq-help external" href="<%- troubleshootLink %>" target="_blank"> <%= _("Learn More").t() %></a>
+                </div>
+                <div class="sources-and-faq-help"></div>
+            </div>
+        </div>
+    </div>
+</div>

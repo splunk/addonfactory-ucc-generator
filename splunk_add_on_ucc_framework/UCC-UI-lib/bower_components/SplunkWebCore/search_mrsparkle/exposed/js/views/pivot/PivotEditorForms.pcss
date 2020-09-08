@@ -1,0 +1,231 @@
+/*  Splunk: Component: Pivot Inspector */
+/*  ================================== */
+
+
+/* TO DO: This file should be broken up and moved into views */
+
+
+@define-mixin popup-container {
+    h4 {
+        font-size: $baseFontSize;
+        margin-top: 0;
+    }
+
+    .pivot-config-content {
+        background-color: $white;
+        border-left: 1px solid $borderColor;
+        border-top-right-radius: $containerInnerBorderRadius;
+        padding: 10px 20px;
+        overflow: auto;
+    }
+
+    .field-picker-wrapper .pivot-config-content {
+        background-color: $white;
+        border: none;
+        border-radius: $containerInnerBorderRadius;
+    }
+
+    .shared-datamodel-objectfieldlist {
+        padding: 10px;
+        margin: -10px;
+        border-top-right-radius: $containerInnerBorderRadius;
+        border-bottom-right-radius: $containerInnerBorderRadius;
+    }
+
+    .pivot-configpopups-inspectelementpane,
+    .pivot-configpopups-addelementpane {
+        .buttons-wrapper {
+            text-align: right;
+            padding-top: 5px;
+        }
+
+        .popdown-dialog-footer {
+            padding-left: 0;
+        }
+
+        .cancel-button {
+            float: left;
+        }
+    }
+
+    .field-list {
+        margin-bottom: 2px;
+    }
+
+    .type-icon {
+        margin-right: 3px;
+        text-align: center;
+    }
+}
+
+.pivot-configpopups-timerangeinspector {
+    @mixin popup-container;
+    width: 640px;
+}
+
+$creator-width: 440px;
+$slide-buffer: 20px;
+.pivot-configpopups-pivotconfigwizard {
+    @mixin popup-container;
+    width: $creator-width;
+    overflow: hidden;
+
+    .field-picker-wrapper {
+        width: $creator-width;
+        float: left;
+        margin-right: $slide-buffer;
+
+        .pivot-config-content {
+            max-height: 300px;
+        }
+    }
+
+    .element-editor-wrapper {
+        float: left;
+        width: $creator-width;
+        margin-right: calc(-1px * ($creator-width + $slide-buffer));
+
+        .back-button-column {
+            position: relative;
+            float: left;
+
+            .back-button {
+                position: absolute;
+                width: 0;
+                text-align: center;
+                padding-left: 8px;
+                padding-right: 16px;
+                left:  3px;
+                top:  3px;
+
+            }
+        }
+
+        $back-button-left-space: 33px;
+        .preview-pane-wrapper {
+            float: left;
+            margin-left: $back-button-left-space;
+            width: calc($creator-width - $back-button-left-space);
+        }
+
+        .sub-pane-divider {
+            border-top: 1px solid $grayLighter;
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+    }
+
+    .remove-button {
+        float: left;
+        margin-right: 5px;
+    }
+}
+
+.pivot-element-form, .pivot-configforms-allsplitsform {
+    &.form-horizontal {
+        margin: 0 0;
+    }
+
+    h5 {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
+    .control-group {
+        margin-bottom: 10px;
+    }
+
+    .control-label {
+        width: 85px;
+        text-align: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .controls {
+        margin-left: 85px;
+    }
+
+    .inline-control {
+        display: inline;
+
+        input[type="text"] {
+            width: 100px;
+            margin-bottom: 5px;
+        }
+    }
+
+    .pivot-inspector-help-text {
+        font-size: 11px;
+        margin-top: 5px;
+
+        .help-tooltip {
+            color: $linkColor;
+            top: -0.5em;
+            position: relative;
+            line-height: 0;
+            font-size: 9px;
+            vertical-align: baseline;
+            padding: 2px;
+            cursor: default;
+        }
+    }
+}
+
+.pivot-configforms-filters-stringfilterform,
+.pivot-configforms-filters-numberfilterform {
+
+    .control-label {
+      width: 75px;
+    }
+
+    input[type="text"].limit-amount-input {
+        margin-left: 10px;
+        width: 30px;
+    }
+
+    .limit-by-select > ul {
+        max-height: 250px;
+    }
+
+}
+
+.pivot-configforms-columns-numbercolumnform,
+.pivot-configforms-allsplitsform.number-split,
+.pivot-configforms-rows-numberrowform {
+
+    .control-label {
+        width: 105px;
+    }
+
+    .pivot-inspector-help-text, input[type="text"] + .placeholder {
+        margin-left: 20px;
+    }
+
+}
+
+.pivot-configforms-columns-booleancolumnform,
+.pivot-configforms-rows-booleanrowform {
+
+    .control-label {
+        width: 75px;
+    }
+
+}
+
+.sample-values-menu {
+    ul {
+        max-height: 275px;
+    }
+}
+
+.sample-value-limit {
+    position: relative;
+    border-top: 1px solid $borderColor;
+    padding: 5px 10px;
+    white-space: normal;
+    display: block;
+    text-decoration: none;
+    font-size: $baseFontSizeSmall;
+    color: $textGray;
+}

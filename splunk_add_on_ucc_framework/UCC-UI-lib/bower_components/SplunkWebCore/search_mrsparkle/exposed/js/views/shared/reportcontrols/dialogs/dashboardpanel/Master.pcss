@@ -1,0 +1,32 @@
+/*  Splunk: Component: add to dashboard */
+/*  ============================ */
+
+.shared-reportcontrols-dialogs-dashboardpanel-create {
+	.modal-body {
+		overflow-y: auto;
+	}
+
+	.shared-controls-syntheticselectcontrol {
+		width: 100%;
+
+		> .dropdown-toggle{
+			display: block;
+
+			> .link-label {
+				display: inline-block;
+				overflow: hidden;
+				text-overflow:ellipsis;
+				max-width: 88%;
+            	vertical-align: middle;
+			}
+
+		}
+	}
+
+	.shared-controls-textareacontrol {
+		> textarea {
+			min-width: 100%;
+			min-height: 26px;
+		}
+	}
+}

@@ -1,0 +1,336 @@
+<%inherit file="//qunit/template.html" />
+
+<%def name="title()">Events Viewer -- QUnit tests</%def>
+
+<script type="text/javascript" src="/en-US/static/js/time_range.js"></script>
+<script type="text/javascript" src="/en-US/static/js/job.js"></script>
+<script type="text/javascript" src="/en-US/static/js/context.js"></script>
+<script type="text/javascript" src="/en-US/static/js/search.js"></script>
+<script type="text/javascript" src="/en-US/static/js/page_status.js"></script>
+
+<script type="text/javascript" src="/en-US/static/js/test_utils.js"></script>
+
+
+<script language="javascript">
+    // important to disable the chatty debug that the tests spew.
+    //Splunk.Logger.mode.Default = Splunk.Logger.mode.None
+</script>
+<script type="text/javascript" src="/en-US/static/js/init.js"></script>
+
+<!--  Now the base module classes-->
+<script type="text/javascript" src="/en-US/modules/AbstractModule.js"></script>
+<script type="text/javascript" src="/en-US/modules/DispatchingModule.js"></script>
+
+<!--  Now the modules we'll be testing -->
+<script type="text/javascript" src="/en-US/modules/results/AbstractPagedModule.js"></script>
+<script type="text/javascript" src="/en-US/modules/results/EventsViewer.js"></script>
+<script type="text/javascript" src="/en-US/modules/results/SimpleResultsTable.js"></script>
+<script type="text/javascript" src="/en-US/modules/prototypes/SimpleEventsViewer.js"></script>
+
+<script language="javascript">
+    // req for the testing
+    Splunk._testHarnessMode = true;
+    var logger = Splunk.Logger.getLogger("events_viewer.html", Splunk.Logger.mode.Firebug);
+
+    var moduleTypes = getModuleTypes();
+    Splunk.Module.loadParams = {};
+        
+    
+
+    // in order to make use of callForEachModule and callForEachCombination,  we need 
+    // to implement this template method,  generateInstance.  
+    function generateInstance(className, params) {
+        
+        if (className=="SimpleResultsTable") {
+            params["entityName"] = "events";
+        }
+
+        switch (className) {
+            case "SimpleResultsTable" : 
+                container = $('<div><div class="SimpleResultsTableResults"></div></div>');
+            default:
+                container = $('<div></div>');
+                
+        }
+        var moduleId = className + "_testInstance";
+        container.attr("id", moduleId);
+        Splunk.Module.loadParams[moduleId] = {};
+        for (var key in params) {
+            if (params.hasOwnProperty(key)) {
+                Splunk.Module.loadParams[moduleId][key] = params[key];
+            }
+        }
+        var module = new Splunk.Module[className](container);
+        module.moduleType = className;
+        return module; 
+    }
+
+    // at some point maybe this gets to go into test_utils, but not yet.
+    function addMockContextWithRealTimeSearch(module, firstId, reDispatchedId, earliestTime, latestTime) {
+        addMockContext(module, firstId, reDispatchedId);
+        var searchInstance = module.baseContext._root["search"];
+        searchInstance.job._isRealTimeSearch = true;
+        if (earliestTime && latestTime) {
+            var range = new Splunk.TimeRange(earliestTime, latestTime);
+            searchInstance.setTimeRange(range);
+        }
+    }
+    
+    // Test the fieldList, field_picker functionality handled by the
+    // modules that display events.
+    function test_fieldListSettingAppliedToGetResultsURL() {
+        var loadParams = {"fields": '_raw,source,host,sourcetype'};
+        
+        callForEachModule(function(moduleUnderTest) {
+            
+            var prefix = "checking " + moduleUnderTest.moduleType + ". ";
+            
+            addMockContext(moduleUnderTest, "1234.56");
+            moduleUnderTest.onContextChange();
+            
+            // actual tests
+            var args = moduleUnderTest.getResultParams();
+            var url = moduleUnderTest.getResultURL(args);
+            assertNotUndefined(prefix + 'The module should not return an undefined result url.', url);
+            
+            var receivedFields = moduleUnderTest.getNormalizedFields();
+            assertEquals(prefix + " getNormalizedFields should return correct answer", loadParams["fields"], receivedFields.join(",")); 
+
+            // match something after field list
+            var re = /(?:field_list=)(([\w]+(?:%2[cC])?)+)/;
+            var match = url.match(re);
+
+            logger.info('Match for EventViewer url match=', match, " url=", url);
+            assertNotNull(prefix + 'getResultURL should contain a field_list property (url is ' + url + ')', match);
+            
+            // commas are encoded as %2C from encodeURIComponent
+            var matchedFields = match[1].split('%2C');
+            logger.info('Matched fields', matchedFields);
+            assertEquals(prefix + "The number of fields returned from the getResultsURL call should match those we passed earlier", 4, matchedFields.length);
+            
+            var expectedFields = loadParams["fields"].split(",");
+            for (var i = 0, j = matchedFields.length; i<j; i++) {
+                logger.info("About to compare the values:", expectedFields[i], matchedFields[i]);
+                assertEquals(prefix + "the field list in the URL should match the order and values exactly..", expectedFields[i], matchedFields[i]);
+            }
+        }, loadParams);
+    }
+    // Test that the modules that display events respond to progress events in appropriate ways.
+    // Specifically, getResults should be called once and only once when 
+    // a) a progress event occurs. 
+    // b) at the time of that event there is 
+    //     i)   space in the module for more events
+    //     ii)  more events available in the job than the number of events we currently have. 
+    // c) 
+    function test_multipleProgressEventsCallGetResultsOnlyWhenNecessary() {
+        callForEachModule(function(moduleUnderTest) {
+            addMockContext(moduleUnderTest, "1234.56");
+            
+            var getResultsCounter = 0;
+            var context = moduleUnderTest.getContext();
+            var job = context.get("search").job;
+            
+            var prefix = "checking " + moduleUnderTest.moduleType + ". ";
+            moduleUnderTest.getResults = function() {
+                getResultsCounter += 1;
+            };
+            moduleUnderTest.onContextChange();
+            assertEquals(prefix + "Calling onContextChange before there are any events should not call getResults.", 0, getResultsCounter); 
+
+            getResultsCounter = 0;
+            job.updateByTicketValues({'isDone':0, 'eventCount':3, 'eventAvailableCount':3, 'resultCount':0, 'scanCount':13, 'doneProgress': '0.4', 'eventSorting': 'desc'});
+            moduleUnderTest.onJobProgress();
+            assertEquals(prefix + "With more events (3), calling onJobProgress should call getResults", 1, getResultsCounter); 
+
+            getResultsCounter = 0;
+            job.updateByTicketValues({'isDone':0, 'eventCount':3, 'eventAvailableCount':3, 'resultCount':0, 'scanCount':13, 'doneProgress': '0.4', 'eventSorting': 'desc'});
+            moduleUnderTest.onJobProgress();
+            assertEquals(prefix + "With the same number of events (3), calling onJobProgress should not call getResults", 0, getResultsCounter); 
+
+            getResultsCounter = 0;
+            job.updateByTicketValues({'isDone':0, 'eventCount':9, 'eventAvailableCount':9, 'resultCount':0, 'scanCount':19, 'doneProgress': '0.4', 'eventSorting': 'desc'});
+            moduleUnderTest.onJobProgress();
+            assertEquals(prefix + "With more events (9), calling onJobProgress should call getResults", 1, getResultsCounter); 
+
+            getResultsCounter = 0;
+            job.updateByTicketValues({'isDone':0, 'eventCount':10, 'eventAvailableCount':10, 'resultCount':0, 'scanCount':20, 'doneProgress': '0.4', 'eventSorting': 'desc'});
+            moduleUnderTest.onJobProgress();
+            assertEquals(prefix + "With more events (10), calling onJobProgress should call getResults", 1, getResultsCounter); 
+
+            getResultsCounter = 0;
+            job.updateByTicketValues({'isDone':0, 'eventCount':11, 'eventAvailableCount':11, 'resultCount':0, 'scanCount':21, 'doneProgress': '0.4', 'eventSorting': 'desc'});
+            moduleUnderTest.onJobProgress();
+            assertEquals(prefix + "With more events than we need (11), calling onJobProgress should not call getResults", 0, getResultsCounter); 
+        }, {"count": 10});
+    }
+    function test_singleProgressEventWithSufficientEventsCallsGetResults() {
+        callForEachModule(function(moduleUnderTest) {
+        
+            addMockContext(moduleUnderTest, "1234.56");
+            
+            var context = moduleUnderTest.getContext();
+            var job = context.get("search").job;
+            
+            var getResultsCounter = 0;
+            moduleUnderTest.getResults = function() {
+                getResultsCounter += 1;
+            };
+            moduleUnderTest.onContextChange();
+            
+            getResultsCounter = 0;
+            job.updateByTicketValues({'isDone':0, 'eventCount':712, 'eventAvailableCount':712, 'resultCount':0, 'scanCount':19, 'doneProgress': '0.4', 'eventSorting': 'desc'});
+            moduleUnderTest.onJobProgress();
+            assertEquals("With more events (712), calling onJobProgress should call getResults", 1, getResultsCounter); 
+        }, {"count": 10});
+    }
+
+
+    function test_requestsEveryProgressEventWhenInRealTime() {
+        callForEachModule(function(moduleUnderTest) {
+            addMockContextWithRealTimeSearch(moduleUnderTest, "1234.56", "second_id", "rt-10m", "rt");
+            
+            var getResultsCounter = 0;
+            var context = moduleUnderTest.getContext();
+            var job = context.get("search").job;
+            
+            
+            var prefix = "checking " + moduleUnderTest.moduleType + ". ";
+            moduleUnderTest.getResults = function() {
+                getResultsCounter += 1;
+            };
+            moduleUnderTest.onContextChange();
+            assertEquals(prefix + "Calling onContextChange before there are any events should not call getResults.", 0, getResultsCounter); 
+
+            getResultsCounter = 0;
+            job.updateByTicketValues({'isDone':0, 'eventCount':3, 'eventAvailableCount':3, 'resultCount':0, 'scanCount':13, 'doneProgress': '0.4', 'eventSorting': 'realtime'});
+            moduleUnderTest.onJobProgress();
+            assertEquals(prefix + "With some events coming now(3), calling onJobProgress should call getResults", 1, getResultsCounter); 
+
+            getResultsCounter = 0;
+            job.updateByTicketValues({'isDone':0, 'eventCount':3, 'eventAvailableCount':3, 'resultCount':0, 'scanCount':13, 'doneProgress': '0.4', 'eventSorting': 'realtime'});
+            moduleUnderTest.onJobProgress();
+            assertEquals(prefix + "Even though there's no difference, because its a real time search every progress event should call getResults", 1, getResultsCounter); 
+        }, {"count": 10});
+    }
+
+
+    /*
+     * TODO: disabled due to recent SDK support for neagtive offsets; the test
+     * params need to change before they'll pass again
+     *
+     
+    function XXtest_sendsInvertedOffsetWhenInRealTime() {
+        
+        var cases = [{
+            name: "first page of a real time search",
+            eventSorting: "realtime",
+            eventAvailableCount: 100,
+            offset: 0,
+            count: 10,
+            expectedOffset : -10,
+            expectedCount  : 10
+        },
+        {
+            name: "second page of a real time search",
+            eventSorting: "realtime",
+            eventAvailableCount: 100,
+            offset: 10,
+            count: 10,
+            expectedOffset : -20,
+            expectedCount  : 10
+        },
+        {
+            name: "penultimate page of a real time search",
+            eventSorting: "realtime",
+            eventAvailableCount: 92,
+            offset: 80,
+            count: 10,
+            expectedOffset : -90,
+            expectedCount  : 10
+        },
+        {
+            name: "last page of a real time search",
+            eventSorting: "realtime",
+            eventAvailableCount: 92,
+            offset: 90,
+            count: 10,
+            expectedOffset : -100,
+            expectedCount  : 2
+        },
+        {
+            name: "when eventSorting is NOT REALTIME, first page",
+            eventAvailableCount: 100,
+            offset: 0,
+            count: 10,
+            expectedOffset : 0,
+            expectedCount  : 10,
+            eventSorting: "something_else"
+        },
+        {
+            name: "when eventSorting is NOT REALTIME, last page",
+            eventAvailableCount: 100,
+            offset: 90,
+            count: 10,
+            expectedOffset : 90,
+            expectedCount  : 10,
+            eventSorting: "something_else"
+        }
+        ];
+
+        callForEachModule(function(moduleUnderTest) {
+            var prefix = "checking " + moduleUnderTest.moduleType + ". ";
+            
+            addMockContextWithRealTimeSearch(moduleUnderTest, "1234.56", "second_id", "rt-10m", "rt");
+                
+            for (var i=0,len=cases.length; i<len;i++) {
+                var c = cases[i];
+                
+                moduleUnderTest.baseContext.set("results.offset", c.offset);
+                moduleUnderTest.baseContext.set("results.count",  c.count);
+                // ok this is a little ugly but seems the lesser of two evils.
+                var searchReference = moduleUnderTest.baseContext._root.search;
+                searchReference.job._eventAvailableCount = c.eventAvailableCount;
+                if (c.eventSorting) {
+                    searchReference.job._eventSorting = c.eventSorting;
+                }
+
+                var eventParams = moduleUnderTest.getResultParams();
+                assertEquals(prefix + c.name + ". The offset should be as expected", c.expectedOffset, eventParams.offset);
+                assertEquals(prefix + c.name + ". The count should be as expected", c.expectedCount, eventParams.count);
+
+                if (c.offset == c.expectedOffset) {
+                    assertFalse(prefix + c.name + ". There should be no reverse_order param", eventParams.hasOwnProperty("reverse_order"));
+                } else {
+                    assertEquals(prefix + c.name + " there should be no reverse_order param", 1, eventParams.reverse_order);
+                }
+
+                // -----------------------------------
+                //switch to 'results',   to check that the same logic does not apply there. 
+                moduleUnderTest.setParam("entityName", "results")
+                var resultParams = moduleUnderTest.getResultParams();
+                
+                assertEquals(prefix + c.name + ". For results, the offset should be the normal offset and NOT INVERTED", c.offset, resultParams.offset);
+
+                // set it back from 'results' to 'events'...
+                moduleUnderTest.setParam("entityName", "events")
+
+                assertEquals(prefix + c.name + ". The offset should be as expected again", c.expectedOffset, eventParams.offset);
+
+                // -----------------------------------
+                // put in an explicit sort field. 
+                // granted, this is a bit weird cause EventsViewer doesnt actually use sort field 
+                // at all...
+                moduleUnderTest.setSortField("bytes");
+                assertEquals(prefix + c.name + ". with an explicit sort, the offset should be the normal offset and NOT INVERTED", c.offset, resultParams.offset);
+                moduleUnderTest.setSortField(null);
+
+
+                
+            }
+            
+            
+        }, {"entityName" : "events"});
+
+    } */
+
+</script>

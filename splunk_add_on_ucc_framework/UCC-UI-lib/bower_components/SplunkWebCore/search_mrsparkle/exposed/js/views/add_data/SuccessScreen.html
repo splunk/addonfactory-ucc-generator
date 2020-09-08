@@ -1,0 +1,44 @@
+<div class="success-container">
+    <i class="icon-check"></i>
+    <div class="success-header">
+        <h3><%= inputTypeSuccessMessage %></h3>
+        <p><%= _('Configure your inputs by going to Settings > ').t() %>
+        <a href="<%= dataInputsLink %>" target="_blank"> <%= _("Data Inputs").t() %></a>
+        </p>
+    </div>
+    <div class="success-option copy-token">
+        <label for="token" class="token-label"><%= _('Token Value').t() %></label>
+        <input id="token" type="text" onclick="this.focus();this.select()" readonly="readonly" value="<%- token %>"/>
+    </div>
+    <div class="success-option start-searching">
+        <a class="btn btn-primary btn-success-page" href="<%= searchLink %>"><%= _('Start Searching').t() %></a>
+        <p> <%= _('Search your data now or see ').t() %>
+            <a href="<%= searchHelpLink %>" class="external" target="_blank"> <%= _("examples and tutorials.").t() %></a>
+        </p>
+    </div>
+    <div class="success-option extract-fields">
+        <a class="btn btn-success-page" href="<%= extractFieldsLink %>"><%= _('Extract Fields').t() %></a>
+        <p> <%= _('Create search-time field extractions.').t() %>
+          <a href="<%= fieldsHelpLink %>" class="external" target="_blank"> <%= _("Learn more about fields.").t() %></a>
+        </p>
+    </div>
+    <div class="success-option add-more-data">
+        <a class="btn btn-success-page" href="<%= addDataLink %>"><%= _('Add More Data').t() %></a>
+        <p> <%= _('Add more data inputs now or see ').t() %>
+            <a href="<%= addDataHelpLink %>" class="external" target="_blank"> <%= _("examples and tutorials.").t() %></a>
+        </p>
+    </div>
+    <div class="success-option download-apps">
+        <a class="btn btn-success-page" href="<%= downloadAppsLink %>"><%= _('Download Apps').t() %></a>
+        <p> <%= _('Apps help you do more with your data.').t() %>
+            <a href="<%= downloadAppsHelpLink %>" class="external" target="_blank"> <%= _('Learn more.').t() %></a>
+        </p>
+    </div>
+    <div class="success-option build-dashboards">
+        <a class="btn btn-success-page" href="<%= buildDashboardsLink %>"><%= _('Build Dashboards').t() %></a>
+        <p> <%= _('Visualize your searches.').t() %>
+            <a href="<%= buildDashboardsHelpLink %>" class="external" target="_blank"> <%= _('Learn more.').t() %></a>
+        </p>
+    </div>
+</div>
+

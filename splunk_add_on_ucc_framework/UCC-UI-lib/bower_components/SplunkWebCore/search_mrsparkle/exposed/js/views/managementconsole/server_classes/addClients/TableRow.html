@@ -1,0 +1,21 @@
+<td class="cell-matched">
+    <% if (allClientsSelected) { %>
+    <i class="icon-check"></i>
+    <% } else if (!_.isUndefined(selected) && selected === true) { %>
+    <i class="icon-check"></i>
+    <% } %>
+</td>
+
+<td class="cell-hostname"><%- hostname %></td>
+
+<td class="cell-dns"><%- dns %></td>
+
+<td class="cell-client-name"><%- clientName %></td>
+
+<td class="cell-ip"><%- ip %></td>
+
+<td class="cell-utsname"><%- utsname %></td>
+
+<td class="cell-last-phone-home"><%- convertToRelativeTime(lastPhoneHomeTime) %></td>
+
+

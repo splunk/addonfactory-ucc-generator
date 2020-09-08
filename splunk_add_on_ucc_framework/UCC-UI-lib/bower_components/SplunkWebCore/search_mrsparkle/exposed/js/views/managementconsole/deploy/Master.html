@@ -1,0 +1,22 @@
+<div class="section-header section-padded form-horizontal">
+    <% if (canDeploy) { %>
+    <button class="btn btn-primary btn-deploy pull-right"><%- strings.DEPLOY_PENDING_CHANGES %></button>
+    <button class="btn btn-primary btn-cancel-pending pull-right"><%- strings.CANCEL_PENDING_CHANGES %></button>
+  <% } %>
+    <h2 class="section-title"><%- strings.TITLE %></h2>
+    <p class="description"><%- strings.DESCRIPTION %></p>
+</div>
+<div class="main-section">
+    <ul class="nav nav-tabs main-tabs">
+        <li class="pending-changes-tab">
+            <a href="#pending-changes" data-toggle="tab"><%- strings.PENDING_CHANGES %></a>
+        </li>
+        <li class="deployed-changes-tab">
+            <a href="#deployed-changes" data-toggle="tab"><%- strings.DEPLOYED_CHANGES %></a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane pending-changes"></div>
+        <div class="tab-pane deployed-changes"></div>
+    </div>
+</div>

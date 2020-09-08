@@ -1,0 +1,20 @@
+<%
+    currentAppname = currentApp ? currentApp.name : 'search';   // TODO: search fallback is not always safe assumption
+%>
+<ul class="<%-css.appsList%>" data-role="apps-list">
+    <% _.each(apps, function(i) { %>
+    <li data-app="<%- i.name %>">
+        <a href="<%- i.href %>" <% if (currentApp && i.name === currentApp.name) { %>class="<%-css.selected%>"<% } %> >
+
+            <% if (i.icon) { %> <img data-icosrc="<%-i.icon%>" alt="menu icon" class="<%-css.icon%>" data-role="icon" style="display:none;"><% } %>
+            <span class="<%-css.label%>"><%- i.label %></span>
+        </a>
+    </li>
+    <% }); %>
+</ul>
+<ul class="<%-css.menu%>">
+    <li><a href="<%- make_url('manager', currentAppname, 'apps','local') %>" data-role="manage-apps"><%- _("Manage Apps").t() %></a></li>
+    <% if(canViewRemoteApps){ %>
+    <li><a href="<%= appsRemote_url %>" data-role="more-apps"><%- _("Find More Apps").t() %></a></li>
+    <%} %>
+</ul>

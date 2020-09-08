@@ -1,0 +1,64 @@
+<%inherit file="//layout/admin_lite.html"/>
+<%namespace name="formset" file="//formset.html" />
+
+<%def name="title()">${_('Licensing')} - ${parent.title()}</%def>
+<%def name="get_breadcrumbs()">
+    <%
+        return [
+            [_('Manager'), ['manager']],
+            [_('Licensing'), ['manager','system','licensing']]
+        ]
+    %>
+</%def>
+
+<div class="serverMode splClearfix">
+    <span class="serverModeLabel">${_('This server is associated with a remote master license server')}</span>
+    
+	<a class="button" href="${make_url(['manager','system','licensing','self'], _qs=dict(return_to=cherrypy.request.relative_uri))|h}">
+    	<span class="switch">${_('Switch to local master')}</span>
+    </a>
+</div>
+
+<div style="padding: 15px">
+
+    <h1 class="info-header">${_('Local server information') | h}</h1> 
+    
+    <table class="properties">
+        <tr>
+            <td class="k">${_('Indexer name')}</td>
+            <td>${self_config.slave_label| h}</td>
+        </tr>
+        <tr>
+            <td class="k">${_('Master server URI')}</td>
+            <td>
+                ${self_config.master_uri | h}
+            </td>
+        </tr>
+        <tr>
+            <td class="k">${_('Last successful contact time')}</td>
+            <td>
+                % if self_config.last_master_contact_success_time:
+                    ${i18n.format_timedelta(self_config.last_master_contact_success_time) | h}
+                    (${i18n.format_datetime(self_config.last_master_contact_success_time, format='short') | h})
+                % else:
+                    ${_('never successfully contacted')}
+                % endif
+            </td>
+        </tr>
+        <tr>
+            <td class="k">${_('Messages')}</td>
+            <td><a href="${make_url(['manager','system','licensing','messages'], _qs=dict(return_to=cherrypy.request.relative_uri))|h}">Show all messages</a></td>
+        </tr>
+    </table>
+
+    <br />
+    <p>
+        <a onclick="$('#details').toggle()" style="cursor:pointer">${_('Show all configuration details')}</a>
+    </p>
+    
+    <div id="details" style="display:none">
+        ${formset.dump_model(self_config)}
+    </div>
+
+</div>
+

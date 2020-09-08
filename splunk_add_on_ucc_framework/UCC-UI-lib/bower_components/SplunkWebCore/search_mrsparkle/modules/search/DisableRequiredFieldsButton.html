@@ -1,0 +1,11 @@
+<%page args="module"/>
+<div class="tooltip_content">
+    <p>${_('<strong>Checked (Explore):</strong> Splunk automatically extracts as many fields from incoming data as possible. Searches will take longer to complete.')}</p>
+    <p class="last">${_('<strong>Unchecked (Fast):</strong> Splunk only extracts the fields required to fulfill each search.')}</p>
+</div>
+
+<div class="fd_toggle_container">
+	<label class="fd_toggle_label">${_('Field discovery:')}</label><input type="checkbox" class="fd_toggle_checkbox"/>
+</div>
+
+<a href="javascript:void(0)" class="splIconicLink splIcon-sidebar-open"><span class="splIconicLinkIcon"></span><span class="splIconicLinkLabel">${_('Hide')}</span></a>

@@ -1,0 +1,10 @@
+<li>
+    <a class="<%-css.primaryLink%>" href="<%= jobLink %>" data-role="jobs-link"><%- _("Jobs").t() %></a>
+    <a class="<%-css.secondaryLink%>" href="<%= jobLink %>" target="_blank" data-role="jobs-link-external"></a>
+</li>
+<% if (typeof alertsLink !== "undefined" && alertsLink !== null) { %>
+<li>
+    <a class="<%-css.primaryLink%>" href="<%= alertsLink %>" data-role="alerts-link"><%- _("Triggered Alerts").t() %></a>
+    <a class="<%-css.secondaryLink%>" href="<%= alertsLink %>" target="_blank" data-role="alerts-link-external"></a>
+</li>
+<% } %>

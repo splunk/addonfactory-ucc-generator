@@ -1,0 +1,486 @@
+/*  Splunk: Page: Pivot View */
+/*  =================== */
+
+
+$vizMenuWidth: 80px;
+$configMenuWidth: 380px;
+$docActionBarHeight: 55px;
+$jobActionBarHeight: 37px;
+$bodyMinWidth: 960px;
+
+.pivot-pivotview {
+
+    .pivot-visualizationtypemenu {
+        position: absolute;
+        left: 0px;
+        bottom: 0px;
+        top: 0px;
+        width: $vizMenuWidth;
+        background-color: $black;
+        margin: 0px;
+        overflow-y: auto;
+        padding-top: 15px;
+
+        li {
+            font-size: 30px;
+            line-height: 50px;
+            list-style: none;
+            text-align: center;
+            margin: 2px 0;
+        }
+
+        li [class*=" icon-"] {
+            display: inline-block;
+            width: 1.25em;
+            text-align: center;
+        }
+
+        li a {
+            display: block;
+            color: $gray;
+            text-decoration: none;
+        }
+
+        li a:hover {
+            color: $white;
+            background-color: $grayDark;
+        }
+
+        li a.disabled {
+            color: $grayDarker;
+            background-color: $black;
+            cursor: default;
+        }
+
+        li.active a {
+            color: $white;
+            background-color: transparent;
+        }
+
+    }
+
+    .pivot-documentactionbar {
+        $paddingLeft: 20px;
+        $bottomBorderWidth: 1px;
+        min-width: calc($bodyMinWidth - $vizMenuWidth - $paddingLeft);
+        position: absolute;
+        left: $vizMenuWidth;
+        right: 0px;
+        height: calc($docActionBarHeight - $bottomBorderWidth);
+        padding-left: $paddingLeft;
+        border-bottom: $bottomBorderWidth solid $borderColor;
+
+        .report-name {
+            font-weight: 200;
+            font-size: 26px;
+            margin: 0;
+            line-height: $docActionBarHeight;
+            display: inline;
+
+            i {
+                margin-right: 10px;
+            }
+        }
+
+        .action-bar {
+            position: absolute;
+            bottom: 13px;
+
+            .report-action-buttons, .data-source-button {
+                margin-left: 15px;
+            }
+
+            .create-drop-down {
+                display: inline;
+            }
+        }
+    }
+
+    .pivot-jobactionbar {
+        $paddingTop: 5px;
+        $paddingHoriz: 0;
+        $actionBarWidth: 131px;
+        $bottomBorderWidth: 1px;
+        min-width: calc($bodyMinWidth - $vizMenuWidth - (2 * $paddingHoriz));
+
+        position: absolute;
+        left: $vizMenuWidth;
+        right: 0px;
+        top: $docActionBarHeight;
+        height: calc($jobActionBarHeight - $paddingTop - $bottomBorderWidth);
+        padding: $paddingTop $paddingHoriz 0px;
+
+        .jobstatus-wrapper {
+            margin-right: calc($actionBarWidth + 30px);
+
+		    &.with-inspect-button {
+		        margin-right: calc($actionBarWidth + 55px);
+		    }
+
+	        .alert {
+	            /*  lame, but effective */
+	            top: -5px;
+	        }
+        }
+
+        .action-bar {
+        	padding-right: 20px;
+        }
+
+        .shared-jobstatus {
+            position: static;
+            clear: none;
+            margin-top: 0;
+        }
+
+        .initializing-message {
+            float: left;
+            line-height: 26px;
+            padding-left: 20px;
+        }
+
+        .shared-jobstatus-count {
+            padding-top: 5px;
+    	}
+
+        .icon-share, .icon-print, .icon-export, .icon-search {
+            font-size: 15px;
+        }
+    }
+
+    .alert {
+        margin-bottom: 0px;
+        background-color: transparent;
+    }
+
+    .viz-content-full-width > .alerts > .alert,
+    .viz-content-with-menu > .alerts > .alert {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        border-top: none;
+
+    }
+
+    .data-display-alert,
+    .lazy-results-table.loading .alert,
+    .viz-container .loading .alert,
+    .viz-container .visualization-message .alert {
+        margin-top: 10px;
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+
+    .viz-builder-wrapper {
+        position: absolute;
+        left: $vizMenuWidth;
+        right: 0;
+        bottom: 0;
+        top: calc($docActionBarHeight + $jobActionBarHeight);
+        overflow: hidden; /*  SPL-83380 */
+    }
+
+    .concertina-group-body {
+        padding-right: 20px;
+    }
+
+    .pivot-pivotcontent {
+        &.viz-content-with-menu {
+            background-color: $white;
+        }
+        .alerts {
+            padding: 0px 20px;
+        }
+
+        .viz-container {
+            position: absolute;
+            left: 0;
+            right: 0;
+        }
+    }
+
+    /*  define a different horizontal component offset from the 180px default for form.form-horizontal */
+    $horizontalComponentOffset: 120px;
+    .pivot-visualizationconfigmenu {
+        background-color: $offWhite;
+
+            .panel-body > .form-horizontal {
+                margin-bottom: 10px;
+
+            .alert-viz-control {
+                margin-left: 12px;
+                margin-bottom: 0px;
+                border-bottom: none;
+                padding-right: 0px;
+                margin-top: -10px;
+            }
+
+            > .control-group {
+                margin-bottom: 10px;
+
+                .control-label {
+                    width: calc($horizontalComponentOffset - 10px);
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+
+                .controls {
+                     margin-left: $horizontalComponentOffset;
+                    /*  override for block controls */
+                    .btn {
+                        width: auto;
+                    }
+                }
+            }
+
+            > .form-actions {
+                padding-left: $horizontalComponentOffset;
+            }
+
+            .btn-pill:hover {
+                background-color: color($interactiveGradientEndColor l(-20%));
+            }
+
+            .divider {
+                padding-bottom: 15px;
+                width: $configMenuWidth;
+            }
+
+        }
+
+        $borderRightWidth: 1px;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: calc($configMenuWidth - $borderRightWidth);
+        bottom: 0px;
+        border-right: $borderRightWidth solid $borderColor;
+        border-top: 1px solid $borderColor;
+        overflow: hidden;
+
+
+    }
+
+    /*  These next two widths are chosen so that the overall label input controls have the same width */
+    /*  whether or not there is a show/hide button appended */
+    .pivot-customcontrols-axislabelcontrolgroup input {
+        width: 115px;
+    }
+
+    .input-pivot-label {
+        width: 187px;
+    }
+
+    .pivot-addsubpaneldropdownmenu {
+        padding-left: $horizontalComponentOffset;
+        margin-bottom: 16px;
+    }
+
+    .pivot-field-picker-group .dropdown-toggle .link-label {
+        max-width: 150px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        display: inline-block;
+        margin-bottom: -4px;
+    }
+
+    .pivot-visualizationconfigpanel {
+
+        .alert {
+            border: none;
+            border-bottom: 1px dotted $borderColor;
+            background: none;
+            border-radius: 0;
+            margin: 0;
+            padding-left: 27px;
+            margin: 0 20px;
+
+            &:first-child {
+                margin-top: -5px;
+            }
+
+            &:last-child {
+                margin-bottom: 10px;
+            }
+
+            .icon-alert {
+                left: 0;
+            }
+        }
+
+        .panel-section-divider {
+            font-size: 11px;
+            border-top: 1px dotted $borderColor;
+            font-weight: bold;
+            margin: 10px 20px;
+        }
+
+        .remove-button {
+            font-size: 14px;
+            cursor: pointer;
+            margin-left: 10px;
+            text-decoration: none;
+        }
+
+
+        .input-append .dropdown-toggle:first-child {
+            border-top-right-radius: $interactiveBorderRadius;
+            border-bottom-right-radius: $interactiveBorderRadius;
+        }
+
+    }
+
+    /*  shared styles for the visualization content */
+    /*  NOTE: any width- or left-offset-dependent styles need to go in the individual declarations below */
+    /*  the single value container has to be handled as a special case because it over-writes class names */
+    /*  that are dynamically added to it... */
+    .viz-content-full-width, .viz-content-with-menu {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        overflow: hidden;
+    }
+
+    .viz-content-full-width {
+        min-width: calc($bodyMinWidth - $vizMenuWidth);
+        left: 0;
+    }
+
+    .viz-content-with-menu {
+        min-width: calc($bodyMinWidth - $vizMenuWidth - $configMenuWidth);
+        left: $configMenuWidth;
+        border-top: 1px solid $borderColor;
+    }
+
+    .shared-jschart {
+        background-color: $white;
+    }
+
+    .header-table-wrapper {
+        border-bottom: none;
+    }
+
+    .shared-singlevalue {
+        width: 100%;
+    }
+
+    .shared-vizcontrols-customcontrols-gaugecolorrangescontrolgroups {
+        background-color: inherit;
+
+        .tab-pane {
+            background-color: transparent;
+        }
+
+        .form-horizontal {
+        }
+
+        input[type="text"] {
+            width: 50px;
+        }
+
+        .swatch-hex input {
+            width: 44px;
+        }
+
+        .shared-vizcontrols-components-color-ranges {
+            $labelWidth: 50px;
+            /*  Add a negative margin to the color range labels so that they can expand left */
+            /*  underneath the control label. (SPL-77469) */
+            label {
+                width: calc($labelWidth + $horizontalComponentOffset) !important;
+                margin-left: -$horizontalComponentOffset;
+            }
+
+            .controls {
+                margin-left: calc($labelWidth + 5px) !important;
+            }
+        }
+
+        .add-color-range {
+            float: left;
+        }
+
+        .remove-range {
+            position: relative;
+            font-size: 16px;
+            line-height: 16px;
+            top: 2px;
+            left: 5px;
+        }
+
+    }
+
+}
+
+/*  In the field picker drop down, wrap long field names mid-word to avoid them */
+/*  falling to the next line. */
+.pivot-field-picker-dropdown .link-label {
+    white-space: pre;
+}
+
+.pivot-datasourcemenu {
+    h4, dl {
+        font-size: $baseFontSize;
+        padding: 5px 10px;
+        margin: 0;
+    }
+    dl {
+        padding-top: 0;
+    }
+
+    dt {
+        width: 60px;
+    }
+
+    dd {
+        margin-left: 65px;
+    }
+
+    .property-label {
+        width: 75px;
+        display: inline-block;
+    }
+
+    .property-value {
+        display: inline-block;
+    }
+}
+
+
+
+/*  Print */
+/*  -------------------------------------------------- */
+
+@define-mixin print-mixin {
+    .pivot-visualizationtypemenu,
+    .pivot-pivotelementsdisplay,
+    .pivot-visualizationconfigmenu {
+        @mixin print-hide;
+    }
+
+    .pivot-documentactionbar,
+    .pivot-jobactionbar{
+        border: none !important;
+    }
+
+    .pivot-jobactionbar,
+    .pivot-documentactionbar,
+    .pivot-pivotcontent {
+        @mixin print-no-background;
+        position:static !important;
+        left: auto !important;
+        right: auto !important;
+        top: auto !important;
+        bottom: auto !important;
+    }
+}
+@media print {
+    body {
+        @mixin print-mixin;
+    }
+}
+body.print {
+    @mixin print-mixin;
+}

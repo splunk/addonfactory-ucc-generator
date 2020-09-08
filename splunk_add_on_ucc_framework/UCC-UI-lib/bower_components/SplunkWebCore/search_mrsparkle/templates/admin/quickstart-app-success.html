@@ -1,0 +1,57 @@
+<%!
+    title = 'App Install Complete'
+
+%>
+<%namespace name="lib" file="//lib.html" import="*"/>
+<%inherit file="//layout/admin.html" />
+
+<%
+import splunk
+from splunk.appserver.mrsparkle.lib import util, i18n
+
+
+data_inputs_url = make_url(['manager', namespace, 'adddata'])
+apps_url = make_url(['manager', namespace, 'apps', 'local'])
+appname = app.get('label', appid)
+%>
+<div class="spl-success-message-page"> 
+    <!-- start gdi wrapper --> 
+    <div class="spl-gdi-wrapper spl-gdi-success-layout-wrapper spl-border-box-sizing"> 
+        <!-- start success message layout --> 
+        <span class="spl-success-message-wrapper"> 
+            <div class="spl-success-message-wrapper-inner"> 
+                <span class="spl-success-message-content spl-icon-success-xlg"> 
+                    <h1 class="spl-success-message">${_('Success! The %(appname)s app is now ready to use') % dict(appname=appname)}</h1> 
+                    <span class="spl-success-sub-message"> 
+                        <span class="spl-success-sub-message-inner"> 
+                            ${_('Access the configurations for this app any time by going to <strong>Settings &#187; <a href="%(url)s">Apps</a></strong>') % dict(url=apps_url)} 
+                        </span> 
+                    </span> 
+                    <span class="spl-success-actions-wrapper spl-border-box-sizing"> 
+                        <div class="spl-success-actions-wrapper-inner"> 
+                            <ul class="spl-success-actions-list"> 
+                                % if int(app.get('visible', 0)) and not int(app.get('disabled', 0)):
+                                    <li class="spl-success-actions-item"> 
+                                        <a href="${make_url(['app', appid])}" class="spl-success-actions-link spl-icon-application-lg">${_('Start using the %(appname)s app') % dict(appname=appname)}</a> 
+                                    </li> 
+                                % elif not int(app.get('disabled', 0)):
+                                    <li class="spl-success-actions-item"> 
+                                        <a href="${make_url(['app', 'search'])}" class="spl-success-actions-link spl-icon-application-lg">${_('Start using the %(appname)s app') % dict(appname='Search')}</a> 
+                                    </li> 
+                                % endif
+                                <li class="spl-success-actions-item"> 
+                                    <a href="${make_url(['/manager', namespace, 'adddata'])}" class="spl-success-actions-link spl-icon-add-data-lg">${_('Add more data')}</a> 
+                                </li> 
+                                <li class="spl-success-actions-item spl-success-actions-item-last"> 
+                                    <a href="${make_url('/app/launcher/home')}" class="spl-success-actions-link spl-icon-home-lg">${_('Back to home')}</a> 
+                                </li> 
+                            </ul> 
+                        </div> 
+                    </span> 
+                </span> 
+            </div> 
+        </span> 
+    </div> 
+    <!-- end success message layout --> 
+    <!-- End gdi wrapper --> 
+</div>

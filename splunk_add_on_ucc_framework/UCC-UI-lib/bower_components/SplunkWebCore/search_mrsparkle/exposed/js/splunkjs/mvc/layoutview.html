@@ -1,0 +1,41 @@
+<style>
+    /*  Fonts */
+    /*  ----------- */
+
+    /*  Regular */
+    @font-face {
+        font-family: 'Roboto';
+        src: url('<%- make_url("static/fonts/roboto-regular-webfont.woff") %>') format('woff');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    /*  Bold */
+    @font-face {
+        font-family: 'Roboto';
+        src: url('<%- make_url("static/fonts/roboto-bold-webfont.woff") %>') format('woff');
+        font-weight: bold;
+        font-style: normal;
+    }
+
+    /*  light */
+    @font-face {
+        font-family: 'Roboto';
+        src: url('<%- make_url("static/fonts/roboto-light-webfont.woff") %>') format('woff');
+        font-weight: 200;
+        font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Architects Daughter';
+      font-style: normal;
+      font-weight: normal;
+      src: url('<%- make_url("static/fonts/ArchitectsDaughter.ttf") %>') format('truetype');
+    }
+</style>
+<a style="position:absolute; top:-100px; left:-1000px" href="#navSkip" tabIndex="1">
+    <%- _("Screen reader users, click here to skip the navigation bar").t() %>
+</a>
+<header></header>
+<a id="navSkip"></a>
+<footer></footer>'

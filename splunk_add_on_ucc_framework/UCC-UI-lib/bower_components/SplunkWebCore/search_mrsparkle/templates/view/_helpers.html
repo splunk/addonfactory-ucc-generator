@@ -1,0 +1,33 @@
+<%!
+import cgi
+import splunk.util
+from splunk.appserver.mrsparkle.lib import message
+
+# the view code no longer uses anything in the _helpers file, because everything that 
+# used to be here was pulled up into view.html so that the inheritance could work 
+# properly. 
+# we may have a need for this file in the future though, for little helper utils 
+# and things that dont need actual inheritance but are not broad enough to go into 
+# the lib file.
+%>
+
+<%namespace name="lib" file="//lib.html" import="*"/>
+
+<%def name="message(level, msg)">
+    <%def name="js_msg(level, msg)">
+        Splunk.Messenger.System.getInstance().send(${jsonify(cgi.escape(level))}, 'Splunk.Module.Template', ${jsonify(cgi.escape(msg))})
+    </%def>
+
+    % if not is_xhr():
+        <%lib:add_script_block>
+            ${js_msg(level, msg)}
+        </%lib:add_script_block>
+    % else:
+        <% message.send_client_message(level, msg) %>
+    % endif 
+</%def>
+
+<%def name="inlineMessage(level, msg)">
+    <div class="message ${level | h}">${msg | h}</div>
+</%def>
+

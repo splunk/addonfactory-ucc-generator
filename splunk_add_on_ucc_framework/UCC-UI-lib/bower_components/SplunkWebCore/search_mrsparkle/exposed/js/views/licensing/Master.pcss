@@ -1,0 +1,173 @@
+.manager-header {
+    border-bottom: 1px solid $grayLightMedium;
+}
+
+.manager-table {
+    
+    width: 100%;
+    table-layout: fixed;
+
+    td {
+        padding: 10px;
+        white-space: nowrap;
+    }
+    .license-group {
+        font-weight: 500;
+        font-size: large;
+    }
+    .license-table-left {
+        text-align: right;
+        width: 140px;
+    }
+    .license-listing-table-label {
+        vertical-align: top;
+    }
+}
+
+.license-header {
+    font-weight: bold;
+}
+
+.alerts-violations-outer {
+    padding: 10px;
+}
+
+.alert-error {
+    margin-bottom: 0;
+}
+
+.show-all-alerts-violations {
+    margin-left: 28px;
+}
+
+.splButton-tertiary.orange {
+    background: $splunkLiteOrange;
+    border: none;
+    color: $white;
+}
+
+.splButton-tertiary.black {
+    background: $grayDark;
+    border: none;
+    color: $white;
+}
+
+.inline-btn {
+    float: none !important;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 5px !important;
+    height: 24px !important;
+    line-height: 24px;
+    padding: 0 15px;
+}
+
+.license-listings td {
+    padding: 4px 8px;
+}
+
+.license-progress-bar-outer {
+    position: relative;
+    border-style: solid;
+    border-width: 1px;
+    width: 200px;
+    height: 8px;
+    overflow: hidden;
+}
+
+.license-progress-bar-inner {
+    position: absolute;
+    height: inherit;
+    background-color: $black;
+}
+
+.license-usage-chart {
+    width: 100%;
+    height: 200px;
+}
+
+.license-usage-chart-split-picker {
+    a {
+        width: auto;
+    }
+}
+
+/* add/expired license modals */
+
+.license-select-control {
+    text-align: center;
+}
+
+.license-paste-control {
+    text-align: center;
+}
+
+.modal {
+    width: 650px;
+    margin-left: -325px;
+    textarea {
+        width: 580px;
+        height: 150px;
+        padding: 5px 7px;
+        margin-top: 4px;
+        border-width: 1px;
+        border-style: solid;
+        border-color: #cccccc;
+    }
+    .get-license-btn,
+    .back-license-btn {
+        margin-right: 5px;
+    }
+}
+
+.browser-warning,
+.multiple-files-error {
+    padding-top:10px;
+    padding-bottom:10px;
+}
+
+.license-validation-success {
+    margin-bottom: 10px;
+    .icon-check {
+        font-size: 16px;
+        color: $splunkGreen;
+    }
+}
+
+.license-upload-success {
+    .icon-check {
+        font-size: 16px;
+        color: $splunkGreen;
+    }
+}
+
+.upgrade-enterprise-btn {
+    background-color: $splunkGreen;
+}
+
+.get-new-license {
+    margin-top: 20px;
+}
+
+.enterprise-learn-more,
+.splunk-lite-free-error,
+.browser-warning,
+.license-progress-control,
+.license-upload-error,
+.license-pastebin,
+.license-file-input,
+.multiple-files-error,
+.license-validation-error,
+.progress,
+.license-upload-error {
+    display: none;
+}
+
+.licensing-dialogs-expiredlicense {
+    
+}
+
+.change-spl-light-free {
+    line-height: 24px;
+    margin-left: 10px;
+}

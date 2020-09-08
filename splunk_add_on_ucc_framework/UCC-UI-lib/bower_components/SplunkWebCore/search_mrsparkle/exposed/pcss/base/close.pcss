@@ -1,0 +1,54 @@
+
+/*  Close icons */
+/*  -------------------------------------------------- */
+
+
+.close {
+  float: right;
+  
+  border-radius: $interactiveBorderRadius;
+  width: 27px;
+  height: 27px;
+  
+  /* hide any placeholder text */
+  color: transparent;
+  font-size: 0;
+  line-height: 0;
+  text-align: center;
+  
+  
+  &:before {
+  	font-family: "Splunk Icons";
+  	content: '\2717';
+  	font-size: $baseFontSizeLarge;
+  	color: color($textColor a(40%));
+  	line-height: 27px;
+  }
+  
+  &:hover {
+  	background-color: $pillBackgroundColorHover;
+  	cursor: pointer;
+  	text-decoration: none;
+  	
+  	&:before {
+  		color: $linkColorHover;
+  	}
+  }
+  &:focus {
+  	@mixin focus-pill;
+  	&:before {
+  		color: $linkColorHover;
+  	}
+  }
+}
+
+/*  Additional properties for button version */
+/*  iOS requires the button element instead of an anchor tag. */
+/*  If you want the anchor version, it requires `href="#"`. */
+button.close {
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  -webkit-appearance: none;
+}

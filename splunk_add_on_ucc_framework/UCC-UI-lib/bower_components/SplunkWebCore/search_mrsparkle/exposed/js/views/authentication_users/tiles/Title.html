@@ -1,0 +1,14 @@
+<div class="pull-left">
+    <% if (canEditUsers && (maxUsers > 1)) { %>
+        <h2 class="section-title"><%- _("Manage Accounts").t() %></h2>
+        <% if (isSplunkAuth) { %>
+            <%- sprintf(_("You can manage up to %s accounts").t(), maxUsers) %>
+        <% } %>
+    <% } else { %>
+        <h2 class="section-title"><%- _("Manage Account").t() %></h2>
+    <% } %>
+</div>
+
+<% if (canEditUsers && isSplunkAuth && (numUsers < maxUsers)) { %>
+    <button class="btn btn-primary pull-right add-new"><%- _("Add new").t() %></button>
+<% } %>

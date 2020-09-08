@@ -1,0 +1,594 @@
+
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('/static/fonts/roboto-regular-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+    font-family: 'Splunk Icons';
+    src: url('/static/fonts/splunkicons-regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+body {
+    font: 12px roboto, helvetica, arial, sans-serif;
+    line-height: 20px;
+    color: #ccc;
+    background-color: #222222;
+    margin: 0;
+}
+header {
+    line-height: 32px;
+}
+[class^="icon-"], [class*=" icon-"] {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+    vertical-align: text-top;
+    background-image: url("/static/img/bootstrap/glyphicons-halflings.png");
+    background-position: 14px 14px;
+    background-repeat: no-repeat;
+    margin-top: 1px;
+}
+[class^="icon-"]::before,
+[class*=" icon-"]::before {
+    display: inline-block;
+    font-family: "Splunk Icons";
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+}
+.icon-check::before {
+    content: "\2713";
+}
+.icon-close:before,
+.icon-cancel:before {
+  content: "\2717";
+}
+.clear {
+    clear: both;
+}
+
+h2 {
+    margin-bottom: 10px;
+    margin-top: 20px;
+    font-size: 27px;
+    font-weight: 300;
+    white-space: nowrap;
+    overflow: visible;
+}
+a {
+   color: $textGray;
+    text-decoration: none;
+}
+a:hover {
+    color: $white;
+}
+button::-moz-focus-inner {
+    border: none;
+}
+label {
+   color: $textGray;
+}
+label.license_label {
+    text-transform: none;
+    font-size: $baseFontSize;
+    margin-left: 3px;
+}
+
+/* Layout */
+.account {
+    position: absolute;
+    top: 33%;
+    width: 100%;
+}
+.wrapper-container {
+    width: 485px;
+    margin: 0 auto;
+}
+.content {
+    margin-bottom: 40px;
+}
+footer {
+    position: fixed;
+    bottom: 6px;
+    color: #555;
+    width: 100%
+}
+p.copyright {
+    width: 485px;
+    margin: 0 auto;
+}
+
+/* logo */
+#brand{
+    font-family: "Splunk Icons";
+    color: $white;
+    font-size: 48px;
+    padding-bottom: 30px;
+    margin: 8px 0;
+    font-weight: normal;
+}
+#brand > span.prompt {
+    color: $splunkGreen;
+    font-weight: normal;
+}
+
+/* Errors */
+p.error {
+    color: #F06363;
+    padding: 0px;
+    margin: 5px 0;
+    width: 485px;
+}
+.messaging {
+    min-height: 20px;
+    margin-bottom: 10px;
+}
+.licenseError {
+    font-weight: bold;
+    display: block;
+}
+.licenseErrorText {
+}
+p.licensePageError {
+	top:30px;
+}
+
+#userMessaging {
+    min-height: 20px;
+    margin-bottom: 10px;
+}
+
+.subContainer {
+    display: none;
+    min-height: 20px;
+    margin-bottom: 10px;
+}
+
+/* password hint popup */
+#passwordHint {
+   position: relative;
+   border-radius: $baseBorderRadius;
+}
+#passwordHintContent {
+    margin-bottom: 0px;
+}
+#passwordHintContent p {
+    line-height:130%;
+    margin-top: 0px;
+    margin-bottom: 7px;
+   color: $textGray;
+}
+#passwordHintContent p:last-child {
+    margin-bottom: 0;
+}
+#passwordHintContent p span {
+    padding-left: 10px;
+}
+#passwordHint #passwordHintClose {
+    height: 10px;
+    width: 10px;
+    cursor: pointer;
+    display: block;
+    background: transparent;
+    position: absolute;
+    top:8px;
+    right:10px;
+    z-index: 110;
+    opacity:0.5;
+}
+#passwordHint #passwordHintClose:hover {
+    background-position: -20px 0px;
+    opacity:1;
+}
+
+/* tips */
+#connectError {
+    display: none;
+}
+#connectError p {
+    margin-top: 0px;
+}
+#connectError p:last-child {
+    margin-bottom: 0px;
+}
+.connectErrorContinue {
+    margin-top: 90px;
+}
+
+#tipsCheckerContainer {
+    padding: 0;
+}
+#tipsCheckerContainer iframe {
+    max-height: 90px;
+    background-color: #222222;
+    margin-top: -30px;
+}
+.tipsCheckerContinueLink {
+    height: 26px;
+}
+
+#freeMessageContainer {
+    padding-left: 20px;
+	line-height: 25px;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+}
+#freeMessageContainer .freeMessageUpdate {
+    margin:10px 0px 20px;
+}
+#freeMessageContainer .freeMessageUpdate .splButton-primary {
+	margin-right:10px;
+}
+#freeMessageContainer .skipUpdate {
+    margin-left: 10px;
+}
+#freeMessageContainer .connectErrorContinue {
+    float: none;
+}
+
+.checkingForUpdatesWrapper {
+    padding-top: 15px;
+}
+.checkingForUpdates,
+.noUpdatesFound {
+	height: 16px;
+	line-height: 16px;
+}
+.checkingForUpdates {
+    padding-left: 20px;
+}
+.spinner {
+    top: 7px;
+}
+#freeMessageContainer .freeMessageUpdate .skipUpdate {
+	margin-left: 10px;
+}
+
+iframe {
+    width: 100%; overflow: hidden;
+}
+
+.licensingPage #mainPanel {
+    top:82px;
+}
+.licensingPage #mainPanel a {
+    font-size: $baseFontSize;
+}
+.licenseExpiredForm {
+    margin-bottom: 10px;
+}
+.licenseExpiredForm p {
+    margin: 0 0 10px 0;
+}
+.licenseOptionDiv {
+    margin-bottom: 7px;
+}
+.licenseOptionDiv label {
+   color: $textColor;
+}
+.licenseExpiredForm p.licenseButtonRow {
+    margin-top: 15px;
+    margin-bottom:15px;
+}
+
+
+/* form elements */
+input {
+    margin: 0;
+    float: left;
+    resize: none;
+    box-sizing: border-box;
+}
+input[type=text],
+input[type=password] {
+    width: 200px;
+    height: 40px;
+    padding: 0 6px;
+    border-color: #BFBFBF;
+    border-right-width: 0;
+    border-radius: 0;
+}
+input[type=text]:focus,
+input[type=password]:focus {
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    border-color: #BFBFBF;
+    outline: none;
+}
+input[name=username], input[name=new_password] {
+    border-top-left-radius: $interactiveBorderRadius;
+    border-bottom-left-radius: $interactiveBorderRadius;
+}
+input[type=submit] {
+   color: $textColor;
+    text-align: center;
+    height: 40px;
+    min-width: 60px;
+    padding: 4px 12px;
+    white-space: nowrap;
+
+    @mixin interactive;
+    border: 1px solid #BFBFBF;
+
+    border-radius: 0 4px 4px 0;
+}
+
+/* borrowing styles form search bar */
+form table {
+    box-shadow: 0 0 5px black;
+    border-collapse: collapse;
+}
+form table td {
+    padding: 0 !important;
+}
+form table .input-wrapper {
+    border-right: none;
+    position: relative;
+}
+form table td:first-child .input-wrapper {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+form table td+td .input-wrapper {
+    border-left: none;
+    padding-left: 0;
+}
+
+.placeholder-text {
+    position: absolute;
+    left: 0;
+    padding: 13px 9px;
+    color: #aaa;
+    line-height: normal;
+}
+.loginForm table {
+    margin-bottom: 5px;
+}
+table input[type=text],
+table input[type=password] {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: $baseFontSize;
+    padding: 0 6px;
+    box-sizing: border-box;
+    margin: 0;
+    height: 40px;
+    resize: none;
+
+    width: 200px;
+
+    border: 1px solid #BFBFBF;
+    border-right-width: 0;
+
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+table input[type=text], #newpassword {
+    border-top-left-radius: $interactiveBorderRadius;
+    border-bottom-left-radius: $interactiveBorderRadius;
+}
+table input[type=password] {
+    border-radius: 0;
+}
+table input[type=text]:focus,
+table input[type=password]:focus {
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    border-color: #bbb;
+    outline: none;
+}
+table .placeholder {
+    color: #aaa;
+}
+table tr .splButton-primary  {
+    line-height: 38px;
+    height: 40px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    padding: 0 15px;
+    text-align: center;
+    /*width: auto;*/
+    margin: 0;
+    min-width: 60px;
+    cursor: pointer;
+    border-left-color: #AEAEAE;
+    white-space: nowrap;
+}
+/* copied button classes from view and default css.  careful for delta in changes here */
+.splButton-primary,
+.splButton-secondary {
+    display: inline-block;
+    padding: 4px 12px;
+    margin-bottom: 0px;
+    font-size: $baseFontSize;
+    line-height: 16px;
+    text-align: center;
+    vertical-align: middle;
+
+   	@mixin interactive;
+     border: 1px solid #BFBFBF;
+
+    border-radius: $interactiveBorderRadius;
+    cursor: pointer;
+}
+a.splButton-primary:hover,
+.splButton-primary:hover {
+	@mixin interactive;
+
+    outline: none;
+
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.08);
+
+}
+a.splButton-primary,
+a.splButton-secondary,
+a.splButton-primary span,
+a.splButton-secondary span {
+    text-decoration: none;
+    float: left;
+}
+.splButton-primary span,
+.splButton-secondary span {
+    min-width: 110px;
+    display: block;
+}
+p.loginButtonRow {
+    margin-top:15px;
+}
+.footer {
+    position: fixed;
+    margin: 0;
+    line-height: 20px;
+    bottom: 0px;
+    padding-bottom: 10px;
+    color:  #555;
+    font-size: $baseFontSizeSmall;
+	@mixin gradient-vertical rgba(32,32,32,0), #222222;
+}
+
+/* noscript message */
+noscript {
+    position: absolute;
+    width: 482px;
+    top: 40%;
+    margin-top: -15px;
+}
+
+noscript p {
+	display: block;
+}
+
+input[type=submit],
+input[type=reset],
+input[type=button],
+button[type=submit],
+button:hover
+{
+    color: #010101;
+}
+
+/* responsive */
+@media (max-width: 767px) {
+    .container-center,
+    .container-top {
+        left: inherit;
+        right: inherit;
+        margin: 0;
+    }
+    .container-top {
+        width: 482px;
+        margin: 0 auto;
+    }
+
+    #brand {
+        text-align: center;
+    }
+    #passwordHint {
+        width: 220px;
+        margin: 0 auto;
+    }
+    p.error {
+        text-align: center;
+    }
+
+    /* not needed to login */
+    #updateCheckerContainer {
+        display: none !important;
+    }
+
+    table, tbody, tr, td {
+        display: block;
+    }
+    form table {
+        width: 200px;
+        margin: 0 auto;
+        background: #EAEAEA; /* Old browsers */
+		@mixin gradient-vertical #fbfbfb, #D0D0D0;
+
+        padding: 10px;
+        box-shadow: 0px 1px 1px rgba(0,0,0,0.08);
+        border: 1px solid #E0E0E0;
+        border-top-color: $white;
+        border-bottom-color: #CFCFCF;
+        border-radius: $baseBorderRadius;
+    }
+    form table .input-wrapper {
+        background: transparent;
+        box-shadow: none;
+        border: none;
+        margin-bottom: 10px;
+        padding: 0;
+    }
+    table input[type="text"], table input[type="password"] {
+        width: 100%;
+        box-sizing: border-box;
+        border-right-width: 1px;
+        border-radius: $interactiveBorderRadius;
+    }
+    table tr .splButton-primary {
+        margin-top: 5px;
+        border: 1px solid #bbb;
+        border-radius: $interactiveBorderRadius;
+        width: 100%;
+    }
+}
+
+/* Lite */
+body.lite {
+    background: url("/static/img/skins/default/lite_login_bg.jpg") no-repeat center center fixed;
+    background-size: cover;
+}
+.lite #brand,
+.lite #brand > span.prompt {
+    color: $white;
+    font-size: 32px;
+    padding-bottom: 10px;
+}
+.lite footer {
+    background: none;
+    text-align: center;
+    color: #CCC;
+    width: 100%;
+}
+.lite .wrapper-container {
+    padding: 20px 50px;
+    width: 620px;
+    background: rgba(51, 51, 51, .75);
+}
+.lite form table {
+    border-collapse: separate;
+}
+.lite input[type=submit] {
+    border-radius: 0px;
+    background: none;
+    border: 1px solid #E8B258 !important;
+    box-shadow: none;
+    box-shadow: none;
+    color: #E8B258;
+    margin-left: 6px;
+    font-size: $baseFontSizeLarge;
+    line-height: 35px;
+    height: 35px;
+    padding: 0 12px;
+}
+.lite form table td:first-child .input-wrapper,
+.lite table input[type=text], #newpassword {
+    border-radius: 0px;
+}
+.lite input[type=text],
+.lite input[type=password] {
+    width: 230px;
+    height: 35px;
+}
+.lite table input[type=text],
+.lite table input[type=password],
+.lite table,
+.lite table td {
+    border: none;
+    box-shadow: none;
+}
+.lite .placeholder-text {
+    padding: 11px 9px;
+}

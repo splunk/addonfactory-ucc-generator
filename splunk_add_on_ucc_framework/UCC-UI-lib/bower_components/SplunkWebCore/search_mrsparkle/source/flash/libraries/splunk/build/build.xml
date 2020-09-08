@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="Splunk Library" basedir="../" default="all">
+
+    <property name="FLEX_SDK" value="D:/applications/Adobe/Flex 3.0 SDK/flex_sdk_3" />
+    <property name="asdoc.exe" value="${FLEX_SDK}/bin/asdoc.exe" />
+    <property name="compc.exe" value="${FLEX_SDK}/bin/compc.exe" />
+
+    <property name="jasongatt.bin.dir" value="${basedir}/../jasongatt/bin" />
+
+    <property name="build.dir" value="${basedir}/build" />
+    <property name="src.dir" value="${basedir}/src" />
+    <property name="bin.dir" value="${basedir}/bin" />
+    <property name="docs.dir" value="${basedir}/docs" />
+
+    <target name="src">
+        <delete includeemptydirs="true">
+            <fileset dir="${bin.dir}" includes="**/*" />
+        </delete>
+        <exec executable="${compc.exe}" dir="${basedir}">
+            <arg value="-library-path=${jasongatt.bin.dir}" />
+            <arg value="-source-path=${src.dir}" />
+            <arg value="-include-sources=${src.dir}" />
+            <arg value="-output=${bin.dir}/splunk.swc" />
+        </exec>
+    </target>
+
+    <target name="docs">
+        <delete includeemptydirs="true">
+            <fileset dir="${docs.dir}" includes="**/*" />
+        </delete>
+        <property file="${build.dir}/build.properties" />
+        <exec executable="${asdoc.exe}">
+            <arg value="-library-path=${jasongatt.bin.dir}" />
+            <arg value="-source-path=${src.dir}" />
+            <arg value="-doc-sources=${src.dir}" />
+            <arg value="-output=${docs.dir}" />
+            <arg value="-main-title=${docs.title}" />
+            <arg value="-window-title=${docs.title}" />
+            <arg value="-footer=${docs.copyright}" />
+            <arg value="-package=com.splunk.services,${docs.com.splunk.services}" />
+            <arg value="-package=com.splunk.services.events,${docs.com.splunk.services.events}" />
+            <arg value="-package=com.splunk.services.namespaces,${docs.com.splunk.services.namespaces}" />
+            <arg value="-package=com.splunk.services.properties,${docs.com.splunk.services.properties}" />
+            <arg value="-package=com.splunk.services.search,${docs.com.splunk.services.search}" />
+            <arg value="-package=com.splunk.services.search.data,${docs.com.splunk.services.search.data}" />
+            <arg value="-package=com.splunk.time,${docs.com.splunk.time}" />
+        </exec>
+    </target>
+
+    <target name="all" depends="src,docs" />
+
+</project>

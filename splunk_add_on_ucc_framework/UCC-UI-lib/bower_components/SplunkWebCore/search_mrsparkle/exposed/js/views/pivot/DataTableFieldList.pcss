@@ -1,0 +1,35 @@
+/*  Splunk: Component: Pivot: object field list */
+/*  =============================================== */
+
+/* object field list?
+
+    markup missing ....
+
+*/
+/*  used in pivot select object expanded table */
+.pivot-datatablefieldlist {
+
+    table.field-list {
+        /*  these rules are here so the table can be embedded inside other tables witout inheriting their styles */
+        /*  TOOD: not sure tihs is still needed */
+        > tbody > tr {
+            background-color: transparent;
+        }
+
+        td, th {
+            border: none;
+            padding-left: 0;
+        }
+
+        td.group-name {
+            width: 80px;
+            color: $textGray;
+        }
+    }
+
+    .type-icon {
+        color: $textGrayDark;
+        width: 10px;
+        display: inline-block;
+    }
+}

@@ -1,0 +1,147 @@
+/*  Splunk : Page: Deployment Server Add Clients */
+/*  ============================================ */
+
+/*  Common */
+/*  ------ */
+
+/*  TODO: move to common */
+.section-header {
+	@mixin clearfix;
+    position: relative;
+    padding: 10px 20px;
+
+    .btn-toolbar {
+    	float: right;
+    }
+}
+
+/*  FIXME: is this still needed */
+.section-padded {
+	@mixin clearfix;
+	padding: 10px 20px;
+}
+
+.divider {
+	clear:both;
+}
+
+.tab-content {
+	background-color: $bodyBackgroundColor;
+	padding: 20px;
+	overflow: visible;
+	min-height: 400px;
+}
+
+pre {
+	border: none;
+	background-color: transparent;
+	padding: 0;
+}
+
+.btn + .btn {
+	margin-left: 1em;
+}
+
+/*   feedback */
+.message-single {
+    margin: 60px 0px;
+}
+
+/*   lists */
+.list-container {
+    float:left;
+    width: 33%;
+}
+
+.list-inner {
+	margin-right:60px;
+}
+
+.list-area {
+ 	width: 100%;
+ 	min-height: 60px;
+ 	resize: vertical;
+ 	box-sizing: border-box;
+}
+
+.deploymentserver-edit-addclients-selectedmachinetypeslist {
+	.btn:first-child {
+		width: 160px;
+		cursor: default;
+	}
+	.btn-combo + .btn-combo {
+		display: block;
+		margin-left: 0;
+		margin-bottom: 5px;
+	}
+}
+
+.selectedMachineTypeElement {
+	margin-bottom: 2px;
+}
+
+.add-edit-form:after {
+	display: table;
+	content: "";
+	line-height: 0;
+	clear: both;
+}
+
+/*  TODO: remove id's */
+#selectedClientsGridContainer,
+#allClientsGridContainer,
+#unselectedClientsGridContainer
+{
+	margin-left: -20px;
+	margin-right: -20px;
+}
+
+/*  TODO: make a base class for this */
+.create-drop-down .btn {
+	font-size: 15px;
+	padding: 0;
+	width: 24px;
+	height: 24px;
+	line-height: 24px;
+}
+
+#machine-filters-selecter {
+	margin-bottom: 5px;
+}
+
+.searchFilterContainer {
+    margin-left: 20px;
+}
+
+.tab-content {
+     border-top: 1px solid $borderDarkColor;
+}
+
+td .client-check {
+    text-align: center;
+}
+
+/*  FIXME: should not be using control-group/label */
+#controls .control-label {
+	display: none;
+	.control-group {
+		margin-bottom: 10px;
+	}
+}
+
+.searchFilterContainer .deploymentserver-search {
+    margin-bottom: 0;
+}
+
+
+#clients-tabs-contents {
+	padding-top: 10px;
+}
+
+#whitelist, #blacklist {
+
+    .filter-text-area {
+        width: 100%;
+        min-height: 50px;
+    }
+}

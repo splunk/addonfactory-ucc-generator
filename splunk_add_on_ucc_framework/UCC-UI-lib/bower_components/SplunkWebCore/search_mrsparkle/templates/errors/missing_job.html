@@ -1,0 +1,44 @@
+<%inherit file="//layout/base.html" />
+<%namespace name="lib" file="//lib.html" import="*" />
+
+<%def name="css()">
+    <%lib:stylesheet_tags files="${[
+        '/static/css/view.css', 
+        '/static/css/skins/default/default.css']}" />
+    <style>
+        #layout {
+            padding: 2em;
+            font-size: 13px;
+        }
+        
+        a.splButton-secondary {
+            margin-left: 0;
+        }
+        
+        h1 {
+            font-size: 24px;
+            line-height: 1;
+            margin: 0;
+            color: #333;
+            font-weight: 200;
+        }
+        
+    </style>
+</%def>
+
+
+<div id="layout">
+  <h1>${_(not_found_str) | h}</h1>
+  <p>${_(explanation_str) | h}</p>
+
+  % if url is not None:
+  <p>${_(rerun_str) | h}</p>
+  % endif
+  
+  <p>
+      <a class="splButton-secondary" href="${make_url("/") | h}">Return to Splunk</a>
+  % if url is not None:
+      <a class="splButton-primary" href="${url | h}">Rerun search</a>
+  % endif
+  </p>
+</div>

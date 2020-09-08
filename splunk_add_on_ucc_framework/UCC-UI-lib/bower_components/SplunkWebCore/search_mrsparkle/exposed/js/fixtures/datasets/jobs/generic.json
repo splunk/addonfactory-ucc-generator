@@ -1,0 +1,82 @@
+{
+  "links": {},
+  "origin": "https://localhost:8000/servicesNS/admin/search/search/jobs",
+  "updated": "2016-04-29T09:54:55-07:00",
+  "generator": {
+    "build": "26aff62ed48c614fe2eae4a0e1a05efac6adb265",
+    "version": "20160428"
+  },
+  "entry": [{
+    "name": "",
+    "id": "https://localhost:8000/servicesNS/admin/search/search/jobs/1461948895.56",
+    "updated": "2016-04-29T09:54:55.000-07:00",
+    "links": {
+      "alternate": "/servicesNS/admin/search/search/jobs/1461948895.56",
+      "search.log": "/servicesNS/admin/search/search/jobs/1461948895.56/search.log",
+      "events": "/servicesNS/admin/search/search/jobs/1461948895.56/events",
+      "results": "/servicesNS/admin/search/search/jobs/1461948895.56/results",
+      "results_preview": "/servicesNS/admin/search/search/jobs/1461948895.56/results_preview",
+      "timeline": "/servicesNS/admin/search/search/jobs/1461948895.56/timeline",
+      "summary": "/servicesNS/admin/search/search/jobs/1461948895.56/summary",
+      "control": "/servicesNS/admin/search/search/jobs/1461948895.56/control"
+    },
+    "published": "1969-12-31T16:00:00.000-08:00",
+    "author": "",
+    "content": {
+      "cursorTime": "1969-12-31T16:00:00.000-08:00",
+      "defaultSaveTTL": "604800",
+      "defaultTTL": "600",
+      "delegate": "",
+      "diskUsage": 28672,
+      "dispatchState": "PARSING",
+      "doneProgress": 0,
+      "earliestTime": "1969-12-31T16:00:00.000-08:00",
+      "isDone": false,
+      "isFailed": false,
+      "isFinalized": false,
+      "isPaused": false,
+      "isSaved": false,
+      "isSavedSearch": false,
+      "isZombie": false,
+      "label": "",
+      "sid": "1461948895.56",
+      "statusBuckets": 0,
+      "ttl": 600,
+      "messages": [],
+      "request": {
+        "adhoc_search_level": "smart",
+        "auto_cancel": "30",
+        "earliest_time": "",
+        "indexedRealtime": "",
+        "latest_time": "",
+        "preview": "true",
+        "rf": "*",
+        "search": "| from savedsearch:\"foo\" | head 50",
+        "status_buckets": "300",
+        "ui_dispatch_app": "search"
+      },
+      "runtime": {
+        "auto_cancel": "30",
+        "auto_pause": "0"
+      },
+      "searchProviders": []
+    },
+    "acl": {
+      "perms": {
+        "read": ["admin"],
+        "write": ["admin"]
+      },
+      "owner": "admin",
+      "modifiable": true,
+      "sharing": "global",
+      "app": "search",
+      "can_write": true,
+      "ttl": "600"
+    }
+  }],
+  "paging": {
+    "total": 1,
+    "perPage": 0,
+    "offset": 0
+  }
+}

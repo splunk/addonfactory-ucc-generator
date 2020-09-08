@@ -1,0 +1,29 @@
+.brand {
+    font-size: 17px;
+    float: left;
+    text-decoration: none;
+    line-height: $navbarHeightLite;
+    height: $navbarHeightLite;
+    border: none;
+    &:hover {
+        background: none;
+        border: none;
+        text-decoration: none;
+    }
+}
+
+.gt {
+    color: $splunkGray;
+    font-weight: normal;
+}
+
+.subBrand,
+.appText {
+    color: $splunkLiteOrange;
+    -webkit-font-smoothing: antialiased;
+}
+
+.appText {
+    font-size: 14px;
+    margin-right: 5px;
+}

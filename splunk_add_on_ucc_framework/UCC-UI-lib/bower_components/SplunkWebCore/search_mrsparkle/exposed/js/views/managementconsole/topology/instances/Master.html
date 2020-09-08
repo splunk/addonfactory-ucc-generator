@@ -1,0 +1,26 @@
+<div class="section-header section-padded">
+    <% if (user.canShowForwarderSetup()) { %>
+        <a href="#" class="btn btn-primary pull-right fwd-setup-instructions"><%- strings.FWD_SETUP %></a>
+    <% } %>
+    <h2 class="section-title"><%- strings.TITLE %></h2>
+    <p class="description">
+        <%- strings.DESCRIPTION %><br>
+        <% if (showForwarderAuthLink) { %>
+            <%- strings.FWD_AUTH_DESCRIPTION %>
+            <a href="#" class="fwd-authentication"><%- strings.FWD_AUTH %></a>
+        <% } %>
+    </p>
+</div>
+
+<div class="main-section">
+    <div class="filter-toolbox"></div>
+    <div class="result-section">
+        <div class="clearfix"></div>
+        <a href="#" class="show-filters-btn btn-pill"><i class="icon-chevron-left icon-no-underline"></i><span><%- strings.SHOW_FILTERS %></span></a>
+        <%
+        if (showForwarderConfigureButton) {%>
+        	<a href="#" class="btn-configure-forwarders tooltip-link btn-pill pull-left"><%- strings.CONFIGURE %></a>
+        <%}%>
+        <div class="grid-placeholder"></div>
+    </div>
+</div>

@@ -1,0 +1,8 @@
+/*  Messages appears in Splunk Bar and Lite Bar */
+/*  ======================= */
+
+
+.view {
+    composes: view from '../Menu.pcssm';
+    margin: 0 10px;
+}
