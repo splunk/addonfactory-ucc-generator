@@ -327,7 +327,7 @@ def main():
     elif args.py2_requirements and os.path.exists(args.py2_requirements):
         install_libs(args, lib_dest, py2=True)
     elif args.py3_requirements or args.py2_requirements:
-        logging.warning("Unable to find requirements file") 
+        raise FileNotFoundError("Unable to find requirements file") 
     install_libs(args, lib_dest)
     install_libs_py2(args, ta_name)
     install_libs_py3(args, ta_name)
@@ -410,4 +410,4 @@ def install_requirements():
     elif args.py2_requirements and os.path.exists(args.py2_requirements):
         install_libs(args, lib_dest, py2=True)
     else:
-        logging.warning("Unable to find requirements file")
+        raise FileNotFoundError("Unable to find requirements file")
