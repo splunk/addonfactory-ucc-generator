@@ -47,7 +47,7 @@ def clean_before_build(args):
 
     logging.warning("Cleaning out directory " + outputdir)
     shutil.rmtree(os.path.join(outputdir), ignore_errors=True)
-    os.mkdir(outputdir)
+    os.makedirs(outputdir)
     logging.warning("Cleaned out directory " + outputdir)
 
 
@@ -162,7 +162,7 @@ def is_oauth_configured(ta_tabs):
                 if elements["type"] == "oauth":
                     return True
             break
-        return False
+    return False
 
 
 def replace_oauth_html_template_token(args, ta_name, ta_version):
@@ -185,14 +185,14 @@ def modify_and_replace_token_for_oauth_templates(
     args, ta_name, ta_tabs, ta_version
 ):
     redirect_xml_src = os.path.join(
-        outputdir, ta_name, "default/data/ui/views/redirect.xml"
+        outputdir, ta_name, "default", "data", "ui", "views", "redirect.xml"
     )
     # if oauth is configured replace token in html template and rename the templates with respect to addon name
     if is_oauth_configured(ta_tabs):
         replace_oauth_html_template_token(args, ta_name, ta_version)
 
         redirect_js_src = os.path.join(
-            outputdir, ta_name, "appserver/static/js/build/redirect_page.js"
+            outputdir, ta_name, "appserver", "static", "js", "build", "redirect_page.js"
         )
         redirect_js_dest = (
             os.path.join(outputdir, ta_name, "appserver/static/js/build/")
@@ -202,15 +202,15 @@ def modify_and_replace_token_for_oauth_templates(
             + ".js"
         )
         redirect_html_src = os.path.join(
-            outputdir, ta_name, "appserver/templates/redirect.html"
+            outputdir, ta_name, "appserver", "templates", "redirect.html"
         )
         redirect_html_dest = (
-            os.path.join(outputdir, ta_name, "appserver/templates/")
+            os.path.join(outputdir, ta_name, "appserver", "templates")
             + ta_name.lower()
             + "_redirect.html"
         )
         redirect_xml_dest = (
-            os.path.join(outputdir, ta_name, "default/data/ui/views/")
+            os.path.join(outputdir, ta_name, "default", "data", "ui", "views")
             + ta_name.lower()
             + "_redirect.xml"
         )
@@ -304,15 +304,14 @@ def main():
 
     shutil.copyfile(
         args.config,
-        os.path.join(
-            outputdir, ta_name, "appserver/static/js/build/globalConfig.json",
+        os.path.join(outputdir, ta_name, "appserver", "static", "js", "build", "globalConfig.json",
         ),
     )
     replace_token(args, ta_name)
 
     generate_rest(args, ta_name, scheme, import_declare_name)
     modify_and_replace_token_for_oauth_templates(
-        args, ta_name, ta_tabs, "1.0.0"
+        args, ta_name, ta_tabs, args.config.get('meta').get('version')
     )
     add_modular_input(
         args, ta_name, schema_content, import_declare_name, j2_env
@@ -338,8 +337,10 @@ def generate_static_files():
 
 def migrate_package():
     logging.info("Exporting generated Package.")
-    src = os.path.join(os.path.join(sourcedir, "UCC-UI-lib", "package"))
+    src = os.path.join(os.path.join(sourcedir, "UCC-UI-lib", "build"))
     dest = os.path.join(os.path.join(sourcedir, "package"))
+    if os.path.exists(dest):
+        shutil.rmtree(dest, ignore_errors=True)
     os.makedirs(dest)
     recursive_overwrite(src, dest)
 
