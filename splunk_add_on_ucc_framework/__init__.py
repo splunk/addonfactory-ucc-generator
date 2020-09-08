@@ -2,6 +2,7 @@ __version__ = "0.1.0"
 
 import logging
 import os
+import glob
 from os import system
 import shutil
 import argparse
@@ -53,6 +54,7 @@ def clean_before_build(args):
 
 def copy_package_source(args, ta_name):
     logging.warning("Copy package directory " + args.source)
+    print(args.source)
     recursive_overwrite(args.source, os.path.join(outputdir, ta_name))
 
 
@@ -62,7 +64,7 @@ def export_package(args, ta_name):
 
 
 def copy_package_template(args, ta_name):
-    logging.warning("Copy template directory ")
+    logging.warning("Copy template directory")
     recursive_overwrite(
         os.path.join(sourcedir, "package"), os.path.join(outputdir, ta_name)
     )
@@ -87,20 +89,29 @@ def replace_token(args, ta_name):
             f.write(s)
 
 
-def install_libs(args, ta_name):
-
-    lib_dest = os.path.join(outputdir, ta_name, "lib")
-    os.makedirs(lib_dest)
-    install_cmd = (
-        "pip3 install -r"
-        + os.path.join(sourcedir, "../../requirements.txt")
-        + " --no-compile --no-binary :all: --target "
-        + lib_dest
-    )
-
-    os.system(install_cmd)
-    os.system("rm -rf " + lib_dest + "/*.egg-info")
-    os.system("rm -rf " + lib_dest + "/*.dist-info")
+def install_libs(args, lib_dest, py2=False, py3=False):
+    if not os.path.exists(lib_dest):
+        os.makedirs(lib_dest)
+    if py3:
+        install_cmd = (
+            "pip3 install -r "
+            + os.path.join("..", args.py3_requirements)
+            + " --no-compile --no-binary :all: --target "
+            + lib_dest
+        )
+        os.system(install_cmd)
+    if py2:
+        install_cmd = (
+            "pip2 install -r "
+            + os.path.join("..", args.py2_requirements)
+            + " --no-compile --no-binary :all: --target "
+            + lib_dest
+        )
+        os.system(install_cmd)
+    remove_files(lib_dest)
+    # rmdirs = glob.glob(lib_dest + "/*.egg-info") + glob.glob(lib_dest + "/*.dist-info")
+    # for rmdir in rmdirs:
+    #     shutil.rmtree(rmdir)
 
 
 def install_libs_py2(args, ta_name):
@@ -117,9 +128,9 @@ def install_libs_py2(args, ta_name):
         + " --no-compile --no-binary :all: --target "
         + lib_dest
     )
-
-    os.system("rm -rf " + lib_dest + "/*.egg-info")
-    os.system("rm -rf " + lib_dest + "/*.dist-info")
+    remove_files(lib_dest)
+    # os.system("rm -rf " + lib_dest + "/*.egg-info")
+    # os.system("rm -rf " + lib_dest + "/*.dist-info")
 
 
 def install_libs_py3(args, ta_name):
@@ -131,9 +142,14 @@ def install_libs_py3(args, ta_name):
         + " --no-compile --no-binary :all: --target "
         + lib_dest
     )
-    os.system("rm -rf " + lib_dest + "/*.egg-info")
-    os.system("rm -rf " + lib_dest + "/*.dist-info")
+    remove_files(lib_dest)
+    # os.system("rm -rf " + lib_dest + "/*.egg-info")
+    # os.system("rm -rf " + lib_dest + "/*.dist-info")
 
+def remove_files(path):
+    rmdirs = glob.glob(path + "/*.egg-info") + glob.glob(path + "/*.dist-info")
+    for rmdir in rmdirs:
+        shutil.rmtree(rmdir)
 
 def copy_splunktaucclib(args, ta_name):
     logging.warning("Copy splunktaucclib directory ")
@@ -266,6 +282,7 @@ def make_modular_alerts(args, ta_name, ta_namespace, schema_content):
 
 def main():
     parser = argparse.ArgumentParser(description="Build the add-on")
+    requirements_group = parser.add_mutually_exclusive_group()
     parser.add_argument(
         "--source",
         type=str,
@@ -278,8 +295,24 @@ def main():
         help="Path to configuration file",
         required=True,
     )
+    requirements_group.add_argument(
+        "--py2-requirements",
+        type=str,
+        help="Install libraries in addon using python2",
+    )
+    requirements_group.add_argument(
+        "--py3-requirements",
+        type=str,
+        help="Install libraries in addon using python3",
+    )
+    parser.add_argument(
+        "--path-requirements",
+        type=str,
+        help="Path in addon to install 3rd Party libs",
+        default="lib"
+    )
     args = parser.parse_args()
-
+    print(args)
     clean_before_build(args)
 
     with open(os.path.join(args.source, "app.manifest"), "r") as f:
@@ -297,7 +330,14 @@ def main():
     logging.warning("Package ID is " + ta_name)
 
     copy_package_template(args, ta_name)
-    install_libs(args, ta_name)
+    lib_dest = os.path.join(outputdir, ta_name, args.path_requirements)
+    if args.py3_requirements and os.path.exists(os.path.join("..", args.py3_requirements)):
+        install_libs(args, lib_dest, py3=True)
+    elif args.py2_requirements and os.path.exists(os.path.join("..", args.py2_requirements)):
+        install_libs(args, lib_dest, py2=True)
+    else:
+        print("Unable to find requirements file")
+    install_libs(args, lib_dest)
     install_libs_py2(args, ta_name)
     install_libs_py3(args, ta_name)
     copy_splunktaucclib(args, ta_name)
@@ -349,3 +389,36 @@ def build_ucc():
     generate_static_files()
     migrate_package()
 
+def install_requirements():
+    """
+    Install libraries in add-on.  
+    """
+    parser = argparse.ArgumentParser(description="Build the add-on")
+    requirements_group = parser.add_mutually_exclusive_group(required=True)
+    parser.add_argument(
+        "--path-requirements",
+        type=str,
+        help="Path in addon to install 3rd Party libs",
+        default="lib"
+    )
+    requirements_group.add_argument(
+        "--py2-requirements",
+        type=str,
+        help="Install libraries in addon using python2",
+    )
+    requirements_group.add_argument(
+        "--py3-requirements",
+        type=str,
+        help="Install libraries in addon using python3",
+
+    )
+    # requirements_group.set_defaults(py3_requirements="requirements.txt")
+    args = parser.parse_args()
+    print(args)
+    lib_dest = os.path.join("../package", args.path_requirements)
+    if args.py3_requirements and os.path.exists(os.path.join("..", args.py3_requirements)):
+        install_libs(args, lib_dest, py3=True)
+    elif args.py2_requirements and os.path.exists(os.path.join("..", args.py2_requirements)):
+        install_libs(args, lib_dest, py2=True)
+    else:
+        print("Unable to find requirements file")
