@@ -325,6 +325,9 @@ def setup_env():
     logging.info("Setting up Environment")
     install_npm_dependencies = "npm install -g bower"
     os.system(install_npm_dependencies)
+    os.chdir(os.path.join(sourcedir, "UCC-UI-lib", "bower_components", "SplunkWebCore"))
+    os.system("npm install")
+    
 
 
 def generate_static_files():
