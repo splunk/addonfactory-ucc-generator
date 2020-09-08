@@ -54,7 +54,6 @@ def clean_before_build(args):
 
 def copy_package_source(args, ta_name):
     logging.warning("Copy package directory " + args.source)
-    print(args.source)
     recursive_overwrite(args.source, os.path.join(outputdir, ta_name))
 
 
@@ -95,7 +94,7 @@ def install_libs(args, lib_dest, py2=False, py3=False):
     if py3:
         install_cmd = (
             "pip3 install -r "
-            + os.path.join("..", args.py3_requirements)
+            + args.py3_requirements
             + " --no-compile --no-binary :all: --target "
             + lib_dest
         )
@@ -103,15 +102,12 @@ def install_libs(args, lib_dest, py2=False, py3=False):
     if py2:
         install_cmd = (
             "pip2 install -r "
-            + os.path.join("..", args.py2_requirements)
+            + args.py2_requirements
             + " --no-compile --no-binary :all: --target "
             + lib_dest
         )
         os.system(install_cmd)
     remove_files(lib_dest)
-    # rmdirs = glob.glob(lib_dest + "/*.egg-info") + glob.glob(lib_dest + "/*.dist-info")
-    # for rmdir in rmdirs:
-    #     shutil.rmtree(rmdir)
 
 
 def install_libs_py2(args, ta_name):
@@ -129,8 +125,6 @@ def install_libs_py2(args, ta_name):
         + lib_dest
     )
     remove_files(lib_dest)
-    # os.system("rm -rf " + lib_dest + "/*.egg-info")
-    # os.system("rm -rf " + lib_dest + "/*.dist-info")
 
 
 def install_libs_py3(args, ta_name):
@@ -143,8 +137,6 @@ def install_libs_py3(args, ta_name):
         + lib_dest
     )
     remove_files(lib_dest)
-    # os.system("rm -rf " + lib_dest + "/*.egg-info")
-    # os.system("rm -rf " + lib_dest + "/*.dist-info")
 
 def remove_files(path):
     rmdirs = glob.glob(path + "/*.egg-info") + glob.glob(path + "/*.dist-info")
@@ -312,7 +304,6 @@ def main():
         default="lib"
     )
     args = parser.parse_args()
-    print(args)
     clean_before_build(args)
 
     with open(os.path.join(args.source, "app.manifest"), "r") as f:
@@ -331,12 +322,12 @@ def main():
 
     copy_package_template(args, ta_name)
     lib_dest = os.path.join(outputdir, ta_name, args.path_requirements)
-    if args.py3_requirements and os.path.exists(os.path.join("..", args.py3_requirements)):
+    if args.py3_requirements and os.path.exists(args.py3_requirement)):
         install_libs(args, lib_dest, py3=True)
-    elif args.py2_requirements and os.path.exists(os.path.join("..", args.py2_requirements)):
+    elif args.py2_requirements and os.path.exists(args.py2_requirements):
         install_libs(args, lib_dest, py2=True)
-    else:
-        print("Unable to find requirements file")
+    elif args.py3_requirements or args.py2_requirements:
+        logging.warning("Unable to find requirements file") 
     install_libs(args, lib_dest)
     install_libs_py2(args, ta_name)
     install_libs_py3(args, ta_name)
@@ -412,13 +403,11 @@ def install_requirements():
         help="Install libraries in addon using python3",
 
     )
-    # requirements_group.set_defaults(py3_requirements="requirements.txt")
     args = parser.parse_args()
-    print(args)
-    lib_dest = os.path.join("../package", args.path_requirements)
-    if args.py3_requirements and os.path.exists(os.path.join("..", args.py3_requirements)):
+    lib_dest = os.path.join(args.path_requirements)
+    if args.py3_requirements and os.path.exists(args.py3_requirements):
         install_libs(args, lib_dest, py3=True)
-    elif args.py2_requirements and os.path.exists(os.path.join("..", args.py2_requirements)):
+    elif args.py2_requirements and os.path.exists(args.py2_requirements):
         install_libs(args, lib_dest, py2=True)
     else:
-        print("Unable to find requirements file")
+        logging.warning("Unable to find requirements file")
