@@ -75,7 +75,7 @@ def replace_token(args, ta_name):
     views = ["inputs.xml", "configuration.xml", "redirect.xml"]
     for view in views:
         template_dir = os.path.join(
-            outputdir, ta_name, "default/data/ui/views"
+            outputdir, ta_name, "default", "data", "ui", "views"
         )
         with open(os.path.join(template_dir, view)) as f:
             s = f.read()
@@ -112,7 +112,7 @@ def install_libs(args, lib_dest, py2=False, py3=False):
 
 def install_libs_py2(args, ta_name):
 
-    lib_dest = os.path.join(outputdir, ta_name, "lib/ucc_py2")
+    lib_dest = os.path.join(outputdir, ta_name, "lib", "ucc_py2")
     os.makedirs(lib_dest)
     os.system(
         "pip2 install future"
@@ -134,7 +134,7 @@ def install_libs_py2(args, ta_name):
 
 def install_libs_py3(args, ta_name):
 
-    lib_dest = os.path.join(outputdir, ta_name, "lib/ucc_py3")
+    lib_dest = os.path.join(outputdir, ta_name, "lib", "ucc_py3")
     os.makedirs(lib_dest)
     os.system(
         "pip3 install httplib2"
@@ -144,7 +144,7 @@ def install_libs_py3(args, ta_name):
     remove_files(lib_dest)
 
 def remove_files(path):
-    rmdirs = glob.glob(path + "/*.egg-info") + glob.glob(path + "/*.dist-info")
+    rmdirs = glob.glob(os.path.koin(path, "*.egg-info")) + glob.glob(os.path.join(path, "*.dist-info"))
     for rmdir in rmdirs:
         shutil.rmtree(rmdir)
 
@@ -152,7 +152,7 @@ def copy_splunktaucclib(args, ta_name):
     logging.warning("Copy splunktaucclib directory ")
     recursive_overwrite(
         os.path.join(sourcedir, "splunktaucclib"),
-        os.path.join(outputdir, ta_name, "lib/splunktaucclib"),
+        os.path.join(outputdir, ta_name, "lib", "splunktaucclib"),
     )
 
 
@@ -180,13 +180,13 @@ def is_oauth_configured(ta_tabs):
 
 def replace_oauth_html_template_token(args, ta_name, ta_version):
     html_template_path = os.path.join(
-        outputdir, ta_name, "appserver/templates"
+        outputdir, ta_name, "appserver", "templates"
     )
     with open(os.path.join(html_template_path, "redirect.html")) as f:
         s = f.read()
 
     # Safely write the changed content, if found in the file
-    with open(html_template_path + "/" + "redirect.html", "w") as f:
+    with open(os.path.join(html_template_path, "redirect.html"), "w") as f:
         # replace addon name in html template
         s = s.replace("${ta.name}", ta_name.lower())
         # replace addon version in html template
@@ -208,7 +208,7 @@ def modify_and_replace_token_for_oauth_templates(
             outputdir, ta_name, "appserver", "static", "js", "build", "redirect_page.js"
         )
         redirect_js_dest = (
-            os.path.join(outputdir, ta_name, "appserver/static/js/build/")
+            os.path.join(outputdir, ta_name, "appserver", "static", "js", "build", "")
             + ta_name.lower()
             + "_redirect_page."
             + ta_version
@@ -308,6 +308,13 @@ def main():
         help="Path in addon to install 3rd Party libs",
         default="lib"
     )
+    parser.add_argument(
+        "--exclude",
+        nargs='*',
+        choice=['modular_alerts', 'modular_input', 'oauth', 'py2_libs', 'py3_libs', 'rest_files', 'splunktaucclib'],
+        help="Modules not to generate",
+        default=""
+    )
     args = parser.parse_args()
     clean_before_build(args)
 
@@ -332,11 +339,15 @@ def main():
     elif args.py2_requirements and os.path.exists(args.py2_requirements):
         install_libs(args, lib_dest, py2=True)
     elif args.py3_requirements or args.py2_requirements:
-        raise FileNotFoundError("Unable to find requirements file") 
-    install_libs(args, lib_dest)
-    install_libs_py2(args, ta_name)
-    install_libs_py3(args, ta_name)
-    copy_splunktaucclib(args, ta_name)
+        raise FileNotFoundError("Unable to find requirements file")
+    
+    exclude_list = args.exclude.split(",")
+    if not "py2_libs" in exclude_list:
+        install_libs_py2(args, ta_name)
+    if not "py3_libs" in exclude_list:
+        install_libs_py3(args, ta_name)
+    if not "splunktaucclib" in exclude_list:
+        copy_splunktaucclib(args, ta_name)
 
     shutil.copyfile(
         args.config,
@@ -345,14 +356,18 @@ def main():
     )
     replace_token(args, ta_name)
 
-    generate_rest(args, ta_name, scheme, import_declare_name)
-    modify_and_replace_token_for_oauth_templates(
-        args, ta_name, ta_tabs, schema_content.get('meta').get('version')
-    )
-    add_modular_input(
-        args, ta_name, schema_content, import_declare_name, j2_env
-    )
-    make_modular_alerts(args, ta_name, ta_namespace, schema_content)
+    if not "rest_files" in exclude_list:
+        generate_rest(args, ta_name, scheme, import_declare_name)
+    if not "oauth" in exclude_list:
+        modify_and_replace_token_for_oauth_templates(
+            args, ta_name, ta_tabs, schema_content.get('meta').get('version')
+        )
+    if not "modular_input" in exclude_list:
+        add_modular_input(
+            args, ta_name, schema_content, import_declare_name, j2_env
+        )
+    if not "modular_alerts" in exclude_list:
+        make_modular_alerts(args, ta_name, ta_namespace, schema_content)
     copy_package_source(args, ta_name)
     export_package(args, ta_name)
 
