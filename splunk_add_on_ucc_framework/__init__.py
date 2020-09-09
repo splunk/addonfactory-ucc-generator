@@ -124,6 +124,11 @@ def install_libs_py2(args, ta_name):
         + " --no-compile --no-binary :all: --target "
         + lib_dest
     )
+    os.system(
+        "pip2 install httplib2"
+        + " --no-compile --no-binary :all: --target "
+        + lib_dest
+    )
     remove_files(lib_dest)
 
 
@@ -322,7 +327,7 @@ def main():
 
     copy_package_template(args, ta_name)
     lib_dest = os.path.join(outputdir, ta_name, args.path_requirements)
-    if args.py3_requirements and os.path.exists(args.py3_requirement):
+    if args.py3_requirements and os.path.exists(args.py3_requirements):
         install_libs(args, lib_dest, py3=True)
     elif args.py2_requirements and os.path.exists(args.py2_requirements):
         install_libs(args, lib_dest, py2=True)
@@ -342,7 +347,7 @@ def main():
 
     generate_rest(args, ta_name, scheme, import_declare_name)
     modify_and_replace_token_for_oauth_templates(
-        args, ta_name, ta_tabs, args.config.get('meta').get('version')
+        args, ta_name, ta_tabs, schema_content.get('meta').get('version')
     )
     add_modular_input(
         args, ta_name, schema_content, import_declare_name, j2_env
