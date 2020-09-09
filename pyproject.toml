@@ -19,9 +19,11 @@ future = "^0"
 pytest = "^6"
 
 [tool.poetry.scripts]
-ucc-gen = "splunk_add_on_ucc_framework:main"
-build-ucc = "splunk_add_on_ucc_framework:build_ucc"
-install-libs = "splunk_add_on_ucc_framework:install_requirements"
-requires = ["setuptools >= 40.6.0", "wheel"]
-build-backend = "setuptools.build_meta"
+ucc-gen="splunk_add_on_ucc_framework:main"
+build-ucc="splunk_add_on_ucc_framework:build_ucc"
+install-libs="splunk_add_on_ucc_framework:install_requirements"
+
+[build-system]
+requires=["setuptools >= 40.6.0", "wheel"]
+build-backend="setuptools.build_meta"
 
