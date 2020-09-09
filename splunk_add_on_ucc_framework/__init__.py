@@ -3,7 +3,6 @@ __version__ = "0.1.0"
 import logging
 import os
 import glob
-from time import sleep
 from os import system
 import shutil
 import argparse
@@ -218,10 +217,9 @@ def modify_and_replace_token_for_oauth_templates(
         redirect_xml_dest = (
             os.path.join(outputdir, ta_name, "default", "data", "ui", "views", ta_name.lower() + "_redirect.xml")   
         )
-        print(redirect_xml_dest)
         os.rename(redirect_js_src, redirect_js_dest)
         os.rename(redirect_html_src, redirect_html_dest)
-        os.rename(redirect_xml_src, "C:\\Automation\\UCC\\box\\splunk-add-on-sdk-python\\output\\Splunk_TA_box\\default\\data\\ui\\views\\splunk_ta_box_redirect.xml")
+        os.rename(redirect_xml_src, redirect_xml_dest)
 
     # if oauth is not configured remove the redirect.xml template
     else:
