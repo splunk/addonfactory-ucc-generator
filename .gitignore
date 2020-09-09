@@ -6,7 +6,10 @@
 package/.idea
 .idea/
 
-
+splunk_add_on_ucc_framework/UCC-UI-lib/node_modules/*
+splunk_add_on_ucc_framework/UCC-UI-lib/bower_components/SplunkWebCore/node_modules/*
+splunk_add_on_ucc_framework/UCC-UI-lib/bower_components/lodash/*
+splunk_add_on_ucc_framework/package/
 
 *.egg-info
 output

@@ -139,18 +139,6 @@ def install_default_libs(args, ta_name, py2=False, py3=False):
     )
     remove_files(lib_dest)
 
-
-def install_libs_py3(args, ta_name):
-
-    lib_dest = os.path.join(outputdir, ta_name, "lib", "ucc_py3")
-    os.makedirs(lib_dest)
-    os.system(
-        "pip3 install httplib2"
-        + " --no-compile --no-binary :all: --target "
-        + lib_dest
-    )
-    remove_files(lib_dest)
-
 def remove_files(path):
     rmdirs = glob.glob(os.path.join(path, "*.egg-info")) + glob.glob(os.path.join(path, "*.dist-info"))
     for rmdir in rmdirs:
