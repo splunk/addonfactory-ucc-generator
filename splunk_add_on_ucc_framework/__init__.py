@@ -97,45 +97,34 @@ def replace_token(args, ta_name):
             f.write(s)
 
 
-def install_libs(args, lib_dest, py2=False, py3=False):
-    if not os.path.exists(lib_dest):
-        os.makedirs(lib_dest)
-    pip_executables = []
-    if py2:
-        pip_executables.append(("pip2", args.py2_requirements))
-    if py3:
-        pip_executables.append(("pip3", args.py3_requirements))
+def install_libs(requirements=None, py2_requirements=None, py3_requirements=None, ucc_target=None, target=None):
+    if target:
+        py2_target = py3_target = target
+    else:
+        target = ucc_target
+        py2_target = os.path.join(target, "ucc_py2")
+        py3_target = os.path.join(target, "ucc_py3")
 
-    for pip_executable, py_requirements in pip_executables:
-        install_cmd = (
-            pip_executable +" install -r \""
-            + py_requirements
-            + "\" --no-compile --no-binary :all: --target \""
-            + lib_dest
-            + "\""
-        )
-        os.system(install_cmd)
-    remove_files(lib_dest)
+    for executable, each_requirement, each_target in [
+        ("pip2", py2_requirements, py2_target),
+        ("pip3", py3_requirements, py3_target),
+        ("pip3", requirements, target),
+    ]:
+        if each_requirement:
+            if not os.path.exists(each_requirement):
+                raise FileNotFoundError("Unable to find requirements file. {}".format(each_requirement))
+            if not os.path.exists(each_target):
+                os.makedirs(each_target)
+            install_cmd = (
+                executable +" install -r \""
+                + each_requirement
+                + "\" --no-compile --no-binary :all: --target \""
+                + each_target
+                + "\""
+            )
+            os.system(install_cmd)
+            remove_files(each_target)
 
-
-def install_default_libs(args, ta_name, py2=False, py3=False):
-    # Decide the pip version and libs to be installed 
-    PY2_DEFAULT_LIBS = ["future", "six", "httplib2"]
-    PY3_DEFAULT_LIBS = ["httplib2"]
-    pip_executable = "pip3" if py3 else "pip2"
-    destination = "ucc_py3" if py3 else "ucc_py2"
-    py_default_libs = PY3_DEFAULT_LIBS if py3 else PY2_DEFAULT_LIBS
-    py_default_libs = " ".join(py_default_libs)
-    lib_dest = os.path.join(outputdir, ta_name, "lib", destination)
-
-    os.makedirs(lib_dest)
-    # Install all the package
-    os.system(
-        "{} install {} --no-compile --no-binary :all: --target \"{}\"".format(
-            pip_executable, py_default_libs, lib_dest
-        )
-    )
-    remove_files(lib_dest)
 
 def remove_files(path):
     rmdirs = glob.glob(os.path.join(path, "*.egg-info")) + glob.glob(os.path.join(path, "*.dist-info"))
@@ -283,20 +272,20 @@ def main():
         required=True,
     )
     requirements_group.add_argument(
+        "--requirements",
+        type=str,
+        help="Install libraries in addon at lib/ using pip3",
+    )
+    requirements_group.add_argument(
         "--py2-requirements",
         type=str,
-        help="Install libraries in addon using python2",
+        help="Install libraries in addon at lib/ucc_py2 using pip2",
     )
+
     requirements_group.add_argument(
         "--py3-requirements",
         type=str,
-        help="Install libraries in addon using python3",
-    )
-    parser.add_argument(
-        "--path-requirements",
-        type=str,
-        help="Path in addon to install 3rd Party libs",
-        default="lib"
+        help="Install libraries in addon at lib/ucc_py3 using pip3",
     )
     parser.add_argument(
         "--exclude",
@@ -323,21 +312,22 @@ def main():
     logger.info("Package ID is " + ta_name)
 
     copy_package_template(args, ta_name)
-    lib_dest = os.path.join(outputdir, ta_name, args.path_requirements)
-    if args.py3_requirements and os.path.exists(args.py3_requirements):
-        install_libs(args, lib_dest, py3=True)
-    elif args.py2_requirements and os.path.exists(args.py2_requirements):
-        install_libs(args, lib_dest, py2=True)
-    elif args.py3_requirements or args.py2_requirements:
-        raise FileNotFoundError("Unable to find requirements file")
+    ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
+    install_libs(
+        requirements=args.requirements,
+        py2_requirements=args.py2_requirements,
+        py3_requirements=args.py3_requirements,
+        ucc_target=ucc_lib_target
+    )
     
     exclude_list = args.exclude
-    if not "py2_libs" in exclude_list:
-        install_default_libs(args, ta_name, py2=True)
-    if not "py3_libs" in exclude_list:
-        install_default_libs(args, ta_name, py3=True)
-    if not "splunktaucclib" in exclude_list:
+    if not "libs" in exclude_list:
+        install_libs(requirements=os.path.join(sourcedir, "requirements.txt"), ucc_target=ucc_lib_target)
         copy_splunktaucclib(args, ta_name)
+    if not "py2_libs" in exclude_list:
+        install_libs(py2_requirements=os.path.join(sourcedir, "py2_requirements.txt"), ucc_target=ucc_lib_target)
+    if not "py3_libs" in exclude_list:
+        install_libs(py3_requirements=os.path.join(sourcedir, "py3_requirements.txt"), ucc_target=ucc_lib_target)
 
     shutil.copyfile(
         args.config,
@@ -425,9 +415,8 @@ def install_requirements():
     )
     args = parser.parse_args()
     lib_dest = os.path.join(args.path_requirements)
-    if args.py3_requirements and os.path.exists(args.py3_requirements):
-        install_libs(args, lib_dest, py3=True)
-    elif args.py2_requirements and os.path.exists(args.py2_requirements):
-        install_libs(args, lib_dest, py2=True)
-    else:
-        raise FileNotFoundError("Unable to find requirements file")
+    install_libs(
+        py3_requirements=args.py3_requirementsargs,
+        py2_requirements=args.py2_requirementsargs, 
+        target=lib_dest
+    )
