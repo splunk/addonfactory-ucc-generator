@@ -144,7 +144,7 @@ def install_libs_py3(args, ta_name):
     remove_files(lib_dest)
 
 def remove_files(path):
-    rmdirs = glob.glob(os.path.koin(path, "*.egg-info")) + glob.glob(os.path.join(path, "*.dist-info"))
+    rmdirs = glob.glob(os.path.join(path, "*.egg-info")) + glob.glob(os.path.join(path, "*.dist-info"))
     for rmdir in rmdirs:
         shutil.rmtree(rmdir)
 
