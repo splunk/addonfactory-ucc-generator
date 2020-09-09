@@ -23,6 +23,14 @@ j2_env = Environment(
     loader=FileSystemLoader(os.path.join(sourcedir, "templates"))
 )
 
+logger = logging.getLogger('UCC')
+logger.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s [%(name)s] %(levelname)s: %(message)s')
+shandler = logging.StreamHandler()
+shandler.setLevel(logging.INFO)
+shandler.setFormatter(formatter)
+logger.addHandler(shandler)
+
 
 def recursive_overwrite(src, dest, ignore=None):
     if os.path.isdir(src):
@@ -46,24 +54,24 @@ def recursive_overwrite(src, dest, ignore=None):
 
 def clean_before_build(args):
 
-    logging.warning("Cleaning out directory " + outputdir)
+    logger.info("Cleaning out directory " + outputdir)
     shutil.rmtree(os.path.join(outputdir), ignore_errors=True)
     os.makedirs(outputdir)
-    logging.warning("Cleaned out directory " + outputdir)
+    logger.info("Cleaned out directory " + outputdir)
 
 
 def copy_package_source(args, ta_name):
-    logging.warning("Copy package directory " + args.source)
+    logger.info("Copy package directory " + args.source)
     recursive_overwrite(args.source, os.path.join(outputdir, ta_name))
 
 
 def export_package(args, ta_name):
-    logging.warning("Exporting package")
+    logger.info("Exporting package")
     recursive_overwrite(os.path.join(outputdir, ta_name), args.source)
 
 
 def copy_package_template(args, ta_name):
-    logging.warning("Copy template directory")
+    logger.info("Copy template directory")
     recursive_overwrite(
         os.path.join(sourcedir, "package"), os.path.join(outputdir, ta_name)
     )
@@ -71,7 +79,7 @@ def copy_package_template(args, ta_name):
 
 def replace_token(args, ta_name):
     # replace token in template
-    logging.warning("Replace tokens in views")
+    logger.info("Replace tokens in views")
     views = ["inputs.xml", "configuration.xml", "redirect.xml"]
     for view in views:
         template_dir = os.path.join(
@@ -93,41 +101,41 @@ def install_libs(args, lib_dest, py2=False, py3=False):
         os.makedirs(lib_dest)
     if py3:
         install_cmd = (
-            "pip3 install -r "
+            "pip3 install -r \""
             + args.py3_requirements
-            + " --no-compile --no-binary :all: --target "
+            + "\" --no-compile --no-binary :all: --target \""
             + lib_dest
+            + "\""
         )
         os.system(install_cmd)
     if py2:
         install_cmd = (
-            "pip2 install -r "
+            "pip2 install -r \""
             + args.py2_requirements
-            + " --no-compile --no-binary :all: --target "
+            + "\" --no-compile --no-binary :all: --target \""
             + lib_dest
+            + "\""
         )
         os.system(install_cmd)
     remove_files(lib_dest)
 
 
-def install_libs_py2(args, ta_name):
+def install_default_libs(args, ta_name, py2=False, py3=False):
+    # Decide the pip version and libs to be installed 
+    PY2_DEFAULT_LIBS = ["future", "six", "httplib2"]
+    PY3_DEFAULT_LIBS = ["httplib2"]
+    pip_executable = "pip3" if py3 else "pip2"
+    destination = "ucc_py3" if py3 else "ucc_py2"
+    py_default_libs = PY3_DEFAULT_LIBS if py3 else PY2_DEFAULT_LIBS
+    py_default_libs = " ".join(py_default_libs)
+    lib_dest = os.path.join(outputdir, ta_name, "lib", destination)
 
-    lib_dest = os.path.join(outputdir, ta_name, "lib", "ucc_py2")
     os.makedirs(lib_dest)
+    # Install all the package
     os.system(
-        "pip2 install future"
-        + " --no-compile --no-binary :all: --target "
-        + lib_dest
-    )
-    os.system(
-        "pip2 install six"
-        + " --no-compile --no-binary :all: --target "
-        + lib_dest
-    )
-    os.system(
-        "pip2 install httplib2"
-        + " --no-compile --no-binary :all: --target "
-        + lib_dest
+        "{} install {} --no-compile --no-binary :all: --target \"{}\"".format(
+            pip_executable, py_default_libs, lib_dest
+        )
     )
     remove_files(lib_dest)
 
@@ -149,7 +157,7 @@ def remove_files(path):
         shutil.rmtree(rmdir)
 
 def copy_splunktaucclib(args, ta_name):
-    logging.warning("Copy splunktaucclib directory ")
+    logger.info("Copy splunktaucclib directory ")
     recursive_overwrite(
         os.path.join(sourcedir, "splunktaucclib"),
         os.path.join(outputdir, ta_name, "lib", "splunktaucclib"),
@@ -330,7 +338,7 @@ def main():
     ta_namespace = schema_content.get("meta").get("restRoot")
     import_declare_name = "import_declare_test"
 
-    logging.warning("Package ID is " + ta_name)
+    logger.info("Package ID is " + ta_name)
 
     copy_package_template(args, ta_name)
     lib_dest = os.path.join(outputdir, ta_name, args.path_requirements)
@@ -341,11 +349,11 @@ def main():
     elif args.py3_requirements or args.py2_requirements:
         raise FileNotFoundError("Unable to find requirements file")
     
-    exclude_list = args.exclude.split(",")
+    exclude_list = args.exclude
     if not "py2_libs" in exclude_list:
-        install_libs_py2(args, ta_name)
+        install_default_libs(args, ta_name, py2=True)
     if not "py3_libs" in exclude_list:
-        install_libs_py3(args, ta_name)
+        install_default_libs(args, ta_name, py3=True)
     if not "splunktaucclib" in exclude_list:
         copy_splunktaucclib(args, ta_name)
 
@@ -373,7 +381,7 @@ def main():
 
 
 def setup_env():
-    logging.info("Setting up Environment")
+    logger.info("Setting up Environment")
     install_npm_dependencies = "npm install -g bower"
     os.system(install_npm_dependencies)
     os.chdir(os.path.join(sourcedir, "UCC-UI-lib", "bower_components", "SplunkWebCore"))
@@ -382,7 +390,7 @@ def setup_env():
 
 
 def generate_static_files():
-    logging.info("Generating Static files")
+    logger.info("Generating Static files")
     os.chdir(os.path.join(sourcedir, "UCC-UI-lib"))
     os.system("npm install")
     os.system("bower install")
@@ -390,7 +398,7 @@ def generate_static_files():
 
 
 def migrate_package():
-    logging.info("Exporting generated Package.")
+    logger.info("Exporting generated Package.")
     src = os.path.join(os.path.join(sourcedir, "UCC-UI-lib", "build"))
     dest = os.path.join(os.path.join(sourcedir, "package"))
     if os.path.exists(dest):
