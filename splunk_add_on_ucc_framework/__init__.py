@@ -311,7 +311,7 @@ def main():
     parser.add_argument(
         "--exclude",
         nargs='*',
-        choice=['modular_alerts', 'modular_input', 'oauth', 'py2_libs', 'py3_libs', 'rest_files', 'splunktaucclib'],
+        choices=['modular_alerts', 'modular_input', 'oauth', 'py2_libs', 'py3_libs', 'rest_files', 'splunktaucclib'],
         help="Modules not to generate",
         default=""
     )
