@@ -61,17 +61,18 @@ def clean_before_build(args):
 
 
 def copy_package_source(args, ta_name):
-    logger.info("Copy package directory " + args.source)
+    logger.info("Copy package directory ")
     recursive_overwrite(args.source, os.path.join(outputdir, ta_name))
 
 
 def export_package(args, ta_name):
     logger.info("Exporting package")
     recursive_overwrite(os.path.join(outputdir, ta_name), args.source)
+    logger.info("Final build ready at: {}".format(args.source))
 
 
 def copy_package_template(args, ta_name):
-    logger.info("Copy template directory")
+    logger.info("Copy UCC template directory")
     recursive_overwrite(
         os.path.join(sourcedir, "package"), os.path.join(outputdir, ta_name)
     )
@@ -99,19 +100,16 @@ def replace_token(args, ta_name):
 def install_libs(args, lib_dest, py2=False, py3=False):
     if not os.path.exists(lib_dest):
         os.makedirs(lib_dest)
-    if py3:
-        install_cmd = (
-            "pip3 install -r \""
-            + args.py3_requirements
-            + "\" --no-compile --no-binary :all: --target \""
-            + lib_dest
-            + "\""
-        )
-        os.system(install_cmd)
+    pip_executables = []
     if py2:
+        pip_executables.append(("pip2", args.py2_requirements))
+    if py3:
+        pip_executables.append(("pip3", args.py3_requirements))
+
+    for pip_executable, py_requirements in pip_executables:
         install_cmd = (
-            "pip2 install -r \""
-            + args.py2_requirements
+            pip_executable +" install -r \""
+            + py_requirements
             + "\" --no-compile --no-binary :all: --target \""
             + lib_dest
             + "\""
@@ -145,7 +143,7 @@ def remove_files(path):
         shutil.rmtree(rmdir)
 
 def copy_splunktaucclib(args, ta_name):
-    logger.info("Copy splunktaucclib directory ")
+    logger.info("Copy splunktaucclib directory")
     recursive_overwrite(
         os.path.join(sourcedir, "splunktaucclib"),
         os.path.join(outputdir, ta_name, "lib", "splunktaucclib"),
