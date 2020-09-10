@@ -51,24 +51,3 @@ echo "Building package"
 python3 -m poetry build
 # python3 -m poetry run ucc-gen --source tests/package/Splunk_TA_UCCExample --config tests/data/globalConfig.json
 python3 -m poetry run ucc-gen --source ../package/ --config ../package/appserver/static/js/build/globalConfig.json
-cd ..
-echo "Check output folder for the addon package"
-
-
-echo "Extracting Appserver Files"
-mkdir -p package/appserver/static/css
-cp -r splunk-add-on-sdk-python/output/*/appserver/static/css/. package/appserver/static/css
-mkdir -p package/appserver/static/styles
-cp -r splunk-add-on-sdk-python/output/*/appserver/static/styles/. package/appserver/static/styles
-mkdir -p package/appserver/static/js/build
-cp -r splunk-add-on-sdk-python/output/*/appserver/static/js/build/*.js package/appserver/static/js/build
-mkdir -p package/appserver/templates
-cp -r splunk-add-on-sdk-python/output/*/appserver/templates/. package/appserver/templates
-
-echo "Extracting User Interface"
-mkdir -p package/default/data
-cp -r splunk-add-on-sdk-python/output/*/default/data/. package/default/data
-
-echo "Extracting Lib"
-mkdir -p package/lib
-cp -r splunk-add-on-sdk-python/output/*/lib/. package/lib
