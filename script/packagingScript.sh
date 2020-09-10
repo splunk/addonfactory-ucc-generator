@@ -38,16 +38,17 @@ python3 -m virtualenv .venv -p python3 > /dev/null
 echo "Virtual Environment Installed and Activated"
 
 echo "Installing Dependencies"
-# sudo yum -y install libxslt-devel libxml2-devel
 sudo apt-get -qq install python-pip > /dev/null
 sudo apt-get -qq install -y libxml2-dev libxslt-dev lib32z1-dev python-lxml > /dev/null
 pip2 install "virtualenv<17.0.0,>=16.7.9" --upgrade > /dev/null
 echo "Getting Python Poetry"
 pip3 -q install poetry > /dev/null
 cd splunk-add-on-sdk-python
-pip3 -q install -r splunk_add_on_ucc_framework/requirements.txt > /dev/null
+poetry install
+poetry run build-ucc
+poetry build
+pip3 install dist/splunk_add_on_ucc_framework-0.1.0.tar.gz
 
-echo "Building package"
-python3 -m poetry build
-# python3 -m poetry run ucc-gen --source tests/package/Splunk_TA_UCCExample --config tests/data/globalConfig.json
 python3 -m poetry run ucc-gen --source ../package/ --config ../package/appserver/static/js/build/globalConfig.json
+ls --all -l ../package/
+ls -la ../package/appserver/static/js/build/
