@@ -181,22 +181,22 @@ def modify_and_replace_token_for_oauth_templates(
     redirect_xml_src = os.path.join(
         outputdir, ta_name, "default", "data", "ui", "views", "redirect.xml"
     )
-    redirect_js_src = os.path.join(
-            outputdir, ta_name, "appserver", "static", "js", "build", "redirect_page.js"
-    )
-    redirect_html_src = os.path.join(
-            outputdir, ta_name, "appserver", "templates", "redirect.html"
-    )
     # if oauth is configured replace token in html template and rename the templates with respect to addon name
     if is_oauth_configured(ta_tabs):
         replace_oauth_html_template_token(args, ta_name, ta_version)
 
+        redirect_js_src = os.path.join(
+            outputdir, ta_name, "appserver", "static", "js", "build", "redirect_page.js"
+        )
         redirect_js_dest = (
             os.path.join(outputdir, ta_name, "appserver", "static", "js", "build", "")
             + ta_name.lower()
             + "_redirect_page."
             + ta_version
             + ".js"
+        )
+        redirect_html_src = os.path.join(
+            outputdir, ta_name, "appserver", "templates", "redirect.html"
         )
         redirect_html_dest = (
             os.path.join(outputdir, ta_name, "appserver", "templates", ta_name.lower() + "_redirect.html")
@@ -208,11 +208,9 @@ def modify_and_replace_token_for_oauth_templates(
         os.rename(redirect_html_src, redirect_html_dest)
         os.rename(redirect_xml_src, redirect_xml_dest)
 
-    # if oauth is not configured remove the extra template
+    # if oauth is not configured remove the redirect.xml template
     else:
         os.remove(redirect_xml_src)
-        os.remove(redirect_html_src)
-        os.remove(redirect_js_src)
 
 
 def add_modular_input(
@@ -375,6 +373,13 @@ def install_requirements():
     Install libraries in add-on.  
     """
     parser = argparse.ArgumentParser(description="Build the add-on")
+    requirements_group = parser.add_mutually_exclusive_group(required=True)
+    parser.add_argument(
+        "--addon",
+        type=str,
+        help="Path to addon repo.",
+        default="/"
+    )
     parser.add_argument(
         "--exclude",
         nargs='*',
@@ -383,7 +388,7 @@ def install_requirements():
         default=""
     )
     args = parser.parse_args()
-    ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
+    ucc_lib_target = os.path.join(args.addon, "lib")
 
     install_libs(
         exclude_list=args.exclude,
