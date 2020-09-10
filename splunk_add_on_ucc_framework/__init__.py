@@ -96,34 +96,32 @@ def replace_token(args, ta_name):
                 s = s.replace("${ta.name}", ta_name.lower())
             f.write(s)
 
+def install_libs(exclude_list, parent_path, ucc_lib_target):
 
-def install_libs(requirements=None, py2_requirements=None, py3_requirements=None, ucc_target=None, target=None):
-    if target:
-        py2_target = py3_target = target
-    else:
-        target = ucc_target
-        py2_target = os.path.join(target, "ucc_py2")
-        py3_target = os.path.join(target, "ucc_py3")
+    def _install_libs(requirements, ucc_target, installer="python3"):
+        
+        if not os.path.exists(requirements):
+            raise FileNotFoundError("Unable to find requirements file. {}".format(requirements))
+        if not os.path.exists(ucc_target):
+            os.makedirs(ucc_target)
+        install_cmd = (
+            installer +" -m pip install -r \""
+            + requirements
+            + "\" --no-compile --no-binary :all: --target \""
+            + ucc_target
+            + "\""
+        )
+        os.system(install_cmd)
+        remove_files(ucc_target)
 
-    for executable, each_requirement, each_target in [
-        ("pip2", py2_requirements, py2_target),
-        ("pip3", py3_requirements, py3_target),
-        ("pip3", requirements, target),
-    ]:
-        if each_requirement:
-            if not os.path.exists(each_requirement):
-                raise FileNotFoundError("Unable to find requirements file. {}".format(each_requirement))
-            if not os.path.exists(each_target):
-                os.makedirs(each_target)
-            install_cmd = (
-                executable +" install -r \""
-                + each_requirement
-                + "\" --no-compile --no-binary :all: --target \""
-                + each_target
-                + "\""
-            )
-            os.system(install_cmd)
-            remove_files(each_target)
+    if not "libs" in exclude_list and os.path.join(parent_path, "requirement.txt"):
+        _install_libs(requirements=os.path.join(parent_path, "requirements.txt"), ucc_target=ucc_lib_target)
+
+    if not "py2_libs" in exclude_list and os.path.exists(os.path.join(parent_path, "requirements_py2.txt")):
+        _install_libs(requirements=os.path.join(parent_path, "requirements_py2.txt"), installer="python2", ucc_target=os.path.join(ucc_lib_target, "ucc_py2"))
+
+    if not "py3_libs" in exclude_list and os.path.exists(os.path.join(parent_path, "requirements_py3.txt")):
+        _install_libs(requirements=os.path.join(parent_path, "requirements_py3.txt"), ucc_target=os.path.join(ucc_lib_target, "ucc_py3"))
 
 
 def remove_files(path):
@@ -271,34 +269,18 @@ def main():
         help="Path to configuration file",
         required=True,
     )
-    requirements_group.add_argument(
-        "--requirements",
-        type=str,
-        help="Install libraries in addon at lib/ using pip3",
-    )
-    requirements_group.add_argument(
-        "--py2-requirements",
-        type=str,
-        help="Install libraries in addon at lib/ucc_py2 using pip2",
-    )
-
-    requirements_group.add_argument(
-        "--py3-requirements",
-        type=str,
-        help="Install libraries in addon at lib/ucc_py3 using pip3",
-    )
     parser.add_argument(
         "--exclude",
         nargs='*',
-        choices=['modular_alerts', 'modular_input', 'oauth', 'py2_libs', 'py3_libs', 'rest_files', 'splunktaucclib'],
+        choices=['libs', 'modular_alerts', 'modular_input', 'oauth', 'py2_libs', 'py3_libs', 'rest_files', 'splunktaucclib'],
         help="Modules not to generate",
         default=""
     )
     args = parser.parse_args()
     clean_before_build(args)
 
-    with open(os.path.join(args.source, "app.manifest"), "r") as f:
-        data = json.load(f)
+    # with open(os.path.join(args.source, "app.manifest"), "r") as f:
+    #     data = json.load(f)
     with open(args.config, "r") as f:
         schema_content = json.load(f)
 
@@ -313,22 +295,18 @@ def main():
 
     copy_package_template(args, ta_name)
     ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
+    exclude_list = args.exclude
     install_libs(
-        requirements=args.requirements,
-        py2_requirements=args.py2_requirements,
-        py3_requirements=args.py3_requirements,
-        ucc_target=ucc_lib_target
+        exclude_list=exclude_list,
+        parent_path=os.path.abspath(os.path.join(args.source, "..")),
+        ucc_lib_target=ucc_lib_target
+    )
+    install_libs(
+        exclude_list=exclude_list,
+        parent_path=sourcedir,
+        ucc_lib_target=ucc_lib_target
     )
     
-    exclude_list = args.exclude
-    if not "libs" in exclude_list:
-        install_libs(requirements=os.path.join(sourcedir, "requirements.txt"), ucc_target=ucc_lib_target)
-        copy_splunktaucclib(args, ta_name)
-    if not "py2_libs" in exclude_list:
-        install_libs(py2_requirements=os.path.join(sourcedir, "py2_requirements.txt"), ucc_target=ucc_lib_target)
-    if not "py3_libs" in exclude_list:
-        install_libs(py3_requirements=os.path.join(sourcedir, "py3_requirements.txt"), ucc_target=ucc_lib_target)
-
     shutil.copyfile(
         args.config,
         os.path.join(outputdir, ta_name, "appserver", "static", "js", "build", "globalConfig.json",
@@ -395,28 +373,18 @@ def install_requirements():
     Install libraries in add-on.  
     """
     parser = argparse.ArgumentParser(description="Build the add-on")
-    requirements_group = parser.add_mutually_exclusive_group(required=True)
     parser.add_argument(
-        "--path-requirements",
-        type=str,
-        help="Path in addon to install 3rd Party libs",
-        default="lib"
-    )
-    requirements_group.add_argument(
-        "--py2-requirements",
-        type=str,
-        help="Install libraries in addon using python2",
-    )
-    requirements_group.add_argument(
-        "--py3-requirements",
-        type=str,
-        help="Install libraries in addon using python3",
-
+        "--exclude",
+        nargs='*',
+        choices=['libs', 'py2_libs', 'py3_libs'],
+        help="Modules not to generate",
+        default=""
     )
     args = parser.parse_args()
-    lib_dest = os.path.join(args.path_requirements)
+    ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
+
     install_libs(
-        py3_requirements=args.py3_requirementsargs,
-        py2_requirements=args.py2_requirementsargs, 
-        target=lib_dest
+        exclude_list=args.exclude,
+        parent_path=os.path.abspath(os.path.join(args.source, "..")),
+        ucc_lib_target=ucc_lib_target
     )

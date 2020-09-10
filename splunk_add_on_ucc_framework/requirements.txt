@@ -1,2 +1,2 @@
-splunk-sdk
+splunk-sdk==1.6.6
 solnlib==2.0.8a4
