@@ -307,6 +307,7 @@ def main():
         parent_path=sourcedir,
         ucc_lib_target=ucc_lib_target
     )
+    copy_splunktaucclib(args, ta_name)
     
     shutil.copyfile(
         args.config,
