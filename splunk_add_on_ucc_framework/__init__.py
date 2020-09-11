@@ -34,20 +34,26 @@ logger.addHandler(shandler)
 PARENT_DIR = ".."
 
 
-def recursive_overwrite(src, dest, ignore=None):
+def get_os_path(path):
+    if "\\\\" in path:
+        path = path.replace("\\\\", os.sep)
+    else:
+        path = path.replace("\\", os.sep)
+    path = path.replace("/", os.sep)
+    return path.strip(os.sep)
+
+def recursive_overwrite(src, dest, ignore_list=None):
     if os.path.isdir(src):
         if not os.path.isdir(dest):
             os.makedirs(dest)
         files = os.listdir(src)
-        if ignore is not None:
-            ignored = ignore(src, files)
-        else:
-            ignored = set()
         for f in files:
-            if f not in ignored:
+            if not ignore_list or not os.path.join(dest, f) in ignore_list:
                 recursive_overwrite(
-                    os.path.join(src, f), os.path.join(dest, f), ignore
+                    os.path.join(src, f), os.path.join(dest, f), ignore_list
                 )
+            else:
+                logger.info("Excluding : {}".format(os.path.join(dest, f)))
     else:
         if os.path.exists(dest):
             os.remove(dest)
@@ -67,9 +73,9 @@ def copy_package_source(args, ta_name):
     recursive_overwrite(args.source, os.path.join(outputdir, ta_name))
 
 
-def export_package(args, ta_name):
+def export_package(args, ta_name, ignore_list=None):
     logger.info("Exporting package")
-    recursive_overwrite(os.path.join(outputdir, ta_name), args.source)
+    recursive_overwrite(os.path.join(outputdir, ta_name), args.source, ignore_list)
     logger.info("Final build ready at: {}".format(args.source))
 
 
@@ -117,7 +123,7 @@ def install_libs(parent_path, ucc_lib_target):
             os.system(install_cmd)
             remove_files(ucc_target)
 
-    if os.path.join(parent_path, "requirement.txt"):
+    if os.path.exists(os.path.join(parent_path, "requirements.txt")):
         _install_libs(requirements=os.path.join(parent_path, "requirements.txt"), ucc_target=ucc_lib_target)
 
     if os.path.exists(os.path.join(parent_path, "requirements_py2.txt")):
@@ -257,12 +263,14 @@ def make_modular_alerts(args, ta_name, ta_namespace, schema_content):
             sourcedir,
         )
         
-def get_exclude_list(path):
+def get_ignore_list(args, path):
     if not os.path.exists(path):
         return []
     else:
-        with open(path) as exclude_file:
-            return exclude_file.read()
+        with open(path) as ignore_file:
+            ignore_list = ignore_file.readlines()
+        ignore_list = [(os.path.join(args.source, get_os_path(path))).strip() for path in ignore_list]
+        return ignore_list
 
 
 def main():
@@ -288,7 +296,7 @@ def main():
 
     # Setting default value to Config argument
     if not args.config:
-        args.config = os.path.abspath(os.path.join(args.source, PARENT_DIR, "GlobalConfig.json"))
+        args.config = os.path.abspath(os.path.join(args.source, PARENT_DIR, "globalConfig.json"))
 
     clean_before_build()
 
@@ -306,8 +314,14 @@ def main():
 
         logger.info("Package ID is " + ta_name)
 
+        copy_package_template(args, ta_name)
+
+        shutil.copyfile(
+            args.config,
+            os.path.join(outputdir, ta_name, "appserver", "static", "js", "build", "globalConfig.json"),
+        )
         ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
-        exclude_list = get_exclude_list(os.path.abspath(os.path.join(args.source, PARENT_DIR, ".uccignore")))
+        ignore_list = get_ignore_list(args, os.path.abspath(os.path.join(args.source, PARENT_DIR, ".uccignore")))
 
         install_libs(
             parent_path=os.path.abspath(os.path.join(args.source, PARENT_DIR)),
@@ -319,13 +333,7 @@ def main():
             ucc_lib_target=ucc_lib_target
         )
         copy_splunktaucclib(args, ta_name)
-        
-        copy_package_template(args, ta_name)
 
-        shutil.copyfile(
-            args.config,
-            os.path.join(outputdir, ta_name, "appserver", "static", "js", "build", "globalConfig.json"),
-        )
 
         replace_token(args, ta_name)
 
@@ -355,4 +363,4 @@ def main():
         )
 
     copy_package_source(args, ta_name)
-    export_package(args, ta_name)
+    export_package(args, ta_name, ignore_list)

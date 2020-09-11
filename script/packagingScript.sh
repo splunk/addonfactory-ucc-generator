@@ -46,7 +46,10 @@ pip3 -q install poetry > /dev/null
 cd splunk-add-on-sdk-python
 poetry install
 poetry run build-ucc
+ls --all -l splunk_add_on_ucc_framework/
 poetry build
+tar -xvzf dist/splunk_add_on_ucc_framework-0.1.0.tar.gz
+ls --all -l splunk_add_on_ucc_framework-0.1.0/
 pip3 install dist/splunk_add_on_ucc_framework-0.1.0.tar.gz
 cd ..
 ucc-gen
