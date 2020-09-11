@@ -40,7 +40,7 @@ def get_os_path(path):
     else:
         path = path.replace("\\", os.sep)
     path = path.replace("/", os.sep)
-    return path
+    return path.strip(os.sep)
 
 def recursive_overwrite(src, dest, ignore_list=None):
     if os.path.isdir(src):
@@ -73,9 +73,9 @@ def copy_package_source(args, ta_name):
     recursive_overwrite(args.source, os.path.join(outputdir, ta_name))
 
 
-def export_package(args, ta_name, exclude_list=None):
+def export_package(args, ta_name, ignore_list=None):
     logger.info("Exporting package")
-    recursive_overwrite(os.path.join(outputdir, ta_name), args.source, exclude_list)
+    recursive_overwrite(os.path.join(outputdir, ta_name), args.source, ignore_list)
     logger.info("Final build ready at: {}".format(args.source))
 
 
@@ -263,14 +263,14 @@ def make_modular_alerts(args, ta_name, ta_namespace, schema_content):
             sourcedir,
         )
         
-def get_exclude_list(args, path):
+def get_ignore_list(args, path):
     if not os.path.exists(path):
         return []
     else:
-        with open(path) as exclude_file:
-            exclude_list = exclude_file.readlines()
-        exclude_list = [(os.path.join(args.source, get_os_path(path))).strip() for path in exclude_list]
-        return exclude_list
+        with open(path) as ignore_file:
+            ignore_list = ignore_file.readlines()
+        ignore_list = [(os.path.join(args.source, get_os_path(path))).strip() for path in ignore_list]
+        return ignore_list
 
 
 def main():
@@ -321,7 +321,7 @@ def main():
             os.path.join(outputdir, ta_name, "appserver", "static", "js", "build", "globalConfig.json"),
         )
         ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
-        exclude_list = get_exclude_list(args, os.path.abspath(os.path.join(args.source, PARENT_DIR, ".uccignore")))
+        ignore_list = get_ignore_list(args, os.path.abspath(os.path.join(args.source, PARENT_DIR, ".uccignore")))
 
         install_libs(
             parent_path=os.path.abspath(os.path.join(args.source, PARENT_DIR)),
@@ -363,7 +363,4 @@ def main():
         )
 
     copy_package_source(args, ta_name)
-    if exclude_list:
-        export_package(args, ta_name, exclude_list)
-    else:
-        export_package(args, ta_name)
+    export_package(args, ta_name, ignore_list)
