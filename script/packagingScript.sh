@@ -48,7 +48,7 @@ poetry install
 poetry run build-ucc
 poetry build
 pip3 install dist/splunk_add_on_ucc_framework-0.1.0.tar.gz
-
-ucc-gen --source ../package/ --config ../package/appserver/static/js/build/globalConfig.json
-ls --all -l ../package/
-ls --all -l ../package/appserver/static/js/build/
+cd ..
+ucc-gen
+ls --all -l package/
+ls --all -l package/appserver/static/js/build/
