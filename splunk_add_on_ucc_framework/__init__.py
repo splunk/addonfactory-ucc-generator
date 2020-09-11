@@ -31,6 +31,8 @@ shandler.setLevel(logging.INFO)
 shandler.setFormatter(formatter)
 logger.addHandler(shandler)
 
+PARENT_DIR = ".."
+
 
 def recursive_overwrite(src, dest, ignore=None):
     if os.path.isdir(src):
@@ -52,11 +54,11 @@ def recursive_overwrite(src, dest, ignore=None):
         shutil.copy(src, dest)
 
 
-def clean_before_build(args):
+def clean_before_build():
 
     logger.info("Cleaning out directory " + outputdir)
     shutil.rmtree(os.path.join(outputdir), ignore_errors=True)
-    os.makedirs(outputdir)
+    os.makedirs(os.path.join(outputdir))
     logger.info("Cleaned out directory " + outputdir)
 
 
@@ -96,32 +98,33 @@ def replace_token(args, ta_name):
                 s = s.replace("${ta.name}", ta_name.lower())
             f.write(s)
 
-def install_libs(exclude_list, parent_path, ucc_lib_target):
+def install_libs(parent_path, ucc_lib_target):
 
     def _install_libs(requirements, ucc_target, installer="python3"):
         
         if not os.path.exists(requirements):
-            raise FileNotFoundError("Unable to find requirements file. {}".format(requirements))
-        if not os.path.exists(ucc_target):
-            os.makedirs(ucc_target)
-        install_cmd = (
-            installer +" -m pip install -r \""
-            + requirements
-            + "\" --no-compile --no-binary :all: --target \""
-            + ucc_target
-            + "\""
-        )
-        os.system(install_cmd)
-        remove_files(ucc_target)
+            logging.warning("Unable to find requirements file. {}".format(requirements))
+        else:
+            if not os.path.exists(ucc_target):
+                os.makedirs(ucc_target)
+            install_cmd = (
+                installer +" -m pip install -r \""
+                + requirements
+                + "\" --no-compile --no-binary :all: --target \""
+                + ucc_target
+                + "\""
+            )
+            os.system(install_cmd)
+            remove_files(ucc_target)
 
-    if not "libs" in exclude_list and os.path.join(parent_path, "requirement.txt"):
+    if os.path.join(parent_path, "requirement.txt"):
         _install_libs(requirements=os.path.join(parent_path, "requirements.txt"), ucc_target=ucc_lib_target)
 
-    if not "py2_libs" in exclude_list and os.path.exists(os.path.join(parent_path, "requirements_py2.txt")):
-        _install_libs(requirements=os.path.join(parent_path, "requirements_py2.txt"), installer="python2", ucc_target=os.path.join(ucc_lib_target, "ucc_py2"))
+    if os.path.exists(os.path.join(parent_path, "requirements_py2.txt")):
+        _install_libs(requirements=os.path.join(parent_path, "requirements_py2.txt"), installer="python2", ucc_target=os.path.join(ucc_lib_target, "py2"))
 
-    if not "py3_libs" in exclude_list and os.path.exists(os.path.join(parent_path, "requirements_py3.txt")):
-        _install_libs(requirements=os.path.join(parent_path, "requirements_py3.txt"), ucc_target=os.path.join(ucc_lib_target, "ucc_py3"))
+    if os.path.exists(os.path.join(parent_path, "requirements_py3.txt")):
+        _install_libs(requirements=os.path.join(parent_path, "requirements_py3.txt"), ucc_target=os.path.join(ucc_lib_target, "py3"))
 
 
 def remove_files(path):
@@ -253,147 +256,100 @@ def make_modular_alerts(args, ta_name, ta_namespace, schema_content):
             outputdir,
             sourcedir,
         )
+        
+def get_exclude_list(path):
+    if not os.path.exists(path):
+        return []
+    else:
+        with open(path) as exclude_file:
+            return exclude_file.read()
 
 
 def main():
     parser = argparse.ArgumentParser(description="Build the add-on")
-    requirements_group = parser.add_mutually_exclusive_group()
     parser.add_argument(
         "--source",
         type=str,
+        nargs='?',
         help="Folder containing the app.manifest and app source",
         default="package",
     )
     parser.add_argument(
         "--config",
         type=str,
-        help="Path to configuration file",
-        required=True,
-    )
-    parser.add_argument(
-        "--exclude",
-        nargs='*',
-        choices=['libs', 'modular_alerts', 'modular_input', 'oauth', 'py2_libs', 'py3_libs', 'rest_files', 'splunktaucclib'],
-        help="Modules not to generate",
-        default=""
+        nargs='?',
+        help="Path to configuration file, Defaults to GlobalConfig.json in parent directory of source provided",
+        default=None
     )
     args = parser.parse_args()
-    clean_before_build(args)
 
-    # with open(os.path.join(args.source, "app.manifest"), "r") as f:
-    #     data = json.load(f)
-    with open(args.config, "r") as f:
-        schema_content = json.load(f)
+    # Setting default value to Config argument
+    if not args.config:
+        args.config = os.path.abspath(os.path.join(args.source, PARENT_DIR, "GlobalConfig.json"))
 
-    scheme = GlobalConfigBuilderSchema(schema_content, j2_env)
-    ta_name = schema_content.get("meta").get("name")
-    ta_version = schema_content.get("meta").get("version")
-    ta_tabs = schema_content.get("pages").get("configuration").get("tabs")
-    ta_namespace = schema_content.get("meta").get("restRoot")
-    import_declare_name = "import_declare_test"
+    clean_before_build()
 
-    logger.info("Package ID is " + ta_name)
+    if os.path.exists(args.config):
 
-    copy_package_template(args, ta_name)
-    ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
-    exclude_list = args.exclude
-    install_libs(
-        exclude_list=exclude_list,
-        parent_path=os.path.abspath(os.path.join(args.source, "..")),
-        ucc_lib_target=ucc_lib_target
-    )
-    install_libs(
-        exclude_list=exclude_list,
-        parent_path=sourcedir,
-        ucc_lib_target=ucc_lib_target
-    )
-    copy_splunktaucclib(args, ta_name)
-    
-    shutil.copyfile(
-        args.config,
-        os.path.join(outputdir, ta_name, "appserver", "static", "js", "build", "globalConfig.json",
-        ),
-    )
-    replace_token(args, ta_name)
+        with open(args.config, "r") as config_file:
+            schema_content = json.load(config_file)
 
-    if not "rest_files" in exclude_list:
+        scheme = GlobalConfigBuilderSchema(schema_content, j2_env)
+        ta_name = schema_content.get("meta").get("name")
+        ta_version = schema_content.get("meta").get("version")
+        ta_tabs = schema_content.get("pages").get("configuration").get("tabs")
+        ta_namespace = schema_content.get("meta").get("restRoot")
+        import_declare_name = "import_declare_test"
+
+        logger.info("Package ID is " + ta_name)
+
+        ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
+        exclude_list = get_exclude_list(os.path.abspath(os.path.join(args.source, PARENT_DIR, ".uccignore")))
+
+        install_libs(
+            parent_path=os.path.abspath(os.path.join(args.source, PARENT_DIR)),
+            ucc_lib_target=ucc_lib_target
+        )
+
+        install_libs(
+            parent_path=sourcedir,
+            ucc_lib_target=ucc_lib_target
+        )
+        copy_splunktaucclib(args, ta_name)
+        
+        copy_package_template(args, ta_name)
+
+        shutil.copyfile(
+            args.config,
+            os.path.join(outputdir, ta_name, "appserver", "static", "js", "build", "globalConfig.json"),
+        )
+
+        replace_token(args, ta_name)
+
         generate_rest(args, ta_name, scheme, import_declare_name)
-    if not "oauth" in exclude_list:
+
         modify_and_replace_token_for_oauth_templates(
-            args, ta_name, ta_tabs, schema_content.get('meta').get('version')
-        )
-    if not "modular_input" in exclude_list:
+                args, ta_name, ta_tabs, schema_content.get('meta').get('version')
+            )
+
         add_modular_input(
-            args, ta_name, schema_content, import_declare_name, j2_env
-        )
-    if not "modular_alerts" in exclude_list:
+                args, ta_name, schema_content, import_declare_name, j2_env
+            )
+
         make_modular_alerts(args, ta_name, ta_namespace, schema_content)
+
+    else:
+        logger.warning("Skipped installing UCC required python modules as GlobalConfig.json does not exist.")
+        logger.warning("Skipped Generating UI components as GlobalConfig.json does not exist.")
+        logger.info("Setting TA name as generic")
+        
+        ta_name = "TA-generic"
+        ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
+
+        install_libs(
+            parent_path=os.path.abspath(os.path.join(args.source, PARENT_DIR)),
+            ucc_lib_target=ucc_lib_target
+        )
+
     copy_package_source(args, ta_name)
     export_package(args, ta_name)
-
-
-def setup_env():
-    logger.info("Setting up Environment")
-    install_npm_dependencies = "npm install -g bower"
-    os.system(install_npm_dependencies)
-    os.chdir(os.path.join(sourcedir, "UCC-UI-lib", "bower_components", "SplunkWebCore"))
-    os.system("npm install")
-    
-
-
-def generate_static_files():
-    logger.info("Generating Static files")
-    os.chdir(os.path.join(sourcedir, "UCC-UI-lib"))
-    os.system("npm install")
-    os.system("bower install")
-    os.system("npm run build")
-    src = os.path.join(sourcedir, "UCC-UI-lib", "package", "appserver", "templates", "redirect.html")
-    dest = os.path.join(sourcedir, "UCC-UI-lib", "build", "appserver", "templates", "redirect.html")
-    shutil.copy(src, dest)
-    src = os.path.join(sourcedir, "UCC-UI-lib", "data", "redirect_page.js")
-    dest = os.path.join(sourcedir, "UCC-UI-lib", "build", "appserver", "static", "js", "build", "redirect_page.js")
-    shutil.copy(src, dest)
-
-
-def migrate_package():
-    logger.info("Exporting generated Package.")
-    src = os.path.join(os.path.join(sourcedir, "UCC-UI-lib", "build"))
-    dest = os.path.join(os.path.join(sourcedir, "package"))
-    if os.path.exists(dest):
-        shutil.rmtree(dest, ignore_errors=True)
-    os.makedirs(dest)
-    recursive_overwrite(src, dest)
-
-
-def build_ucc():
-    setup_env()
-    generate_static_files()
-    migrate_package()
-
-def install_requirements():
-    """
-    Install libraries in add-on.  
-    """
-    parser = argparse.ArgumentParser(description="Build the add-on")
-    requirements_group = parser.add_mutually_exclusive_group(required=True)
-    parser.add_argument(
-        "--addon",
-        type=str,
-        help="Path to addon repo.",
-        default="/"
-    )
-    parser.add_argument(
-        "--exclude",
-        nargs='*',
-        choices=['libs', 'py2_libs', 'py3_libs'],
-        help="Modules not to generate",
-        default=""
-    )
-    args = parser.parse_args()
-    ucc_lib_target = os.path.join(args.addon, "lib")
-
-    install_libs(
-        exclude_list=args.exclude,
-        parent_path=os.path.abspath(os.path.join(args.source, "..")),
-        ucc_lib_target=ucc_lib_target
-    )

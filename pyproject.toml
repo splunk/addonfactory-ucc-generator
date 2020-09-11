@@ -3,7 +3,7 @@ name = "splunk_add_on_ucc_framework"
 version = "0.1.0"
 description = ""
 authors = ["rfaircloth-splunk <rfaircloth@splunk.com>"]
-exclude = ["splunk_add_on_ucc_framework/UCC-UI-lib"]
+exclude = ["splunk_add_on_ucc_framework/UCC-UI-lib", "build.py"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
@@ -20,7 +20,7 @@ pytest = "^6"
 
 [tool.poetry.scripts]
 ucc-gen="splunk_add_on_ucc_framework:main"
-build-ucc="splunk_add_on_ucc_framework:build_ucc"
+build-ucc="build:build_ucc"
 install-libs="splunk_add_on_ucc_framework:install_requirements"
 
 [build-system]
