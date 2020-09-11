@@ -314,6 +314,12 @@ def main():
 
         logger.info("Package ID is " + ta_name)
 
+        copy_package_template(args, ta_name)
+
+        shutil.copyfile(
+            args.config,
+            os.path.join(outputdir, ta_name, "appserver", "static", "js", "build", "globalConfig.json"),
+        )
         ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
         exclude_list = get_exclude_list(args, os.path.abspath(os.path.join(args.source, PARENT_DIR, ".uccignore")))
 
@@ -328,12 +334,6 @@ def main():
         )
         copy_splunktaucclib(args, ta_name)
 
-        copy_package_template(args, ta_name)
-
-        shutil.copyfile(
-            args.config,
-            os.path.join(outputdir, ta_name, "appserver", "static", "js", "build", "globalConfig.json"),
-        )
 
         replace_token(args, ta_name)
 
