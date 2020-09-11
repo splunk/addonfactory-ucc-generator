@@ -50,5 +50,6 @@ poetry build
 pip3 install dist/splunk_add_on_ucc_framework-0.1.0.tar.gz
 cd ..
 ucc-gen
+ls --all -l  /home/circleci/project/.venv/lib/python3.7/site-packages/splunk_add_on_ucc_framework
 ls --all -l package/
 ls --all -l package/appserver/static/js/build/
