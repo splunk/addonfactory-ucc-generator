@@ -282,6 +282,9 @@ def main():
         default=None
     )
     args = parser.parse_args()
+    
+    if not os.path.exists(args.source):
+        raise NotADirectoryError("{} not Found.".format(os.path.abspath(args.source)))
 
     # Setting default value to Config argument
     if not args.config:
