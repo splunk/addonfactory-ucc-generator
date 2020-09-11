@@ -117,7 +117,7 @@ def install_libs(parent_path, ucc_lib_target):
             os.system(install_cmd)
             remove_files(ucc_target)
 
-    if os.path.join(parent_path, "requirement.txt"):
+    if os.path.exists(os.path.join(parent_path, "requirements.txt")):
         _install_libs(requirements=os.path.join(parent_path, "requirements.txt"), ucc_target=ucc_lib_target)
 
     if os.path.exists(os.path.join(parent_path, "requirements_py2.txt")):
@@ -288,7 +288,7 @@ def main():
 
     # Setting default value to Config argument
     if not args.config:
-        args.config = os.path.abspath(os.path.join(args.source, PARENT_DIR, "GlobalConfig.json"))
+        args.config = os.path.abspath(os.path.join(args.source, PARENT_DIR, "globalConfig.json"))
 
     clean_before_build()
 
@@ -319,7 +319,7 @@ def main():
             ucc_lib_target=ucc_lib_target
         )
         copy_splunktaucclib(args, ta_name)
-        
+
         copy_package_template(args, ta_name)
 
         shutil.copyfile(
