@@ -1,4 +1,5 @@
 import unittest
+import pytest
 import json
 import os
 from splunk_add_on_ucc_framework.splunktaucclib.global_config import (
@@ -7,7 +8,7 @@ from splunk_add_on_ucc_framework.splunktaucclib.global_config import (
 )
 from solnlib.credentials import get_session_key
 
-basedir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+basedir = os.patdocker .dirname(os.path.dirname(os.path.abspath(__file__)))
 
 with open(
     os.path.join(os.path.dirname(basedir), "splunktaucclib/globalConfig.json")
@@ -20,7 +21,7 @@ global_config = GlobalConfig(
     "https://127.0.0.1:8089", get_session_key("admin", "admin"), schema
 )
 
-
+@pytest.mark.usefixtures("setup_splunk")
 class TestCreateFunction(unittest.TestCase):
     """
         Use the same globalConfig.json under ta-ui-framework

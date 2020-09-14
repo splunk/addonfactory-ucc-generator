@@ -1,8 +1,9 @@
 import unittest
 import subprocess
 import json
+import pytest
 
-
+@pytest.mark.usefixtures("setup_splunk")
 class TestCreateFunction(unittest.TestCase):
     def setUp(self):
         """
