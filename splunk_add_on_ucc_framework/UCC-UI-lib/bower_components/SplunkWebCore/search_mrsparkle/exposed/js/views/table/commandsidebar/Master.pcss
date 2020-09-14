@@ -1,0 +1,251 @@
+@import '../variables.pcss';
+
+.table-commandsidebar {
+    $sidebarColor: #666;
+    $sidebarWidth: 180px;
+    $sidebarColorHover: color($sidebarColor blend($white 10%));
+    $commandColor: color($sidebarColor blend($white 15%));
+    $commandColorHover:  color($commandColor blend($white 10%));
+    $commandColorActive: $blue;
+    $commandColorActiveHover: color($commandColorActive blend($white 20%));
+    $commandColorError:  color($commandColor blend($red 50%));
+    $commandColorErrorHover: color($commandColorHover blend($red 55%));
+    $commandColorActiveError:  $red;
+    $commandColorActiveErrorHover: color($commandColorActiveError blend($white 10%));
+
+    @define-mixin focus-dark {
+        background-color:  color($focusColor blend($commandColor 50%));
+        box-shadow: none;
+        outline: none;
+    }
+
+    @mixin display-flex column;
+    flex: 0 0 $sidebarWidth;
+
+    box-sizing: border-box;
+    background-color: $sidebarColor;
+    font-size: $baseFontSizeSmall;
+    position: relative;
+    overflow: hidden;
+
+    > h3, > .nav, > .btn-group-radio {
+        flex: 0 0 auto;
+    }
+
+    h3 {
+        color: $white;
+        line-height: 40px;
+        padding: 0 10px;
+        margin: 0;
+        flex: 0 0 auto;
+    }
+
+    p {
+        padding: 5px 10px 0 10px;
+        margin: 0;
+    }
+
+    > .nav {
+        margin: 0;
+        width: $sidebarWidth;
+        flex: 0 1 auto;
+        overflow-x: hidden;
+        overflow-y: auto;
+        position: relative;
+    }
+
+    &.collapsed {
+        flex: 0 0 $collapsedSidebarWidth;
+        cursor: pointer;
+
+        h3, > .btn-group-radio, .commandsidebar-collapse {
+            opacity: 0;
+        }
+
+        .commandsidebar-expand {
+            opacity: 1.0;
+            pointer-events: auto;
+        }
+
+        .nav > li a {
+            color: transparent;
+        }
+
+        &:hover {
+            color: $white;
+            background-color: $sidebarColorHover;
+
+            .nav > li a {
+                background-color: $commandColorHover;
+                &.active {
+                    background-color: $commandColorActiveHover;
+                }
+                &.error {
+                    background-color: $commandColorErrorHover;
+                }
+                &.active.error {
+                    background-color: $commandColorActiveErrorHover;
+                }
+            }
+        }
+
+
+        /*  Hide controls to prevent click actions*/
+        .control,
+        .commandsidebar-collapse {
+            display:none;
+        }
+    }
+
+    /*  Hide commandsidebar-expand to prevent click actions*/
+    &:not(.collapsed) .commandsidebar-expand {
+        display:none;
+    }
+
+    .icon-toggle {
+        position: absolute;
+        line-height: 40px;
+        text-align: center;
+        color: $white;
+        text-decoration: none;
+        right: 0;
+        top: 0;
+        width: 40px;
+        z-index: 20;
+    }
+
+    .commandsidebar-collapse {
+        width: 40px;
+        margin-left: -41px;
+
+        &:focus {
+            @mixin focus-dark;
+        }
+    }
+
+    .commandsidebar-expand {
+        width: 30px;
+        margin-left: -31px;
+
+        opacity: 0;
+        font-size: 15px;
+
+        &:focus {
+            @mixin focus-dark;
+        }
+    }
+
+    > .btn-group-radio {
+        display: flex;
+        width: $sidebarWidth;
+        padding-bottom: 1px;
+
+        > .btn {
+            border: none;
+            border-radius: 0;
+            border-bottom: transparent 4px solid;
+            background: none;
+            line-height: 16px;
+            color: $white;
+            flex: 1 0 0px;
+            box-shadow: none;
+
+            &.active, &:hover {
+                color: $white;
+                background: none;
+                box-shadow: none;
+                border-top-left-radius: 0px;
+                border-top-right-radius: 0px;
+                border-bottom-left-radius: 0px;
+                border-bottom-right-radius: 0px;
+            }
+            &:hover:not(.active) {
+                background: $tableBackgroundFocus;
+                border-bottom: $grayLight 4px solid;
+            }
+            &.active {
+                border-bottom: $blue 4px solid;
+            }
+            &:focus {
+                @mixin focus-pill;
+            }
+        }
+    }
+
+    li {
+        position: relative;
+
+        .btn-command {
+            background-color: $commandColor;
+            color: $white;
+            padding: 7px 30px 7px 10px;
+            line-height: $baseLineHeight;
+            word-wrap: break-word;
+            cursor: pointer;
+
+            &:hover:not(.active):not(.disabled) {
+                background-color: $commandColorHover;
+                cursor: pointer;
+            }
+
+            &.active {
+                background-color: $commandColorActive;
+            }
+
+            &.error {
+                background-color: $commandColorError;
+
+                &:hover:not(.active):not(.disabled) {
+                    background-color: $commandColorErrorHover;
+                }
+            }
+
+            &.active.error {
+                background-color: $red;
+            }
+
+            &:focus {
+                @mixin focus-dark;
+            }
+
+            &.disabled {
+                cursor: not-allowed;
+            }
+        }
+
+        .btn-remove {
+            position: absolute;
+            display: inline-block;
+            right: 0;
+            top: 0;
+            width: 30px;
+            line-height: 30px;
+            color: $white;
+            text-align: center;
+
+            &:focus {
+                @mixin focus-dark;
+            }
+
+            &:hover {
+                background-color: color($white a(20%))
+            }
+
+        }
+    }
+
+    li + li {
+        margin-top: 1px;
+    }
+
+    .pulse {
+        animation: pulsate 0.7s ease-out;
+        animation-iteration-count: 1;
+    }
+
+    .search-link {
+        margin: 0px auto;
+        font-size: 12px;
+        padding: 5px;
+    }
+}

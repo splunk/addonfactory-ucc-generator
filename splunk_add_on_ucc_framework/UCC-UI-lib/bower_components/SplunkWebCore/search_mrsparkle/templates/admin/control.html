@@ -1,0 +1,89 @@
+<%!
+    title = 'Splunk Server Control'
+%>
+<%namespace name="lib" file="//lib.html" import="*"/>
+<%namespace name="helpers" file="_helpers.html"/>
+<%inherit file="//layout/admin.html" />
+<%
+from splunk.appserver.mrsparkle.lib.msg_pool import MsgPoolMgr, UI_MSG_POOL
+sessionId = cherrypy.session.id
+%>
+<style>
+.error-message { background-color: yellow; color: red; border: 1px black solid } 
+.notification { background-color: yellow; color: green; border: 1px black solid } 
+.formentry { padding: 5px; clear: left}
+.formentry label { width: 10em; float: left; }
+</style>
+<%
+msg_obj = MsgPoolMgr.get_poolmgr_instance()[UI_MSG_POOL].pop(msgid)
+%>
+% if msg_obj:
+    <%helpers:message content="${msg_obj.text}" level="${msg_obj.severity}"/>
+% endif
+<div id="restartstatus">
+    <h1>${_('Restarting Splunk Enterprise...')}</h1>
+    <p>${_('Restart in progress. Please wait.')}</p>
+</div>
+<div id="restartsslwarn">
+    <h1>${_('Restarting Splunk Enterprise...')}</h1>
+    % if not isCloud:
+        <p>
+            ${_('Check the web_service.log file to determine when Splunk has restarted and then <a href="">click here to continue</a>.')}
+        </p>
+    % else:
+        <p>${_('Restart in progress. Please wait.')}</p>
+    % endif
+</div>
+
+<div class="splOverlay"></div>
+<div class="dataInputsWrapper">
+	<div class="first fieldsetWrapper splClearfix">
+		
+		% if displayRestartButton:
+            % if canRestartSplunkweb:
+                <div class="dataInputsDesc">
+                    ${_('Click the button below to restart Splunk.')}
+                </div>
+                <%helpers:displayrestartbutton displayRestartButton="${displayRestartButton}" return_to="${return_to}" />
+            % else:
+                <div class="dataInputsDesc">
+                    <em>${_('The Splunkweb interface has been disabled. You must restart Splunk via the command line (or services control panel).')}</em>
+                </div>
+            % endif
+	    % else:
+	        <div class="dataInputsDesc">${_('You do not have permission to restart splunk.')}</div>
+	    % endif
+	    
+	</div>
+
+    % if displayClearRestartButton:
+        <div class="fieldsetWrapper splClearfix">
+            <h1>${_('Clear restart message')}</h1>
+            <div class="dataInputsDesc">${_('Click the button below to clear restart messages from Splunk.')}</div>
+            
+            <form name="actionControl" action="${make_url(['manager', namespace, 'messages', 'restart_required', 'multidelete'])}" method="post">
+                ${csrf_hidden_input()}
+                <input type="hidden" name="ctrl" id="ctrl" value="remove"/>
+                <input type="hidden" name="ctrl_link" id="ctrl_link" value="/services/messages/restart_required"/>
+                <input type="hidden" name="ctrl_name" id="ctrl_name" value="Restart Required"/>
+                <input type="hidden" name="redirect_to" id="redirect_to" value="${make_url(['manager', namespace, 'control'], translate=False)}"/>
+                <button class="splButton-primary" type="submit">
+                    <span>${_('Clear restart message')}</span>
+                </button>
+            </form>
+        </div>
+    % endif
+	    
+</div>
+
+<%def name="js_initialization()">
+    <% parent.js_initialization() %>
+    % if displayRestartButton and auto_restart:
+        <script language='javascript'>
+            $(function() { 
+                restart_server(${jsonify(return_to)})
+            });
+        </script>
+    % endif
+</%def>
+

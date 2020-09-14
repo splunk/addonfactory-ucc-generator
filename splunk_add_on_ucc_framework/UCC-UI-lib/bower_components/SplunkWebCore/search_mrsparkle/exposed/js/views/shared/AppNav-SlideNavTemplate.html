@@ -1,0 +1,26 @@
+<%if(!submenu){return "";}%>
+<ul class="slidenavList scroll-group">
+    <% _.each(submenu, function(i, index) { %>
+    <li data-index="<%=index%>" class="<%=i.divider ? 'divider':''%>">
+        <% if(!i.divider){ %>
+            <% if(i.submenu && i.submenu.length>0){ %>
+                <a href="#">
+                    <%- _.unescape(_(i.label).t()) %>
+                </a>
+                <i class="icon-triangle-right-small"></i>
+            <%}else if (i.hasOwnProperty('reportUri')) { %>
+                <a href="<%=i.reportUri%>" class="primary-link">
+                    <%- _.unescape(_(i.label).t()) %>
+                </a>
+                <a href="<%=i.uri%>" class="secondary-link">
+                    <i class="icon-<%= i.hasOwnProperty('dispatchView') && i.dispatchView === 'pivot' ? 'pivot' : 'search' %>"></i>
+                </a>
+            <%} else { %>
+                <a href="<%=i.uri%>">
+                    <%- _.unescape(_(i.label).t()) %>
+                </a>
+            <%}%>
+        <%}%>
+    </li>
+    <% }); %>
+</ul>

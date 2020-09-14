@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>SearchBarView Test</title>
+
+    <link rel="stylesheet" type="text/css" href="../static/splunkjs/css/bootstrap.css"/>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="span12">
+                <h2>SearchBarView Test</h2>
+                <p>1. You should see a search bar below.</p>
+                <p>2. There should be no search assistant.
+                      So no little triangle on the bottom-left.</p>
+                <div id="hook"></div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script src="../static/splunkjs/config.js"></script>
+<script>
+    splunkjs.config({
+        proxyPath: '/proxy',
+        scheme: 'https',
+        host: 'localhost',
+        port: 8089,
+        authenticate: {username: 'admin', password: 'changeme'},
+    });
+
+    require.config({baseUrl: '../static/'});
+
+    require([
+        'splunkjs/mvc/searchmanager',
+        'splunkjs/mvc/searchbarview',
+        'splunkjs/splunk',
+        'splunkjs/ready!'
+    ], function(
+        SearchManager,
+        SplunkBarView,
+        sdk,
+        mvc)
+    {
+        new SearchManager({
+            id: 'search1',
+            search: 'index=_internal | head 10'
+        });
+
+        new SplunkBarView({
+            managerid: 'search1',
+            el: $('#hook').append('<div></div>')
+        }).render();
+    });
+</script>
+
+</html>
+

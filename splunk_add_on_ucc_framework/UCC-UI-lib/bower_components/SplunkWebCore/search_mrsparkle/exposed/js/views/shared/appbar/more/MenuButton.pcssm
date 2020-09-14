@@ -1,0 +1,11 @@
+.view {
+    composes: view from '../../splunkbar/MenuButtonLite.pcssm';
+    font-size: 20px;
+    &:after {
+        content: '\2219\2219\2219';
+    }
+}
+
+.label {
+    composes: label from "../../splunkbar/MenuButtonLite.pcssm";
+}

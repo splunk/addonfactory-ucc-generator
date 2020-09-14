@@ -1,0 +1,31 @@
+/*  Splunk: Component: Data Model: object grid */
+/*  =========================================== */
+/*  used on pivot selection page, nested listing */
+
+/* object grid
+	markup missing ...
+*/
+
+@for $depth from 0 to 8 {
+	.nested-$depth {
+		padding-left: calc(8px + (40px * $depth)) !important;
+	}
+}
+
+/*  the grid ... */
+.datamodelexplorer-objectgrid {
+
+	.shared-datamodel-objectfieldlist {
+		margin-top: 15px;
+	}
+
+	.unselectable-object {
+		font-size: 14px;
+		height: 20px;
+		color: $tableTextDisabledColor;
+	}
+
+	.no-objects-message {
+		margin: 50px 20px;
+	}
+}

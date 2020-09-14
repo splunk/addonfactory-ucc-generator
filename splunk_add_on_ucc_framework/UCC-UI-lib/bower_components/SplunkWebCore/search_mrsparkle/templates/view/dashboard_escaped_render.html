@@ -1,0 +1,2 @@
+<%page args="dashboard"/>
+${dashboard.replace('{{SPLUNKWEB_URL_PREFIX}}/static', make_url('/static/')).replace('{{SPLUNKWEB_URL_PREFIX}}',make_url('/').rstrip('/'))}

@@ -1,0 +1,809 @@
+
+/********************************************
+    Page Presentation
+*********************************************/
+
+@import '../shared/pcss/data-enrichment-vars-mixins.pcss';
+
+.main-section-body > .alerts {
+    padding: 25px 50px;
+}
+
+
+.main-section-body  {
+    min-height: 0;
+}
+
+.page-header {
+    margin: 0px;
+    height: 80px;
+    border-bottom: 1px solid $borderColor;
+}
+
+.page-content {
+    min-height: 0;
+}
+
+.content-header {
+    padding: 15px 20px 0 20px;
+    background-color: $white;
+    @mixin clearfix;
+
+    .remove-button {
+        float: left;
+        color: $textGray;
+        font-size: 18px;
+        clear: both;
+        line-height: 28px;
+        margin-top: -10px;
+    }
+}
+
+
+.content-body {
+    width: 100%;
+    background-color: $white;
+    min-height: 400px;
+
+    .body-instructions {
+        margin-left: 20px;
+        margin-bottom: 10px;
+    }
+}
+
+.regex-loading-message {
+    padding: 25px;
+}
+
+.flash-messages-container {
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.preview-table-wrapper {
+	margin-bottom: -1px; /* overlap the bottom border so we don't get two. */
+}
+
+@media only screen and (max-width: 1000px) {
+    .step-wizard .step-label {
+        max-width: 75px !important;
+    }
+}
+
+.highlighted-border-green {
+    box-shadow: inset 0 0 0 3px $greenHighlight;
+}
+
+.highlighted-border-yellow {
+    box-shadow: inset 0 0 0 3px $yellowHighlight;
+}
+
+.highlighted-border-pink {
+    box-shadow: inset 0 0 0 3px $pinkHighlight;
+}
+
+.highlighted-border-blue {
+    box-shadow: inset 0 0 0 3px $blueHighlight;
+}
+
+.highlighted-border-orange {
+    box-shadow: inset 0 0 0 3px $orangeHighlight;
+}
+
+.highlighted-border-salmon {
+    box-shadow: inset 0 0 0 3px $salmonHighlight;
+}
+
+.highlighted-border-purple {
+    box-shadow: inset 0 0 0 3px $purpleHighlight;
+}
+
+/********************************************
+    Header Bar
+*********************************************/
+
+$headerLineHeight: 80px;
+.extract-fields-page-title {
+    font-size: 20px;
+    padding: 0px 20px;
+    float: left;
+    line-height: $headerLineHeight;
+}
+
+.view-all-extractions-button-container {
+    display: inline-block;
+    float: right;
+    line-height: 63px;
+    margin-right: 20px;
+    margin-top: 8px;
+    .icon-alert {
+        color: $red;
+        margin-right: 10px;
+        font-size: 200%;
+    }
+    .view-extractions-button {
+        margin-top: -12px;
+    }
+}
+
+.instruction{
+    padding: 8px 0px 20px 0px;
+}
+
+.step-buttons-container {
+    display: inline-block;
+    margin-top: 8px;
+}
+
+.return-automatic-mode, .return-manual-page, .manual-save-button {
+    margin-top: calc(($headerLineHeight - 27px) / 2);
+}
+
+.manual-save-button {
+    margin-left: 15px;
+}
+
+.button-big {
+    clear: both;
+    width: 300px;
+    height: 100px;
+    line-height: 100px;
+    font-size: 29px;
+    float: left;
+    margin-bottom: 20px;
+}
+
+.method-desc {
+    float: left;
+    padding: 20px;
+    line-height: 26px;
+}
+
+.desc-link {
+    display: block;
+}
+
+/********************************************
+    Method Selection Buttons
+*********************************************/
+
+.method-switch {
+    position: relative;
+    width: 900px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.type-container {
+    display: inline-block;
+    text-align: center;
+    width: 350px;
+    margin-left: -55px;
+    vertical-align: top;
+}
+
+.type-btn {
+    display: block;
+    margin: 0 auto 10px auto;
+    padding: 10px 0 5px 0;
+    cursor: pointer;
+    width: 220px;
+    border-radius: 4px;
+
+    svg {
+        fill: none;
+    }
+
+    @if $theme == enterprise {
+        .stroke {
+            stroke: $splunkGreen;
+            stroke-width: 1px ;
+        }
+        .stroke-thick {
+            stroke-width: 2px;
+        }
+        .fill {
+            fill: $splunkGreen;
+        }
+        &:hover {
+            background-color: color($splunkGreen l(+50%));
+        }
+    }
+
+    @if $theme == lite {
+        .stroke {
+            stroke: $splunkLiteOrange;
+            stroke-width: 1px ;
+        }
+        .stroke-thick {
+            stroke-width: 2px;
+        }
+        .fill {
+            fill: $splunkLiteOrange;
+        }
+        &:hover {
+            background-color: color($splunkLiteOrange l(+39%));
+        }
+    }
+}
+
+.selected-method {
+    /*  selected color is light blue for both enterprise and lite */
+    background-color: color($blue blend($white 88%));
+}
+
+.type-title-text {
+    color: $splunkGreen;
+    font-size: 20px;
+    line-height: 24px;
+}
+
+.type-desc-text {
+    font-size: 11px;
+    line-height: 16px;
+    color: $textGray;
+    width: 220px;
+    margin-left: 65px;
+    margin-right: 65px;
+}
+
+@if $theme == lite {
+    .type-title-text {
+        color: $splunkLiteOrange;
+    }
+}
+
+/********************************************
+    Pick Sample Event Mode
+*********************************************/
+.instructions-container {
+    padding: 20px 0px 10px 20px;
+}
+
+.sourcetype-label-container {
+    padding: 10px 0px 10px 20px;
+}
+
+.sourcetype-label, .type-label {
+    margin-left: 20px;
+    margin-right: 5px;
+    margin-left: 0px;
+}
+
+.sourcetype-name, .source-name {
+    font-weight: bold;
+}
+
+.select-sample-header {
+    .manual-mode-button-container {
+        margin-top: 5px;
+    }
+}
+
+.type-wrapper {
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.sourcetype-dropdown-wrapper, .type-dropdown-wrapper {
+    display: inline-block;
+    /*  The zero font size of the button groups mis-aligns the label in Firefox (SPL-87435). */
+    & > .btn-group {
+        font-size: inherit;
+    }
+}
+
+.source-wrapper {
+    display: block;
+    margin-top: 20px;
+}
+
+.sourcetypeMenu {
+    display: inline-block;
+}
+
+.sourcetype-wrapper {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.input-container .shared-findinput {
+    text-align: center;
+    margin: 5px;
+    .search-query {
+        width: 190px;
+    }
+}
+
+.dropdown-submenu .dropdown-menu {
+  li:first-child {
+    a {
+      border-top: none;
+    }
+  }
+}
+
+.dropdown-submenu > .dropdown-menu {
+  border-radius: 3px;
+}
+
+/********************************************
+    Automatic Extraction Editor
+*********************************************/
+
+.event-wrapper {
+    background-color: $white;
+    border-radius: 5px;
+    padding: 5px;
+    border: 1px solid rgba(82,168,236,.8);
+    margin: 20px 0;
+
+    &.not-interactive {
+        background-color: $blueDark;
+        border-color: $blueDark;
+        color: $white;
+        user-select:none;
+    }
+}
+
+
+.remove-button +  .event-wrapper {
+	margin-top: -10px;
+}
+
+
+.select-fields-header + .automatic-extraction-editor {
+	margin-top: -20px;
+}
+
+
+.automatic-extraction-editor {
+
+    .master-event-container {
+        @mixin highlighted-match-container;
+    }
+
+    .sample-event-wrapper {
+        margin-left: 20px;
+    }
+
+    .highlighted-match, .highlighted-existing-match, .required-text {
+        cursor: pointer;
+    }
+
+    &.disabled {
+        opacity: 0.40;
+
+        .highlighted-match, .highlighted-existing-match, .required-text {
+            cursor: default;
+        }
+    }
+
+}
+
+.fieldextractor-mastereventdelimeditor {
+    overflow: auto;
+    .master-event-container {
+        margin-top: 35px;
+        margin-bottom: 20px;
+        overflow-x: visible;
+        table {
+            border: 0px;
+            margin-bottom: 0px;
+            .masterevt-hdr > span {
+                cursor: pointer;
+                .icon-pencil {
+                    padding-left: 4px;
+                    color: $blueDark;
+                }
+            }
+            td {
+                border: 0px;
+            }
+        }
+    }
+}
+
+.counter-examples-container {
+    .remove-button {
+        margin-top: 0px;
+        line-height: 16px;
+    }
+
+    .counter-example-wrapper {
+        margin-left: 20px;
+        border-color: $red;
+
+        .removed-text {
+            color: $red;
+            text-decoration: line-through;
+        }
+    }
+}
+
+/********************************************
+    Manual Extraction Editor
+*********************************************/
+
+.manual-extraction-editor {
+    margin-top: 5px;
+    .input-title {
+        display: inline-block;
+        margin-right: 10px;
+    }
+    a.btn, a.btn-pill, .preview-in-search-button, .regex-docs-link {
+        float: right;
+        margin-left: 10px;
+    }
+    .regex-editor-wrapper {
+        textarea {
+            width: 99%;
+        }
+    }
+    .preview-in-search-button, .regex-docs-link {
+        margin-top: 5px;
+    }
+
+    .required-text-warning .icon-info-circle {
+      font-size: 200%;
+      position: absolute;
+      left: 0px;
+      top: 8px;
+      color: blue;
+    }
+}
+
+/********************************************
+    Delimiter mode
+*********************************************/
+.delim-selector {
+    padding-top: 10px;
+
+    .delimiter-radio {
+        padding-top:5px;
+
+        .shared-controls-syntheticradiocontrol {
+            padding-top: 5px;
+        }
+
+        .delim-custom {
+            margin-top: 5px;
+            margin-bottom: 0px;
+            margin-left: 10px;
+            margin-right: 10px;
+            padding-right: 0px;
+            width: 45px;
+        }
+
+    }
+}
+
+/********************************************
+    Save Extractions
+*********************************************/
+.save-extractions-container {
+    margin-right: 20px;
+    padding-bottom: 10px;
+}
+
+.save-extractions-form {
+    margin-bottom: 20px;
+}
+
+.shared-documentcontrols-dialogs-permissionsdialog-acl {
+    margin: 15px 0px 10px 180px;
+    border: 1px solid $borderColor;
+    border-top: 0px;
+    width: 600px;
+}
+
+.shared-controls-textcontrol {
+    display: inline-block;
+    margin-bottom: 0px;
+}
+
+.save-extractions-form, .review-extractions-form {
+    .control-label {
+        font-weight: bold;
+    }
+}
+
+.review-extractions-form {
+    display: inline-block;
+    border-top: 1px solid $borderColor;
+    padding-top: 15px;
+    width: 100%;
+}
+
+.sample-event-container {
+    margin-top: 15px;
+}
+
+.sample-event-label {
+    padding-top: 0px !important;
+}
+
+.events-wrapper {
+    margin-left: 180px;
+}
+
+.event-text {
+    white-space: pre-wrap;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    font-family: $monoFontFamily;
+    line-height: 20px;
+    padding-bottom: 0px;
+    word-wrap: break-word;
+}
+
+.save-extractions-form {
+    .shared-controls-textcontrol {
+        width: 450px;
+        input[type=text] {
+            width: 250px;
+            display: inline-block;
+        }
+    }
+}
+
+.extract-prelabel {
+    position: relative;
+    top: 2px;
+}
+
+/********************************************
+    Confirmation View
+*********************************************/
+
+.confirmation-body {
+    margin-top: 25px;
+    margin-bottom: 25px;
+
+    .next-step-links {
+        margin-left: 25px;
+        line-height: 25px;
+
+        i {
+            font-size: 15px;
+            margin-right: 10px
+        }
+    }
+
+    h4 {
+    	font-weight: normal;
+    	font-size: $baseFontSizeLarge;
+    }
+}
+
+/********************************************
+    Extraction Viewer
+*********************************************/
+
+.extraction-viewer {
+    margin-bottom: 10px;
+
+    .regex-text-container {
+        margin-top: 10px;
+        margin-bottom: 5px;
+        padding: 10px;
+        border: 1px solid $borderColor;
+    }
+
+    .regex-button-container {
+        a.btn {
+            float: right;
+            margin-left: 10px;
+        }
+    }
+
+    .search-button-container {
+        a.btn {
+            float: right;
+            margin-left: 10px;
+        }
+        padding-bottom: 10px;
+    }
+}
+
+/********************************************
+    Results Table
+*********************************************/
+.results-control-bar-placeholder {
+    display: inline;
+
+    .match-results-control-bar {
+        padding-top: 5px;
+        padding-left: 20px;
+        padding-right: 10px;
+
+        .count-container {
+            padding-top: 5px;
+        }
+
+        .search-filter-container {
+            .checkbox {
+                padding-top: 3px;
+            }
+        }
+    }
+}
+
+.results-table {
+    table {
+        margin-bottom: 0;
+        .selected-master-event-cell {
+            $selectedBgColor: $blueDark;
+            $selectedColor: $white;
+            background-color: $selectedBgColor !important;
+            color: $selectedColor !important;
+            &:hover {
+                background-color: $selectedBgColor !important;
+                color: $selectedColor !important;
+            }
+        }
+        tbody {
+            tr {
+                position: relative;
+            }
+        }
+    }
+}
+
+.add-sample-event-button {
+    position: absolute;
+    right: 50px;
+    background-color: $linkColor;
+    color:white;
+    padding: 3px 10px;
+    border-radius: 8px;
+    margin-top: -19px;
+    cursor: pointer;
+    font-family: $baseFontFamily;
+}
+
+.nav-tabs {
+  background-color: $white;
+  @mixin gradient-vertical $white, $white;
+  border-top: none;
+  padding-top: 15px;
+  height: 35px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+}
+
+.nav-tabs>li {
+  float: none;
+  display: inline-block;
+}
+
+.shared-tabcontrols-tabbase{
+    padding-bottom: 23px;
+    min-width: -webkit-min-content;
+}
+
+
+/********************************************
+    Extractions Sidebar
+*********************************************/
+
+.existing-extractions-list {
+    padding: 15px;
+    .sourcetype-name, .source-name {
+        font-weight: bold;
+    }
+    .table {
+        margin-top: 20px;
+        border: 1px solid $borderColor;
+        width: 385px;
+    }
+    .extractions-sidebar-instructions {
+        margin-top: 10px;
+    }
+}
+
+.sidebar {
+    overflow: auto;
+    width: 415px;
+}
+
+/********************************************
+    Dropdown Menus & Dialogs
+*********************************************/
+
+.edit-extraction-action, .remove-required-text {
+    padding-left: 20px !important;
+}
+
+.dropdown-menu li.dropdown-title-field-name, li.dropdown-title-required-text {
+    margin-left: 10px;
+    padding: 7px 10px;
+}
+
+.extraction-form-mode-toggle div.btn-group-radio {
+    margin-left: 85px;
+    padding-bottom: 10px;
+    .btn {
+        width: 82px;
+    }
+}
+
+.require-message {
+    padding-top: 10px;
+    padding-bottom: 20px;
+}
+
+.field-extraction-form {
+    padding: 10px 0px 0px 0px;
+    background-color: $white;
+    width: 269px;
+    .extraction-form-container {
+        padding: 0px 10px;
+    }
+    .extraction-form-buttons {
+        background-color: $grayLighter;
+        padding-bottom: 10px;
+        .submit-button {
+            margin-right: 10px;
+        }
+    }
+    .alerts{
+        margin: 0px 10px;
+        .alert {
+            padding: 8px 8px 8px 27px;
+            margin: 0px;
+        }
+    }
+}
+
+.no-fields-message-container {
+    margin: 0px 10px;
+    .no-fields-message {
+        position: relative;
+        padding: 8px 8px 18px 42px;
+        margin: 0px;
+        .icon-alert {
+            color: $red;
+            font-size: 200%;
+            position: absolute;
+            left: 10px;
+            top: 13px;
+        }
+    }
+}
+
+.extraction-form-content {
+    .no-fields-message {
+        padding: 5px 10px 10px 10px;
+    }
+    .selected-text-control {
+        overflow: hidden;
+        .selected-text {
+            width: 165px;
+            word-wrap: break-word;
+            font-weight: bold;
+        }
+    }
+}
+
+/********************************************
+    Form
+*********************************************/
+
+.control-label {
+    width: 150px;
+    float: left;
+}
+
+/********************************************
+    Disabled Components
+*********************************************/
+
+a.disabled, .disabled a {
+    color: $textGray;
+    cursor: default;
+    &:hover {
+        text-decoration: none;
+    }
+}

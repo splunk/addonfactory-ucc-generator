@@ -1,0 +1,5 @@
+.view {
+    composes: view from "../Menu.pcssm";
+    display: block;
+    float: left;
+}

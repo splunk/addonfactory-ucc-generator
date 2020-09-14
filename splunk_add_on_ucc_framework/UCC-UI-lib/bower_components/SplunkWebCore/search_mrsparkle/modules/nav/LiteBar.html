@@ -1,0 +1,58 @@
+<%!
+import os, urllib, sys
+import logging
+import cherrypy
+import time
+from splunk.appserver.mrsparkle.lib import util
+logger = logging.getLogger('splunk.apppserver.mrsparkle.module.lite_bar')
+
+year = time.strftime('%Y')
+%>
+<%
+# define base DOM ID on which to attach menu triggers
+TOP_NAV_ACTIVATOR_BASE = 'navmenu_'
+
+
+#
+# assemble list of JSUnit tests
+#
+def generateJSUnitList():
+    relativePath = '/testing/tests'
+    extension = '.html'
+    testFileDir = util.make_absolute(cherrypy.config['static_dir'] + relativePath)
+    logger.debug('Fetching HTML test files from: %s' % testFileDir)
+    jsUnitTests = []
+    
+    try:
+        for f in os.listdir(testFileDir):
+            if f.endswith(extension):
+                args = urllib.urlencode({"testPage": make_url(['static', 'testing', 'tests', f])})
+                jsUnitTests.append({'label': f[0:-len(extension)], 'uri': make_url('/testing/jsunit/testRunner.html?' + args)})
+
+        # Sort unit tests alphabetically by label.
+        def unitTestSortBy(fieldName) :
+            def compare(a, b) :
+                return cmp(a[fieldName], b[fieldName])
+            return compare
+        jsUnitTests.sort(unitTestSortBy('label'))
+
+    except:
+        pass
+
+    return jsUnitTests
+
+%>
+
+<%page args="module"/>
+
+<%namespace name="lib" file="//lib.html" import="*"/>
+
+<%call expr="lib.add_script_block()">
+    Splunk.Module.loadParams.${module['id']}.menuData = ${jsonify(navConfig) if navConfig else jsonify(None)};
+    Splunk.Module.loadParams.${module['id']}.menuColor = ${jsonify(navColor) if navColor else jsonify(None)};
+</%call>
+
+<%call expr="lib.add_script_block()">
+    Splunk.Module.loadParams.${module['id']}.unitTestListing = ${jsonify(generateJSUnitList())};
+</%call>
+

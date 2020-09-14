@@ -1,0 +1,20 @@
+.view {
+    composes: title from '../ModalLocalClassNames.pcssm';
+    font-size: 25px;
+}
+
+.splunk {
+
+}
+
+.prompt {
+    max-width: 600px;
+}
+
+.prompt, .product {
+    color: $splunkGreen;
+}
+
+.promptLite, .productLite {
+    color: $splunkLiteOrange;
+}

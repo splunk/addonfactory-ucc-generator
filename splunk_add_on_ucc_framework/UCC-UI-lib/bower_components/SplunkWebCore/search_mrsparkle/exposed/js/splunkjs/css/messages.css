@@ -1,0 +1,25 @@
+.splunk-viz-msg {
+    overflow: hidden;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.splunk-table .splunk-viz-msg {
+    overflow: auto;
+    position: static;
+}
+
+.splunk-message-container {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.splunk-message-container.compact {
+    display: block;
+    height: auto;
+    padding: 0px 40px 10px 40px;
+    min-height: 0;
+}

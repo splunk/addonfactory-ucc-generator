@@ -1,0 +1,701 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="../../../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../../../print.css" type="text/css" media="print">
+<meta content="TimeUtils,com.splunk.time.TimeUtils,EPOCH,addDateDuration,addDurations,ceilDate,ceilDuration,daysInMonth,divideDuration,durationToSeconds,floorDate,floorDuration,multiplyDuration,normalizeDuration,roundDate,roundDuration,secondsToDuration,subtractDateDuration,subtractDates,subtractDurations" name="keywords">
+<title>com.splunk.time.TimeUtils</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'TimeUtils - Splunk Library Documentation';
+				var baseRef = '../../../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">Splunk Library Documentation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?com/splunk/time/TimeUtils.html&amp;com/splunk/time/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;TimeUtils</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#methodSummary">Methods</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class TimeUtils"); titleBar_setSubNav(true,false,false,false,false,false,true,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">com.splunk.time</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Class</td><td class="classSignature">public final  class TimeUtils</td>
+</tr>
+</table>
+<p></p>
+<p></p>
+<br>
+<hr>
+</div>
+<a name="methodSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Methods</div>
+<table id="summaryTableMethod" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#addDateDuration()">addDateDuration</a>(date:<a href="DateTime.html">DateTime</a>, duration:<a href="Duration.html">Duration</a>):<a href="../time/DateTime.html">DateTime</a>
+</div>
+<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">TimeUtils</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#addDurations()">addDurations</a>(duration1:<a href="Duration.html">Duration</a>, duration2:<a href="Duration.html">Duration</a>):<a href="../time/Duration.html">Duration</a>
+</div>
+<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">TimeUtils</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#ceilDate()">ceilDate</a>(date:<a href="DateTime.html">DateTime</a>, units:<a href="Duration.html">Duration</a>):<a href="../time/DateTime.html">DateTime</a>
+</div>
+<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">TimeUtils</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#ceilDuration()">ceilDuration</a>(duration:<a href="Duration.html">Duration</a>, units:<a href="Duration.html">Duration</a> = null, referenceDate:<a href="DateTime.html">DateTime</a> = null):<a href="../time/Duration.html">Duration</a>
+</div>
+<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">TimeUtils</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#daysInMonth()">daysInMonth</a>(date:<a href="DateTime.html">DateTime</a>):Number</div>
+<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">TimeUtils</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#divideDuration()">divideDuration</a>(duration:<a href="Duration.html">Duration</a>, scalar:Number):<a href="../time/Duration.html">Duration</a>
+</div>
+<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">TimeUtils</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#durationToSeconds()">durationToSeconds</a>(duration:<a href="Duration.html">Duration</a>, referenceDate:<a href="DateTime.html">DateTime</a> = null):Number</div>
+<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">TimeUtils</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#floorDate()">floorDate</a>(date:<a href="DateTime.html">DateTime</a>, units:<a href="Duration.html">Duration</a>):<a href="../time/DateTime.html">DateTime</a>
+</div>
+<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">TimeUtils</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#floorDuration()">floorDuration</a>(duration:<a href="Duration.html">Duration</a>, units:<a href="Duration.html">Duration</a> = null, referenceDate:<a href="DateTime.html">DateTime</a> = null):<a href="../time/Duration.html">Duration</a>
+</div>
+<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">TimeUtils</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#multiplyDuration()">multiplyDuration</a>(duration:<a href="Duration.html">Duration</a>, scalar:Number):<a href="../time/Duration.html">Duration</a>
+</div>
+<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">TimeUtils</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#normalizeDuration()">normalizeDuration</a>(duration:<a href="Duration.html">Duration</a>, referenceDate:<a href="DateTime.html">DateTime</a> = null):<a href="../time/Duration.html">Duration</a>
+</div>
+<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">TimeUtils</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#roundDate()">roundDate</a>(date:<a href="DateTime.html">DateTime</a>, units:<a href="Duration.html">Duration</a>):<a href="../time/DateTime.html">DateTime</a>
+</div>
+<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">TimeUtils</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#roundDuration()">roundDuration</a>(duration:<a href="Duration.html">Duration</a>, units:<a href="Duration.html">Duration</a> = null, referenceDate:<a href="DateTime.html">DateTime</a> = null):<a href="../time/Duration.html">Duration</a>
+</div>
+<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">TimeUtils</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#secondsToDuration()">secondsToDuration</a>(seconds:Number, referenceDate:<a href="DateTime.html">DateTime</a> = null):<a href="../time/Duration.html">Duration</a>
+</div>
+<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">TimeUtils</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#subtractDateDuration()">subtractDateDuration</a>(date:<a href="DateTime.html">DateTime</a>, duration:<a href="Duration.html">Duration</a>):<a href="../time/DateTime.html">DateTime</a>
+</div>
+<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">TimeUtils</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#subtractDates()">subtractDates</a>(date1:<a href="DateTime.html">DateTime</a>, date2:<a href="DateTime.html">DateTime</a>):<a href="../time/Duration.html">Duration</a>
+</div>
+<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">TimeUtils</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#subtractDurations()">subtractDurations</a>(duration1:<a href="Duration.html">Duration</a>, duration2:<a href="Duration.html">Duration</a>):<a href="../time/Duration.html">Duration</a>
+</div>
+<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">TimeUtils</td>
+</tr>
+</table>
+</div>
+<a name="constantSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Constants</div>
+<table id="summaryTableConstant" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Constant</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#EPOCH">EPOCH</a> : <a href="../time/DateTime.html">DateTime</a>
+<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">TimeUtils</td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<a name="methodDetail"></a>
+<div class="detailSectionHeader">Method detail</div>
+<a name="addDateDuration()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">addDateDuration</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function addDateDuration(date:<a href="DateTime.html">DateTime</a>, duration:<a href="Duration.html">Duration</a>):<a href="../time/DateTime.html">DateTime</a></code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">date</span>:<a href="DateTime.html">DateTime</a></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">duration</span>:<a href="Duration.html">Duration</a></code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../time/DateTime.html">DateTime</a></code></td>
+</tr>
+</table>
+</div>
+<a name="addDurations()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">addDurations</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function addDurations(duration1:<a href="Duration.html">Duration</a>, duration2:<a href="Duration.html">Duration</a>):<a href="../time/Duration.html">Duration</a></code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">duration1</span>:<a href="Duration.html">Duration</a></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">duration2</span>:<a href="Duration.html">Duration</a></code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../time/Duration.html">Duration</a></code></td>
+</tr>
+</table>
+</div>
+<a name="ceilDate()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">ceilDate</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function ceilDate(date:<a href="DateTime.html">DateTime</a>, units:<a href="Duration.html">Duration</a>):<a href="../time/DateTime.html">DateTime</a></code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">date</span>:<a href="DateTime.html">DateTime</a></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">units</span>:<a href="Duration.html">Duration</a></code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../time/DateTime.html">DateTime</a></code></td>
+</tr>
+</table>
+</div>
+<a name="ceilDuration()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">ceilDuration</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function ceilDuration(duration:<a href="Duration.html">Duration</a>, units:<a href="Duration.html">Duration</a> = null, referenceDate:<a href="DateTime.html">DateTime</a> = null):<a href="../time/Duration.html">Duration</a></code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">duration</span>:<a href="Duration.html">Duration</a></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">units</span>:<a href="Duration.html">Duration</a></code> (default = <code>null</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">referenceDate</span>:<a href="DateTime.html">DateTime</a></code> (default = <code>null</code>)<code></code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../time/Duration.html">Duration</a></code></td>
+</tr>
+</table>
+</div>
+<a name="daysInMonth()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">daysInMonth</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function daysInMonth(date:<a href="DateTime.html">DateTime</a>):Number</code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">date</span>:<a href="DateTime.html">DateTime</a></code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code></td>
+</tr>
+</table>
+</div>
+<a name="divideDuration()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">divideDuration</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function divideDuration(duration:<a href="Duration.html">Duration</a>, scalar:Number):<a href="../time/Duration.html">Duration</a></code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">duration</span>:<a href="Duration.html">Duration</a></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">scalar</span>:Number</code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../time/Duration.html">Duration</a></code></td>
+</tr>
+</table>
+</div>
+<a name="durationToSeconds()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">durationToSeconds</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function durationToSeconds(duration:<a href="Duration.html">Duration</a>, referenceDate:<a href="DateTime.html">DateTime</a> = null):Number</code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">duration</span>:<a href="Duration.html">Duration</a></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">referenceDate</span>:<a href="DateTime.html">DateTime</a></code> (default = <code>null</code>)<code></code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code></td>
+</tr>
+</table>
+</div>
+<a name="floorDate()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">floorDate</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function floorDate(date:<a href="DateTime.html">DateTime</a>, units:<a href="Duration.html">Duration</a>):<a href="../time/DateTime.html">DateTime</a></code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">date</span>:<a href="DateTime.html">DateTime</a></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">units</span>:<a href="Duration.html">Duration</a></code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../time/DateTime.html">DateTime</a></code></td>
+</tr>
+</table>
+</div>
+<a name="floorDuration()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">floorDuration</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function floorDuration(duration:<a href="Duration.html">Duration</a>, units:<a href="Duration.html">Duration</a> = null, referenceDate:<a href="DateTime.html">DateTime</a> = null):<a href="../time/Duration.html">Duration</a></code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">duration</span>:<a href="Duration.html">Duration</a></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">units</span>:<a href="Duration.html">Duration</a></code> (default = <code>null</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">referenceDate</span>:<a href="DateTime.html">DateTime</a></code> (default = <code>null</code>)<code></code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../time/Duration.html">Duration</a></code></td>
+</tr>
+</table>
+</div>
+<a name="multiplyDuration()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">multiplyDuration</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function multiplyDuration(duration:<a href="Duration.html">Duration</a>, scalar:Number):<a href="../time/Duration.html">Duration</a></code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">duration</span>:<a href="Duration.html">Duration</a></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">scalar</span>:Number</code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../time/Duration.html">Duration</a></code></td>
+</tr>
+</table>
+</div>
+<a name="normalizeDuration()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">normalizeDuration</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function normalizeDuration(duration:<a href="Duration.html">Duration</a>, referenceDate:<a href="DateTime.html">DateTime</a> = null):<a href="../time/Duration.html">Duration</a></code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">duration</span>:<a href="Duration.html">Duration</a></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">referenceDate</span>:<a href="DateTime.html">DateTime</a></code> (default = <code>null</code>)<code></code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../time/Duration.html">Duration</a></code></td>
+</tr>
+</table>
+</div>
+<a name="roundDate()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">roundDate</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function roundDate(date:<a href="DateTime.html">DateTime</a>, units:<a href="Duration.html">Duration</a>):<a href="../time/DateTime.html">DateTime</a></code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">date</span>:<a href="DateTime.html">DateTime</a></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">units</span>:<a href="Duration.html">Duration</a></code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../time/DateTime.html">DateTime</a></code></td>
+</tr>
+</table>
+</div>
+<a name="roundDuration()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">roundDuration</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function roundDuration(duration:<a href="Duration.html">Duration</a>, units:<a href="Duration.html">Duration</a> = null, referenceDate:<a href="DateTime.html">DateTime</a> = null):<a href="../time/Duration.html">Duration</a></code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">duration</span>:<a href="Duration.html">Duration</a></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">units</span>:<a href="Duration.html">Duration</a></code> (default = <code>null</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">referenceDate</span>:<a href="DateTime.html">DateTime</a></code> (default = <code>null</code>)<code></code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../time/Duration.html">Duration</a></code></td>
+</tr>
+</table>
+</div>
+<a name="secondsToDuration()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">secondsToDuration</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function secondsToDuration(seconds:Number, referenceDate:<a href="DateTime.html">DateTime</a> = null):<a href="../time/Duration.html">Duration</a></code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">seconds</span>:Number</code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">referenceDate</span>:<a href="DateTime.html">DateTime</a></code> (default = <code>null</code>)<code></code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../time/Duration.html">Duration</a></code></td>
+</tr>
+</table>
+</div>
+<a name="subtractDateDuration()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">subtractDateDuration</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function subtractDateDuration(date:<a href="DateTime.html">DateTime</a>, duration:<a href="Duration.html">Duration</a>):<a href="../time/DateTime.html">DateTime</a></code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">date</span>:<a href="DateTime.html">DateTime</a></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">duration</span>:<a href="Duration.html">Duration</a></code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../time/DateTime.html">DateTime</a></code></td>
+</tr>
+</table>
+</div>
+<a name="subtractDates()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">subtractDates</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function subtractDates(date1:<a href="DateTime.html">DateTime</a>, date2:<a href="DateTime.html">DateTime</a>):<a href="../time/Duration.html">Duration</a></code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">date1</span>:<a href="DateTime.html">DateTime</a></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">date2</span>:<a href="DateTime.html">DateTime</a></code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../time/Duration.html">Duration</a></code></td>
+</tr>
+</table>
+</div>
+<a name="subtractDurations()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">subtractDurations</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function subtractDurations(duration1:<a href="Duration.html">Duration</a>, duration2:<a href="Duration.html">Duration</a>):<a href="../time/Duration.html">Duration</a></code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">duration1</span>:<a href="Duration.html">Duration</a></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">duration2</span>:<a href="Duration.html">Duration</a></code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../time/Duration.html">Duration</a></code></td>
+</tr>
+</table>
+</div>
+<a name="constantDetail"></a>
+<div class="detailSectionHeader">Constant detail</div>
+<a name="EPOCH"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">EPOCH</td><td class="detailHeaderType">constant</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const EPOCH:<a href="../time/DateTime.html">DateTime</a></code>
+</div>
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright"></center>
+</div>
+</body>
+</html>
+<!---->

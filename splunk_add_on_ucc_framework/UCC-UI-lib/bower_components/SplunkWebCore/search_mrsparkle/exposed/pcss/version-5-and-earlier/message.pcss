@@ -1,0 +1,86 @@
+
+
+
+/*
+ * General container styles
+ *
+ */
+body {
+    padding: 0;
+    margin: 0;
+}
+.masterHeader {
+    background-color: #222;
+    border-bottom: 1px solid $borderColor;
+    padding: 5px 20px;
+    font-size: $baseFontSize;
+}
+
+.masterContainer {
+    padding: 10px 10px 20px 10px;
+    background-color: #ededed;
+}
+.masterFooter {
+    border-top: 1px solid $borderColor;
+    padding: 10px;
+    font-size: 10px;
+}
+
+/*
+ * block-level elements
+ *
+ */
+.masterHeader  h1 {
+    margin: 5px 0;
+    color: #fff;
+}
+h2 {
+    font-size: 14px;
+}
+table {
+    margin-bottom: 15px;
+    border-top: 1px dotted $borderColor;
+    border-collapse: collapse;
+}
+th {
+    padding: 4px 10px;
+    text-align: left;
+    background-color: #ededed;
+}
+td {
+    padding: 4px 10px;
+    border-bottom: 1px dotted $borderColor;
+    background-color: #ededed;
+    vertical-align: top;
+}
+td.k {
+    font-weight: bold;
+    white-space: nowrap;
+}
+td.v {
+    font-weight: normal;
+    font-size: $baseFontSize;
+    background-color: #fff;
+}
+p {
+    width: 40em;
+    line-height: 140%;
+}
+
+
+/*
+ * object-specific styles
+ *
+ */
+.primaryMessage {
+    font-size: $baseFontSizeLarge;
+}
+
+.byline {
+    font-size: $baseFontSizeSmall;
+   color: $textColor;
+    width: 100%;
+}
+.comment {
+    color: #555;
+}

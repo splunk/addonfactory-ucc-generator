@@ -1,0 +1,77 @@
+
+<div class="section-header section-padded">
+    <% if (docUrl) { %>
+    <a href="<%-docUrl%>" target="_blank" class="btn pull-right"><%-_('Documentation').t()%> <i class="icon-external"></i></a>
+    <% } %>
+    <% if (!backButtonUrl) { %>
+    <h2 class="section-title"> <%- sectionTitle %> </h2>
+    <p class="section-description"> <strong><%- nameLabel %></strong>: <span id="serverClassName"></span>
+    <% } else { %>
+    <h2 class="section-title"> <span id="serverClassName"></span> </h2>
+    <a href="<%- backButtonUrl %>">&lt; <%- _('Back to server classes').t() %></a>
+    <% } %>
+    </p>
+</div>
+<div class="divider"></div>
+
+<div class="section-padded">
+
+    <div class="flash-messages-placeholder"></div>
+
+    <form class="add-edit-form">
+        <div id="whitelist-container" class="list-container">
+            <div class="list-inner">
+                <label>
+                    <strong><%-_("Include").t()%></strong>
+                    <%- _(" (whitelist)").t() %>
+                </label>
+                <div id="whitelist"></div>
+                <div class="help-block">
+                    <%-_("Can be client name, host name, IP address, or DNS name.").t()%><br/>
+                    <%-_("Examples: ").t()%>
+                    <span class="example-text mono-space">185.2.3.*, fwdr-* </span>
+                </div>
+                <div>
+                    <a href="<%-filtersDocUrl%>" target="_blank" class="external"><%-_('Learn more').t()%></a>
+                </div>
+            </div>
+        </div>
+
+        <div id="blacklist-container" class="list-container">
+            <div class="list-inner">
+                <label>
+                    <strong><%-_("Exclude").t()%></strong>
+                    <%- _(" (blacklist)").t() %>
+                </label>
+                <div id="blacklist"></div>
+                <div class="help-block">
+                    <%-_("Can be client name, host name, IP address, or DNS name.").t()%><br/>
+                    <%-_("Examples: ").t()%>
+                    <span class="example-text mono-space">ronnie, rarity</span>
+                </div>
+                <div>
+                    <a href="<%-filtersDocUrl%>" target="_blank" class="external"><%-_('Learn more').t()%></a>
+                </div>
+            </div>
+        </div>
+
+        <div id="machine-filters-container" class="list-container"></div>
+    </form>
+
+    <div class="divider" style="margin: 10px -20px"></div>
+
+    <div id="page-actions" class="pull-right"></div>
+</div>
+
+<div class="tab-content" id="clients-tabs-contents">
+    <div class="pull-left" id="controls"></div>
+    <div id="selectedClientsFilterContainer" class="pull-left searchFilterContainer"></div>
+    <div id="unselectedClientsFilterContainer" class="pull-left searchFilterContainer"></div>
+    <div id="allClientsFilterContainer" class="pull-left searchFilterContainer"></div>
+    <div style="clear:both"/>
+    <div id="selected_clients"></div>
+    <div id="unselected_clients"> </div>
+    <div id="all_clients"> </div>
+</div>
+
+

@@ -1,0 +1,117 @@
+<%inherit file="//qunit/template.html" />
+
+<%def name="title()">Submit Button -- QUnit tests</%def>
+
+<script type="text/javascript" src="/en-US/static/js/contrib/swfobject.js"></script>
+<script type="text/javascript" src="/en-US/static/js/contrib/deprecated/jquery-ui-1.8.5.custom.min.js"></script>
+<script type="text/javascript" src="/en-US/static/js/ja_bridge.js"></script>
+<script type="text/javascript" src="/en-US/static/js/jobber.js"></script>
+<script type="text/javascript" src="/en-US/static/js/job.js"></script>
+<script type="text/javascript" src="/en-US/static/js/context.js"></script>
+<script type="text/javascript" src="/en-US/static/js/search.js"></script>
+<script type="text/javascript" src="/en-US/static/js/menu_builder.js"></script>
+<script type="text/javascript" src="/en-US/static/js/time_range.js"></script>
+<script type="text/javascript" src="/en-US/static/js/module_loader.js"></script>
+<script type="text/javascript" src="/en-US/static/js/page_status.js"></script>
+<script type="text/javascript" src="/en-US/static/js/test_utils.js"></script>
+<script language="javascript">
+    // important to disable the chatty debug that the tests spew.
+    //Splunk.Logger.mode.Default = Splunk.Logger.mode.None
+</script>
+
+<script type="text/javascript" src="/en-US/static/js/init.js"></script>
+
+
+<!--  Now the modules  -->
+<script type="text/javascript" src="/en-US/modules/AbstractModule.js"></script>
+<script type="text/javascript" src="/en-US/modules/DispatchingModule.js"></script>
+<script type="text/javascript" src="/en-US/modules/search/SubmitButton.js"></script>
+
+
+
+
+
+<script language="javascript">
+    // VERY IMPORTANT.  In certain cases Jobs will get automatically dispatched
+    // whenever addChild is called.  
+    // test harness mode short-circuits default behaviour.
+    Splunk._testHarnessMode = true;
+
+    Splunk.Globals['Jobber']._getStatus = function() {};
+
+
+    var logger = Splunk.Logger.getLogger("ReportBuilder", Splunk.Logger.mode.Firebug);
+    var moduleTypes = [];
+
+
+    // ******************************************
+    // UTILS
+    // ******************************************
+    function generateHierarchy(hasDispatchingParent) {
+        // if the client wanted it to have a dispatching parent, we give em one.
+        var mockParent = (hasDispatchingParent) ? new Splunk.Module.DispatchingModule($("<div/>")) : new Splunk.Module($("<div/>"));
+        var moduleUnderTest = generateSubmitButton();
+        var mockChild  = new Splunk.Module($("<div/>"));
+        mockParent.moduleType = "Splunk.MockParentModule";
+        mockChild.moduleType = "Splunk.MockChildModule";
+        moduleUnderTest.addChild(mockChild);
+        mockParent.addChild(moduleUnderTest);   
+        var context = addMockContext(mockParent);
+     
+        return [mockParent, moduleUnderTest, mockChild];
+    }
+    
+
+    function generateSubmitButton() {
+        var container = $('<div class="SplunkModule SubmitButton"><fieldset><button class="primary"><span>Next Step: Format Report</span></button></fieldset><div/></div>');
+        return new Splunk.Module.SubmitButton(container);
+    }
+    // using 2 for-loops to exercise a little 2x2 matrix of cases. 
+    function forEachCase(callback) {
+        for (hasDispatchingParent = 0; hasDispatchingParent<2; hasDispatchingParent++) {
+            var modules = generateHierarchy(hasDispatchingParent);
+            var mockParent = modules[0];
+            var moduleUnderTest = modules[1];
+            var mockChild = modules[2];
+            callback(mockParent, moduleUnderTest, mockChild);
+        }
+    }
+    function test_blocksNormalContextPushes() {
+        forEachCase(function(mockParent, moduleUnderTest, mockChild) {             
+            window.__changeCount = 0;
+            window.__pushCount   = 0;
+            
+            mockParent.setLoadState(Splunk.util.moduleLoadStates.HAS_CONTEXT);
+            mockParent.markPageLoadComplete();
+            moduleUnderTest.markPageLoadComplete();
+            mockChild.markPageLoadComplete();
+
+
+
+            mockChild.onContextChange = function() {window.__changeCount++;}
+            mockChild.pushContextToChildren = function() {window.__pushCount++;}
+            mockParent.pushContextToChildren();
+            assertEquals("Submit button should have blocked the context push (onContextChange not called)", 0, window.__changeCount);
+            assertEquals("Submit button should have blocked the context push (pushContextToChildren not called)", 0, window.__pushCount);
+        });
+    }
+    
+    function test_doesntBlockResurrectedContextPushes() {
+        forEachCase(function(mockParent, moduleUnderTest, mockChild) {               
+            window.__changeCount = 0;
+            window.__pushCount   = 0;
+    
+            mockParent.setLoadState(Splunk.util.moduleLoadStates.HAS_CONTEXT);
+            moduleUnderTest.setLoadState(Splunk.util.moduleLoadStates.HAS_CONTEXT);
+            
+            var mockContext = addMockContext(mockParent, "123456", "redispatchedId");
+            
+            mockChild.onContextChange = function() {window.__changeCount++;}
+            mockChild.pushContextToChildren = function() {window.__pushCount++;}
+            mockParent.pushContextToChildren(mockContext);
+            assertEquals("Submit button should NOT block the context push (onContextChange called)", 1, window.__changeCount);
+            assertEquals("Submit button should NOT block the context push (pushContextToChildren called)", 1, window.__pushCount);
+        });
+    }
+
+</script>

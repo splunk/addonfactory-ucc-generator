@@ -1,0 +1,111 @@
+<%inherit file="//layout/admin_lite.html"/>
+<%namespace name="formset" file="//formset.html" />
+<%namespace name="lib" file="//lib.html" />
+
+<%def name="title()">${_('Licensing alerts')} - ${parent.title()}</%def>
+<%def name="get_breadcrumbs()">
+    <%
+        return [
+            [_('Manager'), ['manager']],
+            [_('Licensing'), ['manager','system','licensing']],
+            [_('Licensing alerts'), None]
+        ]           
+    %>
+</%def>
+<%def name="show_message_table(message_table)">
+    % if message_table is None or  len(message_table) == 0:
+	<table class="msg-listing" style="width: auto">
+            <tr>
+                <td class="light-container"><span class="light msg-info" title="OK"/></td>
+                <td class="text" style="width:90%">${_('No licensing alerts')}</td>
+                <td class="time"></td>
+            </tr>
+        </table>
+    % else: 
+	<table class="msg-listing" style="width: auto">
+	    
+	    <tr>
+		<th>${_('Severity')}</th>
+		<th>${_('Time')}</th>
+		<th>${_('Message')}</th>
+		<th>${_('Indexer')}</th>
+		<th>${_('Pool')}</th>
+		<th>${_('Stack')}</th>
+		<th>${_('Category')}</th>
+	    </tr>
+	    % for message in message_table:
+		<tr>
+		    <td class="light-container"><span class="light msg-${message['severity'] | h}" title="${message['severity'] | h}"/></td>
+		    <td>
+			% if message['category'] not in ('pool_warning_count', 'pool_violated_slave_count') and message['severity'] == 'warn':
+			    ${i18n.format_datetime(message['create_time']) | h}
+			    <br />
+			    (${i18n.format_timedelta(message['create_time']) | h})
+			% else:
+			    ${_('Correct by midnight to avoid violation')}
+			    <a target="_blank" class="spl-icon-external-link-xsm" href="${generateSelfHelpLink('license.list.warnings')}">${_('Learn more')}</a>
+			% endif
+		    </td>
+		    <td>
+			${message['text'] | h}
+		    </td>
+		    <td>${message['slave_name'] or '' | h}</td>
+		    <td>${message['pool_name'] or '' | h}</td>
+		    <td>${message['stack_name'] or '' | h}</td>
+		    <td>${message['category'] or '' | h}</td>
+		</tr>
+	    % endfor
+	</table>
+   % endif
+</%def>
+<%
+    category_map = {
+        'license_window': _('Licensing window alerts'),
+        'pool_over_quota': _('Pool quota overage alerts'),
+        'orphan_slave': _('Orphaned indexer alerts'),
+        'pool_warning_count': _('Pool warnings'),
+        'pool_violated_slave_count': _('Pool violations')
+    }
+%>
+
+<div class="dataInputsWrapper">
+
+<h1>
+    % if category:
+        ${category_map.get(category) | h}
+    % else:
+        ${_('All licensing alerts')}
+    % endif
+    (${len(all_messages)})
+</h1>
+
+<p class="prose">
+    ${_('License alerts notify you of excessive indexing warnings and licensing misconfigurations. If you receive too many warnings, your indexer will be in violation of the license and you will not be able to search.')}
+    ${_('<a class="spl-icon-external-link-xsm" href="%s" target="_blank">Learn more</a>') % generateSelfHelpLink('license.alerts')}
+</p>
+<style>
+    td, th {
+        padding: 5px 10px !important;
+    }
+</style>
+
+% if category: 
+    ${show_message_table(all_messages)}
+% else: 
+    <div class='subGroupTitle'> Current: </div>
+    ${show_message_table(soft_messages)}
+    <div class='subGroupTitle'> Permanent: </div>
+    ${show_message_table(hard_messages)} 
+% endif
+
+% if category:
+    <p>
+        <a href="${make_url(['manager','system','licensing','messages'])}">${_('Show messages for all alert types')}</a>
+    </p>
+% endif
+
+<p>
+    <a href="${return_to | h}">${_('&laquo; return to overview')}</a>
+</p>
+
+</div>

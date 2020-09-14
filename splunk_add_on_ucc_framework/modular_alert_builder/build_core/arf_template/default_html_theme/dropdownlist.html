@@ -1,0 +1,9 @@
+<%page args="mod_alert, param"/>
+<%inherit file="basecontrol.html"/>
+<%block name="control" args="mod_alert, param">
+<select name="action.${mod_alert.short_name}.param.${param.name}" id="${mod_alert.short_name}_${param.name}">
+    % for option, value in param.possible_values.items():
+        <option value="${value}">${option}</option>
+    % endfor
+</select>
+</%block>

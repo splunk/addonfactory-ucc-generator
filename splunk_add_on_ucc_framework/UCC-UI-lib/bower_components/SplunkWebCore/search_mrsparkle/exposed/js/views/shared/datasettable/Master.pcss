@@ -1,0 +1,294 @@
+$cutBackgroundColor: color($red blend($white 75%));
+$selectedBackgroundColor: color($blue blend($white 75%));
+
+.shared-datasettable-docking-header {
+    overflow: auto;
+}
+
+.shared-datasettable {
+    position:relative;
+
+    &.disabled {
+        opacity: 0.5;
+
+        .scroll-table-wrapper {
+            max-width: 100%;
+            overflow: hidden;
+        }
+    }
+
+    .shared-waitspinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 100;
+    }
+
+    .scroll-table-wrapper {
+        height: auto;
+    }
+
+    .table {
+        min-width: 0;
+    }
+
+    .header-table-wrapper {
+        border-bottom-color: $tableBorder;
+
+        .icon-ipv4:before {
+            font-family: inherit;
+            content: 'IP';
+            font-size: 75%;
+        }
+    }
+
+    .table-results {
+        table-layout: fixed;
+        width: 0; /*with fixed layout browsers treat this as min-width SPL-113744.*/
+        margin-right: -1px;
+        border-collapse: separate;
+        background-color: white;
+    }
+
+    th {
+        font-size: $fontSizeLarge;
+        line-height: 22px;
+        position: relative;
+        box-sizing: border-box;
+        border-left: none;
+        border-right: none;
+        user-select: none;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+
+        &:first-child {
+            font-size: 22px;
+            width: 60px;
+            text-align: right;
+        }
+
+        &.grabbed, &.column-selected:active, &.column-selected-end:active {
+            cursor: move;
+            cursor: grabbing;
+        }
+
+        &.field {
+            width: 200px;
+            padding-right: 25px;
+        }
+
+        &.field.type-raw {
+            width: 600px;
+        }
+
+        &.over-right {
+            border-right: 4px solid $blue !important;
+            padding-top: 0px;
+            padding-left: 9px;
+            right: 1px;
+
+            i.field-type {
+                right: 9px;
+            }
+
+            > .resize {
+                right: -5px;
+                border-left: none;
+                border-right: none;
+            }
+
+        }
+
+        &.over-left {
+            border-left: 4px solid $blue !important;
+            padding-top: 0px;
+            padding-left: 9px;
+            left: -5px;
+
+            i.field-type {
+                right: 9px;
+            }
+
+            > .resize {
+                right: -3px;
+            }
+        }
+
+        &:hover:not(.column-selected):not(.column-selected-end):not(.disabled),
+        &.hover:not(.column-selected):not(.column-selected-end):not(.disabled) {
+            background: $tableBackgroundHover;
+        }
+
+        &.column-selected, &.column-selected-end {
+            background-color: $selectedBackgroundColor;
+            border-top: 2px solid $blue !important;
+            padding-top: 2px;
+
+            cursor: move;
+            cursor: grab;
+        }
+
+        &:not(.column-selected):not(.column-selected-end) + th.column-selected,
+        &:not(.column-selected):not(.column-selected-end) + th.column-selected-end,
+        &.column-selected:first-child {
+            border-left: 2px solid $blue;
+            padding-left: 6px;
+        }
+
+        &.column-selected-end {
+            border-right: 2px solid $blue;
+
+            &:last-child {
+                padding-right: 24px;
+            }
+
+            i.field-type {
+                margin-right: -2px;
+                margin-top: -2px;
+            }
+        }
+
+        &.column-cut,  &.column-cut-end {
+            background-color: $cutBackgroundColor !important;
+        }
+
+        span.name {
+            display: block;
+            white-space: nowrap;
+            word-break: normal;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        i.field-type {
+            position: absolute;
+            top: 4px;
+            right: 14px;
+            color: $textGray;
+        }
+    }
+
+    .resize {
+        display: block;
+        position: absolute;
+        right: 2px;
+        top: 2px;
+        bottom: 2px;
+        width: 1px;
+        border-left: 1px dotted $tableBorder;
+        border-right: 1px dotted $tableBorder;
+        cursor: ew-resize;
+    }
+
+    tr + tr {
+        border-top: 1px dashed $tableBorder;
+    }
+
+    td {
+
+        &.value {
+            font-family: $monoFontFamily;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            min-width: 100px;
+
+            &:hover:not(.selected):not(.column-selected):not(.column-selected-end):not(.disabled) {
+                background: $tableBackgroundHover;
+            }
+
+            &.epoch-time {
+                font-family: inherit;
+                color: $textGray;
+                font-style: italic;
+            }
+
+            &.null-cell {
+                font-family: inherit;
+                background-color: $offWhite;
+                color: $textDisabledColor;
+                font-style: italic;
+            }
+        }
+
+        &.hover:not(.selected):not(.column-selected):not(.column-selected-end):not(.disabled) {
+            background: $tableBackgroundHover;
+        }
+
+        &.selected, &.column-selected, &.column-selected-end {
+            background-color: $selectedBackgroundColor !important;
+        }
+
+        &.selected, &.text-selected {
+            border: 2px solid $blue;
+            padding: 3px 6px 2px 6px;
+
+            &:last-child {
+                padding-right: 18px;
+            }
+        }
+
+        &:not(.column-selected):not(.column-selected-end) + td.column-selected,
+        &:not(.column-selected):not(.column-selected-end) + td.column-selected-end,
+        &.row-num.column-selected {
+            border-left: 2px solid $blue;
+            padding-left: 6px;
+        }
+
+        &.column-selected-end {
+            border-right: 2px solid $blue;
+            padding-right: 6px;
+
+            &:last-child {
+                padding-right: 18px;
+            }
+        }
+
+        &.column-cut, &.column-cut-end {
+            background-color: $cutBackgroundColor !important;
+        }
+
+        &.row-num {
+            color: $textGray;
+            text-align: right;
+        }
+
+        &.row-type {
+            width: 90px;
+        }
+
+        &.truncated {
+            background-color: $tableBackgroundAccent;
+            text-align: center;
+        }
+
+        &.mismatched-type span {
+            color: $red;
+        }
+
+        .highlight {
+            background-color: $selectedBackgroundColor;
+        }
+
+        div.multivalue {
+            position: relative;
+
+            .selection {
+                color: transparent;
+
+                + .real-text-wrapper {
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    top: 0;
+                    bottom: 0;
+                }
+            }
+        }
+    }
+
+    tr:last-child td.column-selected, tr:last-child td.column-selected-end {
+        border-bottom: 2px solid $blue;
+        padding-bottom: 2px;
+    }
+}

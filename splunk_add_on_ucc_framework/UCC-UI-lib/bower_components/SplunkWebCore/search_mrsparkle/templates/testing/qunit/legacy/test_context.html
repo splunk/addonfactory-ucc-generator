@@ -1,0 +1,241 @@
+<%inherit file="//qunit/template.html" />
+
+<%def name="title()">Splunk.Context -- QUnit tests</%def>
+
+<script type="text/javascript" src="/en-US/static/js/job.js"></script>
+<script type="text/javascript" src="/en-US/static/js/jobber.js"></script>
+<script type="text/javascript" src="/en-US/static/js/context.js"></script>
+<script type="text/javascript" src="/en-US/static/js/search_context.js"></script>
+<script type="text/javascript" src="/en-US/static/js/time_range.js"></script>
+<script type="text/javascript" src="/en-US/static/js/page_status.js"></script>
+<script type="text/javascript" src="/en-US/static/js/test_utils.js"></script>
+
+<script language="javascript">
+    // important to disable the chatty debug that the tests spew.
+    Splunk.Logger.mode.Default = Splunk.Logger.mode.None
+</script>
+<script type="text/javascript" src="/en-US/static/js/init.js"></script>
+
+
+<script type="text/javascript">
+    ////////////////////////////////////////////////////////////////////////////
+    // SHARED VARIABLES AND UTILS
+    ////////////////////////////////////////////////////////////////////////////
+    var logger = Splunk.Logger.getLogger("context.html", Splunk.Logger.mode.Firebug);
+
+
+
+    var simpleCases = [
+        {"foot":          1},
+        {"bar":          0},
+        {"baz":          true},
+        {"bat":          false},
+        {"foo.bart":      "And"}, 
+        {"foo.bar.baz" : "Saint"},
+        {"foo.bar.foo" : "Attila"},
+        {"fields" : ["host", "source", "sourcetype"]},
+        
+        {"cux"         : {
+                "raised" : "the", 
+                "handgrenade": "up on high"
+            }
+        },
+        {"cuux.foo"        : {
+                "saying"   : "Oh",
+                "lord"     : "bless"
+            }
+        },
+        {"foo.someCallback" : function() {return "expectedReturnValue"}}
+    ]
+    var overlappingCases = [
+        {"foo" : 1},
+        {"foo.bar" : 2},
+        {"foo.baz" : 3},
+        {"foo.bar.fred" : 5}
+    ]
+    function setKeys(context, map) {
+        for (key in map) {
+            context.set(key, map[key]);
+        }
+    }
+
+    function crossCheckKeys(context, expectedMap, message) {
+        for (key in expectedMap) {
+            var keyMessage = message + " key=" + key;
+            var expected = expectedMap[key];
+            var received = context.get(key);
+            if (expected instanceof Object) {
+                // extend adds a toJSON method and objectSimilarity thinks this is a valid difference.
+                // patch for now. 
+                if (received) {
+                    delete(received.toJSON);
+                }
+                if (expected instanceof Array) {
+                    assertEquals(keyMessage + " array case", expected.join(" - "), received.join(" - "));
+                }
+                else {
+                    assertTrue(keyMessage, Splunk.util.objectSimilarity(expected, received));
+                }
+            } else {
+                assertEquals(keyMessage, expected, received);
+            }
+            assertTrue("check for the key " + key, context.has(key));
+            
+        }
+    }
+    ////////////////////////////////////////////////////////////////////////////
+    // TESTS
+    ////////////////////////////////////////////////////////////////////////////
+    
+    function test_smoke() {
+        var context = new Splunk.Context();
+        context.set("foo", 10);
+        assertEquals("at least basic get/set works", 10, context.get("foo"));
+
+    }
+    function test_getSetSingleKey() {
+        for (var i=0,len=simpleCases.length; i<len; i++) {
+            var context = new Splunk.Context();
+            var testCase = simpleCases[i];
+            setKeys(context, testCase);
+            crossCheckKeys(context, testCase, "check we can get our value out " + testCase);
+        } 
+    }
+    function test_getSetMultipleKeys() {
+        // Since in this test we pair up i with len-i,  we only iterate to just the midpoint of the 
+        // testcase array
+        for (var i=0,len=Math.floor(simpleCases.length-1/2); i<len; i++) {
+            var context = new Splunk.Context();
+            
+            // set the i'th set of keys
+            var set1 = simpleCases[i]
+            setKeys(context, set1);
+            crossCheckKeys(context, set1, "check that the keys from the first testcase were set");
+            
+            // also set the (len-i)'th set of keys
+            var set2 = simpleCases[len-i];
+            setKeys(context, set2);
+            crossCheckKeys(context, set2, "check that the keys from the second testcase were set");
+            
+
+            crossCheckKeys(context, set1, "check that the keys from the first testcase are STILL set");
+            
+        } 
+    }
+    function test_getSetAllKeys() {
+        var context = new Splunk.Context();
+        for (var i=0,len=simpleCases.length; i<len; i++) {
+            setKeys(context, simpleCases[i]);
+            crossCheckKeys(context, simpleCases[i], "check that the keys from the ith testcase were set");
+        }
+        for (var i=0,len=simpleCases.length; i<len; i++) {
+            crossCheckKeys(context, simpleCases[i], "check that the keys from the ith testcase are still set");
+        }            
+    }
+
+    function test_getSetOverlappingKeys() {
+        var context = new Splunk.Context();
+        for (var i=0,len=overlappingCases.length; i<len; i++) {
+            setKeys(context, overlappingCases[i]);
+            crossCheckKeys(context, overlappingCases[i], "check that the keys from the ith testcase were set");
+        }
+        for (var i=0,len=overlappingCases.length; i<len; i++) {
+            crossCheckKeys(context, overlappingCases[i], "check that the keys from the ith testcase are still set");
+        }            
+    }
+    // when you call context.set(namespace, someObject),  and the object implements clone, 
+    // and then you modify someObject further,  those modifications do NOT EFFECT the internal value in the context. 
+    // set is effectively a snapshot.
+    function test_clonableObjectsClonedOnAssignment() {
+        var contextUnderTest = new Splunk.Context();
+        var expectedFoo = "fred";
+        var outsideReference = new mockClonableObject();
+        outsideReference.foo = expectedFoo;
+        contextUnderTest.set("quincunx", outsideReference);
+        
+        // we can modify this guy here, but it should NOT effect the copy in the context. 
+        outsideReference.foo = "mildred";
+        var immaculateContext = contextUnderTest.get("quincunx");
+        assertEquals("check that modifying the original reference did not alter the context's internal reference.", expectedFoo, immaculateContext.foo);
+    }
+    // when you call context.get(namespace), and the object implements clone, 
+    // then you modify the value you received,  the modifications do NOT EFFECT the internal value in the context.
+    function test_clonableObjectsNotReturnedByReference() {
+        var contextUnderTest = new Splunk.Context();
+        var expectedFoo = "fred";
+        var obj = new mockClonableObject();
+        obj.foo = expectedFoo;
+        contextUnderTest.set("quincunx", obj);
+        
+        var gettedContext = contextUnderTest.get("quincunx");
+        gettedContext.foo = "mildred";
+        var secondGettedContext = contextUnderTest.get("quincunx");
+        assertEquals("check that modifying the returned value did not alter the context's internal reference.", expectedFoo, secondGettedContext.foo);
+    }
+
+    function test_literalObjectsNotReturnedByReference() {
+        for (var i=0,len=simpleCases.length; i<len; i++) {
+            var context = new Splunk.Context();
+            var testCase = simpleCases[i];
+            setKeys(context, testCase);
+            
+            for (key in testCase) {
+                var localVar = context.get(key);
+                localVar = "foo";
+            }
+            crossCheckKeys(context, testCase, "check that the internal context values are unchanged." + testCase);
+        }
+    }
+
+    function test_undefinedValues() {
+        for (var i=0,len=simpleCases.length; i<len; i++) {
+            var context = new Splunk.Context();
+            var testCase = simpleCases[i];
+            setKeys(context, testCase);
+            for (key in testCase) {
+                mangledKey = key + "_mangled";
+                var shouldBeNull = context.get(mangledKey);
+                assertEquals("there should be a null value for " + mangledKey, null, shouldBeNull);
+            }
+        } 
+    }
+    function test_singlePropertyClone() {
+        var context = new Splunk.Context();
+        for (var i=0,len=simpleCases.length; i<len; i++) {
+            var testCase = simpleCases[i];
+            setKeys(context, testCase);
+            var clonedContext = context.clone();
+            crossCheckKeys(clonedContext, testCase, "check that the cloned context has the same value. " + testCase);
+        }    
+    }
+    function test_multiPropertyClone() {
+        var context = new Splunk.Context();
+        for (var i=0,len=simpleCases.length; i<len; i++) {
+            setKeys(context, simpleCases[i]);
+        }
+        var clonedContext = context.clone();
+        for (var i=0,len=simpleCases.length; i<len; i++) {
+            crossCheckKeys(clonedContext, simpleCases[i], "check that the cloned context has all the same keys");
+        }
+    }
+
+    function test_branchNodeAccess() {
+        var context = new Splunk.Context();
+        context.set("foo.bar", "12");
+        context.set("foo.baz", "98");
+        context.set("foo.baz.bat", "124");
+        context.set("saint.attila");
+        var hash = context.getAll("foo");
+        assertTrue("check that matching branch values were returned", hash.hasOwnProperty("bar"))
+        assertTrue("check that matching branch values were returned", hash.hasOwnProperty("baz"))
+        assertTrue("check that matching branch values were returned", hash.hasOwnProperty("baz.bat"))
+        
+        assertEquals("check the value is correct", "12",  hash["bar"]);
+        assertEquals("check the value is correct", "98",  hash["baz"]);
+        assertEquals("check the value is correct", "124", hash["baz.bat"]);
+
+        assertFalse("check that non matching values are not returned", hash.hasOwnProperty("saint"));
+        assertFalse("check that non matching values are not returned", hash.hasOwnProperty("saint.attila"));
+    }
+    
+</script>

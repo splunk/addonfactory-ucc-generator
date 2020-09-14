@@ -1,0 +1,55 @@
+.DashboardTitleBar .modecontrols {
+    margin-left: 20px;
+	float: right;
+    *width:13em;
+}
+.DashboardTitleBar .modecontrols .modecontrols-label {
+	font-weight: bold;
+	line-height: 25px;
+	margin-right:1em;
+    float: left;
+}
+.DashboardTitleBar .controls {
+  float: right;
+  display:inline-block;
+}
+.DashboardTitleBar .viewmode,
+.DashboardTitleBar .editmode,
+.DashboardTitleBar .readonly 
+{
+	float: right;
+}
+.DashboardTitleBar .splHeader-primary {
+	border:none;
+	line-height:21px;
+}
+.DashboardTitleBar .splHeader-primary h2 {
+	display:block;
+	float:left;
+	margin-left:0;
+}
+.DashboardTitleBar .message_rowgrouping {
+	color: #999;
+	font-style: italic;
+	font-size: 11px;
+	width: 100%;
+	text-align: right;
+	float: right;
+}
+.DashboardTitleBar .modecontrols span.splRadio-control label,
+.DashboardTitleBar .modecontrols label.modecontrols-label
+{
+    padding-top: 0px;
+}
+.TitleBarSchedulePDFPopup .pdfpreviewlink {
+	padding: 10px;
+	margin: 10px;
+	border: 1px solid #ccc;
+	font-size: 12px;
+	font-style: italic;
+	color: #666;
+}
+.TitleBarSchedulePDFPopup .pdfpreviewlink a {
+	display: block;
+	font-style: normal;
+}

@@ -1,0 +1,11 @@
+.splunk-choice-input .splunk-choice-input-message {
+    color: gray;
+    font-size: 11px;
+    height: 0;
+    overflow: visible;
+    margin-top: -5px;
+}
+
+.splunk-choice-input {
+    padding-bottom: 20px;
+}

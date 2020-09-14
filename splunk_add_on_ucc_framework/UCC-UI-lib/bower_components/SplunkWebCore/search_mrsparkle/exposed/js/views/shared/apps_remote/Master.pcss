@@ -1,0 +1,292 @@
+/*  Splunk: Page: Apps Remote */
+/*  ==================== */
+
+$appsRemoteSidebarMargin:20px;
+$appsRemoteSidebarWidth: 260px;
+$appsRemoteSidebarOuterWidth: calc(260px + ($appsRemoteSidebarMargin * 2));
+
+/*  ---- general ----- */
+
+.section-header {
+    border-bottom:1px solid $borderColor;
+    padding-bottom: 10px;
+}
+
+.appsremote-sortfilter {
+    margin: -5px 0  5px -10px;
+}
+
+.content-area {
+    position: relative;
+    @mixin clearfix;
+
+    /*  white sidebar background */
+    &:before {
+        content:'';
+        position: absolute;
+        top:0;
+        bottom:0;
+        left:0;
+        width: calc(260px + ($appsRemoteSidebarMargin * 2));
+        border-right:1px solid $borderColor;
+        background-color: $white;
+        display:block;
+    }
+}
+
+/*  ---- sidebar ---- */
+
+.shared-appsremote-filterbar {
+    width:$appsRemoteSidebarWidth;
+    padding: $appsRemoteSidebarMargin;
+    box-sizing: border-box();
+    margin-right:-1px;
+    position:relative;
+    z-index:2;
+    min-height: 1040px;
+
+    .control-label {
+        margin-top: 5px;
+        color: $textGray;
+        font-size: $baseFontSizeSmall;
+        text-transform: uppercase;
+    }
+    .control-group + .control-group > .control-label {
+        margin-top: 25px;
+    }
+}
+
+.text-filter-control-wrapper {
+    margin: -20px  -20px  0  -20px;
+
+    .text-filter-control {
+        padding: 15px 20px 10px 20px;
+        box-sizing: border-box;
+        white-space: nowrap;
+        &.affix-top {
+            left: 0;
+            top: 0;
+            right: 0;
+            background-color: $white;
+            z-index: 406;
+            position: fixed;
+            right:0;
+            @mixin affix-top-shadow;
+        }
+    }
+
+    &, .text-filter-control {
+       min-height: 72px;
+    }
+
+    .search-query {
+        width: calc($appsRemoteSidebarWidth - 41px);
+    }
+}
+
+.tags {
+    margin-bottom:20px;
+}
+
+.tag {
+    color: $white;
+    background: $linkColor;
+    border-radius: 10px;
+    line-height: 20px;
+    padding: 0 8px 0 10px;
+    display: inline-block;
+
+    &:hover, &:focus {
+        background: $linkColorHover;
+        color: $white;
+        text-decoration:none;
+    }
+    &:focus {
+        @mixin focus-button;
+    }
+}
+
+/*  ---- results ---- */
+
+.results-control-bar {
+    margin-left: $appsRemoteSidebarOuterWidth;
+    margin-bottom: 5px;
+
+    .pagination {
+        margin: -5px 0;
+    }
+}
+
+.results-control-bar-inner {
+    padding: 15px 20px 10px 20px;
+    box-sizing: border-box;
+    border-left: 1px solid $borderColor;
+}
+
+.results-control-bar,
+.results-control-bar-inner {
+    min-height: 72px;
+}
+
+.results-control-bar-inner.affix-top {
+    left: $appsRemoteSidebarOuterWidth;
+    top: 0;
+    right: 0;
+    background-color: rgb(227,227,227);
+    z-index: 407;
+    position: fixed;
+}
+
+.results {
+    margin-left:$appsRemoteSidebarOuterWidth;
+    padding:0 0 0 20px;
+
+    .app-list-placeholder {
+        margin-top: 50px;
+    }
+}
+
+.results-pane {
+    .shared-waitspinner {
+        left:50%;
+        top: 200px;
+        margin-left: calc($appsRemoteSidebarOuterWidth / 2);
+        position: absolute;
+        text-align: center;
+    }
+}
+
+/*  ---- app boxes ---- */
+
+.result-app-wrapper,
+.add-on-tile-wrapper {
+    width: 100%;
+    box-sizing: border-box;
+    display: inline-block;
+    padding-right: 20px;
+    margin-bottom: 20px;
+    vertical-align: top;
+}
+
+@media screen and (min-width: 1400px) {
+    .result-app-wrapper {
+        width: 50%;
+    }
+}
+
+@media screen and (min-width: 2000px) {
+    .result-app-wrapper {
+        width: 33%;
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .add-on-tile-wrapper {
+        width: 50%;
+    }
+}
+
+.app {
+    padding: 20px 20px 14px 20px;
+    position: relative;
+    background-color: $white;
+    border: 1px solid $borderColor;
+    border-radius: 2px;
+
+    .divider {
+        margin: 10px -20px;
+        border-color: $grayLighter;
+    }
+}
+
+.app-icon {
+    float: left;
+    width: 36px;
+    margin-right: 10px;
+    text-align:top;
+}
+
+.app-icon img {
+    width: 72px;
+}
+
+.app h3 {
+    font-size: 18px;
+    line-height: 36px;
+    margin-bottom: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align:top;
+    margin:0 20px 20px 10px;
+}
+
+.app-description {
+    margin-bottom: 10px;
+    min-height: 80px;
+    white-space:pre-wrap;
+}
+
+@media screen and (min-width: 1400px) {
+    .result-app-wrapper .app-description {
+        min-height: 95px;
+    }
+}
+
+.app-description-full {
+    display:none;
+    max-height: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.app-actions {
+    min-height: 26px;
+}
+
+.app-actions-placeholder {
+    float:right;
+    margin-left:20px;
+}
+
+.app-certified {
+    background: no-repeat left center;
+    background-size: 12px 16px;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAgCAYAAAAIXrg4AAAA8klEQVRIx2NwvqQwH4j/0wgnMNDQcBB+T2sL/o9aMIgt8L+qR1sLFr6c8P/Cl+P/i+5G0M4CGKDEIpwWTH3W9B8dkGMR3kgGGQYylBKLiEpF0Tds/u98t5osi0hKpvgsAslRLR9gswiXT8iyoOtxyf8XPx9T3wJsBn/+8xGcpHFlTAZaGUyUBZQYTFJOJsdgoi0g12CiigpKDB6t0YjF90EWNNCqTQRueIEAkGEAxOepaPh6IFZgQAdAwQKozeQaDHKkAwM+ALIZ6gJSg6OAgRQA1BAAiiQiDAc1ngUYyAEgjUDcT3ZwkGARKBHsx0gdRAAARPNzHwPy5LEAAAAASUVORK5CYII=');
+    font-size:  $baseFontSizeSmall;
+    padding-left: 16px;
+    margin-bottom:10px;
+}
+
+.app-detail {
+    white-space:nowrap;
+    max-width: 100%;
+    overflow:hidden;
+    display:inline-block;
+    font-size: $baseFontSizeSmall;
+}
+
+/*  ---- dialog ----- */
+
+.username-placeholder {
+    padding-bottom: 10px;
+}
+
+.rights {
+    padding-top: 10px;
+}
+
+.license-agreement {
+    display: inline-block;
+    padding-bottom: 10px;
+}
+
+.successbtn {
+    display: block;
+    margin-top: 10px;
+}
+
+/*  ---- error ---- */
+
+.alert {
+    margin-left: 20px;
+}

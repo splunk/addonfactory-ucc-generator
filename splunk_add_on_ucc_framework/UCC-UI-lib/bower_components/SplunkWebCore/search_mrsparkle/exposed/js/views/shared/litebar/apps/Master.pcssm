@@ -1,0 +1,21 @@
+/* toggle */
+
+.view {
+    composes: view from '../../Menu.pcssm';
+    height: 40px;
+    float: left;
+    border-left: 1px solid $gray;
+    border-right: 1px solid $gray;
+}
+
+.toggle {
+    composes: toggle from '../Master.pcssm';
+}
+
+.appName {
+    display: inline-block;
+    vertical-align: middle;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: calc((100vw - 800px) / 2);
+}

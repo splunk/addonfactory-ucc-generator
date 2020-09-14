@@ -1,0 +1,115 @@
+<%page args="namespace, view_id, view_object, panel_sequence, chart_drilldown_types, table_drilldown_types, APP" />
+<%namespace name="lib" file="//lib.html" import="*"/>
+<%!
+import splunk.util, splunk.entity
+%>
+<%
+    savedSearches = splunk.entity.getEntities('saved/searches', namespace=APP['id'], count=500)
+    
+    panelObject = view_object.getPanelBySequence(panel_sequence)
+    panelClass = panelObject.matchTagName
+    
+    panelClassTypes = [
+        ('table', _('Data table')),
+        ('chart', _('Chart')),
+        ('single', _('Single value')),
+        ('event', _('Event viewer'))
+    ]
+    
+    inlineSearchString = panelObject.searchCommand if panelObject.searchMode == 'string' else ''
+    
+%>
+<%doc> 
+  In general creating an option.foo tag is much simpler than this
+  however since the defaults depend on the panelClass, 
+  we need to create two sets of radios that both end up being a single option key...
+  NOTE: in viewmaster.js, these elements are actually removed from the form right before 
+        we submit. 
+</%doc> 
+<%def name="buildDrilldownRadios(drilldown_types, panelClass, default)">
+<%
+    selectedDrilldown = panelObject.options.get("drilldown", default);
+    # TODO - the second argument to get() above appears to do nothing in mako. Patching manually.
+    if (not selectedDrilldown) :
+        selectedDrilldown = default;
+%>
+    % for drilldown in drilldown_types :
+        <input type="radio" class="inlineradio"  name="${panelClass}_option.drilldown" id="vmpDrilldown_${panelClass}_${drilldown['value'] | h}" value="${drilldown['value'] | h}"
+        % if selectedDrilldown == drilldown["value"]:
+            checked="checked"
+        % endif
+        >
+        <label for="vmpDrilldown_${panelClass}_${drilldown['value'] | h}">${drilldown["name"] | h}</label>
+    % endfor
+</%def>
+
+<div class="vmPanelContainer">
+    <form name="vmEditPanel" class="entityEditForm vmEditPanel" method="POST" action="${make_url(['viewmaster', namespace, view_id, 'panel']) | h}" view_id="${view_id | h}" panel_sequence="${panel_sequence | h}" current_search_mode="${panelObject.searchMode | h}">
+        <div class="fieldsetWrapper">
+            <fieldset>
+                <legend>${_('Edit panel')}</legend>
+                <div>
+                    <label for="vmpPanelClass">${_('Panel type')}</label>
+                    <select name="panel_class" id="vmpPanelClass">
+                        <%lib:generate_select_options optionArray="${panelClassTypes}" selectedValue="${panelClass}" />
+                    </select>
+                </div>
+                <div>
+                    <label for="vmpTitle">${_('Title')}</label>
+                    <input type="text" id="vmpTitle" name="title" value="${panelObject.title or '' | h}" />
+                </div>
+
+                <fieldset class="drilldownOptions">
+                    <legend class="labelLegend">${_('Drilldown')}</legend>
+
+                    <%doc> 
+                        NOTE: onsubmit, if the panelClass is neither table nor chart, this hidden input gets removed entirely
+                        see comments about buildDrilldownRadios() for more details.
+                    </%doc> 
+                    <input type="hidden" name="option.drilldown" />
+                    
+                    <div class="radioset chartDrilldown">
+                        <%call expr="buildDrilldownRadios(chart_drilldown_types, 'chart', 'all')"></%call>
+                    </div>
+                    <div class="radioset tableDrilldown">
+                        <%call expr="buildDrilldownRadios(table_drilldown_types, 'table', 'row')"></%call>
+                    </div>
+                </fieldset>
+
+                <fieldset class="searchCommand">
+
+                    <legend class="labelLegend">${_('Search command')}</legend>
+                    <div class="radioset">
+                        <input type="radio" class="inlineradio" name="searchMode" id="vmpSearchModeSaved" value="saved">
+                        <label for="vmpSearchModeSaved">${_('Saved search')}</label>
+                        <input type="radio" class="inlineradio"  name="searchMode" id="vmpSearchModeString" value="string">
+                        <label for="vmpSearchModeString">${_('Inline search string')}</label>
+                    </div>
+                    <div class="searchModeString">
+                        <input type="text" class="control" id="vmpSearchCommandString" name="searchCommand" value="${inlineSearchString | h}" />
+                    </div>
+                    <div class="searchModeSaved">
+                        <select type="text" class="control" id="vmpSearchCommandSaved" name="searchCommand">
+                        % for name in savedSearches:
+                            % if panelObject.searchCommand == name:
+                                <option selected="selected">${name | h}</option>
+                            % else:
+                                <option>${name | h}</option>
+                            % endif
+                        % endfor
+                        </select>
+                    </div>
+                </fieldset>
+                <div class="searchModeString">
+                    <label for="vmpSearchEarliestTime">${_('Earliest time')}</label>
+                    <input type="text" class="control" id="vmpSearchEarliestTime" name="searchEarliestTime" value="${panelObject.searchEarliestTime or '' | h}" />
+                </div>
+                <div class="searchModeString">
+                    <label for="vmpSearchLatestTime">${_('Latest time')}</label>
+                    <input type="text" class="control" id="vmpSearchLatestTime" name="searchLatestTime" value="${panelObject.searchLatestTime or '' | h}" />
+                </div>
+            </fieldset>
+        </div>
+        <input type="submit" value="go" style="display:none" />
+    </form>
+</div>

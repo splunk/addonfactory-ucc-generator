@@ -1,0 +1,16 @@
+{
+  "name": "SplunkWebCore",
+  "description": "Splunk web core code",
+  "keywords": [
+    "corejs",
+    "splunkjs",
+    "build",
+    "webpack"
+  ],
+  "version": "6.5.1612",
+  "SHA": "8409b2ef04",
+  "_source": "art://SplunkWebCore/SplunkWebCore",
+  "_target": "=6.5.1612",
+  "_release": "6.5.1612",
+  "_originalSource": "SplunkWebCore"
+}

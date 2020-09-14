@@ -1,0 +1,54 @@
+
+<div class="main">
+    <div class="section-header">
+        <h2 class="section-title"><%= _('5. Review').t() %></h2>
+        <div class="label-instructions">
+            <%= _('Review your saved configuration details.').t() %>
+            <a href="<%= helpUrl %>" target="_blank"> <%- _("Learn more.").t()%><i class="icon-external"></i></a>
+        </div>
+        <div class="flash-messages-placeholder"></div>
+    </div>
+    <div class="section">
+        <div class="section-props">
+                <table>
+                    <tr>
+                        <td class="review-label"><%= _('Provider').t() %></td>
+                        <td class="review-value"><%= theProvider %></td>
+                    </tr>
+                    <tr>
+                        <td class="review-label"><%- _("Virtual Index").t() %></td>
+                        <td class="review-value"><%- vix %></td>
+                    </tr>
+                    <tr>
+                        <td class="review-label"><%= _('Source').t() %></td>
+                        <td class="review-value"><%= source %></td>
+                        <td class="edit-link"><a href="#" class="edit"><%= _('Edit').t() %></a>
+                    </tr>
+                    <tr>
+                        <td class="review-label"><%= _('Sourcetype').t() %></td>
+                        <td class="review-value"><%= sourcetype %></td>
+                    </tr>
+                    <tr>
+                        <td class="review-label"><%= _('App context').t() %></td>
+                        <td class="review-value"><%- appContext %></td>
+                    </tr>
+                    <tr>
+                        <td class="review-label"><%- _("Sharing Preference").t() %></td>
+                        <td class="review-value"><%- sharingSetting %></td>
+                    </tr>
+              
+                    <tr></tr>
+                </table>
+
+            </div>
+    </div>
+        <div class="section">
+            <div class="section-props">
+                <tr>
+                        <h3 class="label-instructions"><%= _('The following configuration has been added to your props.conf file. You can copy these to the clipboard for reuse.').t() %>
+                        </h3>
+                           <div class="textarea-placeholder textarea"></div>
+                </tr>
+            </div>
+        </div>
+    </div>

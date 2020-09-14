@@ -1,0 +1,73 @@
+/*  Splunk : Page: Deployment Server Add Apps */
+/*  ========================================= */
+
+/*  TODO: this should be common */
+.section-header {
+	@mixin clearfix;
+    position: relative;
+    padding: 10px 20px;
+
+    .btn-toolbar {
+    	float: right;
+    }
+}
+
+
+/*  FIXME: this should be shared by default; */
+.dashboard-panel {
+	margin-right: 0;
+	margin-bottom: 10px;
+	width: 45%;
+	min-height: 400px;
+	/*  add header to contain edit link */
+	.dashboard-header {
+		margin: -20px -20px 0px -20px;
+		padding: 2px 15px 0px 10px;
+		border-bottom: 1px solid $borderColor;
+	}
+	.dashboard-title {
+		font-size: $baseFontSizeLarge;
+		font-weight: normal;
+		color: $textColor;
+	}
+}
+
+.searchFilterContainer {
+	background-color: $grayLightMedium;
+	@mixin gradient-vertical $interactiveGradientStartColor, $interactiveGradientEndColor;
+	padding: 5px 10px;
+	border-bottom: 1px solid $borderColor;
+}
+
+.deploymentserver-search {
+	margin: 0 !important;
+}
+
+.apps-list {
+	list-style:none;
+	margin: 0;
+	li {
+		padding: 10px 20px;
+		border-bottom: 1px solid $tableBorder;
+		cursor: pointer;
+	}
+	li:hover {
+		background-color: $tableBackgroundAccentHover !important;
+	}
+	li:nth-child(even){
+		background-color: $tableBackgroundAccent;
+	}
+	.selectPrompt {
+		color: $textGray;
+	}
+}
+
+.alert-error {
+	margin: 70px 0px;
+}
+
+
+.paginator_container {
+  margin-left: -20px;
+  margin-right: -20px;
+}

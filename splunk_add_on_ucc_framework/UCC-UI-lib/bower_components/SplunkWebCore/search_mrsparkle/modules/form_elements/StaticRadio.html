@@ -1,0 +1,18 @@
+<%page args="module"/>
+
+<%def name="radio(text, value, name, id, checked=None)">\
+    <% checkedAttr = ('checked="checked"') if checked == str(text) else '' %>
+    <input type="radio" value="${value | h}" name="${name | h}" id="${id | h}" ${checkedAttr} />
+    <label for="${id | h}">${text | h}</label>
+    <br/>
+</%def>\
+
+% if module['params'].get('label'):
+<label class="StaticRadioTitle">${module['params'].get('label') | h}</label>
+% endif
+
+<fieldset>
+% for i, field in enumerate(module['staticFieldsToDisplay']):
+<%self:radio text="${field.get('label')}" value="${field.get('value','')}" name="${module['name']}" id="${module['name'] + '_' + str(i)}" checked="${module.get('checked')}" />
+% endfor
+</fieldset>

@@ -1,0 +1,40 @@
+See http://jira.splunk.com:8080/browse/SPL-21568
+
+*** jquery-1.4.2.js.org	2010-07-28 15:20:19.000000000 -0700
+--- jquery-1.4.2.js	2010-07-28 17:19:48.000000000 -0700
+***************
+*** 2609,2626 ****
+  // Window isn't included so as not to unbind existing unload events
+  // More info:
+  //  - http://isaacschlueter.com/2006/10/msie-memory-leaks/
+! if ( window.attachEvent && !window.addEventListener ) {
+! 	window.attachEvent("onunload", function() {
+! 		for ( var id in jQuery.cache ) {
+! 			if ( jQuery.cache[ id ].handle ) {
+! 				// Try/Catch is to handle iframes being unloaded, see #4280
+! 				try {
+! 					jQuery.event.remove( jQuery.cache[ id ].handle.elem );
+! 				} catch(e) {}
+! 			}
+! 		}
+! 	});
+! }
+  /*!
+   * Sizzle CSS Selector Engine - v1.0
+   *  Copyright 2009, The Dojo Foundation
+--- 2609,2623 ----
+  // Window isn't included so as not to unbind existing unload events
+  // More info:
+  //  - http://isaacschlueter.com/2006/10/msie-memory-leaks/
+! jQuery.fn.SplunkPatchWindowUnload = function(){
+!     for ( var id in jQuery.cache )
+!         // Skip the window
+!         if ( id != 1 && jQuery.cache[ id ].handle )
+!             jQuery.event.remove( jQuery.cache[ id ].handle.elem );
+! }; 
+! //Workaround for anonymous function assignment for onunload - see SPL-21568
+! jQuery( window ).bind( 'unload', jQuery.fn.SplunkPatchWindowUnload ); 
+! 
+  /*!
+   * Sizzle CSS Selector Engine - v1.0
+   *  Copyright 2009, The Dojo Foundation

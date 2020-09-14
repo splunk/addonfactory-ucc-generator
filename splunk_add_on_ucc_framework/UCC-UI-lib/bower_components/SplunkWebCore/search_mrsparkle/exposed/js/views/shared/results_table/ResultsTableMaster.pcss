@@ -1,0 +1,297 @@
+/*  Splunk: Component: results table */
+/*  ================================ */
+
+/* results table view
+    Sub-components: table-chrome, table-sorts, etc.
+
+    <div class="views-shared-resultstable" style="display: block;">
+        <div class="simpleResultsTableWrapper">
+            <table class="simpleResultsTable splTable table table-striped table-chrome enableMouseover">
+                <tbody>
+                    <tr class="">
+                        <th class="None sorts">
+                            <a><span class="sortLabel">count</span> </a>
+                        </th>
+                        <th class="None">
+                            <a><span class="sortLabel">host</span> </a>
+                        </th>
+                        <th class="None">
+                            <a><span class="sortLabel">percent</span> </a>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td field="count" class="d" ismin="1" ismax="1" heat="1.0">
+                            100
+                        </td>
+                        <td field="host" class="d">
+                            pkhalil-mbp15.sv.splunk.com
+                        </td>
+                        <td field="percent" class="d" ismin="1" ismax="1" heat="1.0">
+                            100.000000
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+*/
+
+/*  these styles are for the renderer in the timeline page */
+/*  FIXME: is this still used? */
+.shared-resultstable {
+
+	.simpleResultsTableWrapper {
+		width: 100%;
+		overflow: auto;
+	}
+
+	table .pos {
+		color: $textGray;
+		text-align: right;
+		font-size: 11px;
+		width: 50px;
+	}
+	/*  default table padding for first and last cell */
+	table  tr > th:first-child,
+	table  tr > td:first-child
+	{
+		padding-left: 20px;
+	}
+	table  tr > th:last-child,
+	table  tr > td:last-child
+	{
+		padding-right: 20px;
+	}
+
+	.table-chrome th a {
+		color: $textColor;
+		text-decoration: none;
+	}
+	.table-chrome th.pos:after {
+		content: "";
+	}
+}
+
+.results-table {
+    overflow-x: auto;
+    position: relative;
+    width: 100%;
+
+    /*  default table padding for first and last cell */
+    table tr > th:first-child,
+    table tr > td:first-child
+    {
+        padding-left: 20px;
+    }
+    table tr > th:last-child,
+    table tr > td:last-child
+    {
+        padding-right: 20px;
+    }
+
+    /* table column format button */
+    table tr > th .btn-col-format
+    {
+        margin: -4px -8px -4px 4px;
+        padding: 4px 6px;
+        color: $textGray;
+    }
+    table tr > th .btn-col-format:hover
+    {
+        color: $textColor;
+    }
+    table tr > th:last-child .btn-col-format
+    {
+            margin-right: -20px;
+    }
+    table tr > th.editing-column
+    {
+        background: #CCCCCC !important;
+    }
+
+    table tr > td:focus, table tr:focus > td
+    {
+        background: $tableBackgroundFocus !important;
+        outline: none;
+    }
+
+    table tr:focus
+    {
+        outline: none;
+    }
+
+    td.numeric {
+
+        .multivalue-subcell {
+            text-align: right;
+        }
+    }
+
+    td.timestamp,
+    th.timestamp {
+        min-width: 150px;
+    }
+
+    /*  custom rendering for a single column table, don't right align numeric columns */
+    table.single-column-table {
+
+        th.numeric {
+            text-align: left;
+        }
+
+        td.numeric {
+            text-align: left;
+
+            .multivalue-subcell {
+                text-align: left;
+            }
+        }
+    }
+
+    & > .table > tbody > tr > td.with-overlay {
+        padding-right: 20px !important;
+    }
+
+    .table {
+        margin-bottom: 0px;
+    }
+
+    /*  TODO: use some vars here */
+    .overlay-cell {
+        height: 24px;
+        width: 15px;
+        float: right;
+        margin: -4px -20px -24px 0;
+    }
+    .overlay-cell-value {
+        height: 24px;
+        width: 0;
+        border-left: 15px solid $tableBackgroundAccent;
+    }
+    .heat-value {
+        border-left-color: $red;
+    }
+    .max-value {
+        border-left-color: $red;
+    }
+    .min-value {
+        border-left-color: $blue;
+    }
+    .no-value {
+        border-left-color: transparent;
+    }
+
+    /*  do our own striping because the .table-striped comes with hover effects that we don't want */
+
+    .tbody tr.even td {
+        background-color: $tableBackground;
+    }
+
+    .tbody tr.odd td {
+        background-color: $tableBackgroundAccent;
+    }
+
+    /*  overrides for wrapping versus not wrapping the results */
+
+    .wrapped-results th,
+    .wrapped-results td {
+        white-space: normal;
+    }
+
+    .not-wrapped-results th,
+    .not-wrapped-results td {
+        white-space: nowrap;
+    }
+
+    /*  some classes for the cutom hover effects */
+
+    thead tr.sorts th.highlighted {
+        @mixin interactive-hover;
+    }
+
+    tbody td.highlighted, tbody tr.highlighted > td {
+        background-color: $tableBackgroundHover !important;
+        cursor: pointer;
+    }
+
+    tbody td.highlighted.color-formatted {
+        color: black !important;
+    }
+
+    .multivalue-subcell.highlighted {
+        background-color: $tableBackgroundHover !important;
+        cursor: pointer;
+    }
+
+    /*  styling for static table header */
+    .scroll-table-wrapper {
+        height: 100%;
+    }
+
+    /*  styling for row expansion */
+
+    th.col-info {
+        padding-left: 20px;
+        padding-right: 0px;
+
+        .icon-info {
+            display: block;
+            width: 15px;
+        }
+    }
+
+    table > tbody > tr > td.row-expansion-toggle {
+        border-right: 1px solid $tableBorderVertical;
+        padding: 0px;
+
+        a {
+            color: $textColor;
+            display: block;
+            padding: 4px 0px 4px 20px;
+            width: 15px;
+            height: 16px;
+        }
+
+        .icon-triangle-right-small:before {
+             content: "\203A";
+        }
+
+        .icon-triangle-down-small:before {
+             content: "\02C5";
+        }
+    }
+
+    tr.expanded-row td, tr.expanded-content-row td {
+        background-color: $tableBackgroundHover !important;
+    }
+
+    tr.expanded-content-row td {
+        border-top: none;
+        color: $textColor;
+    }
+
+}
+
+.shared-resultstabledrilldownpoptart {
+    &.dropdown-menu {
+        li.info {
+            max-height: 68px;
+            overflow-y: auto;
+
+            &+li{
+                &:after {
+                    content: '';
+                    display: block;
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    top: -8px;
+                    height: 8px;
+                    @mixin gradient-vertical color($white a(0)), $white;
+                    background-color: transparent;
+                }
+            }
+        }
+    }
+}

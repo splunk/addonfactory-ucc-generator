@@ -1,0 +1,82 @@
+.dropzone {
+  width:600px;
+  height:190px;
+  background-size: 600px 190px;
+  position: relative;
+  margin-top: 20px;
+
+  &.small {
+    width: 370px;
+    height: 140px;
+    background-size: 370px 140px;
+  }
+}
+
+.dropzone-icon {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin-top: -54px;
+	margin-left: -36px;
+	
+	@if $theme == enterprise {
+		.fill {
+			fill:$splunkGreen;
+		}
+	}
+	
+	@if $theme == lite {
+		.fill {
+			fill:$splunkLiteOrange;
+		}
+	}
+}
+
+
+.dropzone-box {
+	fill:none;
+	position: absolute;
+	left: 10px;
+	top: 5px;
+	display: block;
+	
+	.dashed {
+  		stroke-width: 2px;
+  		stroke-dasharray:10,10;
+  		
+  		@if $theme == enterprise {
+  			stroke:color($splunkGreen a(35%));
+  		}
+  		
+  		@if $theme == lite {
+  			stroke:color($splunkLiteOrange a(50%));
+  		}
+	}
+}
+
+.dropzone-text {
+  position: absolute;
+  bottom: 0;
+  left:0;
+  right: 0;
+  text-align: center;
+  
+  h2 {
+    color: $splunkGreen;
+  	background-color: $white;
+  	text-align: center;
+  	font-size:20px;
+  	font-weight:200;
+  	display: inline-block;
+  	margin: 0;
+  	padding: 5px 10px;
+  	
+  	@if $theme == enterprise {
+  		color: $splunkGreen;
+  	}
+  	
+  	@if $theme == lite {
+  		color: $splunkLiteOrange;
+  	}
+  }
+}

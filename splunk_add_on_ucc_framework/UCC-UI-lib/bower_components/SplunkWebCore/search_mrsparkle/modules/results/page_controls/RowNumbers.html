@@ -1,0 +1,9 @@
+<%page args="module"/>
+<%! import splunk.util %>
+<% 
+    enableRowNumbers = splunk.util.normalizeBoolean(module.get('displayRowNumbers', False)) 
+    # overwrite the deprecated param with the new standard param if it's present.
+    if ("default" in module["params"]) :
+        enableRowNumbers = splunk.util.normalizeBoolean(module.get('default', False)) 
+%>
+<input type="checkbox" name="displayRowNumbers" value="true" id="${module['id']}_checkbox"${' checked="checked"' if enableRowNumbers else ''}/><label for="${module['id']}_checkbox">${_('Display row numbers')}</label>

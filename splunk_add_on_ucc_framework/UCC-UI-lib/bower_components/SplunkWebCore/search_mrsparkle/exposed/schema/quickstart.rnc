@@ -1,0 +1,44 @@
+##
+## Splunk getting data in Quickstart guide info
+##
+
+start = Quickstart
+
+Quickstart = element quickstart { 
+    element title { text }
+    & Header?
+    & Optiongroup*
+    & Footer?
+}
+
+Optiongroup = element optiongroup {
+    element title { text }?
+    & Header?
+    & Option*
+    & Footer?
+}
+
+Option = element option {
+    attribute platforms { "unix" | "windows" | "Unix" | "Windows" }?
+    & element title { text }
+    & element summary { text }
+    & element doctarget { text }?
+    & Action*
+}
+
+Action = element action {
+    attribute type { "href" | "guide" | "install_app" | "add_monitor" | "add_network_tcp" | "add_network_udp" | "add_script" | "add_wmi" | "add_remote_eventlog" | "edit_local_eventlog" | "add_regmon" | "add_perfmon" }
+    & element target { text }?
+    & element wintarget { text }?
+    & element label { text }
+}
+
+Header = element header {
+    attribute type { "html" }?
+    & text
+}
+
+Footer = element footer {
+    attribute type { "html" }
+    & text
+}

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Login Tests</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" type="text/css" href="../static/splunkjs/css/bootstrap.css"/>
+     <style type="text/css">
+        .success{
+            color: green;
+        }
+        .fail{
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="dashboard-body container-fluid main-section-body" data-role="main">
+    <div class="row">
+        <div class="span12 dashboard-header clearfix">
+            <h2>Log in form test</h2>
+        </div>
+    </div>
+    <div class="dashboard-row">
+        <div class="dashboard-cell" style="width: 100%;">
+            <div class="dashboard-panel">
+                <div class="dashboard-element">
+                    <p>This is a test and sample for a login redirect page. It stores a session key in a cookie and redirects to another page that logs in with that key.</p>
+                    <h3>Steps:</h3>
+                    <ol>
+                        <li>Enter username as <b>admin</b> and password as <b>changeme</b> below (the defaults are correct)</li>
+                        <li>Click the login button</li>
+                        <li>If all is well, you will be redirected to a page with splunk controls</li>
+                        <li>If you are not re-directed, something went wrong. Check the console.</li>
+                    </ol>
+                    <p>Username:</p>
+                    <input id="usernamebox" type="text" value="admin" name="uname">
+                    <p>Password:</p>
+                    <input id="pwbox" type="password" value="changeme" name="pw">
+                    </br>
+                    <button class="btn" onclick="onLogin()">Log in</button>
+                    <div id="errorText"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../static/splunkjs/config.js"></script>
+<script>
+    require.config({baseUrl: '../static/'});
+
+    function onLogin() {
+        require([
+            'jquery',
+            'splunkjs/splunk',
+            'jquery.deparam'
+        ], function($, sdk, deparam) {
+            var username = $('#usernamebox').val();
+            var password = $('#pwbox').val();
+
+            var http =  new sdk.ProxyHttp('/proxy');
+                
+            var service = new sdk.Service(http, {
+                username: username,
+                password: password,
+                scheme: 'https',
+                host: 'localhost', 
+                port: 8089
+            });
+            
+            service.login(function(err) {
+                if (!err) {
+                    var key = service.sessionKey;
+                    $.cookie('splunk_sessionkey', key);
+                    window.location.href = 'test_login_form_landing.html';  
+                }
+                else {
+                    $('#errorText').empty().append('<p class="fail">Login failed, try again</p>');
+                    console.error('Login failed: ', err);
+                }              
+            });
+        });
+    }   
+</script>
+    
+</body>
+</html>
+

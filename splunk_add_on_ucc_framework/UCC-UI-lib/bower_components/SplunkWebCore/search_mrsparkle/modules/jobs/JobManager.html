@@ -1,0 +1,52 @@
+<%page args="module"/>
+<%
+currentUser = cherrypy.session['user']['name'].lower()
+currentApp = APP.get('id').lower()
+isLite = (cherrypy.config['product_type'] == 'lite' or cherrypy.config['product_type'] == 'lite_free')
+%>
+<div class="jobManagerWrapper">
+    <h2 class="jobManagerStatus loading "><div class="popupLoading">${_('Loading job data.')}</div></h2>
+    <h2 class="jobManagerStatus nojobs empty_results" style="display:none;">${_('No jobs found.')} <a href="">${_('Reload.')}</a></h2>
+    <table class="jobManagerGrid splTable">
+        <thead>
+            <tr class="jobManagerGridHeader">
+                <th></th>
+                <th class="sortable" abbr="dispatch_time"><a name="createTime">${_('Dispatched at')}<span class="splSortNone splSortDesc"></span></a></th>
+                <th class="sortable" abbr="user"><a name="user">${_('Owner')}<span class="splSortNone"></span></a></th>
+                % if not isLite:
+                    <th class="sortable" abbr="eai:acl.app"><a name="app">${_('Application')}<span class="splSortNone"></span></a></th>
+                % endif
+                <th class="sortable" abbr="diskUsage"><a name="diskUsage">${_('Size')}<span class="splSortNone"></span></a></th>
+                <th class="sortable" abbr="eventCount"><a name="eventCount">${_('Events')}<span class="splSortNone"></span></a></th>
+                <th class="sortable" abbr="runDuration"><a name="runDuration">${_('Run time')}<span class="splSortNone"></span></a></th>
+                <th class="sortable" abbr="ttl"><a name="ttl">${_('Expires')}<span class="splSortNone"></span></a></th>
+                <th>${_('Status')}</th>
+                <th class="jmActions">${_('Actions')}</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div><!--/jobManagerWrapper -->
+
+<div class="jmBatchActions">
+
+    <div class="jmSelect">
+        <span class="selectText">${_('Select')}&nbsp;<a href="#" class="selectAll">${_('All')}</a><span class="splPipe">|</span><a href="#" class="selectNone">${_('None')}</a></span>
+        <span class="jmBatchActionsText">${_('Selected jobs')}</span>
+        <button class="splButton-secondary save">
+            <span>${_('Save')}</span>
+        </button>
+        <button class="splButton-secondary pause">
+            <span>${_('Pause')}</span>
+        </button>
+        <button class="splButton-secondary unpause">
+            <span>${_('Resume')}</span>
+        </button>
+        <button class="splButton-secondary finalize">
+            <span>${_('Finalize')}</span>
+        </button>
+        <button class="splButton-secondary cancel">
+            <span>${_('Delete')}</span>
+        </button>
+    </div>
+</div>

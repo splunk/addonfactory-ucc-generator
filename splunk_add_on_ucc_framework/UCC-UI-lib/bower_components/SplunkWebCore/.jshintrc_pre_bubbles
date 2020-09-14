@@ -1,0 +1,63 @@
+{
+    "multistr": true,
+    "undef": false,
+    "expr": true,
+
+    // !! trick
+    "-W018": false,
+
+    // indentation off
+    "-W015": false,
+
+    // construct without ()
+    "-W058": false,
+
+    // initializing to undefined
+    "-W080": false,
+
+    // using new Object()
+    "-W010": false,
+
+    // using new Array()
+    "-W009": false,
+
+    // function declarations in blocks
+    "-W082": false,
+
+    // assignment in a return
+    "-W093": false,
+
+
+    // let's come back and fix these...
+
+    // == comparisons to 0, ''
+    "-W041": false,
+
+    // better written with dot notation
+    "-W069": false,
+
+    // mixing spaces and tabs
+    "-W099": false,
+
+    // used out of scope
+    "-W038": false,
+
+    // line break before &&
+    "-W014": false,
+
+    // bad escaping
+    "-W044": false,
+
+    // functions within a loop
+    "-W083": false,
+
+    // script URL
+    "-W107": false,
+
+    // ++ and --
+    "-W016": false,
+
+    // dangling _
+    "-W105": false
+
+}

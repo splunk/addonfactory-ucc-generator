@@ -1,0 +1,21 @@
+<%page args="module"/>
+<%namespace name="lib" file="//lib.html" import="*" />
+<%
+    options = [
+        ['column', _('column')],
+        ['line', _('line')],
+        ['area', _('area')],
+        ['bar', _('bar')],
+        ['pie', _('pie')],
+        ['scatter', _('scatter')],
+        ['radialGauge', _('radial gauge')],
+        ['fillerGauge', _('filler gauge')],
+        ['markerGauge', _('marker gauge')]
+    ]
+%>
+<fieldset>
+    <label for="${module['id']}_select">${_("Chart type")}</label>
+    <select id="${module['id']}_select">
+        <%lib:generate_select_options optionArray="${options}" selectedValue="${module['params'].get('default')}" />
+    </select>
+</fieldset>

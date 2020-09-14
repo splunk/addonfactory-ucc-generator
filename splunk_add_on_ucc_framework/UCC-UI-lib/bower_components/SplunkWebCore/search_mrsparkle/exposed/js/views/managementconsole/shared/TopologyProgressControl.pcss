@@ -1,0 +1,44 @@
+.progress-control {
+    vertical-align: middle;
+    margin-left: 10px;
+
+    .deployment-progress-bar {
+        margin-top: 5px;
+        margin-left: 5px;
+
+        .deployment-management-progress-bar {
+            display: none;
+            width: 300px;
+        }
+    }
+
+    .status-icon-section {
+        margin-top: 5px;
+    }
+
+    .progress-status {
+        margin-top: 5px;
+        margin-left: 10px;
+    }
+}
+
+.status-icon {
+    width: 15px;
+    font-size: 1.3em;
+
+    &.icon-neutral {
+        color: $yellow;
+    }
+
+    &.icon-negative {
+        color: $red;
+    }
+
+    &.icon-positive {
+        color: $green;
+    }
+
+    &.icon-info {
+        color: #3a87ad;
+    }
+}

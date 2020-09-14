@@ -1,0 +1,759 @@
+/*  Splunk: Mixins */
+/*  ================== */
+/*  Snippets of reusable CSS to develop faster and keep code readable */
+
+
+/*  Mixins */
+/*  -------------------------------------------------- */
+
+
+/*  UTILITY MIXINS */
+/*  -------------------------------------------------- */
+
+/*  Link */
+/*  ------------------ */
+@define-mixin link {
+    color: $linkColor;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+      color: $linkColorHover;
+      text-decoration: underline;
+    }
+    &:focus {
+      @mixin focus-link;
+    }
+}
+
+
+/*  Clearfix */
+/*  -------- */
+/*  For clearing floats like a boss h5bp.com/q */
+
+@define-mixin clearfix {
+    &:before,
+    &:after {
+        display: table;
+        content: "";
+        /*  Fixes Opera/contenteditable bug: */
+        /*  http://nicolasgallagher.com/micro-clearfix-hack/#comment-36952 */
+        line-height: 0;
+    }
+    &:after {
+        clear: both;
+    }
+}
+
+/*  Webkit-style focus */
+/*  ------------------ */
+@define-mixin tab-focus {
+  /*  Default */
+  outline: thin dotted #333;
+  /*  Webkit */
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+
+/*  Center-align a block level element */
+/*  ---------------------------------- */
+@define-mixin center-block  {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/*  Sizing shortcuts */
+/*  ------------------------- */
+@define-mixin size $height, $width {
+  width: $width;
+  height: $height;
+}
+@define-mixin square $size {
+  @mixin size $size, $size;
+}
+
+/*  Placeholder text */
+/*  ------------------------- */
+@define-mixin placeholder $color: $placeholderText {
+  &::placeholder {
+    color: $color;
+  }
+}
+
+/*  Text overflow */
+/*  ------------------------- */
+/*  Requires inline-block or block for proper styling */
+@define-mixin text-overflow  {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/*  CSS image replacement */
+/*  ------------------------- */
+/*  Source: https://github.com/h5bp/html5-boilerplate/commit/aa0396eae757 */
+@define-mixin hide-text {
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+}
+
+
+/*  FONTS */
+/*  -------------------------------------------------- */
+
+
+@define-mixin font-family-serif  {
+  font-family: $serifFontFamily;
+}
+@define-mixin font-family-sans-serif  {
+  font-family: $sansFontFamily;
+}
+@define-mixin font-family-monospace  {
+  font-family: $monoFontFamily;
+}
+@define-mixin font-shorthand $size: $baseFontSize, $weight: normal, $lineHeight: $baseLineHeight {
+    font-size: $size;
+    font-weight: $weight;
+    line-height: $lineHeight;
+}
+@define-mixin font-serif $size: $baseFontSize, $weight: normal, $lineHeight: $baseLineHeight {
+    @mixin font-family-serif;
+    @mixin font-shorthand $size, $weight, $lineHeight;
+}
+@define-mixin font-sans-serif $size: $baseFontSize, $weight: normal, $lineHeight: $baseLineHeight {
+    @mixin font-family-serif;
+    @mixin font-shorthand $size, $weight, $lineHeight;
+}
+@define-mixin font-monospace $size: $baseFontSize, $weight: normal, $lineHeight: $baseLineHeight {
+    @mixin font-family-monospace;
+    @mixin font-shorthand $size, $weight, $lineHeight;
+}
+
+
+/*  FORMS */
+/*  -------------------------------------------------- */
+
+/*  Block level inputs */
+@define-mixin input-block-level {
+  display: block;
+  width: 100%;
+  min-height: $inputHeight; /*  Make inputs at least the height of their button counterpart (base line-height + padding + border) */
+  box-sizing: border-box; /*  Makes inputs behave like true block-level elements */
+}
+
+/*  Mixin for form field states */
+@define-mixin formFieldState $textColor: #555, $borderColor: #ccc, $backgroundColor: #f5f5f5 {
+  /*  Set the text color */
+  .control-label,
+  .help-block,
+  .help-inline {
+    color: $textColor;
+  }
+  /*  Style inputs accordingly */
+  .checkbox,
+  .radio,
+  input,
+  select,
+  textarea {
+    color: $textColor;
+  }
+  input,
+  select,
+  textarea {
+    border-color: $borderColor;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075); /*  Redeclare so transitions work */
+    &:focus {
+      border-color: color($borderColor l(-10%));
+      $shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 6px color($borderColor l(+20%));
+      box-shadow: $shadow;
+    }
+  }
+  /*  Give a small background color for input-prepend/-append */
+  .input-prepend .add-on,
+  .input-append .add-on {
+    color: $textColor;
+    background-color: $backgroundColor;
+    border-color: $textColor;
+  }
+}
+
+
+/*  CSS3 PROPERTIES */
+/*  -------------------------------------------------- */
+
+
+/*  Single Side Border Radius */
+@define-mixin border-top-radius $radius {
+  border-top-right-radius: $radius;
+  border-top-left-radius: $radius;
+}
+@define-mixin border-right-radius $radius {
+  border-top-right-radius: $radius;
+  border-bottom-right-radius: $radius;
+}
+@define-mixin border-bottom-radius $radius {
+  border-bottom-right-radius: $radius;
+  border-bottom-left-radius: $radius;
+}
+@define-mixin border-left-radius $radius {
+  border-top-left-radius: $radius;
+  border-bottom-left-radius: $radius;
+}
+
+
+/*  Transformations */
+@define-mixin rotate $degrees {
+    transform: rotate($degrees);
+}
+@define-mixin scale $ratio {
+    transform: scale($ratio);
+}
+@define-mixin translate $x, $y {
+    transform: translate($x, $y);
+}
+@define-mixin skew $x, $y {
+    transform: skew($x, $y);
+    backface-visibility: hidden; /*  See https://github.com/twitter/bootstrap/issues/5319 */
+}
+
+
+
+/*  Resize anything */
+@define-mixin resizable $direction {
+  resize: $direction; /*  Options: horizontal, vertical, both */
+  overflow: auto; /*  Safari fix */
+}
+
+/*  CSS3 Content Columns */
+@define-mixin content-columns $columnCount, $columnGap: $gridGutterWidth {
+    column-count: $columnCount;
+    column-gap: $columnGap;
+}
+
+/*  Optional hyphenation */
+@define-mixin hyphens $mode: auto {
+    word-wrap: break-word;
+    hyphens: $mode;
+}
+
+
+
+
+/*  BACKGROUNDS */
+/*  -------------------------------------------------- */
+
+/*  Gradient Bar Colors for buttons and alerts */
+@define-mixin gradientBar $primaryColor, $secondaryColor, $textColor: #fff, $textShadow: 0 -1px 0 rgba(0,0,0,.25) {
+  color: $textColor;
+  text-shadow: $textShadow;
+  @mixin gradient-vertical $primaryColor, $secondaryColor;
+  border-color: rgba(0,0,0,.1) rgba(0,0,0,.1) rgba(0,0,0,.25);
+}
+
+/*  Gradients */
+@define-mixin gradient-horizontal $startColor: #555, $endColor: #333 {
+    background-color: $endColor;
+    background-image: linear-gradient(to right, $startColor, $endColor); /*  Standard, IE10 */
+    background-repeat: repeat-x;
+}
+@define-mixin gradient-vertical $startColor: #555, $endColor: #333 {
+    background-color: color($startColor blend($endColor 40%));
+    background-image: linear-gradient(to bottom, $startColor, $endColor); /*  Standard, IE10 */
+    background-repeat: repeat-x;
+}
+@define-mixin gradient-directional $startColor: #555, $endColor: #333, $deg: 45deg {
+    background-color: $endColor;
+    background-repeat: repeat-x;
+    background-image: linear-gradient($deg, $startColor, $endColor); /*  Standard, IE10 */
+}
+@define-mixin gradient-horizontal-three-colors $startColor: #00b3ee, $midColor: #7a43b6, $colorStop: 50%, $endColor: #c3325f {
+    background-color: color($midColor blend($endColor 30%));
+    background-image: linear-gradient(to right, $startColor, $midColor $colorStop, $endColor);
+    background-repeat: no-repeat;
+}
+@define-mixin gradient-vertical-three-colors $startColor: #00b3ee, $midColor: #7a43b6, $colorStop: 50%, $endColor: #c3325f {
+    background-color: color($midColor blend($endColor 30%));
+    background-image: linear-gradient($startColor, $midColor $colorStop, $endColor);
+    background-repeat: no-repeat;
+}
+@define-mixin gradient-radial $innerColor: #555, $outerColor: #333 {
+    background-color: $outerColor;
+    background-repeat: no-repeat;
+}
+@define-mixin gradient-striped $color: #555, $angle: 45deg {
+    background-color: $color;
+    background-image: linear-gradient($angle, rgba(255,255,255,.15) 25%, transparent 25%, transparent 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.15) 75%, transparent 75%, transparent);
+}
+@define-mixin gradient-vertical-two-color-stops $startColor: $interactiveGradientStartColor, $colorStop: 50%, $endColor: $interactiveGradientEndColor, $endColorStop: 100% {
+	background-color: color($startColor blend($endColor 20%)); /* Old browsers */
+	background-image: linear-gradient(to bottom, $startColor $colorStop, $endColor $endColorStop); /* W3C */
+}
+@define-mixin gradient-horizontal-two-color-stops $startColor, $colorStop, $endColor, $IE9ImageFallback {
+    background: $endColor $IE9ImageFallback left top repeat-y;
+    background: linear-gradient(to right, $startColor calc($colorStop - 1), transparent $colorStop ), $endColor; /*  w3c */
+}
+
+/*  Reset filters for IE */
+@define-mixin reset-filter  {
+  filter: e(%("progid:DXImageTransform.Microsoft.gradient(enabled = false)"));
+}
+
+
+
+/*  COMPONENT MIXINS */
+/*  -------------------------------------------------- */
+
+/*  Horizontal dividers */
+/*  ------------------------- */
+/*  Dividers (basically an hr) within dropdowns and nav lists */
+@define-mixin nav-divider $color: $borderColor {
+  height: 1px;
+  margin: calc(($baseLineHeight / 2) - 1px) 1px; /*  8px 1px */
+  overflow: hidden;
+  background-color: $color;
+}
+
+/*  Button backgrounds */
+/*  ------------------ */
+@define-mixin buttonBackground $startColor, $endColor, $textColor: #fff, $textShadow: 0 -1px 0 rgba(0,0,0,.25) {
+  /*  gradientBar will set the background to a pleasing blend of these, to support IE<=9 */
+  @mixin gradientBar $startColor, $endColor, $textColor, $textShadow;
+  @mixin reset-filter;
+
+  /*  in these cases the gradient won't cover the background, so we override */
+  &:hover, &:focus, &:active, &.active, &.disabled, &[disabled] {
+    color: $textColor;
+    background-color: $endColor;
+  }
+}
+
+/*  Navbar vertical align */
+/*  ------------------------- */
+/*  Vertically center elements in the navbar. */
+/*  Example: an element has a height of 30px, so write out `.navbarVerticalAlign(30px);` to calculate the appropriate top margin. */
+@define-mixin navbarVerticalAlign $elementHeight {
+  margin-top: calc(($navbarHeight - $elementHeight) / 2);
+}
+
+
+
+/*  Disable highlighting text */
+/*  ------------------------- */
+@define-mixin disable-text-highlight  {
+	-webkit-touch-callout: none;
+	user-select: none;
+}
+
+/*  Printing */
+/*  ------------------ */
+@define-mixin print-width-100-percent {
+	max-width: 100% !important;
+	width: 100% !important;
+	overflow: hidden !important;
+}
+
+@define-mixin print-hide  {
+	display: none !important;
+}
+
+@define-mixin print-no-background {
+	background: none !important;
+}
+
+@define-mixin print-wrap-all {
+	word-break: break-all !important;
+	word-wrap: break-word !important;
+	overflow-wrap: break-word !important;
+	white-space: normal !important;
+}
+
+@define-mixin print-table {
+    table {
+        @mixin print-width-100-percent;
+        table-layout: auto !important;
+    }
+
+    .scrolling-table-wrapper, .results-wrapper, .results-table, .events-viewer-wrapper {
+        @mixin print-width-100-percent;
+    }
+
+    td,
+    th {
+        @mixin print-no-background;
+        @mixin print-wrap-all;
+        width: auto !important;
+        page-break-inside:auto;
+    }
+
+    .table-chrome .sorts:after {
+        content: '';
+    }
+
+    .header-table-docked,
+    .table-scroll-bar-docked {
+        @mixin print-hide;
+    }
+}
+
+
+/*  Popdown */
+/*  ------------------ */
+@define-mixin popdown-dialog {
+	background-color: $interactiveColor;
+	border: 1px solid $interactiveBorderColor;
+	/* border-bottom-color: $interactiveBorderBottomColor; */
+	/* border-top-color: $interactiveBorderTopColor; */
+
+	/*  remove gradient for IE to fix clipping */
+	@mixin reset-filter;
+
+	box-shadow: 1px 2px 5px rgba(0,0,0,0.2);
+
+	border-radius: $containerOuterBorderRadius;
+
+	top:100%;
+	left: 50%;
+	margin: 8px 0 0 -103px;
+
+	display:none;
+	position:absolute;
+	z-index: $zindexPopdown;
+	/*  placement of arrow */
+
+	white-space: normal; /* prevent inheriting nowrap from btn-group */
+
+	.arrow {
+		width: 0;
+		height: 0;
+		border-left: 8px solid transparent;
+		border-right: 8px solid transparent;
+
+		border-bottom: 8px solid $interactiveBorderTopColor;
+		position: absolute;
+		top: -8px;
+		left: 50%;
+		margin-left: -4px;
+
+		/*  generated arrow */
+		&:before {
+			content: "";
+			display: block;
+			width: 0;
+			height: 0;
+			border-left: 8px solid transparent;
+			border-right: 8px solid transparent;
+
+			border-bottom: 8px solid $white;
+			position: absolute;
+			top: 1px;
+			left:0;
+			margin-left: -8px;
+		}
+	}
+
+	&.up {
+		margin-top: 0;
+
+		/*  placement of arrow */
+		> .arrow {
+			border-top: 8px solid $interactiveBorderBottomColor;
+			border-bottom: none;
+			top: auto;
+			bottom: -8px;
+
+			&:before {
+				border-top: 8px solid $white;
+				border-bottom: none;
+				position: absolute;
+				top: auto;
+				bottom: 1px;
+			}
+		}
+	}
+	&.right { /* point left */
+		margin-left: 5px;
+		margin-top: 0;
+
+		/*  placement of arrow */
+		.arrow {
+			border-right: 8px solid $interactiveBorderBottomColor;
+			border-top: 8px solid transparent;
+			border-bottom: 8px solid transparent;
+			border-left: none;
+			top: 50%;
+			left: -8px;
+			margin: -8px 0 0 0 ;
+
+			&:before {
+				border-right: 8px solid $white;
+				border-top: 8px solid transparent;
+				border-bottom: 8px solid transparent;
+				border-left: none;
+
+				position: absolute;
+				top: 0;
+				left: 1px;
+				margin: -8px 0 0 0 ;
+			}
+		}
+	}
+
+
+	/*  position of arrow when floated right */
+	&.pull-right .arrow {
+		left: auto;
+		right: 8px;
+	}
+	/*  open state */
+	&.open {
+		display:block;
+	}
+}/*  .popdown-dialog */
+
+/*  popdown body */
+@define-mixin popdown-dialog-body {
+	margin: 0;
+	border-radius: $containerInnerBorderRadius;
+	background-color: $white;
+	@mixin clearfix;
+}
+
+
+
+/* Flex
+/*  ------------- */
+
+@define-mixin display-flex $direction: row {
+    display: flex;
+    flex-direction: $direction;
+}
+
+@define-mixin flex-fit-or-fill {
+    /* IE10, IE11 */
+    -ms-flex-positive: 0; /*Not sure why IE10 requires the broken out values.*/
+    -ms-flex-negative: 1;
+    -ms-flex-preferred-size: auto;
+    -ms-flex: 0 1 auto; //Shrink if you are too big.
+
+    /* Firefox, maybe MS Edge */
+    flex: 1 0 0px; /* Just fill the space. *
+
+    /* Chrome and Safari */
+    -webkit-flex: 0 1 auto; /* Shrink if you are too big. */
+
+    /* Temp Chrome bug. This can be removed when fixed in Chrome 48.
+    /* https://code.google.com/p/chromium/issues/detail?id=546034#c6 */
+    min-height: 0;
+    min-width: 0;
+}
+
+/*  Full Page Layout */
+/*  ------------- */
+@define-mixin application-layout $leftColWidth: 400px {
+    html {
+        height: 100% !important;
+    }
+
+    body {
+        height: 100% !important;
+    }
+
+    .shared-page {
+        height: 100% !important;
+    }
+
+    .layoutCol {
+        overflow: hidden;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+    }
+
+    .layoutRow {
+        overflow: hidden;
+        position: absolute;
+        left: 0;
+        right: 0;
+    }
+
+    .scroll-x {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .scroll-y {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Pane configuration */
+    .main-section-body {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0px;
+        top: 25px; /* this makes room for splunkbar. */
+        min-height:0px !important;
+    }
+
+    .layoutBodyColumns {
+        bottom: 0px;
+        background-color: $white;
+        overflow: auto;
+    }
+
+    .layoutColLeft {
+        width: $leftColWidth;
+    }
+
+    .layoutColRight {
+        right: 0px;
+        left: $leftColWidth; /* left equals width of layoutColLeft */
+    }
+
+}
+
+
+
+
+/*  Grid System */
+/*  ----------- */
+
+/*  Centered container element */
+@define-mixin container-fixed  {
+  margin-right: auto;
+  margin-left: auto;
+  @mixin clearfix;
+}
+
+/*  Table columns */
+@define-mixin tableColumns $columnSpan: 1 {
+  float: none; /*  undo default grid column styles */
+  width: calc((($gridColumnWidth) * $columnSpan) + ($gridGutterWidth * ($columnSpan - 1px)) - 16px); /*  16 is total padding on left and right of table cells */
+  margin-left: 0; /*  undo default grid column styles */
+}
+
+/*  Make a Grid */
+/*  Use .makeRow and .makeColumn to assign semantic layouts grid system behavior */
+@define-mixin makeRow  {
+  margin-left: calc($gridGutterWidth * -1);
+  @mixin clearfix;
+}
+@define-mixin makeColumn $columns: 1, $offset: 0 {
+  float: left;
+  margin-left: calc(($gridColumnWidth * $offset) + ($gridGutterWidth * ($offset - 1px)) + ($gridGutterWidth * 2));
+  width: calc(($gridColumnWidth * $columns) + ($gridGutterWidth * ($columns - 1)));
+}
+
+/*  The Grid */
+
+
+@define-mixin grid-core-span $gridColumns {
+    width: calc(($gridColumnWidth * $gridColumns) + ($gridGutterWidth * ($gridColumns - 1)));
+}
+
+@define-mixin grid-core-offset ($gridColumns) {
+    margin-left: calc(($gridColumnWidth * $gridColumns) + ($gridGutterWidth * ($gridColumns + 1)));
+}
+
+@define-mixin grid-core ($gridColumnWidth, $gridGutterWidth) {
+    @for $index from 1 to 12 {
+        .span$(index) {
+            @mixin grid-core-span $index;
+            float: left;
+            min-height: 1px; /*  prevent collapsing columns */
+            margin-left: $gridGutterWidth;
+        }
+    }
+
+    @for $index from 1 to 12 {
+        .offset$(index) {
+            @mixin grid-core-offset $index;
+        }
+    }
+
+    .row {
+      margin-left: calc($gridGutterWidth * -1);
+      @mixin clearfix;
+    }
+
+    /*  Set the container width, and override it for fixed navbars in media queries */
+    .container,
+    .navbar-static-top .container,
+    .navbar-fixed-top .container,
+    .navbar-fixed-bottom .container {
+        @mixin grid-core-span $gridColumns;
+    }
+}
+
+@define-mixin grid-fluid-span $index {
+       width: calc(($fluidGridColumnWidth * $index) + ($fluidGridGutterWidth * ($index - 1)));
+}
+
+@define-mixin grid-fluid-offset $index {
+    margin-left: calc(($fluidGridColumnWidth * $index) + ($fluidGridGutterWidth * ($index - 1)) + ($fluidGridGutterWidth * 2));
+}
+
+@define-mixin grid-fluid-offsetFirstChild $index {
+  margin-left: calc(($fluidGridColumnWidth * $index) + ($fluidGridGutterWidth * ($index - 1)) + ($fluidGridGutterWidth));
+}
+
+@define-mixin grid-fluid $fluidGridColumnWidth, $fluidGridGutterWidth {
+    .row-fluid {
+        width: 100%;
+        @mixin clearfix;
+
+        @for $index from 1 to 12 {
+            .span$(index) {
+                @mixin input-block-level;
+                @mixin grid-fluid-span $index;
+
+                float: left;
+                margin-left: $fluidGridGutterWidth;
+
+                &:first-child {
+                    margin-left: 0;
+                }
+            }
+        }
+
+        @for $index from 1 to 12 {
+            .offset$(index) {
+                @mixin grid-fluid-offset $index;
+            }
+        }
+
+        /*  Space grid-sized controls properly if multiple per line */
+        .controls-row [class*="span"] + [class*="span"] {
+            margin-left: $fluidGridGutterWidth;
+        }
+    }
+}
+
+@define-mixin grid-input-span $columns {
+  width: calc((($gridColumnWidth) * $columns) + ($gridGutterWidth * ($columns - 1)) - 14px);
+}
+
+
+@define-mixin grid-input $gridColumnWidth, $gridGutterWidth {
+    @for $index from 1 to 12 {
+        .span$(index) {
+            @mixin grid-input-span $index;
+        }
+    }
+
+    input,
+    textarea,
+    .uneditable-input {
+      margin-left: 0; /*  override margin-left from core grid system */
+    }
+
+    /*  Space grid-sized controls properly if multiple per line */
+    .controls-row [class*="span"] + [class*="span"] {
+      margin-left: $gridGutterWidth;
+    }
+}

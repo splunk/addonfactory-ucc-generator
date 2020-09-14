@@ -1,0 +1,524 @@
+<%namespace file="_helpers.html" import="genListRows"/>
+<%namespace file="../lib.html" import="stylesheet_tags"/>
+<%namespace file="../lib.html" import="csrf_hidden_input"/>
+<%namespace name="helpers" file="_helpers.html"/>
+<%
+import copy
+import urllib as url
+import splunk.util as util
+import splunk.appserver.mrsparkle.lib.paginator as paginator
+from splunk.appserver.mrsparkle.lib.msg_pool import MsgPoolMgr, UI_MSG_POOL
+from splunk.appserver.mrsparkle.lib import util as libutil
+sessionId = cherrypy.session.id
+header = _(uiHelper["header"]) if uiHelper.get('header') else _("You do not have permission to access the configuration for this page.")
+introText =  _(uiHelper['introText']) if uiHelper.get("introText") else ''
+deleteButtonText = _(uiHelper['deleteButtonText']) if uiHelper.get("deleteButtonText") else _("Delete")
+entitiesLen = -1
+auth_change_confirm = _("Are you sure you want to switch authentication systems?")
+delete_confirm = _('Are you sure you want to delete: "%s"?')
+delete_confirm_file_input = _('Are you sure you want to remove this file input: "%s"? Once removed, Splunk will no longer index data from this source.')
+unembed_confirm = _('Are you sure you no longer want to share this report outside of Splunk?')
+isLite = libutil.isLite()
+isCloud = libutil.isCloud()
+canShowAppContext = uiHelper.get("showAppContext", "")
+try:
+    entitiesLen = len(entities)
+except:
+    pass
+
+
+# Build breadcrumbs string for passoff to appinstall page
+this_url = libutil.strip_url(libutil.current_url_path(include_qs=True))
+child_breadcrumbs = libutil.complete_breadcrumb(breadcrumbs, this_url)
+child_breadcrumbs_string = libutil.build_breadcrumbs_string(child_breadcrumbs)
+
+
+newInputMap = {
+    'data/inputs/win-event-log-collections/localhost': 'evt_logs_local',
+    'data/inputs/win-event-log-collections': 'evt_logs_remote',
+    'data/inputs/monitor': 'file_monitor',
+    'data/inputs/win-perfmon': 'perfmon_local',
+    'data/inputs/win-wmi-collections': 'perfmon_remote',
+    'data/inputs/tcp/raw': 'tcp',
+    'data/inputs/udp': 'udp',
+    'data/inputs/registry': 'regmon',
+    'data/inputs/ad': 'admon',
+    'data/inputs/WinHostMon': 'hostmon',
+    'data/inputs/WinNetMon': 'netmon',
+    'data/inputs/WinPrintMon': 'printmon',
+    'data/inputs/script': 'scripts',
+    'deployment/server/setup/data/inputs/remote_eventlogs': 'evt_logs_local',
+    'deployment/server/setup/data/inputs/remote_perfmon': 'perfmon_local',
+    'deployment/server/setup/data/inputs/remote_monitor': 'file_monitor',
+    'deployment/server/setup/data/inputs/tcp/remote_raw': 'tcp',
+    'deployment/server/setup/data/inputs/remote_udp': 'udp',
+    'deployment/server/setup/data/inputs/remote_script': 'scripts'
+}
+
+%>
+
+<%call expr="stylesheet_tags(cssFiles)"></%call>
+<style>
+h3 {
+    margin-top: 0;
+}
+div.appList {
+    height: 150px;
+    width: 48%;
+    float: left;
+    border: 1px solid #CCC;
+    border-top-color: #DDD;
+    border-left-color: #DDD;
+    margin: 15px 0 0 15px;
+    padding: 15px;
+    background: #FFF;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+.appIcon {
+    vertical-align: middle;
+    margin-right: 15px;
+    background: url(/splunkd/__raw/servicesNS/admin/search/static/appIcon.png) 0 0 no-repeat #DED;
+    width: 36px;
+    height 36px;
+    border-radius: 4px;
+    border: 1px solid #EEE;
+}
+.app-enable {
+    float: right;
+    background-color: #61a035;
+    background-image: -moz-linear-gradient(top, #65a637, #5c9732);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#65a637), to(#5c9732));
+    background-image: -webkit-linear-gradient(top, #65a637, #5c9732);
+    background-image: -o-linear-gradient(top, #65a637, #5c9732);
+    background-image: linear-gradient(to bottom, #65a637, #5c9732);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff65a637', endColorstr='#ff5c9732', GradientType=0);
+    background-color: #65a637;
+    border: 1px solid #4e802a;
+    border-bottom-color: #4e802a;
+    border-top-color: #4e802a;
+    color: #ffffff;
+    -webkit-box-shadow: inset 0px 1px 0 #6aae3a;
+    -moz-box-shadow: inset 0px 1px 0 #6aae3a;
+    box-shadow: inset 0px 1px 0 #6aae3a;
+ }
+</style>
+<script type="text/javascript">
+  function doObjectAction(ctrl, link, name) {
+    $('#ctrl').val(ctrl);
+    $('#ctrl_link').val(link);
+    $('#ctrl_name').val(name);
+    okToPost = true;
+    % if endpoint_path == 'authentication/providers/LDAP':
+        <%
+            numDisable = 0
+            for e in entities:
+                for link in entities[e].links:
+                    if link[0] == 'disable':
+                        numDisable += 1
+        %>                
+        if ((ctrl == "disable" && ${numDisable}==1) || (ctrl == "enable" && ${numDisable}==0) || (ctrl == "remove" && ${len(entities)}==1 && ${numDisable}==1)) {
+            okToPost = confirm("${auth_change_confirm}");
+            if (!okToPost){
+                return false;
+            }
+        }
+    % endif
+    if (ctrl == 'remove') {
+        if (link.indexOf('/inputs/monitor') != -1 ) {
+            okToPost = confirm( sprintf('${delete_confirm_file_input}', name) );
+        } else {
+            okToPost = confirm( sprintf('${delete_confirm}', name) );
+        }
+    }
+    if (ctrl == 'unembed') {
+        okToPost = confirm("${unembed_confirm}");
+    }
+    if (okToPost){
+        document.actionControl.submit();
+    }else{
+        return false;
+    }
+  }
+    % if util.normalizeBoolean(uiHelper.get("showAppContext", "")):
+   /**
+     * Generates a proxy hidden input for checkboxes that are submitted while in
+     * their unselected state
+     */
+    function generateProxyCheckbox(checkboxObject, formObject, falseValue) {
+        if ($(checkboxObject).prop('checked')) return;
+        if (falseValue == null) falseValue = '0';
+
+        var expectedName = checkboxObject.name;
+        var displacedName = '_spl_proxied_' + expectedName;
+        checkboxObject.name = displacedName;
+        $(sprintf('<input type="hidden" name="%s" value="%s" />', expectedName, falseValue)).appendTo(formObject);
+    }
+    
+    $(function() {
+        $('#appOnlyFilterCheckbox').bind('change', function() {
+            generateProxyCheckbox(this, $('.appOnlyFilter'), '0');
+            document.pagingControl.submit();
+        });
+    });
+    % endif
+</script>
+% if endpoint_path == 'apps/local' and isLite:
+    <div>
+% else:
+    <div class="adminContentList">
+% endif
+% if endpoint_path:
+<%
+msg_obj = None
+try:
+    msg_obj = MsgPoolMgr.get_poolmgr_instance()[UI_MSG_POOL].pop(msgid)
+except Exception, e:
+    pass
+%>
+    % if msg_obj:
+        <%helpers:message content="${msg_obj.text}" level="${msg_obj.severity}" msg_obj="${msg_obj}"/>
+    % endif
+    % if len(uiHelper) == 0:
+        <%helpers:message content="There was an error retrieving the configuration, can not process this page." level="error"/>
+    % endif
+    ## Filter controls
+    <%
+    search = kwargs.get("search", "")
+    pwnr = kwargs.get("pwnr", "-")
+    ns = kwargs.get("ns", namespace)
+    app_only = util.normalizeBoolean(kwargs.get("app_only", "0"))
+    sort_dir = kwargs.get("sort_dir", "")
+    sort_key = kwargs.get("sort_key", "")
+
+    nss = appOptionList
+    pwnrs = pwnrOptionList
+    %>
+    <form name="pagingControl" method="get">
+        % if 'sort_dir' in kwargs:
+            <input type="hidden" name="sort_dir" value="${kwargs['sort_dir'] | h}"/>
+        % endif
+        % if 'sort_key' in kwargs:
+            <input type="hidden" name="sort_key" value="${kwargs['sort_key'] | h}"/>
+        % endif
+        % if 'redirect' in kwargs:
+            <input type="hidden" name="redirect" value="${kwargs['redirect'] | h}"/>
+        % endif
+        
+        ## EAI pagination
+        <%
+        try:
+            count = int(entities.count)
+        except Exception, e:
+            count = 25
+        try:
+            offset = int(entities.offset)
+        except Exception, e:
+            offset = 0
+        try:
+            totalResults = int(entities.totalResults)
+        except Exception, e:
+            totalResults = 0
+        newOffset = count + offset
+        prevOffset = 0 if ( (offset - count) < 0 ) else (offset - count)
+        spanStart = 1 if offset == 0 else (offset + 1)
+        spanEnd = ( offset + count )
+        sel = ""
+        resPerPage = [10, 25, 50, 100]
+        if (spanEnd > totalResults):
+            lastPage = True
+            spanEnd = totalResults
+            
+        max_pages = 10    
+        pager = paginator.Google(totalResults, count, max_pages=max_pages, item_offset=offset)
+        page_range = []
+        for page in pager.page_range:
+            page_range.append(
+                {
+                    'number':page,
+                    'offset':pager.page_item_offset(page),
+                    'active':pager.is_active_page(page)
+                }
+            )
+    
+        %>
+        % if endpoint_path == 'apps/local' and isLite:
+            <!-- no filters with lite -->
+        % else:
+            <div class="eaiFilterControls splClearfix">
+                % if canShowAppContext:
+                    <div class="eaiFilterControl">
+                        <label for="appContextSelect">${_('App context')}</label>
+                        <select name="ns" onchange="document.pagingControl.submit()" id="appContextSelect">
+                          <option value="-">${_('All')}</option>
+                          % for option in nss:
+                          <option value="${option.get('value', '') | h}" ${'selected="selected"' if (option.get('value') == ns) else ''}>${option.get("label") | h}</option>
+                          % endfor
+                        </select>
+                    </div>
+                    
+                    % if len(pwnrs) > 0:
+                    <div class="eaiFilterControl">
+                        <label for="ownerSelect">${_('Owner')}</label>
+                        <select name="pwnr" onchange="document.pagingControl.submit()" id="ownerSelect">
+                            % if len(pwnrs) == 250:
+                            <option value="maxuserlimit" ${'disabled="disabled"'}>${_('List displays up to 250 Owner values. Use the search box to find additional Owners')}</option>
+                            % endif
+                            <option value="-" ${'selected="selected"'}>${_('Any')}</option>
+                            % for option in pwnrs:
+                            <option value="${option.get('value', '') | h}" ${'selected="selected"' if (option.get('value') == pwnr) else ''}>${option.get("label") | h}</option>
+                            % endfor
+                        </select>
+                    </div>
+                    % endif                
+                % endif
+                <div class="eaiFilterControl eaiSearchControl">
+                    <input name="search" type="text" value='${search | h}' class="eaiFilter" id="searchInput"> <!-- js needs to go somewhere else-->
+                    <input class="searchButton" value="" type="submit">
+                </div>
+            </div>
+            
+            % if canShowAppContext:
+                <div class="appOnlyFilter eaiFilterControl">
+                    <input type="checkbox" id="appOnlyFilterCheckbox" class="checkbox" name="app_only" value="1" ${'disabled="disabled"' if (ns=="-") else ''} ${app_only and "checked='checked'" or ""}/>
+                    <label for="appOnlyFilterCheckbox">${_('Show only objects created in this app context')}</label>
+                    <a href="${generateSelfHelpLink('learnmore.manager.appcontext')}" class="spl-icon-external-link-xsm" target="_blank">${_('Learn more')}</a>
+                </div>
+            % endif
+                
+            <div class="eaiPagination">
+                <div class="eaiPaginationHeader splClearfix">
+                % if endpoint_path == 'admin/LDAP-groups':
+                    <span class="splPipe">|</span><a href="${make_url(['manager', namespace, 'authentication', 'providers', 'LDAP'])}" style="line-height: 25px;">&laquo; ${_('Back to strategies')}</a>
+                % endif
+                    <%
+                    try:
+                       hasCreateLink = filter((lambda x: x[0] == 'create'), entities.links)
+                    except:
+                       hasCreateLink = False
+                    %>
+                    <div class="actionButtons">
+                        % if can_view_remote_apps and endpoint_path == 'apps/local':
+                            <!-- If instance is cloud and DMC is enabled then we do not show browse apps -->
+                            % if not isCloud or isDMCDisabled:
+                                <a class="splButton-primary" href="${make_url(['manager', namespace, 'apps', 'remote'])}">
+                                    <span><%doc>TRANS: Clicked to browse SplunkBase</%doc>${_('Browse more apps')}</span>
+                                </a>
+                            % endif
+                        % endif
+                        % if showNewButton and hasCreateLink:
+                            % if endpoint_path == 'apps/local':
+                                % if not isCloud:
+                                    <a class="splButton-secondary" href="${make_url(['manager', 'appinstall', '_upload'], _qs=dict(breadcrumbs=child_breadcrumbs_string))}">
+                                        <span>${_('Install app from file')}</span>
+                                    </a>
+                                % endif
+                                <a class="splButton-secondary" href="${make_url(['manager', namespace, endpoint_path, '_new'], _qs=dict(action='edit', ns=ns))}">
+                                    <span><%doc>TRANS: Clicked to create a new entry</%doc>${_('Create app')}</span>
+                                </a>
+                            % elif endpoint_path in newInputMap:
+                                <% inputMode = 2 if endpoint_path.startswith('deployment/server/setup') else 1 %>
+                                <a class="splButton-primary" href="${make_url(['manager', namespace, 'adddata', 'selectsource' if inputMode == 1 else 'selectforwarders'], _qs=dict(input_mode=inputMode, input_type=newInputMap[endpoint_path]))}">
+                                    <span><%doc>TRANS: Clicked to create a new entry</%doc>${_('New')}</span>
+                                </a>
+                            % elif endpoint_path.startswith('data/inputs/') and endpoint_path != 'data/inputs/tcp/cooked':
+                                <a class="splButton-primary" href="${make_url(['manager', namespace, 'adddata', 'selectsource'], _qs=dict(input_mode=1, input_type=endpoint_path[len('data/inputs/'):], modinput=1))}">
+                                            <span><%doc>TRANS: Clicked to create a new entry</%doc>${_('New')}</span>
+                                </a>
+                            % elif endpoint_path == 'data/props/extractions':
+                                %if not isLite:
+                                <a class="splButton-primary" href="${make_url(['manager', namespace, endpoint_path, '_new'], _qs=dict(action='edit', ns=ns))}">
+                                    <span><%doc>TRANS: Clicked to create a new entry</%doc>${_('New')}</span>
+                                </a>
+                                %endif
+                                <% appName = namespace if namespace != 'system' else 'search' %>
+                                <a class="splButton-primary" href="${make_url(['app', appName, 'field_extractor'])}">
+                                    <span>${_('Open Field Extractor')}</span>
+                                </a>
+                            % else:
+                                <a class="splButton-primary" href="${make_url(['manager', namespace, endpoint_path, '_new'], _qs=dict(action='edit', ns=ns))}">
+                                    <span><%doc>TRANS: Clicked to create a new entry</%doc>${_('New')}</span>
+                                </a>
+                            % endif
+                        % endif
+                        % if endpoint_path == 'admin/directory' and kwargs['can_reassign']:
+                            <a class="splButton-secondary" href="${make_url(['manager', namespace, 'bulkreassign'], _qs=dict(app=ns, owner=pwnr, count=count, offset=offset, search=search, appOnly=app_only, sortDir=sort_dir, sortKey=sort_key))}">
+                                <span>${_('Reassign Knowledge Objects')}</span>
+                            </a>
+                        % endif
+                    </div>
+                </div>
+
+                % if len(uiHelper) == 0:
+                    ${_('Click here to start over from the <a href="%(url)s">manager home page.</a>') % dict(url=make_url("/manager"))}
+                % endif
+                
+                % if introText != 'None':
+                    <div class="listIntroText">${introText | h}</div>
+                % endif
+            </div> <!-- eaiPagination -->
+            
+            <div class="eaiResultsPageControls splClearfix">
+                % if totalResults > 0:
+                <p class="eaiResultsCount eaiResultsPageControl">${ungettext('Showing <span>%(first)s-%(last)s</span> of %(total)s item', 'Showing <span>%(first)s-%(last)s</span> of %(total)s items', totalResults) % dict(first=spanStart, last=spanEnd, total=totalResults)}</p>
+                % endif
+
+                <div class="Paginator eaiResultsPageControl">
+                    <% page_opts = copy.deepcopy(kwargs) %>
+                    <div class="ResultsContainer">
+                        <ul>
+                            <li class="previous">
+                                % if ( (spanStart > count) or (spanStart > 1) ):
+                                    <% page_opts['offset'] = prevOffset %>
+                                    <a href="${make_url('', _qs=page_opts, translate=False)}"> <%doc>TRANS: Previous page</%doc>&laquo; ${_('prev')} </a>
+                                % endif
+                            </li>
+                            % for page in page_range:
+                                % if page['active']:
+                            <li class="page active">
+                                % else:
+                            <li class="page">
+                                % endif
+                                <% page_opts['offset'] = page['offset'] %>
+                                <a href="${make_url('', _qs=page_opts, translate=False)}">${page['number']}</a>
+                            </li>
+                            % endfor
+                            <li class="next">
+                                % if spanEnd < totalResults:
+                                    <% page_opts['offset'] = newOffset %>
+                                    <a href="${make_url('', _qs=page_opts, translate=False)}"> <%doc>TRANS:Next page</%doc>${_('next')} &raquo; </a>
+                                % endif
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                % if totalResults > 0:
+                <div class="eaiResultsPerPage eaiResultsPageControl">
+                    <label for="resultsPerPageSelect">${_('Results per page')}</label>
+                    <select name="count" class="short" onchange="document.pagingControl.submit()" id="resultsPerPageSelect">
+                        % for i in resPerPage:
+                        <%
+                        if i == count:
+                            sel = "selected='selected'"
+                        else:
+                            sel = ""
+                        endif
+                        %>
+                        <option ${sel}>${i}</option>
+                        % endfor
+                        % if count not in resPerPage and count != 0:
+                            <option disabled="disabled">---</option>
+                            <option selected='selected'>${count | h}</option>
+                        % endif
+                    </select>
+                </div>
+                % endif
+
+            </div> <!-- eaiResultsPageControls -->
+            
+            % for arg in kwargs:
+                % if not arg.lower().startswith('api.'):
+                    <% continue %>
+                % endif
+                %try: 
+                    <input type="hidden" name="${arg | h}" value="${kwargs[arg] | h}"/>
+                %except: 
+                    <%helpers:message content="There was an error parsing url arguments, can not process this page." level="error"/>
+                    <% return %>
+                %endtry
+            % endfor
+        % endif
+    </form>
+        
+    <% page_class = endpoint_path.replace('/','-').lower()  %>
+    <div class="listWrapper page-${page_class | h} splClearfix"> 
+            % if entitiesLen >= 0:
+              <form name="actionControl" action="${make_url(['manager', namespace, endpoint_path, 'multidelete'])}" method="post">
+                ${csrf_hidden_input()}
+                <input type="hidden" name="ctrl" id="ctrl" value=""/>
+                <input type="hidden" name="ctrl_link" id="ctrl_link" value=""/>
+                <input type="hidden" name="ctrl_name" id="ctrl_name" value=""/>
+                <input type="hidden" name="showAppContext" id="showAppContext" value="${util.normalizeBoolean(uiHelper.get("showAppContext", "")) | h}"/>
+                % for arg in kwargs:
+                    %try: 
+                        <input type="hidden" name="${arg | h}" value="${kwargs[arg] | h}"/>
+                    %except: 
+                        <%helpers:message content="There was an error parsing url arguments, can not process this page." level="error"/>
+                        <% return %>
+                    %endtry
+                % endfor
+
+                % if endpoint_path == 'apps/local' and isLite:
+                    <%call expr="genListRows(namespace, uiHelper, entities, endpoint_path, kwargs)"/>
+                % else:
+                    <table class="splTable splTable-list">
+                        <%call expr="genListRows(namespace, uiHelper, entities, endpoint_path, showAdvancedEdit, kwargs)"/>
+                    </table>
+                % endif
+              </form>
+            % endif
+    </div><!-- listWrapper -->
+    
+
+    % if (totalResults > count) and not (endpoint_path == 'apps/local' and isLite):
+    <div class="eaiResultsPageControls splClearfix">
+        <p class="eaiResultsCount eaiResultsPageControl">${ungettext('Showing <span>%(first)s-%(last)s</span> of %(total)s item', 'Showing <span>%(first)s-%(last)s</span> of %(total)s items', totalResults) % dict(first=spanStart, last=spanEnd, total=totalResults)}</p>
+        <div class="Paginator eaiResultsPageControl">
+           <% page_opts = copy.deepcopy(kwargs) %>
+            <div class="ResultsContainer">
+                <ul>
+                    <li class="previous">
+                        % if ( (spanStart > count) or (spanStart > 1) ):
+                            <% page_opts['offset'] = prevOffset %>
+                            <a href="${make_url('', _qs=page_opts, translate=False)}"> <%doc>TRANS: Previous page</%doc>&laquo; ${_('prev')} </a>
+                        % endif
+                    </li>
+                    % for page in page_range:
+                        % if page['active']:
+                    <li class="page active">
+                        % else:
+                    <li class="page">
+                        % endif
+                        <% page_opts['offset'] = page['offset'] %>
+                        <a href="${make_url('', _qs=page_opts, translate=False)}">${page['number']}</a>
+                    </li>
+                    % endfor
+                    <li class="next">
+                        % if spanEnd < totalResults:
+                            <% page_opts['offset'] = newOffset %>
+                            <a href="${make_url('', _qs=page_opts, translate=False)}"> <%doc>TRANS:Next page</%doc>${_('next')} &raquo; </a>
+                        % endif
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div> <!-- /.eaiResultsPageControls -->
+    % endif    
+
+    <div class="moveObjectFormContainer">
+      <form action="${make_url(['manager', namespace, endpoint_path, 'move'])}" name="moveControl" id="moveControl" method="post">
+        <fieldset>
+          <label for="appContextSelect_New">${_('App context:')}</label>
+          <select name="newns" id="appContextSelect_New">
+            % for option in nss:
+              % if option.get('value') != ns:
+                <option value="${option.get('value', '') | h}">${option.get("label") | h}</option>
+              % endif
+            % endfor
+          </select>
+        </fieldset>
+        ${csrf_hidden_input()}
+        <input type="hidden" name="uri" value=""/>
+        <input type="hidden" name="name" value=""/>
+        <input type="hidden" name="entowner" value=""/>
+        <input type="hidden" name="pwnr" value="${pwnr | h}"/>
+        <input type="hidden" name="search" value="${search | h}"/>
+        <input type="hidden" name="count" value="${count | h}"/>
+        <input type="hidden" name="offset" value="${offset | h}"/>
+      </form>      
+    </div>
+% endif
+</div>
+<!-- adminContentList ends -->

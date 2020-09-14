@@ -1,0 +1,155 @@
+<%namespace file="/lib.html" import="csrf_hidden_input, wizard_errors"/>
+
+${wizard_errors(header=_('Your alert settings could not be saved.'), errors=saved_search.errors)}
+${csrf_hidden_input()}
+% if saved_search.id:
+    <input type="hidden" name="id" value="${saved_search.id|h}"/>
+% endif
+<input type="hidden" name="search" value="${saved_search.search or ''|h}"/>
+<input type="hidden" name="ui.vsid" value="${saved_search.ui.vsid or '' |h}" />
+<input type="hidden" name="ui.dispatch_view" value="${saved_search.ui.dispatch_view or '' |h}" />
+<input type="hidden" name="ui.display_view" value="${saved_search.ui.display_view or '' |h}" />
+<table>
+    <tbody>
+        <tr>
+            <td class="col1"><label for="name"><span class="required">*</span> ${_('Name')}</label></td>
+            <td class="col2">
+                <input type="text" name="name" maxlength="100" value="${saved_search.name or '' |h}" id="name" ${'disabled="disabled"' if saved_search.id else ''}/>
+            </td>
+        </tr>
+        <tr>
+            <td class="col1"><label for="ui_howoften">${_('Schedule')}</label></td>
+            <td class="col2">
+                <ul>
+                    <li>
+                        <select name="ui_howoften" id="ui_howoften">
+                            <option value="realtime" ${'selected="selected"' if saved_search.ui_howoften=='realtime' else ''}>${_('Trigger in real-time whenever a result matches')}</option>
+                            <option value="schedule" ${'selected="selected"' if saved_search.ui_howoften=='schedule' else ''}>${_('Run on a schedule once every...')}</option>
+                            <option value="rolling" ${'selected="selected"' if saved_search.ui_howoften=='rolling' else ''}>${_('Monitor in real-time over a rolling window of...')}</option>
+                        </select>
+                    </li>
+                    <li class="schedule indent">
+                        <select name="ui_schedule">
+                            <option value="1h" ${'selected="selected"' if saved_search.ui_schedule == '1h' else ''}>${_('Hour')}</option>
+                            <option value="1d" ${'selected="selected"' if saved_search.ui_schedule == '1d' else ''}>${_('Day')}</option>
+                            <option value="1w" ${'selected="selected"' if saved_search.ui_schedule == '1w' else ''}>${_('Week')}</option>
+                            <option value="1m" ${'selected="selected"' if saved_search.ui_schedule == '1m' else ''}>${_('Month')}</option>
+                            <option value="cron" ${'selected="selected"' if saved_search.ui_schedule == 'cron' else ''}>${_('Cron schedule')}</option>
+                        </select>
+                        <p class="note non_cron">
+                            ${_('Search will run over selected schedule interval.')}
+                        </p>
+                        <div class="cron indent">
+                            <label for="ui_cron"><span class="required">*</span> ${_('Cron Expression')}</label>
+                            <input type="text" name="ui_cron" value="${saved_search.schedule.cron_schedule or ''|h}"/>
+                            <p class="note">
+                                ${_('00 18 * * * (every day at 6 PM) <a href="%s" class="spl-icon-external-link-xsm" target="_blank">Learn more</a>') % generateSelfHelpLink('learnmore.alert.scheduled') | n }
+                            </p>
+                            <label for="dispatch_earliest_time" style="display:block; padding-top:10px;"><span class="required">*</span> ${_('Search time range')}</label>
+                            <input type="text" name="dispatch.earliest_time" value="${saved_search.dispatch.earliest_time or '' |h}" id="dispatch_earliest_time" style="width:134px;" placeholder="${_('Earliest time')}"/>
+                            <label class="dispatch_time_to">${_('to')}</label>
+                            <input type="text"  name="dispatch.latest_time" value="${saved_search.dispatch.latest_time or '' |h}" style="width:134px;" placeholder="${_('Latest time')}"/>
+                            <p class="note">
+                               ${_("-1d (one day ago), now (triggering time)")}<br />
+                               ${_("Time specifiers: y, mon, d, h, m, s")}
+                               <a href="${generateSelfHelpLink('learnmore.alert.relativetime')}" class="spl-icon-external-link-xsm" target="_blank" class="spl-icon-external-link-xsm">${_('Learn more')}</a>
+
+                            </p>
+                        </div>
+                    </li>
+                    <li class="rolling indent">
+                        <input type="text" name="ui_rolling_value" value="${saved_search.ui_rolling_value or '' | h}" style="width:60px;"/>
+                        <select name="ui_rolling_unit" style="width:80px;">
+                            <option value="m" ${'selected="selected"' if saved_search.ui_rolling_unit=='m' else '' | h}>${_('minute')}</option>
+                            <option value="h" ${'selected="selected"' if saved_search.ui_rolling_unit=='h' else '' | h}>${_('hour')}</option>
+                            <option value="d" ${'selected="selected"' if saved_search.ui_rolling_unit=='d' else '' | h}>${_('day')}</option>
+                        </select>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        <tr class="triggerif">
+            <td class="col1"><label for="alert_type">${_('Trigger if')}</label></td>
+            <td class="col2">
+                <ul>
+                    <li>
+                        <select name="alert.type" id="alert_type">
+                            <option value="number of events" ${'selected="selected"' if saved_search.alert.type=='number of events' else ''}>${_('Number of results')}</option>
+                            <option value="custom" ${'selected="selected"' if saved_search.alert.type=='custom' else ''}>${_('Custom condition is met')}</option>
+                        </select>
+                    </li>
+                    <li class="number indent">
+                        <select name="alert.comparator" style="width:150px;">
+                            <option value="greater than" ${'selected="selected"' if saved_search.alert.comparator == 'greater than' else ''}>${_('Is greater than')}</option>
+                            <option value="less than" ${'selected="selected"' if saved_search.alert.comparator == 'less than' else ''}>${_('Is less than')}</option>
+                            <option value="equal to" ${'selected="selected"' if saved_search.alert.comparator == 'equal to' else ''}>${_('Equals to')}</option>
+                            <option value="not equal to" ${'selected="selected"' if saved_search.alert.comparator == 'not equal to' else ''}>${_('Not equal to')}</option>
+                        </select>
+                        <input type="text" name="alert.threshold" value="${saved_search.alert.threshold or '0' | h}" style="width:60px;"/>
+                    </li>
+                    <li class="custom indent">
+                        <input type="text" name="alert.condition" value="${saved_search.alert.condition or '' | h}" placeholder="${_('Custom condition')}"/>
+                        <p class="note">
+                            ${_('Evaluated against the results of the base search.')}
+                            <a href="${generateSelfHelpLink('learnmore.alert.rolling')}" class="spl-icon-external-link-xsm" target="_blank">${_('Learn more')}</a>
+                        </p>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        <script>
+        (function(){
+            var $uiHowOften = $('select[name="ui_howoften"]');
+            var $schedule = $('.schedule');
+            var $rolling = $('.rolling');
+            var $triggerif = $('.triggerif');
+            $uiHowOften.bind('change', function() {
+                var value = $(this).val();
+                if (value=='schedule') {
+                    $schedule.show();
+                    $triggerif.show();
+                    $rolling.hide();
+                } else if(value=='rolling') {
+                    $rolling.show();
+                    $triggerif.show();
+                    $schedule.hide();
+                } else {
+                    $schedule.hide();
+                    $rolling.hide();
+                    $triggerif.hide();
+                }
+            });
+            $uiHowOften.trigger('change');
+
+            var $uiSchedule = $('select[name="ui_schedule"]');
+            var $cron = $('.cron');
+            var $scheduleHelp = $('.note.non_cron');
+            $uiSchedule.bind('change', function(){
+                if ($(this).val()=='cron') {
+                    $cron.show();
+                    $scheduleHelp.hide();
+                } else {
+                    $cron.hide();
+                    $scheduleHelp.show();
+                }
+            });
+            $uiSchedule.trigger('change');
+
+            var $number = $('.number');
+            var $custom = $('.custom');
+            var $uiTriggerCondition = $('select[name="alert.type"]');
+            $uiTriggerCondition.bind('change', function() {
+                var value = $(this).val();
+                if (value=='number of events') {
+                    $number.show();
+                    $custom.hide();
+                } else {
+                    $number.hide();
+                    $custom.show();
+                }
+            });
+            $uiTriggerCondition.trigger('change');
+        })()
+        </script>
+    </tbody>
+</table>

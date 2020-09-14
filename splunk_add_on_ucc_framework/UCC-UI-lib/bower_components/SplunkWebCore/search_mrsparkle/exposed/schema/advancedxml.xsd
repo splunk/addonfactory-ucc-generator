@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:attributeGroup name="BaseView">
+    <xs:annotation>
+      <xs:documentation>
+        advanced XML view
+      </xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="refresh"/>
+    <xs:attribute name="onunloadCancelJobs" type="Boolean"/>
+    <xs:attribute name="autoCancelInterval"/>
+    <xs:attribute name="isVisible"/>
+    <xs:attribute name="autoRun"/>
+    <xs:attribute name="template"/>
+    <xs:attribute name="displayView"/>
+    <xs:attribute name="stylesheet"/>
+    <xs:attribute name="objectMode"/>
+  </xs:attributeGroup>
+  
+  <xs:element name="view">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="label"/>
+        <xs:element ref="module"/>
+      </xs:choice>
+      <xs:attributeGroup ref="BaseView"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="label" type="xs:string"/>
+  
+  <xs:element name="module">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="param"/>
+        <xs:element ref="module"/>
+      </xs:choice>
+      <xs:attribute name="name" use="required"/>
+      <xs:attribute name="layoutPanel"/>
+      <xs:attribute name="group"/>
+      <xs:attribute name="altTitle"/>
+      <xs:attribute name="autoRun"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="param">
+    <xs:complexType mixed="true">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="param"/>
+        <xs:element ref="list"/>
+      </xs:choice>
+      <xs:attribute name="name" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="list">
+    <xs:complexType mixed="true">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="item"/>
+        <xs:element ref="param"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="item">
+    <xs:complexType mixed="true">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="param"/>
+        <xs:element ref="list"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:simpleType name="Boolean">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="true"/>
+      <xs:enumeration value="false"/>
+      <xs:enumeration value="True"/>
+      <xs:enumeration value="False"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

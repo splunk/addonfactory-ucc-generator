@@ -1,0 +1,837 @@
+/*  Splunk: Tables */
+/*  =================== */
+/*  Tables for, you guessed it, tabular data */
+
+/*  BASE TABLES */
+/*  ----------------- */
+
+table {
+  max-width: 100%;
+  background-color: $tableBackground;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+
+
+/*  BASELINE STYLES */
+/*  --------------- */
+.table {
+    width: auto;
+    min-width: 100%;
+    max-width: none;
+    margin-bottom: $baseLineHeight;
+
+    /*  Cells */
+    th, td {
+        text-align: left;
+        vertical-align: top;
+        font-weight: normal;
+        padding: 4px 8px;
+        line-height: $baseLineHeight;
+        border-top: 1px solid $tableBorder;
+
+        &:first-child {
+            padding-left: 20px;
+        }
+
+        &:last-child {
+            padding-right: 20px;
+        }
+
+    	td:focus {
+    		@mixin focus-pill;
+    	}
+    }
+
+    thead th {
+      vertical-align: bottom;
+    }
+
+    /*  Remove top border from thead by default */
+    caption + thead tr:first-child th,
+    caption + thead tr:first-child td,
+    colgroup + thead tr:first-child th,
+    colgroup + thead tr:first-child td,
+    thead:first-child tr:first-child th,
+    thead:first-child tr:first-child td {
+      border-top: 0;
+    }
+    /*  Account for multiple tbody instances */
+    tbody + tbody {
+      border-top: 2px solid $tableBorder;
+    }
+
+    /*  sorts */
+    .sorts {
+        white-space: nowrap;
+        cursor: pointer;
+        a {
+            color: inherit;
+            &:hover {
+                text-decoration: none;
+            }
+        }
+
+        &:hover {
+            background-color: $tableBackgroundHover;
+        }
+
+        .icon-sorts {
+          display: inline;
+        }
+
+        .icon-sorts:before {
+          font-family: "Splunk Icons";
+          content: "\2195";
+          padding-left: 5px;
+          color: $tableSortIconColor;
+        }
+
+        .asc:before,
+        .Asc:before
+        {
+          content: "\21A5";
+          color: inherit;
+        }
+
+        .desc:before,
+        .Desc:before {
+          content: "\21A7";
+          color: inherit;
+        }
+
+    }
+
+    /*  Nesting */
+    .table {
+        background-color: $tableBackground;
+    }
+}
+
+
+/* saf3+, chrome1+ */
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    /*  fix table headers */
+    .table-chrome > thead > tr > th  { position: relative;  }
+}
+
+
+
+
+/*  CONDENSED TABLE W/ HALF PADDING */
+/*  ------------------------------- */
+
+.table-condensed {
+  th,
+  td {
+    padding: 4px 5px;
+  }
+}
+
+
+
+/*  BORDERED VERSION */
+/*  ---------------- */
+
+.table-bordered {
+  border: 1px solid $tableBorder;
+  border-collapse: separate; /*  Done so we can round those corners! */
+  border-left: 0;
+  border-radius: $baseBorderRadius;
+  th,
+  td {
+    border-left: 1px solid $tableBorder;
+  }
+  /*  Prevent a double border */
+  caption + thead tr:first-child th,
+  caption + tbody tr:first-child th,
+  caption + tbody tr:first-child td,
+  colgroup + thead tr:first-child th,
+  colgroup + tbody tr:first-child th,
+  colgroup + tbody tr:first-child td,
+  thead:first-child tr:first-child th,
+  tbody:first-child tr:first-child th,
+  tbody:first-child tr:first-child td {
+    border-top: 0;
+  }
+  /*  For first th/td in the first row in the first thead or tbody */
+  thead:first-child tr:first-child > th:first-child,
+  tbody:first-child tr:first-child > td:first-child,
+  tbody:first-child tr:first-child > th:first-child {
+    border-top-left-radius: $baseBorderRadius;
+  }
+  /*  For last th/td in the first row in the first thead or tbody */
+  thead:first-child tr:first-child > th:last-child,
+  tbody:first-child tr:first-child > td:last-child,
+  tbody:first-child tr:first-child > th:last-child {
+    border-top-right-radius: $baseBorderRadius;
+  }
+  /*  For first th/td (can be either) in the last row in the last thead, tbody, and tfoot */
+  thead:last-child tr:last-child > th:first-child,
+  tbody:last-child tr:last-child > td:first-child,
+  tbody:last-child tr:last-child > th:first-child,
+  tfoot:last-child tr:last-child > td:first-child,
+  tfoot:last-child tr:last-child > th:first-child {
+    border-bottom-left-radius: $baseBorderRadius;
+  }
+  /*  For last th/td (can be either) in the last row in the last thead, tbody, and tfoot */
+  thead:last-child tr:last-child > th:last-child,
+  tbody:last-child tr:last-child > td:last-child,
+  tbody:last-child tr:last-child > th:last-child,
+  tfoot:last-child tr:last-child > td:last-child,
+  tfoot:last-child tr:last-child > th:last-child {
+    border-bottom-right-radius: $baseBorderRadius;
+  }
+
+  /*  Clear border-radius for first and last td in the last row in the last tbody for table with tfoot */
+  tfoot + tbody:last-child tr:last-child td:first-child {
+    border-bottom-left-radius: 0;
+  }
+  tfoot + tbody:last-child tr:last-child td:last-child {
+    border-bottom-right-radius: 0;
+  }
+
+  /*  Special fixes to round the left border on the first td/th */
+  caption + thead tr:first-child th:first-child,
+  caption + tbody tr:first-child td:first-child,
+  colgroup + thead tr:first-child th:first-child,
+  colgroup + tbody tr:first-child td:first-child {
+    border-top-left-radius: $baseBorderRadius;
+  }
+  caption + thead tr:first-child th:last-child,
+  caption + tbody tr:first-child td:last-child,
+  colgroup + thead tr:first-child th:last-child,
+  colgroup + tbody tr:first-child td:last-child {
+    border-top-right-radius: $baseBorderRadius;
+  }
+
+}
+
+
+/*  BORDERED LITE */
+/*  ----------------- */
+/* a stripped-down verison of bootstrap's table-bordered */
+.table-bordered-lite {
+    th, td {
+        border-left: 1px solid $tableBorder;
+
+        &:first-child {
+            border-left: none;
+        }
+    }
+}
+
+/*  BORDERED DOTTED */
+/*  ----------------- */
+.table-dotted {
+    td, th {
+        border-top: 1px dashed $borderColor;
+    }
+}
+
+/*  ZEBRA-STRIPING */
+/*  -------------- */
+
+.table-striped {
+    > thead > tr > th {
+        background-color: $white;
+        border-top: 1px solid $tableBorder;
+    }
+
+    > tbody {
+        > tr:nth-child(odd) > td,
+        > tr:nth-child(odd) > th
+        > tr.odd > td,
+        > tr.odd > th {
+            background-color: $tableBackgroundAccent;
+        }
+
+        /*  For tables that have manually striped rows due to row-grouping, reset .even to white. */
+        /*  Consider not have the table-striped class and only rely on the row class - Marc */
+        > tr.even > td,
+        > tr.even > th {
+            background-color: $white;
+        }
+    }
+}
+
+
+/*  CHROME */
+/*  ------------------- */
+
+.table-chrome {
+    border-top: 1px solid $interactiveBorderTopColor;
+    border-bottom: 1px solid $interactiveBorderBottomColor;
+    > thead > tr > th {
+        font-weight: normal;
+        @mixin interactive;
+        box-shadow: none;
+        /*  position: relative; this fixes a rendering bug in Safari 6.0.5 (SPL-67998) - also causes rendering issue in FF */
+
+        &:first-child {
+            border-left: none;
+        }
+        &:last-child {
+            border-right: none;
+        }
+    }
+    /*  FF bug fix */
+    td {
+        border-left: 0 solid transparent;
+        border-right: 0 solid transparent;
+    }
+    /*  sorting */
+    .sorts {
+        font-weight: normal;
+        &:hover {
+            text-decoration: none;
+            @mixin interactive-hover;
+        }
+        a {
+            text-decoration: none;
+            color: $textColor;
+        }
+    }
+
+    .sorts.active {
+        /* .gradient-vertical($interactiveGradientEndColor,$interactiveGradientStartColor); */
+        /* box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.1); */
+    }
+    .sorts.active:hover {
+        @mixin interactive-hover;
+        border-bottom: 1px solid $tableBorder;
+    }
+
+
+    &.table-striped > tbody > tr:nth-child(even) > td {
+        background-color: $tableBackgroundAccent;
+    }
+
+    &.table-striped > tbody > tr:nth-child(odd) > td {
+        background-color: $white;
+    }
+
+    &.table-striped > tbody > tr.even > td {
+        background-color: $tableBackgroundAccent;
+    }
+
+    &.table-striped > tbody > tr.odd > td {
+        background-color: $white;
+    }
+
+}
+
+
+
+/*  TABLE CELL SIZING */
+/*  ----------------- */
+
+/*  Reset default grid behavior */
+table td[class*="span"],
+table th[class*="span"],
+.row-fluid table td[class*="span"],
+.row-fluid table th[class*="span"] {
+  display: table-cell;
+  float: none; /*  undo default grid column styles */
+  margin-left: 0; /*  undo default grid column styles */
+}
+
+/*  Change the column widths to account for td/th padding */
+.table td,
+.table th {
+  &.span1     { @mixin tableColumns 1; }
+  &.span2     { @mixin tableColumns 2; }
+  &.span3     { @mixin tableColumns 3; }
+  &.span4     { @mixin tableColumns 4; }
+  &.span5     { @mixin tableColumns 5; }
+  &.span6     { @mixin tableColumns 6; }
+  &.span7     { @mixin tableColumns 7; }
+  &.span8     { @mixin tableColumns 8; }
+  &.span9     { @mixin tableColumns 9; }
+  &.span10    { @mixin tableColumns 10; }
+  &.span11    { @mixin tableColumns 11; }
+  &.span12    { @mixin tableColumns 12; }
+}
+
+
+
+/*  HOVER EFFECT */
+/*  ------------ */
+.table-hover {
+  > tbody {
+    > tr:hover > td,
+    > tr:hover > th {
+      background-color: $tableBackgroundHover;
+    }
+  }
+}
+
+
+/*  FOCUS EFFECT */
+/*  ------------ */
+
+/*  add focus back in, needs to come last */
+.table > tbody > tr,
+.table > tbody > tr.even,
+.table > tbody > tr.odd {
+	 > td:focus {
+		@mixin focus-pill;
+	}
+}
+.table > tbody > tr:focus,
+.table > tbody > tr.even:focus,
+.table > tbody > tr.odd:focus {
+	outline: none;
+	 > td {
+		@mixin focus-pill;
+	}
+}
+
+
+
+
+
+/*  TABLE BACKGROUNDS */
+/*  ----------------- */
+/*  Exact selectors below required to override .table-striped */
+
+.table tbody tr {
+  &.success > td {
+    background-color: $successBackground;
+  }
+  &.error > td {
+    background-color: $errorBackground;
+  }
+  &.warning > td {
+    background-color: $warningBackground;
+  }
+  &.info > td {
+    background-color: $infoBackground;
+  }
+}
+
+/*  Hover states for .table-hover */
+.table-hover tbody tr {
+  &.success:hover > td {
+    background-color: color($successBackground l(-5%));
+  }
+  &.error:hover > td {
+    background-color: color($errorBackground l(-5%));
+  }
+  &.warning:hover > td {
+    background-color: color($warningBackground l(-5%));
+  }
+  &.info:hover > td {
+    background-color: color($infoBackground l(-5%));
+  }
+}
+
+
+
+
+/*  EMBEDDED TABLES */
+/*  -------------------- */
+/*  tables that appear within other tables. */
+
+
+.table-embed {
+    width:100%;
+    border: 0;
+    td {
+        border-bottom: 1px dashed $borderColor;
+        border-left: 0;
+        padding: 0;
+        background-color: transparent !important;
+    }
+    td:first-child {
+        padding-right: 10px;
+    }
+}
+
+
+
+
+/*  ROW EXPANDING */
+/*  -------------------- */
+
+
+.table-row-expanding {
+    width: 100%;
+    table-layout: fixed;
+    margin-bottom: -1px;
+    border-bottom: 1px solid $borderColor;
+
+    & > tbody > tr > td.expands {
+        cursor: pointer;
+        border-right:1px solid $tableBorderVertical;
+        padding: 0;
+
+        &.disabled {
+            color: $textDisabledColor;
+            cursor: default;
+            > span, a {
+                color: inherit;
+                cursor: inherit;
+            }
+        }
+
+        > span, a, > i {
+            color: $textColor;
+            display: block;
+            padding: 4px 0 4px 20px;
+            width: 15px;
+            height: 16px;
+            text-decoration: none;
+            text-align: left;
+
+            &:focus {
+            	@mixin focus-pill;
+            }
+        }
+    }
+
+    /*  style for an extra row inserted in the expanded state */
+    /*  TODO unify these class names */
+    & > tbody > tr.more-info > td,
+    & > tbody > tr.info-row > td {
+        border-top: none;
+        background-color: $tableBackgroundAccentHover;
+    }
+
+    & > tbody > tr.expanded > td {
+        background-color: $tableBackgroundAccentHover;
+    }
+
+    & > tbody > tr > td > .btn-combo {
+        margin: -4px 5px -6px 20px;
+    }
+
+    & > tbody > tr > td > .btn-combo:first-child {
+        margin-left: 0;
+    }
+
+    & > tbody > tr > td.title > a,
+    & > tbody > tr > td.title > span {
+        margin: -4px -8px;
+        padding: 4px 8px;
+        display: block;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        font-size: 14px;
+        line-height: 16px;
+
+        &:focus {
+        	@mixin focus-pill;
+        }
+    }
+
+    & > tbody > tr > td.title > .disabled {
+        color: $tableTextDisabledColor;
+    }
+
+    & > tbody > tr.expanded > td.title > a {
+        white-space: normal;
+    }
+
+    th.col-info {
+        width:15px;
+        padding-left:20px;
+        padding-right:0;
+        text-align: left;
+        vertical-align: top;
+        font-size: 100%;
+        border-right:1px solid $tableBorderVertical;
+
+
+        a {
+            text-decoration: none;
+            color: $black;
+        }
+
+        .icon-info {
+            width:15px;
+            display: block;
+
+        }
+    }
+
+    td.expands:hover:not(.disabled),
+    td.col-info:hover:not(.disabled) {
+        background-color: $tableBackgroundAccentHover !important; /*  lame but needed to override BS .table-striped */
+        border-right:1px solid $tableBorderVertical !important;
+    }
+    
+    td.expands .icon-triangle-right-small:before {content: "\203A"; }
+    td.expands .icon-triangle-down-small:before {content: "\02C5"; }
+}
+
+/*  remove sorting icons for info column */
+.table-chrome {
+    .sorts th.col-info:after {
+        content: "";
+    }
+
+}
+
+
+
+/*  SPECIAL COLUMNS AND CELLS */
+/*  -------------------- */
+/*  custom styles for row numbers */
+
+td.row-number,
+th.row-number {
+    width: 1px;
+}
+td.row-number, td.line-num {
+    text-align: right;
+    color: $textGray;
+}
+
+/*  custom styles for numeric value cells */
+th.numeric, td.numeric {
+    text-align: right
+}
+
+td.end-group {
+    border-right:1px solid $tableBorderVertical;
+}
+
+
+/*  DOCKING AND STATIC TABLE HEADERS */
+/*  ----------- */
+/*  class for docking table header and scroll bar */
+
+.header-table-docked {
+    position: fixed;
+    top: 0;
+    z-index: $zindexHeaderTable;
+    overflow: hidden;
+    @mixin affix-top-shadow;
+    background: $white;
+}
+
+.header-table-docked > .disable {
+    display: block;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    background-color: $gray;
+    opacity: 0.30;
+}
+
+.header-table-docked > table {
+    table-layout: fixed;
+    margin-bottom: 0;
+    /*  SPL-71945, this prevents the last header cell from appearing un-styled in Firefox and IE */
+    max-width: inherit;
+}
+
+.table-scroll-bar-docked {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow-x: auto;
+}
+
+ /*  class for static table header and scroll bar */
+
+.header-table-static {
+    height: 0;
+    position: relative;
+    z-index: $zindexHeaderTable;
+
+    > table {
+        margin-bottom: 0;
+    }
+}
+
+.header-table-wrapper {
+    overflow: hidden;
+    border-bottom: 1px solid $tableBorder;
+    .table {
+        margin-bottom: 0;
+    }
+}
+
+ /*  need to clean up these two classes to make sense */
+.scroll-table-wrapper { /*  used on dashboards and embedded tables, the wrapper scrolls horz and vert */
+    height: 380px; /* override */
+    width: 100%;
+    overflow: auto;
+}
+
+.scrolling-table-wrapper { /* tables that will scroll horizontally */
+    width: 100%;
+    overflow-x: auto;
+    position: relative;
+}
+
+/*  tables that will scroll vertically, up to consumer to set height or max-height */
+.vertical-scrolling-table-wrapper {
+    width: 100%;
+    overflow-y: auto;
+}
+
+
+/*  MODALIZING ROWS */
+/*  ----------- */
+.modalize-table-top, .modalize-table-bottom, .modalize-table-overlay {
+    position: absolute;
+    left: 0;
+    background-color: $gray;
+    opacity: 0.30;
+}
+
+.modalize-table-top {
+    top: 0;
+}
+
+.modalize-table-bottom {
+    bottom: 0;
+}
+
+.modalize-table-overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+}
+
+
+/*  DRILLDOWN */
+/*  -------------------------------------------------- */
+
+.table-drilldown > tbody > tr > td {
+    color: $linkColor;
+    &:hover {
+        color: $linkColorHover;
+    }
+    /*  reset for row # */
+    &.row-number {
+        color: $textGray;
+    }
+}
+.table-drilldown-row > tbody > tr:hover > td {
+   color: $linkColorHover;
+   /*  reset for row # */
+   &.row-number {
+       color: $textGray;
+   }
+}
+.table-drilldown-cell > tbody > tr > td:hover {
+    .multivalue-subcell {
+        color: $linkColor;
+        &:hover {
+            color: $linkColorHover;
+        }
+    }
+}
+
+
+/*  MISC */
+/*  ----------- */
+/*  misc hacks that should probably never been added */
+.ui-grid-head-table,
+.ui-grid-body-table
+{
+    margin-bottom: 0;
+}
+
+/*  table-scroll? */
+.table-scroll {
+    tbody {
+        max-height: 200px;
+        overflow-y: scroll;
+    }
+}
+
+/*  just the row borders */
+.table-border-row {
+    border-top: 1px solid $tableBorder;
+    th, td {border-top: 1px solid $tableBorder;}
+}
+
+/*  fixed width tables */
+.table-fixed {
+    table-layout:fixed;
+    tr > td:first-child {
+        max-width: 300px;
+        word-break: break-all;
+    }
+}
+
+/*  remove the sorting icons for the row number column */
+.table-chrome {
+    .sorts th.row-number:after {
+        content: "";
+    }
+}
+
+/*  Lite UI */
+/*  -------------------------------------------------- */
+@if $theme == lite {
+	.table-chrome {
+		border-top-width: 0;
+		border-bottom-color: $splunkLiteBlack;
+
+		> thead > tr > th {
+		    border-top-width: 0;
+			border-left-width: 0;
+			border-right-width: 0;
+			border-bottom: 1px solid $splunkLiteBlack;
+			font-weight: bold;
+
+			&.sorts:hover, &.sorts.active:hover {
+				 background: $tableBackgroundHover;
+			}
+		}
+
+		> tbody > tr > td {
+			border-top-width: 0;
+		}
+
+		> tbody > tr:nth-child(odd) > td {
+			    background-color: $white;
+		}
+
+		> tbody > tr:nth-child(even) > td{
+			background-color: $tableBackgroundAccent;
+		}
+
+		> tbody > tr.odd > td {
+		    background-color: $white;
+		}
+
+
+		> tbody > tr.even > td  {
+			background-color: $tableBackgroundAccent;
+		}
+
+
+	    .sorts {
+		    font-weight: bold;
+
+	    	.icon-sorts:before {
+		        color: $splunkLiteBlack;
+		    }
+	    }
+	}
+
+	.header-table-wrapper, .header-table-wrapper .table-chrome {
+		border-bottom-width: 0;
+	}
+
+}
+
+/*  Print */
+/*  -------------------------------------------------- */
+
+
+@media print { body { @mixin print-table; } }
+body.print { @mixin print-table; }

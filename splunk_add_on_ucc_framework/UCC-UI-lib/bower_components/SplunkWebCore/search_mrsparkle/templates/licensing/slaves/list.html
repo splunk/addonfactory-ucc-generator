@@ -1,0 +1,29 @@
+<%inherit file="//layout/admin_lite.html"/>
+<%namespace name="formset" file="//formset.html" />
+<%namespace name="lib" file="//lib.html" />
+
+<%def name="title()">${_('Connected indexers')} - ${parent.title()}</%def>
+<%def name="get_breadcrumbs()">
+    <%
+        return [
+            [_('Manager'), ['manager']],
+            [_('Licensing'), ['manager','system','licensing']],
+            [_('Connected indexers'), None]
+        ]    
+    %>
+</%def>
+
+<div style="padding:15px">
+
+<h1>${_('Indexers connected to:')} ${server_name | h} (${len(slaves)})</h1>
+
+% for i, slave in enumerate(slaves, 1):
+    <h2>${i}. ${slave.label | h}</h2>
+    <div class="moduleWrapper">
+        ${formset.dump_model(slave)}  
+    </div>
+% endfor
+
+<p><a href="${return_to | h}">${_('&laquo; return to overview')}</a></p>
+
+</div>

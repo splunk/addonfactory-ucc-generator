@@ -1,0 +1,27 @@
+<%inherit file="/layout/admin_lite_dialog.html" />
+
+<h1>${_('App configuration') | h}</h1>
+
+<p class="primaryMessage">
+    ${_('The "%s" app has not been fully configured yet.') % app_label | h}
+</p>
+
+<p>${_('This app has configuration properties that can be customized for this Splunk instance. Depending on the app, these properties may or may not be required.')}</p>
+
+##
+## buttons
+##
+<%def name="gutter()">
+    <div class="admin-dialog-tray">
+        <a href="?setup=1" class="splButton-primary">${_('Continue to app setup page')}</a>
+    </div>
+</%def>
+
+<%doc>
+    ## this route was disabled per SPL-30191
+    <p>
+        <a href="${bypass_link}">${_('Defer setup; go to default view')}</a>
+        <br />
+        <span class="comment">(You can always setup the app later via Apps &raquo; Manage Apps.)</span>
+    </p>
+</%doc>

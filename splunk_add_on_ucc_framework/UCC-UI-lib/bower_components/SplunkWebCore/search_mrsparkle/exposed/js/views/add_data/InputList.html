@@ -1,0 +1,67 @@
+<div class="input_list">
+    <a href="#" class="link-wrap"><div id="evt_logs_local" class="input_item windows">
+        <div class="input_type"><%= _('Local Event Logs').t() %></div>
+        <div class="input_desc"><%= _('Collect event logs from this machine.').t() %></div>
+    </div></a>
+    <a href="#" class="link-wrap"><div id="evt_logs_remote" class="input_item windows">
+        <div class="input_type"><%= _('Remote Event Logs').t() %></div>
+        <div class="input_desc"><%= _('Collect event logs from remote hosts. Note: this uses WMI and requires a domain account.').t() %></div>
+    </div></a>
+    <a href="#" class="link-wrap"><div id="file_monitor" class="input_item">
+        <div class="input_type"><%= _('Files & Directories').t() %></div>
+        <div class="input_desc"><%= _('Upload a file, index a local file, or monitor an entire directory.').t() %></div>
+    </div></a>
+    <a href="#" class="link-wrap"><div id="http" class="input_item">
+        <div class="input_type"><%= _('HTTP Event Collector').t() %></div>
+        <div class="input_desc"><%= _('Configure tokens that clients can use to send data over HTTP or HTTPS.').t() %></div>
+    </div></a>
+    <a href="#" class="link-wrap"><div id="tcp" class="input_item">
+        <% if (model.user.canEditTCP() || isForwarderMode) { %>
+            <% if (model.user.canEditUDP() || isForwarderMode) { %>
+                <div class="input_type"><%= _('TCP / UDP').t() %></div>
+            <% } else { %>
+                <div class="input_type"><%= _('TCP').t() %></div>
+            <% } %>
+        <% } else if (model.user.canEditUDP()) { %>
+            <div class="input_type"><%= _('UDP').t() %></div>
+        <% } %>
+        <div class="input_desc"><%= _('Configure Splunk to listen on a network port.').t() %></div>
+    </div></a>
+    <a href="#" class="link-wrap"><div id="perfmon_local" class="input_item windows">
+        <div class="input_type"><%= _('Local Performance Monitoring').t() %></div>
+        <div class="input_desc"><%= _('Collect performance data from this machine.').t() %></div>
+    </div></a>
+    <a href="#" class="link-wrap"><div id="perfmon_remote" class="input_item windows">
+        <div class="input_type"><%= _('Remote Performance Monitoring').t() %></div>
+        <div class="input_desc"><%= _('Collect performance and event information from remote hosts. Requires domain credentials.').t() %></div>
+    </div></a>
+    <a href="#" class="link-wrap"><div id="regmon" class="input_item windows">
+        <div class="input_type"><%= _('Registry monitoring').t() %></div>
+        <div class="input_desc"><%= _('Have Splunk index the local Windows Registry, and monitor it for changes.').t() %></div>
+    </div></a>
+    <a href="#" class="link-wrap"><div id="admon" class="input_item windows">
+        <div class="input_type"><%= _('Active Directory monitoring').t() %></div>
+        <div class="input_desc"><%= _('Index and monitor Active Directory.').t() %></div>
+    </div></a>
+    <a href="#" class="link-wrap"><div id="hostmon" class="input_item windows">
+        <div class="input_type"><%= _('Local Windows host monitoring').t() %></div>
+        <div class="input_desc"><%= _('Collect up-to-date hardware and software (Computer, Operating System, Processor, Service, Disk, Network Adapter and Application) information about this machine.').t() %></div>
+    </div></a>
+    <a href="#" class="link-wrap"><div id="netmon" class="input_item windows">
+        <div class="input_type"><%= _('Local Windows network monitoring').t() %></div>
+        <div class="input_desc"><%= _('This is an input for Splunk Network Monitor.').t() %></div>
+    </div></a>
+    <a href="#" class="link-wrap"><div id="printmon" class="input_item windows">
+        <div class="input_type"><%= _('Local Windows print monitoring').t() %></div>
+        <div class="input_desc"><%= _('Collect information about printers, printer jobs, print drivers, and print ports on this machine.').t() %></div>
+    </div></a>
+    <a href="#" class="link-wrap"><div id="scripts" class="input_item">
+        <div class="input_type"><%= _('Scripts').t() %></div>
+        <div class="input_desc"><%= _('Get data from any API, service, or database with a script.').t() %></div>
+    </div></a>
+</div>
+<div class="inputform_wrapper">
+
+
+</div>
+

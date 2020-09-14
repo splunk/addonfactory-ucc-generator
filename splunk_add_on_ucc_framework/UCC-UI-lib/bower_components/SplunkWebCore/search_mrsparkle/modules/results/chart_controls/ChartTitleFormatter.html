@@ -1,0 +1,13 @@
+<%page args="module"/>
+
+<%
+if module.has_key('label'):
+    label = _(module['label'])
+else:
+    label = _('Chart title')
+%>
+<fieldset>
+    <label for="${module['id']}_input">${label|h}</label>
+    <input name="chartTitle" id="${module['id']}_input" value="${module.get('default', '')}"/>
+</fieldset>
+

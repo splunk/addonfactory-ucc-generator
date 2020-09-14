@@ -1,0 +1,27 @@
+
+<div class="view-client-summary">
+
+  <!-- this should really use the shared singleValue component   -->
+  <div class="single-value shared-singlevalue span3" data-view="views/shared/SingleValue">
+      <!-- <span class="before-label">before</span> -->
+      <span class="single-result" id="appSize"></span>
+      <span class="after-label">MB</span>
+      <br>
+      <span class="under-label"><%-_("APP DATA SIZE").t()%></span>
+  </div>
+  <div class="single-value shared-singlevalue span3" data-view="views/shared/SingleValue">
+      <span class="single-result" id="numClientsWithApp"></span>
+      <span class="after-label" id="numClientsWithAppLabel" ><%-_("Clients").t()%></span></a>
+      <br>
+      <span class="under-label clients-match-text"></span>
+  </div>
+  <div class="single-value shared-singlevalue span3" data-view="views/shared/SingleValue">
+      <!-- <span class="before-label">before</span> -->
+      <span class="single-result" id="percentageDeployed">0</span>
+      <span class="after-label" id="percentDeployedLabel"><%-_("Clients").t()%></span>
+      <br>
+      <span class="under-label"><%-_("DEPLOYED THIS APP SUCCESSFULLY").t()%></span>
+  </div>
+
+</div>
+

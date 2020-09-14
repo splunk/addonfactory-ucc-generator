@@ -1,0 +1,1359 @@
+structure:
+  - name: dashboard
+    alias: form
+    settings:
+      - name: label
+        type: node
+        dataType: string
+      - name: description
+        type: node
+        dataType: string
+      - name: isVisible
+        description: 'Use false to hide the dashboard from the listing page'
+        type: attribute
+        dataType: boolean
+        default: true
+      - name: isDashboard
+        type: attribute
+        dataType: boolean
+        default: true
+      - name: refresh
+        type: attribute
+        dataType: integer
+        default: null
+      - name: cancelOnUnload
+        attributeName: onunloadCancelJobs
+        type: attribute
+        dataType: boolean
+        default: true
+      - name: script
+        type: attribute
+        dataType: app-resources
+      - name: stylesheet
+        type: attribute
+        dataType: app-resources
+      - name: hideChrome
+        type: attribute
+        dataType: boolean
+    children:
+      - type: fieldset
+        max: 1
+      - type: globalSearchTemplate
+        max: 1
+      - type: globalEarliestTime
+        max: 1
+      - type: globalLatestTime
+        max: 1
+      - type: globalSearchName
+        max: 1
+      - type: base-search
+      - type: row
+
+  - name: globalSearchTemplate
+    tagName: searchTemplate
+    settings:
+      name: query
+      type: content
+      dataType: search-string
+    legacy: true
+    normalization:
+      convertTo:
+        type: inline-search
+        id: global
+  - name: searchTemplate
+    extends: legacySearch
+    settings:
+      - name: query
+        type: content
+        dataType: search-string
+    normalization:
+      convertTo:
+        type: inline-search
+        
+  - name: searchPostProcess
+    extends: legacySearch
+    settings:
+      - name: postprocess
+        type: content
+        dataType: search-string
+      - name: ref
+        type: static
+        dataType: identifier
+        default: global
+    normalization:
+      convertTo:
+        type: postprocess-search
+        
+  - name: searchString
+    extends: legacySearch
+    settings:
+      - name: query
+        type: content
+        dataType: search-string
+    normalization:
+      convertTo:
+        type: inline-search
+
+  - name: globalSearchName
+    tagName: searchName
+    legacy: true
+    normalization:
+      convertTo:
+        type: saved-search
+        id: global
+  - name: searchName
+    extends: legacySearch
+    settings:
+      - name: name
+        type: content
+        dataType: string
+    normalization:
+      convertTo:
+        type: saved-search
+
+  - name: globalEarliestTime
+    tagName: earliestTime 
+    legacy: true
+    settings:
+      - name: earliest
+        type: content
+        dataType: string
+    normalization:
+      convertTo:
+        type: inline-search
+        id: global
+  - name: earliestTime
+    extends: legacySearch
+    settings:
+      - name: earliest
+        type: content
+        dataType: string
+    normalization:
+      convertTo:
+        type: inline-search
+
+  - name: globalLatestTime
+    tagName: latestTime
+    legacy: true
+    settings:
+      - name: latest
+        type: content
+        dataType: string
+    normalization:
+      convertTo:
+        type: inline-search
+        id: global
+  - name: latestTime
+    extends: legacySearch
+    settings:
+      - name: latest
+        type: content
+        dataType: string
+    normalization:
+      convertTo:
+        type: inline-search
+      
+  - name: legacySearch
+    abstract: true
+    legacy: true
+
+  - name: row
+    settings:
+      - name: id
+        type: attribute
+        dataType: identifier
+      - name: grouping
+        type: attribute
+        dataType: string
+        legacy: true
+    normalization:
+      autoId: row%d
+      rowGrouping: panel
+    children:
+      - type: base-panel
+      - type: element
+      - type: html
+
+  - name: base-panel
+    abstract: true
+
+  - name: panelref
+    extends: base-panel
+    tagName: panel
+    match: 'panel[ref]'
+    settings:
+      - name: id
+        type: attribute
+        dataType: identifier
+      - name: title
+        type: node
+        dataType: string
+    normalization:
+      autoId: panel%d
+
+  - name: panel
+    extends: base-panel
+    tagName: panel
+    settings:
+      - name: id
+        type: attribute
+        dataType: identifier
+      - name: title
+        type: node
+        dataType: string
+      - name: description
+        type: node
+        dataType: string
+      - name: depends
+        type: attribute
+        dataType: string
+      - name: rejects
+        type: attribute
+        dataType: string
+    children:
+      - type: element
+        min: 1
+      - type: base-input
+      - type: time-input
+    normalization:
+      autoId: panel%d
+
+elements:
+
+  - name: element
+    abstract: true
+    settings:
+      - name: id
+        type: attribute
+        dataType: identifier
+      - name: title
+        description: 'The element title as shown above the visualization'
+        type: node
+        dataType: string
+      - name: depends
+        parentObj: tokenDependencies
+        attributeName: depends
+        type: attribute
+        dataType: string
+      - name: rejects
+        parentObj: tokenDependencies
+        attributeName: rejects
+        type: attribute
+        dataType: string
+      - name: drilldown
+        type: option
+        dataType: enum
+        values: [all, none]
+        default: all
+    normalization:
+      autoId: element%d
+    children:
+      - type: legacySearch
+      - type: base-search
+        max: 1
+      - type: drilldown
+        max: 1
+
+  - name: chart
+    extends: element
+    settings:
+      - name: charting.chart
+        description: What type of chart do you want
+        type: option
+        dataType: enum
+        values: [area, bar, column, fillerGauge, line, markerGauge, pie, radialGauge, scatter]
+      - name: charting.chart.showLines
+        description: Enable or disable drilldown for the chart
+        type: option
+        dataType: boolean
+      - name: charting.chart.stackMode
+        type: option
+        dataType: enum
+        values: [default, stacked, stacked100]
+      - name: charting.chart.nullValueMode
+        type: option
+        dataType: enum
+        values: [gaps, zero, connect]
+      - name: charting.chart.barSpacing
+        description: 'Controls the spacing between bars in a bar chart'
+        type: option
+        dataType: integer
+      - name: charting.chart.columnSpacing
+        type: option
+        dataType: integer
+      - name: height
+        type: option
+        dataType: string
+      - name: charting.axisTitleX.text
+        type: option
+        dataType: string
+      - name: charting.axisTitleY.text
+        type: option
+        dataType: string
+      - name: charting.axisTitleY2.text
+        type: option
+        dataType: string
+      - name: charting.axisTitleX.visibility
+        type: option
+        dataType: string
+      - name: charting.axisTitleY.visibility
+        type: option
+        dataType: string
+      - name: charting.axisTitleY2.visibility
+        type: option
+        dataType: string
+      - name: charting.seriesColors
+        type: option
+        dataType: string
+      - name: charting.resultTruncationLimit
+        type: option
+        dataType: string
+      - name: charting.chart.resultTruncationLimit
+        type: option
+        dataType: string
+      - name: charting.layout.splitSeries
+        type: option
+        dataType: string
+      - name: charting.gaugeColors
+        type: option
+        dataType: string
+      - name: charting.fieldColors
+        type: option
+        dataType: string
+      - name: charting.lineDashStyle
+        type: option
+        dataType: string
+      - name: charting.data.jobID
+        type: option
+        dataType: string
+      - name: charting.data.offset
+        type: option
+        dataType: string
+      - name: charting.data.count
+        type: option
+        dataType: string
+      - name: charting.data.search
+        type: option
+        dataType: string
+      - name: charting.data.preview
+        type: option
+        dataType: string
+      - name: charting.data.fieldListMode
+        type: option
+        dataType: string
+      - name: charting.data.fieldShowList
+        type: option
+        dataType: string
+      - name: charting.data.fieldHideList
+        type: option
+        dataType: string
+      - name: charting.data.table
+        type: option
+        dataType: string
+      - name: charting.data.rows
+        type: option
+        dataType: string
+      - name: charting.data.columns
+        type: option
+        dataType: string
+      - name: charting.data.count
+        type: option
+        dataType: string
+      - name: charting.axisY2.enabled 
+        type: option
+        dataType: string
+      - name: charting.axisY2.fields 
+        type: option
+        dataType: string
+      - name: charting.axisY.scale
+        type: option
+        dataType: string
+      - name: charting.axisY2.scale
+        type: option
+        dataType: string
+      - name: charting.axisY.minimumNumber
+        type: option
+        dataType: string
+      - name: charting.axisY2.minimumNumber
+        type: option
+        dataType: string
+      - name: charting.axisY.maximumNumber
+        type: option
+        dataType: string
+      - name: charting.axisY2.maximumNumber
+        type: option
+        dataType: string
+      - name: charting.axisX.scale
+        type: option
+        dataType: string
+      - name: charting.axisX.minimumNumber
+        type: option
+        dataType: string
+      - name: charting.axisX.maximumNumber
+        type: option
+        dataType: string
+      - name: charting.axisX.includeZero
+        type: option
+        dataType: string
+      - name: charting.axisY.includeZero
+        type: option
+        dataType: string
+      - name: charting.axisY2.includeZero
+        type: option
+        dataType: string
+      - name: charting.axisLabelsX.majorLabelVisibility
+        type: option
+        dataType: string
+      - name: charting.axisLabelsX.majorLabelStyle.rotation 
+        type: option
+        dataType: string
+      - name: charting.axisLabelsX.majorLabelStyle.overflowMode
+        type: option
+        dataType: string
+      - name: charting.axisLabelsX.integerUnits
+        type: option
+        dataType: string
+      - name: charting.axisLabelsY.majorLabelVisibility
+        type: option
+        dataType: string
+      - name: charting.axisLabelsY2.majorLabelVisibility
+        type: option
+        dataType: string
+      - name: charting.axisLabelsY.majorUnit
+        type: option
+        dataType: string
+      - name: charting.axisLabelsY2.majorUnit
+        type: option
+        dataType: string
+      - name: charting.axisLabelsX.majorUnit
+        type: option
+        dataType: string
+      - name: charting.axisLabelsX.axisVisibility
+        type: option
+        dataType: string
+      - name: charting.axisLabelsY.axisVisibility
+        type: option
+        dataType: string
+      - name: charting.axisLabelsY2.axisVisibility
+        type: option
+        dataType: string
+      - name: charting.axisLabelsX.majorTickVisibility
+        type: option
+        dataType: string
+      - name: charting.axisLabelsY.majorTickVisibility
+        type: option
+        dataType: string
+      - name: charting.axisLabelsY2.majorTickVisibility
+        type: option
+        dataType: string
+      - name: charting.axisLabelsX.minorTickVisibility
+        type: option
+        dataType: string
+      - name: charting.axisLabelsY.minorTickVisibility
+        type: option
+        dataType: string
+      - name: charting.axisLabelsY2.minorTickVisibility
+        type: option
+        dataType: string
+      - name: charting.axisLabelsX.majorTickSize
+        type: option
+        dataType: string
+      - name: charting.axisLabelsY.majorTickSize
+        type: option
+        dataType: string
+      - name: charting.axisLabelsY2.majorTickSize
+        type: option
+        dataType: string
+      - name: charting.axisLabelsX.minorTickSize
+        type: option
+        dataType: string
+      - name: charting.axisLabelsY.minorTickSize
+        type: option
+        dataType: string
+      - name: charting.axisLabelsY2.minorTickSize
+        type: option
+        dataType: string
+      - name: charting.axisLabelsX.majorLabelVisibility
+        type: option
+        dataType: string
+      - name: charting.axisLabelsY.majorLabelVisibility
+        type: option
+        dataType: string
+      - name: charting.axisLabelsY2.majorLabelVisibility
+        type: option
+        dataType: string
+      - name: charting.axisLabelsY.extendsAxisRange
+        type: option
+        dataType: string
+      - name: charting.axisLabelsY.integerUnits
+        type: option
+        dataType: string
+      - name: charting.axisLabelsY2.integerUnits
+        type: option
+        dataType: string
+      - name: charting.axisLabelsX.extendsAxisRange
+        type: option
+        dataType: string
+      - name: charting.axisLabelsY.extendsAxisRange
+        type: option
+        dataType: string
+      - name: charting.gridLinesX.showMajorLines
+        type: option
+        dataType: string
+      - name: charting.gridLinesY.showMajorLines
+        type: option
+        dataType: string
+      - name: charting.gridLinesY2.showMajorLines
+        type: option
+        dataType: string
+      - name: charting.gridLinesX.showMinorLines
+        type: option
+        dataType: string
+      - name: charting.gridLinesY.showMinorLines
+        type: option
+        dataType: string
+      - name: charting.gridLinesY2.showMinorLines
+        type: option
+        dataType: string
+      - name: charting.legend.labels
+        type: option
+        dataType: string
+      - name: charting.legend.placement
+        type: option
+        dataType: string
+      - name: charting.legend.labelStyle.overflowMode
+        type: option
+        dataType: string
+      - name: charting.legend.masterLegend
+        type: option
+        dataType: string
+      - name: charting.chart
+        type: option
+        dataType: string
+      - name: charting.drilldown
+        type: option
+        dataType: string
+      - name: charting.chart.showLines
+        description: Indicates whether or not lines should be painted in area charts
+        type: option
+        dataType: boolean
+      - name: charting.chart.stackMode
+        description: Used to set up stacked area, bar, and column charts
+        type: option
+        dataType: enum
+        values: [default, stacked, stacked100]
+      - name: charting.chart.nullValueMode
+        description: Determines how the area chart handles null values
+        type: option
+        dataType: enum
+        values: [gaps, zero, connect]
+      - name: charting.chart.barSpacing
+        description: Controls the spacing between bars in a bar chart. Whether this property is measured in pixels or is relative to the
+        type: option
+        dataType: integer
+      - name: charting.chart.columnSpacing
+        description: Controls the spacing between columns in a column chart
+        type: option
+        dataType: integer
+      - name: charting.chart.style
+        description: Enables the choice between two basic gauge appearances. The shiny style is a graphically stylized version of the gauge with with chrome, shading, and so on so that it mimics those in the real world. The minimal style is a stripped-down "just the basics" version of the gauge.
+        type: option
+        dataType: enum
+        values: [minimal, shiny]
+      - name: charting.chart.rangeValues
+        description:  A numeric array that represents the overall numerical range represented by the gauge, and the relative size of the color-coded subranges within that overall range. For example, a range of [0,30,70,100] would indicate that the gauge starts at zero, ends at 100, and has three subranges that are each identified by another filler color. If the search returns a value of 71, the filler rises to that value on the gauge and takes on the color assigned to the top range (71-100).
+        type: option
+        dataType: string
+      - name: charting.chart.showLabels
+        description: Determines whether the gauge/pie chart should display labels
+        type: option
+        dataType: boolean
+      - name: charting.chart.showValue
+        description: Determines whether the gauge should show its value
+        type: option
+        dataType: boolean
+      - name: charting.chart.showMarkers
+        description: Indicates whether or not markers should be painted in line charts
+        type: option
+        dataType: boolean
+      - name: charting.chart.markerSize
+        description: Determines the scatter chart's marker size. Defaults to 4
+        type: option
+        dataType: integer
+      - name: charting.chart.usePercentageRange
+        description: Determines whether the gauge uses percentage range. Defaults to false
+        type: option
+        dataType: boolean
+      - name: charting.chart.usePercentageValue
+        description: Determines whether the gauge uses percentage value. Defaults to false
+        type: option
+        dataType: boolean
+      - name: charting.chart.rangeStartAngle
+        description: Determines the radial gauge's range start angle. Defaults to 45
+        type: option
+        dataType: integer
+      - name: charting.chart.rangeArcAngle
+        description: Determines the radial gauge's range arc angle. Defaults to 270
+        type: option
+        dataType: integer
+      - name: charting.chart.majorUnit
+        type: option
+        dataType: string
+      - name: charting.chart.showMajorTicks
+        type: option
+        dataType: string
+      - name: charting.chart.showMinorTicks
+        type: option
+        dataType: string
+      - name: charting.chart.orientation
+        type: option
+        dataType: string
+      - name: charting.chart.seriesSpacing
+        type: option
+        dataType: string
+      - name: charting.chart.sliceCollapsingThreshold
+        type: option
+        dataType: string
+      - name: charting.chart.sliceCollapsingLabel
+        type: option
+        dataType: string
+      - name: charting.chart.showPercent
+        type: option
+        dataType: string
+      - name: charting.chart.overlayFields 
+        type: option
+        dataType: string
+      - name: charting.areaFillOpacity
+        type: option
+        dataType: string
+      - name: charting.chart.bubbleMaximumSize
+        type: option
+        dataType: string
+      - name: charting.chart.bubbleMinimumSize
+        type: option
+        dataType: string
+      - name: charting.chart.bubbleSizeBy
+        type: option
+        dataType: string
+      - name: 
+        type: option
+        dataType: string        
+    children:
+      - type: selection
+        max: 1
+        
+  - name: selection
+    children:
+      - type: action
+    normalization:
+      autoId: 'selection%d'
+      inlineChildren:
+        - type: action
+          setting: actions
+
+  - name: table
+    extends: element
+    settings:
+      - name: count
+        type: option
+        dataType: integer
+      - name: rowNumbers
+        alias: displayRowNumbers
+        type: option
+        dataType: boolean
+        default: true
+      - name: dataOverlayMode
+        type: option
+        dataType: enum
+        values: [none, heatmap, highlow]
+        default: none
+      - name: showPager
+        type: option
+        dataType: boolean
+        default: true
+      - name: previewResults
+        type: option
+        dataType: boolean
+        default: true
+      - name: drilldown
+        type: option
+        dataType: enum
+        values: [all, cell, row, none]
+        default: all
+      - name: fields
+        type: option
+        dataType: fields-list
+        legacy: true
+      - name: fields
+        type: node
+        dataType: fields-list
+      - name: wrap
+        type: option
+        dataType: boolean
+      - name: format
+        type: format
+        
+  - name: map
+    extends: element
+    settings:
+      - name: mapping.data.maxClusters
+        description: The maximum number of clusters to render. Use caution when setting this property, as rendering a large number of clusters can significantly degrade performance. It's recommended to use values below 1000. The default value is 100
+        type: option
+        dataType: integer
+      - name: mapping.fieldColors
+        description: '{<field>:<hex>,...,<field>:<hex>} - A map of field names to hexadecimal color values (0xRRGGBB) to define colors for specific series. The default value is none.'
+        type: option
+        dataType: string
+      - name: mapping.seriesColors
+        description: '[<hex>,...,<hex>] - A list of hexadecimal color values (0xRRGGBB) from which to sample colors for series with no specific colors assigned via the fieldColors property. The default value is'
+        type: option
+        dataType: string
+      - name: mapping.map.center
+        description: (<latitude>,<longitude>) - The initial center point of the map. Latitude values can range from -85 to 85, with values outside of this range being clipped. Longitude values can range from -180 to 180, with values outside of this range being wrapped to fall within it. The default value is none (auto).
+        type: option
+        dataType: string
+      - name: mapping.map.zoom
+        description: The initial zoom level of the map. The default value is none (auto)
+        type: option
+        dataType: integer
+      - name: mapping.map.fitBounds
+        description: '(<south-latitude>,<west-longitude>,<north-latitude>,<east-longitude>) - The initial bounds to fit within the map view area. Latitude values can range from -85 to 85, with values outside of this range being clipped. Longitude values can range from -180 to 180, with values outside of this range being wrapped to fall within it. Values assigned to this property effectively override any values assigned to the center or zoom properties. The default value is none (auto).'
+        type: option
+        dataType: string
+      - name: mapping.tileLayer.url
+        description: The url template to use for requesting tiles. The template can contain {x}, {y}, {z}, and {s} tokens to be replaced with the x coordinate, y coordinate, zoom level, and subdomain, respectively, for each tile. The default value is currently http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png (likely to change before release).
+        type: option
+        dataType: string
+      - name: mapping.tileLayer.subdomains
+        description: '[<string>,...,<string>] - A list of subdomains to distribute tile requests over. More subdomains allows more tiles to be requested simultaneously. The default value is [a,b,c]'
+        type: option
+        dataType: string
+      - name: mapping.tileLayer.minZoom
+        description: The minimum zoom level of the tileset. The default value is 0
+        type: option
+        dataType: integer
+      - name: mapping.tileLayer.maxZoom
+        description: The maximum zoom level of the tileset. The default value is currently 18
+        type: option
+        dataType: integer
+      - name: mapping.tileLayer.invertY
+        description: Whether to invert the y coordinate for tile requests (TMS servers use inverse y-axis numbering). The default value is false
+        type: option
+        dataType: boolean
+      - name: mapping.tileLayer.attribution
+        description: A copyright attribution to be displayed in the bottom right corner of the map. The default value is currently Map data (c) 2012 OpenStreetMap contributors, CC-BY-SA
+        type: option
+        dataType: string
+      - name: mapping.markerLayer.markerOpacity
+        description: The opacity of the markers. Values can range from 0 (transparent) to 1 (opaque). The default value is 0.8
+        type: option
+        dataType: float
+      - name: mapping.markerLayer.markerMinSize
+        description: The minimum size of the markers, in pixels. The default value is 10
+        type: option
+        dataType: integer
+      - name: mapping.markerLayer.markerMaxSize
+        description: The maximum size of the markers, in pixels. The default value is 50
+        type: option
+        dataType: integer
+      - name: height
+
+  - name: single
+    extends: element
+    settings:
+      - name: additionalClass
+        description: Static class added to containing div
+        type: option
+        dataType: string
+      - name: linkView
+        description: Target view which user is redirected to when clicking on the result
+        type: option
+        dataType: string
+      - name: field
+        description: field that holds the value to display
+        type: option
+        dataType: string
+      - name: linkFields
+        description: CSV list containing: result, beforelabel, underlabel, afterlabel turning that portion into a link
+        type: option
+        dataType: string
+      - name: classField
+        description: additional class added to containing div based on the field specified
+        type: option
+        dataType: string
+      - name: beforeLabel
+        description: label that appears to the left of the value
+        type: option
+        dataType: string
+      - name: afterLabel
+        description: label that appears to the right of the value 
+        type: option
+        dataType: string
+      - name: underLabel
+        description: label that appears below the value
+        type: option
+        dataType: string
+      - name: linkSearch
+        description: optional search that is passed to the linked view
+        type: option
+        dataType: search-string
+      - name: drilldown
+        description: enable or disable automatic drilldown for the single value visualization. By default it is disabled ("none") for backwards compatibility.
+        type: option
+        dataType: enum
+        values: [all, none]
+        default: none
+
+  - name: event
+    extends: element
+    settings:
+      - name: count
+        description: The maximum number of rows to display
+        type: option
+        dataType: integer
+      - name: rowNumbers
+        alias: displayRowNumbers
+        description: Toggle display of row numbers to the left of results
+        type: option
+        dataType: boolean
+      - name: entityName
+        description: Toggle whether to show events or results. Events are individual events, while results are created by statistical operators. Defaults to events
+        type: option
+        dataType: enum
+        values: [events, results]
+      - name: maxLines
+        description: The maximum number of lines to display for each result/event
+        type: option
+        dataType: integer
+      - name: showPager
+        description: Toggle pagination on or off
+        type: option
+        dataType: boolean
+      - name: segmentation
+        description: Set the segmentation of events displayed. This affects what you can and can't click on within the event. This only applies to raw and list event panel types
+        type: option
+        dataType: enum
+        values: [none, inner, outer, full]
+      - name: softWrap
+        type: option
+        dataType: boolean
+      - name: type
+        type: option
+        dataType: enum
+        values: [list, raw, table]
+        default: list
+      - name: drilldown
+        description: A "virtual" option to bulk-set all of the type-specific drilldown options. Enabling this causes the default values for the following settings to change (<segmentation> is the value of the segementation option):
+        type: option
+        dataType: enum
+        values: 
+      - name: raw.drilldown
+        type: option
+        dataType: enum
+        values: [full, inner, outer, none]
+      - name: list.drilldown
+        type: option
+        dataType: enum
+        values: [full, inner, outer, none]
+      - name: table.drilldown
+        type: option
+        dataType: enum
+        values: [all, none]
+      - name: list.wrap
+        type: option
+        dataType: boolean
+      - name: table.wrap
+        type: option
+        dataType: boolean
+      - name: table.sortColumn
+        type: option
+        dataType: string
+      - name: table.sortDirection
+        type: option
+        dataType: enum
+        values: [asc, desc]
+      - name: pagerPosition
+        type: option
+        dataType: enum
+        values: [top, bottom]
+      - name: fields
+        type: node
+        dataType: fields-list
+         
+        
+  - name: html
+    settings:
+      - name: id
+        type: attribute
+        dataType: identifier
+      - name: src
+        type: attribute
+        dataType: app-resource
+      - name: content
+        type: content
+        raw: true
+        dataType: html
+    normalization:
+      autoId: element%d
+
+searches:
+
+  - name: base-search
+    settings:
+      - name: id
+        type: attribute
+        dataType: identifier
+    normalization:
+      autoId: search%d
+
+  - name: inline-search
+    extends: base-search
+    tagName: search
+    match: 'search>query'
+    settings:
+      - name: ref
+        type: attribute
+        dataType: identifier
+        description: Reference to the base search
+      - name: description
+        type: node
+        dataType: string
+      - name: query
+        type: node
+        dataType: search-string
+      - name: earliest
+        type: node
+        dataType: string
+      - name: latest
+        type: node
+        dataType: string
+
+  - name: saved-search
+    extends: base-search
+    tagName: search
+    match: search>name
+    settings:
+      - name: description
+        type: node
+      - name: name
+        type: node
+      - name: earliest
+        type: node
+        dataType: string
+      - name: latest
+        type: node
+        dataType: string
+
+  - name: postprocess-search
+    extends: base-search
+    tagName: search
+    match: 'search[ref]>postprocess'
+    settings:
+      - name: ref
+        type: attribute
+        dataType: identifier
+        description: Reference to the base search
+      - name: description
+        type: node
+        dataType: string
+      - name: postprocess
+        type: node
+        dataType: search-string
+        
+  - name: search-reference
+    extends: base-search
+    tagName: search
+    match: 'search[ref]'
+    settings:
+      - name: ref
+        type: attribute
+        dataType: identifier
+        description: Reference to the base search
+
+drilldown:
+  - name: drilldown
+    abstract: true
+    tagName: drilldown
+    normalization:
+      autoId: 'drilldown%d'
+      inlineChildren:
+        - type: condition
+          setting: conditions
+        - type: action
+          setting: actions
+          
+  - name: conditional-drilldown
+    extends: drilldown
+    match: 'drilldown>condition'
+    children:
+      - type: field-condition
+    normalization:
+      convertTo:
+        type: drilldown
+        
+  - name: unconditional-drilldown
+    extends: drilldown
+    children:
+      - type: action
+        min: 1
+    normalization:
+      convertTo:
+        type: drilldown
+
+  - name: condition
+    tagName: condition
+    abstract: ture
+    settings:
+      - name: value
+        attributeName: field
+        type: attribute
+        dataType: string
+      - name: attr
+        type: static
+        dataType: string
+        default: field 
+    children:
+      - type: action
+    normalization:
+      inlineChildren:
+        - type: action
+          setting: actions
+          
+  - name: field-condition
+    extends: condition
+    match: 'condition[field]'
+    settings:
+      - name: value
+        type: attribute
+        attributeName: field
+        dataType: string
+      - name: attr
+        type: static
+        default: field
+    normalization:
+      convertTo:
+        type: condition
+        
+  - name: value-condition
+    extends: condition
+    match: 'condition[value]'
+    settings:
+      - name: value
+        type: attribute
+        attributeName: value
+        dataType: string
+      - name: attr
+        type: static
+        default: value
+    normalization:
+      convertTo:
+        type: condition
+    
+  - name: label-condition
+    extends: condition
+    match: 'condition[label]'
+    settings:
+      - name: value
+        type: attribute
+        attributeName: label
+        dataType: string
+      - name: attr
+        type: static
+        default: label
+    normalization:
+      convertTo:
+        type: condition
+
+  - name: action
+    abstract: true
+
+  - name: set
+    extends: action
+    settings:
+      - name: type
+        type: static
+        dataType: string
+        default: set
+      - name: value
+        type: content
+        dataType: string
+      - name: token
+        type: attribute
+        dataType: token-name
+      - name: prefix
+        type: attribute
+        dataType: string
+      - name: suffix
+        type: attribute
+        dataType: string
+      - name: delimiter
+        type: attribute
+        dataType: string
+  - name: unset
+    extends: action
+    settings:
+      - name: type
+        type: static
+        dataType: string
+        default: unset
+      - name: token
+        type: attribute
+        dataType: token-name
+  - name: link
+    extends: action
+    settings:
+      - name: type
+        type: static
+        dataType: string
+        default: link
+      - name: value
+        type: content
+        dataType: string
+      - name: target
+        type: attribute
+        dataType: string
+
+form:
+  - name: fieldset
+    settings:
+      - name: autoRun
+        type: attribute
+        dataType: boolean
+        default: false
+      - name: submitButton
+        type: attribute
+        dataType: boolean
+    children:
+      - type: base-input
+      - type: time-input
+      - type: html
+
+  - name: input-search
+    abstract: true
+    legacy: true
+    settings:
+      - name: labelField
+        attributeName: fieldForLabel 
+        type: attribute
+        dataType: string
+      - name: valueField
+        attributeName: fieldForValue 
+        type: attribute
+        dataType: string
+    normalization:
+      pullOutSettings:
+        - labelField
+        - valueField
+
+  - name: populatingSearch
+    extends: input-search
+    settings:
+      - name: query
+        type: content
+        dataType: search-string
+      - name: earliest
+        type: attribute
+        dataType: string
+      - name: latest
+        type: attribute
+        dataType: string
+    normalization:
+      convertTo:
+        type: inline-search
+        
+  - name: populatingSavedSearch
+    extends: input-search
+    settings:
+      - name: name
+        type: content
+        dataType: string
+    normalization:
+      convertTo:
+        type: inline-search
+
+  - name: base-input
+    tagName: input
+    abstract: true
+    settings:
+      - name: token
+        type: attribute
+        dataType: token-name
+      - name: searchWhenChanged
+        type: attribute
+        dataType: boolean
+      - name: label
+        type: node
+        dataType: string
+      - name: default
+        type: node
+      - name: seed
+        type: node
+      - name: prefix
+        type: node
+      - name: suffix
+        type: node
+    normalization:
+      autoId: 'input%d'
+
+  - name: text-input
+    extends: base-input
+    match: 'input[type=text]'
+    extends: base-input
+    children:
+      - type: input-change
+
+    
+  - name: input-choice
+    tagName: choice
+    settings:
+      - name: value
+        type: attribute
+        dataType: string
+      - name: label
+        type: content
+        dataType: string
+
+  - name: dropdown-input
+    match: 'input[type=dropdown]'
+    extends: base-input
+    children:
+      - type: input-choice
+      - type: input-search
+      - type: input-change
+    normalization:
+      inlineChildren:
+        - type: input-choice
+          setting: choices
+
+  - name: radio-input
+    match: 'input[type=radio]'
+    extends: base-input
+    children:
+      - type: input-choice
+      - type: input-search
+      - type: input-change
+    normalization:
+      inlineChildren:
+        - type: input-choice
+          setting: choices
+
+  - name: multiselect-input
+    match: 'input[type=multiselect]'
+    extends: base-input
+    settings:
+      - name: valuePrefix
+        type: node
+      - name: valueSuffix
+        type: node
+      - name: delimiter
+        type: node
+        trim: false
+        default: ","
+    children:
+      - type: input-choice
+      - type: input-search
+      - type: input-change
+    normalization:
+      inlineChildren:
+        - type: input-choice
+          setting: choices
+
+  - name: checkbox-input
+    match: 'input[type=checkbox]'
+    extends: base-input
+    settings:
+      - name: valuePrefix
+        type: node
+      - name: valueSuffix
+        type: node
+      - name: delimiter
+        type: node
+        trim: false
+        default: ","
+    children:
+      - type: input-choice
+      - type: input-search
+      - type: input-change
+    normalization:
+      inlineChildren:
+        - type: input-choice
+          setting: choices
+
+  - name: time-input
+    tagName: input
+    match: 'input[type=time]'
+    settings:
+      - name: token
+        type: attribute
+        dataType: token-name
+      - name: searchWhenChanged
+        type: attribute
+        dataType: boolean
+      - name: label
+        type: node
+        dataType: string
+    children:
+      - type: default-time-value
+        max: 1
+      - type: default-time-preset
+        max: 1
+      - type: input-change
+    normalization:
+      autoId: input%d
+      inlineChildren:
+        - type: default-time-value
+          setting: default
+          single: true
+      
+  - name: default-time-value
+    tagName: default
+    match: 'default>earliestTime,default>latestTime'
+    settings:
+      - name: earliest_time
+        nodeName: earliestTime
+        type: node
+        dataType: string
+      - name: latest_time
+        nodeName: latestTime
+        type: node
+        dataType: string
+        
+  - name: default-time-preset
+    tagName: default
+    settings:
+      - name: default
+        type: content
+        dataType: string
+    normalization:
+      pullOutSettings:
+        - default
+      omitFromResults: true
+      
+  - name: input-change
+    tagName: change
+    abstract: true
+    normalization:
+      inlineChildren:
+        - type: condition
+          setting: conditions
+        - type: action
+          setting: actions
+          
+  - name: conditional-input-change
+    extends: input-change
+    match: 'change>condition'
+    children:
+      - type: value-condition
+      - type: label-condition
+    normalization:
+      convertTo:
+        type: input-change
+        
+  - name: unconditional-input-change
+    extends: input-change
+    children:
+      - type: action
+        min: 1
+    normalization:
+      convertTo:
+        type: input-change

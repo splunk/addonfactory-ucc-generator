@@ -1,0 +1,16 @@
+##
+## Splunk app setup RelaxNG schema
+##
+## NOTE: TODO: THIS IS PLACEHOLDER ONLY AND ONLY VALIDATES WELL-FORMEDNESS
+
+start = Setup
+
+Setup = element setup {
+    GlobElement*
+}
+
+GlobElement = element * {
+    (attribute * { text }
+    | text
+    | GlobElement)*
+}

@@ -1,0 +1,15 @@
+<%inherit file="//layout/admin_lite.html"/>
+
+<%def name="title()">${_('Insufficent License Level | Splunk')}</%def>
+
+<div class="section-header section-padded section-paywall">
+    <h2 class="section-title">${feature}</h2>
+
+    <div id="paywall-content">
+        ${_('This feature is not available with your installed set of licenses.') }
+    </div>
+
+    <a class="splButton-primary" href="${make_url(['help'], _qs=dict(location='learnmore.license.features'))}" target="_blank">
+        <span>${ _('Learn More') }</span>
+    </a>
+</div>

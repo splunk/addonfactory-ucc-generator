@@ -1,0 +1,19 @@
+<%inherit file="/layout/wizard.html"/>
+<%namespace file="/lib.html" import="wizard_save_search_form"/>
+<div class="content">
+    <%include file="_steps.html" args="step=1"/>
+    <form method="post" action="${make_url(['dashboardwizard', app, 'step1', 'create'])|h}" class="dashboardStep1">
+        ${wizard_save_search_form(app, saved_search, display_share=False)}
+        <input type="submit" class="visuallyhidden" />
+    </form>
+</div>
+<ul class="buttons splClearfix">
+    <li class="left">
+        <a href="${make_url(['dashboardwizard', app, 'step1', 'new'])}" class="splButton-secondary cancel">${_('Cancel')}</a>
+    </li>
+    <li class="right">
+        <button class="splButton-primary" type="submit" onclick="$(document.forms[0]).trigger('submit');">
+            <span>${_('Next &raquo;')}</span>
+        </button>
+    </li>
+</ul>

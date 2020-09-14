@@ -1,0 +1,13 @@
+<div class="tile-shape">
+    <div class="tile-icon"><%= icon %></div>
+    <div class="tile-name"><%- name %></div>
+    <div class="tile-actions">
+    	<% if (showGear) { %>
+        	<a class="action-edit" href="#"><i class="icon-large icon-gear"></i> <span class="caret"></span></a>
+        <% } %>
+        <div class="action-buttons">
+            <a class="btn action-open" href="<%= reportLink %>"><%- _("Open").t() %></a>
+            <a class="btn action-search" href="<%= searchLink %>"><%- _("Open in Search").t() %></a>
+        </div>
+    </div>
+</div>

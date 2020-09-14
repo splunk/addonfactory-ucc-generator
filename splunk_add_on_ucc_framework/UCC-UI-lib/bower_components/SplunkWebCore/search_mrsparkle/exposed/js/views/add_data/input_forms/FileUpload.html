@@ -1,0 +1,32 @@
+<div class="fileUpload">
+    <h1 class="title"> <%= _('Select Source').t() %> </h1>
+    <p><%= _('Choose a file to upload to Splunk, either by browsing your computer or by dropping a file into the target box below.').t() %>
+    <a class="external" href="<%- helpLinkUpload %>" target="_blank"> <%= _('Learn More').t() %></a>
+    </p>
+
+    <div class="browserWarning" style="display: none;padding-top:40px;padding-bottom:40px;">
+        <div class="alert alert-error">
+            <i class="icon-alert"></i><%= _('Your browser does not support file uploads. Please download and install the latest version or use another supported browser to access this feature.').t() %> <a class="external" href="<%- helpLinkBrowser %>" target="_blank"> <%= _('Learn More').t() %></a>
+        </div>
+    </div>
+
+    <div class="uploadControlWrapper">
+        <div id="flashmessages-placeholder"></div>
+        <div class="selected-file clearfix">
+            <label class="control-label" style="display: inline-block;"><%= _('Selected File:').t() %></label>
+            <span class="source-label"></span>
+        </div>
+
+
+        <a href="#" class="btn upload-file-button"><%= _('Select File').t() %></a>
+        <input type="file" id="inputReference" name="spl-file" style="display:none;"/>
+        <div class="dropzone-container"></div>
+
+        <span class="max-filesize"><%- _('The maximum file upload size is ').t() + maxFileSize + _(" Mb").t() %></span>
+        <div class="progress" style="display: none;">
+          <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+            <span class="sr-only"></span>
+          </div>
+        </div>
+    </div>
+</div>

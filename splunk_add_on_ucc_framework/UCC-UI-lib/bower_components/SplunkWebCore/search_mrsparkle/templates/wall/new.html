@@ -1,0 +1,22 @@
+<%inherit file="layout.html" />
+<%namespace name="lib" file="//lib.html" import="*"/>
+
+<form action="${make_url(['wall', app, 'create'])|h}" method="post">
+	<div style="padding:10px;">
+		<h1>${_("Post")}</h1>
+		% if len(message.errors)>0:
+			<ul class="errors" style="margin:0px; padding:0px;">
+				% for error in message.errors:
+					<li class="error">${error|h}</li>
+				% endfor
+			</ul>
+		% endif
+        ${csrf_hidden_input()}
+		<input type="hidden" name="name" value="wall"/>
+		<textarea name="value" placeholder="What's up?" style="width:90%;" autofocus="autofocus" tabindex="1">${message.value or '' | h}</textarea>
+	</div>
+	<ul class="splClearfix" style="margin:0px; margin-top:10px; background: #fff;  border-top: 1px solid #ccc; padding:10px; list-style:none;">
+		<li style="float:left;"><a href="${make_url(['wall', app, 'new'])}" class="splButton-secondary cancel" tabindex="3">${_("Cancel")}</a></li>
+		<li style="float:right;"><button class="splButton-primary" type="submit" tabindex="2"><span>${_('Submit')}</span></button></li>
+	</ul>
+</form>

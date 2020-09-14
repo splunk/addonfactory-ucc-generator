@@ -1,0 +1,30 @@
+<%namespace name="h" file="//lists/_helpers.html" import="*"/>
+
+<%def name="td(text, value=None, options=None, key=None)">
+% if value == None:
+    <td>${text | h}</td>
+% else:
+    <td><a href="#" rel="${value | h}" title="${text | h}"
+    % if key != None:
+        key="{key | h}"
+    % endif
+    >${text | h}</a></td>
+% endif
+</%def>
+
+<%def name="tr(text)">
+    <tr>${text}</tr>
+</%def>
+
+<table>
+% if staticFields:
+<%h:staticfields items="${staticFields}" formatter="${td}" wrapper="${tr}" />
+% endif
+
+% if fields:
+<%h:listobjfields items="${list_data}" fields="${fields}" formatter="${td}" wrapper="${tr}" />
+% else:
+<%h:listobjfields items="${list_data}" formatter="${td}" wrapper="${tr}" />
+% endif\
+</table>
+

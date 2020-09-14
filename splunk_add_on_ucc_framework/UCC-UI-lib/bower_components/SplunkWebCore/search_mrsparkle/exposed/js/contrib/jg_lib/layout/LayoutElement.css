@@ -1,0 +1,49 @@
+@namespace l ".";
+
+l|LayoutElement
+{
+	position: absolute !important;
+	resize: none !important;
+	display: block;
+	left: 0px;
+	top: 0px;
+	right: auto !important;
+	bottom: auto !important;
+	width: 0px;
+	height: 0px;
+	min-width: 0px !important;
+	min-height: 0px !important;
+	max-width: none !important;
+	max-height: none !important;
+	margin: 0px;
+	padding: 0px;
+	border-width: 0px;
+	border-style: solid;
+}
+
+l|LayoutElement-layoutPending
+{
+	visibility: hidden !important;
+}
+
+l|LayoutElement-root
+{
+	position: relative !important;
+}
+
+l|LayoutElement-child
+{
+	position: absolute !important;
+	left: 0px;
+	top: 0px;
+}
+
+l|LayoutElement-parent-autoWidth
+{
+	overflow-x: hidden !important;
+}
+
+l|LayoutElement-parent-autoHeight
+{
+	overflow-y: hidden !important;
+}

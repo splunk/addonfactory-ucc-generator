@@ -1,0 +1,18 @@
+<%= _('You must restart Splunk for the').t() %> <%-mode%>  <%= _('node to become active.').t() %>
+<% if(mode=="peer") { %>
+<p><%= _('Optional next steps after restart:').t() %></p>
+<ol>
+    <li><%= _('Configure the indexes for the peers.').t() %><br>
+        <div style="color:#999; margin-top:5px; margin-bottom:10px;">
+            <%= _('The index file determines the peers set of indexes and the size and attributes of its buckets. This file must be identical across all peer nodes. Peer index files are edited and distributed from the Master Node. ').t() %>
+            <a href="<%=learnmoreIndexesLink%>" class="external" target="_blank"><%= _('Learn More').t() %></a>
+        </div>
+    </li>
+    <li><%= _('Use forwarders to get data to this peer.').t() %><br>
+        <div style="color:#999; margin-top:5px; margin-bottom:10px;">
+            <%= _('There are two reasons for using forwarders to send data to your cluster. 1. To ensure that all incoming data gets indexed. 2. To handle potential node failure. ').t() %>
+            <a href="<%=learnmoreForwardersLink%>" class="external" target="_blank"><%= _('Learn More').t() %></a>
+        </div>
+    </li>
+</ol>
+<% } %>

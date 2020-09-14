@@ -1,0 +1,43 @@
+<div class="forwarders-main">
+    <div class="header">
+        <span class="forwarders-title"><%= _('Select Forwarders').t() %></span>
+        <br/>
+        <p class="first-p">
+            <%= _('Create or select a server class for data inputs. Use this page only in a single-instance Splunk environment.').t() %>
+        </p>
+        <p>
+            <%= _('To enable forwarding of data from deployment clients to this instance, set the output configurations on your forwarders.').t() %>
+            <% if (isCloud) { %>
+                <p class="has-forwarders">
+                    <%= _("If you don't see your forwarder listed below and/or would like to add a new one").t() %>,
+                    <a href="<%- UFSetupLink %>" class="external" target="_blank"><%= _('start here').t() %></a>.
+                </p>
+            <% } else { %>
+                <a class="external" href="<%- setupLink %>" target="_blank"> <%= _('Learn More').t() %> </a>
+            <% } %>
+        </p>
+    </div>
+    <div class="form-horizontal forwarders-form has-forwarders">
+        <div id="viewby-placeholder"></div>
+        <div id="new_group">
+            <div id="forwarder-list-placeholder"></div>
+            <div id="newgroup-placeholder"></div>
+        </div>
+        <div id="existing_group">
+            <div id="groups-placeholder"></div>
+            <div id="group-fwders-placeholder"></div>
+        </div>
+    </div>
+    <div class="no-forwarders">
+        <% if (isCloud) { %>
+            <i class="icon-alert"></i><%= _("You currently don't have any forwarders installed. If you've recently installed a new forwarder, click the refresh button below to reload page." ).t() %>
+            <div class="cloud-actions">
+                <a href="#" class="btn btn-secondary refresh"><%= _('Refresh').t() %></a>
+                <a href="<%- UFSetupLink %>" class="btn btn-primary external" target="_blank"><%= _('Setup new forwarder').t() %></a>
+            </div>
+        <% } else { %>
+            <i class="icon-alert"></i><%= _('There are currently no forwarders configured as deployment clients to this instance.').t() %>
+            <a href="<%- setupLink %>" class="external" target="_blank"> <%= _('Learn More').t() %> </a>
+        <% } %>
+    </div>
+</div>

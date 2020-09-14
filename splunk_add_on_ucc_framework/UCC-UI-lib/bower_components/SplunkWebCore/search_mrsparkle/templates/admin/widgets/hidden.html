@@ -1,0 +1,4 @@
+<%page args="element" />
+<%namespace file="../_helpers.html" import="wireElementEvents" />
+
+    <input type="hidden" name="${element["elementName"] | h}" id="item-${element['elementName'] | h}" ${'disabled="disabled"' if element.get('disabled') else ''} ${wireElementEvents(element)}/>

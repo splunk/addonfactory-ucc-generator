@@ -1,0 +1,103 @@
+/*  Splunk: Page: Alert */
+/*  ==================== */
+/*  Alert details page layout and overrides */
+
+/*
+
+ */
+.view-alert-page {
+	position: relative;
+
+	& > .divider {
+		clear:both;
+	}
+	.trigger-history {
+		clear: both;
+		background-color: $white;
+	}
+}
+
+/*  TODO: this seems to part of tables, not even sure it's used on this page */
+.table-caption  {
+	height: 36px;
+}
+.table-caption-inner {
+	padding: 5px 12px 0 12px;
+
+	&.affix-top {
+		top: 0;
+		left: 0;
+		right: 0;
+		background-color: $white;
+		z-index: 10;
+		position: fixed;
+	}
+}
+
+/*  TODO: this doesn't work, not sure why it was added */
+.section-description{
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+/*  TODO: maybe this should just use a float */
+.shared-alertcontrols-details > .list-dotted {
+	margin: 10px 0 0 0 ;
+	display: inline-block;
+	width: 42%;
+	vertical-align: top;
+	dd.alert-actions {
+		span {
+			display: inline-block;
+		}
+		div.action-item{
+			margin-left: 10px;
+		}
+		img {
+            width: 18px;
+            height: 18px;
+            float: left;
+            padding-right: 5px;
+        }
+		> a.edit-link {
+			vertical-align: top;
+			padding-left: 5px;
+		}
+		a.expand {
+			padding-right: 2px;
+		}
+	}
+}
+.alert-history > h3 {
+	line-height: 1;
+	margin: 0;
+	padding: 20px 20px 0 20px;
+	color: $textColor;
+	margin-bottom: 5px;
+}
+
+/*  TODO: this should be using message single */
+.alert-disabled, .alert-nofiredalerts {
+	padding: 60px 20px;
+}
+
+.alerts {
+	padding: 30px 20px;
+}
+
+
+/*  TODO: maybe this should be global? */
+.alert-info .icon-info-circle {
+	color: $splunkGreen;
+	font-size: 200%;
+	vertical-align: middle;
+	margin-right: 0.5em;
+}
+
+/*  Lite */
+/*  ------------------------------- */
+@if $theme == lite {
+	.alert-info .icon-info-circle {
+		color: $splunkLiteBlack;
+	}
+}

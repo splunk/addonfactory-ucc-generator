@@ -1,0 +1,60 @@
+{
+    "links": {
+        "_acl": "/servicesNS/-/search/datasets/_acl"
+    },
+    "origin": "https://localhost:8089/servicesNS/-/search/datasets",
+    "updated": "2016-06-15T11:31:53-07:00",
+    "generator": {
+        "build": "62496f6c577935781b59a0a311be4bfec8f4a2da",
+        "version": "20160614"
+    },
+    "entry": [
+        {
+            "name": "geo_attr_countries.csv",
+            "id": "https://localhost:8089/servicesNS/nobody/search/data/lookup-table-files/geo_attr_countries.csv",
+            "updated": "2016-06-15T11:31:53-07:00",
+            "links": {
+                "alternate": "/servicesNS/nobody/search/data/lookup-table-files/geo_attr_countries.csv",
+                "list": "/servicesNS/nobody/search/data/lookup-table-files/geo_attr_countries.csv",
+                "_reload": "/servicesNS/nobody/search/data/lookup-table-files/geo_attr_countries.csv/_reload",
+                "edit": "/servicesNS/nobody/search/data/lookup-table-files/geo_attr_countries.csv"
+            },
+            "author": "nobody",
+            "acl": {
+                "app": "search",
+                "can_change_perms": true,
+                "can_list": true,
+                "can_share_app": true,
+                "can_share_global": true,
+                "can_share_user": false,
+                "can_write": true,
+                "modifiable": true,
+                "owner": "nobody",
+                "perms": {
+                    "read": [
+                        "*"
+                    ],
+                    "write": [
+                        "admin",
+                        "power"
+                    ]
+                },
+                "removable": true,
+                "sharing": "global"
+            },
+            "content": {
+                "description": "",
+                "disabled": false,
+                "eai:acl": null,
+                "eai:location": "/data/lookup-table-files",
+                "eai:type": "inputlookup-table"
+            }
+        }
+    ],
+    "paging": {
+        "total": 3,
+        "perPage": 1,
+        "offset": 0
+    },
+    "messages": []
+}

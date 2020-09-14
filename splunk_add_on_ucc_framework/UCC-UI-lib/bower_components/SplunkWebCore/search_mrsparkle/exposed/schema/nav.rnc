@@ -1,0 +1,51 @@
+##
+## Splunk app view navgation RelaxNG schema
+##
+
+start = Nav
+
+Nav = element nav { 
+    attribute color { text }?
+    & attribute search_view { text }?
+    & NavItem*
+}
+
+NavItem = ( Saved | View | Collection | Divider | A )
+
+Collection = element collection {
+    attribute label { text }
+    & Saved*
+    & View*
+    & Collection*
+    & Divider*
+    & A*
+}
+
+Saved = element saved {
+    (
+        attribute name { text }
+        | (
+            attribute source { "all" | "unclassified" }
+            & attribute match { text }?
+        )
+    )
+    & attribute view { text }?
+}
+
+View = element view {
+    (
+        attribute name { text }
+        | (
+            attribute source { "all" | "unclassified" }
+            & attribute match { text }?
+        )
+    )
+    & attribute default { text }?
+}
+
+A = element a {
+    attribute href { text }
+    & text
+}
+
+Divider = element divider { empty }

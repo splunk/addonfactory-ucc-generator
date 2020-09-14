@@ -1,0 +1,16 @@
+.LinkSwitcher ul {
+    margin-left:0px;
+}
+.LinkSwitcher ul li {
+    list-style: none none;
+    margin: 0;
+    float: left;
+    padding-right: 5px;
+    padding-left: 0px;
+    line-height: 22px;
+}
+.LinkSwitcher a {
+    cursor:pointer;
+}
+
+

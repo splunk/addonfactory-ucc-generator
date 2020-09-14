@@ -1,0 +1,498 @@
+/*  Splunk: Component: SearchBar */
+/*  ============================= */
+/*  Main searchbarinput with default styling */
+
+/*  Sub-Components: search-assistant or autocomplete */
+/*  JS: exposed/js/views/searhbarinput/Master.js */
+
+/* search bar input
+<div class="shared-searchbarinput">
+    <div class="search-field-background"></div>
+    <div class="search-field-wrapper highlighted shared-searchbarinput-searchfield">
+        <pre class="ace_editor ace-tm" style="height: 20px;">
+            <textarea class="ace_text-input" wrap="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="opacity: 0; height: 20px; width: 7.1955px; left: 4px; top: 0px;"></textarea>
+            <div class="ace_gutter" style="display: none;">
+                <div class="ace_layer ace_gutter-layer ace_folding-enabled" style="margin-top: 0px;"></div>
+                <div class="ace_gutter-active-line" style="top: 0px; height: 20px;"></div>
+            </div>
+            <div class="ace_scroller" style="left: 0px; right: 0px; bottom: 0px;">
+                <div class="ace_content" style="margin-top: 0px; width: 811px; height: 60px; margin-left: 0px;">
+                    <div class="ace_layer ace_print-margin-layer">
+                        <div class="ace_print-margin" style="left: 579.64px; visibility: hidden;"></div>
+                    </div>
+                    <div class="ace_layer ace_marker-layer"></div>
+                    <div class="ace_layer ace_text-layer" style="padding: 0px 4px;">
+                        <div class="ace_line_group" style="height:20px">
+                            <div class="ace_line" style="height:20px"></div>
+                        </div>
+                    </div>
+                    <div class="ace_layer ace_marker-layer"></div>
+                    <div class="ace_layer ace_cursor-layer ace_hidden-cursors">
+                        <div class="ace_cursor" style="left: 4px; top: 0px; width: 7.1955px; height: 20px;"></div>
+                    </div>
+                </div>
+                <div class="ace_invisible ace_emptyMessage" style="padding: 0px 9px;">enter search here...</div>
+            </div>
+            <div class="ace_scrollbar ace_scrollbar-v" style="display: none; width: 17px; bottom: 0px;">
+                <div class="ace_scrollbar-inner" style="width: 17px; height: 20px;"></div>
+            </div>
+            <div class="ace_scrollbar ace_scrollbar-h" style="display: none; height: 17px; left: 0px; right: 0px;">
+                <div class="ace_scrollbar-inner" style="height: 17px; width: 811px;"></div>
+            </div>
+            <div style="height: auto; width: auto; top: 0px; left: 0px; visibility: hidden; position: absolute; white-space: pre; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; font-size: inherit; line-height: inherit; font-family: inherit; overflow: hidden;">
+                <div style="height: auto; width: auto; top: 0px; left: 0px; visibility: hidden; position: absolute; white-space: pre; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; font-size: inherit; line-height: inherit; font-family: inherit; overflow: visible;"></div>
+                <div style="height: auto; width: auto; top: 0px; left: 0px; visibility: hidden; position: absolute; white-space: pre; font-style: inherit; font-variant: inherit; font-stretch: inherit; font-size: inherit; line-height: inherit; font-family: inherit; overflow: visible;">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</div>
+            </div>
+        </pre>
+    </div>
+    <div class="search-assistant-wrapper shared-searchbarinput-searchassistant">          
+    </div>
+</div>
+
+*/
+/*  Search Assistant */
+/*  ------------------------- */
+$searchAssistantTypeaheadWidth:  370px;
+
+/* Search Autocomplete */
+.ace_hidden-cursors .ace_cursor {
+    opacity: 0;
+}
+
+.ace_editor.ace_autocomplete {
+    z-index: $zindexPopdown !important;
+    width: 415px !important;
+    background: $white !important;
+    font-family: $baseFontFamily !important;
+    line-height: 18px !important;
+    box-shadow: 0px 2px 1px rgba(0, 0, 0, .1) !important;
+    border: 1px solid $interactiveBorderColor !important;
+    border-radius: $containerInnerBorderRadius;
+
+    .ace_marker-layer {
+        .ace_active-line {
+            background: $pillBackgroundColorFocus !important;
+        }
+
+        .ace_line-hover {
+            border: none !important;
+            background: $pillBackgroundColorHover !important;
+        }
+    }
+
+    .ace_matched-highlight {
+        font-weight: bolder;
+    }
+}
+
+.ace_tooltip.ace_doc-tooltip{
+    z-index: $zindexPopdown !important; 
+    white-space: normal;
+    background: $offWhite;
+    padding: 6px; 
+    border: 1px solid $interactiveBorderColor;
+    border-top-color: $borderColor;
+    box-shadow: 0px 2px 1px rgba(0, 0, 0, .1);
+    border-radius: $containerInnerBorderRadius;
+
+    .command-intro {
+        margin-top: 5px;
+    }
+
+    .command-example {
+        margin-top: 3px;
+    }
+}
+
+.tooltip.right {
+    margin-left: 5px;
+    word-wrap: break-word;
+}
+
+/* dropdown search helper for autocomplete and search language suggestions
+
+    markup missing ...
+
+*/
+.search-assistant-wrapper {
+    position: relative;
+    width:100%;
+    height: 0;
+
+    &.open {
+        z-index: $zindexPopdown;
+    }
+
+    .icon-triangle-down-small:before {
+        content: "\02C5";
+    }
+
+    .icon-triangle-up-small {
+        background-color:$interactiveGradientEndColor;
+        &:before {
+            content: "\02C4";
+        }
+    }
+
+    &.search-assistant-enabled {
+        @mixin overlay-box-shadow;
+    }
+}
+
+.search-assistant-container {
+    display:none;
+    position:relative;
+    border: 1px solid $borderColor;
+    border-bottom: 0px;
+    border-top: 0px;
+    overflow: auto;
+
+    @mixin gradient-horizontal-two-color-stops $white,
+        $searchAssistantTypeaheadWidth,
+        $offWhite,
+        url('./bg_search_assistant.png');
+    background-position: 0 0;
+
+    @mixin clearfix;
+}
+
+.search-assistant-typeahead-wrapper, .search-assistant-help-wrapper {
+    h5 {
+       margin-top: 10px;
+    }
+}
+
+.search-assistant-typeahead-wrapper {
+    margin-right: -$searchAssistantTypeaheadWidth;
+    width: $searchAssistantTypeaheadWidth;
+    float: left;
+
+    h5 {
+        padding: 5px 10px 0 10px;
+        margin: 10px 0;
+    }
+
+    a + h5 {
+        margin-top: 10px;
+    }
+
+    a {
+        padding: 0 10px 0 10px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    a:hover {
+        text-decoration: none;
+    }
+}
+
+.typeahead-keyword {
+    display: block;
+    cursor: pointer;
+
+    &:focus {
+        @mixin focus-pill;
+    }
+    &:hover {
+        background: $pillBackgroundColorHover;
+    }
+}
+
+.search-assistant-help-wrapper {
+    margin-left: $searchAssistantTypeaheadWidth;
+    padding: 5px 15px 0 15px;
+
+    code {
+        color: $splunkGreen;
+        border: none;
+        background: transparent;
+    }
+}
+
+.search-assistant-help-notices {
+    margin-right: 100px;
+    padding: 2px 0px 2px 0px;
+    div:empty {
+        padding: 0px;
+    }
+}
+
+.intro-and-command-container {
+    word-wrap: break-word;
+    max-width: calc(100vw - 660px);
+}
+
+.intro-and-command-container > h5 {
+    color: $splunkGreen;
+}
+
+.intro-and-command-header, .intro-and-command-examples {
+    h5:first-child {
+        margin-top: 0;
+    }
+
+    dd {
+        margin-left: 20px;
+    }
+
+    dt, h5 {
+        margin-top: 10px;
+    }
+
+    dt {
+        font-weight: normal;
+    }
+
+    a {
+        cursor: pointer;
+    }
+}
+
+.intro-and-command-header, .syntax-header {
+    h5 {
+        display: inline;
+    }
+
+    a {
+        margin-left: 30px;
+    }
+}
+
+.intro-and-command-examples {
+    margin-top: 0px;
+}
+
+.intro-and-command-steps {
+    font-weight: bold;
+    margin-top: 10px;
+    display: block;
+}
+
+.search-assistant-autoopen-wrapper {
+    position: relative;
+    float: right;
+}
+
+.search-assistant-autoopen-toggle > .icon-check {
+    text-decoration: none;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.search-assistant-resize-active {
+    background-color:$interactiveGradientEndColor;
+    border: 0 solid $interactiveBorderTopColor;
+    border-top-color: $interactiveBorderTopColor;
+    border-bottom-color: $interactiveBorderBottomColor;
+    border-bottom-width: 1px;
+    height: 6px;
+    margin:0;
+    position:relative;
+    cursor: row-resize;
+
+    &:before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        @mixin translate -50%, -50%;
+        display: block;
+        border-radius: 2px;
+        border: none;
+        height: 4px;
+        width: 4px;
+        background-color: color($black a(25%));
+    }
+}
+
+.search-assistant-activator {
+    position:relative;
+    background-color:$white;
+    cursor:pointer;
+    border-bottom-left-radius: $interactiveBorderRadius;
+    border-bottom-right-radius: $interactiveBorderRadius;
+    border: 1px solid $interactiveBorderBottomColor;
+    border-top: none;
+    width:15px;
+    height:6px;
+    line-height: 9px;
+    padding-bottom: 2px;
+    font-size: 11px;
+    display: block;
+    color: $textColor;
+    text-align: center;
+    text-decoration: none;
+    margin: -1px 0 0 7px;
+
+    &:focus {
+        @mixin focus-button;
+        background: $white;
+        text-decoration: none;
+        color:  $linkColorHover;
+
+        &:before {
+            border-top: 4px solid $white;
+            display: block;
+            position: relative;
+            top: -4px;
+        }
+    }
+
+    &:hover {
+        text-decoration: none;
+    }
+}
+
+
+&.multiline .search-assistant-resize, &.search-assistant-open .search-assistant-resize {
+    border-width: 1px;
+}
+
+/*  Lite UI */
+/*  -------------------------------------------------- */
+@if $theme == lite  {
+    .search-bar {
+        .shared-timerangepicker .btn {
+            border-left: none;
+            border-radius:0;
+        }
+        .search-button .btn {
+            @mixin interactive-primary;
+            &:hover {
+                @mixin interactive-primary-hover;
+            }
+        }
+        &:focus {
+            @mixin focus-field;
+        }
+    }
+    .search-assistant-activator,
+    .search-assistant-open .search-assistant-resize,
+    .search-assistant-wrapper .search-assistant-container {
+        border-radius: 0;
+        border-color: $splunkLiteBlack;
+    }
+
+    .search-assistant-wrapper .search-assistant-autoopen-wrapper {
+        background: color($white a(50%));
+    }
+
+    .search-assistant-wrapper .search-assistant-container  {
+        background: $white;
+
+        .typeahead-wrapper {
+            &:before {
+                content: '';
+                position: absolute;
+                left: $searchAssistantTypeaheadWidth;
+                top: 0;
+                bottom: 0;
+                border-right: 1px solid $borderColor;
+            }
+
+            h5 {
+                font-weight: bold;
+            }
+        }
+
+        .intro-and-command-container > h5 {
+            color: $splunkLiteOrange;
+            font-size: 14px;
+            font-weight: normal;
+        }
+
+        code {
+            color: $splunkLiteOrange;
+        }
+    }
+
+}
+
+/* AceEditor */
+/* -------------------------------------------------- */
+.shared-searchbarinput-searchfield {
+    .ace_editor {
+        margin-bottom: 0px;
+        padding: 4px 6px;
+        min-height: 20px;
+        line-height: 20px;
+        font-family: $monoFontFamily;
+        color: $gray;
+        border-radius: $interactiveBorderRadius;
+        &.focused {
+            border-color: rgba(82, 168, 236, 0.8);
+            outline: 0;
+            border-collapse: separate;
+            box-shadow: 0 0 8px rgba(82, 168, 236, 0.6);
+        }
+        cursor: auto;
+    }
+    .ace_emptyMessage {
+        color: #999;
+        padding-left: 6px;
+    }
+    .ace_scroller {
+        margin-top: 8px;
+        margin-left: 4px;
+        padding-bottom: 8px;
+    }
+    .ace_gutter {
+        padding-top: 8px;
+        background: $interactiveBackgroundColorHover;
+
+        .ace_gutter-active-line {
+            margin-top: 8px;
+        }
+
+        .ace_gutter-cell {
+            padding-left: 6px;
+            padding-right: 6px;
+            color: $textGray;
+        }
+    }
+
+    &.disabled {
+        .ace_editor {
+            background-color: $grayLighter;
+        }
+        .ace_content {
+            cursor: not-allowed !important;
+        }
+    }
+}
+
+.shared-searchbarinput-searchfield, .ace_editor.ace_autocomplete {
+    &.highlighted {
+        .ace_command {
+            color: #2662FC;
+        }
+        .ace_function {
+            color: #CF00CF;
+        }
+        .ace_argument {
+            color: #5CA300;
+        }
+        .ace_modifier {
+            color: #F58220;
+        }
+    }
+}
+
+
+/*  Print */
+/*  -------------------------------------------------- */
+
+@media print {
+    .shared-searchbarinput {
+        padding: 0 !important;
+    }
+    .ace_editor {
+        border: 0;
+    }
+
+    .search-assistant-wrapper{
+        @mixin print-hide;
+    }
+}

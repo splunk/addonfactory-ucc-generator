@@ -1,0 +1,118 @@
+<%inherit file="//qunit/template.html" />
+
+<%def name="title()">Job Array -- QUnit tests</%def>
+
+<script type="text/javascript" src="/en-US/static/js/job.js"></script>
+<script type="text/javascript" src="/en-US/static/js/time_range.js"></script>
+<script type="text/javascript" src="/en-US/static/js/jobber.js"></script>
+<script type="text/javascript" src="/en-US/static/js/page_status.js"></script>
+
+<script language="javascript">
+    // important to disable the chatty debug that the tests spew.
+    Splunk.Logger.mode.Default = Splunk.Logger.mode.None
+</script>
+<script type="text/javascript" src="/en-US/static/js/init.js"></script>
+
+<script type="text/javascript">
+
+    function setUp() {
+        window.__ajax = $.ajax;
+    }
+
+    function tearDown() {
+        $.ajax = window.__ajax;
+    }
+
+    function buildJobs(count) {
+        count = count || 1;
+        var jobs = [];
+        for(var i=0; i<count; i++) {
+            jobs.push(new Splunk.Job('foo'));
+        }
+        return jobs;
+    }
+
+    function test_job_array_acts_like_array() {
+        var jobs = buildJobs(5);
+        var jobsArray = Splunk.JobArray.apply(null, jobs);
+        assertEquals('JobArrays should have a proper length property.', 5, jobsArray.length);
+
+        var newJob = buildJobs();
+        jobsArray.push(newJob);
+        assertEquals('JobArrays respond to push method.', 6, jobsArray.length);
+
+        jobsArray.pop();
+        assertEquals('JobArrays respond to pop method.', 5, jobsArray.length);
+    }
+
+    function test_job_array_returns_new_job_arrays_from_slice() {
+        var jobs = buildJobs(5);
+        var jobsArray = Splunk.JobArray.apply(null, jobs);
+        var newJArray = jobsArray.slice(1,4);
+        assertEquals('JobArrays should have a proper slice method.', 3, newJArray.length);
+        assertEquals('JobArrays returned from the slice method should be JobArrays.', Splunk.JobArray, newJArray.constructor);
+        assertEquals('JobArrays returned from slice should have a JobArray method.', 'function', typeof(newJArray._callAction));
+    }
+
+    function test_job_array_returns_new_job_arrays_from_concat() {
+        var jobs = buildJobs(5);
+        var jobsArray = Splunk.JobArray.apply(null, jobs);
+        var newJArray = jobsArray.concat(buildJobs(2));
+        assertEquals('JobArrays should have a proper concat method.', 7, newJArray.length);
+        assertEquals('JobArrays returned from the JobArray\'s concat method should be JobArrays.', Splunk.JobArray, newJArray.constructor);
+        assertEquals('JobArrays returned from concat should have a JobArray method.', 'function', typeof(newJArray._callAction));
+    }
+
+    function test_job_array_sets_up_job_action_methods() {
+        var ja = new Splunk.JobArray;
+        assert('JobArray prototype should define a list of job actions.', (Splunk.JobArray.prototype.JOB_ACTIONS != undefined));
+        for (var i=0, j=Splunk.JobArray.prototype.JOB_ACTIONS.length; i<j; i++) {
+            var name = Splunk.JobArray.prototype.JOB_ACTIONS[i];
+            assert('JobArrays should get methods based on the JOB_ACTIONS name.', (typeof(ja[name]) == 'function'));
+        }
+    }
+
+    function test_job_array_filtering() {
+        var ja = Splunk.JobArray.apply(null, buildJobs(5));
+        ja[0].setSearchId(123);
+        var filtered = ja.filter(function(j) { return (j.getSearchId() == 123); });
+        assertEquals('Initial JobArray should have 5 jobs.', 5, ja.length);
+        assertEquals('Filtered JobArray should have 1 job.', 1, filtered.length);
+    }
+
+    function test_job_array_job_action_methods_work() {
+        window.__post = $.post;
+        var calledAction = null;
+        $.post = function(url, params, callback) {
+            calledAction = params['action'];
+        }
+
+        var ja = Splunk.JobArray.apply(null, buildJobs(3));
+        ja[0].setSearchId(123);
+        
+        
+        for (var i=0, j=Splunk.JobArray.prototype.JOB_ACTIONS.length; i<j; i++) {
+            var action = Splunk.JobArray.prototype.JOB_ACTIONS[i];
+            ja[action]();
+            assertEquals('JobArrays should call the action endpoint with the correct action parameter.', action, calledAction);
+        }
+        $.post = window.__post;
+    }
+
+    function test_job_array_job_set_ttl() {
+        window.__post = $.post;
+        var calledAction = null;
+        var ttl = null;
+        var testTTL = 1234;
+        $.post = function(url, params, callback) {
+            calledAction = params['action'];
+            ttl = params['ttl'];
+        }
+        var ja = Splunk.JobArray.apply(null, buildJobs(3));
+        ja[0].setSearchId(123);
+        ja.setTTL(function(){}, testTTL);
+        assertEquals('JobArrays should call the action endpoint with the correct action parameter.', 'ttl', calledAction);
+        assertEquals('JobArrays should call the action endpoint with the correct ttl parameter.', ttl, testTTL);
+        $.post = window.__post;
+    }
+</script>

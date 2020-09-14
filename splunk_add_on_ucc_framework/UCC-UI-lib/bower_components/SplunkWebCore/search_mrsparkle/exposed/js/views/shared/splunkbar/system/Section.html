@@ -1,0 +1,11 @@
+<div class="<%=css.icon%>" data-role="icon"></div>
+<h5 class="<%=css.heading%>"><%=model.get('label')%></h5>
+<div class="<%=css.list%>" data-role="section-contents">
+    <% var addedItems = []; %>
+    <%_.each(this.model.get('items'), function(item, i){ %>
+        <% if(_.indexOf(addedItems, item.entry.content.get('menu.label')) === -1) {%>
+            <a href="<%-item.get('url')%>" class="<%=css.link%>" data-entry="<%-item.entry.get('name')%>"><%-_(item.entry.content.get('menu.label')).t() || _(item.entry.get('name')).t() || ''%></a>
+            <% addedItems.push(item.entry.content.get('menu.label')); %>
+        <%}%>
+    <%});%>
+</div>

@@ -1,0 +1,222 @@
+/*  Splunk: Pages: Clustering */
+/*  ========================= */
+
+
+/*  Modal */
+/*  ----- */
+
+.start {
+	/*  override help block styles due to form-horizontal */
+	.help-block {
+		margin-left: 20px;
+		font-size: $baseFontSize;
+		margin-bottom: calc($baseLineHeight / 2);
+	}
+}
+
+/*  FIXME: override default control-label color ;_; */
+.form .control-label {
+	color: $textColor;
+}
+
+
+/*  Summary */
+.statusSummary {
+	@mixin clearfix;
+	.single-value {
+		display: inline-block;
+	  	text-align: center;
+		width: 33%;
+		margin: 0 0 20px 0;
+		padding: 20px;
+		box-sizing: border-box;
+	    .single-result {
+		    font-size: 24px;
+		    font-weight: bold;
+		}
+	}
+	.double-value {
+		float: left;
+		width: 50%;
+		.after-label {
+			margin-right: 20px;
+		}
+	}
+    .shared-flashmessages .alert .icon-alert {
+      font-size: 100%;
+      position: relative;
+      left: 0px;
+      top: 0px;
+    }
+}
+
+.editMenu {
+	display: inline-block;
+}
+
+.section-table {
+  background-color: $white;
+  h3 {
+    line-height: 1;
+    font-size: 16px;
+    margin: 0;
+    padding: 40px 20px 10px 20px;
+    font-weight: normal;
+    color: $textColor;
+  }
+}
+
+/*  TODO: tmp??? */
+.tab-pane {
+	min-height: 300px;
+	background-color: $white;
+	padding-top: 10px;
+}
+
+.tab-content {
+	overflow: visible;
+}
+
+.search-query-control {
+	float: left;
+	margin-bottom: 0;
+	margin-right: 10px;
+	position: relative;
+	input {
+		width: 275px;
+	}
+}
+
+/*  status colors */
+.table .icon-check,
+.statusSummary .icon-check
+{
+	color: $successText;
+	margin-right: 0.5em;
+}
+.table .icon-alert,
+.statusSummary .icon-alert
+{
+	color: $errorText;
+	margin-right: 0.5em;
+}
+
+.clustering-master-peergrid,
+.clustering-master-indexesgrid,
+.clustering-master-searchheadsgrid
+ {
+	clear:both;
+	padding-top: 10px;
+}
+
+.dropdown-menu .list-dotted {
+	margin: 10px;
+}
+
+.section-controls {
+	padding-left: 20px;
+	padding-right: 20px;
+  .bucket-details {
+    margin-left: 20px;
+  }
+}
+
+.tooltip-link {
+	padding: 5px;
+}
+
+.tooltip-inner {
+    white-space:pre-wrap;
+    text-align:left;
+}
+
+.bucket-tooltip.tooltip-link {
+	padding: 0;
+}
+
+/*   Forms ... */
+/*  --------------- */
+
+.wide-form {
+		margin: auto;
+		margin-top: 20px;
+		margin-bottom: 10px;
+		line-height: 20px;
+}
+
+.wide-form tr td:first-child {
+		width: 140px;
+}
+.wide-form tr td:nth-child(2) {
+		width: 240px;
+}
+
+.wide-form .label {
+		float: right;
+		text-align: right;
+		margin-bottom: 10px;
+		padding-right: 10px;
+		margin-top: 2px;
+		text-shadow: none;
+		background: none;
+		color: $black;
+		font-weight: normal;
+		font-size: 12px;
+}
+.wide-form input[type="text"] {
+		display: block;
+		width: 95%;
+}
+.wide-form .hint {
+		line-height: 13px;
+		display: block;
+		padding-top: 4px;
+		margin-bottom: 10px;
+}
+
+.hint {
+		font-size: 11px;
+		color: $textGray;
+}
+
+/*  NO Peers */
+.no-peers {
+	.single-value {
+		width: 100%;
+	}
+}
+
+
+/*  fix z-index for tooltips in popdown */
+.section-header .btn-group {
+	z-index: 1;
+}
+
+.section-table > .divider {
+	border-top: 1px solid $borderColor;
+	border-bottom: 1px solid $white;
+	margin: 0;
+}
+
+/*  fix actions col from wrapping */
+.clustering-searchhead-searchheadgrid {
+	.table {
+		table-layout: auto;
+	}
+	.col-flex {
+		word-wrap: break-word;
+	}
+	.col-slim {
+		width: 150px;
+	}
+	.col-searchable {
+		width: 200px;
+	}
+	.col-actions {
+		width: 210px;
+		.actions-wrapper {
+			/*  white-space: nowrap; */
+			min-width: 210px;
+		}
+	}
+}

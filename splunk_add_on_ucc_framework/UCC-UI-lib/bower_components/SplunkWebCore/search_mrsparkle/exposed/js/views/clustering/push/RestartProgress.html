@@ -1,0 +1,13 @@
+<div class="section-padded">
+    <div class="progress-label">
+    	<%= _('Applying changes:').t() %>
+    	<span class="peer-num"><%=count%></span> <%= _('of').t() %> <%=total%> <%= _('Peers').t() %>
+    </div>
+    <div class="job-bar">
+        <div class="progress progress-striped active">
+            <div class="bar" style="width: <%=100*count/total%>%;">
+                <div class="block"></div>
+            </div>
+        </div>
+    </div>
+</div>

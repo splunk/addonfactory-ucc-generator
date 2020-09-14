@@ -1,0 +1,22 @@
+<div class="app">
+    <div class="app-icon">
+        <img src="<%- model.get('icon') %>">
+    </div>
+    <div class="app-actions-placeholder">
+        <a href="<%- appContent.link %>" class="btn <%- appContent.buttonClass %>"> <%- appContent.buttonText %> </a>
+    </div>
+    <h3 title="<%- model.get('title') %>"><%- model.get('title') %></h3>
+    <% if( appContent.messageText ) { %>
+        <p class="alert alert-warning center-text"><i class="icon-alert"></i><%- appContent.messageText %></p>
+    <%}%>
+    <% if( description.length > descriptionMaxLength) {%>
+        <p class="app-description app-description-short"><%- description.substring(0, descriptionMaxLength - 30) %>... <a href="#" class="app-more-description"><%- _("More").t() %></a></p>
+        <p class="app-description app-description-full"><%- description %><br><a href="#" class="app-less-description"><%- _("Less").t() %></a></p>
+        <%} else {%>
+            <p class="app-description"><%- model.get('description') %></p>
+    <%}%>
+    <div class="divider"></div>
+    <% if(certified === "certified") {%>
+        <div class="app-certified"><%- _("Splunk Certified").t() %></div>
+    <%}%>
+</div>

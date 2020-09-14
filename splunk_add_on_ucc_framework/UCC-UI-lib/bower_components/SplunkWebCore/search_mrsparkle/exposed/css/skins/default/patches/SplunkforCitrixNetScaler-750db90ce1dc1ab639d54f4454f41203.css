@@ -1,0 +1,78 @@
+/* patch for SplunkforCitrixNetScaler - version 4.6.2 */
+
+/* GENERAL */
+.splView-flashtimeline .ResultsHeader .splHeader-primary {
+    background-color:#DBE6E9;
+}
+.DisableRequiredFieldsButton {
+    background-color:#DBE6E9;
+}
+
+div.sidebarCollapsed .sidebarControl {
+    background-color:#DBE6E9;
+}
+
+/* SEARCHBAR */
+table.mainSearchControlsTable .TimeRangePicker .timeRangeActivatorWrapper {
+    background-color:#6699CC;
+    border-color:#6699CC;
+}
+
+table.mainSearchControlsTable .TimeRangePicker .timeRangeActivatorWrapper:hover, 
+table.mainSearchControlsTable .TimeRangePicker .timeRangeActivatorWrapper:focus {
+    background-color: #6699CC; 
+}
+
+table.mainSearchControlsTable input.searchButton {
+    border-color: #6699CC;
+}
+
+input.searchButton {
+    background-color: #6699CC;
+    background-position: right center;
+}
+input.searchButton:hover,
+input.searchButton:focus {
+    background-color: #6699CC;  
+}
+
+table.mainSearchControlsTable .SearchBar .searchFieldWrapper {
+    border-color:#6699CC;
+    background-color:#6699CC;
+}
+
+/* BUTTONS */
+div.FlashTimeline a, 
+div.FlashTimeline a:visited, 
+.JobStatus a
+{
+    color: #fff;
+}
+
+.splButton-primary,
+.splButton-primary:hover,
+.splButton-primary:focus {
+    background-color: #6699CC;
+    border-color: #6699CC;
+}
+
+.splButton-secondary {
+    background-color: #6699CC;
+    color:#fff;
+}
+
+/* SIDEBAR */
+.fieldValuePopup table td, 
+.fieldValuePopup table th {
+    color: #333;
+}
+
+.sidebar .selected a
+{
+    background-color: #6699CC;
+    color:#fff !important;
+}
+
+.DashboardTitleBar .splHeader-primary {
+    background-image:none;
+}

@@ -1,0 +1,32 @@
+<div class="main">
+    <div class="section-header">
+
+    </div>
+    <div class="section">
+<div class="success-container">
+
+<i class="icon-check-circle"></i>
+
+<div class="success-top">
+    <div class="success-header"><%= _('Success! Your new configuration has been saved.').t() %></div>
+
+    <div><%= _('To change this configuration, click Explore More Data and repeat the steps to replace your configuration.').t() %></div>
+</div>
+    <br>
+    <div class="success-option add-more-data">
+        <a class="btn btn-primary btn-success btn-explore" href="<%- route.exploreData(root, locale, system) %>"><%= _('Explore More Data').t() %></a>
+        <%= _('Browse, configure, or reconfigure another file.').t() %>
+    </div>
+<br>
+    <div class="success-option add-more-data">
+        <a class="btn btn-primary btn-success btn-search" href="<%- route.search(root, locale, searchapp, {data: {q: search, earliest: '0', latest: ''}}) %>"><%= _('Search').t() %></a>
+        <%= _('Start searching your data.').t() %>
+    </div>
+<br>
+    <div class="success-option add-more-data">
+        <a class="btn btn-primary  btn-success btn-home" href="<%- route.home(root, locale) %>"><%= _('Home').t() %></a>
+        <%= _('Return to the Home page.').t() %>
+    </div>
+    </div>
+</div>
+    </div>

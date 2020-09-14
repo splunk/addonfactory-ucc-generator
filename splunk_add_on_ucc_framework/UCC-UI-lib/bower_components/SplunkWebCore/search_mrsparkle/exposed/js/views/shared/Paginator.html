@@ -1,0 +1,48 @@
+<% if (paginator.page_range.length) { %>
+  <ul>
+    <% if (paginator.previous_exists()) { %>
+        <li class="previous">
+          <a href="#" class="page-controls" data-offset="<%- paginator.previous_offset() %>"><i class="icon-chevron-left"></i><span><%- _("Prev").t() %></span></a>
+    <% } else { %>
+        <li class="previous disabled">
+          <a class="page-controls"><i class="icon-chevron-left"></i><span><%- _("Prev").t() %></span></a>
+    <% } %>
+    </li>
+
+      <% var pageListMode = pageListMode || false; %>
+      <% if (pageListMode === 'compact') { %>
+        <li class="compact-page-count"><span><%-paginator.active_page%> <%-_("of").t()%> <%-paginator.total_pages%></span></li>
+    <% } else { %>
+        <% for (var i=0; i<paginator.page_range.length; i++) { %>
+           <% var page = paginator.page_range[i]; %>
+           <% if ((i === 0) && (page != 1)) { %>
+              <li><a href="#" data-offset="<%- paginator.page_item_offset(1) %>">1</a></li>
+              <li class="disabled"><a class="dots"><%- _("...").t() %></a></li>
+           <% } else if ((i + 1 === paginator.page_range.length ) && (page != paginator.total_pages)) { %>
+             <% var hasHiddenNext = true; %>
+              <li class="disabled"><a class="dots"><%- _("...").t() %></a></li>
+           <% } else { %>
+               <li <%= (paginator.is_active_page(page)) ? 'class="active"' : "" %>><a href="#" data-offset="<%- paginator.page_item_offset(page) %>"><%- page %></a></li>
+           <% } %>
+        <% } %>
+    <% } %>
+    
+    <% var truncated = truncated || false; %>
+    <% if (truncated && !hasHiddenNext) { %>
+        <li class="max-events-per-bucket warning">
+            <span><i class="icon-warning"></i></span>
+        </li>
+    <% } %>
+      
+    <% if (paginator.next_exists()) { %>
+      <li class="next">
+          <a href="#" class="page-controls" data-offset="<%- paginator.next_offset() %>"><span><%- _("Next").t() %></span><i class="icon-chevron-right"></i></a>
+      </li>
+    <% } else { %>
+      <li class="next disabled">
+          <a class="page-controls disabled"><span><%- _("Next").t() %></span><i class="icon-chevron-right"></i></a>
+      </li>
+    <% } %>
+    
+  </ul>
+<% } %>

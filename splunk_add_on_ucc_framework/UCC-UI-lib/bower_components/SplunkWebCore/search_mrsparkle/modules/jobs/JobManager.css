@@ -1,0 +1,283 @@
+body {
+margin: 0;
+padding: 0;
+}
+
+
+/* overrides for jobs */
+.JobManager {
+	padding: 0;
+}
+
+.JobManager div.jobManagerWrapper {
+    margin: 0 auto;
+    padding: 10px;
+    *overflow-x:hidden;
+}
+
+.JobManager th.jmSelect {
+    width: 90px;
+}
+
+div.resultsArea {
+    border-bottom: 0;
+}
+
+table.splTable {
+    border-bottom: 0;
+}
+
+
+/* filters */
+.JobManager .jobManagerFilters {
+    padding:10px 0px;
+    border-bottom: 1px solid #CCC;
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+.JobManager .jobManagerFilters input {
+    width:288px;
+    padding:2px 5px;
+    margin-right: 15px;
+    border: 1px solid #DDD;
+    background: url(/static/img/skins/default/mag_glass_icon_transparent.png) no-repeat 5px 3px;
+    _background: url(/static/img/skins/default/mag_glass_icon.png) no-repeat 5px 3px;
+}
+.JobManager .jobManagerFilters label {
+    margin-right: 15px;
+}
+.JobManager select {
+    margin-left: 5px;
+    width:121px;
+    background-color: #e5e5e5;
+    border: none;
+}
+/* end filters */
+
+/* pagination */
+.JobManager .jobManagerPaginate h2 {
+    font-weight: normal;
+    display: inline;
+    width:300px;
+}
+.JobManager .jobManagerPaginate h2 span.nowShowing {
+    font-weight: bold;
+}
+.JobManager .jobManagerPaginate .jobManagerPaginator,
+.JobManager .jobManagerPaginate label {
+    float: right;
+}
+.JobManager .jobManagerPaginate label {
+    font-size: 12px;
+}
+.JobManager .jobManagerPaginate select {
+    width: 60px;
+}
+/* end pagination */
+
+.JobManager h2.jobManagerStatus {
+    text-align: center;
+}
+
+.JobManager h2.jobManagerStatus .popupLoading {
+    font-size: 14px;
+    display: table;
+    *display: inline;
+    zoom:1;
+    width:auto;
+}
+
+.JobManager span.jobManagerRefreshedAt {
+    display: none;
+}
+
+.JobManager table.splTable td, .JobManager table.splTable th {
+    padding: 7px;
+}
+
+.JobManager table.splTable td {
+    padding-bottom: 0;
+}
+
+.JobManager table.jobManagerGrid {
+    width:100%;
+    display: none;
+    margin-top: 12px;
+}
+
+
+
+.JobManager tr.parentRow td {
+    padding-top: 14px;
+}
+
+.JobManager tr.childRow td {
+    padding-bottom: 14px;
+    border-bottom: 1px solid #ccc;
+}
+
+
+
+span.SearchString {
+    line-height: 1.2em;
+}
+
+table.splTable td.jobSearchString a {
+    font-size: 12px;
+}
+
+a.viewJob {
+    font-weight: normal;    
+}
+
+a.viewJobLabel {
+    font-weight: bold;
+}
+
+.createTimeCell {
+    font-size: 12px;
+}
+
+.JobManager table.jobManagerGrid td {
+    vertical-align: middle;
+
+}
+
+.JobManager th {
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+}
+
+.JobManager th a {
+    color: #000;   
+}
+
+.JobManager .jmRowHighlight {
+    background-color: #FDE9A8;
+}
+
+.JobManager input {
+    margin: 0;
+}
+
+/* actions buttons */
+/* NOTE: if you want to disable one of these buttons, you have to add the classDisabled (i.e. pauseJobDisabled) */
+/*
+.JobManager .finalizeJob, .JobManager .pauseJob,
+.JobManager .unpauseJob, .JobManager .cancelJob {
+    display: none;
+    float: left;
+    height: 19px;
+    width: 18px;
+    overflow: hidden;
+    text-indent: 20px;
+    margin-right: 3px;
+    background-repeat: no-repeat;
+    background-image: url(/static/img/skins/default/play-pause.png);
+}
+.JobManager .viewJob, .JobManager .saveJob, .JobManager .actionSeperator {
+    display: none;
+}
+.JobManager .jmRowHighlight .viewJob, .JobManager .jmRowHighlight .saveJob, .JobManager .jmRowHighlight .actionSeperator {
+    display: inline;
+}
+.JobManager .jmRowHighlight .finalizeJob, .JobManager .jmRowHighlight .pauseJob,
+.JobManager .jmRowHighlight .unpauseJob, .JobManager .jmRowHighlight .cancelJob {
+    display: block;
+}
+.JobManager .finalizeJob, .JobManager .cancelJob {
+    width: 15px;
+}
+.JobManager .pauseJob {
+    background-position: 0px -140px;
+}
+.JobManager .pauseJob:hover {
+    background-position: 0px -160px;
+}
+.JobManager .pauseJobDisabled {
+    background-position: 0px -180px;
+}
+.JobManager .unpauseJob {
+    background-position: -20px -140px;
+}
+.JobManager .unpauseJob:hover {
+    background-position: -20px -160px;
+}
+.JobManager .unpauseJobDisabled {
+    background-position: -20px -180px;
+}
+.JobManager .finalizeJob {
+    background-position: -40px -140px;
+}
+.JobManager .finalizeJob:hover {
+    background-position: -40px -160px;
+}
+.JobManager .finalizeJobDisabled {
+    background-position: -40px -180px;
+}
+.JobManager .cancelJob {
+    background-position: -57px -140px;
+}
+.JobManager .cancelJob:hover {
+    background-position: -57px -160px;
+}
+.JobManager .cancelJobDisabled {
+    background-position: -57px -180px;
+}
+
+*/
+
+/* Batch Action Buttons */
+
+.JobManager .selectText {
+    margin-right: 15px;
+}
+
+.JobManager .selectText .selectAll {
+	margin-left: 5px;
+}
+
+.JobManager .jmBatchActions {
+	border-top: 1px solid #CCC;
+    _background: #edede7 none; 
+    padding: 5px 10px;
+    _padding-top: 0px;
+    _padding-bottom: 10px;
+   /* height: 45px;*/
+    line-height: 35px;
+    margin-top: 0px;
+    font-size: 12px;
+    background-color: #ededed;
+}
+.JobManager .jmBatchActions button {
+    margin-right: 5px;
+    *margin-left:5px;
+    _margin-top:10px;
+} 
+.JobManager .jmBatchActions button span {
+	min-width: 65px;
+}
+
+/*
+ * Tablesorter styles
+ */
+
+
+.JobManager th.sortable {
+	cursor: pointer;
+}
+
+
+.JobManager .timeTerms {
+    font-style: italic;
+    color: #999;
+}
+
+/**
+ * Kind of weird hack to implement show / hide behavior for
+ * Job Manager
+ */
+.Count {
+    display: none;
+}

@@ -1,0 +1,123 @@
+<%inherit file="//qunit/template.html" />
+
+<%def name="title()">Splunk.Module.HiddenIntention -- QUnit tests</%def>
+
+<script type="text/javascript" src="/en-US/static/js/contrib/deprecated/jquery-ui-1.8.5.custom.min.js"></script>
+<script type="text/javascript" src="/en-US/static/js/job.js"></script>
+<script type="text/javascript" src="/en-US/static/js/context.js"></script>
+<script type="text/javascript" src="/en-US/static/js/search.js"></script>
+<script type="text/javascript" src="/en-US/static/js/time_range.js"></script>
+<script type="text/javascript" src="/en-US/static/js/page_status.js"></script>
+<script type="text/javascript" src="/en-US/static/js/test_utils.js"></script>
+<script language="javascript">
+    // important to disable the chatty debug that the tests spew.
+    Splunk.Logger.mode.Default = Splunk.Logger.mode.None
+</script>
+<script type="text/javascript" src="/en-US/static/js/init.js"></script>
+
+<!--  Now the base module classes-->
+<script type="text/javascript" src="/en-US/modules/AbstractModule.js"></script>
+<script type="text/javascript" src="/en-US/modules/DispatchingModule.js"></script>
+
+<!--  Now the modules we'll be testing -->
+<script type="text/javascript" src="/en-US/modules/search/HiddenIntention.js"></script>
+
+<script type="text/javascript">
+    Splunk._testHarnessMode = true;
+
+    var nonMatchingIntentions = [{
+            "name" : 'addterm', 
+            "arg" : {"host" : "baz"}
+        },
+        {
+            "name" : 'negateterm', 
+            "arg" : {"host" : "bar"}
+        },
+        {
+            "name" : 'toggleterm', 
+            "arg" : {"sourcetype" : "bar"}
+        },
+        {
+            "name" : 'addterm', 
+            "arg" : "random_string"
+        }];
+
+    function generateHiddenIntention(intentionName, intentionArgKey, intentionArgValue) {
+        var container = $("<div/>");
+        
+        container.appendTo(document.body);
+        var hiddenSearch = new Splunk.Module.HiddenIntention(container);
+        var intention = {};
+        intention["name"] = intentionName;
+        if (intentionArgKey) {
+            intention["arg"] = {};
+            intention["arg"][intentionArgKey] = intentionArgValue;
+        } else {
+            intention["arg"] = intentionArgValue;
+        }
+        hiddenSearch._params["intention"] = intention;
+
+        return hiddenSearch;
+    }
+
+    function test_HiddenIntention_getModifiedContext_positive() {
+        // case 1 -- the key value pair addterms
+        var moduleUnderTest = generateHiddenIntention("addterm", "sourcetype", "foo");
+        var modifiedContext = moduleUnderTest.getModifiedContext();
+        var modifiedSearch  = modifiedContext.get("search");
+        assertEquals("should have one intention", 1, modifiedSearch._intentions.length);
+        assertEquals("the intention should have an name key", true, modifiedSearch._intentions[0].hasOwnProperty("name"));
+        assertEquals("the intention should have an arg key", true, modifiedSearch._intentions[0].hasOwnProperty("arg"));
+        assertEquals("the intention arg should have a sourcetype key", true, modifiedSearch._intentions[0]["arg"].hasOwnProperty("sourcetype"));
+        assertEquals("the intention arg's sourcetype should be foo", "foo", modifiedSearch._intentions[0]["arg"]["sourcetype"]);
+
+        // case 2 -- string argument addterms
+        var moduleUnderTest = generateHiddenIntention("addterm", false, "foo");
+        var modifiedContext = moduleUnderTest.getModifiedContext();
+        var modifiedSearch  = modifiedContext.get("search");
+        
+        assertEquals("should have one intention", 1, modifiedSearch._intentions.length);
+        assertEquals("the intention should have an name key", true, modifiedSearch._intentions[0].hasOwnProperty("name"));
+        assertEquals("the intention should have an arg key", true, modifiedSearch._intentions[0].hasOwnProperty("arg"));
+        assertEquals("the intention arg should not have a sourcetype key", false, modifiedSearch._intentions[0]["arg"].hasOwnProperty("sourcetype"));
+        assertEquals("the intention arg should be foo", "foo", modifiedSearch._intentions[0]["arg"]);
+    }
+
+    function test_HiddenIntention_doesIntentionMatch() {
+        var moduleUnderTest = generateHiddenIntention("addterm", "sourcetype", "foo");
+        for (var i=0; i<nonMatchingIntentions.length; i++) {
+            var nonMatchingContext = generateContextWithIntention(nonMatchingIntentions[i]);
+            assertEquals("this intention should not match", false, moduleUnderTest._doesIntentionMatch(nonMatchingIntentions[i]));
+        }
+
+        var workerSearch  = new Splunk.Search("*");
+        workerSearch.addIntention({
+            "name" : 'addterm', 
+            "arg" : {"sourcetype" : "foo"}
+        });
+        var matchingIntention = workerSearch.popIntention("addterm", "sourcetype");
+        
+        assertEquals("SANITY CHECKING 1", true,  matchingIntention.hasOwnProperty("arg"));
+        assertEquals("SANITY CHECKING 2", "foo",  matchingIntention["arg"]["sourcetype"]);
+        assertEquals("this intention should match", true, moduleUnderTest._doesIntentionMatch(matchingIntention));
+    }
+
+    function test_HiddenIntention_applyContext_positive() {
+        var moduleUnderTest = generateHiddenIntention("addterm", "sourcetype", "foo");
+        var workerContext = new Splunk.Context();
+        var workerSearch  = new Splunk.Search("*");
+        workerSearch.addIntention({
+            "name" : 'addterm', 
+            "arg" : {"sourcetype" : "foo"}
+        });
+        assertEquals("SANITY CHECK we should have 1 intention", 1, workerSearch._intentions.length);
+        workerContext.set("search", workerSearch);
+        moduleUnderTest.applyContext(workerContext);
+        searchInstanceAfterApplyContext = workerContext.get("search");
+        assertEquals("for a matching context, applyContext result in a context with 0 intentions.", 0, searchInstanceAfterApplyContext._intentions.length);
+    }
+    // TODO for HiddenSearch, right now the negative cases just throw exceptions and spit out alert()'s.   
+    // When there's better messaging, we can have a nice test that stubs out the messaging interface, 
+    // and runs through the negative test cases checking that proper errors were shown to the user. 
+
+</script>

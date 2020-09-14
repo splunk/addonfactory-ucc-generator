@@ -1,0 +1,254 @@
+<%inherit file="//qunit/template.html" />
+
+<%def name="title()">Splunk.Module.ViewRedirector -- QUnit tests</%def>
+
+<script type="text/javascript" src="/en-US/static/js/contrib/swfobject.js"></script>
+<script type="text/javascript" src="/en-US/static/js/contrib/deprecated/jquery-ui-1.8.5.custom.min.js"></script>
+<script type="text/javascript" src="/en-US/static/js/ja_bridge.js"></script>
+<script type="text/javascript" src="/en-US/static/js/jobber.js"></script>
+<script type="text/javascript" src="/en-US/static/js/job.js"></script>
+<script type="text/javascript" src="/en-US/static/js/context.js"></script>
+<script type="text/javascript" src="/en-US/static/js/search.js"></script>
+<script type="text/javascript" src="/en-US/static/js/menu_builder.js"></script>
+<script type="text/javascript" src="/en-US/static/js/time_range.js"></script>
+<script type="text/javascript" src="/en-US/static/js/module_loader.js"></script>
+<script type="text/javascript" src="/en-US/static/js/page_status.js"></script>
+<script type="text/javascript" src="/en-US/static/js/test_utils.js"></script>
+<script language="javascript">
+    // important to disable the chatty debug that the tests spew.
+    Splunk.Logger.mode.Default = Splunk.Logger.mode.None
+</script>
+
+<script type="text/javascript" src="/en-US/static/js/init.js"></script>
+
+
+<!--  Now the modules  -->
+<script type="text/javascript" src="/en-US/modules/AbstractModule.js"></script>
+<script type="text/javascript" src="/en-US/modules/DispatchingModule.js"></script>
+<script type="text/javascript" src="/en-US/modules/search/ViewRedirector.js"></script>
+
+
+
+
+
+<script language="javascript">
+    // VERY IMPORTANT.  In certain cases Jobs will get automatically dispatched
+    // whenever addChild is called.  
+    // test harness mode short-circuits default behaviour.
+    Splunk._testHarnessMode = true;
+
+    Splunk.Globals['Jobber']._getStatus = function() {};
+    
+    window.__open_method_count = 0;
+    function setUp() {
+        window.__open = window.open;
+        window.open = function() {
+            window.__open_method_count++;
+            var mockWindow = {};
+            mockWindow.mockDocument={};
+            return mockWindow;
+        };
+    }
+    
+    function tearDown() {
+        window.open = window.__open;
+
+    }
+
+
+
+    var logger = Splunk.Logger.getLogger("ViewRedirector", Splunk.Logger.mode.Firebug);
+    var moduleTypes = [];
+    Splunk.Module.loadParams = {};
+    var FIRST_SEARCH_ID   = "first_search_id_before_redispatching";
+    var SECOND_SEARCH_ID  = "second_search_id_after_redispatch";
+    var BASE_SEARCH_ID    = "this_is_the_base_search_id"
+    var VIEW_STATE_ID     = "this_is_our_view_state_id"
+    
+    // ******************************************
+    // UTILS
+    // ******************************************
+    function generateHierarchy(isDispatched, sendBaseSID, dispatchBeforeRedirect, popup) {
+        var mockParent = new Splunk.Module($("<div/>"));
+        var moduleId = "testInstance";
+        var container = $('<div></div>').attr("id", moduleId);
+        Splunk.Module.loadParams[moduleId] = {
+            "sendBaseSID":sendBaseSID,
+            "dispatchBeforeRedirect": dispatchBeforeRedirect,
+            "viewTarget": "VIEW_NAME",
+            "popup": popup
+        }
+        var moduleUnderTest = new Splunk.Module.ViewRedirector(container);
+        var mockChild  = new Splunk.Module($("<div/>"));
+        moduleUnderTest.addChild(mockChild);
+        mockParent.addChild(moduleUnderTest);
+        moduleUnderTest.hierarchyLoaded = true;
+        
+        
+        var search  = new Splunk.Search("foo bar");
+        if (isDispatched) {
+            search.job.setSearchId(FIRST_SEARCH_ID);
+        }
+        search.sendDocumentToLocation = function(doc, loc) {
+            window.__location = loc;
+            window.__locationChangeCount++;
+        }
+        search.dispatchJob = function(successHandler, failHandler, group) {
+            window.__jobDispatchedCount++;
+            this.job.setSearchId(SECOND_SEARCH_ID);
+            // the framework marks them as cancellable,and ViewRedirector then CHANGES THIS
+            this.job.setAsAutoCancellable(true);
+            successHandler(this);
+        }
+    
+        search.clone = function(){return this;};
+        search.secretKey = true;
+        var context = new Splunk.Context();
+        context.set("search", search);
+        mockParent.baseContext = context;
+        
+        return [mockParent, moduleUnderTest, mockChild];
+    }
+    
+    
+
+    // using for-loops to exercise a little 2x2X2 matrix of cases. 
+    function forEachCase(callback) {
+        for (isDispatched = 0; isDispatched<2; isDispatched++) {
+            for (sendBaseSID = 0; sendBaseSID<2; sendBaseSID++) {
+                for (dispatchBeforeRedirect = 0; dispatchBeforeRedirect<2; dispatchBeforeRedirect++) {
+                    for (popup = 0; popup<2; popup++) {
+                        var modules = generateHierarchy(isDispatched, sendBaseSID, dispatchBeforeRedirect, popup);
+                        var mockParent = modules[0];
+                        var moduleUnderTest = modules[1];
+                        var mockChild = modules[2];
+                        var popupArg = "False";
+                        if (popup==1) popupArg="True";
+                        callback(mockParent, moduleUnderTest, mockChild, isDispatched, sendBaseSID, dispatchBeforeRedirect, popupArg);
+                    }
+                }
+            }
+        }
+    }
+    function test_normalContextPush() {
+        var expectedNumberOfCases = {
+            total: 16,
+            sid: 8,
+            q: 4,
+            base_sid: 8
+        }
+        var casesExecuted = {
+            total: 0,
+            sid: 0,
+            q: 0,
+            base_sid: 0
+        }
+        
+        window.__casesExecuted = 0;
+        
+        forEachCase(function(mockParent, moduleUnderTest, mockChild, contextWasDispatched, shouldHaveBaseSID, shouldHaveDispatchedBeforeRedirect, popupArg) {
+            var prefix = "case #" + window.__casesExecuted + " contextWasDispatched=" + contextWasDispatched + " shouldHaveBaseSID=" + shouldHaveBaseSID + "shouldHaveDispatchedBeforeRedirect=" + shouldHaveDispatchedBeforeRedirect + " popupArg=" + popupArg + ". ";
+            casesExecuted.total++;
+            window.__locationChangeCount = 0;
+            window.__location = 0;
+            window.__jobDispatchedCount = 0;
+            window.__open_method_count = 0;
+
+            Splunk.util.queryStringToProp = function() {
+                return {
+                    "base_sid": BASE_SEARCH_ID,
+                    "vs" : VIEW_STATE_ID
+                }
+            }
+            mockParent.markPageLoadComplete();
+            mockParent.setLoadState(Splunk.util.moduleLoadStates.HAS_CONTEXT);
+            moduleUnderTest.markPageLoadComplete();
+            
+            assertTrue("our secret mock search object is still there", mockParent.baseContext.get("search").secretKey);
+
+
+
+            mockParent.pushContextToChildren();
+            if (popupArg=="True") {
+                assertEquals(prefix + "There should have been one call to window.open", 1, window.__open_method_count);
+            } else {
+                // should have changed the window location exactly once.
+                assertEquals(prefix + "There should have been no calls to window.open", 0, window.__open_method_count);
+                assertEquals(prefix + "Context push should have redirected the document", 1, window.__locationChangeCount);
+            }
+            
+            
+
+            // autocancellable check
+            var search = mockParent.getContext().get("search");
+            assertFalse(prefix + "Check that in all cases, ViewRedirector has updated the job to NOT be autocancellable", search.job.canBeAutoCancelled())
+            
+            // check that the base_sid arg was passed along when it should be.
+            var hasBaseSID = window.__location.match(/[?&]+(?:base_sid=)(([\w]+(?:%2[cC])?)+)/);
+            if (shouldHaveBaseSID) {    
+                casesExecuted.base_sid++;
+                assertNotNull(prefix + 'URL should contain a BASE_SEARCH_ID (url is ' + window.__location + ')', hasBaseSID);
+            } else {
+                assertNull(prefix + 'URL should NOT contain a BASE_SEARCH_ID (url is ' + window.__location + ')', hasBaseSID);
+            }
+
+            // check that the vs arg was passed along in all cases.
+            var hasViewStateId = window.__location.match(/[?&]+(?:vs=)(([\w]+(?:%2[cC])?)+)/);
+            //assertNotNull('URL should have our view state preserved', hasViewStateId);
+            
+            // verify that the job was dispatched in the appropriate cases, 
+            // and also that q, sid are present in the URL where they are expected.
+            var receivedQMatch   = window.__location.match(/[?&]+(?:q=)(([\w]+(?:%2[cC])?)+)/)
+            var receivedSIDMatch = window.__location.match(/[?&]+(?:sid=)(([\w]+(?:%2[cC])?)+)/)
+            if (contextWasDispatched) {
+                casesExecuted.sid++;
+                assertNotNull(prefix + "location should have an SID value in it. ", receivedSIDMatch);
+                assertEquals(prefix + "the SID value should be correct", "sid=" + FIRST_SEARCH_ID, receivedSIDMatch[0].substring(1));
+                assertNull(prefix + "location should NOT have any 'q' arg in it. ", receivedQMatch);
+                // NOTE the case of contextWasDispatched && shouldHaveDispatchedBeforeRedirect 
+                // is a degenerate case that currently logs an error in the JS console to the 
+                // effect that this is probably a misconfiguration.  
+            } else {
+                if (shouldHaveDispatchedBeforeRedirect) {
+                    assertEquals(prefix + "ViewRedirector should have called dispatchJob ONCE", 1, window.__jobDispatchedCount);
+                    assertNotNull(prefix + "location should have an SID value it. ", receivedSIDMatch);
+                    assertEquals(prefix + "the SID value should be correct", "sid=" + SECOND_SEARCH_ID, receivedSIDMatch[0].substring(1));
+                    assertNull(prefix + "location should NOT have a 'q' arg in it. ", receivedQMatch);
+                    
+                } else {
+                    casesExecuted.q++;
+                    assertEquals(prefix + "ViewRedirector should NOT have called dispatchJob", 0, window.__jobDispatchedCount);
+                    assertNotNull(prefix + "location should have a 'q' arg in it. ", receivedQMatch);
+                    assertNull(prefix + "location should NOT have any sid arg in it. ", receivedSIDMatch);
+                }
+            }
+            
+        });
+        assertEquals("sanity check - should have executed the expected number of total cases", expectedNumberOfCases.total,    casesExecuted.total);
+        assertEquals("sanity check - should have executed the expected number of sid cases", expectedNumberOfCases.sid,      casesExecuted.sid);
+        assertEquals("sanity check - should have executed the expected number of q cases", expectedNumberOfCases.q,        casesExecuted.q);
+        assertEquals("sanity check - should have executed the expected number of base_sid cases", expectedNumberOfCases.base_sid, casesExecuted.base_sid);
+        
+    }
+    /**
+     * its actually very dangerous for 'children' of view redirector to receive any context changes
+     * although granted this configuration makes no sense and as of this writing it will 
+     * log a JS error if detected. 
+     */
+    function contextChangeDoesntHitChildren() {
+        forEachCase(function(mockParent, moduleUnderTest, mockChild, isDispatched, sendBaseSID, dispatchBeforeRedirect, popupArg) {             
+            window.__changeCount = 0;
+            window.__pushCount   = 0;
+            window.__open_method_count = 0;
+    
+            mockChild.onContextChange = function() {window.__changeCount++;}
+            mockChild.pushContextToChildren = function() {window.__pushCount++;}
+            
+            mockParent.pushContextToChildren();
+            assertEquals("ViewRedirector should not call onContextChange", 0, window.__changeCount);
+            assertEquals("ViewRedirector should block the context push ",  0, window.__pushCount);
+            assertEquals("there should have been no calls to window.open", 0, window.__open_method_count);
+        });
+    }
+    
+</script>

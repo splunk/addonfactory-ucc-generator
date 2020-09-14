@@ -1,0 +1,1032 @@
+<%!
+import logging
+# uiHelper requires splunk.util to be imported.
+import splunk.util
+from splunk import auth
+#needed for views page
+import lxml.etree as et
+from xml.sax.saxutils import quoteattr 
+import re
+import splunk.entity as en
+from splunk.appserver.mrsparkle.lib import util
+from splunk.appserver.mrsparkle.lib.eai import cpQuoteEntity
+import urllib
+import time
+
+logger = logging.getLogger('splunk.appserver.templates.admin._helpers')
+
+isLite = util.isLite()
+isCloud = util.isCloud()
+isAdmin = False
+isDMCDisabled = True
+
+if isLite:
+  entity = en.getEntity('/authentication', 'current-context', namespace=splunk.getDefault('namespace'))
+  roles = entity.get('roles')
+  if roles:
+    if 'admin' in roles:
+      isAdmin = True
+
+if isCloud:
+    try:
+        dmc_settings = en.getEntity('dmc-conf/settings', 'settings')
+        isDMCDisabled = splunk.util.normalizeBoolean(dmc_settings['disabled'])
+    except splunk.RESTException, e:
+        logger.error('Failed to fetch DMC settings to verify status')
+        logger.exception(e)
+    except KeyError, e:
+        logger.error('Failed to fetch DMC disabled status')
+        logger.exception(e)
+    except ValueError, e:
+        logger.error('Failed to parse disabled status')
+        logger.exception(e)
+
+sharing_names = {'user'   : _("Private"),
+                 'app'    : _("App"),
+                 'global' : _("Global"),
+                 'system' : _("Global")}
+
+action_names = {'disable' : _("Disable"),
+                'enable'  : _("Enable"),
+                'remove'  : _("Delete"),
+                'quarantine'  : _("Quarantine"),
+                'unquarantine'  : _("Unquarantine"),
+                'unembed' : _("Disable Embed")}
+year = time.strftime('%Y')
+%>
+
+<%def name="renderContextSwitcher()">
+    <%
+    from lib.util import current_url_path
+    from urlparse import parse_qs
+    from urllib import urlencode
+    showAppSwitcher = True
+    url = current_url_path(include_qs=True)
+    
+    urlParts = url.split("?")
+    
+    path = urlParts[0]
+    try:
+        qstring = urlParts[1]
+    except IndexError:
+        qstring = ""
+    
+    try:
+        qsdict = parse_qs(qstring)
+    except Exception, e:
+        qsdict = {}
+    
+    """
+    logger.debug("\n\n")
+    logger.debug("urlParts ['path','qs'] :: %s" % urlParts)
+    logger.debug("qsdict: %s" % qsdict)
+    logger.debug("\n\n")
+    """
+    
+    pathParts = path.split("/")
+    # show the switcher, or just the label?
+    # check if this is the permissions page.
+    if pathParts[3] == "permissions":
+        showAppSwitcher = False
+        namespace = pathParts[4]
+    else:
+        namespace = pathParts[3]
+    
+    
+    try:
+        section = pathParts[4]
+        if section in ["apps","accesscontrols","authoverview","authentication","distsearch","data","datainputstats","control","forwardreceive","licensestats","systemsettings"]:
+            showAppSwitcher = False
+    except Exception, e:
+        pass
+    
+    
+    # determine if this is an edit, if so disable the switcher.
+    # the values for qsdict are in a list
+    actionList = qsdict.get("action")
+    if actionList != None:
+        if qsdict.get("action")[0] == "edit":
+            showAppSwitcher = False
+    
+    
+    if showAppSwitcher:
+        # build the list of apps for the context switcher.    
+    
+        # set the namespace path part to %s
+        pathParts[3] = "%s"
+        strReplUrl = "/".join(pathParts)
+        if len(qstring) > 0:
+            qstring = "?%s" % qstring
+    
+        appOptionList = [ { 'label': '(All Apps)', 'uri': (strReplUrl % '-') + qstring , 'id': '' }, { 'divider': 'actionsMenuDivider' } ]
+        try:
+            appList = en.getEntities("apps/local", search=['disabled=false','visible=true'], count=-1)
+        except Exception, e:
+            logger.error("exception accessing apps local endpoint.")
+            logger.error("Exception string e: %s" % e)
+        try:
+            manageableAppOptionList = [ {'label': '%s' % ( appList[x].get('label', appList[x].name) ), 'uri': (strReplUrl % appList[x].name ) + qstring } for x in appList ]
+            appOptionList.extend( manageableAppOptionList )
+        except Exception, e:
+            logger.error("exception building appOptionList.")
+            logger.error("Exception string e: %s" % e)
+    endif
+    
+            
+    
+    
+    %>
+    % if showAppSwitcher:
+        <%
+        if namespace == "-":
+            switcherActivatorLabel = "All Apps"
+        else:
+            switcherActivatorLabel = APP['label']
+        endif
+        %>
+        <a href="#" id="managerContextSwitcherActivator">${_(switcherActivatorLabel)} <span class="splIcon splIcon-triangle-3-s">&nbsp;&nbsp;</span></a>
+        <script>
+        $(function(){
+            var appList = ${appOptionList};
+            var appsMenu = new Splunk.MenuBuilder({
+                containerDiv: $('.ManagerBar'),
+                menuDict: appList,
+                activator: $('#managerContextSwitcherActivator', $('.ManagerBar')),
+                menuClasses: 'splMenu-secondary'
+            });
+        });
+        </script>
+    % else:
+        ${_(APP['label'])} &raquo; \
+    % endif
+</%def>
+
+<%def name="renderBreadcrumbs(breadcrumb)">
+    <!-- SPL-48480 Parse out "Host restriction" from the "Port" and display it nicely in the title -->
+    <%
+    from lib.util import current_url_path
+    from urlparse import parse_qs
+    from urllib import urlencode
+    url = current_url_path(include_qs=True)
+
+    urlParts = url.split("?")
+
+    path = urlParts[0]
+    try:
+        qstring = urlParts[1]
+    except IndexError:
+        qstring = ""
+
+    try:
+        qsdict = parse_qs(qstring)
+    except Exception, e:
+        qsdict = {}
+
+    if endpoint_path and endpoint_path.startswith("data/inputs/tcp/raw"):
+        hostAndPort = resolveTcpInputName(breadcrumb[-1][0])
+        if hostAndPort['host'] is not None:
+            pageTitle = _("%(port)s (restricted to host %(host)s)") % {'port' : hostAndPort['port'], 'host' : hostAndPort['host']}
+        else:
+            pageTitle = hostAndPort['port']
+        endif
+    else:
+        if breadcrumb:
+            pageTitle = breadcrumb[-1][0]
+    endif
+    %>
+    % if breadcrumb:
+        <h1 class="ManagerPageTitle">${pageTitle|h}</h1>
+    % endif
+    
+    % if breadcrumb and len(breadcrumb) > 2:
+       <div class="breadcrumb"> \
+        % for i, (title, url) in enumerate(breadcrumb):
+            <!-- SPL-48480 Parse out "Host restriction" from the "Port" and only display port value in the breadcrumb -->
+            <%
+            if endpoint_path and endpoint_path.startswith("data/inputs/tcp/raw"):
+                title = resolveTcpInputName(title)['port']
+            endif
+            %>  
+            <!-- strip out /manager /manager/  /manager/app /manager/app/ -->
+            <% made_url = None %>
+            % if url :
+                <% made_url = make_url(url) %>
+            % endif
+
+            
+            % if made_url and (re.search('/manager/?\w*/?$', made_url) == None)  :
+                <a href="${made_url}">${_(title) | h}</a> \
+                    &raquo; \
+            % elif not url:
+                ${_(title)|h} \
+            % endif
+        % endfor
+        </div> \
+    % endif
+</%def>
+
+<%def name="message(content=None, level='info', msg_obj=None)">
+    % if msg_obj:
+        <!-- using html comments so values are visible in view source.
+        ${msg_obj.uid | h}<br/>
+        ${msg_obj.severity | h}<br/>
+        ${msg_obj.text | h}<br/>
+        ${msg_obj.timestamp | h}<br/>
+        ${msg_obj.pq | h}<br/>
+        -->        
+    % endif
+    % if content:
+        <div class="Message">
+            <ol>
+                % if isinstance(content, basestring):
+                    <li class="${level}">${content|h}</li>
+                % elif isinstance(content, list):
+                    % for x in content:
+                        <li class="${level}">${x|h}</li>
+                    % endfor
+                % else:
+                    <li class="${level}">${_('Invalid message type:')} ${content|h}</li>
+                % endif
+            </ol>
+        </div>
+    % endif
+</%def>
+
+<%def name="generateFormRow(element, eaiAttributes, form_defaults)">
+    <%
+    widget = element['type'] if 'type' in element else 'textfield'
+    widgetstyle = ''
+    depends = element.get('hideUnlessFieldSet')
+    hidetype = 'hideUnlessFieldSet' if element.has_key('hideUnlessFieldSet') else None
+    if not hidetype:
+        hidetype = 'nullUnlessFieldSet' if  element.has_key('nullUnlessFieldSet') else None
+    if hidetype:
+        depends = element[hidetype]
+        depends = depends if isinstance(depends, list) else [ depends ]
+        for depend in depends:
+            if not form_defaults.get(depend, ''):
+                if hidetype == 'nullUnlessFieldSet':
+                    widget = 'hidden'
+                else:
+                    widgetstyle = 'style="display: none"'
+    
+    
+    %>
+
+    <%include file="/admin/widgets/${widget}.html" args="element=element, eaiAttributes=eaiAttributes, widgetstyle=widgetstyle" />
+</%def>
+
+<%def name="makeSortHeading(elementLabel, elementName, kwargs)">
+   <%
+      sort_key = kwargs.get("sort_key", None)
+      sort_dir = kwargs.get("sort_dir", None)
+
+      import copy
+      qs = copy.deepcopy(kwargs)
+      qs['sort_key'] = elementName
+
+      isSorted = (sort_key == elementName)
+
+      if sort_dir == None :
+         sort_dir = "asc"
+         sort_class = "splSortNone"
+      elif sort_dir == "desc":
+         sort_dir = "asc"
+         sort_class = "splSortDesc"
+      else:
+         sort_dir = "desc"
+         sort_class = "splSortAsc"
+                   
+      qs['sort_dir'] = sort_dir
+   %>
+  
+   <a href=${make_url("", _qs=qs, translate=False)}>
+       <span class="sortLabel">${elementLabel|h}</span>
+       % if isSorted:
+         <span class="${sort_class}"></span>
+       % else :
+         <span class="splSortNone"></span>
+       % endif
+   </a>
+</%def>
+
+
+
+<%!
+    ## global col count var
+    countCols = 0
+    countRows = 0
+%>
+
+<%def name="resolveTcpInputName(name)">
+    <%
+    if name:
+        nameParts = name.split(":")
+        if len(nameParts) == 2:
+            return {'host' : nameParts[0], 'port' : nameParts[1]}
+    endif
+    
+    return {'host' : None, 'port' : name}
+    %>
+</%def>
+
+<%def name="genListRows(namespace, uiHelper, entities, endpoint_path, showAdvancedEdit=False, kwargs=None)">
+    <% 
+      global countCols 
+      global countRows
+      isAppList = True if endpoint_path == 'apps/local' else False                
+      isForwardingServer = True if endpoint_path == 'data/outputs/tcp/server' else False
+      isDeploymentserverclass = True if endpoint_path == 'deployment/serverclass' else False
+      isDistributedSearchPeers = True if endpoint_path == 'search/distributed/peers' else False
+      isSavedsearches = True if endpoint_path == 'saved/searches' else False
+      isLDAP = True if endpoint_path == 'authentication/providers/LDAP' else False
+      isViews = True if endpoint_path == 'data/ui/views' else False
+      isClonable = False if endpoint_path in ['admin/Duo-MFA', 'data/inputs/monitor', 'data/outputs/tcp/group','data/inputs/win-event-log-collections','data/lookup-table-files','data/indexes','data/props/extractions', 'authorization/roles', 'search/distributed/peers'] or endpoint_path.startswith('deployment/server/setup/data/inputs') else True
+      if isLite and isSavedsearches:
+          isClonable = False
+      isTcpInput = True if endpoint_path == 'data/inputs/tcp/raw' else False
+      isEnablable = True
+      isForwardedInput = True if endpoint_path.startswith('deployment/server/setup/data/inputs') else False
+      showEnabledColumn = False if uiHelper.get('hideEnabledColumn') else True
+      showPermissionsColumn = False if uiHelper.get('hidePermissionsColumn') else True
+      showActionsColumn = False if uiHelper.get('hideActionsColumn') else True
+      showAppContext = True if splunk.util.normalizeBoolean(uiHelper.get("showAppContext", "")) else False
+      displayNameField = uiHelper.get('displayNameField')
+    %>
+    <%
+    from urllib import quote
+    from lib.eai import cpQuoteEntity
+    from lib.util import current_url_path
+    from urlparse import parse_qs
+
+    countRows = 0
+    countCols = 0
+
+    url = current_url_path(include_qs=True)
+    
+    urlParts = url.split("?")
+    
+    try:
+        qstring = urlParts[1]
+    except IndexError:
+        qstring = ""
+    
+    try:
+        qsdict = parse_qs(qstring)
+    except Exception, e:
+        qsdict = {}
+
+    try:
+        hasCreateLink = filter((lambda x: x[0] == 'create'), entities.links)
+    except:
+        hasCreateLink = False
+    %>
+    
+    <%def name="genDataCells(elements, entity_endpoint_path, headerRow=False)">
+        <% 
+            global countCols 
+            global countRows
+        %>
+        % for element in elements:
+            <% 
+                showSummarizationColumn = True if isSavedsearches and element.get("elementName") == "name" else False 
+            %>
+            % if headerRow:
+                % if "list" in element.get("showInView", []):
+                    % if "elements" in element:
+                        <%call expr="genDataCells(element['elements'], entity_endpoint_path, headerRow)"/>
+                    % endif
+                    <%
+                        elementLabel = None
+                        sortable = splunk.util.normalizeBoolean(element.get('labelListSortable', 'True'))
+                        
+                        if "labelList" in element:
+                          elementLabel = _(element["labelList"])
+                        elif "label" in element:
+                          elementLabel = _(element["label"])
+                        elif element["type"] != "fieldset":
+                          elementLabel = element["elementName"]
+                        else:
+                            continue
+
+                    %>
+                    % if showSummarizationColumn:
+                         <% countCols += 1 %>
+                         <th class="col-summary col-${countCols} row-${countRows}"></th>
+                    % endif
+                    <% countCols += 1 %>
+                    <th class="col-generic col-${countCols} row-${countRows}">
+                      % if sortable:
+                          <%call expr="makeSortHeading(elementLabel, element['elementName'], kwargs)"/>
+                      % else:
+                          ${_(elementLabel)}
+                      % endif
+                    </th>
+                % endif
+            % else:
+            
+                % if "list" in element.get("showInView", []):
+                    % if "elements" in element:
+                        <%call expr="genDataCells(element['elements'], entity_endpoint_path, headerRow)"/>
+                    % endif
+                    % if element.get("type") != "fieldset":
+                         % if  showSummarizationColumn:  
+                            <% countCols += 1 %>
+                            <td class="col-sum col-${countCols} row-${countRows}" style="padding:0px"> 
+                                 % if entity.get('auto_summarize','') == '1':  
+                                     <% qs={'savedsearch': cpQuoteEntity(entity.name, urlquote=False)} %>
+                                     <a href="${make_url(['manager', 'system', 'summarization', cpQuoteEntity(entity.name, urlquote=False)])}"><img class="bolt" src="/static/img/skins/default/bolt.png" /></a>
+                                 % endif
+                            </td>
+                         % endif
+                         <% countCols += 1 %>
+                        <td class="col-generic col-${countCols} row-${countRows}" valign="top">
+                            % if element.get("elementName") == "name":
+                                <%
+                                qs = {'action':'edit'}
+                                if entity['eai:acl']['app']:
+                                    qs['ns'] = entity['eai:acl']['app']
+                                for key in kwargs:
+                                    if key in ('pwnr', 'ns', 'search', 'offset', 'count', 'sort_key', 'sort_dir') or key.lower().startswith('api.'):
+                                        qs['f_'+key] = kwargs[key]
+                                list_links = filter((lambda x: x[0] == 'list'), entity.links)
+                                if isLite and isSavedsearches:
+                                    list_links = False
+                                %>
+                                
+                                <!-- SPL-48480 Parse out "Host restriction" from the "Port" and only display port value in the TCP port column -->            
+                                <%
+                                entityName = entity.name
+
+                                if isTcpInput:
+                                    entityName = resolveTcpInputName(entityName)['port']   
+                                endif
+                                %>
+                                                                    
+                                % if list_links and not isAppList and not isForwardingServer:
+                                    % if isForwardedInput:
+                                        <% qs = {'uri': '/services/' + entity_endpoint_path + '/' + urllib.quote(entity.name).replace('\\','%5C').replace('/','%2F'), 'action': 'edit'} %>
+
+                                    % elif entity_endpoint_path == 'saved/searches':
+                                        <% qs = {'app': entity['eai:acl'].get('app'), 'owner': entity.owner, 'search': '"' + cpQuoteEntity(entity.name, urlquote=False) + '"'} %>
+                                    % else:
+                                        <% qs['uri'] = list_links[0][1] %>
+                                    % endif
+
+                                    % if entity_endpoint_path == 'saved/searches':
+                                        <a href="${make_url(['manager', namespace, entity_endpoint_path], _qs=qs )}">${entityName | h}</a>
+                                    % else:
+                                       <a href="${make_url(['manager', namespace, entity_endpoint_path, cpQuoteEntity(entity.name, urlquote=False)], _qs=qs )}">${entityName | h}</a>
+                                    % endif
+                                % else:
+                                    ${entityName | h}
+                                % endif
+
+                            % else:
+                                <%
+                                # apply any transformations defined in uiHelper
+                                value = entity.get(element['elementName'], '')
+                                processed_value = None
+                                if element.has_key('processValueList'):
+                                    try:
+                                        processed_value = eval(element['processValueList'])
+                                    except Exception, e:
+                                        logger.error('uiHelper processValueList operator failed for endpoint_path=%s elementName=%s: %s' % (endpoint_path, element['elementName'], str(e)))
+                                        processed_value = '[PROCESSING ERROR]'
+                                %>
+                                % if element.has_key('showRSSLink'):
+                                  % if value == "1":
+                                    <a href="${make_url(['rss', cpQuoteEntity(entity.name, urlquote=False)] )}" class="rssLink"></a>
+                                  % endif
+                                % elif element.has_key('showAlertsLink'):
+                                  % if len(value)>0:
+                                    <%
+                                    alerts_id = None
+                                    for link in entity.links:
+                                        if link[0]=='alerts':
+                                            alerts_id = urllib.quote_plus(link[1])
+                                            break
+                                    %>
+                                    % if alerts_id:
+                                        <a href="${make_url(['alerts', entity['eai:acl']['app']], dict([('alerts_id',alerts_id)]))}" onclick="Splunk.window.open(this.href, 'alerts'); return false;">${i18n.format_number(int(value))|h}</a>
+                                    % else:
+                                        ${i18n.format_number(int(value))|h}
+                                    % endif
+                                  % else:
+                                    ${_('0')}
+                                  % endif
+                                % elif processed_value is None:
+                                    ${value | h}
+                                % else:
+
+                                    <div class="preWhitespace">
+                                        % if endpoint_path.startswith('deployment/server/setup/data/inputs') and (element.get("elementName") == 'eai:acl.app') and processed_value != 'N/A':
+                                        <a href="${make_url(['manager', 'system', 'deploymentserveredit'], _qs=dict(id='/services/deployment/server/serverclasses/' + cpQuoteEntity(processed_value, urlquote=False)) )}" target="_blank">${processed_value|h}</a>
+                                        % else:
+                                        ${processed_value|h}
+                                        % endif
+                                    </div>
+
+                                % endif
+                                <%
+                                update_link = filter((lambda x: x[0] == 'update'), entity.links)
+                                implicit_id_required = splunk.util.normalizeBoolean(entity.get('update.implicit_id_required', None))
+                                sbAppId = ''
+                                if 'details' in entity and ('/' in entity['details']):
+                                    sbAppId = entity['details'][entity['details'].rfind('/')+1:]
+                                if implicit_id_required:
+                                    update_link_text = _('Overwrite with')
+                                else:
+                                    update_link_text = _('Update to')
+                                endif
+                                %>
+                                % if isAppList and (element.get('elementName') == 'version') and update_link:
+                                    % if not (isCloud and not isDMCDisabled):
+                                        <span class="splPipe">|</span>
+                                        <a href="#" onclick="window.location='${make_url([installUrl, sbAppId], _qs=dict(return_to=('/manager/%s/apps/local' % namespace), implicit_id_required=implicit_id_required, app_name=entity.get('label')))}';">${_('%s %s' % (update_link_text, entity['update.version']))}</a>
+                                    % endif
+                                % endif
+                            % endif
+                        </td>
+                    % endif
+                % endif
+            % endif
+        % endfor
+    </%def>
+        
+    % if len(entities) == 0:
+        <%
+            if endpoint_path=='authentication/users':
+                no_entities_msg = _('User "%s" was not found. Click the "New" button to create a new user.') % kwargs.get("search")
+            else:
+                no_entities_msg = _('There are no configurations of this type. ') + (showNewButton and _('Click the "New" button to create a new configuration.') or "")
+        %>
+        <tr>
+            <td class="empty_results"><%doc>TRANS: Displayed if no admin entities exist to list</%doc>${no_entities_msg |h}</td>
+        </tr>
+    % endif
+
+        <%
+        visibleApps = en.getEntities("apps/local", search=['visible=true'], count=-1)
+        %>
+        % for entity in entities.values():
+          <%
+          isDeletable = False if ((endpoint_path in ['data/inputs/win-wmi-collections'] and (entity.name in ['CPUTime', 'FreeDiskSpace', 'LocalNetwork', 'Memory', 'LocalProcesses', 'LocalPhysicalDisk'])) or (endpoint_path in ['data/inputs/win-event-log-collections'] and entity.name=='localhost') ) else True
+          _isClonable = isClonable and (endpoint_path not in ['authentication/users', 'data/inputs/tcp/cooked'] or ('type' in entity and entity['type'] == 'Splunk'))
+          entityDisplayName = entity[displayNameField] if displayNameField else entity.name
+          %>
+
+                % if "elements" in uiHelper:
+                    <%
+                    headerRow = False
+                    if countRows == 0:
+                        headerRow = True
+                    isModifiable = True if entity['eai:acl']['modifiable']=="1" else False
+                    isScheduled = True if entity.get('is_scheduled')=="1" else False
+                    %>
+                    % if headerRow:
+                        <tr>
+                            <%call expr="genDataCells(uiHelper['elements'], endpoint_path, headerRow)"/>
+                            % if showPermissionsColumn:
+                              % if isModifiable:
+                              <% countCols += 1 %>
+                                  <th class="col-share col-${countCols} row-${countRows}">
+                                    <%call expr="makeSortHeading(_('Sharing'), 'eai:acl.sharing', kwargs)"/>
+                                  </th>
+                              % endif
+                            %endif
+                            % if showEnabledColumn:
+                            <% countCols += 1 %>
+                            <th class="col-status col-${countCols} row-${countRows}">
+                                <%call expr="makeSortHeading(_('Status'), 'disabled', kwargs)"/>
+                            </th>
+                            % endif
+                            % if showActionsColumn:
+                            <% countCols += 1 %>
+                              <th class="col-actions col-${countCols} row-${countRows}">${_('Actions')}</th>
+                            % endif
+                        </tr>
+                        <%
+                        ## the header has been created, proceed...
+                        headerRow = False
+                        countCols = 0
+                        countRows += 1
+                        %>
+                    % endif
+
+                    <tr>
+                        <% entity_endpoint_path = entity.get('endpoint_base', endpoint_path) %>
+                        <%call expr="genDataCells(uiHelper['elements'], entity_endpoint_path, headerRow)"/>
+                        % if showPermissionsColumn:
+                          % if isModifiable:
+                          <% countCols += 1 %>
+                              <td class="col-share col-${countCols} row-${countRows}" style="white-space:nowrap;">
+                                  <% list_links = filter((lambda x: x[0] == 'list'), entity.links) %>
+                                  ${sharing_names.get(entity['eai:acl']['sharing'], "")}
+                                  % if list_links and (entity['eai:acl'].get('sharing', None) != 'user' or entity['eai:acl'].get('can_share_app', None) == '1'):
+                                      <% qs = {'uri': list_links[0][1]} %>
+                                      <span class="splPipe">|</span> <a href="${make_url(['manager', 'permissions', namespace, entity_endpoint_path, cpQuoteEntity(entity.name, urlquote=False)], _qs=qs)}">${_("Permissions")}</a>
+                                  % endif
+                              </td>
+                          % endif
+                        %endif
+                        % if showEnabledColumn:
+                        <% countCols += 1 %>
+                        <td class="col-status col-${countCols} row-${countRows}" style="white-space:nowrap;">
+                            % if isEnablable:
+                                <%
+                                if not splunk.util.normalizeBoolean(entity.get('disabled',None)):
+                                    enabledState = _("Enabled")
+                                else:
+                                    enabledState = _("Disabled")
+                                endif
+                                %>
+                                ${enabledState}
+
+                                % if entity['eai:acl']['can_write']=='1':
+                                    % for ctrl in ('disable', 'enable'):
+                                         <% ctrl_links = filter((lambda x: x[0] == ctrl), entity.links) %>
+					% if ctrl_links:
+					    <%
+					    ctrlUrl = ctrl_links[0][1].replace("'","\\'")
+					    ctrlEntity = entityDisplayName.replace("\\","\\\\").replace("'","\\'")
+					    if endpoint_path.startswith('deployment/server/setup/data/inputs/'):
+						ctrlEntitySpecial = entityDisplayName  ## deployment endpoint doesnt require extra backslash or apostrophe escaping
+						ctrlUrl = '/services/%s/%s/%s?app_name=%s' % (endpoint_path, urllib.quote(ctrlEntitySpecial).replace('/','%2F'), ctrl, urllib.quote(entity['eai:acl']['app']))
+					    endif
+					    %>
+					    <% jscall = "doObjectAction('%s', '%s', '%s'); return false;" % ( ctrl.replace("'","\\'"), ctrlUrl, ctrlEntity ) %>
+					    <span class="splPipe">|</span>
+					    <% all_tags = _(' all tags for pair') if endpoint_path == 'saved/fvtags' else '' %>
+					    <a href="#" onclick=${quoteattr(jscall)}>${_(action_names[ctrl]) + all_tags}</a>
+                                            <% needs_sep = True %>
+                                        % endif
+                                    % endfor
+                                % endif
+                            % endif
+                        </td>
+                        % endif
+                        % if showActionsColumn:
+                        <% countCols += 1 %>
+                        <td class="col-actions col-${countCols} row-${countRows}" style="white-space:nowrap;">
+                            <% needs_sep = False %>
+                            
+                            % if (isSavedsearches and isScheduled):
+                                % if needs_sep:
+                                    <span class="splPipe">|</span>
+                                    <% needs_sep = False %>
+                                % endif
+                              <script>
+                                <% view_args = dict(savedSearch = entity.name) %>
+                                % if qsdict and qsdict.has_key('ns'):
+                                  <% view_args.update(app = qsdict.get('ns')[0] if qsdict.get('ns')[0] != '-' else '')%>
+                                % endif
+                                var args_${countRows} = ${jsonify(view_args)};
+                              </script>
+                              <a href="#" onclick="Splunk.window.openJobManager(args_${countRows});return false;">${_("View recent")}</a>
+                              <% needs_sep = True %>
+                            % endif
+
+                            % if (isSavedsearches):
+                                % if needs_sep:
+                                    <span class="splPipe">|</span>
+                                    <% needs_sep = False %>
+                                % endif
+                              <% qs = {'s':entity.getLink("alternate")} %>
+                              <a href="${make_url(['app', entity['eai:acl']['app'], '@go'], _qs=qs)}">${_("Run")}</a>
+                              <% needs_sep = True %>
+                            % endif
+
+                            % if (isSavedsearches and showAdvancedEdit):
+                                % if needs_sep:
+                                    <span class="splPipe">|</span>
+                                    <% needs_sep = False %>
+                                % endif
+                              % if qsdict:
+                                <% qs = dict(s=list_links[0][1], ns=qsdict.get('ns',''), pwnr=qsdict.get('pwnr',''), count=qsdict.get('count',''), search=qsdict.get('search',''))%>
+                              % else:
+                                <% qs = {'s': list_links[0][1]} %>
+                              % endif
+                              <a href="${make_url(['manager', namespace, entity_endpoint_path, 'advancededit'], _qs=qs)}">${_("Advanced edit")}</a>
+                              <% needs_sep = True %>
+                            % endif
+                            
+                            % if isLDAP and ('disabled' not in entity or entity['disabled'] == '0'):
+                                % if needs_sep:
+                                    <span class="splPipe">|</span>
+                                    <% needs_sep = False %>
+                                % endif
+                              <% qs = {'api.strategy':entity.name} %>
+                              <a href="${make_url(['manager', namespace, 'admin', 'LDAP-groups'], _qs=qs)}">${_("Map groups")}</a>
+                              <% needs_sep = True %>
+                            % endif
+                            
+                            % if isViews and (entity['eai:acl']['app'] in visibleApps) and ('disabled' not in entity or entity['disabled'] == '0'):
+                                % if needs_sep:
+                                    <span class="splPipe">|</span>
+                                    <% needs_sep = False %>
+                                % endif
+                              <a href="${make_url(['app', entity['eai:acl']['app'], entity.name])}" target="_blank">${_("Open")}</a>
+                              <% needs_sep = True %>
+                            % endif
+
+                            % if isDeploymentserverclass:
+                                % if needs_sep:
+                                    <span class="splPipe">|</span>
+                                    <% needs_sep = False %>
+                                % endif
+                              <%
+                              link_url = filter((lambda x: x[0] == "status"), entity.links)[0][1]
+                              link_url_parts = link_url.split('/')
+                              status_link = ""
+                              if link_url_parts[1] == "servicesNS":
+                                # for servicesNS, remove the app and user parts + deployment since that is where we are.
+                                status_link = link_url_parts[5:]
+                              else:
+                                # for services, there are no app and user parts to remove
+                                status_link = link_url_parts[2:]
+                              %>
+                              <a href="${make_url(status_link, relative=True)}">${_('Status')}</a>
+                              <% needs_sep = True %>
+                            % endif
+
+                            % if isDistributedSearchPeers:
+                               <% quarantine_link = filter((lambda x: x[0] == 'quarantine'), entity.links) %>
+                               <% unquarantine_link = filter((lambda x: x[0] == 'unquarantine'), entity.links) %>
+                               % if quarantine_link:
+                                   % if needs_sep:
+                                     <span class="splPipe">|</span>
+                                     <% needs_sep = False %>
+                                   % endif
+
+                                   <% jscall = "doObjectAction('quarantine', %s, %s);" % ( jsonify(quarantine_link[0][1]), jsonify(entityDisplayName) ) %>
+                                   <a href="#" onclick=${quoteattr(jscall)}>${_(action_names['quarantine'])}</a>
+                                   <% needs_sep = True %>
+                               % endif
+                               % if unquarantine_link:
+                                   % if needs_sep:
+                                     <span class="splPipe">|</span>
+                                     <% needs_sep = False %>
+                                   % endif
+
+                                   <% jscall = "doObjectAction('unquarantine', %s, %s);" % ( jsonify(unquarantine_link[0][1]), jsonify(entityDisplayName) ) %>
+                                   <a href="#" onclick=${quoteattr(jscall)}>${_(action_names['unquarantine'])}</a>
+                                   <% needs_sep = True %>
+                               % endif
+                            % endif
+
+                            % if isAppList:
+                                <% hasSetup = False %>
+                                % if needs_sep:
+                                    <span class="splPipe">|</span>
+                                    <% needs_sep = False %>
+                                % endif
+                                % if filter((lambda x: x[0] == 'setup'), entity.links):
+                                    <% qs = {'action':'edit'} %>
+                                    <%
+                                    hasSetup = True
+                                    if entity.name == "windows":
+                                      qs["redirect_override"]="/app/windows"
+                                    endif
+                                    %>
+                                    % if 'setup_view' in entity:
+                                        <a href="${make_url(['/app', entity.name, entity['setup_view']], _qs=qs)}">${_("Set up")}</a>
+                                    % else:
+                                        <a href="${make_url(['/manager', entity.name, 'apps', 'local', entity.name, 'setup'], _qs=qs)}">${_("Set up")}</a>
+                                    % endif
+                                    <% needs_sep = True %>
+                                % endif
+
+                                % if (entity['visible'] == '1') and (entity['disabled'] == '0') and not ((entity['configured'] == '0') and hasSetup):
+                                    % if needs_sep:
+                                        <span class="splPipe">|</span>
+                                        <% needs_sep = False %>
+                                    % endif
+                                    <a href="${make_url(['app', entity.name])}">${_("Launch app")}</a>
+                                    <% needs_sep = True %>
+                                % endif
+
+                                % if entity['disabled'] == '0':
+                                    % if needs_sep:
+                                        <span class="splPipe">|</span>
+                                        <% needs_sep = False %>
+                                    % endif
+                                    <% qs = {'action':'edit'} %>
+                                    <a href="${make_url(['manager', namespace, 'apps', 'local', entity.name], _qs=qs)}">${_("Edit properties")}</a>
+                                    <% needs_sep = True %>
+                                % endif
+
+                                % if entity['disabled'] == '0':
+                                    % if needs_sep:
+                                        <span class="splPipe">|</span>
+                                        <% needs_sep = False %>
+                                    % endif
+                                    <% qs = {'ns':entity.name, 'app_only':'1'} %>
+                                    <a href="${make_url(['manager', namespace, 'admin', 'directory'], _qs=qs)}">${_("View objects")}</a>
+                                    <% needs_sep = True %>
+                                % endif
+
+                                % if 'details' in entity:
+                                    % if needs_sep:
+                                        <span class="splPipe">|</span>
+                                        <% needs_sep = False %>
+                                    % endif
+                                    <a href="${entity['details']}" class="splunk-components" target="_blank"><span class="icon-external external"></span>${_("View details on SplunkApps")}</a>
+                                    <% needs_sep = True %>
+
+                                % endif
+                            % else:
+                                <% list_links = filter((lambda x: x[0] == 'list'), entity.links) %>
+                                % if _isClonable and list_links and hasCreateLink:
+                                    % if needs_sep:
+                                        <span class="splPipe">|</span>
+                                        <% needs_sep = False %>
+                                    % endif
+                                    <% needs_sep = True %>
+                                    <a href="${make_url(['manager', namespace, entity_endpoint_path, '_new'], _qs=dict(action='edit', uri=list_links[0][1]))}">
+                                    <span><%doc>TRANS: Clicked to clone an existing enity</%doc>${_('Clone')}</span>
+                                    </a>
+                                % endif
+                                % if hasCreateLink and showAppContext:
+                                    <% move_link = filter((lambda x: x[0] == 'move'), entity.links) %>
+                                    % if move_link:
+                                      % if needs_sep:
+                                          <span class="splPipe">|</span>
+                                          <% needs_sep = False %>
+                                      % endif
+                                      <% needs_sep = True %>
+                                      <%
+                                      if entity['eai:acl']['sharing']=='user':
+                                        owner = entity.owner
+                                      else:
+                                        owner = "nobody"
+                                      endif
+
+                                      jscall = "moveObjectToApp(%s,%s,%s); return false;" % (jsonify(move_link[0][1]), jsonify(entityDisplayName), jsonify(owner))
+                                      %>
+                                      <a href="#" class="moveLink" onclick=${quoteattr(jscall)}>
+                                      <span><%doc>TRANS: Clicked to move an existing enity to a different namespace</%doc>${_('Move')}</span>
+                                      </a>
+                                    % endif
+                                % endif
+                                % if (isSavedsearches):
+                                    <% unembed_link = filter((lambda x: x[0] == 'unembed'), entity.links) %>
+                                    % if (unembed_link):
+                                        % if needs_sep:
+                                            <span class="splPipe">|</span>
+                                            <% needs_sep = False %>
+                                        % endif
+                                        <% jscall = "doObjectAction('unembed', %s, %s);" % ( jsonify(unembed_link[0][1]), jsonify(entityDisplayName) ) %>
+                                        <a href="#" onclick=${quoteattr(jscall)}>${_(action_names['unembed'])}</a>
+                                        <% needs_sep = True %>
+                                    % endif
+                                % endif
+                                <% ctrl_links = filter((lambda x: x[0] == 'remove'), entity.links) %>
+                                % if isDeletable and ctrl_links:
+                                    % if needs_sep:
+                                        <span class="splPipe">|</span>
+				    % endif
+				    <%
+				    ctrlUrl = ctrl_links[0][1].replace("'","\\'")
+				    ctrlEntity = entityDisplayName.replace("\\","\\\\").replace("'","\\'")
+				    if endpoint_path.startswith('deployment/server/setup/data/inputs/'):
+					ctrlEntitySpecial = entityDisplayName  ## deployment endpoint doesnt require extra backslash or apostrophe escaping
+					ctrlUrl = '/services/%s/%s?app_name=%s' % (endpoint_path, urllib.quote(ctrlEntitySpecial).replace('/','%2F'), urllib.quote(entity['eai:acl']['app']))
+				    endif
+				    %>
+				    <% jscall = "doObjectAction('remove', '%s', '%s'); return false;" % ( ctrlUrl, ctrlEntity ) %>
+
+				    <a href="#" onclick=${quoteattr(jscall)}>${_(action_names['remove'])}</a>
+				% endif
+                          % endif
+                        </td>
+                        % endif
+                    </tr>
+                    <% countCols = 0 %>
+                % endif
+            <% countRows += 1 %>
+        % endfor
+</%def>
+
+<%def name="menulist(namespace, menuDict)">    
+        <%
+        label = menuDict.get("label", None)
+        menuItems = menuDict.get("menuItems",[]) # menu items is a list of dicts.
+        %>
+        
+        % if label:
+                <h2>${_(label)}</h2>
+        % endif
+        
+        <dl>
+        % for item in menuItems:
+                <%
+                itemLabel = item.get("label", "A label is required for this item.")
+                itemUrl = item.get("url", None)
+                itemDescription = item.get("description", None)
+                links = item.get("links", None)
+                currentUser=auth.getCurrentUser()['name']
+                itemId=item.get("id", "default")
+
+                adminAccessibleOnly = ['forwarding', 'apps']
+                if isLite:
+                  if itemId == 'server-controls':
+                    continue
+
+                  if itemId in adminAccessibleOnly and not isAdmin:
+                    continue
+
+                  if itemId == 'apps' and isCloud:
+                    continue
+
+                if itemId == 'forwarding' and isCloud:
+                  continue
+
+                %>
+                
+                <div class="adminListItem">
+                                    <dt>
+                            % if itemUrl:
+                                    <a href="${make_url(itemUrl % dict(namespace=cpQuoteEntity(namespace),currentUser=cpQuoteEntity(currentUser)))}">${_(itemLabel)}</a>
+                            % else:
+                                    ${_(itemLabel)}
+                            % endif
+                    % if links:
+                        <span>
+                        % for link in links:
+                            <%
+                            label = link.get("label", "label is required and not provided")
+                            url = "#"
+                            localUrl = link.get("local-url", None)
+                            remoteUrl = link.get("remote-url", None)
+                            if remoteUrl != None:
+                                url = remoteUrl
+                                target = "_blank"
+                            ## local url's win if both are defined
+                            if localUrl != None:
+                                url = make_url(localUrl % dict(namespace=cpQuoteEntity(namespace),currentUser=cpQuoteEntity(currentUser)))
+                                target = "_top"
+                            %>
+                         <span class="splPipe">|</span><a href="${url}" target="${target}">${_(label)}</a> 
+                        % endfor
+                        </span>
+                    % endif
+                    </dt>
+                    % if itemDescription:
+                            <dd>${_(itemDescription)}</dd>
+                    % endif
+                </div>        
+        % endfor
+        </dl>        
+</%def>
+
+## used by admin/EAI to hook events into widgets
+<%def name="wireElementEvents(element, eltype=None)">
+    <%
+    eltype = eltype if eltype else element['type']
+    %>
+    % if element.has_key('onChange') and eltype in ('select', 'multiselect', 'hidden', 'text'):
+        onchange="${'Splunk.EAI.getInstance().doElementOnChange(this, %s)' % (jsonify(element['elementName']).replace('"', "'"))}"
+    % endif
+    % if element.has_key('onChange') and eltype in ('radio','checkbox','button') :
+        onclick="${'Splunk.EAI.getInstance().doElementOnChange(this, %s)' % (jsonify(element['elementName']).replace('"', "'"))}"
+    % endif
+</%def>
+
+<%def name="header(namespace)">
+    <div class="layoutRow oneColRow navigationHeader splClearfix">
+        <div class="ManagerBar">
+          <!--h1>{uiHelper.get('header') or _("You do not have permission to access the configuration for this page.")}</h1-->
+          ${renderBreadcrumbs(breadcrumbs)}
+        </div>
+    </div>
+
+    <div class="aboutPopupContainer">
+        <div class="aboutPopupSplunkLogo"></div>
+        <p>
+            ${ _("Copyright &copy; 2005-%(year)s Splunk Inc. All rights reserved.") % dict(year=year)}
+            <br/>
+            ${_('version %(version)s, build %(build_number)s') % dict(version=cherrypy.config.get('version_label'), build_number=cherrypy.config.get('build_number'))} 
+        </p>
+        <ul>
+            <li><a href="http://www.splunk.com/r/support" target="_blank" class="spl-icon-external-link-xsm">${_("Support")}</a></li>
+            <li><a href="http://www.splunk.com/r/docs" target="_blank" class="spl-icon-external-link-xsm">${_("Documentation")}</a></li>
+            <li><a href="http://www.splunk.com/r/privacy" target="_blank" class="spl-icon-external-link-xsm">${_("Privacy policy")}</a></li>
+        </ul>
+    ##    <ul>
+    ##        <li><a href="/debug/status" target="_blank" class="spl-icon-external-link-xsm">${_("System information")}</a></li>
+    ##    </ul>
+        <p>
+            ${ _("Current app: %s" % APP['label']) | h}
+        </p>
+    </div>
+</%def>
+
+<%def name="displayrestartbutton(displayRestartButton=True, return_to='')">
+    % if displayRestartButton:
+    <a class="splButton-primary" href="#" onclick="restart_server(${jsonify(return_to).replace('"', "'")})">
+        <span><%doc>TRANS: Clicked to restart splunkd</%doc>${_('Restart Splunk')}</span>
+    </a>
+    % endif
+</%def>
+

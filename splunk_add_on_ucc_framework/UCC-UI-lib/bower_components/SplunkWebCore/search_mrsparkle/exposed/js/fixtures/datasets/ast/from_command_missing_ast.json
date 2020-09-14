@@ -1,0 +1,181 @@
+{
+  "spl": "search | from savedsearch:SPL-115941 | fields user, sourcetype, source | rename user as luke | rename source as leia | fields luke, leia",
+  "ast": {
+    "command": "fields",
+    "raw": " luke, leia",
+    "type": "SP_STREAM",
+    "fields_and_properties": [
+      {
+        "name": "leia",
+        "modified": true,
+        "referenced": true
+      },
+      {
+        "name": "luke",
+        "modified": true,
+        "referenced": true
+      },
+      {
+        "name": "*",
+        "removed": true
+      }
+    ],
+    "mode": "add",
+    "field_list": [
+      "leia",
+      "luke"
+    ],
+    "pipeline": "streaming",
+    "sources": [
+      {
+        "command": "rename",
+        "raw": " source as leia ",
+        "type": "SP_STREAM",
+        "fields_and_properties": [
+          {
+            "name": "leia",
+            "modified": true
+          },
+          {
+            "name": "source",
+            "referenced": true,
+            "removed": true
+          }
+        ],
+        "renames": [
+          {
+            "field": "source",
+            "newField": "leia"
+          }
+        ],
+        "pipeline": "streaming",
+        "sources": [
+          {
+            "command": "rename",
+            "raw": " user as luke ",
+            "type": "SP_STREAM",
+            "fields_modified": [
+              {
+                "name": "luke"
+              }
+            ],
+            "fields_referenced": [
+              {
+                "name": "user"
+              }
+            ],
+            "fields_removed": [
+              {
+                "name": "user"
+              }
+            ],
+            "renames": [
+              {
+                "field": "user",
+                "newField": "luke"
+              }
+            ],
+            "pipeline": "streaming",
+            "sources": [
+              {
+                "command": "fields",
+                "raw": " user, sourcetype, source ",
+                "type": "SP_STREAM",
+                "fields_modified": [
+                  {
+                    "name": "source"
+                  },
+                  {
+                    "name": "sourcetype"
+                  },
+                  {
+                    "name": "user"
+                  }
+                ],
+                "fields_referenced": [
+                  {
+                    "name": "source"
+                  },
+                  {
+                    "name": "sourcetype"
+                  },
+                  {
+                    "name": "user"
+                  }
+                ],
+                "fields_removed": [
+                  {
+                    "name": "*"
+                  }
+                ],
+                "mode": "add",
+                "field_list": [
+                  "source",
+                  "sourcetype",
+                  "user"
+                ],
+                "pipeline": "streaming",
+                "sources": [
+                  {
+                    "command": "from",
+                    "raw": " savedsearch:SPL-115941 ",
+                    "type": "SP_STREAM",
+                    "fields_modified": [
+                      {
+                        "name": "*"
+                      }
+                    ],
+                    "fields_referenced": [],
+                    "fields_removed": [],
+                    "object": {
+                      "datasettype": "savedsearch",
+                      "dataset": "\"SPL-115941\"",
+                      "search": {
+                        "spl": "savedsearch \"SPL-115941\""
+                      }
+                    },
+                    "pipeline": "streaming",
+                    "sources": [
+                      {
+                        "command": "search",
+                        "raw": "",
+                        "type": "SP_STREAM",
+                        "fields_modified": [
+                          {
+                            "name": "*"
+                          }
+                        ],
+                        "fields_referenced": [],
+                        "fields_removed": [],
+                        "function": "AND",
+                        "pipeline": "streaming"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "annotations": {
+      "interesting_fields": [
+        {
+          "name": "leia"
+        },
+        {
+          "name": "luke"
+        }
+      ]
+    }
+  },
+  "actions": [
+    {
+      "name": "get_interesting_fields"
+    },
+    {
+      "name": "annotate_datasets"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+
+.view {
+    composes: view from './MenuButton.pcssm';
+    line-height: $navbarHeightLite;
+    height: $navbarHeightLite;
+}
+
+.label {
+    composes: label from "./MenuButton.pcssm";
+}
+
+.truncateLabel {
+    composes: truncateLabel from "./MenuButton.pcssm";
+}
+
+.optionalLabel {
+    composes: optionalLabel from "./MenuButton.pcssm";
+}

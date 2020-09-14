@@ -1,0 +1,13 @@
+<div class="dropzone <% if (size === 'small') { %> <%- 'small' %><% } %>">
+    <svg class="dropzone-icon" <% if (size === 'small') { %><%= 'width="100px" height="120px" viewBox="0 0 100 120"' %><% } else { %><%= 'width="72px" height="88px" viewBox="0 0 72 88"' %><% } %> version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <g class="fill">
+            <path d="M50,27 L68.0005854,27 C70.2022516,27 72,28.7919267 72,31.0023804 L72,83.9976196 C72,86.2074215 70.2094011,88 68.0005854,88 L3.99941455,88 C1.79774843,88 0,86.2080733 0,83.9976196 L0,31.0023804 C0,28.7925785 1.79059889,27 3.99941455,27 L21,27 L21,32 L5.99898406,32 C5.4472604,32 5,32.4408979 5,32.9958767 L5,82.0041233 C5,82.5541308 5.44605521,83 5.99898406,83 L66.0010159,83 C66.5527396,83 67,82.5591021 67,82.0041233 L67,32.9958767 C67,32.4458692 66.5539448,32 66.0010159,32 L50,32 L50,27 Z"></path>
+            <path d="M41.9634682,10 L41.9634682,28 L46.9634682,28 L46.9634682,5 L44.4634682,5 L23.9634682,5 L23.9634682,10 L41.9634682,10 Z" transform="translate(35.463468, 16.500000) rotate(-45.000000) translate(-35.463468, -16.500000) "></path>
+            <rect x="33" y="3" width="5" height="51"></rect>
+        </g>
+    </svg>
+    <svg class="dropzone-box" <% if (size === 'small') { %><%= 'width="370px" height="120px" viewBox="0 0 400 120"' %><% } else { %><%= 'width="580px" height="170px" viewBox="0 0 580 170"' %><% } %> version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <rect class="dashed" x="1" y="1" rx="10" ry="10" <% if (size === 'small') { %><%= 'width="368" height="118"' %><% } else { %><%= 'width="578" height="168"' %><% } %></rect>
+    </svg>
+    <div class="dropzone-text"><h2> <%- dropBoxLabel %> </h2></div>
+</div>

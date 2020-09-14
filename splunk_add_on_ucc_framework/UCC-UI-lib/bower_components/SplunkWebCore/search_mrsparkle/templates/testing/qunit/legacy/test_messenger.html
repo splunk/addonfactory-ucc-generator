@@ -1,0 +1,280 @@
+<%inherit file="//qunit/template.html" />
+
+<%def name="title()">Messenger -- QUnit tests</%def>
+
+<script language="javascript">
+var logger = Splunk.Logger.getLogger("messenger.html");
+function test_SubjectID(){
+    var fixture = createFixture1(10, false);
+    var leading = "";
+    for(var i=0; i<[fixture.MAX_OBSERVERS_BUFFER].join("").length; i++){
+        leading += "0";
+    }
+    var results = fixture.getSubjects(false, null, null, false);
+    assertEquals(results[0].id, leading + "1");
+    var customID = "my_custom_id";
+    var fixture = createFixture3(customID);
+    var results = fixture.getSubjects(false, null, null, false);
+    assertEquals(results[0].id, customID);
+}
+function test_SubjectClassName(){
+    var className = "myClassName";
+    var fixture = createFixture5(className);
+    var results = fixture.getSubjects(false, null, null, false);
+    assertEquals(results[0].className, className);
+}
+function test_SubjectContent(){
+    var content = "w00t! my content";
+    var fixture = createFixture6(content);
+    var results = fixture.getSubjects(false, null, null, false);
+    assertEquals(results[0].content, content);
+}
+function test_SubjectLevel(){
+    var level = "mylevel";
+    var fixture = createFixture7(level);
+    var results = fixture.getSubjects(false, null, null, false);
+    assertEquals(results[0].level, level);
+}
+function test_Simple(){
+    var size = 10;
+    var fixture = createFixture1(size, false);
+    var results;
+    assertEquals(fixture.getSubjectLength(null), size);
+    assertEquals(fixture.getSubjectLength(null, true), 0);
+    results = fixture.getSubjects(false, {}, []);
+    assertEquals(fixture.getSubjectLength(null), size);
+    assertEquals(results.length, size);
+    results = fixture.getSubjects(false, {}, [], true);
+    assertEquals(fixture.getSubjectLength(null, true), 0);
+    assertEquals(results.length, 0);
+    results = fixture.getSubjects(false, null, null);
+    assertEquals(results.length, size);
+    results = fixture.getSubjects(false, null, null, true);
+    assertEquals(results.length, 0);
+    results = fixture.getSubjects(true, {}, []);
+    assertEquals(fixture.getSubjectLength(null), 0);
+    assertEquals(results.length, size);
+    fixture = createFixture1(size, false);
+    results = fixture.getSubjects(true, {}, [], true);
+    assertEquals(fixture.getSubjectLength(null, true), 0);
+    assertEquals(results.length, 0);
+    fixture = createFixture1(size, false);
+    results = fixture.getSubjects(true, null, null);
+    assertEquals(results.length, size);
+    fixture = createFixture1(size, false);
+    results = fixture.getSubjects(true, null, null, true);
+    assertEquals(results.length, 0);
+    fixture = createFixture1(size, false);
+}
+function test_StringFilter(){
+    var size = 10;
+    var fixture, results, resultsLength;
+    fixture = createFixture1(size, true);
+    resultsLength = fixture.getSubjectLength({"level":"info"});
+    results = fixture.getSubjects(false, {"level":"info"}, []);
+    assertEquals(resultsLength, size*2);
+    assertEquals(results.length, size*2);
+    resultsLength = fixture.getSubjectLength({"level":"info"}, true);
+    results = fixture.getSubjects(false, {"level":"info"}, [], true);
+    assertEquals(resultsLength, 0);
+    assertEquals(results.length, 0);
+    results = fixture.getSubjects(false, {"level":"info"}, null);
+    assertEquals(results.length, size*2);
+    results = fixture.getSubjects(false, {"level":"info"}, null, true);
+    assertEquals(results.length, 0);
+    resultsLength = fixture.getSubjectLength({"level":"foo"});
+    results = fixture.getSubjects(false, {"level":"foo"}, []);
+    assertEquals(resultsLength, 0);
+    assertEquals(results.length, 0);
+    resultsLength = fixture.getSubjectLength({"level":"foo"}, true);
+    results = fixture.getSubjects(false, {"level":"foo"}, [], true);
+    assertEquals(resultsLength, size*2);
+    assertEquals(results.length, size*2);
+    results = fixture.getSubjects(false, {"level":"foo"}, null);
+    assertEquals(results.length, 0);
+    results = fixture.getSubjects(false, {"level":"foo"}, null, true);
+    assertEquals(results.length, size*2);
+    resultsLength = fixture.getSubjectLength({"content":"string_1"});
+    results = fixture.getSubjects(false, {"content":"string_1"}, []);
+    assertEquals(resultsLength, 2);
+    assertEquals(results.length, 2);
+    resultsLength = fixture.getSubjectLength({"content":"string_1"}, true);
+    results = fixture.getSubjects(false, {"content":"string_1"}, [], true);
+    assertEquals(resultsLength, size*2-2);
+    assertEquals(results.length, size*2-2);
+    results = fixture.getSubjects(false, {"content":"string_1"}, null);
+    assertEquals(results.length, 2);
+    results = fixture.getSubjects(false, {"content":"string_1"}, null, true);
+    assertEquals(results.length, size*2-2);
+    resultsLength = fixture.getSubjectLength({"content":"string_1", "className":"klass_1"});
+    results = fixture.getSubjects(false, {"content":"string_1", "className":"klass_1"}, []);
+    assertEquals(resultsLength, 2);
+    assertEquals(results.length, 2);
+    resultsLength = fixture.getSubjectLength({"content":"string_1", "className":"klass_1"}, true);
+    results = fixture.getSubjects(false, {"content":"string_1", "className":"klass_1"}, [], true);
+    assertEquals(resultsLength, size*2-2);
+    assertEquals(results.length, size*2-2);
+    results = fixture.getSubjects(false, {"content":"string_1", "className":"klass_1"}, null);
+    assertEquals(results.length, 2);
+    results = fixture.getSubjects(false, {"content":"string_1", "className":"klass_1"}, null, true);
+    assertEquals(results.length, size*2-2);
+    resultsLength = fixture.getSubjectLength({"content":"string_1", "className":"klass_2"});
+    results = fixture.getSubjects(false, {"content":"string_1", "className":"klass_2"}, []);
+    assertEquals(resultsLength, 0);
+    assertEquals(results.length, 0);
+    resultsLength = fixture.getSubjectLength({"content":"string_1", "className":"klass_2"}, true);
+    results = fixture.getSubjects(false, {"content":"string_1", "className":"klass_2"}, [], true);
+    assertEquals(resultsLength, 20);
+    assertEquals(results.length, 20);
+    results = fixture.getSubjects(false, {"content":"string_1", "className":"klass_2"}, null);
+    assertEquals(results.length, 0);
+    results = fixture.getSubjects(false, {"content":"string_1", "className":"klass_2"}, null, true);
+    assertEquals(results.length, 20);
+}
+function test_RegExpFilter(){
+    var size = 10;
+    var fixture, results, resultsLength;
+    fixture = createFixture1(size, true);
+    resultsLength = fixture.getSubjectLength({"level":/info/});
+    results = fixture.getSubjects(false, {"level":/info/}, null);
+    assertEquals(resultsLength, size*2);
+    assertEquals(results.length, size*2);
+    fixture = createFixture1(size, true);
+    resultsLength = fixture.getSubjectLength({"level":/i/});
+    results = fixture.getSubjects(false, {"level":/i/}, null);
+    assertEquals(resultsLength, size*2);
+    assertEquals(results.length, size*2);
+    fixture = createFixture1(size, true);
+    resultsLength = fixture.getSubjectLength({"level":/#/});
+    results = fixture.getSubjects(false, {"level":/#/}, null);
+    assertEquals(resultsLength, 0);
+    assertEquals(results.length, 0);
+}
+function test_Sort(){
+    var size = 2;
+    var fixture, results1, results2;
+    fixture = createFixture2(size, false);
+    results1 = fixture.getSubjects(false, {}, ["level"]);
+    results2 = fixture.getSubjects(false, {}, []);
+    assertEquals(results1.date, results2.date);
+    results1 = fixture.getSubjects(false, {}, ["level"], true);
+    results2 = fixture.getSubjects(false, {}, [], true);
+    assertEquals(results1.date, results2.date);
+    results1 = fixture.getSubjects(false, null, ["level"]);
+    results2 = fixture.getSubjects(false, null, null);
+    assertEquals(results1.date, results2.date);
+    results1 = fixture.getSubjects(false, null, ["level"], true);
+    results2 = fixture.getSubjects(false, null, null, true);
+    assertEquals(results1.date, results2.date);
+    results1 = fixture.getSubjects(false, {}, ["content"]);
+    results2 = fixture.getSubjects(false, {}, []);
+    assertEquals(results1.content, results2.content);
+    results1 = fixture.getSubjects(false, {}, ["content"], true);
+    results2 = fixture.getSubjects(false, {}, [], true);
+    assertEquals(results1.content, results2.content);
+    results1 = fixture.getSubjects(false, null, ["content"]);
+    results2 = fixture.getSubjects(false, null, null);
+    assertEquals(results1.content, results2.content);
+    results1 = fixture.getSubjects(false, null, ["content"], true);
+    results2 = fixture.getSubjects(false, null, null, true);
+    assertEquals(results1.content, results2.content);
+    results1 = fixture.getSubjects(false, {}, ["className"]);
+    results2 = fixture.getSubjects(false, {}, []);
+    assertNotEquals(results1[0].className, "klass_1");
+    assertNotEquals(results2[0].className, "klass_2");
+    results1 = fixture.getSubjects(false, {}, ["className"], true);
+    results2 = fixture.getSubjects(false, {}, [], true);
+    assertEquals(results1.length, 0);
+    assertEquals(results2.length, 0);
+    results1 = fixture.getSubjects(false, null, ["className"]);
+    results2 = fixture.getSubjects(false, null, null);
+    assertNotEquals(results1[0].className, "klass_1");
+    assertNotEquals(results2[0].className, "klass_2");
+    results1 = fixture.getSubjects(false, null, ["className"], true);
+    results2 = fixture.getSubjects(false, null, null, true);
+    assertEquals(results1.length, 0);
+    assertEquals(results2.length, 0);
+}
+
+function test_FilterSort(){
+    var size = 2;
+    var fixture, results1, results2;
+    fixture = createFixture2(size, true);
+    results1 = fixture.getSubjects(false, {"level":"info"}, ["level"]);
+    results2 = fixture.getSubjects(false, {}, []);
+    assertEquals(results1[0].date, results2[0].date);
+    results2 = fixture.getSubjects(false, null, null);
+    assertEquals(results1[0].date, results2[0].date);
+    results1 = fixture.getSubjects(false, {"level":"info"}, ["level"], true);
+    results2 = fixture.getSubjects(false, {}, [], true);
+    assertEquals(results1.length, 0);
+    assertEquals(results2.length, 0);
+    results2 = fixture.getSubjects(false, null, null, true);
+    assertEquals(results2.length, 0);
+    results1 = fixture.getSubjects(false, {"content":"string_1"}, ["content"]);
+    results2 = fixture.getSubjects(false, {}, []);
+    assertEquals(results1.length, 2);
+    assertEquals(results1[0].content, results2[3].content);
+    results2 = fixture.getSubjects(false, null, null);
+    assertEquals(results1[0].content, results2[3].content);
+    results1 = fixture.getSubjects(false, {"content":"string_1"}, ["content"], true);
+    results2 = fixture.getSubjects(false, {}, [], true);
+    assertEquals(results1.length, size*2-2);
+    assertEquals(results2.length, 0);
+    results2 = fixture.getSubjects(false, null, null, true);
+    assertEquals(results2.length, 0);
+    results1 = fixture.getSubjects(false, {"content":"string_1", "level":"info"}, ["className"]);
+    results2 = fixture.getSubjects(false, {}, []);
+    assertEquals(results1.length, 2);
+    assertEquals(results1[0].className, results2[2].className);
+    results1 = fixture.getSubjects(false, {"content":"string_1", "level":"info"}, ["className"], true);
+    results2 = fixture.getSubjects(false, {}, [], true);
+    assertEquals(results1.length, size*2-2);
+    assertEquals(results2.length, 0);
+}
+function createFixture1(size, dupe){
+    var messenger = new Splunk.Messenger.Bus();
+    for(var i=0; i<size; i++){
+        messenger.send("info", "string_"+i, "klass_"+i, null, null);
+        if(dupe){
+            messenger.send("info", "string_"+i, "klass_"+i, null, null);
+        }
+    }
+    return messenger;
+}
+function createFixture2(size, dupe){
+    var messenger = new Splunk.Messenger.Bus();
+    for(var i=0, j=size-1; i<size; i++, j--){
+        messenger.send("info", "string_"+i, "klass_"+j, null, null);
+        if(dupe){
+            messenger.send("info", "string_"+i, "klass_"+j, null, null);
+        }
+    }
+    return messenger;
+}
+function createFixture3(id){
+    var messenger = new Splunk.Messenger.Bus();
+    messenger.send("info", "string", "klass", id, null);
+    return messenger;
+}
+function createFixture4(date){
+    var messenger = new Splunk.Messenger.Bus();
+    messenger.send("info", "string", "klass", null, date);
+    return messenger;
+}
+function createFixture5(className){
+    var messenger = new Splunk.Messenger.Bus();
+    messenger.send("info", "string", className, null, null);
+    return messenger;
+}
+function createFixture6(content){
+    var messenger = new Splunk.Messenger.Bus();
+    messenger.send("info", content, "klass", null, null);
+    return messenger;
+}
+function createFixture7(level){
+    var messenger = new Splunk.Messenger.Bus();
+    messenger.send(level, "string", "klass", null, null);
+    return messenger;
+}
+</script>

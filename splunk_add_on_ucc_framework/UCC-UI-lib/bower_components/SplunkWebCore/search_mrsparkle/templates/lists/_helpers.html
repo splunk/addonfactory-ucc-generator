@@ -1,0 +1,174 @@
+<% import splunk.appserver.mrsparkle.lib.i18n as i18n %>
+<%namespace name="m" file="//view/_helpers.html" import="*"/>
+
+<%def name="i18nText(text, format=None)">
+<%
+    output = text
+    if format == 'number':
+        output = i18n.format_number(float(unicode(text)))
+    elif format == 'percent':
+        output = i18n.format_percent(float(unicode(text)))
+    elif format == 'decimal':
+        output = i18n.format_decimal(float(unicode(text)))
+    elif format == 'date_short':
+        output = i18n.format_date(text, 'short')
+    elif format == 'date_medium':
+        output = i18n.format_date(text, 'medium')
+    elif format == 'date_long':
+        output = i18n.format_date(text, 'long')
+    elif format == 'date_full':
+        output = i18n.format_date(text, 'full')
+%>
+${output}
+</%def>
+
+<%def name="staticfields(items, formatter, wrapper=None, delimiter=None, options=None)">
+<%
+import cgi
+
+if not delimiter:
+    delimiter = ''
+delimiter = cgi.escape(delimiter)
+
+if not options:
+    options = {}
+
+output = []
+for field in items:
+    tmp = []
+    labelFormat = field.get('labelFormat')
+    label_txt = field.get('label')
+    if labelFormat:
+        label_txt = capture(self.i18nText, label_txt, labelFormat)
+
+    tmp.append(capture(formatter, label_txt, field.get('value'), options, field.get('key')))
+
+    if wrapper:
+        output.append(capture(wrapper, delimiter.join(tmp)))
+    else:
+        output.append(delimiter.join(tmp))
+%>\
+${''.join(output)}\
+</%def>
+
+
+<%def name="listobjfields(items, formatter, fields=None, wrapper=None, delimiter=None, options=None)">
+<%
+import cgi
+import csv
+import re
+import logging
+from splunk.search import ResultField
+
+logger = logging.getLogger('splunk.listobjfields')
+
+if not delimiter:
+    delimiter = ''
+delimiter = cgi.escape(delimiter)
+
+if not options:
+    options = {}
+
+def label(field, obj, i=None):
+
+    label_key = field.get('label')
+    labelFormat = field.get('labelFormat')
+    multiLabel = field.get('multiLabel')
+    multiLabelAlt = field.get('multiLabelAlt')
+    
+    obj_label = None
+    if label_key != None:
+        obj_label = obj.get(label_key)
+
+    elif multiLabel:
+        try:
+            ##use the person login if realname is none
+            if multiLabel.find('realname') > 0 and 'realname' in obj and obj['realname'] == None:
+                pass
+            else:                
+                obj_label = multiLabel % obj            
+        except (KeyError, ValueError), e:
+            pass
+        
+        if obj_label == None:
+            try:
+                if multiLabelAlt:
+                    obj_label = multiLabelAlt % obj
+            except (KeyError, ValueError), e:
+                pass
+
+    label_output = ''            
+    if obj_label == None:
+        return None
+    elif obj_label and type(i) == int and type(obj_label) == ResultField and len(obj_label) >= i+1:
+        label_output = unicode(obj_label[i])
+    else:
+        label_output = unicode(obj_label)
+        
+    return capture(self.i18nText, label_output, labelFormat)
+
+
+inlineError = None
+output = []
+for obj in items:
+
+    tmp = []
+    if not fields:
+        for key, value in obj.items():
+            tmp.append(capture(formatter, key, value, options))
+
+        if wrapper:
+            output.append(capture(wrapper, delimiter.join(tmp)))
+        else:
+            output.append(delimiter.join(tmp))
+
+    else:
+        for field in fields:
+            # try:
+            field_matches = None
+            if field.get('match'):
+                reader = csv.reader([field.get('match')])
+                for row in reader:
+                    field_matches = [match.strip() for match in row]
+
+            field_value_key = field.get('value')
+            if field_value_key:
+
+                obj_value = obj.get(field_value_key)
+                if obj_value:
+                    
+                    # This allows us to handle multi-value fields
+                    field_out_value = []
+                    if isinstance(obj_value, basestring):
+                        if not field_matches or unicode(obj_value) in field_matches:
+                            label_text = label(field, obj)
+                            tmp.append(capture(formatter, label_text, unicode(obj_value), options, field_value_key))
+                    else:
+                        for i, val in enumerate(obj_value):
+                            if not field_matches or unicode(val) in field_matches:
+                                label_text = label(field, obj, i)
+                                if label_text == None:
+                                    next
+                                else:
+                                    field_out_value.append(capture(formatter, label_text, unicode(val), options, field_value_key))
+                        if field_out_value:
+                            tmp.append(''.join(field_out_value))
+
+            else:
+                label_text = label(field, obj)
+                if label_text != None:
+                    tmp.append(capture(formatter, label_text, None, options))
+                else:
+                    next
+
+
+        if wrapper:
+             output.append(capture(wrapper, delimiter.join(tmp)))
+        else:
+             output.append(delimiter.join(tmp))
+%>\
+% if inlineError != None:
+${inlineError}
+% endif
+${''.join(output)}\
+</%def>

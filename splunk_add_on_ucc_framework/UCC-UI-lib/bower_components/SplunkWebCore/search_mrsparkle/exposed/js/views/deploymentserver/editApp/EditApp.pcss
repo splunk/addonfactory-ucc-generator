@@ -1,0 +1,120 @@
+/*  Splunk : Page: Deployment Server Edit Apps */
+/*  ========================================= */
+
+
+/*  Common */
+.section-header {
+	@mixin clearfix;
+    position: relative;
+    padding: 10px 20px;
+
+    h2, p {
+    	margin: 0;
+    }
+    .btn-toolbar {
+    	float: right;
+    	margin-bottom: 0;
+    }
+
+}
+
+.section-padded {
+	.divider {
+		margin: 10px -20px;
+		clear:both;
+	}
+}
+
+.form-horizontal {
+	label {
+		margin-top: 0;
+		input {
+			margin: 0 1em 0 0;
+		}
+	}
+}
+
+.list-container {
+	width: 50%;
+	float:left;
+	margin-bottom: 10px;
+}
+
+.selected-serverclasses {
+	.btn-combo .btn:first-child {
+		width: 160px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	.btn-combo .btn {
+		text-align:left;
+	}
+	.btn-combo {
+		float:left;
+		margin-right: 5px;
+		margin-bottom: 5px;
+	}
+	.btn-combo + .btn-combo {
+		margin-left: 0;
+	}
+}
+
+.dropdown-toggle{
+    .btn {
+        margin-left: 20px;
+        font-size: 15px;
+        font-weight: bold;
+    }
+}
+
+.serverclasses-selecter {
+	margin-bottom: 5px;
+
+/*  TODO: make a base class for this */
+	.create-drop-down .btn {
+	    font-size: 15px;
+	    padding: 0;
+	    width: 24px;
+	    height: 24px;
+	    line-height: 24px;
+
+		margin-left: 5px;
+	}
+}
+/* TODO: make this more reusable */
+.fade-up {
+	@mixin gradient-vertical-three-colors color($black a(0)) , color($black a(0.5)), 5px, color($black a(0.5));
+	background-color: transparent;
+	height: 5px;
+	border-bottom: 1px solid $interactiveBorderColor;
+	margin-top: -5px;
+}
+
+/*  output preview */
+.selected-clients {
+	min-height: 400px;
+	padding: 10px 0px;
+	clear: both;
+	background-color: $bodyBackgroundColor;
+
+}
+
+/*  TODO: ths should be standard component */
+.filtersContainer,
+.paginator_container
+{
+	padding-left: 20px;
+}
+
+/*  TODO: need to fix markup so this isn't needed */
+.deployment_filter .btn-group {
+	margin-right: 5px;
+}
+.searchFilterContainer form:last-child {
+	margin-bottom: 10px;
+}
+
+.checkbox {
+  margin: 0px;
+  padding: 0px;
+}

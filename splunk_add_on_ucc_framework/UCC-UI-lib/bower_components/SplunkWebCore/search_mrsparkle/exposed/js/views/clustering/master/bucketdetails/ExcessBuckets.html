@@ -1,0 +1,17 @@
+<div class="remove-excess-buckets section-padded">
+  <p>
+    <%= _('Here is a list of indexes with buckets exceeding the replication or search factor.').t() %>
+  </p>
+  <a class="btn btn-primary remove-all-excess-buckets-button">
+    <%= _('Remove All Excess Buckets').t() %>
+  </a>
+  <span class="message"></span>
+</div>
+<!--<div class="divider">-->
+<div class="list-excess-buckets">
+  <div class="section-controls" style="overflow: auto"><!-- style overflow auto is a workaround for current version of Firefox --></div>
+  <table class="table table-chrome table-striped table-excess-buckets">
+    <tbody></tbody>
+  </table>
+</div>
+

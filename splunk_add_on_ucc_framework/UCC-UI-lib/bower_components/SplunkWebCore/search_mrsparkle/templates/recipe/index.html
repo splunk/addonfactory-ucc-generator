@@ -1,0 +1,101 @@
+<%inherit file="//layout/base.html" />
+<%namespace name="lib" file="//lib.html" import="*" />
+<%!
+import splunk.mining.recipes.recipe as julia
+from mako.filters import html_escape
+%>
+
+<%def name="css()"> 
+    <%coreCSSFiles = ["/static/css/view.css", "/static/css/skins/default/default.css", '/modules/nav/AccountBar.css', '/static/css/print.css'] %>
+    <%lib:stylesheet_tags files="${coreCSSFiles}"  />
+</%def>
+
+<%def name="body_element_open()">
+    <body>
+</%def>
+
+<div class="appHeaderWrapper">
+    <div class="layoutRow oneColRow splClearfix appHeader">       
+        <div class="SplunkModule AccountBar">                        
+            <a href="#" class="splIcon splIcon-close"></a>
+            <div class="appLogoContainer popupAppLogoContainer">
+                <a href="javascript:void()" class="appLogo notLinked"></a>
+                <h1>${_('Recipe builder')}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+% if msgs is not UNDEFINED:
+  % for msg in msgs['errors']:
+        Error: ${msg|h}<br/>
+  % endfor
+  % for msg in msgs['warns']:
+        Warn: ${msg|h}<br/>
+  % endfor
+% endif
+
+
+<form method="GET" id="iterate" class="entityEditForm">
+
+  <input type="hidden" name="py"  value="${py|h}" />
+  ${csrf_hidden_input()}
+  
+
+<%def name="makeDropdown(myclass, id)">
+<%   recipeTypes = julia.get_recipe_list()  %>
+    &nbsp;&nbsp;&nbsp;&nbsp;<b>step:</b><select  onchange='this.form.submit()' name="id_${id|h}">
+%   for r in recipeTypes:
+%     if myclass == r:
+         <option selected="yes" SELECTED>${r|h}</option>
+%     else:
+         <option>${r|h}</option>
+%     endif
+%   endfor
+    </select>
+</%def>
+
+
+<%def name="display(obj)">
+     <%   
+     myclass = obj['_class']
+     rid = obj['_id']
+     makeDropdown(myclass, rid)
+     %>
+<a href="?command=delete&id=${rid|u}&py=${py|u}">[X]</a> 
+% if myclass in ['serial','parallel','block']:
+   <a href="?command=add&id=${rid|u}&py=${py|u}"> add </a>
+% endif
+<ul><ul>
+     <%
+     recipe = julia.get_class(myclass)()
+     rargs = recipe.get_args()
+     %>
+          
+     % for k,v in obj.items():
+        
+        % if k.startswith('_'):
+            <% continue %>
+        % elif isinstance(v, dict) and '_class' in v:
+            <b>${k|h}:</b><br/><% display(v) %>
+        % elif isinstance(v, list):
+	    <b>${k|h}:</b><br/>
+            % for s in v:
+                <% display(s) %>
+            % endfor
+        % else:
+           <b>${k|h}:</b><input type="input" onblur='this.form.submit()'  name="field_${k|h}_${rid|h}" value="${v|h}" />
+        % endif
+        <br/>
+     % endfor
+   
+</ul></ul>
+</%def>
+
+${display(py)} 
+<br/>
+<input type="submit" name="command" value="Update" />
+<input type="submit" name="command" value="Save" />
+
+  <div class="splOverlay">&nbsp;</div>
+</form>

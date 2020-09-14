@@ -1,0 +1,218 @@
+/*  Splunk: Page: Data Model Manager */
+/*  ================================ */
+
+.datamodelmanager-datamodelmanager > .btn-toolbar {
+	 margin-left: 10px;
+}
+
+.main-section {
+    background: $bodyBackgroundColor;
+    
+    .table-toolbar {
+        padding: 8px 8px 0;
+
+        > * {
+            min-height: 28px;
+            padding: 0 0 4px;
+
+            > * {
+                display: inline-block;
+
+            }
+        }
+        
+        .filter-container {
+            border-top: 1px solid$grayLightMedium;
+            padding-top: 10px;
+                 
+            .collection-count {
+                margin-left: 13px;
+            } 
+            
+            .select-page-count {
+            	float: right;
+            }          
+        }
+        
+        .paginator-container {
+			min-height: initial;
+        }
+    }    
+}
+        
+.data-model-table-body  {
+    td {
+        overflow: hidden; 
+    }
+}
+
+.rebuild-btn, .update-btn {
+	padding-right: 20px;
+}
+
+.icon-lightning {
+	color: $textGray;
+	cursor: default;
+	font-size: 18px;
+	height: $baseLineHeight;
+	display: block;
+	overflow: hidden;
+}
+
+.icon-lightning-selected {
+	color: $yellow;
+	text-shadow: 0 1px 0 color($yellow l(-20%));
+}
+
+.datamodelmanager-components-editmenu {
+	padding-right: 20px;
+}
+
+.data-model-title {
+	font-size: 14px;
+	display: block;
+	margin: -8px;
+	padding: 8px;
+}
+
+.col-title {
+	word-break: break-all;
+
+    h5 {
+        color: $textGray;
+        text-transform: uppercase;
+        margin: 20px 0 0 0;
+        font-weight: normal;
+        font-size: 12px;
+    }
+
+	dl {
+		margin-bottom: 0;
+	}
+
+	ul {
+	    word-break: break-word;
+	}
+}
+
+.col-accelerate {
+		width: 15px;
+}
+
+.col-actions {
+	width: 180px;
+
+	> .dropdown, > a {
+		display: inline-block;
+	}
+
+	> .dropdown:first-child, > a:first-child {
+		min-width: 40px;
+		margin-right: 20px;
+	}
+}
+
+.col-type {
+    width: 70px;
+}
+
+.col-app, .col-owner {
+	width: 140px;
+	white-space: nowrap;
+	text-overflow:ellipsis;
+}
+
+.col-sharing {
+	width: 70px;
+}
+
+
+.text-name-filter-placeholder {
+	display: inline-block;
+	input {
+		margin: 0;
+	}
+}
+
+.dm-list-placeholder {
+	clear: both;
+}
+
+.collection-paginator-placeholder {
+	margin-top: 8px;
+	margin-bottom: 8px;
+}
+
+/*  needed due to extra markup around btns ;_; */
+.select-visible-filter-placeholder,
+.select-owner-filter-placeholder,
+.text-name-filter-placeholder
+{
+	margin-left: 5px;
+}
+
+/*  File Upload */
+.control-upload {
+	position: relative;
+
+	.btn-file {
+		width: 80px;
+		box-sizing: border-box;
+		border-top-left-radius: 0;
+		border-bottom-left-radius: 0;
+	}
+
+    .fileInputContainer {
+        border-radius: 4px;
+    }
+
+    .isFocused{
+        .btn-file {
+            @mixin focus-button;
+        }
+    }
+
+	span.filename.uneditable-input {
+		width: calc(100% - 80px);
+		box-sizing: border-box;
+		height: 26px;
+		border-right: none;
+		margin-right: 0;
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 0;
+		text-overflow:ellipsis;
+		display: inline-block;
+	}
+
+	input {
+		position: absolute;
+		top: -10000px;
+		left: -10000px;
+		opacity: 0;
+		direction: ltr;
+		cursor: pointer;
+	}
+}
+
+/*  Acceleration Dialog */
+.blocksize-control {
+  display: inline-block;
+  margin: 3px 0 16px 0;
+
+  .shared-controls-textcontrol {
+    vertical-align: middle;
+
+    input {
+      width: 8em;
+      padding-right: 6px;
+    }
+  }
+
+  .control {
+    display: inline-block;
+    
+    .uneditable-input {
+        width: 8em;
+    }
+  }
+}

@@ -1,0 +1,19 @@
+/*!
+ * Splunk component bootstrap used in module system
+ */
+
+/*  Main styles */
+
+@if $theme == 'lite' {
+    .splunk-components {
+        @import "../base/reset.pcss";
+        @import "../base/sprites.pcss";
+        @import "../base/modals.pcss";
+        @import "../base/close.pcss";
+        @import "../base/carousel.pcss";
+        @import "../base/utilities.pcss"; /*  Has to be last to override when necessary */
+    }
+
+    @import "../base/tour.pcss"; /*  Has to be last to override when necessary */
+}
+@import "main.pcss";

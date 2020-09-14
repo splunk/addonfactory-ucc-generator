@@ -1,0 +1,6 @@
+<% _.each(items, function(item) { %>
+<% var count = item.count ? item.count : '' %>
+<a href="#" class="link-wrap<%= item.cls ? ' ' + item.cls : '' %>">
+	<div class="input_item<%= item.type === currentType ? ' selected' : '' %>" data-type="<%- item.type %>"><%- item.label %> <span title="<%- count %>" class="item-count"><%- count %></span></div>
+</a>
+<% }) %>

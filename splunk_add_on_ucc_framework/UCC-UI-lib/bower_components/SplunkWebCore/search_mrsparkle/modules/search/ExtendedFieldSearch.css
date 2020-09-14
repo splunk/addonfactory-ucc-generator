@@ -1,0 +1,25 @@
+/* each form search item
+_________________________________*/
+
+.splFormSearch .ExtendedFieldSearch {
+    width: auto;
+    float: left;
+    padding: 5px 0 0 10px;
+}
+
+.splFormSearch .ExtendedFieldSearch label {
+    display:block;
+    padding-top:5px;
+    margin-bottom: 0;
+}
+
+.splFormSearch .ExtendedFieldSearch input {
+    margin-bottom:5px;
+    min-width: 250px;
+}
+
+
+.splFormSearch .viewHeader .ExtendedFieldSearch {
+    margin: 0px 5px;
+    padding: 0px;
+}

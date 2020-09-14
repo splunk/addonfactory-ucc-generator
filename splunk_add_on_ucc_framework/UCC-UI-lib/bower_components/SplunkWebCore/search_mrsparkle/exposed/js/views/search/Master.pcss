@@ -1,0 +1,465 @@
+/*  Splunk: Page: Search/Timeline */
+/*  ============================= */
+/*  page layout and overrides */
+
+
+.main-section-body {
+    min-height: 350px;
+}
+
+.search-title {
+    position: relative;
+    @mixin clearfix;
+    margin-bottom: 4px;
+}
+
+.search-title h2 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 340px;
+}
+
+.alert-partial-fields {
+    margin: 10px 20px;
+}
+
+.document-controls {
+    float: right;
+}
+
+.search-actions-createdashboardpanel {
+    margin-left: 10px;
+}
+
+.section-header {
+    padding-bottom: 15px;
+}
+
+.save-report {
+    margin-right: 10px;
+}
+
+
+.search-actions-savemenu {
+    display: inline-block;
+}
+
+/*  Page specific vertical spacing adjustments */
+
+.shared-jobstatus {
+    margin-top: 12px;
+    margin-bottom: -15px;
+    padding-right: 0px;
+    padding-left: 0px;
+
+    .progress-bar {
+        margin: 0px -20px;
+    }
+}
+
+.job-status-container {
+    min-height: 23px;
+}
+
+.search-results-eventspane-eventcontrols {
+    padding-top: 3px;
+}
+
+.single-value {
+    display: block;
+}
+
+.dropdown-menu {
+    .report_actions {
+        overflow: visible;
+    }
+
+    .create-event-type {
+        .tooltip.left {
+            width: 153px;
+        }
+    }
+}
+
+/*  states */
+
+.status-bar {
+    float:right;
+    list-style-type: none;
+     > li {
+        float: left;
+        margin:0 5px;
+    }
+    a {
+        background-color: $grayLightMedium;
+        color: $textColor;
+        padding: 2px 5px;
+        border: 1px solid $grayDark;
+        border-radius: 5px;
+        @mixin gradient-vertical $interactiveGradientStartColor, $interactiveGradientEndColor;
+        text-decoration: none;
+        &:hover {
+            @mixin gradient-vertical $interactiveGradientEndColor, $interactiveGradientStartColor;
+        }
+    }
+}
+
+/*TIMELINE*/
+.timeline-wrapper {
+    clear:both;
+    padding:0 10px;
+}
+
+/*ALERTS*/
+
+.section-padded {
+    .alerts {
+        margin: 25px 0 0 0;
+        li {
+            padding: 8px 35px 8px 3px;
+        }
+    }
+    .alert {
+        margin: 0;
+    }
+}
+
+/*  Open In Pivot Dialog */
+.open-in-pivot-modal {
+    width: 460px;
+}
+
+/* wrapper for the buttons and chart */
+.timeline-container {
+    margin-top: -8px;
+
+    .format-timeline {
+        z-index: 1;
+    }
+
+    .dropdown {
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+
+    &.minimized .dropdown {
+        margin-top: 5px;
+    }
+    &.minimized .format-search {
+        z-index: 3;
+    }
+
+    .controlLinks {
+        margin-right: 20px;
+        margin-bottom: 2px;
+    }
+
+    .bucketSize {
+        font-size: 11px;
+    }
+
+    &.loading {
+        min-height: 105px;
+        padding: 10px 20px;
+        box-sizing: border-box;
+    }
+}
+
+/*  generic message */
+.message-single,
+.lazy-results-table.loading,
+.shared-reportvisualizer .loading,
+.shared-reportvisualizer .visualization-message {
+    padding: 60px 20px;
+}
+
+.events-fields-container > .alerts  {
+    margin: 0 20px;
+}
+
+/*TMP*/
+#paginator {
+    float:right;
+}
+
+#count,
+#rowNumbers,
+#wrapResults,
+#segmentation,
+#maxlines
+{
+    float:left;
+    margin-right:1em;
+}
+
+.result-options{
+   /* overflow:hidden; */
+    padding:5px;
+}
+
+
+.fieldcontrols {
+    list-style:none;
+    li {
+        display:inline;
+        margin-right:1em;
+    }
+}
+
+/* fields-histogram */
+
+table.fields-histogram {
+
+    width: 100%;
+    height: 65px;
+    margin: 0;
+    padding: 0;
+    border-width: 0;
+    border-collapse: separate;
+    border-spacing: 1px;
+
+    td {
+        height: 100%;
+        padding: 0;
+        border-width: 0;
+        vertical-align: bottom;
+    }
+
+    .fields-histogram-column {
+        margin: 0;
+        padding: 0;
+        min-width: 1px;
+        background-color: $grayLight;
+    }
+
+}
+
+
+/* splunk-charting-Timeline */
+
+.splunk-charting-Timeline {
+    font-size: 11px;
+    line-height: 1;
+
+    .splunk-charting-label {
+        cursor: default;
+    }
+
+    .splunk-charting-TimeAxisLabels {
+
+        .splunk-charting-label {
+            margin-left: 5px;
+            margin-right: 5px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+        }
+
+    }
+
+    .splunk-charting-NumericAxisLabels {
+
+        .splunk-charting-label {
+            margin-left: 5px;
+            margin-right: 5px;
+            margin-top: 3px;
+            margin-bottom: 3px;
+        }
+
+    }
+
+    .splunk-charting-ClickDragRangeMarker,
+    .splunk-charting-CursorMarker {
+
+        .splunk-charting-label {
+            color: $black;
+            margin-left: 7px;
+            margin-right: 7px;
+        }
+
+    }
+
+    .splunk-charting-Tooltip {
+
+        .splunk-charting-label {
+            color: $white;
+            margin-left: 7px;
+            margin-right: 7px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+        }
+
+    }
+}
+
+.ui-resizable-handle {
+    bottom: -1px;
+
+
+    .ui-draggable-dragging {
+        position: relative;
+    }
+}
+
+/* Initial Help */
+.search-initialhelp {
+    padding: 30px;
+    min-height: 200px;
+
+    .help-column {
+        padding-bottom: 0;
+        margin-bottom: 20px;
+        h3 {
+            margin: -5px 0 8px 0;
+        }
+        > .btn {
+            margin: 20px 10px 0 0;
+        }
+    }
+
+    .column-what {
+        margin: 0 0 0 420px;
+        min-height: 150px;
+        border-left: 1px dotted $borderColor;
+    }
+
+    .what-columns {
+        min-height: 40px;
+        > div {
+            max-width: 230px;
+        }
+    }
+
+    .btn {
+        line-height: 22px;
+    }
+
+    .column-how {
+        width:360px;
+        min-height: 150px;
+        margin-bottom: 0px;
+        float: left;
+        > p {
+            min-height: 40px;
+            margin-bottom: 0px;
+        }
+    }
+}
+
+/*  IE gets no opacity */
+.search-disabled {
+    opacity: 0.3;
+}
+
+.tab-pane {
+    position: relative;
+
+    &.search-disabled:after {
+        content: '';
+        position: absolute;
+        top: -46px;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 500;
+    }
+}
+
+.results-table {
+    margin-bottom: -1px;
+}
+
+.shared-eventsviewer, .lazy-events-viewer.loading {
+    border-left: 1px solid $tableBorderVertical;
+}
+
+.lazy-events-viewer.loading {
+    min-height: 400px;
+    border-top: 1px solid $tableBorderVertical;
+    text-align: center;
+    padding-top: 15px;
+    .alert {
+        display: inline-block;
+    }
+}
+
+.shared-eventsviewer-list,
+.shared-eventsviewer-raw,
+.shared-eventsviewer-table {
+    margin-bottom: -1px;
+    overflow-y: hidden;
+}
+
+
+/*  dashboard modal msg */
+.dashboard-success-message {
+    word-wrap: break-word;
+}
+
+/*  give format popdown some width to help IE out */
+.popdown-dialog.dialog-format {
+    width: 300px;
+}
+
+/*  Lite UI */
+/*  -------------------------------------------------- */
+
+@if $theme == lite {
+    .search-initialhelplite {
+        @mixin clearfix;
+       .column-what {
+            width: 60%;
+            float: left
+        }
+        .column-how {
+            width: 20%;
+            float: right;
+        }
+    }
+    .search-initialhelp {
+        border: none;
+    }
+    .howto {
+        margin: 50px 0 0 0;
+        padding: 0;
+        list-style: none;
+        a {
+            line-height: 22px;
+        }
+    }
+    .search-initialhelplite-what .scroll-table-wrapper {
+        height: auto;
+    }
+    .lite .search-results-wrapper .table-chrome {
+        border-top: 1px solid $borderColor;
+    }
+    .btn.add-data {
+        margin-bottom: 10px;
+    }
+}
+
+
+/*  Print */
+/*  -------------------------------------------------- */
+@media print {
+    .format-search,
+    .controlLinks .zoomOut,
+    .controlLinks .zoomIn,
+    .controlLinks .selectAll,
+    .document-controls,
+    .divider,
+    .search-results-eventspane-controls,
+    .table-disabled-screen {
+        @mixin print-hide;
+    }
+
+    .searchContainer {
+        clear: both;
+    }
+
+    .search-title h2 {
+        white-space: normal;
+        padding-right: 0;
+    }
+
+}

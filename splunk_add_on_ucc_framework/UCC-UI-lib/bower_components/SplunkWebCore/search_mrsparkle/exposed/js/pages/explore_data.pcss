@@ -1,0 +1,452 @@
+
+
+/* TODO: import adddata-success.pcss when build catches up to allow us to get it from current */
+
+@mixin application-layout 400px;
+
+.wizard-steps-placeholder {
+  min-height: 85px;
+  margin-left: 1em;
+  display: inline-block;
+
+}
+
+.viewstack-placeholder {
+  background-color: $white;
+  top: 0px;
+  bottom: 0px;
+  min-height: 600px;
+
+}
+
+.components-placeholder {
+  margin-top: 3em;
+}
+
+/* 1. SELECT VIRTUAL INDEX */
+.dataexplorer-selectvirtualindex {
+
+  label {
+    font-weight: bold;
+  }
+
+  td {
+    width: 150px;
+    padding-right: 20px;
+  }
+
+  .section-header {
+    padding: 20px;
+  }
+
+  .section-title {
+    border-bottom: none;
+    font-weight: 200px;
+  }
+
+  .label-instructions {
+    padding-top: 10px;
+    padding-left: 30px;
+    padding-bottom: 10px;
+  }
+}
+
+/* 2. SELECT A FILE */
+.dataexplorer-browse {
+
+  label {
+    font-weight: bold;
+  }
+
+  .section-title {
+    border-bottom: none;
+    font-weight: 200px;
+  }
+
+  .main-container {
+    padding-left: 30px;
+  }
+
+  .label-instructions {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .loading-placeholder {
+    margin-left: auto;
+    margin-right: auto;
+    padding-right: 30px;
+    width: 100%;
+  }
+
+  .root-path-container {
+    padding-top: 10px;
+
+    .select-root-path-label {
+      font-weight: 600;
+    }
+
+    .select-root-path-placeholder {
+      padding-top: 5px;
+    }
+
+  }
+
+  .directory-items-table-wrapper {
+    clear: both;
+  }
+
+  .collection-paginator-placeholder {
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+}
+
+/* browse child view: directory breadcrumb */
+.dataexplorer-directorybreadcrumb {
+  .breadcrumbs {
+    padding-top: 10px;
+  }
+
+  td {
+    padding-right: 10px;
+    width: auto;
+  }
+
+  .last-crumb {
+    font-weight: bold;
+  }
+}
+
+.dataexplorer-components-directoryitemrow {
+  td {
+    .col-type {
+      width: 20px;
+    }
+  }
+}
+
+/* browse child view: directory items table */
+.dataexplorer-components-directoryitemstable {
+
+  .table-striped .dataexplorer-components-directoryitemrow.active > td {
+    background-color: $blueDark;
+    &, > a {
+      color: $white;
+    }
+  }
+
+  td {
+    overflow: hidden;
+  }
+
+  .col-name {
+    width: 40%;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+  }
+
+  .col-type {
+    width: 4em;
+  }
+
+  .col-owner {
+    width: 20%;
+    text-overflow:ellipsis;
+  }
+
+  .col-file-size {
+    width: 7em;
+  }
+
+  .col-permissions {
+    width: 6em;
+  }
+
+  .col-last-modified-time {
+    width: 30%;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+  }
+
+}
+
+header {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0px;
+  height: 25px;
+}
+
+.main-section-body {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 25px;
+  bottom: 0px;
+}
+
+/* 3. PREVIEW */
+
+.dataexplorer-preview {
+
+  .section-header {
+    padding: 20px;
+  }
+
+  .section-title {
+    border-bottom: none;
+    font-weight: 200px;
+  }
+
+  .label-instructions {
+    padding-top: 10px;
+    padding-left: 30px;
+    padding-bottom: 10px;
+  }
+
+  .loading {
+    margin-left: 20px;
+  }
+}
+
+.preview-container {
+  top: 85px;
+}
+
+.router-placeholder {
+  top: 85px;
+}
+
+/* 4. ENTER CONTEXT SETTINGS */
+.dataexplorer-additionalsettings {
+
+  .main {
+    padding: 20px;
+    min-height: 800px;
+  }
+
+  .title {
+    font-weight: normal;
+    font-size: 20px;
+  }
+
+  .label-instructions {
+    padding-top: 10px;
+    padding-left: 30px;
+    padding-bottom: 10px;
+  }
+
+  .section-title {
+    border-bottom: none;
+    font-weight: 200px;
+  }
+
+  .section {
+    margin-bottom: 40px;
+    padding: 20px;
+  }
+
+  .context-title {
+    width: 100%;
+    padding-left: 30px;
+  }
+
+  .section-body {
+    margin-right: 100px;
+    float: left;
+  }
+
+  .section-desc {
+    width: 400px;
+    padding-left: 10px;
+  }
+
+  .section-props {
+    float: left;
+  }
+
+  .context_placeholder {
+    padding-left: 30px;
+  }
+
+  .sharing_placeholder {
+    padding-left: 30px;
+  }
+
+  .appcontext-section {
+    padding-left: 20px;
+  }
+
+  .sharing-section {
+    padding-left: 20px;
+  }
+
+  @media all {
+    h3 {
+      font-size: 16px;
+      font-weight: normal;
+    }
+
+    td {
+      width: 300px;
+      padding-left: 20px;
+    }
+  }
+}
+
+/* 5. REVIEW SETTINGS */
+.dataexplorer-reviewsettings {
+
+  .section-header {
+    padding: 20px;
+  }
+
+  .main {
+    padding: 20px;
+    min-height: 800px;
+  }
+
+  .label-instructions {
+    padding-top: 10px;
+    padding-left: 30px;
+    padding-bottom: 10px;
+  }
+  .section-title {
+    border-bottom: none;
+    font-weight: 200px;
+
+  }
+  .section {
+    clear: both;
+  }
+
+  .edit-link {
+    width: 200px;
+    padding-left: 20px;
+    height: 25px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .section-body {
+  }
+
+  .section-props {
+    padding: 20px;
+  }
+
+  .section-change {
+    float: left;
+  }
+
+  .desc {
+    width: 300px;
+  }
+
+  .review-label {
+    text-align: right;
+    font-weight: bold;
+    padding: 20px;
+  }
+
+  .source-value {
+    text-align: right;
+    font-weight: bold;
+    padding-right: 20px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    padding-top: 30px;
+    width: 300px;
+  }
+
+  .review-value {
+    width: 200px;
+    padding-left: 30px;
+    height: 25px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .edit-link-placeholder {
+    width: 200px;
+    padding-left: 30px;
+    height: 25px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  /*
+  text area below settings
+  */
+
+  @media all {
+    .control .uneditable-input.uneditable-input-multiline {
+      height: 150px;
+      width: 400px;
+      padding-left: 30px;
+    }
+  }
+
+  .textarea-placeholder {
+    padding-left: 30px;
+  }
+
+}
+
+/* dialog for editing source path */
+.dataexplorer-editsourcemodal {
+
+  textarea {
+    height: 30px;
+    width: 350px;
+    overflow: auto;
+  }
+}
+
+/* CONFIRMATION page. Copied from GDI: add-data-success.pcss */
+/* TODO: import add-data-success */
+
+.dataexplorer-confirmation {
+  .shared-appbar {
+    display: none;
+  }
+
+  .success-container {
+    width: 700px;
+    margin: 0 auto;
+    margin-top: 70px;
+  }
+
+  .icon-check-circle {
+    float: left;
+    font-size: 50px;
+    color: $splunkGreen;
+    margin-right: 15px;
+    line-height: 33px;
+
+  }
+
+  .success-top {
+    float: left;
+    margin-bottom: 25px;
+  }
+
+  .success-header {
+    font-family: Roboto;
+    font-weight: 200px;
+    font-size: 24px;
+    margin-bottom: 5px;
+  }
+
+  .success-option {
+    margin-top: 25px;
+  }
+
+  .btn-success {
+    width: 120px;
+    margin-right: 15px;
+  }
+
+}
