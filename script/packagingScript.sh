@@ -44,5 +44,3 @@ pip2 install "virtualenv<17.0.0,>=16.7.9" --upgrade > /dev/null
 
 pip3 install splunk_add_on_ucc_framework-0.1.0.tar.gz
 ucc-gen
-ls --all -l package/
-ls --all -l package/appserver/static/js/build/
