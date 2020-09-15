@@ -299,7 +299,7 @@ def main():
         args.config = os.path.abspath(os.path.join(args.source, PARENT_DIR, "globalConfig.json"))
 
     clean_before_build()
-
+    ignore_list = get_ignore_list(args, os.path.abspath(os.path.join(args.source, PARENT_DIR, ".uccignore")))
     if os.path.exists(args.config):
 
         with open(args.config, "r") as config_file:
@@ -321,7 +321,6 @@ def main():
             os.path.join(outputdir, ta_name, "appserver", "static", "js", "build", "globalConfig.json"),
         )
         ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
-        ignore_list = get_ignore_list(args, os.path.abspath(os.path.join(args.source, PARENT_DIR, ".uccignore")))
 
         install_libs(
             parent_path=os.path.abspath(os.path.join(args.source, PARENT_DIR)),
