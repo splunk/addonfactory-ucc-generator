@@ -82,7 +82,7 @@ def export_package(args, ta_name, ignore_list=None):
 def copy_package_template(args, ta_name):
     logger.info("Copy UCC template directory")
     recursive_overwrite(
-        args.source, os.path.join(outputdir, ta_name)
+        os.path.join(sourcedir,"package"), os.path.join(outputdir, ta_name)
     )
 
 

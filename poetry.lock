@@ -256,6 +256,17 @@ python-versions = "*"
 version = "0.3.5"
 
 [[package]]
+category = "dev"
+description = "Pytest testing utilities with docker containers."
+name = "lovely-pytest-docker"
+optional = false
+python-versions = "*"
+version = "0.1.0"
+
+[package.dependencies]
+pytest = "*"
+
+[[package]]
 category = "main"
 description = "Powerful and Pythonic XML processing library combining libxml2/libxslt with the ElementTree API."
 name = "lxml"
@@ -662,7 +673,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "9845b4403763d56930a82ae530dda51c68b2152f6a6bca07e7b743f84817925e"
+content-hash = "7dadda60530aef0c6423956fd20f18a4d57aef84cbe130141fc701ad3084e81a"
 lock-version = "1.0"
 python-versions = "^3.7"
 
@@ -760,6 +771,10 @@ langdetect = [
 ]
 logutils = [
     {file = "logutils-0.3.5.tar.gz", hash = "sha256:bc058a25d5c209461f134e1f03cab637d66a7a5ccc12e593db56fbb279899a82"},
+]
+lovely-pytest-docker = [
+    {file = "lovely-pytest-docker-0.1.0.tar.gz", hash = "sha256:f471f442daad56f26660e8c31a075a82c28f5196ecc2d58658cf6516d9eb2cd0"},
+    {file = "lovely_pytest_docker-0.1.0-py3-none-any.whl", hash = "sha256:7694a0194b082665edd5729c62513ea38f4320d6268d6f5f9485e878966f93be"},
 ]
 lxml = [
     {file = "lxml-4.3.4-cp27-cp27m-macosx_10_6_intel.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64.whl", hash = "sha256:ef2d1fc370400e0aa755aab0b20cf4f1d0e934e7fd5244f3dd4869078e4942b9"},

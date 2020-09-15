@@ -7,4 +7,4 @@ RUN echo Splunk VERSION=$SPLUNK_VERSION
 
 COPY deps/apps /opt/splunk/etc/apps/
 
-COPY $SPLUNK_APP_PACKAGE /opt/splunk/etc/apps/$SPLUNK_APP_ID
+COPY output/Splunk_TA_UCCExample /opt/splunk/etc/apps/Splunk_TA_UCCExample
