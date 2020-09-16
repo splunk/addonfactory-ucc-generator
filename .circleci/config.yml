@@ -29,7 +29,7 @@ jobs:
             poetry install
             poetry run build-ucc
             poetry build
-            poetry run ucc-gen --source tests/data/package --config tests/data/globalConfig.json
+            #poetry run ucc-gen --source tests/data/package --config tests/data/globalConfig.json
       - save_cache:
           key: poetry-{{ checksum "poetry.lock" }}
           paths:
