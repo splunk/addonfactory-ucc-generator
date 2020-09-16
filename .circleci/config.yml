@@ -29,10 +29,6 @@ jobs:
             poetry run build-ucc
             poetry build
             poetry run ucc-gen --source tests/package/Splunk_TA_UCCExample --config ./globalConfig.json
-      - save_cache:
-          key: poetry-{{ checksum "poetry.lock" }}
-          paths:
-            - ~/.poetry
       - store_artifacts:
           path: dist
       - store_artifacts:
