@@ -16,6 +16,7 @@ jobs:
           name: Install
           command: |
             source $HOME/.poetry/env
+            poetry install
             poetry run build-ucc
             poetry build
       - store_artifacts:
