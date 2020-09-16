@@ -23,7 +23,7 @@ jobs:
           name: Build
           command: |
             source $HOME/.poetry/env
-            git fetch --all --tags
+            git fetch --all --tags --prune
             git tag
             poetry version
             export PATH=~/.npm-global/bin:$PATH
