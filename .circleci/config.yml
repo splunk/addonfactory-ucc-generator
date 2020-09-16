@@ -11,6 +11,8 @@ jobs:
       - restore_cache:
           keys:
             - poetry-{{ checksum "poetry.lock" }}
+      - restore_cache:
+          keys:
             - npm-deps-{{ checksum "splunk_add_on_ucc_framework/UCC-UI-lib/package-lock.json" }}
       - run:
           name: Install Tools
