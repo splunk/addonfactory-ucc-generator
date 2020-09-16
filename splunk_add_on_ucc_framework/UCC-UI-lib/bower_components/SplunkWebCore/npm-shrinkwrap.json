@@ -4246,6 +4246,16 @@
         "ssri": "^5.2.4",
         "unique-filename": "^1.1.0",
         "y18n": "^4.0.0"
+      },
+      "dependencies": {
+        "rimraf": {
+          "version": "2.7.1",
+          "resolved": "https://registry.npmjs.org/rimraf/-/rimraf-2.7.1.tgz",
+          "integrity": "sha512-uWjbaKIK3T1OSVptzX7Nl6PvQ3qAGtKEtVRjRuazjfL3Bx5eI409VZSqgND+4UNnmzLVdPj9FqFJNPqBZFve4w==",
+          "requires": {
+            "glob": "^7.1.3"
+          }
+        }
       }
     },
     "chai": {
