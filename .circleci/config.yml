@@ -16,7 +16,7 @@ jobs:
             npm config set prefix '~/.npm-global'
             export PATH=~/.npm-global/bin:$PATH
             npm install -g bower
-            
+
       - run:
           name: Install
           command: |
@@ -25,8 +25,11 @@ jobs:
             poetry install
             poetry run build-ucc
             poetry build
+            poetry run ucc-gen --source tests/package/Splunk_TA_UCCExample
       - store_artifacts:
-          path: /tmp/workspace/
+          path: dist
+      - store_artifacts:
+          path: output
 
 workflows:
   version: 2
