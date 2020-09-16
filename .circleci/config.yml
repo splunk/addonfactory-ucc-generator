@@ -23,9 +23,9 @@ jobs:
           name: Build
           command: |
             source $HOME/.poetry/env
-            poetry version $(./semtag getcurrent)
             export PATH=~/.npm-global/bin:$PATH
             poetry install
+            poetry-dynamic-versioning
             poetry run build-ucc
             poetry build
             #poetry run ucc-gen --source tests/data/package --config tests/data/globalConfig.json
