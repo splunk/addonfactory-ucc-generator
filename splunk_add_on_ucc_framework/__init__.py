@@ -36,13 +36,13 @@ PARENT_DIR = ".."
 
 def get_os_path(path):
     """ 
-    Returns a path which is os compatible.
+    Returns a path which will be compatible.
 
     Args:
         path (str): Path in string
 
     Return:
-        string: Path which is os compatible.
+        string: Path which will be compatible.
     """
 
     if "\\\\" in path:
@@ -95,7 +95,7 @@ def copy_package_source(args, ta_name):
     Copy source package to output directory.
 
     Args:
-        args (argparse.Namespace): Object containing command-line arguments.
+        args (argparse.Namespace): Object with command-line arguments.
         ta_name (str): Name of TA.
     """
 
@@ -108,7 +108,7 @@ def export_package(args, ta_name, ignore_list=None):
     Export package from output directory to source directory.
     
     Args:
-        args (argparse.Namespace): Object containing command-line arguments.
+        args (argparse.Namespace): Object with command-line arguments.
         ta_name (str): Name of TA.
         ignore_list (list): List of files/folder to ignore while copying.
 
@@ -124,7 +124,7 @@ def copy_package_template(args, ta_name):
     Copy UCC template to output directory.
     
     Args:
-        args (argparse.Namespace): Object containing command-line arguments.
+        args (argparse.Namespace): Object with command-line arguments.
         ta_name (str): Name of TA.
     """
 
@@ -140,7 +140,7 @@ def replace_token(args, ta_name):
     Replace token with addon verison in redirect.xml.
 
     Args:
-        args (argparse.Namespace): Object containing command-line arguments.
+        args (argparse.Namespace): Object with command-line arguments.
         ta_name (str): Name of TA.
     """
 
@@ -221,7 +221,7 @@ def copy_splunktaucclib(args, ta_name):
     Copy splunkucclib in lib folder under output/{ta_name}.
 
     Args:
-        args (argparse.Namespace): Object containing command-line arguments.
+        args (argparse.Namespace): Object with command-line arguments.
         ta_name (str): Name of TA.
     """
 
@@ -237,7 +237,7 @@ def generate_rest(args, ta_name, scheme, import_declare_name):
     Build REST for Add-on.
 
     Args:
-        args (argparse.Namespace): Object containing command-line arguments.
+        args (argparse.Namespace): Object with command-line arguments.
         ta_name (str): Name of TA.
         scheme (GlobalConfigBuilderSchema): REST schema.
         import_declare_name (str): Name of import_declare_* file.
@@ -278,7 +278,7 @@ def replace_oauth_html_template_token(args, ta_name, ta_version):
     Replace tokens with addon name and version in redirect.html.
 
     Args:
-        args (argparse.Namespace): Object containing command-line arguments.
+        args (argparse.Namespace): Object with command-line arguments.
         ta_name (str): Name of TA.
         ta_version (str): Version of TA.
     """
@@ -305,7 +305,7 @@ def modify_and_replace_token_for_oauth_templates(
     Rename templates with respect to addon name if OAuth is configured.
     
     Args:
-        args (argparse.Namespace): Object containing command-line arguments.
+        args (argparse.Namespace): Object with command-line arguments.
         ta_name (str): Name of TA.
         ta_version (str): Version of TA.
         ta_tabs (list): List of tabs mention in globalConfig.json.
@@ -354,7 +354,7 @@ def add_modular_input(
     Generate Moduler input for addon.
 
     Args:
-        args (argparse.Namespace): Object containing command-line arguments.
+        args (argparse.Namespace): Object with command-line arguments.
         ta_name (str): Name of TA.
         schema_content (dict): JSON schema of globalConfig.json
     """
@@ -389,7 +389,7 @@ def make_modular_alerts(args, ta_name, ta_namespace, schema_content):
     Generate the alert schema with required structure.
 
     Args:
-        args (argparse.Namespace): Object containing command-line arguments.
+        args (argparse.Namespace): Object with command-line arguments.
         ta_name (str): Name of TA.
         ta_namespace (str): restRoot of TA.
         schema_content (dict): JSON schema of globalConfig.json.
@@ -410,7 +410,7 @@ def get_ignore_list(args, path):
     Return path of files/folders to ignore while copying to package.
 
     Args:
-        args (argparse.Namespace): Object containing command-line arguments.
+        args (argparse.Namespace): Object with command-line arguments.
         path (str): Path of '.uccignore'.
 
     Returns:
