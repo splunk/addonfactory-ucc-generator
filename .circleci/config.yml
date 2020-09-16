@@ -21,14 +21,14 @@ jobs:
             npm install -g bower
 
       - run:
-          name: Install
+          name: Build
           command: |
             source $HOME/.poetry/env
             export PATH=~/.npm-global/bin:$PATH
             poetry install
             poetry run build-ucc
             poetry build
-            poetry run ucc-gen --source tests/package/Splunk_TA_UCCExample --config ./globalConfig.json
+            poetry run ucc-gen --source tests/data/package --config tests/data/globalConfig.json
       - save_cache:
           key: poetry-{{ checksum "poetry.lock" }}
           paths:
@@ -45,6 +45,7 @@ jobs:
           paths:
             - dist
             - output
+
 workflows:
   version: 2
   build_test:
