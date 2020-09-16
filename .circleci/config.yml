@@ -9,9 +9,10 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install Poetry
+          name: Install Tools
           command: |
             curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+            npm install -g bower
       - run:
           name: Install
           command: |
