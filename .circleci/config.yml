@@ -25,7 +25,7 @@ jobs:
             poetry install
             poetry run build-ucc
             poetry build
-            poetry run ucc-gen --source tests/package/Splunk_TA_UCCExample
+            poetry run ucc-gen --source tests/package/Splunk_TA_UCCExample --config ./globalConfig.json
       - store_artifacts:
           path: dist
       - store_artifacts:
