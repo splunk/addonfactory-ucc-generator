@@ -1,0 +1,26 @@
+version: 2.1
+orbs:
+  go: circleci/go@0.2.0
+
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.7
+    steps:
+      - checkout
+      - run:
+          name: Install Poetry
+          command: |
+            curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+      - run:
+          name: Install
+          command: |
+            poetry run build-npm
+            poetry build
+      - store_artifacts:
+          path: /tmp/workspace/
+workflows:
+  version: 2
+  build_test:
+    jobs:
+      - build
