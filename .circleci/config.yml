@@ -8,9 +8,9 @@ jobs:
       - image: circleci/python:3.7-node
     steps:
       - checkout
-      # - restore_cache:
-      #     keys:
-      #       - poetry-{{ checksum "poetry.lock" }}
+      - restore_cache:
+          keys:
+            - poetry-{{ checksum "poetry.lock" }}
       - run:
           name: Install Tools
           command: |
@@ -28,7 +28,6 @@ jobs:
             poetry run poetry-dynamic-versioning
             poetry run build-ucc
             poetry build
-            #poetry run ucc-gen --source tests/data/package --config tests/data/globalConfig.json
       - save_cache:
           key: poetry-{{ checksum "poetry.lock" }}
           paths:
@@ -45,6 +44,19 @@ jobs:
           paths:
             - dist
             - output
+
+  test:
+    docker:
+      - image: circleci/python:3.7-node
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: Install Tools
+          command: |
+            pip install /tmp/workspace/dist/*
+
 workflows:
   version: 2
   build_test:
@@ -53,6 +65,8 @@ workflows:
   build_release:
     jobs:
       - build:
+          requires:
+            - build
           filters:
             branches:
               ignore: /.*/
