@@ -81,7 +81,7 @@ def recursive_overwrite(src, dest, ignore_list=None):
 
 def clean_before_build():
     """
-    Clean output direcotry before build process. 
+    Clean output directory before build process. 
     """
 
     logger.info("Cleaning out directory " + outputdir)
@@ -137,7 +137,7 @@ def copy_package_template(args, ta_name):
 def replace_token(args, ta_name):
     """
     Replace token with addon name in inputs.xml, configuration.xml, redirect.xml.
-    Replace token with addon verison in redirect.xml.
+    Replace token with addon version in redirect.xml.
 
     Args:
         args (argparse.Namespace): Object with command-line arguments.
@@ -175,7 +175,7 @@ def install_libs(parent_path, ucc_lib_target):
         Install 3rd Party libraries using pip2/pip3
 
         Args:
-            requirements (str): Path to requiremnts file.
+            requirements (str): Path to requirements file.
             ucc_target (str): Target path to install libraries.
             installer (str): Pip version(pip2/pip3).
         """
@@ -258,10 +258,10 @@ def is_oauth_configured(ta_tabs):
     Check if oauth is configured in globalConfig.json.
 
     Args:
-        ta_tabs (list): List of tabs mention in globalConfig.json.
+        ta_tabs (list): List of tabs mentioned in globalConfig.json.
 
     Returns:
-        bool: True if oauth is configure, False otherwise.
+        bool: True if oauth is configured, False otherwise.
     """
 
     for tab in ta_tabs:
@@ -308,7 +308,7 @@ def modify_and_replace_token_for_oauth_templates(
         args (argparse.Namespace): Object with command-line arguments.
         ta_name (str): Name of TA.
         ta_version (str): Version of TA.
-        ta_tabs (list): List of tabs mention in globalConfig.json.
+        ta_tabs (list): List of tabs mentioned in globalConfig.json.
 
     """
     redirect_xml_src = os.path.join(
@@ -351,7 +351,7 @@ def add_modular_input(
     args, ta_name, schema_content, import_declare_name
 ):
     """  
-    Generate Moduler input for addon.
+    Generate Modular input for addon.
 
     Args:
         args (argparse.Namespace): Object with command-line arguments.
