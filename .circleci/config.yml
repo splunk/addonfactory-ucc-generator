@@ -46,7 +46,6 @@ jobs:
           paths:
             - dist
             - output
-
 workflows:
   version: 2
   build_test:
