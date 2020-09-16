@@ -23,9 +23,7 @@ jobs:
           name: Build
           command: |
             source $HOME/.poetry/env
-            git fetch --all --tags --prune
-            git tag
-            poetry version
+            poetry version $(./semtag getcurrent)
             export PATH=~/.npm-global/bin:$PATH
             poetry install
             poetry run build-ucc
