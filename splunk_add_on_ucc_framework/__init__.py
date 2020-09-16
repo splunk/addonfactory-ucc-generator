@@ -36,13 +36,13 @@ PARENT_DIR = ".."
 
 def get_os_path(path):
     """ 
-    Returns a path which will be compatible.
+    Returns a path which will be os compatible.
 
     Args:
         path (str): Path in string
 
     Return:
-        string: Path which will be compatible.
+        string: Path which will be os compatible.
     """
 
     if "\\\\" in path:
