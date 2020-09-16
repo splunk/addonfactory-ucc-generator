@@ -16,6 +16,7 @@ jobs:
             npm config set prefix '~/.npm-global'
             export PATH=~/.npm-global/bin:$PATH
             npm install -g bower
+            
       - run:
           name: Install
           command: |
