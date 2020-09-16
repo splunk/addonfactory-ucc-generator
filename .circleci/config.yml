@@ -24,6 +24,7 @@ jobs:
           command: |
             source $HOME/.poetry/env
             git fetch --all --tags
+            git tag
             export PATH=~/.npm-global/bin:$PATH
             poetry install
             poetry run build-ucc
