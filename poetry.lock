@@ -79,6 +79,14 @@ version = "0.4.3"
 
 [[package]]
 category = "dev"
+description = "Dynamic version generation"
+name = "dunamai"
+optional = false
+python-versions = ">=3.5,<4.0"
+version = "1.3.0"
+
+[[package]]
+category = "dev"
 description = "execnet: rapid multi-Python deployment"
 name = "execnet"
 optional = false
@@ -382,6 +390,19 @@ dev = ["pre-commit", "tox"]
 
 [[package]]
 category = "dev"
+description = "Plugin for Poetry to enable dynamic versioning based on VCS tags"
+name = "poetry-dynamic-versioning"
+optional = false
+python-versions = ">=3.5,<4.0"
+version = "0.8.3"
+
+[package.dependencies]
+dunamai = ">=1.3,<2.0"
+jinja2 = ">=2.11.1,<3.0.0"
+tomlkit = ">=0.4"
+
+[[package]]
+category = "dev"
 description = "library with cross-python path, ini-parsing, io, code, log facilities"
 name = "py"
 optional = false
@@ -476,6 +497,10 @@ requests2 = ">=2.16,<3.0"
 six = ">=1.12.0,<1.13.0"
 splunk-appinspect = ">=2.0.1"
 splunk-sdk = ">=1.6,<2.0"
+
+[package.dependencies.lovely-pytest-docker]
+optional = true
+version = ">=0.1.0"
 
 [package.extras]
 docker = ["lovely-pytest-docker (>=0.1.0)"]
@@ -640,6 +665,14 @@ python-versions = "*"
 version = "1.3"
 
 [[package]]
+category = "dev"
+description = "Style preserving TOML library"
+name = "tomlkit"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+version = "0.7.0"
+
+[[package]]
 category = "main"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
 name = "urllib3"
@@ -673,7 +706,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "7dadda60530aef0c6423956fd20f18a4d57aef84cbe130141fc701ad3084e81a"
+content-hash = "a40994ac8ea612fac1c3fde5376693775037af20d2e9c0f59caf7579fbecb185"
 lock-version = "1.0"
 python-versions = "^3.7"
 
@@ -710,6 +743,10 @@ click = [
 colorama = [
     {file = "colorama-0.4.3-py2.py3-none-any.whl", hash = "sha256:7d73d2a99753107a36ac6b455ee49046802e59d9d076ef8e47b61499fa29afff"},
     {file = "colorama-0.4.3.tar.gz", hash = "sha256:e96da0d330793e2cb9485e9ddfd918d456036c7149416295932478192f4436a1"},
+]
+dunamai = [
+    {file = "dunamai-1.3.0-py3-none-any.whl", hash = "sha256:6f7b313a3e817ed08069147f0e25fbc7e85cf1c1394709d896cb76e552cabbff"},
+    {file = "dunamai-1.3.0.tar.gz", hash = "sha256:5685cfe8c69fda7a4cf6e1f33de6ce5f0655c1e53c5caf8a680dfc81cd53f6b8"},
 ]
 execnet = [
     {file = "execnet-1.7.1-py2.py3-none-any.whl", hash = "sha256:d4efd397930c46415f62f8a31388d6be4f27a91d7550eb79bc64a756e0056547"},
@@ -907,6 +944,10 @@ pluggy = [
     {file = "pluggy-0.13.1-py2.py3-none-any.whl", hash = "sha256:966c145cd83c96502c3c3868f50408687b38434af77734af1e9ca461a4081d2d"},
     {file = "pluggy-0.13.1.tar.gz", hash = "sha256:15b2acde666561e1298d71b523007ed7364de07029219b604cf808bfa1c765b0"},
 ]
+poetry-dynamic-versioning = [
+    {file = "poetry-dynamic-versioning-0.8.3.tar.gz", hash = "sha256:493cf972312947ffce99c9f0e38b504312960b9f616c11954fb3c62cc24c2337"},
+    {file = "poetry_dynamic_versioning-0.8.3-py3-none-any.whl", hash = "sha256:75dab648b63d68c359f4d921e00c97ec4d347a8cda21393ca9b61f370d9de004"},
+]
 py = [
     {file = "py-1.9.0-py2.py3-none-any.whl", hash = "sha256:366389d1db726cd2fcfc79732e75410e5fe4d31db13692115529d34069a043c2"},
     {file = "py-1.9.0.tar.gz", hash = "sha256:9ca6883ce56b4e8da7e79ac18787889fa5206c79dcc67fb065376cd2fe03f342"},
@@ -1003,6 +1044,10 @@ splunk-sdk = [
 text-unidecode = [
     {file = "text-unidecode-1.3.tar.gz", hash = "sha256:bad6603bb14d279193107714b288be206cac565dfa49aa5b105294dd5c4aab93"},
     {file = "text_unidecode-1.3-py2.py3-none-any.whl", hash = "sha256:1311f10e8b895935241623731c2ba64f4c455287888b18189350b67134a822e8"},
+]
+tomlkit = [
+    {file = "tomlkit-0.7.0-py2.py3-none-any.whl", hash = "sha256:6babbd33b17d5c9691896b0e68159215a9387ebfa938aa3ac42f4a4beeb2b831"},
+    {file = "tomlkit-0.7.0.tar.gz", hash = "sha256:ac57f29693fab3e309ea789252fcce3061e19110085aa31af5446ca749325618"},
 ]
 urllib3 = [
     {file = "urllib3-1.21.1-py2.py3-none-any.whl", hash = "sha256:8ed6d5c1ff9d6ba84677310060d6a3a78ca3072ce0684cb3c645023009c114b1"},
