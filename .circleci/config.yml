@@ -26,11 +26,22 @@ jobs:
             poetry run build-ucc
             poetry build
             poetry run ucc-gen --source tests/package/Splunk_TA_UCCExample --config ./globalConfig.json
+      - save_cache:
+          key: poetry-{{ checksum "poetry.lock" }}
+          paths:
+            - ~/.poetry
       - store_artifacts:
           path: dist
       - store_artifacts:
           path: output
-
+      - persist_to_workspace:
+          # Must be an absolute path, or relative path from working_directory. This is a directory on the container which is
+          # taken to be the root directory of the workspace.
+          root: .
+          # Must be relative path from root
+          paths:
+            - dist
+            - output
 workflows:
   version: 2
   build_test:
