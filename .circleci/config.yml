@@ -5,7 +5,7 @@ orbs:
 jobs:
   build:
     docker:
-      - image: circleci/python:3.7
+      - image: circleci/buildpack-deps:stable
     steps:
       - checkout
       - run:
@@ -15,7 +15,7 @@ jobs:
       - run:
           name: Install
           command: |
-            poetry run build-npm
+            poetry run build-ucc
             poetry build
       - store_artifacts:
           path: /tmp/workspace/
