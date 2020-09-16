@@ -62,11 +62,12 @@ workflows:
   build_test:
     jobs:
       - build
+      - test:
+          requires:
+            - build
   build_release:
     jobs:
       - build:
-          requires:
-            - build
           filters:
             branches:
               ignore: /.*/
