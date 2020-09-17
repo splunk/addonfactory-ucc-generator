@@ -18,7 +18,7 @@ jobs:
           name: Install Tools
           command: |
             curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
-            mkdir ~/.npm-global
+            mkdir ~/.npm-global || true
             npm config set prefix '~/.npm-global'
             export PATH=~/.npm-global/bin:$PATH
             npm install -g bower
