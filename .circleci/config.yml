@@ -111,6 +111,44 @@ jobs:
           paths:
             - dist
             - output
+  tag:
+    parameters:
+      semtag:
+        type: string
+    docker:
+      - image: circleci/python:3.7
+    environment:
+      SEMTAG: "<< parameters.semtag >>"
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "7c:e9:cc:8d:8e:4d:9c:17:1d:e3:96:23:ce:bd:a4:c3"
+      - checkout
+      - run:
+          name: TAG
+          command: |
+            ./semtag ${SEMTAG} -f
+
+  merge-beta-to-master:
+    docker:
+      - image: circleci/python:3.7
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "7c:e9:cc:8d:8e:4d:9c:17:1d:e3:96:23:ce:bd:a4:c3"
+      - checkout
+      - run:
+          name: Merge
+          command: |
+            git config --global user.email "addonreleasesrv@splunk.com"
+            git config --global user.name "Add on release service"
+            git pull origin master
+            git merge master -m "Merge from master"
+            git checkout master
+            git merge << pipeline.git.revision >>
+            git push
 workflows:
   version: 2
   build_test:
@@ -119,7 +157,15 @@ workflows:
       - test:
           requires:
             - build
-  build_release:
+      - tag:
+          name: tag-alpha
+          requires:
+            - test
+          semtag: alpha
+          filters:
+            branches:
+              only: develop
+  release:
     jobs:
       - publish:
           filters:
@@ -127,3 +173,104 @@ workflows:
               ignore: /.*/
             tags:
               only: /^v\d*\.\d*\.\d*/
+      - approval-tag-beta:
+          requires:
+            - publish
+          type: approval
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-alpha\.\d+/
+      - tag:
+          name: tag-beta
+          semtag: beta
+          requires:
+            - approval-tag-beta
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-alpha\.\d+/
+      - approval-merge-beta-to-master:
+          requires:
+            - publish
+          type: approval
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-beta\.\d+/
+      - merge-beta-to-master:
+          requires:
+            - approval-merge-beta-to-master
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-beta\.\d+/
+      - approval-tag-final-major:
+          type: approval
+          requires:
+            - merge-beta-to-master
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-beta\.\d+/
+      - tag:
+          name: tag-final-major
+          semtag: "final -s major"
+          requires:
+            - approval-tag-final-major
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-beta\.\d+/
+      - approval-tag-final-minor:
+          type: approval
+          requires:
+            - merge-beta-to-master
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-beta\.\d+/
+      - tag:
+          name: tag-final-minor
+          semtag: "final -s minor"
+          requires:
+            - approval-tag-final-minor
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-beta\.\d+/
+      - approval-tag-final-patch:
+          type: approval
+          requires:
+            - merge-beta-to-master
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-beta\.\d+/
+      - tag:
+          name: tag-final-patch
+          semtag: "final -s patch"
+          requires:
+            - approval-tag-final-patch
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-beta\.\d+/
+      - publish_release:
+          requires:
+            - publish
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*$/
