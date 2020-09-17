@@ -4,8 +4,6 @@ Validators for Splunk configuration.
 
 from __future__ import absolute_import
 
-from builtins import str
-from past.builtins import basestring
 import sys
 
 from builtins import object
@@ -275,7 +273,7 @@ class Number(Validator):
         """
         def check(val):
             try:
-                return val is None or isinstance(val, (int, float))
+                return val is None or isinstance(val, (int, long, float))
             except NameError:
                 return val is None or isinstance(val, (int, float))
         assert check(min_val) and check(max_val), \
@@ -292,7 +290,7 @@ class Number(Validator):
     def validate(self, value, data):
         try:
             try:
-                value = int(value) if self._is_int else float(value)
+                value = long(value) if self._is_int else float(value)
             except NameError:
                 value = int(value) if self._is_int else float(value)
         except ValueError:
@@ -342,7 +340,7 @@ class String(Validator):
             if val is None:
                 return True
             try:
-                return isinstance(val, int) and val >= 0
+                return isinstance(val, (int, long)) and val >= 0
             except NameError:
                 return isinstance(val, (int)) and val >= 0
 

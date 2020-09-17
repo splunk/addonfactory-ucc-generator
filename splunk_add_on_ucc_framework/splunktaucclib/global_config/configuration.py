@@ -1,6 +1,6 @@
+
 from __future__ import absolute_import
 
-from builtins import str
 from builtins import object
 import copy
 import json
@@ -13,11 +13,11 @@ from ..rest_handler.handler import RestHandler
 
 
 __all__ = [
-    "GlobalConfigError",
-    "Configuration",
-    "Inputs",
-    "Configs",
-    "Settings",
+    'GlobalConfigError',
+    'Configuration',
+    'Inputs',
+    'Configs',
+    'Settings',
 ]
 
 
@@ -30,10 +30,10 @@ class Configuration(object):
     Splunk Configuration Handler.
     """
 
-    FILTERS = [u"eai:appName", u"eai:acl", u"eai:userName"]
-    ENTITY_NAME = u"name"
-    SETTINGS = u"settings"
-    NOT_FOUND = u"[404]: Not Found"
+    FILTERS = [u'eai:appName', u'eai:acl', u'eai:userName']
+    ENTITY_NAME = u'name'
+    SETTINGS = u'settings'
+    NOT_FOUND = u'[404]: Not Found'
 
     def __init__(self, splunkd_client, schema):
         """
@@ -73,7 +73,7 @@ class Configuration(object):
         :return:
 
         Usage::
-        >>> from splunk_add_on_ucc_framework.splunktaucclib.global_config import GlobalConfig
+        >>> from splunktaucclib.global_config import GlobalConfig
         >>> global_config = GlobalConfig()
         >>> payload = {
         >>>    'settings': [
@@ -92,10 +92,8 @@ class Configuration(object):
         """
         # expand the payload to task_list
         task_list = []
-        for type_name, configurations in list(payload.items()):
-            task_list.extend(
-                [(type_name, configuration) for configuration in configurations]
-            )
+        for type_name, configurations in payload.items():
+            task_list.extend([(type_name, configuration) for configuration in configurations])
         task_len = len(task_list)
         # return empty error list if task list is empty
         if not task_list:
@@ -118,7 +116,8 @@ class Configuration(object):
 
     def _save_configuration(self, type_name, configuration):
         schema = self._search_configuration_schema(
-            type_name, configuration[self.ENTITY_NAME],
+            type_name,
+            configuration[self.ENTITY_NAME],
         )
         configuration = copy.copy(configuration)
         self._dump_multiple_select(configuration, schema)
@@ -147,14 +146,17 @@ class Configuration(object):
 
     def _create(self, type_name, configuration):
         self._save_endpoint(
-            type_name, configuration,
+            type_name,
+            configuration,
         )
 
     def _update(self, type_name, configuration):
         name = configuration[self.ENTITY_NAME]
         del configuration[self.ENTITY_NAME]
         self._save_endpoint(
-            type_name, configuration, name=name,
+            type_name,
+            configuration,
+            name=name,
         )
 
     @classmethod
@@ -165,74 +167,82 @@ class Configuration(object):
 
     def _load_endpoint(self, name, schema):
         query = {
-            "output_mode": "json",
-            "count": "0",
-            "--cred--": "1",
+            'output_mode': 'json',
+            'count': '0',
+            '--cred--': '1',
         }
         response = self._client.get(
-            RestHandler.path_segment(self._endpoint_path(name)), **query
+            RestHandler.path_segment(self._endpoint_path(name)),
+            **query
         )
         body = response.body.read()
         cont = json.loads(body)
 
         entities = []
-        for entry in cont["entry"]:
-            entity = entry["content"]
-            entity[self.ENTITY_NAME] = entry["name"]
+        for entry in cont['entry']:
+            entity = entry['content']
+            entity[self.ENTITY_NAME] = entry['name']
             self._load_multiple_select(entity, schema)
             entities.append(entity)
         return entities
 
     def _save_endpoint(self, endpoint, content, name=None):
         endpoint = self._endpoint_path(endpoint)
-        self._client.post(RestHandler.path_segment(endpoint, name=name), **content)
+        self._client.post(
+            RestHandler.path_segment(endpoint, name=name),
+            **content
+        )
 
     @classmethod
     def _load_multiple_select(cls, entity, schema):
         for field in schema:
-            field_type = field.get("type")
-            value = entity.get(field["field"])
-            if field_type != "multipleSelect" or not value:
+            field_type = field.get('type')
+            value = entity.get(field['field'])
+            if field_type != 'multipleSelect' or not value:
                 continue
-            delimiter = field["options"]["delimiter"]
-            entity[field["field"]] = value.split(delimiter)
+            delimiter = field['options']['delimiter']
+            entity[field['field']] = value.split(delimiter)
 
     @classmethod
     def _dump_multiple_select(cls, entity, schema):
         for field in schema:
-            field_type = field.get("type")
-            value = entity.get(field["field"])
-            if field_type != "multipleSelect" or not value:
+            field_type = field.get('type')
+            value = entity.get(field['field'])
+            if field_type != 'multipleSelect' or not value:
                 continue
             if not isinstance(value, list):
                 continue
-            delimiter = field["options"]["delimiter"]
-            entity[field["field"]] = delimiter.join(value)
+            delimiter = field['options']['delimiter']
+            entity[field['field']] = delimiter.join(value)
 
     def _endpoint_path(self, name):
-        return "{admin_match}/{endpoint_name}".format(
+        return '{admin_match}/{endpoint_name}'.format(
             admin_match=self._schema.admin_match,
-            endpoint_name=RestSchema.endpoint_name(name, self._schema.namespace),
+            endpoint_name=RestSchema.endpoint_name(
+                name,
+                self._schema.namespace
+            )
         )
 
     def _search_configuration_schema(self, type_name, configuration_name):
         for item in self.internal_schema:
             # add support for settings schema
-            if item["name"] == type_name or (
-                type_name == self.SETTINGS and item["name"] == configuration_name
-            ):
-                return item["entity"]
+            if item['name'] == type_name or \
+                    (type_name == self.SETTINGS and item['name'] == configuration_name):
+                return item['entity']
         else:
             raise GlobalConfigError(
-                "Schema Not Found for Configuration, "
-                "configuration_type={configuration_type}, "
-                "configuration_name={configuration_name}".format(
-                    configuration_type=type_name, configuration_name=configuration_name,
+                'Schema Not Found for Configuration, '
+                'configuration_type={configuration_type}, '
+                'configuration_name={configuration_name}'.format(
+                    configuration_type=type_name,
+                    configuration_name=configuration_name,
                 ),
             )
 
 
 class Inputs(Configuration):
+
     def __init__(self, splunkd_client, schema):
         super(Inputs, self).__init__(splunkd_client, schema)
         self._splunkd_client = splunkd_client
@@ -246,7 +256,7 @@ class Inputs(Configuration):
         :return:
 
         Usage::
-        >>> from splunk_add_on_ucc_framework.splunktaucclib.global_config import GlobalConfig
+        >>> from splunktaucclib.global_config import GlobalConfig
         >>> global_config = GlobalConfig()
         >>> inputs = global_config.inputs.load()
         """
@@ -255,18 +265,21 @@ class Inputs(Configuration):
             self._references = Configs(self._splunkd_client, self._schema).load()
         inputs = {}
         for input_item in self.internal_schema:
-            if input_type is None or input_item["name"] == input_type:
+            if input_type is None or input_item['name'] == input_type:
                 input_entities = self._load_endpoint(
-                    input_item["name"], input_item["entity"]
+                    input_item['name'],
+                    input_item['entity']
                 )
                 # filter unused fields in response
                 for input_entity in input_entities:
                     self._filter_fields(input_entity)
                 # expand referenced entity
                 self._reference(
-                    input_entities, input_item, self._references,
+                    input_entities,
+                    input_item,
+                    self._references,
                 )
-                inputs[input_item["name"]] = input_entities
+                inputs[input_item['name']] = input_entities
         return inputs
 
     @property
@@ -274,41 +287,56 @@ class Inputs(Configuration):
         return self._schema.inputs
 
     @classmethod
-    def _reference(cls, input_entities, input_item, configs):
+    def _reference(
+        cls,
+        input_entities,
+        input_item,
+        configs
+    ):
         for input_entity in input_entities:
             cls._input_reference(
-                input_item["name"], input_entity, input_item["entity"], configs
+                input_item['name'],
+                input_entity,
+                input_item['entity'],
+                configs
             )
 
     @classmethod
-    def _input_reference(cls, input_type, input_entity, input_schema, configs):
+    def _input_reference(
+        cls,
+        input_type,
+        input_entity,
+        input_schema,
+        configs
+    ):
         for field in input_schema:
-            options = field.get("options", {})
-            config_type = options.get("referenceName")
-            config_name = input_entity.get(field["field"])
+            options = field.get('options', {})
+            config_type = options.get('referenceName')
+            config_name = input_entity.get(field['field'])
             if not config_type or not config_name:
                 continue
 
             for config in configs.get(config_type, []):
-                if config["name"] == config_name:
-                    input_entity[field["field"]] = config
+                if config['name'] == config_name:
+                    input_entity[field['field']] = config
                     break
             else:
                 raise GlobalConfigError(
-                    "Config Not Found for Input, "
-                    "input_type={input_type}, "
-                    "input_name={input_name}, "
-                    "config_type={config_type}, "
-                    "config_name={config_name}".format(
+                    'Config Not Found for Input, '
+                    'input_type={input_type}, '
+                    'input_name={input_name}, '
+                    'config_type={config_type}, '
+                    'config_name={config_name}'.format(
                         input_type=input_type,
-                        input_name=input_entity["name"],
+                        input_name=input_entity['name'],
                         config_type=config_type,
-                        config_name=config_name,
+                        config_name=config_name
                     )
                 )
 
 
 class Configs(Configuration):
+
     def load(self, config_type=None):
         """
 
@@ -316,17 +344,20 @@ class Configs(Configuration):
         :return:
 
          Usage::
-        >>> from splunk_add_on_ucc_framework.splunktaucclib.global_config import GlobalConfig
+        >>> from splunktaucclib.global_config import GlobalConfig
         >>> global_config = GlobalConfig()
         >>> configs = global_config.configs.load()
         """
         configs = {}
         for config in self.internal_schema:
-            if config_type is None or config["name"] == config_type:
-                config_entities = self._load_endpoint(config["name"], config["entity"])
+            if config_type is None or config['name'] == config_type:
+                config_entities = self._load_endpoint(
+                    config['name'],
+                    config['entity']
+                )
                 for config_entity in config_entities:
                     self._filter_fields(config_entity)
-                configs[config["name"]] = config_entities
+                configs[config['name']] = config_entities
         return configs
 
     @property
@@ -336,7 +367,7 @@ class Configs(Configuration):
 
 class Settings(Configuration):
 
-    TYPE_NAME = u"settings"
+    TYPE_NAME = u'settings'
 
     def load(self):
         """
@@ -344,16 +375,20 @@ class Settings(Configuration):
         :return:
 
          Usage::
-        >>> from splunk_add_on_ucc_framework.splunktaucclib.global_config import GlobalConfig
+        >>> from splunktaucclib.global_config import GlobalConfig
         >>> global_config = GlobalConfig()
         >>> settings = global_config.settings.load()
         """
         settings = []
         for setting in self.internal_schema:
             setting_entity = self._load_endpoint(
-                "settings/%s" % setting["name"], setting["entity"]
+                'settings/%s' % setting['name'],
+                setting['entity']
             )
-            self._load_multiple_select(setting_entity[0], setting["entity"])
+            self._load_multiple_select(
+                setting_entity[0],
+                setting['entity']
+            )
             entity = setting_entity[0]
             self._filter_fields(entity)
             settings.append(entity)
@@ -365,6 +400,6 @@ class Settings(Configuration):
 
     def _search_configuration_schema(self, type_name, configuration_name):
         return super(Settings, self)._search_configuration_schema(
-            configuration_name, configuration_name,
+            configuration_name,
+            configuration_name,
         )
-

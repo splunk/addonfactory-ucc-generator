@@ -29,7 +29,7 @@ __all__ = [
 
 
 def make_conf_item(conf_item, content, eai):
-    for key, val in list(content.items()):
+    for key, val in content.items():
         conf_item[key] = val
 
     for eai_field in EAI_FIELDS:
@@ -187,7 +187,7 @@ class AdminExternalHandler(HookMixin, admin.MConfigHandler, object):
             return None
 
         payload = {}
-        for filed, value in list(self.callerArgs.data.items()):
+        for filed, value in self.callerArgs.data.items():
             payload[filed] = value[0] if value and value[0] else ''
         return payload
 

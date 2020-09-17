@@ -293,7 +293,7 @@ class RestCredentials(object):
 
     @staticmethod
     def _delete_empty_value_for_dict(dct):
-        empty_value_names = [k for k, v in list(dct.items()) if v == '']
+        empty_value_names = [k for k, v in dct.items() if v == '']
         for k in empty_value_names:
             del dct[k]
 
@@ -319,7 +319,7 @@ class RestCredentials(object):
             clear_password = password_dict[name]
             need_write_magic_pwd = False
             need_write_back_pwd = False
-            for k, v in list(clear_password.items()):
+            for k, v in clear_password.items():
                 # make sure key exist in model content
                 if k in existed_model['content']:
                     if existed_model['content'][k] == self.PASSWORD:
