@@ -12,6 +12,7 @@ repository = "https://github.com/splunk/splunk-add-on-sdk-python/"
 homepage = "https://github.com/splunk/splunk-add-on-sdk-python/"
 
 keywords = ['splunk']
+
 [tool.poetry.dependencies]
 python = "^3.7"
 solnlib = '^2.1'
@@ -26,9 +27,6 @@ future = "^0"
 pytest = "^5.4"
 pytest-splunk-addon = { version = "^1.3", extras = [ "docker" ] }
 poetry-dynamic-versioning = "^0.8"
-#setuptools = "^50"
-#wheel = "^0"
-#pip = "^20"
 
 [tool.poetry-dynamic-versioning]
 enable = true
@@ -38,10 +36,6 @@ ucc-gen="splunk_add_on_ucc_framework:main"
 build-ucc="build:build_ucc"
 install-libs="splunk_add_on_ucc_framework:install_requirements"
 
-#[build-system]
-#requires=["setuptools >= 40.6.0", "wheel"]
-#build-backend="setuptools.build_meta"
-
 [build-system]
-requires = ["poetry>=0.12"]
+requires = ["poetry>=1.0.0"]
 build-backend = "poetry.masonry.api"
