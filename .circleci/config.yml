@@ -123,7 +123,7 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints:
-            - "7c:e9:cc:8d:8e:4d:9c:17:1d:e3:96:23:ce:bd:a4:c3"
+            - "59:ce:70:93:78:ef:e2:1d:76:b8:20:f6:e5:74:e9:27"
       - checkout
       - run:
           name: TAG
