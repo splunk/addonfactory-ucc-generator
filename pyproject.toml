@@ -3,8 +3,14 @@ name = "splunk_add_on_ucc_framework"
 version = "0.0.0"
 description = "Splunk Add-on SDK formerly UCC is a build and code generation framework"
 authors = ["rfaircloth-splunk <rfaircloth@splunk.com>"]
-exclude = ["splunk_add_on_ucc_framework/UCC-UI-lib", "build.py"]
-include = ["splunk_add_on_ucc_framework/UCC-UI-lib/package",
+exclude = [
+    "build.py",
+    "splunk_add_on_ucc_framework/UCC-UI-lib/bower_components",
+    "splunk_add_on_ucc_framework/UCC-UI-lib/config",
+    "splunk_add_on_ucc_framework/UCC-UI-lib/node_modules",
+    "splunk_add_on_ucc_framework/UCC-UI-lib/testes"
+    ]
+include = ["splunk_add_on_ucc_framework/UCC-UI-lib/package/*/*",
 "splunk_add_on_ucc_framework/requirements_py2.txt",
 "splunk_add_on_ucc_framework/requirements_py3.txt",
 "splunk_add_on_ucc_framework/requirements.txt",
