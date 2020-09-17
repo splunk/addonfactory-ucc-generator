@@ -1,0 +1,16 @@
+<%page args="module"/>
+
+<%def name="option(text, value=None, selected=None)">\
+<% selectedAttr = ('selected="selected"') if selected == str(text) else '' %>
+    <option value="${value or ''| h}" ${selectedAttr} >${text | h}</option>
+</%def>\
+
+% if module['params'].get('label'):
+<label for="${module['id']}_id">${module['params'].get('label') | h}</label>
+% endif
+
+<select id="${module['id']}_id">
+% for field in module['staticFieldsToDisplay']:
+<%self:option text="${field.get('label')}" value="${field.get('value','')}" selected="${module.get('selected')}" />
+% endfor
+</select>

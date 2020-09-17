@@ -1,0 +1,305 @@
+.TimeRangePicker select {
+    margin-bottom:5px;
+}
+.TimeRangePicker #timelineRange {
+    display: none;
+}
+.TimeRangePicker .timelineRangeIntialized {
+    display: none;
+}
+.TimeRangePicker span.timeRangePickerLabel {
+    display: block;
+    margin-bottom:5px;
+    font-size: 12px;
+}
+
+/* Time range Menu */
+
+table.mainSearchControlsTable .TimeRangePicker{
+  _margin-right: 10px;
+  _width:168px;
+}
+
+.TimeRangePicker .timeRangeActivatorWrapper {
+    min-width:100px;
+    line-height: 21px;
+    display: inline-block;
+    color: #000;
+    outline: none;
+    padding-right: 15px;
+    _zoom:1;
+
+    /*fixed width for IE7/8*/
+    *width:160px;
+/*    _width:auto;*/ /*This was causing issues in formSearch*/
+}
+.TimeRangePicker .timeRangeActivatorWrapper span.splIcon-triangle-4-s {
+    float: right;
+    margin: 8px -3px 0 0;
+}
+.TimeRangePicker .timeRangeActivator {
+    display: block;
+    padding: 0 0 0 10px;
+    text-decoration: none;
+    _zoom:1;
+    cursor: pointer;
+    white-space: nowrap;
+    margin-right: 8px;
+}
+.TimeRangePicker .timeRangeActivator:hover {
+    _text-decoration:none;
+}
+.TimeRangePicker .timeRangeMenu {
+    margin-left: -1px;
+}
+.TimeRangePicker .timeRangeMenu ul {
+    width: 168px;
+    padding: 5px 0px;
+}
+.TimeRangePicker .timeRangeMenu ul li.hasSubMenu {
+    _height:16px;
+}
+/*
+.TimeRangePicker .timeRangeMenu ul li.customDateItem div.outerMenuWrapper {
+    top:-120px;
+}
+.TimeRangePicker .timeRangeMenu ul li.dateRangeParent div.outerMenuWrapper {
+    top:-200px;
+}
+*/
+.TimeRangePicker .timeRangeMenu ul li div.outerMenuWrapper ul {
+    width: 278px;
+    height:100%;
+}
+
+.TimeRangePicker .timeRangeMenu ul li,
+.TimeRangePicker .timeRangeMenu ul div.innerMenuWrapper {
+    width:auto;
+}
+
+/* TimeSpinner tweaks */
+.TimeRangePicker .TimeSpinner input {
+	width:14px;
+	padding:0;
+	margin: 0;
+}
+.TimeRangePicker .TimeSpinner input.milliseconds {
+	width:21px;
+}
+
+/* datepicker messaging */
+
+.trpCustomDateTime .datepickerErrMsg p {
+    margin-top: 0;
+	margin-bottom: 10px;
+	color: red;
+}
+
+/* custom time picker popup styles */
+
+.TimeRangePicker .customDateTime {
+    display:none;
+}
+
+.trpCustomDateTime {
+    *width:720px;
+}
+.trpCustomDateTime .popupContent {
+    width:700px;
+    height:250px;
+    padding: 10px;
+}
+.trpCustomDateTime .rangeType {
+    float:left;
+    width:100%;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+.trpCustomDateTime .rangeType input.radio,
+.trpCustomDateTime .rangeType label {
+    float:left;
+    clear:none;
+}
+.trpCustomDateTime .rangeType input.radio {
+    margin:0;
+}
+.trpCustomDateTime .rangeType label {
+    margin-left:5px;
+    margin-right: 10px;
+}
+
+.trpCustomDateTime .dateTimePanel {
+    display:none;
+    float: left;
+}
+.trpCustomDateTime .visibleDateTimePanel {
+    display:block;
+}
+.trpCustomDateTime input.disabled {
+    padding-left: 7px;
+}
+
+/* date range / specific date */
+
+.trpCustomDateTime .earliestTimeContainer,
+.trpCustomDateTime .latestTimeContainer {
+    width:240px;
+    margin-right:15px;
+    float:left;
+}
+.trpCustomDateTime .specificOptionWrapper input,
+.trpCustomDateTime .specificOptionWrapper label {
+    float:left;
+    clear:none;
+    margin-top: 0px;
+    /* SPL-61031 - truncate long text */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 85px;
+}
+.trpCustomDateTime .earliestDateRadio,
+.trpCustomDateTime .nowDateRadio {
+    margin-left:10px;
+}
+.trpCustomDateTime .earliestDateTime,
+.trpCustomDateTime .latestDateTime {
+    margin-top: 5px;
+    clear:left;
+    float: left;
+}
+.trpCustomDateTime input.customDate {
+    width:64px;
+    margin: 0;
+    float:left;
+    padding: 5px;
+}
+.trpCustomDateTime .earliestTime, .trpCustomDateTime .latestTime {
+    float: left;
+}
+.trpCustomDateTime .dateRangeMode .TimeSpinner {
+     float:left;
+     border: 0;
+     width:153px;
+     padding: 5px;
+}
+.trpCustomDateTime div.outputString {
+    padding: 5px 7px;
+    width:240px;
+}
+
+.trpCustomDateTime h5 {
+    font-size: 12px;
+    font-weight: normal;
+    margin:0px 0px 5px 0px;
+}
+
+/* FIX IE6 */
+.trpCustomDateTime .dateRangeMode {
+    _position: relative;
+    _float:none;
+}
+.trpCustomDateTime .dateRangeMode .earliestTimeContainer,
+.trpCustomDateTime .dateRangeMode .latestTimeContainer {
+    _float:none;
+    _position:absolute;
+    _top:0;
+    _left:0;
+}
+.trpCustomDateTime .dateRangeMode .latestTimeContainer {
+    _left: 255px;
+}
+
+/* relative mode / realtime mode */
+.trpCustomDateTime .customTimeOptions {
+    float: left;
+    clear: both;
+    width: 100%;
+    line-height: 32px;
+    _float:none;
+    _width:auto;
+}
+.trpCustomDateTime .customTimeOptions label,
+.trpCustomDateTime .customTimeOptions input,
+.trpCustomDateTime .customTimeOptions select {
+    float: left;
+    _float:none;
+}
+.trpCustomDateTime .customTimeOptions label {
+    _display:inline-block;
+}
+.trpCustomDateTime .customTimeOptions select {
+    width: auto;
+    padding: 4px 4px 5px;
+}
+.trpCustomDateTime .relativeOptions .relativeValue,
+.trpCustomDateTime .realtimeOptions .rollingWindowSize {
+    width:25px;
+}
+.trpCustomDateTime .customTimeOptions input,
+.trpCustomDateTime .customTimeOptions select,
+.trpCustomDateTime .customTimeOptions label {
+    margin-right:10px;
+}
+.trpCustomDateTime .customTimeOptions input.disabled {
+    width: 240px;
+}
+.trpCustomDateTime .relativeEffectives,
+.trpCustomDateTime .realtimeEffectives {
+    margin-top: 10px;
+    float: left;
+    _float:none;
+    width: 100%;
+    _width:auto;
+}
+.trpCustomDateTime .realtimeEffectives {
+    clear:left;
+}
+
+.trpCustomDateTime  div.searchLangEquivalentWrapper,
+.trpCustomDateTime  div.effectiveRangeWrapper {
+    float: left;
+    width: 267px;
+}
+
+/* advanced mode */
+
+.trpCustomDateTime .advancedMode label {
+    display: block;
+    margin-bottom: 10px;
+}
+.trpCustomDateTime .advancedMode input {
+    width: 240px;
+    display: block;
+}
+.trpCustomDateTime .advancedStartContainer,
+.trpCustomDateTime .advancedEndContainer {
+    width:269px;
+    float: left;
+}
+
+.trpCustomDateTime .colon {
+    _display: none;
+}
+
+.splFormSearch .viewHeader .TimeRangePicker {
+    margin: 0px 5px;
+    padding: 0px;
+}
+/*SPL-43024 - need to account for label space*/
+.splFormSearch .viewHeader .timeRangeActivatorWrapper{
+    margin-top:23px;
+}
+
+.splFormSearch .TimeRangePicker {
+    float: left;
+    margin: 0;
+    margin-top: 23px;
+}
+
+.TimeRangePicker .timeRangeActivatorWrapper label {
+    display:block;
+    padding-top:5px;
+    margin-bottom: 0;
+}
+

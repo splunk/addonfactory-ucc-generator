@@ -1,0 +1,15 @@
+<div class="control-group col-1 timeinput earliest">
+    <label class="control-label" for="earliest_<%- cid %>" title="<%- _("Earliest:").t() %>"><%- _("Earliest:").t() %></label>
+    <div class="controls">
+        <div class="input-append"><input type="text" size="5" value="<%- time %>" class="earliest_input timerangepicker-real-time-earliest-time" id="earliest_<%- cid %>"/></div>
+
+        <span id="hint_<%- cid %>" class="help-block help-block-timestamp"></span>
+    </div>
+</div>
+<div class="control-group col-2 timeinput latest">
+    <label class="control-label" title="<%- _("Latest:").t() %>"><%- _("Latest:").t() %></label>
+    <div class="controls">
+        <span class="form-value uneditable-input">now</span>
+    </div>
+</div>
+<button class="apply btn pull-left" id="apply_<%- cid %>"><%- _("Apply").t() %></button>

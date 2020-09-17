@@ -1,0 +1,38 @@
+.faq {
+  padding: 20px;
+  
+  h1 {
+  	font-size: 24px;
+  	font-weight: 200;
+  	 margin-top: 0;
+  }
+}
+
+.faq-group {
+	max-width: 600px;
+}
+
+.faq-header {
+  margin-bottom:10px;
+  cursor: pointer;
+  padding-left: 14px;
+  position: relative;
+  
+  .icon-accordion-toggle {
+	position: absolute;
+  	left: 0;
+  	top:0;
+  }
+  
+  &:hover .faq-question {
+	text-decoration: underline;
+  	text-color: $linkColor;
+  }
+}
+
+
+.faq-body {
+  margin-left: 34px;
+  margin-bottom: 20px;
+  display: none;
+}

@@ -1,0 +1,25 @@
+.Paginator {
+    float:none;
+    /*height: 22px;*/
+}
+.Paginator ul {
+    list-style:none;
+    margin:0;
+    padding:0;
+}
+.Paginator ul li {
+    padding:0;
+    display:inline;
+    line-height: 18px;
+}
+.Paginator a {
+    padding: 2px 8px;
+    min-width: 10px;
+    text-align:center;
+    display: inline-block;
+    _display: inline;
+}
+.Paginator a.disabled {
+    visibility:visible;
+    cursor:text;
+}

@@ -1,0 +1,39 @@
+{
+  "spl": "rex field=\"activity\" \"Bowser: (?<bowser>.*)\"",
+  "ast": {
+    "command": "rex",
+    "raw": " field=\"activity\" \"Bowser: (?<bowser>.*)\"",
+    "type": "SP_STREAM",
+    "fields_and_properties": [
+      {
+        "name": "bowser",
+        "modified": true
+      },
+      {
+        "name": "activity",
+        "referenced": true
+      }
+    ],
+    "field": "activity",
+    "sed_mode": false,
+    "max_match": 1,
+    "offset_field": "",
+    "regex_expression": "Bowser: (?<bowser>.*)",
+    "pipeline": "streaming",
+    "annotations": {
+      "interesting_fields": [{
+        "name": "*"
+      }, {
+        "name": "activity"
+      }, {
+        "name": "bowser"
+      }]
+    }
+  },
+  "actions": [{
+    "name": "get_interesting_fields"
+  }, {
+    "name": "annotate_datasets"
+  }]
+}
+

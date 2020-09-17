@@ -1,0 +1,22 @@
+
+<div class="section-header section-padded">
+    <div class="btn-toolbar pull-right">
+        <div class="btn-group">
+            <a href="<%=docLink%>" class="btn" target="_blank"><%= _('Documentation').t() %> <i class="icon-external"></i></a>
+        </div>
+    </div>
+    <h2 class="section-title"><%= _('Distribute Configuration Bundle').t() %></h2>
+    <p class="section-description"><%= _('Distribute the configuration bundle from the master to the peers.').t() %>
+        <a href='<%=learnMoreLink%>' class='external' target='_blank'><%= _('Learn More').t() %></a>
+    </p>
+    <a href="clustering">
+        <i class="icon-chevron-left icon-no-underline"></i><span><%- _("Back to Master Node").t() %></span>
+    </a>
+
+	<div class="btn-toolbar">
+		<a class="btn btn-primary" id="push" options="{&quot;width&quot;: 450, &quot;height&quot;: 200, &quot;modal&quot;: true, &quot;title&quot;: &quot;Distriibute configuration bundle&quot;}"><%= _('Distribute Configuration Bundle').t() %></a>
+	</div>
+</div>
+
+<div class="divider"></div>
+<div class="section-bg"></div>

@@ -1,0 +1,28 @@
+<div class="<%=css.header%>" data-results-header="<%=className%>"><%- title %></div>
+<ul class="<%=css.list%>" data-role="<%=className%>-list">
+    <% collection.each(function(model) { %>
+    <% var appName = model.entry.acl.get('app'); %>
+    <% var modelApp = _.find(apps.models, function(app) {return app.entry.get('name') === appName;}); %>
+    <% var openInApp = modelApp && modelApp.entry.content.get("visible") ? appName : alternateApp; %>
+    <li class='<%=css.row%>'>
+        <a class="<%=css.primaryLink%>" data-role="main-link" href="<%- getViewingPageRoute(modelRoute, app, openInApp, model) %>">
+            <% if (nameAttr && model.entry.content.get(nameAttr)) { %>
+                <%- model.entry.content.get(nameAttr) %>
+            <% } else { %>
+                <%- model.entry.get('name') %>
+            <% } %>
+        </a>
+        <a class="<%=css.secondaryLink%>" data-role="secondary-link" href="<%- getViewingPageRoute(modelRoute, app, openInApp, model) %>" target="_blank">
+        </a>
+    </li>
+    <% }); %>
+    <% if (collection.models[0].paging.get('perPage') < collection.models[0].paging.get('total')) { %>
+    <li class="<%css.rowMore%>">
+        <a class="<%=css.primaryLink%>" data-role="more-link" href="<%- managerRoute %>">
+            <%- _('More ' + title + ' results').t() %>
+        </a>
+        <a class="<%=css.secondaryLink%>" data-role="secondary-link" href="<%- managerRoute %>" target="_blank">
+        </a>
+    </li>
+    <% } %>
+</ul>

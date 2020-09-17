@@ -1,0 +1,36 @@
+/*  Spinners */
+/*  ---------------------------- */
+
+.view {
+    background-position: left top;
+
+}
+
+.smallgray {
+    composes: view;
+	background-image: url("./loading_small_gray.png");
+    width: 14px;
+    height: 14px;
+    background-size: 112px 14px;
+}
+
+
+.mediumgreen {
+    composes: view;
+	background-image: url("./loading_medium_green.png");
+	background-position: left top;
+	width: 19px;
+	height: 19px;
+	background-size: 152px 19px;
+}
+
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+	.smallgray {
+		background-image: url("./loading_small_gray_2x.png");
+	}
+
+	.mediumgreen {
+		background-image: url("./loading_medium_green_2x.png");
+	}
+}

@@ -1,0 +1,60 @@
+.color-picker-container {
+	$swatchSize: 25px;
+	$swatchMargin: 5px;
+	$swatchesPerRow: 5;
+	$totalWidth: calc($swatchSize * $swatchesPerRow + $swatchMargin * ($swatchesPerRow - 1));
+
+	.swatches {
+		margin-bottom: 10px;
+
+		.swatch-holder {
+			width: $totalWidth;
+			list-style: none;
+			margin: 0;
+
+			li {
+				line-height: $baseLineHeight;
+				height: $swatchSize;
+				width: $swatchSize;
+				float: left;
+				margin-right: $swatchMargin;
+				margin-top: $swatchMargin;
+
+				/*  The last swatch in the row shouldn't have a horizontal margin. */
+				&:nth-child($(swatchesPerRow)n) {
+					margin-right: 0;
+				}
+			}
+
+			.swatch {
+				border-radius: 1px;
+                display: block;
+				height: 100%;
+				width: 100%;
+				border: 1px solid lightgray;
+				box-sizing: border-box;
+
+                &:focus {
+                    @mixin focus-button;
+                }
+			}
+		}
+	}
+
+	.hex-input {
+		/*  Have to hard-code the width of the prepended/appended parts of the text input */
+		/*  and subtract it so that the input fills the full width. */
+		width: calc($totalWidth - 66px);
+	}
+
+	.mini-swatch {
+		display: block;
+		height: 15px;
+		width: 15px;
+
+		&:focus {
+			@mixin focus-button;
+		}
+	}
+
+}

@@ -1,0 +1,22 @@
+<%page args="module"/>
+<%
+import os.path
+import splunk.util
+from splunk.appserver.mrsparkle.lib.util import make_splunkhome_path
+from formencode.validators import URL
+import logging
+
+logger = logging.getLogger('splunk.appserver.lib.i18n')
+
+src = module['src']
+if splunk.util.normalizeBoolean(module['check_exists']):
+    logger.warn('check_exists flag is deprecated and has no effect')
+if src.startswith(('http://', 'https://')):    
+    u = URL(add_http=False)
+elif src.startswith('/'):
+    src = make_url(src)
+else:
+    p = make_splunkhome_path(['etc', 'apps', APP['id'], 'appserver', 'static', src])
+    src = make_url(['static', 'app', APP['id'], src])
+%>
+<iframe src="" scrolling="no" frameborder="0" data-src="${src}"></iframe>

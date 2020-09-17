@@ -1,0 +1,75 @@
+<%page args="module"/>
+<div class="splHeader splHeader-primary">
+    <h2>${VIEW["label"]|h}<em><!-- Slot for saved search name. --></em></h2>
+    % if VIEW['canWrite'] is True:
+        <div class="modecontrols">
+        <label class="modecontrols-label">${_('Edit:')}</label>
+            <div class="splRadio splRadio-group">
+                <span class="splRadio-control l-first">
+                    <input type="radio" name="mode" value="edit" id="edit${module['id']|h}"/>
+                    <label for="edit${module['id']|h}" title="${_('Switch to edit mode')}">${_('On')}</label>
+                </span>
+                <span class="splRadio-control l-last">
+                    <input type="radio" name="mode" value="view" id="view${module['id']|h}" checked="checked"/>
+                    <label for="view${module['id']|h}" title="${_('Switch to view mode')}">${_('Off')}</label>
+                </span>
+            </div>
+        </div>
+        <div class="viewmode splButtonGroup" style="display: block;">
+            <a href="#" class="splButton-tertiary print"><span class="splButtonIcon"></span><span>${_('Print')}</span></a>
+            % if VIEW.get('nativeObjectMode','') == 'SimpleDashboard':
+                % if APP['can_alert']:
+                    <a href="#" class="splButton-tertiary schedulepdf"><span class="splButtonIcon"></span><span>${_('Schedule PDF Delivery')}</span></a>
+                % endif
+                <a href="#" class="splButton-tertiary renderpdf"><span class="splButtonIcon"></span><span>${_('Generate PDF')}</span></a>
+            % endif 
+        </div>
+        <div class="editmode splButtonGroup" style="display: none;">
+           % if VIEW.get('nativeObjectMode','') == 'SimpleDashboard':
+                % if VIEW['hasRowGrouping'] is False:
+                    <a href="#" class="splButton-tertiary add"><span class="splButtonIcon"></span><span>${_('New panel')}</span></a>
+                    <a href="#" class="splButton-tertiary move"><span class="splButtonIcon"></span><span>${_('Move panels')}</span></a>
+                % else:
+                    <a href="#" class="splButton-tertiary splButton-disabled add"><span class="splButtonIcon"></span><span>${_('New panel')}</span></a>
+                    <a href="#" class="splButton-tertiary splButton-disabled move"><span class="splButtonIcon"></span><span>${_('Move panels')}</span></a>
+                % endif
+            % endif
+           <%
+            edit_xml = make_url(
+                ['manager', APP['id'], 'data/ui/views', VIEW['id']], 
+                _qs=dict(
+                action='edit',
+                ns=APP['id'],
+                uri=VIEW['editUrlPath'],
+                redirect_override="/app/%s/%s" % (APP['id'], VIEW['id'])
+                )
+            )
+            %>
+            <a href="${edit_xml}" class="splButton-tertiary xml"><span class="splButtonIcon"></span><span>${_('Edit XML')}</span></a>
+            <%
+            edit_permissions = make_url(
+                ['manager', 'permissions', APP['id'], 'data/ui/views', VIEW['id']], 
+                _qs=dict(
+                    uri=VIEW['editUrlPath'],
+                    redirect_override="/app/%s/%s" % (APP['id'], VIEW['id'])
+                )
+            )
+            %>			
+            <a href="${edit_permissions}" class="splButton-tertiary permissions"><span class="splButtonIcon"></span><span>${_('Edit permissions')}</span></a>
+        </div>
+    % else:
+        <div class="readonly splButtonGroup">
+            <a href="#" class="splButton-tertiary print"><span class="splButtonIcon"></span><span>${_('Print')}</span></a>
+            % if VIEW.get('nativeObjectMode','') == 'SimpleDashboard':
+                % if APP['can_alert']:
+                    <a href="#" class="splButton-tertiary schedulepdf"><span class="splButtonIcon"></span><span>${_('Schedule PDF Delivery')}</span></a>
+                % endif
+                <a href="#" class="splButton-tertiary renderpdf"><span class="splButtonIcon"></span><span>${_('Generate PDF')}</span></a>
+            % endif
+        </div>
+    % endif
+    <div class="pdfPopup"><div class="loading">Loading...</div></div>
+    % if VIEW['nativeObjectMode']=='SimpleDashboard' and VIEW['canWrite'] is True and VIEW['hasRowGrouping'] is True:
+        <div class="message_rowgrouping" style="display:none;">${_('Panel editing functionalities are disabled for dashboards with grouped panels. <a href="%s" class="spl-icon-external-link-xsm" target="_blank">Learn more</a>') % generateSelfHelpLink('learnmore.paneleditor.rowgrouping')}</div>
+    % endif
+</div>

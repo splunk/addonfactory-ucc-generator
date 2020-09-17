@@ -1,0 +1,87 @@
+/*  Splunk: Component: Bunny Button */
+/*  =============================== */
+
+
+/* ad hoc search mode selector
+	overview: button + dropdown + synthetic select
+
+	TODO: why does this not use either dropdown or popdown or synthetic select?
+	TODO: does this need btn-group? maybe just use relative container
+	NOTE: some styles come from job-status.pcss
+
+	<div class="btn-group view-searchmode">
+		<a href="#" class="btn btn-small dropdown-toggle dropdown-toggle-search-mode" data-toggle="dropdown">
+			<i class="icon-bulb"></i>
+			<span class="link-label">Smart Mode</span>
+		</a>
+		<div class="dropdown-menu dropdown-menu-search-mode" style="display:block;">
+			<div class="arrow"></div>
+			<ul>
+				<li>
+					<a data-value="fast" href="#">
+						<span class="link-label">Fast Mode</span>
+						<span class="link-description">
+							Field discovery on for event searches. No event or field data for stats searches.
+						</span>
+					</a>
+				</li>
+				<li>
+					<a data-value="smart" href="#">
+						<span class="link-label">Smart Mode</span>
+						<span class="link-description">
+							Field discovery off for event searches. No event or field data for stats searches.
+						</span>
+					</a>
+				</li>
+				<li>
+					<a data-value="verbose" href="#">
+						<span class="link-label">Verbose Mode</span>
+						<span class="link-description">All event &amp; field data</span>
+					</a>
+				</li>
+			</ul>
+		</div><!-- /.dropdown-menu -->
+	</div><!-- /.btn-group -->
+
+*/
+/*  fix alignment of icons */
+.dropdown-toggle-search-mode i[class^="icon-"]::before  {
+	vertical-align: top;
+}
+/*  set menu width */
+.dropdown-menu-search-mode {
+	width: 26em;
+}
+/*  add padding for icons */
+.dropdown-menu-search-mode li > a {
+	padding-left: 45px ;
+}
+/*  help text */
+.dropdown-menu-search-mode .link-description {
+	color: $textGray;
+	display: block;
+	font-size: 0.85em;
+}
+/*  large menu icons */
+.dropdown-menu-search-mode .link-icon {
+	display: block;
+	position: absolute;
+	color: $textGray;
+	left: 0;
+	top: 5px;
+	font-size: 2em;
+	width:  1.5em;
+	line-height: 1em;
+	opacity: 0.80;
+}
+/*  selected option */
+.dropdown-menu-search-mode a .icon-check {
+	left: 30px
+}
+
+/*  fix BS 2.2.x */
+.dropdown-menu-search-mode li > a {
+	white-space: normal;
+}
+
+

@@ -1,0 +1,16 @@
+{
+    "source": {
+        "include": [
+            "search_mrsparkle/exposed/js/splunkjs/mvc/"
+        ],
+        "includePattern": ".+\\.(js|jsx|es)(doc)?$"
+    },
+    "plugins": [
+        "plugins/markdown",
+        "plugins/underscore"
+    ],
+    "opts": {
+        "destination": "./search_mrsparkle/exposed/docs/js/public",
+        "recurse": false
+    }
+}

@@ -1,0 +1,52 @@
+<%page args="module"/>
+<%!
+from splunk.appserver.mrsparkle.lib import util
+%>
+<%page args="module"/>
+<%namespace name="helpers" file="//module/_helpers.html" />
+<!-- this weird output div was folded into the skin CSS so it is needed for backward compatibility of skins  -->
+<div class="output splClearfix">
+    <div class="splHeader"></div>
+    
+    <div class="nextSteps">
+    
+            <a href="#" class="splButton-tertiary inspector splButton-disabled " tabindex="-1" title=${_('Job Inspector')}><span class="splButtonIcon"></span></a>            
+            <a href="#" class="splButton-tertiary print splButton-disabled " tabindex="-1" title=${_('Print')}><span class="splButtonIcon"></span></a>
+            % if (splunk.util.normalizeBoolean(module.get('showSaveMenu'))):
+            <a href="#" class="splButton-primary  save" title="${_('Save')}"><span class="splButtonIcon"></span><span>${_('Save')}</span><span class="splMenuIcon"></span></a>
+            % endif
+            % if (splunk.util.normalizeBoolean(module.get('showCreateMenu'))):
+            <a href="#" class="splButton-primary create" title="${_('Create')}"><span class="splButtonIcon"></span><span>${_('Create')}</span><span class="splMenuIcon"></span></a>
+            % endif
+    </div>
+    <div class="jobActions splButtonGroup">
+            <a href="#" class="splButton-tertiary splButton-disabled background" tabindex="-1" title="${_('Send to background')}"><span class="splButtonIcon"></span></a>
+            <a href="#" class="splButton-tertiary splButton-disabled unpause" tabindex="-1" title="${_('Resume')}" style="display:none;"><span class="splButtonIcon"></span></a>
+            <a href="#" class="splButton-tertiary splButton-disabled pause" tabindex="-1" title="${_('Pause')}"><span class="splButtonIcon"></span></a>
+            <a href="#" class="splButton-tertiary splButton-disabled finalize" tabindex="-1" title="${_('Finalize')}"><span class="splButtonIcon"></span></a>
+            <a href="#" class="splButton-tertiary splButton-disabled cancel" tabindex="-1" title="${_('Cancel')}"><span class="splButtonIcon"></span></a>
+    </div>
+    <div class="autoPauseStatus">
+	    <span class="autoPauseText"></span>
+	    <a href="#" class="autoPauseToggle href" title="${_('Cancel')}">${_('Cancel')}</a>
+    </div>
+    
+    <div class="clearFix"></div>
+</div>
+
+<div class="autoPause">
+    <h1>${_('Your search has been paused!')}</h1>
+    <p>
+        ${_('This search is taking more than %s seconds to complete. Narrow \
+            your time range via the time picker drop down if you want to get \
+            results faster.') % module['autoPauseInterval']}
+    </p>
+</div>
+<div class="eventtypeForm"></div>
+<div class="pdfPopup"></div>
+<div class="savedsearchpopup"></div>
+<div style="display:none">
+<%helpers:export className="exportResultsForm" />
+<%helpers:share />
+</div>
+<input type="hidden" name="can_schedule_search" value="${1 if APP['can_alert'] else 0 | h}" />

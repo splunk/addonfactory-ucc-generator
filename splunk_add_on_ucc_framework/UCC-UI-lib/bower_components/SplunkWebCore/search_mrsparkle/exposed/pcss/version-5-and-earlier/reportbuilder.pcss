@@ -1,0 +1,112 @@
+
+
+/* Styles for all report builder screens */
+.twoColRow .layoutCell,
+.threeColRow .layoutCell {
+    width:auto !important;
+}
+.layoutCell {
+    border-left-width :1px;
+    border-left-style: solid;
+    /* box model cheat so the border doesnt kill the percentage arithmetic. */
+    margin-left:-1px;
+}
+.reportBuilder .mainSearchControls {
+    padding-bottom: 0px;    
+}
+.equalHeightRow {
+    margin: 0px;
+}
+.reportFirstPanel {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;   
+}
+.firstRow {
+    border-top:0px;
+}
+.lastCell {
+    border-right-width:0px;
+}
+.firstCell .SplunkModule{
+    padding-left:0px;
+}
+.firstCell {
+    border-left-width:0px;
+    margin-left:0px;
+}
+.panel_row1_col { /* showHideHeader row in charting */
+    margin:0px;   
+}
+
+.panel_row4_col {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+}
+
+div.resultsArea {
+    padding-bottom:40px;   
+}
+/*-- basic element overrides --*/
+
+.reportBuilder label {
+    display: block;   
+}
+
+.splView-report_builder_define_data select,
+.layoutCell input, .layoutCell select,
+.reportBuilder .equalHeightsRow textarea {
+    margin-top:3px; 
+    width:220px;  
+}
+
+
+input {
+    padding:3px 5px;   
+}
+textarea[disabled] {
+    background-color: #ededed;
+}
+.layoutCell select {
+    width:232px; 
+    background-color: #FFF;
+}
+.ReportBuilderSearchField textarea {
+    width:100%;   
+}
+.layoutCell input.short {
+    min-width: 20px;
+}
+.layoutCell select.short {
+    min-width: 32px;
+}
+.reportBuilder input[type=radio] {
+    min-width:5px !important;   
+}
+
+/*-- Report builder module overrides --*/
+
+.GenericHeader h3 {
+    font-size: 14px;
+    color: #73A550;
+    padding-top: 10px;
+    border-top-width: 1px;
+    border-top-style: solid;
+    margin-top: 10px;
+}
+.EnablePreview label, .Count label, .SimpleResultsTable label, .AddTotals label {
+    display:inline;   
+}
+.resultsArea .Count {
+    float:right;    
+}
+.resultsArea .Paginator {
+    margin-top:10px;   
+}
+.SingleFieldChooser label {
+    margin-right:10px;   
+}
+
+.ChartTypeFormatter,
+.ReportType {
+    float:left;
+}

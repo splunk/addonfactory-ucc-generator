@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Thing</title>
+
+    <link rel="stylesheet" type="text/css" href="../static/splunkjs/css/bootstrap.css"/>
+</head>
+    <style type="text/css">
+        .success{
+            color: green;
+        }
+        .fail{
+            color: red;
+        }
+    </style>
+<body>
+    <div class="dashboard-body container-fluid main-section-body" data-role="main">
+        <div class="row">
+            <div class="span12 dashboard-header clearfix">
+                <h2>Timeline Tests</h2>
+            </div>
+        </div>
+        <div class="dashboard-row">
+            <div class="dashboard-cell" style="width: 100%;">
+                <div class="dashboard-panel">
+                    <div class="dashboard-element">
+                        <div class="panel-head">
+                            <h3>Timeline Tests</h3>
+                        </div>
+                        <div class="panel-body">
+                            <p>There should be a timeline on this page.</p>
+                            <p>SERVER_ZONEINFO should have a green value.</p>
+                            <p>Splunk.Globals.timeZone should say 'Good!' in green.</p>
+                            <p>If you see red there is an error.</p>
+                            <p><b>SERVER_ZONEINFO: </b><span id="szi-span" class="fail">No value</span></p>
+                            <p><b>Splunk.Globals.timeZone: </b><span id="sbtz-span" class="fail">No value</span></p>
+                            <div id="timeline"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script src="../static/splunkjs/config.js"></script>
+<script>
+    splunkjs.config({
+        proxyPath: '/proxy',
+        scheme: 'https',
+        host: 'localhost',
+        port: 8089,
+        authenticate: {username: 'admin', password: 'changeme'}
+    });
+</script>
+<script>
+    require.config({baseUrl: '../static/'});
+</script>
+
+<script>
+    require([
+        'splunkjs/mvc/searchmanager',
+        'splunkjs/mvc/timelineview',
+        'splunkjs/ready!'
+    ], function(
+        SearchManager,
+        TimelineView,
+        Timerange,
+        mvc)
+    {
+        new SearchManager({
+            id: 'search1',
+            search: 'index=_internal | head 10' 
+        });
+
+        new TimelineView({
+            id: 'tlv',
+            managerid: 'search1',
+            el: $('#timeline')
+        }).render();
+
+        var szi = window.$C.SERVER_ZONEINFO;
+        if(szi){
+            $('#szi-span').text(szi.substring(0,100) + '...').removeClass('fail').addClass('success');
+        }
+        var sbtz = Splunk.Globals.timeZone;
+        if(sbtz){
+            $('#sbtz-span').text('Good!').removeClass('fail').addClass('success');
+        }
+
+    });
+</script>
+
+</html>
+

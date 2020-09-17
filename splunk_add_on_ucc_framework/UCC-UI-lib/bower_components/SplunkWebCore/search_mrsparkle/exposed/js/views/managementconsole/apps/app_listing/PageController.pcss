@@ -1,0 +1,57 @@
+.btn-mini {
+    font-size: 12px;
+}
+
+.file-container, .location-container {
+    margin: 15px 20px 25px 10px;
+}
+
+.file-name {
+    font-weight: bold;
+}
+
+.shared-controls-multiinputcontrol {
+    display: inline-block;
+    margin-top: 8px;
+    width: 275px;
+}
+
+.file-button {
+    position: relative;
+    overflow: hidden;
+}
+
+.main-section .entities-grid {
+    tr.list-item .cell-name.app-name {
+        word-break: normal;
+    }
+}
+
+/* There are only 2 ways to style an input of type file, either by styling another HTML element and then triggering
+click on a hidden input of type file, or the way it is being done here. */
+.file-button input.file-input {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+
+.loading {
+    display: inline-block;
+    visibility: hidden;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+.entities-grid tr.list-item .cell-name {
+    width: 300px;
+}
+
+.entities-grid tr.list-item .action-cell {
+    width: 250px;
+}

@@ -1,0 +1,16 @@
+<div class="bucket-details section-padded section-header">
+  <h2 class="section-title">
+    <i class="icon-data"></i>
+    <%= _("Bucket Status").t() %>
+  </h2>
+  <p class="section-description">
+    <%= _("Buckets in fix-up status and excess buckets are listed here.").t() %>
+    <a href='<%=learnMoreLink%>' class='external' target='_blank'><%= _('Learn More').t() %></a>
+  </p>
+  <a href="./clustering?tab=indexes">
+    <i class="icon-chevron-left icon-no-underline"></i><span><%- _("Back to Master Node").t() %></span>
+  </a>
+</div>
+<!--<div class="divider">-->
+<div class="index-dropdown section-controls"><span class="index-dropdown-label">Select Index: </span></div>
+<div class="bucket-details-tabbed-view-stack"></div>

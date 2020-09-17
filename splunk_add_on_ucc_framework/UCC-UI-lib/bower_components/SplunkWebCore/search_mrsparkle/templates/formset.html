@@ -1,0 +1,355 @@
+<%! 
+import splunk.models.base 
+from splunk.appserver.mrsparkle.lib import util
+%>
+
+##
+## XSS protection
+##
+
+<%def name="csrf_hidden_input()">
+    <input type="hidden" name="splunk_form_key" value="${util.getFormKey()|h}" />
+</%def>
+
+
+##
+## core HTML form widgets
+##
+
+<%def name="textbox(name, model=None, value=None, disabled=False, size=40, **html_attrs)">
+    <input type="textbox" name="formset_${name|h}" size="${size|h}" \
+        % if value != None:
+            value="${value|h}" \
+        % elif isinstance(model, splunk.models.base.SplunkAppObjModel) and hasattr(model, name) and getattr(model, name) != None:
+            value="${getattr(model, name)|h}" \
+        % endif
+        % if splunk.util.normalizeBoolean(disabled):
+            disabled="disabled" \
+        % endif
+        % if html_attrs:
+            % for k in html_attrs:
+                ${k|h}="${html_attrs[k]|h}" \
+            % endfor
+        % endif
+    />
+</%def>
+
+
+<%def name="textarea(name, model=None, value=None, disabled=False, rows=5, cols=60, **html_attrs)">
+    <%
+        if value != None:
+            input_value = value
+        elif isinstance(model, splunk.models.base.SplunkAppObjModel) and hasattr(model, name) and getattr(model, name) != None:
+            input_value = getattr(model, name)
+        else:
+            input_value = ''
+    %>
+    <textarea name="formset_${name|h}" rows="${rows|h}" cols="${cols|h}" \
+        % if splunk.util.normalizeBoolean(disabled):
+            disabled="disabled" \
+        % endif
+        % if html_attrs:
+            % for k in html_attrs:
+                ${k|h}="${html_attrs[k]|h}" \
+            % endfor
+        % endif
+    >${input_value | h}</textarea> \
+</%def>
+
+
+<%def name="checkbox(name, model=None, value=None, disabled=False, **html_attrs)">
+    <input type="checkbox" name="formset_${name|h}" \
+        % if model != None and hasattr(model, name):
+            % if getattr(model, name):
+                checked="checked" \
+            % endif
+        % elif splunk.util.normalizeBoolean(value):
+            checked="checked" \
+        % endif
+        % if splunk.util.normalizeBoolean(disabled):
+            disabled="disabled" \
+        % endif
+        % if html_attrs:
+            % for k in html_attrs:
+                ${k|h}="${html_attrs[k]|h}" \
+            % endfor
+        % endif
+    />
+</%def>
+
+
+<%def name="radioset(name, model=None, value=None, disabled=False, options=[], orientation='H', id_offset=0, id=None, **html_attrs)">
+    <%
+        # try to lookup model value if nothing is explicitly set
+        if value == None and model and hasattr(model, name):
+            value = getattr(model, name)
+    %>
+    <span class="formset_radioset">
+    % for i, item in enumerate(options, id_offset):
+        <%
+            if isinstance(item, tuple) or isinstance(item, list):
+                option_value = item[0]
+                label = item[1]
+            else:
+                option_value = item
+                label = item
+        %>
+        <input type="radio" name="formset_${name|h}" value="${option_value|h}" \
+            % if option_value == value:
+                checked="checked" \
+            % endif
+            % if splunk.util.normalizeBoolean(disabled):
+                disabled="disabled" \
+            % endif
+            % if html_attrs:
+                % for k in html_attrs:
+                    ${k|h}="${html_attrs[k]|h}" \
+                % endfor
+            % endif
+            id="${'radioset_%s_%s' % (name, i) | h}" \
+        /><label 
+            for="${'radioset_%s_%s' % (name, i) | h}"
+            % if disabled:
+                class="input-disabled"
+            % endif
+        >${label|h}</label> \
+    % endfor
+    </span>
+</%def>
+
+
+<%def name="select(name, model=None, value=None, disabled=False, options=[], **html_attrs)">
+    <%
+        # try to lookup model value if nothing is explicitly set
+        if value == None and model and hasattr(model, name):
+            value = getattr(model, name)
+    %>
+    <select name="formset_${name|h}" \
+        % if splunk.util.normalizeBoolean(disabled):
+            disabled="disabled" \
+        % endif
+        % if html_attrs:
+            % for k in html_attrs:
+                ${k|h}="${html_attrs[k]|h}" \
+            % endfor
+        % endif
+    >
+    % for item in options:
+        <%
+            if isinstance(item, tuple) or isinstance(item, list):
+                option_value = item[0]
+                label = item[1]
+            else:
+                option_value = item
+                label = item
+            is_selected = 'selected="1"' if option_value == value else ''
+        %>
+        <option value="${option_value|h}" ${is_selected}>${label|h}</option> \
+    % endfor
+    </select>
+</%def>
+
+
+
+<%def name="accumulator(name, model=None, values=[], disabled=False, options=[], size='10', available_label='Available fields', selected_label='Selected fields', **html_attrs)">
+    <%
+        ## build a plain list of values (not labels) to use for quick
+        ## membership testing
+        if len(values) > 0 and (isinstance(values[0], list) or isinstance(values[0], tuple)):
+            raw_values = [v[0] for v in values]
+        else:
+            raw_values = values
+    %>
+    
+    <div class="accumulator">
+        
+        <div class="accumulator-pane">
+            <span class="accumulator-label">${available_label|h}</span><br />
+            <div class="accumulator-scrollbox">
+                <ul class="available">
+                    % for option in options:
+                        <%
+                            if isinstance(option, list) or isinstance(option, tuple):
+                                option_value = option[0]
+                                option_label = option[1]
+                                is_enabled = True
+                                if len(option) > 2 and option[2] != None:
+                                    is_enabled = option[2]
+                            else:
+                                option_value = option
+                                option_label = option
+                                is_enabled = True
+
+                            is_chosen = (option_value in raw_values)
+
+                            css_class = []
+                            if not is_enabled:
+                                css_class.append('disabled')
+                            if is_chosen:
+                                css_class.append('chosen')
+                        %>
+                        <li val="${option_value | h}" class="${' '.join(css_class) | h}">${option_label | h}</li> \
+                    % endfor
+                </ul>
+            </div>
+        </div>
+
+        <div class="accumulator-pane">
+            <span class="accumulator-label">${selected_label|h}</span><br />
+            <div class="accumulator-scrollbox">
+                <ul class="selected" \
+                    % if html_attrs:
+                        % for k in html_attrs:
+                            ${k|h}="${html_attrs[k]|h}" \
+                        % endfor
+                    % endif
+                >
+                    % for option in values:
+                        <%
+                            if isinstance(option, list) or isinstance(option, tuple):
+                                option_value = option[0]
+                                option_label = option[1]
+                                is_enabled = True
+                                if len(option) > 2 and option[2] != None:
+                                    is_enabled = option[2]
+                            else:
+                                option_value = option
+                                option_label = option
+                                is_enabled = True
+                        %>
+                        <li val="${option_value | h}" ${'' if is_enabled else 'disabled="1"'}>${option_label | h}</li>
+                    % endfor
+                </ul>
+                <select name="formset_${name|h}" multiple="1" class="proxy" style="display:none">
+                    % for value in raw_values:
+                        <option value="${value|h}" selected="1">${value|h}</option>
+                    % endfor
+                </select>
+            </div>
+        </div>
+
+    </div>
+</%def>
+
+
+
+##
+## accumulator2 is an alternate version that uses <select> elements instead of a <div>
+##
+
+<%def name="accumulator2(name, model=None, values=[], disabled=False, options=[], size='10', available_label='Available fields', selected_label='Selected fields', **html_attrs)">
+    <table class="accumulator">
+        <tr>
+            <td>
+                <label class="accumulator-label">${available_label|h}</label><br />
+                <select size="${size|h}" multiple="1" class="available">
+                    % for option in options:
+                        <%
+                            if isinstance(option, list) or isinstance(option, tuple):
+                                option_value = option[0]
+                                option_label = option[1]
+                                is_enabled = True if option[2] == None else option[2]
+                            else:
+                                option_value = option
+                                option_label = option
+                                is_enabled = True
+                            if option_value in values:
+                                is_enabled = False
+                        %>
+                        <option value="${option_value | h}" ${'' if is_enabled else 'disabled="1"'}>${option_label | h}</option> \
+                    % endfor
+                </select>
+            </td>
+            <td style="vertical-align: middle">
+                <button type="button" class="delete">&laquo;</button><br />
+                <button type="button" class="insert">&raquo;</button><br />
+            </td>
+            <td>
+                <label class="accumulator-label">${selected_label|h}</label><br />
+                <select size="${size|h}" multiple="1" class="selected" \
+                    % if html_attrs:
+                        % for k in html_attrs:
+                            ${k|h}="${html_attrs[k]|h}" \
+                        % endfor
+                    % endif
+                >
+                    % for option in values:
+                        <%
+                            if isinstance(option, list) or isinstance(option, tuple):
+                                option_value = option[0]
+                                option_label = option[1]
+                                is_enabled = True if option[2] == None else option[2]
+                            else:
+                                option_value = option
+                                option_label = option
+                                is_enabled = True
+                        %>
+                        <option value="${option_value | h}" ${'' if is_enabled else 'disabled="1"'}>${option_label | h}</option>
+                    % endfor
+                </select>
+                <select name="formset_${name|h}" multiple="1" class="proxy" style="display:none">
+                    % for value in values:
+                        <option selected="1">${value|h}</option>
+                    % endfor
+                </select>
+            </td>
+        </tr>
+    </table>
+</%def>
+
+
+<%def name="button(label, is_primary=False, is_submit=False, href=None, disabled=False, **html_attrs)">
+    <%
+        css_class = 'splButton-primary' if is_primary else 'splButton-secondary'
+        type = 'submit' if is_submit else 'button'
+    %>
+    <button class="${css_class}" type="${type}" \
+        % if href:
+            onclick="location.href='${href|h,x}';return(false)" \
+        % endif
+        % if splunk.util.normalizeBoolean(disabled):
+            disabled="disabled" \
+        % endif
+        % if html_attrs:
+            % for k in html_attrs:
+                ${k|h}="${html_attrs[k]|h}" \
+            % endfor
+        % endif
+    >${label | h}</button>
+</%def>
+
+
+
+##
+## convenience methods
+##
+
+<%def name="dump_model(model)">
+% if not isinstance(model, splunk.models.base.SplunkAppObjModel):
+    <p>No model object to render!</p>
+% else:
+    <table>
+        % for prop in sorted(model.model_fields):
+            <tr>
+                <td class="k">${prop | h}</td>
+                <td>
+                % if isinstance(getattr(model, prop), list):
+                    ${dump_list(getattr(model, prop))}
+                % else:
+                    ${getattr(model, prop) | h}
+                % endif
+                </td>
+            </tr>
+        % endfor
+    </table>
+% endif
+</%def>
+
+<%def name="dump_list(L)">
+    <ul>
+    % for item in L:
+        <li>${item | h}</li>
+    % endfor
+    </ul>
+</%def>
+

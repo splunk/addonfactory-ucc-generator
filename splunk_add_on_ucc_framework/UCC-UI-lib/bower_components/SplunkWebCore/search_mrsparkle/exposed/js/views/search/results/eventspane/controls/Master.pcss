@@ -1,0 +1,201 @@
+/*  Splunk: Component: event controls */
+/*  ================================= */
+/*   views-search-results-eventspane-eventcontrols is super component */
+
+/* event controls layaout
+	this super component contains, synthetic selects, dropdowns, and pagination
+
+	<div class="views-search-results-eventspane-eventcontrols" style="display: block;">
+		<div class="btn-group view-count views-shared-controls-syntheticselectcontrol">
+			<a href="#" class="dropdown-toggle btn-pill"><span class="link-label">10 per page</span></a>
+			<div class="dropdown-menu dropdown-menu-selectable dropdown-menu-narrow">
+				<div class="arrow"></div>
+				<ul>
+					<li>
+						<a data-value="10" href="#">10 per page</a>
+					</li>
+					<li>
+						<a data-value="20" href="#">20 per page</a>
+					</li>
+					<li>
+						<a data-value="50" href="#">50 per page</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="btn-group pull-left format-events">
+			<a href="#" class="format btn-pill">Format</a>
+			<div class="popdown-dialog dialog-format">
+				<div class="arrow"></div>
+				<div class="popdown-dialog-body popdown-dialog-padded form form-horizontal form-format">
+					<div class="control-group views-shared-controls-controlgroup">
+						<label for="control-view122" class="control-label">Style</label>
+						<div class="controls btn-group btn-group-2">
+							<button class="btn active" data-value="list">List</button> <button class="btn" data-value="table">Table</button>
+						</div>
+					</div>
+					<div class="control-group views-shared-controls-controlgroup">
+						<label for="control-view124" class="control-label">Row Numbers</label>
+						<div class="controls btn-group btn-group-2">
+							<button class="btn" data-value="1">Yes</button> <button class="btn active" data-value="0">No</button>
+						</div>
+					</div>
+					<div class="control-group views-shared-controls-controlgroup">
+						<label for="control-view126" class="control-label">Wrap Results</label>
+						<div class="controls btn-group btn-group-2">
+							<button class="btn active" data-value="1">Yes</button> <button class="btn" data-value="0">No</button>
+						</div>
+					</div>
+					<div class="control-group views-shared-controls-controlgroup" style="display: block;">
+						<label for="control-view130" class="control-label">Max Lines</label>
+						<div class="controls views-shared-controls-syntheticselectcontrol">
+							<a href="#" class="dropdown-toggle btn"><span class="link-label">5 lines</span></a>
+							<div class="dropdown-menu dropdown-menu-selectable dropdown-menu-narrow">
+								<div class="arrow"></div>
+								<ul>
+									<li>
+										<a data-value="5" href="#">5 lines</a>
+									</li>
+									<li>
+										<a data-value="10" href="#">10 lines</a>
+									</li>
+									<li>
+										<a data-value="20" href="#">20 lines</a>
+									</li>
+									<li>
+										<a data-value="50" href="#">50 lines</a>
+									</li>
+									<li>
+										<a data-value="100" href="#">100 lines</a>
+									</li>
+									<li>
+										<a data-value="200" href="#">200 lines</a>
+									</li>
+									<li>
+										<a data-value="0" href="#">All lines</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="pagination pull-right views-shared-searchresultspaginator">
+			<ul>
+				<li class="previous disabled">
+					<a class="page-controls">« prev</a>
+				</li>
+				<li class="active">
+					<a data-offset="0" href="#">1</a>
+				</li>
+				<li>
+					<a data-offset="10" href="#">2</a>
+				</li>
+				<li>
+					<a data-offset="20" href="#">3</a>
+				</li>
+				<li>
+					<a data-offset="30" href="#">4</a>
+				</li>
+				<li>
+					<a data-offset="40" href="#">5</a>
+				</li>
+				<li>
+					<a data-offset="50" href="#">6</a>
+				</li>
+				<li>
+					<a data-offset="60" href="#">7</a>
+				</li>
+				<li>
+					<a data-offset="70" href="#">8</a>
+				</li>
+				<li>
+					<a data-offset="80" href="#">9</a>
+				</li>
+				<li>
+					<a data-offset="90" href="#">10</a>
+				</li>
+				<li class="next">
+					<a data-offset="10" class="page-controls" href="#">next »</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+
+*/
+
+.search-results-eventspane-controls {
+	min-height: 36px;
+}
+
+/*  docking controls */
+.events-controls-inner {
+	padding:5px 20px 0 10px;
+	background-color: $white;
+	height: 31px;
+	position: relative;
+	/* SPL-73911, removing this to fix event controls/modalize issues. */
+	/* --> can't track down why this was here. */
+	/* z-index: 2; */
+
+	&.affix-top {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		margin-bottom: -1px;
+		border-bottom: 1px solid $borderColor;
+		z-index: $zindexHeaderTable;
+		&.disabled .events-controls-inner-cover {
+			position: absolute;
+			top: 0px;
+			right: 0px;
+			bottom: 0px;
+			left: 0px;
+			opacity: 0.30;
+			background-color: $gray;
+			z-index: 404;
+		}
+	}
+}
+
+
+.search-results-eventspane-controls-showfield {
+	margin-right: 10px;
+}
+
+/*  state for field picker */
+.show-fields {
+	.search-results-wrapper
+	{
+		padding-left: 240px;
+	}
+	.search-results-eventspane-fieldsviewer {
+		margin-left: -240px;
+		width: 240px;
+		float:left;
+	}
+
+	.events-controls-inner {
+		margin-left: 241px;
+
+		&.affix-top {
+			left: 241px;
+			margin-left: 0;
+		}
+	}
+}
+
+/*  Print */
+/*  -------------------------------------------------- */
+@media print {
+	.search-results-eventspane-controls {
+		@mixin print-hide;
+	}
+	/* SPL-127479: prevent timeline and event results from overlapping */
+	.search-results-wrapper {
+		padding-top: 20px;
+	}
+}

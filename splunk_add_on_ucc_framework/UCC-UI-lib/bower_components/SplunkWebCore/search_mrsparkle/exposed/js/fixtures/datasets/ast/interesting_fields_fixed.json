@@ -1,0 +1,215 @@
+{
+    "spl": "search index=\"_internal\" | fields \"_raw\", \"_time\", \"active_realtime_searches\", \"avg_time_spent_in_queue\", \"count\", \"cpu_total\", \"current_queue_size\", \"cumulative_hits\", \"bytes\", \"chillOrFreeze\", \"date_minute\", \"date_mday\", \"date_second\", \"max_age\", \"log_level\", \"index\"",
+    "ast": {
+        "command": "fields",
+        "raw": " \"_raw\", \"_time\", \"active_realtime_searches\", \"avg_time_spent_in_queue\", \"count\", \"cpu_total\", \"current_queue_size\", \"cumulative_hits\", \"bytes\", \"chillOrFreeze\", \"date_minute\", \"date_mday\", \"date_second\", \"max_age\", \"log_level\", \"index\"",
+        "type": "SP_STREAM",
+        "fields_and_properties": [
+            {
+                "name": "_raw",
+                "modified": true,
+                "referenced": true
+            },
+            {
+                "name": "_time",
+                "modified": true,
+                "referenced": true
+            },
+            {
+                "name": "active_realtime_searches",
+                "modified": true,
+                "referenced": true
+            },
+            {
+                "name": "avg_time_spent_in_queue",
+                "modified": true,
+                "referenced": true
+            },
+            {
+                "name": "bytes",
+                "modified": true,
+                "referenced": true
+            },
+            {
+                "name": "chillOrFreeze",
+                "modified": true,
+                "referenced": true
+            },
+            {
+                "name": "count",
+                "modified": true,
+                "referenced": true
+            },
+            {
+                "name": "cpu_total",
+                "modified": true,
+                "referenced": true
+            },
+            {
+                "name": "cumulative_hits",
+                "modified": true,
+                "referenced": true
+            },
+            {
+                "name": "current_queue_size",
+                "modified": true,
+                "referenced": true
+            },
+            {
+                "name": "date_mday",
+                "modified": true,
+                "referenced": true
+            },
+            {
+                "name": "date_minute",
+                "modified": true,
+                "referenced": true
+            },
+            {
+                "name": "date_second",
+                "modified": true,
+                "referenced": true
+            },
+            {
+                "name": "index",
+                "modified": true,
+                "referenced": true
+            },
+            {
+                "name": "log_level",
+                "modified": true,
+                "referenced": true
+            },
+            {
+                "name": "max_age",
+                "modified": true,
+                "referenced": true
+            },
+            {
+                "name": "*",
+                "removed": true
+            }
+        ],
+        "mode": "add",
+        "field_list": [
+            "_raw",
+            "_time",
+            "active_realtime_searches",
+            "avg_time_spent_in_queue",
+            "bytes",
+            "chillOrFreeze",
+            "count",
+            "cpu_total",
+            "cumulative_hits",
+            "current_queue_size",
+            "date_mday",
+            "date_minute",
+            "date_second",
+            "index",
+            "log_level",
+            "max_age"
+        ],
+        "pipeline": "streaming",
+        "sources": [
+            {
+                "command": "search",
+                "raw": " index=\"_internal\" ",
+                "type": "SP_STREAM",
+                "fields_modified": [
+                    {
+                        "name": "*"
+                    }
+                ],
+                "fields_removed": [],
+                "fields_referenced": [
+                    {
+                        "name": "index"
+                    }
+                ],
+                "function": "AND",
+                "args": [
+                    {
+                        "type": "function",
+                        "value": "==",
+                        "args": [
+                            {
+                                "type": "field",
+                                "value": "index"
+                            },
+                            {
+                                "type": "string",
+                                "value": "_internal"
+                            }
+                        ],
+                        "is_negated": false,
+                        "is_numeric": false,
+                        "is_indexed": true,
+                        "is_case_sensitive": false,
+                        "is_literal_term": false
+                    }
+                ],
+                "pipeline": "streaming"
+            }
+        ],
+        "annotations": {
+            "interesting_fields": [
+                {
+                    "name": "_raw"
+                },
+                {
+                    "name": "_time"
+                },
+                {
+                    "name": "active_realtime_searches"
+                },
+                {
+                    "name": "avg_time_spent_in_queue"
+                },
+                {
+                    "name": "bytes"
+                },
+                {
+                    "name": "chillOrFreeze"
+                },
+                {
+                    "name": "count"
+                },
+                {
+                    "name": "cpu_total"
+                },
+                {
+                    "name": "cumulative_hits"
+                },
+                {
+                    "name": "current_queue_size"
+                },
+                {
+                    "name": "date_mday"
+                },
+                {
+                    "name": "date_minute"
+                },
+                {
+                    "name": "date_second"
+                },
+                {
+                    "name": "index"
+                },
+                {
+                    "name": "log_level"
+                },
+                {
+                    "name": "max_age"
+                }
+            ]
+        }
+    },
+    "actions": [
+        {
+            "name": "get_interesting_fields"
+        },
+        {
+            "name": "annotate_datasets"
+        }
+    ]
+}

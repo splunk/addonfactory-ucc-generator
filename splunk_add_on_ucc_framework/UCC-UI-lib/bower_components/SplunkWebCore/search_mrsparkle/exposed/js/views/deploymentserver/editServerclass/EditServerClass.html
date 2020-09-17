@@ -1,0 +1,20 @@
+<div class="section-header section-padded">
+	<div class="btn-toolbar pull-right">
+	    <div class="btn-group ">
+	    	<a href="<%- docUrl %>" target="_blank" class="help-link btn"><%- _("Documentation").t() %> <i class="icon-external"></i></a>
+	    </div>
+	</div>
+
+    <h2 class="section-title"> <%-_("Server Class").t()%>: <span id="serverClassName"></span> </h2>
+    <p class="section-description"><a href="<%-redirect_url%>" title="back"><i class="icon-chevron-left"></i> <%-_("Back to Forwarder Management").t()%></a></p>
+    <div id="read-only-msg-container"></div>
+</div>
+
+<div id='serverClassSummary'></div>
+
+<div class="dashboard-container section-padded">
+    <div class="flash-messages-placeholder"></div>
+    <div id="add_apps_prompt" class="dashboard-panel panel"></div>
+    <div id="add_clients_prompt" class="dashboard-panel panel"></div>
+</div>
+

@@ -1,0 +1,44 @@
+<%inherit file="//qunit/template.html" />
+
+<%def name="title()">Splunk.Module.AsciiTimeline -- QUnit tests</%def>
+
+<!-- import additional dependencies -->
+<script type="text/javascript" src="/en-US/static/js/jobber.js"></script>
+<script type="text/javascript" src="/en-US/static/js/menu_builder.js"></script>
+<script type="text/javascript" src="/en-US/static/js/job.js"></script>
+<script type="text/javascript" src="/en-US/static/js/time_range.js"></script>
+<script type="text/javascript" src="/en-US/static/js/module_loader.js"></script>
+<script type="text/javascript" src="/en-US/static/js/page_status.js"></script>
+
+<script language="javascript">
+    // important to disable the chatty debug that the tests spew.
+    Splunk.Logger.mode.Default = Splunk.Logger.mode.None
+</script>
+
+<!--  Now the base module classes-->
+<script type="text/javascript" src="/en-US/modules/AbstractModule.js"></script>
+<script type="text/javascript" src="/en-US/modules/DispatchingModule.js"></script>
+
+<!--  Now the modules we'll be testing -->
+<script type="text/javascript" src="/en-US/modules/prototypes/AsciiTimeline.js"></script>
+
+<script type="text/javascript" src="/en-US/static/js/init.js"></script>
+
+<script type="text/javascript">
+    Splunk._testHarnessMode = true;
+    function test_AsciiTimeline() {
+        var container = $("<div/>");
+        $("<div class='timelineChart'></div>").appendTo(container);
+        
+        container.appendTo(document.body);
+        var module = new Splunk.Module.AsciiTimeline(container);
+        module.renderResults($.ajax({
+                type: "GET",
+                url:  Splunk.util.make_url("/static/testing/baked_output/timeline_sample.xml"),
+                async: false
+            }).responseXML);
+        
+        assertEquals("the specified bar should have the right starttime attribute", "02/13/2008 00:00:00",  $("td.bar",module.container).attr("earliesttime"));
+        assertEquals("the specified bar should have the right duration attribute", "86400", $("td.bar",module.container).attr("duration") );
+    }
+</script>

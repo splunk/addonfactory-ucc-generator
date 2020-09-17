@@ -1,0 +1,77 @@
+/*  Messages styles in Lite Side Nav */
+/*  ======================= */
+
+.messagesHeader {
+    line-height: $navbarHeightLite;
+    height: $navbarHeightLite;
+    padding: 0 10px;
+}
+
+.messageLinks {
+    height: 30px;
+    line-height: 30px;
+    border-bottom: 1px dotted $textGray;
+}
+
+.deleteAllMessages {
+    font-size: 10px;
+    color: $textGray;
+    float: right;
+    margin-right: 8px;
+    &:hover {
+        color: $textGray;
+    }
+    &:focus {
+        background: none;
+    }
+}
+
+.noMessages {
+    background: none;
+    color: $textGray;
+    text-align: left;
+    line-height: $navbarHeightLite;
+    padding: 0 10px;
+}
+
+.messageList {
+    composes: messageList from '../splunkbar/messages/MenuContents.pcssm';
+    width: auto;
+    max-height: 150px;
+    overflow-y: auto;
+    border-top: 1px dotted $textGray;
+    border-bottom: 1px dotted $textGray;
+    .message-content {
+        color: $white;
+    }
+    a.delete-message {
+        border: none !important;
+        &.delete-message:hover,
+        &.delete-message:focus,
+        &.delete-message:active {
+            color: $textGray;
+        }
+    }
+}
+
+.messageNotification {
+    background: $red;
+    border-radius: 10px;
+    color: #FFF;
+    display: inline-block;
+    line-height: 8px;
+    padding: 3px 4px;
+    font-size: 9px;
+    font-style: normal;
+    display: none;
+}
+
+.messagesTitle {
+    float: left;
+}
+
+.splunkMessagesDivider {
+    border-top: 1px solid $gray;
+    height: 0px;
+    margin: 0 10px;
+}

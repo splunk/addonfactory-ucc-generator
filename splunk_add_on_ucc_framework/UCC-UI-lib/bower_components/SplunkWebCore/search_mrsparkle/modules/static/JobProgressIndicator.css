@@ -1,0 +1,28 @@
+/* display is quickly owned by show()/hide(), but this hides us initially. */
+.JobProgressIndicator {
+    display: none;
+}
+
+.JobProgressIndicator .splBarGraph, .JobProgressIndicator .splBarGraphBar {
+    height: 4px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px; 
+    border-radius: 2px; 
+}
+
+.JobProgressIndicator .splBarGraphValue {
+    position: relative;
+    padding-top: 5px;
+    float: right;
+    clear: both;
+}
+
+.JobProgressIndicator .barGraphWrapper {
+    width:auto;
+    padding-top:20px;
+    margin-bottom:0px;
+}
+.JobProgressIndicator .splBarGraph {
+    width:100%;
+}
+

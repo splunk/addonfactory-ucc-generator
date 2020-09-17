@@ -1,0 +1,25 @@
+## a simple javascript block which will perform a redirect to the 'login_uri' it was given (which is assumed to point to the 'account/login' page)
+## sending along the given return-to URI as a 'return_to' query string argument and preserving the current fragment id
+
+<html>
+
+    <head>
+
+        <script type="text/javascript">
+
+            var hashTag = '',
+                hashPos = document.location.href.indexOf('#');
+
+            if(hashPos > -1) {
+                hashTag = document.location.href.substr(hashPos);
+            }
+
+            document.location = "${login_uri}?return_to=" + encodeURIComponent("${return_to}") + hashTag;
+
+        </script>
+
+    </head>
+
+    <body></body>
+
+</html>

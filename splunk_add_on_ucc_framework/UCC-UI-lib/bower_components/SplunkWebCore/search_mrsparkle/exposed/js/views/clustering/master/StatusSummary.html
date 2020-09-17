@@ -1,0 +1,61 @@
+
+<div class="searchable-summary">
+        <div class="single-value">
+            <span class="single-result" data-name="isClusterSearchable">
+                <% if (typeof isClusterSearchable !== 'undefined') { %>
+                    <% if (isClusterSearchable) { %>
+                        <i class="icon-check"></i>
+                        <%= _('All Data is Searchable').t() %>
+                    <% } else { %>
+                        <i class="icon-alert"></i>
+                        <%= _('Some Data is Not Searchable').t() %>
+                    <% } %>
+                <% } %>
+            </span>
+        </div>
+        <div class="single-value" data-name="isSearchFactorMet">
+            <span class="single-result">
+                <% if (typeof isSearchFactorMet !== 'undefined') { %>
+                    <% if (isSearchFactorMet) { %>
+                        <i class="icon-check"></i>
+                        <%= _('Search Factor is Met').t() %>
+                    <% } else { %>
+                        <i class="icon-alert"></i>
+                        <%= _('Search Factor is Not Met').t() %>
+                    <% } %>
+                <% } %>
+            </span>
+        </div>
+        <div class="single-value" data-name="isReplicationFactorMet">
+            <span class="single-result">
+                <% if (typeof isReplicationFactorMet !== 'undefined') { %>
+                    <% if (isReplicationFactorMet) { %>
+                        <i class="icon-check"></i>
+                        <%= _('Replication Factor is Met').t() %>
+                    <% } else { %>
+                        <i class="icon-alert"></i>
+                        <%= _('Replication Factor is Not Met').t() %>
+                    <% } %>
+                <% } %>
+            </span>
+        </div>
+</div>
+
+<div class="searchable-value-summary" data-name="peers">
+    <div class="single-value double-value">
+        <span class="single-result" data-name="numSearchablePeers"><%-numSearchablePeers%></span>
+        <span class="after-label"><%= _('searchable').t() %></span>
+        <span class="single-result" data-name="numNotSearchablePeers"><%-numNotSearchablePeers%></span>
+        <span class="after-label"><%= _('not searchable').t() %></span><br>
+        <span class="under-label"><%= _('Peers').t() %></span>
+    </div>
+    <div class="single-value double-value" data-name="indexes">
+        <span class="single-result" data-name="numSearchableIndexes"><%-numSearchableIndexes%></span>
+        <span class="after-label"><%= _('searchable').t() %></span>
+        <span class="single-result" data-name="numNotSearchableIndexes"><%-numNotSearchableIndexes%> </span>
+        <span class="after-label"><%= _('not searchable').t() %></span><br>
+        <span class="under-label"><%= _('Indexes').t() %></span>
+    </div>
+</div>
+
+

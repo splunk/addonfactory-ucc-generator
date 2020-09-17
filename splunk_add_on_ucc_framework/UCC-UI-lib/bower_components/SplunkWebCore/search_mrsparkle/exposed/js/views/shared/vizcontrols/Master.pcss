@@ -1,0 +1,30 @@
+/*  Splunk: Component: Visualization Controls */
+/*  ========================================= */
+/*  TODO: organize this better */
+
+
+/* visualization controls
+
+	missing markup ...
+
+*/
+.visualization-controls {
+	@mixin clearfix;
+    
+    margin-bottom: 10px;
+
+	padding-left:20px;
+	padding-right:20px;
+
+	.format-visualization {
+		width: 450px;
+	}
+}
+
+/*  Print */
+/*  -------------------------------------------------- */
+@media print {
+	.visualization-controls {
+		@mixin print-hide;
+	}
+}

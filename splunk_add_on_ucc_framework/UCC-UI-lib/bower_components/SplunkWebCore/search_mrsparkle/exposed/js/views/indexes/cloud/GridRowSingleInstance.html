@@ -1,0 +1,47 @@
+<td class="index-name">
+    <% if (model.entity.entry.links.get("edit")) { %>
+    <a href=<%- editLink %> class="editAction"><%- model.entity.entry.get("name") %></a>
+    <% } else { %>
+    <span class="disabled-action"><%- model.entity.entry.get("name") %></span>
+    <% } %>
+</td>
+<td class="actions">
+    <% if (model.entity.entry.links.get("edit")) { %>
+    <a href=<%- editLink %> class="editAction"><%= _("Edit").t() %></a>
+    <% } else { %>
+    <span class="disabled-action"><%= _("Edit").t() %></span>
+    <% } %>
+    <% if (isInternal) { %>
+    <span class="disabled-action"><%= _("Delete").t() %></span>
+    <% if (isEnabled) { %>
+    <span class="disabled-action"><%= _("Disable").t() %></span>
+    <% } else { %>
+    <span class="disabled-action"><%= _("Enable").t() %></span>
+    <% } %>
+    <% } else { %>
+    <% if (isEnabled) { %>
+    <a href="#" class="deleteAction"><%= _("Delete").t() %></a>
+    <a href="#" class="disableAction"><%= _("Disable").t() %></a>
+    <% } else { %>
+    <span class="disabled-action"><%= _("Delete").t() %></span>
+    <a href="#" class="enableAction"><%= _("Enable").t() %></a>
+    <% } %>
+    <% } %>
+</td>
+<% if (user.canUseApps()) { %>
+<td class="index-app"><%- model.entity.entry.acl.get("app") %></td>
+<% } %>
+<td class="current-size"><%- formatNumbersUtils.bytesToFileSize(model.entity.entry.content.get("currentDBSizeMB") * 1024 * 1024) %></td> <!-- format w/ size units -->
+<td class="max-size"><%- formatNumbersUtils.bytesToFileSize(model.entity.entry.content.get("maxTotalDataSizeMB") * 1024 * 1024) %></td> <!-- format in GB -->
+<td class="event-count" title="<%- splunkUtil.sprintf(_('%s events').t(), model.entity.entry.content.get("totalEventCount")) %>"><%- formatNumbersUtils.abbreviateNumber(model.entity.entry.content.get("totalEventCount")) %></td> <!-- Abbreviate number -->
+<td class="earliest-event" title="<%- formatToLocalTime(model.entity.entry.content.get("minTime")) %>"><%- formatToRelativeTime(model.entity.entry.content.get("minTime")) %></td> <!-- format into relative time -->
+<td class="latest-event" title="<%- formatToLocalTime(model.entity.entry.content.get("maxTime")) %>"><%- formatToRelativeTime(model.entity.entry.content.get("maxTime")) %></td><!-- format into relative time -->
+<td class="retention"><%- timeUtils.getRelativeStringFromSeconds(model.entity.entry.content.get("frozenTimePeriodInSecs"), true) %></td> <!-- format into relative time -->
+
+<% if (user.canViewArchives()) { %>
+    <td class="archive"><%- model.entity.entry.content.get("archive.provider") %></td>
+<% } %>
+
+<td class="index-status">
+    <div class="status-cell-placeholder"></div>
+</td>

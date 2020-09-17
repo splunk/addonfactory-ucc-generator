@@ -1,3 +1,9 @@
-[submodule "contrib/common"]
-	path = contrib/common
-	url = ssh://git@git.splunk.com:7999/soln/common.git
+[submodule "deps/build/addonfactory_test_matrix_splunk"]
+	path = deps/build/addonfactory_test_matrix_splunk
+	url = git@github.com:splunk/addonfactory_test_matrix_splunk.git
+[submodule "deps/apps/Splunk_SA_CIM"]
+	path = deps/apps/Splunk_SA_CIM
+	url = git@github.com:splunk/addonfactory-splunk_sa_cim.git
+[submodule "deps/apps/splunk_env_indexer"]
+	path = deps/apps/splunk_env_indexer
+	url = git@github.com:splunk/addonfactory-splunk_env_indexer.git

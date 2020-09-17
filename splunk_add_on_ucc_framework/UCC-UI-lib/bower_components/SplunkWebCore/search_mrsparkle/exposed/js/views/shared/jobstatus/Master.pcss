@@ -1,0 +1,246 @@
+/*  Splunk: Component: Job Status */
+/*  ============================= */
+
+/* job status bar
+    wrapper for nested components
+    Sub-Components: job-status,  job-controls, bunny-button
+
+    <div class="views-shared-jobstatus">
+        <div class="status pull-left">
+            <span class="number">100</span> events (09/19/2012, 17:56:33 to 12/31/1969, 17:56:33) <span class="ratio">Sampled at 1:1,000</span>
+        </div>
+        <div class="btn-group pull-right views-shared-controls-syntheticselectcontrol">
+            <a href="#" class="btn dropdown-toggle btn-small dropdown-toggle-search-mode"><span class="link-label">Verbose Mode</span></a>
+            <div class="dropdown-menu dropdown-menu-search-mode" style="top: 19.4333px; left: 47px; display: none; margin-left: -277.033px;">
+                <div class="arrow" style="margin-left: 105.033px;"></div>
+                <ul>
+                    <li>
+                        <a data-value="fast" href="#"><span class="link-label">Fast Mode</span> <span class="link-description">Field discovery on for event searches. No event or field data for stats searches.</span></a>
+                    </li>
+                    <li>
+                        <a data-value="smart" href="#"><span class="link-label">Smart Mode</span> <span class="link-description">Field discovery off for event searches. No event or field data for stats searches.</span></a>
+                    </li>
+                    <li>
+                        <a data-value="verbose" href="#"><span class="link-label">Verbose Mode</span> <span class="link-description">All event &amp; field data</span></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="views-shared-jobcontrols btn-group pull-right" style="display: block;">
+            <div class="job-menu btn-combo">
+                <a href="#" class="btn btn-small dropdown-toggle">Job</a>
+                <div class="dropdown-menu dropdown-menu-selectable">
+                    <div class="arrow"></div>
+                    <ul>
+                        <li class="send-background">
+                            <a href="#" class="disabled" style="color: rgb(204, 204, 204);">Send Job to Background</a>
+                        </li>
+                        <li class="inspect">
+                            <a href="#">Inspect Job</a>
+                        </li>
+                        <li class="delete">
+                            <a href="#">Delete Job</a>
+                        </li>
+                    </ul>
+                    <ul>
+                        <li class="share">
+                            <a href="#">Share Job</a>
+                        </li>
+                        <li class="expire">
+                            <a href="#">Expire</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="progress-bar" style="display: block;">
+                <div class="progress-animation-wrapper" style="display: none; width: 0%;">
+                    <img class="progress-animation-image" src="/static/img/splunk/progress-bar-animation.gif">
+                </div><span class="progress-label progress-label-complete" style="display: block;">Complete</span> <span class="progress-label progress-label-finalizing" style="display: none;">Finalizing...</span> <span class="progress-label progress-label-paused" style="display: none;">Paused</span> <span class="progress-label progress-label-realtime" style="display: none;">Real-time</span> <span class="progress-label progress-label-percentage" data-original-title="" style="display: none;">0.0%</span>
+            </div>
+        </div>
+    </div>
+
+*/
+.shared-jobstatus {
+    @mixin clearfix;
+    clear:both;
+    min-height:22px;
+    margin-top: 5px;
+    padding: 0 20px 5px 20px;
+    position: relative;
+
+    .loader {
+        float: left;
+        margin-right: 5px;
+        margin-top: 2px;
+    }
+
+    .view-scanned {
+        line-height: 19px;
+        min-height: 19px;
+        margin-right:6px;
+    }
+
+    .icon-warning-paused {
+        color: $yellow;
+        font-size: 200%;
+        display: inline-block;
+        margin-right: 3px;
+        vertical-align: middle;
+        line-height: 16px;
+    }
+
+    .status {
+        padding: 5px 0;
+        margin-right: 5px;
+        float: left;
+
+        .icon-check {
+            color: $splunkGreen;
+        }
+    }
+
+    .sampling-mode {
+        float: left;
+    }
+}
+
+.export-print-group {
+    margin-right: 20px;
+
+    .icon-share, .icon-print, .icon-export {
+        font-size: 15px;
+    }
+
+}
+
+/* job status controls
+    main component for job status
+
+    <div class="views-shared-jobcontrols btn-group pull-right" style="display: block;">
+        <div class="job-menu btn-combo">
+            <a href="#" class="btn btn-small dropdown-toggle">Job</a>
+            <div class="dropdown-menu dropdown-menu-selectable">
+                <div class="arrow"></div>
+                <ul>
+                    <li class="send-background">
+                        <a href="#" class="disabled" style="color: rgb(204, 204, 204);">Send Job to Background</a>
+                    </li>
+                    <li class="inspect">
+                        <a href="#">Inspect Job</a>
+                    </li>
+                    <li class="delete">
+                        <a href="#">Delete Job</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="share">
+                        <a href="#">Share Job</a>
+                    </li>
+                    <li class="expire">
+                        <a href="#">Expire</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="progress-bar" style="display: block;">
+            <div class="progress-animation-wrapper" style="display: none; width: 0%;">
+                <img class="progress-animation-image" src="/static/img/splunk/progress-bar-animation.gif">
+            </div><span class="progress-label progress-label-complete" style="display: block;">Complete</span> <span class="progress-label progress-label-finalizing" style="display: none;">Finalizing...</span> <span class="progress-label progress-label-paused" style="display: none;">Paused</span> <span class="progress-label progress-label-realtime" style="display: none;">Real-time</span> <span class="progress-label progress-label-percentage" data-original-title="" style="display: none;">0.0%</span>
+        </div>
+    </div>
+*/
+
+.shared-jobstatus-samplingmode-dialog {
+    .control {
+        display: inline-block;
+        input {
+            margin: 0 5px;
+            width: 45px;
+            padding-right: 10px;
+        }
+    }
+    .alert {
+        padding-right: 0px;
+        margin-bottom: 10px;
+    }
+}
+
+.shared-jobstatus-searchmode {
+    margin-left: 5px;
+    position: relative;
+
+    > .btn-pill {
+        padding-left: 20px;
+
+         > [class^="icon-"],
+         > [class*=" icon-"] {
+            font-size:15px;
+            line-height: 20px;
+            width: 20px;
+            text-align: center;
+            position: absolute;
+            top: 3px;
+            left: 0;
+        }
+    }
+}
+
+.shared-jobstatus-buttons {
+    margin-left: 5px;
+}
+
+.shared-jobstatus-autopause {
+    clear:both;
+    padding-top: 10px;
+    > .alert {
+        margin-bottom: 0;
+    }
+}
+
+.shared-jobstatus-buttons-sharedialog {
+    .control-label {
+        width: 140px;
+    }
+    .controls {
+        margin-left: 160px;
+    }
+    .icon-bookmark {
+        font-size: 16px;
+    }
+    .bookmark > ir {
+        width: 0;
+    }
+
+    p {
+        margin-bottom: 20px;
+    }
+}
+
+.shared-jobstatus-buttons-sharedialog {
+    .control-label {
+        text-align: left;
+    }
+    .control-label {
+        width: 100px;
+    }
+    .controls {
+        margin-left: 120px;
+    }
+}
+
+/* style for views/shared/jobstatus/buttons/ExportResultsDialog.js */
+.shared-jobstatus-buttons-exportresultsdialog .rerun-msg a {
+    white-space: nowrap;
+}
+
+/*  Print */
+/*  -------------------------------------------------- */
+@media print {
+    .shared-jobstatus-buttons,
+    .shared-jobstatus-searchmode,
+    .shared-jobstatus-spinner,
+    .tooltip {
+        @mixin print-hide;
+    }
+}

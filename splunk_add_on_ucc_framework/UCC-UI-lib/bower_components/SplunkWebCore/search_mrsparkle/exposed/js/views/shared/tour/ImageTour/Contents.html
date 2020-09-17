@@ -1,0 +1,39 @@
+<div id="<%= imageTourId %>">
+    <div class="<%= css.carouselInner %>" data-carousel="items">
+        <% for (var i=0; i < images.length; i++) { %>
+            <div class="<%= css.carouselItem %>" <%- (i === 0) ? "data-active=true" : ''%> data-carousel="item">
+                <img class="<%= css.carouselImage %>" src="<%- imgUrlLocalized %>/<%- images[i] %>" />
+                <div class="<%= css.tourGutter %>">
+                    <div class="<%= css.gutterText %>">
+                        <%= captions[i] %>
+                    </div>
+                </div>
+            </div>
+        <% } %>
+    </div>
+    <div class="<%= css.carouselAssets %>">
+        <ol class="<%= css.carouselIndicators %>" data-carousel="indicators">
+            <% for (var i=0; i < images.length; i++) { %>
+                <li class="<%= css.carouselIndicator %>" data-target="#<%- imageTourId %>" data-slide-to="<%- i %>" <%- (i === 0) ? "data-active=true": ''%>></li>
+            <% } %>
+        </ol>
+        <a style="display:none;" class="<%= css.previous %>" data-slide="prev" href="#">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="25px" height="48px" viewBox="0 0 612 792">
+                <polygon points="476.81,-0.002 499.794,22.355 136.249,395.998 499.794,769.641 476.81,791.998 91.501,395.998" />
+            </svg>
+        </a>
+        <a class="<%= css.next %>" data-slide="next" href="#">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="25px" height="48px" viewBox="0 0 612 792">
+                <polygon points="114.484,792 91.5,769.643 455.045,396 91.5,22.357 114.484,0 499.793,396" />
+            </svg>
+        </a>
+        <p class="<%= css.tourLinks %>">
+            <a class="<%= css.skipTour %>" data-action="skip-tour" href="#">
+                <%- skipTourLabel %>
+            </a>
+            <a class="<%= css.nextTour %>" data-action="next-tour" href="#">
+                <%- continueLabel %>
+            </a>
+        </p>
+    </div>
+</div>

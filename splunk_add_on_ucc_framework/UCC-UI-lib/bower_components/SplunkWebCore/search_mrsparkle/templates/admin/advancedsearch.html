@@ -1,0 +1,32 @@
+<%!
+    title = 'Advanced search'
+%>
+<%namespace name="lib" file="//lib.html" import="*"/>
+<%inherit file="//layout/admin.html" />
+<%
+import splunk
+from splunk.appserver.mrsparkle.lib import util, i18n
+
+isLite = util.isLite()
+%>
+
+<div class="dataInputsWrapper">
+    <div class="dataInputsDesc">${_('Create and edit search macros. Edit permissions on search commands.')}</div>
+
+    <table class="splTable">
+            <tr>
+                <th>${_('')}</th>
+                <th>${_('Actions')}</th>
+            </tr>
+            % if not isLite:
+            <tr>
+                <td class="input_name"><a href="${make_url(['manager', namespace, 'admin', 'macros'])}">${_('Search macros')}</a></td>
+                <td><a href="${make_url(['manager', namespace, 'admin', 'macros', '_new'], _qs=dict(action='edit'))}">${_('Add new')}</a></td>
+            </tr>
+            % endif
+            <tr>
+                <td class="input_name"><a href="${make_url(['manager', namespace, 'admin', 'commandsconf'])}">${_('Search commands')}</a></td>
+                <td></td>
+            </tr>
+    </table>
+</div>

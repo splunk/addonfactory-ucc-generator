@@ -1,0 +1,77 @@
+<%!
+    title = 'Search-time props'
+%>
+<%namespace name="lib" file="//lib.html" import="*"/>
+<%inherit file="//layout/admin.html" />
+<%
+import splunk
+from splunk.appserver.mrsparkle.lib import util, i18n
+isLite = util.isLite()
+%>
+
+<div class="dataInputsWrapper">
+    <div class="dataInputsDesc">${_('View, edit, and set permissions on field extractions. Define event workflow actions and field aliases. Rename sourcetypes.')}</div>
+    
+    <table class="splTable" id="dataInputs">
+        <tr>
+            <th>${_('Type')}</th>
+            <th>${_('Actions')}</th>
+        </tr>
+        <tr>
+            <td class="input_name"><a href="${make_url(['manager', namespace, 'data', 'props', 'fieldaliases'])}">${_('Field aliases')}</a></td>
+            <td><a href="${make_url(['manager', namespace, 'data', 'props', 'fieldaliases', '_new'], _qs=dict(action='edit'))}">${_('Add new')}</a></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="input_description">${_('Edit or add one or more aliases to field names')}</td>
+        </tr>
+        
+        <tr>
+            <td class="input_name"><a href="${make_url(['manager', namespace, 'data', 'props', 'calcfields'])}">${_('Calculated fields')}</a></td>
+            <td><a href="${make_url(['manager', namespace, 'data', 'props', 'calcfields', '_new'], _qs=dict(action='edit'))}">${_('Add new')}</a></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="input_description">${_('Edit or add one or more calculated fields')}</td>
+        </tr>
+        
+        <tr>
+            <td class="input_name"><a href="${make_url(['manager', namespace, 'data', 'props', 'extractions/'])}">${_('Field extractions')}</a></td>
+            <td>
+            %if not isLite:
+                <a href="${make_url(['manager', namespace, 'data', 'props', 'extractions', '_new'], _qs=dict(action='edit'))}">${_('Add new')}</a>
+            %else:
+                <a href="${make_url(['app', namespace, 'field_extractor'])}">${_('Open field extractor')}</a>
+            %endif
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="input_description">${_('View and edit all field extractions. Add new field extractions and update permissions.')}</td>
+        </tr>
+        
+        <tr>
+            <td class="input_name"><a href="${make_url(['manager', namespace, 'data', 'transforms', 'extractions'])}">${_('Field transformations')}</a></td>
+            <td><a href="${make_url(['manager', namespace, 'data', 'transforms', 'extractions', '_new'], _qs=dict(action='edit'))}">${_('Add new')}</a></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="input_description">${_('Edit or add transformations for field extractions that use a transform.')}</td>
+        </tr>
+        
+        <tr>
+            <td class="input_name"><a href="${make_url(['manager', namespace, 'data', 'props', 'sourcetype-rename'])}">${_('Sourcetype renaming')}</a></td>
+            <td><a href="${make_url(['manager', namespace, 'data', 'props', 'sourcetype-rename', '_new'], dict(action='edit'))}">${_('Add new')}</a></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="input_description">${_('Rename a source type. Multiple source types can share the same name.')}</td>
+        </tr>
+        
+        % if not isLite:
+            <tr>
+                <td class="input_name"><a href="${make_url(['manager', namespace, 'data', 'ui', 'workflow-actions'])}">${_('Workflow actions')}</a></td>
+                <td><a href="${make_url(['manager', namespace, 'data', 'ui', 'workflow-actions', '_new'], dict(action='edit'))}">${_('Add new')}</a></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="input_description">${_('Edit or add workflow actions')}</td>
+            </tr>
+        % endif
+        
+    </table>
+</div>

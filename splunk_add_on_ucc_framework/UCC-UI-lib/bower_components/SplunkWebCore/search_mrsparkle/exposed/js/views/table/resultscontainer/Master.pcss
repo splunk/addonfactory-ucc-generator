@@ -1,0 +1,442 @@
+@import '../variables.pcss';
+
+$summaryCutBackgroundColor: color($red blend($white 75%));
+$summarySelectedBackgroundColor: color($blue blend($white 75%));
+
+.table-resultscontainer-summarytable {
+    @mixin display-flex column;
+    flex: 1 1 0px;
+    &:not(.summary-table-no-results) {
+        background-color: $grayLight;
+    }
+    &.summary-table-no-results {
+        background-color: white;
+        .table-summary {
+            min-height: 0px;
+        }
+    }
+    
+    &.disabled {
+        opacity: 0.5;
+        
+        .scroll-table-wrapper {
+            max-width: 100%;
+            overflow: hidden;
+        }
+    }
+    
+    .shared-waitspinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 100;
+    }
+    
+    position: relative;
+
+    .header-table-wrapper {
+        border-bottom: none;
+    }
+
+    .scroll-table-wrapper {
+        height: auto;
+        margin-left: 0px;
+        margin-top: 41px;
+        @mixin display-flex column;
+        flex: 1 1 0px;
+    }
+
+    /* IE11 hack (These styles don't apply to edge) */
+    @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+        .scroll-table-wrapper {
+            height: calc(100vh - $contentTop - $titleBarHeight - 100px);
+            width: auto;
+        }
+
+        .header-table-wrapper {
+            margin-right: 0 !important;
+        }
+    }
+
+    .dataset-table-head {
+        position: absolute;
+        @mixin display-flex row;
+
+        /* SPL-114466: This hack is necessary to force the GPU to render the page on a separate layer on Chrome Retina displays */
+        /* Background reference: http://blog.getpostman.com/2015/01/23/ui-repaint-issue-on-chrome */
+        transform: translateZ(0);
+
+        top: 3px;
+        left: 0px;
+        -moz-transform: none;
+    }
+
+    .table-summary {
+        margin-bottom: 0px;
+        background-color: $grayLight;
+        @mixin display-flex row;
+        thead {
+            float: left;
+        }
+    }
+
+    .summary-header i {
+        float: right;
+        margin-right: 10px;
+        color: $grayLight;
+    }
+
+    .coverage {
+        display: flex;
+        .bar {
+            height: 10px;
+            min-width: 5px;
+        }
+    }
+
+    .coverage > .match,
+    .summary-matchedtype:before {
+        background-color: $green;
+    }
+
+    .coverage > .mismatch,
+    .summary-mismatchedtype:before {
+        background-color: $red;
+    }
+
+    .coverage > .null,
+    .summary-nullvalues:before {
+        background-color: $yellow;
+    }
+
+    .coverage > .loading {
+        background-color: color($black a(10%));
+    }
+
+    .col-header,
+    .summary-table-column {
+        border-left: 2px solid $grayLight;
+        border-right: 2px solid $grayLight;
+    }
+
+    .col-header.column-selected::after,
+    .summary-table-column.column-selected::after {
+        content: '';
+        border: 2px solid #467fc7;
+        position: absolute;
+        top: -2px;
+        right: -1px;
+        bottom: -2px;
+        left: -1px;
+        pointer-events: none;
+    }
+
+    .col-header {
+        font-size: $fontSizeLarge;
+        line-height: 22px;
+        position: relative;
+        box-sizing: border-box;
+        word-wrap: break-word;
+        user-select: none;
+        background-color: $white;
+        padding: 0px;
+
+        &:first-child {
+            width: 60px;
+            min-width: 60px;
+        }
+
+        &.column-selected, &.column-selected-end {
+            cursor: move;
+            cursor: grab;
+        }
+
+        &.grabbed, &.column-selected:active, &.column-selected-end:active {
+            cursor: move;
+            cursor: grabbing;
+        }
+
+        &.over-right {
+            border-right: 4px solid $blue !important;
+            border-left: none;
+            right: -2px;
+        }
+
+        &.over-right + div.col-header {
+            border-left: none;
+            margin-left: 2px;
+            margin-right: -2px;
+            border-right-width: 4px;
+        }
+
+        &.over-left {
+            border-left: 4px solid $blue !important;
+            border-right: none;
+            left: -2px;
+        }
+
+        &:not(:first-child) {
+            min-width: 200px;
+        }
+
+        &:last-child {
+            padding-right: 0px;
+        }
+
+        &.field {
+            width: 200px;
+        }
+
+        &.field.type-raw {
+            width: 600px;
+        }
+
+        &:hover:not(.column-selected):not(.disabled),
+        &.hover:not(.column-selected):not(.disabled) {
+            background: $tableBackgroundHover;
+        }
+
+        &.column-selected {
+            background-color: $summarySelectedBackgroundColor;
+        }
+
+        &.column-cut {
+            background-color: $summaryCutBackgroundColor !important;
+        }
+
+        &.all {
+            font-size: 22px;
+            float: right;
+            text-align: right;
+        }
+
+        span.name {
+            display: block;
+            white-space: nowrap;
+            word-break: normal;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 2px 25px 4px 6px;
+        }
+
+        i.field-type {
+            position: absolute;
+            top: 2px;
+            right: 14px;
+            color: $textGray;
+        }
+
+        i.icon-ipv4:before {
+            font-family: inherit;
+            content: 'IP';
+            font-size: 75%;
+        }
+    }
+}
+
+.summary-table-results {
+    white-space: nowrap;
+    height: auto;
+    padding-bottom: 2px;
+    padding-left: 60px;
+    max-width: 100%;
+}
+
+.summary-table-column {
+    background-color: $white;
+    box-sizing: border-box;
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+    min-width: 200px;
+
+    &.hover:not(.column-selected):not(.disabled) {
+        background: $tableBackgroundHover;
+    }
+
+    &.column-selected, .highlight {
+        background-color: $summarySelectedBackgroundColor;
+    }
+
+    div.result-field {
+        position: relative;
+
+        .selection {
+            color: transparent;
+
+            + .real-text-wrapper {
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+            }
+        }
+    }
+
+    &.column-cut {
+        background-color: $summaryCutBackgroundColor !important;
+    }
+
+    &:not(.column-_raw) {
+        width: 200px;
+    }
+
+    &.column-_raw {
+        width: 600px;
+    }
+
+    &.column-selected.hover {
+        .list-summary.hover {
+            background-color: $summarySelectedBackgroundColor;
+        }
+    }
+
+}
+
+
+.metrics-no-results {
+    display: inline-block;
+    padding: 6px;
+}
+
+.list-summary {
+    padding: 10px 20px 10px 0;
+    position: relative;
+
+    &:hover:not(.column-selected):not(.disabled),
+    &.hover:not(.column-selected):not(.disabled){
+        background: $tableBackgroundHover !important;
+    }
+
+    &.column-selected {
+        background-color: $summarySelectedBackgroundColor;
+        border-left: 2px solid $blue !important;
+        border-right: 2px solid $blue !important;
+        margin-left: -1px;
+        margin-right: -1px;
+        padding-right: 19px;
+    }
+
+    &.column-selected > .list-summary-row {
+        margin-left: -1px;
+    }
+
+    &.column-cut {
+        background-color: $summaryCutBackgroundColor !important;
+    }
+}
+
+
+.list-summary-row {
+    max-width: 280px;
+    line-height: 20px;
+    @mixin clearfix;
+}
+
+.list-summary-row-last {
+    padding-bottom: 10px;
+}
+.list-summary-label {
+    position: relative;
+    flex: 1000 0 0;
+    padding-left: 20px;
+    float:left;
+
+    &.summary-matchedtype:not(.summary-zero):before,
+    &.summary-mismatchedtype:not(.summary-zero):before,
+    &.summary-nullvalues:not(.summary-zero):before {
+        content: '';
+        display: block;
+        position: absolute;
+        left: 10px;
+        top: 5px;
+        height: 8px;
+        width: 8px;
+    }
+}
+
+.list-summary-spacer {
+    position: relative;
+    overflow: hidden;
+    &::before {
+        position: absolute;
+        left:0;
+        top:0;
+        content: '......................................................................................................................................................'
+    }
+}
+
+.list-summary-value {
+    flex: 1 0 auto;
+    text-align: right;
+    margin: 0;
+    color: $textGray;
+    white-space: nowrap;
+    float:right;
+}
+
+.top-results-cell {
+    border-top: 1px solid $grayLight;
+    padding: 4px 6px;
+    position: relative;
+    z-index: 0;
+    @mixin clearfix;
+
+    &.text-selected, &.selected {
+        padding: 3px 4px 2px 4px;
+        border: 2px solid $blue !important;
+        background-color: $summarySelectedBackgroundColor;
+
+        + .top-result-row {
+            border-top: none;
+        }
+    }
+
+    &.column-selected  {
+        background-color: $summarySelectedBackgroundColor;
+        border-left: 2px solid $blue !important;
+        border-right: 2px solid $blue !important;
+        margin-left: -1px;
+        margin-right: -1px;
+    }
+
+    &.column-cut {
+        background-color: $summaryCutBackgroundColor !important;
+    }
+
+    &:hover:not(.disabled), &.hover:not(.column-selected) {
+        background: $tableBackgroundHover !important;
+    }
+
+    .result-bar {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        bottom: 2px;
+        z-index: -1;
+        max-width: calc(100% - 4px);
+        background-color: color($black a(10%));
+    }
+
+    .result-field {
+        float: left;
+        white-space: normal;
+        max-width: 100%;
+        word-wrap: break-word;
+    }
+
+    .result-value {
+        float: right;
+        color: $grayLight;
+    }
+}
+
+.column-highlighted:not(.column-selected):not(.column-selected-end)  {
+    background-color: $yellowLighter;
+}
+
+.column-highlighted:not(.selected):not(.column-selected):not(.column-selected-end)  {
+    background-color: $yellowLighter;
+}

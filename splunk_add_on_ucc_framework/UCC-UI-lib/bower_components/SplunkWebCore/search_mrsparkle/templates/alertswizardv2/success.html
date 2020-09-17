@@ -1,0 +1,19 @@
+<%inherit file="/layout/wizard.html"/>
+<%namespace file="/lib.html" import="manager_save_search_link,wizard_ok"/>
+
+<div class="content alertSuccess">
+    <h1 class="spl-icon-success-md">${_('New alert saved successfully')}</h1>
+    <p class="information">
+        ${_('<strong>View triggered alerts</strong> through the <a href="%s" class="spl-icon-external-link-xsm" onclick="Splunk.window.openAerts(this.href); return false;">Alert manager</a>.') % make_url(['alerts', app])}
+    </p>
+    <p class="information">
+        ${_('<strong>Edit this alert</strong> at Settings &raquo; Searches, reports, and alerts &raquo;')} ${manager_save_search_link(saved_search.namespace, saved_search.id, saved_search.name)}  
+    </p>
+    % if saved_search.action.rss.enabled:
+        <% rss_url = cherrypy.request.base + make_url(['rss', saved_search.name]) %>
+        <p class="information">
+            <span class="rss">${_('RSS:')}</span> <a href="${rss_url | h}" class="spl-icon-external-link-xsm" target="_blank">${rss_url | h}</a>
+        </p>
+    % endif
+</div>
+${wizard_ok()}

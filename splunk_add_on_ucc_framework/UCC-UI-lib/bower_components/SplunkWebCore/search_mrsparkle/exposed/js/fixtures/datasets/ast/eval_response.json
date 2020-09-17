@@ -1,0 +1,28 @@
+{
+  "spl": "eval \"foo\"='bar'",
+  "ast": {
+    "command": "eval",
+    "raw": " \"foo\"='bar'",
+    "type": "SP_STREAM",
+    "fields_and_properties": [{
+      "name": "foo",
+      "modified": true
+    }, {
+      "name": "bar",
+      "referenced": true
+    }],
+    "pipeline": "streaming",
+    "annotations": {
+      "interesting_fields": [{
+        "name": "*"
+      }, {
+        "name": "foo"
+      }]
+    }
+  },
+  "actions": [{
+    "name": "get_interesting_fields"
+  }, {
+    "name": "annotate_datasets"
+  }]
+}

@@ -1,0 +1,12 @@
+##
+## Splunk combined RelaxNG schema 
+##
+
+start = (
+    external "view.rnc"
+    | external "simplexml.rnc"
+    | external "nav.rnc"
+    | external "manager.rnc"
+    | external "setup.rnc"
+    | external "quickstart.rnc"
+)

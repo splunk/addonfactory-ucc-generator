@@ -1,0 +1,13 @@
+<%page args="module" />
+<% 
+    dataOverlayMode = module['params'].get('dataOverlayMode', '') 
+    ## overwrite the old deprecated key with the new standard 'default' key, if it's present.
+    if ('default' in module['params']) :
+        dataOverlayMode = module['params'].get('default') 
+%>
+<label for="${module['id']}_select">${_('Overlay:')}</label>
+<select name="dataOverlayMode" id="${module['id']}_select">
+    <option value="none"${' selected="selected"' if dataOverlayMode=='none' else ''}>${_('None')}</option>
+    <option value="heatmap"${' selected="selected"' if dataOverlayMode=='heatmap' else ''}>${_('Heat map')}</option>
+    <option value="highlow"${' selected="selected"' if dataOverlayMode=='highlow' else ''}>${_('High and low values')}</option>
+</select>

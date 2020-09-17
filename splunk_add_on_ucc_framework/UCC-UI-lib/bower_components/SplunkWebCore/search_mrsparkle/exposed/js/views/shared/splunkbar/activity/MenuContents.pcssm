@@ -1,0 +1,17 @@
+/* Header */
+
+.view {
+    composes: menu from '../../MenuDialog.pcssm';
+
+    li {
+    }
+
+}
+
+.primaryLink {
+    composes: primaryLink from '../../MenuDialog.pcssm';
+}
+
+.secondaryLink {
+    composes: secondaryLink from '../../MenuDialog.pcssm';
+}

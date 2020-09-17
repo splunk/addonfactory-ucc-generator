@@ -1,0 +1,35 @@
+<%inherit file="//layout/wizard.html"/>
+<%page expression_filter="h"/>
+
+<style>
+     .verificationResults {
+         font-size: 15px; 
+         text-align: center; 
+         padding: 50px 30px 70px 30px;
+     }
+</style>
+
+<div class="content saveSearchSuccess">
+    <div class="verificationWizard">
+        <div style="margin-bottom: 10px; font-size:13px;" class="note">
+            % if isSuccess: 
+                 ${_('Verification action successfully completed with these results:')} 
+            % else: 
+                 ${_('Verification action failed to complete for the following reasons:')}
+            % endif 
+        </div>
+        <hr>
+        <div class="verificationResults">
+             ${result}
+        </div>
+     </div>
+
+</div>
+
+<ul class="buttons splClearfix">
+    <li class="right">
+        <a class="splButton-primary cancel ok"  href="#">
+            <span>${_('Close')}</span>
+        </a>
+    </li>
+</ul> 

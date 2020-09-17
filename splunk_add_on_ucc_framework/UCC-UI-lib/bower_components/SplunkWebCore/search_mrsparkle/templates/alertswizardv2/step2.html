@@ -1,0 +1,173 @@
+<%inherit file="/layout/wizard.html"/>
+<%namespace file="/lib.html" import="csrf_hidden_input, wizard_cancel_delete, wizard_errors"/>
+
+<div class="content alertStep2">
+    <%include file="_steps.html" args="step=2"/>
+    <form method="post" action="${make_url(['alertswizardv2', app, 'step2', 'update']) | h}">
+        ${wizard_errors(header=_('Your alert settings could not be saved.'), errors=saved_search.errors)}
+        ${csrf_hidden_input()}
+        <input type="hidden" name="id" value="${saved_search.id | h}"/>
+        <table>
+            <tbody>
+                <tr>
+                    <td class="col1"><label>${_('Enable actions')}</label></td>
+                    <td class="col2">
+                        <ul>
+                            <li>
+                                <input type="checkbox" class="checkbox" name="action.email.enabled" id="action-email-enabled" value="1" ${'checked="checked"' if saved_search.action.email.enabled else ''}/>
+                                <label for="action-email-enabled">${_('Send email')}</label>
+
+                                <ul class="email indent">
+                                    <li>
+                                        <p class="note">${_('To send email you must set a valid MTA in email alert settings. <a href="%s" class="spl-icon-external-link-xsm" target="_blank">Learn more</a>.</em>') % generateSelfHelpLink('learnmore.alert.email')}</p>
+                                    </li>
+                                    <li>
+                                        <label for="action-email-to"><span class="required">*</span> ${_('Addresses')}</label>
+                                        <textarea name="action.email.to" id="action-email-to" placeholder="${_('Semi-colon separated list of email addresses')}">${saved_search.action.email.to or '' | h }</textarea>
+                                    </li>
+                                    <li>
+                                        <label for="action-email-subject">${_('Subject')}</label>
+                                        <input type="text" name="action.email.subject" id="action-email-subject" value="${saved_search.action.email.subject or '' | h}"/>
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" class="checkbox" name="ui_include_enabled" id="ui_include_enabled" value="1" ${'checked="checked"' if saved_search.ui_include_enabled else ''}/>
+                                        <label for="ui_include_enabled">${_('Include results')}</label>
+                                        <select name="ui_include_type" id="ui_include_type" style="width:80px;">
+                                            <option value="csv"${' selected="selected"'if saved_search.ui_include_type=='csv' else ''}>${_('as CSV')}</option>
+                                            <option value="inline"${' selected="selected"'if saved_search.ui_include_type=='inline' else ''}>${_('inline')}</option>
+                                            % if saved_search.ui_allow_pdf:
+                                                <option value="pdf"${' selected="selected"'if saved_search.ui_include_type=='pdf' else ''}>${_('as PDF')}</option>
+                                            % endif
+                                        </select>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <input type="checkbox" class="checkbox" name="action.script.enabled" id="action-script-enabled" value="1" ${'checked="checked"' if saved_search.action.script.enabled else ''}/>
+                                <label for="action-script-enabled">${_('Run a script')}</label>
+                                <div class="script indent">
+                                    <label>$SPLUNK_HOME/bin/scripts/</label>
+                                    <input type="text" name="action.script.filename" value="${saved_search.action.script.filename or '' | h}" placeholder="${_('Script filename')}"/>
+                                </div>
+                            </li>
+                            <li>
+                                <input type="checkbox" class="checkbox" name="alert.track"  id="alert-track" value="1" ${'checked="checked"' if saved_search.alert.track else ''}/>
+                                <label for="alert-track">${_('List in <a href="%s" class="spl-icon-external-link-xsm" onclick="Splunk.window.openAerts(this.href); return false;">Triggered Alerts</a>') % make_url(['alerts', app])}</label>
+                                <div class="track indent">
+                                    <label for="alert-severity">${_('Severity')}</label>
+                                    <% severities = ('1', _('Info')), ('2', _('Low')), ('3', _('Medium')), ('4', _('High')), ('5', _('Critical')) %>
+                                    <select name="alert.severity" id="alert-severity">
+                                        % for option in severities:
+                                            <option value="${option[0] | h}" ${'selected="selected"' if option[0]==saved_search.alert.severity else ''}>${option[1] | h}</option>
+                                        % endfor
+                                    </select>
+                                </div>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr class="digestmode" ${'style="display:none;"' if saved_search.ui_howoften=='realtime' else ''}>
+                    <td class="col1"><label>${_('Execute actions on')}</label></td>
+                    <td class="col2">
+                        <input type="radio" name="alert.digest_mode" id="alert-digest_mode-on" value="1" ${'checked="checked"' if saved_search.alert.digest_mode else ''}/>
+                        <label for="alert-digest_mode-on" style="padding-right:20px;">${_('All results')}</label>
+                        <input type="radio" name="alert.digest_mode" id="alert-digest_mode-off" value="0" ${'checked="checked"' if not saved_search.alert.digest_mode else ''}/>
+                        <label for="alert-digest_mode-off">${_('Each result')}</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1"><label>${_('Throttling')}</label></td>
+                    <td class="col2">
+                        <ul>
+                            <li>
+                                <input type="checkbox" class="checkbox" name="alert.suppress.enabled" id="alert-suppress-enabled" value="1" ${'checked="checked"' if saved_search.alert.suppress.enabled else ''}/>
+                                <label for="alert-suppress-enabled" class="digestoff">${_('Suppress for results with the same field value')}</label>
+                                <label for="alert-suppress-enabled" class="digeston">${_('After executing actions, suppress them for...')}</label>
+                            </li>
+                            <li class="suppress indent">
+                                <p class="digestoff note">
+                                    <input type="text" name="alert.suppress.fieldlist" value="${saved_search.alert.suppress.fieldlist or '' | h}"/><span class="required">*</span>
+                                    ${_('clientip, host (results with the same clientip and host)')}
+
+                                    <a href="${generateSelfHelpLink('learnmore.alert.perresult')}" class="spl-icon-external-link-xsm"  target="_blank" ${'style="display:none;"' if saved_search.ui_howoften!='realtime' else ''}>${_('Learn more')}</a>
+
+                                    <a href="${generateSelfHelpLink('learnmore.alert.rolling')}" class="spl-icon-external-link-xsm"  target="_blank" ${'style="display:none;"' if saved_search.ui_howoften!='rolling' else ''}>${_('Learn more')}</a>
+
+                                    <a href="${generateSelfHelpLink('learnmore.alert.scheduled')}" class="spl-icon-external-link-xsm"  target="_blank" ${'style="display:none;"' if saved_search.ui_howoften!='schedule' else ''}>${_('Learn more')}</a>
+
+                                </p>
+                                <label for="ui_suppress_value" class="digestoff">${_('For the next')}</label>
+                                <input type="text" name="ui_suppress_value" id="ui_suppress_value" value="${saved_search.ui_suppress_value or '' | h}" style="width:60px;">
+                                <select name="ui_suppress_unit" class="ui-suppress-unit">
+                                     <option value="s" ${'selected="selected"' if saved_search.ui_suppress_unit=='s' else ''}>${_('second(s)')}</option>
+                                     <option value="m" ${'selected="selected"' if saved_search.ui_suppress_unit=='m' else ''}>${_('minute(s)')}</option>
+                                     <option value="h"${'selected="selected"' if saved_search.ui_suppress_unit=='h' else ''}>${_('hour(s)')}</option>
+                                </select>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+
+<ul class="buttons splClearfix">
+    <li class="left">${wizard_cancel_delete(make_url(['alertswizardv2', app, 'delete']), saved_search.id)}</li>
+    <li class="right"><button class="splButton-primary" type="submit" onclick="$(document.forms[0]).trigger('submit');"><span>${_('Next &#187;')}</span></button></li>
+    <li class="right"><a href="${make_url(['alertswizardv2', app, 'step1', 'edit'], _qs=dict(id=saved_search.id)) | h}" class="splButton-secondary"><span>${_('&#171; Back')}</span></a></li>
+</ul>
+
+<script>
+(function(){
+    function CheckboxToggle($checkbox, $toggle){
+        this.$checkbox = $checkbox;
+        this.$toggle = $toggle;
+        var that = this;
+        $checkbox.bind('click', function() {
+            that.setVisibility(this.checked);
+        });
+        this.setVisibility($checkbox[0].checked);
+    }
+    CheckboxToggle.prototype.setVisibility = function(isVisible) {
+        if (isVisible) {
+            this.$toggle.show();
+        } else {
+            this.$toggle.hide();
+        }
+    };
+    new CheckboxToggle($('input[name="action.email.enabled"]'), $('.email'));
+    new CheckboxToggle($('input[name="action.script.enabled"]'), $('.script'));
+    new CheckboxToggle($('input[name="alert.track"]'), $('.track'));
+    new CheckboxToggle($('input[name="alert.suppress.enabled"]'), $('.suppress'));
+
+    var digestModeSelector = 'input[name="alert.digest_mode"]';
+    var $digeston = $('.digeston');
+    var $digestoff = $('.digestoff');
+    var $uiSuppressValue = $('input[name="ui_suppress_value"]');
+    var $digestMode = $(digestModeSelector);
+    function toggleDigestMode(value) {
+        if (value==='0') {
+            $digeston.hide();
+            $digestoff.show();
+            if (!$uiSuppressValue.val()) {
+                $uiSuppressValue.val('30');
+            }
+        } else {
+            $digeston.show();
+
+            if($('#alert-digest_mode-on').is(':visible')){
+                $digestoff.hide();
+            }
+
+            if (!$uiSuppressValue.val()) {
+                $uiSuppressValue.val('5');
+            }
+        }
+    }
+    $digestMode.bind('click', function() {
+        toggleDigestMode($(this).val());
+    });
+    toggleDigestMode($(digestModeSelector + ':checked').val());
+})()
+</script>

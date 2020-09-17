@@ -1,0 +1,1 @@
+Splunk.Module.ServerSideInclude = $.klass(Splunk.Module, {});

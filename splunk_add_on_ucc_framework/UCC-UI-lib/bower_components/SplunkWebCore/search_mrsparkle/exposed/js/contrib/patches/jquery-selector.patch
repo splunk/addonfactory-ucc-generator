@@ -1,0 +1,22 @@
+jQuery 1.4.2 fails to handle tag ids containing periods 
+eg. "#some.tag" which is legal HTML
+See also: http://dev.jquery.com/ticket/6846
+*** jquery-1.4.2.js.org	2010-07-28 15:20:19.000000000 -0700
+--- jquery-1.4.2.js	2010-07-28 17:16:57.000000000 -0700
+***************
+*** 35,41 ****
+  
+  	// A simple way to check for HTML strings or ID strings
+  	// (both of which we optimize for)
+! 	quickExpr = /^[^<]*(<[\w\W]+>)[^>]*$|^#([\w-]+)$/,
+  
+  	// Is it a simple selector
+  	isSimple = /^.[^:#\[\.,]*$/,
+--- 35,41 ----
+  
+  	// A simple way to check for HTML strings or ID strings
+  	// (both of which we optimize for)
+! 	quickExpr = /^[^<]*(<[\w\W]+>)[^>]*$|^#([\w.-]+)$/,
+  
+  	// Is it a simple selector
+  	isSimple = /^.[^:#\[\.,]*$/,

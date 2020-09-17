@@ -1,0 +1,384 @@
+<%inherit file="//layout/admin_lite.html"/>
+<%page expression_filter="h"/>
+<%namespace name="lib" file="//lib.html" />
+<%namespace file="/lib.html" import="prettyInt, csrf_hidden_input, get_summarization_status"/>
+<%
+    import time
+    import splunk.appserver.mrsparkle.lib.i18n as i18n
+    from splunk.appserver.mrsparkle.lib import util 
+    from splunk.appserver.mrsparkle.lib.eai import cpQuoteEntity
+%>
+
+
+<%def name="title()">${_('Report Acceleration Summaries')} - ${parent.title()}</%def>
+<%def name="get_breadcrumbs()">
+    <%
+            return [
+                [_('Manager'), ['manager']],
+                [_('Report Acceleration Summaries'), ['manager','system','summarization']],
+                [_('Summary Details'), ''],
+            ]
+    %>
+</%def>
+
+
+<script src="${make_url('/static/js/summarization.js')}"></script>
+
+<script type="text/javascript">
+    function show_verification_wizard(verifyLink, total_buckets, max_verify_time, max_verify_buckets) {
+        Splunk.Popup.SummarizationVerificationWizard(verifyLink, total_buckets, max_verify_time, max_verify_buckets);
+    } 
+
+    function show_verification_result(isSuccess, result) {
+        Splunk.Popup.SummarizationVerificationResultsPopup(isSuccess, result);
+    } 
+
+
+  function doObjectAction(ctrl, link) {
+    $('#ctrl').val(ctrl);
+    $('#ctrl_link').val(link);
+
+    okToPost = true; 
+    if (ctrl == "redo"){
+        okToPost = confirm("${_('Are you sure you want to rebuild this summary?')}" ); 
+    }
+    if (ctrl == "remove"){
+        okToPost = confirm("${_('Are you sure you want to delete this summary?')}" ); 
+    }
+    
+    if (okToPost)
+        document.actionControl.submit();
+    else 
+        return false; 
+  }
+
+setInterval(updateSummarizationStatus, 10000); 
+
+setInterval(function() {
+    $.get(
+     "${make_url(['manager','system','summarization','verifystatus'], _qs=dict(uri=tsum.id))}" ,  
+    function(data) { 
+         var obj = jQuery.parseJSON(data); 
+         var newHtml = constructVerificationState(obj);
+         $('#verifyStatus').html(newHtml); 
+     }  );
+   },  10000); 
+
+
+function constructVerificationState(tsum) {
+        newHtml = ''
+
+        if (tsum.verification_state  == 'VERIFYING') { 
+            newHtml += '<div style="padding-top:5px;padding-bottom:3px;"> ${_("Verifying")} </div>' 
+            var progress = (!tsum.hasOwnProperty("verification_progress") || tsum.verification_progress == "None") ? "0%" : tsum.verification_progress;
+            newHtml += '<div class="running">' + progress  + '${_(" complete")}</div>' 
+        } else {  
+            enableActionButtons(); 
+            var isVerificationSuccess = 0; 
+
+            if (tsum.verification_state == "DONE") { 
+                if (tsum.verification_buckets_failed == '0')
+                    isVerificationSuccess = 1;  
+                var verificationResult = ''; 
+                var verification_time = tsum.verification_time; 
+
+                if (tsum.verification_buckets_failed != "None" && tsum.verification_buckets_passed != "None") {
+                    verificationResult =  tsum.verification_buckets_failed + "${_(' buckets failed (')}" + tsum.verification_buckets_passed + "${_(' passed, ')}" + tsum.verification_buckets_skipped + "${_(' skipped)')}"; 
+                } else 
+                    verificationResult = "${_('There was an error retrieving the verification details for this summary.')}"; 
+                if (isVerificationSuccess == 0) {     
+                     newHtml += '<span class="icon_small red_warning_small">&nbsp;</span> <a class="showVerificationResults" href="javascript:void(0)" onclick="show_verification_result(\''+ isVerificationSuccess + '\',\'' + verificationResult + '\')">${_("Failed to verify ")}' + verification_time + '</a>' ; 
+                } else {
+                     newHtml += ' <div class="complete"> <a class="showVerificationResults"  href="javascript:void(0)" onclick="show_verification_result(\'' + isVerificationSuccess + '\',\'' + verificationResult + '\')">${_("Verified ")}' + verification_time + ' </a></div>';  
+                }
+           } else if ( tsum.verification_state == "PROCESS_ERROR") { 
+                isVerificationSuccess = 0;  
+                newHtml += '<br/><span class="icon_small red_warning_small">&nbsp;</span> <a class="showVerificationResults" href="javascript:void(0)" onclick="show_verification_result(\'' +isVerificationSuccess + '\',\'' + tsum.verification_error + '\')">${_("Failed to verify ")}' + verification_time + ' </a>' ;  
+           }
+     } 
+     return newHtml;  
+}
+
+
+function enableActionButtons(){
+    $('.actionButton').each(function(){
+        $(this).removeAttr('disabled');
+     }); 
+
+
+}
+
+</script>	
+
+
+
+<style>
+.pageContent {
+    width: 650px;
+}
+
+.pageContentWrapper, td {
+     font-size:13px;
+}
+
+.rowHeader {
+    font-weight:bold; 
+    width:  250px; 
+}
+
+.access_time { 
+    color:#868686;
+    padding-left:10px; 
+    font-size:11px; 
+}
+
+.running {
+    background-image: url("/static/img/skins/default/loader_green_on_grey.gif"); 
+    background-repeat: no-repeat;
+    padding-left: 20px; 
+    background-size: 15px; 
+}
+
+
+.sectionBody {
+    margin-top:10px;
+}
+
+.actionButton {
+    border: 1px solid #CCC; 
+    background: #EEE; 
+    padding: 3px 0px; 
+    margin-right: 5px; 
+    color: #333; 
+    border-radius:5px; 
+    width:70px;
+    cursor: pointer;
+}
+
+button[disabled] {
+    color: #999;
+    background: #EEF;
+    cursor: auto;
+}
+
+</style>
+<div class="pageContentWrapper">
+
+% if controller_exception:
+    <div class="error">
+        <%lib:render_exception e="${controller_exception}" />
+    </div>
+% endif
+
+
+
+<div class="pageContent">
+<h1> ${_("Summary: ")}${tsum.hash} </h1>
+
+
+<div style="width:50%; float:left"> 
+<h2> ${_("Summary Status ")}</h2>
+<%
+    removeLink = ''
+    redoLink = ''
+    verifyLink = ''
+    updateLink = ''
+    for (action, link)  in tsum.action_links:
+        if action == 'remove':
+            removeLink = link + "?disable_auto_summary=1"
+            redoLink = link
+            verifyLink = link + "/verify?force_restart=1"
+        elif action == 'reschedule':
+            updateLink = link
+    try:
+        summary_size = "%.2f" % (float(tsum.size)/(1024*1024))
+        timeDeltaDays = int(int(tsum.time_range)/86400)
+        if timeDeltaDays in [365, 366]:
+            timeDeltaString = _('1 year')
+        elif timeDeltaDays in [28, 29, 30, 31]:
+            timeDeltaString = _('1 month')
+        elif timeDeltaDays in [89, 90, 91, 92]:
+            timeDeltaString = _('3 months')
+        elif timeDeltaDays == 7:
+            timeDeltaString = _('1 week')
+        elif timeDeltaDays == 1:
+            timeDeltaString = _('1 day')
+        elif timeDeltaDays == 0:
+            timeDeltaString = _('All Time')
+        else:
+            timeDeltaString = _('%s days') % i18n.format_number(timeDeltaDays)
+        total_buckets = tsum.buckets
+        verification_time = util.timeToAgoStr(int(tsum.verification_time)) if tsum.verification_time else None
+        mod_time    = util.timeToAgoStr(int(tsum.mod_time))
+        access_time = util.timeToAgoStr(int(tsum.access_time))
+        access_count = prettyInt(int(tsum.access_count))
+        total_buckets = tsum.buckets
+    except TypeError:
+        summary_size = None
+        timeDeltaString = None
+        access_time = None
+        verification_time = None
+        mod_time = None
+        access_count = None
+        total_buckets = None
+
+    complete = int(float(tsum.complete)*100)
+    completeString = _('Complete')
+    if mod_time:
+        completeString += " <span class='access_time'>" + _('Updated: ') + mod_time + "</span>"
+    complete = int(float(tsum.complete)*100)
+    completeString = 'N/A'
+    if isNotEnoughData:
+        completeString = 'Not enough data to summarize.'
+    elif tsum.is_suspended:
+        completeString = 'Suspended.'
+    elif complete < 100:
+        completeString = "<div class='running'>Building summary - " + str(complete) + "%</div>"
+    elif complete == 100:
+        completeString = "Complete"
+        if mod_time:
+            completeString += " <span class='access_time'> Updated: " + mod_time + "</span>"
+
+%>
+
+<div id="${util.remove_special_chars(tsum.id)}" class="sectionBody"> ${get_summarization_status(tsum) | n} </div>
+<div id="verifyStatus" style="padding-top:5px; line-height:15px;">
+               % if tsum.verification_state and tsum.verification_state  == 'VERIFYING': 
+                    <div style="padding-top:5px;padding-bottom:3px;"> ${_("Verifying")} </div> 
+                    <div class="running">${tsum.verification_progress if tsum.verification_progress else '0%'} ${_("complete")}</div>
+               % else: 
+                    % if tsum.verification_state == "DONE": 
+                        <% 
+                            isVerificationSuccess =  1 if tsum.verification_buckets_failed == '0' else 0 
+                            verificationResult = tsum.verification_buckets_failed + _(" buckets failed (") + tsum.verification_buckets_passed + _(" passed, ") + tsum.verification_buckets_skipped + _(" skipped)") if tsum.verification_buckets_failed and tsum.verification_buckets_passed else _('There was an error retrieving the verification details for this summary.')
+                        %>
+                        % if not isVerificationSuccess:                     
+                            <span class="icon_small red_warning_small">&nbsp;</span> <a class="showVerificationResults" href="javascript:void(0)" onclick="show_verification_result(${isVerificationSuccess},'${verificationResult}')">${_("Failed to verify ")}${verification_time} </a>  
+                        % else: 
+                            <div class="complete"> <a class="showVerificationResults"  href="javascript:void(0)" onclick="show_verification_result(${isVerificationSuccess},'${verificationResult}')">${_("Verified")} ${verification_time} </a></div> 
+                        % endif
+                    % elif tsum.verification_state == "PROCESS_ERROR": 
+                        <% 
+                            isVerificationSuccess = 0
+                        %>
+                        <br/>
+                            <span class="icon_small red_warning_small">&nbsp;</span> <a class="showVerificationResults" href="javascript:void(0)" onclick="show_verification_result(${isVerificationSuccess},'${tsum.verification_error}')">${_("Failed to verify")} ${verification_time} </a>  
+                    % endif
+                % endif
+  
+
+
+</div>
+</div>
+
+% if verifyLink != '' and updateLink != '' and redoLink != '' and removeLink != '':
+
+<div style="width:50%; float:left"> 
+<h2> ${_("Actions")} </h2>
+    <div class="sectionBody"> 
+    <% 
+        disabledStyle = ' disabled="disabled" '  if tsum.verification_state and tsum.verification_state  == 'VERIFYING' else ''
+    %>
+    
+    <form name="actionControl" method="post">
+        ${csrf_hidden_input()}
+        <input type="hidden" name="ctrl" id="ctrl" value=""/>
+        <input type="hidden" name="ctrl_link" id="ctrl_link" value=""/>
+        <input type="hidden" name="uri" id="uri" value="${tsum.id}"/>
+        <button class="actionButton" ${disabledStyle}  onclick="show_verification_wizard('${verifyLink}', '${total_buckets}', '15', '100'); return false;"  class="actionButton">${_("Verify")}</button>
+        <button class="actionButton" ${disabledStyle}  onclick="doObjectAction('reschedule', '${updateLink}'); return false;"  class="actionButton">${_("Update")}</button>
+        <button class="actionButton"  ${disabledStyle}  onclick="doObjectAction('redo', '${redoLink}'); return false;"  class="actionButton">${_("Rebuild")}</button>
+        <button class="actionButton" ${disabledStyle} onclick="doObjectAction('remove', '${removeLink}'); return false;"  class="actionButton">${_("Delete")}</button>
+    </form>
+</div>
+</div>
+% endif
+
+<div style="clear:both"/>
+<br/>
+
+
+<h2> ${_("Reports Using This Summary")} </h2>
+
+
+<table style='margin-top:15px;' class='splTable'>
+			<tr>
+			    <th>${_("Search name")}</th>
+			    <th>${_("Owner")}</th>
+			    <th>${_("App")}</th>
+			</tr>
+			% for i in range(len(tsum.saved_searches.values())):
+			    <%    
+				 saved_search = tsum.saved_searches.values()[i]
+				 qs = {'app':saved_search['app'], 'owner':saved_search['owner'], 'search':'"' + cpQuoteEntity(saved_search['name'], urlquote=False) + '"'}
+			    %>
+			    <tr>
+			       <td> 
+                                <a href="${make_url(['manager', saved_search['app'], 'saved', 'searches'], _qs=qs)}">${saved_search['name']}</a>
+                               </td>
+			       <td > ${saved_search['owner']} </td> 
+			       <td > ${saved_search['app']} </td> 
+			    </tr>
+			% endfor
+  </table>
+
+
+
+<table style='margin-top:15px;' class='splTable'>
+			<tr>
+                            <th><h2 style="display:inline"> ${_("Details")} </h2>
+                                <a style="color:#1A7996; font-weight:normal;" href="${generateSelfHelpLink('learnmore.search.acceleration')}" class="spl-icon-external-link-xsm" target="_blank">${_('Learn more.')}</a></label>
+                            </th>
+			    <th></th>
+			</tr>
+                        <tr>
+           
+                        <td class='rowHeader'> ${_("Summarization Load")}</td> <td> ${tsum.load_factor} </td>
+                        <tr>
+                        <tr>
+                            <td class='rowHeader'> ${_("Access Count ")}</td> 
+		            <td>${access_count} <span class="access_time">${_("Last Access: ")}${access_time}</span></td>
+                        <tr>
+                        <tr>
+                            <td class='rowHeader'> ${_("Size on Disk ")}</td> <td> ${summary_size}MB</td>
+                        <tr>
+                        <tr>
+                            <td class='rowHeader'> ${_("Summary Range ")}</td> <td> ${timeDeltaString} </td>
+                        <tr>
+                        <tr>
+                            <td class='rowHeader'> ${_("Timespans  ")}</td> <td> 
+                            <% 
+                               timespan_formatted = ''
+                               for i in range(len(tsum.timespan)): 
+                                   timespan_formatted += tsum.timespan[i]
+                                   if i < len(tsum.timespan)-1: 
+                                       timespan_formatted += ', ' 
+                            %>
+                             ${timespan_formatted}
+                             </td>
+                        <tr>
+                        <tr>
+                            <td class='rowHeader'> ${_("Buckets  ")}</td> <td> ${total_buckets}</td>
+                        <tr>
+                        <tr>
+                            <td class='rowHeader'> ${_("Chunks  ")}</td> <td> ${tsum.chunks}</td>
+                        <tr>
+  </table>
+
+
+<br/>
+<br/>
+<br/>
+<br/>
+
+
+
+
+
+
+</div>
+</div>
+
+
+
+

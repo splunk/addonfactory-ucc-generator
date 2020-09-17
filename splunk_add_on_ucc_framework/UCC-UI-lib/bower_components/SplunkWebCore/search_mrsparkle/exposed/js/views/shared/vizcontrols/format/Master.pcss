@@ -1,0 +1,279 @@
+/*  Splunk: Component: Visulization Editor */
+/*  ====================================== */
+/*  FIXME: how does this work with viz-controls but there viz controls here? */
+
+/* viz editor controls
+
+	missing markup ...
+
+*/
+
+
+.visualization-controls{
+
+	.popdown{
+		width: 88px; /* TODO: Fix css so this width is not set and right side of btn-pill is not clipped */
+	}
+
+	.popdown-toggle {
+		cursor: pointer;
+		margin-left: 5px;
+	}
+}
+
+/* viz editor wrapper
+
+	missing markup ...
+
+*/
+$tabbableDialogWidth: 420px;
+$tabsLabelWidth: 90px;
+$noTabsDialogWidth: 300px;
+$noTabsLabelWidth: 100px;
+$tabsLeftWidth: 98px;
+$labelLeftSpace: 10px;
+
+.input-append.delta-time-range {
+  display: inline-block;
+  > .dropdown-toggle {
+	width: 90px;
+	padding: 4px 12px;
+  }
+  > input[type="text"] {
+	width: 111px;
+  }
+}
+
+.single-value-radio-icon-group label {
+	margin-top: 3px;
+}
+
+/*  choropleth map color bin preview */
+
+.color-bin-container {
+
+    margin-left: 100px;
+    padding-top: 2px;
+    margin-bottom: 10px;
+
+    .color-bin {
+        border-width: 1px;
+        border-style: solid;
+        display: inline-block;
+        width: 12px;
+        height: 16px;
+    }
+}
+
+.input-append .btn-link {
+	font-size: $baseFontSize;
+	vertical-align: middle;
+	margin: 5px;
+}
+
+/*  new color range grouping */
+/*  FIXME: lots of magic numbers here */
+.shared-vizcontrols-format-dialog, .form-horizontal
+{
+  .delta-time-range-mode {
+	margin-bottom: 10px;
+  }
+  .color-ranges-control-group {
+	overflow: hidden;
+	margin-bottom: 10px;
+	.control-label {
+	  width: 110px;
+	}
+	.controls-block {
+	  width: 220px;
+	  margin-left: 120px;
+	  .color-control-left-col {
+		float: left;
+		width: 80px;
+		.control-label.input-label {
+		  width: 35px;
+		}
+		.input-value {
+		  width: 40px;
+		}
+	  }
+	  .color-control-right-col {
+		float: left;
+		width: 85px;
+	  }
+	  .text-label, .text-value, .input-label {
+		text-align: left;
+	  }
+	  .control-label.text-label {
+		width: 35px;
+	  }
+	  .control-label.text-value {
+		width: 40px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+	  }
+	  .control-label.input-label {
+		width: 20px;
+	  }
+	  .input-value {
+		width: 60px;
+		float: left;
+	  }
+	  .controls.input-value-container {
+		margin-left: 20px;
+	  }
+	  .add-color-range-btn {
+		width: 200px;
+	  }
+	  .remove-range-container {
+		width: 15px;
+		margin-top: 4px;
+		float: left;
+	  }
+	}
+  }
+}
+
+.color-mode-radio-icon-container {
+	float: left;
+	.icon-placeholder {
+	  margin: 0px 10px 0px 20px;
+	  .radio-icon {
+		font-size: 14px;
+		display: inline-block;
+		font-weight: bold;
+		.radio-icon-value-container {
+		  margin: 7px 10px;
+		}
+		.svg-radio-icon-value-container {
+		  svg.icon-svg {
+			margin: 0px auto;
+			display: block;
+		  }
+		  	padding-top: 2px;
+		  .radio-icon-value {
+			text-align: center;
+		  }
+		}
+	  }
+	  .color-mode-radio-icon {
+		border: 1px #CCC solid;
+		width: 40px;
+		margin-left: 10px;
+	  }
+	  .indicator-radio-icon {
+		width: 30px;
+		margin-left: 5px;
+	  }
+	}
+	input[type="radio"] {
+	  float: left;
+	  width: 20px;
+	  height: 26px;
+	}
+	.radio-label {
+	  font-size: 12px;
+	  margin-left: 30px;
+	  padding-bottom: 10px;
+	}
+}
+
+
+/*  Custom styles for locales where we may have long words as labels for tabs and controls (SPL-83062). */
+$(wideTextLocaleSelector) {
+    .shared-vizcontrols-format-dialog .tabbable {
+        /*  Increase the width of the tabs and the control labels, make sure the total dialog with is increased by that amount. */
+        $largerTabWidth: 150px;
+        $largerLabelWidth: 100px;
+        $largerDialogWidth: calc($tabbableDialogWidth + ($largerTabWidth - $tabsLeftWidth) + ($largerLabelWidth - $tabsLabelWidth));
+
+        width: $largerDialogWidth;
+
+        .tab-content {
+            margin-left: $largerTabWidth;
+        }
+        .nav-tabs-left {
+            max-width: $largerTabWidth;
+            width: $largerTabWidth;
+        }
+		.non-tabbable {
+		  width: calc($noTabsDialogWidth + ($largerLabelWidth - $noTabsLabelWidth));
+		}
+        .control-label {
+            max-width: $largerLabelWidth;
+            width: $largerLabelWidth;
+        }
+        .controls {
+            margin-left: calc($largerLabelWidth + $labelLeftSpace);
+        }
+
+    }
+}
+
+/* web components */
+.shared-vizcontrols-format-dialog splunk-control-group {
+    display: block;
+    .btn-group {
+        display: block;
+        display: flex;
+        flex-direction: row;
+        .btn {
+            width: auto;
+        }
+    }
+    .btn {
+        width: 100%;
+        box-sizing: border-box;
+        flex: auto;
+    }
+    input[type="text"], .uneditable-input {
+        width: 100%;
+        box-sizing: border-box;
+        min-height: 26px;
+        display: block;
+    }
+    textarea {
+        width: 100%;
+        max-width: 100%;
+        min-height: 2em;
+        resize: vertical;
+        box-sizing: border-box;
+    }
+    input {
+        box-sizing: border-box;
+        min-height: 26px;
+        flex: auto;
+    }
+    input[type="radio"] {
+        margin: 8px;
+    }
+    select {
+        width: 100%;
+    }
+}
+
+/*  Lite UI */
+/*  ================ */
+/*  Lite */
+@if $theme == lite {
+    .shared-vizcontrols-format-dialog .tabbable, .shared-vizcontrols-format-dialog .popdown-dialog-body {
+		background-color: $offWhite;
+	}
+
+  	.shared-vizcontrols-format-dialog .nav-tabs-left > li a {
+		border-color: $borderColor;
+	}
+
+	.shared-vizcontrols-format-dialog .nav-tabs-left > li:not(.active) a {
+		background-color: $offWhite;
+
+		&:hover {
+			background-color: $pillBackgroundColorHover;
+			border-color: $borderColor;
+		}
+        &:focus {
+            @mixin focus-pill;
+        }
+
+	}
+}

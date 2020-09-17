@@ -1,0 +1,177 @@
+@import './variables.pcss';
+
+/*  Containers */
+
+body {
+    overflow: hidden;
+}
+
+.main-section-body {
+    background-color: $white;
+    font-size: $baseFontSizeSmall;
+    position: absolute;
+    width: 100%;
+    top: $contentTop;
+    bottom: 0;
+    min-height: 400px;
+}
+
+.dataset-results-container {
+    @mixin display-flex column;
+    flex: 1 0 0px;
+    border-top: 1px solid $borderColor;
+    overflow: hidden;
+
+    .shared-jobcontrols {
+        padding-right: 15px;
+    }
+}
+
+.table-builder {
+    height: 100%;
+    @mixin display-flex column;
+}
+
+.content-container {
+    display: flex;
+    flex: 1 1 0px;
+    min-height: 0;
+
+    > .alerts {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+
+        .alert-error {
+            white-space: pre-line;
+            @mixin display-flex column;
+            text-align: center;
+
+            .icon-alert {
+                font-size: 1000%;
+                position: relative;
+                left: initial;
+                top: initial;
+                line-height: 100px;
+                display: flex;
+                justify-content: center;
+            }
+        }
+    }
+}
+
+
+/*  Action Bar */
+.dataset-action-bar {
+    display: flex;
+    flex: 0 0 auto;
+    min-height: 30px;
+    position:relative;
+
+    .message, .call-to-action {
+        font-size: $baseFontSizeLarge;
+
+        .icon-arrow-left {
+            color: $textGray;
+            font-size: 20px;
+            padding-right: 10px;
+        }
+    }
+
+    .message {
+        margin-left: 10px;
+        line-height: 34px;
+    }
+
+
+    .call-to-action {
+        padding: 60px 20px;
+        margin-bottom: -40px;
+        background: $white;
+        position:absolute;
+        top:0;
+        right:0;
+        left:0;
+        z-index: calc($zindexHeaderTable + 1);
+    }
+}
+
+.dataset-action-menu-list, .dataset-action-menu-step-two {
+    display: flex;
+    margin-bottom: 0;
+
+    > li {
+       line-height: 30px;
+    }
+}
+
+.dataset-action-menu-activator {
+    padding: 0px 20px;
+
+    &:focus {
+        @mixin focus-pill
+    }
+}
+
+.dataset-action-menu-dropdown {
+    width: auto;
+    min-width: 100px;
+    max-height: none;
+
+    .link-description {
+        float: right;
+        padding-left: 10px;
+    }
+
+
+    .disabled .link-description {
+        color: $textDisabledColor;
+    }
+}
+
+.action-menu-items li a.disabled{
+    &:hover {
+         cursor: not-allowed;
+     }
+}
+
+/*  Table */
+
+.shared-datasettable {
+    flex: 1 1 0px;
+
+    .scroll-table-wrapper {
+        position: absolute;
+        height: 100%;
+    }
+
+    .header-table-wrapper {
+        position: absolute;
+    }
+
+
+    /* IE11 hack (These styles don't apply to edge) */
+    @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+        .scroll-table-wrapper {
+            position: relative;
+            width: auto;
+        }
+
+        .header-table-wrapper {
+            margin-right: 0 !important;
+        }
+    }
+}
+
+/*  Menu Dropdown */
+.dropdown-menu ul {
+    max-height: calc(100vh - $contentTop + $titleBarHeight + 70px)
+}
+
+.shared-jobdispatchstate {
+    position: absolute;
+    margin: 80px;
+    font-size: 11px;
+    z-index: 1;
+}

@@ -1,0 +1,36 @@
+.FancyChartTypeFormatter {
+    float:left;
+}
+.FancyChartTypeFormatter input {
+    display: none;
+}
+.FancyChartTypeFormatter .chartTypeTitle {
+    width:70px;
+    float: left;
+    padding-top: 11px;
+}
+.FancyChartTypeFormatter .chartTypeActivator {
+    position: relative;
+    float: left;
+}
+.FancyChartTypeFormatter .chartTypeActivator span {
+    display: block;
+    height: 3px;
+    width: 5px;
+    position: absolute;
+    right: 10px;
+    top:15px;
+}
+.FancyChartTypeFormatter .chartTypeMenu li {
+    padding:0;   
+}
+.FancyChartTypeFormatter .chartTypeMenu li.disabled {
+    display: none;
+}
+.FancyChartTypeFormatter .chartTypeActivator a,
+.FancyChartTypeFormatter .chartTypeMenu li a {
+    display: block;
+    width:119px;
+    line-height:33px;
+    padding-left:45px; 
+}

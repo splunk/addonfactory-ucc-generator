@@ -1,0 +1,84 @@
+<%!
+    title = 'App Install'
+%>
+<%namespace name="lib" file="//lib.html" import="*"/>
+<%namespace name="helpers" file="../_helpers.html"/>
+<%inherit file="//layout/admin.html" />
+<%
+import splunk
+from splunk.appserver.mrsparkle.lib import util, i18n
+appText = 'add-on' if util.isLite() else 'app'
+productName = 'Light' if util.isLite() else 'Enterprise'
+%>
+
+
+
+<script language="JavaScript">
+    $(function() {
+        $('.splButton-secondary').click(function() {
+            window.location = ${jsonify(make_url(state['return_to']))};
+            return false;
+        });
+        $('.splButton-primary').click(function() {
+            restart_server(${jsonify(restart_target_url)});
+            return false;
+        });
+            
+    });
+</script>
+
+
+
+<div id="restartstatus">
+    <h1>${_('Restarting Splunk %s...' % productName)}</h1>
+    <p>${_('Restart in progress. Please wait.')}</p>
+    <div id="restart_loader"></div>
+</div>
+<div id="restartsslwarn">
+    <h1>${_('Restarting Splunk %s...' % productName)}</h1>
+    % if not isCloud:
+        <p>
+            ${_('Check the web_service.log file to determine when Splunk has restarted and then <a href="">click here to continue</a>.')}
+        </p>
+    % else:
+        <p>${_('Restart in progress. Please wait.')}</p>
+    % endif
+</div>
+<div class="splOverlay"></div>
+
+
+
+<div class="spl-gdi-wrapper spl-prompt-message-layout"> 
+	<div class="jmFormOptions">
+	    <h2 class="spl-page-hdr spl-icon-success-md" > 
+	        <span> 
+	            ${_('Restart Required')}
+	        </span> 
+	    </h2> 
+	    <span class="spl-hr-solid-lite"></span> 
+	    <!-- start prompt message --> 
+	    <div class="spl-prompt-message-wrapper"> 
+	        <p class="spl-main-description">
+                ${_('You must restart Splunk %s to complete update of this %s.' % (productName, appText))}
+	        </p> 
+	        % if not displayRestartButton:
+	            <p class="error">
+	                ${_('You do not have sufficient privileges to restart the server.')}
+	            </p>
+	        % endif
+	    </div> 
+	</div>
+    
+    <!-- Start button bar --> 
+    <div class="jmFormActions"> 
+        % if displayRestartButton:
+            <a class="splButton-primary" href="#">
+                <span><%doc>TRANS: Clicked to restart splunkd</%doc>${_('Restart Now')}</span>
+            </a>
+        % endif
+        <button class="splButton-secondary">
+            <span>${_('Restart Later')}</span>
+        </button> 
+    </div> 
+</div> 
+

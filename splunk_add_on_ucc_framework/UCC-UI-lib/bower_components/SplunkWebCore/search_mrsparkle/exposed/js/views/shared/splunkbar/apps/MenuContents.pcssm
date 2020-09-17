@@ -1,0 +1,29 @@
+.view {
+    composes: body from "../../MenuDialog.pcssm";
+    min-width: 260px;
+}
+
+.appsList {
+    composes: menuSelectable from '../../MenuDialog.pcssm';
+    max-height: calc(100vh - 120px);
+}
+
+.menu {
+    composes: menuSelectable from "../../MenuDialog.pcssm";
+}
+
+.label {
+    padding-right: 30px;
+}
+
+.icon {
+    height: 18px;
+    position: absolute;
+    right: 10px;
+    top: 4px;
+}
+
+
+.selected {
+    composes: selected from "../../MenuDialog.pcssm";
+}

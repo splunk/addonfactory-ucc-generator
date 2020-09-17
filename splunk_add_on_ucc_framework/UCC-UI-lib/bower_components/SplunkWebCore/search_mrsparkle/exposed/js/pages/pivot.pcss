@@ -1,0 +1,295 @@
+/*  Splunk: Page: Pivot */
+/*  =================== */
+
+$formatBarHeight: 40px;
+$navHeightCollapsed: 6px;
+$navHeightExpanded: 65px;
+
+.disabled-screen {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: $bodyBackgroundColor;
+    opacity: 0.40;
+    z-index: 4;
+}
+
+header {
+    /*  SPL-68433, this needs to be greater than the z-index of .header-table-static in tables.pcss */
+    /*  and .expanded-nav-screen in navs.pcss */
+    z-index: calc($zindexHeaderTable + 2);
+}
+
+.main-section-body {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+}
+
+.datamodels-datamodels, .datamodelexplorer-datamodelexplorer {
+    position: relative;
+    margin-top: 6px;
+}
+
+.manage-models-button, .edit-objects-button {
+    position: absolute;
+    top: 10px;
+    right: 50px;
+}
+
+
+
+
+/*  some minor layout tweaks for the data model grid table */
+.datamodels-datamodelgrid {
+
+    .expanded-info {
+        margin-top: 15px;
+    }
+    .edit-objects-link {
+        margin-left: 10px;
+    }
+    .no-models-message {
+        margin: 50px 20px;
+    }
+    .manage-models-link {
+        margin-left: 10px;
+    }
+}
+
+.datamodelexplorer-objectgrid {
+
+    .field-button:hover {
+        text-decoration: none;
+    }
+    .non-link {
+        cursor: default;
+        color: $black;
+    }
+    .edit-objects-link {
+        margin-left: 10px;
+    }
+    .field-list {
+        background-color: transparent;
+    }
+}
+
+
+.load-failure-messages {
+    position: absolute;
+    left: 0;
+    right: 0;
+    padding: 25px 15px;
+
+    .links-holder a {
+        margin-left: 15px;
+    }
+}
+
+.share-pivot-dialog {
+    $formLeftOffset: 100px;
+    .control-label {
+        width: $formLeftOffset;
+        text-align: left;
+    }
+    .controls {
+        margin-left: $formLeftOffset;
+    }
+}
+
+.shared-statscontrols-statscontrolsmaster {
+    .btn-group + .btn-pill {
+        margin-left: 5px;
+    }
+}
+
+.modal-body {
+    .save-data-model-message {
+        font-size: 12px;
+        color: $textGray;
+        margin: 0 10px 10px;
+    }
+}
+
+/*  Expose a custom tooltip container class that will expand to the full width of its contents. */
+/*  Used for field names in the pivot elements display and the viz sidebar. */
+.tooltip-full-width .tooltip-inner {
+    max-width: none;
+}
+
+
+
+
+/*  default sizes */
+$vizMenuFontSize: 30px;
+$vizMenuLineHeight: 50px;
+
+/*  responsive sizes */
+$vizMenuFontSizeSmall: 28px;
+$vizMenuLineHeightSmall: 40px;
+
+/*  responsive mixins */
+
+@define-mixin responsive-viz-menu $fontSize, $lineHeight {
+    .pivot-pivotview .pivot-visualizationtypemenu li {
+        font-size: $fontSize;
+        line-height: $lineHeight;
+    }
+}
+
+@define-mixin responsive-nav-height $navHeight {
+    .main-section-body {
+        top: $navHeight;
+    }
+}
+
+
+.preview-pane-wrapper .input-append .dropdown-toggle:first-child {
+    border-top-right-radius: $interactiveBorderRadius;
+    border-bottom-right-radius: $interactiveBorderRadius;
+}
+
+/*  apply the mixins with default values, followed by media queries */
+
+@mixin responsive-viz-menu $vizMenuFontSize, $vizMenuLineHeight;
+@media only screen and (max-height: 700px) {
+    @mixin responsive-viz-menu $vizMenuFontSizeSmall, $vizMenuLineHeightSmall;
+}
+
+@mixin responsive-nav-height $navHeightCollapsed;
+.pivot-pivotview .pivot-documentactionbar .action-bar {
+    right: 50px;
+}
+@media only screen and (min-height: 800px) {
+    @mixin responsive-nav-height $navHeightExpanded;
+
+    .pivot-pivotview .pivot-documentactionbar .action-bar {
+        right: 20px;
+    }
+}
+
+.non-responsive {
+    @mixin responsive-nav-height $navHeightExpanded;
+}
+
+
+/*  IE */
+/*  ------------------------------------------------- */
+
+
+/*  SPL-68751 - IE10 box shadow animation artifacts fix */
+.creator-dialog:after,
+.inspector-dialog:after
+{
+    content: "";
+    font-size: 0;
+    display: inline;
+    overflow: hidden;
+}
+
+
+.lazy-results-table {
+    overflow-y: auto;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: $white;
+
+    table {
+        border-top: none;
+    }
+}
+
+.results-table {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    border-top: none;
+
+    td.with-overlay {
+        padding-right: 20px;
+    }
+    .overlay-cell {
+    }
+}
+
+.pivot-pivotview .shared-resultstable-resultstablemaster {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.shared-statscontrols-statscontrolsmaster {
+    $padding-vertical: 5px;
+    background-color: $white;
+    border-top: 1px solid $borderDarkColor;
+    height: calc($formatBarHeight - ($padding-vertical * 2));
+    padding: $padding-vertical 20px;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+}
+
+/*  Print */
+/*  -------------------------------------------------- */
+
+@define-mixin print-mixin {
+    .action-bar,
+    .shared-statscontrols-statscontrolsmaster,
+    .shared-jobcontrols,
+    .tooltip,
+    header {
+        @mixin print-hide;
+    }
+
+    /*  Make sure that absolutely positioned items inside the page container will */
+    /*  have the correct width when printing (SPL-102216). */
+    .shared-responsiveheaderpage {
+        position: relative;
+    }
+
+
+    .viz-builder-wrapper,
+    .results-table,
+    .jobstatus-wrapper {
+        @mixin print-no-background;
+        position:static !important;
+        left: auto !important;
+        right: auto !important;
+        top: auto !important;
+        bottom: auto !important;
+    }
+    .viz-builder-wrapper,
+    .viz-content-with-menu {
+        left: 0;
+    }
+    /*  In print mode, the absolute positioning of the results table will put it on top of the document/job status bar (SPL-89480). */
+    .viz-container, .lazy-results-table {
+        position: static !important;
+    }
+    /*  Prevent Firefox from adding an extra empty page (SPL-89554). */
+    .main-section-body {
+        bottom: auto;
+    }
+
+}
+
+@media print {
+    body {
+        @mixin print-mixin;
+    }
+}
+body.print {
+    @mixin print-mixin;
+}

@@ -1,0 +1,42 @@
+<div style="width:380px;">
+    <h3 style="padding-left:20px;">Event Summary</h3>
+
+    <div class="divider" style="border-bottom:2px solid #ccc;margin-bottom:15px;"></div>
+
+    <div style="padding-left:20px;">
+        <table class="eventDetailsWrapper" style="width:200px;">
+            <tr>
+                <td>Sample size</td>
+                <td class="sampleSize">
+                    <%- _(pageModel.get('read')).t() %> bytes
+                </td>
+            </tr>
+            <tr>
+                <td>Events</td>
+                <td class="eventCount"><%- _(pageModel.get('eventCount')).t() %></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="padding-top:20px;">
+                    <div style="padding-bottom:10px;">Event time distribution</div>
+                    <div class="chartPlaceholder"></div>
+                    <div class="chartRangePlaceholder"></div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="padding-top:20px;padding-bottom:20px;">
+                    <div style="padding-bottom:10px;">Number of lines per event</div>
+                    <table class="linecountDistributionTable">
+                        <thead>
+                            <tr>
+                                <td># of lines </td>
+                                <td># of events</td>
+                                <td>% of events</td>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

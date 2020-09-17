@@ -1,0 +1,65 @@
+$modalwidth: 500px;
+
+/* this is actually the height of the wizard body */
+/* Real Modal Hieght = ~150px + modal wizard body height */
+$modalheight: 250px;
+
+.modal-wizard {
+  width: $modalwidth;
+  .step-wizard {
+    width: 380px;
+    margin: 0 auto;
+    .step-container {
+      min-height: 50px;
+      .step-indicator {
+        margin-top: 20px;
+      }
+    }
+  }
+
+  .nav-buttons {
+    display: none;
+  }
+
+  .progress-bar {
+    padding-bottom: 20px;
+  }
+
+  .modal-body {
+    min-height: $modalheight;
+    max-height: $modalheight;
+
+    .wizard-body {
+      .control .uneditable-input {
+        padding-right: 25px;
+      }
+    }
+  }
+
+  .shared-waitspinner {
+    margin-top: 5px;
+    float: right;
+  }
+}
+
+.fit-accumulator-width {
+  .modal {
+    margin-left: -275px;
+  }
+
+  .modal-wizard {
+    width: 550px;
+  }
+
+  .control-label {
+    width: 100px;
+  }
+
+  .controls {
+    margin-left: 120px;
+  }
+
+  .serverclass.control-group, .apps.control-group {
+    margin-left: 120px;
+  }
+}

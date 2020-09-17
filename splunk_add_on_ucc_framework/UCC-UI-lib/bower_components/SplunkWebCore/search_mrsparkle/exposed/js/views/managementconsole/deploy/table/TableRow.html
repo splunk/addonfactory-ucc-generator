@@ -1,0 +1,37 @@
+<% if (!hideMoreInfo) { %>
+<td class="expands">
+    <a href="#"><i class="icon-triangle-right-small"></i></a>
+</td>
+<% } %>
+
+<% if (!hideColumns) { %>
+	<% if (!_.contains(columnBlacklist, 'entityName')) { %>
+    <td class="cell-entity-name"><%- entityName %></td>
+    <% } %>
+
+    <% if (!_.contains(columnBlacklist, 'entityType')) { %>
+    <td class="cell-entity-type"><%- entityType %></td>
+    <% } %>
+<% } %>
+
+<% if (!_.contains(columnBlacklist, 'operation')) { %>
+<td class="cell-operation"><%- operation %></td>
+<% } %>
+
+<% if (!isPending) { %>
+	<% if (!_.contains(columnBlacklist, 'deployedOn')) { %>
+    <td class="cell-deployed-on"><%- deployedOn %></td>
+    <% } %>
+
+    <% if (!_.contains(columnBlacklist, 'deployedBy')) { %>
+    <td class="cell-deployed-by"><%- deployedBy %></td>
+    <% } %>
+<% } %>
+
+<% if (!_.contains(columnBlacklist, 'editTime')) { %>
+<td class="cell-edit-time"><%- editTime %></td>
+<% } %>
+
+<% if (!_.contains(columnBlacklist, 'editUser')) { %>
+<td class="cell-edit-user"><%- editUser %></td>
+<% } %>

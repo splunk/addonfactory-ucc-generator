@@ -1,0 +1,142 @@
+<%page args="element, eaiAttributes, widgetstyle" />
+
+<% isXmlEditor = splunk.util.normalizeBoolean(element.get('xmleditor')) %>
+
+<div id="item-${element['elementName'] | h}" class="widget ${element['class'] if 'class' in element else '' | h}" ${widgetstyle}>
+    % if 'label' in element:
+        <label for="${element['elementName'] | h}_id" class="${'disabledLabel ' if element.get('disabled') else '' | h}">${_(element['label']) | h}
+        % if element.get('elementName') in eaiAttributes['requiredFields'] or element.has_key('requiredIfVisible'):
+            <span class="requiredAsterisk">*</span>
+        % endif
+        </label>
+    % endif
+    % if 'helpText' in element:
+        <p class="helpText">${_(element['helpText']) | h}</p>
+    % endif
+    <div class="textareaOuterWrap">
+        <div class="CodeMirrorLoading" style="${'display:none;' if not isXmlEditor else ''}" >Loading Editor...</div>
+
+        <div>
+            % if isXmlEditor:
+                <div class="codeMirrorTopMenu">
+                    <a href='#' class="codeMirrorToggleButton">${_('Plain Text')}</a>
+                    <div style="clear:both;padding:0px;"></div>
+                </div>
+            % endif
+            <div class="splTextArea ${'codeMirrorTextAreaWrapper' if isXmlEditor else 'splTextAreaStd'}">
+                <textarea id="${element['elementName'] | h}_id" class="regular ${element['class'] if 'class' in element else '' | h}" name="${element["elementName"] | h}" ${'disabled="disabled"' if element.get('disabled') else ''} ${'spellcheck="false"' if not splunk.util.normalizeBoolean(element.get('spellcheck')) else ''} ${'style="display:block;"' if isXmlEditor else ''}></textarea>
+            </div>
+            <div class="widgeterror"><form:error name="${element["elementName"] | h}"/></div>
+        </div>
+        % if 'exampleText' in element:
+            <p class="exampleText"><em>${_(element['exampleText']) | extract_help_links }</em></p>
+        % endif
+    </div>
+</div>
+
+% if isXmlEditor:
+<script type="text/javascript">
+	//if xml cfg specified xmleditor, invoke codeMirror to replace the textarea
+	//this must be done is a safe way, such that the user cannot be left with an unusable editor in the face of a js error, or when used on unsupported client
+
+	$(document).ready(function() {
+        $script(Splunk.util.make_url('/static/js/contrib/codemirror.js'), function () {
+			var isRichEditor = false;
+			var disableQeuryStr = 'richxmldisable=true';
+			var toggleBtn = $('.codeMirrorToggleButton');
+			var loadingMessage = $('.CodeMirrorLoading');
+			var codeMirrorEditor;
+			//because there are colons possible within a ID, we need to swap with an escaped version
+			var selectorName = '${element['elementName'] | h}_id'.replace(':','\\:');
+			var textareaDom = $('#'+selectorName);
+
+
+            var href = window.location.href;
+            //check to see if query string has disable flag
+            if(href.toLowerCase().indexOf(disableQeuryStr)>-1){
+                _abortCodeMirrorLoad();
+                return;
+            }
+
+            //plant escape hatch on href just in case _abortCodeMirrorLoad was fired it did not sufficiently clear the slate
+            //if everything goes as planned this will not be triggered, as the toggleBtn triggers click event below
+            var loc = href.split('?');
+			loc = loc[0] + '?' + disableQeuryStr + '&' + loc[1];
+			toggleBtn.attr('href',loc);
+
+			//do not load if unsupported
+			//TODO this needs to rely on central UA sniffer lib
+			var uaBlacklist = ['iphone','ipad'];
+			var ua = navigator.userAgent.toLowerCase();
+			for(var i=0,len=uaBlacklist.length;i<len;i++){
+				if(ua.indexOf(uaBlacklist[i])>-1){
+					_abortCodeMirrorLoad();
+					return;
+				}
+			}
+
+			 if(!_toRichEditor(textareaDom[0])){
+				 return;
+			 }
+
+			//toggle event
+			toggleBtn.click('click', function(e) {
+				if (isRichEditor) {
+					//go to plain text
+					textareaDom = codeMirrorEditor.toTextArea();
+					toggleBtn.text(_('Rich Editor'));
+					isRichEditor = false;
+				} else {
+					//go to rich text
+					textareaDom = $('#'+selectorName);
+					_toRichEditor(textareaDom[0]);
+					toggleBtn.text(_('Plain Text'));
+					isRichEditor = true;
+				}
+				e.preventDefault();
+				e.stopPropagation();
+				return false;
+			});
+
+			$('.splButton-primary').bind('click.cmSave',function(){
+				if(isRichEditor){
+					if(codeMirrorEditor){
+						codeMirrorEditor.save();
+					}
+				}
+			});
+
+            if($('#eaiform')) {
+                $('.CodeMirror textarea').blur(function(ev){
+                    if(isRichEditor){
+                        if(codeMirrorEditor){
+                            codeMirrorEditor.save();
+                        }
+                    }
+                });
+            }
+
+			function _abortCodeMirrorLoad(){
+				isRichEditor = false;
+				codeMirrorEditor = null;
+				textareaDom.show();
+				toggleBtn.hide();
+				loadingMessage.hide();
+			}
+
+			function _toRichEditor(elm) {
+				try {
+					codeMirrorEditor = CodeMirror.fromTextArea(elm, {mode: {name: "xml", htmlMode: false} });
+					isRichEditor = true;
+					return true;
+				}catch(ex){
+					//gracefully fail
+					_abortCodeMirrorLoad();
+					return false;
+				}
+			}
+			loadingMessage.hide();
+		});
+	});
+</script>
+% endif

@@ -1,0 +1,80 @@
+/* patch for Splunk_CiscoSecuritySuite - version 1.0.1 */
+
+/* GENERAL*/
+.splView-flashtimeline .ResultsHeader .splHeader-primary {
+    background-color:#DBE6E9;
+}
+.DisableRequiredFieldsButton {
+    background-color:#DBE6E9;
+}
+
+div.sidebarCollapsed .sidebarControl {
+    background-color:#DBE6E9;
+}
+
+/* SEARCH BAR */
+table.mainSearchControlsTable .TimeRangePicker .timeRangeActivatorWrapper {
+    background-color:#286375;
+    border-color:#286375;
+}
+
+table.mainSearchControlsTable .TimeRangePicker .timeRangeActivatorWrapper:hover, 
+table.mainSearchControlsTable .TimeRangePicker .timeRangeActivatorWrapper:focus {
+    background-color: #286375; 
+}
+
+table.mainSearchControlsTable input.searchButton {
+    border-color: #286375;
+}
+
+input.searchButton {
+    background-color: #286375;
+    background-position: right center;
+}
+input.searchButton:hover,
+input.searchButton:focus {
+    background-color: #286375;  
+}
+
+table.mainSearchControlsTable .SearchBar .searchFieldWrapper {
+    border-color:#286375;
+    background-color:#286375;
+}
+
+/* BUTTONS */
+div.FlashTimeline a, 
+div.FlashTimeline a:visited, 
+.JobStatus a
+{
+    color: #fff;
+}
+
+.splButton-primary,
+.splButton-primary:hover,
+.splButton-primary:focus {
+    background-color: #286375;
+    border-color: #286375;
+}
+
+.splButton-secondary {
+    background-color: #286375;
+    color:#fff;
+}
+
+
+/*SIDEBAR*/
+.fieldValuePopup table td, 
+.fieldValuePopup table th {
+    color: #333;
+}
+
+
+.sidebar .selected a
+{
+    background-color: #277991;
+    color:#fff !important;
+}
+
+.DashboardTitleBar .splHeader-primary {
+    background-image:none;
+}

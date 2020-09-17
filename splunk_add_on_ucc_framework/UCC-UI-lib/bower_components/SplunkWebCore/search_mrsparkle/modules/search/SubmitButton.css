@@ -1,0 +1,30 @@
+.SubmitButton .splButton-primary,
+.SubmitButton .splButton-secondary {
+    margin-left:0px;
+}
+
+.splFormSearch .SubmitButton {
+    clear: both;
+    float: left;
+    margin-bottom: 10px;
+    margin-top: 5px;
+}
+
+.splFormSearch .viewHeader .SubmitButton {
+    margin: 0px 5px;
+    padding: 0px;
+    clear: none;
+}
+/*SPL-43024 - need to account for label space*/
+.splFormSearch .viewHeader .SubmitButton fieldset {
+    margin-top: 23px;
+    /* SPL-52411 - Form XML: Mysterious artifact in IE6 */
+    _display: inline;
+}
+
+input.searchButton,
+input.searchButton:focus, 
+input.searchButton:active
+{ 
+   outline: none; 
+}

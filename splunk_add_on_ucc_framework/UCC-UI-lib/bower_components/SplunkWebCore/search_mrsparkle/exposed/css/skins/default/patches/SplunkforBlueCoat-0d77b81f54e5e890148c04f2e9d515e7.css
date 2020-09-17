@@ -1,0 +1,78 @@
+/* splunk 4.3 patch for SplunkforBlueCoat version 1.2 */
+
+/* GENERAL */
+.splView-flashtimeline .ResultsHeader .splHeader-primary {
+    background-color:#F6F3E2;
+}
+
+/* SEARCHBAR */
+input.searchButton {
+    background-color: #002563;
+    background-position: right center;
+}
+input.searchButton:hover,
+input.searchButton:focus {
+    background-color: #002563;  
+}
+
+table.mainSearchControlsTable .TimeRangePicker .timeRangeActivatorWrapper {
+    background-color:#002563;
+    border-color:#002563;
+}
+
+table.mainSearchControlsTable .TimeRangePicker .timeRangeActivatorWrapper:hover, 
+table.mainSearchControlsTable .TimeRangePicker .timeRangeActivatorWrapper:focus {
+    background-color: #002563; 
+}
+
+table.mainSearchControlsTable input.searchButton {
+    border-color: #002563;
+}
+
+table.mainSearchControlsTable .SearchBar .searchFieldWrapper {
+    border-color:#002563;
+    background-color:#002563;
+}
+/* BUTTONS */
+div.FlashTimeline a, 
+div.FlashTimeline a:visited, 
+.JobStatus a
+{
+    color: #fff;
+}
+
+.splButton-primary,
+.splButton-primary:hover,
+.splButton-primary:focus {
+    background-color: #002563;
+    border-color: #002563;
+}
+
+.splButton-secondary {
+    background-color: #002563;
+    color:#fff;
+}
+
+
+/* SIDEBAR */
+div.sidebarCollapsed .sidebarControl {
+    background-color:#F6F3E2;
+}
+.DisableRequiredFieldsButton {
+    background-color:#F6F3E2;
+}
+
+.fieldValuePopup table td, 
+.fieldValuePopup table th {
+    color: #333;
+}
+
+.sidebar .selected a
+{
+    background-color: #277991;
+    color:#fff !important;
+}
+
+.DashboardTitleBar .splHeader-primary {
+    background-image:none;
+}

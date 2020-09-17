@@ -1,0 +1,101 @@
+% if has_layout:
+    <div class="fpPopupContainer" style="display:block;">
+        <div class="fpAllFieldsContainer splBorder-e">
+            <div class="splHeader splHeader-primary">
+                <h2>${_('Available Fields')}</h2>    
+            </div>      
+            <div class="fpUpdateFields">
+                Some new fields may be available. <a href="#" class="fpUpdateFieldsUpdate">Update Fields</a>
+            </div>
+            <div class="fpFilterFields splBackground-primary splBorder-s">
+                <form>
+                    <fieldset>
+                        <div class="fpKeywordFilter fpFilter">
+                            <label for="keywordFilterField"> ${_('Keyword')}</label>
+                            <input type="text" class="fpKeywordFilterField" value="${filter_keyword if filter_keyword else ''}" id="keywordFilterField"/>
+                            <a href="javascript:void(0)" class="fpKeywordFilterClear splIcon splIcon-clear"></a>
+                        </div>
+                        <div class="fpFrequencyFilter fpFilter">
+                            <label for="frequencyFilterField" title="${_('Minimum %')}">${_('Minimum %')}</label>
+                            <input class="fpFrequencyFilterField" type="text" value="${filter_percent if filter_percent else '1'}" id="frequencyFilterField"/>
+                            <a href="javascript:void(0)" class="fpFrequencyFilterClear splIcon splIcon-clear"></a>
+                        </div>
+    
+                        <!-- currently there is no Type filtering, uncomment when there is 
+                        <div class="fpTypeFilter fpFilter">
+                            <label class=""> Type:</label> 
+                            <select>
+                                <option>All</option>
+                                <option>None</option>
+                                <option>Some</option>
+                            </select>
+                        </div>
+                        -->
+    
+                    </fieldset>
+                </form>
+                <a href="javascript:void(0)" class="fpAddAllLink splBorder splBorder-n">${_('Add all &raquo;')}</a>
+            </div>
+    
+            <div class="fpFieldListContainerOuter splBackground-default">
+                <div class="fpFieldListContainerInner">
+% endif
+                    <table class="fpFieldList">
+                        <thead class="fixedHeader">
+                            <tr class="splHeader splHeader-primary">
+                                <th class="fpBlankHeader"></th>
+                                <% 
+                                headers = [
+                                    {"label": _('Name'), "class_name": 'fpFieldListFirstHeader', "sort_key": 'key'},
+                                    {"label": _('#'), "class_name": 'fpFieldListSecondHeader', "sort_key": 'distinct_count'},
+                                    {"label": _('%'), "class_name": 'fpFieldListThirdHeader', "sort_key": 'percent'},
+                                ]
+                                %>
+                                % for header in headers:
+                                    <%
+                                        sort_dir_next = "asc"
+                                        sort_dir_class_name = ""
+                                        if sort_key==header['sort_key']:
+                                            if sort_dir_next==sort_dir:
+                                                sort_dir_next = "desc"
+                                            sort_dir_class_name = 'headerSortDown' if sort_dir=='asc' else 'headerSortUp' if sort_dir=='desc' else ''
+                                    %>
+                                    <th class="${header['class_name']} splBorder-e ${sort_dir_class_name}">
+                                        <span class="splIcon" s:sortkey="${header['sort_key']}" s:sortdir="${sort_dir_next}"></span>${header['label']}
+                                    </th>
+                                % endfor
+                            </tr>
+                        </thead>
+                        <tbody class="scrollContent">
+                            % for field_name in field_summary_sorted_keys:
+                                % if field_name in job_summary.fields:
+                                    <% field = job_summary.fields[field_name] %>
+                                    <tr s:fieldname="${field_name | x}"${' class="fieldSelected"' if field_list.count(field_name)>0 else ''}>
+                                        <td class="fpAddTermCell fpAddFieldBehavior"><span class="splIcon splIcon-arrow-e  fpAddFieldBehavior"></span></td>
+                                        <td class="fpFieldTerm fpFieldListFirst splBorder-e fpAddFieldBehavior" term="${field_name | x}"><div class="fpAddFieldBehavior"><a href="#" class="fpAddFieldBehavior">${field_name | h}</a></div></td>
+                                        <td class="fpFieldListSecond splBorder-e"><a href="javascript:void(0)" class="fpFieldSummary" s:fieldname="${field_name | x}">${'' if field.get('isExact', True) else '&ge;'}${field.get('distinctCount', '')}</a></td>
+                                        <td class="fpFieldListThird">${i18n.format_percent( field['count'] / float(job_summary.count) )}</td>
+                                    </tr>
+                                % endif
+                            % endfor
+                        </tbody>
+                    </table>
+% if has_layout:
+                </div>
+            </div>
+        </div>
+        <div class="fpSelectedFieldsContainer splBackground-secondary">
+            <div class="splHeader splHeader-secondary">
+                <h2>${_('Selected Fields')}</h2>    
+            </div>
+            <a href="javascript:void(0)" class="fpClearSelectedFields splBorder-s">${_('&laquo; Clear all')}</a>
+            <div class="fpFieldListContainerInner">
+                <ul class="fpSelectedFields">
+                    % for field in field_list:
+                        <li term="${field | h}"><span class="splIcon splIcon-arrow-w fpRemoveFieldBehavior"></span>${field | h}</li>
+                    % endfor
+                </ul>
+            </div>
+        </div>
+    </div>
+% endif

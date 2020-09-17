@@ -1,0 +1,19 @@
+.Message {
+    padding:0px;
+}
+.Message ol {
+    list-style:none;
+    margin:0px;
+}
+.Message ol li {
+    margin:0px;
+    _zoom:1;
+   /* padding:5px 10px; 
+   line-height: 28px;*/
+}
+
+.pageControls .Message {
+    width:100%;
+    height:auto;
+    line-height:1em;
+}

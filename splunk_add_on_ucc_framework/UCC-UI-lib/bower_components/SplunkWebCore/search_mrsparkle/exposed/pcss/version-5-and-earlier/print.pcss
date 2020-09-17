@@ -1,0 +1,90 @@
+
+
+@media print {
+    .appHeaderWrapper,
+    .layoutRow.splSearchControls-inline,
+    .AccountBar .accountBarItems,
+    .AppBar,
+    .FlashTimeline a.zoomIn,
+    .FlashTimeline a.zoomOut,
+    .FlashTimeline span.linLogToggle,
+    .TitleBar .splPipe,
+    .TitleBar .actionsMenu,
+    .splSortNone,
+    .splSortAsc,
+    .splSortDesc,
+    .JobStatus .splHeader.complete,
+    .layoutRow.viewHeader,
+    .splIcon-triangle-large,
+    .JSChart .inlineMessageContainer .spl-external-link,
+    .splView-flashtimeline .jobActions,
+    .splView-flashtimeline .nextSteps
+    {
+        display:none !important;
+    }
+    .splHeader-primary {
+        background-color: #fff !important;
+        padding-bottom: 20px;
+    }
+    body,
+    .FlashWrapperContainer{
+        color: $black !important;
+    }
+    div.layout {
+        width: 100% !important;
+    }
+    /* sensitive side bar styles DO NOT TOUCH! */
+    div.withSidebar,
+    div.withSidebar div.oneColRow {
+        overflow:visible;
+    }
+    .sidebar, .TitleBar .editPanel {
+        display:none;
+    }
+    .EventsViewer,
+    .SimpleResultsTable .simpleResultsTableWrapper  table.simpleResultsTable  {
+        overflow: visible !important;
+        white-space: normal !important;
+        word-break: break-all !important;
+        word-wrap: break-word !important;
+    }
+    .layoutCellInner {
+        box-shadow: none !important;
+    }
+
+    /* BEGIN styles for page-break support, currently this is just targeted to dashboards */
+
+    /* page-breaks won't work if the parent element is floating */
+    .splTemplate-dashboard .layout {
+        float: none;
+    }
+    .splTemplate-dashboard .layout,
+    .splTemplate-dashboard .layout * {
+        overflow: visible !important;
+        min-height: 0 !important;
+    }
+    .splTemplate-dashboard .equalHeightRow.oneColRow,
+    .splTemplate-dashboard .equalHeightRow.oneColRow * {
+        float: none !important;
+    }
+
+    /* this element will force a page break after it in all browsers */
+    .page-breaker {
+        page-break-after: always;
+        display: block;
+        width: 100%;
+    }
+    /* hide button borders */
+    .splButton-primary,
+    .splButton-secondary,
+    .splButton-tertiary
+    {
+        border:none !important;
+    }
+    .ButtonSwitcher ul li.selected,
+    .ButtonSwitcher ul li.selected:hover {
+        border:none !important;
+        box-shadow: none !important;
+    }
+    /* END styles for page-break support */
+}

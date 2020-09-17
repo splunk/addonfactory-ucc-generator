@@ -1,0 +1,16 @@
+<%page args="module"/>
+<%namespace name="lib" file="//lib.html" import="*" />
+<%
+    options = [
+        ['false', _('Combined')],
+        ['true', _('Split')]
+    ]
+%>
+<fieldset>
+    <label for="${module['id']}_select">${_("Multi-series mode")}</label>
+    <select id="${module['id']}_select">
+        <%lib:generate_select_options optionArray="${options}" selectedValue="${module['params'].get('default')}" />
+        
+    </select>
+</fieldset>
+

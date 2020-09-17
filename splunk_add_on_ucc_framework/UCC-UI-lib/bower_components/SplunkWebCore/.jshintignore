@@ -1,0 +1,7 @@
+**/*.jsx
+**/*.es
+=======
+**/*.pcss.js
+**/*.pcssm.js
+**/*.jsx.js
+**/*.es.js

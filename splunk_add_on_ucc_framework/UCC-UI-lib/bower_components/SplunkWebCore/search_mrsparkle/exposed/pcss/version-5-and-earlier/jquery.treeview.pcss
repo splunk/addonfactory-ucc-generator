@@ -1,0 +1,80 @@
+
+
+.treeview, .treeview ul { 
+	padding: 0;
+	margin: 0;
+	list-style: none;
+    line-height: 15px;
+}
+
+.treeview ul {
+	background-color: $white;
+	/* margin-top: 4px; */
+}
+
+.treeview .hitarea {
+	background: url(/static/img/treeview/treeview-default.gif) -64px -25px no-repeat;
+	height: 16px;
+	width: 16px;
+	margin-left: -16px;
+	float: left;
+	cursor: pointer;
+}
+
+
+.treeview li { 
+	margin: 0;
+	padding: 2px 0pt 0px 16px;
+}
+
+.treeview a.selected {
+	background-color: #eee;
+}
+
+#treecontrol { margin: 1em 0; display: none; }
+
+.treeview .hover { text-decoration: underline; cursor: pointer; }
+
+.treeview li { background: url(/static/img/treeview/treeview-default-line.gif) 0 0 no-repeat; }
+
+.treeview li.collapsable, .treeview li.expandable { background-position: 0 -176px; }
+
+.treeview span.placeholder{
+  background-image: url(/static/img/skins/default/loader.gif);
+  background-repeat: no-repeat;
+  background-size: 100%;
+  height: 16px;
+  width: 16px;  
+  display: block;
+} 
+
+.treeview .expandable-hitarea { background-position: -80px -3px; }
+
+.treeview li.last { background-position: 0 -1766px }
+
+.treeview li.lastCollapsable, .treeview li.lastExpandable { background-image: url(/static/img/treeview/treeview-default.gif); }  
+
+.treeview li.lastCollapsable { background-position: 0 -111px }
+
+.treeview li.lastExpandable { background-position: -32px -67px }
+
+.treeview li .showmore { background-image: none; background-repeat:none; overflow:hidden; }
+.treeview li.collapsable.leaf, li.expandable.leaf { background-position: 0 0; }
+.treeview .leaf-hitarea { background-position: 0 0; }
+
+.treeview div.lastCollapsable-hitarea, .treeview div.lastExpandable-hitarea { background-position: 0 0; background-image:none; }
+
+.treeview span.nonleaf, span.leaf { display: block; padding: 1px 0 1px 20px; }
+.treeview span.selected { background: #F3ECBB no-repeat 0 0 }
+
+.treeview span.leaf { background: url(/static/img/skins/default/page.gif) no-repeat 0 0 }
+.treeview span.leaf.selected { background: #F3ECBB url(/static/img/skins/default/page.gif) no-repeat 0 0 }
+
+.treeview span.nonleaf { background: $white url(/static/img/skins/default/folder.gif) no-repeat 0 0 }
+.treeview span.nonleaf.selected { background: #F3ECBB url(/static/img/skins/default/folder.gif) no-repeat 0 0 }
+
+.treeview li.lastCollapsable.leaf, .treeview li.lastExpandable.leaf { background: url(/static/img/treeview/treeview-default-line.gif) 0 -1766px no-repeat; }
+
+.treeview .showmore-hitarea{background:url(/static/img/treeview/treeview-default.gif) -32px -69px no-repeat !important;}
+
+

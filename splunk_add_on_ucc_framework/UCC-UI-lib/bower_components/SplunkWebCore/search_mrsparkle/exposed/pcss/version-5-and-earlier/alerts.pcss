@@ -1,0 +1,220 @@
+
+
+/* Alerts manager styles */
+
+
+/* reset elements */
+body, html {
+	padding:0;
+	margin:0;
+	height:100%;
+	overflow:hidden;
+}
+
+input, textarea, select {
+	margin: 0;
+}
+
+.alerts-page-wrapper li {
+	list-style:none;
+	float:left;
+}
+.alerts-page-wrapper ul, .alerts-page-wrapper li {
+	margin: 0;
+	padding: 0;
+}
+.alerts-page-wrapper table {
+	width:100%;
+	margin: 0 10px;
+}
+.alerts-page-wrapper th, .alerts-page-wrapper td {
+	text-align:left;
+	vertical-align:top;
+	padding:3px 5px;
+}
+.alerts-page-wrapper th {
+	border-bottom:1px solid	$borderDarkColor;
+}
+.alerts-page-wrapper td {
+	vertical-align:top;
+	padding: 5px 3px;
+}
+.alerts-page-wrapper tr:last-child td {
+	border-bottom:none;
+}
+.alerts-page-wrapper td input {
+	margin: 0;
+	border: none;
+	vertical-align: middle;
+}
+/* shared */
+.alerts-page-wrapper .formelement1,
+.alerts-page-wrapper #app,
+.alerts-page-wrapper #owner
+{
+    white-space: nowrap;
+    width: 100px;
+}
+.alerts-page-wrapper #app {
+    width:250px;
+}
+.alerts-page-wrapper #alerts_id, .alerts-page-wrapper #severity {
+	white-space:nowrap;
+	width:60px;
+}
+input#search {
+	width: 180px;
+}
+/* filters */
+.alerts-page-wrapper #filters {
+	position:relative;
+	background: #EDEDED;
+	border-bottom:1px solid $borderColor;
+	border-top:1px solid $borderColor;
+	display:block;
+	padding:10px 20px;
+	zoom:1;
+}
+.alerts-page-wrapper #filters table {
+	margin:  0;
+}
+.alerts-page-wrapper #filters table td {
+	margin:  0;
+	padding:  0;
+	vertical-align: middle;
+}
+.alerts-page-wrapper #filters .col2 {
+	text-align: right;
+}
+.alerts-page-wrapper #filters li {
+	padding-right: 10px;
+}
+.alerts-page-wrapper #filters label {
+	padding-right:5px;
+}
+.alerts-page-wrapper #filters #search {
+	border: 1px solid $borderColor;
+}
+/* pagination */
+#Pagination {
+	position: relative;
+	padding: 5px 10px;
+	background: #ededed;
+}
+
+#Pagination ul {
+	float: left;
+}
+
+#Pagination li {
+	margin-right: 2px;
+	display: block;
+}
+
+#Pagination a {
+	color: #5379AF;
+	background-color: transparent;
+	display: block;
+	padding: 3px 6px;
+	border: 1px solid transparent;	        border-radius: 3px;
+}
+
+#Pagination a:hover{
+	background-color: $offWhite;
+	color: #32496A;
+	text-decoration: none;
+}
+
+#Pagination a.active, #Pagination a.active:hover {
+	background-color: $offWhite;
+	color: #32496A;
+}
+
+#Pagination a.disabled, #Pagination a.disabled:hover {
+	color: $textGray;
+	background-color: transparent;
+	cursor: text;
+	visibility: visible;
+}
+
+#Pagination .count {
+	float: right;
+	margin:  0;
+	padding: 5px;
+}
+
+/* results */
+.alerts-page-wrapper #results {
+	overflow:auto;
+	position: relative;
+}
+.alerts-page-wrapper #results table {
+	margin-top:15px;
+	margin-bottom: 15px;
+	width:98%;
+}
+.alerts-page-wrapper #results td {
+	border-bottom:1px solid	$borderColor;
+}
+.alerts-page-wrapper #results .none {
+	text-align:center;
+	font-weight:bold;
+}
+.alerts-page-wrapper #results .sortable {
+	position:relative;
+	padding-right:3px;
+}
+.alerts-page-wrapper #results .sortable span {
+	color:$black;
+}
+.alerts-page-wrapper #results .bulk {
+	text-indent:-5000px;
+    direction:ltr;
+}
+.alerts-page-wrapper #results .severity {
+	background:url(/static/img/skins/default/icon_alerts.png) no-repeat 0 -32px;
+	padding-left:20px;
+	padding-top:2px;
+}
+.alerts-page-wrapper #results .severitylow {
+	background-position:0 -16px;
+}
+.alerts-page-wrapper #results .severityhigh {
+	background-position:0 -48px;
+}
+.alerts-page-wrapper #results .severitycritical {
+	background-position:0 -64px;
+}
+.alerts-page-wrapper #results .severityinfo {
+	background-position:0 0;
+}
+.alerts-page-wrapper #results .severitymedium {
+	background-position:0 -32px;
+}
+/* actions */
+.alerts-page-wrapper #actions {
+	position:absolute;
+	bottom: 0;
+	background: #EDEDED;
+	font-size: $baseFontSize;
+	border-top:1px solid $borderColor;
+	height:44px;
+	width:100%;
+}
+.alerts-page-wrapper #actionsSelection {
+	position:absolute;
+	top:10px;
+	left:10px;
+}
+.alerts-page-wrapper #actionsSelection span {
+	padding-right:5px;
+}
+.alerts-page-wrapper #actionsSelection a {
+	margin-right:5px;
+}
+.alerts-page-wrapper #actionsSelection .selected {
+	padding-left:5px;
+}
+.alerts-page-wrapper #actionsSelection button {
+	margin: 0;
+}

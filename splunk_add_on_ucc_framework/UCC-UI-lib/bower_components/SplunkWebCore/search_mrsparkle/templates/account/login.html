@@ -1,0 +1,260 @@
+<%!
+import time, json
+import splunk.appserver.mrsparkle.lib.i18n as i18n
+
+# TRANS: This is the title for the account login page
+title = _('Login')
+%>
+
+<%inherit file="//layout/base.html" />
+<%namespace name="lib" file="//lib.html" import="*" />
+<%
+year = time.strftime('%Y')
+
+#
+# build all of the nagware parameters
+#
+
+# determine if UI has an error message displayed
+hasErrorMessage = False
+if invalid_password or logged_out or session_expired:
+    hasErrorMessage = True
+
+# assemble dict to serialize into JSON for update checker
+checkerConfig = {
+    'locale': i18n.current_lang_url_component(),
+    'licenseType': 'free' if serverInfo['is_free_license'] else 'pro',
+    'versionNumber': serverInfo['version_label'],
+    'installType': serverInfo['install_type'],
+    'skin': 'basic',
+    'updateCheckerBaseURL': updateCheckerBaseURL,
+    'tipsCheckerCannotConnectBannerPath': make_url('/static/img/nagware/updater_free_cannot_connect.gif'),
+    'updateCheckerCannotConnectBannerPath': make_url('/static/img/nagware/updater_pro_paid_login_cannot_connect.gif'),
+    'hasErrorMessage': hasErrorMessage,
+    'return_to': return_to or '',
+    'django': serverInfo['django'],
+    'product_type': serverInfo['product_type'],
+    'instance_type': serverInfo['instance_type'],
+}
+
+if updateCheckerBaseURL:
+    checkerConfig.update({
+        'cpu_arch': serverInfo['cpu_arch'],
+        'guid': serverInfo['guid'],
+        'license_desc': serverInfo['license_desc'],
+        'os_name': serverInfo['os_name'],
+    })
+
+# add harness for testing
+debugPrefix = 'test.'
+for k in checkerConfig:
+    if (debugPrefix + k) in cherrypy.request.params:
+        checkerConfig[k] = cherrypy.request.params[debugPrefix + k]
+
+# determine CSS class on container
+layoutClass = []
+if checkerConfig['licenseType'] == 'free':
+    layoutClass.append('licenseIsFree')
+if checkerConfig['installType'] == 'trial':
+    layoutClass.append('licenseIsTrial')
+
+# output messaging
+user_message = None
+enable_login_form = True
+# TRANS: Sign in button on the account login page
+login_button_text = _('Sign in')
+
+if invalid_password:
+    user_message = _('Invalid username or password.')
+elif serverInfo['license_state'] == 'PREVIOUS_KEYED_LICENSE':
+    # the enums for license state are from SPL-24850
+    user_message = _('Splunk has detected that you are using a license for an older version of Splunk. <a href="http://www.splunk.com/r/my_licenses" target="_blank" class="spl-icon-external-link-xsm">Get an updated license</a>.')
+    enable_login_form = False
+    # TRANS: Sign in button on the account login page when license is from previous version
+    login_button_text = _('N/A')
+# handle expired licenses for all non admin users SPL-26253
+elif serverInfo['license_state'] == 'EXPIRED':
+    user_message = _("%(openSpan1)s Your license is expired. %(closeSpan)s %(openSpan2)s Please login as an administrator to update the license. %(closeSpan)s") % { 'openSpan1': '<span class="licenseError">', 'closeSpan': "</span>", 'openSpan2':'<span class="licenseErrorText">'}
+elif bad_cookies:
+    user_message = _('Failed to set cookie.  Ensure cookies are enabled in your browser.')
+elif logged_out:
+    user_message = _('You have been logged out. Log in to return to the system.')
+elif session_expired_pw_change: # must come before the check for session_expired
+    user_message = _('Your password was not updated as your session expired.  Login again to start over')
+elif session_expired:
+    user_message = _('Your session has expired. Log in to return to the system.')
+%>
+
+
+<%def name="css()">
+    <%lib:stylesheet_tags files="${['/static/css/login.css']}" />
+    <%lib:script_tags files="${['/static/js/contrib/jquery.cookie.js', '/static/js/contrib/spin.min.js','/static/js/login.js']}" />
+</%def>
+
+
+<script type="text/javascript">
+
+    var hasLoggedIn = Splunk.util.normalizeBoolean('${hasLoggedIn}'),
+        isCloud = Splunk.util.normalizeBoolean('${isCloud}');
+
+    $(function() {
+        // Check that cookies are enabled and Javascript can see them
+        var c = $.cookie('cval');
+        var cescape = escape(c);
+        var toffset = (new Date().getTime()/1000) - ${int(time.time())};
+        if (!c) {
+            $('.error').hide();
+            $('#jserror').text(_('No cookie support detected.  Check your browser configuration.')).show();
+        } else if (cescape != "${cval | h}") {
+            $('.error').hide();
+            $('#jserror').text(_('Invalid cookie detected.  Try reloading this page or restarting your browser.')).show();
+        } else if (Math.abs(toffset) > 86400) {
+            if (!$('#tplerror').length) {
+                $('#jserror').text(_('Warning: The time on the server differs significantly from this machine which may cause login problems and other errors.')).show();
+            }
+        }
+
+        // attach event handlers for password hint link popup
+        $("#passwordHintLink a").click(passwordHintClick);
+        $(document).bind('keypress', function(evt){
+           if (evt.keyCode == 27) {
+                hidePasswordHint();
+            }
+        });
+        $('#passwordHintClose').click(hidePasswordHint);
+
+        if (!hasLoggedIn && !isCloud) {
+            var t = setTimeout(function(){$("#passwordHint").slideDown({duration: '200', easing: 'linear'});}, 1000);
+        }
+
+        $('#loginForm').show();
+    });
+</script>
+
+    <!-- Login Form -->
+    <div class="account">
+        <div class="wrapper-container">
+            <header>
+                <h1 id="brand">
+                    % if cherrypy.config['product_type'] == 'hunk':
+                        splunk<span class="prompt">&gt;&#x00AE;&#xF000;</span>
+                    % elif cherrypy.config['instance_type'] == 'cloud':
+                        splunk<span class="prompt">&gt;&#x00AE;&#xF002;</span>
+                    % elif cherrypy.config['product_type'] == 'enterprise':
+                        splunk<span class="prompt">&gt;&#x00AE;&#xF001;</span>
+                    % elif cherrypy.config['product_type'] == 'lite':
+                        splunk<span class="prompt">&gt;&#x00AE;&#xF003;</span>
+                    % elif cherrypy.config['product_type'] == 'lite_free':
+                        splunk<span class="prompt">&gt;&#x00AE;&#xF003;</span>
+                    % else:
+                        splunk<span class="prompt">&gt;&#x00AE;</span>
+                    % endif
+                </h1>
+            </header>
+            <div class="content">
+                <form action="${ make_url('/account/login') }" class="loginForm" method="post" autocomplete="${'on' if isAutoComplete else 'off'}">
+                    <input type="hidden" name="cval" value="${cval | h }">
+                    % if return_to:
+                        <input type="hidden" name="return_to" value="${return_to|h}">
+                    % endif
+
+                    <table>
+                        <td>
+                            <div class="input-wrapper">
+                                <label class="placeholder-text">${_('Username')}</label>
+                                <input type="text" name="username" id="username" ${'' if enable_login_form else 'disabled="true"'} />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="input-wrapper">
+                                <label class="placeholder-text">${_('Password')}</label>
+                                <input type="password" name="password" id="password" ${'' if enable_login_form else 'disabled="true"'} />
+                            </div>
+                        </td>
+                        <td>
+                              <input class="splButton-primary" type="submit" value="${login_button_text}" ${'' if enable_login_form else 'disabled="true"'} />
+                        </td>
+                    </table>
+                </form>
+                
+                 <div class="messages ${' '.join(layoutClass)}">
+                    % if user_message:
+                        <p id="tplerror" class="error">${user_message}</p>
+                    % endif
+                    <p id="jserror" class="error" style="display: none"></p>
+
+                    % if not serverInfo['is_free_license'] and serverInfo['is_trial_license']:
+                        <p id="passwordHintLink"><a href="#" id="passwordHintLink">${_('First time signing in?')}</a></p>
+                    % endif
+
+                    % if loginContent:
+                    <div id="userMessaging">${loginContent}</div> <%doc>loginContent is raw HTML defined in web.conf</%doc>
+                    % endif
+                </div>
+                <div id="freeUpdateCheckerContainer" class="subContainer">
+                    <iframe frameborder="0" id="freeUpdateChecker" name="freeUpdateChecker" ALLOWTRANSPARENCY="true" scrolling="no" marginheight="0" marginwidth="0"></iframe>
+                </div>
+                <div id="freeMessageContainer" class="subContainer"></div>
+                <div id="tipsCheckerContainer" class="subContainer">
+                    <iframe frameborder="0" id="tipsChecker" name="tipsChecker" ALLOWTRANSPARENCY="true"></iframe>
+
+                    ## TRANS: Continue link that is shown if a free product 'tip' has been displayed
+                    <div class="tipsCheckerContinueLink"><a href="/" class="splButton-primary"><span>${_('Continue &raquo;')}</span></a></div>
+                    <div class="clear"></div>
+                </div>
+
+                <div id="updateCheckerContainer" class="subContainer">
+                    <iframe frameborder="0" id="updateChecker" name="updateChecker" ALLOWTRANSPARENCY="true" scrolling="no" marginheight="0" marginwidth="0"></iframe>
+                </div>
+                <div id="connectError" class="subContainer">
+                    <h2>${_('Your browser could not connect to Splunk.com.')}</h2>
+                    <p>${_('You need to be connected to the Internet to find out when updates to your Splunk software are available.')}</p>
+                </div>
+                <div id="passwordHint" style="display:none">
+                    <div id="passwordHintContent">
+                        <h2>${_("First time signing in?")}</h2>
+                        <p>${_("If you've forgotten your username or password, please contact your Splunk administrator.<br/><br/>username <span>admin</span><br />password <span>changeme</span></p>")}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer>
+            <p class="copyright">
+                ${_('&copy; 2005-%(year)s Splunk Inc. Splunk %(version_label)s build %(build_number)s') % dict(build_number=serverInfo['build_number'], version_label=serverInfo['version_label'], year=year)}.
+            </p>
+            <noscript>
+                <p class="error">Splunk relies on JavaScript to function properly.<br>Please enable JavaScript and then refresh the page to login.</p>
+            </noscript>
+        </footer>
+    </div>
+
+    <!-- More Javascript    -->
+    <script type="text/javascript" language="Javascript1.3">
+        // assemble config for the checker system
+        var CONFIG = ${json.dumps(checkerConfig, html_safe=True)};
+
+        window.onload = function() {
+            // focus on username
+            document.getElementById('username').focus();
+            document.getElementById('username').select();
+
+            var hashPos = window.location.href.indexOf('#');
+
+            if (hashPos != -1) {
+	        var sel = $("input[name='return_to']");
+
+	        if (sel && sel.val()) {
+	            sel.val(sel.val() + window.location.href.substr(hashPos));
+                }
+            }
+
+            % if updateCheckerBaseURL:
+                // start checker
+                initUpdateChecker();
+            % endif
+
+            initializePlaceholder();
+        }
+    </script>
+
+</div>

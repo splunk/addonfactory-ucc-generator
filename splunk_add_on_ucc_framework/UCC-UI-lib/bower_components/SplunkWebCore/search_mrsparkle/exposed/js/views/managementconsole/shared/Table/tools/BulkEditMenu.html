@@ -1,0 +1,24 @@
+<% if (count === 0) { %>
+ <a href="#" class="dropdown-toggle btn-pill disabled">
+  0 <%- singular %>
+  <b class="caret"></b>
+ </a>
+<% } else if (count === 1) { %>
+ <a href="#" class="dropdown-toggle btn-pill">
+  1 <%- singular %>
+  <b class="caret"></b>
+ </a>
+<% } else if (count > 1) { %>
+ <a href="#" class="dropdown-toggle btn-pill">
+  <%- count %> <%- plural %>
+  <b class="caret"></b>
+ </a>
+<% } %>
+<div class="dropdown-menu" id="global-messages-menu">
+ <div class="arrow"></div>
+ <ul>
+  <% _.each(items, function(item) { %>
+   <li><a href="#" class="bulk-action" data-fires="<%- item.fires %>"><%- item.name %></a></li>
+  <% }) %>
+ </ul>
+</div>

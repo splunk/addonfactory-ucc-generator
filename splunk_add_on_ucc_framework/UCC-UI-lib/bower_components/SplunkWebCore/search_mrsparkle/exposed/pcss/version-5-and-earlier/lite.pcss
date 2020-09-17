@@ -1,0 +1,340 @@
+
+
+/*************************************************************
+ *  Splunk Lite Overrides
+ *
+ *    This file contains structural styles for Splunk Lite.
+ *
+ ************************************************************/
+
+
+h1 {
+    color: $grayDark;
+    /*  Using important here so not to have 
+    to use several class specific overrides */
+}
+h2 {
+    color: $grayDark;
+}
+
+body, td {
+    font-size: $baseFontSize;
+}
+
+a {
+    color: #0095cf;
+}
+
+.widget,
+.radioWidget {
+    clear: both;
+    min-height: 32px;
+}
+.widget > div {
+    float: left;
+    width: 550px;
+}
+.widget > label,
+.orphanLabel {
+    float: left;
+    min-width: 220px;
+    line-height: 32px;
+    text-align: right;
+    margin-right: 10px;
+}
+.widget.labelWrap > label {
+    max-width: 220px;
+    line-height: 16px;
+}
+input,
+textarea,
+select,
+.splTextArea {
+    border-color: $grayDark;
+}
+.fieldsetWrapper {
+    clear: both;
+}
+fieldset legend {
+    color: $grayDark;
+    font-weight: normal;
+    font-size: $baseFontSizeLarge; 
+}
+p.exampleText,
+label.disabledLabel  {
+    color: #AAA;
+}
+.widget input.radio,
+.widget input.checkbox {
+    margin-top: 9px;
+}
+.checkboxWidget,
+.selectWidget {
+    margin-left: 230px;
+}
+.widget.selectWidget > label {
+    float: none;
+    line-height: 22px;
+    min-width: 0;
+    text-align: left;
+}
+.widget > div.selectInputContainer {
+    float: none;
+    width: auto;
+}
+.formWrapper {
+    padding: 20px 20px 20px 40px;
+}
+
+/* buttons */
+.splButton-primary,
+.splButton-secondary,
+.splButton-tertiary,
+.section-paywall a.splButton-primary {
+    box-shadow: none;
+    border-radius: 0;
+    background: none;
+    border: 1px solid $grayDark;
+    color: $grayDark;
+    height: 28px !important;
+    line-height: 28px;
+    padding: 0 12px;
+    filter: none;
+}
+.splButton-primary,
+.section-paywall a.splButton-primary {
+    color: $white;
+    background: $grayDark;
+}
+.splButton-primary:hover,
+.splButton-primary:focus {
+    background: $grayDark;
+    border-color: $grayDark;
+    filter: none;
+}
+.splButton-secondary:hover,
+.splButton-secondary:focus,
+.splButton-tertiary:hover,
+.splButton-tertiary:focus,
+.splRadio-control:hover,
+.splRadio-control:focus {
+    border-color: $grayDark;
+    background: $white; 
+    filter: none;
+}
+.spl-prompt-message-layout a.splButton-primary span, 
+.spl-prompt-message-layout a.splButton-secondary span {
+    line-height: 28px;
+    padding: 0;
+    min-width: 36px;
+}
+.splButton-primary.disabled,
+.splButton-secondary.disabled,
+.splButton-tertiary.disabled {
+    color: #AAA;
+    border-color: #AAA;
+}
+input.searchButton,
+input.searchButton:hover,
+input.searchButton:focus {
+    background: url(/static/img/skins/default/search_button.png) -51px center no-repeat $grayDark;
+    border-radius: 0;
+    width: 32px;
+    height: 24px;
+}
+.filterControls .searchButton {
+    width: 32px;
+    height: 24px;
+    background-color: $grayDark;
+}
+.splButton-tertiary.orange {
+    background: $splunkLiteOrange;
+    border: none;
+    color: $white;
+}
+.inline-btn {
+    float: none !important;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 5px !important;
+    height: 24px !important;
+    line-height: 24px;
+}
+
+/* Add data Steps */
+.lite .steps em {
+    padding-top: 2px;
+}
+.lite .steps li.active em {
+    background: $grayDark;
+}
+.lite .spl-prompt-message-layout .dp_choice_title label,
+.lite .steps li.active h2 {
+    color: $grayDark;
+}
+/* Licensing */
+.licenseGroup h1 {
+    line-height: 30px;
+}
+table.properties {
+    line-height: 24px;
+}
+
+table.properties .k {
+    padding: 0 20px 0 30px;
+    text-align: right;
+    vertical-align: middle;
+    min-width: 120px;
+    font-weight: normal;
+}
+table.properties .t {
+    vertical-align: top;
+    padding: 5px 20px 0 0;
+}
+h2.top {
+    margin-top: 0;
+}
+a.splButton-primary.enterprise,
+a.splButton-primary.enterprise:hover {
+    margin-left: 15px;
+    background: $splunkGreen;
+    border-color: #4E802A;
+}
+td.licenseName {
+    font-size: 20px;
+}
+.licenseUsageBar {
+    width: 250px;
+    height: 5px;
+    border: 1px solid $grayDark;
+    margin-bottom: 8px;
+    overflow: hidden;
+}
+.licenseUsageBar .bar {
+    width: 0%;
+    background: $grayDark;
+    height: 5px;
+}
+
+/* Apps */
+.listWrapper.page-apps-local {
+    padding: 0;
+}
+.lite_app {
+    width: 33%;
+    float: left;
+    margin-bottom: 20px;
+}
+.app_wrapper {
+    padding: 30px;
+    margin-left: 20px;
+    background: $white;
+    position: relative;
+    min-height: 170px;
+}
+.app_icon {
+    position: absolute;
+    height: 150px;
+    width: 72px;
+    margin-right: 20px;
+    text-align: center;
+}
+.app_icon img {
+    width: 72px;
+    background: #EEE;
+    margin-bottom: 15px;
+}
+.app_info {
+    margin-left: 90px;
+}
+.app_info h3 {
+    font-size: $baseFontSizeLarge;
+    line-height: 26px;
+    margin-top: -6px;
+    margin-bottom: -6px;
+}
+.app_info .version {
+    padding-left: 0;
+    font-size: $baseFontSize;
+    width: 100%;
+}
+.app_info .description {
+    color:$textGrayDark;
+    height: 50px;
+    margin-bottom: 10px;
+    margin-right: -20px;
+    padding-right: 30px;
+    overflow-y: auto;
+}
+.app_info .actions {
+    position: absolute;
+    bottom: 30px;
+}
+.app_info .button {
+    padding: 0 40px;
+}
+
+/* nav tweaks */
+.sidenav {
+    font-size: $baseFontSize;
+}
+.sidenav .accordion-group {
+    margin-bottom: 2px
+}
+.sidenav .accordion-group .accordion-heading .accordion-toggle {
+    display: block;
+}
+/* Jobs */
+.filterControlLeft div:first-child {
+    display: none
+}
+.JobManager .jobManagerWrapper,
+.jobsHeader {
+    position: relative;
+    top: 0 !important;
+}
+
+/* one offs*/
+.jmFormActions {
+    clear: both;
+}
+.spl-prompt-message-layout h2.spl-page-hdr,
+.spl-gdi-wrapper .spl-prompt-message-wrapper .spl-main-description strong,
+.spl-mgr-advanced-switch label,
+.spl-gdi-wrapper h3.spl-main-description-hdr,
+div.adminIndex h2 {
+    color: $grayDark;
+}
+div.adminIndex h2 {
+    line-height: 25px;
+}
+.detailed-usage {
+    margin-left: 15px;
+}
+.licenseHeaderInfo{
+    padding: 0 20px 10px;
+}
+button.splButton-primary,
+button.splButton-secondary,
+button.splButton-tertiary,
+button.splButton-primary span,
+button.splButton-secondary span,
+button.splButton-tertiary span {
+    line-height: 25px;
+}
+#permissions .orphanLabel {
+    text-align: left;
+}
+
+/* to fix a random bug on the OK button on addon setup success */
+.splButton-primary span {
+    top: 0;
+}
+
+.lite-bar.empty-nav {
+    padding: 0 10px;
+}
+div.dataInputsWrapper h1,
+div.pageContentWrapper h1 {
+    color: $grayDark;
+}

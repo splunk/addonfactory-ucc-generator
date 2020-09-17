@@ -1,0 +1,78 @@
+<%inherit file="//qunit/template.html" />
+
+<%def name="title()">Splunk.Logger -- QUnit tests</%def>
+
+<script type="text/javascript" src="/en-US/static/js/contrib/firebug.js"></script>
+<script type="text/javascript" src="/en-US/static/js/contrib/swfobject.js"></script>
+
+<script type="text/javascript">
+    function test_initialize() {
+        //None mode tests
+        var loggerModeNone = Splunk.Logger.getLogger("logger.html", Splunk.Logger.mode.None);
+        var testLevelModeNone = function(){
+            loggerModeNone.log("log");
+            loggerModeNone.log("log1", "log2");
+            loggerModeNone.info("info");
+            loggerModeNone.info("info1", "info2");
+            loggerModeNone.debug("debug");
+            loggerModeNone.debug("debug1", "debug2");
+            loggerModeNone.warn("warn");
+            loggerModeNone.warn("warn1", "warn2");
+            loggerModeNone.error("error");
+            loggerModeNone.error("error1", "error2");
+            return true;
+        }
+        assert("All levels for none mode", testLevelModeNone());        
+        
+        //Firebug mode tests
+        var loggerModeFirebug = Splunk.Logger.getLogger("logger.html", Splunk.Logger.mode.Firebug);
+        var testLevelsModeFirebug = function(){
+            loggerModeFirebug.log("log");
+            loggerModeFirebug.log("log1", "log2");
+            loggerModeFirebug.info("info");
+            loggerModeFirebug.info("info1", "info2");
+            loggerModeFirebug.debug("debug");
+            loggerModeFirebug.debug("debug1", "debug2");
+            loggerModeFirebug.warn("warn");
+            loggerModeFirebug.warn("warn1", "warn2");
+            loggerModeFirebug.error("error");
+            loggerModeFirebug.error("error1", "error2");
+            return true;
+        }
+        assert("All levels for firebug mode", testLevelsModeFirebug());
+
+        //Server mode tests
+        var loggerModeServer = Splunk.Logger.getLogger("logger.html", Splunk.Logger.mode.Server);
+        for(var i=0; i<Splunk.Logger.mode.Server.MAX_BUFFER+1; i++){
+            loggerModeServer.log("log call", i)
+        }
+        assertEquals("Server buffer via log has reached maximum size and been flushed", Splunk.Logger.mode.Server.Buffer.getInstance().size(), 0);
+        for(var i=0; i<Splunk.Logger.mode.Server.MAX_BUFFER+1; i++){
+            loggerModeServer.info("info call", i)
+        }
+        assertEquals("Server buffer via info has reached maximum size and been flushed", Splunk.Logger.mode.Server.Buffer.getInstance().size(), 0);
+        for(var i=0; i<Splunk.Logger.mode.Server.MAX_BUFFER+1; i++){
+            loggerModeServer.debug("debug call", i)
+        }
+        assertEquals("Server buffer via debug has reached maximum size and been flushed", Splunk.Logger.mode.Server.Buffer.getInstance().size(), 0);
+        for(var i=0; i<Splunk.Logger.mode.Server.MAX_BUFFER+1; i++){
+            loggerModeServer.error("error call", i)
+        }
+        assertEquals("Server buffer via error has reached maximum size and been flushed", Splunk.Logger.mode.Server.Buffer.getInstance().size(), 0);
+        var testLevelsModeServer = function(){
+            loggerModeServer.log("log");
+            loggerModeServer.log("log1", "log2");
+            loggerModeServer.info("info");
+            loggerModeServer.info("info1", "info2");
+            loggerModeServer.debug("debug");
+            loggerModeServer.debug("debug1", "debug2");
+            loggerModeServer.warn("warn");
+            loggerModeServer.warn("warn1", "warn2");
+            loggerModeServer.error("error");
+            loggerModeServer.error("error1", "error2");
+            return true;
+        }
+        assert("All levels for server mode", testLevelsModeServer());
+        
+    }
+</script>

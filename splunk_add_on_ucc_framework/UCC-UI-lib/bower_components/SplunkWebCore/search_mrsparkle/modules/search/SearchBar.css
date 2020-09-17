@@ -1,0 +1,378 @@
+.SearchBar fieldset {
+    padding: 0px;
+    margin: 0px;
+}
+.SearchBar textarea {
+    border: 0 none;   
+    display: block;
+    resize:none;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+    
+    width:100%;
+    height: 16px;
+    /*Note this line-height is also defined in the html template for textareaResize compatibility. */
+    line-height: 16px;
+    margin: 0;
+    padding:  0;
+    overflow: hidden;
+    line-height: 1;
+}
+
+.PostProcessFilter textarea {
+    border-style: solid !important;   
+    border-width: 1px   !important;
+    border-color: #CCC  !important;
+    width: 99% !important;
+    max-width: 300px    !important;
+}
+
+.SearchBar .searchFieldWrapper {
+    _zoom:1;
+	padding: 0;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	height: 26px;
+	z-index: 3;
+	position: relative;
+}
+
+.SearchBar .searchFieldWrapperInner {
+    overflow:hidden;
+    padding: 4px 2px 4px 5px;
+    background-color: #fff;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+	border-style: solid;
+	border-width: 1px;
+	margin: 0;
+	display: block;
+	height: 16px;
+	min-height: 12px;
+}
+.SearchBar .searchFieldWrapperInner.searchFieldActive {
+	height: auto;
+	min-height: 14px;
+}
+
+.SearchBar label {
+	padding: 4px 0 0 5px;
+    line-height: 16px;
+    display: block;
+    position: absolute;
+    margin: 0;
+    top: 1px;
+    left: 1px;
+}
+
+.SearchBar .assistantContainer {
+	border-style: solid;
+    border-width: 1px;
+	border-top: none;
+	overflow: auto;
+	display: none;
+	height: 205px;
+	overflow-x: hidden;
+	_width: 100%;
+	position: relative;
+}
+
+.SearchBar .assBar {
+    background-position: 0 0;
+}
+
+.SearchBar .assTab .splIcon {
+    height:8px;
+    margin: -2px 0 0 3px;
+}
+
+.SearchBar .assTab {
+    width:20px;
+    height:8px; 
+    padding-top: 4px;  
+    position:relative;  
+    
+	-webkit-border-bottom-right-radius: 3px;
+	-webkit-border-bottom-left-radius: 3px;
+	-moz-border-radius-bottomright: 3px;
+	-moz-border-radius-bottomleft: 3px;
+	border-bottom-right-radius: 3px;
+	border-bottom-left-radius: 3px;
+	
+    background-position: -4px 0px;
+    cursor: pointer;
+    margin: 1px 0 0 5px;
+}
+.SearchBar .assTab:hover {
+    text-decoration: none;
+}
+
+.SearchBar span.assistantAutoOpener {
+	display: none;
+}
+.SearchBar .assTab.assistantEnabled  {
+	width: 100%;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+	height: 9px;
+	margin: 0;
+}
+
+.SearchBar .assistantEnabled span.assistantAutoOpener {
+	display: block;
+	position:absolute;
+	right: 5px;
+	top: 0;
+	line-height: 11px;
+}
+.SearchBar .assistantEnabled span.saHandle {
+	display: block;
+	position:absolute;
+	right: 50%;
+	top: 3px;
+	height: 6px;
+	width: 30px;
+	margin-right: -15px;
+	cursor: default;
+	cursor: row-resize;
+}
+.SearchBar h4 {
+    margin-top: 10px;
+    padding-bottom: 0;
+}
+.SearchBar .saHeadingNav {
+	margin-top: 10px;
+	padding-bottom: 0;
+}
+.SearchBar .saHeadingNav h4 {
+	float: left;
+	margin-top: 0;
+	padding-bottom: 0;
+}
+
+
+.useOwnSubmitButton .searchFieldWrapper {
+    margin-right: 45px;
+}
+.SearchBar input {
+    float: right;
+}
+.SearchBar form {
+    display:block;
+}
+.SearchBar .permalinks {
+    text-align:right;
+}
+
+/* SEARCH ASSISTANT/HELPER */
+.SearchBar .assistantWrapper {
+	display: none;
+}
+.SearchBar .assistantContainer a {
+    cursor:pointer;   
+}
+.SearchBar .assistantActivator {
+
+}
+
+.SearchBar .assBar {
+    width: 100%;
+    height:0;   
+    _font-size: 0px;
+}
+
+/* Search assistant content */
+.SearchBar .assistantAnchor {
+    position: relative;
+    height: 0;
+    z-index: 400;
+    margin-top:-2px;
+}
+.SearchBar .assistantWrapper {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 401;
+	width:100%;
+}
+
+.SearchBar .assistantWrapper h3 {
+    margin:10px;   
+}
+.SearchBar ul {
+    margin-bottom:0;  
+    margin-left: 0;
+}
+.SearchBar .assistantWrapper ul,
+.SearchBar .assistantWrapper ul li {
+    list-style: none none;
+}
+
+
+.SearchBar .saHelpWrapper {
+    margin-left: 370px;
+    max-width: 605px;
+    float: left;
+    _float:none;
+}
+
+.SearchBar .assistantInnerHelpOnly .saHelpWrapper {
+    margin-left: 0;
+}
+.SearchBar .assistantInnerNarrow .saHelpWrapper {
+    margin-left: 0;
+    clear: left;
+    float: none;
+    padding-top: 1px;
+    zoom:1;
+}
+
+.SearchBar .saHelpContent {
+    padding:  0 10px 10px 10px;
+}
+
+.SearchBar .assistantInnerNarrow .saHelpContent {
+    padding-left:  5px;
+}
+.SearchBar .saHelpWrapper li {
+    padding: 0;
+}
+.saHelpContent table {
+    margin-top: 10px;
+}
+.saHelpContent td, .saHelpContent th {
+    padding-right:  10px;
+    text-align: left;
+}
+
+
+
+/* typeahead */
+.SearchBar .saTypeaheadWrapper {
+    float: left;
+    margin-right: -370px;
+    width: 370px;
+}
+
+.SearchBar .assistantInnerNarrow .saTypeaheadWrapper {
+	width: 100%;
+	float: none;
+	padding-bottom: 10px;
+}
+
+.SearchBar .saKeywords {
+    overflow: hidden;
+    margin-top: -5px;
+}
+.SearchBar .saKeywords h4 {
+    padding: 5px 10px 0 5px;
+    line-height: 1.2;
+}
+.SearchBar .sakeyword {
+    display: block;
+    white-space: nowrap;
+    padding: 0 10px 0 5px;
+    line-height: 1.2;
+}
+.SearchBar .sakeyword:hover {
+    text-decoration: none;
+}
+.SearchBar .sakeyword:focus {
+    outline: 0;
+    outline: none; 
+}
+.SearchBar .sakeywordCount {
+    float: right;
+    padding: 0 10px;
+    margin-right: -10px;
+}
+.SearchBar .assistantWrapper .saContent {
+    margin-bottom:10px;   
+}
+.SearchBar .assistantWrapper dl {
+    margin:5px 0 0 0; 
+    *margin-top: 0px;
+}
+.SearchBar .assistantWrapper dl dd {
+    margin-left:30px;   
+    margin-bottom: 5px;
+}
+.SearchBar ul.saCommands {
+    margin-bottom:10px;   
+}
+.SearchBar .saNextCommands {
+    padding-bottom:10px;
+    margin-left: 0;
+}
+.SearchBar .saNextCommands a {
+    margin-right:5px;   
+}
+/* IE6 fixes */
+.SearchBar .saSimilarSearchesHeader,
+.SearchBar h4.saExamplesHeader {
+    *padding-bottom:0px   
+}
+
+.SearchBar .saNotice {
+    border-style: solid;                                                                                                                               
+    border-width: 1px;                                                                                                                                                
+    margin: 10px 0 0 0;                                                                                                                                                      
+    padding: 3px           
+}
+
+.SearchBar .error {
+    border-style: solid;                                                                                                                               
+    border-width: 1px;                                                                                                                                                
+    margin: 10px 0 0 0;                                                                                                                                                      
+    padding: 3px;
+    line-height: 1.2;        
+}
+
+.SearchBar .assistantControls {
+    text-align: right;
+    padding: 1px 3px 0 0;
+    overflow: visible;
+    margin-bottom: -5px;
+}
+.intro {
+  padding-bottom: 10px;
+  line-height: 1.2;
+}
+.introstep {
+  display: block;
+  margin-top: 5px;
+  font-weight: bold;
+}
+.SearchBar .intro table { 
+    margin-top: 5px;
+}
+
+.SearchBar .intro ul { 
+    padding-left: 10px;
+    margin: 5px 0;
+}
+.SearchBar .intro ul li {
+    clear:None;   
+    margin-top: 5px;
+    margin-bottom:0;
+}
+.SearchBar .intro ul li{
+    padding: 0;  
+    margin-left: 10px;
+    list-style: outside;
+}
+.saClearBottom{
+	clear: left;
+}
+
+.SearchBar span.searchBarLabel {
+    display: block;
+    margin-bottom:5px;
+    font-size: 12px;          
+}
+
+

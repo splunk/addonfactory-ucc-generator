@@ -1,0 +1,31 @@
+{
+    "source": {
+        "include": [
+            "search_mrsparkle/exposed/js/views/shared/controls",
+            "search_mrsparkle/exposed/js/views/shared/Paginator.js",
+            "search_mrsparkle/exposed/js/views/Base.js",
+            "search_mrsparkle/exposed/js/mixins/viewlogging.js",
+            "search_mrsparkle/exposed/js/validation/ValidationMixin.js",
+            "search_mrsparkle/exposed/js/models/SplunkDBase.js",
+            "search_mrsparkle/exposed/js/models/Base.js",
+            "search_mrsparkle/exposed/js/models/services/search/Job.js",
+            "search_mrsparkle/exposed/js/models/services/saved/Search.js",
+            "search_mrsparkle/exposed/js/models/search/Job.js",
+            "search_mrsparkle/exposed/js/models/search/Report.js",
+            "search_mrsparkle/exposed/js/models/search/DispatchJob.js",
+            "search_mrsparkle/exposed/js/collections/Base.js",
+            "search_mrsparkle/exposed/js/collections/SplunkDsBase.js",
+            "search_mrsparkle/exposed/js/mixins/modelcollection.js",
+            "search_mrsparkle/exposed/js/routers/Base.js"
+        ],
+        "includePattern": ".+\\.(js|jsx|es)(doc)?$"
+    },
+    "plugins": [
+        "plugins/markdown",
+        "plugins/underscore"
+    ],
+    "opts": {
+        "destination": "./search_mrsparkle/exposed/docs/js/all",
+        "recurse": true
+    }
+}

@@ -1,0 +1,36 @@
+<%page args="element,widgetstyle" />
+<%namespace file="../_helpers.html" import="wireElementEvents"/>
+<%
+  # if the element sets display=list then display as a ul list rather than inline
+  display_list = element.get('format') == 'list'
+%>
+
+    <div id="item-${element['elementName'] | h}" class="radioWidget ${element['class'] if 'class' in element else '' | h} widget" ${widgetstyle}>
+        % if 'label' in element:
+            <span class="orphanLabel">${_(element['label']) | h}</span>
+        % endif
+        % if 'helpText' in element:
+            <p class="helpText">${_(element['helpText']) | h}</p>
+        % endif
+        <div>
+            <div class="widgeterror"><form:error name="${element["elementName"] | h}"/></div>
+            <% elnum = 0 %>
+            % if display_list:
+                <ul>
+            % endif
+            % for option in element["options"]:
+                % if display_list:
+                    <li>
+                % endif
+                <input type="radio" class="radio ${element['class'] if 'class' in element else '' | h}" id="${element["elementName"] | h}${elnum | h}" name="${element["elementName"] | h}" value="${option["value"] | h}" ${'disabled="disabled"' if element.get('disabled') else ''} ${wireElementEvents(element)}/>
+                <label for="${element["elementName"] | h}${elnum | h}">${option["label"] | h}</label>
+                <% elnum += 1 %>
+                % if display_list:
+                    </li>
+                % endif
+            % endfor
+            % if 'exampleText' in element:
+                <p class="exampleText"><em>${_(element['exampleText']) | extract_help_links }</em></p>
+            % endif
+        </div>
+    </div>

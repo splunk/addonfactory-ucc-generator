@@ -1,0 +1,5 @@
+<%page args="module"/>
+<%namespace name="lib" file="//lib.html" import="*"/>
+% if module['params'].get('savedSearch'):
+${lib.getSavedSearch(module, module['params'].get('savedSearch'), module['params'].get('useHistory'), APP['id'], cherrypy.session['user'].get('name'), VIEW['nativeObjectMode'])}
+% endif

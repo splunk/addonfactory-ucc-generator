@@ -1,0 +1,83 @@
+/*  Splunk: Alerts */
+/*  =================== */
+
+
+/*  Alerts Container */
+/*  ------------------------- */
+.alerts:not(.alerts-view) {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+
+/*  Base styles */
+/*  ------------------------- */
+
+.alert {
+    margin-bottom: $baseLineHeight;
+    border-radius: $baseBorderRadius;
+    position: relative;
+    padding: 8px 35px 8px 27px;
+    word-wrap: break-word;
+    color: $textColor;
+
+    .icon-alert {
+        font-size: 200%;
+        position: absolute;
+        left: 0px;
+        top: 8px;
+    }
+
+    h4 {
+        color: inherit;
+        margin: 0;
+    }
+    .close {
+      position: relative;
+      top: -2px;
+      right: -21px;
+      line-height: $baseLineHeight;
+    }
+}
+
+.alert-inline {
+    display: inline-block;
+    border: 0;
+    margin-bottom: 0;
+}
+
+
+
+/*  Alert Levels */
+/*  ------------------------- */
+
+.alert-warning  .icon-alert {
+    color: $yellow;
+    &:before {
+        content: '\ECE2';
+    }
+}
+
+.alert-info .icon-alert {
+    color: $splunkGreen;
+    &:before {
+        content: 'I';
+    }
+}
+
+.alert-404,
+.alert-error {
+    .icon-alert {
+        color: $red;
+    }
+}
+
+
+/*  Lite */
+/*  ------------------------- */
+
+@if $theme == lite {
+    .alert-info .icon-alert {
+        color: $splunkLiteBlack;
+    }
+}

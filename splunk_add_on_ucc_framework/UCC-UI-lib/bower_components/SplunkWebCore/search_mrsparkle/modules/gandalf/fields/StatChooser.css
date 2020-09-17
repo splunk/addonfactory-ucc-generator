@@ -1,0 +1,11 @@
+.StatChooser {
+    clear:both;
+    float:left;
+}
+.StatChooser .insertAdditionalSeries {
+    display:none;
+}
+.StatChooser fieldset.showAdditional .insertAdditionalSeries {
+    display:block;
+    clear:both;
+}

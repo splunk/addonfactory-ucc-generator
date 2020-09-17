@@ -1,0 +1,37 @@
+.Count label {
+    margin-right: 5px;
+}
+.Count select {
+    width: 55px;
+}
+.pageControls .Count {
+    float:right;
+    height: 10px;
+}
+
+.Count .perPageLabel {
+    display: inline-block;
+    position: relative;
+    padding-right: 10px;
+    color: #333;
+}
+.Count .dropDown {
+    position: absolute;
+    top: 45%;
+    right: 0;
+}
+
+.CountMenu a {
+    width: 30px;
+    *width:auto;
+}
+
+.CountMenu ul div.innerMenuWrapper {
+    width: 50px;
+}
+
+.CountMenu ul li {
+    width: 50px;
+}
+
+

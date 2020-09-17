@@ -1,0 +1,171 @@
+<%inherit file="//qunit/template.html" />
+
+<%def name="title()">Splunk.Module.ViewstateAdapter -- QUnit tests</%def>
+
+<script type="text/javascript" src="/en-US/static/js/contrib/swfobject.js"></script>
+<script type="text/javascript" src="/en-US/static/js/contrib/deprecated/jquery-ui-1.8.5.custom.min.js"></script>
+<script type="text/javascript" src="/en-US/static/js/ja_bridge.js"></script>
+<script type="text/javascript" src="/en-US/static/js/jobber.js"></script>
+<script type="text/javascript" src="/en-US/static/js/job.js"></script>
+<script type="text/javascript" src="/en-US/static/js/context.js"></script>
+<script type="text/javascript" src="/en-US/static/js/search.js"></script>
+<script type="text/javascript" src="/en-US/static/js/menu_builder.js"></script>
+<script type="text/javascript" src="/en-US/static/js/time_range.js"></script>
+<script type="text/javascript" src="/en-US/static/js/module_loader.js"></script>
+<script type="text/javascript" src="/en-US/static/js/popup.js"></script>
+<script type="text/javascript" src="/en-US/static/js/page_status.js"></script>
+<script type="text/javascript" src="/en-US/static/js/field_summary.js"></script>
+<script type="text/javascript" src="/en-US/static/js/textarea_resize.js"></script>
+<script type="text/javascript" src="/en-US/static/js/contrib/ui.spinner.js"></script>
+<script type="text/javascript" src="/en-US/static/js/timespinner.js"></script>
+
+<script type="text/javascript" src="/en-US/static/js/test_utils.js"></script>
+
+<script language="javascript">
+    // important to disable the chatty debug that the tests spew.
+    //Splunk.Logger.mode.Default = Splunk.Logger.mode.None
+</script>
+
+<script type="text/javascript" src="/en-US/static/js/init.js"></script>
+
+
+<!--  Now the modules  -->
+<script type="text/javascript" src="/en-US/modules/AbstractModule.js"></script>
+<script type="text/javascript" src="/en-US/modules/DispatchingModule.js"></script>
+<script type="text/javascript" src="/en-US/modules/results/ViewstateAdapter.js"></script>
+
+
+
+
+<script language="javascript">
+
+    var logger = Splunk.Logger.getLogger("modules.html", Splunk.Logger.mode.Firebug);
+    
+    function generateViewRedirector(params) {
+        var container = $("<div>");
+        var className = "ViewstateAdapter";
+
+        var moduleId = "my" + className;
+        container.attr("id", moduleId);
+        $(document.body).append(container);
+
+        //Splunk.Module = {}
+        Splunk.Module.loadParams = {};
+        Splunk.Module.loadParams[moduleId] = {};
+        for (var key in params) {
+            if (params.hasOwnProperty(key)) {
+                Splunk.Module.loadParams[moduleId][key] = params[key];
+            }
+        }
+        var module = new Splunk.Module[className](container);
+        module.moduleType = className;
+        return module; 
+    }
+    
+
+    function setUp() {
+
+        
+    }
+    
+    function tearDown() {
+        
+        //$(document.body).html("");
+    }
+
+    
+
+    
+
+    function test_adapterness() {
+        cases = [
+            {
+                "description" : "just some basic params to start",
+                "proxyParams" : {
+                    "YAxisTitleFormatter": {"default": "CPU seconds"}, 
+                    "NullValueFormatter": {"default": "gaps"}, 
+                    "StackModeFormatter": {"default": "stacked100"},
+                }, 
+                "expectedContextDict" : {
+                    "charting.secondaryAxisTitle.text" : "CPU seconds",
+                    "charting.chart.nullValueMode" : "gaps",
+                    "charting.chart.stackMode" : "stacked100"
+                }
+            }, 
+
+            // in this case we put in some new 'default' params.
+            {
+                "description" : "putting in some of the newer default params",
+                "proxyParams" : {
+                    "Count" : {"default" : "10"},
+                    "DataOverlay": {"default" : "heatmap"},
+                    "MaxLines":   {"default": "50"},
+                    "RowNumbers": {"default": "True"},
+                    "Segmentation": {"default": "inner"}
+                }, 
+                "expectedContextDict" : {
+                    "results.maxLines" : "50",
+                    "results.dataOverlayMode" : "heatmap",
+                    "results.maxLines" : "50",
+                    "results.displayRowNumbers" : "True",
+                    "results.segmentation" : "inner"
+                }
+            },
+
+            // in this case we put in the old deprecated params.
+            {
+                "description" : "putting in some of the older deprecated params",
+                "proxyParams" : {
+                    "Count" :       {"count" : "10"},
+                    "DataOverlay":  {"dataOverlayMode" : "heatmap"},
+                    "MaxLines":     {"maxLines": "50"},
+                    "RowNumbers":   {"displayRowNumbers": "True"},
+                    "Segmentation": {"segmentation": "inner"}
+                }, 
+                "expectedContextDict" : {
+                    "results.maxLines" : "50",
+                    "results.dataOverlayMode" : "heatmap",
+                    "results.maxLines" : "50",
+                    "results.displayRowNumbers" : "True",
+                    "results.segmentation" : "inner"
+                }
+            },
+
+            // and lastly, we check that when both are present, the deprecated params lose. 
+            {
+                "description" : "putting in both new params and deprecated params",
+                "proxyParams" : {
+                    "Count" :       {"count" : "10", "default" : "50"},
+                    "DataOverlay":  {"dataOverlayMode" : "highlow", "default" : "heatmap"},
+                    "MaxLines":     {"maxLines": "10", "default" : "50"},
+                    "RowNumbers":   {"displayRowNumbers": "False", "default" : "True"},
+                    "Segmentation": {"segmentation": "outer", "default" : "inner"}
+                }, 
+                "expectedContextDict" : {
+                    "results.maxLines" : "50",
+                    "results.dataOverlayMode" : "heatmap",
+                    "results.maxLines" : "50",
+                    "results.displayRowNumbers" : "True",
+                    "results.segmentation" : "inner"
+                }
+            }
+        ];
+        for (var i=0; i<cases.length; i++) {
+            var loadParams = {};
+            loadParams['proxyParams'] = cases[i]["proxyParams"];
+            var moduleUnderTest = generateViewRedirector(loadParams);
+
+            // if the module's working properly, all the expected context keys 
+            // should be present in the modified Context. 
+            var context = moduleUnderTest.getModifiedContext();
+
+            for (contextKey in cases[i]["expectedContextDict"]) {
+                
+                var receivedValue = context.get(contextKey);
+                var expectedValue = cases[i]["expectedContextDict"][contextKey];
+                assertEquals(cases[i]["description"] + " check the values for the " + contextKey + " key", receivedValue, expectedValue);
+            }
+        }
+    }
+    
+</script>

@@ -1,0 +1,268 @@
+
+
+/* This stylesheet contains styles that are used with the dashboard.html template */
+
+div.layoutCell {
+	position: relative;
+}
+
+/* dashboardPanel divs are to be contained within layoutCell */
+.layoutCellInner {
+    margin:10px 5px 5px;
+}
+.firstCell .layoutCellInner {
+    margin-left:10px;
+}
+.lastCell .layoutCellInner {
+    margin-right:10px;
+}
+/* move the outer margin to dashboard cell inner padding */
+
+.dashboardCell {
+    padding: 10px;
+}
+
+.dashboardContent {
+    clear: both;
+    overflow: hidden;
+}
+
+.layoutCellInner .SplunkModule {
+    margin:0;
+}
+
+.dashboardCell .SplunkModule {
+    padding: 0 0 10px 0;
+}
+
+.dashboardCell .FlashChart {
+    padding-bottom: 0;
+}
+.dashboardCell .meta {
+    float: right;
+}
+
+.dashboardCell .SingleValue {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.dashboardCellEditable {
+    position: relative;
+}
+
+.dashboardCellExpose {
+	background-color: #fff !important;
+	border-radius: 5px 5px;
+}
+
+/* dashboard headers */
+.dashboardCell .splHeader {
+    height: auto;
+    line-height: normal;
+    border-top:none;
+}
+
+.splHeader-dashboard {
+    padding: 0 0 10px 0;
+}
+
+.splLastRefreshed {
+    min-width:60px;
+    color:#444;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+body.splTemplate-dashboard .TitleBar {
+    padding: 0;
+    margin-left: 0;
+}
+
+.splHeader-dashboard h2,
+.dashboardContent .ServerSideInclude h2,
+.dashboardContent .GenericHeader h3 {
+/*    float:left;*/ /*removed due to SPL-42927*/
+    padding: 0 20px 0 0;
+    margin: 0 50px 10px 0;
+    height: auto;
+}
+
+.dashboardContent .SimpleResultsHeader h3 {
+    padding-bottom: 10px;
+}
+
+.dashboardContent .Paginator {
+    height:auto;
+    padding-bottom: 10px;
+}
+
+
+
+
+/* quick and dirty minimizable panel css */
+.layoutCellInner h2.dashboardPanelTitle span{
+    font-size: $baseFontSizeSmall;
+    float:right;
+}
+
+.layoutCellInner .ResultsHeader {
+    padding:0px;
+    background:none;
+    border-top: 0px;
+    margin-bottom: 0.5em;
+}
+/*  Cant think of a cleaner way to do this right now. */
+.splHeader-dashboard span {
+    float:right;
+}
+
+
+/*
+ * UI dashboard editor
+ */
+div.vmEditReorderCanvasWrapper {
+    padding: 0;
+    margin: 0;
+    width: 500px;
+}
+div.vmEditReorderCanvasWrapper legend {
+    padding: 0;
+    margin: 0;
+}
+
+.vmDashboardContainer .advanced {
+    padding: 10px;
+}
+.vmDashboardContainer .addPanelSubmit {
+    padding: 10px 0;
+}
+
+.vmDashboardContainer .vmEditReorderCanvas {
+    margin-top: 10px;
+    height: 225px;
+    overflow: auto;
+}
+
+.vmDashboardContainer .vmEditReorderCanvas ul {
+    list-style-type: none;
+    margin: 0 0 20px 0;
+    padding: 0;
+    clear: both;
+    height: 80px;
+    width: auto;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    user-select: none;
+}
+.vmDashboardContainer .vmEditReorderCanvas li {
+    display: block;
+    float: left;
+    width: 150px;
+    height: 90px;
+    overflow: hidden;
+    border: 1px solid $borderColor;
+    margin: 0 5px 5px 0;
+    position: relative;
+}
+.vmDashboardContainer .vmEditReorderCanvas .panelClass {
+    padding: 3px;
+    font-weight: bold;
+    cursor: move;
+}
+.vmDashboardContainer .vmEditReorderCanvas .panelContents {
+    padding: 3px 3px 15px 3px;
+}
+.vmDashboardContainer .vmEditReorderCanvas .panelContents .links {
+    position: absolute;
+    bottom: 0;
+    left: 3px;
+}
+.vmDashboardContainer .vmEditReorderCanvas .searchCommand {
+    font-style: italic;
+}
+.vmDashboardContainer ul.vmEmptyRow {
+    height: 20px;
+    margin: 0;
+}
+.vmDashboardContainer li.vmPanelDropPlaceholder {
+    border: 1px dashed $borderDarkColor !important;
+}
+
+/* XXX confirm this */
+div.vmPanelDropPlaceholder {
+    border: 1px solid #ccc !important;
+	border-radius: 2px;
+
+	box-shadow: 0 0 5px #ccc;
+
+	margin: 10px;
+    height: 130px;
+
+    float: left;
+    width: 30%;
+    clear: none;
+}
+
+div.vmPanelDropPlaceholderOverlay {
+	top: 0;
+	left: 0;
+	position: absolute;
+	cursor: move;
+	background-color: $white;
+    opacity: 0.01;
+}
+
+div.vmPanelDropPlaceholderOverlay:hover {
+	background-color: $white;
+}
+
+.vmDashboardContainer form.vmAddPanel {
+    padding-top: 10px;
+}
+
+.vmDashboardContainer .radioset label {
+    display: inline;
+}
+.vmDashboardContainer .inlineradio {
+    width: auto;
+    border: 0 !important;
+}
+.vmDashboardContainer fieldset.searchCommand ,
+.vmDashboardContainer fieldset.clickOptions {
+    margin: 10px 0;
+
+}
+
+p.dashboardPromptMessage {
+    text-align: center;
+    font-size: $baseFontSizeLarge;
+    margin-top: 100px;
+}
+
+/*lil-nub-dropdown*/
+.dashboardCell .paneledit {
+    display: none;
+    position:absolute;
+    top:-1px;
+    right:0;
+    margin-right: -1px;
+    direction:ltr;
+    border-radius:0 2px 0 0;
+    z-index: 3;}
+.dashboardCell .paneledit .splButtonIcon {
+    background-position: -13px -721px;
+}
+.dashboardCell .paneledit:hover,
+.dashboardCell .menuOpen {
+    background-color: $offWhite;;
+	@mixin gradient-vertical $white, #e5e5e5;
+    border-color: #aeaeae;
+    border-top-color: #b7b7b7;
+    border-bottom-color: #989898;
+    background-position: 0 0;
+}
+
+/*position for count module*/
+.dashboardCell .Count {
+    margin-left: 10px;
+}

@@ -1,0 +1,22 @@
+.view {
+    float: left;
+    position: relative;
+}
+.divider {
+    display: inline-block;
+    height: 10px;
+    margin: 0 15px;
+    opacity: 0.2;
+}
+.appNavInner {
+    float: left;
+}
+
+/*  Lite UI */
+@if $theme == lite {
+    .divider {
+        display: block;
+        height: 40px;
+        float: left;
+    }
+}

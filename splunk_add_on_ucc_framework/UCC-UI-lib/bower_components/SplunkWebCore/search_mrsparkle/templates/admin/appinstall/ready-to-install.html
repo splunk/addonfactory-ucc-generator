@@ -1,0 +1,101 @@
+<%!
+    title = 'App Install'
+    %>
+    <%namespace name="lib" file="//lib.html" import="*"/>
+    <%namespace name="helpers" file="//admin/_helpers.html"/>
+    <%inherit file="//layout/admin.html" />
+    <%
+    import splunk
+    from splunk.appserver.mrsparkle.lib import util, i18n
+%>
+
+<script language="JavaScript">
+    $(function() {
+        $('#installform').submit(function() {
+            if ($('button').hasClass('disabled')) {
+                $('.spl-license-warn').show();
+                return false;
+            } else {
+                $('button').attr('disabled', 'disabled');
+                $('.splButton-primary').text(${_('Processing...')|jsonify});
+                return true;
+            }
+        });
+        $('.splButton-secondary').click(function() {
+            window.location = ${jsonify(make_url(breadcrumbs[-2][1] if len(breadcrumbs)>1 else state['return_to']))};
+            return false;
+        });
+    });
+</script>
+<script language="JavaScript">
+    function acceptLicense(checkBox) {
+        if ($(checkBox).is(':checked')) {
+            $(checkBox).val(1);
+            $('.splButton-primary').removeClass('disabled');
+        } else {
+            $(checkBox).val(0);
+            $('.splButton-primary').addClass('disabled');
+        }
+    }
+</script>
+
+
+% if error:
+    <%helpers:message content="${error}" level="error"/>
+% endif
+
+
+<div class="spl-gdi-wrapper spl-prompt-message-layout"> 
+	<div class="jmFormOptions">
+	    <h2 class="spl-page-hdr spl-icon-success-md" > 
+	        <span> 
+	            <!-- replace with page title --> 
+	            ${_('Accept License Agreements')}
+	            <!-- end replace with page title --> 
+	        </span>
+	    </h2> 
+	    <span class="spl-hr-solid-lite"></span> 
+	    <!-- start prompt message --> 
+	    <form id="installform" method="post" action="${install_url}">
+	    <input type="hidden" name="state" value="${state.serialize()|h}">
+        ${csrf_hidden_input()}
+	    <div class="spl-prompt-message-wrapper"> 
+	        <p class="spl-main-description">
+	           ${_('Click the button below to install the "%(appname)s" app into Splunk') % dict(appname=appname)}
+	        </p>
+            % if (app_license_url != 'http://www.splunk.com/view/SP-CAAAAAH'):
+            <p class="spl-main-description">
+               ${_('This app is provided by a third party and your rights to use the '
+                'app is in accordance with the license provided by that third-party licensor. '
+                'Splunk is not responsible for any third-party apps and does not provide any '
+                'warranty or support. If you have any questions, complaints or claims with '
+                'respect to this app, please contact the licensor directly, whose contact '
+                'information can be found on the download page.')}
+            </p>
+             % endif
+            <p class="spl-main-description splunk-components">
+               <a href="${app_license_url}" target="_blank">${app_license}<span class="icon-external external"></span></a>
+            </p>
+            <p class="spl-main-description splunk-components">
+               <a href="${_('http://www.splunk.com/view/SP-CAAAAAH')}" target="_blank">${_('Splunk Websites Terms and Conditions of Use')}<span class="icon-external external"></span></a>
+            </p>
+            <p class="spl-main-description">
+                <input type="checkbox" name="accept-license" value="0" id="accept-license" onclick="acceptLicense(this);"/>
+                <label for="accept-license">${_('I have read the terms and conditions of the license and agree to be bound by them.')}</label>
+                <p class="spl-license-warn">${_('Please accept the terms and conditions.')}</p>
+            </p>
+	    </div> 
+	</div>
+    
+    <!-- Start button bar --> 
+    <div class="jmFormActions"> 
+        <button class="splButton-secondary">
+            <span>${_('Cancel')}</span> 
+        </button> 
+        <button class="splButton-primary disabled" type="submit"> 
+            <span>${_('Install')}</span> 
+        </button> 
+    </div> 
+    </form>
+</div> 
+

@@ -1,0 +1,101 @@
+<%inherit file="//layout/admin_lite_dialog.html"/>
+<%namespace name="lib" file="//lib.html" />
+<%namespace name="formset" file="//formset.html" />
+
+<%def name="title()">${_('Expired license')} - ${parent.title()}</%def>
+<%def name="get_breadcrumbs()">
+    <%
+        return [
+            [_('Manager'), ['manager']],
+            [_('Licensing'), ['manager','system','licensing']]
+        ]
+    %>
+</%def>
+
+% if controller_exception:
+    <div class="error">
+        <%lib:render_exception e="${controller_exception}" />
+    </div>
+% endif
+
+
+% if is_success:
+
+    <div class="message_block_success"><span class="message_block_success_text">${_('Change successful')}</span></div>
+    <p>${_('The Free license has been installed.  You must restart Splunk to activate changes.')}</p>
+
+% else:
+
+    <h1>${_('Expired license')}</h1>
+
+    % if not can_change_license:
+        <p>
+            ${_('The Splunk license for this server has expired and search access has been disabled. Contact your Splunk administrator to update the license.')}
+        </p>
+
+    % else:
+
+        <p>
+            ${_('Splunk requires a valid license to work.')}
+        </p>
+
+        <table>
+            <tr>
+                <td>
+                    <input type="radio" id="ms0" name="formset_mode" value="free" />
+                </td>
+                <td>
+                    <label for="ms0">${_('Switch to the Free license')}</label>
+                    <p>
+                        ${_('The Splunk Free license allows you to index 500MB of data per day with no expiration.')}
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="radio" id="ms1" name="formset_mode" value="add_license" />
+                </td>
+                <td>
+                    <label for="ms1">${_('Add a license')}</label><br />
+                    <p>
+                        ${_('Install a valid Splunk license file to proceed')}
+                    </p>
+                </td>
+            </tr>
+        </table>
+        <script type="text/javascript">
+            $(function() {
+                $('form').bind('submit', function() {
+                    if ($('input[name="formset_mode"]:checked').length == 0) {
+                        alert(_('You must choose an option to continue.'));
+                        return false;
+                    }
+                });
+            });
+        </script>
+                
+
+    % endif
+
+% endif
+
+##
+## buttons
+##
+
+<%def name="gutter()">
+    <div class="admin-dialog-tray">
+    % if is_success:
+        <%
+        qs = {'auto_restart':'1'}
+        %>
+        ${formset.button(_('Restart'), is_primary=True, href=make_url(['manager','search','control'], _qs=qs) )}
+    % else:
+        % if can_change_license:
+            ${formset.button(_('Submit'), is_primary=True, is_submit=True)}
+        % else:
+            ${formset.button(_('Change user'), is_primary=True, is_submit=False, href=make_url(['account','login']))}
+        % endif        
+    % endif
+    </div>
+</%def>

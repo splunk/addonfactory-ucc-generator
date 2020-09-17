@@ -1,0 +1,76 @@
+{
+   "links":{
+      "create":"/servicesNS/nobody/demo_bubbles/data/ui/views/_new",
+      "_reload":"/servicesNS/nobody/demo_bubbles/data/ui/views/_reload"
+   },
+   "origin":"https://localhost:8089/servicesNS/nobody/demo_bubbles/data/ui/views",
+   "updated":"2013-05-06T13:07:35-07:00",
+   "generator":{
+      "build":"161914",
+      "version":"20130503"
+   },
+   "entry":[
+      {
+         "name":"airports_by_destination",
+         "id":"https://localhost:8089/servicesNS/nobody/demo_bubbles/data/ui/views/airports_by_destination",
+         "updated":"2013-05-06T13:07:35-07:00",
+         "links":{
+            "alternate":"/servicesNS/nobody/demo_bubbles/data/ui/views/airports_by_destination",
+            "list":"/servicesNS/nobody/demo_bubbles/data/ui/views/airports_by_destination",
+            "_reload":"/servicesNS/nobody/demo_bubbles/data/ui/views/airports_by_destination/_reload",
+            "edit":"/servicesNS/nobody/demo_bubbles/data/ui/views/airports_by_destination"
+         },
+         "author":"nobody",
+         "acl":{
+            "app":"demo_bubbles",
+            "can_change_perms":true,
+            "can_list":true,
+            "can_share_app":true,
+            "can_share_global":true,
+            "can_share_user":false,
+            "can_write":true,
+            "modifiable":true,
+            "owner":"nobody",
+            "perms":{
+               "read":[
+                  "*"
+               ],
+               "write":[
+                  "*"
+               ]
+            },
+            "removable":false,
+            "sharing":"global"
+         },
+         "fields":{
+            "required":[
+               "eai:data"
+            ],
+            "optional":[
+               "digest",
+               "refresh"
+            ],
+            "wildcard":[
+
+            ]
+         },
+         "content":{
+            "eai:acl":null,
+            "eai:appName":"demo_bubbles",
+            "eai:data":"<dashboard>\n\t<label>Airports by Destination (Simple View)<\/label>\n\t<description/>\n\t<row>\n\t\t<table id=\"element1\">\n\t\t\t<title>Airports by Destination<\/title>\n\t\t\t<searchString>search index=faa\n| stats count by DestState DestAirport\n| sort - count<\/searchString>\n\t\t\t<earliestTime>1357027200<\/earliestTime>\n\t\t\t<latestTime>1359705600<\/latestTime>\n\t\t\t<option name=\"wrap\">true<\/option>\n\t\t\t<option name=\"displayRowNumbers\">true<\/option>\n\t\t\t<option name=\"dataOverlayMode\">none<\/option>\n\t\t\t<option name=\"drilldown\">row<\/option>\n\t\t<\/table>\n\t<\/row>\n<\/dashboard>",
+            "eai:digest":"61e226e8e0d68c8d26bfff47ec11048a",
+            "eai:type":"views",
+            "eai:userName":"nobody",
+            "label":"Airports by Destination (Simple View)"
+         }
+      }
+   ],
+   "paging":{
+      "total":1,
+      "perPage":30,
+      "offset":0
+   },
+   "messages":[
+
+   ]
+}

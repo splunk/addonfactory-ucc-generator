@@ -1,0 +1,323 @@
+<%inherit file="//qunit/template.html" />
+
+<%def name="title()">Splunk.Module.ConvertToIntention -- QUnit tests</%def>
+
+<script type="text/javascript" src="/en-US/static/js/time_range.js"></script>
+<script type="text/javascript" src="/en-US/static/js/job.js"></script>
+<script type="text/javascript" src="/en-US/static/js/jobber.js"></script>
+<script type="text/javascript" src="/en-US/static/js/context.js"></script>
+<script type="text/javascript" src="/en-US/static/js/search.js"></script>
+<script type="text/javascript" src="/en-US/static/js/page_status.js"></script>
+
+<script type="text/javascript" src="/en-US/static/js/test_utils.js"></script>
+
+<script language="javascript">
+    // important to disable the chatty debug that the tests spew.
+    //Splunk.Logger.mode.Default = Splunk.Logger.mode.None
+</script>
+<script type="text/javascript" src="/en-US/static/js/init.js"></script>
+
+<!--  Now the base module classes-->
+<script type="text/javascript" src="/en-US/modules/AbstractModule.js"></script>
+
+<!--  Now the modules we'll be testing -->
+<script type="text/javascript" src="/en-US/modules/converters/ConvertToIntention.js"></script>
+
+<script language="javascript">
+    // req for the testing
+    Splunk._testHarnessMode = true;
+    var logger = Splunk.Logger.getLogger("events_viewer.html", Splunk.Logger.mode.Firebug);
+
+    var moduleTypes = getModuleTypes();
+    Splunk.Module.loadParams = {};
+        
+    
+
+    // in order to make use of callForEachModule and callForEachCombination,  we need 
+    // to implement this template method,  generateInstance.  
+    function generateInstance(className, params) {
+        var container = $('<div></div>');
+        
+        var moduleId = className + "_testInstance";
+        container.attr("id", moduleId);
+        container.appendTo(document.body);
+        Splunk.Module.loadParams[moduleId] = {};
+        for (var key in params) {
+            if (params.hasOwnProperty(key)) {
+                Splunk.Module.loadParams[moduleId][key] = params[key];
+            }
+        }
+        var module = new Splunk.Module[className](container);
+        module.moduleType = className;
+        return module; 
+    }
+    
+    function getLegacyIntentionStruct(intentionName, arg1, arg2) {
+        switch (intentionName) {
+        case "addterm" :
+            var argDict = {}
+            argDict[arg1] = arg2;
+            var intention = {
+                name: "addterm",
+                arg:  argDict
+            };
+            break;
+        
+        // the old overly completed 'settingToConvert' + '$target$' replacement
+        case "stringreplace (legacy)" :
+            var argDict = {};
+
+            argDict[arg1] = {
+                "value": "$target$"
+            }
+            var intention = {
+                name: "stringreplace",
+                arg: argDict
+            }
+            break;
+        // the newer, 'one less hoop' system, where it just replaces directly.
+        case "stringreplace" :
+            var argDict = {};
+
+            argDict[arg1] = {
+                "value": "$" + arg1 + "$"
+            }
+            var intention = {
+                name: "stringreplace",
+                arg: argDict
+            }
+        }
+        
+
+        return intention;
+    }
+
+    function checkModifiedIntentionIsPresent(moduleUnderTest, contextKey, contextValue, intentionName) {
+        intentionName = intentionName || "addterm";
+        var modifiedContext = moduleUnderTest.getModifiedContext();
+        var receivedSearch  = modifiedContext.get("search");
+
+        // getIntentionReference predates stringreplace and unfortunately doesnt work very well with stringreplace.
+        var secondArgKey = (intentionName=="stringreplace")? null : contextKey;
+        var receivedIntention = receivedSearch.getIntentionReference(intentionName, secondArgKey );
+        
+        assertEquals(" should match", contextValue, receivedIntention["arg"][contextKey]);
+    }
+    
+    function test_legacyConversion() {
+        var contextKey   = "foobar"
+        var contextValue = "baz"
+        var loadParams = {
+            "intention" : getLegacyIntentionStruct("addterm", contextKey, "$target$"),
+            "settingToConvert" : contextKey
+        };
+        
+        var moduleUnderTest = generateInstance("ConvertToIntention", loadParams)
+        
+        var mockParent = addMockParent(moduleUnderTest);
+        mockParent.getModifiedContext = function() {
+            var context = this.getContext();
+            context.set(contextKey, contextValue);
+            return context;
+        }
+        mockParent.pushContextToChildren();
+        checkModifiedIntentionIsPresent(moduleUnderTest, contextKey, contextValue);
+        
+    }
+    
+
+    function test_stringReplaceLegacyConversion() {
+        var loadParams = {
+            "settingToConvert" : "sensibleKey",
+            "intention" : getLegacyIntentionStruct("stringreplace (legacy)", "hoopJumpingKey")
+        };
+        
+        var moduleUnderTest = generateInstance("ConvertToIntention", loadParams);
+
+        var mockParent = addMockParent(moduleUnderTest);
+        mockParent.getModifiedContext = function() {
+            var context = this.getContext();
+            context.set("sensibleKey", "sensibleValue");
+            return context;
+        }
+        mockParent.pushContextToChildren();
+
+        
+        var modifiedContext = moduleUnderTest.getModifiedContext();
+        var receivedSearch  = modifiedContext.get("search");
+        //console.log(JSON.stringify(receivedSearch._intentions));
+        //console.log(JSON.stringify(receivedIntention));
+        
+        var receivedIntention = receivedSearch.getIntentionReference("stringreplace");
+        //console.log(JSON.stringify(receivedIntention.arg));
+        assertTrue("check that the replacement ended up with us having the right field", receivedIntention.arg.hasOwnProperty("hoopJumpingKey"));
+        //console.log(JSON.stringify(receivedIntention.arg["hoopJumpingKey"]));
+        // dizzy yet? 
+        assertEquals("check that the replacement ended up with us having the right value", "sensibleValue", receivedIntention.arg.hoopJumpingKey.value);
+    }
+    
+    /**
+     *  check that if given an emptystring value as input, it still creates a stringreplace intention.
+     */
+    function test_stringReplaceLegacyConversionHandlesEmptyStringInput() {
+        var loadParams = {
+            "settingToConvert" : "sensibleKey",
+            "intention" : getLegacyIntentionStruct("stringreplace (legacy)", "hoopJumpingKey")
+        };
+        
+        var moduleUnderTest = generateInstance("ConvertToIntention", loadParams);
+
+        var mockParent = addMockParent(moduleUnderTest);
+        mockParent.getModifiedContext = function() {
+            var context = this.getContext();
+            context.set("sensibleKey", "");
+            return context;
+        }
+        mockParent.pushContextToChildren();
+
+        
+        var modifiedContext = moduleUnderTest.getModifiedContext();
+        var receivedSearch  = modifiedContext.get("search");
+        //console.log(JSON.stringify(receivedSearch._intentions));
+        
+        var receivedIntention = receivedSearch.getIntentionReference("stringreplace");
+        //console.log(JSON.stringify(receivedIntention));
+        
+        //console.log(JSON.stringify(receivedIntention.arg));
+        assertTrue("check that the replacement ended up with us having the right field", receivedIntention.arg.hasOwnProperty("hoopJumpingKey"));
+        //console.log(JSON.stringify(receivedIntention.arg["hoopJumpingKey"]));
+        assertEquals("check that the replacement ended up with us having an intention with an emptystring value.", "", receivedIntention.arg.hoopJumpingKey.value);
+    }
+
+    function test_stringReplaceAutomaticConversion() {
+        // NOTE THAT THE 'settingToConvert' is omitted.  
+        // this causes the module to just do replacement automatically based off of 
+        // $foo$ tokens it finds anywhere in the intention struct.
+        var loadParams = {
+            "intention" : getLegacyIntentionStruct("stringreplace", "sensibleKey")
+        };
+        
+        var moduleUnderTest = generateInstance("ConvertToIntention", loadParams);
+
+        var mockParent = addMockParent(moduleUnderTest);
+        mockParent.getModifiedContext = function() {
+            var context = this.getContext();
+            context.set("sensibleKey", "sensibleValue");
+            return context;
+        }
+        mockParent.pushContextToChildren();
+
+        
+        var modifiedContext = moduleUnderTest.getModifiedContext();
+        var receivedSearch  = modifiedContext.get("search");
+        //console.log(JSON.stringify(receivedSearch._intentions));
+        //console.log(JSON.stringify(receivedIntention));
+        
+        var receivedIntention = receivedSearch.getIntentionReference("stringreplace");
+        //console.log(JSON.stringify(receivedIntention.arg));
+        assertTrue("check that the replacement ended up with us having the right field", receivedIntention.arg.hasOwnProperty("sensibleKey"));
+        //console.log(JSON.stringify(receivedIntention.arg["sensibleKey"]));
+        assertEquals("check that the replacement ended up with us having the right value", "sensibleValue", receivedIntention.arg.sensibleKey.value);
+        
+    }
+
+
+    function test_stringReplaceAutomaticConversionHandlesEmptyStringInput() {
+        // NOTE THAT THE 'settingToConvert' is omitted.  
+        // this causes the module to just do replacement automatically based off of 
+        // $foo$ tokens it finds anywhere in the intention struct.
+        var loadParams = {
+            "intention" : getLegacyIntentionStruct("stringreplace", "sensibleKey")
+        };
+        
+        var moduleUnderTest = generateInstance("ConvertToIntention", loadParams);
+
+        var mockParent = addMockParent(moduleUnderTest);
+        mockParent.getModifiedContext = function() {
+            var context = this.getContext();
+            context.set("sensibleKey", "");
+            return context;
+        }
+        mockParent.pushContextToChildren();
+
+        
+        var modifiedContext = moduleUnderTest.getModifiedContext();
+        var receivedSearch  = modifiedContext.get("search");
+        //console.log(JSON.stringify(receivedSearch._intentions));
+        //console.log(JSON.stringify(receivedIntention));
+        
+        var receivedIntention = receivedSearch.getIntentionReference("stringreplace");
+        //console.log(JSON.stringify(receivedIntention.arg));
+        assertTrue("check that the replacement ended up with us having the right field", receivedIntention.arg.hasOwnProperty("sensibleKey"));
+        //console.log(JSON.stringify(receivedIntention.arg["sensibleKey"]));
+        assertEquals("check that the replacement ended up with us having the right value", "", receivedIntention.arg.sensibleKey.value);
+        
+    }
+
+    
+    function test_automaticConversion() {
+        var loadParams = {
+            "intention" : getLegacyIntentionStruct("addterm", "foo", "$foobar$ $baz$")
+        };
+        
+        var moduleUnderTest = generateInstance("ConvertToIntention", loadParams)
+        
+        var mockParent = addMockParent(moduleUnderTest);
+        mockParent.getModifiedContext = function() {
+            var context = this.getContext();
+            context.set("foobar", "foobarvalue");
+            context.set("baz", "bazvalue");
+            return context;
+        }
+        mockParent.pushContextToChildren();
+
+        checkModifiedIntentionIsPresent(moduleUnderTest, "foo", "foobarvalue bazvalue");
+    }
+    
+
+    function test_discoverKeys() {
+        var cases = [];
+        cases[0] = {};
+        cases[0].input  = getLegacyIntentionStruct("addterm", "user", "$foo$");
+        cases[0].output = ["foo"];
+        cases[1] = {};
+        cases[1].input  = getLegacyIntentionStruct("addterm", "user", "$foobar$ $baz$");
+        cases[1].output = ["foobar", "baz"];
+
+        cases[2] = {};
+        cases[2].input  = getLegacyIntentionStruct("addterm", "$dynamic_key$", "$value_with_dynamic_key$");
+        cases[2].output = ["value_with_dynamic_key", "dynamic_key"];
+
+        cases[3] = {};
+        cases[3].input  = getLegacyIntentionStruct("addterm", "$dynamic_key1$ $dynamic_key2$", "$value_with_dynamic_key$ $another_value_with_dynamic_key$ ");
+        cases[3].output = ["value_with_dynamic_key", "another_value_with_dynamic_key", "dynamic_key1", "dynamic_key2"];
+
+        cases[4] = {};
+        cases[4].input  = getLegacyIntentionStruct("addterm", "$dynamic_key1$$dynamic_key2$", "$value_with_dynamic_key$$another_value_with_dynamic_key$ ");
+        cases[4].output = ["value_with_dynamic_key", "another_value_with_dynamic_key", "dynamic_key1", "dynamic_key2"];
+
+        cases[5] = {};
+        cases[5].input  = {"name": "plot", "arg": {"mode": "timechart", "fields": [["count", "$bar$"]], "splitby": "$foo$"}}
+        cases[5].output = ["bar", "foo"];
+
+        cases[6] = {};
+        cases[6].input  = {"name": "plot", "arg": {"mode": "timechart", "fields": [["count", "$bar$"], ["dc", "$bar$"], ["avg", "$foo$"]]}};
+        cases[6].output = ["bar", "foo"];
+
+        cases[7] = {};
+        cases[7].input  = {"name": "plot", "arg": {"mode": "timechart", "fields": [["count", "$drilldown.xfield$"]], "splitby": "$drilldown.column$"}}
+        cases[7].output = ["drilldown.xfield", "drilldown.column"];
+
+
+        
+        for (var i=0; i<cases.length; i++) {
+            var loadParams = {
+                intention : cases[i]["input"]
+            }
+            var moduleUnderTest = generateInstance("ConvertToIntention", loadParams)
+            var received = moduleUnderTest._matches;
+            var expected = cases[i]["output"];
+            assertEquals("check that the keys are discovered correctly", expected.join(", "), received.join(", "));
+        }
+    }
+</script>

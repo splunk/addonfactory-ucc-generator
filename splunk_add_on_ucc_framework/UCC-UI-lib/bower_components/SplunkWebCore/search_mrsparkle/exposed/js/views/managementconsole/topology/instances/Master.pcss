@@ -1,0 +1,150 @@
+body {
+	overflow: hidden;
+}
+
+.main-section {
+	overflow: hidden;
+	left: 0;
+	top: 162px;
+	right: 0;
+	bottom: 0;
+	background-color: $white;
+	border-top: 1px solid $borderColor;
+	position: fixed;
+}
+
+.filter-toolbox {
+	width: $sideNavWidth;
+	overflow-y: auto;
+	border-right: 1px solid $borderColor;
+	position: absolute;
+	left:0;
+	top:0;
+	bottom: 0;
+
+    i {
+        font-size: 12px;
+    }
+
+	.clear-all-section {
+		padding: 10px 8px;
+		border-bottom: 1px solid $borderColor;
+	}
+
+	.accordion-body {
+        i {
+            width: 14px;
+            font-size: 1.2em;
+        }
+    }
+	
+	.configure-group-link {
+		float: right;
+		margin-right: 20px;
+	}
+
+	.filter-placeholder {
+		padding-left: 20px;
+		padding-top: 10px;
+		padding-bottom: 10px;
+	}
+
+  .shared-controls-multiinputcontrol {
+    width: calc($sideNavWidth - 40px);
+	}
+
+  .shared-controls-syntheticselectcontrol .dropdown-toggle {
+    width: calc($sideNavWidth - 66px);
+  }
+
+  .dmc-no-results {
+    padding: 0px 20px 20px 20px;
+  }
+}
+
+.result-section {
+	overflow-y: auto;
+	position: absolute;
+	left: $sideNavWidth;
+	top: 0;
+	right: 0;
+	bottom: 0;
+
+	.btn-configure-forwarders {
+	    margin-left: 10px;
+	    margin-top: 10px;	
+	}
+	
+	.dmc-instances-body {
+		.table-control-container {
+			.configure-button-placeholder {
+				float: left;
+				margin-top: 10px;
+				margin-left: 20px;
+			}
+
+			.select-page-count-placeholder {
+				margin-top: 10px;
+				margin-right: 20px;
+			}
+		}
+
+		.table-chrome {
+			border-left: 1px solid $borderColor;
+			margin-bottom: 0px;
+			
+			td {
+				word-wrap: break-word;
+				&.cell-actions {
+					.entity-action {
+						margin-right: 1em;
+					}
+				}
+			}
+		}
+	}
+	
+	.show-filters-btn {
+		float: left;
+		position: relative;
+    	top: 10px;
+    	left: 5px;
+    	display: none;
+    	
+    	i {
+    		font-size: 12px;
+    		width: initial;
+    	}
+	}
+}
+
+.result-section-expanded {
+	left: 0;
+}
+
+
+.disabled-action {
+ 	 color: $textDisabledColor;
+}
+
+.control.btn-group.shared-controls-syntheticselectcontrol {
+  	margin-left: 150px;
+}
+
+.modal-body-scrolling {
+ 	 overflow: auto;
+}
+
+.modal-body .header-text {
+  	font-weight: bold;
+}
+
+.file-input-control {
+	input {
+		line-height: 16px;
+	}
+}
+
+.register-key-textarea {
+	height: 100px;
+}

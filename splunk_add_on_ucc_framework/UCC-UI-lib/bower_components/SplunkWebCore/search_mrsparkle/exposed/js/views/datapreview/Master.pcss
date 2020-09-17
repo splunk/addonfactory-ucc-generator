@@ -1,0 +1,295 @@
+.search-results-wrapper {
+  z-index: 99;
+  clear: none;
+}
+
+.source-label {
+	font-weight: bold;
+}
+
+/* remove extra bottom border from static header */
+.header-table-static .header-table-wrapper {
+  border: 0;
+}
+
+.shared-adddata-inputforms-sourseselectordialog .modal-body {
+  padding: 0px;
+  margin: 0px;
+}
+
+/* settings advanced panel */
+.datapreview-settings-advanced input[type="text"]{
+    width:80%;
+}
+.datapreview-settings-advancedfields input[type="text"]{
+    width:80%;
+}
+
+.select2-container {
+    width: 88%;
+    .select2-choice .select2-arrow {
+        display:none;
+    }
+}
+
+.datapreview {
+  @mixin application-layout;
+
+  height: 100%;
+  background-color: $white;
+
+  .layoutColRight {
+    border-left:1px solid  $borderColor;
+  }
+
+  .layoutBodyColumns{
+    border-top:1px solid  $borderColor;
+    top:110px;
+  }
+
+}
+
+.settings-wrapper {
+  height: 100%;
+}
+
+/* START eventsummary view */
+
+.linecountDistributionTable{
+  width:200px;
+}
+
+.linecountDistributionTable td{
+  padding-bottom:4px;
+  text-align: center;
+}
+/* END eventsummary view */
+
+/* overrides base style form label widths */
+.datapreview-settings .form-horizontal .control-label {
+  width: 90px;
+}
+
+.datapreview-settings .form-horizontal .controls {
+  margin-left: 100px;
+}
+
+/* settings advanced panel */
+.datapreview-settings-advanced input[type="text"] {
+  width:80%;
+}
+
+/* START eventsummary view */
+
+.linecountDistributionTable {
+  width:200px;
+}
+
+.linecountDistributionTable td {
+  padding-bottom:4px;
+}
+/* END eventsummary view */
+
+/*copy to clipboard dialog*/
+.copyToClipboardDialog textarea {
+  width: 85%;
+  height: 200px;
+}
+
+.settingsPanels {
+	border-top:  1px solid $interactiveBorderTopColor;
+	border-bottom: 1px solid $interactiveBorderBottomColor;
+}
+
+/* Accordion */
+.accordion .accordion-group.active .accordion-toggle:hover {
+	background-color: $pillBackgroundColorHover;
+	cursor: pointer;
+}
+
+
+/* Select Source */
+
+.shared-adddata-inputforms-sourceselectordialog {
+	top: 40px;
+	bottom: 40px;
+
+	.modal-body {
+	    padding: 0;
+	    max-height:none;
+	}
+	.modal-footer {
+	    position: absolute;
+	    bottom: 0;
+	    left: 0;
+	    right: 0;
+	}
+	.modal-body {
+	    position: absolute;
+	    top: 53px;
+	    bottom: 47px;
+	    left: 0;
+	    right: 0;
+	    height: auto;
+	}
+
+	.shared-flashmessages {
+		padding: 10px 20px;
+		margin: 0;
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+	}
+}
+
+.datapreview-results .alerts {
+  margin-left: 20px;
+}
+
+.shared-adddata-inputforms-sourceselector-sourceselector .filepath {
+	padding: 10px 20px;
+	margin: 0;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: $formActionsBackground;
+	min-height: $baseLineHeight;
+
+	.uneditable-input {
+		width: 747px;
+		margin-bottom: 0;
+	}
+}
+
+.input-container .shared-findinput {
+    text-align: center;
+    margin: 5px;
+    .search-query {
+        width: 190px;
+    }
+}
+
+ .treeview {
+ 	border-bottom: 1px solid $borderColor;
+ 	overflow:auto;
+    position: absolute;
+    top: 0;
+    bottom: 36px;
+    left: 0;
+    right: 0;
+
+	 ul {
+	     list-style-type: none;
+	     margin: 0 0 0 17px;
+
+	     ul {
+	     	margin: 0 0 0 24px;
+	     }
+	 }
+
+	 > ul {
+	 	margin-bottom: -1px;
+	 }
+
+	 .jqtree-element {
+	     border-bottom: 1px solid $borderLightColor;
+	     line-height: 20px;
+	     padding-left: 24px;
+	     position: relative;
+	 }
+
+
+	 a.jqtree-toggler {
+	     color: transparent;
+	     width: 14px;
+	     overflow: hidden;
+	     text-decoration: none;
+	     display: inline-block;
+	     white-space: nowrap;
+	     vertical-align: middle;
+	     background-color: $linkColor;
+	     border-radius:2px;
+	     line-height: 14px;
+	     position: absolute;
+	     left: 3px;
+	     top: 3px;
+
+	     &:before {
+	     	display: inline-block;
+	     	color: $white;
+	     	content: "\02C5";
+	     	font-family: "Splunk Icons";
+	     	padding-right: 20px;
+	     	vertical-align: middle;
+	     	text-align: center;
+	     	width: 14px;
+	     }
+
+	     &:hover {
+	     	background-color: $linkColorHover;
+	     }
+
+	     &.jqtree-closed:before {
+		     content: "\203A";
+	     }
+	 }
+
+	 .jqtree-title {
+	 	display: block;
+	 	color: $linkColor;
+	 	cursor: pointer;
+	 }
+
+	 .jqtree-selected {
+	     background-color: $tableBackgroundFocus;
+	 }
+
+	 .selectedPath {
+	     width: 650px;
+	 }
+ }
+
+.jqtree-closed > ul {
+  display: none;
+ }
+
+.noEventsMessage{
+  margin:20px;
+  display: none;
+}
+
+.datapreview-settings .shared-flashmessages{
+  width:auto;
+  word-wrap: break-word;
+}
+
+.datapreview-save .shared-flashmessages{
+  width:auto;
+  word-wrap: break-word;
+}
+
+.datapreview-save .control-group {
+  clear: both;
+}
+
+.datapreview-save .control-label {
+  float: left;
+  width: 30%;
+  margin-right: 20px;
+  text-align: right;
+  line-height: 2;
+}
+
+@if $theme == lite {
+    .treeview {
+        a.jqtree-toggler {
+            background-color: $splunkLiteBlack;
+            border-radius: 0px;
+            &:hover {
+                background-color: $splunkLiteBlack;
+            }
+        }
+    }
+}

@@ -1,0 +1,182 @@
+.job-inspector {
+  .alerts.shared-flashmessages {
+    padding: 20px 0 0 20px;
+  }
+  .header {
+    background-color: $grayDarker;
+    border-bottom: 1px solid $grayLighter;
+    padding: 5px 14px;
+    font-size: 12px;
+    
+    h1 {
+      margin: 5px 0;
+      color: $white;
+      font-size: 18px;
+      font-weight: normal;
+    }
+  }
+  
+  .emphatic {
+    font-weight: bold;
+  }
+
+  h2 {
+    font-size: 12px;
+    font-weight: bold;
+    color: $grayDark;
+  }
+  
+  font-size: 11px;
+  background-color: $white;
+  font-family: $sansFontFamily;
+
+  .accordion-heading {
+    font-size: 12px;
+    font-weight: bold;
+  }
+  
+  .job-overview {
+    padding: 10px 10px 20px 14px;
+    background-color: $grayLighter;
+    > p {
+      
+      a.search-log {
+        text-decoration: underline;
+      }
+    }
+    
+    .summary {
+      
+      pre {
+        white-space: normal;
+        .highlighted {
+          background-color: $yellow;
+          padding: 2px;
+        }
+      }
+      
+      .messages {
+        li {
+          list-style-type: none;
+          margin-left: 10px;
+          
+          & .text {
+            font-weight: bold;
+          }
+        } 
+      }
+    }
+  }
+  
+  .job-execution-cost {
+    border-top: 1px solid $grayLightMedium;
+    padding: 0 14px;
+    font-size: 10px;
+    
+    table {
+      th {
+        padding: 4px 10px;
+        text-align: left;
+        background-color: $grayLighter;
+      }
+      
+      tr {
+        &.sub {
+          img.durationBar {
+            opacity: 0.25;
+          }
+        }
+      }
+      
+      td {
+        padding: 4px 10px;
+        border-bottom: 1px dotted $grayLight;
+        vertical-align: top;
+          &.numeric {
+            text-align: right;
+          }
+        & img {
+          height: 1px;
+          &.durationBar {
+            height: 12px;
+            background-color: $black;
+            opacity: 0.5;
+          }
+        }
+      }
+    }
+  }
+  
+  .job-properties {
+    padding: 0 14px;
+    font-size: 10px;
+    
+    table {
+      margin-bottom: 15px;
+      border-collapse: collapse;
+      width:100%;
+      
+      tr.additional-links {
+        a {
+          padding-right: 10px;
+          padding-bottom: 10px;
+          text-decoration: underline;
+          display: block;
+          
+          &.search-log {
+            display: inline;
+          }
+          
+          &.peer-link {
+            display: inline;
+          }
+        }
+        
+        td {
+          &.job-prop-value {
+            white-space: normal;
+            font-size: 12px;
+          }
+        }
+      }
+      
+      td {
+        padding: 4px 10px;
+        border-bottom: 1px dotted $grayLightMedium;
+        vertical-align: top;
+         
+        &.job-prop-name {
+          font-weight: bold;
+          white-space: nowrap;
+          font-size: 10px;
+          background-color: $grayLighter;
+        }
+        
+        &.job-prop-value {
+          font-weight: normal;
+          font-family: $monoFontFamily;
+        }
+      }
+    }
+  }
+  
+  .footer {
+    padding: 10px;
+  }
+
+}
+.accordion-group {
+  padding-top: 14px;
+  .accordion-toggle {
+    padding-left: 15px;
+    background: none;
+    border: 0;
+    .icon-accordion-toggle {
+      left: 0;
+    }
+  }
+  .accordion-body {
+    padding: 14px 0 0 14px;
+  }
+}
+

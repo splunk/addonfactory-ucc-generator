@@ -1,0 +1,149 @@
+/*  Splunk: Component: SearchBar */
+/*  ============================= */
+/*  Main searchbar with default styling */
+
+/*  TODO: add color classes */
+
+
+/*  Search Bar */
+/*  -------------- */
+/*  Sub-Components: searchbar-input, time-range-picker, etc ... */
+/*  JS: exposed/js/views/searhbar/Master.js */
+
+/* search bar
+
+<div class="search-bar-wrapper shared-searchbar">
+    <form method="get" action="" class="search-form">
+        <table class="search-bar">
+            <tbody>
+                <tr>
+                    <td class="search-input" width="100%">
+                        <div class="shared-searchbarinput"></div>
+                    </td>
+                    <td class="search-apps"></td>
+                    <td class="search-timerange">
+                        <div class="btn-group shared-timerangepicker"></div>
+                    </td>
+                    <td class="search-button">
+                        <a class="btn" href="#"><i class="icon-search-thin"></i></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div><!-- /.search-bar-wrapper -->
+
+*/
+form.search-form {
+    margin-bottom:0;
+}/* form */
+
+.search-bar { /* table */
+
+    .btn, .btn.dropdown-toggle {
+        border-radius: 0;
+        line-height: 28px;
+        height: 28px;
+        white-space: nowrap;
+        border-left: none;
+    }
+
+    td {
+        padding:0;
+        vertical-align:top;
+    }
+    td.search-input {
+        width: 100%
+    }
+    .search-timerange {
+        .btn {
+            white-space:nowrap;
+            border-radius: 0;
+            min-width: 55px; /*  fix webkit rounding */
+        }
+    }
+    .search-button{
+        .btn {
+            border-top-right-radius: $interactiveBorderRadius;
+            border-bottom-right-radius: $interactiveBorderRadius;
+            margin-left:-2px;/*  extra overlap to cover webkit rounding */
+            font-size: 26px;
+        }
+    } /* td */
+    .search-timerange .shared-timerangepicker .btn .time-label {
+        display: inline-block;
+        vertical-align: middle;
+        max-width: 10em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .shared-searchbarinput-searchfield {
+        .ace_editor {
+            padding: 8px 6px;
+            border-top-left-radius: $interactiveBorderRadius;
+            border-bottom-left-radius: $interactiveBorderRadius;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+    }
+}/* .search-bar */
+
+.dropdown-menu-apps {
+    li {
+        line-height: 20px;
+        position: relative;
+    }
+/*  prevent menu from breaking */
+    .link-label {
+        display: block;
+        white-space: nowrap;
+        word-wrap:normal;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding-right: 28px;
+    }
+
+    .menu-icon {
+        width:18px;
+        height:18px;
+        position: absolute;
+        right: 10px;
+        top: 7px;
+    }
+}
+/*  Lite UI */
+/*  -------------------------------------------------- */
+@if $theme == lite  {
+    .search-bar {
+        .shared-timerangepicker .btn {
+            border-left: none;
+            border-radius:0;
+        }
+        .search-button .btn {
+            @mixin interactive-primary;
+            &:hover {
+                @mixin interactive-primary-hover;
+            }
+        }
+        &:focus {
+            @mixin focus-field;
+        }
+    }
+
+}
+
+/*  Print */
+/*  -------------------------------------------------- */
+
+@media print {
+    .search-button {
+        @mixin print-hide;
+    }
+}
+
+/* SPL-126825: fix printing issues in Firefox */
+body.print table.search-bar td {
+    display: block;
+    width:100% !important; /* overrides web/exposed/build/css/bootstrap-enterprise.css */
+}

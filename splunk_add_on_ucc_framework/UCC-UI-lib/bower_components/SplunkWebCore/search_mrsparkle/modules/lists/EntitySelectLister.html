@@ -1,0 +1,8 @@
+<%page args="module"/>
+
+% if module['params'].get('label'):
+<label for="${module['id']}_id">${_(module['params']['label']) | h}</label>
+% endif
+<select disabled="disabled" id="${module['id']}_id">
+    <option>Loading...</option>
+</select>

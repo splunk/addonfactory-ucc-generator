@@ -1,0 +1,7 @@
+// 
+
+(function() {
+    require.config({
+        urlArgs: ""
+    });
+})();

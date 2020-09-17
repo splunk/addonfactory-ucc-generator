@@ -1,0 +1,13 @@
+<testsuites>
+  <testsuite name="Flash Profile Card AsUnit Test Suite" errors="1" failures="1" tests="8" time="8.002">
+    <testcase classname="lib.test.cases.FailureTest" name="testError" time="0.049">
+      <error type="java.lang.NullPointerException">
+          <!-- stack trace -->
+      </error>
+      <failure type="Error">Reference runtime test error</failure>
+    </testcase>
+    <testcase classname="lib.test.cases.FailureTest" name="testAssertion">
+      <failure type="AssertionFailedError">Reference assertion test failure</failure>
+    </testcase>
+  </testsuite>
+</testsuites>

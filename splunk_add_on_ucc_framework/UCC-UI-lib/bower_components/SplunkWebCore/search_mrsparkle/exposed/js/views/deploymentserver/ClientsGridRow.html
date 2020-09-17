@@ -1,0 +1,54 @@
+<% if(isExpanded) { %>
+<td class="<%- toggleCellClass %>"><%= expandedCellBody %></td>
+<% } else { %>
+<td class="<%- toggleCellClass %>"><%= collapsedCellBody %></td>
+<% } %>
+<td class="col-host-name"><%- model.entry.content.get("hostname") %>
+    <!-- Additional information -->
+    <% if(isExpanded) { %>
+    <dl class="list-dotted">
+        <dt> <%-_("Apps").t()%> </dt>
+        <dd>
+            <%- applicationList %>
+            <span id="<%-'more_apps_' + model.entry.get('name')%>" style="display:none"></span>
+        </dd>
+        <dt> <%-_("Server Classes").t()%> </dt>
+        <dd>
+            <%- serverClassesList %>
+            <span id="<%-'more_serverclasses_' + model.entry.get('name')%>" style="display:none"></span>
+        </dd>
+    </dl>
+
+    <% if (numErrors > 0)  { %>
+    <div class='error-title'><%- _("ERRORS").t() %></div>
+    <div>  <a  href="<%-searchUrl%>"><%- _("Last 100 errors").t() %></a></div>
+    <dl class="list-dotted">
+        <dt> <%-_("Not yet deployed").t()%> </dt>
+        <dd>
+            <%- errorList %>
+        </dd>
+    </dl>
+    <% } %>
+    <% } %>
+</td>
+<td class="col-client-name"><%- model.entry.content.get("name") %>
+</td>
+<td class="col-ip"><%- model.entry.content.get("ip") %> </td>
+<td><span id=<%-"delete_" + model.entry.get("name")%>></span></td>
+<td class="col-machine-type"><%- model.entry.content.get("utsname") %> </td>
+
+<!--Deployed column -->
+<td class="col-deployed">
+    <div class='small-alert'><i class="icon-alert" style="<%-errorStyle%>"></i></div>
+    <div class='table-value'>  <a id="<%-model.entry.get('name')%>"  style="<%-errorStyle%>"><%-numErrors%></a></div>
+    <div class='table-value-right'><%-numSuccessfulDownloads + _(" deployed").t()%></div>
+    <div style="clear:both"></div>
+</td>
+
+<!--phonehome column -->
+<td class="col-phone-home">
+    <div class='small-alert'><i class="icon-alert" style="<%-phonehomeErrorStyle%>"></i></div>
+    <div class='table-value-wide'><%- relativeLastPhoneHomeTime %></div>
+    <div style="clear:both"></div>
+</td>
+

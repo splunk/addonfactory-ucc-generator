@@ -1,0 +1,15 @@
+/*  Splunk: Component: App-Nav */
+/*  ========================== */
+/*  app nav componet used on app bar and previously on the home page. */
+
+/*  App Boxes */
+/*  ----------------------------- */
+
+
+.view {
+	border-radius: 4px;
+	position:relative;
+    width: 300px;
+    overflow:hidden;
+    transition: height 200ms;
+}

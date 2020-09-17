@@ -1,0 +1,173 @@
+<%inherit file="//layout/view.html" />
+<%namespace file="//view/_helpers.html" import="*"/>
+<%namespace name="lib" file="//lib.html" import="*"/>
+<%!
+import logging
+logger = logging.getLogger('splunk.appserver.templates.view.dashboard')
+
+headerPanels = ["appHeader", "navigationHeader", "liteHeader"]
+
+upperPanels = ["viewHeader", "splSearchControls-inline", "reportFirstPanel", "reportSecondPanel", "reportThirdPanel"]
+
+lowerPanels = ["graphArea", "resultsArea"]
+
+renderingErrors = []
+%>
+
+<%def name="css()">
+    <% parent.css() %>
+    <%lib:stylesheet_tags files="${['/static/css/reportbuilder.css']}" />
+</%def>
+
+<%def name="buildPanelContents(modules, groupName)">
+    <%call expr="parent.buildPanelContents(modules, groupName)"></%call>
+</%def>
+
+<%def name="buildSimplePanelContainer(modules, panelName)">
+    <%call expr="parent.buildSimplePanelContainer(modules, panelName)"></%call>
+</%def>
+
+<%def name="getFloatLayoutRow(modules, rowNumber)">
+    <%call expr="parent.getFloatLayoutRow(modules, rowNumber)"></%call>
+</%def>
+
+
+
+<%def name="getDashboardPanel(modules, panelGroup)">
+    % for groupName in panelGroup :
+        <%call expr="buildPanelContents(modules, groupName)"></%call>
+    % endfor    
+</%def>
+
+<div class="layout reportBuilder ${VIEW['id']}">
+    % if "messaging" in modules :
+        <%call expr="buildSimplePanelContainer(modules, 'messaging')"></%call>
+    % endif
+    
+    <div class="appHeaderWrapper">
+        % for panelName in headerPanels : 
+            <%call expr="buildSimplePanelContainer(modules, panelName)"></%call>
+        % endfor
+    </div>
+
+    % for panelName in upperPanels : 
+        <%call expr="buildSimplePanelContainer(modules, panelName)"></%call>
+    % endfor
+
+    % for rowNumber in range(1,10): 
+        % if 'panel_row' + str(rowNumber) + '_col1' in modules : 
+            <%call expr="parent.getFloatLayoutRow(modules, rowNumber)"></%call>
+        % endif
+    % endfor
+
+    % for panelName in lowerPanels :        
+        ##explicitly render results area for more control over layout
+        % if panelName == 'resultsArea' and (panelName in modules):
+            
+            <%            
+            explicitRenderMods = ["ShowHideHeader", "Count", "Paginator", "Export", "DataOverlay", "EnablePreview", "AddTotals", "ResultsHeader"]
+            topMods = {}
+            for module in modules[panelName]:
+                if module['className'] in explicitRenderMods:
+                    topMods[module['className']] = module
+                # TODO - Remove this once the params stanza is implemented everywhere
+                if module.has_key('params'):
+                    for param in module['params']:
+                        if not module.has_key(param):
+                            module[param] = module['params'][param]
+            %>\
+            
+            % if 'ShowHideHeader' in topMods :
+                <%call expr="parent.buildModule(topMods['ShowHideHeader'])"></%call>
+            % endif
+            
+            % if 'ResultsHeader' in topMods :
+                <%call expr="parent.buildModule(topMods['ResultsHeader'])"></%call>
+            % endif
+            
+            % if 'DataOverlay' in topMods :
+                <%call expr="parent.buildModule(topMods['DataOverlay'])"></%call>
+            % endif
+            
+            % if 'AddTotals' in topMods :
+                <%call expr="parent.buildModule(topMods['AddTotals'])"></%call>
+            % endif
+            
+            % if 'EnablePreview' in topMods :
+                <%call expr="parent.buildModule(topMods['EnablePreview'])"></%call>
+            % endif
+            
+            % if 'Export' in topMods :
+                <%call expr="parent.buildModule(topMods['Export'])"></%call>                
+            % endif
+            
+            % if 'Count' in topMods :
+                <%call expr="parent.buildModule(topMods['Count'])"></%call>
+            % endif
+            
+            % if 'Paginator' in topMods :
+                <%call expr="parent.buildModule(topMods['Paginator'])"></%call>
+            % endif
+            
+            <div style="clear:both"></div>
+            
+            ##render everything else
+            % for module in modules[panelName] :
+                % if module['className'] not in explicitRenderMods:                                
+                    <%call expr="parent.buildModule(module)"></%call>
+                % endif                
+            % endfor
+            
+            <%call expr="parent.addPanelToSuccessfullyRenderedPanels('resultsArea')"></%call>
+            
+        % else :          
+            <%call expr="buildSimplePanelContainer(modules, panelName)"></%call>
+        % endif
+    % endfor
+</div>
+
+<%call expr="lib.add_script_block()">
+// slightly modified the equalHeights extension. 
+// if elements are less than 5px across,  i let them shrink to 0 height. 
+// reason being is that our switchers may well have hidden every module within
+// a container.   The container then falls to 0 width, but it has a 1px border 
+// And if if it also has a min-height, the border will be visible which we dont want.
+$.fn.equalHeights = function(px) {
+	$(this).each(function(){
+		$(this).children().css({'min-height': 0}); 
+        if ($.browser.msie && $.browser.version == 6.0) { 
+            $(this).children().css({'height': 0}); 
+        }
+        var max = 0;
+		$(this).children().each(function(i){
+			if ($(this).height() > max) { max = $(this).height(); }
+		});
+        if ($.browser.msie && $.browser.version == 6.0) { $(this).children().css({'height': max}); }
+		$(this).children().not(":width(<5)").css({'min-height': max}); 
+        
+        // while we're in here we check whether the row is <10 px, which we assume 
+        // means that all the modules in the row are hidden.   In this case 
+        // we hide the border, and reduce the padding to 0 so the whole row 
+        // will take up no space, and not have that vestigial border.
+        if (max<10) {
+            $(this).css({"padding": "0px", "border-bottom-width" : "0px"});
+        } else {
+            $(this).css({"padding": "5px 10px", "border-bottom-width" : "1px" });
+        }
+	});
+	return this;
+};
+
+// borrowed from http://james.padolsey.com/javascript/extending-jquerys-selector-capabilities/
+$.extend($.expr[':'],{
+    width: function(a,i,m) {
+        if(!m[3]||!(/^(<|>)\d+$/).test(m[3])) {return false;}
+        return m[3].substr(0,1) === '>' ? 
+                 $(a).width() > m[3].substr(1) : $(a).width() < m[3].substr(1);
+    }
+});
+
+$(document).bind("change click ready allModulesLoaded", function(event) {
+    $(".equalHeightRow").equalHeights(true);
+});
+</%call>

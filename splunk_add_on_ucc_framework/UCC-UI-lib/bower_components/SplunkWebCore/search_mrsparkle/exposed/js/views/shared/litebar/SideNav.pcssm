@@ -1,0 +1,47 @@
+/*  Lite Side Nav */
+/*  ======================= */
+
+.view {
+    width: $sideNavWidth;
+    height: 100%;
+    background: $splunkLiteBlack;
+    color: $white;
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: -$sideNavWidth;
+    z-index: $zindexSideNav;
+    transition: .5s left;
+    a {
+        color: $white;
+    }
+}
+
+.sidenavHead {
+    padding: 0 20px;
+    height: $navbarHeightLite;
+    line-height: $navbarHeightLite;
+    font-size: 14px;
+}
+
+.sideNavBody {
+    padding-bottom: 10px;
+    position: absolute;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    top: 0;
+    overflow: auto;
+    overflow-x: hidden;
+}
+
+/*  Body movement */
+
+body {
+    transition: .5s margin;
+}
+
+[data-sidenav-state=open] {
+    margin-left: $sideNavWidth;
+    margin-right: -$sideNavWidth;
+}

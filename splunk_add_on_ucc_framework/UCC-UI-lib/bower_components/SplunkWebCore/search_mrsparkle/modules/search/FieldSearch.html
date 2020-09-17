@@ -1,0 +1,19 @@
+<%page args="module"/>
+
+<%
+inputValue = ""
+
+# check for the old deprecated param
+if "q" in module : 
+    inputValue = module["q"]
+# check for the new param (possibly obliterating the old)
+if "default" in module : 
+    inputValue = module["default"]
+%>
+<form action="${make_url('/search') }">
+    <!-- We need this div only because XHTML strict requires all children of form to be block items. -->
+    <div>
+        <label>${module.get('label', module["field"]) | h}</label>
+        <input type="text" name="${module['field'] | h}" value="${inputValue | h}" />
+    </div>
+</form>

@@ -1,0 +1,26 @@
+<table class="table table-chrome table-striped">
+    <colgroup>
+        <!--<col class="col-flex col-info <%- headerCellClass %>">
+        <col class="col-slim col-selected">-->
+        <col class="col-flex col-name">
+        <col class="col-slim col-s3-bucket">
+        <col class="col-slim col-actions">
+    </colgroup>
+    <thead>
+    <tr>
+        <!--<th class="<%- headerCellClass %>"><i class="icon-info"></i></th>
+        <th class="select-all-checkbox"></th>-->
+        <th class="<%- sortCellClass %>" <%- sortKeyAttribute %>="name">
+        <a href="#" class="name-sort-link"><%= _('Name').t() %><i class="icon-sorts"></i></a>
+        </th>
+        <th class="<%- sortCellClass %>" <%- sortKeyAttribute %>="vix.fs.default.name">
+        <a href="#" class="s3-bucket-sort-link"><%= _('AWS S3 Path').t() %><i class="icon-sorts"></i></a>
+        </th>
+        <th><%= _('Actions').t() %></th>
+    </tr>
+    </thead>
+    <tbody class="archives-grid-table-body">
+
+    </tbody>
+
+</table>

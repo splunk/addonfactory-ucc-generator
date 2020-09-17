@@ -1,0 +1,23 @@
+<%page args="module"/>
+
+<div class="TimeRangeBinningWrapper splBorder splBorder-n">
+<a href="#" class="trbToggle"><span class="splIcon splIcon-triangle"></span> ${_('Set span for time axis intervals (for example: every 10 minutes)')}</a>
+
+<fieldset class="trpFieldsetOuter">
+    <label for="${module['id']}_input">${_('Time span for each interval')}</label>
+    
+    <input type="radio" class="radio" id="trbAuto" class="trbOptions" name="trbOptions" value='auto' checked="checked" /><label for="trbAuto" class="trbOptionsLabel" style="display:inline;">${_('Auto')}</label><br />
+    <input type="radio" class="radio" id="trbCustom" class="trbOptions" name="trbOptions" value='custom' /><label for="trbCustom" class="trbOptionsLabel" style="display:inline;">${_('Custom')}</label>
+    
+    <fieldset class="trpFieldsetInner">
+        <input id="${module['id']}_input" type="text" class='short'>
+        <select id="${module['id']}_select">
+            <option value="s">${_('Second(s)')}</option>
+            <option value="m">${_('Minute(s)')}</option>
+            <option value="h">${_('Hour(s)')}</option>
+            <option value="d">${_('Day(s)')}</option>
+            <option value="mon">${_('Month(s)')}</option>
+        </select>
+    </fieldset>
+</fieldset>
+</div>

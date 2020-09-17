@@ -1,0 +1,32 @@
+<td class="cell-name">
+    <div class="model-title">
+        <% if (showNameLink) { %>
+            <a href="#" class="edit-entity-link"><%- model.entry.get("name") %></a>
+        <% } else { %>
+            <%- model.entry.get("name") %>
+        <% } %>
+    </div>
+	<% if( description.length > descMaxLength) { %>
+        <p class="model-description model-description-short"><%- stringUtils.truncateTrailingString(description, descMaxLength) %> <a href="#" class="model-more-description"><%- _("More").t() %></a></p>
+        <p class="model-description model-description-full"><%- description %><br><a href="#" class="model-less-description"><%- _("Less").t() %></a></p>
+    <% } else { %>
+        <p class="model-description"><%- description %></p>
+    <% } %>
+</td>
+<td class="cell-actions">
+    <a href="#" class="entity-action run-action"><%= _("Run").t() %> <i class="icon-external"></i></a>
+	<% if (model.entry.content.get("next_scheduled_time")) { %>
+		<a href="#" class="entity-action view-recent-action" target="_blank"><%= _("View Recent").t() %> <i class="icon-external"></i></a>
+	<% } %>
+</td>
+<td class="cell-schedule"><%- _(model.entry.content.get("next_scheduled_time")||"none").t() %></td>
+<td class="cell-display"><%- _(model.entry.content.get("displayview")||"none").t() %></td>
+<td class="cell-owner"><%- _(model.entry.acl.get("owner")||"").t() %></td>
+<td class="cell-app"><%- model.entry.acl.get("app") %></td>
+<td class="cell-alerts"><%- alertCount %></td>
+<td class="sharing">
+    <div class="sharing-cell-placeholder"></div>
+</td>
+<td class="status">
+    <div class="status-cell-placeholder"></div>
+</td>

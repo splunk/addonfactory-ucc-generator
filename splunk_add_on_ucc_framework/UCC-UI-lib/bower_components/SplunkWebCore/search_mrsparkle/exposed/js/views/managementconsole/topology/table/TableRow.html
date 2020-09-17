@@ -1,0 +1,110 @@
+<% if (hiddenColumnNames.indexOf(allColumnNames[0]) === -1) { %>
+    <td class="cell-checkbox">
+        <label class="checkbox">
+            <a href="#" class="btn" data-instance="<%- instanceId %>">
+              <% if (topologyUpdate) {%>
+                <i class="icon-check" style=""></i>
+              <% } else { %>
+                <i class="icon-check" style="display:none"></i>
+              <% } %>
+            </a>
+        </label>
+    </td>
+<% } %>
+
+<% if (hiddenColumnNames.indexOf(allColumnNames[1]) === -1) { %>
+    <td class="cell-hostname"><%- hostname %></td>
+<% } %>
+
+<% if (hiddenColumnNames.indexOf(allColumnNames[2]) === -1) { %>
+    <td class="cell-actions">
+
+      <% if( task.state === 'completed' || task.state === 'running' ) { %>
+        <span class="entity-action disabled-action"><%- strings.EDIT %></span>&nbsp;
+      <% } else {%>
+        <a href="#" data-instance="<%- instanceId %>" class="entity-action edit-action"><%- strings.EDIT %></a>&nbsp;
+      <% } %>
+
+      <% if( task.state === 'running' ) { %>
+      <span class="entity-action disabled-action"><%- strings.REMOVE %></span>
+      <% } else {%>
+        <a href="#" data-instance="<%- instanceId %>" class="entity-action remove-action enabled"><%- strings.REMOVE %></a>
+      <% } %>
+
+    </td>
+<% } %>
+
+<% if (hiddenColumnNames.indexOf(allColumnNames[3]) === -1) { %>
+    <td class="cell-dns"><%- dns %></td>
+<% } %>
+
+<% if (hiddenColumnNames.indexOf(allColumnNames[4]) === -1) { %>
+    <td class="cell-client-name"><%- clientName %></td>
+<% } %>
+
+<% if (hiddenColumnNames.indexOf(allColumnNames[5]) === -1) { %>
+    <td class="cell-ip"><%- ip %></td>
+<% } %>
+
+<% if (hiddenColumnNames.indexOf(allColumnNames[6]) === -1) { %>
+    <td class="cell-splunk-platform"><%- splunkPlatform %></td>
+<% } %>
+
+<% if (hiddenColumnNames.indexOf(allColumnNames[7]) === -1) { %>
+    <td class="cell-phone-home"><%- phoneHome %></td>
+<% } %>
+
+<% if (hiddenColumnNames.indexOf(allColumnNames[8]) === -1) { %>
+    <td class="cell-splunk-version"><%- splunkVersion %></td>
+<% } %>
+
+<% if (hiddenColumnNames.indexOf(allColumnNames[9]) === -1) { %>
+<td class="cell-topology"><%- splunkRole %></td>
+<% } %>
+
+<% if (hiddenColumnNames.indexOf(allColumnNames[10]) === -1) { %>
+    <td class="cell-registration-status">
+        <% if (task) { %>
+            <% if (task.state === 'new') { %>
+                <i class="icon-star icon-neutral"></i>
+            <% } else if (task.state === 'running') { %>
+                <i class="icon-gear icon-neutral"></i>
+            <% } else if (task.state === 'completed') { %>
+                <i class="icon-check icon-positive"></i>
+            <% } else { %>
+                <i class="icon-x icon-negative"></i>
+            <% } %>
+            <a href="#" class="view-task-progress"><%- taskModel.getLabelFromStatus(task.state) %></a>
+        <% } %>
+    </td>
+<% } %>
+
+<% if (hiddenColumnNames.indexOf(allColumnNames[11]) === -1) { %>
+    <td class="cell-deploy-status">
+        <%- deployStatus %> <a href="#" data-instance="<%- instanceId %>" class="entity-action show-deploy-status">(<%- _("details").t() %>)</a>
+    </td>
+<% } %>
+
+<% if (hiddenColumnNames.indexOf(allColumnNames[12]) === -1) { %>
+
+    <td class="cell-pending">
+        <% if (isPending) { %>
+            <a href="#" class="pending-link"><%- pendingText %></a>
+        <% } %>
+    </td>'
+<% } %>
+
+<% if (hiddenColumnNames.indexOf(allColumnNames[13]) === -1) { %>
+    <td class="cell-actions">
+        <% if (canConfigure) { %>
+        <% if (configureUrl !== null) { %>
+            <a href="<%- configureUrl %>" class="entity-action configure-action"><%- strings.CONFIGURE %></a>
+        <% } else { %>
+            <span class="entity-action disabled-action"><%- strings.CONFIGURE %></span>
+        <% } %>
+        <% } %>
+        <% if (showRemoveLink) { %>
+            <a href="#" data-instance="<%- instanceId %>" class="entity-action remove-action"><%- strings.REMOVE %></a>
+        <% } %>
+    </td>
+<% } %>

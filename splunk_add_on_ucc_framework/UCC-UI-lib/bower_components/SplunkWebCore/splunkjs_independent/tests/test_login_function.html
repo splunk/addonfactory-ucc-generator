@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Login Tests</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Test">
+    <meta name="author" content="Monster">
+
+    <link rel="stylesheet" type="text/css" href="../static/splunkjs/css/bootstrap.css"/>
+    <style type="text/css">
+        .success{
+            color: green;
+        }
+        .fail{
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="dashboard-body container-fluid main-section-body" data-role="main">
+    <div class="row">
+        <div class="span12 dashboard-header clearfix">
+            <h2>Login Tests</h2>
+        </div>
+    </div>
+    <div class="dashboard-row">
+        <div class="dashboard-cell" style="width: 100%;">
+            <div class="dashboard-panel">
+                <div class="dashboard-element">
+                    <h3>Test login with proxy using a specified <b>authenticate</b> function</h3>
+                    <p>This page tests pasing a function to authenticate. It:</p>
+                    <ul>
+                        <li>Checks that login succeeds</li>
+                        <li>Checks that a search manager can get data</li>
+                        <li>Checks that the provided auth was called by looking for a marker placed by authenticate</li>
+                        <li>Checks username is set</li>
+                    </ul>
+                    <h3><b>Steps:</b></h3>
+                    <p><b>No interaction required.</b> If there are no errors and everything is green, it passes.</p>
+                    <div class="panel-body">
+
+                        <h4>Messages</h4>
+                        <div id="messages"></div>
+
+                        <h4>Errors</h4>
+                        <div id="errors">
+                            <p class="fail">Not logged in!</p>
+                        </div>
+
+                        <div id="hook"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../static/splunkjs/config.js"></script>
+<script>
+
+    splunkjs.config({
+        proxyPath: '/proxy',
+        authenticate: function(done) {
+            require([
+                "splunkjs/splunk",
+            ], function(sdk) {
+                var http =  new sdk.ProxyHttp('/proxy');
+                    
+                var service = new sdk.Service(http, {
+                    username: 'admin',
+                    password: 'changeme',
+                    scheme: 'https',
+                    host: 'localhost', 
+                    port: 8089
+                });
+
+                // Leave a breadcrumb on the page to check this function was called
+                $('#hook').append('<div id="authCalledMarker"></div>');
+
+                service.login(function(err) {
+                    var key = service.sessionKey;
+                    done(err, {sessionKey: key, username: 'admin'});
+                });
+            });
+        }
+    });
+    
+</script>
+
+<script>
+    require.config({baseUrl: "../static/"});
+</script>
+        
+<script>
+    
+    require([
+        "jquery",
+        "splunkjs/mvc/tableview",
+        "splunkjs/mvc/singleview",
+        "splunkjs/mvc/timerangeview",
+        "splunkjs/mvc/searchmanager",
+        "splunkjs/splunk",
+        "splunkjs/ready!"
+    ], function(
+        $,
+        TableView,
+        SingleView,
+        TimerangeView,
+        SearchManager,
+        sdk,
+        mvc)
+    {
+        // Login success
+        $('#errors').empty();
+        addMessage('Login success');
+
+        var manager = new SearchManager({
+            id: "search1",
+            search: "index=_internal | head 10 | stats count" 
+        });
+
+        manager.on('search:done', function() {
+            addMessage('Manager done');
+        });
+
+        manager.on('search:error', function() { 
+            addError('Manager error');
+        });
+
+        if ($('#authCalledMarker')[0]) {
+            addMessage('Authentication marker found: authenticate was called');
+        }
+        else{
+            addError('No authentication marker found: authenticate was not called');
+        }
+
+        function addMessage(msgText) {
+            $('#messages').append('<p class="success">'+msgText+'</p>');
+        }
+            
+        function addError(errorText) {
+            if($('#noErrors')[0]){
+                $('#errors').empty();
+            }
+            $('#errors').append('<p class="fail">'+errorText+'</p>');
+        }
+    });
+</script>
+    
+</body>
+</html>
+

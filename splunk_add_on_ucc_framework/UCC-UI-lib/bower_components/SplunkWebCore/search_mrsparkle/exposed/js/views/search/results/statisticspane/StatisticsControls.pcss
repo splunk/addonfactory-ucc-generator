@@ -1,0 +1,56 @@
+/*  Splunk: Component: Statistics Controls */
+/*  ====================================== */
+
+/* statistic controls
+
+    markup missing ...
+
+*/
+.search-results-statisticspane-statisticscontrols {
+    height: 36px;
+    margin-top: -10px; /*  override default tab padding */
+
+    .dialog-format {
+        width: 300px;
+    }
+
+    .searchresultspaginator {
+        float: right;
+    }
+
+    .statistics-controls-inner {
+        padding:5px 20px 5px 20px;
+        background-color: $white;
+        height: 26px;
+        position: relative;
+
+        &.affix-top {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            margin-bottom: -1px;
+            border-bottom: 1px solid $borderColor;
+            z-index: 406;
+            &.disabled .statistics-controls-inner-cover {
+                position: absolute;
+                top: 0px;
+                right: 0px;
+                bottom: 0px;
+                left: 0px;
+                opacity: 0.30;
+                background-color: $gray;
+                z-index: 404;
+            }
+        }
+    }
+}
+
+
+/*  Print */
+/*  -------------------------------------------------- */
+@media print {
+    .search-results-statisticspane-statisticscontrols {
+        @mixin print-hide;
+    }
+}

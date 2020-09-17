@@ -1,0 +1,51 @@
+<div>
+    <table class="detail-table">
+        <tr>
+            <td></td>
+            <td class="detail-messages"></td>
+        </tr>
+        <tr class="detail-pair-roles">
+            <td class="detail-name"><%- _("Role").t() %></td>
+            <td class="detail-value"></td>
+        </tr>
+        <tr class="detail-pair-username">
+            <td class="detail-name"><%- _("Username").t() %></td>
+            <td class="detail-value"><%- username %></td>
+        </tr>
+        <tr class="detail-pair-candelete">
+            <td class="detail-name"><%- _("Permission to Delete Data").t() %></td>
+            <td class="detail-value"></td>
+        </tr>
+        <tr class="detail-pair-email">
+            <td class="detail-name"><%- _("Email address").t() %></td>
+            <td class="detail-value"></td>
+        </tr>
+        <tr class="detail-pair-password">
+            <td class="detail-name"><%- _("Password").t() %></td>
+            <td class="detail-value"></td>
+        </tr>
+        <tr class="detail-pair-confirmpassword">
+            <td class="detail-name"><%- _("Confirm password").t() %></td>
+            <td class="detail-value"></td>
+        </tr>
+        <tr class="detail-pair-fullname">
+            <td class="detail-name"><%- _("Full name").t() %></td>
+            <td class="detail-value"></td>
+        </tr>
+        <tr class="detail-pair-timezone">
+            <td class="detail-name"><%- _("Time zone").t() %></td>
+            <td class="detail-value"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="detail-buttons">
+                <% if (isNew) { %>
+                    <button class="btn detail-cancel"><%- _("Cancel").t() %></button>
+                <% } else if (canEditUsers && isSplunkAuth && !isSelf) { %>
+                    <button class="btn detail-delete"><%- _("Delete").t() %></button>
+                <% } %>
+                <button class="btn btn-primary detail-save"><%- _("Save").t() %></button>
+            </td>
+        </tr>
+    </table>
+</div>

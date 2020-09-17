@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<summary earliest_time='02/01/2006:00:00:00' latest_time='07/01/2008:00:00:00' duration='76114800'>
+	<field k='clientip' c='229051' dc='219' exact='0'>
+		<modes>
+			<value c='49987' exact='1'><text>68.142.230.190</text></value>
+			<value c='32871' exact='0'><text>66.249.65.104</text></value>
+			<value c='26231' exact='0'><text>68.142.230.186</text></value>
+			<value c='21678' exact='0'><text>66.249.66.228</text></value>
+			<value c='15150' exact='1'><text>66.249.65.135</text></value>
+			<value c='8241' exact='1'><text>24.5.76.242</text></value>
+			<value c='3890' exact='0'><text>86.132.202.106</text></value>
+			<value c='2551' exact='1'><text>192.168.1.1</text></value>
+			<value c='2140' exact='0'><text>66.249.72.240</text></value>
+			<value c='1693' exact='0'><text>209.191.65.124</text></value>		
+		</modes>
+
+	</field>
+</summary>

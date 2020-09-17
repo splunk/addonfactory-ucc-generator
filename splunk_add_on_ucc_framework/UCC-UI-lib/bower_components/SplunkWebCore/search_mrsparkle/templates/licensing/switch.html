@@ -1,0 +1,146 @@
+<%inherit file="//layout/admin_lite_dialog.html"/>
+<%namespace name="lib" file="//lib.html" />
+<%namespace name="formset" file="//formset.html" />
+<%!
+from splunk.appserver.mrsparkle.lib import util
+isLite = util.isLite()
+if isLite: 
+    page_text = _('Change license')
+    page_desc = _('Please update the license or switch to Light Free License.')
+else:
+    page_text = _('Change license group')
+    page_desc = _('The type of license group determines what sorts of licenses can be used in the pools on this license server.')
+%>
+<%def name="title()">${page_text} - ${parent.title()}</%def>
+<%def name="get_breadcrumbs()">
+    <%
+        return [
+            [_('Manager'), ['manager']],
+            [_('Licensing'), ['manager','system','licensing']],
+            [_(page_text), None]
+        ]
+    %>
+</%def>
+
+<%
+
+## in the following: 
+## Pos 0 describes the specific license group
+## Pos 1 is the string used as the header
+## Pos 2 is the string used if the license error occurs
+## Pos 3 is the string used to describe the group
+if not isLite:
+    descriptions = [
+        [
+            'Enterprise',
+            _('Enterprise license'),
+            _('Enterprise licenses'),
+            _('This license adds support for multi-user and distributed deployments, alerting, role-based security, single sign-on, scheduled PDF delivery, and unlimited data volumes.')
+        ],
+        [
+            'Forwarder',
+            _('Forwarder license'),
+            _('Forwarder licenses'),
+            _('Use this group when configuring Splunk as a forwarder.') + ('<a class="spl-icon-external-link-xsm" href="%s" target="_blank">' % generateSelfHelpLink('licensing.forwarderlicense')) + _("Learn more") + '</a>'
+        ],
+        [
+            'Free',
+            _('Free license'),
+            _('Free licenses'),
+            _('Use this group when you are running Splunk Free. This license has a 500MB/day daily indexing volume. ') + ('<a class="spl-icon-external-link-xsm" href="%s" target="_blank">' % generateSelfHelpLink('licensing.freelicense')) + _("Learn more") + '</a>'
+        ],
+        [
+            'Trial',
+            _('Enterprise Trial license'),
+            _('Enterprise Trial licenses'),
+            _('This is your included download trial. IMPORTANT: If you switch to another license, you cannot return to the Trial. You must install an Enterprise license or switch to Splunk Free.')    
+        ]
+    ]
+else:
+    descriptions = [
+        [
+            'Enterprise',
+            _('Add license'),
+            _('licenses'),
+            _('Use this option to either update your existing Splunk Light license with either additional capacity or longer term, or add a Splunk Enterprise license to convert your instance to Splunk Enterprise.') + ('<a class="spl-icon-external-link-xsm" href="%s" target="_blank">' % generateSelfHelpLink('licensing.light.license')) + _("Learn more about Splunk Light license") + '</a><br />' + ('<a class="spl-icon-external-link-xsm" href="%s" target="_blank">' % generateSelfHelpLink('licensing.enterprise.license')) + _("Learn more about Splunk Enterprise license") + '</a>'
+        ],
+        [
+            'Lite_Free',
+            _('Light Free license'),
+            _('Light Free licenses'),
+            _('Use this option when running Splunk Light Free. This license has a limit of 500MB/day and is restricted to one admin account.') + ('<a class="spl-icon-external-link-xsm" href="%s" target="_blank">' % generateSelfHelpLink('licensing.lightfreelicense')) + _("Learn more") + '</a>'
+        ]
+    ]
+endif
+
+## try to get current friendly title
+current_title = license_group
+for i, row in enumerate(descriptions):
+    if row[0] == license_group:
+        current_title = row[1]
+        break
+%> 
+
+
+% if controller_exception:
+    <div class="error">
+        <%lib:render_exception e="${controller_exception}" />
+    </div>
+% endif
+
+
+% if is_success:
+
+    <div class="message_block_success"><span class="message_block_success_text">${_('Restart Required')}</span></div>
+    <p>
+        ${_('The licensing group has been set to <strong>%s</strong>. You must restart Splunk in order for changes to take effect.') % h(current_title)}
+    </p>
+
+% else:
+
+    <h1>${page_text}</h1>
+
+    <p>${_(page_desc)} <a class="spl-icon-external-link-xsm" href="${generateSelfHelpLink('licensing.chnglicgrp')}" target="_blank">${_('Learn more')}</a> </p>
+
+    <table>
+        % for i, row in enumerate(descriptions):
+            % if row[0] in available_groups:
+                <tr>
+                    <td>
+                        <input type="radio" name="license_group" value="${_('add') if row[1] == _('Add license') else row[0]|h}" id="license_type_${i}" ${'checked="checked"' if (license_group == row[0] or row[1] == _('Add license')) else ''}/>
+                    </td>
+                    <td>
+                        <label class="big" for="license_type_${i}">${row[1]|h}</label>
+                        <p>${row[3]}</p>
+                        % if len(license_map[row[0]]) == 0:
+                            <p style="color:#800;">
+                                ${_('There are no valid Splunk <em>%s</em> installed. You will be prompted to install a license if you choose this option.') % h(row[2])}
+                            </p>
+                        % endif
+                    </td>
+                </tr>
+            % endif 
+        % endfor
+
+    </table>
+% endif
+
+
+##
+## buttons
+##
+
+<%def name="gutter()">
+    <div class="admin-dialog-tray">
+    % if is_success:
+        <%
+        qs = {'auto_restart':'1'}
+        %>
+        ${formset.button(_('Restart Later'), href=return_to)}
+        ${formset.button(_('Restart Now'), is_primary=True, href=make_url(['manager','search','control'], _qs=qs) )}
+    % else:
+        ${formset.button(_('Cancel'), href=return_to)}
+        ${formset.button(_('Save'), is_primary=True, is_submit=True)}
+    % endif
+    </div>
+</%def>

@@ -1,0 +1,65 @@
+.input_item{
+  padding:10px 30px 10px 20px;
+  border-bottom: 1px dotted $interactiveBorderBottomColor;
+  position: relative;
+  font-size: 14px;
+  
+    
+    &.selected {
+      color: $textGrayDark;
+      background-color: $grayLighter;
+      
+      &:after {
+      	content: "\203A"; 
+      	color: $textDisabledColor;
+      	font-size: 24px;
+      	position: absolute;
+      	right: 10px;
+      	top: 0;
+      	line-height: 53px;
+      	    font-family: "Splunk Icons";
+      }
+
+    }
+}
+
+.input_type {
+	line-height: 20px;
+}
+
+.input_desc {
+  color: $textGray;
+  font-size: 11px;
+}
+
+
+
+.input_list .link-wrap {
+  display: block;
+  text-decoration: none !important;
+  
+	&:hover {
+		background-color: $pillBackgroundColorHover;
+	}
+	
+	&:focus {
+		background-color: $pillBackgroundColorFocus;
+		outline: none;
+		
+		
+		.selected {
+			background-color: transparent;
+		}
+	}
+}
+
+.form-section.inline {
+  padding-left: 0px;
+  margin-bottom: 10px;
+}
+
+.inputForm {
+    .tcpUdpBtn.active {
+        opacity: 1;
+    }
+}

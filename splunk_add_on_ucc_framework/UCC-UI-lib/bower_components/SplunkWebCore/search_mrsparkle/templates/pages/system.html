@@ -1,0 +1,17 @@
+<%inherit file="base.html"/>
+<div class="preload">
+    <div id="placeholder-splunk-bar">
+        <a href="${make_url([])}" class="brand" title="splunk &gt; listen to your data">splunk<strong>&gt;</strong></a>
+    </div>
+    <div id="placeholder-main-section-body">
+    ${_('Loading...')}
+    </div>
+</div>
+
+<script>
+    % if appinstall_args is UNDEFINED:
+    __appinstall_args__ = {};
+    % else:
+    __appinstall_args__ = ${json_decode(appinstall_args)};
+    % endif
+</script>

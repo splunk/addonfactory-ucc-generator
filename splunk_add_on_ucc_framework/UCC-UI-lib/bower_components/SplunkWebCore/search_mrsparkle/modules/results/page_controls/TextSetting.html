@@ -1,0 +1,11 @@
+<%page args="module"/>
+
+<%def name="id()">
+${module['id']}_text
+</%def>
+
+% if module['params'].get('label'):
+<label for="${id()}">${module['params']['label'] | h}</label>
+% endif
+<input type='text' name="${module['params']['elementName'] | h}" id="${id()}" autocomplete="off" />
+

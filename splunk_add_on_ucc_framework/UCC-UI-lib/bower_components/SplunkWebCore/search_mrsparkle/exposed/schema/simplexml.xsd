@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:group name="BaseSimple">
+    <xs:annotation>
+      <xs:documentation>
+        base simple XML
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="label"/>
+        <xs:element ref="row"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:group>
+  
+  <xs:element name="label" type="xs:string"/>
+  
+  <xs:element name="row">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="chart"/>
+        <xs:element ref="table"/>
+        <xs:element ref="single"/>
+        <xs:element ref="event"/>
+        <xs:element ref="html"/>
+      </xs:choice>
+      <xs:attribute name="grouping"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:complexType name="Panel">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="title"/>
+      <xs:choice>
+        <xs:element ref="searchString"/>
+        <xs:element ref="searchName"/>
+        <xs:element ref="searchTemplate"/>
+        <xs:element ref="searchPostProcess"/>
+      </xs:choice>
+      <xs:element ref="earliestTime"/>
+      <xs:element ref="latestTime"/>
+      <xs:element ref="fields"/>
+      <xs:element ref="option"/>
+      <xs:element ref="drilldown"/>
+    </xs:choice>
+  </xs:complexType>
+  
+  <xs:element name="title" type="xs:string"/>
+  <xs:element name="searchString" type="xs:string"/>
+  <xs:element name="searchName" type="xs:string"/>
+  <xs:element name="searchTemplate" type="xs:string"/>
+  <xs:element name="searchPostProcess" type="xs:string"/>
+  <xs:element name="earliestTime" type="xs:string"/>
+  <xs:element name="latestTime" type="xs:string"/>
+  <xs:element name="fields" type="xs:string"/>
+  <xs:element name="chart" type="Panel"/>
+  <xs:element name="table" type="Panel"/>
+  <xs:element name="single" type="Panel"/>
+  <xs:element name="event" type="Panel"/>
+  <xs:element name="html">
+    <xs:complexType mixed="true">
+      <xs:group minOccurs="0" maxOccurs="unbounded" ref="GlobElement"/>
+      <xs:attribute name="src"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="option">
+    <xs:complexType mixed="true">
+      <xs:attribute name="name" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="form">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:group ref="BaseSimple"/>
+        <xs:element ref="searchTemplate"/>
+        <xs:element ref="earliestTime"/>
+        <xs:element ref="latestTime"/>
+        <xs:element ref="fieldset"/>
+      </xs:choice>
+      <xs:attribute name="class"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="dashboard">
+    <xs:complexType>
+      <xs:group ref="BaseSimple"/>
+    </xs:complexType>
+  </xs:element>  
+
+  <xs:element name="fieldset">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="input"/>
+        <xs:element ref="html"/>
+      </xs:choice>
+      <xs:attribute name="autoRun" type="Boolean"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="drilldown">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="link"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="link">
+    <xs:complexType mixed="true">
+      <xs:attribute name="field"/>
+      <xs:attribute name="series"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:group name="BaseInput">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="label"/>
+        <xs:element ref="default"/>
+        <xs:element ref="prefix"/>
+        <xs:element ref="suffix"/>
+        <xs:element ref="seed"/>
+        <xs:choice>
+          <xs:element ref="populatingSearch"/>
+          <xs:element ref="populatingSavedSearch"/>
+        </xs:choice>
+      </xs:choice>
+    </xs:sequence>
+  </xs:group>
+  
+  <xs:element name="default" type="xs:string"/>
+  <xs:element name="prefix" type="xs:string"/>
+  <xs:element name="suffix" type="xs:string"/>
+  <xs:element name="seed" type="xs:string"/>
+  <xs:element name="populatingSearch">
+    <xs:complexType mixed="true">
+      <xs:attribute name="fieldForValue" use="required"/>
+      <xs:attribute name="fieldForLabel" use="required"/>
+      <xs:attribute name="earliest"/>
+      <xs:attribute name="latest"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="populatingSavedSearch">
+    <xs:complexType mixed="true">
+      <xs:attribute name="fieldForValue" use="required"/>
+      <xs:attribute name="fieldForLabel" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:attributeGroup name="BaseInput">
+    <xs:attribute name="token"/>
+    <xs:attribute name="searchWhenChanged" type="Boolean"/>
+  </xs:attributeGroup>
+  
+  <xs:element name="input">
+    <xs:complexType>
+      <xs:choice>
+        <xs:group ref="BaseInput"/>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:group ref="BaseInput"/>
+          <xs:element ref="choice"/>
+        </xs:choice>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:group ref="BaseInput"/>
+          <xs:element ref="choice"/>
+        </xs:choice>
+        <xs:element minOccurs="0" ref="default"/>
+      </xs:choice>
+      <xs:attribute name="type">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="text"/>
+            <xs:enumeration value="dropdown"/>
+            <xs:enumeration value="radio"/>
+            <xs:enumeration value="time"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attributeGroup ref="BaseInput"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="choice">
+    <xs:complexType mixed="true">
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:group name="GlobElement">
+    <xs:annotation>
+      <xs:documentation>
+        Globals
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:any processContents="skip"/>
+    </xs:sequence>
+  </xs:group>
+  
+  <xs:simpleType name="Boolean">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="true"/>
+      <xs:enumeration value="false"/>
+      <xs:enumeration value="True"/>
+      <xs:enumeration value="False"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

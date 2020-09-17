@@ -1,0 +1,63 @@
+.view {
+    composes: view from '../../MenuDialog.pcssm';
+}
+
+.dialogPadded {
+    composes: dialogPadded from '../../MenuDialog.pcssm';
+}
+
+.arrow {
+    display: none;
+}
+
+
+.body {
+    composes: body from '../../MenuDialog.pcssm';
+}
+
+.footer {
+    composes: footer from '../../MenuDialog.pcssm';
+}
+
+
+/*  Splunk: Dropdown arrow/caret */
+/*  =========================== */
+
+
+.dropup,
+.dropdown {
+  position: relative;
+}
+
+.dropdown-toggle:active,
+.open .dropdown-toggle {
+  outline: 0;
+}
+
+/*  Dropdowns */
+/*  --------- */
+
+.menu  {
+    composes: menu from '../../MenuDialog.pcssm';
+    li {
+        position: relative;
+        > a {
+            display: block;
+            line-height: 40px;
+            padding: 0 50px 0 30px;
+            font-size: 17px;
+            white-space: nowrap;
+            color: $splunkLiteBlack;
+
+            &:hover:not(.disabled),
+            &:focus:not(.disabled) {
+                color: $splunkLiteBlack;
+                background: $pillBackgroundColorHover;
+            }
+       }
+
+       + li > a {
+           border-top: 1px solid $borderColor;
+       }
+    }
+}

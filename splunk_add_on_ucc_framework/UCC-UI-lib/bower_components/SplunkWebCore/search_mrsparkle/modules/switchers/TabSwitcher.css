@@ -1,0 +1,36 @@
+.TabSwitcher {
+    float:none !important;
+    min-height:27px;
+    _height:27px;
+    padding: 0px 5px;
+    overflow: hidden;
+    _overflow:visible;
+}
+.TabSwitcher ul {
+    margin: 0;
+    padding: 0;
+    list-style: none none; /*ie6 has to be told twice */
+}
+.TabSwitcher ul li {
+    float: left;
+    padding-left: 20px;
+    height: 27px;
+    line-height: 27px;
+    margin-right: 5px;
+    margin-top: 5px;
+}
+.TabSwitcher ul li.disabled {
+    opacity:0.25;
+}
+
+.TabSwitcher ul li a {
+    display: block;
+    _display: inline-block;
+    padding-right: 20px;
+    text-align: center;
+    cursor: pointer;
+    min-width: 125px;
+    _white-space:nowrap;
+    _width:125px;
+}
+

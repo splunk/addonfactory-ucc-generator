@@ -1,0 +1,334 @@
+.view {
+    background-color: $interactiveColor;
+    border: 1px solid $interactiveBorderColor;
+    /* border-bottom-color: $interactiveBorderBottomColor; */
+    /* border-top-color: $interactiveBorderTopColor; */
+
+    /*  remove gradient for IE to fix clipping */
+    @mixin reset-filter;
+
+    box-shadow: 1px 2px 5px rgba(0,0,0,0.2);
+
+    border-radius: $containerOuterBorderRadius;
+
+    top:100%;
+    left: 50%;
+    margin: 8px 0 0 -103px;
+
+    display:none;
+    position:absolute;
+    z-index: $zindexPopdown;
+    /*  placement of arrow */
+
+    white-space: normal; /* prevent inheriting nowrap from btn-group */
+
+    &[data-popdown-point=down] {
+        margin-top: 0;
+
+    }
+    &[data-popdown-point=left] { /* point left */
+        margin-left: 5px;
+        margin-top: 0;
+    }
+
+    /*  open state */
+    &.[data-popdown-state=open] {
+        display:block;
+    }
+
+    /*  SPL-68751 - IE10 box shadow animation artifacts fix */
+    &:after    {
+        content: "";
+        font-size: 0;
+        display: inline;
+        overflow: hidden;
+    }
+}
+
+.dialogPadded {
+    composes: view;
+    padding: 10px;
+}
+
+.arrow {
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+
+    border-bottom: 8px solid $interactiveBorderTopColor;
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    margin-left: -4px;
+
+    /*  generated arrow */
+    &:before {
+        content: "";
+        display: block;
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+
+        border-bottom: 8px solid $white;
+        position: absolute;
+        top: 1px;
+        left:0;
+        margin-left: -8px;
+    }
+
+    [data-placement=over] > & { // point up
+        border-top: 8px solid $interactiveBorderBottomColor;
+        border-bottom: none;
+        top: auto;
+        bottom: -8px;
+
+        &:before {
+            border-top: 8px solid $white;
+            border-bottom: none;
+            position: absolute;
+            top: auto;
+            bottom: 1px;
+        }
+    }
+    &[data-placement=right] > & { // point left
+        border-right: 8px solid $interactiveBorderBottomColor;
+        border-top: 8px solid transparent;
+        border-bottom: 8px solid transparent;
+        border-left: none;
+        top: 50%;
+        left: -8px;
+        margin: -8px 0 0 0 ;
+
+        &:before {
+            border-right: 8px solid $white;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+            border-left: none;
+
+            position: absolute;
+            top: 0;
+            left: 1px;
+            margin: -8px 0 0 0 ;
+        }
+    }
+}
+
+
+.body {
+    margin: 0;
+    border-radius: $containerInnerBorderRadius;
+    background-color: $white;
+    @mixin clearfix;
+}
+
+.footer {
+    border-top: 1px solid $borderColor;
+    padding: 5px;
+    border-bottom-left-radius: $containerInnerBorderRadius;
+    border-bottom-right-radius: $containerInnerBorderRadius;
+    @mixin clearfix;
+
+    @if $theme == lite {
+        background: $offWhite;
+    }
+}
+
+
+/*  Splunk: Dropdown arrow/caret */
+/*  =========================== */
+
+
+.dropup,
+.dropdown {
+  position: relative;
+}
+
+.dropdown-toggle:active,
+.open .dropdown-toggle {
+  outline: 0;
+}
+
+/*  Dropdowns */
+/*  --------- */
+
+.menu  {
+    composes: body;
+    width: auto;
+    list-style: none;
+    word-wrap: break-word;
+    line-height: calc(16px * 4 / 3);
+    padding: 0;
+    background-clip: padding-box;
+    min-width: 120px;
+
+    list-style: none;
+    overflow-x: hidden;
+    overflow-y: auto;
+    /* in rare cases that long strings increase the container size, this will minimize the issues */
+    max-width: 100%;
+    max-height: 270px;
+    box-sizing: border-box;
+    border-radius:0;
+
+	+ .menu {
+        border-top: 1px solid $interactiveBorderTopColor;
+
+        @if $theme == lite {
+            border-color: $borderColor;
+        }
+    }
+
+    li {
+        position: relative;
+
+        > a {
+            display: block;
+            clear: both;
+            font-weight: normal;
+            line-height: $baseLineHeight;
+            position: relative;
+            color: $linkColor;
+            padding: 5px 10px ;
+            white-space: normal;
+            text-decoration: none;
+            line-height: $baseLineHeight;
+
+            &:focus:not(.disabled) {
+                @mixin focus-pill;
+            }
+
+            &:hover:not(.disabled) {
+                color: $linkColorHover;
+                background: $pillBackgroundColorHover;
+                @mixin gradient-vertical $pillBackgroundColorHover, $pillBackgroundColorHover;
+            }
+
+			&.disabled {
+	            color: $textDisabledColor;
+	        }
+       }
+
+	   + li > a {
+	       border-top: 1px dotted $borderColor;
+	   }
+    }
+}
+
+/* link info style */
+.title {
+    color: $textGray;
+    text-transform: uppercase;
+    padding: 3px 10px;
+}
+
+.info {
+    display: block;
+    font-size: $fontSizeSmall;
+}
+
+li > a.primaryLink {
+    margin-right: 40px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: 1px dotted  $borderColor;
+    min-width: 100px;
+    flex: 1 0 0;
+}
+
+li > a.secondaryLink {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 40px;
+    padding-left:0;
+    padding-right: 0;
+    font-size: 16px;
+    text-align: center;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    white-space: nowrap;
+    font-size: 14px;
+}
+.startGroup {
+
+}
+
+.menu > li.startGroup > a,
+.menu .divider + li > a  {
+    border-top-style: solid;
+    border-color: $borderColor;
+}
+
+.selected:before {
+    content: '';
+    position: absolute;
+    left: 9px;
+    top: 7px;
+    height: 8px;
+    width: 4px;
+    border-right: 0.15em solid currentColor;
+    border-bottom:0.15em solid currentColor;
+    transform: rotate(42deg) scaleX(0.9);
+}
+
+/*  Sizes */
+/*  ------------------- */
+
+.menuNarrow {
+    composes: menu;
+    max-width: 10em;
+}
+
+.menuLarge {
+    composes: menu;
+    max-width: 25em;
+}
+
+.menuLarger {
+    composes: menu;
+    max-width: 30em;
+}
+
+
+/*  Selectable dropdown */
+/*  ------------------- */
+
+.menuSelectable {
+    composes: menu;
+    li > a {
+        padding-left: 24px;
+    }
+}
+
+.header {
+    display: block;
+    padding: 3px 20px;
+    font-size: 12px;
+    line-height: 1.42857143;
+    color: $textGray;
+}
+
+
+/*  fixed height dropdowns & popdowns */
+/*  --------------------------------- */
+
+.menuTall ul {
+    max-height: 20em;
+    overflow: auto;
+}
+
+.menuShort ul {
+    max-height: 10em;
+    overflow: auto;
+}
+
+/*  Typeahead */
+/*  --------- */
+.typeahead {
+    z-index: 1051;
+    margin-top: 2px; /*  give it some space to breathe */
+    border-radius: $baseBorderRadius;
+}

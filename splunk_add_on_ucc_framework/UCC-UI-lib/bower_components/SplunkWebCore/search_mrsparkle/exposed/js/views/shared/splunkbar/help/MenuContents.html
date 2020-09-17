@@ -1,0 +1,33 @@
+<ul class="<%-css.menu%>">
+    <% if (isCloud) { %>
+        <li><a data-action="splunk-search" data-link-external="external" href="http://www.splunk.com/en_us/search.html?query=search" target="_blank"><%- _("Search Splunk").t() %> </a></li>
+        <li><a data-action="customer-portal" data-link-external="external" href="https://splunkcommunities.force.com/customers/home/home.jsp" target="_blank"><%- _("Customer Portal").t() %> </a></li>
+        <li><a data-action="splunk-answers" data-link-external="external" href="http://answers.splunk.com/" target="_blank"><%- _("Splunk Answers").t() %> </a></li>
+        <% if (!isLite) { %>
+            <li><a data-action="splunkbase" data-link-external="external" href="https://splunkbase.splunk.com" target="_blank"><%- _("Splunkbase").t() %> </a></li>
+        <% } %>
+        <li><a data-action="docs" data-link-external="external" href="<%- docLink %>" target="_blank"><%- _("Help for this page").t() %> </a></li>
+        <li><a data-action="support-and-services" data-link-external="external" href="https://www.splunk.com/en_us/support-and-services.html" target="_blank"><%- _("Support & Services").t() %> </a></li>
+        <li><a data-action="customer-support" data-link-external="external" href="http://www.splunk.com/en_us/about-us/contact.html#customer-support" target="_blank"><%- _("Customer Support").t() %> </a></li>
+        <% if (isLite && hasTours) { %>
+            <li><a data-action="splunk-tours" class="splunk-tours" href="#"><%- _("Product Tours").t() %> </a></li>
+        <% } %>
+        <li><a data-action="about-splunk" class="about-splunk" href="#"><%- _("About").t() %> </a></li>
+        <li><a data-action="whats-new" data-link-external="external" href="<%- makeDocLink('helpmenu.whatsnew') %>" target="_blank"><%- _("What's New").t() %> </a></li>
+    <% } else { %>
+        <li><a data-action="whats-new" data-link-external="external" href="<%- makeDocLink('helpmenu.whatsnew') %>" target="_blank"><%- _("What's New").t() %> </a></li>
+        <% if (!isLite) { %>
+            <li><a data-action="tutorials" data-link-external="external" href="<%- makeDocLink('search_app.tutorial') %>" target="_blank"><%- _("Tutorials").t() %> </a></li>
+        <% } %>
+        <li><a data-action="splunk-answers" data-link-external="external"  href="http://splunk-base.splunk.com/" target="_blank"><%- _("Splunk Answers").t() %> </a></li>
+        <li><a data-action="contact-support" data-link-external="external"  href="http://www.splunk.com/support" target="_blank"><%- _("Contact Support").t() %> </a></li>
+        <li><a data-action="docs" data-link-external="external" href="<%- docLink %>" target="_blank"><%- _("Help for this page").t() %> </a></li>
+        <% if (isLite && hasTours) { %>
+            <li><a data-action="splunk-tours" href="#"><%- _("Product Tours").t() %> </a></li>
+        <% } %>
+        <li><a data-action="about-splunk" href="#"><%- _("About").t() %> </a></li>
+    <% } %>
+</ul>
+<% if (!isLite) { %>
+    <div class="<%-css.formSearch%>" action="#help" data-role="form"></div>
+<% } %>

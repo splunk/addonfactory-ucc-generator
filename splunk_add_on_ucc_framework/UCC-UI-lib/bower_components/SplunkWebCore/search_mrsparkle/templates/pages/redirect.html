@@ -1,0 +1,9 @@
+<%
+import cherrypy
+redirect = '/app/%s/search' % app
+if cherrypy.request.query_string:
+    redirect += '?' + cherrypy.request.query_string
+%>
+<script>
+window.location = ${json_decode(redirect)};
+</script>

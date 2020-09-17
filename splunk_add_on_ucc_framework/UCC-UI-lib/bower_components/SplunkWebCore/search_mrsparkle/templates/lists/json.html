@@ -1,0 +1,26 @@
+<%
+import json
+import cherrypy
+import splunk.appserver.mrsparkle
+from splunk.appserver.mrsparkle.lib.jsonresponse import JsonResponse
+
+output = ''
+error = ''
+try:
+    output = json.dumps(list_data)
+except TypeError, e:
+    try: 
+        cleaned = []
+        for item in list_data:
+            cleaned_item = {}
+            for k,v in item.items():
+                cleaned_item[k] = unicode(v)
+            cleaned.append(cleaned_item)
+        output = json.dumps(cleaned)
+    except TypeError, e:
+        resp = JsonResponse()
+        resp.addError(e.message)
+        output = resp.toJson()
+cherrypy.response.headers['content-type'] = splunk.appserver.mrsparkle.MIME_JSON
+%>\
+${output}

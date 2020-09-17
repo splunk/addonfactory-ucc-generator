@@ -1,0 +1,75 @@
+<div id="ResultsActionButtons_0_2_0" s:parentmodule="#JobStatus_0_1_1" class="SplunkModule ResultsActionButtons">                        
+
+<fieldset>
+    <a class="splButton-primary saveButton secondary"><span>Save Results</span></a>
+    <button class="splButton-secondary exportButton"><span>Export...</span></button>
+    <button class="splButton-secondary printButton"><span>Print...</span></button>
+    <button class="splButton-secondary linkButton"><span>Get link...</span></button>
+
+    <button class="splButton-secondary editButton" style="display: inline;"><span>Edit report...</span></button>
+    <a href="#" class="previousRunsLink" style="display: inline;">Previous runs...</a>
+    <span class="splViewEvents" style="display: inline;">
+        <span class="splPipe">|</span>
+       <a href="#" class="splViewEventsLink">View events...</a>
+    </span>
+</fieldset>
+
+<div class="exportResultsForm">
+    <div class="exParamsContainer">
+    <form method="get" class="exForm entityEditForm">
+        <input type="hidden" value="true" name="isDownload"/>
+        <div class="fieldsetWrapper">
+        <fieldset>
+            <label class="exParam">
+                File name 
+            </label>
+            <div>
+                <input type="text" class="exFilename" name="filename"/>
+            </div>
+            <label class="exParam">
+                Format 
+            </label>
+            <div>
+                <select class="exOutputModeSelect" name="outputMode">
+                    <option value="csv">CSV</option>
+                    <option value="raw">Text</option>
+                    <option value="xml">XML</option>
+                    <option value="json">JSON</option>
+                </select>
+            </div>
+            <label class="exParam">
+                Max # of output lines 
+            </label>
+            <div>
+                <input type="text" value="10000" class="exMaxcount" name="count"/>
+            </div>
+        </fieldset>
+        </div>
+    </form>
+    </div>
+</div>
+
+
+<!--  sadly, this popup layers markup is now DUPLICATED. TitleBar, as well as the ResultsActionButtons module, both require this layer  -->
+<div class="shareLinkForm">
+    <div class="linkParamsContainer">
+    <form method="get" class="linkForm entityEditForm">
+        <div class="fieldsetWrapper">
+        <fieldset>
+            <label class="exParam">
+                Link to the results 
+            </label>
+            <div>
+                <input type="text" style="width: 500px;" name="linkText"/>
+            </div>
+            <div>
+                <p>Your results have been saved and shared with all users. They are available in Splunk Manager.</p>
+                <a href="#" class="undoEverything">Undo save and sharing.</a>
+            </div>
+        </fieldset>
+        </div>
+    </form>
+    </div>
+</div>
+
+<div class="savedSearchForm"/>    <div/></div>

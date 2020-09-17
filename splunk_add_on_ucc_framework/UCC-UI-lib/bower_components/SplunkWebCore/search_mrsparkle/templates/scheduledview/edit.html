@@ -1,0 +1,218 @@
+<%inherit file="/layout/wizard.html"/>
+<%namespace file="/lib.html" import="csrf_hidden_input, wizard_cancel_delete, wizard_errors"/>
+
+<div class="content scheduledView">
+
+    <div class="ui-invalid-message error" id="form-message">
+        <span id="form-message-text"></span>
+    </div>
+
+    % if scheduled_view.schedule.is_scheduled == True:
+        <div class="pdfScheduleStop" style="border-bottom:1px solid #ccc;padding-bottom:1em;margin-bottom:1em;">
+            <h2>${_("Stop Scheduling this PDF")}</h2>
+            <button style="float:right;" class="splButton-primary stopScheduling" type="submit" onclick="$('.is_scheduled').val('False'); $(document.forms[0]).trigger('submit');"><span>${_('Stop Scheduling')}</span></button>
+            <p class="note">Delete the current schedule to stop PDF delivery</p>
+        </div>
+    % endif
+
+    <form method="post" action="${make_url(['scheduledview', app, 'update']) | h}">
+        ${csrf_hidden_input()}
+        <h1 class="pdf-title">${viewLabel|h}</h1>
+        <p class="note">${_('To send email you must set a valid MTA in email alert settings. <a href="%s" class="spl-icon-external-link-xsm" target="_blank">Learn more</a>.</em>') % generateSelfHelpLink('learnmore.alert.email')}</p>
+        <fieldset id="frequency-settings">
+            <label for="frequency">${_('Email Schedule')}</label>
+            <select name="frequency" id="frequency" class="ui-cron-schedule">
+                <option value="30 minutes" ${'selected="selected"' if frequency=='30 minutes' else ''}>${_('every 30 minutes')}</option>
+                <option value="hour" ${'selected="selected"' if frequency=='hour' else ''}>${_('every hour')}</option>
+                <option value="12 hours" ${'selected="selected"' if frequency=='12 hours' else ''}>${_('every 12 hours')}</option>
+                <option value="day_midnight" ${'selected="selected"' if frequency=='day_midnight' else ''}>${_('every day at midnight')}</option>
+                <option value="day_6pm" ${'selected="selected"' if frequency=='day_6pm' else ''}>${_('every day at 6pm')}</option>
+                <option value="week" ${'selected="selected"' if frequency=='week' else ''}>${_('every week (every Saturday at midnight)')}</option>
+                <option value="cron" ${'selected="selected"' if frequency=='cron' else ''}>${_('Cron...')}</option>
+            </select>
+            <div class="ui-manual-cron indent">
+                <label for="manual_cron">${_('Enter a cron-style schedule.')}</label>
+                <input type="text" name="manual_cron" id="manual_cron" ${'value="'+str(manual_cron)+'"' if manual_cron != None else 'value=""'}/>
+                <p class="note">${_('For example <code class="cron">*/5 * * * *</code> (every 5 minutes) or <code class="cron">0 21 * * *</code> (every day at 9 PM).')}</p>
+            </div>
+        </fieldset>
+        <fieldset id="email-settings" style="margin-top:1em;">
+            <label for="action-email-to">${_('Deliver To')}</label>
+            <input type="text" name="action.email.to" id="action-email-to" ${'value="'+str(scheduled_view.action.email.to)+'"' if scheduled_view.action.email.to != None else 'value=""'}/>
+            <p class="note">${_('Enter comma-separated email addresses.')}</p>
+            <label for="paperSize">${_('Paper Setup')}</label>
+            <table><tr>
+                <td><select name="paperSize" id="paperSize" class="ui-paper-size">
+                    <option value="letter" ${'selected="selected"' if paperSize=='letter' else ''}>${_('Letter')}</option>
+                    <option value="legal" ${'selected="selected"' if paperSize=='legal' else ''}>${_('Legal')}</option>
+                    <option value="a2" ${'selected="selected"' if paperSize=='a2' else ''}>${_('A2')}</option>
+                    <option value="a3" ${'selected="selected"' if paperSize=='a3' else ''}>${_('A3')}</option>
+                    <option value="a4" ${'selected="selected"' if paperSize=='a4' else ''}>${_('A4')}</option>
+                    <option value="a5" ${'selected="selected"' if paperSize=='a5' else ''}>${_('A5')}</option>
+                </select></td>
+                <td><select name="paperOrientation" id="paperOrientation" class="ui-paper-orientation">
+                    <option value="portrait" ${'selected="selected"' if paperOrientation=='portrait' else ''}>${_('Portrait')}</option>
+                    <option value="landscape" ${'selected="selected"' if paperOrientation=='landscape' else ''}>${_('Landscape')}</option>
+                </select></td>
+            </tr></table>
+        </fieldset>
+        <input type="hidden" class="is_scheduled" name="schedule.is_scheduled" value="True"/>
+        <input type="hidden" name="id" value="${scheduled_view.id}" id="scheduled-view-id"/>
+        <input type="hidden" name="pdfPreviewUrl" value="${pdfPreviewUrl}" id="pdf-preview-url"/>
+        <input type="submit" style="display:none;" />
+        % if pdfPreviewUrl != None:
+            <p class="information" style="margin-top:1em;"><a id="pdf-preview-link" target="_blank" href="#">${_("Preview")}</a></p>
+            <p class="information" style="margin-top:1em;"><a id="pdf-test-email-link" href="#">${_("Send Test Email")}</a></p>
+        % endif
+    </form>
+</div>
+
+<ul class="buttons splClearfix">
+    <li class="left">${wizard_cancel_delete(make_url(['scheduledview', app, 'delete']), scheduled_view.id)}</li>
+    <li class="right"><button class="splButton-primary" id="submit-button" type="submit"><span>${_('Schedule')}</span></button></li>
+</ul>
+
+<script type="text/javascript">
+    var getPaperSize = function() {
+            return $('#paperSize').val();
+        },
+        getPaperOrientation = function() {
+            return $('#paperOrientation').val();
+        },
+        getPdfUrlBase = function() {
+            return $('#pdf-preview-url').val();
+        },
+        buildPdfUrl = function() {
+            var paperSize = getPaperSize(),
+                paperOrientation = getPaperOrientation(),
+                isLandscape = paperOrientation != 'portrait',
+                pdfUrlBase = getPdfUrlBase(),
+                isPdfgen = pdfUrlBase.indexOf("pdfgen/render") != -1,
+                paperSizeArgs = "";
+
+            if (isPdfgen) {
+                paperSizeArgs = "&paper-size=" + paperSize + (isLandscape ? "-" + paperOrientation : "");
+            } else {
+                paperSizeArgs = "&papersize=" + paperSize + "&orientation=" + paperOrientation;
+            }
+
+            $('#pdf-preview-link').attr('href', pdfUrlBase + paperSizeArgs);
+        },
+        sendTestEmail = function() {
+            var postData = {
+                'splunk_form_key': Splunk.util.getFormKey(),
+                'paper-size': getPaperSize(),
+                'paper-orientation': getPaperOrientation(),
+                'to': $('#action-email-to').val(),
+                'scheduled-view-id': $('#scheduled-view-id').val()
+                },
+                pdfPreviewUrl = getPdfUrlBase(),
+                pdfPreviewQueryStringIndex = pdfPreviewUrl.indexOf("?"),
+                pdfPreviewQueryStringExists = pdfPreviewQueryStringIndex !== -1 && pdfPreviewQueryStringIndex < (pdfPreviewUrl.length - 1),
+                pdfPreviewQueryString = pdfPreviewQueryStringExists ? pdfPreviewUrl.substr(pdfPreviewQueryStringIndex + 1) : "",
+                pdfPreviewQueryProps = Splunk.util.queryStringToProp(pdfPreviewQueryString);
+
+            $.extend(postData, pdfPreviewQueryProps);
+
+            $.post("${make_url(['scheduledview', app, 'sendTestEmail'])}", postData, function(data) {
+                if (data == "success") {
+                    showMessage("${_("Test email sent.")}", 'info');
+                } else {
+                    showMessage("${_("Test email cannot be sent. Error: ")}" + data, 'error');
+                }
+            });
+        },
+        enableSendTestEmail = function() {
+            var toText = $('#action-email-to').val();
+            if (toText.length > 0) {
+                $('#pdf-test-email-link').removeClass('disabled');
+            } else {
+                $('#pdf-test-email-link').addClass('disabled');
+            }
+        },
+        showMessage = function(message, messageClass) {
+            $('#form-message').show();
+            $('#form-message').removeClass("error info");
+            $('#form-message').addClass(messageClass);
+            $('#form-message-text').text(message);
+            // attempt to trigger the iframe onresize function by simulating the mouseup event
+            parent.$('body').find('iframe').contents().find('body').trigger('mouseup');
+        },
+        hideMessage = function() {
+            $('#form-message').hide();
+        },
+        validate = function(validCallback) {
+            // validate fields
+            var valid = true;
+            var cronSchedule = $('.ui-cron-schedule').val();
+            var manualCronText = $('input[name="manual_cron"]').val();
+            var emailToText = $('input[name="action.email.to"]').val();
+            var emailValidateRegExp = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            var emailToIndividualAddresses = null;
+
+            // validate manual cron
+            if (cronSchedule === 'cron') {
+                if (manualCronText.length === 0 || !Splunk.util.validateCronString(manualCronText)) {
+                    valid = false;
+                    invalidMessage = _("Please specify a valid cron string or choose a preset frequency.");
+                }
+            }
+
+            // validate email addresses
+            if (emailToText.length === 0) {
+                valid = false;
+                invalidMessage = _("Please specify at least one email address.");
+            }
+            else {
+                emailToIndividualAddresses = emailToText.split(",");
+                for (var i = 0; i < emailToIndividualAddresses.length; i++){
+                	var address = emailToIndividualAddresses[i];
+                    if (emailValidateRegExp.test($.trim(address)) === false) {
+                        valid = false;
+                        invalidMessage = _("Email addresses are not specified correctly.");
+                        break;
+                    }
+                }
+            }
+
+            // if everything is valid, submit, otherwise, display invalid message
+            if (valid) {
+                hideMessage();
+                validCallback();
+            } else {
+                showMessage(invalidMessage, "error");
+            }
+        }
+
+    $(document).ready(function() {
+        hideMessage();
+
+        buildPdfUrl();
+        $('#paperSize').change(buildPdfUrl);
+        $('#paperOrientation').change(buildPdfUrl);
+
+        enableSendTestEmail();
+        $('#action-email-to').bind('keyup change', enableSendTestEmail);
+        $('#pdf-test-email-link').click(function() {
+            validate(sendTestEmail);
+        });
+
+        if ($('select').val() != 'cron') {
+            $('.ui-manual-cron').hide();
+        }
+
+        $('select').change(function() {
+            if ($('select').val() === 'cron') {
+                $('.ui-manual-cron').show();
+            } else {
+                $('.ui-manual-cron').hide();
+            }
+        });
+
+        $('#submit-button').click(function(event) {
+            validate(function() {
+                $(document.forms[0]).trigger('submit');
+            });
+        });
+    });
+</script>

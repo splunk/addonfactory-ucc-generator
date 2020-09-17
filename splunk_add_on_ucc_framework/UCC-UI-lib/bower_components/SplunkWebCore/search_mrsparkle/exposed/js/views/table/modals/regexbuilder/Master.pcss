@@ -1,0 +1,173 @@
+$modalMargin: 0;
+$extractLeftBarWidth: 260px;
+$extractFormBarHeight: 47px;
+
+.extract-table-wrapper {
+    position: absolute;
+    top: $modalMargin;
+    left: calc($extractLeftBarWidth + $modalMargin + 1px);
+    right: $modalMargin;
+    bottom: calc($modalMargin + $extractFormBarHeight);
+
+    background-color: $white;
+    z-index: 1100;
+    overflow-y: scroll;
+
+    .table-results {
+        width: 100%
+    }
+    
+    td.field-value {
+        font-family: $monoFontFamily;
+        whitespace: pre-wrap;
+    }
+
+    td.field-value span.starting {
+        background-color: color($orange a(50%));
+    }
+
+    td.field-value span.match {
+        background-color: color($green a(50%));
+    }
+
+    td.field-value span.stopping {
+        background-color: color($red a(50%));
+    }
+
+    .table-loading-message {
+        margin-top: 60px;
+        margin-left: 60px;
+    }
+
+    .flash-messages-container {
+        margin-left: 10px;
+    }
+}
+
+.extract-form {
+    overflow: hidden;
+    position: absolute;
+    bottom: $modalMargin;
+    left: $modalMargin;
+    right: $modalMargin;
+    height: $extractFormBarHeight;
+    border-top: 1px solid $borderColor;
+
+    background-color: $white;
+    z-index: 1100;
+    padding: 10px;
+    box-sizing:border-box;
+
+    text-align: right;
+
+    .control-group {
+        display: inline-block;
+        margin-right: 40px;
+    }
+
+    .btn-pill {
+        background: $linkColor;
+        color: $white;
+        line-height: 30px;
+        flex: 1 0 0px;
+        text-align: center;
+        border-radius: 4px;
+        min-width: 100px;
+        margin-left: 10px;
+
+        &:hover {
+            text-decoration: none;
+            background: $linkColorHover;
+            color: $white;
+        }
+
+        &.disabled {
+            background: $grayLightMedium;
+            cursor: not-allowed;
+        }
+    }
+}
+
+.extract-sidebar {
+    overflow: auto;
+    position: absolute;
+    top: $modalMargin;
+    width: $extractLeftBarWidth;
+    bottom: calc($modalMargin + $extractFormBarHeight);
+    left: $modalMargin;
+    border-right: 1px solid $borderColor;
+
+    background-color: $white;
+    z-index: 1100;
+
+    display: flex;
+    flex-direction: column;
+
+    .extract-capture-options {
+        overflow-y: auto;
+        overflow-x: hidden;
+        flex: 0 1 52%;
+        border-bottom: 1px solid $borderColor;
+    }
+
+    .extract-form {
+        padding: 10px;
+    }
+
+    white-space: nowrap;
+
+    ul {
+        vertical-align: top;
+        width: 100%;
+        box-sizing: border-box;
+        margin-bottom: 0;
+
+        + ul {
+            border-top: 1px solid $borderColor;
+        }
+
+        a, li.text  {
+            padding: 5px 10px;
+            line-height: 16px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: $textColor;
+        }
+
+        li.text {
+            color: $textGray;
+        }
+
+        li.selected .icon-check {
+            display: block;
+            position: absolute;
+            left: 10px;
+            top:4px
+        }
+
+        a {
+            padding-left: 24px;
+            white-space: normal;
+            position: relative;
+            .icon-check {
+                display: none;
+            }
+        }
+    }
+
+    .menu-starting {
+        border-left: 5px solid $orange;
+    }
+
+    .menu-extraction {
+        border-left: 5px solid $green;
+    }
+
+    .menu-stopping {
+        border-left: 5px solid $red;
+    }
+
+    .sidebar-loading-message {
+        margin: 60px auto;
+    }
+}

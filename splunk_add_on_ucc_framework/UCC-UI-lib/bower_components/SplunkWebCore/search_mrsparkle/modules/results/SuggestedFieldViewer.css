@@ -1,0 +1,66 @@
+.SuggestedFieldViewer {
+    padding:0 0 0 0;
+    display:none;
+}
+.SuggestedFieldViewer .fieldTabs div {
+    /* effectively this is the space between the graph icon and the right edge
+       of the sidebar. */
+    padding-right:15px;
+    cursor:pointer;
+    position: relative;
+}
+.SuggestedFieldViewer .fieldTabs a {
+    display:block;
+    padding:5px 15px 4px 23px;
+    word-break: break-all;
+    word-break: break-word;
+    position: relative;
+    text-decoration: none;
+}
+
+.SuggestedFieldViewer .iconString,
+.SuggestedFieldViewer .iconNumeric
+ {
+    display:block;
+    float: left;
+    position: absolute;
+    left: 10px;
+    _left: -15px;
+    top: 4px;
+    width: 15px;
+}
+
+.SuggestedFieldViewer .fieldTabs div span.splIcon {
+    position:absolute;
+    right:5px;
+    top:9px;   
+    display: none;
+}
+.SuggestedFieldViewer .fieldTabs .mouseoverHighlight span.splIcon {
+    display: block;
+}
+.SuggestedFieldViewer h3,
+.SuggestedFieldViewer .inlineFieldHeader h4 {
+    padding:2px 10px;
+    margin:0px;
+}
+.SuggestedFieldViewer .popupContainer {
+    display: none;
+    position: absolute;
+    z-index: 502; 
+}
+.SuggestedFieldViewer .popupContainer th {
+    cursor:pointer;
+}
+
+
+
+.SuggestedFieldViewer .splDivider {
+    margin: 0px 10px 5px;   
+}
+
+.SuggestedFieldViewer .allFieldsLink {
+    display: block;            
+    padding: 10px 0px;
+    margin: 0px 10px;
+}

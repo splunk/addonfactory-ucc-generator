@@ -1,0 +1,1198 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<summary earliest_time="1969-12-31T16:00:00.000-08:00" latest_time="1969-12-31T16:00:00.000-08:00" duration="0" c="6">
+  <histogram>
+    <bucket time="2013-05-06T08:00:00.000-07:00" count="1"/>
+    <bucket time="2013-05-06T09:00:00.000-07:00" count="2"/>
+    <bucket time="2013-05-06T10:00:00.000-07:00" count="2"/>
+    <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+  </histogram>
+  <field k="bytes" c="4" nc="4" dc="4" exact="1" relevant="0">
+    <min>209</min>
+    <max>4123</max>
+    <mean>2176.250000</mean>
+    <stdev>2238.234330</stdev>
+    <modes>
+      <value c="1" exact="1">
+        <text>209</text>
+      </value>
+      <value c="1" exact="1">
+        <text>267</text>
+      </value>
+      <value c="1" exact="1">
+        <text>4106</text>
+      </value>
+      <value c="1" exact="1">
+        <text>4123</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="0"/>
+    </histogram>
+  </field>
+  <field k="clientip" c="4" nc="0" dc="12" exact="1" relevant="0">
+    <tags>
+      <tag c="1">clientip61</tag>
+    </tags>
+    <modes>
+      <value c="2" exact="1">
+        <text>103</text>
+      </value>
+      <value c="2" exact="1">
+        <text>149</text>
+      </value>
+      <value c="2" exact="1">
+        <text>218</text>
+      </value>
+      <value c="2" exact="1">
+        <text>30</text>
+      </value>
+      <value c="1" exact="1">
+        <text>110</text>
+      </value>
+      <value c="1" exact="1">
+        <text>135</text>
+      </value>
+      <value c="1" exact="1">
+        <text>179</text>
+      </value>
+      <value c="1" exact="1">
+        <text>201</text>
+      </value>
+      <value c="1" exact="1">
+        <text>248</text>
+      </value>
+      <value c="1" exact="1">
+        <text>61</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="0"/>
+    </histogram>
+  </field>
+  <field k="cookie" c="4" nc="2" dc="3" exact="1" relevant="0">
+    <min>2.51</min>
+    <max>2.52</max>
+    <mean>2.515000</mean>
+    <stdev>0.007071</stdev>
+    <modes>
+      <value c="2" exact="1">
+        <text>-</text>
+      </value>
+      <value c="1" exact="1">
+        <text>2.51</text>
+      </value>
+      <value c="1" exact="1">
+        <text>2.52</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="0"/>
+    </histogram>
+  </field>
+  <field k="date_hour" c="5" nc="5" dc="3" exact="1" relevant="0">
+    <min>10</min>
+    <max>12</max>
+    <mean>10.800000</mean>
+    <stdev>0.836660</stdev>
+    <modes>
+      <value c="2" exact="1">
+        <text>10</text>
+      </value>
+      <value c="2" exact="1">
+        <text>11</text>
+      </value>
+      <value c="1" exact="1">
+        <text>12</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="0"/>
+    </histogram>
+  </field>
+  <field k="date_mday" c="5" nc="5" dc="1" exact="1" relevant="0">
+    <min>6</min>
+    <max>6</max>
+    <mean>6.000000</mean>
+    <stdev>0.000000</stdev>
+    <modes>
+      <value c="5" exact="1">
+        <text>6</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="0"/>
+    </histogram>
+  </field>
+  <field k="date_minute" c="5" nc="5" dc="3" exact="1" relevant="0">
+    <min>29</min>
+    <max>44</max>
+    <mean>37.800000</mean>
+    <stdev>6.340347</stdev>
+    <modes>
+      <value c="2" exact="1">
+        <text>36</text>
+      </value>
+      <value c="2" exact="1">
+        <text>44</text>
+      </value>
+      <value c="1" exact="1">
+        <text>29</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="0"/>
+    </histogram>
+  </field>
+  <field k="date_month" c="5" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="5" exact="1">
+        <text>may</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="0"/>
+    </histogram>
+  </field>
+  <field k="date_second" c="5" nc="5" dc="3" exact="1" relevant="0">
+    <min>14</min>
+    <max>56</max>
+    <mean>31.000000</mean>
+    <stdev>22.825424</stdev>
+    <modes>
+      <value c="2" exact="1">
+        <text>14</text>
+      </value>
+      <value c="2" exact="1">
+        <text>56</text>
+      </value>
+      <value c="1" exact="1">
+        <text>15</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="0"/>
+    </histogram>
+  </field>
+  <field k="date_wday" c="5" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="5" exact="1">
+        <text>monday</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="0"/>
+    </histogram>
+  </field>
+  <field k="date_year" c="5" nc="5" dc="1" exact="1" relevant="0">
+    <min>2013</min>
+    <max>2013</max>
+    <mean>2013.000000</mean>
+    <stdev>0.000000</stdev>
+    <modes>
+      <value c="5" exact="1">
+        <text>2013</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="0"/>
+    </histogram>
+  </field>
+  <field k="date_zone" c="5" nc="4" dc="2" exact="1" relevant="0">
+    <min>-300</min>
+    <max>-300</max>
+    <mean>-300.000000</mean>
+    <stdev>0.000000</stdev>
+    <modes>
+      <value c="4" exact="1">
+        <text>-300</text>
+      </value>
+      <value c="1" exact="1">
+        <text>local</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="0"/>
+    </histogram>
+  </field>
+  <field k="entry{}.acl.app" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>demo_bubbles</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="entry{}.acl.can_change_perms" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>true</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="entry{}.acl.can_list" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>true</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="entry{}.acl.can_share_app" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>true</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="entry{}.acl.can_share_global" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>true</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="entry{}.acl.can_share_user" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>false</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="entry{}.acl.can_write" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>true</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="entry{}.acl.modifiable" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>true</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="entry{}.acl.owner" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>nobody</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="entry{}.acl.perms.read{}" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>*</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="entry{}.acl.perms.write{}" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>*</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="entry{}.acl.removable" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>false</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="entry{}.acl.sharing" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>global</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="entry{}.author" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>nobody</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="entry{}.content.eai:acl" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>null</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="entry{}.content.eai:appName" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>demo_bubbles</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="entry{}.content.eai:data" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>&lt;dashboard&gt;
+    &lt;label&gt;Airports by Destination (Simple View)&lt;/label&gt;
+    &lt;description/&gt;
+    &lt;row&gt;
+        &lt;table id="element1"&gt;
+            &lt;title&gt;Airports by Destination&lt;/title&gt;
+            &lt;searchString&gt;search index=faa
+| stats count by DestState DestAirport
+| sort - count&lt;/searchString&gt;
+            &lt;earliestTime&gt;1357027200&lt;/earliestTime&gt;
+            &lt;latestTime&gt;1359705600&lt;/latestTime&gt;
+            &lt;option name="wrap"&gt;true&lt;/option&gt;
+            &lt;option name="displayRowNumbers"&gt;true&lt;/option&gt;
+            &lt;option name="dataOverlayMode"&gt;none&lt;/option&gt;
+            &lt;option name="drilldown"&gt;row&lt;/option&gt;
+        &lt;/table&gt;
+    &lt;/row&gt;
+&lt;/dashboard&gt;</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="entry{}.content.eai:digest" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>61e226e8e0d68c8d26bfff47ec11048a</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="entry{}.content.eai:type" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>views</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="entry{}.content.eai:userName" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>nobody</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="entry{}.content.label" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>Airports by Destination (Simple View)</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="entry{}.fields.optional{}" c="1" nc="0" dc="2" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>digest</text>
+      </value>
+      <value c="1" exact="1">
+        <text>refresh</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="entry{}.fields.required{}" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>eai:data</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="entry{}.id" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>https://localhost:8089/servicesNS/nobody/demo_bubbles/data/ui/views/airports_by_destination</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="entry{}.links._reload" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>/servicesNS/nobody/demo_bubbles/data/ui/views/airports_by_destination/_reload</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="entry{}.links.alternate" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>/servicesNS/nobody/demo_bubbles/data/ui/views/airports_by_destination</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="entry{}.links.edit" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>/servicesNS/nobody/demo_bubbles/data/ui/views/airports_by_destination</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="entry{}.links.list" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>/servicesNS/nobody/demo_bubbles/data/ui/views/airports_by_destination</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="entry{}.name" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>airports_by_destination</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="entry{}.updated" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>2013-05-06T13:07:35-07:00</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="file" c="2" nc="0" dc="2" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>robots.txt</text>
+      </value>
+      <value c="1" exact="1">
+        <text>wp-login.php</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="0"/>
+    </histogram>
+  </field>
+  <field k="generator.build" c="1" nc="1" dc="1" exact="1" relevant="0">
+    <min>161914</min>
+    <max>161914</max>
+    <mean>161914.000000</mean>
+    <stdev>0.000000</stdev>
+    <modes>
+      <value c="1" exact="1">
+        <text>161914</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="generator.version" c="1" nc="1" dc="1" exact="1" relevant="0">
+    <min>20130503</min>
+    <max>20130503</max>
+    <mean>20130503.000000</mean>
+    <stdev>0.000000</stdev>
+    <modes>
+      <value c="1" exact="1">
+        <text>20130503</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="host" c="6" nc="0" dc="1" exact="1" relevant="0">
+    <tags>
+      <tag c="6">lilripper</tag>
+    </tags>
+    <modes>
+      <value c="6" exact="1">
+        <text>lilripper.sv.splunk.com</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="ident" c="4" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="4" exact="1">
+        <text>-</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="0"/>
+    </histogram>
+  </field>
+  <field k="index" c="6" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="6" exact="1">
+        <text>fixture</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="line" c="1" nc="1" dc="1" exact="1" relevant="0">
+    <min>0</min>
+    <max>0</max>
+    <mean>0.000000</mean>
+    <stdev>0.000000</stdev>
+    <modes>
+      <value c="1" exact="1">
+        <text>0</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="0"/>
+    </histogram>
+  </field>
+  <field k="linecount" c="6" nc="6" dc="3" exact="1" relevant="0">
+    <min>1</min>
+    <max>74</max>
+    <mean>14.333333</mean>
+    <stdev>29.364378</stdev>
+    <modes>
+      <value c="4" exact="1">
+        <text>1</text>
+      </value>
+      <value c="1" exact="1">
+        <text>74</text>
+      </value>
+      <value c="1" exact="1">
+        <text>8</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="links._reload" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>/servicesNS/nobody/demo_bubbles/data/ui/views/_reload</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="links.create" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>/servicesNS/nobody/demo_bubbles/data/ui/views/_new</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="method" c="4" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="4" exact="1">
+        <text>GET</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="0"/>
+    </histogram>
+  </field>
+  <field k="origin" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>https://localhost:8089/servicesNS/nobody/demo_bubbles/data/ui/views</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="paging.offset" c="1" nc="1" dc="1" exact="1" relevant="0">
+    <min>0</min>
+    <max>0</max>
+    <mean>0.000000</mean>
+    <stdev>0.000000</stdev>
+    <modes>
+      <value c="1" exact="1">
+        <text>0</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="paging.perPage" c="1" nc="1" dc="1" exact="1" relevant="0">
+    <min>30</min>
+    <max>30</max>
+    <mean>30.000000</mean>
+    <stdev>0.000000</stdev>
+    <modes>
+      <value c="1" exact="1">
+        <text>30</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="paging.total" c="1" nc="1" dc="1" exact="1" relevant="0">
+    <min>1</min>
+    <max>1</max>
+    <mean>1.000000</mean>
+    <stdev>0.000000</stdev>
+    <modes>
+      <value c="1" exact="1">
+        <text>1</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="punct" c="6" nc="0" dc="6" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>..._-_-_[//:::_-]_"_/-._/."___"-"_"/._(;_;___.;_-;</text>
+      </value>
+      <value c="1" exact="1">
+        <text>..._-_-_[//:::_-]_"_/._/."___"-"_"__/."_"-"</text>
+      </value>
+      <value c="1" exact="1">
+        <text>..._-_-_[//:::_-]_"_/_/."___"-"_"/._(;_/.;_://..//</text>
+      </value>
+      <value c="1" exact="1">
+        <text>..._-_-_[//:::_-]_"_/_/."___"-"_"__/.(+://..///.#)</text>
+      </value>
+      <value c="1" exact="1">
+        <text>//:::_=____=________=____________=________________</text>
+      </value>
+      <value c="1" exact="1">
+        <text>{___"":{______"":"///////",______"":"///////"___},</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="referer" c="4" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="4" exact="1">
+        <text>-</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="0"/>
+    </histogram>
+  </field>
+  <field k="req_time" c="4" nc="0" dc="3" exact="1" relevant="0">
+    <modes>
+      <value c="2" exact="1">
+        <text>06/May/2013:11:36:56 -0500</text>
+      </value>
+      <value c="1" exact="1">
+        <text>06/May/2013:10:44:14 -0500</text>
+      </value>
+      <value c="1" exact="1">
+        <text>06/May/2013:12:29:15 -0500</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="0"/>
+    </histogram>
+  </field>
+  <field k="source" c="6" nc="0" dc="3" exact="1" relevant="0">
+    <modes>
+      <value c="4" exact="1">
+        <text>events.txt</text>
+      </value>
+      <value c="1" exact="1">
+        <text>json.txt</text>
+      </value>
+      <value c="1" exact="1">
+        <text>multiline.txt</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="sourcetype" c="6" nc="0" dc="3" exact="1" relevant="0">
+    <modes>
+      <value c="4" exact="1">
+        <text>access_combined</text>
+      </value>
+      <value c="1" exact="1">
+        <text>json</text>
+      </value>
+      <value c="1" exact="1">
+        <text>multiline</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="splunk_server" c="6" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="6" exact="1">
+        <text>lilripper.sv.splunk.com-docyes</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="status" c="4" nc="4" dc="2" exact="1" relevant="0">
+    <min>200</min>
+    <max>404</max>
+    <mean>251.000000</mean>
+    <stdev>102.000000</stdev>
+    <modes>
+      <value c="3" exact="1">
+        <text>200</text>
+      </value>
+      <value c="1" exact="1">
+        <text>404</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="0"/>
+    </histogram>
+  </field>
+  <field k="tag::host" c="6" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="6" exact="1">
+        <text>lilripper</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="timeendpos" c="5" nc="5" dc="3" exact="1" relevant="0">
+    <min>21</min>
+    <max>46</max>
+    <mean>40.800000</mean>
+    <stdev>11.077003</stdev>
+    <modes>
+      <value c="3" exact="1">
+        <text>46</text>
+      </value>
+      <value c="1" exact="1">
+        <text>21</text>
+      </value>
+      <value c="1" exact="1">
+        <text>45</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="0"/>
+    </histogram>
+  </field>
+  <field k="timestamp" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>none</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="timestartpos" c="5" nc="5" dc="3" exact="1" relevant="0">
+    <min>0</min>
+    <max>20</max>
+    <mean>15.800000</mean>
+    <stdev>8.843076</stdev>
+    <modes>
+      <value c="3" exact="1">
+        <text>20</text>
+      </value>
+      <value c="1" exact="1">
+        <text>0</text>
+      </value>
+      <value c="1" exact="1">
+        <text>19</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="0"/>
+    </histogram>
+  </field>
+  <field k="updated" c="1" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>2013-05-06T13:07:35-07:00</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="0"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="1"/>
+    </histogram>
+  </field>
+  <field k="uri" c="4" nc="0" dc="3" exact="1" relevant="0">
+    <modes>
+      <value c="2" exact="1">
+        <text>/</text>
+      </value>
+      <value c="1" exact="1">
+        <text>/robots.txt</text>
+      </value>
+      <value c="1" exact="1">
+        <text>/wp-login.php</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="0"/>
+    </histogram>
+  </field>
+  <field k="uri_path" c="4" nc="0" dc="3" exact="1" relevant="0">
+    <modes>
+      <value c="2" exact="1">
+        <text>/</text>
+      </value>
+      <value c="1" exact="1">
+        <text>/robots.txt</text>
+      </value>
+      <value c="1" exact="1">
+        <text>/wp-login.php</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="0"/>
+    </histogram>
+  </field>
+  <field k="user" c="4" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="4" exact="1">
+        <text>-</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="0"/>
+    </histogram>
+  </field>
+  <field k="useragent" c="4" nc="0" dc="4" exact="1" relevant="0">
+    <modes>
+      <value c="1" exact="1">
+        <text>Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13</text>
+      </value>
+      <value c="1" exact="1">
+        <text>Mozilla/5.0 (compatible; YodaoBot/1.0; http://www.yodao.com/help/webmaster/spider/; )</text>
+      </value>
+      <value c="1" exact="1">
+        <text>Sogou web spider/4.0</text>
+      </value>
+      <value c="1" exact="1">
+        <text>Sogou web spider/4.0(+http://www.sogou.com/docs/help/webmasters.htm#07)</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="0"/>
+    </histogram>
+  </field>
+  <field k="version" c="4" nc="0" dc="1" exact="1" relevant="0">
+    <modes>
+      <value c="4" exact="1">
+        <text>HTTP/1.1</text>
+      </value>
+    </modes>
+    <histogram>
+      <bucket time="2013-05-06T08:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T09:00:00.000-07:00" count="2"/>
+      <bucket time="2013-05-06T10:00:00.000-07:00" count="1"/>
+      <bucket time="2013-05-06T13:00:00.000-07:00" count="0"/>
+    </histogram>
+  </field>
+</summary>

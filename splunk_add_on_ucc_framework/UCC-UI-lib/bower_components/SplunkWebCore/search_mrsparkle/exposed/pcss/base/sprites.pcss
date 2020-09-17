@@ -1,0 +1,310 @@
+/*  Splunk: icons */
+/*  ================= */
+/*  override bootstrap glyph icons and replace with custom font icons */
+/*  loosely based on [FontAwesome](http://fortawesome.github.com/Font-Awesome/) */
+/*  see splunk [styleguide](http://localhost:8000/static/style-guide.html) for more details */
+
+/*  Icon Font Face */
+/*  ----------------- */
+
+@font-face {
+    font-family: 'Splunk Icons';
+    src: url('$staticFontPath/splunkicons-regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    /*  unicode-range: U+00-FF; */
+}
+
+[class^="icon-"]:before,
+[class*=" icon-"]:before {
+    font-family: "Splunk Icons";
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+}
+
+a [class^="icon-"],
+a [class*=" icon-"] {
+    display: inline-block;
+    text-decoration: none;
+}
+
+ /* makes the font 33% larger relative to the icon container */
+.icon-large {
+    font-size: 1.3333333333333333em;
+    vertical-align: middle;
+}
+
+/*  Utils & helpers */
+/*  ---------------- */
+
+
+/*  utility for setting font-family */
+/*  TODO: is this used? or needed? */
+.font-icon {
+    font-family: "Splunk Icons";
+    font-size:inherit;
+    line-height:inherit;
+}
+
+.icon-no-underline:first-child {
+    padding-right: 0.3em;
+}
+
+.icon-no-underline:last-child {
+    padding-left: 0.3em;
+}
+
+.icon-no-underline:first-child:last-child {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+
+.icon-no-underline:before {
+    text-decoration: none;
+}
+
+.padded-icon {
+  margin-right: 0.5em;
+}
+
+
+/*image replace helper*/
+.ir {
+    position: relative;
+    display: inline-block;
+    min-width: 0.5em;
+    text-indent: -9999px;
+    outline:none;
+    /*  vertical-align:middle; */
+}
+.ir:before {
+    position: absolute;
+    top: 0;
+    left: 0;  /* Firefox needs to be explicit here */
+    text-indent: 0;
+}
+
+/*  FONT ICONS */
+/*  -------------- */
+
+/* example
+
+    <a href="#" class="icon-check">Check</a> -
+    <a href="#" class="icon-check ir">Check</a>
+
+*/
+
+/*  when possible we should use the Unicode Private Use Area (PUA) to ensure screen
+    readers do not read off random characters that represent icons */
+
+
+/*  convert this ... */
+/*      .icon-share:before                  {content: "\EC83 "; } */
+/*  into this */
+/*      <li class="icon-share"></li> */
+/*  Search: */
+/*      \.(icon-[^:]+).* */
+/*  Replace: */
+/*      <li class="$1"></li> */
+
+/*splunk logo*/
+.icon-splunk:before                 {content: "splunk"; }
+.icon-greater:before                {content: "\003E"; }
+.icon-hunk:before                   {content: "\F000"; }
+.icon-enterprise:before             {content: "\F001"; }
+.icon-cloud-logo:before             {content: "\F002"; }
+
+
+/* shapes */
+.icon-circle:before                 {content: "\ECD0"; }
+.icon-circle-filled:before          {content: "\25CF"; }
+.icon-box-filled:before             {content: "\25A0"; }
+.icon-triangle-up-small:before      {content: "\25B4"; }
+.icon-triangle-right:before         {content: "\25B6"; }
+.icon-triangle-right-small:before   {content: "\25B8"; }
+.icon-triangle-down:before          {content: "\25BC"; }
+.icon-triangle-down-small:before    {content: "\25BE"; }
+.icon-triangle-left:before          {content: "\25C0"; }
+.icon-triangle-left-small:before    {content: "\25C2"; }
+
+
+/*arrows & pointers*/
+.icon-arrow-up:before               {content: "\EC01"; }
+.icon-arrow-right:before            {content: "\27A1"; }
+.icon-arrow-down:before             {content: "\EC02"; }
+.icon-arrow-left:before             {content: "\EC00"; }
+
+.icon-two-arrows-cycle:before       {content: "\EC12"; }
+.icon-external:before               {content: "\EC13"; }
+
+.icon-rotate-counter:before         {content: "\21BA"; }
+.icon-rotate:before                 {content: "\21BB"; }
+
+.icon-location:before               {content: "\EC80"; }
+
+.icon-chevron-left:before           {content: "\2039"; }
+.icon-chevron-right:before          {content: "\203A"; }
+.icon-chevron-up:before             {content: "\02C4"; }
+.icon-chevron-down:before           {content: "\02C5"; }
+
+
+
+/*actions*/
+.icon-trash:before                  {content: "\EC66"; }
+.icon-share:before                  {content: "\27A6"; }
+.icon-export:before                 {content: "\EC68"; }
+.icon-print:before                  {content: "\EC89"; }
+.icon-search:before                 {content: "\EC9B"; }
+.icon-search-thin:before            {content: "\ECC2"; }
+.icon-pivot:before                  {content: "\EC12"; }
+.icon-clone:before                  {content: "\ECE8"; }
+
+.icon-pause:before                  {content: "\EC50"; }
+.icon-stop:before                   {content: "\25A0"; }
+.icon-play:before                   {content: "\25B6"; }
+
+.icon-sort:before                   {content: "\2195"; }
+.icon-sorted-up:before              {content: "\21A5"; }
+.icon-sorted-down:before            {content: "\21A7"; }
+
+.icon-minus:before                  {content: "\2212"; }
+.icon-minus-circle:before           {content: "\2296"; margin-right: 0.25em; }
+.icon-plus:before                   {content: "\002B"; }
+.icon-plus-circle:before            {content: "\2295"; }
+.icon-x:before                      {content: "\2717"; }
+.icon-x-circle:before               {content: "\2297"; }
+
+.icon-close:before,
+.icon-cancel:before                 {content: "\2717"; }
+
+.icon-collapse-left:before          {content: "\ECE0"; }
+.icon-expand-right:before           {content: "\ECE1"; }
+
+.icon-fullscreen:before             {content: "\ECF3"; }
+.icon-fullscreen-exit:before        {content: "\ECF4"; }
+
+/*concepts*/
+.icon-activity:before               {content: "\ECAE"; }
+.icon-string:before                 {content: "a"; }
+.icon-number:before                 {content: "\0023"; }
+.icon-text:before                   {content: "\ECD9"; }
+.icon-not-allowed:before            {content: "\EC9E"; }
+.icon-data:before                   {content: "\ECA4"; }
+.icon-data-input:before             {content: "\ECA3"; }
+.icon-settings:before               {content: "\ECA5"; }
+.icon-distributed-environment:before             {content: "\ECA6"; }
+.icon-visible:before                {content: "\ECC0"; }
+.icon-hidden:before                 {content: "\ECC1"; }
+.icon-boolean:before                {content: "\ECD2"; }
+.icon-menu:before,
+.icon-rows:before                   {content: "\EC56"; }
+.icon-tiles:before                  {content: "\ECF0"; }
+
+
+/*misc*/
+.icon-info:before                      {content: "\0069"; }
+.icon-info-circle:before               {content: "\0049"; }
+.icon-question:before  {
+    font-family: inherit; /* Roboto */
+    content: "\003F";
+}
+.icon-question-circle:before        {content: "\EC9D"; }
+.icon-box-unchecked:before          {content: "\2610"; }
+.icon-box-checked:before            {content: "\2611"; }
+.icon-check-circle:before           {content: "\ECD3"; }
+.icon-alert-circle:before           {content: "\ECD4"; }
+.icon-code:before                   {content: "\ECD7"; }
+.icon-code-thin:before              {content: "\ECD6"; }
+.icon-alert:before,
+.icon-error:before                  {content: "\26A0"; }
+.icon-warning:before                {content: "\ECE2"; }
+
+/*objects*/
+.icon-bell:before                   {content: "\EC9C"; }
+.icon-bookmark:before               {content: "\ECA1"; }
+.icon-bulb:before                   {content: "\EC98"; }
+.icon-calendar:before               {content: "\EC9A"; }
+.icon-check:before                  {content: "\2713"; }
+.icon-clock:before                  {content: "\231A"; }
+.icon-cloud:before                  {content: "\2601"; }
+.icon-flag:before                   {content: "\2691"; }
+.icon-gear:before                   {content: "\2699"; }
+.icon-lightning:before              {content: "\2301"; }
+.icon-link:before                   {content: "\ECF1"; }
+.icon-lock:before                   {content: "\EC9F"; }
+.icon-lock-unlocked:before          {content: "\ECA0"; }
+.icon-mail:before                   {content: "\2709"; }
+.icon-pencil:before                 {content: "\270F"; }
+.icon-speech-bubble:before          {content: "\EC99"; }
+.icon-star:before                   {content: "\2605"; }
+.icon-user:before                   {content: "\EC84"; }
+.icon-clipboard:before              {content: "\ECD5"; }
+.icon-paintbrush:before             {content: "\ECCA"; }
+.icon-warning-sign:before           {content: "\26A0"; }
+
+
+/*results and visualizations*/
+.icon-chart-area:before             {content: "\ECA9"; }
+.icon-chart-bar:before              {content: "\ECAA"; }
+.icon-chart-column:before           {content: "\ECAB"; }
+.icon-chart-pie:before              {content: "\ECAC"; }
+.icon-chart-scatter:before          {content: "\ECAD"; }
+.icon-chart-bubble:before           {content: "\ECB8"; }
+.icon-chart-line:before             {content: "\ECAE"; }
+.icon-single-value:before           {content: "\ECAF"; }
+.icon-gauge-radial:before           {content: "\ECA2"; }
+.icon-gauge-marker:before           {content: "\ECB0"; }
+.icon-gauge-filler:before           {content: "\ECB1"; }
+.icon-choropleth-map:before         {content: "\ECB9"; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+.icon-external-viz:before           {content: "\ECF2"; }
+.icon-label-rotation--90:before     {content: "\ECE3"; }
+.icon-label-rotation--45:before     {content: "\ECE4"; }
+.icon-label-rotation-0:before       {content: "\ECE5"; }
+.icon-label-rotation-45:before      {content: "\ECE6"; }
+.icon-label-rotation-90:before      {content: "\ECE7"; }
+
+.icon-chart-area-plus-table:before             {content: "\ECA9  \002B  \ECA8"; }
+.icon-chart-bar-plus-table:before              {content: "\ECAA  \002B  \ECA8"; }
+.icon-chart-column-plus-table:before           {content: "\ECAB  \002B  \ECA8"; }
+.icon-chart-pie-plus-table:before              {content: "\ECAC  \002B  \ECA8"; }
+.icon-chart-scatter-plus-table:before          {content: "\ECAD  \002B  \ECA8"; }
+.icon-chart-bubble-plus-table:before           {content: "\ECB8  \002B  \ECA8"; }
+.icon-chart-line-plus-table:before             {content: "\ECAE  \002B  \ECA8"; }
+.icon-single-value-plus-table:before           {content: "\ECAF  \002B  \ECA8"; }
+.icon-gauge-radial-plus-table:before           {content: "\ECA2  \002B  \ECA8"; }
+.icon-gauge-marker-plus-table:before           {content: "\ECB0  \002B  \ECA8"; }
+.icon-gauge-filler-plus-table:before           {content: "\ECB1  \002B  \ECA8"; }
+.icon-location-plus-table:before               {content: "\EC80  \002B  \ECA8"; }
+.icon-choropleth-map-plus-table:before         {content: "\ECB9  \002B  \ECA8"; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+.icon-external-viz-plus-table:before           {content: "\ECF2  \002B  \ECA8"; }
+
+/*formatting*/
+.icon-list:before                   {content: "\ECA7"; }
+.icon-table:before                  {content: "\ECA8"; }
+.icon-bar-beside:before             {content: "\ECB2"; }
+.icon-bar-stacked:before            {content: "\ECB3"; }
+.icon-bar-stacked-100:before        {content: "\ECB4"; }
+.icon-missing-value-skipped:before  {content: "\ECB5"; }
+.icon-missing-value-zero:before     {content: "\ECB6"; }
+.icon-missing-value-join:before     {content: "\ECB7"; }
+
+
+/*documents*/
+.icon-folder:before                 {content: "\ECE9"; }
+.icon-document:before               {content: "\ECC3"; }
+.icon-report:before                 {content: "\ECC3"; }
+.icon-report-search:before          {content: "\ECC4"; }
+.icon-report-pivot:before           {content: "\ECc5"; }
+.icon-dashboard:before              {content: "\ECC6"; }
+.icon-panel:before                  {content: "\ECC7"; }
+.icon-panel-search:before           {content: "\ECC8"; }
+.icon-panel-pivot:before            {content: "\ECC9"; }
+
+/*  Lite UI */
+.lite {
+    .ir {
+        display: none;
+    }
+}

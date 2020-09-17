@@ -1,0 +1,396 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:splunk="http://www.splunk.com/xhtml-extensions/1.0" xml:lang="en">
+<head>
+    <title>${self.title()}</title>
+
+    <!-- get system files -->
+    <script type="text/javascript" src="${make_url('/static/js/contrib/deprecated/jquery-1.8.3.min.js')}"></script>
+    <script type="text/javascript" src="${make_url('/static/js/contrib/jquery.cookie.js')}"></script>
+    <script type="text/javascript" src="${make_url('/static/js/contrib/json2.js')}"></script>
+    <script type="text/javascript" src="${make_url('/static/js/contrib/lowpro_for_jquery.js')}"></script>
+    <script type="text/javascript" src="${make_url('/static/js/i18n.js')}"></script>
+    <script type="text/javascript">
+        i18n_register({"plural": function(n) { return n == 1 ? 0 : 1; }, "catalog": {}});
+        var _i18n_locale = {
+            "date_formats": {
+                "medium": {
+                    "pattern": "MMM d, yyyy",
+                    "format": "%(MMM)s %(d)s, %(yyyy)s"
+                },
+                "full": {
+                    "pattern": "EEEE, MMMM d, yyyy",
+                    "format": "%(EEEE)s, %(MMMM)s %(d)s, %(yyyy)s"
+                },
+                "long": {
+                    "pattern": "MMMM d, yyyy",
+                    "format": "%(MMMM)s %(d)s, %(yyyy)s"
+                },
+                "short": {
+                    "pattern": "M/d/yy",
+                    "format": "%(M)s/%(d)s/%(yy)s"
+                }
+            },
+            "scientific_format": "#E0",
+            "exp_symbol": "E",
+            "eras": {
+                "wide": {
+                    "0": "Before Christ",
+                    "1": "Anno Domini"
+                },
+                "abbreviated": {
+                    "0": "BC",
+                    "1": "AD"
+                },
+                "narrow": {
+                    "0": "B",
+                    "1": "A"
+                }
+            },
+            "decimal_symbol": ".",
+            "months": {
+                "stand-alone": {
+                    "wide": {
+                        "1": "January",
+                        "2": "February",
+                        "3": "March",
+                        "4": "April",
+                        "5": "May",
+                        "6": "June",
+                        "7": "July",
+                        "8": "August",
+                        "9": "September",
+                        "10": "October",
+                        "11": "November",
+                        "12": "December"
+                    },
+                    "abbreviated": {
+                        "1": "January",
+                        "2": "February",
+                        "3": "March",
+                        "4": "April",
+                        "5": "May",
+                        "6": "June",
+                        "7": "July",
+                        "8": "August",
+                        "9": "September",
+                        "10": "October",
+                        "11": "November",
+                        "12": "December"
+                    },
+                    "narrow": {
+                        "1": "J",
+                        "2": "F",
+                        "3": "M",
+                        "4": "A",
+                        "5": "M",
+                        "6": "J",
+                        "7": "J",
+                        "8": "A",
+                        "9": "S",
+                        "10": "O",
+                        "11": "N",
+                        "12": "D"
+                    }
+                },
+                "format": {
+                    "wide": {
+                        "1": "January",
+                        "2": "February",
+                        "3": "March",
+                        "4": "April",
+                        "5": "May",
+                        "6": "June",
+                        "7": "July",
+                        "8": "August",
+                        "9": "September",
+                        "10": "October",
+                        "11": "November",
+                        "12": "December"
+                    },
+                    "abbreviated": {
+                        "1": "Jan",
+                        "2": "Feb",
+                        "3": "Mar",
+                        "4": "Apr",
+                        "5": "May",
+                        "6": "Jun",
+                        "7": "Jul",
+                        "8": "Aug",
+                        "9": "Sep",
+                        "10": "Oct",
+                        "11": "Nov",
+                        "12": "Dec"
+                    },
+                    "narrow": {
+                        "1": "J",
+                        "2": "F",
+                        "3": "M",
+                        "4": "A",
+                        "5": "M",
+                        "6": "J",
+                        "7": "J",
+                        "8": "A",
+                        "9": "S",
+                        "10": "O",
+                        "11": "N",
+                        "12": "D"
+                    }
+                }
+            },
+            "group_symbol": ",",
+            "days": {
+                "stand-alone": {
+                    "wide": {
+                        "0": "Monday",
+                        "1": "Tuesday",
+                        "2": "Wednesday",
+                        "3": "Thursday",
+                        "4": "Friday",
+                        "5": "Saturday",
+                        "6": "Sunday"
+                    },
+                    "abbreviated": {
+                        "0": "Monday",
+                        "1": "Tuesday",
+                        "2": "Wednesday",
+                        "3": "Thursday",
+                        "4": "Friday",
+                        "5": "Saturday",
+                        "6": "Sunday"
+                    },
+                    "narrow": {
+                        "0": "M",
+                        "1": "T",
+                        "2": "W",
+                        "3": "T",
+                        "4": "F",
+                        "5": "S",
+                        "6": "S"
+                    }
+                },
+                "format": {
+                    "wide": {
+                        "0": "Monday",
+                        "1": "Tuesday",
+                        "2": "Wednesday",
+                        "3": "Thursday",
+                        "4": "Friday",
+                        "5": "Saturday",
+                        "6": "Sunday"
+                    },
+                    "abbreviated": {
+                        "0": "Mon",
+                        "1": "Tue",
+                        "2": "Wed",
+                        "3": "Thu",
+                        "4": "Fri",
+                        "5": "Sat",
+                        "6": "Sun"
+                    },
+                    "narrow": {
+                        "0": "M",
+                        "1": "T",
+                        "2": "W",
+                        "3": "T",
+                        "4": "F",
+                        "5": "S",
+                        "6": "S"
+                    }
+                }
+            },
+            "datetime_formats": {
+                "null": "{1} {0}"
+            },
+            "percent_format": "#,##0%",
+            "min_week_days": 1,
+            "first_week_day": 6,
+            "periods": {
+                "am": "AM",
+                "pm": "PM"
+            },
+            "minus_sign": "-",
+            "time_formats": {
+                "medium": {
+                    "pattern": "h:mm:ss a",
+                    "format": "%(h)s:%(mm)s:%(ss)s %(a)s"
+                },
+                "full": {
+                    "pattern": "h:mm:ss a v",
+                    "format": "%(h)s:%(mm)s:%(ss)s %(a)s %(v)s"
+                },
+                "long": {
+                    "pattern": "h:mm:ss a z",
+                    "format": "%(h)s:%(mm)s:%(ss)s %(a)s %(z)s"
+                },
+                "short": {
+                    "pattern": "h:mm a",
+                    "format": "%(h)s:%(mm)s %(a)s"
+                }
+            },
+            "quarters": {
+                "stand-alone": {
+                    "wide": {
+                        "1": "1st quarter",
+                        "2": "2nd quarter",
+                        "3": "3rd quarter",
+                        "4": "4th quarter"
+                    },
+                    "abbreviated": {
+                        "1": "1st quarter",
+                        "2": "2nd quarter",
+                        "3": "3rd quarter",
+                        "4": "4th quarter"
+                    },
+                    "narrow": {
+                        "1": "1",
+                        "2": "2",
+                        "3": "3",
+                        "4": "4"
+                    }
+                },
+                "format": {
+                    "wide": {
+                        "1": "1st quarter",
+                        "2": "2nd quarter",
+                        "3": "3rd quarter",
+                        "4": "4th quarter"
+                    },
+                    "abbreviated": {
+                        "1": "Q1",
+                        "2": "Q2",
+                        "3": "Q3",
+                        "4": "Q4"
+                    },
+                    "narrow": {
+                        "1": "1",
+                        "2": "2",
+                        "3": "3",
+                        "4": "4"
+                    }
+                }
+            },
+            "plus_sign": "+",
+            "number_format": "#,##0.###",
+            "locale_name": "en_US"
+        };
+
+    </script>
+    <script type="text/javascript" src="${make_url('/static/js/splunk.js')}"></script>
+    <script type="text/javascript" src="${make_url('/static/js/contrib/strftime.js')}"></script>
+    <script type="text/javascript" src="${make_url('/static/js/util.js')}"></script>
+    <script type="text/javascript" src="${make_url('/static/js/logger.js')}"></script>
+    <script type="text/javascript" src="${make_url('/static/js/messenger.js')}"></script>
+
+
+    <!-- Import the test files -->
+    <script type="text/javascript" charset="utf-8" src="${make_url('/static/js/contrib/qunit-1.14.0/qunit.js')}"></script>
+    <script type="text/javascript" charset="utf-8" src="${make_url('/static/js/contrib/qunit-1.14.0/jsunit2qunit.js')}"></script>
+
+    <script type="text/javascript" charset="utf-8" src="${make_url('/static/js/contrib/sinon-1.15.4.js')}"></script>
+    <script type="text/javascript" charset="utf-8" src="${make_url('/static/js/contrib/sinon-qunit-1.0.0.js')}"></script>
+    <script type="text/javascript">
+        //only include sinon-ie if IE is detected (SPL-115289), RE taken from js/helpers/user_agent.js
+        if (/(?=.*msie ([\d.]+))|(?=.*trident)(?=.*rv\:([\d.]+))/i.test(window.navigator.userAgent)) {
+            var script = document.createElement('script');
+            script.src = "${make_url('/static/js/contrib/sinon-ie-1.15.4.js')}";
+            document.head.appendChild(script);
+        }
+    </script>
+
+    <script>
+
+        // by default, disable the sinon fake timers, some tests rely on actual setTimeout behavior
+        sinon.config.useFakeTimers = false;
+
+    </script>
+
+    <!-- TODO: this additional jsunit to qunit stuff needs to be migrated to the jsunit2qunit.js file -->
+    <script type="text/javascript">
+
+        window.equals = equal;
+
+        function warn(message, value) {
+            if (window.console)
+                console.warn(message + (arguments.length > 1 ? value : ''));
+        }
+
+        function info(message, value) {
+            if (window.console)
+                console.info(message + (arguments.length > 1 ? value : ''));
+        }
+
+        function debug(message, value) {
+            if (window.console)
+                console.debug(message + (arguments.length > 1 ? value : ''));
+        }
+
+    </script>
+
+    <!-- static set of server config, as defined by /en-US/config?autoload=1 -->
+    <script type="text/javascript">
+        window.$C = {
+            "BUILD_NUMBER": 76838,
+            "BUILD_PUSH_NUMBER": 0,
+            "DEFAULT_NAMESPACE": "search",
+            "DISPATCH_TIME_FORMAT": "%s.%Q",
+            "FLASH_MAJOR_VERSION": 9,
+            "FLASH_MINOR_VERSION": 0,
+            "FLASH_REVISION_VERSION": 124,
+            "JS_LOGGER_MODE": "None",
+            "JS_LOGGER_MODE_SERVER_END_POINT": "util/log/js",
+            "JS_LOGGER_MODE_SERVER_MAX_BUFFER": 100,
+            "JS_LOGGER_MODE_SERVER_POLL_BUFFER": 1000,
+            "LOCALE": "en-US",
+            "MRSPARKLE_PORT_NUMBER": 8000,
+            "MRSPARKLE_ROOT_PATH": "",
+            "NOCACHE": false,
+            "SEARCH_RESULTS_TIME_FORMAT": "%Y-%m-%dT%H:%M:%S.%Q%z",
+            "SERVER_TIMEZONE_OFFSET": 25200,
+            "SERVER_ZONEINFO": "### SERIALIZED TIMEZONE FORMAT 1.0;Y-25200 YW 50 44 54;Y-28800 NW 50 53 54;Y-25200 YW 50 57 54;Y-25200 YG 50 50 54;@-1633269600 0;@-1615129200 1;@-1601820000 0;@-1583679600 1;@-880207200 2;@-769395600 3;@-765385200 1;@-687967200 0;@-662655600 1;@-620834400 0;@-608137200 1;@-589384800 0;@-576082800 1;@-557935200 0;@-544633200 1;@-526485600 0;@-513183600 1;@-495036000 0;@-481734000 1;@-463586400 0;@-450284400 1;@-431532000 0;@-418230000 1;@-400082400 0;@-386780400 1;@-368632800 0;@-355330800 1;@-337183200 0;@-323881200 1;@-305733600 0;@-292431600 1;@-273679200 0;@-260982000 1;@-242229600 0;@-226508400 1;@-210780000 0;@-195058800 1;@-179330400 0;@-163609200 1;@-147880800 0;@-131554800 1;@-116431200 0;@-100105200 1;@-84376800 0;@-68655600 1;@-52927200 0;@-37206000 1;@-21477600 0;@-5756400 1;@9972000 0;@25693200 1;@41421600 0;@57747600 1;@73476000 0;@89197200 1;@104925600 0;@120646800 1;@126698400 0;@152096400 1;@162381600 0;@183546000 1;@199274400 0;@215600400 1;@230724000 0;@247050000 1;@262778400 0;@278499600 1;@294228000 0;@309949200 1;@325677600 0;@341398800 1;@357127200 0;@372848400 1;@388576800 0;@404902800 1;@420026400 0;@436352400 1;@452080800 0;@467802000 1;@483530400 0;@499251600 1;@514980000 0;@530701200 1;@544615200 0;@562150800 1;@576064800 0;@594205200 1;@607514400 0;@625654800 1;@638964000 0;@657104400 1;@671018400 0;@688554000 1;@702468000 0;@720003600 1;@733917600 0;@752058000 1;@765367200 0;@783507600 1;@796816800 0;@814957200 1;@828871200 0;@846406800 1;@860320800 0;@877856400 1;@891770400 0;@909306000 1;@923220000 0;@941360400 1;@954669600 0;@972810000 1;@986119200 0;@1004259600 1;@1018173600 0;@1035709200 1;@1049623200 0;@1067158800 1;@1081072800 0;@1099213200 1;@1112522400 0;@1130662800 1;@1143972000 0;@1162112400 1;@1173607200 0;@1194166800 1;@1205056800 0;@1225616400 1;@1236506400 0;@1257066000 1;@1268560800 0;@1289120400 1;@1300010400 0;@1320570000 1;@1331460000 0;@1352019600 1;@1362909600 0;@1383469200 1;@1394359200 0;@1414918800 1;@1425808800 0;@1446368400 1;@1457863200 0;@1478422800 1;@1489312800 0;@1509872400 1;@1520762400 0;@1541322000 1;@1552212000 0;@1572771600 1;@1583661600 0;@1604221200 1;@1615716000 0;@1636275600 1;@1647165600 0;@1667725200 1;@1678615200 0;@1699174800 1;@1710064800 0;@1730624400 1;@1741514400 0;@1762074000 1;@1772964000 0;@1793523600 1;@1805018400 0;@1825578000 1;@1836468000 0;@1857027600 1;@1867917600 0;@1888477200 1;@1899367200 0;@1919926800 1;@1930816800 0;@1951376400 1;@1962871200 0;@1983430800 1;@1994320800 0;@2014880400 1;@2025770400 0;@2046330000 1;@2057220000 0;@2077779600 1;@2088669600 0;@2109229200 1;@2120119200 0;@2140678800 1;$",
+            "SPLUNKD_FREE_LICENSE": false,
+            "SPLUNKD_SESSION_KEY": "57c402b171cbf4a4b96c1d235ff98d1a",
+            "SYSTEM_NAMESPACE": "system",
+            "UI_INACTIVITY_TIMEOUT": 3600000,
+            "UI_UNIX_START_TIME": 1268701228,
+            "VERSION_LABEL": "4.1",
+            "FORM_KEY": "15938876867373032169"
+        }
+    </script>
+
+    <link rel="stylesheet" href="${make_url('/static/js/contrib/qunit-1.14.0/qunit.css')}" type="text/css" media="screen" charset="utf-8"></link>
+</head>
+
+<body>
+    ${self.html()}
+
+    <h1 id="qunit-header">${self.title()}</h1>
+    <h2 id="qunit-banner"></h2>
+    <h2 id="qunit-userAgent"></h2>
+    <ol id="qunit-tests"></ol>
+
+    ${self.body()}
+
+    <!-- This is another extension to the jsunit2qunit.js file, sets up a dummy module so that the tests respect the setUp and tearDown methods if they exist
+         Also, calls the setUpPage function if it's defined. -->
+    <script type="text/javascript">
+
+        if(window.setUpPage) {
+            window.setUpPage();
+        }
+
+	    if(window.setUp || window.tearDown) {
+
+	        module("JSUnit to QUnit", {
+	            setup: window.setUp || function() {},
+	            teardown: window.tearDown || function() {}
+	        })
+
+	    }
+
+    </script>
+
+</body>
+</html>
+
+<%def name="html()"></%def>
+<%def name="title()">splunk&gt;Unit Testing (title not set by test)</%def>

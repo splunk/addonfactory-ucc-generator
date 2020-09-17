@@ -1,0 +1,169 @@
+/*  Splunk: Component: Mega-Menu */
+/*  ============================ */
+/*  special popdown menu */
+
+/*  mega-menu */
+/*  ========== */
+
+/* special system menu in popdown
+
+	<div style="position:relative; ">
+		<div class="popdown-dialog mega-menu open">
+				<div class="arrow"></div>
+				<div class="popdown-dialog-body">
+					<div class="menu-section section-monitor">
+						<i class="icon icon-gauge-radial"></i>
+						<h3>Monitor</h3>
+						<ul class="menu">
+							<li><a href="#">Data Storage</a></li>
+							<li><a href="#">User Activities</a></li>
+							<li><a href="#">System Usage</a></li>
+						</ul>
+					</div>
+
+					<div class="menu-section section-settings">
+						<i class="icon icon-settings"></i>
+						<h3>Settings</h3>
+						<ul class="menu">
+							<li><a href="#">Services</a></li>
+							<li><a href="#">Users</a></li>
+							<li><a href="#">Licenses</a></li>
+							<li><a href="#">Email</a></li>
+							<li><a href="#">System Logs</a></li>
+						</ul>
+					</div>
+
+					<div class="menu-section section-data">
+						<i class="icon icon-data-input"></i>
+						<h3>Data</h3>
+						<ul class="menu">
+							<li><a href="#">Inputs</a></li>
+							<li><a href="#">Indexes</a></li>
+							<li><a href="#">Report Acceleration</a></li>
+						</ul>
+					</div>
+
+					<div class="menu-section section-knowledge">
+						<i class="icon icon-bookmark"></i>
+						<h3>Knoweledge</h3>
+						<ul class="menu">
+							<li><a href="#">Data Models</a></li>
+							<li><a href="#">Search Tools</a></li>
+							<li><a href="#">Fields</a></li>
+							<li><a href="#">Lookups &amp; Workflows</a></li>
+							<li><a href="#">Customizations</a></li>
+						</ul>
+					</div>
+
+					<hr>
+
+					<div class="menu-section section-distributed">
+						<i class="icon icon-distributed-environment"></i>
+						<h3>Distributed Envirionment</h3>
+						<ul class="menu">
+							<li><a href="#">App Deployment</a></li>
+							<li><a href="#">Clustering</a></li>
+							<li><a href="#">Data Forwarding</a></li>
+							<li><a href="#">Distributed Search</a></li>
+						</ul>
+					</div>
+
+				</div><!-- /.popdown-dialog-body -->
+
+			</div><!-- /.popdown -->
+	</div>
+
+*/
+.mega-menu {
+	@mixin clearfix;
+	/* This background is covered by the popdown-dialog-body when there is no sidebar */
+	background: @white url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAEsAQMAAAA4nkuWAAAABlBMVEX////MzMw46qqDAAAAEUlEQVQoU2NhYGkYhaOQ2hAALFSaMRD7VeAAAAAASUVORK5CYII=') repeat-y 150px;
+	max-width: 602px; /* Fixes a bug with columns on IE11 */
+
+	> .popdown-dialog-body {
+		padding: 18px 0 10px 20px;
+		width: 430px;
+        columns:2;
+        column-gap:0;
+	}
+
+
+	&.mega-menu-narrow > .popdown-dialog-body {
+		width: 220px;
+        columns:1;
+	}
+
+	.mega-menu-sidebar {
+		width: 150px;
+		padding: 20px 0;
+		float: left;
+
+		> a {
+			color: $splunkGreen;
+			text-align: center;
+			display: block;
+			text-decoration: none;
+			padding: 20px;
+
+			&:hover {
+				background:color($splunkGreen l(+50%));
+			}
+		}
+
+		svg {
+			margin: 0 auto 10px auto;
+			display: block;
+
+		}
+	}
+	.mega-menu-sidebar + .popdown-dialog-body {
+		margin-left: 152px;
+	}
+
+
+
+	.menu-section {
+		display: inline-block;
+		width: 155px;
+		position: relative;
+		padding: 2px 20px 0 30px;
+		margin-bottom: 20px;
+		color: $textColor;
+        vertical-align: top;
+
+		h5 {
+			color: $textGray;
+			font-size: $fontSizeSmall;
+			text-transform: uppercase;
+			font-weight: normal;
+		}
+
+		ul {
+			list-style: none;
+			margin: 0;
+		}
+		.icon {
+			font-size: 25px;
+			position: absolute;
+			left: 2px;
+			top: 2px;
+			height: 25px;
+			width: 22px;
+			color: $textGray;
+			opacity: 0.8;
+			text-align: center;
+		}
+
+		li {
+			line-height: 20px;
+			text-indent: -10px;
+			margin-left: 10px;
+		}
+
+	}
+	hr {
+		clear:both;
+		border: none;
+		border-top: 1px solid $interactiveBorderTopColor;
+	}
+}

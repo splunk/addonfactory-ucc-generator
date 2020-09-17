@@ -1,0 +1,17 @@
+<tr class="more-info">
+    <td class="expands"></td>
+    <td colspan="4">
+        <dl class="list-dotted">
+            <dt><%= _('Location').t() %></dt>
+            <dd><%- model.entry.content.get('host_port_pair') || _('N/A').t()%></dd>
+            <dt><%= _('Last Heartbeat').t() %></dt>
+            <dd><%- time_utils.convertToLocalTime(model.entry.content.get('last_heartbeat')) || _('N/A').t()%></dd>
+            <dt><%= _('Replication Port').t() %></dt>
+            <dd><%- model.entry.content.get('replication_port') || _('N/A').t()%></dd>
+            <dt><%= _('Base Generation ID').t() %></dt>
+            <dd><%- model.entry.content.get('base_generation_id') || _('N/A').t()%></dd>
+            <dt><%= _('GUID').t() %></dt>
+            <dd><%- model.entry.get('name') || _('N/A').t()%></dd>
+        </dl>
+    </td>
+</tr>

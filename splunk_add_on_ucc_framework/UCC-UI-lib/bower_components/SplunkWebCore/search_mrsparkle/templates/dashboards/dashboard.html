@@ -1,0 +1,508 @@
+<%page args="dashboard,escapedOutput=False,kw={}"/>\
+<%
+from urlparse import urljoin
+from urllib import quote
+from splunk.models.view_escaping.forminput import BaseInput
+from splunk.appserver.mrsparkle.lib import util
+isLite = util.isLite()
+CUR_PAGE = "/app/%s/%s" % ( quote(APP['id']), quote(VIEW['id']) ) if escapedOutput else make_url("/app/%s/%s" % ( quote(APP['id']), quote(VIEW['id']) ))
+def url(arg):
+    if escapedOutput:
+        if arg[0] == '/' and arg[1] != '/': # server-relative URL
+            return "{{SPLUNKWEB_URL_PREFIX}}%s" % arg
+        elif arg.startswith('http://') or arg.startswith('https://') or arg.startswith('//'): # absolute or scheme-relative URL
+            return arg
+        else: # relative URL
+            return "{{SPLUNKWEB_URL_PREFIX}}%s" %  urljoin(CUR_PAGE, arg)
+    else:
+        if arg[0] == '/' and arg[1] != '/': # server-relative URL
+            return make_url(arg, validate=False)
+        else: # absolute or relative URL
+            return urljoin(CUR_PAGE, arg)
+
+augment_perf = splunk.util.normalizeBoolean(cherrypy.config.get('simple_xml_perf_debug'))
+
+hasGlobalTRP = dashboard.hasGlobalTRP()
+
+options = dict()
+for option in ['hideChrome', 'hideSplunkBar', 'hideAppBar', 'hideFooter', 'hideTitle', 'hideEdit', 'targetTop']:
+    options[option] = splunk.util.normalizeBoolean(kw.get(option, False)) if option in kw else getattr(dashboard, option, False)
+%>\
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+% if options['targetTop']:
+    <base target="_top" />
+% endif
+    <title>${_(dashboard.label if dashboard.label else dashboard.viewName) | h}</title>
+    <link rel="shortcut icon" href="${util.getFaviconURL()}" />
+% if isLite:
+    <link rel="stylesheet" type="text/css" href="${url('/static/build/css/bootstrap-lite.css')}" />
+    <link rel="stylesheet" type="text/css" href="${url('/static/css/build/pages/dashboard-simple-bootstrap-lite.min.css')}" />
+% else:
+    <link rel="stylesheet" type="text/css" href="${url('/static/build/css/bootstrap-enterprise.css')}" />
+    <link rel="stylesheet" type="text/css" href="${url('/static/css/build/pages/dashboard-simple-bootstrap.min.css')}" />
+% endif
+% for css in customCssFiles:
+    <link rel="stylesheet" type="text/css" media="all" href="${url(css)}" />
+% endfor
+
+</head>
+% if isLite:
+<body class="simplexml preload locale-${i18n.current_lang()[0]|h} lite" data-splunk-version="${cherrypy.config.get('version_number')}" data-splunk-product="${cherrypy.config.get('product_type')}">
+% else:
+<body class="simplexml preload locale-${i18n.current_lang()[0]|h}" data-splunk-version="${cherrypy.config.get('version_number')}" data-splunk-product="${cherrypy.config.get('product_type')}">
+% endif
+<!-- 
+BEGIN LAYOUT
+This section contains the layout for the dashboard. Splunk uses proprietary
+styles in <div> tags, similar to Bootstrap's grid system. 
+-->
+<header>
+    <a class="navSkip" href="#navSkip" tabindex="1">Screen reader users, click here to skip the navigation bar</a>
+    % if (not options['hideChrome']):
+    <div class="header splunk-header">
+        % if not isLite:
+            % if (not options['hideSplunkBar']):
+            <div id="placeholder-splunk-bar">
+                <a href="${url('/app/launcher/home')}" class="brand" title="splunk &gt; listen to your data">splunk<strong>&gt;</strong></a>
+            </div>
+            % endif
+            % if (not options['hideAppBar']):
+                <div id="placeholder-app-bar"></div>
+            % endif
+        % endif
+    </div>
+    % endif
+    <a id="navSkip"></a>
+</header>
+<div class="dashboard-body container-fluid main-section-body" data-role="main">
+    <div class="dashboard-header clearfix">
+    % if (not options['hideTitle']):
+    % if dashboard.label:
+        <h2>${_(dashboard.label)|h}</h2>
+    % else:
+        <h2>&nbsp;</h2>
+    % endif
+    % if dashboard.description is not None:
+        <p class="description">${_(dashboard.description)|h}</p>
+    % endif
+    % endif
+    </div>
+% if dashboard.fieldset or dashboard.submitButton:
+    <div class="fieldset">
+% for input in dashboard.fieldset:
+        <%include file="elements/${input.__class__.__name__}.html" args="element=input,renderid=True,sourceApp=dashboard.sourceApp,url=url" />\
+% endfor
+%if dashboard.submitButton:
+        <div class="form-submit" id="search_btn">
+            <button class="btn btn-primary submit">${_("Submit")}</button>
+        </div>
+% endif
+    </div>
+% endif
+<%def name="tokenDepsData(obj)">\
+% if obj.tokenDeps and obj.tokenDeps.depends:
+ data-depends="${obj.tokenDeps.depends}"\
+% endif
+% if obj.tokenDeps and obj.tokenDeps.rejects:
+ data-rejects="${obj.tokenDeps.rejects}"\
+% endif
+</%def>
+<%def name="originalId(obj)">\
+% if obj.idGenerated is False:
+ data-original-id="${obj.id}"\
+% endif
+</%def>
+% for i,row in enumerate(dashboard.rows):
+%   if len(row.panels):
+<%
+width = str(round(100.0/len(row.panels),3))[0:-1].rstrip('0').rstrip('.') + '%'
+%>\
+    <div id="${row.id | h}" class="dashboard-row dashboard-row${i+1}"${tokenDepsData(row)}${originalId(row)}>
+        % for panel in row.panels:
+        % if panel.ref:
+        <div id="${panel.id | h}" class="dashboard-cell referenced-panel" style="width: ${width};" data-panel-ref="${panel.ref | h}" data-panel-app="${panel.app | h}"${tokenDepsData(panel)}${originalId(panel)}>
+            <div class="dashboard-panel clearfix">
+            </div>
+        </div>
+        % else:
+        <div id="${panel.id | h}" class="dashboard-cell" style="width: ${width};"${tokenDepsData(panel)}${originalId(panel)}>
+            <div class="dashboard-panel clearfix">
+                % if panel.title:
+                <h2 class="panel-title">${panel.title | h}</h2>
+                % endif
+                % if panel.fieldset:
+                <div class="fieldset">
+                    % for input in panel.fieldset:
+                    <%include file="elements/${input.__class__.__name__}.html" args="element=input,renderid=True,sourceApp=dashboard.sourceApp,url=url" />\
+                    % endfor
+                </div>
+                % endif
+                <%
+                single= False
+                panel_element_width = '100%'
+                %>
+                % for j,element in enumerate(panel.panelElements):
+                % if element.matchTagName == 'single' and single == False:
+                <div class="panel-element-row">\
+<%
+                    single_count = 0
+                    for k in range(j,len(panel.panelElements)):
+                        if panel.panelElements[k].matchTagName != 'single':
+                            break
+                        single_count = single_count + 1
+                    panel_element_width = str(round(100.0/single_count,3))[0:-1].rstrip('0').rstrip('.') + '%'
+                    single = True
+%>
+                % endif
+                % if element.matchTagName != 'single':
+                % if single:
+<%
+                    single= False
+                    panel_element_width = '100%'
+%>
+                </div>
+                % endif
+                <div class="panel-element-row">
+                % endif
+                    <div id="${element.id}" class="dashboard-element ${element.matchTagName}" style="width: ${panel_element_width}">
+                        % if element.title is not None:
+                        <div class="panel-head">
+                            <h3>${_(element.title) | h}</h3>
+                        </div>
+                        % endif
+                        <%include file="elements/${element.__class__.__name__}.html" args="element=element,sourceApp=dashboard.sourceApp,url=url" />
+                    </div>
+                % if element.matchTagName != 'single':
+                </div>
+                % endif
+                % endfor
+                % if single:
+                </div>
+                % endif
+            </div>
+        </div>
+        % endif
+        %endfor
+    </div>
+%   endif
+% endfor
+</div>
+
+<!-- 
+END LAYOUT
+-->
+
+% if augment_perf:
+<script type="text/javascript">
+    function _curTime(){ return new Date().getTime(); }
+    var __pageStart = _curTime(), last = __pageStart;
+    function __log_perf(type) { var cur = _curTime(); console.log('[PERF] %o in duration=%o ms (sinceLast=%o ms)', type, cur-__pageStart, cur-last); last = cur;  }
+    if(window.console && typeof window.console.timeStamp === 'function') { var orig = __log_perf; __log_perf = function(type){ console.timeStamp(type); orig(type); } }
+    document.addEventListener('DOMContentLoaded', function(){ __log_perf('DOMContentLoaded'); });
+    document.addEventListener('load', function(){ __log_perf('load'); });
+</script>
+% endif
+<script src="${url('/config?autoload=1')}"></script>
+<script src="${url('/static/js/i18n.js')}"></script>
+<script src="${url('/i18ncatalog?autoload=1')}"></script>
+<script src="${url('/static/build/simplexml/index.js')}"></script>
+<script type="text/javascript">
+// <![CDATA[
+% if augment_perf:
+__log_perf('loaded static scripts');
+% endif
+% if augment_perf:
+__log_perf('configured require');
+% endif:
+// <![CDATA[
+//
+// LIBRARY REQUIREMENTS
+//
+// In the require function, we include the necessary libraries and modules for
+// the HTML dashboard. Then, we pass variable names for these libraries and
+// modules as function parameters, in order.
+// 
+// When you add libraries or modules, remember to retain this mapping order
+// between the library or module and its function parameter. You can do this by
+// adding to the end of these lists, as shown in the commented examples below.
+
+require([
+    "splunkjs/mvc",
+    "splunkjs/mvc/utils",
+    "splunkjs/mvc/tokenutils",
+    "underscore",
+    "jquery",
+    "splunkjs/mvc/simplexml",
+    "splunkjs/mvc/layoutview",
+    "splunkjs/mvc/simplexml/dashboardview",
+    "splunkjs/mvc/simplexml/dashboard/panelref",
+    "splunkjs/mvc/simplexml/element/chart",
+    "splunkjs/mvc/simplexml/element/event",
+    "splunkjs/mvc/simplexml/element/html",
+    "splunkjs/mvc/simplexml/element/list",
+    "splunkjs/mvc/simplexml/element/map",
+    "splunkjs/mvc/simplexml/element/single",
+    "splunkjs/mvc/simplexml/element/table",
+    "splunkjs/mvc/simplexml/element/visualization",
+    "splunkjs/mvc/simpleform/formutils",
+    "splunkjs/mvc/simplexml/eventhandler",
+    "splunkjs/mvc/simplexml/searcheventhandler",
+    "splunkjs/mvc/simpleform/input/dropdown",
+    "splunkjs/mvc/simpleform/input/radiogroup",
+    "splunkjs/mvc/simpleform/input/linklist",
+    "splunkjs/mvc/simpleform/input/multiselect",
+    "splunkjs/mvc/simpleform/input/checkboxgroup",
+    "splunkjs/mvc/simpleform/input/text",
+    "splunkjs/mvc/simpleform/input/timerange",
+    "splunkjs/mvc/simpleform/input/submit",
+    "splunkjs/mvc/searchmanager",
+    "splunkjs/mvc/savedsearchmanager",
+    "splunkjs/mvc/postprocessmanager",
+    "splunkjs/mvc/simplexml/urltokenmodel"
+    // Add comma-separated libraries and modules manually here, for example:
+    // ..."splunkjs/mvc/simplexml/urltokenmodel",
+    // "splunkjs/mvc/tokenforwarder"
+    ],
+    function(
+        mvc,
+        utils,
+        TokenUtils,
+        _,
+        $,
+        DashboardController,
+        LayoutView,
+        Dashboard,
+        PanelRef,
+        ChartElement,
+        EventElement,
+        HtmlElement,
+        ListElement,
+        MapElement,
+        SingleElement,
+        TableElement,
+        VisualizationElement,
+        FormUtils,
+        EventHandler,
+        SearchEventHandler,
+        DropdownInput,
+        RadioGroupInput,
+        LinkListInput,
+        MultiSelectInput,
+        CheckboxGroupInput,
+        TextInput,
+        TimeRangeInput,
+        SubmitButton,
+        SearchManager,
+        SavedSearchManager,
+        PostProcessManager,
+        UrlTokenModel
+
+        // Add comma-separated parameter names here, for example: 
+        // ...UrlTokenModel, 
+        // TokenForwarder
+        ) {
+% if augment_perf:
+        __log_perf('required dependencies');
+        $('body').on('loaded', function(){ __log_perf('preload done'); });
+% endif
+% if augment_perf:
+        __log_perf('imported dependencies');
+% endif
+
+        var pageLoading = true;
+
+
+        // 
+        // TOKENS
+        //
+        
+        // Create token namespaces
+        var urlTokenModel = new UrlTokenModel();
+        mvc.Components.registerInstance('url', urlTokenModel);
+        var defaultTokenModel = mvc.Components.getInstance('default', {create: true});
+        var submittedTokenModel = mvc.Components.getInstance('submitted', {create: true});
+
+        urlTokenModel.on('url:navigate', function() {
+            defaultTokenModel.set(urlTokenModel.toJSON());
+            if (!_.isEmpty(urlTokenModel.toJSON()) && !_.all(urlTokenModel.toJSON(), _.isUndefined)) {
+                submitTokens();
+            } else {
+                submittedTokenModel.clear();
+            }
+        });
+
+        // Initialize tokens
+        defaultTokenModel.set(urlTokenModel.toJSON());
+
+        function submitTokens() {
+            // Copy the contents of the defaultTokenModel to the submittedTokenModel and urlTokenModel
+            FormUtils.submitForm({ replaceState: pageLoading });
+        }
+
+        function setToken(name, value) {
+            defaultTokenModel.set(name, value);
+            submittedTokenModel.set(name, value);
+        }
+
+        function unsetToken(name) {
+            defaultTokenModel.unset(name);
+            submittedTokenModel.unset(name);
+        }
+        % if augment_perf:
+        __log_perf('created submission models');
+        % endif
+
+        % for panel in dashboard.all_panels():
+            % if panel.ref:
+        var ${panel.id} = new PanelRef({
+            id: ${panel.id | json_decode},
+            % if panel.title:
+            title: ${panel.title | json_decode},
+            % endif
+            % if panel.tokenDeps:
+            tokenDependencies: ${json_decode(panel.tokenDeps.obj())|n},
+            % endif
+            % if panel.idGenerated is False:
+            originalId: ${json_decode(panel.id)|n},
+            % endif
+            el: $('#${panel.id}')
+        }, {tokens: true}).render();
+
+        DashboardController.addReadyDep(${panel.id}.load(${panel.ref | json_decode}, ${panel.app | json_decode}));
+
+            % endif
+        % endfor
+        
+        
+        //
+        // SEARCH MANAGERS
+        //
+
+% for (search, obj) in dashboard.all_searches():
+        % if getattr(search,'searchMode', None):
+        <%include file="contexts/${search.searchMode}.js" args="ctx=search,runOnSubmit= not isinstance(obj, BaseInput), cancelOnUnload=dashboard.onUnloadCancelJobs" />\
+        % for eventName, props in search.eventHandlers:
+            
+        <%include file="contexts/eventhandler.js" args="search=search, eventName=eventName, conditions=props" />
+        % endfor
+        % if augment_perf:
+        __log_perf('started search ${search.id}');
+        % endif
+        % endif
+% endfor
+
+
+        //
+        // SPLUNK LAYOUT
+        //
+<%
+    supportedKeys = ["id", "hideAppBar", "hideAppsList", "hideChrome", "hideFooter", "hideSplunkBar", "layout"]
+    layoutOptions = {k: v for k, v in options.items() if k in supportedKeys}
+%>
+        $('header').remove();
+        new LayoutView(${json_decode(layoutOptions)})
+            .render()
+            .getContainerElement()
+            .appendChild($('.dashboard-body')[0]);
+
+        //
+        // DASHBOARD EDITOR
+        //
+
+        new Dashboard({
+            id: 'dashboard',
+            el: $('.dashboard-body'),
+            showTitle: ${json_decode(not options['hideTitle'])},
+            editable: ${json_decode(not options['hideEdit'])}
+        }, {tokens: true}).render();
+
+
+        //
+        // VIEWS: VISUALIZATION ELEMENTS
+        //
+% for element in dashboard.all_elements():
+
+        var ${element.id} = <%include file="elements/${element.__class__.__name__}.js" args="element=element,sourceApp=dashboard.sourceApp,url=url" />\
+        % if augment_perf:
+        __log_perf('initialized element ${element.id}');
+        % endif
+% endfor
+% if dashboard.has_fields():
+
+
+        //
+        // VIEWS: FORM INPUTS
+        //
+% for input in dashboard.all_fields():
+
+        var ${input.id} = <%include file="elements/${input.__class__.__name__}.js" args="element=input,sourceApp=dashboard.sourceApp,url=url" />
+        ${input.id}.on("change", function(newValue) {
+            FormUtils.handleValueChange(${input.id});
+        });
+        <%include file="elements/drilldown/inputchange.html" args="input=input,url=url" />\
+% endfor
+% if dashboard.submitButton:
+
+
+        // 
+        // SUBMIT FORM DATA
+        //
+
+        var submit = new SubmitButton({
+            id: 'submit',
+            el: $('#search_btn')
+        }, {tokens: true}).render();
+
+        submit.on("submit", function() {
+            submitTokens();
+        });
+% else:
+
+        DashboardController.onReady(function() {
+            if (!submittedTokenModel.has('earliest') && !submittedTokenModel.has('latest')) {
+                submittedTokenModel.set({ earliest: '0', latest: '' });
+            }
+        });
+% endif
+% endif
+% if augment_perf:
+        __log_perf('initialized components');
+% endif
+
+        // Initialize time tokens to default
+        if (!defaultTokenModel.has('earliest') && !defaultTokenModel.has('latest')) {
+            defaultTokenModel.set({ earliest: '0', latest: '' });
+        }
+
+% if dashboard.autoRun:
+        submitTokens();
+% else:
+        if (!_.isEmpty(urlTokenModel.toJSON())){
+            submitTokens();
+        }
+% endif
+
+% if dashboard.refresh and dashboard.refresh > 0:
+        setTimeout("location.reload();", ${dashboard.refresh} * 1000);
+% endif
+
+        //
+        // DASHBOARD READY
+        //
+
+        DashboardController.ready();
+        pageLoading = false;
+
+    }
+);
+// ]]>
+</script>
+% for js in customJsFiles:
+<script src="${url(js)}" type="text/javascript"></script>
+% endfor
+</body>
+</html>

@@ -1,0 +1,110 @@
+/*  Lite Bar */
+/*  ======================= */
+
+.view {
+    all: initial;
+    background: $splunkLiteBlack !important;
+    color: $white;
+    min-height: $navbarHeightLite;
+    padding-right: 10px;
+    font-size: $baseFontSize;
+    font-family: $baseFontFamily;
+    display: block;
+    a {
+        color: $white;
+        text-decoration: none;
+    }
+}
+.hamburger {
+    line-height: $navbarHeightLite;
+    height: $navbarHeightLite;
+    cursor: pointer;
+    position: relative;
+    z-index: calc($zindexSideNavBackdrop + 1);
+    padding: 0 20px;
+    display: block;
+    text-align: center;
+    font-size: 24px;
+    float: left;
+
+    &:hover  {
+        background: color($white a(10%));
+    }
+}
+.brand {
+    font-size: 17px;
+    float: left;
+    text-decoration: none;
+    line-height: $navbarHeightLite;
+    height: $navbarHeightLite;
+    border: none;
+    &:hover {
+        background: none;
+        border: none;
+        text-decoration: none;
+    }
+}
+.gt {
+    color: $splunkGray;
+    font-weight: normal;
+}
+.subBrand {
+    color: $splunkLiteOrange;
+    -webkit-font-smoothing: antialiased;
+}
+.logo {
+    float: left;
+}
+.nav {
+    margin-bottom: 0;
+    height: $navbarHeightLite;
+    line-height: $navbarHeightLite;
+    float: left;
+}
+.navbarGlobal {
+    list-style: none;
+    margin: 0;
+    display: flex;
+    float: right;
+}
+.messageNotification {
+    background: $red;
+    border-radius: 10px;
+    color: $white;
+    display: inline-block;
+    line-height: 8px;
+    padding: 3px 4px;
+    font-size: 9px;
+    font-style: normal;
+    display: none;
+    position: absolute;
+    top: 5px;
+    right: 12px;
+}
+.sidenavScreen {
+    position: fixed;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: $zindexSideNavBackdrop;
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+
+@media only screen and (min-width: 1100px) {
+  .nav .product-menu-label,
+  .nav .help-menu-label {
+    display: inline;
+  }
+}
+
+@media only screen and (min-width: 1300px) {
+  .nav .realname {
+      max-width: 250px;
+  }
+}
+
+@media only screen and (min-width: 1500px) {
+  .nav .realname {
+      max-width: 350px;
+  }
+}

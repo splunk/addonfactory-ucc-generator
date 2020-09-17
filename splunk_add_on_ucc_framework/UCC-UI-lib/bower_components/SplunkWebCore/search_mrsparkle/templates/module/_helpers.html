@@ -1,0 +1,111 @@
+<%def name="export(className)">
+<div class="${className}">
+    <div class="exParamsContainer">
+    <form class="exForm entityEditForm" method="GET">
+        <input type="hidden" name="isDownload" value="true"/>
+        <input type="hidden" name="timeFormat" value="%FT%T.%Q%:z"/>
+        <input type="hidden" name="maxLines" value="0"/>
+        <input type="hidden" name="count" value="0"/>
+        <div class="fieldsetWrapper">
+        <fieldset>
+            <label class="exParam" for="exFilename">
+                ${_("File name")} 
+            </label>
+            <div>
+                <input name="filename" class="exFilename" type="text" id="exFilename">
+            </div>
+            <label class="exParam" for="exFormat">
+                ${_("Format")} 
+            </label>
+            <div>
+                <select name="outputMode" class="exOutputModeSelect" id="exFormat">
+                    <option value="csv">CSV</option>
+                    <option value="raw">${_("Raw events")}</option>
+                    <option value="xml">XML</option>
+                    <option value="json">JSON</option>
+                </select>
+            </div>
+            <p>${_("Max # of results to export")}</p>
+            <div>
+                <input type="radio" name="spl_ctrl-limit" value="unlimited" class="radio" checked="checked" id="exMaxExportsNoLimit" style="float:none;clear:none;display:inline;" />
+                <label class="exParam" for="exMaxExportsNoLimit" style="display:inline">${_('Unlimited')}</label>
+            </div>
+            <div>
+                <input type="radio" name="spl_ctrl-limit" value="limit" class="radio" style="float:none;clear:none;display:inline;">
+                <input name="spl_ctrl-count" class="exMaxcount" value="10000" type="text" id="exMaxExports" onfocus="$(this).prev().prop('checked', true);">
+            </div>
+        </fieldset>
+        </div>
+        <input type="submit" class="visuallyhidden" />
+    </form>
+    </div>
+</div>
+</%def>
+
+<%def name="share()">
+<!--  sadly, this popup layers markup is now DUPLICATED. TitleBar, as well as the ResultsActionButtons module, both require this layer  -->
+<div class="shareLinkForm">
+    <div class="linkParamsContainer">
+    <form class="linkForm entityEditForm" method="GET">
+        <div class="fieldsetWrapper">
+        <fieldset>
+            <label class="exParam" for="exLink">
+                ${_("Link to the results")} 
+            </label>
+            <div>
+                <input name="linkText" class="linkTextInput" type="text" style="width:500px;" id="exLink" />
+            </div>
+            <div>
+                <p>${_("Your results have been saved and shared with all users. They are available in the Jobs Manager.")}</p>
+                <a class="undoEverything" href="#">${_("Undo save and sharing.")}</a>
+            </div>
+        </fieldset>
+        </div>
+    </form>
+    </div>
+</div>
+<script type="text/javascript">
+    (function(){
+        // jQuery 1.7.1+ no longer suppresses errors that occur when trying to focus a
+        // hidden element on IE. An element is hidden if any of it's ancestor elements
+        // are hidden, so the selector here doesn't handle all cases. Need a try-catch.
+        try {
+            $("input:visible:enabled:first").focus(); //focus on first element
+        } catch (e) {}
+    })()
+</script>
+</%def>
+
+
+<%def name="fieldsummarylayer()">
+
+<!-- hidden div that serves as the base for the layers when they're dynamically created. -->
+<div class="popupContainer fieldValuePopup splShadow">
+    <div class="fieldValuePopupInner">
+    <div class="splHeader splHeader-primary">
+        <a class="splIcon splIcon-close" href="javascript:void(0)"></a>
+        <h2></h2>
+     </div>
+     <div class="popupContent">
+         <div class="fieldLinks"></div>
+         <div class="reportLinks splBackground-primary"></div>
+         <p class="numericalStats"></p>
+         <p class="fieldHeader"></p>
+         <table>
+             <tbody>
+             </tbody>
+         </table>
+     </div>
+     </div>
+</div>
+<script type="text/javascript">
+    (function(){
+        // jQuery 1.7.1+ no longer suppresses errors that occur when trying to focus a
+        // hidden element on IE. An element is hidden if any of it's ancestor elements
+        // are hidden, so the selector here doesn't handle all cases. Need a try-catch.
+        try {
+            $("input:visible:enabled:first").focus(); //focus on first element
+        } catch (e) {}
+    })()
+</script>
+</%def>

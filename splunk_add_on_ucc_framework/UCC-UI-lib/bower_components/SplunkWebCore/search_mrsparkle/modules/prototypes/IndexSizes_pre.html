@@ -1,0 +1,17 @@
+<p class="eventCountWrapper">
+    ${_("Total events indexed:")} <span class="eventNumber">${globalEventCount}</span>
+</p>
+% if showDetails:
+<table class="eventCountDetail">
+    <tr>
+        <th>Index</th>
+        <th class="numeric">Event count</th>
+        <th class="numeric">DB size (MB)</th>
+    </tr>
+    % for item in indexes:
+        <tr>
+            <td>${item.name}</td><td class="numeric">${item['totalEventCount']}</td><td class="numeric">${item['currentDBSizeMB']}</td>
+        </tr>
+    % endfor
+</table>
+% endif

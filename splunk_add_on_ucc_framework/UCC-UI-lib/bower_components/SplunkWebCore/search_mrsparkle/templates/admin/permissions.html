@@ -1,0 +1,319 @@
+<%namespace name="lib" file="//lib.html" import="*"/>
+<%namespace name="helpers" file="//admin/_helpers.html"/>
+<%inherit file="//layout/admin.html" />
+<%
+import cherrypy
+import splunk.util
+from splunk.appserver.mrsparkle.lib import util
+isFree = splunk.util.normalizeBoolean(cherrypy.config["is_free_license"])
+isLite = util.isLite()
+%>
+<style type="text/css">
+#permissions table {
+    width:318px;    
+}
+#permissions table td {
+    padding:5px;
+}
+#permissions table tbody tr:hover {
+    background: #ededed;
+}
+#permissions .fieldsetWrapper2 {
+    position:relative;
+    padding-bottom:23px;
+}
+#permissions .fieldsetWrapper2 legend {
+    padding-bottom:10px;
+}
+#permissions input {
+    margin: 0;
+}
+#permissions table {
+    border-bottom:1px solid #CCC;
+}
+#permissions table thead td {
+    font-size:12px;
+    padding-top:20px;
+    vertical-align:top;
+}
+#permissions table thead td.col2, #permissions table thead td.col3 {
+    text-align:center;
+}
+#permissions table tbody tr.world td {
+    font-weight:bold;
+    border-bottom:1px solid #CCC;
+}
+#permissions table tbody tr.world td.col1 {
+    border-left:1px solid #CCC;
+    border-top:1px solid #CCC;
+}
+#permissions table tbody tr.world td.col2 {
+    border-top:1px solid #CCC;
+    text-align:center;    
+}
+#permissions table tbody tr.world td.col3 {
+    border-right:1px solid #CCC;
+    border-top:1px solid #CCC;
+    text-align:center;    
+}
+#permissions table tbody tr.roles td.col1 {
+    border-left:1px solid #CCC;;
+}
+#permissions table tbody tr.roles td.col2 {
+    text-align:center; 
+}
+#permissions table tbody tr.roles td.col3 {
+    border-right:1px solid #CCC;
+    text-align:center;  
+}
+#permissions .sharingRadios {
+    margin-top:5px;
+    margin-bottom:10px;   
+}
+</style>
+% if error:
+    <%helpers:message content="${error}" level="error"/>
+% endif
+% if info:
+    <%helpers:message content="${info}" level="info"/>
+% endif
+<div id="permissions" class="editFormWrapper">
+    % if entity:
+        <% sharing_option_values = [x[0] for x in sharing_options] %> 
+        <form action="${action_path | h}" method="post" class="entityEditForm">
+            <!--  
+                entity data:
+                ${entity | h}
+            -->
+            ${csrf_hidden_input()}
+            <input type="hidden" name="owner" value="${owner | h}" />
+
+            % if not isLite:
+                % if sharing != 'system' and endpoint_base != 'apps/local' and len(sharing_options) > 1:
+                    <div class="fieldsetWrapper">
+                        <fieldset>
+                            <legend class="labelLegend">${_('%s%s should appear in') % (object_label[:1].upper(), object_label[1:]) | h}</legend>
+                            <div class="sharingRadios">
+                                % for i, sharing_option in enumerate(sharing_options):
+                                   <input type="radio" id="sharing_${sharing_option[0] | h}" name="sharing" value="${sharing_option[0] | h}" class="radio"${' checked="checked"' if sharing_option[0]==sharing else ''}${'' if modifiable and sharing in sharing_option_values else ' disabled="disabled"'}/> <label for="sharing_${sharing_option[0] | h}">${sharing_option[1] | h}</label>
+                                % endfor
+                            </div>          
+                        </fieldset>
+                    </div>
+                % endif
+            % endif
+
+            <fieldset class="fieldsetWrapper2">
+	        % if endpoint_base == 'apps/local':
+                  <legend>${_('App permissions')}</legend>
+                  <label>${_("Users with read access can only save objects for themselves, and require write access to be able to share objects with other users.")}</label>
+                % else:
+                  <legend>${_('Permissions')}</legend>
+                  % if isFree:
+                    <label>
+                      ${_("Free server does not support managing object permissions.")}
+                      ${_("This is an Enterprise license-level feature and is currently not available on this instance.")}
+                    </label>
+                    <p>${_('To enable this and other Enterprise features, <a href="http://www.splunk.com/r/aboutlicenses" target="_blank" class="spl-icon-external-link-xsm">learn more about licenses</a> at Splunk.com or <a href="http://www.splunk.com/r/getlicense" target="_blank" class="spl-icon-external-link-xsm">contact Splunk Sales</a> directly.')}</p>
+                  % endif
+                % endif
+
+            % if isLite:
+                <% sharing_lite = 'global' if sharing == 'app' else sharing %>
+                % if sharing_lite != 'system' and endpoint_base != 'apps/local':
+                    % if len(sharing_options) > 1:
+                        <fieldset>
+                            <div class="sharingRadios">
+                                % for i, sharing_option in enumerate(sharing_options):
+                                   <input type="radio" id="sharing_${sharing_option[0] | h}" name="sharing" value="${sharing_option[0] | h}" class="radio"${' checked="checked"' if sharing_option[0]==sharing_lite else ''}${'' if modifiable and sharing_lite in sharing_option_values else ' disabled="disabled"'}/> <label for="sharing_${sharing_option[0] | h}">${sharing_option[1] | h}</label>
+                                % endfor
+                            </div>          
+                        </fieldset>
+                    % elif len(sharing_options) > 0:
+                        <input type="hidden" name="sharing" value="${sharing_options[0][0] | h}" />
+                    % endif
+                % endif
+            % endif
+
+                % if not isFree:
+                <table>
+                    <thead><!-- no header fixed header not support x-platform -->
+                        <tr>
+                            <td class="col1">${_('Roles')}</td>                
+                            <td class="col2">${_('Read')}</td>
+                            <td class="col3">${_('Write')}</td>
+                        </tr>
+                    </thead>
+                    <tfoot><!-- no footer --></tfoot>
+                    <tbody>
+                        <tr class="world" title="${_('CAUTION! This will give everyone permissions!')}">
+                            <td class="col1"><span class="orphanLabel" for="">${_('Everyone')}</span><label for="world_read" class="hiddenLabel">${_('Global Read')}</label><label for="world_write" class="hiddenLabel">${_('Global Write')}</label></td>
+                            <td class="col2"><input type="checkbox" class="readCheckbox checkbox" name="perms_read" value="*" id="world_read"${' checked="checked"' if '*' in perms_read else ''}${'' if perms_modifiable and sharing != 'user' else ' disabled="disabled"'}/></td>
+                            <td class="col3"><input type="checkbox" class="checkbox" name="perms_write" value="*" id="world_write"${' checked="checked"' if '*' in perms_write else ''}${'' if perms_modifiable and sharing != 'user' else ' disabled="disabled"'}/></td>
+                        </tr>
+                        % for role in roles:
+                            % if not isLite or role == 'admin' or role == 'user':
+                                <tr class="roles">
+                                    <td class="col1"><span class="orphanLabel">${role | h}</span><label for="${role | h}_read" class="hiddenLabel">${_('%s Read') % role | h}</label><label for="${role | h}_write" class="hiddenLabel">${_('%s Write') % role | h}</label></td>
+                                    <td class="col2"><input type="checkbox" class="readCheckbox checkbox" name="perms_read" value="${role | h}" id="${role | h}_read"${' checked="checked"' if role in perms_read else ''}${'' if perms_modifiable and '*' not in perms_read and sharing != 'user' else ' disabled="disabled"'}/></td>
+                                    <td class="col3"><input type="checkbox" class="checkbox" name="perms_write" value="${role | h}" id="${role | h}_write"${' checked="checked"' if role in perms_write else ''}${'' if perms_modifiable and '*' not in perms_write and sharing != 'user' else ' disabled="disabled"'}/></td>
+                                </tr>
+                            % endif
+                        % endfor
+                    </tbody>
+                </table>
+                % endif
+            </fieldset>
+	    % if endpoint_base == 'apps/local':
+            <div class="fieldsetWrapper">
+                <fieldset>
+                    <legend>${_('Sharing for config file-only objects')}</legend>
+                    <label>${_('Set permissions for configurations that have been copied over or added to config files rather than created through the UI.')}</label>
+                    <label>${_('Objects defined in config files only (not in the UI) should appear in')}</label>
+                    <div style="margin-top:10px;">
+                        % for i, sharing_option in enumerate(sharing_options):
+                            <input type="radio" id="sharing_${sharing_option[0] | h}" name="sharing" value="${sharing_option[0] | h}" class="radio"${' checked="checked"' if sharing_option[0]==sharing else ''}${'' if modifiable and sharing in sharing_option_values else ' disabled="disabled"'}/><label for="sharing_${sharing_option[0] | h}">${sharing_option[1] | h}</label>
+                        % endfor
+                    </div>          
+                </fieldset>
+            </div>
+            % endif    
+            <div class="jmFormActions">
+                <button type="button" class="splButton-secondary" onclick="window.location='${cancel_url}';"><span>${_('Cancel')}</span></button>
+                % if perms_modifiable:
+                    <button type="submit" class="splButton-primary"><span>${_('Save')}</span></button>
+                % endif
+            </div>
+        </form>
+    % else:
+        <p>
+            ${_('Sorry, the permissions for this object are unavailable.')}
+        </p>
+        <button type="button" class="splButton-primary" onclick="window.location='${cancel_url}';"><span>${_('Go back')}</span></button>
+    % endif
+</div>
+<script type="text/javascript">
+(function(){
+    PARENT_SELECTOR = "#permissions";
+    ACL_MAX_HEIGHT = 300;
+    var disableSharingID = "sharing_user";
+    var worldReadElement = $(".world input[name='perms_read']", $(PARENT_SELECTOR));
+    var worldWriteElement = $(".world input[name='perms_write']", $(PARENT_SELECTOR));
+    var roleReadElements = $(".roles input[name='perms_read']", $(PARENT_SELECTOR));
+    var roleWriteElements = $(".roles input[name='perms_write']", $(PARENT_SELECTOR));
+    /**
+     * Top level UI event listener and dispatcher.
+     *
+     * @param {Object} event A DOM event.
+     * @type Boolean
+     * @return Cancel (false) or enable (true) the propagation of this event.
+     */
+    function onUIEvent(event){
+        var eventType = event.type;
+        var eventTarget = $(event.target);//What was the source element of the event.
+        if(eventType==="click" || eventType==="keydown"){
+            if(eventTarget.attr("name")=="sharing"){
+                handleSharingAction(event);
+            }else if(eventTarget.attr("id")=="world_read"){
+                handleWorldReadAction(event);
+            }else if(eventTarget.attr("id")=="world_write"){
+                handleWorldWriteAction(event);
+            }else if(eventTarget.attr("name")=="perms_write" && eventTarget.attr("id")!="world_write"){
+                handlePermsWrite(event);
+            }
+        }
+    }
+    /**
+     * Handle sharing action. Intentionally explicit/procedural for ease of understanding.
+     *
+     * @param {Object} event A jQuery normalized DOM event.
+     */
+    function handleSharingAction(event){
+        var eventTarget = $(event.target);
+        if(eventTarget.attr("id")==disableSharingID){
+            //disable world read and write checkboxes
+            worldReadElement[0].disabled = true;
+            worldWriteElement[0].disabled = true;
+            //diable all roles read and write checkboxes
+            disableElements(roleReadElements, true);
+            disableElements(roleWriteElements, true);
+        }else{
+            //enable world read and write checkboxes
+            worldReadElement[0].disabled = false;
+            worldWriteElement[0].disabled = false;
+            //if world read checked
+            if(worldReadElement[0].checked){
+                //disable all roles read checkboxes
+                disableElements(roleReadElements, true);
+            }else{
+                disableElements(roleReadElements, false);
+            }
+            if(worldWriteElement[0].checked){
+                //disable all roles write checkboxes
+                disableElements(roleWriteElements, true);
+                //Select world readable and disable underlying readables
+                worldReadElement[0].checked = true;
+                disableElements(roleReadElements, true);
+            }else{
+                disableElements(roleWriteElements, false);
+            }
+        }
+    }
+    /**
+     * Handle sharing action.
+     *
+     * @param {Object} event A jQuery normalized DOM event.
+     */
+    function handleWorldReadAction(event){
+        var eventTarget = $(event.target);
+        if(eventTarget[0].checked){
+            //disable all roles read checkboxes
+            disableElements(roleReadElements, true);
+        }else{
+            //enable all roles read checkboxes
+            disableElements(roleReadElements, false);
+        }
+    }
+    /**
+     * Handle sharing action.
+     *
+     * @param {Object} event A jQuery normalized DOM event.
+     */
+    function handleWorldWriteAction(event){
+        var eventTarget = $(event.target);
+        if(eventTarget[0].checked){
+            //disable all roles write checkboxes
+            worldReadElement[0].checked = true;
+            disableElements(roleWriteElements, true);
+            disableElements(roleReadElements, true);
+        }else{
+            //enable all roles write checkboxes
+            disableElements(roleWriteElements, false);
+        }            
+    }
+    /**
+     * Handle check action on non-world checkbox. Check adjacent read if this element is checked do nothing or check it.
+     *
+     * @param {Object} event A jQuery normalized DOM event.
+     */
+    function handlePermsWrite(event){
+        var eventTarget = $(event.target);
+        var permReadElement = $("input[name='perms_read']", eventTarget.parent().parent())[0];
+        if(eventTarget[0].checked && !permReadElement.checked && !permReadElement.disabled){
+            permReadElement.checked = true;
+        }
+    }
+    /**
+     * Set the disabled value for an array of elements.
+     *
+     * @param {Array} elements An array of elements.
+     * @param {Boolean} bool The desired disable value. 
+     */
+    function disableElements(elements, bool){
+         for(var i=0; i<elements.length; i++){
+             elements[i].disabled = bool;
+         }
+    }
+    $(PARENT_SELECTOR).bind("click keydown", onUIEvent);
+})();
+</script> 

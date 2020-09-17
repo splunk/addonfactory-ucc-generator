@@ -1,0 +1,57 @@
+<%!
+    title = 'App Install'
+%>
+<%namespace name="lib" file="//lib.html" import="*"/>
+<%inherit file="//layout/admin.html" />
+<%
+import splunk
+from splunk.appserver.mrsparkle.lib import util, i18n
+appText = 'add-on' if util.isLite() else 'app'
+%>
+
+<script language="JavaScript">
+    $(function() {
+        $('.splButton-secondary').click(function() {
+            window.location = ${jsonify(make_url(state['return_to']))};
+            return false;
+        });
+        $('.splButton-primary').click(function() {
+            window.location = ${jsonify(setup_url)};
+            return false;
+        });
+            
+    });
+</script>
+
+<div class="spl-gdi-wrapper spl-prompt-message-layout"> 
+	<div class="jmFormOptions">
+	    <h2 class="spl-page-hdr spl-icon-success-md" > 
+	        <span> 
+	            <!-- replace with page title --> 
+	            ${_('Install successful')}
+	            <!-- end replace with page title --> 
+	        </span> 
+	    </h2> 
+	    <span class="spl-hr-solid-lite"></span> 
+	    <!-- start prompt message --> 
+	    <div class="spl-prompt-message-wrapper"> 
+	        <h3 class="spl-main-description-hdr"> 
+	            ${_('%s setup required' % appText.capitalize())}
+	        </h3> 
+	        <p class="spl-main-description"> 
+	            ${_('You must set up your new %s before you can use it.' % appText)}
+	        </p> 
+	    </div> 
+	</div>
+    
+    <!-- Start button bar --> 
+    <div class="jmFormActions"> 
+        <button class="splButton-primary">
+            <span>${_('Set up now')}</span> 
+        </button> 
+        <button class="splButton-secondary">  
+            <span>${_('Set up later')}</span> 
+        </button> 
+    </div> 
+</div> 
+

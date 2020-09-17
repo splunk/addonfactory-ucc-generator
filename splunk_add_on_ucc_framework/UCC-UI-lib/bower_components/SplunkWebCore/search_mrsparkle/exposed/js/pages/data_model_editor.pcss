@@ -1,0 +1,178 @@
+/*  Splunk: Data Model Editor Page */
+/*  ================================ */
+
+
+/*  override default padding */
+.section-header {
+    padding: 10px 20px;
+}
+
+/*  generic message */
+.message-single {
+    margin: 100px 50px;
+}
+
+
+/*  TODO: move this to base; */
+.modal-narrow {
+    width: 300px;
+    margin-left: -150px;
+
+    input[type="text"]{
+        width: 240px;
+    }
+}
+.modal-wide {
+    width: 900px;
+    margin-left: -450px;
+}
+
+.section-description > .value {
+    padding-right: 20px;
+}
+
+.view-add-edit-container .help-block {
+    margin-top: -5px;
+}
+
+.select-multiple-objects + .list-header {
+    margin-top: 10px;
+}
+
+.view-add-edit-container .control-label {
+    font-weight: bold;
+}
+
+
+.view-add-edit-container {
+  .divider-gradient-gray-white {
+      border-top: 1px solid $borderColor;
+      border-bottom: 1px solid $white;
+  }
+
+  .main-view-and-drill-down-view-container {
+      width:100%;
+  }
+
+  .rex-form-view .main-view-and-drill-down-view-container {
+      overflow: hidden;
+  }
+
+  .main-view {
+      width:100%;
+      float:left;
+      vertical-align:text-top;
+  }
+
+  .drill-down-view {
+      width:99.9%;
+      float:left;
+      margin-right:-100%;
+      vertical-align:text-top;
+
+      .value-stats-container {
+          padding: 10px 20px;
+          background-color: $white;
+          @mixin clearfix;
+      }
+
+      .value-stats {
+          padding-top:5px;
+          margin-right:5px;
+          font-weight:bold;
+      }
+
+      .back-button-container {
+          padding:10px 20px;
+          font-size:13px;
+      }
+
+      .drill-down-table-wrapper {
+          background-color: $white;
+      }
+  }
+
+  $editorPanePadding: 20px;
+  .editor-container {
+      padding: $editorPanePadding;
+  }
+
+  .buttons-container {
+    @mixin clearfix;
+    clear: both;
+    margin-top: 10px;
+    margin-right: $editorPanePadding;
+    float: right;
+    .btn {
+      float: left;
+    }
+  }
+
+
+/*  CONTROLS */
+  .shared-controls-syntheticcheckboxcontrol {
+    .btn {
+      margin-right: 5px;
+    }
+  }
+
+  .alerts {
+      margin-left: 25px;
+  }
+
+}
+
+.view-add-edit-search-object {
+    .search-bar label {
+        font-weight: normal;
+    }
+
+    .shared-controls-controlgroup {
+        margin-right: 20px;
+    }
+
+    + .divider {
+        border: none;
+        height: 1px;
+    }
+
+}
+.lookup-controls .control-label {
+    font-weight: normal;
+}
+
+.control-group + .control-label {
+    margin-top: 20px;
+}
+
+.uneditable-input {
+  margin-bottom: 0px;
+}
+
+
+.view-add-edit-search-object {
+  .display-name-placeholder,
+  .object-name-placeholder
+  {
+    float: left;
+  }
+
+  .search-bar-placeholder
+  {
+    clear : left;
+  }
+}
+
+/*  view values dialog */
+.shared-datamodel-dialogs-viewvaluesdialog {
+    .modal-body {
+        padding: 0;
+    }
+    .alert {
+        margin: 20px;
+    }
+    .sample-value {
+        border-bottom: 1px solid $borderColor;
+        padding: 2px 9px;
+    }
+}
