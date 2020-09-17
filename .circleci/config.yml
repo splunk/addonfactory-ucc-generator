@@ -90,8 +90,7 @@ jobs:
             poetry install
             poetry run poetry-dynamic-versioning
             poetry run build-ucc
-            poetry build
-            poetry publish -u ${TWINE_USERNAME} -p ${TWINE_PASSWORD}
+            poetry publish --build -u $TWINE_USERNAME -p $TWINE_PASSWORD
       - save_cache:
           key: poetry-{{ checksum "poetry.lock" }}
           paths:
