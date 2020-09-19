@@ -172,7 +172,7 @@ workflows:
             branches:
               ignore: /.*/
             tags:
-              only: /^v\d*\.\d*\.\d*/
+              only: /^v\d*\.\d*\.\d*.*$/
       - approval-tag-beta:
           requires:
             - publish
@@ -181,7 +181,7 @@ workflows:
             branches:
               ignore: /.*/
             tags:
-              only: /^v\d*\.\d*\.\d*-alpha\.\d+/
+              only: /^v\d*\.\d*\.\d*-a\..*$/
       - tag:
           name: tag-beta
           semtag: b
@@ -191,7 +191,7 @@ workflows:
             branches:
               ignore: /.*/
             tags:
-              only: /^v\d*\.\d*\.\d*-alpha\.\d+/
+              only: /^v\d*\.\d*\.\d*-a\..*$/
       - approval-merge-beta-to-master:
           requires:
             - publish
@@ -200,7 +200,7 @@ workflows:
             branches:
               ignore: /.*/
             tags:
-              only: /^v\d*\.\d*\.\d*-beta\.\d+/
+              only: /^v\d*\.\d*\.\d*-b\..*$/
       - merge-beta-to-master:
           requires:
             - approval-merge-beta-to-master
@@ -208,7 +208,7 @@ workflows:
             branches:
               ignore: /.*/
             tags:
-              only: /^v\d*\.\d*\.\d*-beta\.\d+/
+              only: /^v\d*\.\d*\.\d*-b\..*$/
       - approval-tag-final-major:
           type: approval
           requires:
@@ -217,7 +217,7 @@ workflows:
             branches:
               ignore: /.*/
             tags:
-              only: /^v\d*\.\d*\.\d*-beta\.\d+/
+              only: /^v\d*\.\d*\.\d*-b\..*$/
       - tag:
           name: tag-final-major
           semtag: "final -s major"
@@ -227,7 +227,7 @@ workflows:
             branches:
               ignore: /.*/
             tags:
-              only: /^v\d*\.\d*\.\d*-beta\.\d+/
+              only: /^v\d*\.\d*\.\d*-b\..*$/
       - approval-tag-final-minor:
           type: approval
           requires:
@@ -236,7 +236,7 @@ workflows:
             branches:
               ignore: /.*/
             tags:
-              only: /^v\d*\.\d*\.\d*-beta\.\d+/
+              only: /^v\d*\.\d*\.\d*-b\..*$/
       - tag:
           name: tag-final-minor
           semtag: "final -s minor"
@@ -246,7 +246,7 @@ workflows:
             branches:
               ignore: /.*/
             tags:
-              only: /^v\d*\.\d*\.\d*-beta\.\d+/
+              only: /^v\d*\.\d*\.\d*-b\..*$/
       - approval-tag-final-patch:
           type: approval
           requires:
@@ -255,7 +255,7 @@ workflows:
             branches:
               ignore: /.*/
             tags:
-              only: /^v\d*\.\d*\.\d*-beta\.\d+/
+              only: /^v\d*\.\d*\.\d*-b\..*$/
       - tag:
           name: tag-final-patch
           semtag: "final -s patch"
@@ -265,4 +265,4 @@ workflows:
             branches:
               ignore: /.*/
             tags:
-              only: /^v\d*\.\d*\.\d*-beta\.\d+/
+              only: /^v\d*\.\d*\.\d*-b\..*$/
