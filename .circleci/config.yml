@@ -161,6 +161,9 @@ workflows:
           requires:
             - test
           type: approval
+          filters:
+            branches:
+              only: develop          
       - tag:
           name: tag-alpha
           requires:
