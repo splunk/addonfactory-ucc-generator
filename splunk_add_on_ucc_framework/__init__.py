@@ -1,4 +1,4 @@
-__version__ = "0.1.0"
+__version__ = "0.0.0"
 
 import logging
 import os
@@ -116,7 +116,7 @@ def export_package(args, ta_name, ignore_list=None):
 
     logger.info("Exporting package")
     recursive_overwrite(os.path.join(outputdir, ta_name), args.source, ignore_list)
-    logger.info("Final build ready at: {}".format(args.source))
+    logger.info("Final build ready at: {}".format(outputdir))
 
 
 def copy_package_template(args, ta_name):
@@ -130,7 +130,7 @@ def copy_package_template(args, ta_name):
 
     logger.info("Copy UCC template directory")
     recursive_overwrite(
-        os.path.join(sourcedir, "package"), os.path.join(outputdir, ta_name)
+        os.path.join(sourcedir,"package"), os.path.join(outputdir, ta_name)
     )
 
 
@@ -452,7 +452,8 @@ def main():
         args.config = os.path.abspath(os.path.join(args.source, PARENT_DIR, "globalConfig.json"))
 
     clean_before_build()
-
+    
+    ignore_list = get_ignore_list(args, os.path.abspath(os.path.join(args.source, PARENT_DIR, ".uccignore")))
     if os.path.exists(args.config):
 
         with open(args.config, "r") as config_file:
@@ -469,12 +470,12 @@ def main():
 
         copy_package_template(args, ta_name)
 
+
         shutil.copyfile(
             args.config,
             os.path.join(outputdir, ta_name, "appserver", "static", "js", "build", "globalConfig.json"),
         )
         ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
-        ignore_list = get_ignore_list(args, os.path.abspath(os.path.join(args.source, PARENT_DIR, ".uccignore")))
 
         install_libs(
             parent_path=os.path.abspath(os.path.join(args.source, PARENT_DIR)),

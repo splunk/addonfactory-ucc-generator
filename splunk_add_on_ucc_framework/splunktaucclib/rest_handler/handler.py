@@ -12,7 +12,7 @@ import json
 import traceback
 import urllib.parse
 from functools import wraps
-from solnlib.packages.splunklib import binding
+from splunklib import binding
 from solnlib.splunk_rest_client import SplunkRestClient
 
 from .error import RestError

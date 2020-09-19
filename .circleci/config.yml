@@ -1,0 +1,269 @@
+version: 2.1
+orbs:
+  go: circleci/go@0.2.0
+
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.7-node
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - poetry-cache-{{ checksum "poetry.lock" }}
+      - restore_cache:
+          keys:
+            - npm-deps-{{ checksum "splunk_add_on_ucc_framework/UCC-UI-lib/package-lock.json" }}
+      - run:
+          name: Install Tools
+          command: |
+            curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+            mkdir ~/.npm-global || true
+            npm config set prefix '~/.npm-global'
+            export PATH=~/.npm-global/bin:$PATH
+            npm install -g bower
+      - run:
+          name: Build
+          command: |
+            source $HOME/.poetry/env
+            export PATH=~/.npm-global/bin:$PATH
+            poetry install
+            poetry run poetry-dynamic-versioning
+            poetry run build-ucc
+            poetry build
+      - save_cache:
+          key: poetry-cache-{{ checksum "poetry.lock" }}
+          paths:
+            - ~/.cache/poetry
+      - save_cache:
+          paths:
+            - ~/.npm-global # location depends on npm version
+          key: npm-deps-{{ checksum "splunk_add_on_ucc_framework/UCC-UI-lib/package-lock.json" }}
+      - store_artifacts:
+          path: dist
+      - store_artifacts:
+          path: output
+      - persist_to_workspace:
+          # Must be an absolute path, or relative path from working_directory. This is a directory on the container which is
+          # taken to be the root directory of the workspace.
+          root: .
+          # Must be relative path from root
+          paths:
+            - dist
+            - output
+
+  test:
+    docker:
+      - image: circleci/python:3.7-node
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: Install Tools
+          command: |
+            pip install /tmp/workspace/dist/*
+  publish:
+    docker:
+      - image: circleci/python:3.7-node
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - poetry-cache-{{ checksum "poetry.lock" }}
+      - restore_cache:
+          keys:
+            - npm-deps-{{ checksum "splunk_add_on_ucc_framework/UCC-UI-lib/package-lock.json" }}
+      - run:
+          name: Install Tools
+          command: |
+            curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+            mkdir ~/.npm-global || true
+            npm config set prefix '~/.npm-global'
+            export PATH=~/.npm-global/bin:$PATH
+            npm install -g bower
+      - run:
+          name: Build
+          command: |
+            source $HOME/.poetry/env
+            export PATH=~/.npm-global/bin:$PATH
+            poetry install
+            poetry run poetry-dynamic-versioning
+            poetry run build-ucc
+            poetry publish --build -u $TWINE_USERNAME -p $TWINE_PASSWORD
+      - save_cache:
+          key: poetry-cache-{{ checksum "poetry.lock" }}
+          paths:
+            - ~/.poetry
+      - save_cache:
+          paths:
+            - ~/.npm-global # location depends on npm version
+          key: npm-deps-{{ checksum "splunk_add_on_ucc_framework/UCC-UI-lib/package-lock.json" }}
+      - store_artifacts:
+          path: dist
+      - store_artifacts:
+          path: output
+      - persist_to_workspace:
+          # Must be an absolute path, or relative path from working_directory. This is a directory on the container which is
+          # taken to be the root directory of the workspace.
+          root: .
+          # Must be relative path from root
+          paths:
+            - dist
+            - output
+  tag:
+    parameters:
+      semtag:
+        type: string
+    docker:
+      - image: circleci/python:3.7
+    environment:
+      SEMTAG: "<< parameters.semtag >>"
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "14:2e:73:04:b0:3d:21:7d:bb:c5:79:51:f9:52:b2:22"
+      - checkout
+      - run:
+          name: TAG
+          command: |
+            ./semtag ${SEMTAG} -f
+
+  merge-beta-to-master:
+    docker:
+      - image: circleci/python:3.7
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "7c:e9:cc:8d:8e:4d:9c:17:1d:e3:96:23:ce:bd:a4:c3"
+      - checkout
+      - run:
+          name: Merge
+          command: |
+            git config --global user.email "addonreleasesrv@splunk.com"
+            git config --global user.name "Add on release service"
+            git pull origin master
+            git merge master -m "Merge from master"
+            git checkout master
+            git merge << pipeline.git.revision >>
+            git push
+workflows:
+  version: 2
+  build_test:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+      - approval-tag-alpha:
+          requires:
+            - test
+          type: approval
+      - tag:
+          name: tag-alpha
+          requires:
+            - approval-tag-alpha
+          semtag: a
+  release:
+    jobs:
+      - publish:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*.*$/
+      - approval-tag-beta:
+          requires:
+            - publish
+          type: approval
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-a\..*$/
+      - tag:
+          name: tag-beta
+          semtag: b
+          requires:
+            - approval-tag-beta
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-a\..*$/
+      - approval-merge-beta-to-master:
+          requires:
+            - publish
+          type: approval
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-b\..*$/
+      - merge-beta-to-master:
+          requires:
+            - approval-merge-beta-to-master
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-b\..*$/
+      - approval-tag-final-major:
+          type: approval
+          requires:
+            - merge-beta-to-master
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-b\..*$/
+      - tag:
+          name: tag-final-major
+          semtag: "final -s major"
+          requires:
+            - approval-tag-final-major
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-b\..*$/
+      - approval-tag-final-minor:
+          type: approval
+          requires:
+            - merge-beta-to-master
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-b\..*$/
+      - tag:
+          name: tag-final-minor
+          semtag: "final -s minor"
+          requires:
+            - approval-tag-final-minor
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-b\..*$/
+      - approval-tag-final-patch:
+          type: approval
+          requires:
+            - merge-beta-to-master
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-b\..*$/
+      - tag:
+          name: tag-final-patch
+          semtag: "final -s patch"
+          requires:
+            - approval-tag-final-patch
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-b\..*$/

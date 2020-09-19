@@ -41,18 +41,6 @@ echo "Installing Dependencies"
 sudo apt-get -qq install python-pip > /dev/null
 sudo apt-get -qq install -y libxml2-dev libxslt-dev lib32z1-dev python-lxml > /dev/null
 pip2 install "virtualenv<17.0.0,>=16.7.9" --upgrade > /dev/null
-echo "Getting Python Poetry"
-pip3 -q install poetry > /dev/null
-cd splunk-add-on-sdk-python
-poetry install
-poetry run build-ucc
-ls --all -l splunk_add_on_ucc_framework/
-poetry build
-tar -xvzf dist/splunk_add_on_ucc_framework-0.1.0.tar.gz
-ls --all -l splunk_add_on_ucc_framework-0.1.0/
-pip3 install dist/splunk_add_on_ucc_framework-0.1.0.tar.gz
-cd ..
+
+pip3 install splunk_add_on_ucc_framework-0.1.0.tar.gz
 ucc-gen
-ls --all -l  /home/circleci/project/.venv/lib/python3.7/site-packages/splunk_add_on_ucc_framework
-ls --all -l package/
-ls --all -l package/appserver/static/js/build/

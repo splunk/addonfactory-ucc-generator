@@ -1,8 +1,10 @@
 import unittest
 import subprocess
 import json
+import pytest
 
-
+@pytest.mark.usefixtures("splunk")
+@pytest.mark.usefixtures("splunk_setup")
 class TestCreateFunction(unittest.TestCase):
     def setUp(self):
         """
@@ -123,7 +125,7 @@ class TestCreateFunction(unittest.TestCase):
             endpoint,
             data
         ])
-        output = subprocess.check_output(create_cmd.split(' '))
+        output = subprocess.check_output(create_cmd.split(' ')).decode()
         # check if it's created successfully
         self.assertTrue('<title>{name}</title>'.format(name=name) in output)
 

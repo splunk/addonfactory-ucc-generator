@@ -1,22 +1,45 @@
 [tool.poetry]
 name = "splunk_add_on_ucc_framework"
-version = "0.1.0"
-description = ""
+version = "0.0.0"
+description = "Splunk Add-on SDK formerly UCC is a build and code generation framework"
 authors = ["rfaircloth-splunk <rfaircloth@splunk.com>"]
-exclude = ["splunk_add_on_ucc_framework/UCC-UI-lib", "build.py"]
+exclude = [
+    "build.py",
+    "splunk_add_on_ucc_framework/UCC-UI-lib/bower_components",
+    "splunk_add_on_ucc_framework/UCC-UI-lib/config",
+    "splunk_add_on_ucc_framework/UCC-UI-lib/node_modules",
+    "splunk_add_on_ucc_framework/UCC-UI-lib/testes"
+    ]
+include = ["splunk_add_on_ucc_framework/UCC-UI-lib/package/*/*",
+"splunk_add_on_ucc_framework/requirements_py2.txt",
+"splunk_add_on_ucc_framework/requirements_py3.txt",
+"splunk_add_on_ucc_framework/requirements.txt",
+    ]
+
+readme = 'README.rst'  # Markdown files are supported
+
+repository = "https://github.com/splunk/splunk-add-on-sdk-python/"
+homepage = "https://github.com/splunk/splunk-add-on-sdk-python/"
+
+keywords = ['splunk']
 
 [tool.poetry.dependencies]
 python = "^3.7"
-solnlib = '>=2.0.8a3'
+solnlib = '^3.0'
 splunk-sdk = "^1.6"
 jinja2 = "^2"
 mako= "^1"
 munch= "^2"
-lxml = "^4.5"
+lxml = "^4.3"
 future = "^0"
 
 [tool.poetry.dev-dependencies]
-pytest = "^6"
+pytest = "^5.4"
+pytest-splunk-addon = { version = "^1.3", extras = [ "docker" ] }
+poetry-dynamic-versioning = "^0.8"
+
+[tool.poetry-dynamic-versioning]
+enable = true
 
 [tool.poetry.scripts]
 ucc-gen="splunk_add_on_ucc_framework:main"
@@ -24,6 +47,5 @@ build-ucc="build:build_ucc"
 install-libs="splunk_add_on_ucc_framework:install_requirements"
 
 [build-system]
-requires=["setuptools >= 40.6.0", "wheel"]
-build-backend="setuptools.build_meta"
-
+requires = ["poetry>=1.0.0"]
+build-backend = "poetry.masonry.api"
