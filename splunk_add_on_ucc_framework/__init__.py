@@ -138,14 +138,6 @@ def remove_files(path):
     for rmdir in rmdirs:
         shutil.rmtree(rmdir)
 
-def copy_splunktaucclib(args, ta_name):
-    logger.info("Copy splunktaucclib directory")
-    recursive_overwrite(
-        os.path.join(sourcedir, "splunktaucclib"),
-        os.path.join(outputdir, ta_name, "lib", "splunktaucclib"),
-    )
-
-
 def generate_rest(args, ta_name, scheme, import_declare_name):
     build(
         scheme,
@@ -333,8 +325,6 @@ def main():
             parent_path=sourcedir,
             ucc_lib_target=ucc_lib_target
         )
-        copy_splunktaucclib(args, ta_name)
-
 
         replace_token(args, ta_name)
 
