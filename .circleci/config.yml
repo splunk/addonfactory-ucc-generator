@@ -157,14 +157,15 @@ workflows:
       - test:
           requires:
             - build
+      - approval-tag-alpha:
+          requires:
+            - test
+          type: approval
       - tag:
           name: tag-alpha
           requires:
-            - test
+            - approval-tag-alpha
           semtag: a
-          filters:
-            branches:
-              only: develop
   release:
     jobs:
       - publish:
