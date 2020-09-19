@@ -11,8 +11,8 @@ import os.path as op
 import stat
 import shutil
 from solnlib.utils import is_true
-from splunk_add_on_ucc_framework.splunktaucclib.global_config import GlobalConfigSchema
-from splunk_add_on_ucc_framework.splunktaucclib.rest_handler.endpoint.field import (
+from splunktaucclib.global_config import GlobalConfigSchema
+from splunktaucclib.rest_handler.endpoint.field import (
     RestField,
 )
 import json
