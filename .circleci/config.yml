@@ -161,7 +161,7 @@ workflows:
           name: tag-alpha
           requires:
             - test
-          semtag: alpha
+          semtag: a
           filters:
             branches:
               only: develop
@@ -184,7 +184,7 @@ workflows:
               only: /^v\d*\.\d*\.\d*-alpha\.\d+/
       - tag:
           name: tag-beta
-          semtag: beta
+          semtag: b
           requires:
             - approval-tag-beta
           filters:
