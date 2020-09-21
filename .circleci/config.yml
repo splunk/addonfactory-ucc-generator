@@ -10,7 +10,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - poetry-{{ checksum "poetry.lock" }}
+            - poetry-cache-{{ checksum "poetry.lock" }}
       - restore_cache:
           keys:
             - npm-deps-{{ checksum "splunk_add_on_ucc_framework/UCC-UI-lib/package-lock.json" }}
@@ -32,9 +32,9 @@ jobs:
             poetry run build-ucc
             poetry build
       - save_cache:
-          key: poetry-{{ checksum "poetry.lock" }}
+          key: poetry-cache-{{ checksum "poetry.lock" }}
           paths:
-            - ~/.poetry
+            - ~/.cache/poetry
       - save_cache:
           paths:
             - ~/.npm-global # location depends on npm version
@@ -70,7 +70,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - poetry-{{ checksum "poetry.lock" }}
+            - poetry-cache-{{ checksum "poetry.lock" }}
       - restore_cache:
           keys:
             - npm-deps-{{ checksum "splunk_add_on_ucc_framework/UCC-UI-lib/package-lock.json" }}
@@ -92,7 +92,7 @@ jobs:
             poetry run build-ucc
             poetry publish --build -u $TWINE_USERNAME -p $TWINE_PASSWORD
       - save_cache:
-          key: poetry-{{ checksum "poetry.lock" }}
+          key: poetry-cache-{{ checksum "poetry.lock" }}
           paths:
             - ~/.poetry
       - save_cache:
@@ -157,14 +157,18 @@ workflows:
       - test:
           requires:
             - build
+      - approval-tag-alpha:
+          requires:
+            - test
+          type: approval
+          filters:
+            branches:
+              only: develop          
       - tag:
           name: tag-alpha
           requires:
-            - test
-          semtag: alpha
-          filters:
-            branches:
-              only: develop
+            - approval-tag-alpha
+          semtag: a
   release:
     jobs:
       - publish:
@@ -172,7 +176,7 @@ workflows:
             branches:
               ignore: /.*/
             tags:
-              only: /^v\d*\.\d*\.\d*/
+              only: /^v\d*\.\d*\.\d*.*$/
       - approval-tag-beta:
           requires:
             - publish
@@ -181,17 +185,17 @@ workflows:
             branches:
               ignore: /.*/
             tags:
-              only: /^v\d*\.\d*\.\d*-alpha\.\d+/
+              only: /^v\d*\.\d*\.\d*-a\..*$/
       - tag:
           name: tag-beta
-          semtag: beta
+          semtag: b
           requires:
             - approval-tag-beta
           filters:
             branches:
               ignore: /.*/
             tags:
-              only: /^v\d*\.\d*\.\d*-alpha\.\d+/
+              only: /^v\d*\.\d*\.\d*-a\..*$/
       - approval-merge-beta-to-master:
           requires:
             - publish
@@ -200,7 +204,7 @@ workflows:
             branches:
               ignore: /.*/
             tags:
-              only: /^v\d*\.\d*\.\d*-beta\.\d+/
+              only: /^v\d*\.\d*\.\d*-b\..*$/
       - merge-beta-to-master:
           requires:
             - approval-merge-beta-to-master
@@ -208,7 +212,7 @@ workflows:
             branches:
               ignore: /.*/
             tags:
-              only: /^v\d*\.\d*\.\d*-beta\.\d+/
+              only: /^v\d*\.\d*\.\d*-b\..*$/
       - approval-tag-final-major:
           type: approval
           requires:
@@ -217,7 +221,7 @@ workflows:
             branches:
               ignore: /.*/
             tags:
-              only: /^v\d*\.\d*\.\d*-beta\.\d+/
+              only: /^v\d*\.\d*\.\d*-b\..*$/
       - tag:
           name: tag-final-major
           semtag: "final -s major"
@@ -227,7 +231,7 @@ workflows:
             branches:
               ignore: /.*/
             tags:
-              only: /^v\d*\.\d*\.\d*-beta\.\d+/
+              only: /^v\d*\.\d*\.\d*-b\..*$/
       - approval-tag-final-minor:
           type: approval
           requires:
@@ -236,7 +240,7 @@ workflows:
             branches:
               ignore: /.*/
             tags:
-              only: /^v\d*\.\d*\.\d*-beta\.\d+/
+              only: /^v\d*\.\d*\.\d*-b\..*$/
       - tag:
           name: tag-final-minor
           semtag: "final -s minor"
@@ -246,7 +250,7 @@ workflows:
             branches:
               ignore: /.*/
             tags:
-              only: /^v\d*\.\d*\.\d*-beta\.\d+/
+              only: /^v\d*\.\d*\.\d*-b\..*$/
       - approval-tag-final-patch:
           type: approval
           requires:
@@ -255,7 +259,7 @@ workflows:
             branches:
               ignore: /.*/
             tags:
-              only: /^v\d*\.\d*\.\d*-beta\.\d+/
+              only: /^v\d*\.\d*\.\d*-b\..*$/
       - tag:
           name: tag-final-patch
           semtag: "final -s patch"
@@ -265,4 +269,4 @@ workflows:
             branches:
               ignore: /.*/
             tags:
-              only: /^v\d*\.\d*\.\d*-beta\.\d+/
+              only: /^v\d*\.\d*\.\d*-b\..*$/

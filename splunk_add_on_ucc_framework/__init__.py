@@ -35,6 +35,16 @@ PARENT_DIR = ".."
 
 
 def get_os_path(path):
+    """
+    Returns a path which will be os compatible.
+
+    Args:
+        path (str): Path in string
+
+    Return:
+        string: Path which will be os compatible.
+    """
+
     if "\\\\" in path:
         path = path.replace("\\\\", os.sep)
     else:
@@ -43,6 +53,15 @@ def get_os_path(path):
     return path.strip(os.sep)
 
 def recursive_overwrite(src, dest, ignore_list=None):
+    """
+    Method to copy from src to dest recursively.
+
+    Args:
+        src (str): Source of copy
+        dest (str): Destination to copy
+        ignore_list (list): List of files/folder to ignore while copying
+    """
+
     if os.path.isdir(src):
         if not os.path.isdir(dest):
             os.makedirs(dest)
@@ -61,6 +80,9 @@ def recursive_overwrite(src, dest, ignore_list=None):
 
 
 def clean_before_build():
+    """
+    Clean output directory before build process.
+    """
 
     logger.info("Cleaning out directory " + outputdir)
     shutil.rmtree(os.path.join(outputdir), ignore_errors=True)
@@ -69,17 +91,43 @@ def clean_before_build():
 
 
 def copy_package_source(args, ta_name):
+    """
+    Copy source package to output directory.
+
+    Args:
+        args (argparse.Namespace): Object with command-line arguments.
+        ta_name (str): Name of TA.
+    """
+
     logger.info("Copy package directory ")
     recursive_overwrite(args.source, os.path.join(outputdir, ta_name))
 
 
 def export_package(args, ta_name, ignore_list=None):
+    """
+    Export package from output directory to source directory.
+
+    Args:
+        args (argparse.Namespace): Object with command-line arguments.
+        ta_name (str): Name of TA.
+        ignore_list (list): List of files/folder to ignore while copying.
+
+    """
+
     logger.info("Exporting package")
     recursive_overwrite(os.path.join(outputdir, ta_name), args.source, ignore_list)
     logger.info("Final build ready at: {}".format(outputdir))
 
 
 def copy_package_template(args, ta_name):
+    """
+    Copy UCC template to output directory.
+
+    Args:
+        args (argparse.Namespace): Object with command-line arguments.
+        ta_name (str): Name of TA.
+    """
+
     logger.info("Copy UCC template directory")
     recursive_overwrite(
         os.path.join(sourcedir,"package"), os.path.join(outputdir, ta_name)
@@ -87,6 +135,15 @@ def copy_package_template(args, ta_name):
 
 
 def replace_token(args, ta_name):
+    """
+    Replace token with addon name in inputs.xml, configuration.xml, redirect.xml.
+    Replace token with addon version in redirect.xml.
+
+    Args:
+        args (argparse.Namespace): Object with command-line arguments.
+        ta_name (str): Name of TA.
+    """
+
     # replace token in template
     logger.info("Replace tokens in views")
     views = ["inputs.xml", "configuration.xml", "redirect.xml"]
@@ -105,16 +162,30 @@ def replace_token(args, ta_name):
             f.write(s)
 
 def install_libs(parent_path, ucc_lib_target):
+    """
+    Install 3rd Party libraries in addon.
 
-    def _install_libs(requirements, ucc_target, installer="python3"):
-        
+    Args:
+        parent_path (str): Path of parent directory.
+        ucc_lib_target (str): Target path to install libraries.
+    """
+
+    def _install_libs(requirements, ucc_target, installer="pip3"):
+        """
+        Install 3rd Party libraries using pip2/pip3
+
+        Args:
+            requirements (str): Path to requirements file.
+            ucc_target (str): Target path to install libraries.
+            installer (str): Pip version(pip2/pip3).
+        """
         if not os.path.exists(requirements):
             logging.warning("Unable to find requirements file. {}".format(requirements))
         else:
             if not os.path.exists(ucc_target):
                 os.makedirs(ucc_target)
             install_cmd = (
-                installer +" -m pip install -r \""
+                installer +" install -r \""
                 + requirements
                 + "\" --no-compile --no-binary :all: --target \""
                 + ucc_target
@@ -127,26 +198,35 @@ def install_libs(parent_path, ucc_lib_target):
         _install_libs(requirements=os.path.join(parent_path, "requirements.txt"), ucc_target=ucc_lib_target)
 
     if os.path.exists(os.path.join(parent_path, "requirements_py2.txt")):
-        _install_libs(requirements=os.path.join(parent_path, "requirements_py2.txt"), installer="python2", ucc_target=os.path.join(ucc_lib_target, "py2"))
+        _install_libs(requirements=os.path.join(parent_path, "requirements_py2.txt"), installer="pip2", ucc_target=os.path.join(ucc_lib_target, "py2"))
 
     if os.path.exists(os.path.join(parent_path, "requirements_py3.txt")):
         _install_libs(requirements=os.path.join(parent_path, "requirements_py3.txt"), ucc_target=os.path.join(ucc_lib_target, "py3"))
 
 
 def remove_files(path):
+    """
+    Remove *.egg-info and *.dist-info files in given path.
+
+    Args:
+        path (str): Path to remove *.egg-info and *.dist-info files.
+    """
+
     rmdirs = glob.glob(os.path.join(path, "*.egg-info")) + glob.glob(os.path.join(path, "*.dist-info"))
     for rmdir in rmdirs:
         shutil.rmtree(rmdir)
 
-def copy_splunktaucclib(args, ta_name):
-    logger.info("Copy splunktaucclib directory")
-    recursive_overwrite(
-        os.path.join(sourcedir, "splunktaucclib"),
-        os.path.join(outputdir, ta_name, "lib", "splunktaucclib"),
-    )
-
-
 def generate_rest(args, ta_name, scheme, import_declare_name):
+    """
+    Build REST for Add-on.
+
+    Args:
+        args (argparse.Namespace): Object with command-line arguments.
+        ta_name (str): Name of TA.
+        scheme (GlobalConfigBuilderSchema): REST schema.
+        import_declare_name (str): Name of import_declare_* file.
+    """
+
     build(
         scheme,
         "splunktaucclib.rest_handler.admin_external.AdminExternalHandler",
@@ -158,7 +238,16 @@ def generate_rest(args, ta_name, scheme, import_declare_name):
 
 
 def is_oauth_configured(ta_tabs):
-    # check if oauth is configured in globalConfig.json
+    """
+    Check if oauth is configured in globalConfig.json.
+
+    Args:
+        ta_tabs (list): List of tabs mentioned in globalConfig.json.
+
+    Returns:
+        bool: True if oauth is configured, False otherwise.
+    """
+
     for tab in ta_tabs:
         if tab["name"] == "account":
             for elements in tab["entity"]:
@@ -169,6 +258,15 @@ def is_oauth_configured(ta_tabs):
 
 
 def replace_oauth_html_template_token(args, ta_name, ta_version):
+    """
+    Replace tokens with addon name and version in redirect.html.
+
+    Args:
+        args (argparse.Namespace): Object with command-line arguments.
+        ta_name (str): Name of TA.
+        ta_version (str): Version of TA.
+    """
+
     html_template_path = os.path.join(
         outputdir, ta_name, "appserver", "templates"
     )
@@ -187,6 +285,16 @@ def replace_oauth_html_template_token(args, ta_name, ta_version):
 def modify_and_replace_token_for_oauth_templates(
     args, ta_name, ta_tabs, ta_version
 ):
+    """
+    Rename templates with respect to addon name if OAuth is configured.
+
+    Args:
+        args (argparse.Namespace): Object with command-line arguments.
+        ta_name (str): Name of TA.
+        ta_version (str): Version of TA.
+        ta_tabs (list): List of tabs mentioned in globalConfig.json.
+
+    """
     redirect_xml_src = os.path.join(
         outputdir, ta_name, "default", "data", "ui", "views", "redirect.xml"
     )
@@ -196,7 +304,7 @@ def modify_and_replace_token_for_oauth_templates(
     redirect_html_src = os.path.join(
         outputdir, ta_name, "appserver", "templates", "redirect.html"
     )
-    # if oauth is configured replace token in html template and rename the templates with respect to addon name
+
     if is_oauth_configured(ta_tabs):
         replace_oauth_html_template_token(args, ta_name, ta_version)
 
@@ -211,21 +319,29 @@ def modify_and_replace_token_for_oauth_templates(
             os.path.join(outputdir, ta_name, "appserver", "templates", ta_name.lower() + "_redirect.html")
         )
         redirect_xml_dest = (
-            os.path.join(outputdir, ta_name, "default", "data", "ui", "views", ta_name.lower() + "_redirect.xml")   
+            os.path.join(outputdir, ta_name, "default", "data", "ui", "views", ta_name.lower() + "_redirect.xml")
         )
         os.rename(redirect_js_src, redirect_js_dest)
         os.rename(redirect_html_src, redirect_html_dest)
         os.rename(redirect_xml_src, redirect_xml_dest)
 
-     # if oauth is not configured remove the extra template
+    # if oauth is not configured remove the extra template
     else:
         os.remove(redirect_xml_src)
         os.remove(redirect_html_src)
         os.remove(redirect_js_src)
 
 def add_modular_input(
-    args, ta_name, schema_content, import_declare_name, j2_env
+    args, ta_name, schema_content, import_declare_name
 ):
+    """
+    Generate Modular input for addon.
+
+    Args:
+        args (argparse.Namespace): Object with command-line arguments.
+        ta_name (str): Name of TA.
+        schema_content (dict): JSON schema of globalConfig.json
+    """
 
     services = schema_content.get("pages").get("inputs").get("services")
     for service in services:
@@ -253,8 +369,18 @@ def add_modular_input(
 
 
 def make_modular_alerts(args, ta_name, ta_namespace, schema_content):
-    if schema_content.get("alerts"):
+    """
+    Generate the alert schema with required structure.
 
+    Args:
+        args (argparse.Namespace): Object with command-line arguments.
+        ta_name (str): Name of TA.
+        ta_namespace (str): restRoot of TA.
+        schema_content (dict): JSON schema of globalConfig.json.
+
+    """
+
+    if schema_content.get("alerts"):
         alert_build(
             {"alerts": schema_content["alerts"]},
             ta_name,
@@ -262,8 +388,19 @@ def make_modular_alerts(args, ta_name, ta_namespace, schema_content):
             outputdir,
             sourcedir,
         )
-        
+
 def get_ignore_list(args, path):
+    """
+    Return path of files/folders to ignore while copying to package.
+
+    Args:
+        args (argparse.Namespace): Object with command-line arguments.
+        path (str): Path of '.uccignore'.
+
+    Returns:
+        list: List of paths to ignore while copying to package.
+    """
+
     if not os.path.exists(path):
         return []
     else:
@@ -290,7 +427,7 @@ def main():
         default=None
     )
     args = parser.parse_args()
-    
+
     if not os.path.exists(args.source):
         raise NotADirectoryError("{} not Found.".format(os.path.abspath(args.source)))
 
@@ -299,7 +436,7 @@ def main():
         args.config = os.path.abspath(os.path.join(args.source, PARENT_DIR, "globalConfig.json"))
 
     clean_before_build()
-    
+
     ignore_list = get_ignore_list(args, os.path.abspath(os.path.join(args.source, PARENT_DIR, ".uccignore")))
     if os.path.exists(args.config):
 
@@ -333,8 +470,6 @@ def main():
             parent_path=sourcedir,
             ucc_lib_target=ucc_lib_target
         )
-        copy_splunktaucclib(args, ta_name)
-
 
         replace_token(args, ta_name)
 
@@ -345,7 +480,7 @@ def main():
             )
 
         add_modular_input(
-                args, ta_name, schema_content, import_declare_name, j2_env
+                args, ta_name, schema_content, import_declare_name
             )
 
         make_modular_alerts(args, ta_name, ta_namespace, schema_content)
@@ -354,7 +489,7 @@ def main():
         logger.warning("Skipped installing UCC required python modules as GlobalConfig.json does not exist.")
         logger.warning("Skipped Generating UI components as GlobalConfig.json does not exist.")
         logger.info("Setting TA name as generic")
-        
+
         ta_name = "TA-generic"
         ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
 

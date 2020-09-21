@@ -23,7 +23,7 @@ Usage:
   $PROG
   $PROG getlast
   $PROG getfinal
-  $PROG (final|alpha|beta|candidate) [-s <scope> (major|minor|patch|auto) | -o]
+  $PROG (final|a|b|candidate) [-s <scope> (major|minor|patch|auto) | -o]
   $PROG --help
   $PROG --version
 Options:
@@ -53,9 +53,9 @@ Commands:
   final      Tags the current build as a final version, this only can be done on the master branch.
   candidate  Tags the current build as a release candidate, the tag will contain all
                the commits from the last final version.
-  alpha      Tags the current build as an alpha version, the tag will contain all
+  a          Tags the current build as an alpha version, the tag will contain all
                the commits from the last final version.
-  beta       Tags the current build as a beta version, the tag will contain all
+  b          Tags the current build as a beta version, the tag will contain all
                the commits from the last final version."
 
 # Commands and options
@@ -621,7 +621,7 @@ case $ACTION in
     fi
     increase_version
     ;;
-  alpha|beta)
+  a|b)
     init
     identifier="$ACTION"
     increase_version

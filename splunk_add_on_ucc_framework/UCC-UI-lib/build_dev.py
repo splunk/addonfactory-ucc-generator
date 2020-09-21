@@ -52,22 +52,6 @@ def copy_directory(src, dest):
             print('Directory %s not copied. Error: %s' % (src, exc))
 
 
-def copy_libs():
-    libs = ["splunktaucclib", "solnlib", "splunklib"]
-
-    for lib in libs:
-        lib_dest = os.path.join(
-            'build',
-            'bin',
-            ta_namespace,
-            lib
-        )
-        copy_directory(
-            os.path.join(basedir, lib),
-            lib_dest
-        )
-
-
 def add_modular_input():
     services = schema_content.get("pages").get("inputs").get("services")
     for service in services:
@@ -99,5 +83,4 @@ def add_modular_input():
 
 clean_before_build()
 generate_rest()
-copy_libs()
 add_modular_input()
