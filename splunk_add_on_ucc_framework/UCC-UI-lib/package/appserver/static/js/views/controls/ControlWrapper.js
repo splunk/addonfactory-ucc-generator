@@ -229,16 +229,16 @@ define([
         },
 
         _filterByAllowList: function(fields) {
-            const whiteRegex = new RegExp(this.controlOptions.allowList);
+            const allowRegex = new RegExp(this.controlOptions.allowList);
             return _.filter(fields, (field) => {
-                return whiteRegex.test(field.value);
+                return allowRegex.test(field.value);
             });
         },
 
         _filterByDenyList: function(fields) {
-            const blackRegex = new RegExp(this.controlOptions.denyList);
+            const denyRegex = new RegExp(this.controlOptions.denyList);
             return _.filter(fields, (field) => {
-                return !blackRegex.test(field.value);
+                return !denyRegex.test(field.value);
             });
         },
 

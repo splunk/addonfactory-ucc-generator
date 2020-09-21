@@ -349,9 +349,9 @@ def add_modular_input(
         class_name = input_name.upper()
         description = service.get("title")
         entity = service.get("entity")
-        field_white_list = ["name", "index", "sourcetype"]
-        # filter fields in white list
-        entity = [x for x in entity if x.get("field") not in field_white_list]
+        field_allow_list = ["name", "index", "sourcetype"]
+        # filter fields in allow list
+        entity = [x for x in entity if x.get("field") not in field_allow_list]
         import_declare = "import " + import_declare_name
 
         content = j2_env.get_template("input.template").render(
