@@ -27,6 +27,7 @@ jobs:
           command: |
             source $HOME/.poetry/env
             export PATH=~/.npm-global/bin:$PATH
+            cat /etc/os-release
             poetry install
             poetry run poetry-dynamic-versioning
             poetry run build-ucc
