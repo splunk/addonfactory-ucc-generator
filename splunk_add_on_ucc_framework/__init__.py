@@ -463,7 +463,7 @@ def main():
 
         with open(args.config, "r") as config_file:
             schema_content = json.load(config_file)
-        
+
         scheme = GlobalConfigBuilderSchema(schema_content, j2_env)
         ta_name = schema_content.get("meta").get("name")
         ta_version = schema_content.get("meta").get("version")
