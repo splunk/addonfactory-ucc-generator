@@ -411,7 +411,7 @@ def get_ignore_list(args, path):
 
 def update_ta_version(args):
     """
-    Update version of TA in globalCofig.json.
+    Update version of TA in globalConfig.json.
 
     Args:
         args (argparse.Namespace): Object with command-line arguments.
