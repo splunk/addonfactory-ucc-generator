@@ -26,8 +26,8 @@ class MetricEventWriter(object):
         assert app is not None
         assert isinstance(config, dict)
         self._app = app
-        self._black_list_tags = config.get('tag_black_list', [])
-        self._white_list_tags = config.get('tag_white_list', [])
+        self._deny_list_tags = config.get('tag_black_list', [])
+        self._allow_list_tags = config.get('tag_white_list', [])
 
     def write_event(self, ev, tags=[]):
         '''
@@ -35,15 +35,15 @@ class MetricEventWriter(object):
         '''
         assert isinstance(ev, dict)
         assert isinstance(tags, list)
-        if self._white_list_tags:
-            filter_tags = [t for t in tags if t in self._white_list_tags]
+        if self._allow_list_tags:
+            filter_tags = [t for t in tags if t in self._allow_list_tags]
             if filter_tags:
                 self._flush_event(ev, tags)
-            # else: no tags found in white_list, just skip this event
+            # else: no tags found in allow_list, just skip this event
             return
 
-        if self._black_list_tags and tags:
-            filter_tags = [t for t in tags if t in self._black_list_tags]
+        if self._deny_list_tags and tags:
+            filter_tags = [t for t in tags if t in self._deny_list_tags]
             if filter_tags:
                 # skip this event
                 return
@@ -61,8 +61,8 @@ class MetricEventWriter(object):
         raise NotImplemented('_flush_msg should be implemented.')
 
     def update_config(self, config):
-        self._black_list_tags = config.get('tag_black_list', [])
-        self._white_list_tags = config.get('tag_white_list', [])
+        self._deny_list_tags = config.get('tag_black_list', [])
+        self._allow_list_tags = config.get('tag_white_list', [])
 
 
 class FileEventWriter(MetricEventWriter):

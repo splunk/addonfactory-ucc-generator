@@ -1,7 +1,7 @@
-<%block name="expand_ctrl_props" args="param, skip_list=['name', 'id'], white_list=[]" >
+<%block name="expand_ctrl_props" args="param, skip_list=['name', 'id'], allow_list=[]" >
     %if param.get("ctrl_props"):
         %for prop_name, prop_value in param.ctrl_props.items():
-            %if (white_list and prop_name not in white_list) or (skip_list and prop_name in skip_list):
+            %if (allow_list and prop_name not in allow_list) or (skip_list and prop_name in skip_list):
                 <% continue %>
             %endif
             %if param.ctrl_props.get(prop_name):

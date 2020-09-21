@@ -60,7 +60,7 @@ def add_modular_input():
         description = service.get("title")
         entity = service.get("entity")
         field_allow_list = ["name", "index", "sourcetype"]
-        # filter fields in white list
+        # filter fields in allow list
         entity = [x for x in entity if x.get("field") not in field_allow_list]
         import_declare = 'import ' + import_declare_name
 

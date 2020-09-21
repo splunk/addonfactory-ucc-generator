@@ -143,11 +143,11 @@ define([
                 return {label, value};
             });
 
-            // filter result with white list
+            // filter result with allow list
             if (this.controlOptions.allowList) {
                 dic = this._filterByAllowList(dic);
             }
-            // filter result with black list
+            // filter result with deny list
             if (this.controlOptions.denyList) {
                 dic = this._filterByDenyList(dic);
             }
