@@ -409,6 +409,12 @@ def get_ignore_list(args, path):
         ignore_list = [(os.path.join(args.source, get_os_path(path))).strip() for path in ignore_list]
         return ignore_list
 
+def update_ta_version(args):
+    with open(args.config, "r") as config_file:
+        schema_content = json.load(config_file)
+    schema_content["meta"]["version"] = args.ta_version
+    with open(args.config, "w") as config_file:
+        json.dump(schema_content, config_file)
 
 def main():
     parser = argparse.ArgumentParser(description="Build the add-on")
@@ -445,10 +451,12 @@ def main():
     ignore_list = get_ignore_list(args, os.path.abspath(os.path.join(args.source, PARENT_DIR, ".uccignore")))
     if os.path.exists(args.config):
 
+        if args.ta_version:
+            update_ta_version(args)
+
         with open(args.config, "r") as config_file:
             schema_content = json.load(config_file)
-        if args.ta_version:
-            schema_content["meta"]["version"] = args.ta_version
+        
         scheme = GlobalConfigBuilderSchema(schema_content, j2_env)
         ta_name = schema_content.get("meta").get("name")
         ta_version = schema_content.get("meta").get("version")
