@@ -426,6 +426,11 @@ def main():
         help="Path to configuration file, Defaults to GlobalConfig.json in parent directory of source provided",
         default=None
     )
+    parser.add_argument(
+        "--ta-version",
+        type=str,
+        help="Version of TA, Deafult version is version specify in globalConfig.json",
+    )
     args = parser.parse_args()
 
     if not os.path.exists(args.source):
@@ -442,7 +447,8 @@ def main():
 
         with open(args.config, "r") as config_file:
             schema_content = json.load(config_file)
-
+        if args.ta_version:
+            schema_content["meta"]["version"] = args.ta_version
         scheme = GlobalConfigBuilderSchema(schema_content, j2_env)
         ta_name = schema_content.get("meta").get("name")
         ta_version = schema_content.get("meta").get("version")
@@ -461,15 +467,15 @@ def main():
         )
         ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
 
-        install_libs(
-            parent_path=os.path.abspath(os.path.join(args.source, PARENT_DIR)),
-            ucc_lib_target=ucc_lib_target
-        )
+        # install_libs(
+        #     parent_path=os.path.abspath(os.path.join(args.source, PARENT_DIR)),
+        #     ucc_lib_target=ucc_lib_target
+        # )
 
-        install_libs(
-            parent_path=sourcedir,
-            ucc_lib_target=ucc_lib_target
-        )
+        # install_libs(
+        #     parent_path=sourcedir,
+        #     ucc_lib_target=ucc_lib_target
+        # )
 
         replace_token(args, ta_name)
 
@@ -499,4 +505,4 @@ def main():
         )
 
     copy_package_source(args, ta_name)
-    export_package(args, ta_name, ignore_list)
+    # export_package(args, ta_name, ignore_list)
