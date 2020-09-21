@@ -467,15 +467,15 @@ def main():
         )
         ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
 
-        # install_libs(
-        #     parent_path=os.path.abspath(os.path.join(args.source, PARENT_DIR)),
-        #     ucc_lib_target=ucc_lib_target
-        # )
+        install_libs(
+            parent_path=os.path.abspath(os.path.join(args.source, PARENT_DIR)),
+            ucc_lib_target=ucc_lib_target
+        )
 
-        # install_libs(
-        #     parent_path=sourcedir,
-        #     ucc_lib_target=ucc_lib_target
-        # )
+        install_libs(
+            parent_path=sourcedir,
+            ucc_lib_target=ucc_lib_target
+        )
 
         replace_token(args, ta_name)
 
@@ -505,4 +505,4 @@ def main():
         )
 
     copy_package_source(args, ta_name)
-    # export_package(args, ta_name, ignore_list)
+    export_package(args, ta_name, ignore_list)
