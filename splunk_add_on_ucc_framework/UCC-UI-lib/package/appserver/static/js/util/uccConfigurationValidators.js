@@ -148,7 +148,7 @@ function checkConfigDetails({pages: {configuration, inputs}}) {
                 });
 
                 // Details check for entity options.
-                _.forEach(['blackList', 'whiteList'], d => {
+                _.forEach(['denyList', 'allowList'], d => {
                     if (options && options[d]) {
                         error = parseRegexRawStr(options[d]).error;
                         appendError(
