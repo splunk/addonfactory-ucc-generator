@@ -410,6 +410,13 @@ def get_ignore_list(args, path):
         return ignore_list
 
 def update_ta_version(args):
+    """
+    Update version of TA in globalCofig.json.
+
+    Args:
+        args (argparse.Namespace): Object with command-line arguments.
+    """
+
     with open(args.config, "r") as config_file:
         schema_content = json.load(config_file)
     schema_content["meta"]["version"] = args.ta_version
@@ -435,7 +442,7 @@ def main():
     parser.add_argument(
         "--ta-version",
         type=str,
-        help="Version of TA, Deafult version is version specify in globalConfig.json",
+        help="Version of TA, Deafult version is version specified in globalConfig.json",
     )
     args = parser.parse_args()
 
