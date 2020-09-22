@@ -147,7 +147,7 @@ version = "0.1.1"
 futures = "*"
 
 [[package]]
-category = "dev"
+category = "main"
 description = "A comprehensive HTTP client library."
 name = "httplib2"
 optional = false
@@ -169,7 +169,7 @@ marker = "python_version < \"3.8\""
 name = "importlib-metadata"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
-version = "1.7.0"
+version = "2.0.0"
 
 [package.dependencies]
 zipp = ">=0.5"
@@ -678,16 +678,29 @@ version = "1.6.14"
 
 [[package]]
 category = "main"
+description = "Supporting library for Splunk Add-ons"
+name = "splunktalib"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*, !=3.6.*"
+version = "1.1.3"
+
+[package.dependencies]
+httplib2 = ">=0.18,<0.19"
+sortedcontainers = ">=2.2,<3.0"
+
+[[package]]
+category = "main"
 description = ""
 name = "splunktaucclib"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*, !=3.6.*"
-version = "4.0.0"
+version = "4.0.2"
 
 [package.dependencies]
 future = ">=0,<1"
 solnlib = ">=3,<4"
 splunk-sdk = ">=1.6,<2.0"
+splunktalib = ">=1.1,<2.0"
 
 [[package]]
 category = "dev"
@@ -824,8 +837,8 @@ idna = [
     {file = "idna-2.5.tar.gz", hash = "sha256:3cb5ce08046c4e3a560fc02f138d0ac63e00f8ce5901a56b32ec8b7994082aab"},
 ]
 importlib-metadata = [
-    {file = "importlib_metadata-1.7.0-py2.py3-none-any.whl", hash = "sha256:dc15b2969b4ce36305c51eebe62d418ac7791e9a157911d58bfb1f9ccd8e2070"},
-    {file = "importlib_metadata-1.7.0.tar.gz", hash = "sha256:90bb658cdbbf6d1735b6341ce708fc7024a3e14e99ffdc5783edea9f9b077f83"},
+    {file = "importlib_metadata-2.0.0-py2.py3-none-any.whl", hash = "sha256:cefa1a2f919b866c5beb7c9f7b0ebb4061f30a8a9bf16d609b000e2dfaceb9c3"},
+    {file = "importlib_metadata-2.0.0.tar.gz", hash = "sha256:77a540690e24b0305878c37ffd421785a6f7e53c8b5720d211b211de8d0e95da"},
 ]
 ipaddress = [
     {file = "ipaddress-1.0.22-py2.py3-none-any.whl", hash = "sha256:64b28eec5e78e7510698f6d4da08800a5c575caa4a286c93d651c5d3ff7b6794"},
@@ -1093,9 +1106,13 @@ splunk-appinspect = [
 splunk-sdk = [
     {file = "splunk-sdk-1.6.14.tar.gz", hash = "sha256:9f0fa01cbf706f3777d055d3d3dc05b0d3b51ec42978e5917d49cd09a7e7750f"},
 ]
+splunktalib = [
+    {file = "splunktalib-1.1.3-py2.py3-none-any.whl", hash = "sha256:ebb9bb210fe335763a1cfab613f8f0aee4219765783db028ac7c835b94ec65dc"},
+    {file = "splunktalib-1.1.3.tar.gz", hash = "sha256:35f1b9bcbdbc6e64fedca6a6ff78f085baefedd5f66df18e76e60ee81460dceb"},
+]
 splunktaucclib = [
-    {file = "splunktaucclib-4.0.0-py2.py3-none-any.whl", hash = "sha256:fbcfb17b8c94f7d36de8c4fb0454b930f094ec214744f8e8de5d21aadda6be1f"},
-    {file = "splunktaucclib-4.0.0.tar.gz", hash = "sha256:074677a4a1704bdeba26c371d77f1c12a2b5e0e8be31eb2850d2ed74e8c6e3eb"},
+    {file = "splunktaucclib-4.0.2-py2.py3-none-any.whl", hash = "sha256:c16f189e66178e6c189337ad41a60ded337cbf583cb9824cfb8a6661f389cbf3"},
+    {file = "splunktaucclib-4.0.2.tar.gz", hash = "sha256:d0ebc5237fe616f83e5c3b1f8e7b3fa5521268cb5cc03c72646a891e78af1452"},
 ]
 text-unidecode = [
     {file = "text-unidecode-1.3.tar.gz", hash = "sha256:bad6603bb14d279193107714b288be206cac565dfa49aa5b105294dd5c4aab93"},
