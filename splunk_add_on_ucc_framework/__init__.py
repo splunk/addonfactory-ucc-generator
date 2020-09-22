@@ -409,6 +409,19 @@ def get_ignore_list(args, path):
         ignore_list = [(os.path.join(args.source, get_os_path(path))).strip() for path in ignore_list]
         return ignore_list
 
+def update_ta_version(args):
+    """
+    Update version of TA in globalConfig.json.
+
+    Args:
+        args (argparse.Namespace): Object with command-line arguments.
+    """
+
+    with open(args.config, "r") as config_file:
+        schema_content = json.load(config_file)
+    schema_content.setdefault("meta", {})["version"] = args.ta_version
+    with open(args.config, "w") as config_file:
+        json.dump(schema_content, config_file)
 
 def main():
     parser = argparse.ArgumentParser(description="Build the add-on")
@@ -426,6 +439,11 @@ def main():
         help="Path to configuration file, Defaults to GlobalConfig.json in parent directory of source provided",
         default=None
     )
+    parser.add_argument(
+        "--ta-version",
+        type=str,
+        help="Version of TA, Deafult version is version specified in globalConfig.json",
+    )
     args = parser.parse_args()
 
     if not os.path.exists(args.source):
@@ -439,6 +457,9 @@ def main():
 
     ignore_list = get_ignore_list(args, os.path.abspath(os.path.join(args.source, PARENT_DIR, ".uccignore")))
     if os.path.exists(args.config):
+
+        if args.ta_version:
+            update_ta_version(args)
 
         with open(args.config, "r") as config_file:
             schema_content = json.load(config_file)
