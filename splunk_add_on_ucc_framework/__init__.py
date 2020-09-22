@@ -419,7 +419,7 @@ def update_ta_version(args):
 
     with open(args.config, "r") as config_file:
         schema_content = json.load(config_file)
-    schema_content["meta"]["version"] = args.ta_version
+    schema_content.setdefault("meta", {})["version"] = args.ta_version
     with open(args.config, "w") as config_file:
         json.dump(schema_content, config_file)
 
