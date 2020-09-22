@@ -187,7 +187,7 @@ def install_libs(parent_path, ucc_lib_target):
             install_cmd = (
                 installer +" install -r \""
                 + requirements
-                + "\" --no-compile --no-binary :all: --target \""
+                + "\" --no-compile --target \""
                 + ucc_target
                 + "\""
             )
