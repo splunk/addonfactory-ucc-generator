@@ -49,6 +49,7 @@ munch= "^2"
 lxml = "^4.3"
 future = "^0"
 splunktaucclib = "^4.0"
+wheel = "*"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.4"
