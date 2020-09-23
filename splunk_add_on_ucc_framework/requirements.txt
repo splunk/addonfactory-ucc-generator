@@ -1,3 +1,4 @@
-splunk-sdk==1.6.14
-solnlib>=3.0
-splunktaucclib>=4.0
+splunk-sdk>=1.6.10,<1.7
+solnlib>=3.0,<3.1
+splunktaucclib>=4.0,<4.1
+httplib2>=0.18, <0.19
