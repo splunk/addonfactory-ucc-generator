@@ -42,7 +42,6 @@ keywords = ['splunk']
 [tool.poetry.dependencies]
 python = "^3.7"
 solnlib = '^3.0'
-splunk-sdk = "^1.6"
 jinja2 = "^2"
 mako= "^1"
 munch= "^2"
