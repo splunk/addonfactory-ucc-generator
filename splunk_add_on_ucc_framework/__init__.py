@@ -421,7 +421,7 @@ def update_ta_version(args):
         schema_content = json.load(config_file)
     schema_content.setdefault("meta", {})["version"] = args.ta_version
     with open(args.config, "w") as config_file:
-        json.dump(schema_content, config_file)
+        json.dump(schema_content, config_file, indent=4)
 
 def main():
     parser = argparse.ArgumentParser(description="Build the add-on")
