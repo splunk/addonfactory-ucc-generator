@@ -8,9 +8,25 @@ exclude = [
     "splunk_add_on_ucc_framework/UCC-UI-lib/bower_components",
     "splunk_add_on_ucc_framework/UCC-UI-lib/config",
     "splunk_add_on_ucc_framework/UCC-UI-lib/node_modules",
-    "splunk_add_on_ucc_framework/UCC-UI-lib/testes"
+    "splunk_add_on_ucc_framework/UCC-UI-lib/testes",
     ]
-include = ["splunk_add_on_ucc_framework/UCC-UI-lib/package/*/*",
+include = [
+"splunk_add_on_ucc_framework/package",
+"splunk_add_on_ucc_framework/package/locale",
+"splunk_add_on_ucc_framework/package/locale/zh_CN",
+"splunk_add_on_ucc_framework/package/locale/zh_CN/LC_MESSAGES",
+"splunk_add_on_ucc_framework/package/default",
+"splunk_add_on_ucc_framework/package/default/data",
+"splunk_add_on_ucc_framework/package/default/data/ui",
+"splunk_add_on_ucc_framework/package/default/data/ui/nav",
+"splunk_add_on_ucc_framework/package/default/data/ui/views",
+"splunk_add_on_ucc_framework/package/appserver",
+"splunk_add_on_ucc_framework/package/appserver/static",
+"splunk_add_on_ucc_framework/package/appserver/static/css",
+"splunk_add_on_ucc_framework/package/appserver/static/js",
+"splunk_add_on_ucc_framework/package/appserver/static/js/build",
+"splunk_add_on_ucc_framework/package/appserver/static/styles",
+"splunk_add_on_ucc_framework/package/appserver/templates",
 "splunk_add_on_ucc_framework/requirements_py2.txt",
 "splunk_add_on_ucc_framework/requirements_py3.txt",
 "splunk_add_on_ucc_framework/requirements.txt",
@@ -26,13 +42,13 @@ keywords = ['splunk']
 [tool.poetry.dependencies]
 python = "^3.7"
 solnlib = '^3.0'
-splunk-sdk = "^1.6"
 jinja2 = "^2"
 mako= "^1"
 munch= "^2"
 lxml = "^4.3"
 future = "^0"
 splunktaucclib = "^4.0"
+wheel = "*"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.4"

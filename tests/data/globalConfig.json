@@ -12,11 +12,11 @@
                         ],
                         "header": [
                             {
-                                "label": "Account Name",
+                                "label": "Name",
                                 "field": "name"
                             },
                             {
-                                "label": "Authentication Type",
+                                "label": "Auth Type",
                                 "field": "auth_type"
                             }
                         ]
@@ -24,7 +24,7 @@
                     "entity": [
                         {
                             "type": "text",
-                            "label": "Account Name",
+                            "label": "Name",
                             "validators": [
                                 {
                                     "type": "string",
@@ -34,7 +34,7 @@
                                 },
                                 {
                                     "type": "regex",
-                                    "errorMsg": "Account Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+                                    "errorMsg": "Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
                                     "pattern": "^[a-zA-Z]\\w*$"
                                 }
                             ],
@@ -47,17 +47,17 @@
                         },
                         {
                             "type": "singleSelect",
-                            "label": "Salesforce Environment",
+                            "label": "Example Environment",
                             "options": {
                                 "disableSearch": true,
                                 "autoCompleteFields": [
                                     {
-                                        "value": "login.salesforce.com",
-                                        "label": "Production"
+                                        "value": "login.example.com",
+                                        "label": "Value1"
                                     },
                                     {
-                                        "value": "test.salesforce.com",
-                                        "label": "Sandbox"
+                                        "value": "test.example.com",
+                                        "label": "Value2"
                                     },
                                     {
                                         "value": "other",
@@ -68,7 +68,7 @@
                             },
                             "help": "",
                             "field": "custom_endpoint",
-                            "defaultValue": "login.salesforce.com",
+                            "defaultValue": "login.example.com",
                             "required": true
                         },
                         {
@@ -78,6 +78,50 @@
                             "field": "endpoint",
                             "options": {
                                 "display": false
+                            }
+                        },
+                        {
+                            "type": "checkbox",
+                            "label": "Example Checkbox",
+                            "field": "account_checkbox",
+                            "help": "This is an example checkbox for the account entity"
+                        },
+                        {
+                            "type": "radio",
+                            "label": "Example Radio",
+                            "field": "account_radio",
+                            "defaultValue": "yes",
+                            "help": "This is an example radio button for the account entity",
+                            "required": true,
+                            "options": {
+                                "items": [{
+                                        "value": "yes",
+                                        "label": "Yes"
+                                    },
+                                    {
+                                        "value": "no",
+                                        "label": "No"
+                                    }
+                                ],
+                                "display": true
+                            }
+                        },
+                        {
+                            "type": "multipleSelect",
+                            "label": "Example Multiple Select",
+                            "field": "account_multiple_select",
+                            "help": "This is an example multipleSelect for account entity",
+                            "required": true,
+                            "options": {
+                                "items": [{
+                                        "value": "one",
+                                        "label": "Option One"
+                                    },
+                                    {
+                                        "value": "two",
+                                        "label": "Option Two"
+                                    }
+                                ]
                             }
                         },
                         {
@@ -116,7 +160,7 @@
                                         "oauth_field": "security_token",
                                         "label": "Security Token",
                                         "encrypted": true,
-                                        "help": "Enter the Salesforce security token.",
+                                        "help": "Enter the security token.",
                                         "field": "token"
                                     }
                                 ],
@@ -125,25 +169,34 @@
                                         "oauth_field": "client_id",
                                         "label": "Client Id",
                                         "field": "client_id",
-                                        "help": "Enter the Salesforce Client Id for this account."
+                                        "help": "Enter the Client Id for this account."
                                     },
                                     {
                                         "oauth_field": "client_secret",
                                         "label": "Client Secret",
                                         "field": "client_secret",
                                         "encrypted": true,
-                                        "help": "Enter the Salesforce Client Secret key for this account."
+                                        "help": "Enter the Client Secret key for this account."
                                     },
                                     {
                                         "oauth_field": "redirect_url",
                                         "label": "Redirect url",
                                         "field": "redirect_url",
-                                        "help": "Copy and paste this URL into your Salesforce app."
+                                        "help": "Copy and paste this URL into your app."
                                     }
                                 ],
                                 "auth_code_endpoint": "/services/oauth2/authorize",
                                 "access_token_endpoint": "/services/oauth2/token",
                                 "oauth_timeout": 30
+                            }
+                        },
+                        {
+                            "field": "example_help_link",
+                            "label": "",
+                            "type": "helpLink",
+                            "options": {
+                                "text": "Help Link",
+                                "link": "https://docs.splunk.com/Documentation"
                             }
                         }
                     ],
@@ -376,7 +429,7 @@
                     "hook": {
                         "src": "Hook"
                     },
-                    "name": "sfdc_object",
+                    "name": "example_input_one",
                     "entity": [
                         {
                             "type": "text",
@@ -397,6 +450,32 @@
                             "field": "name",
                             "help": "A unique name for the data input.",
                             "required": true
+                        },
+                        {
+                            "type": "checkbox",
+                            "label": "Example Checkbox",
+                            "field": "input_one_checkbox",
+                            "help": "This is an example checkbox for the input one entity"
+                        },
+                        {
+                            "type": "radio",
+                            "label": "Example Radio",
+                            "field": "input_one_radio",
+                            "defaultValue": "yes",
+                            "help": "This is an example radio button for the input one entity",
+                            "required": false,
+                            "options": {
+                                "items": [{
+                                        "value": "yes",
+                                        "label": "Yes"
+                                    },
+                                    {
+                                        "value": "no",
+                                        "label": "No"
+                                    }
+                                ],
+                                "display": true
+                            }
                         },
                         {
                             "field": "singleSelectTest",
@@ -488,7 +567,7 @@
                         },
                         {
                             "type": "singleSelect",
-                            "label": "Salesforce Account",
+                            "label": "Example Account",
                             "options": {
                                 "referenceName": "account"
                             },
@@ -593,12 +672,21 @@
                             "field": "limit",
                             "help": "The maximum number of results returned by the query.",
                             "required": false
+                        },
+                        {
+                            "field": "example_help_link",
+                            "label": "",
+                            "type": "helpLink",
+                            "options": {
+                                "text": "Help Link",
+                                "link": "https://docs.splunk.com/Documentation"
+                            }
                         }
                     ],
-                    "title": "Salesforce Object"
+                    "title": "Example Input One"
                 },
                 {
-                    "name": "sfdc_event_log",
+                    "name": "example_input_two",
                     "entity": [
                         {
                             "type": "text",
@@ -656,13 +744,57 @@
                         },
                         {
                             "type": "singleSelect",
-                            "label": "Salesforce Account",
+                            "label": "Example Account",
                             "options": {
                                 "referenceName": "account"
                             },
                             "help": "",
                             "field": "account",
                             "required": true
+                        },
+                        {
+                            "type": "multipleSelect",
+                            "label": "Example Multiple Select",
+                            "field": "input_two_multiple_select",
+                            "help": "This is an example multipleSelect for input two entity",
+                            "required": true,
+                            "options": {
+                                "items": [{
+                                        "value": "one",
+                                        "label": "Option One"
+                                    },
+                                    {
+                                        "value": "two",
+                                        "label": "Option Two"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "checkbox",
+                            "label": "Example Checkbox",
+                            "field": "input_two_checkbox",
+                            "help": "This is an example checkbox for the input two entity"
+                        },
+                        {
+                            "type": "radio",
+                            "label": "Example Radio",
+                            "field": "input_two_radio",
+                            "defaultValue": "yes",
+                            "help": "This is an example radio button for the input two entity",
+                            "required": false,
+                            "options": {
+                                "items": [{
+                                        "value": "yes",
+                                        "label": "Yes"
+                                    },
+                                    {
+                                        "value": "no",
+                                        "label": "No"
+                                    }
+                                ],
+                                "display": true
+                            }
                         },
                         {
                             "type": "radio",
@@ -699,9 +831,18 @@
                             "help": "The date and time, in \"YYYY-MM-DDThh:mm:ss.000z\" format, after which to query and index records. \nThe default is 90 days before today.",
                             "tooltip": "Changing this parameter may result in gaps or duplication in data collection.",
                             "required": false
+                        },
+                        {
+                            "field": "example_help_link",
+                            "label": "",
+                            "type": "helpLink",
+                            "options": {
+                                "text": "Help Link",
+                                "link": "https://docs.splunk.com/Documentation"
+                            }
                         }
                     ],
-                    "title": "Salesforce Event Log"
+                    "title": "Example Input Two"
                 }
             ],
             "title": "Inputs",
@@ -757,7 +898,7 @@
                         }
                     },
                     {
-                        "label": "Salesforce Account",
+                        "label": "Example Account",
                         "field": "account"
                     },
                     {

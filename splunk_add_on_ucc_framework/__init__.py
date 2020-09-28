@@ -119,21 +119,6 @@ def export_package(args, ta_name, ignore_list=None):
     logger.info("Final build ready at: {}".format(outputdir))
 
 
-def copy_package_template(args, ta_name):
-    """
-    Copy UCC template to output directory.
-
-    Args:
-        args (argparse.Namespace): Object with command-line arguments.
-        ta_name (str): Name of TA.
-    """
-
-    logger.info("Copy UCC template directory")
-    recursive_overwrite(
-        os.path.join(sourcedir,"package"), os.path.join(outputdir, ta_name)
-    )
-
-
 def replace_token(args, ta_name):
     """
     Replace token with addon name in inputs.xml, configuration.xml, redirect.xml.
@@ -161,7 +146,7 @@ def replace_token(args, ta_name):
                 s = s.replace("${ta.name}", ta_name.lower())
             f.write(s)
 
-def install_libs(parent_path, ucc_lib_target):
+def install_libs(path, ucc_lib_target):
     """
     Install 3rd Party libraries in addon.
 
@@ -187,21 +172,30 @@ def install_libs(parent_path, ucc_lib_target):
             install_cmd = (
                 installer +" install -r \""
                 + requirements
-                + "\" --no-compile --no-binary :all: --target \""
+                + "\" --no-compile --prefer-binary --ignore-installed --target \""
                 + ucc_target
                 + "\""
             )
             os.system(install_cmd)
             remove_files(ucc_target)
+    logging.info(f"  Checking for requirements in {path}")
+    if os.path.exists(os.path.join(path, "requirements.txt")):
+        logging.info(f"  Uses common requirements")    
+        _install_libs(requirements=os.path.join(path, "requirements.txt"), ucc_target=ucc_lib_target)
+    else:
+        logging.info(f"  Not using common requirements")    
 
-    if os.path.exists(os.path.join(parent_path, "requirements.txt")):
-        _install_libs(requirements=os.path.join(parent_path, "requirements.txt"), ucc_target=ucc_lib_target)
+    if os.path.exists(os.path.join(path, "requirements_py2.txt")):
+        logging.info(f"  Uses py2 requirements")    
+        _install_libs(requirements=os.path.join(path, "requirements_py2.txt"), installer="pip2", ucc_target=os.path.join(ucc_lib_target, "py2"))
+    else:
+        logging.info(f"  Not using py2 requirements")    
 
-    if os.path.exists(os.path.join(parent_path, "requirements_py2.txt")):
-        _install_libs(requirements=os.path.join(parent_path, "requirements_py2.txt"), installer="pip2", ucc_target=os.path.join(ucc_lib_target, "py2"))
-
-    if os.path.exists(os.path.join(parent_path, "requirements_py3.txt")):
-        _install_libs(requirements=os.path.join(parent_path, "requirements_py3.txt"), ucc_target=os.path.join(ucc_lib_target, "py3"))
+    if os.path.exists(os.path.join(path, "requirements_py3.txt")):
+        logging.info(f"  Uses py3 requirements")            
+        _install_libs(requirements=os.path.join(path, "requirements_py3.txt"), ucc_target=os.path.join(ucc_lib_target, "py3"))
+    else:
+        logging.info(f"  Not using py3 requirements")    
 
 
 def remove_files(path):
@@ -409,6 +403,19 @@ def get_ignore_list(args, path):
         ignore_list = [(os.path.join(args.source, get_os_path(path))).strip() for path in ignore_list]
         return ignore_list
 
+def update_ta_version(args):
+    """
+    Update version of TA in globalConfig.json.
+
+    Args:
+        args (argparse.Namespace): Object with command-line arguments.
+    """
+
+    with open(args.config, "r") as config_file:
+        schema_content = json.load(config_file)
+    schema_content.setdefault("meta", {})["version"] = args.ta_version
+    with open(args.config, "w") as config_file:
+        json.dump(schema_content, config_file, indent=4)
 
 def main():
     parser = argparse.ArgumentParser(description="Build the add-on")
@@ -426,6 +433,11 @@ def main():
         help="Path to configuration file, Defaults to GlobalConfig.json in parent directory of source provided",
         default=None
     )
+    parser.add_argument(
+        "--ta-version",
+        type=str,
+        help="Version of TA, Deafult version is version specified in globalConfig.json",
+    )
     args = parser.parse_args()
 
     if not os.path.exists(args.source):
@@ -440,6 +452,9 @@ def main():
     ignore_list = get_ignore_list(args, os.path.abspath(os.path.join(args.source, PARENT_DIR, ".uccignore")))
     if os.path.exists(args.config):
 
+        if args.ta_version:
+            update_ta_version(args)
+
         with open(args.config, "r") as config_file:
             schema_content = json.load(config_file)
 
@@ -452,23 +467,29 @@ def main():
 
         logger.info("Package ID is " + ta_name)
 
-        copy_package_template(args, ta_name)
+        logger.info("Copy UCC template directory")
+        recursive_overwrite(
+            os.path.join(sourcedir,"package"), os.path.join(outputdir, ta_name)
+        )
 
-
+        logger.info("Copy globalConfig to output")
         shutil.copyfile(
             args.config,
             os.path.join(outputdir, ta_name, "appserver", "static", "js", "build", "globalConfig.json"),
         )
-        ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
 
+        ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
+        logger.info(f"Install UCC Requirements into {ucc_lib_target} from {sourcedir}")
         install_libs(
-            parent_path=os.path.abspath(os.path.join(args.source, PARENT_DIR)),
-            ucc_lib_target=ucc_lib_target
+            sourcedir,
+            ucc_lib_target
         )
 
+        talibs = os.path.abspath(os.path.join(args.source, os.pardir))
+        logger.info(f"Install Addon Requirements into {ucc_lib_target} from {talibs}")
         install_libs(
-            parent_path=sourcedir,
-            ucc_lib_target=ucc_lib_target
+            talibs ,
+            ucc_lib_target
         )
 
         replace_token(args, ta_name)
@@ -499,4 +520,4 @@ def main():
         )
 
     copy_package_source(args, ta_name)
-    export_package(args, ta_name, ignore_list)
+    # export_package(args, ta_name, ignore_list)
