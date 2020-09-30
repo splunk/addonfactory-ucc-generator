@@ -47,6 +47,7 @@ class Meta(DocumentWithoutAddProp):
     restRoot = StringField(required=True, pattern="^\w+$")
     apiVersion = StringField(required=True, pattern="^(?:\d{1,3}\.){2}\d{1,3}$")
     version = StringField(required=True)
+    schemaVersion = StringField( pattern="^(?:\d{1,3}\.){2}\d{1,3}$")
 
 
 # Text validator for the String Field Value input

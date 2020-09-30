@@ -89,6 +89,65 @@ def clean_before_build():
     os.makedirs(os.path.join(outputdir))
     logger.info("Cleaned out directory " + outputdir)
 
+def versiontuple(version_str):
+    """
+    convert string into tuple to compare version
+
+    Args:
+        version_str : raw string
+    Returns:
+        tuple : version into tupleformat
+    """
+    filled = []
+    for point in version_str.split("."):
+        filled.append(point.zfill(8))
+    return tuple(filled)
+
+def handle_update(config_path):
+    """
+    handle changes in globalConfig.json
+
+    Args:
+        config_path : path to globalConfig.json
+
+    Returns:
+        dictionary : schema_content (globalConfig.json)     
+    """
+    with open(config_path, "r") as config_file:
+        schema_content = json.load(config_file)
+    version = schema_content.get("meta").get("schemaVersion","0.0.0")
+
+    if versiontuple(version) < versiontuple("0.0.1"):
+        ta_tabs = schema_content.get("pages").get("configuration").get("tabs")
+
+        for tab in ta_tabs:
+            conf_entitties= tab.get("entity")
+            for entity in conf_entitties:
+                entity_option = entity.get("options")
+                if entity_option and "whiteList" in entity_option:
+                    entity_option["allowList"] = entity_option.get("whiteList")
+                    del entity_option["whiteList"]
+                if entity_option and "blackList" in entity_option:
+                    entity_option["denyList"] = entity_option.get("blackList")
+                    del entity_option["blackList"]
+        
+        services = schema_content.get("pages").get("inputs").get("services")
+        for service in services:
+            conf_entitties= service.get("entity")
+            for entity in conf_entitties:
+                entity_option = entity.get("options")
+                if entity_option and "whiteList" in entity_option:
+                    entity_option["allowList"] = entity_option.get("whiteList")
+                    del entity_option["whiteList"]
+                if entity_option and "blackList" in entity_option:
+                    entity_option["denyList"] = entity_option.get("blackList")
+                    del entity_option["blackList"]
+
+        schema_content["meta"]["schemaVersion"]="0.0.1"
+        with open(config_path, "w") as config_file:
+            json.dump(schema_content,config_file, ensure_ascii=False, indent=4)
+    return schema_content
+    
 
 def copy_package_source(args, ta_name):
     """
@@ -455,8 +514,7 @@ def main():
         if args.ta_version:
             update_ta_version(args)
 
-        with open(args.config, "r") as config_file:
-            schema_content = json.load(config_file)
+        schema_content = handle_update(args.config)
 
         scheme = GlobalConfigBuilderSchema(schema_content, j2_env)
         ta_name = schema_content.get("meta").get("name")
