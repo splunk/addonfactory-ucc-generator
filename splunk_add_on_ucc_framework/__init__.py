@@ -89,7 +89,7 @@ def clean_before_build():
     os.makedirs(os.path.join(outputdir))
     logger.info("Cleaned out directory " + outputdir)
 
-def versiontuple(version_str):
+def version_tuple(version_str):
     """
     convert string into tuple to compare version
 
@@ -115,11 +115,14 @@ def handle_update(config_path):
     """
     with open(config_path, "r") as config_file:
         schema_content = json.load(config_file)
+    # check for schemaVersion in meta, if not availble then set default 0.0.0 
     version = schema_content.get("meta").get("schemaVersion","0.0.0")
 
-    if versiontuple(version) < versiontuple("0.0.1"):
+    # check for schemaVersion, if it's less than 0.0.1 then updating globalConfig.json 
+    if version_tuple(version) < version_tuple("0.0.1"):
         ta_tabs = schema_content.get("pages").get("configuration").get("tabs")
 
+        # check in every Account tab for biased term
         for tab in ta_tabs:
             conf_entitties= tab.get("entity")
             for entity in conf_entitties:
@@ -132,6 +135,7 @@ def handle_update(config_path):
                     del entity_option["blackList"]
         
         services = schema_content.get("pages").get("inputs").get("services")
+        # check in every Input service for biased term
         for service in services:
             conf_entitties= service.get("entity")
             for entity in conf_entitties:
@@ -143,7 +147,10 @@ def handle_update(config_path):
                     entity_option["denyList"] = entity_option.get("blackList")
                     del entity_option["blackList"]
 
+        # set schemaVersion to 0.0.1 as updated globalConfig.json according to new update
         schema_content["meta"]["schemaVersion"]="0.0.1"
+
+        # upadating new changes in globalConfig.json 
         with open(config_path, "w") as config_file:
             json.dump(schema_content,config_file, ensure_ascii=False, indent=4)
     return schema_content
@@ -514,6 +521,7 @@ def main():
         if args.ta_version:
             update_ta_version(args)
 
+        # handle_update check schemaVersion and update globalConfig.json if required and return schema
         schema_content = handle_update(args.config)
 
         scheme = GlobalConfigBuilderSchema(schema_content, j2_env)
