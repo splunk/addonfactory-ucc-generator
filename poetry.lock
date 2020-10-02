@@ -394,7 +394,7 @@ description = "Plugin for Poetry to enable dynamic versioning based on VCS tags"
 name = "poetry-dynamic-versioning"
 optional = false
 python-versions = ">=3.5,<4.0"
-version = "0.8.3"
+version = "0.9.0"
 
 [package.dependencies]
 dunamai = ">=1.3,<2.0"
@@ -763,7 +763,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["pytest (>=3.5,<3.7.3 || >3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pytest-cov", "jaraco.test (>=3.2.0)", "jaraco.itertools", "func-timeout", "pytest-black (>=0.3.7)", "pytest-mypy"]
 
 [metadata]
-content-hash = "3693935d93ce59ce4de3bf4ea7c1bd42ee83ef01cbab748005380ba827d91b90"
+content-hash = "cd7060498049ad156a7f3b3f44d34c5886ff7fb78e55674feaf6066705ca3541"
 lock-version = "1.0"
 python-versions = "^3.7"
 
@@ -1002,8 +1002,8 @@ pluggy = [
     {file = "pluggy-0.13.1.tar.gz", hash = "sha256:15b2acde666561e1298d71b523007ed7364de07029219b604cf808bfa1c765b0"},
 ]
 poetry-dynamic-versioning = [
-    {file = "poetry-dynamic-versioning-0.8.3.tar.gz", hash = "sha256:493cf972312947ffce99c9f0e38b504312960b9f616c11954fb3c62cc24c2337"},
-    {file = "poetry_dynamic_versioning-0.8.3-py3-none-any.whl", hash = "sha256:75dab648b63d68c359f4d921e00c97ec4d347a8cda21393ca9b61f370d9de004"},
+    {file = "poetry-dynamic-versioning-0.9.0.tar.gz", hash = "sha256:4fe11706388d8c2e835178e5f67dda26e8e5d3df628c84893052be9fae7be57c"},
+    {file = "poetry_dynamic_versioning-0.9.0-py3-none-any.whl", hash = "sha256:a9db211bdaf5ac55151a8e45583fb1e4fe54bb7b5a23ee925e7b23a580e56b0b"},
 ]
 py = [
     {file = "py-1.9.0-py2.py3-none-any.whl", hash = "sha256:366389d1db726cd2fcfc79732e75410e5fe4d31db13692115529d34069a043c2"},
