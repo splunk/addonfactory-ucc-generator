@@ -32,7 +32,7 @@ include = [
 "splunk_add_on_ucc_framework/requirements.txt",
     ]
 
-readme = 'README.rst'  # Markdown files are supported
+readme = 'README.md'  # Markdown files are supported
 
 repository = "https://github.com/splunk/splunk-add-on-sdk-python/"
 homepage = "https://github.com/splunk/splunk-add-on-sdk-python/"
