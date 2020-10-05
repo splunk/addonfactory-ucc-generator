@@ -398,7 +398,7 @@ def remove_listed_files(ignore_list):
         if os.path.exists(path):
             shutil.rmtree(path, ignore_errors=True)
         else:
-            logger.info("While ignoring the files mentioned in .uccignore {} was not found:".format(path))
+            logger.info("While ignoring the files mentioned in .uccignore {} was not found".format(path))
 
 def update_ta_version(args):
     """
