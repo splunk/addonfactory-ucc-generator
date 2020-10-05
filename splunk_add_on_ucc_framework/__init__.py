@@ -103,22 +103,6 @@ def copy_package_source(args, ta_name):
     recursive_overwrite(args.source, os.path.join(outputdir, ta_name))
 
 
-def export_package(args, ta_name, ignore_list=None):
-    """
-    Export package from output directory to source directory.
-
-    Args:
-        args (argparse.Namespace): Object with command-line arguments.
-        ta_name (str): Name of TA.
-        ignore_list (list): List of files/folder to ignore while copying.
-
-    """
-
-    logger.info("Exporting package")
-    recursive_overwrite(os.path.join(outputdir, ta_name), args.source, ignore_list)
-    logger.info("Final build ready at: {}".format(outputdir))
-
-
 def replace_token(args, ta_name):
     """
     Replace token with addon name in inputs.xml, configuration.xml, redirect.xml.
@@ -383,25 +367,38 @@ def make_modular_alerts(args, ta_name, ta_namespace, schema_content):
             sourcedir,
         )
 
-def get_ignore_list(args, path):
+def get_ignore_list(ta_name, path):
     """
-    Return path of files/folders to ignore while copying to package.
+    Return path of files/folders to be removed.
 
     Args:
-        args (argparse.Namespace): Object with command-line arguments.
+        ta_name (str): Name of TA.
         path (str): Path of '.uccignore'.
 
     Returns:
-        list: List of paths to ignore while copying to package.
+        list: List of paths to be removed from output directory.
     """
-
     if not os.path.exists(path):
         return []
     else:
         with open(path) as ignore_file:
             ignore_list = ignore_file.readlines()
-        ignore_list = [(os.path.join(args.source, get_os_path(path))).strip() for path in ignore_list]
+        ignore_list = [(os.path.join("output", ta_name, get_os_path(path))).strip() for path in ignore_list]
         return ignore_list
+
+def remove_listed_files(ignore_list):
+    """
+    Return path of files/folders to removed in output folder.
+
+    Args:
+        ignore_list (list): List of files/folder to removed in output directory.
+
+    """
+    for path in ignore_list:
+        if os.path.exists(path):
+            shutil.rmtree(path, ignore_errors=True)
+        else:
+            logger.info("Path not found :" + path)
 
 def update_ta_version(args):
     """
@@ -449,7 +446,6 @@ def main():
 
     clean_before_build()
 
-    ignore_list = get_ignore_list(args, os.path.abspath(os.path.join(args.source, PARENT_DIR, ".uccignore")))
     if os.path.exists(args.config):
 
         if args.ta_version:
@@ -519,5 +515,6 @@ def main():
             ucc_lib_target=ucc_lib_target
         )
 
+    ignore_list = get_ignore_list(os.path.abspath(ta_name, os.path.join(args.source, PARENT_DIR, ".uccignore")))
+    remove_listed_files(ignore_list)
     copy_package_source(args, ta_name)
-    # export_package(args, ta_name, ignore_list)
