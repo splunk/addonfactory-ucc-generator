@@ -515,6 +515,6 @@ def main():
             ucc_lib_target=ucc_lib_target
         )
 
-    ignore_list = get_ignore_list(os.path.abspath(ta_name, os.path.join(args.source, PARENT_DIR, ".uccignore")))
+    ignore_list = get_ignore_list(ta_name, os.path.abspath(os.path.join(args.source, PARENT_DIR, ".uccignore")))
     remove_listed_files(ignore_list)
     copy_package_source(args, ta_name)
