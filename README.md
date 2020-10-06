@@ -49,9 +49,8 @@ By the running the `ucc-gen` command, the following steps came in action:
 2. Retrieve the package ID of addon
 3. Copy UCC template directory under `output/<package_ID>` directory
 4. Copy `globalConfig.json` file to `output/<package_ID>/appserver/static/js/build` directory
-5. Collect and install UCC Requirements into `output/<package_ID>/lib` directory of addon's package
-6. Collect and install Addon's Requirements into `output/<package_ID>/lib` directory of addon's package
-7. For the addon's requirements, packages were installed according to following table.
+5. Collect and install Addon's Requirements into `output/<package_ID>/lib` directory of addon's package
+6. For the addon's requirements, packages were installed according to following table.
 
 | File Name            | Description                         | Output directory in ucc build |
 |----------------------|-------------------------------------|-------------------------------|
@@ -59,8 +58,8 @@ By the running the `ucc-gen` command, the following steps came in action:
 | requirements_py2.txt | Only Python2 compatible packages    | output/<package_ID>/lib/py2   |
 | requirements_py3.txt | Only python3 compatible packages    | output/<package_ID>/lib/py3   |
 
-8. Replace tokens in views
-9. Copy addon's `package/*` to `output/<package_ID>/*` directory
+7. Replace tokens in views
+8. Copy addon's `package/*` to `output/<package_ID>/*` directory
 
 
 ## Params
