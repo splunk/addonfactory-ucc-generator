@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 
 from past.builtins import basestring
-from splunk_add_on_ucc_framework.splunktaucclib.rest_handler.schema import RestSchema
+from splunktaucclib.rest_handler.schema import RestSchema
 from io import StringIO
 from builtins import object
 from six import string_types as basestring
