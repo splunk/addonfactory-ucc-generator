@@ -8,7 +8,7 @@ A framework to generate Splunk Add-ons. It includes UI, Rest handler, Modular in
 ## What is UCC?
 
 UCC is Universal Configuration Console. It is a service for Generating Splunk Add-ons which is easily customizable and flexible.
-It helpful to control the activity by using hooks and other functionalities. UCC provides basic UI template for creating Addon's UI.
+It is helpful to control the activity by using hooks and other functionalities. UCC provides basic UI template for creating Addon's UI.
 
 
 ## Features
@@ -38,8 +38,8 @@ To build the ucc based addon follow the below steps:
 
 1. Install the `splunk-add-on-ucc-framework` via `pip3`
 2. Run the `ucc-gen` command
-3. Make sure that `package` directory and `globalConfig.json` file should present in current directory
-4. The ultimate addon package will be generated, at `output` directory.
+3. Make sure that `package` directory and `globalConfig.json` file present in the directory
+4. The final addon package will be generated, at `output` directory.
 
 
 ## Workflow
