@@ -7,6 +7,7 @@ from os import system
 import shutil
 import argparse
 import json
+from xml.etree import cElementTree as et
 from .uccrestbuilder.global_config import (
     GlobalConfigBuilderSchema,
     GlobalConfigPostProcessor,
@@ -414,6 +415,48 @@ def update_ta_version(args):
     with open(args.config, "w") as config_file:
         json.dump(schema_content, config_file, indent=4)
 
+def handle_no_inputs(ta_name):
+    """
+    Handle for configuration without input page.
+
+    Args:
+        ta_name (str): Name of TA. 
+    """
+    def _removeinput(path):
+        """
+        Remove "inputs" view from default.xml
+
+        Args:
+            path (str) : path to default.xml
+        """
+        tree = et.parse(path)
+        root = tree.getroot()
+
+        for element in root:
+            if element.tag =="view" and element.get('name') == "inputs":
+                root.remove(element)
+
+        tree.write(path)
+
+    default_xml_file = os.path.join(
+        outputdir, ta_name, "default", "data", "ui", "nav","default.xml"
+    )
+    # Remove "inputs" view from default.xml
+    _removeinput(default_xml_file)
+
+    file_remove_list = []
+    file_remove_list.append(os.path.join(
+        outputdir, ta_name, "default", "data", "ui", "views","inputs.xml"
+    ))
+    file_remove_list.append(os.path.join(outputdir,ta_name,"appserver","static","css","inputs.css"))
+    file_remove_list.append(os.path.join(outputdir,ta_name,"appserver","static","css","createInput.css"))
+    # Remove unnecessary files
+    for fl in file_remove_list:
+        try:
+            os.remove(fl)
+        except OSError:
+            pass
+
 def main():
     parser = argparse.ArgumentParser(description="Build the add-on")
     parser.add_argument(
@@ -460,6 +503,7 @@ def main():
         ta_tabs = schema_content.get("pages").get("configuration").get("tabs")
         ta_namespace = schema_content.get("meta").get("restRoot")
         import_declare_name = "import_declare_test"
+        is_inputs = ("inputs" in schema_content.get("pages"))
 
         logger.info("Package ID is " + ta_name)
 
@@ -495,11 +539,13 @@ def main():
         modify_and_replace_token_for_oauth_templates(
                 args, ta_name, ta_tabs, schema_content.get('meta').get('version')
             )
-
-        add_modular_input(
+        if is_inputs:
+            add_modular_input(
                 args, ta_name, schema_content, import_declare_name
             )
-
+        else:
+            handle_no_inputs(ta_name)
+            
         make_modular_alerts(args, ta_name, ta_namespace, schema_content)
 
     else:
