@@ -447,14 +447,18 @@ def handle_no_inputs(ta_name):
     # Remove "inputs" view from default.xml
     _removeinput(default_xml_file)
 
-    inputs_xml_file = os.path.join(
+    file_remove_list = []
+    file_remove_list.append(os.path.join(
         outputdir, ta_name, "default", "data", "ui", "views","inputs.xml"
-    )
+    ))
+    file_remove_list.append(os.path.join(outputdir,ta_name,"appserver","static","css","inputs.css"))
+    file_remove_list.append(os.path.join(outputdir,ta_name,"appserver","static","css","createInput.css"))
     # Remove unnecessary files
-    try:
-        os.remove(inputs_xml_file)
-    except OSError:
-        pass
+    for fl in file_remove_list:
+        try:
+            os.remove(fl)
+        except OSError:
+            pass
 
 def main():
     parser = argparse.ArgumentParser(description="Build the add-on")
