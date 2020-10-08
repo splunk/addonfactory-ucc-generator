@@ -492,7 +492,7 @@ def main():
         stage = version.stage[:1]
     
     version_str = version.serialize(metadata=True,style=Style.SemVer)
-    version_splunk = f"{version.base}-{stage}{version.commit}"
+    version_splunk = f"{version.base}{stage}{version.commit}"
     
     parser.add_argument(
         "--ta-version",
