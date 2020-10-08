@@ -49,6 +49,7 @@ lxml = "^4.3"
 future = "^0"
 splunktaucclib = "^4.0"
 wheel = "*"
+dunamai = "*"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.4"

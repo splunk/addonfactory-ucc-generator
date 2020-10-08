@@ -69,4 +69,4 @@ splunk-add-on-ucc-framework supports the following params:
 |------------|----------------------------------------------------------------------------------------------------------|
 | source     | Folder containing the app.manifest and app source                                                        |
 | config     | Path to the configuration file, Defaults to GlobalConfig.json in the parent directory of source provided |
-| ta-version | Current version of TA, Default version is version specified in globalConfig.json                         |
+| ta-version | Optional override Current version of TA, Default version is version specified in globalConfig.json a Splunkbase compatible version of SEMVER will be used by default                         |
