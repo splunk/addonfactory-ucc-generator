@@ -1,12 +1,13 @@
 __version__ = "0.0.0"
 
 import logging
-import os
+import os, time
 import glob
 from os import system
 import shutil
 import argparse
 import json
+from xml.etree import cElementTree as et
 from .uccrestbuilder.global_config import (
     GlobalConfigBuilderSchema,
     GlobalConfigPostProcessor,
@@ -15,6 +16,8 @@ from .uccrestbuilder import build
 from .start_alert_build import alert_build
 
 from jinja2 import Environment, FileSystemLoader
+from dunamai import Version, Style
+import configparser
 
 outputdir = os.path.join(os.getcwd(), "output")
 sourcedir = os.path.dirname(os.path.realpath(__file__))
@@ -163,21 +166,31 @@ def install_libs(path, ucc_lib_target):
             os.system(install_cmd)
             remove_files(ucc_target)
     logging.info(f"  Checking for requirements in {path}")
-    if os.path.exists(os.path.join(path, "requirements.txt")):
+    print(os.path.join(path, "lib","requirements.txt"))
+    if os.path.exists(os.path.join(path,"lib", "requirements.txt")):
         logging.info(f"  Uses common requirements")    
-        _install_libs(requirements=os.path.join(path, "requirements.txt"), ucc_target=ucc_lib_target)
+        _install_libs(requirements=os.path.join(path, "lib","requirements.txt"), ucc_target=ucc_lib_target)
+    elif os.path.exists(os.path.join(os.path.abspath(os.path.join(args.source, os.pardir)), "requirements.txt")):
+        logging.info(f"  Uses common requirements")    
+        _install_libs(requirements=os.path.join(os.path.abspath(os.path.join(args.source, os.pardir)), "requirements.txt"), ucc_target=ucc_lib_target)
     else:
         logging.info(f"  Not using common requirements")    
 
-    if os.path.exists(os.path.join(path, "requirements_py2.txt")):
+    if os.path.exists(os.path.join(path,"lib","py2", "requirements.txt")):
         logging.info(f"  Uses py2 requirements")    
-        _install_libs(requirements=os.path.join(path, "requirements_py2.txt"), installer="pip2", ucc_target=os.path.join(ucc_lib_target, "py2"))
+        _install_libs(requirements=os.path.join(path,"lib","py2", "requirements.txt"), installer="pip2", ucc_target=os.path.join(ucc_lib_target, "py2"))
+    elif os.path.exists(os.path.join(os.path.abspath(os.path.join(args.source, os.pardir)), "requirements_py2.txt")):
+        logging.info(f"  Uses py2 requirements")    
+        _install_libs(requirements=os.path.join(os.path.abspath(os.path.join(args.source, os.pardir)), "requirements_py2.txt"), installer="pip2", ucc_target=os.path.join(ucc_lib_target, "py2"))        
     else:
         logging.info(f"  Not using py2 requirements")    
 
-    if os.path.exists(os.path.join(path, "requirements_py3.txt")):
+    if os.path.exists(os.path.join(path, "lib","py3","requirements.txt")):
         logging.info(f"  Uses py3 requirements")            
-        _install_libs(requirements=os.path.join(path, "requirements_py3.txt"), ucc_target=os.path.join(ucc_lib_target, "py3"))
+        _install_libs(requirements=os.path.join(path,"lib", "py3","requirements.txt"), ucc_target=os.path.join(ucc_lib_target, "py3"))
+    elif os.path.exists(os.path.join(os.path.abspath(os.path.join(args.source, os.pardir)), "requirements_py3.txt")):
+        logging.info(f"  Uses py3 requirements")    
+        _install_libs(requirements=os.path.join(os.path.abspath(os.path.join(args.source, os.pardir)), "requirements_py3.txt"), installer="pip3", ucc_target=os.path.join(ucc_lib_target, "py2"))        
     else:
         logging.info(f"  Not using py3 requirements")    
 
@@ -414,6 +427,48 @@ def update_ta_version(args):
     with open(args.config, "w") as config_file:
         json.dump(schema_content, config_file, indent=4)
 
+def handle_no_inputs(ta_name):
+    """
+    Handle for configuration without input page.
+
+    Args:
+        ta_name (str): Name of TA. 
+    """
+    def _removeinput(path):
+        """
+        Remove "inputs" view from default.xml
+
+        Args:
+            path (str) : path to default.xml
+        """
+        tree = et.parse(path)
+        root = tree.getroot()
+
+        for element in root:
+            if element.tag =="view" and element.get('name') == "inputs":
+                root.remove(element)
+
+        tree.write(path)
+
+    default_xml_file = os.path.join(
+        outputdir, ta_name, "default", "data", "ui", "nav","default.xml"
+    )
+    # Remove "inputs" view from default.xml
+    _removeinput(default_xml_file)
+
+    file_remove_list = []
+    file_remove_list.append(os.path.join(
+        outputdir, ta_name, "default", "data", "ui", "views","inputs.xml"
+    ))
+    file_remove_list.append(os.path.join(outputdir,ta_name,"appserver","static","css","inputs.css"))
+    file_remove_list.append(os.path.join(outputdir,ta_name,"appserver","static","css","createInput.css"))
+    # Remove unnecessary files
+    for fl in file_remove_list:
+        try:
+            os.remove(fl)
+        except OSError:
+            pass
+
 def main():
     parser = argparse.ArgumentParser(description="Build the add-on")
     parser.add_argument(
@@ -430,10 +485,20 @@ def main():
         help="Path to configuration file, Defaults to GlobalConfig.json in parent directory of source provided",
         default=None
     )
+    version = Version.from_git()
+    if not version.stage:
+        stage = 'R'
+    else:
+        stage = version.stage[:1]
+    
+    version_str = version.serialize(metadata=True)
+    version_splunk = f"{version.base}-{stage}{version.commit}"
+    
     parser.add_argument(
         "--ta-version",
         type=str,
-        help="Version of TA, Deafult version is version specified in globalConfig.json",
+        help="Version of TA, Deafult version is version specified in the package such as app.manifest, app.conf, and globalConfig.json",
+        default = version_splunk
     )
     args = parser.parse_args()
 
@@ -460,6 +525,7 @@ def main():
         ta_tabs = schema_content.get("pages").get("configuration").get("tabs")
         ta_namespace = schema_content.get("meta").get("restRoot")
         import_declare_name = "import_declare_test"
+        is_inputs = ("inputs" in schema_content.get("pages"))
 
         logger.info("Package ID is " + ta_name)
 
@@ -473,18 +539,10 @@ def main():
             args.config,
             os.path.join(outputdir, ta_name, "appserver", "static", "js", "build", "globalConfig.json"),
         )
-
         ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
-        logger.info(f"Install UCC Requirements into {ucc_lib_target} from {sourcedir}")
+        logger.info(f"Install Addon Requirements into {ucc_lib_target} from {args.source}")
         install_libs(
-            sourcedir,
-            ucc_lib_target
-        )
-
-        talibs = os.path.abspath(os.path.join(args.source, os.pardir))
-        logger.info(f"Install Addon Requirements into {ucc_lib_target} from {talibs}")
-        install_libs(
-            talibs ,
+            args.source ,
             ucc_lib_target
         )
 
@@ -495,11 +553,13 @@ def main():
         modify_and_replace_token_for_oauth_templates(
                 args, ta_name, ta_tabs, schema_content.get('meta').get('version')
             )
-
-        add_modular_input(
+        if is_inputs:
+            add_modular_input(
                 args, ta_name, schema_content, import_declare_name
             )
-
+        else:
+            handle_no_inputs(ta_name)
+            
         make_modular_alerts(args, ta_name, ta_namespace, schema_content)
 
     else:
@@ -511,10 +571,50 @@ def main():
         ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
 
         install_libs(
-            parent_path=os.path.abspath(os.path.join(args.source, PARENT_DIR)),
+            args.source,
             ucc_lib_target=ucc_lib_target
         )
 
     ignore_list = get_ignore_list(ta_name, os.path.abspath(os.path.join(args.source, PARENT_DIR, ".uccignore")))
     remove_listed_files(ignore_list)
     copy_package_source(args, ta_name)
+
+    #Update app.manifest
+    with open(os.path.join(outputdir, ta_name,'VERSION'), 'w') as version_file:
+        version_file.write(version_str)
+        version_file.write("\n")
+        version_file.write(version_splunk)
+
+
+    manifest= None
+    with open(os.path.abspath(os.path.join(outputdir, ta_name, "app.manifest")), "r") as manifest_file:
+        manifest = json.load(manifest_file)
+        manifest['info']['id']['version'] = version_splunk
+    
+    
+    with open(os.path.abspath(os.path.join(outputdir, ta_name, "app.manifest")), "w") as manifest_file:
+        manifest_file.write(json.dumps(manifest, indent=4, sort_keys=True))
+
+    app_config = configparser.ConfigParser()        
+    app_config.read_file(open(os.path.join(outputdir, ta_name,'default', "app.conf")))
+    if not 'launcher' in app_config:
+        app_config.add_section('launcher')
+    if not 'id' in app_config:
+        app_config.add_section('id')
+    if not 'package' in app_config:
+        app_config.add_section('package')
+    if not 'ui' in app_config:
+        app_config.add_section('ui')
+
+    app_config['launcher']['version']=version_splunk    
+    app_config['launcher']['description']=manifest['info']['description']
+    
+    app_config['id']['version']=version_splunk
+
+    app_config['package']['build']=str(int(time.time()))
+    app_config['package']['id']=manifest['info']['id']['name'] 
+
+    app_config['ui']['label']=manifest['info']['title']
+
+    with open(os.path.join(outputdir, ta_name,'default', "app.conf"), 'w') as configfile:
+        app_config.write(configfile)
