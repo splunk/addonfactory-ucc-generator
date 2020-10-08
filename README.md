@@ -54,9 +54,9 @@ By the running the `ucc-gen` command, the following steps came in action:
 
 | File Name            | Description                         | Output directory in ucc build |
 |----------------------|-------------------------------------|-------------------------------|
-| requirements.txt     | Python2/python3 compatible packages | output/<package_ID>/lib       |
-| requirements_py2.txt | Only Python2 compatible packages    | output/<package_ID>/lib/py2   |
-| requirements_py3.txt | Only python3 compatible packages    | output/<package_ID>/lib/py3   |
+| lib/requirements.txt     | Python2/python3 compatible packages | output/<package_ID>/lib       |
+| lib/py2/requirements.txt | Only Python2 compatible packages    | output/<package_ID>/lib/py2   |
+| lib/py3/requirements.txt | Only python3 compatible packages    | output/<package_ID>/lib/py3   |
 
 7. Replace tokens in views
 8. Copy addon's `package/*` to `output/<package_ID>/*` directory
