@@ -164,21 +164,31 @@ def install_libs(path, ucc_lib_target):
             os.system(install_cmd)
             remove_files(ucc_target)
     logging.info(f"  Checking for requirements in {path}")
-    if os.path.exists(os.path.join(path, "requirements.txt")):
+    print(os.path.join(path, "lib","requirements.txt"))
+    if os.path.exists(os.path.join(path,"lib", "requirements.txt")):
         logging.info(f"  Uses common requirements")    
-        _install_libs(requirements=os.path.join(path, "requirements.txt"), ucc_target=ucc_lib_target)
+        _install_libs(requirements=os.path.join(path, "lib","requirements.txt"), ucc_target=ucc_lib_target)
+    elif os.path.exists(os.path.join(os.path.abspath(os.path.join(args.source, os.pardir)), "requirements.txt")):
+        logging.info(f"  Uses common requirements")    
+        _install_libs(requirements=os.path.join(os.path.abspath(os.path.join(args.source, os.pardir)), "requirements.txt"), ucc_target=ucc_lib_target)
     else:
         logging.info(f"  Not using common requirements")    
 
-    if os.path.exists(os.path.join(path, "requirements_py2.txt")):
+    if os.path.exists(os.path.join(path,"lib","py2", "requirements.txt")):
         logging.info(f"  Uses py2 requirements")    
-        _install_libs(requirements=os.path.join(path, "requirements_py2.txt"), installer="pip2", ucc_target=os.path.join(ucc_lib_target, "py2"))
+        _install_libs(requirements=os.path.join(path,"lib","py2", "requirements.txt"), installer="pip2", ucc_target=os.path.join(ucc_lib_target, "py2"))
+    elif os.path.exists(os.path.join(os.path.abspath(os.path.join(args.source, os.pardir)), "requirements_py2.txt")):
+        logging.info(f"  Uses py2 requirements")    
+        _install_libs(requirements=os.path.join(os.path.abspath(os.path.join(args.source, os.pardir)), "requirements_py2.txt"), installer="pip2", ucc_target=os.path.join(ucc_lib_target, "py2"))        
     else:
         logging.info(f"  Not using py2 requirements")    
 
-    if os.path.exists(os.path.join(path, "requirements_py3.txt")):
+    if os.path.exists(os.path.join(path, "lib","py3","requirements.txt")):
         logging.info(f"  Uses py3 requirements")            
-        _install_libs(requirements=os.path.join(path, "requirements_py3.txt"), ucc_target=os.path.join(ucc_lib_target, "py3"))
+        _install_libs(requirements=os.path.join(path,"lib", "py3","requirements.txt"), ucc_target=os.path.join(ucc_lib_target, "py3"))
+    elif os.path.exists(os.path.join(os.path.abspath(os.path.join(args.source, os.pardir)), "requirements_py3.txt")):
+        logging.info(f"  Uses py3 requirements")    
+        _install_libs(requirements=os.path.join(os.path.abspath(os.path.join(args.source, os.pardir)), "requirements_py3.txt"), installer="pip3", ucc_target=os.path.join(ucc_lib_target, "py2"))        
     else:
         logging.info(f"  Not using py3 requirements")    
 
@@ -517,18 +527,10 @@ def main():
             args.config,
             os.path.join(outputdir, ta_name, "appserver", "static", "js", "build", "globalConfig.json"),
         )
-
         ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
-        logger.info(f"Install UCC Requirements into {ucc_lib_target} from {sourcedir}")
+        logger.info(f"Install Addon Requirements into {ucc_lib_target} from {args.source}")
         install_libs(
-            sourcedir,
-            ucc_lib_target
-        )
-
-        talibs = os.path.abspath(os.path.join(args.source, os.pardir))
-        logger.info(f"Install Addon Requirements into {ucc_lib_target} from {talibs}")
-        install_libs(
-            talibs ,
+            args.source ,
             ucc_lib_target
         )
 
@@ -557,7 +559,7 @@ def main():
         ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
 
         install_libs(
-            parent_path=os.path.abspath(os.path.join(args.source, PARENT_DIR)),
+            args.source,
             ucc_lib_target=ucc_lib_target
         )
 
