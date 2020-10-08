@@ -601,6 +601,8 @@ def main():
         app_config.add_section('launcher')
     if not 'id' in app_config:
         app_config.add_section('id')
+    if not 'install' in app_config:
+        app_config.add_section('install')
     if not 'package' in app_config:
         app_config.add_section('package')
     if not 'ui' in app_config:
@@ -611,7 +613,7 @@ def main():
     
     app_config['id']['version']=version_splunk
 
-    app_config['package']['build']=str(int(time.time()))
+    app_config['install']['build']=str(int(time.time()))
     app_config['package']['id']=manifest['info']['id']['name'] 
 
     app_config['ui']['label']=manifest['info']['title']
