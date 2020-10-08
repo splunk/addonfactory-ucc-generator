@@ -179,18 +179,18 @@ def install_libs(path, ucc_lib_target):
     if os.path.exists(os.path.join(path,"lib","py2", "requirements.txt")):
         logging.info(f"  Uses py2 requirements")    
         _install_libs(requirements=os.path.join(path,"lib","py2", "requirements.txt"), installer="pip2", ucc_target=os.path.join(ucc_lib_target, "py2"))
-    elif os.path.exists(os.path.join(os.path.abspath(os.path.join(args.source, os.pardir)), "requirements_py2.txt")):
+    elif os.path.exists(os.path.join(os.path.abspath(os.path.join(path, os.pardir)), "requirements_py2.txt")):
         logging.info(f"  Uses py2 requirements")    
-        _install_libs(requirements=os.path.join(os.path.abspath(os.path.join(args.source, os.pardir)), "requirements_py2.txt"), installer="pip2", ucc_target=os.path.join(ucc_lib_target, "py2"))        
+        _install_libs(requirements=os.path.join(os.path.abspath(os.path.join(path, os.pardir)), "requirements_py2.txt"), installer="pip2", ucc_target=os.path.join(ucc_lib_target, "py2"))        
     else:
         logging.info(f"  Not using py2 requirements")    
 
     if os.path.exists(os.path.join(path, "lib","py3","requirements.txt")):
         logging.info(f"  Uses py3 requirements")            
         _install_libs(requirements=os.path.join(path,"lib", "py3","requirements.txt"), ucc_target=os.path.join(ucc_lib_target, "py3"))
-    elif os.path.exists(os.path.join(os.path.abspath(os.path.join(args.source, os.pardir)), "requirements_py3.txt")):
+    elif os.path.exists(os.path.join(os.path.abspath(os.path.join(path, os.pardir)), "requirements_py3.txt")):
         logging.info(f"  Uses py3 requirements")    
-        _install_libs(requirements=os.path.join(os.path.abspath(os.path.join(args.source, os.pardir)), "requirements_py3.txt"), installer="pip3", ucc_target=os.path.join(ucc_lib_target, "py2"))        
+        _install_libs(requirements=os.path.join(os.path.abspath(os.path.join(path, os.pardir)), "requirements_py3.txt"), installer="pip3", ucc_target=os.path.join(ucc_lib_target, "py2"))        
     else:
         logging.info(f"  Not using py3 requirements")    
 
@@ -491,8 +491,8 @@ def main():
     else:
         stage = version.stage[:1]
     
-    version_str = version.serialize(metadata=True)
-    version_splunk = f"{version.base}-{stage}{version.commit}"
+    version_str = version.serialize(metadata=True,style=Style.SemVer)
+    version_splunk = f"{version.base}{stage}{version.commit}"
     
     parser.add_argument(
         "--ta-version",
@@ -601,6 +601,8 @@ def main():
         app_config.add_section('launcher')
     if not 'id' in app_config:
         app_config.add_section('id')
+    if not 'install' in app_config:
+        app_config.add_section('install')
     if not 'package' in app_config:
         app_config.add_section('package')
     if not 'ui' in app_config:
@@ -611,7 +613,7 @@ def main():
     
     app_config['id']['version']=version_splunk
 
-    app_config['package']['build']=str(int(time.time()))
+    app_config['install']['build']=str(int(time.time()))
     app_config['package']['id']=manifest['info']['id']['name'] 
 
     app_config['ui']['label']=manifest['info']['title']
