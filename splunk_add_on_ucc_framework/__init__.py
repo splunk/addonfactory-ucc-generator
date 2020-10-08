@@ -1,7 +1,7 @@
 __version__ = "0.0.0"
 
 import logging
-import os
+import os, time
 import glob
 from os import system
 import shutil
@@ -16,6 +16,8 @@ from .uccrestbuilder import build
 from .start_alert_build import alert_build
 
 from jinja2 import Environment, FileSystemLoader
+from dunamai import Version, Style
+import configparser
 
 outputdir = os.path.join(os.getcwd(), "output")
 sourcedir = os.path.dirname(os.path.realpath(__file__))
@@ -473,10 +475,20 @@ def main():
         help="Path to configuration file, Defaults to GlobalConfig.json in parent directory of source provided",
         default=None
     )
+    version = Version.from_git()
+    if not version.stage:
+        stage = 'R'
+    else:
+        stage = version.stage[:1]
+    
+    version_str = version.serialize(metadata=True)
+    version_splunk = f"{version.base}-{stage}{version.commit}"
+    
     parser.add_argument(
         "--ta-version",
         type=str,
-        help="Version of TA, Deafult version is version specified in globalConfig.json",
+        help="Version of TA, Deafult version is version specified in the package such as app.manifest, app.conf, and globalConfig.json",
+        default = version_splunk
     )
     args = parser.parse_args()
 
@@ -564,3 +576,43 @@ def main():
     ignore_list = get_ignore_list(ta_name, os.path.abspath(os.path.join(args.source, PARENT_DIR, ".uccignore")))
     remove_listed_files(ignore_list)
     copy_package_source(args, ta_name)
+
+    #Update app.manifest
+    with open(os.path.join(outputdir, ta_name,'VERSION'), 'w') as version_file:
+        version_file.write(version_str)
+        version_file.write("\n")
+        version_file.write(version_splunk)
+
+
+    manifest= None
+    with open(os.path.abspath(os.path.join(outputdir, ta_name, "app.manifest")), "r") as manifest_file:
+        manifest = json.load(manifest_file)
+        manifest['info']['id']['version'] = version_splunk
+    
+    
+    with open(os.path.abspath(os.path.join(outputdir, ta_name, "app.manifest")), "w") as manifest_file:
+        manifest_file.write(json.dumps(manifest, indent=4, sort_keys=True))
+
+    app_config = configparser.ConfigParser()        
+    app_config.read_file(open(os.path.join(outputdir, ta_name,'default', "app.conf")))
+    if not 'launcher' in app_config:
+        app_config.add_section('launcher')
+    if not 'id' in app_config:
+        app_config.add_section('id')
+    if not 'package' in app_config:
+        app_config.add_section('package')
+    if not 'ui' in app_config:
+        app_config.add_section('ui')
+
+    app_config['launcher']['version']=version_splunk    
+    app_config['launcher']['description']=manifest['info']['description']
+    
+    app_config['id']['version']=version_splunk
+
+    app_config['package']['build']=str(int(time.time()))
+    app_config['package']['id']=manifest['info']['id']['name'] 
+
+    app_config['ui']['label']=manifest['info']['title']
+
+    with open(os.path.join(outputdir, ta_name,'default', "app.conf"), 'w') as configfile:
+        app_config.write(configfile)
