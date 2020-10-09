@@ -54,7 +54,7 @@ dunamai = "*"
 [tool.poetry.dev-dependencies]
 pytest = "^5.4"
 pytest-splunk-addon = { version = "^1.3", extras = [ "docker" ] }
-poetry-dynamic-versioning = "^0.9"
+poetry-dynamic-versioning = "^0.10"
 
 [tool.poetry-dynamic-versioning]
 enable = true
