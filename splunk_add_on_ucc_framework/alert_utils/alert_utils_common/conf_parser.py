@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2020 2020
+#
+# SPDX-License-Identifier: Apache-2.0
 
 """
 This class is used to override the Python built-in ConfigParser, because
