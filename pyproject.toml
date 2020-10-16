@@ -45,13 +45,13 @@ keywords = ['splunk']
 
 [tool.poetry.dependencies]
 python = "^3.7"
-solnlib = '^3.0'
+solnlib = '^3'
 jinja2 = "^2"
 mako= "^1"
 munch= "^2"
 lxml = "^4.3"
 future = "^0"
-splunktaucclib = "^4.0"
+splunktaucclib = "^4"
 wheel = "*"
 dunamai = "*"
 reuse = "*"
