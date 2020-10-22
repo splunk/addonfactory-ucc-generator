@@ -13,7 +13,7 @@ from . import arf_consts as ac
 
 from splunk_add_on_ucc_framework.alert_utils.alert_utils_common.conf_parser import TABConfigParser
 
-merge_black_list = ['default.meta', 'README.txt']
+merge_deny_list = ['default.meta', 'README.txt']
 merge_mode_config = {
     "app.conf": "item_overwrite"
 }
@@ -50,7 +50,7 @@ def merge_conf_file(src_file, dst_file, merge_mode="stanza_overwrite"):
         return
     if not os.path.isfile(dst_file):
         return
-    if bn(src_file) in merge_black_list:
+    if bn(src_file) in merge_deny_list:
         return
 
     sparser = TABConfigParser()
@@ -88,7 +88,7 @@ def merge_conf_file(src_file, dst_file, merge_mode="stanza_overwrite"):
         parser.write(df)
 
 
-def merge(src, dst, no_black_list=True):
+def merge(src, dst, no_deny_list=True):
     if op.isfile(src):
         return
 
@@ -99,7 +99,7 @@ def merge(src, dst, no_black_list=True):
     for file in src_files:
         f_path = op.join(src, file)
         if op.isfile(f_path):
-            if no_black_list and file in merge_black_list:
+            if no_deny_list and file in merge_deny_list:
                 continue
 
             if file.endswith("pyo") or file.endswith("pyc"):

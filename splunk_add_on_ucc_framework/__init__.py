@@ -96,6 +96,72 @@ def clean_before_build():
     os.makedirs(os.path.join(outputdir))
     logger.info("Cleaned out directory " + outputdir)
 
+def version_tuple(version_str):
+    """
+    convert string into tuple to compare version
+
+    Args:
+        version_str : raw string
+    Returns:
+        tuple : version into tupleformat
+    """
+    filled = []
+    for point in version_str.split("."):
+        filled.append(point.zfill(8))
+    return tuple(filled)
+
+def handle_update(config_path):
+    """
+    handle changes in globalConfig.json
+
+    Args:
+        config_path : path to globalConfig.json
+
+    Returns:
+        dictionary : schema_content (globalConfig.json)     
+    """
+    with open(config_path, "r") as config_file:
+        schema_content = json.load(config_file)
+    # check for schemaVersion in meta, if not availble then set default 0.0.0 
+    version = schema_content.get("meta").get("schemaVersion","0.0.0")
+
+    # check for schemaVersion, if it's less than 0.0.1 then updating globalConfig.json 
+    if version_tuple(version) < version_tuple("0.0.1"):
+        ta_tabs = schema_content.get("pages").get("configuration").get("tabs")
+
+        # check in every Account tab for biased term
+        for tab in ta_tabs:
+            conf_entitties= tab.get("entity")
+            for entity in conf_entitties:
+                entity_option = entity.get("options")
+                if entity_option and "whiteList" in entity_option:
+                    entity_option["allowList"] = entity_option.get("whiteList")
+                    del entity_option["whiteList"]
+                if entity_option and "blackList" in entity_option:
+                    entity_option["denyList"] = entity_option.get("blackList")
+                    del entity_option["blackList"]
+        
+        services = schema_content.get("pages").get("inputs").get("services")
+        # check in every Input service for biased term
+        for service in services:
+            conf_entitties= service.get("entity")
+            for entity in conf_entitties:
+                entity_option = entity.get("options")
+                if entity_option and "whiteList" in entity_option:
+                    entity_option["allowList"] = entity_option.get("whiteList")
+                    del entity_option["whiteList"]
+                if entity_option and "blackList" in entity_option:
+                    entity_option["denyList"] = entity_option.get("blackList")
+                    del entity_option["blackList"]
+
+        # set schemaVersion to 0.0.1 as updated globalConfig.json according to new update
+        schema_content["meta"]["schemaVersion"]="0.0.1"
+
+        # upadating new changes in globalConfig.json 
+        with open(config_path, "w") as config_file:
+            json.dump(schema_content,config_file, ensure_ascii=False, indent=4)
+    return schema_content
+    
 
 def copy_package_source(args, ta_name):
     """
@@ -343,9 +409,9 @@ def add_modular_input(
         class_name = input_name.upper()
         description = service.get("title")
         entity = service.get("entity")
-        field_white_list = ["name", "index", "sourcetype"]
-        # filter fields in white list
-        entity = [x for x in entity if x.get("field") not in field_white_list]
+        field_allow_list = ["name", "index", "sourcetype"]
+        # filter fields in allow list
+        entity = [x for x in entity if x.get("field") not in field_allow_list]
         import_declare = "import " + import_declare_name
 
         content = j2_env.get_template("input.template").render(
@@ -519,8 +585,8 @@ def main():
         if args.ta_version:
             update_ta_version(args)
 
-        with open(args.config, "r") as config_file:
-            schema_content = json.load(config_file)
+        # handle_update check schemaVersion and update globalConfig.json if required and return schema
+        schema_content = handle_update(args.config)
 
         scheme = GlobalConfigBuilderSchema(schema_content, j2_env)
         ta_name = schema_content.get("meta").get("name")
