@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2020 2020
+#
+# SPDX-License-Identifier: Apache-2.0
+
 #
 # Splunk UI module python renderer
 # This module is imported by the module loader (lib.module.ModuleMapper) into

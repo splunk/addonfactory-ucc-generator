@@ -1,27 +1,27 @@
 [[package]]
-category = "dev"
-description = "apipkg: namespace control and lazy-import mechanism"
 name = "apipkg"
-optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 version = "1.5"
+description = "apipkg: namespace control and lazy-import mechanism"
+category = "dev"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
-category = "dev"
-description = "Atomic file writes."
-marker = "sys_platform == \"win32\""
 name = "atomicwrites"
+version = "1.4.0"
+description = "Atomic file writes."
+category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "1.4.0"
+marker = "sys_platform == \"win32\""
 
 [[package]]
-category = "dev"
-description = "Classes Without Boilerplate"
 name = "attrs"
+version = "20.2.0"
+description = "Classes Without Boilerplate"
+category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "20.2.0"
 
 [package.extras]
 dev = ["coverage (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "zope.interface", "sphinx", "sphinx-rtd-theme", "pre-commit"]
@@ -30,194 +30,217 @@ tests = ["coverage (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six
 tests_no_zope = ["coverage (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six"]
 
 [[package]]
-category = "dev"
-description = "Screen-scraping library"
 name = "beautifulsoup4"
+version = "4.8.1"
+description = "Screen-scraping library"
+category = "dev"
 optional = false
 python-versions = "*"
-version = "4.8.1"
-
-[package.dependencies]
-soupsieve = ">=1.2"
 
 [package.extras]
 html5lib = ["html5lib"]
 lxml = ["lxml"]
 
+[package.dependencies]
+soupsieve = ">=1.2"
+
 [[package]]
+name = "binaryornot"
+version = "0.4.4"
+description = "Ultra-lightweight pure Python package to check if a file is binary or text."
 category = "main"
-description = "Python package for providing Mozilla's CA Bundle."
-name = "certifi"
 optional = false
 python-versions = "*"
-version = "2020.6.20"
-
-[[package]]
-category = "main"
-description = "Universal encoding detector for Python 2 and 3"
-name = "chardet"
-optional = false
-python-versions = "*"
-version = "3.0.4"
-
-[[package]]
-category = "dev"
-description = "Composable command line interface toolkit"
-name = "click"
-optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "7.0"
-
-[[package]]
-category = "dev"
-description = "Cross-platform colored terminal text."
-marker = "sys_platform == \"win32\""
-name = "colorama"
-optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
-version = "0.4.3"
-
-[[package]]
-category = "main"
-description = "Dynamic version generation"
-name = "dunamai"
-optional = false
-python-versions = ">=3.5,<4.0"
-version = "1.3.1"
-
-[[package]]
-category = "dev"
-description = "execnet: rapid multi-Python deployment"
-name = "execnet"
-optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "1.7.1"
 
 [package.dependencies]
-apipkg = ">=1.4"
+chardet = ">=3.0.2"
+
+[[package]]
+name = "boolean.py"
+version = "3.8"
+description = "Define boolean algebras, create and parse boolean expressions and create custom boolean DSL."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "certifi"
+version = "2020.6.20"
+description = "Python package for providing Mozilla's CA Bundle."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "chardet"
+version = "3.0.4"
+description = "Universal encoding detector for Python 2 and 3"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "click"
+version = "7.0"
+description = "Composable command line interface toolkit"
+category = "dev"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+
+[[package]]
+name = "colorama"
+version = "0.4.4"
+description = "Cross-platform colored terminal text."
+category = "dev"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+marker = "sys_platform == \"win32\""
+
+[[package]]
+name = "dunamai"
+version = "1.3.1"
+description = "Dynamic version generation"
+category = "main"
+optional = false
+python-versions = ">=3.5,<4.0"
+
+[[package]]
+name = "execnet"
+version = "1.7.1"
+description = "execnet: rapid multi-Python deployment"
+category = "dev"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [package.extras]
 testing = ["pre-commit"]
 
+[package.dependencies]
+apipkg = ">=1.4"
+
 [[package]]
-category = "dev"
-description = "Faker is a Python package that generates fake data for you."
 name = "faker"
+version = "4.14.0"
+description = "Faker is a Python package that generates fake data for you."
+category = "dev"
 optional = false
 python-versions = ">=3.5"
-version = "4.1.8"
 
 [package.dependencies]
 python-dateutil = ">=2.4"
 text-unidecode = "1.3"
 
 [[package]]
-category = "dev"
-description = "A platform independent file lock."
 name = "filelock"
+version = "3.0.12"
+description = "A platform independent file lock."
+category = "dev"
 optional = false
 python-versions = "*"
-version = "3.0.12"
 
 [[package]]
-category = "main"
-description = "Clean single-source support for Python 3 and 2"
 name = "future"
+version = "0.17.1"
+description = "Clean single-source support for Python 3 and 2"
+category = "main"
 optional = false
 python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
-version = "0.17.1"
 
 [[package]]
-category = "dev"
-description = "Backport of the concurrent.futures package from Python 3.2"
 name = "futures"
+version = "3.1.1"
+description = "Backport of the concurrent.futures package from Python 3.2"
+category = "dev"
 optional = false
 python-versions = "*"
-version = "3.1.1"
 
 [[package]]
-category = "dev"
-description = "Python Futures made then-able"
 name = "futures-then"
+version = "0.1.1"
+description = "Python Futures made then-able"
+category = "dev"
 optional = false
 python-versions = "*"
-version = "0.1.1"
 
 [package.dependencies]
 futures = "*"
 
 [[package]]
-category = "main"
-description = "A comprehensive HTTP client library."
 name = "httplib2"
-optional = false
-python-versions = "*"
 version = "0.18.1"
-
-[[package]]
+description = "A comprehensive HTTP client library."
 category = "main"
-description = "Internationalized Domain Names in Applications (IDNA)"
-name = "idna"
 optional = false
 python-versions = "*"
-version = "2.5"
 
 [[package]]
-category = "dev"
-description = "Read metadata from Python packages"
-marker = "python_version < \"3.8\""
+name = "idna"
+version = "2.10"
+description = "Internationalized Domain Names in Applications (IDNA)"
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+
+[[package]]
 name = "importlib-metadata"
+version = "2.0.0"
+description = "Read metadata from Python packages"
+category = "dev"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
-version = "2.0.0"
-
-[package.dependencies]
-zipp = ">=0.5"
+marker = "python_version < \"3.8\""
 
 [package.extras]
 docs = ["sphinx", "rst.linker"]
 testing = ["packaging", "pep517", "importlib-resources (>=1.3)"]
 
+[package.dependencies]
+zipp = ">=0.5"
+
 [[package]]
-category = "dev"
-description = "IPv4/IPv6 manipulation library"
 name = "ipaddress"
+version = "1.0.22"
+description = "IPv4/IPv6 manipulation library"
+category = "dev"
 optional = false
 python-versions = "*"
-version = "1.0.22"
 
 [[package]]
-category = "main"
-description = "A very fast and expressive template engine."
 name = "jinja2"
+version = "2.11.1"
+description = "A very fast and expressive template engine."
+category = "main"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
-version = "2.11.1"
-
-[package.dependencies]
-MarkupSafe = ">=0.23"
 
 [package.extras]
 i18n = ["Babel (>=0.8)"]
 
+[package.dependencies]
+MarkupSafe = ">=0.23"
+
 [[package]]
-category = "dev"
-description = "A wrapper to JSON parsers allowing comments, multiline strings and trailing commas"
 name = "jsoncomment"
+version = "0.3.3"
+description = "A wrapper to JSON parsers allowing comments, multiline strings and trailing commas"
+category = "dev"
 optional = false
 python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*"
-version = "0.3.3"
 
 [package.extras]
 ujson = ["ujson (>=1.30)"]
 
 [[package]]
-category = "dev"
-description = "An implementation of JSON Schema validation for Python"
 name = "jsonschema"
+version = "3.2.0"
+description = "An implementation of JSON Schema validation for Python"
+category = "dev"
 optional = false
 python-versions = "*"
-version = "3.2.0"
+
+[package.extras]
+format = ["idna", "jsonpointer (>1.13)", "rfc3987", "strict-rfc3339", "webcolors"]
+format_nongpl = ["idna", "jsonpointer (>1.13)", "webcolors", "rfc3986-validator (>0.1.0)", "rfc3339-validator"]
 
 [package.dependencies]
 attrs = ">=17.4.0"
@@ -226,61 +249,60 @@ setuptools = "*"
 six = ">=1.11.0"
 
 [package.dependencies.importlib-metadata]
-python = "<3.8"
 version = "*"
-
-[package.extras]
-format = ["idna", "jsonpointer (>1.13)", "rfc3987", "strict-rfc3339", "webcolors"]
-format_nongpl = ["idna", "jsonpointer (>1.13)", "webcolors", "rfc3986-validator (>0.1.0)", "rfc3339-validator"]
+python = "<3.8"
 
 [[package]]
-category = "dev"
-description = "Manipulates JUnit/xUnit Result XML files"
 name = "junitparser"
+version = "1.4.1"
+description = "Manipulates JUnit/xUnit Result XML files"
+category = "dev"
 optional = false
 python-versions = "*"
-version = "1.4.1"
 
 [package.dependencies]
 future = "*"
 
 [[package]]
-category = "dev"
-description = "Language detection library ported from Google's language-detection."
 name = "langdetect"
+version = "1.0.7"
+description = "Language detection library ported from Google's language-detection."
+category = "dev"
 optional = false
 python-versions = "*"
-version = "1.0.7"
 
 [package.dependencies]
 six = "*"
 
 [[package]]
-category = "dev"
-description = "Logging utilities"
-name = "logutils"
+name = "license-expression"
+version = "1.2"
+description = "license-expression is small utility library to parse, compare, simplify and normalize license expressions (such as SPDX license expressions) using boolean logic."
+category = "main"
 optional = false
 python-versions = "*"
-version = "0.3.5"
+
+[package.dependencies]
+"boolean.py" = ">=3.6,<4.0.0"
 
 [[package]]
-category = "dev"
-description = "Pytest testing utilities with docker containers."
 name = "lovely-pytest-docker"
+version = "0.2.0"
+description = "Pytest testing utilities with docker containers."
+category = "dev"
 optional = false
 python-versions = "*"
-version = "0.2.0"
 
 [package.dependencies]
 pytest = "*"
 
 [[package]]
-category = "main"
-description = "Powerful and Pythonic XML processing library combining libxml2/libxslt with the ElementTree API."
 name = "lxml"
+version = "4.5.1"
+description = "Powerful and Pythonic XML processing library combining libxml2/libxslt with the ElementTree API."
+category = "main"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, != 3.4.*"
-version = "4.5.1"
 
 [package.extras]
 cssselect = ["cssselect (>=0.7)"]
@@ -289,112 +311,112 @@ htmlsoup = ["beautifulsoup4"]
 source = ["Cython (>=0.29.7)"]
 
 [[package]]
-category = "main"
-description = "A super-fast templating language that borrows the  best ideas from the existing templating languages."
 name = "mako"
+version = "1.0.12"
+description = "A super-fast templating language that borrows the  best ideas from the existing templating languages."
+category = "main"
 optional = false
 python-versions = ">=2.6"
-version = "1.0.12"
 
 [package.dependencies]
 MarkupSafe = ">=0.9.2"
 
 [[package]]
-category = "dev"
-description = "Python implementation of Markdown."
 name = "markdown"
+version = "3.1.1"
+description = "Python implementation of Markdown."
+category = "dev"
 optional = false
 python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*"
-version = "3.1.1"
-
-[package.dependencies]
-setuptools = ">=36"
 
 [package.extras]
 testing = ["coverage", "pyyaml"]
 
+[package.dependencies]
+setuptools = ">=36"
+
 [[package]]
-category = "main"
-description = "Safely add untrusted strings to HTML/XML markup."
 name = "markupsafe"
+version = "1.1.1"
+description = "Safely add untrusted strings to HTML/XML markup."
+category = "main"
 optional = false
 python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*"
-version = "1.1.1"
 
 [[package]]
-category = "dev"
-description = "More routines for operating on iterables, beyond itertools"
 name = "more-itertools"
+version = "8.5.0"
+description = "More routines for operating on iterables, beyond itertools"
+category = "dev"
 optional = false
 python-versions = ">=3.5"
-version = "8.5.0"
 
 [[package]]
-category = "main"
-description = "A dot-accessible dictionary (a la JavaScript objects)"
 name = "munch"
+version = "2.5.0"
+description = "A dot-accessible dictionary (a la JavaScript objects)"
+category = "main"
 optional = false
 python-versions = "*"
-version = "2.5.0"
-
-[package.dependencies]
-six = "*"
 
 [package.extras]
 testing = ["pytest", "coverage", "astroid (>=1.5.3,<1.6.0)", "pylint (>=1.7.2,<1.8.0)", "astroid (>=2.0)", "pylint (>=2.3.1,<2.4.0)"]
 yaml = ["PyYAML (>=5.1.0)"]
 
+[package.dependencies]
+six = "*"
+
 [[package]]
-category = "dev"
-description = "Core utilities for Python packages"
 name = "packaging"
+version = "20.4"
+description = "Core utilities for Python packages"
+category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "20.4"
 
 [package.dependencies]
 pyparsing = ">=2.0.2"
 six = "*"
 
 [[package]]
-category = "dev"
-description = "Your own expressive painter who colors text in your terminal."
 name = "painter"
+version = "0.3.1"
+description = "Your own expressive painter who colors text in your terminal."
+category = "dev"
 optional = false
 python-versions = "*"
-version = "0.3.1"
 
 [[package]]
-category = "dev"
-description = "Python Imaging Library (Fork)"
 name = "pillow"
+version = "7.1.2"
+description = "Python Imaging Library (Fork)"
+category = "dev"
 optional = false
 python-versions = ">=3.5"
-version = "7.1.2"
 
 [[package]]
-category = "dev"
-description = "plugin and hook calling mechanisms for python"
 name = "pluggy"
+version = "0.13.1"
+description = "plugin and hook calling mechanisms for python"
+category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "0.13.1"
-
-[package.dependencies]
-[package.dependencies.importlib-metadata]
-python = "<3.8"
-version = ">=0.12"
 
 [package.extras]
 dev = ["pre-commit", "tox"]
 
+[package.dependencies]
+[package.dependencies.importlib-metadata]
+version = ">=0.12"
+python = "<3.8"
+
 [[package]]
-category = "dev"
-description = "Plugin for Poetry to enable dynamic versioning based on VCS tags"
 name = "poetry-dynamic-versioning"
+version = "0.10.0"
+description = "Plugin for Poetry to enable dynamic versioning based on VCS tags"
+category = "dev"
 optional = false
 python-versions = ">=3.5,<4.0"
-version = "0.9.0"
 
 [package.dependencies]
 dunamai = ">=1.3,<2.0"
@@ -402,36 +424,40 @@ jinja2 = ">=2.11.1,<3.0.0"
 tomlkit = ">=0.4"
 
 [[package]]
-category = "dev"
-description = "library with cross-python path, ini-parsing, io, code, log facilities"
 name = "py"
+version = "1.9.0"
+description = "library with cross-python path, ini-parsing, io, code, log facilities"
+category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "1.9.0"
 
 [[package]]
-category = "dev"
-description = "Python parsing module"
 name = "pyparsing"
+version = "2.4.7"
+description = "Python parsing module"
+category = "dev"
 optional = false
 python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
-version = "2.4.7"
 
 [[package]]
-category = "dev"
-description = "Persistent/Functional/Immutable data structures"
 name = "pyrsistent"
+version = "0.17.3"
+description = "Persistent/Functional/Immutable data structures"
+category = "dev"
 optional = false
 python-versions = ">=3.5"
-version = "0.17.3"
 
 [[package]]
-category = "dev"
-description = "pytest: simple powerful testing with Python"
 name = "pytest"
+version = "5.4.3"
+description = "pytest: simple powerful testing with Python"
+category = "dev"
 optional = false
 python-versions = ">=3.5"
-version = "5.4.3"
+
+[package.extras]
+checkqa-mypy = ["mypy (v0.761)"]
+testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "requests", "xmlschema"]
 
 [package.dependencies]
 atomicwrites = ">=1.0"
@@ -444,74 +470,58 @@ py = ">=1.5.0"
 wcwidth = "*"
 
 [package.dependencies.importlib-metadata]
-python = "<3.8"
 version = ">=0.12"
-
-[package.extras]
-checkqa-mypy = ["mypy (v0.761)"]
-testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "requests", "xmlschema"]
+python = "<3.8"
 
 [[package]]
-category = "dev"
-description = "run tests in isolated forked subprocesses"
 name = "pytest-forked"
+version = "1.3.0"
+description = "run tests in isolated forked subprocesses"
+category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
-version = "1.3.0"
 
 [package.dependencies]
 py = "*"
 pytest = ">=3.10"
 
 [[package]]
-category = "dev"
-description = "pytest plugin to run your tests in a specific order"
-name = "pytest-ordering"
-optional = false
-python-versions = "*"
-version = "0.6"
-
-[package.dependencies]
-pytest = "*"
-
-[[package]]
-category = "dev"
-description = "A Dynamic test tool for Splunk Apps and Add-ons"
 name = "pytest-splunk-addon"
+version = "1.3.9"
+description = "A Dynamic test tool for Splunk Apps and Add-ons"
+category = "dev"
 optional = false
-python-versions = ">=3.0, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "1.3.6"
+python-versions = ">=3.7,<4.0"
+
+[package.extras]
+docker = ["lovely-pytest-docker (>=0,<1)"]
 
 [package.dependencies]
-faker = ">=4.1.1,<4.2.0"
-filelock = ">=3.0.12,<3.1.0"
-future = ">=0.17.1,<0.18.0"
-httplib2 = ">=0.18,<1.0"
-jsonschema = ">=3.2.0,<3.3.0"
-junitparser = "1.4.1"
-logutils = ">=0.3.5,<0.4.0"
-pytest = ">=5.3,<6.0"
-pytest-ordering = ">=0.6,<1.0"
-pytest-xdist = ">=1.34.0,<1.35.0"
-requests2 = ">=2.16,<3.0"
-six = ">=1.12.0,<1.13.0"
-splunk-appinspect = ">=2.0.1"
+faker = ">=4.1,<5.0"
+filelock = ">=3.0,<4.0"
+httplib2 = "*"
+jsonschema = ">=3.2,<4.0"
+junitparser = "*"
+pytest = ">5.4.0,<6.1"
+pytest-xdist = "*"
+requests = ">=2,<3"
+splunk_appinspect = ">=2,<3"
 splunk-sdk = ">=1.6,<2.0"
 
 [package.dependencies.lovely-pytest-docker]
+version = ">=0,<1"
 optional = true
-version = ">=0.1.0"
-
-[package.extras]
-docker = ["lovely-pytest-docker (>=0.1.0)"]
 
 [[package]]
-category = "dev"
-description = "pytest xdist plugin for distributed testing and loop-on-failing modes"
 name = "pytest-xdist"
+version = "1.34.0"
+description = "pytest xdist plugin for distributed testing and loop-on-failing modes"
+category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
-version = "1.34.0"
+
+[package.extras]
+testing = ["filelock"]
 
 [package.dependencies]
 execnet = ">=1.1"
@@ -519,51 +529,64 @@ pytest = ">=4.4.0"
 pytest-forked = "*"
 six = "*"
 
-[package.extras]
-testing = ["filelock"]
-
 [[package]]
-category = "dev"
-description = "Extensions to the standard Python datetime module"
 name = "python-dateutil"
+version = "2.8.1"
+description = "Extensions to the standard Python datetime module"
+category = "dev"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
-version = "2.8.1"
 
 [package.dependencies]
 six = ">=1.5"
 
 [[package]]
-category = "dev"
-description = "File type identification using libmagic"
-name = "python-magic"
-optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
-version = "0.4.18"
-
-[[package]]
-category = "dev"
-description = "YAML parser and emitter for Python"
-name = "pyyaml"
-optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
-version = "5.3"
-
-[[package]]
-category = "dev"
-description = "Alternative regular expression module, to replace re."
-name = "regex"
+name = "python-debian"
+version = "0.1.38"
+description = "Debian package related modules"
+category = "main"
 optional = false
 python-versions = "*"
-version = "2019.06.08"
+
+[package.dependencies]
+chardet = "*"
+six = "*"
 
 [[package]]
-category = "main"
-description = "Python HTTP for Humans."
-name = "requests"
+name = "python-magic"
+version = "0.4.18"
+description = "File type identification using libmagic"
+category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+
+[[package]]
+name = "pyyaml"
+version = "5.3"
+description = "YAML parser and emitter for Python"
+category = "dev"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+
+[[package]]
+name = "regex"
+version = "2019.06.08"
+description = "Alternative regular expression module, to replace re."
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "requests"
 version = "2.24.0"
+description = "Python HTTP for Humans."
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+
+[package.extras]
+security = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)"]
+socks = ["PySocks (>=1.5.6,<1.5.7 || >1.5.7)", "win-inet-pton"]
 
 [package.dependencies]
 certifi = ">=2017.4.17"
@@ -571,86 +594,79 @@ chardet = ">=3.0.2,<4"
 idna = ">=2.5,<3"
 urllib3 = ">=1.21.1,<1.25.0 || >1.25.0,<1.25.1 || >1.25.1,<1.26"
 
-[package.extras]
-security = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)"]
-socks = ["PySocks (>=1.5.6,<1.5.7 || >1.5.7)", "win-inet-pton"]
-
 [[package]]
-category = "dev"
-description = "Python HTTP for Humans."
-name = "requests2"
+name = "reuse"
+version = "0.11.1"
+description = "reuse is a tool for compliance with the REUSE recommendations."
+category = "main"
 optional = false
 python-versions = "*"
-version = "2.16.0"
 
 [package.dependencies]
-certifi = ">=2017.4.17"
-chardet = ">=3.0.2,<3.1.0"
-idna = ">=2.5,<2.6"
-urllib3 = ">=1.21.1,<1.22"
-
-[package.extras]
-security = ["cryptography (>=1.3.4)", "idna (>=2.0.0)", "pyOpenSSL (>=0.14)"]
-socks = ["PySocks (>=1.5.6,<1.5.7 || >1.5.7)", "win-inet-pton"]
+binaryornot = "*"
+"boolean.py" = "*"
+Jinja2 = "*"
+license-expression = "*"
+python-debian = "*"
+requests = "*"
 
 [[package]]
-category = "main"
-description = "Python Data Structures for Humans"
 name = "schematics"
+version = "2.1.0"
+description = "Python Data Structures for Humans"
+category = "main"
 optional = false
 python-versions = "*"
-version = "2.1.0"
 
 [[package]]
-category = "main"
-description = "Python 2 and 3 compatibility utilities"
 name = "six"
+version = "1.12.0"
+description = "Python 2 and 3 compatibility utilities"
+category = "main"
 optional = false
 python-versions = ">=2.6, !=3.0.*, !=3.1.*"
-version = "1.12.0"
 
 [[package]]
-category = "main"
-description = "The Splunk Software Development Kit for Splunk Solutions"
 name = "solnlib"
+version = "3.0.5"
+description = "The Splunk Software Development Kit for Splunk Solutions"
+category = "main"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*, !=3.6.*"
-version = "3.0.3"
 
 [package.dependencies]
 future = ">=0,<1"
 requests = ">=2.24,<3.0"
 schematics = ">=2.1,<3.0"
+six = "*"
 sortedcontainers = ">=2.2,<3.0"
-splunk-sdk = ">=1.6,<2.0"
+splunk-sdk = "*"
 
 [[package]]
-category = "main"
-description = "Sorted Containers -- Sorted List, Sorted Dict, Sorted Set"
 name = "sortedcontainers"
+version = "2.2.2"
+description = "Sorted Containers -- Sorted List, Sorted Dict, Sorted Set"
+category = "main"
 optional = false
 python-versions = "*"
-version = "2.2.2"
 
 [[package]]
-category = "dev"
-description = "A modern CSS selector implementation for Beautiful Soup."
 name = "soupsieve"
+version = "2.0.1"
+description = "A modern CSS selector implementation for Beautiful Soup."
+category = "dev"
 optional = false
 python-versions = ">=3.5"
-version = "2.0.1"
 
 [[package]]
-category = "dev"
-description = "Automatic validation checks for Splunk Apps"
 name = "splunk-appinspect"
+version = "2.3.1"
+description = "Automatic validation checks for Splunk Apps"
+category = "dev"
 optional = false
 python-versions = "*"
-version = "2.3.0"
 
 [package.dependencies]
-Markdown = "3.1.1"
-PyYAML = "5.3"
 beautifulsoup4 = "4.8.1"
 chardet = "3.0.4"
 click = "7.0"
@@ -662,39 +678,41 @@ jsoncomment = "0.3.3"
 langdetect = "1.0.7"
 lxml = "4.5.1"
 mako = "1.0.12"
+Markdown = "3.1.1"
 painter = "0.3.1"
 pillow = "7.1.2"
 python-magic = "0.4.18"
+PyYAML = "5.3"
 regex = "2019.6.8"
 six = "1.12.0"
 
 [[package]]
-category = "main"
-description = "The Splunk Software Development Kit for Python."
 name = "splunk-sdk"
+version = "1.6.14"
+description = "The Splunk Software Development Kit for Python."
+category = "main"
 optional = false
 python-versions = "*"
-version = "1.6.14"
 
 [[package]]
-category = "main"
-description = "Supporting library for Splunk Add-ons"
 name = "splunktalib"
+version = "1.1.4"
+description = "Supporting library for Splunk Add-ons"
+category = "main"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*, !=3.6.*"
-version = "1.1.3"
 
 [package.dependencies]
 httplib2 = ">=0.18,<0.19"
 sortedcontainers = ">=2.2,<3.0"
 
 [[package]]
-category = "main"
-description = ""
 name = "splunktaucclib"
+version = "4.0.4"
+description = ""
+category = "main"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*, !=3.6.*"
-version = "4.0.4"
 
 [package.dependencies]
 future = ">=0,<1"
@@ -703,69 +721,70 @@ splunk-sdk = ">=1.6,<2.0"
 splunktalib = ">=1.1,<2.0"
 
 [[package]]
-category = "dev"
-description = "The most basic Text::Unidecode port"
 name = "text-unidecode"
+version = "1.3"
+description = "The most basic Text::Unidecode port"
+category = "dev"
 optional = false
 python-versions = "*"
-version = "1.3"
 
 [[package]]
-category = "dev"
-description = "Style preserving TOML library"
 name = "tomlkit"
+version = "0.7.0"
+description = "Style preserving TOML library"
+category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
-version = "0.7.0"
 
 [[package]]
-category = "main"
-description = "HTTP library with thread-safe connection pooling, file post, and more."
 name = "urllib3"
+version = "1.25.10"
+description = "HTTP library with thread-safe connection pooling, file post, and more."
+category = "main"
 optional = false
-python-versions = "*"
-version = "1.21.1"
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, <4"
 
 [package.extras]
-secure = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "certifi", "ipaddress"]
+brotli = ["brotlipy (>=0.6.0)"]
+secure = ["certifi", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "pyOpenSSL (>=0.14)", "ipaddress"]
 socks = ["PySocks (>=1.5.6,<1.5.7 || >1.5.7,<2.0)"]
 
 [[package]]
-category = "dev"
-description = "Measures the displayed width of unicode strings in a terminal"
 name = "wcwidth"
+version = "0.2.5"
+description = "Measures the displayed width of unicode strings in a terminal"
+category = "dev"
 optional = false
 python-versions = "*"
-version = "0.2.5"
 
 [[package]]
-category = "main"
-description = "A built-package format for Python"
 name = "wheel"
+version = "0.35.1"
+description = "A built-package format for Python"
+category = "main"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
-version = "0.35.1"
 
 [package.extras]
 test = ["pytest (>=3.0.0)", "pytest-cov"]
 
 [[package]]
-category = "dev"
-description = "Backport of pathlib-compatible object wrapper for zip files"
-marker = "python_version < \"3.8\""
 name = "zipp"
+version = "3.3.1"
+description = "Backport of pathlib-compatible object wrapper for zip files"
+category = "dev"
 optional = false
 python-versions = ">=3.6"
-version = "3.3.0"
+marker = "python_version < \"3.8\""
 
 [package.extras]
 docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["pytest (>=3.5,<3.7.3 || >3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pytest-cov", "jaraco.test (>=3.2.0)", "jaraco.itertools", "func-timeout", "pytest-black (>=0.3.7)", "pytest-mypy"]
 
 [metadata]
-content-hash = "7cfefdae221f76708870271629f137c9afe1caaf04e02b957236d9a7cd58c590"
 lock-version = "1.0"
 python-versions = "^3.7"
+content-hash = "bc986b2a4e2460a1b18ab13555be6bb0884a19692c632f4726b7ad414e957f39"
 
 [metadata.files]
 apipkg = [
@@ -785,6 +804,14 @@ beautifulsoup4 = [
     {file = "beautifulsoup4-4.8.1-py3-none-any.whl", hash = "sha256:dcdef580e18a76d54002088602eba453eec38ebbcafafeaabd8cab12b6155d57"},
     {file = "beautifulsoup4-4.8.1.tar.gz", hash = "sha256:6135db2ba678168c07950f9a16c4031822c6f4aec75a65e0a97bc5ca09789931"},
 ]
+binaryornot = [
+    {file = "binaryornot-0.4.4-py2.py3-none-any.whl", hash = "sha256:b8b71173c917bddcd2c16070412e369c3ed7f0528926f70cac18a6c97fd563e4"},
+    {file = "binaryornot-0.4.4.tar.gz", hash = "sha256:359501dfc9d40632edc9fac890e19542db1a287bbcfa58175b66658392018061"},
+]
+"boolean.py" = [
+    {file = "boolean.py-3.8-py2.py3-none-any.whl", hash = "sha256:d75da0fd0354425fa64f6bbc6cec6ae1485d0eec3447b73187ff8cbf9b572e26"},
+    {file = "boolean.py-3.8.tar.gz", hash = "sha256:cc24e20f985d60cd4a3a5a1c0956dd12611159d32a75081dabd0c9ab981acaa4"},
+]
 certifi = [
     {file = "certifi-2020.6.20-py2.py3-none-any.whl", hash = "sha256:8fc0819f1f30ba15bdb34cceffb9ef04d99f420f68eb75d901e9560b8749fc41"},
     {file = "certifi-2020.6.20.tar.gz", hash = "sha256:5930595817496dd21bb8dc35dad090f1c2cd0adfaf21204bf6732ca5d8ee34d3"},
@@ -798,8 +825,7 @@ click = [
     {file = "Click-7.0.tar.gz", hash = "sha256:5b94b49521f6456670fdb30cd82a4eca9412788a93fa6dd6df72c94d5a8ff2d7"},
 ]
 colorama = [
-    {file = "colorama-0.4.3-py2.py3-none-any.whl", hash = "sha256:7d73d2a99753107a36ac6b455ee49046802e59d9d076ef8e47b61499fa29afff"},
-    {file = "colorama-0.4.3.tar.gz", hash = "sha256:e96da0d330793e2cb9485e9ddfd918d456036c7149416295932478192f4436a1"},
+    {file = "colorama-0.4.4-py2.py3-none-any.whl", hash = "sha256:9f47eda37229f68eee03b24b9748937c7dc3868f906e8ba69fbcbdd3bc5dc3e2"},
 ]
 dunamai = [
     {file = "dunamai-1.3.1-py3-none-any.whl", hash = "sha256:8eaac70fef958a2cbbff9be5250edff8a815f8f8edb030219d4203da1a978b1c"},
@@ -810,8 +836,8 @@ execnet = [
     {file = "execnet-1.7.1.tar.gz", hash = "sha256:cacb9df31c9680ec5f95553976c4da484d407e85e41c83cb812aa014f0eddc50"},
 ]
 faker = [
-    {file = "Faker-4.1.8-py3-none-any.whl", hash = "sha256:edffca9d8106fffc23ccef15797665fa8aebec4c0eeb3fd6d43cd23540978d5b"},
-    {file = "Faker-4.1.8.tar.gz", hash = "sha256:179418909da04b04000eab5463c403895faed2849d36ef8d9cbda72cc44797a0"},
+    {file = "Faker-4.14.0-py3-none-any.whl", hash = "sha256:a7a36c3c657f06bd1e3e3821b9480f2a92017d8a26e150e464ab6b97743cbc92"},
+    {file = "Faker-4.14.0.tar.gz", hash = "sha256:30afa8f564350770373f299d2d267bff42aaba699a7ae0a3b6f378b2a8170569"},
 ]
 filelock = [
     {file = "filelock-3.0.12-py3-none-any.whl", hash = "sha256:929b7d63ec5b7d6b71b0fa5ac14e030b3f70b75747cef1b10da9b879fef15836"},
@@ -833,8 +859,8 @@ httplib2 = [
     {file = "httplib2-0.18.1.tar.gz", hash = "sha256:8af66c1c52c7ffe1aa5dc4bcd7c769885254b0756e6e69f953c7f0ab49a70ba3"},
 ]
 idna = [
-    {file = "idna-2.5-py2.py3-none-any.whl", hash = "sha256:cc19709fd6d0cbfed39ea875d29ba6d4e22c0cebc510a76d6302a28385e8bb70"},
-    {file = "idna-2.5.tar.gz", hash = "sha256:3cb5ce08046c4e3a560fc02f138d0ac63e00f8ce5901a56b32ec8b7994082aab"},
+    {file = "idna-2.10-py2.py3-none-any.whl", hash = "sha256:b97d804b1e9b523befed77c48dacec60e6dcb0b5391d57af6a65a312a90648c0"},
+    {file = "idna-2.10.tar.gz", hash = "sha256:b307872f855b18632ce0c21c5e45be78c0ea7ae4c15c828c20788b26921eb3f6"},
 ]
 importlib-metadata = [
     {file = "importlib_metadata-2.0.0-py2.py3-none-any.whl", hash = "sha256:cefa1a2f919b866c5beb7c9f7b0ebb4061f30a8a9bf16d609b000e2dfaceb9c3"},
@@ -863,8 +889,9 @@ junitparser = [
 langdetect = [
     {file = "langdetect-1.0.7.zip", hash = "sha256:91a170d5f0ade380db809b3ba67f08e95fe6c6c8641f96d67a51ff7e98a9bf30"},
 ]
-logutils = [
-    {file = "logutils-0.3.5.tar.gz", hash = "sha256:bc058a25d5c209461f134e1f03cab637d66a7a5ccc12e593db56fbb279899a82"},
+license-expression = [
+    {file = "license-expression-1.2.tar.gz", hash = "sha256:7960e1dfdf20d127e75ead931476f2b5c7556df05b117a73880b22ade17d1abc"},
+    {file = "license_expression-1.2-py2.py3-none-any.whl", hash = "sha256:6d97906380cecfc758a77f6d38c6760f2afade7e83d2b8295e234fe21f486fb8"},
 ]
 lovely-pytest-docker = [
     {file = "lovely-pytest-docker-0.2.0.tar.gz", hash = "sha256:665d85166fe67777efb1c85cbbdd19dea279c53fd464598adb33257664eca96c"},
@@ -985,8 +1012,8 @@ pluggy = [
     {file = "pluggy-0.13.1.tar.gz", hash = "sha256:15b2acde666561e1298d71b523007ed7364de07029219b604cf808bfa1c765b0"},
 ]
 poetry-dynamic-versioning = [
-    {file = "poetry-dynamic-versioning-0.9.0.tar.gz", hash = "sha256:4fe11706388d8c2e835178e5f67dda26e8e5d3df628c84893052be9fae7be57c"},
-    {file = "poetry_dynamic_versioning-0.9.0-py3-none-any.whl", hash = "sha256:a9db211bdaf5ac55151a8e45583fb1e4fe54bb7b5a23ee925e7b23a580e56b0b"},
+    {file = "poetry-dynamic-versioning-0.10.0.tar.gz", hash = "sha256:f1279bc9a292923b6bbcf879275114ed11e12c735c2f03c9d6f64e0ddd94c292"},
+    {file = "poetry_dynamic_versioning-0.10.0-py3-none-any.whl", hash = "sha256:f32002d1e53729e3287f7122df8bac7221468f3ca816dfb150107c7b37ccf3b7"},
 ]
 py = [
     {file = "py-1.9.0-py2.py3-none-any.whl", hash = "sha256:366389d1db726cd2fcfc79732e75410e5fe4d31db13692115529d34069a043c2"},
@@ -1007,14 +1034,9 @@ pytest-forked = [
     {file = "pytest-forked-1.3.0.tar.gz", hash = "sha256:6aa9ac7e00ad1a539c41bec6d21011332de671e938c7637378ec9710204e37ca"},
     {file = "pytest_forked-1.3.0-py2.py3-none-any.whl", hash = "sha256:dc4147784048e70ef5d437951728825a131b81714b398d5d52f17c7c144d8815"},
 ]
-pytest-ordering = [
-    {file = "pytest-ordering-0.6.tar.gz", hash = "sha256:561ad653626bb171da78e682f6d39ac33bb13b3e272d406cd555adb6b006bda6"},
-    {file = "pytest_ordering-0.6-py2-none-any.whl", hash = "sha256:27fba3fc265f5d0f8597e7557885662c1bdc1969497cd58aff6ed21c3b617de2"},
-    {file = "pytest_ordering-0.6-py3-none-any.whl", hash = "sha256:3f314a178dbeb6777509548727dc69edf22d6d9a2867bf2d310ab85c403380b6"},
-]
 pytest-splunk-addon = [
-    {file = "pytest-splunk-addon-1.3.6.tar.gz", hash = "sha256:15a894ac1f8d930279dae812901fa59879498bd1484328473baa5b8949de4b73"},
-    {file = "pytest_splunk_addon-1.3.6-py2.py3-none-any.whl", hash = "sha256:7e4b1537dae2a6a662fcd975833507e45de0f6eef45b3312cbb3118c227c9a1d"},
+    {file = "pytest-splunk-addon-1.3.9.tar.gz", hash = "sha256:05d45f7ef734ad5e029669c78b9d508630e0fc628fef6fc3fa0b946f4f32a10f"},
+    {file = "pytest_splunk_addon-1.3.9-py3-none-any.whl", hash = "sha256:23612b4dadc1f15ade59dba13b7c9df40db2221b555b3deeccfd595584f6cd43"},
 ]
 pytest-xdist = [
     {file = "pytest-xdist-1.34.0.tar.gz", hash = "sha256:340e8e83e2a4c0d861bdd8d05c5d7b7143f6eea0aba902997db15c2a86be04ee"},
@@ -1023,6 +1045,11 @@ pytest-xdist = [
 python-dateutil = [
     {file = "python-dateutil-2.8.1.tar.gz", hash = "sha256:73ebfe9dbf22e832286dafa60473e4cd239f8592f699aa5adaf10050e6e1823c"},
     {file = "python_dateutil-2.8.1-py2.py3-none-any.whl", hash = "sha256:75bb3f31ea686f1197762692a9ee6a7550b59fc6ca3a1f4b5d7e32fb98e2da2a"},
+]
+python-debian = [
+    {file = "python-debian-0.1.38.tar.gz", hash = "sha256:a352bb5f9ef19b0272078f516ee0ec42b05e90ac85651d87c10e7041550dcc1d"},
+    {file = "python_debian-0.1.38-py3-none-any.whl", hash = "sha256:a1f89336d7675a56cdd92fa90cd8c00b9178dabcc6d3e08a397e80eca2b855f3"},
+    {file = "python_debian-0.1.38-py3.7.egg", hash = "sha256:9175c8377dcfbb8bd0704272e3955620991d6d5c45a05aef99fe7211971bd271"},
 ]
 python-magic = [
     {file = "python-magic-0.4.18.tar.gz", hash = "sha256:b757db2a5289ea3f1ced9e60f072965243ea43a2221430048fd8cacab17be0ce"},
@@ -1058,9 +1085,9 @@ requests = [
     {file = "requests-2.24.0-py2.py3-none-any.whl", hash = "sha256:fe75cc94a9443b9246fc7049224f75604b113c36acb93f87b80ed42c44cbb898"},
     {file = "requests-2.24.0.tar.gz", hash = "sha256:b3559a131db72c33ee969480840fff4bb6dd111de7dd27c8ee1f820f4f00231b"},
 ]
-requests2 = [
-    {file = "requests2-2.16.0-py2.py3-none-any.whl", hash = "sha256:141d4f8ad6c1b68932d54f71f303c2aef681556b519c490ec83da193761a9f91"},
-    {file = "requests2-2.16.0.tar.gz", hash = "sha256:f7685b2d620a172053cced288dddf12d4b3441a382cc382821c0f36c02488516"},
+reuse = [
+    {file = "reuse-0.11.1-py3-none-any.whl", hash = "sha256:fb15e9c605d815cc816bec690d3ecf88ecba50968b6d41d558d95e54e80bbcc4"},
+    {file = "reuse-0.11.1.tar.gz", hash = "sha256:a5c539a3ccf46eff16c85590b4cc158fc614ce434b7d9dff5120ef441c591227"},
 ]
 schematics = [
     {file = "schematics-2.1.0-py2.py3-none-any.whl", hash = "sha256:8fcc6182606fd0b24410a1dbb066d9bbddbe8da9c9509f47b743495706239283"},
@@ -1071,8 +1098,8 @@ six = [
     {file = "six-1.12.0.tar.gz", hash = "sha256:d16a0141ec1a18405cd4ce8b4613101da75da0e9a7aec5bdd4fa804d0e0eba73"},
 ]
 solnlib = [
-    {file = "solnlib-3.0.3-py2.py3-none-any.whl", hash = "sha256:b9a37a81b61136d9ace1c61ba48c452269eb8f07e455b86c24bc0f3eb87db5cc"},
-    {file = "solnlib-3.0.3.tar.gz", hash = "sha256:a9b6b08ad04778084bbea72d49674287d022c8f4dc65ddb023d424079d778de0"},
+    {file = "solnlib-3.0.5-py2.py3-none-any.whl", hash = "sha256:c433a4abf7f460a04c6b52d06e663bce3bc3f132bf5c34e11707bddc9847bbdd"},
+    {file = "solnlib-3.0.5.tar.gz", hash = "sha256:f09b5c97c92741e3bc3cc94e647398166be7d0fd8c8f78f17f3863c444f4842c"},
 ]
 sortedcontainers = [
     {file = "sortedcontainers-2.2.2-py2.py3-none-any.whl", hash = "sha256:c633ebde8580f241f274c1f8994a665c0e54a17724fecd0cae2f079e09c36d3f"},
@@ -1083,15 +1110,15 @@ soupsieve = [
     {file = "soupsieve-2.0.1.tar.gz", hash = "sha256:a59dc181727e95d25f781f0eb4fd1825ff45590ec8ff49eadfd7f1a537cc0232"},
 ]
 splunk-appinspect = [
-    {file = "splunk-appinspect-latest.tar.gz", hash = "sha256:eee158f5c90a6bfe7921e43f5a6686c1b7dc887f4efd321f97e588bca43383b7"},
-    {file = "splunk_appinspect-2.3.0-py3-none-any.whl", hash = "sha256:8328b49b1c8e3fd0057719b0931600c43cb3aae9a5d0c9e9f44d170bfd3ef741"},
+    {file = "splunk-appinspect-2.3.1.tar.gz", hash = "sha256:4cda232a6f7dd77c53bd91bb7f441324d8740b1f5e5943d1e255bf74675dcd9b"},
+    {file = "splunk_appinspect-2.3.1-py3-none-any.whl", hash = "sha256:c9b9b73a4ba731cc6aee2fe0e331525d6311603052307d8d34fda03c407fd3b2"},
 ]
 splunk-sdk = [
     {file = "splunk-sdk-1.6.14.tar.gz", hash = "sha256:9f0fa01cbf706f3777d055d3d3dc05b0d3b51ec42978e5917d49cd09a7e7750f"},
 ]
 splunktalib = [
-    {file = "splunktalib-1.1.3-py2.py3-none-any.whl", hash = "sha256:ebb9bb210fe335763a1cfab613f8f0aee4219765783db028ac7c835b94ec65dc"},
-    {file = "splunktalib-1.1.3.tar.gz", hash = "sha256:35f1b9bcbdbc6e64fedca6a6ff78f085baefedd5f66df18e76e60ee81460dceb"},
+    {file = "splunktalib-1.1.4-py2.py3-none-any.whl", hash = "sha256:be6d139569112965fa2d5912584e69458c0f982c331a7a5b1571c36bb222071c"},
+    {file = "splunktalib-1.1.4.tar.gz", hash = "sha256:c336272381509e96ab63348bb46852b0562d2e16a6cfa3ac399c346c5d1e2b65"},
 ]
 splunktaucclib = [
     {file = "splunktaucclib-4.0.4-py2.py3-none-any.whl", hash = "sha256:4d894001af193aab48d21b18587f9b719d677ee4bd1b66efc8d74b09a251c75e"},
@@ -1106,8 +1133,8 @@ tomlkit = [
     {file = "tomlkit-0.7.0.tar.gz", hash = "sha256:ac57f29693fab3e309ea789252fcce3061e19110085aa31af5446ca749325618"},
 ]
 urllib3 = [
-    {file = "urllib3-1.21.1-py2.py3-none-any.whl", hash = "sha256:8ed6d5c1ff9d6ba84677310060d6a3a78ca3072ce0684cb3c645023009c114b1"},
-    {file = "urllib3-1.21.1.tar.gz", hash = "sha256:b14486978518ca0901a76ba973d7821047409d7f726f22156b24e83fd71382a5"},
+    {file = "urllib3-1.25.10-py2.py3-none-any.whl", hash = "sha256:e7983572181f5e1522d9c98453462384ee92a0be7fac5f1413a1e35c56cc0461"},
+    {file = "urllib3-1.25.10.tar.gz", hash = "sha256:91056c15fa70756691db97756772bb1eb9678fa585d9184f24534b100dc60f4a"},
 ]
 wcwidth = [
     {file = "wcwidth-0.2.5-py2.py3-none-any.whl", hash = "sha256:beb4802a9cebb9144e99086eff703a642a13d6a0052920003a230f3294bbe784"},
@@ -1118,6 +1145,6 @@ wheel = [
     {file = "wheel-0.35.1.tar.gz", hash = "sha256:99a22d87add3f634ff917310a3d87e499f19e663413a52eb9232c447aa646c9f"},
 ]
 zipp = [
-    {file = "zipp-3.3.0-py3-none-any.whl", hash = "sha256:eed8ec0b8d1416b2ca33516a37a08892442f3954dee131e92cfd92d8fe3e7066"},
-    {file = "zipp-3.3.0.tar.gz", hash = "sha256:64ad89efee774d1897a58607895d80789c59778ea02185dd846ac38394a8642b"},
+    {file = "zipp-3.3.1-py3-none-any.whl", hash = "sha256:16522f69653f0d67be90e8baa4a46d66389145b734345d68a257da53df670903"},
+    {file = "zipp-3.3.1.tar.gz", hash = "sha256:c1532a8030c32fd52ff6a288d855fe7adef5823ba1d26a29a68fd6314aa72baa"},
 ]

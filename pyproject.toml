@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2020 Splunk Inc.
+#
+# SPDX-License-Identifier: Apache-2.0
+
 [tool.poetry]
 name = "splunk_add_on_ucc_framework"
 version = "0.0.0"
@@ -41,20 +45,24 @@ keywords = ['splunk']
 
 [tool.poetry.dependencies]
 python = "^3.7"
-solnlib = '^3.0'
+solnlib = '^3'
 jinja2 = "^2"
 mako= "^1"
 munch= "^2"
 lxml = "^4.3"
 future = "^0"
-splunktaucclib = "^4.0"
+splunktaucclib = "^4"
 wheel = "*"
 dunamai = "*"
+reuse = "*"
+#black = [
+#    { version = "20.8b1" , python = "^3.7" }
+#]
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.4"
 pytest-splunk-addon = { version = "^1.3", extras = [ "docker" ] }
-poetry-dynamic-versioning = "^0.9"
+poetry-dynamic-versioning = "^0.10"
 
 [tool.poetry-dynamic-versioning]
 enable = true

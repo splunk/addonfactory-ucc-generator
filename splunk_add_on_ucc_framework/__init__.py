@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2020 2020
+#
+# SPDX-License-Identifier: Apache-2.0
+
 __version__ = "0.0.0"
 
 import logging
@@ -232,13 +236,12 @@ def install_libs(path, ucc_lib_target):
             os.system(install_cmd)
             remove_files(ucc_target)
     logging.info(f"  Checking for requirements in {path}")
-    print(os.path.join(path, "lib","requirements.txt"))
     if os.path.exists(os.path.join(path,"lib", "requirements.txt")):
         logging.info(f"  Uses common requirements")    
         _install_libs(requirements=os.path.join(path, "lib","requirements.txt"), ucc_target=ucc_lib_target)
-    elif os.path.exists(os.path.join(os.path.abspath(os.path.join(args.source, os.pardir)), "requirements.txt")):
+    elif os.path.exists(os.path.join(os.path.abspath(os.path.join(path, os.pardir)), "requirements.txt")):
         logging.info(f"  Uses common requirements")    
-        _install_libs(requirements=os.path.join(os.path.abspath(os.path.join(args.source, os.pardir)), "requirements.txt"), ucc_target=ucc_lib_target)
+        _install_libs(requirements=os.path.join(os.path.abspath(os.path.join(path, os.pardir)), "requirements.txt"), ucc_target=ucc_lib_target)
     else:
         logging.info(f"  Not using common requirements")    
 
