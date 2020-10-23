@@ -127,7 +127,7 @@ def handle_update(config_path):
 
     # check for schemaVersion, if it's less than 0.0.1 then updating globalConfig.json 
     if version_tuple(version) < version_tuple("0.0.1"):
-        ta_tabs = schema_content.get("pages").get("configuration").get("tabs")
+        ta_tabs = schema_content.get("pages").get("configuration",{}).get("tabs",{})
 
         # check in every Account tab for biased term
         for tab in ta_tabs:
@@ -140,19 +140,21 @@ def handle_update(config_path):
                 if entity_option and "blackList" in entity_option:
                     entity_option["denyList"] = entity_option.get("blackList")
                     del entity_option["blackList"]
-        
-        services = schema_content.get("pages").get("inputs").get("services")
-        # check in every Input service for biased term
-        for service in services:
-            conf_entitties= service.get("entity")
-            for entity in conf_entitties:
-                entity_option = entity.get("options")
-                if entity_option and "whiteList" in entity_option:
-                    entity_option["allowList"] = entity_option.get("whiteList")
-                    del entity_option["whiteList"]
-                if entity_option and "blackList" in entity_option:
-                    entity_option["denyList"] = entity_option.get("blackList")
-                    del entity_option["blackList"]
+
+        is_inputs = ("inputs" in schema_content.get("pages"))
+        if is_inputs:
+            services = schema_content.get("pages").get("inputs",{}).get("services",{})
+            # check in every Input service for biased term
+            for service in services:
+                conf_entitties= service.get("entity")
+                for entity in conf_entitties:
+                    entity_option = entity.get("options")
+                    if entity_option and "whiteList" in entity_option:
+                        entity_option["allowList"] = entity_option.get("whiteList")
+                        del entity_option["whiteList"]
+                    if entity_option and "blackList" in entity_option:
+                        entity_option["denyList"] = entity_option.get("blackList")
+                        del entity_option["blackList"]
 
         # set schemaVersion to 0.0.1 as updated globalConfig.json according to new update
         schema_content["meta"]["schemaVersion"]="0.0.1"
