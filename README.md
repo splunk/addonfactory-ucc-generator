@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2020 Splunk Inc.
+#
+# SPDX-License-Identifier: Apache-2.0
+
 # splunk-add-on-ucc-framework
 
 ![PyPI](https://img.shields.io/pypi/v/splunk-add-on-ucc-framework)

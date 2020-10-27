@@ -1,4 +1,4 @@
-<%page args="mod_alerts, black_list=['short_name', 'alert_props', 'parameters', 'uuid', 'code', 'largeIcon', 'smallIcon', 'index']"/>\
+<%page args="mod_alerts, deny_list=['short_name', 'alert_props', 'parameters', 'uuid', 'code', 'largeIcon', 'smallIcon', 'index']"/>\
 % for alert in mod_alerts:
 
 [${alert.short_name}]
@@ -14,7 +14,7 @@ param._cam = ${ar_value}
              %for p_k, p_v in v.items():
 ${str(p_k).strip()} = ${str(p_v).strip()}
              %endfor
-        %elif k not in black_list:
+        %elif k not in deny_list:
 ${str(k).strip()} = ${str(v).strip()}
         %endif
     %endfor

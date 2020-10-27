@@ -1,4 +1,4 @@
-var BLACK_LIST = [];
+var DENY_LIST = [];
 
 module.exports = function() {
     return {
@@ -10,8 +10,8 @@ module.exports = function() {
                     src: ['**'],
                     dest: 'build',
                     filter: function (file) {
-                        for (var i = 0; i < BLACK_LIST.length; i++) {
-                            var name = BLACK_LIST[i];
+                        for (var i = 0; i < DENY_LIST.length; i++) {
+                            var name = DENY_LIST[i];
                             if (file.indexOf(name) >= 0) {
                                 return false;
                             }
@@ -36,8 +36,8 @@ module.exports = function() {
                     ],
                     dest: 'build',
                     filter: function (file) {
-                        for (var i = 0; i < BLACK_LIST.length; i++) {
-                            var name = BLACK_LIST[i];
+                        for (var i = 0; i < DENY_LIST.length; i++) {
+                            var name = DENY_LIST[i];
                             if (file.indexOf(name) >= 0) {
                                 return false;
                             }

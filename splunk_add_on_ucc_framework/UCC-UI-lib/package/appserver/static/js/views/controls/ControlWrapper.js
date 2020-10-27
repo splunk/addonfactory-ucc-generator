@@ -143,13 +143,13 @@ define([
                 return {label, value};
             });
 
-            // filter result with white list
-            if (this.controlOptions.whiteList) {
-                dic = this._filterByWhiteList(dic);
+            // filter result with allow list
+            if (this.controlOptions.allowList) {
+                dic = this._filterByAllowList(dic);
             }
-            // filter result with black list
-            if (this.controlOptions.blackList) {
-                dic = this._filterByBlackList(dic);
+            // filter result with deny list
+            if (this.controlOptions.denyList) {
+                dic = this._filterByDenyList(dic);
             }
             // set singleSelect selection list
             if(this.control.setAutoCompleteFields) {
@@ -228,17 +228,17 @@ define([
             return BaseView.prototype.remove.apply(this, arguments);
         },
 
-        _filterByWhiteList: function(fields) {
-            const whiteRegex = new RegExp(this.controlOptions.whiteList);
+        _filterByAllowList: function(fields) {
+            const allowRegex = new RegExp(this.controlOptions.allowList);
             return _.filter(fields, (field) => {
-                return whiteRegex.test(field.value);
+                return allowRegex.test(field.value);
             });
         },
 
-        _filterByBlackList: function(fields) {
-            const blackRegex = new RegExp(this.controlOptions.blackList);
+        _filterByDenyList: function(fields) {
+            const denyRegex = new RegExp(this.controlOptions.denyList);
             return _.filter(fields, (field) => {
-                return !blackRegex.test(field.value);
+                return !denyRegex.test(field.value);
             });
         },
 

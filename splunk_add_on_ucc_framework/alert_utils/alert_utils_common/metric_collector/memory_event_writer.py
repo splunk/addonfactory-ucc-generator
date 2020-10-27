@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2020 2020
+#
+# SPDX-License-Identifier: Apache-2.0
+
 from future import standard_library
 standard_library.install_aliases()
 from alert_utils.alert_utils_common.metric_collector.event_writer import *

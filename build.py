@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2020 2020
+#
+# SPDX-License-Identifier: Apache-2.0
+
 from splunk_add_on_ucc_framework import logger, sourcedir, recursive_overwrite
 
 import os

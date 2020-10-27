@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2020 2020
+#
+# SPDX-License-Identifier: Apache-2.0
+
 import cherrypy, logging, datetime, math, os, splunk.search, splunk.util
 import controllers.module as module
 from splunk.appserver.mrsparkle.lib import i18n, util

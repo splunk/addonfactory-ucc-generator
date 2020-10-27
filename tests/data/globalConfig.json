@@ -559,7 +559,7 @@
                             "defaultValue": "default",
                             "options": {
                                 "endpointUrl": "data/indexes",
-                                "blackList": "^_.*$",
+                                "denyList": "^_.*$",
                                 "createSearchChoice": true
                             },
                             "field": "index",
@@ -736,7 +736,7 @@
                             "defaultValue": "default",
                             "options": {
                                 "endpointUrl": "data/indexes",
-                                "blackList": "^_.*$",
+                                "denyList": "^_.*$",
                                 "createSearchChoice": true
                             },
                             "field": "index",
