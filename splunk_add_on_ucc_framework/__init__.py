@@ -480,7 +480,10 @@ def remove_listed_files(ignore_list):
     """
     for path in ignore_list:
         if os.path.exists(path):
-            shutil.rmtree(path, ignore_errors=True)
+            if os.path.isfile(path):
+                os.remove(path)
+            elif os.path.isdir(path):
+                shutil.rmtree(path, ignore_errors=True)
         else:
             logger.info("While ignoring the files mentioned in .uccignore {} was not found".format(path))
 
