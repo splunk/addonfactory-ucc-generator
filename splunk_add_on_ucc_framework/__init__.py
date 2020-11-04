@@ -691,3 +691,8 @@ def main():
 
     with open(os.path.join(outputdir, ta_name,'default', "app.conf"), 'w') as configfile:
         app_config.write(configfile)
+
+    #Copy Licenses
+    license_dir = os.path.abspath(os.path.join(args.source, PARENT_DIR, "LICENSES"))
+    if os.path.exists(license_dir):        
+        shutil.copy(license_dir, os.path.join(outputdir, ta_name))
