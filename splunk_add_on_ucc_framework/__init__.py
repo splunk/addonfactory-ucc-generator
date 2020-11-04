@@ -582,6 +582,11 @@ def main():
 
     clean_before_build()
 
+    manifest= None
+    with open(os.path.abspath(os.path.join(args.source, "app.manifest")), "r") as manifest_file:
+        manifest = json.load(manifest_file)
+        ta_name = manifest['info']['id']['name']
+
     if os.path.exists(args.config):
 
         if args.ta_version:
@@ -591,7 +596,7 @@ def main():
         schema_content = handle_update(args.config)
 
         scheme = GlobalConfigBuilderSchema(schema_content, j2_env)
-        ta_name = schema_content.get("meta").get("name")
+        
         ta_version = schema_content.get("meta").get("version")
         ta_tabs = schema_content.get("pages").get("configuration").get("tabs")
         ta_namespace = schema_content.get("meta").get("restRoot")
