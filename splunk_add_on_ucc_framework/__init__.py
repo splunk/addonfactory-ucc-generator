@@ -646,7 +646,6 @@ def main():
         logger.warning("Skipped Generating UI components as GlobalConfig.json does not exist.")
         logger.info("Setting TA name as generic")
 
-        ta_name = "TA-generic"
         ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
 
         install_libs(
