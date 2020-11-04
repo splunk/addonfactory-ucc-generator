@@ -694,5 +694,7 @@ def main():
 
     #Copy Licenses
     license_dir = os.path.abspath(os.path.join(args.source, PARENT_DIR, "LICENSES"))
+    
     if os.path.exists(license_dir):        
-        shutil.copy(license_dir, os.path.join(outputdir, ta_name))
+        logger.info("Copy LICENSES directory ")
+        recursive_overwrite(license_dir, os.path.join(outputdir, ta_name,"LICENSES"))
