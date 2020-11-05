@@ -229,7 +229,7 @@ def install_libs(path, ucc_lib_target):
             if not os.path.exists(ucc_target):
                 os.makedirs(ucc_target)
             install_cmd = (
-                installer +"-m pip install -r \""
+                installer +" -m pip install -r \""
                 + requirements
                 + "\" --no-compile --prefer-binary --ignore-installed --target \""
                 + ucc_target
