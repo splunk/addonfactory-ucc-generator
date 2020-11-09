@@ -17,15 +17,15 @@ marker = "sys_platform == \"win32\""
 
 [[package]]
 name = "attrs"
-version = "20.2.0"
+version = "20.3.0"
 description = "Classes Without Boilerplate"
 category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [package.extras]
-dev = ["coverage (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "zope.interface", "sphinx", "sphinx-rtd-theme", "pre-commit"]
-docs = ["sphinx", "sphinx-rtd-theme", "zope.interface"]
+dev = ["coverage (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "zope.interface", "furo", "sphinx", "pre-commit"]
+docs = ["furo", "sphinx", "zope.interface"]
 tests = ["coverage (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "zope.interface"]
 tests_no_zope = ["coverage (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six"]
 
@@ -65,7 +65,7 @@ python-versions = "*"
 
 [[package]]
 name = "certifi"
-version = "2020.6.20"
+version = "2020.11.8"
 description = "Python package for providing Mozilla's CA Bundle."
 category = "main"
 optional = false
@@ -120,7 +120,7 @@ apipkg = ">=1.4"
 
 [[package]]
 name = "faker"
-version = "4.14.1"
+version = "4.14.2"
 description = "Faker is a Python package that generates fake data for you."
 category = "dev"
 optional = false
@@ -262,7 +262,7 @@ python = "<3.8"
 
 [[package]]
 name = "junitparser"
-version = "1.6.1"
+version = "1.6.2"
 description = "Manipulates JUnit/xUnit Result XML files"
 category = "dev"
 optional = false
@@ -653,7 +653,7 @@ splunk-sdk = "*"
 
 [[package]]
 name = "sortedcontainers"
-version = "2.2.2"
+version = "2.3.0"
 description = "Sorted Containers -- Sorted List, Sorted Dict, Sorted Set"
 category = "main"
 optional = false
@@ -717,7 +717,7 @@ sortedcontainers = ">=2.2,<3.0"
 
 [[package]]
 name = "splunktaucclib"
-version = "4.0.6"
+version = "4.0.8"
 description = ""
 category = "main"
 optional = false
@@ -805,8 +805,8 @@ atomicwrites = [
     {file = "atomicwrites-1.4.0.tar.gz", hash = "sha256:ae70396ad1a434f9c7046fd2dd196fc04b12f9e91ffb859164193be8b6168a7a"},
 ]
 attrs = [
-    {file = "attrs-20.2.0-py2.py3-none-any.whl", hash = "sha256:fce7fc47dfc976152e82d53ff92fa0407700c21acd20886a13777a0d20e655dc"},
-    {file = "attrs-20.2.0.tar.gz", hash = "sha256:26b54ddbbb9ee1d34d5d3668dd37d6cf74990ab23c828c2888dccdceee395594"},
+    {file = "attrs-20.3.0-py2.py3-none-any.whl", hash = "sha256:31b2eced602aa8423c2aea9c76a724617ed67cf9513173fd3a4f03e3a929c7e6"},
+    {file = "attrs-20.3.0.tar.gz", hash = "sha256:832aa3cde19744e49938b91fea06d69ecb9e649c93ba974535d08ad92164f700"},
 ]
 beautifulsoup4 = [
     {file = "beautifulsoup4-4.8.1-py2-none-any.whl", hash = "sha256:5279c36b4b2ec2cb4298d723791467e3000e5384a43ea0cdf5d45207c7e97169"},
@@ -822,8 +822,8 @@ binaryornot = [
     {file = "boolean.py-3.8.tar.gz", hash = "sha256:cc24e20f985d60cd4a3a5a1c0956dd12611159d32a75081dabd0c9ab981acaa4"},
 ]
 certifi = [
-    {file = "certifi-2020.6.20-py2.py3-none-any.whl", hash = "sha256:8fc0819f1f30ba15bdb34cceffb9ef04d99f420f68eb75d901e9560b8749fc41"},
-    {file = "certifi-2020.6.20.tar.gz", hash = "sha256:5930595817496dd21bb8dc35dad090f1c2cd0adfaf21204bf6732ca5d8ee34d3"},
+    {file = "certifi-2020.11.8-py2.py3-none-any.whl", hash = "sha256:1f422849db327d534e3d0c5f02a263458c3955ec0aae4ff09b95f195c59f4edd"},
+    {file = "certifi-2020.11.8.tar.gz", hash = "sha256:f05def092c44fbf25834a51509ef6e631dc19765ab8a57b4e7ab85531f0a9cf4"},
 ]
 chardet = [
     {file = "chardet-3.0.4-py2.py3-none-any.whl", hash = "sha256:fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691"},
@@ -845,8 +845,8 @@ execnet = [
     {file = "execnet-1.7.1.tar.gz", hash = "sha256:cacb9df31c9680ec5f95553976c4da484d407e85e41c83cb812aa014f0eddc50"},
 ]
 faker = [
-    {file = "Faker-4.14.1-py3-none-any.whl", hash = "sha256:f94866bced86e8c0fe257e411b62476ffdeb3190ff3df6017ff37f858117a787"},
-    {file = "Faker-4.14.1.tar.gz", hash = "sha256:2dd0e22bb97453fe1d3af2d785d8b45aa9e46018bacc7ba03ce5e2d86543c3a5"},
+    {file = "Faker-4.14.2-py3-none-any.whl", hash = "sha256:ce1c38823eb0f927567cde5bf2e7c8ca565c7a70316139342050ce2ca74b4026"},
+    {file = "Faker-4.14.2.tar.gz", hash = "sha256:6afc461ab3f779c9c16e299fc731d775e39ea7e8e063b3053ee359ae198a15ca"},
 ]
 filelock = [
     {file = "filelock-3.0.12-py3-none-any.whl", hash = "sha256:929b7d63ec5b7d6b71b0fa5ac14e030b3f70b75747cef1b10da9b879fef15836"},
@@ -895,8 +895,8 @@ jsonschema = [
     {file = "jsonschema-3.2.0.tar.gz", hash = "sha256:c8a85b28d377cc7737e46e2d9f2b4f44ee3c0e1deac6bf46ddefc7187d30797a"},
 ]
 junitparser = [
-    {file = "junitparser-1.6.1-py2.py3-none-any.whl", hash = "sha256:62dbc0339e0a0570222e29f58dcb079ec33e18c484d3ac1e0ad6c2b28b81e872"},
-    {file = "junitparser-1.6.1.tar.gz", hash = "sha256:2e8a263077b30a3afff8aed906a35aabc74cf536400e86fbcf46f64c9bb1bf8d"},
+    {file = "junitparser-1.6.2-py2.py3-none-any.whl", hash = "sha256:3c1945d5b77f6c8d721d997ecfe88a0d19c8d10a9613153527c3670b22431ab7"},
+    {file = "junitparser-1.6.2.tar.gz", hash = "sha256:38756555f7bc3142fdde5e3d37bc915fb97599824ed9f615aab026002fe3eee4"},
 ]
 langdetect = [
     {file = "langdetect-1.0.7.zip", hash = "sha256:91a170d5f0ade380db809b3ba67f08e95fe6c6c8641f96d67a51ff7e98a9bf30"},
@@ -1114,8 +1114,8 @@ solnlib = [
     {file = "solnlib-3.0.5.tar.gz", hash = "sha256:f09b5c97c92741e3bc3cc94e647398166be7d0fd8c8f78f17f3863c444f4842c"},
 ]
 sortedcontainers = [
-    {file = "sortedcontainers-2.2.2-py2.py3-none-any.whl", hash = "sha256:c633ebde8580f241f274c1f8994a665c0e54a17724fecd0cae2f079e09c36d3f"},
-    {file = "sortedcontainers-2.2.2.tar.gz", hash = "sha256:4e73a757831fc3ca4de2859c422564239a31d8213d09a2a666e375807034d2ba"},
+    {file = "sortedcontainers-2.3.0-py2.py3-none-any.whl", hash = "sha256:37257a32add0a3ee490bb170b599e93095eed89a55da91fa9f48753ea12fd73f"},
+    {file = "sortedcontainers-2.3.0.tar.gz", hash = "sha256:59cc937650cf60d677c16775597c89a960658a09cf7c1a668f86e1e4464b10a1"},
 ]
 soupsieve = [
     {file = "soupsieve-2.0.1-py3-none-any.whl", hash = "sha256:1634eea42ab371d3d346309b93df7870a88610f0725d47528be902a0d95ecc55"},
@@ -1133,8 +1133,8 @@ splunktalib = [
     {file = "splunktalib-1.1.4.tar.gz", hash = "sha256:c336272381509e96ab63348bb46852b0562d2e16a6cfa3ac399c346c5d1e2b65"},
 ]
 splunktaucclib = [
-    {file = "splunktaucclib-4.0.6-py2.py3-none-any.whl", hash = "sha256:40c34a0314458ecb8af72c3da4c84a881d0c6c553a13d4d1109694264cae8cc9"},
-    {file = "splunktaucclib-4.0.6.tar.gz", hash = "sha256:c2a71770ff71b4474e47f8af8e36379b3c8528fe72df80168d740873d38b590c"},
+    {file = "splunktaucclib-4.0.8-py2.py3-none-any.whl", hash = "sha256:7e14ddf04c81367d1012952a089373c6a708210e563d5c5a9163c55415a637ef"},
+    {file = "splunktaucclib-4.0.8.tar.gz", hash = "sha256:cf55cbb3fd27dfb4954c526a1e8a17dd7d89f00d77672a99f37204bfae5be41f"},
 ]
 text-unidecode = [
     {file = "text-unidecode-1.3.tar.gz", hash = "sha256:bad6603bb14d279193107714b288be206cac565dfa49aa5b105294dd5c4aab93"},
