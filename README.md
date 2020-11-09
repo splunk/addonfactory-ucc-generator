@@ -24,7 +24,7 @@ It is helpful to control the activity by using hooks and other functionalities. 
 
 - Addon package and globalConfig.json file
 
-> Note: You may refer the globalConfig.json file [here](tests/data/globalConfig.json)
+> Note: You may refer the globalConfig.json file [here](https://github.com/splunk/addonfactory-ucc-generator/blob/master/tests/data/globalConfig.json)
 
 
 ## Installation
@@ -58,9 +58,9 @@ By the running the `ucc-gen` command, the following steps came in action:
 
 | File Name            | Description                         | Output directory in ucc build |
 |----------------------|-------------------------------------|-------------------------------|
-| lib/requirements.txt     | Python2/python3 compatible packages | output/<package_ID>/lib       |
+| lib/requirements.txt     | Python2/Python3 compatible packages | output/<package_ID>/lib       |
 | lib/py2/requirements.txt | Only Python2 compatible packages    | output/<package_ID>/lib/py2   |
-| lib/py3/requirements.txt | Only python3 compatible packages    | output/<package_ID>/lib/py3   |
+| lib/py3/requirements.txt | Only Python3 compatible packages    | output/<package_ID>/lib/py3   |
 
 7. Replace tokens in views
 8. Copy addon's `package/*` to `output/<package_ID>/*` directory
@@ -69,6 +69,7 @@ By the running the `ucc-gen` command, the following steps came in action:
 ## Params
 
 splunk-add-on-ucc-framework supports the following params:
+
 | Name       | Description                                                                                              |
 |------------|----------------------------------------------------------------------------------------------------------|
 | source     | Folder containing the app.manifest and app source                                                        |
