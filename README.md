@@ -69,6 +69,7 @@ By the running the `ucc-gen` command, the following steps came in action:
 ## Params
 
 splunk-add-on-ucc-framework supports the following params:
+
 | Name       | Description                                                                                              |
 |------------|----------------------------------------------------------------------------------------------------------|
 | source     | Folder containing the app.manifest and app source                                                        |
