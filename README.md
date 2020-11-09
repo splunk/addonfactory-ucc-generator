@@ -58,7 +58,7 @@ By the running the `ucc-gen` command, the following steps came in action:
 
 | File Name            | Description                         | Output directory in ucc build |
 |----------------------|-------------------------------------|-------------------------------|
-| lib/requirements.txt     | Python2/python3 compatible packages | output/<package_ID>/lib       |
+| lib/requirements.txt     | Python2/Python3 compatible packages | output/<package_ID>/lib       |
 | lib/py2/requirements.txt | Only Python2 compatible packages    | output/<package_ID>/lib/py2   |
 | lib/py3/requirements.txt | Only Python3 compatible packages    | output/<package_ID>/lib/py3   |
 
