@@ -214,7 +214,7 @@ def install_libs(path, ucc_lib_target):
         ucc_lib_target (str): Target path to install libraries.
     """
 
-    def _install_libs(requirements, ucc_target, installer="pip3"):
+    def _install_libs(requirements, ucc_target, installer="python3.7"):
         """
         Install 3rd Party libraries using pip2/pip3
 
@@ -261,7 +261,7 @@ def install_libs(path, ucc_lib_target):
         _install_libs(requirements=os.path.join(path,"lib", "py3","requirements.txt"), ucc_target=os.path.join(ucc_lib_target, "py3"))
     elif os.path.exists(os.path.join(os.path.abspath(os.path.join(path, os.pardir)), "requirements_py3.txt")):
         logging.info(f"  Uses py3 requirements")    
-        _install_libs(requirements=os.path.join(os.path.abspath(os.path.join(path, os.pardir)), "requirements_py3.txt"), installer="pip3", ucc_target=os.path.join(ucc_lib_target, "py2"))        
+        _install_libs(requirements=os.path.join(os.path.abspath(os.path.join(path, os.pardir)), "requirements_py3.txt"), ucc_target=os.path.join(ucc_lib_target, "py2"))        
     else:
         logging.info(f"  Not using py3 requirements")    
 
