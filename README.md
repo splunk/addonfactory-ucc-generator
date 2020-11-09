@@ -17,7 +17,7 @@ UCC provides basic UI template for creating Addon's UI. It is helpful to control
 
 ## Features
 
-- Generate ucc based addons for your Splunk Technology Add-ons
+- Generate UCC based addons for your Splunk Technology Add-ons
 
 
 ## Requirements
@@ -38,10 +38,10 @@ $ pip3 install splunk-add-on-ucc-framework
 
 ## How to use
 
-To build the ucc based addon follow the below steps:
+To build the UCC based addon follow the below steps:
 
-1. Install the `splunk-add-on-ucc-framework` via `pip3`
-2. Run the `ucc-gen` command
+1. Install the `splunk-add-on-ucc-framework` via `pip3`.
+2. Run the `ucc-gen` command.
 3. Make sure that `package` folder and `globalConfig.json` file are present in the addon folder.
 4. The final addon package will be generated, in the `output` folder.
 
@@ -51,19 +51,19 @@ To build the ucc based addon follow the below steps:
 By the running the `ucc-gen` command, the following steps are executed:
 1. Cleaning out the `output` folder.
 2. Retrieve the package ID of addon.
-3. Copy UCC template directory under `output/<package_ID>` directory
-4. Copy `globalConfig.json` file to `output/<package_ID>/appserver/static/js/build` directory
-5. Collect and install Addon's requirements into `output/<package_ID>/lib` directory of addon's package
-6. For the addon's requirements, packages were installed according to following table.
+3. Copy UCC template directory under `output/<package_ID>` directory.
+4. Copy `globalConfig.json` file to `output/<package_ID>/appserver/static/js/build` directory.
+5. Collect and install Addon's requirements into `output/<package_ID>/lib` directory of addon's package.
+6. For the addon's requirements, packages are installed according to following table:
 
-    | File Name            | Description                         | Output directory in ucc build |
+    | File Name            | Description                         | Output directory in UCC build |
     |----------------------|-------------------------------------|-------------------------------|
     | lib/requirements.txt     | Python2/Python3 compatible packages | output/<package_ID>/lib       |
     | lib/py2/requirements.txt | Only Python2 compatible packages    | output/<package_ID>/lib/py2   |
     | lib/py3/requirements.txt | Only Python3 compatible packages    | output/<package_ID>/lib/py3   |
 
-7. Replace tokens in views
-8. Copy addon's `package/*` to `output/<package_ID>/*` directory
+7. Replace tokens in views.
+8. Copy addon's `package/*` to `output/<package_ID>/*` directory.
 
 
 ## Params
