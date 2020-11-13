@@ -17,6 +17,7 @@ members = {endpoints}
     _external_template = """
 [admin_external:{name}]
 handlertype = python
+python.version = python3
 handlerfile = {rh_name}.py
 handleractions = {actions}
 handlerpersistentmode = true
