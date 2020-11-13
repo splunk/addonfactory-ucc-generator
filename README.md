@@ -35,7 +35,6 @@ UCC provides basic UI template for creating Addon's UI. It is helpful to control
 $ pip3 install splunk-add-on-ucc-framework
 ```
 
-
 ## How to use
 
 To build the UCC based addon follow the below steps:
