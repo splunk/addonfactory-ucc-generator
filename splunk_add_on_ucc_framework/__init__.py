@@ -429,6 +429,21 @@ def add_modular_input(
         with open(input_file_name, "w") as input_file:
             input_file.write(content)
 
+        input_default = os.path.join(
+            outputdir, ta_name, "default",  "inputs.conf"
+        )   
+        config = configparser.ConfigParser()
+        if os.path.exists(input_default):
+            config.read(input_default)
+        
+        if config.has_section(input_name):
+            config[input_name]['python.version'] = 'python3'
+        else:
+            config[input_name] = {'python.version': 'python3'}
+        
+        with open(input_default, 'w') as configfile:
+           config.write(configfile)
+
 
 def make_modular_alerts(args, ta_name, ta_namespace, schema_content):
     """
