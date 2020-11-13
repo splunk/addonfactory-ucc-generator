@@ -22,16 +22,18 @@ pip-wheel-metadata/UNKNOWN.dist-info/METADATA
 .DS_Store
 .venv
 output
-splunk_add_on_ucc_framework/package/appserver/static/css/*
-splunk_add_on_ucc_framework/package/appserver/static/js/build/*.js
-splunk_add_on_ucc_framework/package/locale/zh_CN/LC_MESSAGES/messages.po
-splunk_add_on_ucc_framework/package/locale/zh_CN/LC_MESSAGES/messages.mo
-splunk_add_on_ucc_framework/package/locale/messages.pot
-splunk_add_on_ucc_framework/package/appserver/static/styles/bootstrap.pcss
-splunk_add_on_ucc_framework/package/appserver/templates/base.html
-splunk_add_on_ucc_framework/package/appserver/templates/redirect.html
-splunk_add_on_ucc_framework/package/default/data/ui/nav/default.xml
-splunk_add_on_ucc_framework/package/default/data/ui/views/configuration.xml
-splunk_add_on_ucc_framework/package/default/data/ui/views/inputs.xml
-splunk_add_on_ucc_framework/package/default/data/ui/views/redirect.xml
-splunk_add_on_ucc_framework/uccrestbuilder/builder.py
+# The following files should never be checked into git but can not be in the
+# ignore file due to poetry issues
+# splunk_add_on_ucc_framework/package/appserver/static/css/*
+# splunk_add_on_ucc_framework/package/appserver/static/js/build/*.js
+# splunk_add_on_ucc_framework/package/locale/zh_CN/LC_MESSAGES/messages.po
+# splunk_add_on_ucc_framework/package/locale/zh_CN/LC_MESSAGES/messages.mo
+# splunk_add_on_ucc_framework/package/locale/messages.pot
+# splunk_add_on_ucc_framework/package/appserver/static/styles/bootstrap.pcss
+# splunk_add_on_ucc_framework/package/appserver/templates/base.html
+# splunk_add_on_ucc_framework/package/appserver/templates/redirect.html
+# splunk_add_on_ucc_framework/package/default/data/ui/nav/default.xml
+# splunk_add_on_ucc_framework/package/default/data/ui/views/configuration.xml
+# splunk_add_on_ucc_framework/package/default/data/ui/views/inputs.xml
+# splunk_add_on_ucc_framework/package/default/data/ui/views/redirect.xml
+# splunk_add_on_ucc_framework/uccrestbuilder/builder.py
