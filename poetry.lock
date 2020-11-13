@@ -13,7 +13,6 @@ description = "Atomic file writes."
 category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-marker = "sys_platform == \"win32\""
 
 [[package]]
 name = "attrs"
@@ -24,10 +23,10 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [package.extras]
-dev = ["coverage (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "zope.interface", "furo", "sphinx", "pre-commit"]
+dev = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "zope.interface", "furo", "sphinx", "pre-commit"]
 docs = ["furo", "sphinx", "zope.interface"]
-tests = ["coverage (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "zope.interface"]
-tests_no_zope = ["coverage (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six"]
+tests = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "zope.interface"]
+tests_no_zope = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six"]
 
 [[package]]
 name = "beautifulsoup4"
@@ -37,12 +36,12 @@ category = "dev"
 optional = false
 python-versions = "*"
 
+[package.dependencies]
+soupsieve = ">=1.2"
+
 [package.extras]
 html5lib = ["html5lib"]
 lxml = ["lxml"]
-
-[package.dependencies]
-soupsieve = ">=1.2"
 
 [[package]]
 name = "binaryornot"
@@ -94,7 +93,6 @@ description = "Cross-platform colored terminal text."
 category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
-marker = "sys_platform == \"win32\""
 
 [[package]]
 name = "dunamai"
@@ -112,11 +110,11 @@ category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
-[package.extras]
-testing = ["pre-commit"]
-
 [package.dependencies]
 apipkg = ">=1.4"
+
+[package.extras]
+testing = ["pre-commit"]
 
 [[package]]
 name = "faker"
@@ -188,14 +186,13 @@ description = "Read metadata from Python packages"
 category = "dev"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
-marker = "python_version < \"3.8\""
+
+[package.dependencies]
+zipp = ">=0.5"
 
 [package.extras]
 docs = ["sphinx", "rst.linker"]
 testing = ["packaging", "pep517", "importlib-resources (>=1.3)"]
-
-[package.dependencies]
-zipp = ">=0.5"
 
 [[package]]
 name = "iniconfig"
@@ -221,11 +218,11 @@ category = "main"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
-[package.extras]
-i18n = ["Babel (>=0.8)"]
-
 [package.dependencies]
 MarkupSafe = ">=0.23"
+
+[package.extras]
+i18n = ["Babel (>=0.8)"]
 
 [[package]]
 name = "jsoncomment"
@@ -246,19 +243,15 @@ category = "dev"
 optional = false
 python-versions = "*"
 
+[package.dependencies]
+attrs = ">=17.4.0"
+importlib-metadata = {version = "*", markers = "python_version < \"3.8\""}
+pyrsistent = ">=0.14.0"
+six = ">=1.11.0"
+
 [package.extras]
 format = ["idna", "jsonpointer (>1.13)", "rfc3987", "strict-rfc3339", "webcolors"]
 format_nongpl = ["idna", "jsonpointer (>1.13)", "webcolors", "rfc3986-validator (>0.1.0)", "rfc3339-validator"]
-
-[package.dependencies]
-attrs = ">=17.4.0"
-pyrsistent = ">=0.14.0"
-setuptools = "*"
-six = ">=1.11.0"
-
-[package.dependencies.importlib-metadata]
-version = "*"
-python = "<3.8"
 
 [[package]]
 name = "junitparser"
@@ -340,9 +333,6 @@ python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*"
 [package.extras]
 testing = ["coverage", "pyyaml"]
 
-[package.dependencies]
-setuptools = ">=36"
-
 [[package]]
 name = "markupsafe"
 version = "1.1.1"
@@ -367,12 +357,12 @@ category = "main"
 optional = false
 python-versions = "*"
 
+[package.dependencies]
+six = "*"
+
 [package.extras]
 testing = ["pytest", "coverage", "astroid (>=1.5.3,<1.6.0)", "pylint (>=1.7.2,<1.8.0)", "astroid (>=2.0)", "pylint (>=2.3.1,<2.4.0)"]
 yaml = ["PyYAML (>=5.1.0)"]
-
-[package.dependencies]
-six = "*"
 
 [[package]]
 name = "packaging"
@@ -410,13 +400,11 @@ category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
+[package.dependencies]
+importlib-metadata = {version = ">=0.12", markers = "python_version < \"3.8\""}
+
 [package.extras]
 dev = ["pre-commit", "tox"]
-
-[package.dependencies]
-[package.dependencies.importlib-metadata]
-version = ">=0.12"
-python = "<3.8"
 
 [[package]]
 name = "poetry-dynamic-versioning"
@@ -463,14 +451,11 @@ category = "dev"
 optional = false
 python-versions = ">=3.5"
 
-[package.extras]
-checkqa_mypy = ["mypy (0.780)"]
-testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "requests", "xmlschema"]
-
 [package.dependencies]
-atomicwrites = ">=1.0"
+atomicwrites = {version = ">=1.0", markers = "sys_platform == \"win32\""}
 attrs = ">=17.4.0"
-colorama = "*"
+colorama = {version = "*", markers = "sys_platform == \"win32\""}
+importlib-metadata = {version = ">=0.12", markers = "python_version < \"3.8\""}
 iniconfig = "*"
 more-itertools = ">=4.0.0"
 packaging = "*"
@@ -478,9 +463,9 @@ pluggy = ">=0.12,<1.0"
 py = ">=1.8.2"
 toml = "*"
 
-[package.dependencies.importlib-metadata]
-version = ">=0.12"
-python = "<3.8"
+[package.extras]
+checkqa_mypy = ["mypy (==0.780)"]
+testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "requests", "xmlschema"]
 
 [[package]]
 name = "pytest-forked"
@@ -496,14 +481,11 @@ pytest = ">=3.10"
 
 [[package]]
 name = "pytest-splunk-addon"
-version = "1.3.11"
+version = "1.3.12"
 description = "A Dynamic test tool for Splunk Apps and Add-ons"
 category = "dev"
 optional = false
 python-versions = ">=3.7,<4.0"
-
-[package.extras]
-docker = ["lovely-pytest-docker (>=0,<1)"]
 
 [package.dependencies]
 faker = ">=4.1,<5.0"
@@ -511,15 +493,15 @@ filelock = ">=3.0,<4.0"
 httplib2 = "*"
 jsonschema = ">=3.2,<4.0"
 junitparser = "*"
+lovely-pytest-docker = {version = ">=0,<1", optional = true, markers = "extra == \"docker\""}
 pytest = ">5.4.0,<6.1"
 pytest-xdist = "*"
 requests = ">=2,<3"
 splunk_appinspect = ">=2,<3"
 splunk-sdk = ">=1.6,<2.0"
 
-[package.dependencies.lovely-pytest-docker]
-version = ">=0,<1"
-optional = true
+[package.extras]
+docker = ["lovely-pytest-docker (>=0,<1)"]
 
 [[package]]
 name = "pytest-xdist"
@@ -529,14 +511,14 @@ category = "dev"
 optional = false
 python-versions = ">=3.5"
 
-[package.extras]
-psutil = ["psutil (>=3.0)"]
-testing = ["filelock"]
-
 [package.dependencies]
 execnet = ">=1.1"
 pytest = ">=6.0.0"
 pytest-forked = "*"
+
+[package.extras]
+psutil = ["psutil (>=3.0)"]
+testing = ["filelock"]
 
 [[package]]
 name = "python-dateutil"
@@ -593,15 +575,15 @@ category = "main"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
-[package.extras]
-security = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)"]
-socks = ["PySocks (>=1.5.6,<1.5.7 || >1.5.7)", "win-inet-pton"]
-
 [package.dependencies]
 certifi = ">=2017.4.17"
 chardet = ">=3.0.2,<4"
 idna = ">=2.5,<3"
 urllib3 = ">=1.21.1,<1.25.0 || >1.25.0,<1.25.1 || >1.25.1,<1.26"
+
+[package.extras]
+security = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)"]
+socks = ["PySocks (>=1.5.6,!=1.5.7)", "win-inet-pton"]
 
 [[package]]
 name = "reuse"
@@ -764,18 +746,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, <4"
 [package.extras]
 brotli = ["brotlipy (>=0.6.0)"]
 secure = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "certifi", "ipaddress"]
-socks = ["PySocks (>=1.5.6,<1.5.7 || >1.5.7,<2.0)"]
-
-[[package]]
-name = "wheel"
-version = "0.35.1"
-description = "A built-package format for Python"
-category = "main"
-optional = false
-python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
-
-[package.extras]
-test = ["pytest (>=3.0.0)", "pytest-cov"]
+socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]
 name = "zipp"
@@ -784,14 +755,13 @@ description = "Backport of pathlib-compatible object wrapper for zip files"
 category = "dev"
 optional = false
 python-versions = ">=3.6"
-marker = "python_version < \"3.8\""
 
 [package.extras]
 docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
-testing = ["pytest (>=3.5,<3.7.3 || >3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pytest-cov", "jaraco.test (>=3.2.0)", "jaraco.itertools", "func-timeout", "pytest-black (>=0.3.7)", "pytest-mypy"]
+testing = ["pytest (>=3.5,!=3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pytest-cov", "jaraco.test (>=3.2.0)", "jaraco.itertools", "func-timeout", "pytest-black (>=0.3.7)", "pytest-mypy"]
 
 [metadata]
-lock-version = "1.0"
+lock-version = "1.1"
 python-versions = "^3.7"
 content-hash = "f51b596f059cabf642bb65e800d2b694fb138ec57bc092d9d9fb2535c062b943"
 
@@ -835,6 +805,7 @@ click = [
 ]
 colorama = [
     {file = "colorama-0.4.4-py2.py3-none-any.whl", hash = "sha256:9f47eda37229f68eee03b24b9748937c7dc3868f906e8ba69fbcbdd3bc5dc3e2"},
+    {file = "colorama-0.4.4.tar.gz", hash = "sha256:5941b2b48a20143d2267e95b1c2a7603ce057ee39fd88e7329b0c292aa16869b"},
 ]
 dunamai = [
     {file = "dunamai-1.3.1-py3-none-any.whl", hash = "sha256:8eaac70fef958a2cbbff9be5250edff8a815f8f8edb030219d4203da1a978b1c"},
@@ -876,6 +847,7 @@ importlib-metadata = [
     {file = "importlib_metadata-2.0.0.tar.gz", hash = "sha256:77a540690e24b0305878c37ffd421785a6f7e53c8b5720d211b211de8d0e95da"},
 ]
 iniconfig = [
+    {file = "iniconfig-1.1.1-py2.py3-none-any.whl", hash = "sha256:011e24c64b7f47f6ebd835bb12a743f2fbe9a26d4cecaa7f53bc4f35ee9da8b3"},
     {file = "iniconfig-1.1.1.tar.gz", hash = "sha256:bc3af051d7d14b2ee5ef9969666def0cd1a000e121eaea580d4a313df4b37f32"},
 ]
 ipaddress = [
@@ -1047,8 +1019,8 @@ pytest-forked = [
     {file = "pytest_forked-1.3.0-py2.py3-none-any.whl", hash = "sha256:dc4147784048e70ef5d437951728825a131b81714b398d5d52f17c7c144d8815"},
 ]
 pytest-splunk-addon = [
-    {file = "pytest-splunk-addon-1.3.11.tar.gz", hash = "sha256:c70f0ec8ae1d70f429d853c5dd8ca1e38436be1b5f9ed6c8ff876e5ebc8d9f92"},
-    {file = "pytest_splunk_addon-1.3.11-py3-none-any.whl", hash = "sha256:70b9872c0a13a718ec7955381e47faaf1fbe60afb0903135cd375c6659824be7"},
+    {file = "pytest-splunk-addon-1.3.12.tar.gz", hash = "sha256:746c10e3b8394a3af7edc85737995cf805e06f0d1efcdd8da69bf8d7ce4ad38d"},
+    {file = "pytest_splunk_addon-1.3.12-py3-none-any.whl", hash = "sha256:37366951b7f8d338017bba95edbb60649d45ef721a3b35fea27fbdabf5e74049"},
 ]
 pytest-xdist = [
     {file = "pytest-xdist-2.1.0.tar.gz", hash = "sha256:82d938f1a24186520e2d9d3a64ef7d9ac7ecdf1a0659e095d18e596b8cbd0672"},
@@ -1151,10 +1123,6 @@ tomlkit = [
 urllib3 = [
     {file = "urllib3-1.25.11-py2.py3-none-any.whl", hash = "sha256:f5321fbe4bf3fefa0efd0bfe7fb14e90909eb62a48ccda331726b4319897dd5e"},
     {file = "urllib3-1.25.11.tar.gz", hash = "sha256:8d7eaa5a82a1cac232164990f04874c594c9453ec55eef02eab885aa02fc17a2"},
-]
-wheel = [
-    {file = "wheel-0.35.1-py2.py3-none-any.whl", hash = "sha256:497add53525d16c173c2c1c733b8f655510e909ea78cc0e29d374243544b77a2"},
-    {file = "wheel-0.35.1.tar.gz", hash = "sha256:99a22d87add3f634ff917310a3d87e499f19e663413a52eb9232c447aa646c9f"},
 ]
 zipp = [
     {file = "zipp-3.4.0-py3-none-any.whl", hash = "sha256:102c24ef8f171fd729d46599845e95c7ab894a4cf45f5de11a44cc7444fb1108"},
