@@ -67,7 +67,7 @@ export function parseErrorMsg(data) {
     var error_msg = '', rsp, regex, msg, matches;
     try {
         rsp = JSON.parse(data.responseText);
-        regex = /.+"REST Error \[[\d]+\]:\s+.+\s+--\s+([\s\S]*)"\.\s*See splunkd\.log for more details\./;
+        regex = /.+"REST Error \[[\d]+\]:\s+.+\s+--\s+([\s\S]*)"\.\s*See splunkd\.log(\/python.log)? for more details\./;
         msg = String(rsp.messages[0].text);
         matches = regex.exec(msg);
         if (matches && matches[1]) {
