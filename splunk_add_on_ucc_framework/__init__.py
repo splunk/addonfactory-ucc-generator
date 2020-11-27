@@ -691,7 +691,9 @@ def main():
  
     config_file = os.path.join(outputdir, ta_name,'default', "app.conf")    
     def save_comments(config_file):
-    """Save index and content of comments in config file and return dictionary thereof"""
+        """
+        Save index and content of comments in config file and return dictionary thereof
+        """
     comment_map = {}
     with open(config_file, 'r') as file:
         i = 0
