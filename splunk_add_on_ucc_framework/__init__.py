@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-__version__ = "4.1.9b1.post4.dev0+ee0b519f"
+__version__ = "0.0.0"
 
 import logging
 import os, time
