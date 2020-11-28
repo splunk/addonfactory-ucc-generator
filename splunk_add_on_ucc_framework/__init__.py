@@ -559,6 +559,32 @@ def handle_no_inputs(ta_name):
         except OSError:
             pass
 
+config_file = os.path.join(outputdir, ta_name,'default', "app.conf")    
+def save_comments(config_file):
+    """
+    Save index and content of comments in config file and return dictionary thereof
+    """
+comment_map = {}
+with open(config_file, 'r') as file:
+    i = 0
+    lines = file.readlines()
+    for line in lines:
+        if re.match( r'^\s*#.*?$', line):
+            comment_map[i] = line
+        i += 1
+return comment_map
+
+def restore_comments(config_file, comment_map):
+    """
+    Write comments to config file at their original indices
+    """
+    with open(config_file, 'r') as file:
+        lines = file.readlines()
+    for (index, comment) in sorted(comment_map.items()):
+        lines.insert(index, comment)
+    with open(config_file, 'w') as file:
+        file.write(''.join(lines))
+    
 def main():
     parser = argparse.ArgumentParser(description="Build the add-on")
     parser.add_argument(
@@ -688,30 +714,6 @@ def main():
     
     with open(os.path.abspath(os.path.join(outputdir, ta_name, "app.manifest")), "w") as manifest_file:
         manifest_file.write(json.dumps(manifest, indent=4, sort_keys=True))
- 
-    config_file = os.path.join(outputdir, ta_name,'default', "app.conf")    
-    def save_comments(config_file):
-        """
-        Save index and content of comments in config file and return dictionary thereof
-        """
-    comment_map = {}
-    with open(config_file, 'r') as file:
-        i = 0
-        lines = file.readlines()
-        for line in lines:
-            if re.match( r'^\s*#.*?$', line):
-                comment_map[i] = line
-            i += 1
-    return comment_map
-
-    def restore_comments(config_file, comment_map):
-        """Write comments to config file at their original indices"""
-        with open(config_file, 'r') as file:
-            lines = file.readlines()
-        for (index, comment) in sorted(comment_map.items()):
-            lines.insert(index, comment)
-        with open(config_file, 'w') as file:
-            file.write(''.join(lines))
        
     comment_map = save_comments(config_file)
     app_config = configparser.ConfigParser()        
