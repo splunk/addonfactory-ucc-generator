@@ -232,7 +232,7 @@ def install_libs(path, ucc_lib_target):
             install_cmd = (
                 installer +" -m pip install -r \""
                 + requirements
-                + "\" --no-compile --prefer-binary --ignore-installed --target \""
+                + "\" --no-compile --prefer-binary --ignore-installed --use-deprecated=legacy-resolver --target \""
                 + ucc_target
                 + "\""
             )
