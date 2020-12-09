@@ -62,7 +62,7 @@ jobs:
       - run:
           name: Install Tools
           command: |
-            pip install /tmp/workspace/dist/*
+            pip install /tmp/workspace/dist/* --use-deprecated=legacy-resolver
   publish:
     docker:
       - image: circleci/python:3.7-node

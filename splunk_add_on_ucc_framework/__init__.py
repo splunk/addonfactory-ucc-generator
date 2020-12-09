@@ -236,6 +236,7 @@ def install_libs(path, ucc_lib_target):
                 + ucc_target
                 + "\""
             )
+            os.system(installer +" -m pip install pip --upgrade")
             os.system(install_cmd)
             remove_files(ucc_target)
     logging.info(f"  Checking for requirements in {path}")
