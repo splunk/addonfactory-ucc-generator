@@ -699,7 +699,7 @@ sortedcontainers = ">=2.2,<3.0"
 
 [[package]]
 name = "splunktaucclib"
-version = "4.0.8"
+version = "4.0.12"
 description = ""
 category = "main"
 optional = false
@@ -1105,8 +1105,8 @@ splunktalib = [
     {file = "splunktalib-1.1.4.tar.gz", hash = "sha256:c336272381509e96ab63348bb46852b0562d2e16a6cfa3ac399c346c5d1e2b65"},
 ]
 splunktaucclib = [
-    {file = "splunktaucclib-4.0.8-py2.py3-none-any.whl", hash = "sha256:7e14ddf04c81367d1012952a089373c6a708210e563d5c5a9163c55415a637ef"},
-    {file = "splunktaucclib-4.0.8.tar.gz", hash = "sha256:cf55cbb3fd27dfb4954c526a1e8a17dd7d89f00d77672a99f37204bfae5be41f"},
+    {file = "splunktaucclib-4.0.12-py2.py3-none-any.whl", hash = "sha256:cb30a6e741a2a0257e7ba9f232ddcd06da9fc96ae3c3d6899a832f105b8d1f57"},
+    {file = "splunktaucclib-4.0.12.tar.gz", hash = "sha256:88b9c898b45fc3dce4caaf2ae428a53ead564788c4df207edcce05c0e8bde2f3"},
 ]
 text-unidecode = [
     {file = "text-unidecode-1.3.tar.gz", hash = "sha256:bad6603bb14d279193107714b288be206cac565dfa49aa5b105294dd5c4aab93"},
