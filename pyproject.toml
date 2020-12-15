@@ -62,7 +62,7 @@ reuse = "*"
 [tool.poetry.dev-dependencies]
 pytest = "^6.0"
 pytest-splunk-addon = { version = "^1.3", extras = [ "docker" ] }
-poetry-dynamic-versioning = "^0.10"
+poetry-dynamic-versioning = "^0.12"
 
 [tool.poetry-dynamic-versioning]
 enable = true
