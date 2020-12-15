@@ -96,7 +96,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
 name = "dunamai"
-version = "1.3.1"
+version = "1.5.0"
 description = "Dynamic version generation"
 category = "main"
 optional = false
@@ -408,14 +408,14 @@ dev = ["pre-commit", "tox"]
 
 [[package]]
 name = "poetry-dynamic-versioning"
-version = "0.10.0"
+version = "0.12.0"
 description = "Plugin for Poetry to enable dynamic versioning based on VCS tags"
 category = "dev"
 optional = false
 python-versions = ">=3.5,<4.0"
 
 [package.dependencies]
-dunamai = ">=1.3,<2.0"
+dunamai = ">=1.5,<2.0"
 jinja2 = ">=2.11.1,<3.0.0"
 tomlkit = ">=0.4"
 
@@ -699,7 +699,7 @@ sortedcontainers = ">=2.2,<3.0"
 
 [[package]]
 name = "splunktaucclib"
-version = "4.0.8"
+version = "4.0.12"
 description = ""
 category = "main"
 optional = false
@@ -763,7 +763,7 @@ testing = ["pytest (>=3.5,!=3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "f51b596f059cabf642bb65e800d2b694fb138ec57bc092d9d9fb2535c062b943"
+content-hash = "2d0b830e44b1f4e5e3ce42d45e826b214a3f8127c1ec1bb9826ade6f08ec55cb"
 
 [metadata.files]
 apipkg = [
@@ -808,8 +808,8 @@ colorama = [
     {file = "colorama-0.4.4.tar.gz", hash = "sha256:5941b2b48a20143d2267e95b1c2a7603ce057ee39fd88e7329b0c292aa16869b"},
 ]
 dunamai = [
-    {file = "dunamai-1.3.1-py3-none-any.whl", hash = "sha256:8eaac70fef958a2cbbff9be5250edff8a815f8f8edb030219d4203da1a978b1c"},
-    {file = "dunamai-1.3.1.tar.gz", hash = "sha256:879653e60fd0c9667bf48cb563bed668c498be48ce33628b5f140909579ada7b"},
+    {file = "dunamai-1.5.0-py3-none-any.whl", hash = "sha256:1f256e09537986a8b413ee0de9e7f1f264608407429fe17031b71c733b197ce4"},
+    {file = "dunamai-1.5.0.tar.gz", hash = "sha256:0424b86ae37a6f23c480adb985b89866b71b3d9bde221bbd119060eef48315ed"},
 ]
 execnet = [
     {file = "execnet-1.7.1-py2.py3-none-any.whl", hash = "sha256:d4efd397930c46415f62f8a31388d6be4f27a91d7550eb79bc64a756e0056547"},
@@ -996,8 +996,8 @@ pluggy = [
     {file = "pluggy-0.13.1.tar.gz", hash = "sha256:15b2acde666561e1298d71b523007ed7364de07029219b604cf808bfa1c765b0"},
 ]
 poetry-dynamic-versioning = [
-    {file = "poetry-dynamic-versioning-0.10.0.tar.gz", hash = "sha256:f1279bc9a292923b6bbcf879275114ed11e12c735c2f03c9d6f64e0ddd94c292"},
-    {file = "poetry_dynamic_versioning-0.10.0-py3-none-any.whl", hash = "sha256:f32002d1e53729e3287f7122df8bac7221468f3ca816dfb150107c7b37ccf3b7"},
+    {file = "poetry-dynamic-versioning-0.12.0.tar.gz", hash = "sha256:6bab4b62125bdc8feb3cb6420d10732df1bf769f6ee06412c72c2b0bbf19e2e2"},
+    {file = "poetry_dynamic_versioning-0.12.0-py3-none-any.whl", hash = "sha256:3f33ca7f5ec047d4909e3e77390d47711ffd6f70a2ad7e5efc98a389b468bbf0"},
 ]
 py = [
     {file = "py-1.9.0-py2.py3-none-any.whl", hash = "sha256:366389d1db726cd2fcfc79732e75410e5fe4d31db13692115529d34069a043c2"},
@@ -1105,8 +1105,8 @@ splunktalib = [
     {file = "splunktalib-1.1.4.tar.gz", hash = "sha256:c336272381509e96ab63348bb46852b0562d2e16a6cfa3ac399c346c5d1e2b65"},
 ]
 splunktaucclib = [
-    {file = "splunktaucclib-4.0.8-py2.py3-none-any.whl", hash = "sha256:7e14ddf04c81367d1012952a089373c6a708210e563d5c5a9163c55415a637ef"},
-    {file = "splunktaucclib-4.0.8.tar.gz", hash = "sha256:cf55cbb3fd27dfb4954c526a1e8a17dd7d89f00d77672a99f37204bfae5be41f"},
+    {file = "splunktaucclib-4.0.12-py2.py3-none-any.whl", hash = "sha256:cb30a6e741a2a0257e7ba9f232ddcd06da9fc96ae3c3d6899a832f105b8d1f57"},
+    {file = "splunktaucclib-4.0.12.tar.gz", hash = "sha256:88b9c898b45fc3dce4caaf2ae428a53ead564788c4df207edcce05c0e8bde2f3"},
 ]
 text-unidecode = [
     {file = "text-unidecode-1.3.tar.gz", hash = "sha256:bad6603bb14d279193107714b288be206cac565dfa49aa5b105294dd5c4aab93"},

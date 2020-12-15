@@ -6,6 +6,7 @@ __version__ = "0.0.0"
 
 import logging
 import os, time
+import re
 import glob
 from os import system
 import shutil
@@ -231,10 +232,11 @@ def install_libs(path, ucc_lib_target):
             install_cmd = (
                 installer +" -m pip install -r \""
                 + requirements
-                + "\" --no-compile --prefer-binary --ignore-installed --target \""
+                + "\" --no-compile --prefer-binary --ignore-installed --use-deprecated=legacy-resolver --target \""
                 + ucc_target
                 + "\""
             )
+            os.system(installer +" -m pip install pip --upgrade")
             os.system(install_cmd)
             remove_files(ucc_target)
     logging.info(f"  Checking for requirements in {path}")
@@ -557,6 +559,33 @@ def handle_no_inputs(ta_name):
             os.remove(fl)
         except OSError:
             pass
+    
+def save_comments(outputdir, ta_name):
+    """
+    Save index and content of comments in conf file and return dictionary thereof
+    """
+    config_file = os.path.join(outputdir, ta_name,'default', "app.conf")
+    comment_map = {}
+    with open(config_file, 'r') as file:
+        i = 0
+        lines = file.readlines()
+        for line in lines:
+            if re.match( r'^\s*#.*?$', line):
+                comment_map[i] = line
+            i += 1
+    return comment_map
+
+def restore_comments(outputdir, ta_name, comment_map):
+    """
+    Write comments to conf file at their original indices
+    """
+    config_file = os.path.join(outputdir, ta_name,'default', "app.conf")
+    with open(config_file, 'r') as file:
+        lines = file.readlines()
+    for (index, comment) in sorted(comment_map.items()):
+        lines.insert(index, comment)
+    with open(config_file, 'w') as file:
+        file.write(''.join(lines))
 
 def main():
     parser = argparse.ArgumentParser(description="Build the add-on")
@@ -687,7 +716,8 @@ def main():
     
     with open(os.path.abspath(os.path.join(outputdir, ta_name, "app.manifest")), "w") as manifest_file:
         manifest_file.write(json.dumps(manifest, indent=4, sort_keys=True))
-
+        
+    comment_map = save_comments(outputdir, ta_name)
     app_config = configparser.ConfigParser()        
     app_config.read_file(open(os.path.join(outputdir, ta_name,'default', "app.conf")))
     if not 'launcher' in app_config:
@@ -713,7 +743,9 @@ def main():
 
     with open(os.path.join(outputdir, ta_name,'default', "app.conf"), 'w') as configfile:
         app_config.write(configfile)
-
+    #restore License header
+    restore_comments(outputdir, ta_name, comment_map)
+    
     #Copy Licenses
     license_dir = os.path.abspath(os.path.join(args.source, PARENT_DIR, "LICENSES"))
     
