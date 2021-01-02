@@ -511,7 +511,7 @@ def update_ta_version(args):
     Args:
         args (argparse.Namespace): Object with command-line arguments.
     """
-
+    logger.info("Updating TA-Version to {}".format(args.ta_version))
     with open(args.config, "r") as config_file:
         schema_content = json.load(config_file)
     schema_content.setdefault("meta", {})["version"] = args.ta_version
@@ -616,9 +616,12 @@ def main():
         "--ta-version",
         type=str,
         help="Version of TA, Deafult version is version specified in the package such as app.manifest, app.conf, and globalConfig.json",
-        default = version_splunk
+        default = None
     )
+
     args = parser.parse_args()
+    if args.ta_version:
+        version_splunk=f"{args.ta_version}{stage}{version.commit}"
 
     if not os.path.exists(args.source):
         raise NotADirectoryError("{} not Found.".format(os.path.abspath(args.source)))
