@@ -504,17 +504,17 @@ def remove_listed_files(ignore_list):
         else:
             logger.info("While ignoring the files mentioned in .uccignore {} was not found".format(path))
 
-def update_ta_version(args):
+def update_ta_version(version):
     """
     Update version of TA in globalConfig.json.
 
     Args:
         args (argparse.Namespace): Object with command-line arguments.
     """
-    logger.info("Updating TA-Version to {}".format(args.ta_version))
+    logger.info("Updating TA-Version to {}".format(version))
     with open(args.config, "r") as config_file:
         schema_content = json.load(config_file)
-    schema_content.setdefault("meta", {})["version"] = args.ta_version
+    schema_content.setdefault("meta", {})["version"] = version
     with open(args.config, "w") as config_file:
         json.dump(schema_content, config_file, indent=4)
 
@@ -640,7 +640,9 @@ def main():
     if os.path.exists(args.config):
 
         if args.ta_version:
-            update_ta_version(args)
+            update_ta_version(args.ta_version)
+        else:
+            update_ta_version(version_splunk)
 
         # handle_update check schemaVersion and update globalConfig.json if required and return schema
         schema_content = handle_update(args.config)
