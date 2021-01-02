@@ -119,14 +119,14 @@ def handle_update(config_path):
         config_path : path to globalConfig.json
 
     Returns:
-        dictionary : schema_content (globalConfig.json)     
+        dictionary : schema_content (globalConfig.json)
     """
     with open(config_path, "r") as config_file:
         schema_content = json.load(config_file)
-    # check for schemaVersion in meta, if not availble then set default 0.0.0 
+    # check for schemaVersion in meta, if not availble then set default 0.0.0
     version = schema_content.get("meta").get("schemaVersion","0.0.0")
 
-    # check for schemaVersion, if it's less than 0.0.1 then updating globalConfig.json 
+    # check for schemaVersion, if it's less than 0.0.1 then updating globalConfig.json
     if version_tuple(version) < version_tuple("0.0.1"):
         ta_tabs = schema_content.get("pages").get("configuration",{}).get("tabs",{})
 
@@ -160,11 +160,11 @@ def handle_update(config_path):
         # set schemaVersion to 0.0.1 as updated globalConfig.json according to new update
         schema_content["meta"]["schemaVersion"]="0.0.1"
 
-        # upadating new changes in globalConfig.json 
+        # upadating new changes in globalConfig.json
         with open(config_path, "w") as config_file:
             json.dump(schema_content,config_file, ensure_ascii=False, indent=4)
     return schema_content
-    
+
 
 def copy_package_source(args, ta_name):
     """
@@ -230,42 +230,42 @@ def install_libs(path, ucc_lib_target):
             if not os.path.exists(ucc_target):
                 os.makedirs(ucc_target)
             install_cmd = (
-                installer +" -m pip install -r \""
-                + requirements
-                + "\" --no-compile --prefer-binary --ignore-installed --use-deprecated=legacy-resolver --target \""
-                + ucc_target
-                + "\""
+                    installer +" -m pip install -r \""
+                    + requirements
+                    + "\" --no-compile --prefer-binary --ignore-installed --use-deprecated=legacy-resolver --target \""
+                    + ucc_target
+                    + "\""
             )
             os.system(installer +" -m pip install pip --upgrade")
             os.system(install_cmd)
             remove_files(ucc_target)
     logging.info(f"  Checking for requirements in {path}")
     if os.path.exists(os.path.join(path,"lib", "requirements.txt")):
-        logging.info(f"  Uses common requirements")    
+        logging.info(f"  Uses common requirements")
         _install_libs(requirements=os.path.join(path, "lib","requirements.txt"), ucc_target=ucc_lib_target)
     elif os.path.exists(os.path.join(os.path.abspath(os.path.join(path, os.pardir)), "requirements.txt")):
-        logging.info(f"  Uses common requirements")    
+        logging.info(f"  Uses common requirements")
         _install_libs(requirements=os.path.join(os.path.abspath(os.path.join(path, os.pardir)), "requirements.txt"), ucc_target=ucc_lib_target)
     else:
-        logging.info(f"  Not using common requirements")    
+        logging.info(f"  Not using common requirements")
 
     if os.path.exists(os.path.join(path,"lib","py2", "requirements.txt")):
-        logging.info(f"  Uses py2 requirements")    
+        logging.info(f"  Uses py2 requirements")
         _install_libs(requirements=os.path.join(path,"lib","py2", "requirements.txt"), installer="python2", ucc_target=os.path.join(ucc_lib_target, "py2"))
     elif os.path.exists(os.path.join(os.path.abspath(os.path.join(path, os.pardir)), "requirements_py2.txt")):
-        logging.info(f"  Uses py2 requirements")    
-        _install_libs(requirements=os.path.join(os.path.abspath(os.path.join(path, os.pardir)), "requirements_py2.txt"), installer="python2", ucc_target=os.path.join(ucc_lib_target, "py2"))        
+        logging.info(f"  Uses py2 requirements")
+        _install_libs(requirements=os.path.join(os.path.abspath(os.path.join(path, os.pardir)), "requirements_py2.txt"), installer="python2", ucc_target=os.path.join(ucc_lib_target, "py2"))
     else:
-        logging.info(f"  Not using py2 requirements")    
+        logging.info(f"  Not using py2 requirements")
 
     if os.path.exists(os.path.join(path, "lib","py3","requirements.txt")):
-        logging.info(f"  Uses py3 requirements")            
+        logging.info(f"  Uses py3 requirements")
         _install_libs(requirements=os.path.join(path,"lib", "py3","requirements.txt"), ucc_target=os.path.join(ucc_lib_target, "py3"))
     elif os.path.exists(os.path.join(os.path.abspath(os.path.join(path, os.pardir)), "requirements_py3.txt")):
-        logging.info(f"  Uses py3 requirements")    
-        _install_libs(requirements=os.path.join(os.path.abspath(os.path.join(path, os.pardir)), "requirements_py3.txt"), installer="python3", ucc_target=os.path.join(ucc_lib_target, "py2"))        
+        logging.info(f"  Uses py3 requirements")
+        _install_libs(requirements=os.path.join(os.path.abspath(os.path.join(path, os.pardir)), "requirements_py3.txt"), installer="python3", ucc_target=os.path.join(ucc_lib_target, "py2"))
     else:
-        logging.info(f"  Not using py3 requirements")    
+        logging.info(f"  Not using py3 requirements")
 
 
 def remove_files(path):
@@ -347,7 +347,7 @@ def replace_oauth_html_template_token(args, ta_name, ta_version):
 
 
 def modify_and_replace_token_for_oauth_templates(
-    args, ta_name, ta_tabs, ta_version
+        args, ta_name, ta_tabs, ta_version
 ):
     """
     Rename templates with respect to addon name if OAuth is configured.
@@ -373,11 +373,11 @@ def modify_and_replace_token_for_oauth_templates(
         replace_oauth_html_template_token(args, ta_name, ta_version)
 
         redirect_js_dest = (
-            os.path.join(outputdir, ta_name, "appserver", "static", "js", "build", "")
-            + ta_name.lower()
-            + "_redirect_page."
-            + ta_version
-            + ".js"
+                os.path.join(outputdir, ta_name, "appserver", "static", "js", "build", "")
+                + ta_name.lower()
+                + "_redirect_page."
+                + ta_version
+                + ".js"
         )
         redirect_html_dest = (
             os.path.join(outputdir, ta_name, "appserver", "templates", ta_name.lower() + "_redirect.html")
@@ -396,7 +396,7 @@ def modify_and_replace_token_for_oauth_templates(
         os.remove(redirect_js_src)
 
 def add_modular_input(
-    args, ta_name, schema_content, import_declare_name
+        args, ta_name, schema_content, import_declare_name
 ):
     """
     Generate Modular input for addon.
@@ -433,18 +433,18 @@ def add_modular_input(
 
         input_default = os.path.join(
             outputdir, ta_name, "default",  "inputs.conf"
-        )   
+        )
         config = configparser.ConfigParser()
         if os.path.exists(input_default):
             config.read(input_default)
-        
+
         if config.has_section(input_name):
             config[input_name]['python.version'] = 'python3'
         else:
             config[input_name] = {'python.version': 'python3'}
-        
+
         with open(input_default, 'w') as configfile:
-           config.write(configfile)
+            config.write(configfile)
 
 
 def make_modular_alerts(args, ta_name, ta_namespace, schema_content):
@@ -504,7 +504,7 @@ def remove_listed_files(ignore_list):
         else:
             logger.info("While ignoring the files mentioned in .uccignore {} was not found".format(path))
 
-def update_ta_version(version):
+def update_ta_version(config,version):
     """
     Update version of TA in globalConfig.json.
 
@@ -512,10 +512,10 @@ def update_ta_version(version):
         args (argparse.Namespace): Object with command-line arguments.
     """
     logger.info("Updating TA-Version to {}".format(version))
-    with open(args.config, "r") as config_file:
+    with open(config, "r") as config_file:
         schema_content = json.load(config_file)
     schema_content.setdefault("meta", {})["version"] = version
-    with open(args.config, "w") as config_file:
+    with open(config, "w") as config_file:
         json.dump(schema_content, config_file, indent=4)
 
 def handle_no_inputs(ta_name):
@@ -523,7 +523,7 @@ def handle_no_inputs(ta_name):
     Handle for configuration without input page.
 
     Args:
-        ta_name (str): Name of TA. 
+        ta_name (str): Name of TA.
     """
     def _removeinput(path):
         """
@@ -559,7 +559,7 @@ def handle_no_inputs(ta_name):
             os.remove(fl)
         except OSError:
             pass
-    
+
 def save_comments(outputdir, ta_name):
     """
     Save index and content of comments in conf file and return dictionary thereof
@@ -608,10 +608,10 @@ def main():
         stage = 'R'
     else:
         stage = version.stage[:1]
-    
+
     version_str = version.serialize(metadata=True,style=Style.SemVer)
     version_splunk = f"{version.base}{stage}{version.commit}"
-    
+
     parser.add_argument(
         "--ta-version",
         type=str,
@@ -622,6 +622,7 @@ def main():
     args = parser.parse_args()
     if args.ta_version:
         version_splunk=f"{args.ta_version}{stage}{version.commit}"
+        version_str=f"{args.ta_version}+{version.commit}"
 
     if not os.path.exists(args.source):
         raise NotADirectoryError("{} not Found.".format(os.path.abspath(args.source)))
@@ -640,15 +641,15 @@ def main():
     if os.path.exists(args.config):
 
         if args.ta_version:
-            update_ta_version(args.ta_version)
+            update_ta_version(args.config,args.ta_version)
         else:
-            update_ta_version(version_splunk)
+            update_ta_version(args.config, version_splunk)
 
         # handle_update check schemaVersion and update globalConfig.json if required and return schema
         schema_content = handle_update(args.config)
 
         scheme = GlobalConfigBuilderSchema(schema_content, j2_env)
-        
+
         ta_version = schema_content.get("meta").get("version")
         ta_tabs = schema_content.get("pages").get("configuration").get("tabs")
         ta_namespace = schema_content.get("meta").get("restRoot")
@@ -679,15 +680,15 @@ def main():
         generate_rest(args, ta_name, scheme, import_declare_name)
 
         modify_and_replace_token_for_oauth_templates(
-                args, ta_name, ta_tabs, schema_content.get('meta').get('version')
-            )
+            args, ta_name, ta_tabs, schema_content.get('meta').get('version')
+        )
         if is_inputs:
             add_modular_input(
                 args, ta_name, schema_content, import_declare_name
             )
         else:
             handle_no_inputs(ta_name)
-            
+
         make_modular_alerts(args, ta_name, ta_namespace, schema_content)
 
     else:
@@ -717,13 +718,13 @@ def main():
     with open(os.path.abspath(os.path.join(outputdir, ta_name, "app.manifest")), "r") as manifest_file:
         manifest = json.load(manifest_file)
         manifest['info']['id']['version'] = version_splunk
-    
-    
+
+
     with open(os.path.abspath(os.path.join(outputdir, ta_name, "app.manifest")), "w") as manifest_file:
         manifest_file.write(json.dumps(manifest, indent=4, sort_keys=True))
-        
+
     comment_map = save_comments(outputdir, ta_name)
-    app_config = configparser.ConfigParser()        
+    app_config = configparser.ConfigParser()
     app_config.read_file(open(os.path.join(outputdir, ta_name,'default', "app.conf")))
     if not 'launcher' in app_config:
         app_config.add_section('launcher')
@@ -736,13 +737,13 @@ def main():
     if not 'ui' in app_config:
         app_config.add_section('ui')
 
-    app_config['launcher']['version']=version_splunk    
+    app_config['launcher']['version']=version_splunk
     app_config['launcher']['description']=manifest['info']['description']
-    
+
     app_config['id']['version']=version_splunk
 
     app_config['install']['build']=str(int(time.time()))
-    app_config['package']['id']=manifest['info']['id']['name'] 
+    app_config['package']['id']=manifest['info']['id']['name']
 
     app_config['ui']['label']=manifest['info']['title']
 
@@ -750,10 +751,10 @@ def main():
         app_config.write(configfile)
     #restore License header
     restore_comments(outputdir, ta_name, comment_map)
-    
+
     #Copy Licenses
     license_dir = os.path.abspath(os.path.join(args.source, PARENT_DIR, "LICENSES"))
-    
-    if os.path.exists(license_dir):        
+
+    if os.path.exists(license_dir):
         logger.info("Copy LICENSES directory ")
         recursive_overwrite(license_dir, os.path.join(outputdir, ta_name,"LICENSES"))
