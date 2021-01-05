@@ -408,7 +408,7 @@ dev = ["pre-commit", "tox"]
 
 [[package]]
 name = "poetry-dynamic-versioning"
-version = "0.12.0"
+version = "0.12.1"
 description = "Plugin for Poetry to enable dynamic versioning based on VCS tags"
 category = "dev"
 optional = false
@@ -996,8 +996,8 @@ pluggy = [
     {file = "pluggy-0.13.1.tar.gz", hash = "sha256:15b2acde666561e1298d71b523007ed7364de07029219b604cf808bfa1c765b0"},
 ]
 poetry-dynamic-versioning = [
-    {file = "poetry-dynamic-versioning-0.12.0.tar.gz", hash = "sha256:6bab4b62125bdc8feb3cb6420d10732df1bf769f6ee06412c72c2b0bbf19e2e2"},
-    {file = "poetry_dynamic_versioning-0.12.0-py3-none-any.whl", hash = "sha256:3f33ca7f5ec047d4909e3e77390d47711ffd6f70a2ad7e5efc98a389b468bbf0"},
+    {file = "poetry-dynamic-versioning-0.12.1.tar.gz", hash = "sha256:cf26328e3c9c44ae078a9e1771a39f642fd2513b38047ebf03d79289ace22a56"},
+    {file = "poetry_dynamic_versioning-0.12.1-py3-none-any.whl", hash = "sha256:054ad3a8e363cc8793bfa443946eb1d7d5ed1559c2fad3077fa3e9da23070731"},
 ]
 py = [
     {file = "py-1.9.0-py2.py3-none-any.whl", hash = "sha256:366389d1db726cd2fcfc79732e75410e5fe4d31db13692115529d34069a043c2"},
