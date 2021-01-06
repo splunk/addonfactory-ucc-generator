@@ -480,21 +480,33 @@ py = "*"
 pytest = ">=3.10"
 
 [[package]]
+name = "pytest-ordering"
+version = "0.6"
+description = "pytest plugin to run your tests in a specific order"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+pytest = "*"
+
+[[package]]
 name = "pytest-splunk-addon"
-version = "1.3.12"
+version = "1.4.0"
 description = "A Dynamic test tool for Splunk Apps and Add-ons"
 category = "dev"
 optional = false
 python-versions = ">=3.7,<4.0"
 
 [package.dependencies]
-faker = ">=4.1,<5.0"
+faker = ">=4.1,<6.0"
 filelock = ">=3.0,<4.0"
 httplib2 = "*"
 jsonschema = ">=3.2,<4.0"
 junitparser = "*"
 lovely-pytest-docker = {version = ">=0,<1", optional = true, markers = "extra == \"docker\""}
 pytest = ">5.4.0,<6.1"
+pytest-ordering = "*"
 pytest-xdist = "*"
 requests = ">=2,<3"
 splunk_appinspect = ">=2,<3"
@@ -763,7 +775,7 @@ testing = ["pytest (>=3.5,!=3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "2d0b830e44b1f4e5e3ce42d45e826b214a3f8127c1ec1bb9826ade6f08ec55cb"
+content-hash = "1327d1681411049111aad8c6190fabc25ff64ca4cfb9c8aee8c1cfa53b060bd6"
 
 [metadata.files]
 apipkg = [
@@ -1018,9 +1030,14 @@ pytest-forked = [
     {file = "pytest-forked-1.3.0.tar.gz", hash = "sha256:6aa9ac7e00ad1a539c41bec6d21011332de671e938c7637378ec9710204e37ca"},
     {file = "pytest_forked-1.3.0-py2.py3-none-any.whl", hash = "sha256:dc4147784048e70ef5d437951728825a131b81714b398d5d52f17c7c144d8815"},
 ]
+pytest-ordering = [
+    {file = "pytest-ordering-0.6.tar.gz", hash = "sha256:561ad653626bb171da78e682f6d39ac33bb13b3e272d406cd555adb6b006bda6"},
+    {file = "pytest_ordering-0.6-py2-none-any.whl", hash = "sha256:27fba3fc265f5d0f8597e7557885662c1bdc1969497cd58aff6ed21c3b617de2"},
+    {file = "pytest_ordering-0.6-py3-none-any.whl", hash = "sha256:3f314a178dbeb6777509548727dc69edf22d6d9a2867bf2d310ab85c403380b6"},
+]
 pytest-splunk-addon = [
-    {file = "pytest-splunk-addon-1.3.12.tar.gz", hash = "sha256:746c10e3b8394a3af7edc85737995cf805e06f0d1efcdd8da69bf8d7ce4ad38d"},
-    {file = "pytest_splunk_addon-1.3.12-py3-none-any.whl", hash = "sha256:37366951b7f8d338017bba95edbb60649d45ef721a3b35fea27fbdabf5e74049"},
+    {file = "pytest-splunk-addon-1.4.0.tar.gz", hash = "sha256:32889df9219ca6ab5afdd3a0a7ddf802c7617a618214755acaa41e15b1577219"},
+    {file = "pytest_splunk_addon-1.4.0-py3-none-any.whl", hash = "sha256:c6877a53e7031d592172650ba994542e56a5a28b3d8e2b8dd6ea1d206a908a14"},
 ]
 pytest-xdist = [
     {file = "pytest-xdist-2.1.0.tar.gz", hash = "sha256:82d938f1a24186520e2d9d3a64ef7d9ac7ecdf1a0659e095d18e596b8cbd0672"},
