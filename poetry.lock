@@ -96,7 +96,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
 name = "dunamai"
-version = "1.5.0"
+version = "1.5.4"
 description = "Dynamic version generation"
 category = "main"
 optional = false
@@ -808,8 +808,8 @@ colorama = [
     {file = "colorama-0.4.4.tar.gz", hash = "sha256:5941b2b48a20143d2267e95b1c2a7603ce057ee39fd88e7329b0c292aa16869b"},
 ]
 dunamai = [
-    {file = "dunamai-1.5.0-py3-none-any.whl", hash = "sha256:1f256e09537986a8b413ee0de9e7f1f264608407429fe17031b71c733b197ce4"},
-    {file = "dunamai-1.5.0.tar.gz", hash = "sha256:0424b86ae37a6f23c480adb985b89866b71b3d9bde221bbd119060eef48315ed"},
+    {file = "dunamai-1.5.4-py3-none-any.whl", hash = "sha256:0edbc8c37484b2db7c54b70de88c2b6ce866890440fc4bea6470cb1b88b75058"},
+    {file = "dunamai-1.5.4.tar.gz", hash = "sha256:82eb8dbdad6734a6ad475a2e8d0d5167fde7b0ae0d9529da0042129ca3736523"},
 ]
 execnet = [
     {file = "execnet-1.7.1-py2.py3-none-any.whl", hash = "sha256:d4efd397930c46415f62f8a31388d6be4f27a91d7550eb79bc64a756e0056547"},
