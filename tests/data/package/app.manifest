@@ -24,7 +24,7 @@
     "commonInformationModels": null,
     "license": {
       "name": null,
-      "text": "LICENSES/LicenseRef-Splunk-1-2020.txt",
+      "text": "LICENSES/Apache-2.0.txt",
       "uri": null
     },
     "privacyPolicy": {
