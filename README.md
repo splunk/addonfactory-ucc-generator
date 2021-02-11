@@ -63,7 +63,7 @@ By the running the `ucc-gen` command, the following steps are executed:
 
 7. Replace tokens in views.
 8. Copy addon's `package/*` to `output/<package_ID>/*` directory.
-
+9. If an addon requires some additional configurations in packaging than implement the steps in additional_packaging.py
 
 ## Params
 
