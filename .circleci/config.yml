@@ -65,7 +65,7 @@ jobs:
             pip install /tmp/workspace/dist/* --use-deprecated=legacy-resolver
   release:
     docker:
-      - image: circleci/node:11
+      - image: circleci/node:12
     steps:
       - checkout
       - run: npx semantic-release

@@ -10,6 +10,7 @@ import re
 import glob
 from os import system
 import shutil
+import sys
 import argparse
 import json
 from xml.etree import cElementTree as et
@@ -504,7 +505,7 @@ def remove_listed_files(ignore_list):
         else:
             logger.info("While ignoring the files mentioned in .uccignore {} was not found".format(path))
 
-def update_ta_version(args):
+def update_ta_version(config, ta_version):
     """
     Update version of TA in globalConfig.json.
 
@@ -512,10 +513,10 @@ def update_ta_version(args):
         args (argparse.Namespace): Object with command-line arguments.
     """
 
-    with open(args.config, "r") as config_file:
+    with open(config, "r") as config_file:
         schema_content = json.load(config_file)
-    schema_content.setdefault("meta", {})["version"] = args.ta_version
-    with open(args.config, "w") as config_file:
+    schema_content.setdefault("meta", {})["version"] = ta_version
+    with open(config, "w") as config_file:
         json.dump(schema_content, config_file, indent=4)
 
 def handle_no_inputs(ta_name):
@@ -619,7 +620,9 @@ def main():
         default = version_splunk
     )
     args = parser.parse_args()
-
+    ta_version = args.ta_version.strip()
+    if not ta_version:
+        ta_version = version_splunk
     if not os.path.exists(args.source):
         raise NotADirectoryError("{} not Found.".format(os.path.abspath(args.source)))
 
@@ -635,9 +638,7 @@ def main():
         ta_name = manifest['info']['id']['name']
 
     if os.path.exists(args.config):
-
-        if args.ta_version:
-            update_ta_version(args)
+        update_ta_version(args.config, ta_version)
 
         # handle_update check schemaVersion and update globalConfig.json if required and return schema
         schema_content = handle_update(args.config)
@@ -645,6 +646,7 @@ def main():
         scheme = GlobalConfigBuilderSchema(schema_content, j2_env)
         
         ta_version = schema_content.get("meta").get("version")
+        logger.info("Addon Version : " + ta_version)
         ta_tabs = schema_content.get("pages").get("configuration").get("tabs")
         ta_namespace = schema_content.get("meta").get("restRoot")
         import_declare_name = "import_declare_test"
@@ -686,6 +688,7 @@ def main():
         make_modular_alerts(args, ta_name, ta_namespace, schema_content)
 
     else:
+        logger.info("Addon Version : " + ta_version)
         logger.warning("Skipped installing UCC required python modules as GlobalConfig.json does not exist.")
         logger.warning("Skipped Generating UI components as GlobalConfig.json does not exist.")
         logger.info("Setting TA name as generic")
@@ -705,13 +708,13 @@ def main():
     with open(os.path.join(outputdir, ta_name,'VERSION'), 'w') as version_file:
         version_file.write(version_str)
         version_file.write("\n")
-        version_file.write(version_splunk)
+        version_file.write(ta_version)
 
 
     manifest= None
     with open(os.path.abspath(os.path.join(outputdir, ta_name, "app.manifest")), "r") as manifest_file:
         manifest = json.load(manifest_file)
-        manifest['info']['id']['version'] = version_splunk
+        manifest['info']['id']['version'] = ta_version
     
     
     with open(os.path.abspath(os.path.join(outputdir, ta_name, "app.manifest")), "w") as manifest_file:
@@ -731,10 +734,10 @@ def main():
     if not 'ui' in app_config:
         app_config.add_section('ui')
 
-    app_config['launcher']['version']=version_splunk    
+    app_config['launcher']['version'] = ta_version
     app_config['launcher']['description']=manifest['info']['description']
     
-    app_config['id']['version']=version_splunk
+    app_config['id']['version'] = ta_version
 
     app_config['install']['build']=str(int(time.time()))
     app_config['package']['id']=manifest['info']['id']['name'] 
@@ -752,3 +755,8 @@ def main():
     if os.path.exists(license_dir):        
         logger.info("Copy LICENSES directory ")
         recursive_overwrite(license_dir, os.path.join(outputdir, ta_name,"LICENSES"))
+
+    if os.path.exists(os.path.abspath(os.path.join(args.source,PARENT_DIR,"additional_packaging.py"))):
+        sys.path.insert(0,os.path.abspath(os.path.join(args.source,PARENT_DIR)))
+        from additional_packaging import additional_packaging
+        additional_packaging(ta_name)
