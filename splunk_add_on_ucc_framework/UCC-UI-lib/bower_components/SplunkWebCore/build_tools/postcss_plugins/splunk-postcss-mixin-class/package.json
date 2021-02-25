@@ -1,5 +1,0 @@
-{
-  "name": "splunk-postcss-mixin-class",
-  "description": "A CSS Modules transform to extract local aliases for inline imports",
-  "main": "index.js"
-}

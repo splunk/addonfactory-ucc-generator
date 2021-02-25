@@ -1,9 +1,0 @@
-<%page args="element, widgetstyle" />
-<%namespace file="../_helpers.html" import="wireElementEvents"/>
-
-
-    <div id="item-${element['elementName'] | h}" class="standaloneHelp ${element['class'] if 'class' in element else '' | h}" ${widgetstyle}>
-        % if 'helpText' in element:
-            <p class="helpText">${_(element['helpText']) | extract_help_links}</p>
-        % endif
-    </div>
