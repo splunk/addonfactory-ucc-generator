@@ -9,10 +9,7 @@ description = "Splunk Add-on SDK formerly UCC is a build and code generation fra
 authors = ["rfaircloth-splunk <rfaircloth@splunk.com>"]
 exclude = [
     "build.py",
-    "splunk_add_on_ucc_framework/UCC-UI-lib/bower_components",
-    "splunk_add_on_ucc_framework/UCC-UI-lib/config",
-    "splunk_add_on_ucc_framework/UCC-UI-lib/node_modules",
-    "splunk_add_on_ucc_framework/UCC-UI-lib/testes",
+    "splunk_add_on_ucc_framework/ucc_ui_lib/",
     ]
 include = [
 "splunk_add_on_ucc_framework/package",
