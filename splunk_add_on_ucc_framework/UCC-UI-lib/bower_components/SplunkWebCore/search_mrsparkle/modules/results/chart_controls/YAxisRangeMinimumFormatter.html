@@ -1,8 +1,0 @@
-<%page args="module"/>
-
-
-<fieldset>
-    <label for="${module['id']}_secondaryAxis.minimumNumber">${_("Min value")}</label>
-    <input type="text" id="${module['id']}_secondaryAxis.minimumNumber" value="${module.get('default', '') | h}"/>
-</fieldset>
-

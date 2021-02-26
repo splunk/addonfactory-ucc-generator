@@ -13,7 +13,7 @@ jobs:
             - poetry-cache-{{ checksum "poetry.lock" }}
       - restore_cache:
           keys:
-            - npm-deps-{{ checksum "splunk_add_on_ucc_framework/UCC-UI-lib/package-lock.json" }}
+            - yarn-packages-{{ checksum "splunk_add_on_ucc_framework/ucc_ui_lib/yarn.lock" }}
       - run:
           name: Install Tools
           command: |
@@ -21,7 +21,7 @@ jobs:
             mkdir ~/.npm-global || true
             npm config set prefix '~/.npm-global'
             export PATH=~/.npm-global/bin:$PATH
-            npm install -g bower
+            npm install -g yarn
       - run:
           name: Build
           command: |
@@ -38,7 +38,7 @@ jobs:
       - save_cache:
           paths:
             - ~/.npm-global # location depends on npm version
-          key: npm-deps-{{ checksum "splunk_add_on_ucc_framework/UCC-UI-lib/package-lock.json" }}
+          key: yarn-packages-{{ checksum "splunk_add_on_ucc_framework/ucc_ui_lib/yarn.lock" }}
       - store_artifacts:
           path: dist
       - store_artifacts:
@@ -80,7 +80,7 @@ jobs:
             - poetry-cache-{{ checksum "poetry.lock" }}
       - restore_cache:
           keys:
-            - npm-deps-{{ checksum "splunk_add_on_ucc_framework/UCC-UI-lib/package-lock.json" }}
+            - yarn-packages-{{ checksum "splunk_add_on_ucc_framework/ucc_ui_lib/yarn.lock" }}
       - run:
           name: Install Tools
           command: |
@@ -88,7 +88,7 @@ jobs:
             mkdir ~/.npm-global || true
             npm config set prefix '~/.npm-global'
             export PATH=~/.npm-global/bin:$PATH
-            npm install -g bower
+            npm install -g yarn
       - run:
           name: Build
           command: |
@@ -105,7 +105,7 @@ jobs:
       - save_cache:
           paths:
             - ~/.npm-global # location depends on npm version
-          key: npm-deps-{{ checksum "splunk_add_on_ucc_framework/UCC-UI-lib/package-lock.json" }}
+          key: yarn-packages-{{ checksum "splunk_add_on_ucc_framework/ucc_ui_lib/yarn.lock" }}
       - store_artifacts:
           path: dist
       - store_artifacts:

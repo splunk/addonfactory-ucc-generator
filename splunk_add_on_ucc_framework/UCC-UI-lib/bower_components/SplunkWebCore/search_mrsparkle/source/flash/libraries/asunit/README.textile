@@ -1,9 +1,0 @@
-
-h1. AsUnit 3.x
-
-This build of the AsUnit test framework should support Flash Players 9, 10 and Adobe AIR.
-
-This framework includes runner base classes for ActionScript 3, Flex MXML or Adobe AIR test runners.
-
-
-

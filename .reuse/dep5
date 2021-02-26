@@ -8,7 +8,7 @@ Source: https://github.com/splunk/addonfactory-ucc-generator
 # Files: src/*
 # Copyright: $YEAR $NAME <$CONTACT>
 # License: ...
-Files: splunk_add_on_ucc_framework/UCC-UI-lib/*
+Files: splunk_add_on_ucc_framework/ucc_ui_lib/*
 Copyright: 202 Splunk Inc. <addonfactory@splunk.com>
 License: Apache-2.0
 

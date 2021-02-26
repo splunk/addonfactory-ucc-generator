@@ -1,7 +1,0 @@
-/*!
-* THIS FILE HAS MOVED
-* ===================================================
-* The base styles have a new location. This file
-* enables django dashboards to get new styles.
-*/
-@import '../../../build/css/splunkjs-dashboard.css';

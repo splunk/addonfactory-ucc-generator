@@ -1,8 +1,0 @@
-<%page args="element" />\
-<div class="input input-checkboxgroup" id="${element.id}">
-            % if element.label is None or element.label.strip() == '':
-            <label>&nbsp;</label>
-            % else:
-            <label>${_(element.label)|h}</label>
-            % endif
-        </div>
