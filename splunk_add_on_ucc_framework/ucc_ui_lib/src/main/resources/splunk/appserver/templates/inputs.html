@@ -8,7 +8,7 @@ app_name = cherrypy.request.path_info.split('/')[3]
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>${_('Loading...')}</title>
+    <title>${_('Inputs')}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
@@ -22,7 +22,7 @@ app_name = cherrypy.request.path_info.split('/')[3]
     </script>
 
     <%
-    page_path = "/static/app/" + app_name + "/pages/" + page + ".js"
+    page_path = "/static/app/" + app_name + "/js/build/" + page + ".js"
     %>
 
     <script src="${make_url(page_path)}"></script>
