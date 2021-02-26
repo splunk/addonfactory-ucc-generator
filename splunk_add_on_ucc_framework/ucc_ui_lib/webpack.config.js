@@ -16,7 +16,7 @@ const entries = fs
 module.exports = webpackMerge(baseConfig, {
     entry: entries,
     output: {
-        path: path.join(__dirname, 'stage/appserver/static/pages/'),
+        path: path.join(__dirname, 'stage/appserver/static/js/build'),
         filename: '[name].js',
     },
     plugins: [
