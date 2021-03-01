@@ -1,5 +1,0 @@
-.view {
-    composes: view from '../../ModalLocalClassNames.pcssm';
-    width: 570px;
-    margin-left: -285px;
-}

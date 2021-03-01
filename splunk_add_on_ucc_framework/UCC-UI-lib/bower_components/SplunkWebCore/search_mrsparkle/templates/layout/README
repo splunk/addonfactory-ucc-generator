@@ -1,9 +1,0 @@
-documentation: 
-http://www.makotemplates.org/docs/inheritance.html
-
-inheritance:
-//layout/base.html+
-                  |
-                  +-//layout/${GRID}.html+
-                                         |
-                                         +-//${CONTROLLER}/${ACTION}.html

@@ -1,6 +1,0 @@
-<%page args="element, widgetstyle" />
-<%namespace file="../_helpers.html" import="wireElementEvents"/>
-<div id="item-${element['elementName'] | h}" class="standaloneHelp ${element['class'] if 'class' in element else '' | h}" ${widgetstyle}>
-	
-	<a href="${make_url('/savedsearchredirect', _qs=dict(s=entity.getLink('alternate')))}" class="spl-icon-external-link-xsm">${_('Click to edit actions')}</a>
-</div>

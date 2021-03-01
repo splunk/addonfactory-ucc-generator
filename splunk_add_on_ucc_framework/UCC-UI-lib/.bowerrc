@@ -1,4 +1,0 @@
-{
-    "strict-ssl": false,
-    "resolvers": ["bower-art-resolver"]
-}
