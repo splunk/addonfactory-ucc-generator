@@ -12,7 +12,6 @@ export function getMetaInfo() {
 }
 
 export function generateEndPointUrl(name) {
-    console.log("unifiedConfig: ", unifiedConfigs);
     return `${unifiedConfigs.meta.restRoot}/${name}`;
 }
 
