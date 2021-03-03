@@ -5,6 +5,7 @@ import { SplunkThemeProvider } from '@splunk/themes';
 
 import { defaultTheme } from '@splunk/splunk-utils/themes';
 
+import ConfigManager from '../util/configManager';
 import TestComponent from '../components/TestComponent';
 import { StyledContainer, StyledGreeting } from './StartStyles';
 
@@ -38,9 +39,11 @@ if (page === 'inputs') {
     layout(
         <SplunkThemeProvider {...themeProviderSettings}>
             <StyledContainer>
-                <StyledGreeting>Hello, from inside Inputs!</StyledGreeting>
-                <div>Your component will appear below.</div>
-                <TestComponent name="from inside TestComponent" />
+                <ConfigManager>
+                    <StyledGreeting>Hello, from inside Inputs!</StyledGreeting>
+                    <div>Your component will appear below.</div>
+                    <TestComponent name="from inside TestComponent" />
+                </ConfigManager>
             </StyledContainer>
         </SplunkThemeProvider>,
         { pageTitle: 'Inputs' }
@@ -49,9 +52,11 @@ if (page === 'inputs') {
     layout(
         <SplunkThemeProvider {...themeProviderSettings}>
             <StyledContainer>
-                <StyledGreeting>Hello, from inside Configuration!</StyledGreeting>
-                <div>Your component will appear below.</div>
-                <TestComponent name="from inside TestComponent" />
+                <ConfigManager>
+                    <StyledGreeting>Hello, from inside Configuration!</StyledGreeting>
+                    <div>Your component will appear below.</div>
+                    <TestComponent name="from inside TestComponent" />
+                </ConfigManager>
             </StyledContainer>
         </SplunkThemeProvider>,
         { pageTitle: 'Configuration' }

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from '@splunk/react-ui/Button';
 import { StyledContainer, StyledGreeting } from './TestComponentStyles';
+import { getUnifiedConfigs } from '../util/util';
 
 class TestComponent extends Component {
     static propTypes = {
@@ -15,6 +16,10 @@ class TestComponent extends Component {
     constructor(props) {
         super(props);
         this.state = { counter: 0 };
+    }
+
+    componentDidMount() {
+        console.log("getUnifiedConfigs: ", getUnifiedConfigs());
     }
 
     render() {
