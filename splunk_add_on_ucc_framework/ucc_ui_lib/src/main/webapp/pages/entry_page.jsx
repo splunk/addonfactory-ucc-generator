@@ -40,9 +40,14 @@ if (page === 'inputs') {
         <SplunkThemeProvider {...themeProviderSettings}>
             <StyledContainer>
                 <ConfigManager>
-                    <StyledGreeting>Hello, from inside Inputs!</StyledGreeting>
-                    <div>Your component will appear below.</div>
-                    <TestComponent name="from inside TestComponent" />
+                    {({loading, appData}) => {
+                        return !loading && appData && (
+                            <>
+                                <StyledGreeting>Hello, from inside Inputs!</StyledGreeting>
+                                <TestComponent name="from inside TestComponent" />
+                            </>
+                        )
+                    }}
                 </ConfigManager>
             </StyledContainer>
         </SplunkThemeProvider>,
@@ -53,9 +58,14 @@ if (page === 'inputs') {
         <SplunkThemeProvider {...themeProviderSettings}>
             <StyledContainer>
                 <ConfigManager>
-                    <StyledGreeting>Hello, from inside Configuration!</StyledGreeting>
-                    <div>Your component will appear below.</div>
-                    <TestComponent name="from inside TestComponent" />
+                    {({loading, appData}) => {
+                        return !loading && appData && (
+                            <>
+                                <StyledGreeting>Hello, from inside Configuration!</StyledGreeting>
+                                <TestComponent name="from inside TestComponent" />
+                            </>
+                        )
+                    }}
                 </ConfigManager>
             </StyledContainer>
         </SplunkThemeProvider>,
