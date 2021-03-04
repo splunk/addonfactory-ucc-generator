@@ -1,13 +1,12 @@
 import React from 'react';
-
 import layout from '@splunk/react-page';
 import { SplunkThemeProvider } from '@splunk/themes';
-
 import { defaultTheme } from '@splunk/splunk-utils/themes';
 
 import ConfigManager from '../util/configManager';
 import TestComponent from '../components/TestComponent';
-import { StyledContainer, StyledGreeting } from './StartStyles';
+import TableWrapper from '../components/table/TableWrapper';
+import { StyledContainer, StyledGreeting } from './EntryPageStyle';
 
 const defaultThemeSplunkThemeProviderMap = {
     enterprise: {
@@ -41,12 +40,7 @@ if (page === 'inputs') {
             <StyledContainer>
                 <ConfigManager>
                     {({loading, appData}) => {
-                        return !loading && appData && (
-                            <>
-                                <StyledGreeting>Hello, from inside Inputs!</StyledGreeting>
-                                <TestComponent name="from inside TestComponent" />
-                            </>
-                        )
+                        return !loading && appData && <TableWrapper />
                     }}
                 </ConfigManager>
             </StyledContainer>
