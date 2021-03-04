@@ -7,12 +7,12 @@ export function setMetaInfo(data) {
 
 export function getMetaInfo() {
     return {
-        appData: appData
-    }
+        appData: appData,
+    };
 }
 
 export function generateEndPointUrl(name) {
-    return `${unifiedConfigs.meta.restRoot}/${name}`;
+    return `${unifiedConfigs.meta.restRoot}_${name}`;
 }
 
 export function setUnifiedConfig(unifiedConfig) {
