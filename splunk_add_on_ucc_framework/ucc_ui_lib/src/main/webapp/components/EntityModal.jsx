@@ -40,7 +40,7 @@ class EntityModal extends Component {
                     onRequestClose={this.handleRequestClose}
                     open={this.state.open}
                 >
-                    <Modal.Header title={this.props.formLable} onRequestClose={this.handleRequestClose} />
+                    <Modal.Header title={this.props.formLabel} onRequestClose={this.handleRequestClose} />
                     <Modal.Body>
                         <BaseFormView 
                             ref={this.form }
@@ -69,7 +69,7 @@ EntityModal.propTypes = {
     serviceName:PropTypes.string,
     mode:PropTypes.string,
     currentInput:PropTypes.object,
-    formLable:PropTypes.string,
+    formLabel:PropTypes.string,
     handleSavedata:PropTypes.func
 }
 

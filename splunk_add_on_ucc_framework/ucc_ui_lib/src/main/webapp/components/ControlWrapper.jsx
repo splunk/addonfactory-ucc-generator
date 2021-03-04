@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
 import ControlGroup from '@splunk/react-ui/ControlGroup';
 import CONTROL_TYPE_MAP from '../constants/ControlTypeMap';
 
@@ -8,7 +7,11 @@ class ControlWrapper extends React.PureComponent {
 
     constructor(props){
         super(props);
-        this.controlType = _.isString(props.type) ? CONTROL_TYPE_MAP[props.type] : props.type;
+        this.controlType = this.isString(props.type) ? CONTROL_TYPE_MAP[props.type] : props.type;
+    }
+
+    isString = (str)=>{
+        return !!((typeof str === 'string' || str instanceof String));
     }
 
     render(){
@@ -17,7 +20,6 @@ class ControlWrapper extends React.PureComponent {
             React.createElement(this.controlType,
                 { 
                     handleChange:this.props.handleChange,
-                    helptext:this.props.helptext ,
                     key:this.props.id,
                     id:this.props.id,
                     value:this.props.value,
@@ -30,7 +32,8 @@ class ControlWrapper extends React.PureComponent {
         this.props.display && 
         <ControlGroup 
             label={this.props.label}
-            help={this.props.helptext} 
+            help={this.props.helptext}
+            tooltip={this.props.tooltip}
             error={this.props.error}  >
             {rowView}
         </ControlGroup>
@@ -39,6 +42,7 @@ class ControlWrapper extends React.PureComponent {
 }
 
 ControlWrapper.propTypes = {
+    tooltip:PropTypes.string,
     mode:PropTypes.string,
     label:PropTypes.string,
     id:PropTypes.number,
