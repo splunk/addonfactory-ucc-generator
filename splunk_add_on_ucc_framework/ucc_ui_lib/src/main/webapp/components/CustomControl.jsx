@@ -26,7 +26,7 @@ class CustomControl extends Component {
 
     loadCustomControl = (module)=> {
         const myPromise = new Promise((myResolve) => {
-            __non_webpack_require__([`app/${this.props.appName}js/build/custom/${module}`], (Control) => {
+            __non_webpack_require__([`app/${this.props.appName}/js/build/custom/${module}`], (Control) => {
                 myResolve(Control);
             }
           );

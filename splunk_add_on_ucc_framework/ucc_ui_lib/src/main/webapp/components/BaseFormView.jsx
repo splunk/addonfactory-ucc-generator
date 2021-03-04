@@ -130,7 +130,7 @@ class BaseFormView extends Component {
     
     loadHook = (module,globalConfig) => {
         const myPromise = new Promise((myResolve) => {
-            __non_webpack_require__([`app/${this.appName}js/build/custom/${module}`], (Hook) => {
+            __non_webpack_require__([`app/${this.appName}/js/build/custom/${module}`], (Hook) => {
                 this.hook = new Hook(
                     globalConfig,
                     this.props.serviceName,
