@@ -31,6 +31,7 @@
     "@splunk/stylelint-config": "^4.0.0",
     "@splunk/themes": "^0.7.0",
     "@splunk/webpack-configs": "^5.0.0",
+    "axios": "^0.21.1",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.0.4",
     "chai": "^3.5.0",
@@ -49,16 +50,16 @@
     "html-webpack-plugin": "^3.2.0",
     "jest": "^25.1.0",
     "jest-junit": "^10.0.0",
+    "jsonschema": "^1.4.0",
     "prettier": "^2.0.5",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "styled-components": "^5.1.1",
     "stylelint": "^13.0.0",
+    "underscore": "^1.12.0",
     "webpack": "^4.16.2",
     "webpack-cli": "^3.1.0",
-    "webpack-merge": "^4.1.3",
-    "jsonschema": "^1.4.0",
-    "underscore": "^1.12.0"
+    "webpack-merge": "^4.1.3"
   },
   "engines": {
     "node": ">=6"

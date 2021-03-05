@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Button from '@splunk/react-ui/Button';
 import { StyledContainer, StyledGreeting } from './TestComponentStyles';
 import { getUnifiedConfigs } from '../util/util';
+import { axiosCallWrapper } from '../util/axiosCallWrapper';
 
 class TestComponent extends Component {
     static propTypes = {
@@ -11,6 +12,7 @@ class TestComponent extends Component {
 
     static defaultProps = {
         name: 'User',
+        serviceName: 'example_input_one',
     };
 
     constructor(props) {
@@ -19,7 +21,14 @@ class TestComponent extends Component {
     }
 
     componentDidMount() {
-        console.log("getUnifiedConfigs: ", getUnifiedConfigs());
+        console.log('getUnifiedConfigs: ', getUnifiedConfigs());
+        axiosCallWrapper(this.props.serviceName)
+            .then((response) => {
+                console.log(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }
 
     render() {
@@ -30,13 +39,6 @@ class TestComponent extends Component {
             counter === 0
                 ? 'You should try clicking the button.'
                 : `You've clicked the button ${counter} time${counter > 1 ? 's' : ''}.`;
-        // const requireFunc = typeof __webpack_require__ === "function" ? __non_webpack_require__ : require;
-        function requireDynamically(path) {
-            return eval(`require`); // Ensure Webpack does not analyze the require statement
-        }
-        requireDynamically(['custom/' + module], (CustomRow) => {
-            this.CustomRow = CustomRow;
-        });
 
         return (
             <StyledContainer>
