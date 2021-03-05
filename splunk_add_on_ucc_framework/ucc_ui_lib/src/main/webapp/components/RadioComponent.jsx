@@ -7,17 +7,17 @@ class RadioComponent extends Component {
         super(props);
     }
 
-    handleChange = (e) => {
-        this.props.handleChange(this.props.id, e.target.value)
+    handleChange = (e, { value }) => {
+        this.props.handleChange(this.props.id, value);
     };
 
     render() {
         return (
             <RadioBar
+                inline
                 onChange={this.handleChange}
                 value={this.props.value}
                 key={this.props.field}
-                style={{ width: 200 }}
             >
                 {this.props.controlOptions.items.map(item => (
                     <RadioBar.Option key={item.value} value={item.value} label={item.label} />
@@ -32,7 +32,7 @@ RadioComponent.propTypes = {
     value: PropTypes.string,
     handleChange: PropTypes.func.isRequired,
     field: PropTypes.string,
-    controlOptions: PropTypes.object 
+    controlOptions: PropTypes.object
 };
 
 

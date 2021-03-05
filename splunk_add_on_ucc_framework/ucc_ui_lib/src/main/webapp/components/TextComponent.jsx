@@ -7,8 +7,8 @@ class TextComponent extends Component {
         super(props);
     }
 
-    handleChange = (e) => {
-        this.props.handleChange(this.props.id, e.target.value);
+    handleChange = (e, {value}) => {
+        this.props.handleChange(this.props.id, value);
     };
 
     render() {
@@ -17,7 +17,7 @@ class TextComponent extends Component {
                 inline
                 placeholder={this.props.controlOptions.placeholder}
                 className={this.props.field}
-                disabled={this.props.controlOptions.display === false ? true : false}
+                disabled={this.props.disabled}
                 value={this.props.value}
                 onChange={this.handleChange}
                 type={this.props.encrypted === true ? 'password' : 'text'}

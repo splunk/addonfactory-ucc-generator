@@ -7,8 +7,8 @@ class CheckBoxComponent extends Component {
         super(props);
     }
 
-    handleClick = (e) => {
-        this.props.handleClick(this.props.id, e.target.value);
+    handleChange = (e, {value}) => {
+        this.props.handleChange(this.props.id, value);
     };
 
     render() {
@@ -16,11 +16,10 @@ class CheckBoxComponent extends Component {
             <Switch
                 key={this.props.field}
                 value={this.props.value}
-                onClick={this.handleClick}
+                onClick={this.handleChange}
                 selected={this.props.value === 1 ? true : false}
                 appearance="checkbox"
             >
-                {this.props.label}
             </Switch>
         );
     }
@@ -31,7 +30,6 @@ CheckBoxComponent.propTypes = {
     value: PropTypes.string,
     handleClick: PropTypes.func.isRequired,
     field: PropTypes.string,
-    label: PropTypes.string,
     controlOptions: PropTypes.object,
 };
 
