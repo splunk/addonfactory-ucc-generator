@@ -20,11 +20,10 @@ class ControlWrapper extends React.PureComponent {
             React.createElement(this.controlType,
                 { 
                     handleChange:this.props.handleChange,
-                    key:this.props.id,
                     id:this.props.id,
                     value:this.props.value,
                     field:this.props.field,
-                    disable:isDisable,
+                    disabled:isDisable,
                     controlOptions:this.props.controlOptions,
                 })): `No View Found for ${this.props.type} type`;
 
@@ -45,7 +44,7 @@ ControlWrapper.propTypes = {
     tooltip:PropTypes.string,
     mode:PropTypes.string,
     label:PropTypes.string,
-    id:PropTypes.number,
+    id:PropTypes.string,
     handleChange:PropTypes.func,
     value : PropTypes.string,
     display : PropTypes.bool,

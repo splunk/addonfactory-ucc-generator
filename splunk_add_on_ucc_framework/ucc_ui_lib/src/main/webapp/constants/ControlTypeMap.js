@@ -1,15 +1,15 @@
 import Link from '@splunk/react-ui/Link';
-import TextView from '../components/TextView';
+import TextComponent from '../components/TextComponent';
 import SingleSelectView from '../components/SingleSelectView';
 import MultipleSelectView from '../components/MultipleSelectView';
-import CheckboxView from '../components/CheckboxView';
-import RadioView from '../components/RadioView';
+import CheckBoxComponent from '../components/CheckBoxComponent';
+import RadioComponent from '../components/RadioComponent';
 
 export default {
-    'text': TextView,
-    'singleSelect': SingleSelectView,
+    'text': TextComponent,
+    'singleSelect': SingleSelectComponent,
     'helpLink':Link,
-    'multipleSelect':MultipleSelectView,
-    'checkbox':CheckboxView,
-    'radio':RadioView
+    'multipleSelect':MultipleSelectComponent,
+    'checkbox':CheckBoxComponent,
+    'radio':RadioComponent
 };

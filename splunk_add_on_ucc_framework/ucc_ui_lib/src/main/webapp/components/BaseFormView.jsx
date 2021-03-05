@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Message from '@splunk/react-ui/Message';
+import update from 'immutability-helper';
 import CustomControl from './CustomControl';
 import ControlWrapper from './ControlWrapper';
 import { getUnifiedConfigs } from '../util/util';
@@ -62,6 +64,13 @@ class BaseFormView extends Component {
             }
         });
 
+        this.state = {
+            data:temState,
+            ErrorMsg :"",
+            WarningMsg: ""
+        }
+
+        
         // Hook on create method call
         if (this.hookDeferred) {
             this.hookDeferred.then(() => {
@@ -83,11 +92,11 @@ class BaseFormView extends Component {
                 return false;
             }
         }
-        // here We will validate data, save data to global state and also to backend
+        // To DO :here We will validate data, save data to global state and also to backend
         const saveSuccess = true;
         const dataValues = {};
 
-        const retunValue = {
+        const returnValue = {
             result: saveSuccess,
             data: dataValues,
         };
@@ -96,18 +105,18 @@ class BaseFormView extends Component {
             if (this.hook && typeof this.hook.onSaveSuccess === 'function') {
                 this.hook.onSaveSuccess();
             }
-            return retunValue;
+            return returnValue;
         }
 
         if (this.hook && typeof this.hook.onSaveFail === 'function') {
             this.hook.onSaveFail();
         }
-        return retunValue;
+        return returnValue;
     };
 
     handleChange(fieldId, targetValue) {
-        const newFields = { ...this.state };
-        newFields[fieldId].value = targetValue;
+        this.clearErrorMsg();
+        const newFields = update(this.state,{data:{[fieldId]:{value:{$set:targetValue}}}});
         this.setState(newFields);
 
         if (this.hookDeferred) {
@@ -117,6 +126,57 @@ class BaseFormView extends Component {
                 }
             });
         }
+    }
+
+    setErrorIndex = (index) => {
+        const newFields = update(this.state,{data:{[index]:{error:{$set:true}}}});
+        this.setState(newFields);
+    }
+
+    setErrorField = (field) =>{
+        const index = this.entities.findIndex(({ entity }) => entity.field === field);
+        this.setErrorIndex(index);
+    }
+
+    setErrorMsg = (msg) =>{
+        const newFields = { ...this.state };
+        newFields.ErrorMsg = msg;
+        this.setState(newFields);
+    }
+
+    clearErrorMsg = () =>{
+        const newFields = { ...this.state };
+        newFields.ErrorMsg = "";
+        this.setState(newFields);
+    }
+
+    clearAllErrorMsg = () =>{
+        const newFields = { ...this.state };
+        newFields.ErrorMsg = "";
+        const newData = {...this.state.data}
+
+        for(let index=0; index < newData.length; index+=1){
+            if(newData[index].error){
+                const tem = {...newData[index]}
+                tem.error = false;
+                newData[index] =tem; 
+            }
+        }
+        newFields.data = newData;
+        this.setState(newFields);
+    }
+    
+    generateErrorMessage = () => {
+        if (this.state.ErrorMsg) {
+            return (
+                <div className="msg msg-error" >
+                    <Message fill type="error">
+                        {this.state.ErrorMsg}
+                    </Message>
+                </div>
+            )
+        }
+        return null; 
     }
 
     loadHook = (module, globalConfig) => {
@@ -190,7 +250,11 @@ class BaseFormView extends Component {
             }
         });
 
-        return <div>{rows}</div>;
+        return( <div className="form-horizontal">
+            {this.generateErrorMessage()}
+            {rows}
+            </div>
+        );
     }
 }
 

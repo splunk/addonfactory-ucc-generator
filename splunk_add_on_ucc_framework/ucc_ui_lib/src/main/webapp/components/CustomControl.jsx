@@ -11,7 +11,7 @@ class CustomControl extends Component {
             "value":this.props.value
         }
         this.loadCustomControl(this.props.controlOptions.src).then((Control)=>{
-            const customControl = new Control(this.el, this.setValue,data);
+            const customControl = new Control(this.el, this.setValue, data);
             customControl.render();
         })
       }
@@ -36,14 +36,15 @@ class CustomControl extends Component {
 
     setValue = (newValue) => {
         this.props.handleChange(this.props.id,newValue);
-      }
+    }
 
     render(){
         return (
         this.props.display && 
         <ControlGroup 
             label={this.props.label}
-            help={this.props.helptext} 
+            help={this.props.helptext}
+            tooltip={this.props.tooltip} 
             error={this.props.error}  >
             <div ref={ (el) => {this.el = el} } />
         </ControlGroup>
@@ -52,6 +53,7 @@ class CustomControl extends Component {
 }
 
 CustomControl.propTypes = {
+    tooltip:PropTypes.string,
     mode:PropTypes.string,
     label:PropTypes.string,
     id:PropTypes.number,
