@@ -1,7 +1,7 @@
 import Link from '@splunk/react-ui/Link';
 import TextComponent from '../components/TextComponent';
-import SingleSelectView from '../components/SingleSelectView';
-import MultipleSelectView from '../components/MultipleSelectView';
+import SingleSelectComponent from '../components/SingleSelectComponent';
+import MultipleSelectComponent from '../components/MultipleSelectComponent';
 import CheckBoxComponent from '../components/CheckBoxComponent';
 import RadioComponent from '../components/RadioComponent';
 
