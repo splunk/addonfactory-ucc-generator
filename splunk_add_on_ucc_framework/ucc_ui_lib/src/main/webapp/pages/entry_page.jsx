@@ -3,7 +3,7 @@ import layout from '@splunk/react-page';
 import { SplunkThemeProvider } from '@splunk/themes';
 import { defaultTheme } from '@splunk/splunk-utils/themes';
 
-import { StyledContainer } from './entryPageStyle';
+import { StyledContainer } from './EntryPageStyle';
 import ConfigManager from '../util/configManager';
 import InputPage from './Input/InputPage';
 import ConfigurationPage from './Configuration/ConfigurationPage';
@@ -39,8 +39,8 @@ if (page === 'inputs') {
         <SplunkThemeProvider {...themeProviderSettings}>
             <StyledContainer>
                 <ConfigManager>
-                    {({loading, appData}) => {
-                        return !loading && appData && <InputPage isInput serviceName="" />
+                    {({ loading, appData }) => {
+                        return !loading && appData && <InputPage isInput serviceName="" />;
                     }}
                 </ConfigManager>
             </StyledContainer>
@@ -52,8 +52,8 @@ if (page === 'inputs') {
         <SplunkThemeProvider {...themeProviderSettings}>
             <StyledContainer>
                 <ConfigManager>
-                    {({loading, appData}) => {
-                        return !loading && appData && <ConfigurationPage />
+                    {({ loading, appData }) => {
+                        return !loading && appData && <ConfigurationPage />;
                     }}
                 </ConfigManager>
             </StyledContainer>
