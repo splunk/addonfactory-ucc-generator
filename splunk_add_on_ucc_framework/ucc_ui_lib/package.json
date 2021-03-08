@@ -31,6 +31,7 @@
     "@splunk/stylelint-config": "^4.0.0",
     "@splunk/themes": "^0.7.0",
     "@splunk/webpack-configs": "^5.0.0",
+    "axios": "^0.21.1",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.0.4",
     "chai": "^3.5.0",
