@@ -41,26 +41,26 @@ class BaseFormView extends Component {
                 }
             });
         }
-
-        const temState = [];
+        
+        const temState = {};
         this.entities.forEach((e) => {
             const tempEntity = {};
 
             if (props.mode === 'CREATE') {
-                tempEntity.value = e.defaultValue || '';
-                tempEntity.display = e.options.display || true;
+                tempEntity.value = (typeof e.defaultValue !== "undefined")?e.defaultValue:'';
+                tempEntity.display = (typeof e?.options?.display !== "undefined")?e.options.display:true;
                 tempEntity.error = false;
-                temState.push(tempEntity);
+                temState[e.field] = tempEntity;
             } else if (props.mode === 'EDIT') {
-                tempEntity.value = props.currentInput[e.field] || '';
-                tempEntity.display = e.options.display || true;
+                tempEntity.value = (typeof props.currentInput[e.field] !== "undefined")? props.currentInput[e.field]:'';
+                tempEntity.display = (typeof e?.options?.display !== "undefined")?e.options.display:true;
                 tempEntity.error = false;
-                temState.push(tempEntity);
+                temState[e.field] = tempEntity;
             } else {
                 tempEntity.value = e.field === 'name' ? '' : props.currentInput[e.field];
-                tempEntity.display = e.options.display || true;
+                tempEntity.display = (typeof e?.options?.display !== "undefined")?e.options.display:true;
                 tempEntity.error = false;
-                temState.push(tempEntity);
+                temState[e.field] = tempEntity;
             }
         });
 
@@ -113,29 +113,34 @@ class BaseFormView extends Component {
         }
         return returnValue;
     };
+    
 
-    handleChange(fieldId, targetValue) {
+    handleChange = (field, targetValue)=> {
         this.clearErrorMsg();
-        const newFields = update(this.state,{data:{[fieldId]:{value:{$set:targetValue}}}});
+        const newFields = update(this.state ,{ data: { [field] : { value: {$set: targetValue } } } } );
         this.setState(newFields);
 
         if (this.hookDeferred) {
             this.hookDeferred.then(() => {
                 if (typeof this.hook.onChange === 'function') {
-                    this.hook.onChange(newFields[fieldId]);
+                    this.hook.onChange(newFields[field]);
                 }
             });
         }
     }
 
-    setErrorIndex = (index) => {
-        const newFields = update(this.state,{data:{[index]:{error:{$set:true}}}});
+
+    setErrorField = (field) =>{
+        const newFields = update(this.state ,{ data: { [field] : { error: {$set: true } } } } );
         this.setState(newFields);
     }
 
-    setErrorField = (field) =>{
-        const index = this.entities.findIndex(({ entity }) => entity.field === field);
-        this.setErrorIndex(index);
+    clearErrorMsg = () =>{
+        if(this.state.ErrorMsg){
+            const newFields = { ...this.state };
+            newFields.ErrorMsg = "";
+            this.setState(newFields);
+        }
     }
 
     setErrorMsg = (msg) =>{
@@ -144,24 +149,22 @@ class BaseFormView extends Component {
         this.setState(newFields);
     }
 
-    clearErrorMsg = () =>{
-        const newFields = { ...this.state };
-        newFields.ErrorMsg = "";
-        this.setState(newFields);
-    }
 
+    // Not tested yet
     clearAllErrorMsg = () =>{
         const newFields = { ...this.state };
         newFields.ErrorMsg = "";
         const newData = {...this.state.data}
-
-        for(let index=0; index < newData.length; index+=1){
-            if(newData[index].error){
-                const tem = {...newData[index]}
+     
+        Object.keys(newData).map( (key) => {
+            if(newData[key].error){
+                const tem = {...newData[key]}
                 tem.error = false;
-                newData[index] =tem; 
+                return tem;
             }
-        }
+            return newData[key];
+          });
+
         newFields.data = newData;
         this.setState(newFields);
     }
@@ -214,15 +217,14 @@ class BaseFormView extends Component {
 
         const rows = [];
 
-        this.entities.forEach( (e, index) => {
+        this.entities.forEach( (e) => {
             if (e.type === 'custom') {
                 rows.push(
                     <CustomControl
-                        id={index}
                         key={e.field}
                         handleChange={this.handleChange}
-                        display={this.state[index].display}
-                        error={this.state[index].error}
+                        display={this.state.data[e.field].display}
+                        error={this.state.data[e.field].error}
                         field={e.field}
                         helptext={e.help}
                         label={e.label}
@@ -234,17 +236,17 @@ class BaseFormView extends Component {
                 rows.push(
                     <ControlWrapper
                         key={e.field}
-                        id={index}
                         handleChange={this.handleChange}
-                        value={this.state[index].value}
-                        display={this.state[index].display}
-                        error={this.state[index].error}
+                        value={this.state.data[e.field].value}
+                        display={this.state.data[e.field].display}
+                        error={this.state.data[e.field].error}
                         helptext={e.help || ""}
                         label={e.label}
                         field={e.field}
                         controlOptions={ e.options|| {} }
                         mode={this.props.mode}
                         tooltip={e.tooltip || ""}
+                        type={e.type}
                     />
                 );
             }

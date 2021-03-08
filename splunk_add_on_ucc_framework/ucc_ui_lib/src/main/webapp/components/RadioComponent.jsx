@@ -3,12 +3,9 @@ import PropTypes from 'prop-types';
 import RadioBar from '@splunk/react-ui/RadioBar';
 
 class RadioComponent extends Component {
-    constructor(props) {
-        super(props);
-    }
 
     handleChange = (e, { value }) => {
-        this.props.handleChange(this.props.id, value);
+        this.props.handleChange(this.props.field, value);
     };
 
     render() {
@@ -28,7 +25,6 @@ class RadioComponent extends Component {
 }
 
 RadioComponent.propTypes = {
-    id: PropTypes.number.isRequired,
     value: PropTypes.string,
     handleChange: PropTypes.func.isRequired,
     field: PropTypes.string,
@@ -37,4 +33,3 @@ RadioComponent.propTypes = {
 
 
 export default RadioComponent;
-

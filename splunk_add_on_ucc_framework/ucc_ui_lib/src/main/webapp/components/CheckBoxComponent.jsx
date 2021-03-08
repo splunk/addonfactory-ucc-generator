@@ -3,12 +3,8 @@ import PropTypes from 'prop-types';
 import Switch from '@splunk/react-ui/Switch';
 
 class CheckBoxComponent extends Component {
-    constructor(props) {
-        super(props);
-    }
-
-    handleChange = (e) => {
-        this.props.handleChange(this.props.id, 1 - this.props.value);
+    handleChange = () => {
+        this.props.handleChange(this.props.field, 1 - this.props.value);
     };
 
     render() {
@@ -18,19 +14,18 @@ class CheckBoxComponent extends Component {
                 value={this.props.field}
                 onClick={this.handleChange}
                 disabled={this.props.disabled}
-                selected={this.props.value ? true : false}
+                selected={!!this.props.value}
                 appearance="checkbox"
-            ></Switch>
+             />
         );
     }
 }
 
 CheckBoxComponent.propTypes = {
-    id: PropTypes.number.isRequired,
     value: PropTypes.string,
-    handleClick: PropTypes.func.isRequired,
+    handleChange: PropTypes.func.isRequired,
     field: PropTypes.string,
-    controlOptions: PropTypes.object,
+    disabled: PropTypes.bool
 };
 
 export default CheckBoxComponent;

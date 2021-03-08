@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Multiselect from '@splunk/react-ui/Multiselect';
 
-function MultiInputControl(props) {
-    const { id, field, disabled = false, value, controlOptions, ...restProps } = props;
+function MultiInputComponent(props) {
+    const { field, disabled = false, value, controlOptions, ...restProps } = props;
     const { items, placeholder, createSearchChoice, delimiter = ',' } = controlOptions;
 
     function handleChange(e, { values }) {
-        restProps.handleChange(id, values.join(delimiter));
+        restProps.handleChange(field, values.join(delimiter));
     }
 
     const valueList = value ? value.split(delimiter) : [];
@@ -28,8 +28,7 @@ function MultiInputControl(props) {
     );
 }
 
-MultiInputControl.propTypes = {
-    id: PropTypes.number.isRequired,
+MultiInputComponent.propTypes = {
     disabled: PropTypes.bool,
     value: PropTypes.string,
     handleChange: PropTypes.func.isRequired,
@@ -47,4 +46,4 @@ MultiInputControl.propTypes = {
     }),
 };
 
-export default MultiInputControl;
+export default MultiInputComponent;

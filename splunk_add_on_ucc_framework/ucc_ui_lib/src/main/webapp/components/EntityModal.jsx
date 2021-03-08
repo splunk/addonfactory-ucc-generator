@@ -7,7 +7,7 @@ import BaseFormView from './BaseFormView';
 class EntityModal extends Component {
     constructor(props) {
         super(props);
-        this.state = { open: false };
+        this.state = { open: props.open };
         this.form = React.createRef();
     }
 
@@ -17,6 +17,7 @@ class EntityModal extends Component {
 
     handleRequestClose = () => {
         this.setState({ open: false });
+        this.props.handleRequestClose();
     };
 
     handleSubmit = () =>{
@@ -66,6 +67,8 @@ class EntityModal extends Component {
 
 EntityModal.propTypes = {
     isInput: PropTypes.bool,
+    open: PropTypes.bool,
+    handleRequestClose:PropTypes.func,
     serviceName:PropTypes.string,
     mode:PropTypes.string,
     currentInput:PropTypes.object,

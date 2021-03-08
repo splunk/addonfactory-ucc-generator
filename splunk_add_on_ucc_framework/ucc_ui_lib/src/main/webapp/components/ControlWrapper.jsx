@@ -20,7 +20,6 @@ class ControlWrapper extends React.PureComponent {
             React.createElement(this.controlType,
                 { 
                     handleChange:this.props.handleChange,
-                    id:this.props.id,
                     value:this.props.value,
                     field:this.props.field,
                     disabled:isDisable,
@@ -44,9 +43,8 @@ ControlWrapper.propTypes = {
     tooltip:PropTypes.string,
     mode:PropTypes.string,
     label:PropTypes.string,
-    id:PropTypes.string,
     handleChange:PropTypes.func,
-    value : PropTypes.string,
+    value : PropTypes.any,
     display : PropTypes.bool,
     error : PropTypes.bool,
     helptext : PropTypes.string,
