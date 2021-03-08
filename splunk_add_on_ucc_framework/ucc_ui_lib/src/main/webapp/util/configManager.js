@@ -1,11 +1,19 @@
 import React, {Component} from "react";
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
+import styled from 'styled-components';
 import * as _ from "lodash";
 
 import { validateSchema } from './uccConfigurationValidators';
 import { getFormattedMessage } from './messageUtil';
 import { setMetaInfo, setUnifiedConfig } from './util';
+import { loadGlobalConfig } from './script';
 import ErrorModal from '../components/ErrorModal';
+
+const WaitSpinnerWrapper = styled(WaitSpinner)`
+    position: fixed;
+    top: 50%;
+    left: 50%;
+`;
 
 class ConfigManager extends Component {
 
@@ -21,7 +29,8 @@ class ConfigManager extends Component {
     }
 
     componentWillMount() {
-        this.loadGlobalConfig().then((val) => {
+        this.setState({loading: true});
+        loadGlobalConfig().then((val) => {
             // The configuration object should be attached to global object,
             // before executing the code below.
             // this.unifiedConfig = window.__globalConfig;
@@ -33,34 +42,6 @@ class ConfigManager extends Component {
                 console.error("Error [configManager.js] [35]: ", err);
             }
         });
-    }
-
-    loadGlobalConfig() {
-        // Get the configuraiton json file in sync mode
-        this.setState({loading: true});
-        return new Promise((resolve, reject) => {
-            fetch(`${this.getBuildDirPath()}/globalConfig.json`).then((res) => {
-                return res.json();     
-            }).then((json) => {
-                // window.__globalConfig = json;
-                resolve(json);
-            }).catch((err) => {
-                reject(err);
-            });
-        });
-    }
-
-    getBuildDirPath() {
-        const scripts = document.getElementsByTagName('script');
-        const scriptsCount = scripts.length;
-        for (let i = 0; i < scriptsCount; i++) {
-            const s = scripts[i];
-            if(s.src && s.src.match(/js\/build/)) {
-                const lastSlashIndex = s.src.lastIndexOf('/');
-                return s.src.slice(0, lastSlashIndex);
-            }
-        }
-        return '';
     }
 
     attchPropertie(unifiedConfig) {
@@ -103,8 +84,8 @@ class ConfigManager extends Component {
         return (
             <>
                 {
-                    this.state.loading ? 
-                    <WaitSpinner size="large" /> : 
+                    this.state.loading ?
+                    <WaitSpinnerWrapper size="large" /> : 
                     this.renderComponents()
                 }
             </>

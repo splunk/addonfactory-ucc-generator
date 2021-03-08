@@ -1,13 +1,12 @@
 import React from 'react';
-
 import layout from '@splunk/react-page';
 import { SplunkThemeProvider } from '@splunk/themes';
-
 import { defaultTheme } from '@splunk/splunk-utils/themes';
 
+import { StyledContainer } from './EntryPageStyle';
 import ConfigManager from '../util/configManager';
-import TestComponent from '../components/TestComponent';
-import { StyledContainer, StyledGreeting } from './StartStyles';
+import InputPage from './Input/InputPage';
+import ConfigurationPage from './Configuration/ConfigurationPage';
 
 const defaultThemeSplunkThemeProviderMap = {
     enterprise: {
@@ -40,13 +39,8 @@ if (page === 'inputs') {
         <SplunkThemeProvider {...themeProviderSettings}>
             <StyledContainer>
                 <ConfigManager>
-                    {({loading, appData}) => {
-                        return !loading && appData && (
-                            <>
-                                <StyledGreeting>Hello, from inside Inputs!</StyledGreeting>
-                                <TestComponent name="from inside TestComponent" />
-                            </>
-                        )
+                    {({ loading, appData }) => {
+                        return !loading && appData && <InputPage isInput serviceName="" />;
                     }}
                 </ConfigManager>
             </StyledContainer>
@@ -58,13 +52,8 @@ if (page === 'inputs') {
         <SplunkThemeProvider {...themeProviderSettings}>
             <StyledContainer>
                 <ConfigManager>
-                    {({loading, appData}) => {
-                        return !loading && appData && (
-                            <>
-                                <StyledGreeting>Hello, from inside Configuration!</StyledGreeting>
-                                <TestComponent name="from inside TestComponent" />
-                            </>
-                        )
+                    {({ loading, appData }) => {
+                        return !loading && appData && <ConfigurationPage />;
                     }}
                 </ConfigManager>
             </StyledContainer>

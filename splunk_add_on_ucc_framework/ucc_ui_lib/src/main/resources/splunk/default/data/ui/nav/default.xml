@@ -1,5 +1,5 @@
 <nav>
     <view name="inputs" />
-    <view name="configuration" default="true"/>
+    <view name="configuration" default="true" />
     <view name="search" />
 </nav>
