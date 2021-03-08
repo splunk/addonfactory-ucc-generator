@@ -20,7 +20,7 @@ class TextComponent extends Component {
                 disabled={this.props.disabled}
                 value={this.props.value}
                 onChange={this.handleChange}
-                type={this.props.encrypted === true ? 'password' : 'text'}
+                type={this.props.encrypted ? 'password' : 'text'}
             />
         );
     }

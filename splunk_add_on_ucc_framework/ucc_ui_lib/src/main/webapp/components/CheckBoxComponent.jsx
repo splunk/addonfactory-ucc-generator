@@ -7,20 +7,20 @@ class CheckBoxComponent extends Component {
         super(props);
     }
 
-    handleChange = (e, {value}) => {
-        this.props.handleChange(this.props.id, value);
+    handleChange = (e) => {
+        this.props.handleChange(this.props.id, 1 - this.props.value);
     };
 
     render() {
         return (
             <Switch
                 key={this.props.field}
-                value={this.props.value}
+                value={this.props.field}
                 onClick={this.handleChange}
-                selected={this.props.value === 1 ? true : false}
+                disabled={this.props.disabled}
+                selected={this.props.value ? true : false}
                 appearance="checkbox"
-            >
-            </Switch>
+            ></Switch>
         );
     }
 }
