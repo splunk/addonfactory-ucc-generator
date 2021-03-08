@@ -3,12 +3,9 @@ import PropTypes from 'prop-types';
 import Text from '@splunk/react-ui/Text';
 
 class TextComponent extends Component {
-    constructor(props) {
-        super(props);
-    }
 
     handleChange = (e, {value}) => {
-        this.props.handleChange(this.props.id, value);
+        this.props.handleChange(this.props.field, value);
     };
 
     render() {
@@ -27,11 +24,12 @@ class TextComponent extends Component {
 }
 
 TextComponent.propTypes = {
-    id: PropTypes.number.isRequired,
     value: PropTypes.string,
     handleChange: PropTypes.func.isRequired,
     field: PropTypes.string,
     controlOptions: PropTypes.object,
+    encrypted:PropTypes.bool,
+    disabled:PropTypes.bool
 };
 
 export default TextComponent;

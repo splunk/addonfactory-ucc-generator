@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { _ } from '@splunk/ui-utils/i18n';
-
+import Button from '@splunk/react-ui/Button';
 import { getUnifiedConfigs } from '../../util/util';
 import { WaitSpinnerWrapper } from '../../components/table/TableStyle';
 import { TitleComponent, SubTitleComponent, TableCaptionComponent } from './InputPageStyle';
 import Table from '../../components/table/Table';
+import EntityModal from '../../components/EntityModal';
+
 
 function InputPage({ isInput, serviceName }) {
     const [loading, setLoading] = useState(true);
     const [rowData, setRowData] = useState([]);
     const [title, setTitle] = useState(null);
     const [description, setDescription] = useState(null);
+    const [open,setOpen] = useState(false);
 
     useEffect(() => {
         const unifiedConfigs = getUnifiedConfigs();
@@ -381,6 +384,35 @@ function InputPage({ isInput, serviceName }) {
         setRowData((data) => [...oldData]);
     };
 
+    const handleRequestClose = () => {
+        setOpen(false);
+    }
+
+    // temprary button for test Form
+    const generateModalDialog = () => {
+        if (open) {
+            return (
+                < EntityModal
+                    isInput
+                    open={open}
+                    handleRequestClose={handleRequestClose}
+                    handleSavedata={null}
+                    serviceName="example_input_one"
+                    mode="CREATE"
+                    currentInput={null}
+                    formLabel="Add Input"
+                />
+            );
+        }
+            return null;
+    }
+
+    
+
+    const handleRequestOpen = () => {
+        setOpen(true);
+    }
+
     return (
         <>
             {loading ? (
@@ -389,6 +421,7 @@ function InputPage({ isInput, serviceName }) {
                 <>
                     <TitleComponent>{title}</TitleComponent>
                     <SubTitleComponent>{description}</SubTitleComponent>
+                    <Button onClick={handleRequestOpen} appearance="primary" label="Add Input" />
                     <hr />
                     <TableCaptionComponent>
                         <div className="table-caption-inner">
@@ -401,6 +434,8 @@ function InputPage({ isInput, serviceName }) {
                         data={rowData}
                         handleToggleActionClick={(row) => changeStatus(row)}
                     />
+                    
+                    {generateModalDialog()} 
                 </>
             )}
         </>

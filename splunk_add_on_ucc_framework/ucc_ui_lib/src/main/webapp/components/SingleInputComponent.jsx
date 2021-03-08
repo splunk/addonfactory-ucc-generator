@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Select from '@splunk/react-ui/Select';
 
-function SingleInputControl(props) {
-    const { id, field, disabled = false, value, controlOptions, ...restProps } = props;
+function SingleInputComponent(props) {
+    const { field, disabled = false, value, controlOptions, ...restProps } = props;
     const { autoCompleteFields } = controlOptions;
 
     function handleChange(e, { value }) {
-        restProps.handleChange(id, value);
+        restProps.handleChange( field, value);
     }
 
     function generateOptions() {
@@ -35,8 +35,7 @@ function SingleInputControl(props) {
     );
 }
 
-SingleInputControl.propTypes = {
-    id: PropTypes.number.isRequired,
+SingleInputComponent.propTypes = {
     disabled: PropTypes.bool,
     value: PropTypes.string,
     handleChange: PropTypes.func.isRequired,
@@ -46,4 +45,4 @@ SingleInputControl.propTypes = {
     }),
 };
 
-export default SingleInputControl;
+export default SingleInputComponent;
