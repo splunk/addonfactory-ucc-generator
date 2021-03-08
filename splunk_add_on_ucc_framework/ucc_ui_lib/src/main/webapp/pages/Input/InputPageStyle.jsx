@@ -1,10 +1,5 @@
 import styled from 'styled-components';
-import Button from '@splunk/react-ui/Button';
 import { variables } from '@splunk/themes';
-
-export const ButtonComponent = styled(Button)`
-    margin: 0px 5px;
-`;
 
 export const TitleComponent = styled.div`
     font-size: ${variables.fontSizeXXLarge};

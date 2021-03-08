@@ -14,6 +14,7 @@ const WaitSpinnerWrapper = styled(WaitSpinner)`
     top: 50%;
     left: 50%;
 `;
+
 class ConfigManager extends Component {
 
     constructor(props) {
@@ -83,7 +84,7 @@ class ConfigManager extends Component {
         return (
             <>
                 {
-                    this.state.loading ? 
+                    this.state.loading ?
                     <WaitSpinnerWrapper size="large" /> : 
                     this.renderComponents()
                 }
