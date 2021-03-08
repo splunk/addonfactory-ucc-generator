@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import DL from '@splunk/react-ui/DefinitionList';
 import Table from '@splunk/react-ui/Table';
+import { _ } from '@splunk/ui-utils/i18n';
+
 import { getUnifiedConfigs } from '../../util/util';
 
 function getExpansionRowData(row) {
@@ -8,11 +10,12 @@ function getExpansionRowData(row) {
     let moreInfo = unifiedConfigs.pages.inputs.table.moreInfo;
     return (
         moreInfo && moreInfo.length && moreInfo.map((val) => {
+            const label = _(val.label);
             return (
                 <>
                     { (row[val.field] || val.label == "Status") &&
                         <>
-                            <DL.Term>{val.label}</DL.Term>
+                            <DL.Term>{label}</DL.Term>
                             <DL.Description>
                                 { val.label == "Status" ? row[val.field] ? 'Disabled': 'Enabled': `${row[val.field]}` }
                             </DL.Description>

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import DL from '@splunk/react-ui/DefinitionList';
 import Table from '@splunk/react-ui/Table';
 import Switch from '@splunk/react-ui/Switch';
 import ButtonGroup from '@splunk/react-ui/ButtonGroup';
@@ -14,16 +13,12 @@ import { ActionButtonComponent } from './TableStyle';
 import { getUnifiedConfigs } from '../../util/util';
 import { getExpansionRow } from './TableExpansionRow';
 
-
 function InputTable({ isInput, serviceName, data, handleToggleActionClick }) {
-
     const [sortKey, setSortKey] = useState('name');
     const [sortDir, setSortDir] = useState('asc');
     const [columns, setColumns] = useState([]);
 
     useEffect(() => {
-        console.log("isInput: ", isInput);
-        console.log("Unified config: ", getUnifiedConfigs());
         generateColumns();
     }, []);
 
@@ -36,15 +31,14 @@ function InputTable({ isInput, serviceName, data, handleToggleActionClick }) {
                 headers.forEach((header) => {
                     column.push({
                         ...header,
-                        sortKey: header.field || null
+                        sortKey: header.field || null,
                     });
                 });
             }
             column.push({ label: 'Actions', field: 'actions', sortKey: '' });
-            console.log("Columns: ", column);
             setColumns(column);
         }
-    }
+    };
 
     const handleSort = (e, val) => {
         const prevSortKey = sortKey;
@@ -57,57 +51,53 @@ function InputTable({ isInput, serviceName, data, handleToggleActionClick }) {
     const getTableHeaders = () => {
         return (
             <Table.Head>
-                {columns && columns.length && columns.map((headData) => (
-                    <Table.HeadCell
-                        key={headData.field}
-                        onSort={headData.sortKey ? handleSort: null}
-                        sortKey={headData.sortKey ? headData.sortKey: null}
-                        sortDir={headData.sortKey ? headData.sortKey === sortKey ? sortDir : 'none': null}
-                    >
-                        {headData.label}
-                    </Table.HeadCell>
-                ))}
+                {columns &&
+                    columns.length &&
+                    columns.map((headData) => (
+                        <Table.HeadCell
+                            key={headData.field}
+                            onSort={headData.sortKey ? handleSort : null}
+                            sortKey={headData.sortKey ? headData.sortKey : null}
+                            sortDir={
+                                headData.sortKey
+                                    ? headData.sortKey === sortKey
+                                        ? sortDir
+                                        : 'none'
+                                    : null
+                            }
+                        >
+                            {headData.label}
+                        </Table.HeadCell>
+                    ))}
             </Table.Head>
-        )
-    }
+        );
+    };
 
-    const handleEditActionClick = () => {
+    const handleEditActionClick = () => {};
 
-    }
+    const handleCloneActionClick = () => {};
 
-    const handleCloneActionClick = () => {
-
-    }
-
-    const handleDeleteActionClick = () => {
-
-    }
+    const handleDeleteActionClick = () => {};
 
     const rowActionsPrimaryButton = (row) => {
         return (
             <Table.Cell key={row.id}>
                 <ButtonGroup>
-                    <Tooltip
-                        content={_('Edit')}
-                    >
+                    <Tooltip content={_('Edit')}>
                         <ActionButtonComponent
                             appearance="primary"
                             icon={<Pencil screenReaderText={null} size={1} />}
                             onClick={() => handleEditActionClick(row)}
                         />
                     </Tooltip>
-                    <Tooltip
-                        content={_('Clone')}
-                    >
+                    <Tooltip content={_('Clone')}>
                         <ActionButtonComponent
                             appearance="primary"
                             icon={<Clone screenReaderText={null} size={1} />}
                             onClick={() => handleCloneActionClick(row)}
                         />
                     </Tooltip>
-                    <Tooltip
-                        content={_('Delete')}
-                    >
+                    <Tooltip content={_('Delete')}>
                         <ActionButtonComponent
                             appearance="primary"
                             icon={<Trash screenReaderText={null} size={1} />}
@@ -116,76 +106,69 @@ function InputTable({ isInput, serviceName, data, handleToggleActionClick }) {
                     </Tooltip>
                 </ButtonGroup>
             </Table.Cell>
-        )
-    }
+        );
+    };
 
     const getTableRow = (row) => {
         return (
-            <Table.Row 
-                key={row.id}
-                expansionRow={getExpansionRow(columns.length, row)}
-            >
-                {columns && columns.length && columns.map((header) => {
-                    if(header.field === "disabled") {
-                        return (
-                            <Table.Cell key={header.field}>
-                                <Switch
-                                    key={row.name}
-                                    value={row.disabled}
-                                    onClick={() => handleToggleActionClick(row)}
-                                    selected={!row.disabled}
-                                    appearance="toggle"
-                                >
-                                    { row.disabled ? "Disabled" : "Enabled" }
-                                </Switch>
-                            </Table.Cell>
-                        )
-                    } else if (header.field == "actions") {
-                        return rowActionsPrimaryButton(row);
-                    } else {
-                        return (
-                            <Table.Cell key={header.field}>
-                                {row[header.field]}
-                            </Table.Cell>
-                        )
-                    }
-                })}
+            <Table.Row key={row.id} expansionRow={getExpansionRow(columns.length, row)}>
+                {columns &&
+                    columns.length &&
+                    columns.map((header) => {
+                        if (header.field === 'disabled') {
+                            return (
+                                <Table.Cell key={header.field}>
+                                    <Switch
+                                        key={row.name}
+                                        value={row.disabled}
+                                        onClick={() => handleToggleActionClick(row)}
+                                        selected={!row.disabled}
+                                        appearance="toggle"
+                                    >
+                                        {row.disabled ? 'Disabled' : 'Enabled'}
+                                    </Switch>
+                                </Table.Cell>
+                            );
+                        } else if (header.field == 'actions') {
+                            return rowActionsPrimaryButton(row);
+                        } else {
+                            return <Table.Cell key={header.field}>{row[header.field]}</Table.Cell>;
+                        }
+                    })}
             </Table.Row>
         );
-    }
+    };
 
     const getTableBody = () => {
-        const rows = data;
         return (
             <Table.Body>
-                {data && data.length && data
-                    .sort((rowA, rowB) => {
-                        if (sortDir === 'asc') {
-                            return rowA[sortKey] > rowB[sortKey] ? 1 : -1;
-                        }
-                        if (sortDir === 'desc') {
-                            return rowB[sortKey] > rowA[sortKey] ? 1 : -1;
-                        }
-                        return 0;
-                    })
-                    .map((row) => (
-                        getTableRow(row)
-                    ))
-                }
+                {data &&
+                    data.length &&
+                    data
+                        .sort((rowA, rowB) => {
+                            if (sortDir === 'asc') {
+                                return rowA[sortKey] > rowB[sortKey] ? 1 : -1;
+                            }
+                            if (sortDir === 'desc') {
+                                return rowB[sortKey] > rowA[sortKey] ? 1 : -1;
+                            }
+                            return 0;
+                        })
+                        .map((row) => getTableRow(row))}
             </Table.Body>
         );
-    }
+    };
 
     return (
         <>
-            { columns && columns.length &&
+            {columns && columns.length && (
                 <>
                     <Table stripeRows rowExpansion="single">
                         {getTableHeaders()}
                         {getTableBody()}
                     </Table>
                 </>
-            }
+            )}
         </>
     );
 }
@@ -194,8 +177,7 @@ InputTable.propTypes = {
     isInput: PropTypes.boolean,
     serviceName: PropTypes.string.isRequired,
     data: PropTypes.object.isRequired,
-    handleToggleActionClick: PropTypes.func
+    handleToggleActionClick: PropTypes.func,
 };
 
 export default InputTable;
-
