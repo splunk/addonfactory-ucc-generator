@@ -8,7 +8,7 @@ const appendError = (errors, err, position) => {
     }
 }
 
-const parseRegexRawStr = (rawStr) => {
+export const parseRegexRawStr = (rawStr) => {
     let error, result;
 
     try {
@@ -20,7 +20,7 @@ const parseRegexRawStr = (rawStr) => {
     return {error, result};
 }
 
-const parseArrForDupKeys = (arr, targetField) => {
+export const parseArrForDupKeys = (arr, targetField) => {
     const uniqFieldsLength = _.uniqBy(arr, d => {
         if (_.isString(d[targetField])) {
             return d[targetField].toLowerCase();
@@ -32,7 +32,7 @@ const parseArrForDupKeys = (arr, targetField) => {
     }
 }
 
-const parseNumberValidator = (range) => {
+export const parseNumberValidator = (range) => {
     const isRangeLegal = range.length === 2 && _.isNumber(range[0]) &&
         _.isNumber(range[1]) && range[0] <= range[1];
 
@@ -42,7 +42,7 @@ const parseNumberValidator = (range) => {
     return {error};
 }
 
-const parseStringValidator = (minLength, maxLength) => {
+export const parseStringValidator = (minLength, maxLength) => {
     const error = maxLength >= minLength ? undefined :
         getFormattedMessage(14);
 
@@ -61,7 +61,7 @@ const parseFunctionRawStr = (rawStr) => {
     return {error, result};
 }
 
-const checkDupKeyValues = (config, isInput, position) => {
+export const checkDupKeyValues = (config, isInput, position) => {
     // Forbid dup name/title in services and tabs
     const servicesLikeArr = _.get(config, isInput ? 'services' : 'tabs');
     const errors = [];
