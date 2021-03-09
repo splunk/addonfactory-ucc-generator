@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState } from 'react';
 import ColumnLayout from '@splunk/react-ui/ColumnLayout';
 import TableFilter from '../../components/table/TableFilter';
 import Table from '../../components/table/Table';
@@ -6,61 +6,32 @@ import { TableCaptionComponent } from './TableStyle';
 import Select from '@splunk/react-ui/Select';
 import { getUnifiedConfigs } from '../../util/util';
 
-import { _ } from '@splunk/ui-utils/i18n';
 import PropTypes from 'prop-types';
 import { TableSelectBoxWrapper } from './TableStyle';
-// import InputRowContext from '../../context/InputRowContext';
 
 function TableWrapper({ isInput, serviceName, rowData }) {
 
     const [searchText, setSearchText] = useState("");
     const [searchType, setSearchType] = useState("all");
-    //const { rowData } = useContext(InputRowContext);
-
-    // setTimeout(() => {
-    //     console.log("Inputs: ", rowData);
-    // }, 5000)
-
-    useEffect(() => {
-        const unifiedConfigs = getUnifiedConfigs();
-        const services = unifiedConfigs.pages.inputs.services;
-        console.log("unifiedConfigs: ", unifiedConfigs.pages.inputs.services);
-
-        // services.map((service) => {
-
-        // })
-
-    }, []);
 
     /**
      * 
      * @param row {Object} row
      */
     const changeStatus = (row) => {
-        let oldData = rowData['sfdc_event_log'];
+        // let oldData = rowData['sfdc_event_log'];
         // const index = oldData.findIndex((val) => { return val.id == row.id });
         // if (index != -1) {
-        oldData[3].disabled = !oldData[3].disabled;
+        // oldData[3].disabled = !oldData[3].disabled;
         // }
         //setRowData(data => ([...oldData]));
     }
 
     const handleFilterChange = (e, { value }) => {
-        console.log("Val: ", value);
         setSearchText(value);
-        // this.state.type[sfdc_object].filter((val) => val);
-        // if (searchType == "All") {
-        //   let arr = [];
-        //   Object.keys(rowData).forEach((key) => {
-        //     arr = arr.concat(rowData[key]);
-        //   });
-        //   let newArr = arr.filter((val) => val.name.includes(value));
-        //   setRowData()
-        // }
     }
 
     const handleChange = (e, { value }) => {
-        // this.setState({ value });
         setSearchType(value);
     };
 
