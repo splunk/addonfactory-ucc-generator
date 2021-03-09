@@ -15,7 +15,6 @@ function InputPage({ isInput, serviceName }) {
 
     useEffect(() => {
         const unifiedConfigs = getUnifiedConfigs();
-        console.log("unifiedConfigs: ", unifiedConfigs.pages.inputs.services);
         setTitle(_(unifiedConfigs.pages.inputs.title));
         setDescription(_(unifiedConfigs.pages.inputs.description));
         fetchInputs();
@@ -591,6 +590,6 @@ function InputPage({ isInput, serviceName }) {
             }
         </>
     );
-};
+}
 
 export default InputPage;
