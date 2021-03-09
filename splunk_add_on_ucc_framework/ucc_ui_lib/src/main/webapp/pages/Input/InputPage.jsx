@@ -585,8 +585,6 @@ function InputPage({ isInput, serviceName }) {
                 <WaitSpinnerWrapper size="large" /> :
                 <TableWrapper
                     isInput={isInput}
-                    isInput={isInput}
-                    isInput={isInput}
                     serviceName={serviceName}
                     rowData={rowData}
                 />
