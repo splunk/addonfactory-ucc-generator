@@ -587,7 +587,7 @@ socks = ["PySocks (>=1.5.6,!=1.5.7)", "win-inet-pton"]
 
 [[package]]
 name = "reuse"
-version = "0.11.1"
+version = "0.12.1"
 description = "reuse is a tool for compliance with the REUSE recommendations."
 category = "main"
 optional = false
@@ -1089,8 +1089,8 @@ requests = [
     {file = "requests-2.24.0.tar.gz", hash = "sha256:b3559a131db72c33ee969480840fff4bb6dd111de7dd27c8ee1f820f4f00231b"},
 ]
 reuse = [
-    {file = "reuse-0.11.1-py3-none-any.whl", hash = "sha256:fb15e9c605d815cc816bec690d3ecf88ecba50968b6d41d558d95e54e80bbcc4"},
-    {file = "reuse-0.11.1.tar.gz", hash = "sha256:a5c539a3ccf46eff16c85590b4cc158fc614ce434b7d9dff5120ef441c591227"},
+    {file = "reuse-0.12.1-py3-none-any.whl", hash = "sha256:a07fce3a43eefa2e3140a7510b6171788cc95a3c9cc840517c10d6de28c42d6d"},
+    {file = "reuse-0.12.1.tar.gz", hash = "sha256:4ed065f24c5fc929ebf8853663e14ca486fe4108d7aebceebf51e2c597ec2186"},
 ]
 schematics = [
     {file = "schematics-2.1.0-py2.py3-none-any.whl", hash = "sha256:8fcc6182606fd0b24410a1dbb066d9bbddbe8da9c9509f47b743495706239283"},
