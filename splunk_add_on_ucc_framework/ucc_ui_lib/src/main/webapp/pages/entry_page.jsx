@@ -3,7 +3,7 @@ import layout from '@splunk/react-page';
 import { SplunkThemeProvider } from '@splunk/themes';
 import { defaultTheme } from '@splunk/splunk-utils/themes';
 
-import { StyledContainer } from './entryPageStyle';
+import { StyledContainer } from './EntryPageStyle';
 import ConfigManager from '../util/configManager';
 import InputPage from './Input/InputPage';
 import ConfigurationPage from './Configuration/ConfigurationPage';
