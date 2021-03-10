@@ -583,7 +583,7 @@ function TableWrapper({ isInput, serviceName }) {
      * 
      * @param row {Object} row
      */
-    const changeStatus = (row, index) => {
+    const changeStatus = (row) => {
 
     }
 
@@ -686,7 +686,7 @@ function TableWrapper({ isInput, serviceName }) {
                         isInput={isInput}
                         serviceName={serviceName}
                         data={filteredData}
-                        handleToggleActionClick={(row, index) => changeStatus(row, index)}
+                        handleToggleActionClick={(row) => changeStatus(row)}
                     />
                 </>
             }

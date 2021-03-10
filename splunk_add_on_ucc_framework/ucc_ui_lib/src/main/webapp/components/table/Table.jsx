@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import Table from '@splunk/react-ui/Table';
 import Switch from '@splunk/react-ui/Switch';
 import ButtonGroup from '@splunk/react-ui/ButtonGroup';
@@ -12,15 +12,11 @@ import PropTypes from 'prop-types';
 import { ActionButtonComponent } from './TableStyle';
 import { getUnifiedConfigs } from '../../util/util';
 import { getExpansionRow } from './TableExpansionRow';
-import InputRowContext from '../../context/InputRowContext';
 
 function InputTable({ isInput, serviceName, data, handleToggleActionClick }) {
 
     const [sortKey, setSortKey] = useState('name');
     const [sortDir, setSortDir] = useState('asc');
-
-    const { rowData, setRowData } = useContext(InputRowContext);
-    console.log("rowData: ", rowData);
 
     const generateColumns = () => {
         const unifiedConfigs = getUnifiedConfigs();
@@ -121,14 +117,14 @@ function InputTable({ isInput, serviceName, data, handleToggleActionClick }) {
                 key={row.id}
                 expansionRow={getExpansionRow(columns.length, row)}
             >
-                {columns && columns.length && columns.map((header, index) => {
+                {columns && columns.length && columns.map((header) => {
                     if (header.field === "disabled") {
                         return (
                             <Table.Cell key={header.field}>
                                 <Switch
                                     key={row.name}
                                     value={row.disabled}
-                                    onClick={() => handleToggleActionClick(row, index)}
+                                    onClick={() => handleToggleActionClick(row)}
                                     selected={!row.disabled}
                                     appearance="toggle"
                                 >
