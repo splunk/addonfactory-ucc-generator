@@ -3,10 +3,11 @@ import layout from '@splunk/react-page';
 import { SplunkThemeProvider } from '@splunk/themes';
 import { defaultTheme } from '@splunk/splunk-utils/themes';
 
-import { StyledContainer } from './EntryPageStyle';
+import { StyledContainer } from './entryPageStyle';
 import ConfigManager from '../util/configManager';
 import InputPage from './Input/InputPage';
 import ConfigurationPage from './Configuration/ConfigurationPage';
+import { InputRowContextProvider } from '../context/InputRowContext';
 
 const defaultThemeSplunkThemeProviderMap = {
     enterprise: {
@@ -36,15 +37,17 @@ const page = urlParts[urlParts.length - 1];
 
 if (page === 'inputs') {
     layout(
-        <SplunkThemeProvider {...themeProviderSettings}>
-            <StyledContainer>
-                <ConfigManager>
-                    {({ loading, appData }) => {
-                        return !loading && appData && <InputPage isInput serviceName="" />;
-                    }}
-                </ConfigManager>
-            </StyledContainer>
-        </SplunkThemeProvider>,
+        <InputRowContextProvider value={null}>
+            <SplunkThemeProvider {...themeProviderSettings}>
+                <StyledContainer>
+                    <ConfigManager>
+                        {({ loading, appData }) => {
+                            return !loading && appData && <InputPage isInput serviceName="" />
+                        }}
+                    </ConfigManager>
+                </StyledContainer>
+            </SplunkThemeProvider>
+        </InputRowContextProvider>,
         { pageTitle: 'Inputs' }
     );
 } else if (page === 'configuration') {
@@ -53,7 +56,7 @@ if (page === 'inputs') {
             <StyledContainer>
                 <ConfigManager>
                     {({ loading, appData }) => {
-                        return !loading && appData && <ConfigurationPage />;
+                        return !loading && appData && <ConfigurationPage />
                     }}
                 </ConfigManager>
             </StyledContainer>
