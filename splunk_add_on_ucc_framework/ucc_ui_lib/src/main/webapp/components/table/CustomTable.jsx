@@ -173,7 +173,7 @@ function CustomTable({ isInput, serviceName, data, handleToggleActionClick }) {
     return (
         <>
             { columns && columns.length &&
-                <Table key={columns.length} stripeRows rowExpansion="single">
+                <Table stripeRows rowExpansion="single">
                     {getTableHeaders()}
                     {getTableBody()}
                 </Table>
