@@ -6,8 +6,10 @@ import { _ } from '@splunk/ui-utils/i18n';
 import { getUnifiedConfigs } from '../../util/util';
 
 function getExpansionRowData(row) {
+
     const unifiedConfigs = getUnifiedConfigs();
-    let moreInfo = unifiedConfigs.pages.inputs.table.moreInfo;
+    const {moreInfo} = unifiedConfigs.pages.inputs.table;
+
     return (
         moreInfo &&
         moreInfo.length &&

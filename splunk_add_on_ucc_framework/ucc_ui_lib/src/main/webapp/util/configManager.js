@@ -28,7 +28,7 @@ class ConfigManager extends Component {
         }
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this.setState({loading: true});
         loadGlobalConfig().then((val) => {
             // The configuration object should be attached to global object,
@@ -57,9 +57,9 @@ class ConfigManager extends Component {
         setUnifiedConfig(unifiedConfig);
         setMetaInfo(appData);
         this.setState({
-            appData: appData,
-            validationResult: validationResult,
-            unifiedConfig: unifiedConfig,
+            appData,
+            validationResult,
+            unifiedConfig,
             loading: false
         });
     }
@@ -67,17 +67,17 @@ class ConfigManager extends Component {
     renderComponents() {
         if (this.state.validationResult.failed) {
             return (
-                <ErrorModal message={getFormattedMessage(110, [_.unescape(this.state.validationResult.errors[0].stack)])} open={true} />
+                <ErrorModal message={getFormattedMessage(110, [_.unescape(this.state.validationResult.errors[0].stack)])} open />
             );
-        } else if (this.state.syntaxError) {
+        } if (this.state.syntaxError) {
             return (
-                <ErrorModal message={getFormattedMessage(110, [getFormattedMessage(20)])} open={true} />
+                <ErrorModal message={getFormattedMessage(110, [getFormattedMessage(20)])} open />
             );
-        } else {
+        } 
             return (
                 this.props.children(this.state)
             );
-        }
+        
     }
 
     render() {
