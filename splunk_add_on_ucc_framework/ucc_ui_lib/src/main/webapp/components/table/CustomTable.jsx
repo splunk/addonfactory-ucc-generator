@@ -9,20 +9,20 @@ import Tooltip from '@splunk/react-ui/Tooltip';
 import { _ } from '@splunk/ui-utils/i18n';
 import PropTypes from 'prop-types';
 
-import { ActionButtonComponent } from './TableStyle';
+import { ActionButtonComponent } from './CustomTableStyle';
 import { getUnifiedConfigs } from '../../util/util';
 import { getExpansionRow } from './TableExpansionRow';
 
-function InputTable({ isInput, serviceName, data, handleToggleActionClick }) {
+function CustomTable({ isInput, serviceName, data, handleToggleActionClick }) {
 
     const [sortKey, setSortKey] = useState('name');
     const [sortDir, setSortDir] = useState('asc');
 
     const generateColumns = () => {
         const unifiedConfigs = getUnifiedConfigs();
-        let column = [];
+        const column = [];
         if (isInput) {
-            let headers = unifiedConfigs.pages.inputs.table.header;
+            const headers = unifiedConfigs.pages.inputs.table.header;
             if (headers && headers.length) {
                 headers.forEach((header) => {
                     column.push({
@@ -54,7 +54,7 @@ function InputTable({ isInput, serviceName, data, handleToggleActionClick }) {
                         key={headData.field}
                         onSort={headData.sortKey ? handleSort : null}
                         sortKey={headData.sortKey ? headData.sortKey : null}
-                        sortDir={headData.sortKey ? headData.sortKey === sortKey ? sortDir : 'none' : null}
+                        sortDir={headData.sortKey && headData.sortKey === sortKey ? sortDir : 'none'}
                     >
                         {headData.label}
                     </Table.HeadCell>
@@ -83,7 +83,7 @@ function InputTable({ isInput, serviceName, data, handleToggleActionClick }) {
                         content={_('Edit')}
                     >
                         <ActionButtonComponent
-                            appearance="primary"
+                            appearance="flat"
                             icon={<Pencil screenReaderText={null} size={1} />}
                             onClick={() => handleEditActionClick(row)}
                         />
@@ -92,7 +92,7 @@ function InputTable({ isInput, serviceName, data, handleToggleActionClick }) {
                         content={_('Clone')}
                     >
                         <ActionButtonComponent
-                            appearance="primary"
+                            appearance="flat"
                             icon={<Clone screenReaderText={null} size={1} />}
                             onClick={() => handleCloneActionClick(row)}
                         />
@@ -101,7 +101,7 @@ function InputTable({ isInput, serviceName, data, handleToggleActionClick }) {
                         content={_('Delete')}
                     >
                         <ActionButtonComponent
-                            appearance="primary"
+                            appearance="destructive"
                             icon={<Trash screenReaderText={null} size={1} />}
                             onClick={() => handleDeleteActionClick(row)}
                         />
@@ -132,15 +132,18 @@ function InputTable({ isInput, serviceName, data, handleToggleActionClick }) {
                                 </Switch>
                             </Table.Cell>
                         )
-                    } else if (header.field == "actions") {
-                        return rowActionsPrimaryButton(row);
-                    } else {
-                        return (
-                            <Table.Cell key={header.field}>
-                                {row[header.field]}
-                            </Table.Cell>
-                        )
                     }
+                    
+                    if (header.field === "actions") {
+                        return rowActionsPrimaryButton(row);
+                    } 
+                    
+                    return (
+                        <Table.Cell key={header.field}>
+                            {row[header.field]}
+                        </Table.Cell>
+                    )
+                    
                 })}
             </Table.Row>
         );
@@ -170,7 +173,7 @@ function InputTable({ isInput, serviceName, data, handleToggleActionClick }) {
     return (
         <>
             { columns && columns.length &&
-                <Table stripeRows rowExpansion="single">
+                <Table key={columns.length} stripeRows rowExpansion="single">
                     {getTableHeaders()}
                     {getTableBody()}
                 </Table>
@@ -179,11 +182,11 @@ function InputTable({ isInput, serviceName, data, handleToggleActionClick }) {
     );
 }
 
-InputTable.propTypes = {
-    isInput: PropTypes.boolean,
+CustomTable.propTypes = {
+    isInput: PropTypes.bool,
     serviceName: PropTypes.string.isRequired,
-    data: PropTypes.object.isRequired,
+    data: PropTypes.array.isRequired,
     handleToggleActionClick: PropTypes.func
 };
 
-export default InputTable;
+export default CustomTable;

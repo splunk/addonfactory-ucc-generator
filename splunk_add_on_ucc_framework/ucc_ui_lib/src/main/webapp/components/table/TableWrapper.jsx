@@ -1,15 +1,14 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useCallback, memo } from 'react';
 import ColumnLayout from '@splunk/react-ui/ColumnLayout';
-import TableFilter from '../../components/table/TableFilter';
-import Table from '../../components/table/Table';
-import { TableCaptionComponent } from './TableStyle';
-import Select from '@splunk/react-ui/Select';
-import { getUnifiedConfigs } from '../../util/util';
+import update from 'immutability-helper';
 
+import Select from '@splunk/react-ui/Select';
 import PropTypes from 'prop-types';
-import { TableSelectBoxWrapper } from './TableStyle';
+import TableFilter from "./TableFilter";
+import CustomTable from "./CustomTable";
+import { TableCaptionComponent, TableSelectBoxWrapper, WaitSpinnerWrapper } from './CustomTableStyle';
+import { getUnifiedConfigs } from '../../util/util';
 import InputRowContext from '../../context/InputRowContext';
-import { WaitSpinnerWrapper } from './TableStyle';
 
 function TableWrapper({ isInput, serviceName }) {
 
@@ -21,9 +20,9 @@ function TableWrapper({ isInput, serviceName }) {
 
     useEffect(() => {
         fetchInputs();
-    }, []);
+    }, [fetchInputs]);
 
-    const fetchInputs = () => {
+    const fetchInputs = useCallback(() => {
         setLoading(true);
         setTimeout(() => {
             // API call response
@@ -557,34 +556,36 @@ function TableWrapper({ isInput, serviceName }) {
             ]];
             modifyAPIResponse(data);
         }, 1000);
-    }
+    }, [modifyAPIResponse]);
 
-    const modifyAPIResponse = (data) => {
+    const modifyAPIResponse = useCallback((data) => {
         const unifiedConfigs = getUnifiedConfigs();
-        let obj = {};
+        const obj = {};
         unifiedConfigs.pages.inputs.services.forEach((service, index) => {
             if (service && service.name && data) {
-                let modifiedResponse = [];
+                const tmpObj = {};
                 data[index].forEach((val) => {
-                    modifiedResponse.push({
+                    tmpObj[val.name] = {
                         ...val.content,
                         id: val.id,
-                        name: val.name
-                    });
+                        name: val.name,
+                        serviceName: service.name
+                    }
                 });
-                obj[service.name] = modifiedResponse;
+                obj[service.name] = tmpObj;
             }
         });
         setRowData(obj);
         setLoading(false);
-    }
+    }, [setRowData]);
 
     /**
      * 
      * @param row {Object} row
      */
     const changeStatus = (row) => {
-
+        const updatedRowData = update(rowData, { [row.serviceName]: { [row.name]: { disabled: { $set: !row.disabled }}}})
+        setRowData(updatedRowData);
     }
 
     const handleFilterChange = (e, { value }) => {
@@ -597,14 +598,14 @@ function TableWrapper({ isInput, serviceName }) {
 
     const getSearchTypeDropdown = () => {
         const unifiedConfigs = getUnifiedConfigs();
-        const services = unifiedConfigs.pages.inputs.services;
+        const { services } = unifiedConfigs.pages.inputs;
 
         let arr = [];
         arr = services.map((service) => {
-            return <Select.Option label={service.title} value={service.name} />
+            return <Select.Option key={service.name} label={service.title} value={service.name} />
         });
 
-        arr.unshift(<Select.Option label="All" value="all" />);
+        arr.unshift(<Select.Option key="all" label="All" value="all" />);
         return arr;
     }
 
@@ -615,41 +616,39 @@ function TableWrapper({ isInput, serviceName }) {
      * It will return a new array which will match with searchText
      */
     const findByMatchingValue = (data) => {
-        console.log("data: ", data);
-        let arr = [];
-        data.forEach((val) => {
+        const arr = [];
+        Object.keys(data).forEach((v) => {
             let found = false;
-            Object.keys(val).forEach((key) => {
-                if (typeof val[key] == 'string' && val[key].toLowerCase().includes(searchText.toLowerCase())) {
+            Object.keys(data[v]).forEach((vv) => {
+                if (typeof data[v][vv] === 'string' && data[v][vv].toLowerCase().includes(searchText.toLowerCase())) {
                     if (!found) {
-                        arr.push(val);
+                        arr.push(data[v]);
                         found = true;
                     }
                 }
-            })
+            });
         });
         return arr;
     }
 
     const getRowData = () => {
-        if (searchType == "all") {
+        if (searchType === "all") {
             let arr = [];
             Object.keys(rowData).forEach((key) => {
                 let newArr = [];
                 if (searchText && searchText.length) {
                     newArr = findByMatchingValue(rowData[key]);
                 } else {
-                    newArr = rowData[key];
+                    newArr = Object.keys(rowData[key]).map((val) => rowData[key][val])
                 }
                 arr = arr.concat(newArr);
             });
             return arr;
-        } else {
-            return findByMatchingValue(rowData[searchType]);
         }
+        return findByMatchingValue(rowData[searchType]);
     }
 
-    const filteredData = getRowData();
+    const filteredData = !loading && getRowData();
 
     return (
         <>
@@ -676,13 +675,11 @@ function TableWrapper({ isInput, serviceName }) {
                             <ColumnLayout.Column span={4}>
                                 <TableFilter handleChange={handleFilterChange} />
                             </ColumnLayout.Column>
-                            <ColumnLayout.Column span={4}>
-
-                            </ColumnLayout.Column>
+                            <ColumnLayout.Column span={4} />
                         </ColumnLayout.Row>
                     </ColumnLayout>
 
-                    <Table
+                    <CustomTable
                         isInput={isInput}
                         serviceName={serviceName}
                         data={filteredData}
@@ -695,8 +692,8 @@ function TableWrapper({ isInput, serviceName }) {
 }
 
 TableWrapper.propTypes = {
-    isInput: PropTypes.boolean,
+    isInput: PropTypes.bool,
     serviceName: PropTypes.string.isRequired
 };
 
-export default TableWrapper;
+export default memo(TableWrapper);

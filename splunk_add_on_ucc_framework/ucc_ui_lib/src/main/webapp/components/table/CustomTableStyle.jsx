@@ -3,7 +3,8 @@ import Button from '@splunk/react-ui/Button';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 
 export const ActionButtonComponent = styled(Button)`
-    margin: 0px 5px;
+    margin: 0px 1px;
+    border: none;
 `;
 
 export const WaitSpinnerWrapper = styled(WaitSpinner)`
