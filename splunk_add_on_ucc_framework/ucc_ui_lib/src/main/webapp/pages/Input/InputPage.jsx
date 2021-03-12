@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { _ } from '@splunk/ui-utils/i18n';
 
 import { getUnifiedConfigs } from '../../util/util';
 import { TitleComponent, SubTitleComponent } from './InputPageStyle';
 import TableWrapper from '../../components/table/TableWrapper';
+import { InputRowContextProvider } from '../../context/InputRowContext';
 
 function InputPage({ isInput, serviceName }) {
 
@@ -20,12 +22,16 @@ function InputPage({ isInput, serviceName }) {
         <>
             <TitleComponent>{title}</TitleComponent>
             <SubTitleComponent>{description}</SubTitleComponent>
-            <TableWrapper
-                isInput={isInput}
-                serviceName={serviceName}
-            />
+            <InputRowContextProvider value={null}>
+                <TableWrapper isInput={isInput} serviceName={serviceName} />
+            </InputRowContextProvider>
         </>
     );
 }
+
+InputPage.propTypes = {
+    isInput: PropTypes.bool,
+    serviceName: PropTypes.string.isRequired,
+};
 
 export default InputPage;

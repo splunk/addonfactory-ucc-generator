@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { variables, mixins } from '@splunk/themes';
+import { defaultTheme } from '@splunk/splunk-utils/themes';
 
 const StyledContainer = styled.div`
     ${mixins.reset('inline')};
@@ -15,4 +16,26 @@ const StyledGreeting = styled.div`
     font-size: ${variables.fontSizeXXLarge};
 `;
 
-export { StyledContainer, StyledGreeting };
+const defaultThemeSplunkThemeProviderMap = {
+    enterprise: {
+        family: 'enterprise',
+        colorScheme: 'light',
+        density: 'comfortable',
+    },
+    enterpriseDark: {
+        family: 'enterprise',
+        colorScheme: 'dark',
+        density: 'comfortable',
+    },
+    lite: {
+        family: 'enterprise',
+        colorScheme: 'light',
+        density: 'comfortable',
+    },
+};
+
+const ThemeProviderSettings =
+    defaultThemeSplunkThemeProviderMap[defaultTheme()] ||
+    defaultThemeSplunkThemeProviderMap.enterprise;
+
+export { StyledContainer, StyledGreeting, ThemeProviderSettings };
