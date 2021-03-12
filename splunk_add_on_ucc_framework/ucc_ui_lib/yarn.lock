@@ -1236,6 +1236,19 @@
     prop-types "^15.6.2"
     scriptjs "^2.5.8"
 
+"@splunk/react-toast-notifications@^0.9.0":
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@splunk/react-toast-notifications/-/react-toast-notifications-0.9.0.tgz#0283ae0f981efebb0c804ac11a9e2718473d1986"
+  integrity sha512-r+7Zl+zjo+X1G9kPj0wyq8CLyw8FKUv4Rdlpzx+qVC8jwUELZFCnDJNs/lhtE7ColRsc8/jxlKx3J1f9I4mX8Q==
+  dependencies:
+    "@splunk/react-icons" "^3.0.1"
+    "@splunk/react-ui" "^4.0.0"
+    "@splunk/themes" "^0.7.0"
+    "@splunk/ui-utils" "^1.2.1"
+    lodash "^4.17.14"
+    prop-types "^15.6.2"
+    react-flip-move "^3.0.1"
+
 "@splunk/react-ui@^4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@splunk/react-ui/-/react-ui-4.0.0.tgz#41f51f891f3c345857477b25fb2eb56ad4d4e2f5"
@@ -7216,6 +7229,11 @@ react-event-listener@^0.6.2:
     "@babel/runtime" "^7.2.0"
     prop-types "^15.6.0"
     warning "^4.0.1"
+
+react-flip-move@^3.0.1:
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/react-flip-move/-/react-flip-move-3.0.4.tgz#261f66101fbc305f9b7b28959c5cf8236413ca74"
+  integrity sha512-HyUVv9g3t/BS7Yz9HgrtYSWyRNdR2F81nkj+C5iRY675AwlqCLB5JU9mnZWg0cdVz7IM4iquoyZx70vzZv3Z8Q==
 
 react-is@^16.12.0, react-is@^16.13.1, react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.4, react-is@^16.8.6:
   version "16.13.1"
