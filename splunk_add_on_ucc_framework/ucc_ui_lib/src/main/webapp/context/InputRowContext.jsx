@@ -1,19 +1,36 @@
-import React, { createContext, useState } from "react";
+import React, { createContext } from 'react';
+import PropTypes from 'prop-types';
 
 const InputRowContext = createContext({
     rowData: {},
-    setRowData: () => { },
+    setRowData: () => {},
 });
 
-export const InputRowContextProvider = ({ children }) => {
+export class InputRowContextProvider extends React.PureComponent {
+    constructor() {
+        super();
+        this.state = {
+            rowData: {},
+        };
+        this.setState = this.setState.bind(this);
+    }
 
-    const [rowData, setRowData] = useState({});
-
-    return (
-        <InputRowContext.Provider value={{ rowData, setRowData }}>
-            {children}
-        </InputRowContext.Provider>
-    );
+    render() {
+        return (
+            <InputRowContext.Provider
+                value={{ rowData: this.state.rowData, setRowData: this.setState }}
+            >
+                {this.props.children}
+            </InputRowContext.Provider>
+        );
+    }
 }
+
+InputRowContextProvider.propTypes = {
+    children: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.node),
+        PropTypes.node
+    ]).isRequired
+};
 
 export default InputRowContext;
