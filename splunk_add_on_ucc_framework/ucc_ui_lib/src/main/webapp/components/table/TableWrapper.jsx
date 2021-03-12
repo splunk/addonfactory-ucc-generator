@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect, useCallback, memo } from 'react';
 import ColumnLayout from '@splunk/react-ui/ColumnLayout';
 import update from 'immutability-helper';
+import axios from 'axios';
 
 import Select from '@splunk/react-ui/Select';
 import PropTypes from 'prop-types';
@@ -11,16 +12,20 @@ import {
     TableSelectBoxWrapper,
     WaitSpinnerWrapper,
 } from './CustomTableStyle';
-import { getUnifiedConfigs } from '../../util/util';
+import { getUnifiedConfigs, generateToast } from '../../util/util';
 import InputRowContext from '../../context/InputRowContext';
+import { axiosCallWrapper } from '../../util/axiosCallWrapper';
 
 function TableWrapper({ isInput, serviceName }) {
     const [loading, setLoading] = useState(true);
     const [searchText, setSearchText] = useState('');
     const [searchType, setSearchType] = useState('all');
     const [selecetedPage, setSelectedPage] = useState('10');
+    const [error, setError] = useState(false);
 
     const { rowData, setRowData } = useContext(InputRowContext);
+
+    const unifiedConfigs = getUnifiedConfigs();
 
     useEffect(() => {
         fetchInputs();
@@ -28,515 +33,43 @@ function TableWrapper({ isInput, serviceName }) {
 
     const fetchInputs = useCallback(() => {
         setLoading(true);
-        setTimeout(() => {
-            // API call response
-            const data = [
-                [
-                    {
-                        name: 'account',
-                        id:
-                            'https://10.202.39.212:8000/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/account',
-                        updated: '1970-01-01T00:00:00+00:00',
-                        links: {
-                            alternate:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/account',
-                            list:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/account',
-                            edit:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/account',
-                            remove:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/account',
-                        },
-                        author: 'nobody',
-                        acl: {
-                            app: 'Splunk_TA_salesforce',
-                            can_list: true,
-                            can_write: true,
-                            modifiable: false,
-                            owner: 'nobody',
-                            perms: {
-                                read: ['admin', 'power', 'splunk-system-role', 'user'],
-                                write: ['admin', 'splunk-system-role'],
-                            },
-                            removable: true,
-                            sharing: 'app',
-                        },
-                        content: {
-                            disabled: false,
-                            'eai:acl': null,
-                            host: '$decideOnStartup',
-                            host_resolved: 'so1',
-                            index: '11default',
-                            interval: '1200',
-                            limit: '1000',
-                            object: 'Account',
-                            object_fields: 'Id,LastModifiedById,LastModifiedDate,Name',
-                            order_by: 'LastModifiedDate',
-                            'python.version': null,
-                            sourcetype: 'sfdc:object',
-                            start_by_shell: 'false',
-                        },
-                    },
-                    {
-                        name: 'contentversion',
-                        id:
-                            'https://10.202.39.212:8000/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/contentversion',
-                        updated: '1970-01-01T00:00:00+00:00',
-                        links: {
-                            alternate:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/contentversion',
-                            list:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/contentversion',
-                            edit:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/contentversion',
-                            remove:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/contentversion',
-                        },
-                        author: 'nobody',
-                        acl: {
-                            app: 'Splunk_TA_salesforce',
-                            can_list: true,
-                            can_write: true,
-                            modifiable: false,
-                            owner: 'nobody',
-                            perms: {
-                                read: ['admin', 'power', 'splunk-system-role', 'user'],
-                                write: ['admin', 'splunk-system-role'],
-                            },
-                            removable: true,
-                            sharing: 'app',
-                        },
-                        content: {
-                            disabled: false,
-                            'eai:acl': null,
-                            host: '$decideOnStartup',
-                            host_resolved: 'so1',
-                            index: 'default',
-                            interval: '1200',
-                            limit: '1000',
-                            object: 'ContentVersion',
-                            object_fields: 'Id,LastModifiedById,LastModifiedDate,Title',
-                            order_by: 'LastModifiedDate',
-                            'python.version': null,
-                            sourcetype: 'sfdc:object',
-                            start_by_shell: 'false',
-                        },
-                    },
-                    {
-                        name: 'dashboard',
-                        id:
-                            'https://10.202.39.212:8000/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/dashboard',
-                        updated: '1970-01-01T00:00:00+00:00',
-                        links: {
-                            alternate:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/dashboard',
-                            list:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/dashboard',
-                            edit:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/dashboard',
-                            remove:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/dashboard',
-                        },
-                        author: 'nobody',
-                        acl: {
-                            app: 'Splunk_TA_salesforce',
-                            can_list: true,
-                            can_write: true,
-                            modifiable: false,
-                            owner: 'nobody',
-                            perms: {
-                                read: ['admin', 'power', 'splunk-system-role', 'user'],
-                                write: ['admin', 'splunk-system-role'],
-                            },
-                            removable: true,
-                            sharing: 'app',
-                        },
-                        content: {
-                            disabled: true,
-                            'eai:acl': null,
-                            account: 'Temp1',
-                            host: '$decideOnStartup',
-                            host_resolved: 'so1',
-                            index: '22default',
-                            interval: '1200',
-                            limit: '1000',
-                            object: 'Dashboard',
-                            object_fields: 'Id,LastModifiedDate,Title',
-                            order_by: 'LastModifiedDate',
-                            'python.version': null,
-                            sourcetype: 'sfdc:object',
-                            start_by_shell: 'false',
-                        },
-                    },
-                    {
-                        name: 'loginhistory',
-                        id:
-                            'https://10.202.39.212:8000/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/loginhistory',
-                        updated: '1970-01-01T00:00:00+00:00',
-                        links: {
-                            alternate:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/loginhistory',
-                            list:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/loginhistory',
-                            edit:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/loginhistory',
-                            remove:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/loginhistory',
-                        },
-                        author: 'nobody',
-                        acl: {
-                            app: 'Splunk_TA_salesforce',
-                            can_list: true,
-                            can_write: true,
-                            modifiable: false,
-                            owner: 'nobody',
-                            perms: {
-                                read: ['admin', 'power', 'splunk-system-role', 'user'],
-                                write: ['admin', 'splunk-system-role'],
-                            },
-                            removable: true,
-                            sharing: 'app',
-                        },
-                        content: {
-                            disabled: true,
-                            'eai:acl': null,
-                            account: 'Other',
-                            host: '$decideOnStartup',
-                            host_resolved: 'so1',
-                            index: 'default',
-                            interval: '60',
-                            limit: '1000',
-                            object: 'LoginHistory',
-                            object_fields:
-                                'ApiType,ApiVersion,Application,Browser,ClientVersion,Id,LoginTime,LoginType,LoginUrl,Platform,SourceIp,Status,UserId',
-                            order_by: 'LoginTime',
-                            'python.version': null,
-                            sourcetype: 'sfdc:object',
-                            start_by_shell: 'false',
-                        },
-                    },
-                    {
-                        name: 'opportunity',
-                        id:
-                            'https://10.202.39.212:8000/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/opportunity',
-                        updated: '1970-01-01T00:00:00+00:00',
-                        links: {
-                            alternate:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/opportunity',
-                            list:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/opportunity',
-                            edit:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/opportunity',
-                            remove:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/opportunity',
-                        },
-                        author: 'nobody',
-                        acl: {
-                            app: 'Splunk_TA_salesforce',
-                            can_list: true,
-                            can_write: true,
-                            modifiable: false,
-                            owner: 'nobody',
-                            perms: {
-                                read: ['admin', 'power', 'splunk-system-role', 'user'],
-                                write: ['admin', 'splunk-system-role'],
-                            },
-                            removable: true,
-                            sharing: 'app',
-                        },
-                        content: {
-                            disabled: true,
-                            'eai:acl': null,
-                            account: 'Dummy1',
-                            host: '$decideOnStartup',
-                            host_resolved: 'so1',
-                            index: 'default',
-                            interval: '1200',
-                            limit: '1000',
-                            object: 'Opportunity',
-                            object_fields: 'Id,LastModifiedById,LastModifiedDate,Name',
-                            order_by: 'LastModifiedDate',
-                            'python.version': null,
-                            sourcetype: 'sfdc:object',
-                            start_by_shell: 'false',
-                        },
-                    },
-                    {
-                        name: 'report',
-                        id:
-                            'https://10.202.39.212:8000/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/report',
-                        updated: '1970-01-01T00:00:00+00:00',
-                        links: {
-                            alternate:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/report',
-                            list:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/report',
-                            edit:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/report',
-                            remove:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/report',
-                        },
-                        author: 'nobody',
-                        acl: {
-                            app: 'Splunk_TA_salesforce',
-                            can_list: true,
-                            can_write: true,
-                            modifiable: false,
-                            owner: 'nobody',
-                            perms: {
-                                read: ['admin', 'power', 'splunk-system-role', 'user'],
-                                write: ['admin', 'splunk-system-role'],
-                            },
-                            removable: true,
-                            sharing: 'app',
-                        },
-                        content: {
-                            disabled: true,
-                            'eai:acl': null,
-                            account: 'Test',
-                            host: '$decideOnStartup',
-                            host_resolved: 'so1',
-                            index: 'default',
-                            interval: '1200',
-                            limit: '1000',
-                            object: 'Report',
-                            object_fields: 'Id,LastModifiedDate,Name',
-                            order_by: 'LastModifiedDate',
-                            'python.version': null,
-                            sourcetype: 'sfdc:object',
-                            start_by_shell: 'false',
-                        },
-                    },
-                    {
-                        name: 'user',
-                        id:
-                            'https://10.202.39.212:8000/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/user',
-                        updated: '1970-01-01T00:00:00+00:00',
-                        links: {
-                            alternate:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/user',
-                            list:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/user',
-                            edit:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/user',
-                            remove:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_object/user',
-                        },
-                        author: 'nobody',
-                        acl: {
-                            app: 'Splunk_TA_salesforce',
-                            can_list: true,
-                            can_write: true,
-                            modifiable: false,
-                            owner: 'nobody',
-                            perms: {
-                                read: ['admin', 'power', 'splunk-system-role', 'user'],
-                                write: ['admin', 'splunk-system-role'],
-                            },
-                            removable: true,
-                            sharing: 'app',
-                        },
-                        content: {
-                            disabled: true,
-                            account: 'Tushar',
-                            'eai:acl': null,
-                            host: '$decideOnStartup',
-                            host_resolved: 'so1',
-                            index: 'default',
-                            interval: '1200',
-                            limit: '1000',
-                            object: 'User',
-                            object_fields:
-                                'LastModifiedDate,City,Country,FirstName,Id,IsActive,LastLoginDate,LastName,Latitude,Longitude,MobilePhone,Name,PostalCode,State,Username,UserRoleId,UserType,Email,CompanyName,ProfileId,Profile.PermissionsApiEnabled,Profile.PermissionsModifyAllData,Profile.PermissionsViewSetup',
-                            order_by: 'LastModifiedDate',
-                            'python.version': null,
-                            sourcetype: 'sfdc:object',
-                            start_by_shell: 'false',
-                        },
-                    },
-                ],
-                [
-                    {
-                        name: 'klrhbfka',
-                        id:
-                            'https://10.202.23.134:8000/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_event_log/klrhbfka',
-                        updated: '1970-01-01T00:00:00+00:00',
-                        links: {
-                            alternate:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_event_log/klrhbfka',
-                            list:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_event_log/klrhbfka',
-                            edit:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_event_log/klrhbfka',
-                            remove:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_event_log/klrhbfka',
-                        },
-                        author: 'nobody',
-                        acl: {
-                            app: 'Splunk_TA_salesforce',
-                            can_list: true,
-                            can_write: true,
-                            modifiable: false,
-                            owner: 'nobody',
-                            perms: {
-                                read: ['admin', 'power', 'splunk-system-role', 'user'],
-                                write: ['admin', 'splunk-system-role'],
-                            },
-                            removable: true,
-                            sharing: 'app',
-                        },
-                        content: {
-                            account: 'dishank',
-                            disabled: true,
-                            'eai:acl': null,
-                            host: '$decideOnStartup',
-                            host_resolved: 'so1',
-                            index: 'default',
-                            interval: '36000',
-                            monitoring_interval: 'Daily',
-                            'python.version': null,
-                            sourcetype: 'sfdc:logfile',
-                            start_by_shell: 'false',
-                        },
-                    },
-                    {
-                        name: 'test',
-                        id:
-                            'https://10.202.23.134:8000/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_event_log/test',
-                        updated: '1970-01-01T00:00:00+00:00',
-                        links: {
-                            alternate:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_event_log/test',
-                            list:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_event_log/test',
-                            edit:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_event_log/test',
-                            remove:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_event_log/test',
-                        },
-                        author: 'nobody',
-                        acl: {
-                            app: 'Splunk_TA_salesforce',
-                            can_list: true,
-                            can_write: true,
-                            modifiable: false,
-                            owner: 'nobody',
-                            perms: {
-                                read: ['admin', 'power', 'splunk-system-role', 'user'],
-                                write: ['admin', 'splunk-system-role'],
-                            },
-                            removable: true,
-                            sharing: 'app',
-                        },
-                        content: {
-                            account: 'dishank',
-                            disabled: true,
-                            'eai:acl': null,
-                            host: '$decideOnStartup',
-                            host_resolved: 'so1',
-                            index: 'default',
-                            interval: '36000',
-                            monitoring_interval: 'Daily',
-                            'python.version': null,
-                            sourcetype: 'sfdc:logfile',
-                            start_by_shell: 'false',
-                        },
-                    },
-                    {
-                        name: 'test123',
-                        id:
-                            'https://10.202.23.134:8000/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_event_log/test123',
-                        updated: '1970-01-01T00:00:00+00:00',
-                        links: {
-                            alternate:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_event_log/test123',
-                            list:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_event_log/test123',
-                            edit:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_event_log/test123',
-                            remove:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_event_log/test123',
-                        },
-                        author: 'nobody',
-                        acl: {
-                            app: 'Splunk_TA_salesforce',
-                            can_list: true,
-                            can_write: true,
-                            modifiable: false,
-                            owner: 'nobody',
-                            perms: {
-                                read: ['admin', 'power', 'splunk-system-role', 'user'],
-                                write: ['admin', 'splunk-system-role'],
-                            },
-                            removable: true,
-                            sharing: 'app',
-                        },
-                        content: {
-                            account: 'dishank',
-                            disabled: true,
-                            'eai:acl': null,
-                            host: '$decideOnStartup',
-                            host_resolved: 'so1',
-                            index: 'default',
-                            interval: '30000',
-                            monitoring_interval: 'Daily',
-                            'python.version': null,
-                            sourcetype: 'sfdc:logfile',
-                            start_by_shell: 'false',
-                        },
-                    },
-                    {
-                        name: 'test_hook',
-                        id:
-                            'https://10.202.23.134:8000/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_event_log/test_hook',
-                        updated: '1970-01-01T00:00:00+00:00',
-                        links: {
-                            alternate:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_event_log/test_hook',
-                            list:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_event_log/test_hook',
-                            edit:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_event_log/test_hook',
-                            remove:
-                                '/servicesNS/nobody/Splunk_TA_salesforce/Splunk_TA_salesforce_sfdc_event_log/test_hook',
-                        },
-                        author: 'nobody',
-                        acl: {
-                            app: 'Splunk_TA_salesforce',
-                            can_list: true,
-                            can_write: true,
-                            modifiable: false,
-                            owner: 'nobody',
-                            perms: {
-                                read: ['admin', 'power', 'splunk-system-role', 'user'],
-                                write: ['admin', 'splunk-system-role'],
-                            },
-                            removable: true,
-                            sharing: 'app',
-                        },
-                        content: {
-                            account: 'dishank',
-                            disabled: false,
-                            'eai:acl': null,
-                            host: '$decideOnStartup',
-                            host_resolved: 'so1',
-                            index: 'default',
-                            interval: '360000',
-                            monitoring_interval: 'Daily',
-                            'python.version': null,
-                            sourcetype: 'sfdc:logfile',
-                            start_by_shell: 'false',
-                        },
-                    },
-                ],
-            ];
-            modifyAPIResponse(data);
-        }, 1000);
+        let requests = [];
+        unifiedConfigs.pages.inputs.services.forEach((service) => {
+            requests.push(axiosCallWrapper(service.name));
+        });
+        axios
+            .all(requests)
+            .catch((error) => {
+                let message = '';
+                if (error.response) {
+                    // The request was made and the server responded with a status code
+                    message = `Error received from server: ${error.response.data.messages[0].text}`;
+                    error.ucc_err_code = 'ERR0001';
+                    generateToast(message);
+                } else if (error.request) {
+                    console.log(error.request);
+                    // The request was made but no response was received
+                    message = `No response received while making request to input services`;
+                    error.ucc_err_code = 'ERR0002';
+                    generateToast(message);
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    message = `Error making request to input services`;
+                    error.ucc_err_code = 'ERR0003';
+                    generateToast(message);
+                }
+                setError(error);
+                setLoading(false);
+                return Promise.reject(error);
+            })
+            .then((response) => {
+                // const isNotUndefined = response.every(Boolean);
+                modifyAPIResponse(response.map((res) => res.data.entry));
+            });
     }, [modifyAPIResponse]);
 
     const modifyAPIResponse = useCallback(
         (data) => {
-            const unifiedConfigs = getUnifiedConfigs();
             const obj = {};
             unifiedConfigs.pages.inputs.services.forEach((service, index) => {
                 if (service && service.name && data) {
@@ -564,9 +97,55 @@ function TableWrapper({ isInput, serviceName }) {
      */
     const changeStatus = (row) => {
         const updatedRowData = update(rowData, {
-            [row.serviceName]: { [row.name]: { disabled: { $set: !row.disabled } } },
+            [row.serviceName]: {
+                [row.name]: { __toggleDisable: { $set: true } },
+            },
         });
         setRowData(updatedRowData);
+        const params = new URLSearchParams();
+        params.append('disabled', !row.disabled);
+        axiosCallWrapper(
+            `${row.serviceName}/${row.name}`,
+            null,
+            params,
+            { 'Content-Type': 'application/x-www-form-urlencoded' },
+            'post'
+        )
+            .catch((error) => {
+                let message = '';
+                if (error.response) {
+                    // The request was made and the server responded with a status code
+                    message = `Error received from server: ${error.response.data.messages[0].text}`;
+                    generateToast(message);
+                } else if (error.request) {
+                    console.log(error.request);
+                    // The request was made but no response was received
+                    message = `No response received while making request to ${row.serviceName}/${row.name}`;
+                    generateToast(message);
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    message = `Error making request to ${row.serviceName}/${row.name}`;
+                    generateToast(message);
+                }
+                const updatedRowData = update(rowData, {
+                    [row.serviceName]: {
+                        [row.name]: { __toggleDisable: { $set: false } },
+                    },
+                });
+                setRowData(updatedRowData);
+                return Promise.reject(error);
+            })
+            .then((response) => {
+                const updatedRowData = update(rowData, {
+                    [row.serviceName]: {
+                        [row.name]: {
+                            disabled: { $set: response.data.entry[0].content.disabled },
+                            __toggleDisable: { $set: false },
+                        },
+                    },
+                });
+                setRowData(updatedRowData);
+            });
     };
 
     const handleFilterChange = (e, { value }) => {
@@ -629,10 +208,14 @@ function TableWrapper({ isInput, serviceName }) {
             });
             return arr;
         }
-        return findByMatchingValue(rowData[searchType]);
+        return findByMatchingValue(rowData[searchType] || []);
     };
 
     const filteredData = !loading && getRowData();
+
+    if (error.ucc_err_code) {
+        throw error;
+    }
 
     return (
         <>

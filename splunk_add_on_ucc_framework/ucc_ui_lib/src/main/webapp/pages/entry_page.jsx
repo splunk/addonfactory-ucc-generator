@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import layout from '@splunk/react-page';
 import { SplunkThemeProvider } from '@splunk/themes';
 import { defaultTheme } from '@splunk/splunk-utils/themes';
@@ -7,6 +7,10 @@ import { StyledContainer } from './EntryPageStyle';
 import ConfigManager from '../util/configManager';
 import InputPage from './Input/InputPage';
 import ConfigurationPage from './Configuration/ConfigurationPage';
+import ErrorBoundary from '../components/ErrorBoundary';
+
+// const InputPage = React.lazy(() => import('./Input/InputPage'));
+// const ConfigurationPage = React.lazy(() => import('./Configuration/ConfigurationPage'));
 import { InputRowContextProvider } from '../context/InputRowContext';
 
 const defaultThemeSplunkThemeProviderMap = {
@@ -42,7 +46,7 @@ if (page === 'inputs') {
                 <StyledContainer>
                     <ConfigManager>
                         {({ loading, appData }) => {
-                            return !loading && appData && <InputPage isInput serviceName="" />
+                            return !loading && appData && <InputPage isInput serviceName="" />;
                         }}
                     </ConfigManager>
                 </StyledContainer>
@@ -56,7 +60,7 @@ if (page === 'inputs') {
             <StyledContainer>
                 <ConfigManager>
                     {({ loading, appData }) => {
-                        return !loading && appData && <ConfigurationPage />
+                        return !loading && appData && <ConfigurationPage />;
                     }}
                 </ConfigManager>
             </StyledContainer>
