@@ -1,8 +1,10 @@
 import React from 'react';
 import Heading from '@splunk/react-ui/Heading';
 import Message from '@splunk/react-ui/Message';
+import PropTypes from 'prop-types';
 
 import errorCodes from '../constants/errorCodes';
+import ErrorWithCode from '../errors/errorWithCode';
 
 class ErrorBoundary extends React.Component {
     constructor(props) {
@@ -12,14 +14,16 @@ class ErrorBoundary extends React.Component {
 
     static getDerivedStateFromError(error) {
         // Update state so the next render will show the fallback UI.
-        return { errorCode: error.ucc_err_code };
+        if (error instanceof ErrorWithCode) {
+            return { errorCode: error.errorCode };
+        }
     }
 
     componentDidCatch(error, errorInfo) {
         // Catch errors in any components below and re-render with error message
         this.setState({
-            error: error,
-            errorInfo: errorInfo,
+            error,
+            errorInfo,
         });
         // You can also log error messages to an error reporting service here
     }
@@ -40,7 +44,9 @@ class ErrorBoundary extends React.Component {
                     </details>
                 </>
             );
-        } else if (this.state.error) {
+        }
+
+        if (this.state.error) {
             return (
                 <>
                     <Heading level={2}>Something went wrong!</Heading>
@@ -56,5 +62,9 @@ class ErrorBoundary extends React.Component {
         return this.props.children;
     }
 }
+
+ErrorBoundary.propTypes = {
+    children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
+};
 
 export default ErrorBoundary;

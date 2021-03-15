@@ -104,6 +104,13 @@ function CustomTable({ isInput, serviceName, data, handleToggleActionClick }) {
     };
 
     const getTableRow = (row) => {
+        let statusContent = '';
+        // eslint-disable-next-line no-underscore-dangle
+        if (!row.__toggleDisable) {
+            statusContent = row.disabled ? 'Disabled' : 'Enabled';
+        } else {
+            statusContent = <WaitSpinner />;
+        }
         return (
             <Table.Row key={row.id} expansionRow={getExpansionRow(columns.length, row)}>
                 {columns &&
@@ -120,16 +127,10 @@ function CustomTable({ isInput, serviceName, data, handleToggleActionClick }) {
                                         disabled={row.__toggleDisable}
                                         appearance="toggle"
                                         style={{ padding: 0 }}
+                                        selectedLabel="Enabled"
+                                        unselectedLabel="Disabled"
                                     >
-                                        {!row.__toggleDisable ? (
-                                            row.disabled ? (
-                                                'Disabled'
-                                            ) : (
-                                                'Enabled'
-                                            )
-                                        ) : (
-                                            <WaitSpinner />
-                                        )}
+                                        {statusContent}
                                     </Switch>
                                 </Table.Cell>
                             );
