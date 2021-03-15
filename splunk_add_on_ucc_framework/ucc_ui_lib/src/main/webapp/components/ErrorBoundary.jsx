@@ -4,7 +4,6 @@ import Message from '@splunk/react-ui/Message';
 import PropTypes from 'prop-types';
 
 import errorCodes from '../constants/errorCodes';
-import ErrorWithCode from '../errors/errorWithCode';
 
 class ErrorBoundary extends React.Component {
     constructor(props) {
@@ -14,9 +13,7 @@ class ErrorBoundary extends React.Component {
 
     static getDerivedStateFromError(error) {
         // Update state so the next render will show the fallback UI.
-        if (error instanceof ErrorWithCode) {
-            return { errorCode: error.errorCode };
-        }
+        return { errorCode: error.uccErrorCode };
     }
 
     componentDidCatch(error, errorInfo) {

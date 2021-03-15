@@ -15,7 +15,6 @@ import {
 import { getUnifiedConfigs, generateToast } from '../../util/util';
 import InputRowContext from '../../context/InputRowContext';
 import { axiosCallWrapper } from '../../util/axiosCallWrapper';
-import { ErrorWithCode } from '../../errors/errorWithCode';
 
 function TableWrapper({ isInput, serviceName }) {
     const [loading, setLoading] = useState(true);
@@ -23,7 +22,6 @@ function TableWrapper({ isInput, serviceName }) {
     const [searchType, setSearchType] = useState('all');
     const [selecetedPage, setSelectedPage] = useState('10');
     const [error, setError] = useState(null);
-    const [errorCode, setErrorCode] = useState('');
 
     const { rowData, setRowData } = useContext(InputRowContext);
 
@@ -55,7 +53,7 @@ function TableWrapper({ isInput, serviceName }) {
         unifiedConfigs.pages.inputs.services.forEach((service) => {
             requests.push(
                 axiosCallWrapper({
-                    serviceName: service.name,
+                    serviceName: service.name + '1',
                 })
             );
         });
@@ -64,28 +62,27 @@ function TableWrapper({ isInput, serviceName }) {
             // eslint-disable-next-line no-shadow
             .catch((error) => {
                 let message = '';
+                let errorCode = '';
                 if (error.response) {
                     // The request was made and the server responded with a status code
                     message = `Error received from server: ${error.response.data.messages[0].text}`;
-                    setErrorCode('ERR0001');
-                    generateToast(message);
+                    errorCode = 'ERR0001';
                 } else if (error.request) {
                     // The request was made but no response was received
                     message = `No response received while making request to input services`;
-                    setErrorCode('ERR0002');
-                    generateToast(message);
+                    errorCode = 'ERR0002';
                 } else {
                     // Something happened in setting up the request that triggered an Error
                     message = `Error making request to input services`;
-                    setErrorCode('ERR0003');
-                    generateToast(message);
+                    errorCode = 'ERR0003';
                 }
-                setError(error);
+                error.uccErrorCode = errorCode;
+                generateToast(message);
                 setLoading(false);
+                setError(error);
                 return Promise.reject(error);
             })
             .then((response) => {
-                // const isNotUndefined = response.every(Boolean);
                 modifyAPIResponse(response.map((res) => res.data.entry));
             });
     };
@@ -197,13 +194,13 @@ function TableWrapper({ isInput, serviceName }) {
             });
             return arr;
         }
-        return findByMatchingValue(rowData[searchType]);
+        return findByMatchingValue(rowData[searchType] || []);
     };
 
     const filteredData = !loading && getRowData();
 
-    if (errorCode) {
-        throw ErrorWithCode(error, errorCode);
+    if (error?.uccErrorCode) {
+        throw error;
     }
 
     return (
