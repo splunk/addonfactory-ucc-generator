@@ -4,7 +4,20 @@ import {
     parseNumberValidator,
     parseRegexRawStr,
     parseStringValidator,
+    parseFunctionRawStr
 } from './uccConfigurationValidators';
+
+// Validate provided saveValidator function  
+export function SaveValidator(validatorFunc, formData) {
+    const { error, result } = parseFunctionRawStr(validatorFunc);
+    if (error) {
+        return { errorMsg: error };
+    }
+    let ret = result(formData);
+    if (typeof ret === 'string') {
+        return { errorMsg: ret };
+    }
+}
 
 class Validator {
     constructor(entities) {
