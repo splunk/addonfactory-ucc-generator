@@ -130,11 +130,20 @@ class BaseFormView extends Component {
     }
 
 
+    // Set error message to display and set error in perticular field 
+    setErrorFieldMsg = (field, msg) =>{
+        const newFields = update(this.state ,{ data: { [field] : { error: {$set: true } } } } );
+        newFields.ErrorMsg = msg;
+        this.setState(newFields);
+    }
+
+    // Set error in perticular field
     setErrorField = (field) =>{
         const newFields = update(this.state ,{ data: { [field] : { error: {$set: true } } } } );
         this.setState(newFields);
     }
 
+    // Clear error message
     clearErrorMsg = () =>{
         if(this.state.ErrorMsg){
             const newFields = { ...this.state };
@@ -143,37 +152,39 @@ class BaseFormView extends Component {
         }
     }
 
+    // Set error message
     setErrorMsg = (msg) =>{
         const newFields = { ...this.state };
         newFields.ErrorMsg = msg;
         this.setState(newFields);
     }
 
-
-    // Not tested yet
-    clearAllErrorMsg = () =>{
-        const newFields = { ...this.state };
+    // Clear error message and errors from fields 
+    clearAllErrorMsg = (State) =>{        
+        const newFields = State ? { ...State } : {...this.state};
         newFields.ErrorMsg = "";
-        const newData = {...this.state.data}
-     
-        Object.keys(newData).map( (key) => {
+        const newData = State ? { ...State.data } : {...this.state.data};
+        const temData ={}
+        Object.keys(newData).forEach( (key) => {
             if(newData[key].error){
                 const tem = {...newData[key]}
                 tem.error = false;
-                return tem;
+                temData[key] = tem;
             }
-            return newData[key];
-          });
-
-        newFields.data = newData;
-        this.setState(newFields);
+            else{
+                temData[key] = newData[key];
+            }
+        });
+        newFields.data = temData;
+        return State ? newFields : null;
     }
     
+    // Display error message 
     generateErrorMessage = () => {
         if (this.state.ErrorMsg) {
             return (
-                <div className="msg msg-error" >
-                    <Message fill type="error">
+                <div className="msg msg-err" >
+                    <Message appearance="fill" type="error">
                         {this.state.ErrorMsg}
                     </Message>
                 </div>
