@@ -1,7 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import Heading from '@splunk/react-ui/Heading';
 import Message from '@splunk/react-ui/Message';
-import PropTypes from 'prop-types';
+import { _ } from '@splunk/ui-utils/i18n';
 
 import errorCodes from '../constants/errorCodes';
 
@@ -26,31 +28,21 @@ class ErrorBoundary extends React.Component {
     }
 
     render() {
-        if (this.state.errorCode) {
+        if (this.state.error) {
             // Error path
             return (
                 <>
                     <Heading level={2}>
-                        Something went wrong! (ERROR_CODE: {this.state.errorCode})
+                        {_('Something went wrong!')}
+                        {this.state.errorCode ? ` ERROR_CODE: ${this.state.errorCode}` : null}
                     </Heading>
-                    <Message type="info">{errorCodes[this.state.errorCode]}</Message>
+                    {this.state.errorCode ? (
+                        <Message type="info">{errorCodes[this.state.errorCode]}</Message>
+                    ) : null}
                     <details style={{ whiteSpace: 'pre-wrap' }}>
-                        {this.state.error && this.state.error.toString()}
+                        {this.state.error?.toString()}
                         <br />
-                        {this.state.errorInfo && this.state.errorInfo.componentStack}
-                    </details>
-                </>
-            );
-        }
-
-        if (this.state.error) {
-            return (
-                <>
-                    <Heading level={2}>Something went wrong!</Heading>
-                    <details style={{ whiteSpace: 'pre-wrap' }}>
-                        {this.state.error && this.state.error.toString()}
-                        <br />
-                        {this.state.errorInfo && this.state.errorInfo.componentStack}
+                        {this.state.errorInfo?.componentStack}
                     </details>
                 </>
             );

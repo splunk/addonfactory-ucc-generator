@@ -47,8 +47,8 @@ function InputPage({ isInput, serviceName }) {
             <ColumnLayout gutter={8}>
                 <ColumnLayout.Row style={{ padding: '5px 0px' }}>
                     <ColumnLayout.Column span={9}>
-                        <TitleComponent>{title}</TitleComponent>
-                        <SubTitleComponent>{description}</SubTitleComponent>
+                        <TitleComponent>{_(title)}</TitleComponent>
+                        <SubTitleComponent>{_(description)}</SubTitleComponent>
                     </ColumnLayout.Column>
                     {services && services.length > 1 && (
                         <ColumnLayout.Column span={3} style={{ textAlign: 'right' }}>

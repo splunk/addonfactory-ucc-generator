@@ -67,16 +67,14 @@ const axiosCallWrapper = (
               if (error.response) {
                   // The request was made and the server responded with a status code
                   message = `Error response received from server: ${error.response.data.messages[0].text}`;
-                  generateToast(message);
               } else if (error.request) {
                   // The request was made but no response was received
                   message = `No response received while making request to ${endpointUrl}`;
-                  generateToast(message);
               } else {
                   // Something happened in setting up the request that triggered an Error
                   message = `Error making ${method} request to ${endpointUrl}`;
-                  generateToast(message);
               }
+              generateToast(message);
               callbackOnError(error);
               return Promise.reject(error);
           })

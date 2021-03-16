@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import ColumnLayout from '@splunk/react-ui/ColumnLayout';
 import Select from '@splunk/react-ui/Select';
 import Paginator from '@splunk/react-ui/Paginator';
+import { _ } from '@splunk/ui-utils/i18n';
 
 import TableFilter from './TableFilter';
 import CustomTable from './CustomTable';
@@ -148,7 +149,7 @@ function TableWrapper({ isInput, serviceName }) {
             return <Select.Option key={service.name} label={service.title} value={service.name} />;
         });
 
-        arr.unshift(<Select.Option key="all" label="All" value="all" />);
+        arr.unshift(<Select.Option key="all" label={_('All')} value="all" />);
         return arr;
     };
 
@@ -217,8 +218,8 @@ function TableWrapper({ isInput, serviceName }) {
                     <ColumnLayout.Column span={4}>
                         <TableCaptionComponent>
                             <div>
-                                {totalElement} Input
-                                {totalElement > 1 && <span>s</span>}
+                                {totalElement}
+                                {totalElement > 1 ? _(' Inputs') : _(' Input')}
                                 <TableSelectBoxWrapper>
                                     <Select
                                         value={pageSize}

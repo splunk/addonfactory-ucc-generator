@@ -19,6 +19,7 @@ function CustomTable({ isInput, serviceName, data, handleToggleActionClick }) {
     const [sortDir, setSortDir] = useState('asc');
     const unifiedConfigs = getUnifiedConfigs();
     const { moreInfo } = unifiedConfigs.pages.inputs.table;
+    // TODO: add multi field mapping support
     const statusMapping = moreInfo.filter((a) => a.mapping);
 
     const generateColumns = () => {
@@ -130,8 +131,8 @@ function CustomTable({ isInput, serviceName, data, handleToggleActionClick }) {
                                         disabled={row.__toggleDisable}
                                         appearance="toggle"
                                         style={{ padding: 0 }}
-                                        selectedLabel="Enabled"
-                                        unselectedLabel="Disabled"
+                                        selectedLabel={_(statusMapping[0].mapping.false)}
+                                        unselectedLabel={_(statusMapping[0].mapping.true)}
                                     >
                                         {statusContent}
                                     </Switch>
