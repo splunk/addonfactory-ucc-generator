@@ -1,9 +1,10 @@
 import React, { useState, useContext, useEffect, useCallback, memo } from 'react';
 import ColumnLayout from '@splunk/react-ui/ColumnLayout';
-import update from 'immutability-helper';
-
 import Select from '@splunk/react-ui/Select';
+import update from 'immutability-helper';
 import PropTypes from 'prop-types';
+import Paginator from '@splunk/react-ui/Paginator';
+
 import TableFilter from './TableFilter';
 import CustomTable from './CustomTable';
 import {
@@ -18,7 +19,8 @@ function TableWrapper({ isInput, serviceName }) {
     const [loading, setLoading] = useState(true);
     const [searchText, setSearchText] = useState('');
     const [searchType, setSearchType] = useState('all');
-    const [selecetedPage, setSelectedPage] = useState('10');
+    const [pageSize, setPageSize] = useState(10);
+    const [currentPage, setCurrentPage] = useState(0);
 
     const { rowData, setRowData } = useContext(InputRowContext);
 
@@ -562,19 +564,11 @@ function TableWrapper({ isInput, serviceName }) {
      *
      * @param row {Object} row
      */
-    const changeStatus = (row) => {
+    const changeToggleStatus = (row) => {
         const updatedRowData = update(rowData, {
             [row.serviceName]: { [row.name]: { disabled: { $set: !row.disabled } } },
         });
         setRowData(updatedRowData);
-    };
-
-    const handleFilterChange = (e, { value }) => {
-        setSearchText(value);
-    };
-
-    const handleChange = (e, { value }) => {
-        setSearchType(value);
     };
 
     const getSearchTypeDropdown = () => {
@@ -616,8 +610,8 @@ function TableWrapper({ isInput, serviceName }) {
     };
 
     const getRowData = () => {
+        let arr = [];
         if (searchType === 'all') {
-            let arr = [];
             Object.keys(rowData).forEach((key) => {
                 let newArr = [];
                 if (searchText && searchText.length) {
@@ -627,75 +621,87 @@ function TableWrapper({ isInput, serviceName }) {
                 }
                 arr = arr.concat(newArr);
             });
-            return arr;
+        } else {
+            arr = findByMatchingValue(rowData[searchType]);
         }
-        return findByMatchingValue(rowData[searchType]);
+        return [arr.slice((currentPage * pageSize), (currentPage + 1) * pageSize), arr.length];
     };
 
-    const filteredData = !loading && getRowData();
+    if (loading) {
+        return <WaitSpinnerWrapper size="large" />
+    }
+
+    const [filteredData, totalElement] = getRowData();
+
+    const TableHeaderComponent = () => {
+        return (
+            <ColumnLayout gutter={8}>
+                <ColumnLayout.Row
+                    style={{
+                        borderTop: '1px solid #e1e6eb',
+                        padding: '5px 0px',
+                        marginTop: '25px',
+                    }}
+                >
+                    <ColumnLayout.Column span={4}>
+                        <TableCaptionComponent>
+                            <div>
+                                {totalElement} Input
+                                {totalElement > 1 && <span>s</span>}
+                                <TableSelectBoxWrapper>
+                                    <Select value={pageSize}
+                                        onChange={(e, { value }) => {
+                                            setCurrentPage(0);
+                                            setPageSize(value);
+                                        }}
+                                    >
+                                        <Select.Option key="10" label="10 Per Page" value={10} />
+                                        <Select.Option key="25" label="25 Per Page" value={25} />
+                                        <Select.Option key="50" label="50 Per Page" value={50} />
+                                    </Select>
+                                    <Select value={searchType} onChange={(e, { value }) => {
+                                        setCurrentPage(0);
+                                        setSearchType(value);
+                                    }}>
+                                        {getSearchTypeDropdown()}
+                                    </Select>
+                                </TableSelectBoxWrapper>
+                            </div>
+                        </TableCaptionComponent>
+                    </ColumnLayout.Column>
+                    <ColumnLayout.Column span={4}>
+                        <TableFilter handleChange={(e, { value }) => {
+                            setCurrentPage(0);
+                            setSearchText(value);
+                        }} />
+                    </ColumnLayout.Column>
+                    <ColumnLayout.Column span={4} style={{
+                        'textAlign': 'right'
+                    }}>
+                        <Paginator
+                            onChange={(e, { page }) => setCurrentPage(page - 1)}
+                            current={currentPage + 1}
+                            alwaysShowLastPageLink
+                            totalPages={Math.ceil(totalElement / pageSize)}
+                            style={{
+                                'marginRight': '30px'
+                            }}
+                        />
+                    </ColumnLayout.Column>
+                </ColumnLayout.Row>
+            </ColumnLayout>
+        );
+    }
 
     return (
         <>
-            {loading ? (
-                <WaitSpinnerWrapper size="large" />
-            ) : (
-                <>
-                    <ColumnLayout gutter={8}>
-                        <ColumnLayout.Row
-                            style={{
-                                borderTop: '1px solid #e1e6eb',
-                                padding: '5px 0px',
-                                marginTop: '25px',
-                            }}
-                        >
-                            <ColumnLayout.Column span={4}>
-                                <TableCaptionComponent>
-                                    <div>
-                                        {filteredData.length} Input
-                                        {filteredData.length > 1 && <span>s</span>}
-                                        <TableSelectBoxWrapper>
-                                            <Select
-                                                value={selecetedPage}
-                                                onChange={(e, { value }) => setSelectedPage(value)}
-                                            >
-                                                <Select.Option
-                                                    key="10"
-                                                    label="10 Per Page"
-                                                    value="10"
-                                                />
-                                                <Select.Option
-                                                    key="25"
-                                                    label="25 Per Page"
-                                                    value="25"
-                                                />
-                                                <Select.Option
-                                                    key="50"
-                                                    label="50 Per Page"
-                                                    value="50"
-                                                />
-                                            </Select>
-                                            <Select value={searchType} onChange={handleChange}>
-                                                {getSearchTypeDropdown()}
-                                            </Select>
-                                        </TableSelectBoxWrapper>
-                                    </div>
-                                </TableCaptionComponent>
-                            </ColumnLayout.Column>
-                            <ColumnLayout.Column span={4}>
-                                <TableFilter handleChange={handleFilterChange} />
-                            </ColumnLayout.Column>
-                            <ColumnLayout.Column span={4} />
-                        </ColumnLayout.Row>
-                    </ColumnLayout>
-
-                    <CustomTable
-                        isInput={isInput}
-                        serviceName={serviceName}
-                        data={filteredData}
-                        handleToggleActionClick={(row) => changeStatus(row)}
-                    />
-                </>
-            )}
+            <TableHeaderComponent />
+            <CustomTable
+                isInput={isInput}
+                serviceName={serviceName}
+                data={filteredData}
+                handleToggleActionClick={(row) => changeToggleStatus(row)}
+            />
         </>
     );
 }

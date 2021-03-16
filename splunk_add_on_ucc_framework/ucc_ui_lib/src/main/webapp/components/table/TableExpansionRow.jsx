@@ -8,7 +8,7 @@ import { getUnifiedConfigs } from '../../util/util';
 function getExpansionRowData(row) {
 
     const unifiedConfigs = getUnifiedConfigs();
-    const {moreInfo} = unifiedConfigs.pages.inputs.table;
+    const { moreInfo } = unifiedConfigs.pages.inputs.table;
 
     return (
         moreInfo &&
@@ -17,15 +17,11 @@ function getExpansionRowData(row) {
             const label = _(val.label);
             return (
                 <>
-                    {(row[val.field] || val.label == 'Status') && (
+                    {(row[val.field]) && (
                         <>
                             <DL.Term>{label}</DL.Term>
                             <DL.Description>
-                                {val.label == 'Status'
-                                    ? row[val.field]
-                                        ? 'Disabled'
-                                        : 'Enabled'
-                                    : `${row[val.field]}`}
+                                {val.field === 'disabled' ? val.mapping[row[val.field]] : `${row[val.field]}`}
                             </DL.Description>
                         </>
                     )}

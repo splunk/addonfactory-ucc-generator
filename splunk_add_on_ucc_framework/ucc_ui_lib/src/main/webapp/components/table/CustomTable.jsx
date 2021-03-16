@@ -17,9 +17,11 @@ function CustomTable({ isInput, serviceName, data, handleToggleActionClick }) {
 
     const [sortKey, setSortKey] = useState('name');
     const [sortDir, setSortDir] = useState('asc');
+    const unifiedConfigs = getUnifiedConfigs();
+    const { moreInfo } = unifiedConfigs.pages.inputs.table;
+    const statusMapping = moreInfo.filter(a => a.mapping);
 
     const generateColumns = () => {
-        const unifiedConfigs = getUnifiedConfigs();
         const column = [];
         if (isInput) {
             const headers = unifiedConfigs.pages.inputs.table.header;
@@ -32,8 +34,8 @@ function CustomTable({ isInput, serviceName, data, handleToggleActionClick }) {
                 });
             }
             column.push({ label: 'Actions', field: 'actions', sortKey: '' });
-            return column;
         }
+        return column;
     }
 
     const [columns, setColumns] = useState(() => generateColumns());
@@ -128,22 +130,22 @@ function CustomTable({ isInput, serviceName, data, handleToggleActionClick }) {
                                     selected={!row.disabled}
                                     appearance="toggle"
                                 >
-                                    {row.disabled ? "Disabled" : "Enabled"}
+                                    {statusMapping[0].mapping[row.disabled]}
                                 </Switch>
                             </Table.Cell>
                         )
                     }
-                    
+
                     if (header.field === "actions") {
                         return rowActionsPrimaryButton(row);
-                    } 
-                    
+                    }
+
                     return (
                         <Table.Cell key={header.field}>
                             {row[header.field]}
                         </Table.Cell>
                     )
-                    
+
                 })}
             </Table.Row>
         );
@@ -190,3 +192,4 @@ CustomTable.propTypes = {
 };
 
 export default CustomTable;
+
