@@ -1,67 +1,44 @@
 import React from 'react';
 import layout from '@splunk/react-page';
 import { SplunkThemeProvider } from '@splunk/themes';
-import { defaultTheme } from '@splunk/splunk-utils/themes';
 
-import { StyledContainer } from './EntryPageStyle';
+import { StyledContainer, ThemeProviderSettings } from './EntryPageStyle';
 import ConfigManager from '../util/configManager';
 import InputPage from './Input/InputPage';
 import ConfigurationPage from './Configuration/ConfigurationPage';
 
-import { InputRowContextProvider } from '../context/InputRowContext';
+// Take in a component as argument WrappedComponent
+function higherOrderComponent(WrappedComponent) {
+    // And return another component
+    // eslint-disable-next-line react/prefer-stateless-function
+    class HOC extends React.Component {
+        render() {
+            return (
+                <SplunkThemeProvider {...ThemeProviderSettings}>
+                    <StyledContainer>
+                        <ConfigManager>
+                            {({ loading, appData }) => {
+                                return !loading && appData && <WrappedComponent {...this.props} />;
+                            }}
+                        </ConfigManager>
+                    </StyledContainer>
+                </SplunkThemeProvider>
+            );
+        }
+    }
+    return HOC;
+}
 
-const defaultThemeSplunkThemeProviderMap = {
-    enterprise: {
-        family: 'enterprise',
-        colorScheme: 'light',
-        density: 'comfortable',
-    },
-    enterpriseDark: {
-        family: 'enterprise',
-        colorScheme: 'dark',
-        density: 'comfortable',
-    },
-    lite: {
-        family: 'enterprise',
-        colorScheme: 'light',
-        density: 'comfortable',
-    },
-};
-
-const themeProviderSettings =
-    defaultThemeSplunkThemeProviderMap[defaultTheme()] ||
-    defaultThemeSplunkThemeProviderMap.enterprise;
+// Create a new component
+const InputPageComponent = higherOrderComponent(InputPage);
+const ConfigurationPageComponent = higherOrderComponent(ConfigurationPage);
 
 const url = window.location.pathname;
 const urlParts = url.substring(1).split('/');
 const page = urlParts[urlParts.length - 1];
 
 if (page === 'inputs') {
-    layout(
-        <InputRowContextProvider value={null}>
-            <SplunkThemeProvider {...themeProviderSettings}>
-                <StyledContainer>
-                    <ConfigManager>
-                        {({ loading, appData }) => {
-                            return !loading && appData && <InputPage isInput serviceName="" />;
-                        }}
-                    </ConfigManager>
-                </StyledContainer>
-            </SplunkThemeProvider>
-        </InputRowContextProvider>,
-        { pageTitle: 'Inputs' }
-    );
+    layout(<InputPageComponent isInput serviceName="" />, { pageTitle: 'Inputs' });
 } else if (page === 'configuration') {
-    layout(
-        <SplunkThemeProvider {...themeProviderSettings}>
-            <StyledContainer>
-                <ConfigManager>
-                    {({ loading, appData }) => {
-                        return !loading && appData && <ConfigurationPage />;
-                    }}
-                </ConfigManager>
-            </StyledContainer>
-        </SplunkThemeProvider>,
-        { pageTitle: 'Configuration' }
-    );
+    layout(<ConfigurationPageComponent />, { pageTitle: 'Configuration' });
 }

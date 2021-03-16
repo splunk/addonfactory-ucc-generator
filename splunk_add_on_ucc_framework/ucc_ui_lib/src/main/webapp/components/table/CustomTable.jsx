@@ -17,9 +17,11 @@ import { getExpansionRow } from './TableExpansionRow';
 function CustomTable({ isInput, serviceName, data, handleToggleActionClick }) {
     const [sortKey, setSortKey] = useState('name');
     const [sortDir, setSortDir] = useState('asc');
+    const unifiedConfigs = getUnifiedConfigs();
+    const { moreInfo } = unifiedConfigs.pages.inputs.table;
+    const statusMapping = moreInfo.filter((a) => a.mapping);
 
     const generateColumns = () => {
-        const unifiedConfigs = getUnifiedConfigs();
         const column = [];
         if (isInput) {
             const headers = unifiedConfigs.pages.inputs.table.header;
@@ -32,8 +34,8 @@ function CustomTable({ isInput, serviceName, data, handleToggleActionClick }) {
                 });
             }
             column.push({ label: 'Actions', field: 'actions', sortKey: '' });
-            return column;
         }
+        return column;
     };
 
     const [columns, setColumns] = useState(() => generateColumns());
@@ -107,7 +109,7 @@ function CustomTable({ isInput, serviceName, data, handleToggleActionClick }) {
         let statusContent = '';
         // eslint-disable-next-line no-underscore-dangle
         if (!row.__toggleDisable) {
-            statusContent = row.disabled ? 'Disabled' : 'Enabled';
+            statusContent = statusMapping[0].mapping[row.disabled];
         } else {
             statusContent = <WaitSpinner />;
         }
@@ -124,6 +126,7 @@ function CustomTable({ isInput, serviceName, data, handleToggleActionClick }) {
                                         value={row.disabled}
                                         onClick={() => handleToggleActionClick(row)}
                                         selected={!row.disabled}
+                                        // eslint-disable-next-line no-underscore-dangle
                                         disabled={row.__toggleDisable}
                                         appearance="toggle"
                                         style={{ padding: 0 }}
