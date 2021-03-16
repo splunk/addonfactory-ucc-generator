@@ -40,7 +40,7 @@ const page = urlParts[urlParts.length - 1];
 
 if (page === 'inputs') {
     layout(
-        <InputPageComponent isInput serviceName="" />,
+        <InputPageComponent />,
         { pageTitle: 'Inputs' }
     );
 } else if (page === 'configuration') {

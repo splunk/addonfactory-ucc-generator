@@ -16,8 +16,10 @@ class ControlWrapper extends React.PureComponent {
 
     render(){
 
-        const {field, controlOptions, type,label,tooltip, helptext,encrypted=false} = this.props.entity;
+        const {field, options, type,label,tooltip, helptext,encrypted=false} = this.props.entity;
         const {handleChange, addCustomValidator, utilCustomFunctions} = this.props.utilityFuncts;
+
+        console.log("options :",options);
         let rowView;
         if(this.props.entity.type==="custom"){
 
@@ -26,6 +28,7 @@ class ControlWrapper extends React.PureComponent {
                 mode:this.props.mode,
                 serviceName:this.props.serviceName
             }
+            
             rowView = this.controlType ? (
                     React.createElement(this.controlType,
                         { 
@@ -34,7 +37,7 @@ class ControlWrapper extends React.PureComponent {
                             handleChange,
                             addCustomValidator,
                             utilCustomFunctions,
-                            controlOptions
+                            controlOptions:options
                         })
                     ): `No View Found for ${type} type`;
             }
@@ -45,7 +48,7 @@ class ControlWrapper extends React.PureComponent {
                         handleChange,
                         value:this.props.value,
                         field,
-                        controlOptions,
+                        controlOptions:options,
                         error:this.props.error,
                         disabled:this.props.disabled,
                         encrypted

@@ -7,16 +7,10 @@ import BaseFormView from './BaseFormView';
 class EntityModal extends Component {
     constructor(props) {
         super(props);
-        this.state = { open: props.open };
         this.form = React.createRef();
     }
 
-    handleRequestOpen = () => {
-        this.setState({ open: true });
-    };
-
     handleRequestClose = () => {
-        this.setState({ open: false });
         this.props.handleRequestClose();
     };
 
@@ -39,7 +33,7 @@ class EntityModal extends Component {
             <div>
                 <Modal
                     onRequestClose={this.handleRequestClose}
-                    open={this.state.open}
+                    open={this.props.open}
                 >
                     <Modal.Header title={this.props.formLabel} onRequestClose={this.handleRequestClose} />
                     <Modal.Body>

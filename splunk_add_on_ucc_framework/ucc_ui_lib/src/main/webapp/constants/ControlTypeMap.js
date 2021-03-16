@@ -1,4 +1,4 @@
-import Link from '@splunk/react-ui/Link';
+import HelpLinkComponent from '../components/HelpLinkComponent';
 import TextComponent from '../components/TextComponent';
 import SingleInputComponent from '../components/SingleInputComponent';
 import MultiInputComponent from '../components/MultiInputComponent';
@@ -9,7 +9,7 @@ import CustomControl from '../components/CustomControl';
 export default {
     'text': TextComponent,
     'singleSelect': SingleInputComponent,
-    'helpLink':Link,
+    'helpLink':HelpLinkComponent,
     'multipleSelect':MultiInputComponent,
     'checkbox':CheckBoxComponent,
     'radio':RadioComponent,

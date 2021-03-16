@@ -1,36 +1,66 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import Select from '@splunk/react-ui/Select';
 import ColumnLayout from '@splunk/react-ui/ColumnLayout';
 import Button from '@splunk/react-ui/Button';
 import { _ } from '@splunk/ui-utils/i18n';
+import Dropdown from '@splunk/react-ui/Dropdown';
+import Menu from '@splunk/react-ui/Menu';
 
 import { getUnifiedConfigs } from '../../util/util';
 import { TitleComponent, SubTitleComponent } from './InputPageStyle';
 import { InputRowContextProvider } from '../../context/InputRowContext';
 import TableWrapper from '../../components/table/TableWrapper';
+import EntityModal from '../../components/EntityModal'
+import { MODE_CREATE } from "../../constants/modes";
 
-function InputPage({ isInput, serviceName }) {
+function InputPage() {
 
     const [title, setTitle] = useState(null);
     const [description, setDescription] = useState(null);
-
+    const [open, setOpen] = useState(false);
+    const [serviceName, setserviceName] = useState(null);
+    const [serviceLabel, setserviceLabel] = useState(null);
     const unifiedConfigs = getUnifiedConfigs();
     const { services } = unifiedConfigs.pages.inputs;
+    const toggle = <Button appearance="toggle" label="Create New Input" isMenu />;
 
     useEffect(() => {
         setTitle(_(unifiedConfigs.pages.inputs.title));
         setDescription(_(unifiedConfigs.pages.inputs.description));
     }, []);
 
-    const getSearchTypeDropdown = () => {
+    const getInputMenu = () => {
         let arr = [];
         arr = services.map((service) => {
-            return <Select.Option key={service.name} label={service.title} value={service.name} />;
+            return (<Menu.Item key={service.name}>{service.title}</Menu.Item>);
         });
-        arr.unshift(<Select.Option key="createNew" value="" selected disabled hidden label="Create New Input" />);
         return arr;
     };
+
+
+    const handleRequestOpen = () => {
+        setOpen(true);
+    };
+
+    const handleRequestClose = () => {
+        setOpen(false);
+    };
+    const generateModalDialog = () => {
+        if (open) {
+            return (
+                < EntityModal
+                    isInput
+                    open={open}
+                    handleRequestClose={handleRequestClose}
+                    handleSavedata={null}
+                    serviceName={serviceName}
+                    mode={MODE_CREATE}
+                    formLabel={serviceLabel}
+                />
+            );
+        }
+            return null;
+    }
 
     return (
         <>
@@ -42,11 +72,19 @@ function InputPage({ isInput, serviceName }) {
                     </ColumnLayout.Column>
                     {services && services.length > 1 &&
                         <ColumnLayout.Column span={3} style={{ 'textAlign': 'right' }}>
-                            <Select onChange={(e, { value }) => {
-                                console.log("On create new", value);
-                            }}>
-                                {getSearchTypeDropdown()}
-                            </Select>
+
+                            <Dropdown toggle={toggle}>
+                                <Menu onClick={ (event) => {
+                                        const findname =  services[services.findIndex(x => x.title ===event.target.innerText)].name;
+                                        setserviceLabel(`Add ${event.target.innerText}`)
+                                        setserviceName(findname);
+                                        handleRequestOpen();
+                                        }
+} >
+                                    {getInputMenu()}
+                                </Menu>
+                            </Dropdown>
+
                         </ColumnLayout.Column>
                     }
                     {services && services.length === 1 &&
@@ -54,7 +92,9 @@ function InputPage({ isInput, serviceName }) {
                             label="Create New Input"
                             appearance="flat"
                             onClick={() => {
-                                console.log("On create new", services[0].name);
+                                setserviceName(services[0].name)
+                                setserviceLabel(`Add ${services[0].title}`)
+                                handleRequestOpen();
                             }}
                         />
                     }
@@ -62,16 +102,12 @@ function InputPage({ isInput, serviceName }) {
                 </ColumnLayout.Row>
             </ColumnLayout>
             <InputRowContextProvider value={null}>
-                <TableWrapper isInput={isInput} serviceName={serviceName} />
+                <TableWrapper isInput serviceName={serviceName} />
             </InputRowContextProvider>
+            {generateModalDialog()}
         </>
     );
 }
-
-InputPage.propTypes = {
-    isInput: PropTypes.bool,
-    serviceName: PropTypes.string.isRequired,
-};
 
 export default InputPage;
 
