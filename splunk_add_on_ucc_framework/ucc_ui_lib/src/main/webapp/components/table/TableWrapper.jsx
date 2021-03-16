@@ -53,7 +53,7 @@ function TableWrapper({ isInput, serviceName }) {
         unifiedConfigs.pages.inputs.services.forEach((service) => {
             requests.push(
                 axiosCallWrapper({
-                    serviceName: service.name + '1',
+                    serviceName: service.name,
                 })
             );
         });
