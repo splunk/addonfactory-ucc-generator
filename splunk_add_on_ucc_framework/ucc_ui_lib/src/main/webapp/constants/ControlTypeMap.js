@@ -4,6 +4,7 @@ import SingleInputComponent from '../components/SingleInputComponent';
 import MultiInputComponent from '../components/MultiInputComponent';
 import CheckBoxComponent from '../components/CheckBoxComponent';
 import RadioComponent from '../components/RadioComponent';
+import CustomControl from '../components/CustomControl';
 
 export default {
     'text': TextComponent,
@@ -11,5 +12,6 @@ export default {
     'helpLink':Link,
     'multipleSelect':MultiInputComponent,
     'checkbox':CheckBoxComponent,
-    'radio':RadioComponent
+    'radio':RadioComponent,
+    'custom':CustomControl
 };

@@ -7,7 +7,7 @@ class ControlWrapper extends React.PureComponent {
 
     constructor(props){
         super(props);
-        this.controlType = this.isString(props.type) ? CONTROL_TYPE_MAP[props.type] : props.type;
+        this.controlType = this.isString(props.entity.type) ? CONTROL_TYPE_MAP[props.entity.type] : props.entity.type;        
     }
 
     isString = (str)=>{
@@ -15,42 +15,66 @@ class ControlWrapper extends React.PureComponent {
     }
 
     render(){
-        const isDisable = this.props.mode ==="EDIT" ? this.props.controlOptions.disableonEdit : false;
-        const rowView = this.controlType ? (
-            React.createElement(this.controlType,
-                { 
-                    handleChange:this.props.handleChange,
-                    value:this.props.value,
-                    field:this.props.field,
-                    disabled:isDisable,
-                    controlOptions:this.props.controlOptions,
-                })): `No View Found for ${this.props.type} type`;
+
+        const {field, controlOptions, type,label,tooltip, helptext,encrypted=false} = this.props.entity;
+        const {handleChange, addCustomValidator, utilCustomFunctions} = this.props.utilityFuncts;
+        let rowView;
+        if(this.props.entity.type==="custom"){
+
+            const data = {
+                value:this.props.value,
+                mode:this.props.mode,
+                serviceName:this.props.serviceName
+            }
+            rowView = this.controlType ? (
+                    React.createElement(this.controlType,
+                        { 
+                            data,
+                            field,
+                            handleChange,
+                            addCustomValidator,
+                            utilCustomFunctions,
+                            controlOptions
+                        })
+                    ): `No View Found for ${type} type`;
+            }
+        else{
+            rowView = this.controlType ? (
+                React.createElement(this.controlType,
+                    { 
+                        handleChange,
+                        value:this.props.value,
+                        field,
+                        controlOptions,
+                        error:this.props.error,
+                        disabled:this.props.disabled,
+                        encrypted
+                    })
+                ): `No View Found for ${type} type`;
+        }
 
         return (
         this.props.display && 
-        <ControlGroup 
-            label={this.props.label}
-            help={this.props.helptext}
-            tooltip={this.props.tooltip}
-            error={this.props.error}  >
-            {rowView}
-        </ControlGroup>
+            <ControlGroup 
+                label={label}
+                help={helptext}
+                tooltip={tooltip}
+                error={this.props.error}  >
+                {rowView}
+            </ControlGroup>
         )
     }
 }
 
 ControlWrapper.propTypes = {
-    tooltip:PropTypes.string,
     mode:PropTypes.string,
-    label:PropTypes.string,
-    handleChange:PropTypes.func,
+    utilityFuncts:PropTypes.object,
     value : PropTypes.any,
     display : PropTypes.bool,
     error : PropTypes.bool,
-    helptext : PropTypes.string,
-    field : PropTypes.string,
-    type : PropTypes.string,
-    controlOptions : PropTypes.object
+    entity : PropTypes.object,
+    disabled : PropTypes.bool,
+    serviceName: PropTypes.string
 }
 
 export default ControlWrapper;
