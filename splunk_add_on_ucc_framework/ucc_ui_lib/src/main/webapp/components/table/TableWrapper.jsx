@@ -204,7 +204,7 @@ function TableWrapper({ isInput, serviceName }) {
 
     const [filteredData, totalElement] = getRowData();
 
-    const TableHeaderComponent = () => {
+    const tableHeaderComponent = () => {
         return (
             <ColumnLayout gutter={8}>
                 <ColumnLayout.Row
@@ -275,7 +275,7 @@ function TableWrapper({ isInput, serviceName }) {
 
     return (
         <>
-            <TableHeaderComponent />
+            {tableHeaderComponent()}
             <CustomTable
                 isInput={isInput}
                 serviceName={serviceName}
