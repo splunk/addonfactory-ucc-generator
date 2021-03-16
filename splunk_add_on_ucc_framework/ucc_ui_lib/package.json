@@ -26,6 +26,7 @@
     "@splunk/babel-preset": "^3.0.0",
     "@splunk/eslint-config": "^4.0.0",
     "@splunk/react-page": "^5.0.0",
+    "@splunk/react-toast-notifications": "^0.9.0",
     "@splunk/react-ui": "^4.0.0",
     "@splunk/splunk-utils": "^2.0.0",
     "@splunk/stylelint-config": "^4.0.0",

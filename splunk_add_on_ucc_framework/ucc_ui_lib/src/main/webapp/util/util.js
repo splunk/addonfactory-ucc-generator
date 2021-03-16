@@ -1,3 +1,6 @@
+import { TOAST_TYPES } from '@splunk/react-toast-notifications/ToastConstants';
+import Toaster, { makeCreateToast } from '@splunk/react-toast-notifications/Toaster';
+
 let appData = null;
 let unifiedConfigs = null;
 
@@ -22,3 +25,15 @@ export function setUnifiedConfig(unifiedConfig) {
 export function getUnifiedConfigs() {
     return unifiedConfigs;
 }
+
+const createToast = makeCreateToast(Toaster);
+export const generateToast = (message, action = undefined) => {
+    createToast({
+        type: TOAST_TYPES.ERROR,
+        message,
+        autoDismiss: true,
+        dismissOnActionClick: true,
+        showAction: Boolean(action),
+        action: action ? action : undefined,
+    });
+};
