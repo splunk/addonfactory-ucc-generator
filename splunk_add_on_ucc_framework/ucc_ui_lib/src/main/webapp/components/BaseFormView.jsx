@@ -2,9 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Message from '@splunk/react-ui/Message';
 import update from 'immutability-helper';
-import CustomControl from './CustomControl';
 import ControlWrapper from './ControlWrapper';
 import { getUnifiedConfigs } from '../util/util';
+import {
+    MODE_CLONE,
+    MODE_CREATE,
+    MODE_EDIT
+} from "../constants/modes";
 
 class BaseFormView extends Component {
     constructor(props) {
@@ -20,6 +24,14 @@ class BaseFormView extends Component {
             SetState: (state) => {
                 this.setState(state);
             },
+            setErrorFieldMsg:this.setErrorFieldMsg,
+            clearAllErrorMsg:this.clearAllErrorMsg
+        };
+
+        this.utilControlWrapper = {
+            handleChange:this.handleChange,
+            addCustomValidator:this.addCustomValidator,
+            utilCustomFunctions:this.util
         };
 
         if (props.isInput) {
@@ -46,21 +58,29 @@ class BaseFormView extends Component {
         this.entities.forEach((e) => {
             const tempEntity = {};
 
-            if (props.mode === 'CREATE') {
-                tempEntity.value = (typeof e.defaultValue !== "undefined")?e.defaultValue:'';
+            if (props.mode === MODE_CREATE) {
+                tempEntity.value = (typeof e.defaultValue !== "undefined") ? e.defaultValue : null;
                 tempEntity.display = (typeof e?.options?.display !== "undefined")?e.options.display:true;
                 tempEntity.error = false;
+                tempEntity.disabled =false;
                 temState[e.field] = tempEntity;
-            } else if (props.mode === 'EDIT') {
-                tempEntity.value = (typeof props.currentInput[e.field] !== "undefined")? props.currentInput[e.field]:'';
+            } 
+            else if (props.mode === MODE_EDIT) {
+                tempEntity.value = (typeof props.currentInput[e.field] !== "undefined") ? props.currentInput[e.field] : null;
                 tempEntity.display = (typeof e?.options?.display !== "undefined")?e.options.display:true;
                 tempEntity.error = false;
+                tempEntity.disabled = (typeof e?.options?.disableonEdit !== "undefined")?e.options.disableonEdit:false;
                 temState[e.field] = tempEntity;
-            } else {
+            } 
+            else if (props.mode === MODE_CLONE){
                 tempEntity.value = e.field === 'name' ? '' : props.currentInput[e.field];
-                tempEntity.display = (typeof e?.options?.display !== "undefined")?e.options.display:true;
+                tempEntity.display = (typeof e?.options?.display !== "undefined") ? e.options.display:true;
                 tempEntity.error = false;
+                tempEntity.disabled =e.field==='name';
                 temState[e.field] = tempEntity;
+            }
+            else{
+                throw new Error('Invalid mode :',props.mode);
             }
         });
 
@@ -92,13 +112,17 @@ class BaseFormView extends Component {
                 return false;
             }
         }
-        // To DO :here We will validate data, save data to global state and also to backend
+        const datadict={};
+        Object.keys(this.state.data).forEach( (field)=> {
+            datadict[field] = this.state.data[field].value;
+        });
+        
+
         const saveSuccess = true;
-        const dataValues = {};
 
         const returnValue = {
             result: saveSuccess,
-            data: dataValues,
+            data: datadict,
         };
 
         if (saveSuccess) {
@@ -116,9 +140,9 @@ class BaseFormView extends Component {
     
 
     handleChange = (field, targetValue)=> {
-        this.clearErrorMsg();
         const newFields = update(this.state ,{ data: { [field] : { value: {$set: targetValue } } } } );
-        this.setState(newFields);
+        const tempState = this.clearAllErrorMsg(newFields);
+        this.setState(tempState);
 
         if (this.hookDeferred) {
             this.hookDeferred.then(() => {
@@ -129,12 +153,25 @@ class BaseFormView extends Component {
         }
     }
 
+    addCustomValidator = (field,validator) =>{
+        const index = this.entities.findIndex(x => x.field ===field);
+        this.entities[index].CustomValidator = validator;
+    }
 
+    // Set error message to display and set error in perticular field 
+    setErrorFieldMsg = (field, msg) =>{
+        const newFields = update(this.state ,{ data: { [field] : { error: {$set: true } } } } );
+        newFields.ErrorMsg = msg;
+        this.setState(newFields);
+    }
+
+    // Set error in perticular field
     setErrorField = (field) =>{
         const newFields = update(this.state ,{ data: { [field] : { error: {$set: true } } } } );
         this.setState(newFields);
     }
 
+    // Clear error message
     clearErrorMsg = () =>{
         if(this.state.ErrorMsg){
             const newFields = { ...this.state };
@@ -143,37 +180,37 @@ class BaseFormView extends Component {
         }
     }
 
+    // Set error message
     setErrorMsg = (msg) =>{
         const newFields = { ...this.state };
         newFields.ErrorMsg = msg;
         this.setState(newFields);
     }
 
-
-    // Not tested yet
-    clearAllErrorMsg = () =>{
-        const newFields = { ...this.state };
+    // Clear error message and errors from fields 
+    clearAllErrorMsg = (State) =>{        
+        const newFields = State ? { ...State } : {...this.state};
         newFields.ErrorMsg = "";
-        const newData = {...this.state.data}
-     
-        Object.keys(newData).map( (key) => {
+        const newData = State ? { ...State.data } : {...this.state.data};
+        const temData ={}
+        Object.keys(newData).forEach( (key) => {
             if(newData[key].error){
-                const tem = {...newData[key]}
-                tem.error = false;
-                return tem;
+                temData[key] =  {...newData[key], error:false};
             }
-            return newData[key];
-          });
-
-        newFields.data = newData;
-        this.setState(newFields);
+            else{
+                temData[key] = newData[key];
+            }
+        });
+        newFields.data = temData;
+        return State ? newFields : null;
     }
     
+    // Display error message 
     generateErrorMessage = () => {
         if (this.state.ErrorMsg) {
             return (
-                <div className="msg msg-error" >
-                    <Message fill type="error">
+                <div >
+                    <Message appearance="fill" type="error">
                         {this.state.ErrorMsg}
                     </Message>
                 </div>
@@ -203,7 +240,7 @@ class BaseFormView extends Component {
                 });
             }
 
-            if (this.props.mode === 'EDIT') {
+            if (this.props.mode === MODE_EDIT) {
                 if (this.hookDeferred) {
                     this.hookDeferred.then(() => {
                         if (typeof this.hook.onCreate === 'function') {
@@ -215,46 +252,28 @@ class BaseFormView extends Component {
             this.flag = false;
         }
 
-        const rows = [];
-
-        this.entities.forEach( (e) => {
-            if (e.type === 'custom') {
-                rows.push(
-                    <CustomControl
-                        key={e.field}
-                        handleChange={this.handleChange}
-                        display={this.state.data[e.field].display}
-                        error={this.state.data[e.field].error}
-                        field={e.field}
-                        helptext={e.help}
-                        label={e.label}
-                        controlOptions={e.options}
-                        mode={this.props.mode}
-                    />
-                );
-            } else {
-                rows.push(
-                    <ControlWrapper
-                        key={e.field}
-                        handleChange={this.handleChange}
-                        value={this.state.data[e.field].value}
-                        display={this.state.data[e.field].display}
-                        error={this.state.data[e.field].error}
-                        helptext={e.help || ""}
-                        label={e.label}
-                        field={e.field}
-                        controlOptions={ e.options|| {} }
-                        mode={this.props.mode}
-                        tooltip={e.tooltip || ""}
-                        type={e.type}
-                    />
-                );
-            }
-        });
-
-        return( <div className="form-horizontal">
+        return( 
+            <div className="form-horizontal">
             {this.generateErrorMessage()}
-            {rows}
+            {
+                this.entities.map( (e) => {
+
+                    const temState = this.state.data[e.field];
+                        
+                        return ( <ControlWrapper
+                            key={e.field}
+                            utilityFuncts={this.utilControlWrapper}
+                            value={temState.value}
+                            display={temState.display}
+                            error={temState.error}
+                            entity={e}
+                            serviceName={this.props.serviceName}
+                            mode={this.props.mode}
+                            disabled={temState.disbled}
+                        />)
+                    
+                })
+            }
             </div>
         );
     }

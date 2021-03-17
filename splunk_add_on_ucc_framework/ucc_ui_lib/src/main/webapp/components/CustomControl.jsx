@@ -1,32 +1,31 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import ControlGroup from '@splunk/react-ui/ControlGroup';
+import { getUnifiedConfigs } from '../util/util';
 
 class CustomControl extends Component {
 
     componentDidMount() {
-        const data = {
-            "mode":this.props.mode,
-            "field":this.props.field,
-            "value":this.props.value
-        }
-        this.loadCustomControl(this.props.controlOptions.src).then((Control)=>{
-            const customControl = new Control(this.el, this.setValue, data);
+
+        const globalConfig = getUnifiedConfigs();
+        const appName = globalConfig.meta.name;
+        
+        this.loadCustomControl(this.props.controlOptions.src,appName).then((Control)=>{
+            const customControl = new Control(globalConfig, this.el,this.props.data,this.setValue,this.props.utilCustomFunctions);
             customControl.render();
-        })
-      }
+
+            if(typeof customControl.validation === 'function') {
+                    this.props.addCustomValidator(this.props.field,customControl.validator);
+                };
+            })
+    }
 
     shouldComponentUpdate() {
         return false;
-      }
+    }
 
-    componentWillUnmount() {
-        // destroy el plugin to avoid memmory leak
-      }
-
-    loadCustomControl = (module)=> {
+    loadCustomControl = (module,appName)=> {
         const myPromise = new Promise((myResolve) => {
-            __non_webpack_require__([`app/${this.props.appName}/js/build/custom/${module}`], (Control) => {
+            __non_webpack_require__([`app/${appName}/js/build/custom/${module}`], (Control) => {
                 myResolve(Control);
             }
           );
@@ -35,36 +34,23 @@ class CustomControl extends Component {
     };
 
     setValue = (newValue) => {
-        this.props.handleChange(this.props.id,newValue);
+        this.props.handleChange(this.props.field,newValue);
     }
 
     render(){
         return (
-        this.props.display && 
-        <ControlGroup 
-            label={this.props.label}
-            help={this.props.helptext}
-            tooltip={this.props.tooltip} 
-            error={this.props.error}  >
             <div ref={ (el) => {this.el = el} } />
-        </ControlGroup>
         )
     }
 }
 
 CustomControl.propTypes = {
-    tooltip:PropTypes.string,
-    mode:PropTypes.string,
-    label:PropTypes.string,
-    id:PropTypes.number,
+    data:PropTypes.object,
+    field:PropTypes.string,
     handleChange:PropTypes.func,
-    value : PropTypes.string,
-    display : PropTypes.bool,
-    error : PropTypes.bool,
-    helptext : PropTypes.string,
-    field : PropTypes.string,
     controlOptions : PropTypes.object,
-    appName:PropTypes.string
+    addCustomValidator:PropTypes.func,
+    utilCustomFunctions: PropTypes.object
 }
 
 export default CustomControl;

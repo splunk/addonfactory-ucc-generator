@@ -38,7 +38,10 @@ const urlParts = url.substring(1).split('/');
 const page = urlParts[urlParts.length - 1];
 
 if (page === 'inputs') {
-    layout(<InputPageComponent isInput serviceName="" />, { pageTitle: 'Inputs' });
+    layout(
+        <InputPageComponent />,
+        { pageTitle: 'Inputs' }
+    );
 } else if (page === 'configuration') {
     layout(<ConfigurationPageComponent />, { pageTitle: 'Configuration' });
 }
