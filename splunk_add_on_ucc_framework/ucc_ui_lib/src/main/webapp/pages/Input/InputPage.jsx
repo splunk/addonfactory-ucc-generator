@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import ColumnLayout from '@splunk/react-ui/ColumnLayout';
 import Button from '@splunk/react-ui/Button';
 import { _ } from '@splunk/ui-utils/i18n';
@@ -10,30 +10,22 @@ import { getUnifiedConfigs } from '../../util/util';
 import { TitleComponent, SubTitleComponent } from './InputPageStyle';
 import { InputRowContextProvider } from '../../context/InputRowContext';
 import TableWrapper from '../../components/table/TableWrapper';
-import EntityModal from '../../components/EntityModal'
-import { MODE_CREATE } from "../../constants/modes";
+import EntityModal from '../../components/EntityModal';
+import { MODE_CREATE } from '../../constants/modes';
 import ErrorBoundary from '../../components/ErrorBoundary';
 
-
 function InputPage() {
-    const [title, setTitle] = useState(null);
-    const [description, setDescription] = useState(null);
     const [open, setOpen] = useState(false);
     const [serviceName, setserviceName] = useState(null);
     const [serviceLabel, setserviceLabel] = useState(null);
     const unifiedConfigs = getUnifiedConfigs();
-    const { services } = unifiedConfigs.pages.inputs;
-    const toggle = <Button appearance="toggle" label="Create New Input" isMenu />;
-
-    useEffect(() => {
-        setTitle(unifiedConfigs.pages.inputs.title);
-        setDescription(unifiedConfigs.pages.inputs.description);
-    }, []);
+    const { services, title, description } = unifiedConfigs.pages.inputs;
+    const toggle = <Button appearance="primary" label="Create New Input" isMenu />;
 
     const getInputMenu = () => {
         let arr = [];
         arr = services.map((service) => {
-            return (<Menu.Item key={service.name}>{service.title}</Menu.Item>);
+            return <Menu.Item key={service.name}>{service.title}</Menu.Item>;
         });
         return arr;
     };
@@ -49,7 +41,7 @@ function InputPage() {
     const generateModalDialog = () => {
         if (open) {
             return (
-                < EntityModal
+                <EntityModal
                     isInput
                     open={open}
                     handleRequestClose={handleRequestClose}
@@ -60,40 +52,45 @@ function InputPage() {
                 />
             );
         }
-            return null;
-    }
+        return null;
+    };
 
     return (
         <>
             <ColumnLayout gutter={8}>
                 <ColumnLayout.Row style={{ padding: '5px 0px' }}>
                     <ColumnLayout.Column span={9}>
-                        <TitleComponent>{title}</TitleComponent>
-                        <SubTitleComponent>{description}</SubTitleComponent>
+                        <TitleComponent>{_(title)}</TitleComponent>
+                        <SubTitleComponent>{_(description)}</SubTitleComponent>
                     </ColumnLayout.Column>
-                    {services && services.length > 1 &&
-                        (<ColumnLayout.Column span={3} style={{ 'textAlign': 'right' }}>
+                    {services && services.length > 1 && (
+                        <ColumnLayout.Column span={3} style={{ textAlign: 'right' }}>
                             <Dropdown toggle={toggle}>
-                                <Menu onClick={ (event) => {
-                                        const findname =  services[services.findIndex(x => x.title ===event.target.innerText)].name;
-                                        setserviceLabel(`Add ${event.target.innerText}`)
+                                <Menu
+                                    onClick={(event) => {
+                                        const findname =
+                                            services[
+                                                services.findIndex(
+                                                    (x) => x.title === event.target.innerText
+                                                )
+                                            ].name;
+                                        setserviceLabel(`Add ${event.target.innerText}`);
                                         setserviceName(findname);
                                         handleRequestOpen();
-                                        }
-                                } >
+                                    }}
+                                >
                                     {getInputMenu()}
                                 </Menu>
                             </Dropdown>
-
                         </ColumnLayout.Column>
                     )}
                     {services && services.length === 1 && (
                         <Button
                             label="Create New Input"
-                            appearance="flat"
+                            appearance="primary"
                             onClick={() => {
-                                setserviceName(services[0].name)
-                                setserviceLabel(`Add ${services[0].title}`)
+                                setserviceName(services[0].name);
+                                setserviceLabel(`Add ${services[0].title}`);
                                 handleRequestOpen();
                             }}
                         />
@@ -102,7 +99,7 @@ function InputPage() {
             </ColumnLayout>
             <InputRowContextProvider value={null}>
                 <ErrorBoundary>
-                    <TableWrapper isInput serviceName={serviceName} />
+                    <TableWrapper isInput />
                 </ErrorBoundary>
                 <ToastMessages />
             </InputRowContextProvider>

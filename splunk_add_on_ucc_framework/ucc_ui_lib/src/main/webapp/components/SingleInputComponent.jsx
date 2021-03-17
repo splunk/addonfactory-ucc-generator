@@ -7,12 +7,13 @@ function SingleInputComponent(props) {
     const { autoCompleteFields } = controlOptions;
 
     function handleChange(e, { value }) {
-        restProps.handleChange( field, value);
+        restProps.handleChange(field, value);
     }
 
     function generateOptions() {
         const data = [];
-        autoCompleteFields.forEach((item) => {
+        const testData = autoCompleteFields ? autoCompleteFields : [];
+        testData.forEach((item) => {
             if (item.value && item.label) {
                 data.push(<Select.Option label={item.label} value={item.value} key={item.value} />);
             }

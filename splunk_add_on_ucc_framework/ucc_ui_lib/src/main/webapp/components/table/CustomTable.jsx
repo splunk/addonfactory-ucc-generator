@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import Table from '@splunk/react-ui/Table';
 import Switch from '@splunk/react-ui/Switch';
 import ButtonGroup from '@splunk/react-ui/ButtonGroup';
@@ -18,24 +18,25 @@ function CustomTable({ isInput, serviceName, data, handleToggleActionClick }) {
     const [sortKey, setSortKey] = useState('name');
     const [sortDir, setSortDir] = useState('asc');
     const unifiedConfigs = getUnifiedConfigs();
-    const { moreInfo } = unifiedConfigs.pages.inputs.table;
+    const tableConfig = isInput
+        ? unifiedConfigs.pages.inputs.table
+        : unifiedConfigs.pages.configuration.tabs.filter((x) => x.name === serviceName)[0].table;
+    const moreInfo = tableConfig.moreInfo;
+    const headers = tableConfig.header;
     // TODO: add multi field mapping support
-    const statusMapping = moreInfo.filter((a) => a.mapping);
+    const statusMapping = moreInfo?.filter((a) => a.mapping);
 
     const generateColumns = () => {
         const column = [];
-        if (isInput) {
-            const headers = unifiedConfigs.pages.inputs.table.header;
-            if (headers && headers.length) {
-                headers.forEach((header) => {
-                    column.push({
-                        ...header,
-                        sortKey: header.field || null,
-                    });
+        if (headers && headers.length) {
+            headers.forEach((header) => {
+                column.push({
+                    ...header,
+                    sortKey: header.field || null,
                 });
-            }
-            column.push({ label: 'Actions', field: 'actions', sortKey: '' });
+            });
         }
+        column.push({ label: 'Actions', field: 'actions', sortKey: '' });
         return column;
     };
 
@@ -110,7 +111,11 @@ function CustomTable({ isInput, serviceName, data, handleToggleActionClick }) {
         let statusContent = '';
         // eslint-disable-next-line no-underscore-dangle
         if (!row.__toggleDisable) {
-            statusContent = statusMapping[0].mapping[row.disabled];
+            if (row.disabled) {
+                statusContent = statusMapping[0].mapping[row.disabled];
+            } else {
+                statusContent = row.disabled ? 'Disabled' : 'Enabled';
+            }
         } else {
             statusContent = <WaitSpinner />;
         }
@@ -131,8 +136,16 @@ function CustomTable({ isInput, serviceName, data, handleToggleActionClick }) {
                                         disabled={row.__toggleDisable}
                                         appearance="toggle"
                                         style={{ padding: 0 }}
-                                        selectedLabel={_(statusMapping[0].mapping.false)}
-                                        unselectedLabel={_(statusMapping[0].mapping.true)}
+                                        selectedLabel={_(
+                                            statusMapping
+                                                ? statusMapping[0].mapping.false
+                                                : 'Enabled'
+                                        )}
+                                        unselectedLabel={_(
+                                            statusMapping
+                                                ? statusMapping[0].mapping.true
+                                                : 'Disabled'
+                                        )}
                                     >
                                         {statusContent}
                                     </Switch>
@@ -184,9 +197,8 @@ function CustomTable({ isInput, serviceName, data, handleToggleActionClick }) {
 
 CustomTable.propTypes = {
     isInput: PropTypes.bool,
-    serviceName: PropTypes.string.isRequired,
     data: PropTypes.array.isRequired,
     handleToggleActionClick: PropTypes.func,
 };
 
-export default CustomTable;
+export default memo(CustomTable);

@@ -19,7 +19,7 @@ import { getUnifiedConfigs, generateToast } from '../../util/util';
 import InputRowContext from '../../context/InputRowContext';
 import { axiosCallWrapper } from '../../util/axiosCallWrapper';
 
-function TableWrapper({ isInput, serviceName }) {
+function TableWrapper({ isInput, serviceName, addButton }) {
     const [loading, setLoading] = useState(true);
     const [searchText, setSearchText] = useState('');
     const [searchType, setSearchType] = useState('all');
@@ -30,10 +30,13 @@ function TableWrapper({ isInput, serviceName }) {
     const { rowData, setRowData } = useContext(InputRowContext);
 
     const unifiedConfigs = getUnifiedConfigs();
+    const services = isInput
+        ? unifiedConfigs.pages.inputs.services
+        : unifiedConfigs.pages.configuration.tabs.filter((x) => x.name === serviceName);
 
     const modifyAPIResponse = (data) => {
         const obj = {};
-        unifiedConfigs.pages.inputs.services.forEach((service, index) => {
+        services.forEach((service, index) => {
             if (service && service.name && data) {
                 const tmpObj = {};
                 data[index].forEach((val) => {
@@ -54,7 +57,7 @@ function TableWrapper({ isInput, serviceName }) {
     const fetchInputs = () => {
         setLoading(true);
         const requests = [];
-        unifiedConfigs.pages.inputs.services.forEach((service) => {
+        services.forEach((service) => {
             requests.push(
                 axiosCallWrapper({
                     serviceName: service.name,
@@ -142,8 +145,6 @@ function TableWrapper({ isInput, serviceName }) {
     };
 
     const getSearchTypeDropdown = () => {
-        const { services } = unifiedConfigs.pages.inputs;
-
         let arr = [];
         arr = services.map((service) => {
             return <Select.Option key={service.name} label={service.title} value={service.name} />;
@@ -206,7 +207,7 @@ function TableWrapper({ isInput, serviceName }) {
     const [filteredData, totalElement] = getRowData();
 
     const tableHeaderComponent = () => {
-        return (
+        return isInput ? (
             <ColumnLayout gutter={8}>
                 <ColumnLayout.Row
                     style={{
@@ -271,6 +272,48 @@ function TableWrapper({ isInput, serviceName }) {
                     </ColumnLayout.Column>
                 </ColumnLayout.Row>
             </ColumnLayout>
+        ) : (
+            <ColumnLayout gutter={8}>
+                <ColumnLayout.Row
+                    style={{
+                        padding: '5px 0px',
+                    }}
+                >
+                    <ColumnLayout.Column span={4}>
+                        <TableCaptionComponent>
+                            <div>
+                                {totalElement}
+                                {totalElement > 1 ? _(' Items') : _(' Items')}
+                            </div>
+                        </TableCaptionComponent>
+                    </ColumnLayout.Column>
+                    <ColumnLayout.Column span={4}>
+                        <TableFilter
+                            handleChange={(e, { value }) => {
+                                setCurrentPage(0);
+                                setSearchText(value);
+                            }}
+                        />
+                    </ColumnLayout.Column>
+                    <ColumnLayout.Column
+                        span={4}
+                        style={{
+                            textAlign: 'right',
+                        }}
+                    >
+                        <Paginator
+                            onChange={(e, { page }) => setCurrentPage(page - 1)}
+                            current={currentPage + 1}
+                            alwaysShowLastPageLink
+                            totalPages={Math.ceil(totalElement / pageSize)}
+                            style={{
+                                marginRight: '30px',
+                            }}
+                        />
+                        {addButton}
+                    </ColumnLayout.Column>
+                </ColumnLayout.Row>
+            </ColumnLayout>
         );
     };
 
@@ -289,7 +332,7 @@ function TableWrapper({ isInput, serviceName }) {
 
 TableWrapper.propTypes = {
     isInput: PropTypes.bool,
-    serviceName: PropTypes.string.isRequired,
+    serviceName: PropTypes.string,
 };
 
 export default memo(TableWrapper);
