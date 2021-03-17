@@ -59,14 +59,14 @@ class BaseFormView extends Component {
             const tempEntity = {};
 
             if (props.mode === MODE_CREATE) {
-                tempEntity.value = (typeof e.defaultValue !== "undefined")?e.defaultValue:'';
+                tempEntity.value = (typeof e.defaultValue !== "undefined") ? e.defaultValue : null;
                 tempEntity.display = (typeof e?.options?.display !== "undefined")?e.options.display:true;
                 tempEntity.error = false;
                 tempEntity.disabled =false;
                 temState[e.field] = tempEntity;
             } 
             else if (props.mode === MODE_EDIT) {
-                tempEntity.value = (typeof props.currentInput[e.field] !== "undefined")? props.currentInput[e.field]:'';
+                tempEntity.value = (typeof props.currentInput[e.field] !== "undefined") ? props.currentInput[e.field] : null;
                 tempEntity.display = (typeof e?.options?.display !== "undefined")?e.options.display:true;
                 tempEntity.error = false;
                 tempEntity.disabled = (typeof e?.options?.disableonEdit !== "undefined")?e.options.disableonEdit:false;
@@ -74,7 +74,7 @@ class BaseFormView extends Component {
             } 
             else if (props.mode === MODE_CLONE){
                 tempEntity.value = e.field === 'name' ? '' : props.currentInput[e.field];
-                tempEntity.display = (typeof e?.options?.display !== "undefined")?e.options.display:true;
+                tempEntity.display = (typeof e?.options?.display !== "undefined") ? e.options.display:true;
                 tempEntity.error = false;
                 tempEntity.disabled =e.field==='name';
                 temState[e.field] = tempEntity;
@@ -114,7 +114,7 @@ class BaseFormView extends Component {
         }
         const datadict={};
         Object.keys(this.state.data).forEach( (field)=> {
-            datadict[field] = this.state.data[field]["value"];
+            datadict[field] = this.state.data[field].value;
         });
         
 
@@ -195,9 +195,7 @@ class BaseFormView extends Component {
         const temData ={}
         Object.keys(newData).forEach( (key) => {
             if(newData[key].error){
-                const tem = {...newData[key]}
-                tem.error = false;
-                temData[key] = tem;
+                temData[key] =  {...newData[key], error:false};
             }
             else{
                 temData[key] = newData[key];
@@ -211,7 +209,7 @@ class BaseFormView extends Component {
     generateErrorMessage = () => {
         if (this.state.ErrorMsg) {
             return (
-                <div className="ormsg msg-err" >
+                <div >
                     <Message appearance="fill" type="error">
                         {this.state.ErrorMsg}
                     </Message>

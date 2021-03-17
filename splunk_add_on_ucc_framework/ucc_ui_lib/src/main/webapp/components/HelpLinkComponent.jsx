@@ -6,7 +6,7 @@ function HelpLinkComponent(props) {
     const { text, link } = props.controlOptions;
 
     return (
-        <Link to={link}>
+        <Link to={link} openInNewContext>
             {text}
         </Link>
     );
