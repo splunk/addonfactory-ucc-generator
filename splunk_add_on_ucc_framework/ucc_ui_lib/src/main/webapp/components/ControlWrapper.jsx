@@ -36,7 +36,7 @@ class ControlWrapper extends React.PureComponent {
                             handleChange,
                             addCustomValidator,
                             utilCustomFunctions,
-                            controlOptions:options
+                            controlOptions:options,
                         })
                     ): `No View Found for ${type} type`;
             }
@@ -50,7 +50,8 @@ class ControlWrapper extends React.PureComponent {
                         controlOptions:options,
                         error:this.props.error,
                         disabled:this.props.disabled,
-                        encrypted
+                        encrypted,
+                        dependencyValues:this.props.dependencyValues,
                     })
                 ): `No View Found for ${type} type`;
         }
