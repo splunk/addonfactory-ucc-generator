@@ -26,8 +26,8 @@ function InputPage() {
     const toggle = <Button appearance="toggle" label="Create New Input" isMenu />;
 
     useEffect(() => {
-        setTitle(_(unifiedConfigs.pages.inputs.title));
-        setDescription(_(unifiedConfigs.pages.inputs.description));
+        setTitle(unifiedConfigs.pages.inputs.title);
+        setDescription(unifiedConfigs.pages.inputs.description);
     }, []);
 
     const getInputMenu = () => {
@@ -68,8 +68,8 @@ function InputPage() {
             <ColumnLayout gutter={8}>
                 <ColumnLayout.Row style={{ padding: '5px 0px' }}>
                     <ColumnLayout.Column span={9}>
-                        <TitleComponent>{_(title)}</TitleComponent>
-                        <SubTitleComponent>{_(description)}</SubTitleComponent>
+                        <TitleComponent>{title}</TitleComponent>
+                        <SubTitleComponent>{description}</SubTitleComponent>
                     </ColumnLayout.Column>
                     {services && services.length > 1 &&
                         (<ColumnLayout.Column span={3} style={{ 'textAlign': 'right' }}>
