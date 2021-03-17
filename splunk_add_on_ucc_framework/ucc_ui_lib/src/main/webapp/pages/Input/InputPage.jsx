@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import Select from '@splunk/react-ui/Select';
 import ColumnLayout from '@splunk/react-ui/ColumnLayout';
 import Button from '@splunk/react-ui/Button';
 import { _ } from '@splunk/ui-utils/i18n';
 import Dropdown from '@splunk/react-ui/Dropdown';
 import Menu from '@splunk/react-ui/Menu';
+import ToastMessages from '@splunk/react-toast-notifications/ToastMessages';
 
 import { getUnifiedConfigs } from '../../util/util';
 import { TitleComponent, SubTitleComponent } from './InputPageStyle';
@@ -12,9 +12,10 @@ import { InputRowContextProvider } from '../../context/InputRowContext';
 import TableWrapper from '../../components/table/TableWrapper';
 import EntityModal from '../../components/EntityModal'
 import { MODE_CREATE } from "../../constants/modes";
+import ErrorBoundary from '../../components/ErrorBoundary';
+
 
 function InputPage() {
-
     const [title, setTitle] = useState(null);
     const [description, setDescription] = useState(null);
     const [open, setOpen] = useState(false);
@@ -37,7 +38,6 @@ function InputPage() {
         return arr;
     };
 
-
     const handleRequestOpen = () => {
         setOpen(true);
     };
@@ -45,6 +45,7 @@ function InputPage() {
     const handleRequestClose = () => {
         setOpen(false);
     };
+
     const generateModalDialog = () => {
         if (open) {
             return (
@@ -67,12 +68,11 @@ function InputPage() {
             <ColumnLayout gutter={8}>
                 <ColumnLayout.Row style={{ padding: '5px 0px' }}>
                     <ColumnLayout.Column span={9}>
-                        <TitleComponent>{title}</TitleComponent>
-                        <SubTitleComponent>{description}</SubTitleComponent>
+                        <TitleComponent>{_(title)}</TitleComponent>
+                        <SubTitleComponent>{_(description)}</SubTitleComponent>
                     </ColumnLayout.Column>
                     {services && services.length > 1 &&
-                        <ColumnLayout.Column span={3} style={{ 'textAlign': 'right' }}>
-
+                        (<ColumnLayout.Column span={3} style={{ 'textAlign': 'right' }}>
                             <Dropdown toggle={toggle}>
                                 <Menu onClick={ (event) => {
                                         const findname =  services[services.findIndex(x => x.title ===event.target.innerText)].name;
@@ -80,14 +80,14 @@ function InputPage() {
                                         setserviceName(findname);
                                         handleRequestOpen();
                                         }
-} >
+                                } >
                                     {getInputMenu()}
                                 </Menu>
                             </Dropdown>
 
                         </ColumnLayout.Column>
-                    }
-                    {services && services.length === 1 &&
+                    )}
+                    {services && services.length === 1 && (
                         <Button
                             label="Create New Input"
                             appearance="flat"
@@ -97,12 +97,14 @@ function InputPage() {
                                 handleRequestOpen();
                             }}
                         />
-                    }
-
+                    )}
                 </ColumnLayout.Row>
             </ColumnLayout>
             <InputRowContextProvider value={null}>
-                <TableWrapper isInput serviceName={serviceName} />
+                <ErrorBoundary>
+                    <TableWrapper isInput serviceName={serviceName} />
+                </ErrorBoundary>
+                <ToastMessages />
             </InputRowContextProvider>
             {generateModalDialog()}
         </>
@@ -110,4 +112,3 @@ function InputPage() {
 }
 
 export default InputPage;
-

@@ -1,23 +1,40 @@
 import axios from 'axios';
 import { CSRFToken, app } from '@splunk/splunk-utils/config';
 import { createRESTURL } from '@splunk/splunk-utils/url';
-import { generateEndPointUrl } from './util';
+import { generateEndPointUrl, generateToast } from './util';
 
 /**
- * Provides a axios wrapper with applied common options
- * @param {string} serviceName service name which is input name or tab name based on the page
- * @param {string} endpointUrl rest endpoint path
- * @param {object} params object with params as key value pairs
- * @param {object} customHeaders extra headers as key value pair
- * @param {string} method rest method type
+ *
+ * @param {Object} data The object containing required params for request
+ * @param {string} data.serviceName service name which is input name or tab name based on the page
+ * @param {string} data.endpointUrl rest endpoint path
+ * @param {object} data.params object with params as key value pairs
+ * @param {object} data.customHeaders extra headers as key value pair
+ * @param {string} data.method rest method type
+ * @param {string} data.handleError whether or not show toast notifications on failure
+ * @param {string} data.callbackOnError callback function to execute after handling error. Only executed when handleError is set to true
+ * @returns
  */
 const axiosCallWrapper = (
-    serviceName,
-    endpointUrl = null,
-    params = {},
-    customHeaders = {},
-    method = 'get'
+    data = {
+        serviceName: null,
+        endpointUrl: null,
+        params: {},
+        customHeaders: {},
+        method: 'get',
+        handleError: false,
+        callbackOnError: () => {},
+    }
 ) => {
+    const {
+        serviceName,
+        endpointUrl,
+        params,
+        customHeaders,
+        method,
+        handleError,
+        callbackOnError,
+    } = data;
     const endpoint = serviceName ? generateEndPointUrl(serviceName) : endpointUrl;
     const appData = {
         app,
@@ -44,7 +61,24 @@ const axiosCallWrapper = (
         options.params = params;
     }
 
-    return axios(options);
+    return handleError
+        ? axios(options).catch((error) => {
+              let message = '';
+              if (error.response) {
+                  // The request was made and the server responded with a status code
+                  message = `Error response received from server: ${error.response.data.messages[0].text}`;
+              } else if (error.request) {
+                  // The request was made but no response was received
+                  message = `No response received while making request to ${endpointUrl}`;
+              } else {
+                  // Something happened in setting up the request that triggered an Error
+                  message = `Error making ${method} request to ${endpointUrl}`;
+              }
+              generateToast(message);
+              callbackOnError(error);
+              return Promise.reject(error);
+          })
+        : axios(options);
 };
 
 export { axiosCallWrapper };

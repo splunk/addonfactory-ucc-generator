@@ -1,12 +1,12 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState } from 'react';
+import PropTypes from 'prop-types';
 
 const InputRowContext = createContext({
     rowData: {},
-    setRowData: () => { },
+    setRowData: () => {},
 });
 
 export const InputRowContextProvider = ({ children }) => {
-
     const [rowData, setRowData] = useState({});
 
     return (
@@ -14,6 +14,10 @@ export const InputRowContextProvider = ({ children }) => {
             {children}
         </InputRowContext.Provider>
     );
-}
+};
+
+InputRowContextProvider.propTypes = {
+    children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
+};
 
 export default InputRowContext;
