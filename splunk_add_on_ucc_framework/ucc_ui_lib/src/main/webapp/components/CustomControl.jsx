@@ -14,7 +14,7 @@ class CustomControl extends Component {
             customControl.render();
 
             if(typeof customControl.validation === 'function') {
-                    this.props.addCustomValidator(this.props.field,customControl.validator);
+                    this.props.addCustomValidator(this.props.field,customControl.validation);
                 };
             })
     }

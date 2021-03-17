@@ -25,7 +25,7 @@ class Validator {
     }
 
     checkIsFieldHasInput = (attrValue) => {
-        return attrValue !== undefined && attrValue !== '';
+        return attrValue !== undefined && attrValue !== '' && attrValue !== null;
     };
 
     // Validate the required field has value
@@ -72,6 +72,14 @@ class Validator {
                     ? validator.errorMsg
                     : getFormattedMessage(15, [label, validator.pattern]),
             };
+        }
+    }
+
+    // Validate the custom component
+    CustomValidator(validatorFunc, field, data) {
+        let ret = validatorFunc(field, data);
+        if (typeof ret === 'string') {
+            return { errorField: field, errorMsg: ret };
         }
     }
 
@@ -210,6 +218,16 @@ class Validator {
                                 data[this.entities[i].field],
                                 PREDEFINED_VALIDATORS_DICT.ipv4.regex,
                                 PREDEFINED_VALIDATORS_DICT.ipv4.inputValueType
+                            );
+                            if (ret) {
+                                return ret;
+                            }
+                            break;
+                        case 'custom':
+                            ret = this.CustomValidator(
+                                this.entities[i].validators[j].validatorFunc,
+                                this.entities[i].field,
+                                data[this.entities[i].field]
                             );
                             if (ret) {
                                 return ret;

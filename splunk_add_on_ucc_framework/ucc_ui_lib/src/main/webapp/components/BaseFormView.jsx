@@ -4,6 +4,7 @@ import Message from '@splunk/react-ui/Message';
 import update from 'immutability-helper';
 import ControlWrapper from './ControlWrapper';
 import { getUnifiedConfigs } from '../util/util';
+import Validator, {SaveValidator} from '../util/Validator';
 import {
     MODE_CLONE,
     MODE_CREATE,
@@ -38,6 +39,7 @@ class BaseFormView extends Component {
             globalConfig.pages.inputs.services.forEach((service) => {
                 if (service.name === props.serviceName) {
                     this.entities = service.entity;
+                    this.options = service.options;
                     if (service.hook) {
                         this.hookDeferred = this.loadHook(service.hook.src, globalConfig);
                     }
@@ -47,6 +49,7 @@ class BaseFormView extends Component {
             globalConfig.pages.tabs.forEach((tab) => {
                 if (tab.name === props.serviceName) {
                     this.entities = tab.entity;
+                    this.options = tab.options;
                     if (tab.hook) {
                         this.hookDeferred = this.loadHook(tab.hook.src, globalConfig);
                     }
@@ -117,8 +120,20 @@ class BaseFormView extends Component {
             datadict[field] = this.state.data[field].value;
         });
         
+        // Validation of form fields on Submit
+        let validator = new Validator(this.entities);
+        let error = validator.doValidation(datadict);
+        if (error){
+            this.setErrorFieldMsg(error.errorField, error.errorMsg);
+        }    
+        else if (this.options && this.options.saveValidator){
+            error = SaveValidator(this.options.saveValidator, datadict);
+            if (error){
+                this.setErrorMsg(error.errorMsg);
+            }    
+        }
 
-        const saveSuccess = true;
+        const saveSuccess = !error;
 
         const returnValue = {
             result: saveSuccess,
@@ -153,9 +168,10 @@ class BaseFormView extends Component {
         }
     }
 
-    addCustomValidator = (field,validator) =>{
+    addCustomValidator = (field, validatorFunc) =>{
         const index = this.entities.findIndex(x => x.field ===field);
-        this.entities[index].CustomValidator = validator;
+        const validator = [{"type": "custom", "validatorFunc": validatorFunc }];
+        this.entities[index].validators = validator;
     }
 
     // Set error message to display and set error in perticular field 
@@ -209,7 +225,7 @@ class BaseFormView extends Component {
     generateErrorMessage = () => {
         if (this.state.ErrorMsg) {
             return (
-                <div >
+                <div>
                     <Message appearance="fill" type="error">
                         {this.state.ErrorMsg}
                     </Message>

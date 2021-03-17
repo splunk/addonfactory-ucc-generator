@@ -49,7 +49,7 @@ export const parseStringValidator = (minLength, maxLength) => {
     return {error};
 }
 
-const parseFunctionRawStr = (rawStr) => {
+export const parseFunctionRawStr = (rawStr) => {
     let error, result;
 
     try {
