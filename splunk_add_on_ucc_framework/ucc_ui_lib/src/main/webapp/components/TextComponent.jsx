@@ -12,7 +12,7 @@ class TextComponent extends Component {
         return (
             <Text
                 inline
-                placeholder={this.props.controlOptions.placeholder}
+                placeholder={this.props?.controlOptions?.placeholder}
                 className={this.props.field}
                 disabled={this.props.disabled}
                 value={this.props.value}

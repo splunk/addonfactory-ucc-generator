@@ -12,23 +12,22 @@ function higherOrderComponent(WrappedComponent) {
     // And return another component
     // eslint-disable-next-line react/prefer-stateless-function
     class HOC extends React.Component {
-
         render() {
             return (
                 <SplunkThemeProvider {...ThemeProviderSettings}>
                     <StyledContainer>
                         <ConfigManager>
                             {({ loading, appData }) => {
-                                return !loading && appData && <WrappedComponent {...this.props} />
+                                return !loading && appData && <WrappedComponent {...this.props} />;
                             }}
                         </ConfigManager>
                     </StyledContainer>
                 </SplunkThemeProvider>
-            )
+            );
         }
     }
     return HOC;
-};
+}
 
 // Create a new component
 const InputPageComponent = higherOrderComponent(InputPage);
@@ -40,12 +39,9 @@ const page = urlParts[urlParts.length - 1];
 
 if (page === 'inputs') {
     layout(
-        <InputPageComponent isInput serviceName="" />,
+        <InputPageComponent />,
         { pageTitle: 'Inputs' }
     );
 } else if (page === 'configuration') {
-    layout(
-        <ConfigurationPageComponent />,
-        { pageTitle: 'Configuration' }
-    );
+    layout(<ConfigurationPageComponent />, { pageTitle: 'Configuration' });
 }
