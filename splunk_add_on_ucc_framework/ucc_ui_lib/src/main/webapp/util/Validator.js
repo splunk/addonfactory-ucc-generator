@@ -4,10 +4,10 @@ import {
     parseNumberValidator,
     parseRegexRawStr,
     parseStringValidator,
-    parseFunctionRawStr
+    parseFunctionRawStr,
 } from './uccConfigurationValidators';
 
-// Validate provided saveValidator function  
+// Validate provided saveValidator function
 export function SaveValidator(validatorFunc, formData) {
     const { error, result } = parseFunctionRawStr(validatorFunc);
     if (error) {
@@ -35,7 +35,7 @@ class Validator {
         }
     }
 
-    // Validate the string length of field 
+    // Validate the string length of field
     StringValidator(field, label, validator, data) {
         const { error } = parseStringValidator(validator.minLength, validator.maxLength);
         if (error) {
@@ -110,10 +110,15 @@ class Validator {
         if (_.isNaN(val)) {
             return {
                 errorField: field,
-                errorMsg: validator.errorMsg ? validator.errorMsg : getFormattedMessage(16, [label]),
+                errorMsg: validator.errorMsg
+                    ? validator.errorMsg
+                    : getFormattedMessage(16, [label]),
             };
         }
-        if ((this.checkIsFieldHasInput(data) && val > validator.range[1]) || val < validator.range[0]) {
+        if (
+            (this.checkIsFieldHasInput(data) && val > validator.range[1]) ||
+            val < validator.range[0]
+        ) {
             return {
                 errorField: field,
                 errorMsg: validator.errorMsg
@@ -127,7 +132,11 @@ class Validator {
         let ret;
         for (var i = 0; i < this.entities.length; i++) {
             if (this.entities[i].required === true) {
-                ret = this.RequiredValidator(this.entities[i].field, this.entities[i].label, data[this.entities[i].field]);
+                ret = this.RequiredValidator(
+                    this.entities[i].field,
+                    this.entities[i].label,
+                    data[this.entities[i].field]
+                );
                 if (ret) {
                     return ret;
                 }

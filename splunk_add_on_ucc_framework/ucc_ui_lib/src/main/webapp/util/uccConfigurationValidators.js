@@ -1,12 +1,12 @@
 import schema from '../schema/schema.json';
-import {Validator} from 'jsonschema';
+import { Validator } from 'jsonschema';
 import * as _ from 'lodash';
 
 const appendError = (errors, err, position) => {
     if (err) {
         errors.push(new Error(err, position));
     }
-}
+};
 
 export const parseRegexRawStr = (rawStr) => {
     let error, result;
@@ -17,11 +17,11 @@ export const parseRegexRawStr = (rawStr) => {
         error = getFormattedMessage(12, rawStr);
     }
 
-    return {error, result};
-}
+    return { error, result };
+};
 
 export const parseArrForDupKeys = (arr, targetField) => {
-    const uniqFieldsLength = _.uniqBy(arr, d => {
+    const uniqFieldsLength = _.uniqBy(arr, (d) => {
         if (_.isString(d[targetField])) {
             return d[targetField].toLowerCase();
         }
@@ -30,24 +30,22 @@ export const parseArrForDupKeys = (arr, targetField) => {
     if (arr.length != uniqFieldsLength) {
         return getFormattedMessage(21, targetField);
     }
-}
+};
 
 export const parseNumberValidator = (range) => {
-    const isRangeLegal = range.length === 2 && _.isNumber(range[0]) &&
-        _.isNumber(range[1]) && range[0] <= range[1];
+    const isRangeLegal =
+        range.length === 2 && _.isNumber(range[0]) && _.isNumber(range[1]) && range[0] <= range[1];
 
-    const error = isRangeLegal ? undefined :
-        getFormattedMessage(13, JSON.stringify(range));
+    const error = isRangeLegal ? undefined : getFormattedMessage(13, JSON.stringify(range));
 
-    return {error};
-}
+    return { error };
+};
 
 export const parseStringValidator = (minLength, maxLength) => {
-    const error = maxLength >= minLength ? undefined :
-        getFormattedMessage(14);
+    const error = maxLength >= minLength ? undefined : getFormattedMessage(14);
 
-    return {error};
-}
+    return { error };
+};
 
 export const parseFunctionRawStr = (rawStr) => {
     let error, result;
@@ -58,8 +56,8 @@ export const parseFunctionRawStr = (rawStr) => {
         error = getFormattedMessage(11, rawStr);
     }
 
-    return {error, result};
-}
+    return { error, result };
+};
 
 export const checkDupKeyValues = (config, isInput, position) => {
     // Forbid dup name/title in services and tabs
@@ -70,19 +68,18 @@ export const checkDupKeyValues = (config, isInput, position) => {
     if (servicesLikeArr) {
         position = `${position}.${isInput ? 'services' : 'tabs'}`;
 
-
-        ['name', 'title'].forEach(d => {
+        ['name', 'title'].forEach((d) => {
             error = parseArrForDupKeys(servicesLikeArr, d);
             appendError(errors, error, position);
         });
 
         // Forbid dup value/label for items and autoCompleteFields
-        const checkEntityDupKeyValues = ({options}, postion) => {
+        const checkEntityDupKeyValues = ({ options }, postion) => {
             if (!options) return;
-            const {items} = options;
-            let {autoCompleteFields} = options;
+            const { items } = options;
+            let { autoCompleteFields } = options;
             if (items) {
-                ['label', 'value'].forEach(d => {
+                ['label', 'value'].forEach((d) => {
                     error = parseArrForDupKeys(items, d);
                     appendError(errors, error, `${postion}.options.items`);
                 });
@@ -94,28 +91,19 @@ export const checkDupKeyValues = (config, isInput, position) => {
 
             // Label checker, allow same label exist in different group,
             // but forbid same label in any single group
-            const labelStoreList = isGroupType ?
-                autoCompleteFields.map(d => d.children) : [autoCompleteFields];
-            labelStoreList.forEach(d => {
+            const labelStoreList = isGroupType
+                ? autoCompleteFields.map((d) => d.children)
+                : [autoCompleteFields];
+            labelStoreList.forEach((d) => {
                 error = parseArrForDupKeys(d, 'label');
-                appendError(
-                    errors,
-                    error,
-                    `${postion}.options.autoCompleteFields`
-                );
+                appendError(errors, error, `${postion}.options.autoCompleteFields`);
             });
 
             if (isGroupType) {
-                autoCompleteFields = _.flatten(
-                    _.union(autoCompleteFields.map(d => d.children))
-                );
+                autoCompleteFields = _.flatten(_.union(autoCompleteFields.map((d) => d.children)));
             }
             error = parseArrForDupKeys(autoCompleteFields, 'value');
-            appendError(
-                errors,
-                error,
-                `${postion}.options.autoCompleteFields`
-            );
+            appendError(errors, error, `${postion}.options.autoCompleteFields`);
         };
 
         // Forbid dup field/label for entity
@@ -134,122 +122,89 @@ export const checkDupKeyValues = (config, isInput, position) => {
     }
 
     return errors;
-}
+};
 
-const checkConfigDetails = ({pages: {configuration, inputs}}) => {
-    let error, errors = [];
+const checkConfigDetails = ({ pages: { configuration, inputs } }) => {
+    let error,
+        errors = [];
     const position = 'instantce.pages';
-
 
     const checkBaseOptions = (options, position) => {
         _.values(options).forEach((d, i) => {
-            const {error} = parseFunctionRawStr(d);
+            const { error } = parseFunctionRawStr(d);
             appendError(errors, error, `${position}[${i}]`);
         });
     };
 
-    const checkEntity = (entity, rootName, position, isCollectionType = true) =>
-        {
-            _.values(entity).forEach((item, i) => {
-                const {validators, options} = item;
+    const checkEntity = (entity, rootName, position, isCollectionType = true) => {
+        _.values(entity).forEach((item, i) => {
+            const { validators, options } = item;
 
-                _.values(validators).forEach((d, j) => {
-                    switch (d.type) {
-                        case 'string':
-                            error = parseStringValidator(
-                                d.minLength,
-                                d.maxLength
-                            ).error;
-                            break;
-                        case 'number':
-                            error = parseNumberValidator(d.range).error;
-                            break;
-                        case 'regex':
-                            error = parseRegexRawStr(d.pattern).error;
-                            break;
-                        default:
-                    }
-                    appendError(
-                        errors,
-                        error,
-                        `${position}[${i}].validators[${j}]`
-                    );
-                });
-
-                // Details check for entity options.
-                _.forEach(['denyList', 'allowList'], d => {
-                    if (options && options[d]) {
-                        error = parseRegexRawStr(options[d]).error;
-                        appendError(
-                            errors,
-                            error,
-                            `${position}[${i}].options.${d}`
-                        );
-                    }
-                });
+            _.values(validators).forEach((d, j) => {
+                switch (d.type) {
+                    case 'string':
+                        error = parseStringValidator(d.minLength, d.maxLength).error;
+                        break;
+                    case 'number':
+                        error = parseNumberValidator(d.range).error;
+                        break;
+                    case 'regex':
+                        error = parseRegexRawStr(d.pattern).error;
+                        break;
+                    default:
+                }
+                appendError(errors, error, `${position}[${i}].validators[${j}]`);
             });
 
-            if (isCollectionType) {
-                // Name field should be provided
-                if (_.every(_.values(entity), ({field}) => field !== 'name')) {
-                    appendError(errors, getFormattedMessage(23, rootName));
+            // Details check for entity options.
+            _.forEach(['denyList', 'allowList'], (d) => {
+                if (options && options[d]) {
+                    error = parseRegexRawStr(options[d]).error;
+                    appendError(errors, error, `${position}[${i}].options.${d}`);
                 }
+            });
+        });
+
+        if (isCollectionType) {
+            // Name field should be provided
+            if (_.every(_.values(entity), ({ field }) => field !== 'name')) {
+                appendError(errors, getFormattedMessage(23, rootName));
             }
-        };
+        }
+    };
 
     if (inputs) {
-        const {services} = inputs;
+        const { services } = inputs;
         services.forEach((service, i) => {
-            const {entity, options, name} = service;
-            checkBaseOptions(
-                options,
-                `${position}.inputs.services[${i}].options`
-            );
-            checkEntity(
-                entity,
-                name,
-                `${position}.inputs.services[${i}].entity`
-            );
+            const { entity, options, name } = service;
+            checkBaseOptions(options, `${position}.inputs.services[${i}].options`);
+            checkEntity(entity, name, `${position}.inputs.services[${i}].entity`);
         });
-        errors = errors.concat(
-            checkDupKeyValues(inputs, true, `${position}.inputs`)
-        );
+        errors = errors.concat(checkDupKeyValues(inputs, true, `${position}.inputs`));
     }
 
-    if(configuration) {
+    if (configuration) {
         configuration.tabs.forEach((tab, i) => {
-            const {entity, options, name} = tab;
-            checkBaseOptions(
-                options,
-                `${position}.configuration.tabs[${i}].options`
-            );
-            checkEntity(
-                entity,
-                name,
-                `${position}.configuration.tabs[${i}].entity`,
-                false
-            );
+            const { entity, options, name } = tab;
+            checkBaseOptions(options, `${position}.configuration.tabs[${i}].options`);
+            checkEntity(entity, name, `${position}.configuration.tabs[${i}].entity`, false);
         });
         errors = errors.concat(
-            checkDupKeyValues(
-                configuration,
-                false,
-                `${position}.configuration`
-            )
+            checkDupKeyValues(configuration, false, `${position}.configuration`)
         );
     }
 
     return errors;
-}
+};
 
 export const validateSchema = (config) => {
     const validator = new Validator();
     const res = validator.validate(config, schema);
-    if(!res.errors.length) {
+    if (!res.errors.length) {
         res.errors = checkConfigDetails(config);
     }
-    return ({
+    return {
         failed: !!res.errors.length,
-        errors: res.errors
-    });
-}
+        errors: res.errors,
+    };
+};

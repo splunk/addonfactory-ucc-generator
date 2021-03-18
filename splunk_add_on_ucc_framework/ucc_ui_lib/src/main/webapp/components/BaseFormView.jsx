@@ -4,12 +4,8 @@ import Message from '@splunk/react-ui/Message';
 import update from 'immutability-helper';
 import ControlWrapper from './ControlWrapper';
 import { getUnifiedConfigs } from '../util/util';
-import Validator, {SaveValidator} from '../util/Validator';
-import {
-    MODE_CLONE,
-    MODE_CREATE,
-    MODE_EDIT
-} from "../constants/modes";
+import Validator, { SaveValidator } from '../util/Validator';
+import { MODE_CLONE, MODE_CREATE, MODE_EDIT } from '../constants/modes';
 
 class BaseFormView extends Component {
     constructor(props) {
@@ -115,22 +111,21 @@ class BaseFormView extends Component {
                 return false;
             }
         }
-        const datadict={};
-        Object.keys(this.state.data).forEach( (field)=> {
+        const datadict = {};
+        Object.keys(this.state.data).forEach((field) => {
             datadict[field] = this.state.data[field].value;
         });
-        
+
         // Validation of form fields on Submit
         let validator = new Validator(this.entities);
         let error = validator.doValidation(datadict);
-        if (error){
+        if (error) {
             this.setErrorFieldMsg(error.errorField, error.errorMsg);
-        }    
-        else if (this.options && this.options.saveValidator){
+        } else if (this.options && this.options.saveValidator) {
             error = SaveValidator(this.options.saveValidator, datadict);
-            if (error){
+            if (error) {
                 this.setErrorMsg(error.errorMsg);
-            }    
+            }
         }
 
         const saveSuccess = !error;
