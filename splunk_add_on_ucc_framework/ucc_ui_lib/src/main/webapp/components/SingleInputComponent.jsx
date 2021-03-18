@@ -12,8 +12,7 @@ function SingleInputComponent(props) {
 
     function generateOptions() {
         const data = [];
-        const testData = autoCompleteFields ? autoCompleteFields : [];
-        testData.forEach((item) => {
+        autoCompleteFields.forEach((item) => {
             if (item.value && item.label) {
                 data.push(<Select.Option label={item.label} value={item.value} key={item.value} />);
             }

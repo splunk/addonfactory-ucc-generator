@@ -11,17 +11,12 @@ import PropTypes from 'prop-types';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 
 import { ActionButtonComponent } from './CustomTableStyle';
-import { getUnifiedConfigs } from '../../util/util';
 import { getExpansionRow } from './TableExpansionRow';
 
-function CustomTable({ isInput, serviceName, data, handleToggleActionClick }) {
+function CustomTable({ tableConfig, data, handleToggleActionClick }) {
     const [sortKey, setSortKey] = useState('name');
     const [sortDir, setSortDir] = useState('asc');
-    const unifiedConfigs = getUnifiedConfigs();
-    const tableConfig = isInput
-        ? unifiedConfigs.pages.inputs.table
-        : unifiedConfigs.pages.configuration.tabs.filter((x) => x.name === serviceName)[0].table;
-    const moreInfo = tableConfig.moreInfo;
+    const { moreInfo } = tableConfig;
     const headers = tableConfig.header;
     // TODO: add multi field mapping support
     const statusMapping = moreInfo?.filter((a) => a.mapping);
@@ -196,7 +191,6 @@ function CustomTable({ isInput, serviceName, data, handleToggleActionClick }) {
 }
 
 CustomTable.propTypes = {
-    isInput: PropTypes.bool,
     data: PropTypes.array.isRequired,
     handleToggleActionClick: PropTypes.func,
 };

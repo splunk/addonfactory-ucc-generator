@@ -14,32 +14,30 @@ class EntityModal extends Component {
         this.props.handleRequestClose();
     };
 
-    handleSubmit = () =>{
+    handleSubmit = () => {
         const { result, data } = this.form.current.handleSubmit();
-        if(result){
-            const save = this.props.handleSavedata(data);
-            if(save){
-                this.handleRequestClose()
-            }
-            else{
+        if (result) {
+            const save = this.props.handleSaveData(data);
+            if (save) {
+                this.handleRequestClose();
+            } else {
                 this.form.current.handleRemove();
             }
-            
         }
-    }
+    };
 
     render() {
         return (
             <div>
-                <Modal
-                    onRequestClose={this.handleRequestClose}
-                    open={this.props.open}
-                >
-                    <Modal.Header title={this.props.formLabel} onRequestClose={this.handleRequestClose} />
+                <Modal onRequestClose={this.handleRequestClose} open={this.props.open}>
+                    <Modal.Header
+                        title={this.props.formLabel}
+                        onRequestClose={this.handleRequestClose}
+                    />
                     <Modal.Body>
-                        <BaseFormView 
-                            ref={this.form }
-                            isInput= { this.props.isInput }
+                        <BaseFormView
+                            ref={this.form}
+                            isInput={this.props.isInput}
                             serviceName={this.props.serviceName}
                             mode={this.props.mode}
                             currentInput={this.props.currentInput}
@@ -62,12 +60,12 @@ class EntityModal extends Component {
 EntityModal.propTypes = {
     isInput: PropTypes.bool,
     open: PropTypes.bool,
-    handleRequestClose:PropTypes.func,
-    serviceName:PropTypes.string,
-    mode:PropTypes.string,
-    currentInput:PropTypes.object,
-    formLabel:PropTypes.string,
-    handleSavedata:PropTypes.func
-}
+    handleRequestClose: PropTypes.func,
+    serviceName: PropTypes.string,
+    mode: PropTypes.string,
+    currentInput: PropTypes.object,
+    formLabel: PropTypes.string,
+    handleSaveData: PropTypes.func,
+};
 
 export default EntityModal;

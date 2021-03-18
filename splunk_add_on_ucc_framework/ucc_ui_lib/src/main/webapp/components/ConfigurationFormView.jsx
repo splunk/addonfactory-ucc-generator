@@ -1,12 +1,14 @@
 import React, { useRef, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 
 import BaseFormView from './BaseFormView';
 import { axiosCallWrapper } from '../util/axiosCallWrapper';
 import { MODE_EDIT } from '../constants/modes';
 
-const SingleFormView = ({ serviceName, handleSavedata }) => {
+function ConfigurationFormView({ serviceName }) {
     const form = useRef();
     const [error, setError] = useState(null);
+    const [currentServiceState, setCurrentServiceState] = useState({});
 
     useEffect(() => {
         axiosCallWrapper({
@@ -16,19 +18,15 @@ const SingleFormView = ({ serviceName, handleSavedata }) => {
                 setError(error);
             },
         }).then((response) => {
-            console.log(response);
+            setCurrentServiceState(response.data.entry[0].content);
         });
     }, []);
 
     const handleSubmit = () => {
         const { result, data } = form.current.handleSubmit();
         if (result) {
-            const save = handleSavedata(data);
-            if (save) {
-                console.log('saved!');
-            } else {
-                console.log('failed to save!');
-            }
+            console.log(result);
+            console.log(data);
         }
     };
 
@@ -36,17 +34,19 @@ const SingleFormView = ({ serviceName, handleSavedata }) => {
         throw error;
     }
     return (
-        <div style={{ marginTop: '10px' }}>
-            <BaseFormView
-                ref={form}
-                isInput={false}
-                serviceName={serviceName}
-                mode={MODE_EDIT}
-                currentInput="abc"
-                renderSave
-            />
-        </div>
+        <BaseFormView
+            ref={form}
+            page="configuration"
+            serviceName={serviceName}
+            mode={MODE_EDIT}
+            currentInput={currentServiceState}
+            renderSave
+        />
     );
+}
+
+ConfigurationFormView.propTypes = {
+    serviceName: PropTypes.string.isRequired,
 };
 
-export default SingleFormView;
+export default ConfigurationFormView;

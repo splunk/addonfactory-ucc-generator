@@ -52,44 +52,45 @@ class BaseFormView extends Component {
             });
         }
 
-        const temState = {};
+        const tmpState = {};
         this.entities.forEach((e) => {
-            const tempEntity = {};
+            const tmpEntity = {};
+            e.defaultValue = e.defaultValue ? e.defaultValue : '';
 
             if (props.mode === MODE_CREATE) {
-                tempEntity.value = typeof e.defaultValue !== 'undefined' ? e.defaultValue : null;
-                tempEntity.display =
+                tmpEntity.value = typeof e.defaultValue !== 'undefined' ? e.defaultValue : '';
+                tmpEntity.display =
                     typeof e?.options?.display !== 'undefined' ? e.options.display : true;
-                tempEntity.error = false;
-                tempEntity.disabled = false;
-                temState[e.field] = tempEntity;
+                tmpEntity.error = false;
+                tmpEntity.disabled = false;
+                tmpState[e.field] = tmpEntity;
             } else if (props.mode === MODE_EDIT) {
-                tempEntity.value =
+                tmpEntity.value =
                     typeof props.currentInput[e.field] !== 'undefined'
                         ? props.currentInput[e.field]
-                        : null;
-                tempEntity.display =
+                        : e.defaultValue;
+                tmpEntity.display =
                     typeof e?.options?.display !== 'undefined' ? e.options.display : true;
-                tempEntity.error = false;
-                tempEntity.disabled =
+                tmpEntity.error = false;
+                tmpEntity.disabled =
                     typeof e?.options?.disableonEdit !== 'undefined'
                         ? e.options.disableonEdit
                         : false;
-                temState[e.field] = tempEntity;
+                tmpState[e.field] = tmpEntity;
             } else if (props.mode === MODE_CLONE) {
-                tempEntity.value = e.field === 'name' ? '' : props.currentInput[e.field];
-                tempEntity.display =
+                tmpEntity.value = e.field === 'name' ? '' : props.currentInput[e.field];
+                tmpEntity.display =
                     typeof e?.options?.display !== 'undefined' ? e.options.display : true;
-                tempEntity.error = false;
-                tempEntity.disabled = e.field === 'name';
-                temState[e.field] = tempEntity;
+                tmpEntity.error = false;
+                tmpEntity.disabled = e.field === 'name';
+                tmpState[e.field] = tmpEntity;
             } else {
                 throw new Error('Invalid mode :', props.mode);
             }
         });
 
         this.state = {
-            data: temState,
+            data: tmpState,
             ErrorMsg: '',
             WarningMsg: '',
         };
@@ -255,33 +256,45 @@ class BaseFormView extends Component {
         }
 
         return (
-            <div className="form-horizontal">
-                {this.generateErrorMessage()}
-                {this.entities.map((e) => {
-                    const temState = this.state.data[e.field];
-
-                    return (
-                        <ControlWrapper
-                            key={e.field}
-                            utilityFuncts={this.utilControlWrapper}
-                            value={temState.value}
-                            display={temState.display}
-                            error={temState.error}
-                            entity={e}
-                            serviceName={this.props.serviceName}
-                            mode={this.props.mode}
-                            disabled={temState.disbled}
-                        />
-                    );
-                })}
+            <>
                 {this.props.renderSave ? (
-                    <ControlGroup>
-                        <div style={{ flexGrow: 0 }}>
-                            <Button appearance="primary" label="Save" />
-                        </div>
-                    </ControlGroup>
+                    <Message appearance="banner" type="info" onRequestRemove={() => {}}>
+                        <span>
+                            Your trial <strong>will expire soon</strong>. This message should
+                            include
+                            <Message.Link to="http://duckduckgo.com">inline links</Message.Link>
+                            for recovery.
+                        </span>
+                    </Message>
                 ) : null}
-            </div>
+                <div className="form-horizontal" style={{ marginTop: '10px' }}>
+                    {this.generateErrorMessage()}
+                    {this.entities.map((e) => {
+                        const temState = this.state.data[e.field];
+
+                        return (
+                            <ControlWrapper
+                                key={e.field}
+                                utilityFuncts={this.utilControlWrapper}
+                                value={temState.value}
+                                display={temState.display}
+                                error={temState.error}
+                                entity={e}
+                                serviceName={this.props.serviceName}
+                                mode={this.props.mode}
+                                disabled={temState.disbled}
+                            />
+                        );
+                    })}
+                    {this.props.renderSave ? (
+                        <ControlGroup label="">
+                            <div style={{ flexGrow: 0 }}>
+                                <Button appearance="primary" label="Save" />
+                            </div>
+                        </ControlGroup>
+                    ) : null}
+                </div>
+            </>
         );
     }
 }

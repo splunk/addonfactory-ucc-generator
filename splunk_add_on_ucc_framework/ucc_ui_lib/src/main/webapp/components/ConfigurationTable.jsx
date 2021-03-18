@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
-import Button from '@splunk/react-ui/Button';
+import React, { useState, memo } from 'react';
+import PropTypes from 'prop-types';
+
 import ToastMessages from '@splunk/react-toast-notifications/ToastMessages';
 
-import { InputRowContextProvider } from '../context/InputRowContext';
+import { TableContextProvider } from '../context/TableContext';
 import TableWrapper from './table/TableWrapper';
 import ErrorBoundary from './ErrorBoundary';
 import EntityModal from './EntityModal';
 import { MODE_CREATE } from '../constants/modes';
 
-const ConfigurationTable = ({ serviceName, serviceTitle, handleSavedata }) => {
+function ConfigurationTable({ serviceName, serviceTitle, handleSaveData }) {
     const [open, setOpen] = useState(false);
     const serviceLabel = `Add ${serviceTitle}`;
 
@@ -23,10 +24,10 @@ const ConfigurationTable = ({ serviceName, serviceTitle, handleSavedata }) => {
         if (open) {
             return (
                 <EntityModal
-                    isInput={false}
+                    page="configuration"
                     open={open}
                     handleRequestClose={handleRequestClose}
-                    handleSavedata={handleSavedata}
+                    handleSaveData={() => {}}
                     serviceName={serviceName}
                     mode={MODE_CREATE}
                     formLabel={serviceLabel}
@@ -37,25 +38,24 @@ const ConfigurationTable = ({ serviceName, serviceTitle, handleSavedata }) => {
     };
     return (
         <>
-            <InputRowContextProvider value={null}>
+            <TableContextProvider value={null}>
                 <ErrorBoundary>
                     <TableWrapper
-                        isInput={false}
+                        page="configuration"
                         serviceName={serviceName}
-                        addButton={
-                            <Button
-                                label="Add"
-                                appearance="primary"
-                                onClick={() => handleRequestOpen()}
-                            />
-                        }
+                        handleRequestModalOpen={() => handleRequestOpen()}
                     />
                 </ErrorBoundary>
                 <ToastMessages />
-            </InputRowContextProvider>
+            </TableContextProvider>
             {generateModalDialog()}
         </>
     );
+}
+
+ConfigurationTable.propTypes = {
+    serviceName: PropTypes.string.isRequired,
+    serviceTitle: PropTypes.string.isRequired,
 };
 
-export default ConfigurationTable;
+export default memo(ConfigurationTable);

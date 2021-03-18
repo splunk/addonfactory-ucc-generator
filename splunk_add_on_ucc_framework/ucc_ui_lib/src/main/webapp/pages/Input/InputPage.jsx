@@ -8,7 +8,7 @@ import ToastMessages from '@splunk/react-toast-notifications/ToastMessages';
 
 import { getUnifiedConfigs } from '../../util/util';
 import { TitleComponent, SubTitleComponent } from './InputPageStyle';
-import { InputRowContextProvider } from '../../context/InputRowContext';
+import { TableContextProvider } from '../../context/TableContext';
 import TableWrapper from '../../components/table/TableWrapper';
 import EntityModal from '../../components/EntityModal';
 import { MODE_CREATE } from '../../constants/modes';
@@ -45,7 +45,7 @@ function InputPage() {
                     isInput
                     open={open}
                     handleRequestClose={handleRequestClose}
-                    handleSavedata={null}
+                    handleSaveData={() => {}}
                     serviceName={serviceName}
                     mode={MODE_CREATE}
                     formLabel={serviceLabel}
@@ -97,12 +97,12 @@ function InputPage() {
                     )}
                 </ColumnLayout.Row>
             </ColumnLayout>
-            <InputRowContextProvider value={null}>
+            <TableContextProvider value={null}>
                 <ErrorBoundary>
-                    <TableWrapper isInput />
+                    <TableWrapper page="inputs" />
                 </ErrorBoundary>
                 <ToastMessages />
-            </InputRowContextProvider>
+            </TableContextProvider>
             {generateModalDialog()}
         </>
     );
