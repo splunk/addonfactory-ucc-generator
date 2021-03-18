@@ -2,9 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from '@splunk/react-ui/Button';
 import Modal from '@splunk/react-ui/Modal';
+import styled from 'styled-components';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 
 import BaseFormView from './BaseFormView';
+
+const ModalWrapper = styled(Modal)`
+    width: 800px
+`;
 
 class EntityModal extends Component {
     constructor(props) {
@@ -34,7 +39,7 @@ class EntityModal extends Component {
     render() {
         return (
             <div>
-                <Modal onRequestClose={this.handleRequestClose} open={this.props.open}>
+                <ModalWrapper onRequestClose={this.handleRequestClose} open={this.props.open}>
                     <Modal.Header
                         title={this.props.formLabel}
                         onRequestClose={this.handleRequestClose}
@@ -61,7 +66,7 @@ class EntityModal extends Component {
                             disabled={this.state.isSubmititng}
                              />
                     </Modal.Footer>
-                </Modal>
+                </ModalWrapper>
             </div>
         );
     }

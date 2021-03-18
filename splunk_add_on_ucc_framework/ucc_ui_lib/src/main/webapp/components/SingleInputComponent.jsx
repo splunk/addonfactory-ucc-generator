@@ -29,7 +29,7 @@ function SingleInputComponent(props) {
     }
 
     return (
-        <Select value={value} name={field} disabled={disabled} onChange={handleChange}>
+        <Select value={value} name={field} disabled={disabled} onChange={handleChange} style={{ "minWidth": "200px" }}>
             {generateOptions()}
         </Select>
     );
