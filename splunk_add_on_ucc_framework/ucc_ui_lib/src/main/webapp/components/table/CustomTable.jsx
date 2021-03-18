@@ -39,7 +39,7 @@ function CustomTable({ isInput, serviceName, data, handleToggleActionClick }) {
         return column;
     };
 
-    const [columns, setColumns] = useState(() => generateColumns());
+    const columns = generateColumns();
 
     const handleSort = (e, val) => {
         const prevSortKey = sortKey;
@@ -70,15 +70,15 @@ function CustomTable({ isInput, serviceName, data, handleToggleActionClick }) {
         );
     };
 
-    const handleEditActionClick = () => {};
+    const handleEditActionClick = () => { };
 
-    const handleCloneActionClick = () => {};
+    const handleCloneActionClick = () => { };
 
-    const handleDeleteActionClick = () => {};
+    const handleDeleteActionClick = () => { };
 
     const rowActionsPrimaryButton = (row) => {
         return (
-            <Table.Cell key={row.id}>
+            <Table.Cell key={row.id} style={{ padding: '2px' }}>
                 <ButtonGroup>
                     <Tooltip content={_('Edit')}>
                         <ActionButtonComponent
