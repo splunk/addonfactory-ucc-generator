@@ -23,7 +23,7 @@ function InputPage() {
     const [serviceLabel, setserviceLabel] = useState(null);
     const unifiedConfigs = getUnifiedConfigs();
     const { services } = unifiedConfigs.pages.inputs;
-    const toggle = <Button appearance="toggle" label="Create New Input" isMenu />;
+    const toggle = <Button appearance="primary" label="Create New Input" isMenu />;
 
     useEffect(() => {
         setTitle(unifiedConfigs.pages.inputs.title);
@@ -90,7 +90,7 @@ function InputPage() {
                     {services && services.length === 1 && (
                         <Button
                             label="Create New Input"
-                            appearance="flat"
+                            appearance="primary"
                             onClick={() => {
                                 setserviceName(services[0].name)
                                 setserviceLabel(`Add ${services[0].title}`)
@@ -105,8 +105,9 @@ function InputPage() {
                     <TableWrapper isInput serviceName={serviceName} />
                 </ErrorBoundary>
                 <ToastMessages />
+                {generateModalDialog()}
             </InputRowContextProvider>
-            {generateModalDialog()}
+            
         </>
     );
 }

@@ -1,13 +1,19 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import Message from '@splunk/react-ui/Message';
 import update from 'immutability-helper';
+
 import ControlWrapper from './ControlWrapper';
 import { getUnifiedConfigs } from '../util/util';
 import Validator, { SaveValidator } from '../util/Validator';
 import { MODE_CLONE, MODE_CREATE, MODE_EDIT } from '../constants/modes';
+import { axiosCallWrapper } from '../util/axiosCallWrapper';
+import InputRowContext from '../context/InputRowContext';
 
-class BaseFormView extends Component {
+class BaseFormView extends PureComponent{
+
+    static contextType=InputRowContext; 
+
     constructor(props) {
         super(props);
 
@@ -16,6 +22,7 @@ class BaseFormView extends Component {
         this.state = {};
         const globalConfig = getUnifiedConfigs();
         this.appName = globalConfig.meta.name;
+
 
         this.util = {
             SetState: (state) => {
@@ -117,15 +124,12 @@ class BaseFormView extends Component {
         }
     }
 
-    handleRemove = () => {
-        // function to remove data from backend
-    };
-
     handleSubmit = () => {
+        this.props.handleFormSubmit(true,false);
         if (this.hook && typeof this.hook.onSave === 'function') {
             const validationPass = this.hook.onSave();
             if (!validationPass) {
-                return false;
+                this.props.handleFormSubmit(false,false);
             }
         }
         const datadict = {};
@@ -134,7 +138,7 @@ class BaseFormView extends Component {
         });
 
         // Validation of form fields on Submit
-        let validator = new Validator(this.entities);
+        const validator = new Validator(this.entities);
         let error = validator.doValidation(datadict);
         if (error) {
             this.setErrorFieldMsg(error.errorField, error.errorMsg);
@@ -142,29 +146,82 @@ class BaseFormView extends Component {
             error = SaveValidator(this.options.saveValidator, datadict);
             if (error) {
                 this.setErrorMsg(error.errorMsg);
+                
             }
         }
 
-        const saveSuccess = !error;
-
-        const returnValue = {
-            result: saveSuccess,
-            data: datadict,
-        };
-
-        if (saveSuccess) {
-            if (this.hook && typeof this.hook.onSaveSuccess === 'function') {
-                this.hook.onSaveSuccess();
-            }
-            return returnValue;
-        }
-
-        if (this.hook && typeof this.hook.onSaveFail === 'function') {
+        if (error && this.hook && typeof this.hook.onSaveFail === 'function') {
             this.hook.onSaveFail();
+            this.props.handleFormSubmit(false,false);
         }
-        return returnValue;
+        else if(error){
+            this.props.handleFormSubmit(false,false);
+        }
+
+        if(!error){
+            const params = new URLSearchParams();
+            Object.keys(datadict).forEach( (key) => {
+                params.append(key, datadict[key]);
+            });
+
+            axiosCallWrapper({
+                serviceName: `${this.props.serviceName}`,
+                params,
+                customHeaders: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                method: 'post',
+                handleError: false
+            }).catch((err) => {
+                const errorSubmitMsg= this.parseErrorMsg(err?.response?.data?.messages[0]?.text);
+                this.setState({ErrorMsg:errorSubmitMsg});
+                if (this.hook && typeof this.hook.onSaveFail === 'function') {
+                    this.hook.onSaveFail();
+                }
+                this.props.handleFormSubmit(false,false);
+                return Promise.reject(error);
+            }).then((response) => {
+
+                const val = response?.data?.entry[0];
+                const tmpObj ={};
+                
+
+                tmpObj[val.name] = {
+                    ...val.content,
+                    id: val.id,
+                    name: val.name,
+                    serviceName: this.props.serviceName
+                };
+
+                this.context.setRowData( update(this.context.rowData,{[this.props.serviceName]: {$merge : tmpObj}}))
+                console.log("Save Success : ",this.context.rowData);
+                this.props.handleFormSubmit(false,true);
+                
+            });
+        }
     };
+
+    parseErrorMsg = (msg) => {
+        let errorMsg = ''; let regex; let matches;
+        try {
+            regex = /.+"REST Error \[[\d]+\]:\s+.+\s+--\s+([\s\S]*)"\.\s*See splunkd\.log(\/python.log)? for more details\./;
+            matches = regex.exec(msg);
+            if (matches && matches[1]) {
+                try {
+                    const innerMsgJSON = JSON.parse(matches[1]);
+                    errorMsg = String(innerMsgJSON.messages[0].text);
+                } catch (error) {
+                    // eslint-disable-next-line prefer-destructuring
+                    errorMsg = matches[1];
+                }
+            } else {
+                errorMsg = msg;
+            }
+        } catch (err) {
+            errorMsg = 'Error in processing the request';
+        }
+        return errorMsg;
+    }
     
+
 
     handleChange = (field, targetValue)=> {
         const changes = {} 
@@ -278,6 +335,20 @@ class BaseFormView extends Component {
         return null; 
     }
 
+    generatesubmitMessage = () => {
+        if (this.state.isSubmitting) {
+            return (
+                <div>
+                    <Message appearance="fill" type="error">
+                        {this.state.ErrorMsg}
+                    </Message>
+                </div>
+            )
+        }
+        return null; 
+    }
+
+    // generatesubmitMessage
     loadHook = (module, globalConfig) => {
         const myPromise = new Promise((myResolve) => {
             __non_webpack_require__([`app/${this.appName}/js/build/custom/${module}`], (Hook) => {
@@ -313,6 +384,7 @@ class BaseFormView extends Component {
 
         return( 
             <div className="form-horizontal">
+            {this.generatesubmitMessage()}
             {this.generateErrorMessage()}
             {
                 this.entities.map( (e) => {
@@ -344,6 +416,7 @@ BaseFormView.propTypes = {
     serviceName: PropTypes.string,
     mode: PropTypes.string,
     currentInput: PropTypes.object,
+    handleFormSubmit: PropTypes.func
 };
 
 export default BaseFormView;
