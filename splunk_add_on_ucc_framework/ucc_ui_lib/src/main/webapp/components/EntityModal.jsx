@@ -51,7 +51,7 @@ class EntityModal extends Component {
                             onClick={this.handleRequestClose}
                             label="Cancel"
                         />
-                        <Button appearance="primary" label="Submit" />
+                        <Button appearance="primary" label="Submit" onClick={this.handleSubmit}/>
                     </Modal.Footer>
                 </Modal>
             </div>
