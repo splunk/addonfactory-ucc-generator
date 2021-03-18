@@ -83,6 +83,23 @@ class BaseFormView extends Component {
             }
         });
 
+        this.dependencyMap = new Map();
+        this.entities.forEach(e => {
+            const fields = e.options?.dependencies;
+            if (fields) {
+                fields.forEach(field => {
+                    const changeFields = this.dependencyMap.get(field);
+                    if (changeFields) {
+                        changeFields[e.field] = fields;
+                    } else {
+                        this.dependencyMap.set(field, {
+                            [e.field]: fields
+                        });
+                    }
+                });
+            }
+        });
+
         this.state = {
             data:temState,
             ErrorMsg :"",
@@ -150,7 +167,38 @@ class BaseFormView extends Component {
     
 
     handleChange = (field, targetValue)=> {
-        const newFields = update(this.state ,{ data: { [field] : { value: {$set: targetValue } } } } );
+        const changes = {} 
+        if (this.dependencyMap.has(field)) {
+            const value = this.dependencyMap.get(field);
+            for (const loadField in value) {
+
+                const data = {};
+                let load = true;
+
+                value[loadField].forEach(dependency => {
+                    const required = !!this.entities.find(
+                        e => {
+                            return e.field === dependency;
+                        }
+                    ).required;
+
+                    const value = dependency == field ? targetValue : this.state.data[dependency]["value"]
+                    if (required && !value) {
+                        load = false;
+                    } else {
+                        data[dependency] = value
+                    }
+                });
+
+                if (load) {
+                    changes[loadField] = { dependencyValues: {$set: data } }
+                }
+            }
+            
+        }
+        changes[field] = { value: {$set: targetValue } }
+
+        const newFields = update(this.state ,{ data: changes } );
         const tempState = this.clearAllErrorMsg(newFields);
         this.setState(tempState);
 
@@ -281,6 +329,7 @@ class BaseFormView extends Component {
                             serviceName={this.props.serviceName}
                             mode={this.props.mode}
                             disabled={temState.disbled}
+                            dependencyValues={temState.dependencyValues || null}
                         />)
                     
                 })
