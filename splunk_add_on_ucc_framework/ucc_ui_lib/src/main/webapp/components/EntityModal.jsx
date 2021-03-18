@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Button from '@splunk/react-ui/Button';
 import Modal from '@splunk/react-ui/Modal';
 import styled from 'styled-components';
+import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 
 import BaseFormView from './BaseFormView';
 
@@ -14,6 +15,7 @@ class EntityModal extends Component {
     constructor(props) {
         super(props);
         this.form = React.createRef();
+        this.state = {isSubmititng:false};
     }
 
     handleRequestClose = () => {
@@ -21,16 +23,18 @@ class EntityModal extends Component {
     };
 
     handleSubmit = () => {
-        const { result, data } = this.form.current.handleSubmit();
-        if (result) {
-            const save = this.props.handleSavedata(data);
-            if (save) {
-                this.handleRequestClose();
-            } else {
-                this.form.current.handleRemove();
-            }
+        const result  = this.form.current.handleSubmit();
+        if (result){
+            this.handleRequestClose();
         }
     };
+
+    handleFormSubmit = (set,close) =>{
+        this.setState({isSubmititng:set});
+        if(close){
+            this.handleRequestClose();
+        }
+    }
 
     render() {
         return (
@@ -47,6 +51,7 @@ class EntityModal extends Component {
                             serviceName={this.props.serviceName}
                             mode={this.props.mode}
                             currentInput={this.props.currentInput}
+                            handleFormSubmit={this.handleFormSubmit}
                         />
                     </Modal.Body>
                     <Modal.Footer>
@@ -55,7 +60,11 @@ class EntityModal extends Component {
                             onClick={this.handleRequestClose}
                             label="Cancel"
                         />
-                        <Button appearance="primary" label="Submit" onClick={this.handleSubmit} />
+                        <Button appearance="primary" 
+                            label={this.state.isSubmititng?<WaitSpinner/>:"Submit"} 
+                            onClick={this.handleSubmit}
+                            disabled={this.state.isSubmititng}
+                             />
                     </Modal.Footer>
                 </ModalWrapper>
             </div>
@@ -70,8 +79,7 @@ EntityModal.propTypes = {
     serviceName: PropTypes.string,
     mode: PropTypes.string,
     currentInput: PropTypes.object,
-    formLabel: PropTypes.string,
-    handleSavedata: PropTypes.func,
+    formLabel: PropTypes.string
 };
 
 export default EntityModal;

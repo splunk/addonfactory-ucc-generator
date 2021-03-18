@@ -4,7 +4,7 @@ import Select from '@splunk/react-ui/Select';
 
 function SingleInputComponent(props) {
     const { field, disabled = false, value, controlOptions, ...restProps } = props;
-    const { autoCompleteFields } = controlOptions;
+    const { autoCompleteFields=[] } = controlOptions;
 
     function handleChange(e, { value }) {
         restProps.handleChange( field, value);
