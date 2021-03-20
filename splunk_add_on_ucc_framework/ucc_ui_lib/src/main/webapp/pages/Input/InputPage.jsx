@@ -41,12 +41,12 @@ function InputPage() {
 
     const generateModalDialog = () => {
         if (open) {
+            
             return (
                 < EntityModal
                     isInput
                     open={open}
                     handleRequestClose={handleRequestClose}
-                    handleSavedata={null}
                     serviceName={serviceName}
                     mode={MODE_CREATE}
                     formLabel={serviceLabel}

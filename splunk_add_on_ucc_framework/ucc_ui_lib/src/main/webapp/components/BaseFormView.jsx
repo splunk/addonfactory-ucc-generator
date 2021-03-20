@@ -14,7 +14,7 @@ class BaseFormView extends PureComponent{
 
     static contextType=InputRowContext; 
 
-    constructor(props) {
+    constructor(props,context) {
         super(props);
 
         // flag for to render hook method for once
@@ -38,6 +38,8 @@ class BaseFormView extends PureComponent{
             utilCustomFunctions:this.util
         };
 
+
+
         if (props.isInput) {
             globalConfig.pages.inputs.services.forEach((service) => {
                 if (service.name === props.serviceName) {
@@ -48,6 +50,11 @@ class BaseFormView extends PureComponent{
                     }
                 }
             });
+
+            if(props.mode === MODE_EDIT || props.mode === MODE_CLONE){
+                this.currentInput = context.rowData[props.serviceName][props.stanzaName];
+            }
+
         } else {
             globalConfig.pages.tabs.forEach((tab) => {
                 if (tab.name === props.serviceName) {
@@ -72,17 +79,18 @@ class BaseFormView extends PureComponent{
                 temState[e.field] = tempEntity;
             } 
             else if (props.mode === MODE_EDIT) {
-                tempEntity.value = (typeof props.currentInput[e.field] !== "undefined") ? props.currentInput[e.field] : null;
+                tempEntity.value = (typeof this.currentInput[e.field] !== "undefined") ? this.currentInput[e.field] : undefined;
                 tempEntity.display = (typeof e?.options?.display !== "undefined")?e.options.display:true;
                 tempEntity.error = false;
-                tempEntity.disabled = (typeof e?.options?.disableonEdit !== "undefined")?e.options.disableonEdit:false;
+                // eslint-disable-next-line no-nested-ternary
+                tempEntity.disabled = e.field === 'name' ? true : ( (typeof e?.options?.disableonEdit !== "undefined") ? e.options.disableonEdit : false);
                 temState[e.field] = tempEntity;
             } 
             else if (props.mode === MODE_CLONE){
-                tempEntity.value = e.field === 'name' ? '' : props.currentInput[e.field];
+                tempEntity.value = e.field === 'name' ? '' : this.currentInput[e.field];
                 tempEntity.display = (typeof e?.options?.display !== "undefined") ? e.options.display:true;
                 tempEntity.error = false;
-                tempEntity.disabled =e.field==='name';
+                tempEntity.disabled =false;
                 temState[e.field] = tempEntity;
             }
             else{
@@ -177,13 +185,12 @@ class BaseFormView extends PureComponent{
                     this.hook.onSaveFail();
                 }
                 this.props.handleFormSubmit(false,false);
-                return Promise.reject(error);
+                return Promise.reject(err);
             }).then((response) => {
 
                 const val = response?.data?.entry[0];
                 const tmpObj ={};
                 
-
                 tmpObj[val.name] = {
                     ...val.content,
                     id: val.id,
@@ -192,7 +199,6 @@ class BaseFormView extends PureComponent{
                 };
 
                 this.context.setRowData( update(this.context.rowData,{[this.props.serviceName]: {$merge : tmpObj}}))
-                console.log("Save Success : ",this.context.rowData);
                 this.props.handleFormSubmit(false,true);
                 
             });
@@ -335,12 +341,12 @@ class BaseFormView extends PureComponent{
         return null; 
     }
 
-    generatesubmitMessage = () => {
-        if (this.state.isSubmitting) {
+    generateWarningMessage = () => {
+        if (this.state.WarningMsg) {
             return (
                 <div>
-                    <Message appearance="fill" type="error">
-                        {this.state.ErrorMsg}
+                    <Message appearance="fill" type="warning">
+                        {this.state.WarningMsg}
                     </Message>
                 </div>
             )
@@ -384,7 +390,7 @@ class BaseFormView extends PureComponent{
 
         return( 
             <div className="form-horizontal">
-            {this.generatesubmitMessage()}
+            {this.generateWarningMessage()}
             {this.generateErrorMessage()}
             {
                 this.entities.map( (e) => {
@@ -400,7 +406,7 @@ class BaseFormView extends PureComponent{
                             entity={e}
                             serviceName={this.props.serviceName}
                             mode={this.props.mode}
-                            disabled={temState.disbled}
+                            disabled={temState.disabled}
                             dependencyValues={temState.dependencyValues || null}
                         />)
                     
@@ -414,8 +420,8 @@ class BaseFormView extends PureComponent{
 BaseFormView.propTypes = {
     isInput: PropTypes.bool,
     serviceName: PropTypes.string,
+    stanzaName: PropTypes.string,
     mode: PropTypes.string,
-    currentInput: PropTypes.object,
     handleFormSubmit: PropTypes.func
 };
 

@@ -37,7 +37,7 @@ class ControlWrapper extends React.PureComponent {
     render(){
 
         const { field, options, type, label, tooltip, help, encrypted = false } = this.props.entity;
-
+        const {handleChange, addCustomValidator, utilCustomFunctions} = this.props.utilityFuncts;
         let rowView;
         if(this.props.entity.type==="custom"){
 

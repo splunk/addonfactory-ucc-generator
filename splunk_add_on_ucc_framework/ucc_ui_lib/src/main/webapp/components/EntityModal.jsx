@@ -5,6 +5,7 @@ import Modal from '@splunk/react-ui/Modal';
 import styled from 'styled-components';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 
+import { MODE_CLONE, MODE_CREATE, MODE_EDIT } from '../constants/modes';
 import BaseFormView from './BaseFormView';
 
 const ModalWrapper = styled(Modal)`
@@ -16,6 +17,19 @@ class EntityModal extends Component {
         super(props);
         this.form = React.createRef();
         this.state = {isSubmititng:false};
+        
+        if(props.mode === MODE_CREATE){
+            this.buttonText ="Add";
+        }
+        else if(props.mode === MODE_CLONE){
+            this.buttonText = "Save";
+        }
+        else if(props.mode ===MODE_EDIT){
+            this.buttonText = "Update";
+        }
+        else{
+            this.buttonText = "Submit";
+        }
     }
 
     handleRequestClose = () => {
@@ -50,7 +64,7 @@ class EntityModal extends Component {
                             isInput={this.props.isInput}
                             serviceName={this.props.serviceName}
                             mode={this.props.mode}
-                            currentInput={this.props.currentInput}
+                            stanzaName={this.props.stanzaName}
                             handleFormSubmit={this.handleFormSubmit}
                         />
                     </Modal.Body>
@@ -61,7 +75,7 @@ class EntityModal extends Component {
                             label="Cancel"
                         />
                         <Button appearance="primary" 
-                            label={this.state.isSubmititng?<WaitSpinner/>:"Submit"} 
+                            label={this.state.isSubmititng?<WaitSpinner/>:this.buttonText} 
                             onClick={this.handleSubmit}
                             disabled={this.state.isSubmititng}
                              />
@@ -78,7 +92,7 @@ EntityModal.propTypes = {
     handleRequestClose: PropTypes.func,
     serviceName: PropTypes.string,
     mode: PropTypes.string,
-    currentInput: PropTypes.object,
+    stanzaName: PropTypes.string,
     formLabel: PropTypes.string
 };
 

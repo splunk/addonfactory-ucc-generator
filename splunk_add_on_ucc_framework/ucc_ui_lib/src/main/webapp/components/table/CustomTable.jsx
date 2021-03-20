@@ -10,11 +10,16 @@ import { _ } from '@splunk/ui-utils/i18n';
 import PropTypes from 'prop-types';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 
+import { MODE_CLONE, MODE_EDIT } from '../../constants/modes';
 import { ActionButtonComponent } from './CustomTableStyle';
 import { getUnifiedConfigs } from '../../util/util';
 import { getExpansionRow } from './TableExpansionRow';
+import EntityModal from '../EntityModal';
+import DeleteModal from '../DeleteModal';
 
 function CustomTable({ isInput, serviceName, data, handleToggleActionClick }) {
+    const [entityModal, setEntityModal] = useState( { open:false } );
+    const [deleteModal, setDeleteModal] = useState( { open:false } );
     const [sortKey, setSortKey] = useState('name');
     const [sortDir, setSortDir] = useState('asc');
     const unifiedConfigs = getUnifiedConfigs();
@@ -38,6 +43,55 @@ function CustomTable({ isInput, serviceName, data, handleToggleActionClick }) {
         }
         return column;
     };
+
+    const handleEntityClose = () => {
+        setEntityModal({...entityModal,open:false});
+    };
+
+    const handleDeleteClose = () => {
+        setDeleteModal({...deleteModal,open:false});
+    };
+
+    const generateModalDialog = () => {
+        if (entityModal.open) {
+            let label;
+            if(isInput){
+                const ser = unifiedConfigs.pages?.inputs?.services;
+                label =ser[ser.findIndex(x => x.name === entityModal.serviceName)]?.title;
+            }
+            else{
+                const tab = unifiedConfigs.pages?.configuration?.tabs;
+                label =tab[tab.findIndex(x => x.name === entityModal.serviceName)]?.title;
+            }
+            return (
+                < EntityModal
+                    isInput
+                    open={entityModal.open}
+                    handleRequestClose={handleEntityClose}
+                    serviceName={entityModal.serviceName}
+                    stanzaName={entityModal.stanzaName}
+                    mode={entityModal.mode}
+                    formLabel={entityModal.mode ===MODE_CLONE ? `Clone ${label}` : `Update ${label}`}
+                />
+            );
+        }
+        return null;
+    }
+
+    const generateDeleteDialog = () =>{
+        if(deleteModal.open){
+            return (
+                < DeleteModal
+                    isInput
+                    open={deleteModal.open}
+                    handleRequestClose={handleDeleteClose}
+                    serviceName={deleteModal.serviceName}
+                    stanzaName={deleteModal.stanzaName}
+                />
+            );
+        }
+        return null;
+    }
 
     const columns = generateColumns();
 
@@ -70,11 +124,32 @@ function CustomTable({ isInput, serviceName, data, handleToggleActionClick }) {
         );
     };
 
-    const handleEditActionClick = () => { };
+    const handleEditActionClick = (row) => { 
+        const temEntity ={...entityModal}
+        temEntity.open = true;
+        temEntity.serviceName = row.serviceName;
+        temEntity.stanzaName = row.name;
+        temEntity.mode = MODE_EDIT;
+        setEntityModal(temEntity);
 
-    const handleCloneActionClick = () => { };
+    };
 
-    const handleDeleteActionClick = () => { };
+    const handleCloneActionClick = (row) => {
+        const temEntity = {...entityModal}
+        temEntity.open = true;
+        temEntity.serviceName = row.serviceName;
+        temEntity.stanzaName = row.name;
+        temEntity.mode = MODE_CLONE;
+        setEntityModal(temEntity);
+    };
+
+    const handleDeleteActionClick = (row) => {
+        const temDelete = {...deleteModal}
+        temDelete.open = true;
+        temDelete.stanzaName = row.name;
+        temDelete.serviceName = row.serviceName;
+        setDeleteModal(temDelete);
+    };
 
     const rowActionsPrimaryButton = (row) => {
         return (
@@ -178,13 +253,15 @@ function CustomTable({ isInput, serviceName, data, handleToggleActionClick }) {
                     {getTableBody()}
                 </Table>
             )}
+            {generateModalDialog()}
+            {generateDeleteDialog()}
         </>
     );
 }
 
 CustomTable.propTypes = {
     isInput: PropTypes.bool,
-    serviceName: PropTypes.string.isRequired,
+    serviceName: PropTypes.string,
     data: PropTypes.array.isRequired,
     handleToggleActionClick: PropTypes.func,
 };
