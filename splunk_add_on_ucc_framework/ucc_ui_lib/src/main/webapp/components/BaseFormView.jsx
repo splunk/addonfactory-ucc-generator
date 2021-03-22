@@ -22,7 +22,7 @@ class BaseFormView extends PureComponent{
         this.state = {};
         const globalConfig = getUnifiedConfigs();
         this.appName = globalConfig.meta.name;
-
+        this.endpoint = props.mode === MODE_EDIT ? `${this.props.serviceName}/${this.props.stanzaName}` : `${this.props.serviceName}` ;
 
         this.util = {
             SetState: (state) => {
@@ -172,8 +172,12 @@ class BaseFormView extends PureComponent{
                 params.append(key, datadict[key]);
             });
 
+            if(this.props.mode ===MODE_EDIT){
+                params.delete("name");
+            }
+
             axiosCallWrapper({
-                serviceName: `${this.props.serviceName}`,
+                serviceName: this.endpoint,
                 params,
                 customHeaders: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 method: 'post',
@@ -187,7 +191,7 @@ class BaseFormView extends PureComponent{
                 this.props.handleFormSubmit(false,false);
                 return Promise.reject(err);
             }).then((response) => {
-
+                
                 const val = response?.data?.entry[0];
                 const tmpObj ={};
                 
