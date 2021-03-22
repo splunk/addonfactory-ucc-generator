@@ -17,7 +17,7 @@ import { getExpansionRow } from './TableExpansionRow';
 import EntityModal from '../EntityModal';
 import DeleteModal from '../DeleteModal';
 
-function CustomTable({ isInput, serviceName, data, handleToggleActionClick }) {
+function CustomTable({ isInput, data, handleToggleActionClick }) {
     const [entityModal, setEntityModal] = useState( { open:false } );
     const [deleteModal, setDeleteModal] = useState( { open:false } );
     const [sortKey, setSortKey] = useState('name');
@@ -71,7 +71,7 @@ function CustomTable({ isInput, serviceName, data, handleToggleActionClick }) {
                     serviceName={entityModal.serviceName}
                     stanzaName={entityModal.stanzaName}
                     mode={entityModal.mode}
-                    formLabel={entityModal.mode ===MODE_CLONE ? `Clone ${label}` : `Update ${label}`}
+                    formLabel={ entityModal.mode ===MODE_CLONE ? _(`Clone `)+label : _(`Update `)+label }
                 />
             );
         }
@@ -125,30 +125,26 @@ function CustomTable({ isInput, serviceName, data, handleToggleActionClick }) {
     };
 
     const handleEditActionClick = (row) => { 
-        const temEntity ={...entityModal}
-        temEntity.open = true;
-        temEntity.serviceName = row.serviceName;
-        temEntity.stanzaName = row.name;
-        temEntity.mode = MODE_EDIT;
-        setEntityModal(temEntity);
-
+        setEntityModal( {...entityModal,
+            open : true,
+            serviceName : row.serviceName,
+            stanzaName : row.name,
+            mode : MODE_EDIT } );
     };
 
     const handleCloneActionClick = (row) => {
-        const temEntity = {...entityModal}
-        temEntity.open = true;
-        temEntity.serviceName = row.serviceName;
-        temEntity.stanzaName = row.name;
-        temEntity.mode = MODE_CLONE;
-        setEntityModal(temEntity);
+        setEntityModal( {...entityModal, 
+            open:true,
+            serviceName: row.serviceName,
+            stanzaName: row.name,
+            mode: MODE_CLONE});
     };
 
     const handleDeleteActionClick = (row) => {
-        const temDelete = {...deleteModal}
-        temDelete.open = true;
-        temDelete.stanzaName = row.name;
-        temDelete.serviceName = row.serviceName;
-        setDeleteModal(temDelete);
+        setDeleteModal({...deleteModal,
+            open :true,
+            stanzaName: row.name,
+            serviceName : row.serviceName });
     };
 
     const rowActionsPrimaryButton = (row) => {
@@ -261,7 +257,6 @@ function CustomTable({ isInput, serviceName, data, handleToggleActionClick }) {
 
 CustomTable.propTypes = {
     isInput: PropTypes.bool,
-    serviceName: PropTypes.string,
     data: PropTypes.array.isRequired,
     handleToggleActionClick: PropTypes.func,
 };

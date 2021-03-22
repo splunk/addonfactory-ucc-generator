@@ -9,6 +9,7 @@ import Validator, { SaveValidator } from '../util/Validator';
 import { MODE_CLONE, MODE_CREATE, MODE_EDIT } from '../constants/modes';
 import { axiosCallWrapper } from '../util/axiosCallWrapper';
 import InputRowContext from '../context/InputRowContext';
+import { parseErrorMsg } from '../util/messageUtil';
 
 class BaseFormView extends PureComponent{
 
@@ -38,8 +39,6 @@ class BaseFormView extends PureComponent{
             utilCustomFunctions:this.util
         };
 
-
-
         if (props.isInput) {
             globalConfig.pages.inputs.services.forEach((service) => {
                 if (service.name === props.serviceName) {
@@ -48,12 +47,11 @@ class BaseFormView extends PureComponent{
                     if (service.hook) {
                         this.hookDeferred = this.loadHook(service.hook.src, globalConfig);
                     }
+                    if(props.mode === MODE_EDIT || props.mode === MODE_CLONE){
+                        this.currentInput = context.rowData[props.serviceName][props.stanzaName];
+                    }
                 }
             });
-
-            if(props.mode === MODE_EDIT || props.mode === MODE_CLONE){
-                this.currentInput = context.rowData[props.serviceName][props.stanzaName];
-            }
 
         } else {
             globalConfig.pages.tabs.forEach((tab) => {
@@ -62,6 +60,12 @@ class BaseFormView extends PureComponent{
                     this.options = tab.options;
                     if (tab.hook) {
                         this.hookDeferred = this.loadHook(tab.hook.src, globalConfig);
+                    }
+                    if( tab.table && (props.mode === MODE_EDIT || props.mode === MODE_CLONE)){
+                        this.currentInput = context.rowData[props.serviceName][props.stanzaName];
+                    }
+                    else{
+                        this.currentInput = context.rowData[props.serviceName];
                     }
                 }
             });
@@ -79,7 +83,7 @@ class BaseFormView extends PureComponent{
                 temState[e.field] = tempEntity;
             } 
             else if (props.mode === MODE_EDIT) {
-                tempEntity.value = (typeof this.currentInput[e.field] !== "undefined") ? this.currentInput[e.field] : undefined;
+                tempEntity.value = (typeof this.currentInput[e.field] !== "undefined") ? this.currentInput[e.field] : null;
                 tempEntity.display = (typeof e?.options?.display !== "undefined")?e.options.display:true;
                 tempEntity.error = false;
                 // eslint-disable-next-line no-nested-ternary
@@ -187,7 +191,7 @@ class BaseFormView extends PureComponent{
                 method: 'post',
                 handleError: false
             }).catch((err) => {
-                const errorSubmitMsg= this.parseErrorMsg(err?.response?.data?.messages[0]?.text);
+                const errorSubmitMsg= parseErrorMsg(err?.response?.data?.messages[0]?.text);
                 this.setState({ErrorMsg:errorSubmitMsg});
                 if (this.hook && typeof this.hook.onSaveFail === 'function') {
                     this.hook.onSaveFail();
@@ -213,29 +217,6 @@ class BaseFormView extends PureComponent{
         }
     };
 
-    parseErrorMsg = (msg) => {
-        let errorMsg = ''; let regex; let matches;
-        try {
-            regex = /.+"REST Error \[[\d]+\]:\s+.+\s+--\s+([\s\S]*)"\.\s*See splunkd\.log(\/python.log)? for more details\./;
-            matches = regex.exec(msg);
-            if (matches && matches[1]) {
-                try {
-                    const innerMsgJSON = JSON.parse(matches[1]);
-                    errorMsg = String(innerMsgJSON.messages[0].text);
-                } catch (error) {
-                    // eslint-disable-next-line prefer-destructuring
-                    errorMsg = matches[1];
-                }
-            } else {
-                errorMsg = msg;
-            }
-        } catch (err) {
-            errorMsg = 'Error in processing the request';
-        }
-        return errorMsg;
-    }
-    
-
 
     handleChange = (field, targetValue)=> {
 
@@ -258,7 +239,7 @@ class BaseFormView extends PureComponent{
                     if (required && !value) {
                         load = false;
                     } else {
-                        data[dependency] = value
+                        data[dependency] = value;
                     }
                 });
 

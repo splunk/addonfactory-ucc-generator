@@ -4,6 +4,7 @@ import Button from '@splunk/react-ui/Button';
 import Modal from '@splunk/react-ui/Modal';
 import styled from 'styled-components';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
+import { _ } from '@splunk/ui-utils/i18n';
 
 import { MODE_CLONE, MODE_CREATE, MODE_EDIT } from '../constants/modes';
 import BaseFormView from './BaseFormView';
@@ -19,16 +20,16 @@ class EntityModal extends Component {
         this.state = {isSubmititng:false};
         
         if(props.mode === MODE_CREATE){
-            this.buttonText ="Add";
+            this.buttonText = _("Add");
         }
         else if(props.mode === MODE_CLONE){
-            this.buttonText = "Save";
+            this.buttonText = _("Save");
         }
         else if(props.mode ===MODE_EDIT){
-            this.buttonText = "Update";
+            this.buttonText = _("Update");
         }
         else{
-            this.buttonText = "Submit";
+            this.buttonText = _("Submit");
         }
     }
 
@@ -72,7 +73,7 @@ class EntityModal extends Component {
                         <Button
                             appearance="secondary"
                             onClick={this.handleRequestClose}
-                            label="Cancel"
+                            label={_("Cancel")}
                         />
                         <Button appearance="primary" 
                             label={this.state.isSubmititng?<WaitSpinner/>:this.buttonText} 
