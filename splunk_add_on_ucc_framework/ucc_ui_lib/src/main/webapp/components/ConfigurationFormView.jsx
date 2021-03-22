@@ -4,14 +4,17 @@ import PropTypes from 'prop-types';
 import { _ } from '@splunk/ui-utils/i18n';
 import Button from '@splunk/react-ui/Button';
 import ControlGroup from '@splunk/react-ui/ControlGroup';
+import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 
 import BaseFormView from './BaseFormView';
 import { axiosCallWrapper } from '../util/axiosCallWrapper';
-import { MODE_EDIT } from '../constants/modes';
+import { MODE_CONFIG } from '../constants/modes';
+import { WaitSpinnerWrapper } from './table/CustomTableStyle';
 
 function ConfigurationFormView({ serviceName }) {
     const form = useRef();
     const [error, setError] = useState(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [currentServiceState, setCurrentServiceState] = useState({});
 
     // TODO: move this logic to BaseFormView
@@ -29,11 +32,11 @@ function ConfigurationFormView({ serviceName }) {
     }, [serviceName]);
 
     const handleSubmit = () => {
-        const { result, data } = form.current.handleSubmit();
-        if (result) {
-            console.log(result);
-            console.log(data);
-        }
+        form.current.handleSubmit();
+    };
+
+    const handleFormSubmit = (set) => {
+        setIsSubmitting(set);
     };
 
     if (error?.uccErrorCode) {
@@ -42,16 +45,27 @@ function ConfigurationFormView({ serviceName }) {
 
     return (
         <>
-            <BaseFormView
-                ref={form}
-                page="configuration"
-                serviceName={serviceName}
-                mode={MODE_EDIT}
-                currentInput={currentServiceState}
-            />
+            {Object.keys(currentServiceState).length ? (
+                <BaseFormView
+                    ref={form}
+                    page="configuration"
+                    stanzaName={serviceName}
+                    serviceName="settings"
+                    mode={MODE_CONFIG}
+                    currentServiceState={currentServiceState}
+                    handleFormSubmit={handleFormSubmit}
+                />
+            ) : (
+                <WaitSpinnerWrapper />
+            )}
             <ControlGroup label="">
                 <div style={{ flexGrow: 0 }}>
-                    <Button appearance="primary" label={_('Save')} />
+                    <Button
+                        appearance="primary"
+                        label={isSubmitting ? <WaitSpinner /> : _('Save')}
+                        onClick={handleSubmit}
+                        disabled={isSubmitting}
+                    />
                 </div>
             </ControlGroup>
         </>

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import update from 'immutability-helper';
 
@@ -7,16 +7,26 @@ import Message from '@splunk/react-ui/Message';
 import ControlWrapper from './ControlWrapper';
 import { getUnifiedConfigs } from '../util/util';
 import Validator, { SaveValidator } from '../util/Validator';
-import { MODE_CLONE, MODE_CREATE, MODE_EDIT } from '../constants/modes';
+import { MODE_CLONE, MODE_CREATE, MODE_EDIT, MODE_CONFIG } from '../constants/modes';
+import { axiosCallWrapper } from '../util/axiosCallWrapper';
+import TableContext from '../context/TableContext';
+import { parseErrorMsg } from '../util/messageUtil';
 
-class BaseFormView extends Component {
-    constructor(props) {
+class BaseFormView extends PureComponent {
+    static contextType = TableContext;
+
+    constructor(props, context) {
         super(props);
         // flag for to render hook method for once
         this.flag = true;
         this.state = {};
+        this.currentInput = {};
         const globalConfig = getUnifiedConfigs();
         this.appName = globalConfig.meta.name;
+        this.endpoint =
+            props.mode === MODE_EDIT
+                ? `${this.props.serviceName}/${this.props.stanzaName}`
+                : `${this.props.serviceName}`;
 
         this.util = {
             setState: (state) => {
@@ -40,52 +50,85 @@ class BaseFormView extends Component {
                     if (service.hook) {
                         this.hookDeferred = this.loadHook(service.hook.src, globalConfig);
                     }
+                    if (props.mode === MODE_EDIT || props.mode === MODE_CLONE) {
+                        this.currentInput = context.rowData[props.serviceName][props.stanzaName];
+                    }
                 }
             });
         } else {
             globalConfig.pages.configuration.tabs.forEach((tab) => {
-                if (tab.name === props.serviceName) {
+                const flag = tab.table
+                    ? tab.name === props.serviceName
+                    : tab.name === props.stanzaName;
+                if (flag) {
                     this.entities = tab.entity;
                     this.options = tab.options;
                     if (tab.hook) {
                         this.hookDeferred = this.loadHook(tab.hook.src, globalConfig);
                     }
+                    if (tab.table && (props.mode === MODE_EDIT || props.mode === MODE_CLONE)) {
+                        this.currentInput = context.rowData[props.serviceName][props.stanzaName];
+                    } else if (props.mode === MODE_CONFIG) {
+                        this.currentInput = props.currentServiceState;
+                    } else {
+                        this.currentInput = context.rowData[props.serviceName];
+                    }
                 }
             });
         }
 
-        const tmpState = {};
+        const temState = {};
         this.entities.forEach((e) => {
-            const tmpEntity = {};
+            const tempEntity = {};
             e.defaultValue = e.defaultValue ? e.defaultValue : '';
 
             if (props.mode === MODE_CREATE) {
-                tmpEntity.value = typeof e.defaultValue !== 'undefined' ? e.defaultValue : '';
-                tmpEntity.display =
+                tempEntity.value = typeof e.defaultValue !== 'undefined' ? e.defaultValue : null;
+                tempEntity.display =
                     typeof e?.options?.display !== 'undefined' ? e.options.display : true;
-                tmpEntity.error = false;
-                tmpEntity.disabled = false;
-                tmpState[e.field] = tmpEntity;
+                tempEntity.error = false;
+                tempEntity.disabled = false;
+                temState[e.field] = tempEntity;
             } else if (props.mode === MODE_EDIT) {
-                tmpEntity.value =
-                    typeof props.currentInput[e.field] !== 'undefined'
-                        ? props.currentInput[e.field]
-                        : e.defaultValue;
-                tmpEntity.display =
+                tempEntity.value =
+                    typeof this.currentInput[e.field] !== 'undefined'
+                        ? this.currentInput[e.field]
+                        : null;
+
+                tempEntity.display =
                     typeof e?.options?.display !== 'undefined' ? e.options.display : true;
-                tmpEntity.error = false;
-                tmpEntity.disabled =
-                    typeof e?.options?.disableonEdit !== 'undefined'
+                tempEntity.error = false;
+                // eslint-disable-next-line no-nested-ternary
+                tempEntity.disabled =
+                    e.field === 'name'
+                        ? true
+                        : typeof e?.options?.disableonEdit !== 'undefined'
                         ? e.options.disableonEdit
                         : false;
-                tmpState[e.field] = tmpEntity;
+                temState[e.field] = tempEntity;
             } else if (props.mode === MODE_CLONE) {
-                tmpEntity.value = e.field === 'name' ? '' : props.currentInput[e.field];
-                tmpEntity.display =
+                tempEntity.value = e.field === 'name' ? '' : this.currentInput[e.field];
+                tempEntity.display =
                     typeof e?.options?.display !== 'undefined' ? e.options.display : true;
-                tmpEntity.error = false;
-                tmpEntity.disabled = e.field === 'name';
-                tmpState[e.field] = tmpEntity;
+                tempEntity.error = false;
+                tempEntity.disabled = false;
+                temState[e.field] = tempEntity;
+            } else if (props.mode === MODE_CONFIG) {
+                tempEntity.value =
+                    typeof this.currentInput[e.field] !== 'undefined'
+                        ? this.currentInput[e.field]
+                        : e.defaultValue;
+                tempEntity.display =
+                    typeof e?.options?.display !== 'undefined' ? e.options.display : true;
+                tempEntity.error = false;
+                // eslint-disable-next-line no-nested-ternary
+                tempEntity.disabled =
+                    e.field === 'name'
+                        ? true
+                        : typeof e?.options?.disableonEdit !== 'undefined'
+                        ? e.options.disableonEdit
+                        : false;
+                temState[e.field] = tempEntity;
             } else {
                 throw new Error('Invalid mode :', props.mode);
             }
@@ -109,9 +152,9 @@ class BaseFormView extends Component {
         });
 
         this.state = {
-            data: tmpState,
-            ErrorMsg: '',
-            WarningMsg: '',
+            data: temState,
+            errorMsg: '',
+            warningMsg: '',
         };
 
         // Hook on create method call
@@ -124,24 +167,39 @@ class BaseFormView extends Component {
         }
     }
 
-    handleRemove = () => {
-        // function to remove data from backend
-    };
+    // componentDidMount() {
+    //     if(this.props.page === "configuration"){
+    //         axiosCallWrapper({
+    //             serviceName: this.endpoint,
+    //             handleError: true,
+    //             callbackOnError: (error) => {
+    //                 error.uccErrorCode = 'ERR0004';
+    //                 this.setState({error});
+    //             },
+    //         }).then((response) => {
+    //             setCurrentServiceState(response.data.entry[0].content);
+    //         });
+    //     }
+    // }
 
     handleSubmit = () => {
+        this.props.handleFormSubmit(true, false);
         if (this.hook && typeof this.hook.onSave === 'function') {
             const validationPass = this.hook.onSave();
             if (!validationPass) {
-                return false;
+                this.props.handleFormSubmit(false, false);
             }
         }
         const datadict = {};
+
         Object.keys(this.state.data).forEach((field) => {
             datadict[field] = this.state.data[field].value;
         });
+        console.log(datadict);
+        console.log(this.entities);
 
         // Validation of form fields on Submit
-        let validator = new Validator(this.entities);
+        const validator = new Validator(this.entities);
         let error = validator.doValidation(datadict);
         if (error) {
             this.setErrorFieldMsg(error.errorField, error.errorMsg);
@@ -152,24 +210,62 @@ class BaseFormView extends Component {
             }
         }
 
-        const saveSuccess = !error;
-
-        const returnValue = {
-            result: saveSuccess,
-            data: datadict,
-        };
-
-        if (saveSuccess) {
-            if (this.hook && typeof this.hook.onSaveSuccess === 'function') {
-                this.hook.onSaveSuccess();
-            }
-            return returnValue;
-        }
-
-        if (this.hook && typeof this.hook.onSaveFail === 'function') {
+        if (error && this.hook && typeof this.hook.onSaveFail === 'function') {
             this.hook.onSaveFail();
+            this.props.handleFormSubmit(false, false);
+        } else if (error) {
+            this.props.handleFormSubmit(false, false);
         }
-        return returnValue;
+
+        if (!error) {
+            const params = new URLSearchParams();
+
+            Object.keys(datadict).forEach((key) => {
+                if (datadict[key]) {
+                    params.append(key, datadict[key]);
+                }
+            });
+
+            if (this.props.mode === MODE_EDIT) {
+                params.delete('name');
+            }
+
+            axiosCallWrapper({
+                serviceName: this.endpoint,
+                params,
+                customHeaders: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                method: 'post',
+                handleError: false,
+            })
+                .catch((err) => {
+                    const errorSubmitMsg = parseErrorMsg(err?.response?.data?.messages[0]?.text);
+                    this.setState({ errorMsg: errorSubmitMsg });
+                    if (this.hook && typeof this.hook.onSaveFail === 'function') {
+                        this.hook.onSaveFail();
+                    }
+                    this.props.handleFormSubmit(false, false);
+                    return Promise.reject(err);
+                })
+                .then((response) => {
+                    const val = response?.data?.entry[0];
+                    const tmpObj = {};
+
+                    tmpObj[val.name] = {
+                        ...val.content,
+                        id: val.id,
+                        name: val.name,
+                        serviceName: this.props.serviceName,
+                    };
+                    if (this.props.mode !== MODE_CONFIG) {
+                        this.context.setRowData(
+                            update(this.context.rowData, {
+                                [this.props.serviceName]: { $merge: tmpObj },
+                            })
+                        );
+                    }
+                    this.props.handleFormSubmit(false, true);
+                });
+        }
     };
 
     handleChange = (field, targetValue) => {
@@ -223,7 +319,7 @@ class BaseFormView extends Component {
     // Set error message to display and set error in perticular field
     setErrorFieldMsg = (field, msg) => {
         const newFields = update(this.state, { data: { [field]: { error: { $set: true } } } });
-        newFields.ErrorMsg = msg;
+        newFields.errorMsg = msg;
         this.setState(newFields);
     };
 
@@ -235,9 +331,9 @@ class BaseFormView extends Component {
 
     // Clear error message
     clearErrorMsg = () => {
-        if (this.state.ErrorMsg) {
+        if (this.state.errorMsg) {
             const newFields = { ...this.state };
-            newFields.ErrorMsg = '';
+            newFields.errorMsg = '';
             this.setState(newFields);
         }
     };
@@ -245,14 +341,14 @@ class BaseFormView extends Component {
     // Set error message
     setErrorMsg = (msg) => {
         const newFields = { ...this.state };
-        newFields.ErrorMsg = msg;
+        newFields.errorMsg = msg;
         this.setState(newFields);
     };
 
     // Clear error message and errors from fields
     clearAllErrorMsg = (State) => {
         const newFields = State ? { ...State } : { ...this.state };
-        newFields.ErrorMsg = '';
+        newFields.errorMsg = '';
         const newData = State ? { ...State.data } : { ...this.state.data };
         const temData = {};
         Object.keys(newData).forEach((key) => {
@@ -268,18 +364,28 @@ class BaseFormView extends Component {
 
     // Display error message
     generateErrorMessage = () => {
-        if (this.state.ErrorMsg) {
+        if (this.state.errorMsg) {
             return (
-                <div>
-                    <Message appearance="fill" type="error">
-                        {this.state.ErrorMsg}
-                    </Message>
-                </div>
+                <Message appearance="fill" type="error">
+                    {this.state.errorMsg}
+                </Message>
             );
         }
         return null;
     };
 
+    generateWarningMessage = () => {
+        if (this.state.warningMsg) {
+            return (
+                <Message appearance="fill" type="warning">
+                    {this.state.warningMsg}
+                </Message>
+            );
+        }
+        return null;
+    };
+
+    // generatesubmitMessage
     loadHook = (module, globalConfig) => {
         const myPromise = new Promise((myResolve) => {
             __non_webpack_require__([`app/${this.appName}/js/build/custom/${module}`], (Hook) => {
@@ -314,23 +420,27 @@ class BaseFormView extends Component {
         }
 
         return (
-            <div className="form-horizontal" style={{ marginTop: '10px' }}>
+            <div
+                className="form-horizontal"
+                style={this.props.page === 'configuration' ? { marginTop: '10px' } : {}}
+            >
+                {this.generateWarningMessage()}
                 {this.generateErrorMessage()}
                 {this.entities.map((e) => {
-                    const tmpState = this.state.data[e.field];
+                    const temState = this.state.data[e.field];
 
                     return (
                         <ControlWrapper
                             key={e.field}
                             utilityFuncts={this.utilControlWrapper}
-                            value={tmpState.value}
-                            display={tmpState.display}
-                            error={tmpState.error}
+                            value={temState.value}
+                            display={temState.display}
+                            error={temState.error}
                             entity={e}
                             serviceName={this.props.serviceName}
                             mode={this.props.mode}
-                            disabled={tmpState.disbled}
-                            dependencyValues={tmpState.dependencyValues || null}
+                            disabled={temState.disabled}
+                            dependencyValues={temState.dependencyValues || null}
                         />
                     );
                 })}
@@ -342,8 +452,10 @@ class BaseFormView extends Component {
 BaseFormView.propTypes = {
     page: PropTypes.string,
     serviceName: PropTypes.string,
+    stanzaName: PropTypes.string,
+    currentServiceState: PropTypes.object,
     mode: PropTypes.string,
-    currentInput: PropTypes.object,
+    handleFormSubmit: PropTypes.func,
 };
 
 export default BaseFormView;

@@ -2,12 +2,32 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from '@splunk/react-ui/Button';
 import Modal from '@splunk/react-ui/Modal';
+import styled from 'styled-components';
+import WaitSpinner from '@splunk/react-ui/WaitSpinner';
+import { _ } from '@splunk/ui-utils/i18n';
+
+import { MODE_CLONE, MODE_CREATE, MODE_EDIT } from '../constants/modes';
 import BaseFormView from './BaseFormView';
+
+const ModalWrapper = styled(Modal)`
+    width: 800px;
+`;
 
 class EntityModal extends Component {
     constructor(props) {
         super(props);
         this.form = React.createRef();
+        this.state = { isSubmititng: false };
+
+        if (props.mode === MODE_CREATE) {
+            this.buttonText = _('Add');
+        } else if (props.mode === MODE_CLONE) {
+            this.buttonText = _('Save');
+        } else if (props.mode === MODE_EDIT) {
+            this.buttonText = _('Update');
+        } else {
+            this.buttonText = _('Submit');
+        }
     }
 
     handleRequestClose = () => {
@@ -15,21 +35,23 @@ class EntityModal extends Component {
     };
 
     handleSubmit = () => {
-        const { result, data } = this.form.current.handleSubmit();
+        const result = this.form.current.handleSubmit();
         if (result) {
-            const save = this.props.handleSaveData(data);
-            if (save) {
-                this.handleRequestClose();
-            } else {
-                this.form.current.handleRemove();
-            }
+            this.handleRequestClose();
+        }
+    };
+
+    handleFormSubmit = (set, close) => {
+        this.setState({ isSubmititng: set });
+        if (close) {
+            this.handleRequestClose();
         }
     };
 
     render() {
         return (
             <div>
-                <Modal onRequestClose={this.handleRequestClose} open={this.props.open}>
+                <ModalWrapper onRequestClose={this.handleRequestClose} open={this.props.open}>
                     <Modal.Header
                         title={this.props.formLabel}
                         onRequestClose={this.handleRequestClose}
@@ -40,18 +62,24 @@ class EntityModal extends Component {
                             page={this.props.page}
                             serviceName={this.props.serviceName}
                             mode={this.props.mode}
-                            currentInput={this.props.currentInput}
+                            stanzaName={this.props.stanzaName}
+                            handleFormSubmit={this.handleFormSubmit}
                         />
                     </Modal.Body>
                     <Modal.Footer>
                         <Button
                             appearance="secondary"
                             onClick={this.handleRequestClose}
-                            label="Cancel"
+                            label={_('Cancel')}
                         />
-                        <Button appearance="primary" label="Submit" onClick={this.handleSubmit} />
+                        <Button
+                            appearance="primary"
+                            label={this.state.isSubmititng ? <WaitSpinner /> : this.buttonText}
+                            onClick={this.handleSubmit}
+                            disabled={this.state.isSubmititng}
+                        />
                     </Modal.Footer>
-                </Modal>
+                </ModalWrapper>
             </div>
         );
     }
@@ -63,9 +91,8 @@ EntityModal.propTypes = {
     handleRequestClose: PropTypes.func,
     serviceName: PropTypes.string,
     mode: PropTypes.string,
-    currentInput: PropTypes.object,
+    stanzaName: PropTypes.string,
     formLabel: PropTypes.string,
-    handleSaveData: PropTypes.func,
 };
 
 export default EntityModal;

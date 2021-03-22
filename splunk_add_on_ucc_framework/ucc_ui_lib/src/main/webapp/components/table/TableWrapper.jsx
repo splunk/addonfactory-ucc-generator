@@ -25,11 +25,6 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen }) {
         page === 'inputs'
             ? unifiedConfigs.pages.inputs.services
             : unifiedConfigs.pages.configuration.tabs.filter((x) => x.name === serviceName);
-    const tableConfig =
-        page === 'inputs'
-            ? unifiedConfigs.pages.inputs.table
-            : unifiedConfigs.pages.configuration.tabs.filter((x) => x.name === serviceName)[0]
-                  .table;
 
     const modifyAPIResponse = (data) => {
         const obj = {};
@@ -202,7 +197,8 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen }) {
                 handleRequestModalOpen={handleRequestModalOpen}
             />
             <CustomTable
-                tableConfig={tableConfig}
+                page={page}
+                serviceName={serviceName}
                 data={filteredData}
                 handleToggleActionClick={(row) => changeToggleStatus(row)}
             />

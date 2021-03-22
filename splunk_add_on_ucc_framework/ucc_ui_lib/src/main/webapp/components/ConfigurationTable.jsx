@@ -8,7 +8,7 @@ import TableWrapper from './table/TableWrapper';
 import EntityModal from './EntityModal';
 import { MODE_CREATE } from '../constants/modes';
 
-function ConfigurationTable({ serviceName, serviceTitle, handleSaveData }) {
+function ConfigurationTable({ serviceName, serviceTitle }) {
     const [open, setOpen] = useState(false);
     const serviceLabel = `Add ${serviceTitle}`;
 
@@ -44,8 +44,8 @@ function ConfigurationTable({ serviceName, serviceTitle, handleSaveData }) {
                     handleRequestModalOpen={() => handleRequestOpen()}
                 />
                 <ToastMessages />
+                {generateModalDialog()}
             </TableContextProvider>
-            {generateModalDialog()}
         </>
     );
 }

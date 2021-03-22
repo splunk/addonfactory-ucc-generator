@@ -16,8 +16,8 @@ import ErrorBoundary from '../../components/ErrorBoundary';
 
 function InputPage() {
     const [open, setOpen] = useState(false);
-    const [serviceName, setserviceName] = useState(null);
-    const [serviceLabel, setserviceLabel] = useState(null);
+    const [serviceName, setServiceName] = useState(null);
+    const [serviceLabel, setServiceLabel] = useState(null);
     const unifiedConfigs = getUnifiedConfigs();
     const { services, title, description } = unifiedConfigs.pages.inputs;
     const toggle = <Button appearance="primary" label={_('Create New Input')} isMenu />;
@@ -45,7 +45,6 @@ function InputPage() {
                     page="inputs"
                     open={open}
                     handleRequestClose={handleRequestClose}
-                    handleSaveData={() => {}}
                     serviceName={serviceName}
                     mode={MODE_CREATE}
                     formLabel={serviceLabel}
@@ -74,8 +73,8 @@ function InputPage() {
                                                     (x) => x.title === event.target.innerText
                                                 )
                                             ].name;
-                                        setserviceLabel(`Add ${event.target.innerText}`);
-                                        setserviceName(findname);
+                                        setServiceLabel(`Add ${event.target.innerText}`);
+                                        setServiceName(findname);
                                         handleRequestOpen();
                                     }}
                                 >
@@ -89,8 +88,8 @@ function InputPage() {
                             label="Create New Input"
                             appearance="primary"
                             onClick={() => {
-                                setserviceName(services[0].name);
-                                setserviceLabel(`Add ${services[0].title}`);
+                                setServiceName(services[0].name);
+                                setServiceLabel(`Add ${services[0].title}`);
                                 handleRequestOpen();
                             }}
                         />
@@ -100,8 +99,8 @@ function InputPage() {
             <TableContextProvider value={null}>
                 <TableWrapper page="inputs" />
                 <ToastMessages />
+                {generateModalDialog()}
             </TableContextProvider>
-            {generateModalDialog()}
         </ErrorBoundary>
     );
 }
