@@ -141,6 +141,7 @@ class BaseFormView extends PureComponent{
             }
         }
         const datadict = {};
+
         Object.keys(this.state.data).forEach((field) => {
             datadict[field] = this.state.data[field].value;
         });
@@ -168,8 +169,11 @@ class BaseFormView extends PureComponent{
 
         if(!error){
             const params = new URLSearchParams();
+
             Object.keys(datadict).forEach( (key) => {
-                params.append(key, datadict[key]);
+                if(datadict[key]){
+                params.append(key, datadict[key] );
+                }
             });
 
             if(this.props.mode ===MODE_EDIT){
@@ -234,6 +238,7 @@ class BaseFormView extends PureComponent{
 
 
     handleChange = (field, targetValue)=> {
+
         const changes = {} 
         if (this.dependencyMap.has(field)) {
             const value = this.dependencyMap.get(field);
