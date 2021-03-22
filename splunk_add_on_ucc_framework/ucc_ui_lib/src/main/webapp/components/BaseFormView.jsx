@@ -24,7 +24,7 @@ class BaseFormView extends PureComponent {
         const globalConfig = getUnifiedConfigs();
         this.appName = globalConfig.meta.name;
         this.endpoint =
-            props.mode === MODE_EDIT
+            props.mode === MODE_EDIT || props.mode === MODE_CONFIG
                 ? `${this.props.serviceName}/${this.props.stanzaName}`
                 : `${this.props.serviceName}`;
 
@@ -167,21 +167,6 @@ class BaseFormView extends PureComponent {
         }
     }
 
-    // componentDidMount() {
-    //     if(this.props.page === "configuration"){
-    //         axiosCallWrapper({
-    //             serviceName: this.endpoint,
-    //             handleError: true,
-    //             callbackOnError: (error) => {
-    //                 error.uccErrorCode = 'ERR0004';
-    //                 this.setState({error});
-    //             },
-    //         }).then((response) => {
-    //             setCurrentServiceState(response.data.entry[0].content);
-    //         });
-    //     }
-    // }
-
     handleSubmit = () => {
         this.props.handleFormSubmit(true, false);
         if (this.hook && typeof this.hook.onSave === 'function') {
@@ -195,8 +180,6 @@ class BaseFormView extends PureComponent {
         Object.keys(this.state.data).forEach((field) => {
             datadict[field] = this.state.data[field].value;
         });
-        console.log(datadict);
-        console.log(this.entities);
 
         // Validation of form fields on Submit
         const validator = new Validator(this.entities);
@@ -248,15 +231,16 @@ class BaseFormView extends PureComponent {
                 })
                 .then((response) => {
                     const val = response?.data?.entry[0];
-                    const tmpObj = {};
-
-                    tmpObj[val.name] = {
-                        ...val.content,
-                        id: val.id,
-                        name: val.name,
-                        serviceName: this.props.serviceName,
-                    };
                     if (this.props.mode !== MODE_CONFIG) {
+                        const tmpObj = {};
+
+                        tmpObj[val.name] = {
+                            ...val.content,
+                            id: val.id,
+                            name: val.name,
+                            serviceName: this.props.serviceName,
+                        };
+
                         this.context.setRowData(
                             update(this.context.rowData, {
                                 [this.props.serviceName]: { $merge: tmpObj },
@@ -422,7 +406,7 @@ class BaseFormView extends PureComponent {
         return (
             <div
                 className="form-horizontal"
-                style={this.props.page === 'configuration' ? { marginTop: '10px' } : {}}
+                style={this.props.mode === MODE_CONFIG ? { marginTop: '10px' } : {}}
             >
                 {this.generateWarningMessage()}
                 {this.generateErrorMessage()}

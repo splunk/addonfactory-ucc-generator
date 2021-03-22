@@ -17,7 +17,6 @@ function ConfigurationFormView({ serviceName }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [currentServiceState, setCurrentServiceState] = useState({});
 
-    // TODO: move this logic to BaseFormView
     useEffect(() => {
         axiosCallWrapper({
             serviceName: `settings/${serviceName}`,
@@ -43,21 +42,17 @@ function ConfigurationFormView({ serviceName }) {
         throw error;
     }
 
-    return (
+    return Object.keys(currentServiceState).length ? (
         <>
-            {Object.keys(currentServiceState).length ? (
-                <BaseFormView
-                    ref={form}
-                    page="configuration"
-                    stanzaName={serviceName}
-                    serviceName="settings"
-                    mode={MODE_CONFIG}
-                    currentServiceState={currentServiceState}
-                    handleFormSubmit={handleFormSubmit}
-                />
-            ) : (
-                <WaitSpinnerWrapper />
-            )}
+            <BaseFormView
+                ref={form}
+                page="configuration"
+                stanzaName={serviceName}
+                serviceName="settings"
+                mode={MODE_CONFIG}
+                currentServiceState={currentServiceState}
+                handleFormSubmit={handleFormSubmit}
+            />
             <ControlGroup label="">
                 <div style={{ flexGrow: 0 }}>
                     <Button
@@ -69,6 +64,8 @@ function ConfigurationFormView({ serviceName }) {
                 </div>
             </ControlGroup>
         </>
+    ) : (
+        <WaitSpinnerWrapper />
     );
 }
 
