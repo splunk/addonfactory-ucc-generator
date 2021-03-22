@@ -6,6 +6,7 @@ import Message from '@splunk/react-ui/Message';
 
 import ControlWrapper from './ControlWrapper';
 import { getUnifiedConfigs } from '../util/util';
+import Validator, { SaveValidator } from '../util/Validator';
 import { MODE_CLONE, MODE_CREATE, MODE_EDIT } from '../constants/modes';
 
 class BaseFormView extends Component {
@@ -35,6 +36,7 @@ class BaseFormView extends Component {
             globalConfig.pages.inputs.services.forEach((service) => {
                 if (service.name === props.serviceName) {
                     this.entities = service.entity;
+                    this.options = service.options;
                     if (service.hook) {
                         this.hookDeferred = this.loadHook(service.hook.src, globalConfig);
                     }
@@ -44,6 +46,7 @@ class BaseFormView extends Component {
             globalConfig.pages.configuration.tabs.forEach((tab) => {
                 if (tab.name === props.serviceName) {
                     this.entities = tab.entity;
+                    this.options = tab.options;
                     if (tab.hook) {
                         this.hookDeferred = this.loadHook(tab.hook.src, globalConfig);
                     }
@@ -88,6 +91,23 @@ class BaseFormView extends Component {
             }
         });
 
+        this.dependencyMap = new Map();
+        this.entities.forEach((e) => {
+            const fields = e.options?.dependencies;
+            if (fields) {
+                fields.forEach((field) => {
+                    const changeFields = this.dependencyMap.get(field);
+                    if (changeFields) {
+                        changeFields[e.field] = fields;
+                    } else {
+                        this.dependencyMap.set(field, {
+                            [e.field]: fields,
+                        });
+                    }
+                });
+            }
+        });
+
         this.state = {
             data: tmpState,
             ErrorMsg: '',
@@ -120,7 +140,19 @@ class BaseFormView extends Component {
             datadict[field] = this.state.data[field].value;
         });
 
-        const saveSuccess = true;
+        // Validation of form fields on Submit
+        let validator = new Validator(this.entities);
+        let error = validator.doValidation(datadict);
+        if (error) {
+            this.setErrorFieldMsg(error.errorField, error.errorMsg);
+        } else if (this.options && this.options.saveValidator) {
+            error = SaveValidator(this.options.saveValidator, datadict);
+            if (error) {
+                this.setErrorMsg(error.errorMsg);
+            }
+        }
+
+        const saveSuccess = !error;
 
         const returnValue = {
             result: saveSuccess,
@@ -141,9 +173,35 @@ class BaseFormView extends Component {
     };
 
     handleChange = (field, targetValue) => {
-        const newFields = update(this.state, {
-            data: { [field]: { value: { $set: targetValue } } },
-        });
+        const changes = {};
+        if (this.dependencyMap.has(field)) {
+            const value = this.dependencyMap.get(field);
+            for (const loadField in value) {
+                const data = {};
+                let load = true;
+
+                value[loadField].forEach((dependency) => {
+                    const required = !!this.entities.find((e) => {
+                        return e.field === dependency;
+                    }).required;
+
+                    const value =
+                        dependency == field ? targetValue : this.state.data[dependency]['value'];
+                    if (required && !value) {
+                        load = false;
+                    } else {
+                        data[dependency] = value;
+                    }
+                });
+
+                if (load) {
+                    changes[loadField] = { dependencyValues: { $set: data } };
+                }
+            }
+        }
+        changes[field] = { value: { $set: targetValue } };
+
+        const newFields = update(this.state, { data: changes });
         const tempState = this.clearAllErrorMsg(newFields);
         this.setState(tempState);
 
@@ -156,9 +214,10 @@ class BaseFormView extends Component {
         }
     };
 
-    addCustomValidator = (field, validator) => {
+    addCustomValidator = (field, validatorFunc) => {
         const index = this.entities.findIndex((x) => x.field === field);
-        this.entities[index].CustomValidator = validator;
+        const validator = [{ type: 'custom', validatorFunc: validatorFunc }];
+        this.entities[index].validators = validator;
     };
 
     // Set error message to display and set error in perticular field
@@ -271,6 +330,7 @@ class BaseFormView extends Component {
                             serviceName={this.props.serviceName}
                             mode={this.props.mode}
                             disabled={tmpState.disbled}
+                            dependencyValues={tmpState.dependencyValues || null}
                         />
                     );
                 })}

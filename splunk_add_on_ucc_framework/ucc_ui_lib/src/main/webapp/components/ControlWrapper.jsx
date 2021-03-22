@@ -60,6 +60,7 @@ class ControlWrapper extends React.PureComponent {
                       error: this.props.error,
                       disabled: this.props.disabled,
                       encrypted,
+                      dependencyValues: this.props.dependencyValues,
                   })
                 : `No View Found for ${type} type`;
         }
