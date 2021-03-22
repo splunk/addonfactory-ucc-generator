@@ -1,7 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ControlGroup from '@splunk/react-ui/ControlGroup';
+import styled from 'styled-components';
+
 import CONTROL_TYPE_MAP from '../constants/ControlTypeMap';
+
+const CustomElement = styled.div`
+    margin-left: 30px;
+    div {
+        width: 100% !important;
+    }
+`;
+
+const ControlGroupWrapper = styled(ControlGroup)`
+    > * {
+        &:first-child {
+            width: 170px !important;
+        }
+        &:nth-child(3) {
+            margin-left: 200px !important;
+        }
+    }
+`;
 
 class ControlWrapper extends React.PureComponent {
 
@@ -16,9 +36,8 @@ class ControlWrapper extends React.PureComponent {
 
     render(){
 
-        const {field, options, type,label,tooltip, helptext,encrypted=false} = this.props.entity;
+        const { field, options, type, label, tooltip, help, encrypted = false } = this.props.entity;
         const {handleChange, addCustomValidator, utilCustomFunctions} = this.props.utilityFuncts;
-
         let rowView;
         if(this.props.entity.type==="custom"){
 
@@ -57,14 +76,16 @@ class ControlWrapper extends React.PureComponent {
         }
 
         return (
-        this.props.display && 
-            <ControlGroup 
+            this.props.display &&
+            <ControlGroupWrapper
                 label={label}
-                help={helptext}
+                help={help}
                 tooltip={tooltip}
-                error={this.props.error}  >
-                {rowView}
-            </ControlGroup>
+                error={this.props.error}>
+                <CustomElement>
+                    {rowView}
+                </CustomElement>
+            </ControlGroupWrapper>
         )
     }
 }

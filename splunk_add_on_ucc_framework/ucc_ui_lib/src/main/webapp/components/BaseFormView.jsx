@@ -1,14 +1,21 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import Message from '@splunk/react-ui/Message';
 import update from 'immutability-helper';
+
 import ControlWrapper from './ControlWrapper';
 import { getUnifiedConfigs } from '../util/util';
 import Validator, { SaveValidator } from '../util/Validator';
 import { MODE_CLONE, MODE_CREATE, MODE_EDIT } from '../constants/modes';
+import { axiosCallWrapper } from '../util/axiosCallWrapper';
+import InputRowContext from '../context/InputRowContext';
+import { parseErrorMsg } from '../util/messageUtil';
 
-class BaseFormView extends Component {
-    constructor(props) {
+class BaseFormView extends PureComponent{
+
+    static contextType=InputRowContext; 
+
+    constructor(props,context) {
         super(props);
 
         // flag for to render hook method for once
@@ -16,6 +23,7 @@ class BaseFormView extends Component {
         this.state = {};
         const globalConfig = getUnifiedConfigs();
         this.appName = globalConfig.meta.name;
+        this.endpoint = props.mode === MODE_EDIT ? `${this.props.serviceName}/${this.props.stanzaName}` : `${this.props.serviceName}` ;
 
         this.util = {
             SetState: (state) => {
@@ -39,8 +47,12 @@ class BaseFormView extends Component {
                     if (service.hook) {
                         this.hookDeferred = this.loadHook(service.hook.src, globalConfig);
                     }
+                    if(props.mode === MODE_EDIT || props.mode === MODE_CLONE){
+                        this.currentInput = context.rowData[props.serviceName][props.stanzaName];
+                    }
                 }
             });
+
         } else {
             globalConfig.pages.tabs.forEach((tab) => {
                 if (tab.name === props.serviceName) {
@@ -48,6 +60,12 @@ class BaseFormView extends Component {
                     this.options = tab.options;
                     if (tab.hook) {
                         this.hookDeferred = this.loadHook(tab.hook.src, globalConfig);
+                    }
+                    if( tab.table && (props.mode === MODE_EDIT || props.mode === MODE_CLONE)){
+                        this.currentInput = context.rowData[props.serviceName][props.stanzaName];
+                    }
+                    else{
+                        this.currentInput = context.rowData[props.serviceName];
                     }
                 }
             });
@@ -65,17 +83,18 @@ class BaseFormView extends Component {
                 temState[e.field] = tempEntity;
             } 
             else if (props.mode === MODE_EDIT) {
-                tempEntity.value = (typeof props.currentInput[e.field] !== "undefined") ? props.currentInput[e.field] : null;
+                tempEntity.value = (typeof this.currentInput[e.field] !== "undefined") ? this.currentInput[e.field] : null;
                 tempEntity.display = (typeof e?.options?.display !== "undefined")?e.options.display:true;
                 tempEntity.error = false;
-                tempEntity.disabled = (typeof e?.options?.disableonEdit !== "undefined")?e.options.disableonEdit:false;
+                // eslint-disable-next-line no-nested-ternary
+                tempEntity.disabled = e.field === 'name' ? true : ( (typeof e?.options?.disableonEdit !== "undefined") ? e.options.disableonEdit : false);
                 temState[e.field] = tempEntity;
             } 
             else if (props.mode === MODE_CLONE){
-                tempEntity.value = e.field === 'name' ? '' : props.currentInput[e.field];
+                tempEntity.value = e.field === 'name' ? '' : this.currentInput[e.field];
                 tempEntity.display = (typeof e?.options?.display !== "undefined") ? e.options.display:true;
                 tempEntity.error = false;
-                tempEntity.disabled =e.field==='name';
+                tempEntity.disabled =false;
                 temState[e.field] = tempEntity;
             }
             else{
@@ -102,8 +121,8 @@ class BaseFormView extends Component {
 
         this.state = {
             data:temState,
-            ErrorMsg :"",
-            WarningMsg: ""
+            errorMsg :"",
+            warningMsg: ""
         }
 
         
@@ -117,24 +136,22 @@ class BaseFormView extends Component {
         }
     }
 
-    handleRemove = () => {
-        // function to remove data from backend
-    };
-
     handleSubmit = () => {
+        this.props.handleFormSubmit(true,false);
         if (this.hook && typeof this.hook.onSave === 'function') {
             const validationPass = this.hook.onSave();
             if (!validationPass) {
-                return false;
+                this.props.handleFormSubmit(false,false);
             }
         }
         const datadict = {};
+
         Object.keys(this.state.data).forEach((field) => {
             datadict[field] = this.state.data[field].value;
         });
 
         // Validation of form fields on Submit
-        let validator = new Validator(this.entities);
+        const validator = new Validator(this.entities);
         let error = validator.doValidation(datadict);
         if (error) {
             this.setErrorFieldMsg(error.errorField, error.errorMsg);
@@ -142,31 +159,67 @@ class BaseFormView extends Component {
             error = SaveValidator(this.options.saveValidator, datadict);
             if (error) {
                 this.setErrorMsg(error.errorMsg);
+                
             }
         }
 
-        const saveSuccess = !error;
-
-        const returnValue = {
-            result: saveSuccess,
-            data: datadict,
-        };
-
-        if (saveSuccess) {
-            if (this.hook && typeof this.hook.onSaveSuccess === 'function') {
-                this.hook.onSaveSuccess();
-            }
-            return returnValue;
-        }
-
-        if (this.hook && typeof this.hook.onSaveFail === 'function') {
+        if (error && this.hook && typeof this.hook.onSaveFail === 'function') {
             this.hook.onSaveFail();
+            this.props.handleFormSubmit(false,false);
         }
-        return returnValue;
+        else if(error){
+            this.props.handleFormSubmit(false,false);
+        }
+
+        if(!error){
+            const params = new URLSearchParams();
+
+            Object.keys(datadict).forEach( (key) => {
+                if(datadict[key]){
+                params.append(key, datadict[key] );
+                }
+            });
+
+            if(this.props.mode ===MODE_EDIT){
+                params.delete("name");
+            }
+
+            axiosCallWrapper({
+                serviceName: this.endpoint,
+                params,
+                customHeaders: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                method: 'post',
+                handleError: false
+            }).catch((err) => {
+                const errorSubmitMsg= parseErrorMsg(err?.response?.data?.messages[0]?.text);
+                this.setState({errorMsg:errorSubmitMsg});
+                if (this.hook && typeof this.hook.onSaveFail === 'function') {
+                    this.hook.onSaveFail();
+                }
+                this.props.handleFormSubmit(false,false);
+                return Promise.reject(err);
+            }).then((response) => {
+                
+                const val = response?.data?.entry[0];
+                const tmpObj ={};
+                
+                tmpObj[val.name] = {
+                    ...val.content,
+                    id: val.id,
+                    name: val.name,
+                    serviceName: this.props.serviceName
+                };
+
+                this.context.setRowData( update(this.context.rowData,{[this.props.serviceName]: {$merge : tmpObj}}))
+                this.props.handleFormSubmit(false,true);
+                
+            });
+        }
     };
-    
+
 
     handleChange = (field, targetValue)=> {
+
         const changes = {} 
         if (this.dependencyMap.has(field)) {
             const value = this.dependencyMap.get(field);
@@ -186,7 +239,7 @@ class BaseFormView extends Component {
                     if (required && !value) {
                         load = false;
                     } else {
-                        data[dependency] = value
+                        data[dependency] = value;
                     }
                 });
 
@@ -220,7 +273,7 @@ class BaseFormView extends Component {
     // Set error message to display and set error in perticular field 
     setErrorFieldMsg = (field, msg) =>{
         const newFields = update(this.state ,{ data: { [field] : { error: {$set: true } } } } );
-        newFields.ErrorMsg = msg;
+        newFields.errorMsg = msg;
         this.setState(newFields);
     }
 
@@ -232,9 +285,9 @@ class BaseFormView extends Component {
 
     // Clear error message
     clearErrorMsg = () =>{
-        if(this.state.ErrorMsg){
+        if(this.state.errorMsg){
             const newFields = { ...this.state };
-            newFields.ErrorMsg = "";
+            newFields.errorMsg = "";
             this.setState(newFields);
         }
     }
@@ -242,14 +295,14 @@ class BaseFormView extends Component {
     // Set error message
     setErrorMsg = (msg) =>{
         const newFields = { ...this.state };
-        newFields.ErrorMsg = msg;
+        newFields.errorMsg = msg;
         this.setState(newFields);
     }
 
     // Clear error message and errors from fields 
     clearAllErrorMsg = (State) =>{        
         const newFields = State ? { ...State } : {...this.state};
-        newFields.ErrorMsg = "";
+        newFields.errorMsg = "";
         const newData = State ? { ...State.data } : {...this.state.data};
         const temData ={}
         Object.keys(newData).forEach( (key) => {
@@ -266,18 +319,28 @@ class BaseFormView extends Component {
     
     // Display error message 
     generateErrorMessage = () => {
-        if (this.state.ErrorMsg) {
+        if (this.state.errorMsg) {
             return (
-                <div>
                     <Message appearance="fill" type="error">
-                        {this.state.ErrorMsg}
+                        {this.state.errorMsg}
                     </Message>
-                </div>
             )
         }
         return null; 
     }
 
+    generateWarningMessage = () => {
+        if (this.state.warningMsg) {
+            return (
+                    <Message appearance="fill" type="warning">
+                        {this.state.warningMsg}
+                    </Message>
+            )
+        }
+        return null; 
+    }
+
+    // generatesubmitMessage
     loadHook = (module, globalConfig) => {
         const myPromise = new Promise((myResolve) => {
             __non_webpack_require__([`app/${this.appName}/js/build/custom/${module}`], (Hook) => {
@@ -313,6 +376,7 @@ class BaseFormView extends Component {
 
         return( 
             <div className="form-horizontal">
+            {this.generateWarningMessage()}
             {this.generateErrorMessage()}
             {
                 this.entities.map( (e) => {
@@ -328,7 +392,7 @@ class BaseFormView extends Component {
                             entity={e}
                             serviceName={this.props.serviceName}
                             mode={this.props.mode}
-                            disabled={temState.disbled}
+                            disabled={temState.disabled}
                             dependencyValues={temState.dependencyValues || null}
                         />)
                     
@@ -342,8 +406,9 @@ class BaseFormView extends Component {
 BaseFormView.propTypes = {
     isInput: PropTypes.bool,
     serviceName: PropTypes.string,
+    stanzaName: PropTypes.string,
     mode: PropTypes.string,
-    currentInput: PropTypes.object,
+    handleFormSubmit: PropTypes.func
 };
 
 export default BaseFormView;
