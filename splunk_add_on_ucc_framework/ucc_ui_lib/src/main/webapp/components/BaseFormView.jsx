@@ -121,8 +121,8 @@ class BaseFormView extends PureComponent{
 
         this.state = {
             data:temState,
-            ErrorMsg :"",
-            WarningMsg: ""
+            errorMsg :"",
+            warningMsg: ""
         }
 
         
@@ -192,7 +192,7 @@ class BaseFormView extends PureComponent{
                 handleError: false
             }).catch((err) => {
                 const errorSubmitMsg= parseErrorMsg(err?.response?.data?.messages[0]?.text);
-                this.setState({ErrorMsg:errorSubmitMsg});
+                this.setState({errorMsg:errorSubmitMsg});
                 if (this.hook && typeof this.hook.onSaveFail === 'function') {
                     this.hook.onSaveFail();
                 }
@@ -273,7 +273,7 @@ class BaseFormView extends PureComponent{
     // Set error message to display and set error in perticular field 
     setErrorFieldMsg = (field, msg) =>{
         const newFields = update(this.state ,{ data: { [field] : { error: {$set: true } } } } );
-        newFields.ErrorMsg = msg;
+        newFields.errorMsg = msg;
         this.setState(newFields);
     }
 
@@ -285,9 +285,9 @@ class BaseFormView extends PureComponent{
 
     // Clear error message
     clearErrorMsg = () =>{
-        if(this.state.ErrorMsg){
+        if(this.state.errorMsg){
             const newFields = { ...this.state };
-            newFields.ErrorMsg = "";
+            newFields.errorMsg = "";
             this.setState(newFields);
         }
     }
@@ -295,14 +295,14 @@ class BaseFormView extends PureComponent{
     // Set error message
     setErrorMsg = (msg) =>{
         const newFields = { ...this.state };
-        newFields.ErrorMsg = msg;
+        newFields.errorMsg = msg;
         this.setState(newFields);
     }
 
     // Clear error message and errors from fields 
     clearAllErrorMsg = (State) =>{        
         const newFields = State ? { ...State } : {...this.state};
-        newFields.ErrorMsg = "";
+        newFields.errorMsg = "";
         const newData = State ? { ...State.data } : {...this.state.data};
         const temData ={}
         Object.keys(newData).forEach( (key) => {
@@ -319,26 +319,22 @@ class BaseFormView extends PureComponent{
     
     // Display error message 
     generateErrorMessage = () => {
-        if (this.state.ErrorMsg) {
+        if (this.state.errorMsg) {
             return (
-                <div>
                     <Message appearance="fill" type="error">
-                        {this.state.ErrorMsg}
+                        {this.state.errorMsg}
                     </Message>
-                </div>
             )
         }
         return null; 
     }
 
     generateWarningMessage = () => {
-        if (this.state.WarningMsg) {
+        if (this.state.warningMsg) {
             return (
-                <div>
                     <Message appearance="fill" type="warning">
-                        {this.state.WarningMsg}
+                        {this.state.warningMsg}
                     </Message>
-                </div>
             )
         }
         return null; 

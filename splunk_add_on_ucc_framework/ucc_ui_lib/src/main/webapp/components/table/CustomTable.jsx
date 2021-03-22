@@ -56,15 +56,15 @@ function CustomTable({ isInput, data, handleToggleActionClick }) {
         if (entityModal.open) {
             let label;
             if(isInput){
-                const ser = unifiedConfigs.pages?.inputs?.services;
-                label =ser[ser.findIndex(x => x.name === entityModal.serviceName)]?.title;
+                const { services } = unifiedConfigs.pages?.inputs;
+                label =services[services.findIndex(x => x.name === entityModal.serviceName)]?.title;
             }
             else{
-                const tab = unifiedConfigs.pages?.configuration?.tabs;
-                label =tab[tab.findIndex(x => x.name === entityModal.serviceName)]?.title;
+                const { tabs } = unifiedConfigs.pages?.configuration;
+                label =tabs[tabs.findIndex(x => x.name === entityModal.serviceName)]?.title;
             }
             return (
-                < EntityModal
+                <EntityModal
                     isInput
                     open={entityModal.open}
                     handleRequestClose={handleEntityClose}
