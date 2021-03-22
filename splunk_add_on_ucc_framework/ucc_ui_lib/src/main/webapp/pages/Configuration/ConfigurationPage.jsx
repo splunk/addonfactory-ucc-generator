@@ -32,7 +32,7 @@ function ConfigurationPage() {
             </ColumnLayout>
             <TabBar activeTabId={activeTabId} onChange={handleChange}>
                 {tabs.map((tab) => (
-                    <TabBar.Tab key={tab.name} label={tab.title} tabId={tab.name} />
+                    <TabBar.Tab key={tab.name} label={_(tab.title)} tabId={tab.name} />
                 ))}
             </TabBar>
             {tabs.map((tab) => {

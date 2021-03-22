@@ -20,7 +20,7 @@ function InputPage() {
     const [serviceLabel, setserviceLabel] = useState(null);
     const unifiedConfigs = getUnifiedConfigs();
     const { services, title, description } = unifiedConfigs.pages.inputs;
-    const toggle = <Button appearance="primary" label="Create New Input" isMenu />;
+    const toggle = <Button appearance="primary" label={_('Create New Input')} isMenu />;
 
     const getInputMenu = () => {
         let arr = [];

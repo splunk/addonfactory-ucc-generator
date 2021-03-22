@@ -40,7 +40,7 @@ function TableHeader({ page, services, totalElement, handleRequestModalOpen }) {
                     setSearchType(value);
                 }}
             >
-                arr
+                {arr}
             </Select>
         );
     };
@@ -73,9 +73,21 @@ function TableHeader({ page, services, totalElement, handleRequestModalOpen }) {
                                             setPageSize(value);
                                         }}
                                     >
-                                        <Select.Option key="10" label="10 Per Page" value={10} />
-                                        <Select.Option key="25" label="25 Per Page" value={25} />
-                                        <Select.Option key="50" label="50 Per Page" value={50} />
+                                        <Select.Option
+                                            key="10"
+                                            label={_('10 Per Page')}
+                                            value={10}
+                                        />
+                                        <Select.Option
+                                            key="25"
+                                            label={_('25 Per Page')}
+                                            value={25}
+                                        />
+                                        <Select.Option
+                                            key="50"
+                                            label={_('50 Per Page')}
+                                            value={50}
+                                        />
                                     </Select>
                                     {getSearchTypeDropdown()}
                                 </TableSelectBoxWrapper>
@@ -107,7 +119,11 @@ function TableHeader({ page, services, totalElement, handleRequestModalOpen }) {
                         }}
                     />
                     {page === 'inputs' ? null : (
-                        <Button label="Add" appearance="primary" onClick={handleRequestModalOpen} />
+                        <Button
+                            label={_('Add')}
+                            appearance="primary"
+                            onClick={handleRequestModalOpen}
+                        />
                     )}
                 </ColumnLayout.Column>
             </ColumnLayout.Row>

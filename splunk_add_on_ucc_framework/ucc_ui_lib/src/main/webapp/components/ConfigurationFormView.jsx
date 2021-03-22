@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
+import { _ } from '@splunk/ui-utils/i18n';
 import Button from '@splunk/react-ui/Button';
 import ControlGroup from '@splunk/react-ui/ControlGroup';
 
@@ -50,7 +51,7 @@ function ConfigurationFormView({ serviceName }) {
             />
             <ControlGroup label="">
                 <div style={{ flexGrow: 0 }}>
-                    <Button appearance="primary" label="Save" />
+                    <Button appearance="primary" label={_('Save')} />
                 </div>
             </ControlGroup>
         </>
