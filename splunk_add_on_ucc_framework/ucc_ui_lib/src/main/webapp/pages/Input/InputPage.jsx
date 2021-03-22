@@ -42,7 +42,7 @@ function InputPage() {
         if (open) {
             return (
                 <EntityModal
-                    isInput
+                    page="inputs"
                     open={open}
                     handleRequestClose={handleRequestClose}
                     handleSaveData={() => {}}
@@ -56,7 +56,7 @@ function InputPage() {
     };
 
     return (
-        <>
+        <ErrorBoundary>
             <ColumnLayout gutter={8}>
                 <ColumnLayout.Row style={{ padding: '5px 0px' }}>
                     <ColumnLayout.Column span={9}>
@@ -98,13 +98,11 @@ function InputPage() {
                 </ColumnLayout.Row>
             </ColumnLayout>
             <TableContextProvider value={null}>
-                <ErrorBoundary>
-                    <TableWrapper page="inputs" />
-                </ErrorBoundary>
+                <TableWrapper page="inputs" />
                 <ToastMessages />
             </TableContextProvider>
             {generateModalDialog()}
-        </>
+        </ErrorBoundary>
     );
 }
 

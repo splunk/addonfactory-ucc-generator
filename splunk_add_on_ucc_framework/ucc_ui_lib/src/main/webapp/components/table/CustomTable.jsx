@@ -115,7 +115,12 @@ function CustomTable({ tableConfig, data, handleToggleActionClick }) {
             statusContent = <WaitSpinner />;
         }
         return (
-            <Table.Row key={row.id} expansionRow={getExpansionRow(columns.length, row)}>
+            <Table.Row
+                key={row.id}
+                {...(moreInfo
+                    ? { expansionRow: getExpansionRow(columns.length, row, moreInfo) }
+                    : {})}
+            >
                 {columns &&
                     columns.length &&
                     columns.map((header) => {
@@ -181,7 +186,7 @@ function CustomTable({ tableConfig, data, handleToggleActionClick }) {
     return (
         <>
             {columns && columns.length && (
-                <Table stripeRows rowExpansion="single">
+                <Table stripeRows {...(moreInfo ? { rowExpansion: 'single' } : {})}>
                     {getTableHeaders()}
                     {getTableBody()}
                 </Table>
@@ -191,6 +196,7 @@ function CustomTable({ tableConfig, data, handleToggleActionClick }) {
 }
 
 CustomTable.propTypes = {
+    tableConfig: PropTypes.object.isRequired,
     data: PropTypes.array.isRequired,
     handleToggleActionClick: PropTypes.func,
 };

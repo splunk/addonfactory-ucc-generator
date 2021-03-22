@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Message from '@splunk/react-ui/Message';
-import Button from '@splunk/react-ui/Button';
-import ControlGroup from '@splunk/react-ui/ControlGroup';
 import update from 'immutability-helper';
+
+import Message from '@splunk/react-ui/Message';
+
 import ControlWrapper from './ControlWrapper';
 import { getUnifiedConfigs } from '../util/util';
 import { MODE_CLONE, MODE_CREATE, MODE_EDIT } from '../constants/modes';
@@ -11,7 +11,6 @@ import { MODE_CLONE, MODE_CREATE, MODE_EDIT } from '../constants/modes';
 class BaseFormView extends Component {
     constructor(props) {
         super(props);
-
         // flag for to render hook method for once
         this.flag = true;
         this.state = {};
@@ -19,7 +18,7 @@ class BaseFormView extends Component {
         this.appName = globalConfig.meta.name;
 
         this.util = {
-            SetState: (state) => {
+            setState: (state) => {
                 this.setState(state);
             },
             setErrorFieldMsg: this.setErrorFieldMsg,
@@ -32,7 +31,7 @@ class BaseFormView extends Component {
             utilCustomFunctions: this.util,
         };
 
-        if (props.isInput) {
+        if (props.page === 'inputs') {
             globalConfig.pages.inputs.services.forEach((service) => {
                 if (service.name === props.serviceName) {
                     this.entities = service.entity;
@@ -256,51 +255,32 @@ class BaseFormView extends Component {
         }
 
         return (
-            <>
-                {this.props.renderSave ? (
-                    <Message appearance="banner" type="info" onRequestRemove={() => {}}>
-                        <span>
-                            Your trial <strong>will expire soon</strong>. This message should
-                            include
-                            <Message.Link to="http://duckduckgo.com">inline links</Message.Link>
-                            for recovery.
-                        </span>
-                    </Message>
-                ) : null}
-                <div className="form-horizontal" style={{ marginTop: '10px' }}>
-                    {this.generateErrorMessage()}
-                    {this.entities.map((e) => {
-                        const temState = this.state.data[e.field];
+            <div className="form-horizontal" style={{ marginTop: '10px' }}>
+                {this.generateErrorMessage()}
+                {this.entities.map((e) => {
+                    const tmpState = this.state.data[e.field];
 
-                        return (
-                            <ControlWrapper
-                                key={e.field}
-                                utilityFuncts={this.utilControlWrapper}
-                                value={temState.value}
-                                display={temState.display}
-                                error={temState.error}
-                                entity={e}
-                                serviceName={this.props.serviceName}
-                                mode={this.props.mode}
-                                disabled={temState.disbled}
-                            />
-                        );
-                    })}
-                    {this.props.renderSave ? (
-                        <ControlGroup label="">
-                            <div style={{ flexGrow: 0 }}>
-                                <Button appearance="primary" label="Save" />
-                            </div>
-                        </ControlGroup>
-                    ) : null}
-                </div>
-            </>
+                    return (
+                        <ControlWrapper
+                            key={e.field}
+                            utilityFuncts={this.utilControlWrapper}
+                            value={tmpState.value}
+                            display={tmpState.display}
+                            error={tmpState.error}
+                            entity={e}
+                            serviceName={this.props.serviceName}
+                            mode={this.props.mode}
+                            disabled={tmpState.disbled}
+                        />
+                    );
+                })}
+            </div>
         );
     }
 }
 
 BaseFormView.propTypes = {
-    isInput: PropTypes.bool,
+    page: PropTypes.string,
     serviceName: PropTypes.string,
     mode: PropTypes.string,
     currentInput: PropTypes.object,

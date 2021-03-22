@@ -37,7 +37,7 @@ class EntityModal extends Component {
                     <Modal.Body>
                         <BaseFormView
                             ref={this.form}
-                            isInput={this.props.isInput}
+                            page={this.props.page}
                             serviceName={this.props.serviceName}
                             mode={this.props.mode}
                             currentInput={this.props.currentInput}
@@ -58,7 +58,7 @@ class EntityModal extends Component {
 }
 
 EntityModal.propTypes = {
-    isInput: PropTypes.bool,
+    page: PropTypes.string,
     open: PropTypes.bool,
     handleRequestClose: PropTypes.func,
     serviceName: PropTypes.string,

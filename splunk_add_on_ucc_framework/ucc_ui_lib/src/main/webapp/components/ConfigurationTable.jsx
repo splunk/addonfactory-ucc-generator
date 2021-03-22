@@ -5,7 +5,6 @@ import ToastMessages from '@splunk/react-toast-notifications/ToastMessages';
 
 import { TableContextProvider } from '../context/TableContext';
 import TableWrapper from './table/TableWrapper';
-import ErrorBoundary from './ErrorBoundary';
 import EntityModal from './EntityModal';
 import { MODE_CREATE } from '../constants/modes';
 
@@ -39,13 +38,11 @@ function ConfigurationTable({ serviceName, serviceTitle, handleSaveData }) {
     return (
         <>
             <TableContextProvider value={null}>
-                <ErrorBoundary>
-                    <TableWrapper
-                        page="configuration"
-                        serviceName={serviceName}
-                        handleRequestModalOpen={() => handleRequestOpen()}
-                    />
-                </ErrorBoundary>
+                <TableWrapper
+                    page="configuration"
+                    serviceName={serviceName}
+                    handleRequestModalOpen={() => handleRequestOpen()}
+                />
                 <ToastMessages />
             </TableContextProvider>
             {generateModalDialog()}

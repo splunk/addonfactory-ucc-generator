@@ -3,13 +3,7 @@ import DL from '@splunk/react-ui/DefinitionList';
 import Table from '@splunk/react-ui/Table';
 import { _ } from '@splunk/ui-utils/i18n';
 
-import { getUnifiedConfigs } from '../../util/util';
-
-function getExpansionRowData(row) {
-
-    const unifiedConfigs = getUnifiedConfigs();
-    const { moreInfo } = unifiedConfigs.pages.inputs.table;
-
+function getExpansionRowData(row, moreInfo) {
     return (
         moreInfo &&
         moreInfo.length &&
@@ -17,11 +11,13 @@ function getExpansionRowData(row) {
             const label = _(val.label);
             return (
                 <>
-                    {(row[val.field]) && (
+                    {row[val.field] && (
                         <>
                             <DL.Term>{label}</DL.Term>
                             <DL.Description>
-                                {val.field === 'disabled' ? val.mapping[row[val.field]] : `${row[val.field]}`}
+                                {val.field === 'disabled'
+                                    ? val.mapping[row[val.field]]
+                                    : `${row[val.field]}`}
                             </DL.Description>
                         </>
                     )}
@@ -31,11 +27,11 @@ function getExpansionRowData(row) {
     );
 }
 
-export function getExpansionRow(colSpan, row) {
+export function getExpansionRow(colSpan, row, moreInfo) {
     return (
         <Table.Row key={`${row.id}-expansion`}>
             <Table.Cell style={{ borderTop: 'none' }} colSpan={colSpan}>
-                <DL>{getExpansionRowData(row)}</DL>
+                <DL>{getExpansionRowData(row, moreInfo)}</DL>
             </Table.Cell>
         </Table.Row>
     );
