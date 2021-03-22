@@ -170,7 +170,7 @@ class BaseFormView extends Component {
         const changes = {} 
         if (this.dependencyMap.has(field)) {
             const value = this.dependencyMap.get(field);
-            for (const loadField in value) {
+            Object.keys(value).forEach(loadField => {
 
                 const data = {};
                 let load = true;
@@ -182,18 +182,19 @@ class BaseFormView extends Component {
                         }
                     ).required;
 
-                    const value = dependency == field ? targetValue : this.state.data[dependency]["value"]
-                    if (required && !value) {
+                    const currentValue = dependency === field ? targetValue : this.state.data[dependency].value
+                    if (required && !currentValue) {
                         load = false;
+                        data[dependency] = null
                     } else {
-                        data[dependency] = value
+                        data[dependency] = currentValue
                     }
                 });
 
                 if (load) {
-                    changes[loadField] = { dependencyValues: {$set: data } }
+                    changes[loadField] = { dependencyValues: {$set: data }, value: {$set: null } }
                 }
-            }
+            })
             
         }
         changes[field] = { value: {$set: targetValue } }
