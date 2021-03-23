@@ -91,6 +91,7 @@ class DeleteModal extends Component {
                             appearance="secondary"
                             onClick={this.handleRequestClose}
                             label={_("Cancel")}
+                            disabled={this.state.isDeleting}
                         />
                         <Button appearance="primary" 
                             label={this.state.isDeleting?<WaitSpinner/>: _("Delete")} 
