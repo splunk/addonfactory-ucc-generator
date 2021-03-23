@@ -27,16 +27,3 @@ export function getBuildDirPath() {
     return '';
 }
 
-export function parseFuncRawStr(rawStr) {
-    let result;
-
-    try {
-        if (rawStr) {
-            result = eval(`(${rawStr})`);
-        }
-    } catch (e) {
-        console.warn(`${rawStr} ${_('is not a function').t()}${_('.').t()}`);
-    }
-
-    return result;
-}
