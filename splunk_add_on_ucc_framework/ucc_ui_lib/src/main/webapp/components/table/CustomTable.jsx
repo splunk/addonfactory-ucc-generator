@@ -231,28 +231,29 @@ function CustomTable({
                         } else if (header.field === 'disabled') {
                             cellHTML = (
                                 <Table.Cell key={header.field}>
-                                    <Switch
-                                        key={row.name}
-                                        value={row.disabled}
-                                        onClick={() => handleToggleActionClick(row)}
-                                        selected={!row.disabled}
-                                        // eslint-disable-next-line no-underscore-dangle
-                                        disabled={row.__toggleDisable}
-                                        appearance="toggle"
-                                        style={{ padding: 0 }}
-                                        selectedLabel={_(
-                                            statusMapping
-                                                ? statusMapping[0].mapping.false
-                                                : 'Enabled'
-                                        )}
-                                        unselectedLabel={_(
-                                            statusMapping
-                                                ? statusMapping[0].mapping.true
-                                                : 'Disabled'
-                                        )}
-                                    >
+                                    <div style={{ display: 'flex' }}>
+                                        <Switch
+                                            key={row.name}
+                                            value={row.disabled}
+                                            onClick={() => handleToggleActionClick(row)}
+                                            selected={!row.disabled}
+                                            // eslint-disable-next-line no-underscore-dangle
+                                            disabled={row.__toggleDisable}
+                                            appearance="toggle"
+                                            style={{ padding: 0, marginRight: '10px' }}
+                                            selectedLabel={_(
+                                                statusMapping
+                                                    ? statusMapping[0].mapping.false
+                                                    : 'Enabled'
+                                            )}
+                                            unselectedLabel={_(
+                                                statusMapping
+                                                    ? statusMapping[0].mapping.true
+                                                    : 'Disabled'
+                                            )}
+                                        />
                                         {statusContent}
-                                    </Switch>
+                                    </div>
                                 </Table.Cell>
                             );
                         } else if (header.field === 'actions') {
