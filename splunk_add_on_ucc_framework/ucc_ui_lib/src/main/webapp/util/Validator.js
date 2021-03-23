@@ -107,7 +107,7 @@ class Validator {
         }
 
         const val = Number(data);
-        if (_.isNaN(val)) {
+        if (Number.isNaN(val)) {
             return {
                 errorField: field,
                 errorMsg: validator.errorMsg

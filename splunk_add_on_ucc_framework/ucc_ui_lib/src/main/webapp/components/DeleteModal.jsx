@@ -9,7 +9,7 @@ import update from 'immutability-helper';
 import { _ } from '@splunk/ui-utils/i18n';
 
 import { axiosCallWrapper } from '../util/axiosCallWrapper';
-import InputRowContext from '../context/InputRowContext';
+import TableContext from '../context/TableContext';
 import { parseErrorMsg } from '../util/messageUtil';
 
 const ModalWrapper = styled(Modal)`
@@ -17,7 +17,7 @@ const ModalWrapper = styled(Modal)`
 `;
 
 class DeleteModal extends Component {
-    static contextType=InputRowContext;
+    static contextType=TableContext;
 
     constructor(props){
         super(props);

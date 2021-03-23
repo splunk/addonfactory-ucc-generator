@@ -7,7 +7,7 @@ function SingleInputComponent(props) {
     const { autoCompleteFields=[] } = controlOptions;
 
     function handleChange(e, { value }) {
-        restProps.handleChange( field, value);
+        restProps.handleChange(field, value);
     }
 
     function generateOptions() {

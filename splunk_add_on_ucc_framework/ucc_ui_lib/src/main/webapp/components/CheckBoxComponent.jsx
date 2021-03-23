@@ -16,16 +16,16 @@ class CheckBoxComponent extends Component {
                 disabled={this.props.disabled}
                 selected={!!this.props.value}
                 appearance="checkbox"
-             />
+            />
         );
     }
 }
 
 CheckBoxComponent.propTypes = {
-    value: PropTypes.string,
+    value: PropTypes.oneOfType([PropTypes.bool, PropTypes.number]),
     handleChange: PropTypes.func.isRequired,
     field: PropTypes.string,
-    disabled: PropTypes.bool
+    disabled: PropTypes.bool,
 };
 
 export default CheckBoxComponent;

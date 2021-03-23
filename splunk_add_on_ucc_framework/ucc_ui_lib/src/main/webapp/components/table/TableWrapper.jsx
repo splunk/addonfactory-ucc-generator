@@ -3,37 +3,32 @@ import update from 'immutability-helper';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 
-import ColumnLayout from '@splunk/react-ui/ColumnLayout';
-import Select from '@splunk/react-ui/Select';
-import Paginator from '@splunk/react-ui/Paginator';
 import { _ } from '@splunk/ui-utils/i18n';
 
-import TableFilter from './TableFilter';
 import CustomTable from './CustomTable';
-import {
-    TableCaptionComponent,
-    TableSelectBoxWrapper,
-    WaitSpinnerWrapper,
-} from './CustomTableStyle';
+import { WaitSpinnerWrapper } from './CustomTableStyle';
 import { getUnifiedConfigs, generateToast } from '../../util/util';
-import InputRowContext from '../../context/InputRowContext';
+import TableContext from '../../context/TableContext';
 import { axiosCallWrapper } from '../../util/axiosCallWrapper';
+import TableHeader from './TableHeader';
 
-function TableWrapper({ isInput, serviceName }) {
+function TableWrapper({ page, serviceName, handleRequestModalOpen }) {
     const [loading, setLoading] = useState(true);
-    const [searchText, setSearchText] = useState('');
-    const [searchType, setSearchType] = useState('all');
     const [error, setError] = useState(null);
-    const [pageSize, setPageSize] = useState(10);
-    const [currentPage, setCurrentPage] = useState(0);
 
-    const { rowData, setRowData } = useContext(InputRowContext);
+    const { rowData, setRowData, pageSize, currentPage, searchText, searchType } = useContext(
+        TableContext
+    );
 
     const unifiedConfigs = getUnifiedConfigs();
+    const services =
+        page === 'inputs'
+            ? unifiedConfigs.pages.inputs.services
+            : unifiedConfigs.pages.configuration.tabs.filter((x) => x.name === serviceName);
 
     const modifyAPIResponse = (data) => {
         const obj = {};
-        unifiedConfigs.pages.inputs.services.forEach((service, index) => {
+        services.forEach((service, index) => {
             if (service && service.name && data) {
                 const tmpObj = {};
                 data[index].forEach((val) => {
@@ -54,7 +49,7 @@ function TableWrapper({ isInput, serviceName }) {
     const fetchInputs = () => {
         setLoading(true);
         const requests = [];
-        unifiedConfigs.pages.inputs.services.forEach((service) => {
+        services.forEach((service) => {
             requests.push(
                 axiosCallWrapper({
                     serviceName: service.name,
@@ -141,18 +136,6 @@ function TableWrapper({ isInput, serviceName }) {
         });
     };
 
-    const getSearchTypeDropdown = () => {
-        const { services } = unifiedConfigs.pages.inputs;
-
-        let arr = [];
-        arr = services.map((service) => {
-            return <Select.Option key={service.name} label={service.title} value={service.name} />;
-        });
-
-        arr.unshift(<Select.Option key="all" label={_('All')} value="all" />);
-        return arr;
-    };
-
     /**
      *
      * @param {Array} data
@@ -205,80 +188,16 @@ function TableWrapper({ isInput, serviceName }) {
 
     const [filteredData, totalElement] = getRowData();
 
-    const tableHeaderComponent = () => {
-        return (
-            <ColumnLayout gutter={8}>
-                <ColumnLayout.Row
-                    style={{
-                        borderTop: '1px solid #e1e6eb',
-                        padding: '5px 0px',
-                        marginTop: '25px',
-                    }}
-                >
-                    <ColumnLayout.Column span={4}>
-                        <TableCaptionComponent>
-                            <div>
-                                {totalElement}
-                                {totalElement > 1 ? _(' Inputs') : _(' Input')}
-                                <TableSelectBoxWrapper>
-                                    <Select
-                                        value={pageSize}
-                                        onChange={(e, { value }) => {
-                                            setCurrentPage(0);
-                                            setPageSize(value);
-                                        }}
-                                    >
-                                        <Select.Option key="10" label="10 Per Page" value={10} />
-                                        <Select.Option key="25" label="25 Per Page" value={25} />
-                                        <Select.Option key="50" label="50 Per Page" value={50} />
-                                    </Select>
-                                    <Select
-                                        value={searchType}
-                                        onChange={(e, { value }) => {
-                                            setCurrentPage(0);
-                                            setSearchType(value);
-                                        }}
-                                    >
-                                        {getSearchTypeDropdown()}
-                                    </Select>
-                                </TableSelectBoxWrapper>
-                            </div>
-                        </TableCaptionComponent>
-                    </ColumnLayout.Column>
-                    <ColumnLayout.Column span={4}>
-                        <TableFilter
-                            handleChange={(e, { value }) => {
-                                setCurrentPage(0);
-                                setSearchText(value);
-                            }}
-                        />
-                    </ColumnLayout.Column>
-                    <ColumnLayout.Column
-                        span={4}
-                        style={{
-                            textAlign: 'right',
-                        }}
-                    >
-                        <Paginator
-                            onChange={(e, { page }) => setCurrentPage(page - 1)}
-                            current={currentPage + 1}
-                            alwaysShowLastPageLink
-                            totalPages={Math.ceil(totalElement / pageSize)}
-                            style={{
-                                marginRight: '30px',
-                            }}
-                        />
-                    </ColumnLayout.Column>
-                </ColumnLayout.Row>
-            </ColumnLayout>
-        );
-    };
-
     return (
         <>
-            {tableHeaderComponent()}
+            <TableHeader
+                page={page}
+                services={services}
+                totalElement={totalElement}
+                handleRequestModalOpen={handleRequestModalOpen}
+            />
             <CustomTable
-                isInput={isInput}
+                page={page}
                 serviceName={serviceName}
                 data={filteredData}
                 handleToggleActionClick={(row) => changeToggleStatus(row)}
@@ -288,8 +207,9 @@ function TableWrapper({ isInput, serviceName }) {
 }
 
 TableWrapper.propTypes = {
-    isInput: PropTypes.bool,
-    serviceName: PropTypes.string.isRequired,
+    page: PropTypes.string,
+    serviceName: PropTypes.string,
+    handleRequestModalOpen: PropTypes.func,
 };
 
 export default memo(TableWrapper);

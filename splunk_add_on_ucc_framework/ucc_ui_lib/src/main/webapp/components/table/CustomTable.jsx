@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import Table from '@splunk/react-ui/Table';
 import Switch from '@splunk/react-ui/Switch';
 import ButtonGroup from '@splunk/react-ui/ButtonGroup';
@@ -11,77 +11,82 @@ import PropTypes from 'prop-types';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 
 import { MODE_CLONE, MODE_EDIT } from '../../constants/modes';
-import { ActionButtonComponent } from './CustomTableStyle';
 import { getUnifiedConfigs } from '../../util/util';
+import { ActionButtonComponent } from './CustomTableStyle';
 import { getExpansionRow } from './TableExpansionRow';
 import EntityModal from '../EntityModal';
 import DeleteModal from '../DeleteModal';
 
-function CustomTable({ isInput, data, handleToggleActionClick }) {
-    const [entityModal, setEntityModal] = useState( { open:false } );
-    const [deleteModal, setDeleteModal] = useState( { open:false } );
+function CustomTable({ page, serviceName, data, handleToggleActionClick }) {
+    const [entityModal, setEntityModal] = useState({ open: false });
+    const [deleteModal, setDeleteModal] = useState({ open: false });
     const [sortKey, setSortKey] = useState('name');
     const [sortDir, setSortDir] = useState('asc');
     const unifiedConfigs = getUnifiedConfigs();
-    const { moreInfo } = unifiedConfigs.pages.inputs.table;
+    const tableConfig =
+        page === 'inputs'
+            ? unifiedConfigs.pages.inputs.table
+            : unifiedConfigs.pages.configuration.tabs.filter((x) => x.name === serviceName)[0]
+                  .table;
+    const { moreInfo } = tableConfig;
+    const headers = tableConfig.header;
     // TODO: add multi field mapping support
-    const statusMapping = moreInfo.filter((a) => a.mapping);
+    const statusMapping = moreInfo?.filter((a) => a.mapping);
 
     const generateColumns = () => {
         const column = [];
-        if (isInput) {
-            const headers = unifiedConfigs.pages.inputs.table.header;
-            if (headers && headers.length) {
-                headers.forEach((header) => {
-                    column.push({
-                        ...header,
-                        sortKey: header.field || null,
-                    });
+        if (headers && headers.length) {
+            headers.forEach((header) => {
+                column.push({
+                    ...header,
+                    sortKey: header.field || null,
                 });
-            }
-            column.push({ label: 'Actions', field: 'actions', sortKey: '' });
+            });
         }
+        column.push({ label: 'Actions', field: 'actions', sortKey: '' });
         return column;
     };
 
     const handleEntityClose = () => {
-        setEntityModal({...entityModal,open:false});
+        setEntityModal({ ...entityModal, open: false });
     };
 
     const handleDeleteClose = () => {
-        setDeleteModal({...deleteModal,open:false});
+        setDeleteModal({ ...deleteModal, open: false });
     };
 
     const generateModalDialog = () => {
         if (entityModal.open) {
             let label;
-            if(isInput){
+            if (page === 'inputs') {
                 const { services } = unifiedConfigs.pages?.inputs;
-                label =services[services.findIndex(x => x.name === entityModal.serviceName)]?.title;
-            }
-            else{
+                label =
+                    services[services.findIndex((x) => x.name === entityModal.serviceName)]?.title;
+            } else {
                 const { tabs } = unifiedConfigs.pages?.configuration;
-                label =tabs[tabs.findIndex(x => x.name === entityModal.serviceName)]?.title;
+                label = tabs[tabs.findIndex((x) => x.name === entityModal.serviceName)]?.title;
             }
             return (
                 <EntityModal
-                    isInput
+                    page={page}
                     open={entityModal.open}
                     handleRequestClose={handleEntityClose}
                     serviceName={entityModal.serviceName}
                     stanzaName={entityModal.stanzaName}
                     mode={entityModal.mode}
-                    formLabel={ entityModal.mode ===MODE_CLONE ? _(`Clone `)+label : _(`Update `)+label }
+                    formLabel={
+                        entityModal.mode === MODE_CLONE ? _(`Clone `) + label : _(`Update `) + label
+                    }
                 />
             );
         }
         return null;
-    }
+    };
 
-    const generateDeleteDialog = () =>{
-        if(deleteModal.open){
+    const generateDeleteDialog = () => {
+        if (deleteModal.open) {
             return (
-                < DeleteModal
+                <DeleteModal
                     isInput
                     open={deleteModal.open}
                     handleRequestClose={handleDeleteClose}
@@ -91,7 +96,7 @@ function CustomTable({ isInput, data, handleToggleActionClick }) {
             );
         }
         return null;
-    }
+    };
 
     const columns = generateColumns();
 
@@ -124,27 +129,33 @@ function CustomTable({ isInput, data, handleToggleActionClick }) {
         );
     };
 
-    const handleEditActionClick = (row) => { 
-        setEntityModal( {...entityModal,
-            open : true,
-            serviceName : row.serviceName,
-            stanzaName : row.name,
-            mode : MODE_EDIT } );
+    const handleEditActionClick = (row) => {
+        setEntityModal({
+            ...entityModal,
+            open: true,
+            serviceName: row.serviceName,
+            stanzaName: row.name,
+            mode: MODE_EDIT,
+        });
     };
 
     const handleCloneActionClick = (row) => {
-        setEntityModal( {...entityModal, 
-            open:true,
+        setEntityModal({
+            ...entityModal,
+            open: true,
             serviceName: row.serviceName,
             stanzaName: row.name,
-            mode: MODE_CLONE});
+            mode: MODE_CLONE,
+        });
     };
 
     const handleDeleteActionClick = (row) => {
-        setDeleteModal({...deleteModal,
-            open :true,
+        setDeleteModal({
+            ...deleteModal,
+            open: true,
             stanzaName: row.name,
-            serviceName : row.serviceName });
+            serviceName: row.serviceName,
+        });
     };
 
     const rowActionsPrimaryButton = (row) => {
@@ -181,12 +192,21 @@ function CustomTable({ isInput, data, handleToggleActionClick }) {
         let statusContent = '';
         // eslint-disable-next-line no-underscore-dangle
         if (!row.__toggleDisable) {
-            statusContent = statusMapping[0].mapping[row.disabled];
+            if (row.disabled) {
+                statusContent = statusMapping[0].mapping[row.disabled];
+            } else {
+                statusContent = row.disabled ? 'Disabled' : 'Enabled';
+            }
         } else {
             statusContent = <WaitSpinner />;
         }
         return (
-            <Table.Row key={row.id} expansionRow={getExpansionRow(columns.length, row)}>
+            <Table.Row
+                key={row.id}
+                {...(moreInfo
+                    ? { expansionRow: getExpansionRow(columns.length, row, moreInfo) }
+                    : {})}
+            >
                 {columns &&
                     columns.length &&
                     columns.map((header) => {
@@ -202,8 +222,16 @@ function CustomTable({ isInput, data, handleToggleActionClick }) {
                                         disabled={row.__toggleDisable}
                                         appearance="toggle"
                                         style={{ padding: 0 }}
-                                        selectedLabel={_(statusMapping[0].mapping.false)}
-                                        unselectedLabel={_(statusMapping[0].mapping.true)}
+                                        selectedLabel={_(
+                                            statusMapping
+                                                ? statusMapping[0].mapping.false
+                                                : 'Enabled'
+                                        )}
+                                        unselectedLabel={_(
+                                            statusMapping
+                                                ? statusMapping[0].mapping.true
+                                                : 'Disabled'
+                                        )}
                                     >
                                         {statusContent}
                                     </Switch>
@@ -244,7 +272,7 @@ function CustomTable({ isInput, data, handleToggleActionClick }) {
     return (
         <>
             {columns && columns.length && (
-                <Table stripeRows rowExpansion="single">
+                <Table stripeRows {...(moreInfo ? { rowExpansion: 'single' } : {})}>
                     {getTableHeaders()}
                     {getTableBody()}
                 </Table>
@@ -256,9 +284,10 @@ function CustomTable({ isInput, data, handleToggleActionClick }) {
 }
 
 CustomTable.propTypes = {
-    isInput: PropTypes.bool,
+    page: PropTypes.string.isRequired,
+    serviceName: PropTypes.string.isRequired,
     data: PropTypes.array.isRequired,
     handleToggleActionClick: PropTypes.func,
 };
 
-export default CustomTable;
+export default memo(CustomTable);
