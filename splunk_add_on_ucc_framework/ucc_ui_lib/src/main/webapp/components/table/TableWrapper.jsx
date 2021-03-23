@@ -104,12 +104,12 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen }) {
                 },
             });
         });
-        const params = new URLSearchParams();
-        params.append('disabled', !row.disabled);
+        const body = new URLSearchParams();
+        body.append('disabled', !row.disabled);
 
         axiosCallWrapper({
             serviceName: `${row.serviceName}/${row.name}`,
-            params,
+            body,
             customHeaders: { 'Content-Type': 'application/x-www-form-urlencoded' },
             method: 'post',
             handleError: true,
