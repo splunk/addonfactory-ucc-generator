@@ -13,7 +13,7 @@ app_name = cherrypy.request.path_info.split('/')[3]
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 
-<body>
+<body style="min-width:960px">
     <script src="${make_url('/config?autoload=1')}" crossorigin="use-credentials"></script>
     <script src="${make_url('/static/js/i18n.js')}"></script>
     <script src="${make_url('/i18ncatalog?autoload=1')}"></script>

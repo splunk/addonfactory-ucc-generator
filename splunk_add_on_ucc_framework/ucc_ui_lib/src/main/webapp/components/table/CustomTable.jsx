@@ -11,17 +11,25 @@ import PropTypes from 'prop-types';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 
 import { MODE_CLONE, MODE_EDIT } from '../../constants/modes';
-import { getUnifiedConfigs } from '../../util/util';
 import { ActionButtonComponent } from './CustomTableStyle';
+import { getUnifiedConfigs } from '../../util/util';
 import { getExpansionRow } from './TableExpansionRow';
 import EntityModal from '../EntityModal';
 import DeleteModal from '../DeleteModal';
+import CustomCell from '../CustomCell';
 
-function CustomTable({ page, serviceName, data, handleToggleActionClick }) {
+function CustomTable({
+    page,
+    serviceName,
+    data,
+    handleToggleActionClick,
+    handleSort,
+    sortDir,
+    sortKey,
+}) {
     const [entityModal, setEntityModal] = useState({ open: false });
     const [deleteModal, setDeleteModal] = useState({ open: false });
-    const [sortKey, setSortKey] = useState('name');
-    const [sortDir, setSortDir] = useState('asc');
+
     const unifiedConfigs = getUnifiedConfigs();
     const tableConfig =
         page === 'inputs'
@@ -99,14 +107,6 @@ function CustomTable({ page, serviceName, data, handleToggleActionClick }) {
     };
 
     const columns = generateColumns();
-
-    const handleSort = (e, val) => {
-        const prevSortKey = sortKey;
-        const prevSortDir = prevSortKey === val.sortKey ? sortDir : 'none';
-        const nextSortDir = prevSortDir === 'asc' ? 'desc' : 'asc';
-        setSortDir(nextSortDir);
-        setSortKey(val.sortKey);
-    };
 
     const getTableHeaders = () => {
         return (
@@ -188,6 +188,15 @@ function CustomTable({ page, serviceName, data, handleToggleActionClick }) {
         );
     };
 
+    const getCustomCell = (row, header) => {
+        return React.createElement(CustomCell, {
+            serviceName: row.serviceName,
+            field: row.name,
+            row,
+            fileName: header.customCell.src,
+        });
+    };
+
     const getTableRow = (row) => {
         let statusContent = '';
         // eslint-disable-next-line no-underscore-dangle
@@ -200,6 +209,7 @@ function CustomTable({ page, serviceName, data, handleToggleActionClick }) {
         } else {
             statusContent = <WaitSpinner />;
         }
+
         return (
             <Table.Row
                 key={row.id}
@@ -210,8 +220,16 @@ function CustomTable({ page, serviceName, data, handleToggleActionClick }) {
                 {columns &&
                     columns.length &&
                     columns.map((header) => {
-                        if (header.field === 'disabled') {
-                            return (
+                        let cellHTML = '';
+
+                        if (header.customCell && header.customCell.src) {
+                            cellHTML = (
+                                <Table.Cell key={header.field}>
+                                    {getCustomCell(row, header)}
+                                </Table.Cell>
+                            );
+                        } else if (header.field === 'disabled') {
+                            cellHTML = (
                                 <Table.Cell key={header.field}>
                                     <Switch
                                         key={row.name}
@@ -237,13 +255,14 @@ function CustomTable({ page, serviceName, data, handleToggleActionClick }) {
                                     </Switch>
                                 </Table.Cell>
                             );
+                        } else if (header.field === 'actions') {
+                            cellHTML = rowActionsPrimaryButton(row);
+                        } else {
+                            cellHTML = (
+                                <Table.Cell key={header.field}>{row[header.field]}</Table.Cell>
+                            );
                         }
-
-                        if (header.field === 'actions') {
-                            return rowActionsPrimaryButton(row);
-                        }
-
-                        return <Table.Cell key={header.field}>{row[header.field]}</Table.Cell>;
+                        return cellHTML;
                     })}
             </Table.Row>
         );
@@ -251,21 +270,7 @@ function CustomTable({ page, serviceName, data, handleToggleActionClick }) {
 
     const getTableBody = () => {
         return (
-            <Table.Body>
-                {data &&
-                    data.length &&
-                    data
-                        .sort((rowA, rowB) => {
-                            if (sortDir === 'asc') {
-                                return rowA[sortKey] > rowB[sortKey] ? 1 : -1;
-                            }
-                            if (sortDir === 'desc') {
-                                return rowB[sortKey] > rowA[sortKey] ? 1 : -1;
-                            }
-                            return 0;
-                        })
-                        .map((row) => getTableRow(row))}
-            </Table.Body>
+            <Table.Body>{data && data.length && data.map((row) => getTableRow(row))}</Table.Body>
         );
     };
 
@@ -288,6 +293,9 @@ CustomTable.propTypes = {
     serviceName: PropTypes.string.isRequired,
     data: PropTypes.array.isRequired,
     handleToggleActionClick: PropTypes.func,
+    handleSort: PropTypes.func,
+    sortDir: PropTypes.string,
+    sortKey: PropTypes.string,
 };
 
 export default memo(CustomTable);

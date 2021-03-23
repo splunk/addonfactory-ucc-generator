@@ -7,12 +7,16 @@ import CONTROL_TYPE_MAP from '../constants/ControlTypeMap';
 
 const CustomElement = styled.div`
     margin-left: 30px;
+
     div {
-        width: 100% !important;
+        width:100% !important
     }
 `;
 
 const ControlGroupWrapper = styled(ControlGroup)`
+    width: 100%;
+    max-width: 100%;
+
     > * {
         &:first-child {
             width: 170px !important;

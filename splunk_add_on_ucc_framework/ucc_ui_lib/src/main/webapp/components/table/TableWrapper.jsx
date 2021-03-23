@@ -3,16 +3,17 @@ import update from 'immutability-helper';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 
-import { _ } from '@splunk/ui-utils/i18n';
-
-import CustomTable from './CustomTable';
 import { WaitSpinnerWrapper } from './CustomTableStyle';
-import { getUnifiedConfigs, generateToast } from '../../util/util';
-import TableContext from '../../context/TableContext';
 import { axiosCallWrapper } from '../../util/axiosCallWrapper';
+import { getUnifiedConfigs, generateToast } from '../../util/util';
+import CustomTable from './CustomTable';
 import TableHeader from './TableHeader';
+import TableContext from '../../context/TableContext';
 
 function TableWrapper({ page, serviceName, handleRequestModalOpen }) {
+
+    const [sortKey, setSortKey] = useState('name');
+    const [sortDir, setSortDir] = useState('asc');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -136,6 +137,14 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen }) {
         });
     };
 
+    const handleSort = (e, val) => {
+        const prevSortKey = sortKey;
+        const prevSortDir = prevSortKey === val.sortKey ? sortDir : 'none';
+        const nextSortDir = prevSortDir === 'asc' ? 'desc' : 'asc';
+        setSortDir(nextSortDir);
+        setSortKey(val.sortKey);
+    };
+
     /**
      *
      * @param {Array} data
@@ -176,12 +185,25 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen }) {
         } else {
             arr = findByMatchingValue(rowData[searchType]);
         }
-        return [arr.slice(currentPage * pageSize, (currentPage + 1) * pageSize), arr.length];
+
+        // Sort the array based on the sort value
+        const sortedArr = arr.sort((rowA, rowB) => {
+            if (sortDir === 'asc') {
+                return rowA[sortKey] > rowB[sortKey] ? 1 : -1;
+            }
+            if (sortDir === 'desc') {
+                return rowB[sortKey] > rowA[sortKey] ? 1 : -1;
+            }
+            return 0;
+        });
+
+        return [sortedArr.slice(currentPage * pageSize, (currentPage + 1) * pageSize), arr.length];
     };
 
     if (error?.uccErrorCode) {
         throw error;
     }
+
     if (loading) {
         return <WaitSpinnerWrapper size="large" />;
     }
@@ -201,6 +223,9 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen }) {
                 serviceName={serviceName}
                 data={filteredData}
                 handleToggleActionClick={(row) => changeToggleStatus(row)}
+                handleSort={handleSort}
+                sortDir={sortDir}
+                sortKey={sortKey}
             />
         </>
     );
