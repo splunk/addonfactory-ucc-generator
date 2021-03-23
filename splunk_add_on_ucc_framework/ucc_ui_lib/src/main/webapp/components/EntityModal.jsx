@@ -51,7 +51,7 @@ class EntityModal extends Component {
     render() {
         return (
             <div>
-                <ModalWrapper onRequestClose={this.handleRequestClose} open={this.props.open}>
+                <ModalWrapper open={this.props.open}>
                     <Modal.Header
                         title={this.props.formLabel}
                         onRequestClose={this.handleRequestClose}
