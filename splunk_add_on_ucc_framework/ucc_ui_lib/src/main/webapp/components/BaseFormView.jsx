@@ -201,21 +201,21 @@ class BaseFormView extends PureComponent {
         }
 
         if (!error) {
-            const params = new URLSearchParams();
+            const body = new URLSearchParams();
 
             Object.keys(datadict).forEach((key) => {
-                if (datadict[key]) {
-                    params.append(key, datadict[key]);
+                if (datadict[key] != null) {
+                    body.append(key, datadict[key]);
                 }
             });
 
             if (this.props.mode === MODE_EDIT) {
-                params.delete('name');
+                body.delete('name');
             }
 
             axiosCallWrapper({
                 serviceName: this.endpoint,
-                params,
+                body,
                 customHeaders: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 method: 'post',
                 handleError: false,
@@ -256,7 +256,7 @@ class BaseFormView extends PureComponent {
         const changes = {};
         if (this.dependencyMap.has(field)) {
             const value = this.dependencyMap.get(field);
-            for (const loadField in value) {
+            Object.keys(value).forEach((loadField) => {
                 const data = {};
                 let load = true;
 
@@ -265,19 +265,23 @@ class BaseFormView extends PureComponent {
                         return e.field === dependency;
                     }).required;
 
-                    const value =
-                        dependency == field ? targetValue : this.state.data[dependency]['value'];
-                    if (required && !value) {
+                    const currentValue =
+                        dependency === field ? targetValue : this.state.data[dependency].value;
+                    if (required && !currentValue) {
                         load = false;
+                        data[dependency] = null;
                     } else {
-                        data[dependency] = value;
+                        data[dependency] = currentValue;
                     }
                 });
 
                 if (load) {
-                    changes[loadField] = { dependencyValues: { $set: data } };
+                    changes[loadField] = {
+                        dependencyValues: { $set: data },
+                        value: { $set: null },
+                    };
                 }
-            }
+            });
         }
         changes[field] = { value: { $set: targetValue } };
 
@@ -296,7 +300,7 @@ class BaseFormView extends PureComponent {
 
     addCustomValidator = (field, validatorFunc) => {
         const index = this.entities.findIndex((x) => x.field === field);
-        const validator = [{ type: 'custom', validatorFunc: validatorFunc }];
+        const validator = [{ type: 'custom', validatorFunc }];
         this.entities[index].validators = validator;
     };
 
