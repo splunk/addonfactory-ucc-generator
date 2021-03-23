@@ -71,6 +71,7 @@ jobs:
     docker:
       - image: returntocorp/semgrep-agent:v1
         user: root
+    resource_class: large
     steps:
       - checkout
       - run:
@@ -79,7 +80,7 @@ jobs:
             pip3 install --upgrade semgrep
       - run:
           name: "Semgrep Scan"
-          no_output_timeout: 1h
+          no_output_timeout: 2h
           command: |
             export SEMGREP_REPO_NAME=splunk/${CIRCLE_PROJECT_REPONAME}
             python -m semgrep_agent --publish-deployment ${SEMGREP_DEPLOYMENT_ID} --publish-token ${SEMGREP_PUBLISH_TOKEN}
