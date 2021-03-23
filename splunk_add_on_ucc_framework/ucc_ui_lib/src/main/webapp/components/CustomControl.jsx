@@ -1,8 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { _ } from '@splunk/ui-utils/i18n';
+
 import { getUnifiedConfigs } from '../util/util';
 
 class CustomControl extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            loading: true
+        };
+        this.shouldRender = true;
+    }
+
     componentDidMount() {
         const globalConfig = getUnifiedConfigs();
         const appName = globalConfig.meta.name;
@@ -20,10 +30,15 @@ class CustomControl extends Component {
             if (typeof customControl.validation === 'function') {
                 this.props.addCustomValidator(this.props.field, customControl.validation);
             }
+            this.setState({loading: false});
         });
     }
 
-    shouldComponentUpdate() {
+    shouldComponentUpdate(nextProps, nextState) {
+        if (!nextState.loading && this.shouldRender) {
+            this.shouldRender = false;
+            return true;
+        }
         return false;
     }
 
@@ -42,11 +57,10 @@ class CustomControl extends Component {
 
     render() {
         return (
-            <div
-                ref={(el) => {
-                    this.el = el;
-                }}
-            />
+            <>
+                {this.state.loading && _("Loading...")}
+                {<span ref={(el) => { this.el = el; }} style={{visibility: this.state.loading ? 'hidden': 'visible'}} />}
+            </>
         );
     }
 }
