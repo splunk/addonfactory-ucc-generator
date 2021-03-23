@@ -18,11 +18,11 @@ class CustomCell extends Component {
         this.setState({ loading: true });
         this.loadCustomControl().then((Control) => {
             const customControl = new Control(
+                globalConfig,
+                this.props.serviceName,
                 this.el,
                 this.props.field,
-                this.props.row,
-                this.props.serviceName,
-                globalConfig
+                this.props.row
             );
             customControl.render();
             this.setState({ loading: false });
