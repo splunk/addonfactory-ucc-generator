@@ -71,6 +71,7 @@ class EntityModal extends Component {
                             appearance="secondary"
                             onClick={this.handleRequestClose}
                             label={_('Cancel')}
+                            disabled={this.state.isSubmititng}
                         />
                         <Button
                             appearance="primary"
