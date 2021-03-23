@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { _ } from '@splunk/ui-utils/i18n';
 
 import { getUnifiedConfigs } from '../util/util';
 
@@ -50,7 +51,7 @@ class CustomCell extends Component {
     render() {
         return (
             <>
-                {this.state.loading && 'Loading...'}
+                {this.state.loading && _('Loading...')}
                 {
                     <span
                         ref={(el) => {
