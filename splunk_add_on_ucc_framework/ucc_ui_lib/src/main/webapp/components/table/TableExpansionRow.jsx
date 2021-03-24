@@ -12,10 +12,8 @@ function getExpansionRowData(row, moreInfo) {
                 DefinitionLists.push(<DL.Term>{label}</DL.Term>);
                 DefinitionLists.push(
                     <DL.Description>
-                        {val.mapping
+                        {val.mapping && val.mapping[row[val.field]]
                             ? val.mapping[row[val.field]]
-                                ? val.mapping[row[val.field]]
-                                : row[val.field]
                             : row[val.field]}
                     </DL.Description>
                 );
