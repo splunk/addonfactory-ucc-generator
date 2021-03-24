@@ -96,7 +96,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
 name = "dunamai"
-version = "1.5.0"
+version = "1.5.4"
 description = "Dynamic version generation"
 category = "main"
 optional = false
@@ -408,7 +408,7 @@ dev = ["pre-commit", "tox"]
 
 [[package]]
 name = "poetry-dynamic-versioning"
-version = "0.12.0"
+version = "0.12.4"
 description = "Plugin for Poetry to enable dynamic versioning based on VCS tags"
 category = "dev"
 optional = false
@@ -587,7 +587,7 @@ socks = ["PySocks (>=1.5.6,!=1.5.7)", "win-inet-pton"]
 
 [[package]]
 name = "reuse"
-version = "0.11.1"
+version = "0.12.1"
 description = "reuse is a tool for compliance with the REUSE recommendations."
 category = "main"
 optional = false
@@ -808,8 +808,8 @@ colorama = [
     {file = "colorama-0.4.4.tar.gz", hash = "sha256:5941b2b48a20143d2267e95b1c2a7603ce057ee39fd88e7329b0c292aa16869b"},
 ]
 dunamai = [
-    {file = "dunamai-1.5.0-py3-none-any.whl", hash = "sha256:1f256e09537986a8b413ee0de9e7f1f264608407429fe17031b71c733b197ce4"},
-    {file = "dunamai-1.5.0.tar.gz", hash = "sha256:0424b86ae37a6f23c480adb985b89866b71b3d9bde221bbd119060eef48315ed"},
+    {file = "dunamai-1.5.4-py3-none-any.whl", hash = "sha256:0edbc8c37484b2db7c54b70de88c2b6ce866890440fc4bea6470cb1b88b75058"},
+    {file = "dunamai-1.5.4.tar.gz", hash = "sha256:82eb8dbdad6734a6ad475a2e8d0d5167fde7b0ae0d9529da0042129ca3736523"},
 ]
 execnet = [
     {file = "execnet-1.7.1-py2.py3-none-any.whl", hash = "sha256:d4efd397930c46415f62f8a31388d6be4f27a91d7550eb79bc64a756e0056547"},
@@ -1015,8 +1015,8 @@ pluggy = [
     {file = "pluggy-0.13.1.tar.gz", hash = "sha256:15b2acde666561e1298d71b523007ed7364de07029219b604cf808bfa1c765b0"},
 ]
 poetry-dynamic-versioning = [
-    {file = "poetry-dynamic-versioning-0.12.0.tar.gz", hash = "sha256:6bab4b62125bdc8feb3cb6420d10732df1bf769f6ee06412c72c2b0bbf19e2e2"},
-    {file = "poetry_dynamic_versioning-0.12.0-py3-none-any.whl", hash = "sha256:3f33ca7f5ec047d4909e3e77390d47711ffd6f70a2ad7e5efc98a389b468bbf0"},
+    {file = "poetry-dynamic-versioning-0.12.4.tar.gz", hash = "sha256:8bc15c31c5cc095c1a5c9bc42582387ba2cbefa3ae230bda5a84cc834c8b28b1"},
+    {file = "poetry_dynamic_versioning-0.12.4-py3-none-any.whl", hash = "sha256:29a3670de4682ef7830e99d9f5a7e179f98c85d78a332af5f6b5385b4400cb20"},
 ]
 py = [
     {file = "py-1.9.0-py2.py3-none-any.whl", hash = "sha256:366389d1db726cd2fcfc79732e75410e5fe4d31db13692115529d34069a043c2"},
@@ -1089,8 +1089,8 @@ requests = [
     {file = "requests-2.24.0.tar.gz", hash = "sha256:b3559a131db72c33ee969480840fff4bb6dd111de7dd27c8ee1f820f4f00231b"},
 ]
 reuse = [
-    {file = "reuse-0.11.1-py3-none-any.whl", hash = "sha256:fb15e9c605d815cc816bec690d3ecf88ecba50968b6d41d558d95e54e80bbcc4"},
-    {file = "reuse-0.11.1.tar.gz", hash = "sha256:a5c539a3ccf46eff16c85590b4cc158fc614ce434b7d9dff5120ef441c591227"},
+    {file = "reuse-0.12.1-py3-none-any.whl", hash = "sha256:a07fce3a43eefa2e3140a7510b6171788cc95a3c9cc840517c10d6de28c42d6d"},
+    {file = "reuse-0.12.1.tar.gz", hash = "sha256:4ed065f24c5fc929ebf8853663e14ca486fe4108d7aebceebf51e2c597ec2186"},
 ]
 schematics = [
     {file = "schematics-2.1.0-py2.py3-none-any.whl", hash = "sha256:8fcc6182606fd0b24410a1dbb066d9bbddbe8da9c9509f47b743495706239283"},
