@@ -14,7 +14,7 @@ class CheckBoxComponent extends Component {
                 value={this.props.field}
                 onClick={this.handleChange}
                 disabled={this.props.disabled}
-                selected={!!this.props.value}
+                selected={['1', 1, true].includes(this.props.value)}
                 appearance="checkbox"
             />
         );
