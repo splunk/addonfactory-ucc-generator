@@ -80,8 +80,7 @@ class BaseFormView extends PureComponent {
         const temState = {};
         this.entities.forEach((e) => {
             const tempEntity = {};
-            e.defaultValue = e.defaultValue ? e.defaultValue : '';
-
+            
             if (props.mode === MODE_CREATE) {
                 tempEntity.value = typeof e.defaultValue !== 'undefined' ? e.defaultValue : null;
                 tempEntity.display =
@@ -114,6 +113,7 @@ class BaseFormView extends PureComponent {
                 tempEntity.disabled = false;
                 temState[e.field] = tempEntity;
             } else if (props.mode === MODE_CONFIG) {
+                e.defaultValue =  typeof e.defaultValue !== 'undefined' ? e.defaultValue : null;
                 tempEntity.value =
                     typeof this.currentInput[e.field] !== 'undefined'
                         ? this.currentInput[e.field]
