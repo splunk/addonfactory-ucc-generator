@@ -5,10 +5,10 @@ import { isFalse } from '../util/util';
 
 class CheckBoxComponent extends Component {
     handleChange = () => {
-        if (isFalse(this.props.value)) {
-            this.props.handleChange(this.props.field, 1);
-        } else {
+        if (this.props.value && !isFalse(this.props.value)) {
             this.props.handleChange(this.props.field, 0);
+        } else {
+            this.props.handleChange(this.props.field, 1);
         }
     };
 
@@ -19,7 +19,7 @@ class CheckBoxComponent extends Component {
                 value={this.props.field}
                 onClick={this.handleChange}
                 disabled={this.props.disabled}
-                selected={!isFalse(this.props.value)}
+                selected={!(this.props.value ? isFalse(this.props.value) : true)}
                 appearance="checkbox"
             />
         );
