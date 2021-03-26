@@ -14,6 +14,14 @@ export function getMetaInfo() {
     };
 }
 
+export function isFalse(value) {
+    return ['0', 'FALSE', 'F', 'N', 'NO', 'NONE', ''].includes(value.toString().toUpperCase());
+}
+
+export function isTrue(value) {
+    return ['1', 'TRUE', 'T', 'Y', 'YES'].includes(value.toString().toUpperCase());
+}
+
 export function generateEndPointUrl(name) {
     return `${unifiedConfigs.meta.restRoot}_${name}`;
 }

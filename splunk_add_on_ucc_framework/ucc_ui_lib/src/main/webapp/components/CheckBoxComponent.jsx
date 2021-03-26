@@ -1,16 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Switch from '@splunk/react-ui/Switch';
+import { isFalse } from '../util/util';
 
 class CheckBoxComponent extends Component {
-    falseValues = ['0', 'FALSE', 'F', 'N', 'NO', 'NONE', ''];
-
-    isFalse = () => {
-        return this.falseValues.includes(this.props.value.toString().toUpperCase());
-    };
-
     handleChange = () => {
-        if (this.isFalse()) {
+        if (isFalse(this.props.value)) {
             this.props.handleChange(this.props.field, 1);
         } else {
             this.props.handleChange(this.props.field, 0);
@@ -24,7 +19,7 @@ class CheckBoxComponent extends Component {
                 value={this.props.field}
                 onClick={this.handleChange}
                 disabled={this.props.disabled}
-                selected={!this.isFalse()}
+                selected={!isFalse(this.props.value)}
                 appearance="checkbox"
             />
         );
