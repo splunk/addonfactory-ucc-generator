@@ -21,9 +21,10 @@ function ConfigurationFormView({ serviceName }) {
         axiosCallWrapper({
             serviceName: `settings/${serviceName}`,
             handleError: true,
-            callbackOnError: (error) => {
-                error.uccErrorCode = 'ERR0004';
-                setError(error);
+            callbackOnError: (err) => {
+                // eslint-disable-next-line no-param-reassign
+                err.uccErrorCode = 'ERR0004';
+                setError(err);
             },
         }).then((response) => {
             setCurrentServiceState(response.data.entry[0].content);

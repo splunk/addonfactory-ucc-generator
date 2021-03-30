@@ -28,6 +28,7 @@ TextComponent.propTypes = {
     value: PropTypes.string,
     handleChange: PropTypes.func.isRequired,
     field: PropTypes.string,
+    error: PropTypes.bool,
     controlOptions: PropTypes.object,
     encrypted:PropTypes.bool,
     disabled:PropTypes.bool

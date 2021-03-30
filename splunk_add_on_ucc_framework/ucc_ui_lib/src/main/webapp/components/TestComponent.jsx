@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from '@splunk/react-ui/Button';
 import { StyledContainer, StyledGreeting } from './TestComponentStyles';
-import { getUnifiedConfigs } from '../util/util';
 import { axiosCallWrapper } from '../util/axiosCallWrapper';
 
 class TestComponent extends Component {
@@ -21,12 +20,13 @@ class TestComponent extends Component {
     }
 
     componentDidMount() {
-        console.log('getUnifiedConfigs: ', getUnifiedConfigs());
         axiosCallWrapper(this.props.serviceName)
             .then((response) => {
+                // eslint-disable-next-line no-console
                 console.log(response.data);
             })
             .catch((error) => {
+                // eslint-disable-next-line no-console
                 console.log(error);
             });
     }
@@ -56,4 +56,7 @@ class TestComponent extends Component {
     }
 }
 
+TestComponent.propTypes = {
+    serviceName: PropTypes.string,
+};
 export default TestComponent;

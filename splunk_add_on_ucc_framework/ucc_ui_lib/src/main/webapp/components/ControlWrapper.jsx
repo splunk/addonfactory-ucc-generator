@@ -99,6 +99,7 @@ ControlWrapper.propTypes = {
     entity: PropTypes.object,
     disabled: PropTypes.bool,
     serviceName: PropTypes.string,
+    dependencyValues: PropTypes.object,
 };
 
 export default ControlWrapper;
