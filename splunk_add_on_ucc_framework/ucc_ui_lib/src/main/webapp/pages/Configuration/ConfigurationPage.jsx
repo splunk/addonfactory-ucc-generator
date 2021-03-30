@@ -1,9 +1,11 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { _ } from '@splunk/ui-utils/i18n';
 import TabBar from '@splunk/react-ui/TabBar';
 import ColumnLayout from '@splunk/react-ui/ColumnLayout';
 
+import useQuery from '../../hooks/useQuery';
 import { getUnifiedConfigs } from '../../util/util';
 import ErrorBoundary from '../../components/ErrorBoundary';
 import { TitleComponent, SubTitleComponent } from '../Input/InputPageStyle';
@@ -13,12 +15,35 @@ import ConfigurationTable from '../../components/ConfigurationTable';
 function ConfigurationPage() {
     const unifiedConfigs = getUnifiedConfigs();
     const { title, description, tabs } = unifiedConfigs.pages.configuration;
+    const permittedTabNames = tabs.map((tab) => {
+        return tab.name;
+    });
 
     const [activeTabId, setActiveTabId] = useState(tabs[0].name);
+
+    const history = useHistory();
+    const query = useQuery();
+
+    // Run only once when component is mounted to load component based on initial query params
+    useEffect(() => {
+        if (
+            query &&
+            permittedTabNames.includes(query.get('tab')) &&
+            query.get('tab') !== activeTabId
+        ) {
+            setActiveTabId(query.get('tab'));
+        }
+    }, []);
 
     const handleChange = useCallback((e, { selectedTabId }) => {
         setActiveTabId(selectedTabId);
     }, []);
+
+    // Update query params on tab change
+    useEffect(() => {
+        query.set('tab', activeTabId);
+        history.push({ search: query.toString() });
+    }, [activeTabId, history]);
 
     return (
         <ErrorBoundary>
@@ -38,19 +63,25 @@ function ConfigurationPage() {
             {tabs.map((tab) => {
                 return tab.table ? (
                     <div
+                        key={tab.name}
                         style={
                             tab.name !== activeTabId ? { display: 'none' } : { display: 'block' }
                         }
                     >
-                        <ConfigurationTable serviceName={tab.name} serviceTitle={tab.title} />
+                        <ConfigurationTable
+                            key={tab.name}
+                            serviceName={tab.name}
+                            serviceTitle={tab.title}
+                        />
                     </div>
                 ) : (
                     <div
+                        key={tab.name}
                         style={
                             tab.name !== activeTabId ? { display: 'none' } : { display: 'block' }
                         }
                     >
-                        <ConfigurationFormView serviceName={tab.name} />
+                        <ConfigurationFormView key={tab.name} serviceName={tab.name} />
                     </div>
                 );
             })}

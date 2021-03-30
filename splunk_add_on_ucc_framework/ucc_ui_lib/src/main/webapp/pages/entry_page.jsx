@@ -1,4 +1,6 @@
 import React from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
+
 import layout from '@splunk/react-page';
 import { SplunkThemeProvider } from '@splunk/themes';
 
@@ -16,11 +18,15 @@ function higherOrderComponent(WrappedComponent) {
             return (
                 <SplunkThemeProvider {...ThemeProviderSettings}>
                     <StyledContainer>
-                        <ConfigManager>
-                            {({ loading, appData }) => {
-                                return !loading && appData && <WrappedComponent {...this.props} />;
-                            }}
-                        </ConfigManager>
+                        <Router>
+                            <ConfigManager>
+                                {({ loading, appData }) => {
+                                    return (
+                                        !loading && appData && <WrappedComponent {...this.props} />
+                                    );
+                                }}
+                            </ConfigManager>
+                        </Router>
                     </StyledContainer>
                 </SplunkThemeProvider>
             );
@@ -38,10 +44,7 @@ const urlParts = url.substring(1).split('/');
 const page = urlParts[urlParts.length - 1];
 
 if (page === 'inputs') {
-    layout(
-        <InputPageComponent />,
-        { pageTitle: 'Inputs' }
-    );
+    layout(<InputPageComponent />, { pageTitle: 'Inputs' });
 } else if (page === 'configuration') {
     layout(<ConfigurationPageComponent />, { pageTitle: 'Configuration' });
 }

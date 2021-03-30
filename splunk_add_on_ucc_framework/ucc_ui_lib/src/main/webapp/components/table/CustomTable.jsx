@@ -1,4 +1,6 @@
-import React, { useState, memo } from 'react';
+import React, { useState, useEffect, memo } from 'react';
+import { useHistory } from 'react-router-dom';
+
 import Table from '@splunk/react-ui/Table';
 import Switch from '@splunk/react-ui/Switch';
 import ButtonGroup from '@splunk/react-ui/ButtonGroup';
@@ -10,6 +12,7 @@ import { _ } from '@splunk/ui-utils/i18n';
 import PropTypes from 'prop-types';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 
+import useQuery from '../../hooks/useQuery';
 import { MODE_CLONE, MODE_EDIT } from '../../constants/modes';
 import { ActionButtonComponent } from './CustomTableStyle';
 import { getUnifiedConfigs } from '../../util/util';
@@ -40,6 +43,37 @@ function CustomTable({
     const headers = tableConfig.header;
     // TODO: add multi field mapping support
     const statusMapping = moreInfo?.filter((a) => a.mapping);
+
+    const history = useHistory();
+    const query = useQuery();
+
+    // Run only once when component is mounted to load component based on initial query params
+    useEffect(() => {
+        if (
+            query &&
+            query.get('record') &&
+            (query.get('tab') === serviceName || !query.get('tab'))
+        ) {
+            const row = data.find((x) => x.name === query.get('record'));
+            setEntityModal({
+                ...entityModal,
+                open: true,
+                serviceName: row.serviceName,
+                stanzaName: row.name,
+                mode: MODE_EDIT,
+            });
+        }
+    }, []);
+
+    // Update query params on input context change on modal
+    useEffect(() => {
+        if (entityModal.open && entityModal.mode === MODE_EDIT) {
+            query.set('record', entityModal.stanzaName);
+        } else {
+            query.delete('record');
+        }
+        history.push({ search: query.toString() });
+    }, [entityModal, history]);
 
     const generateColumns = () => {
         const column = [];
@@ -291,7 +325,7 @@ function CustomTable({
 
 CustomTable.propTypes = {
     page: PropTypes.string.isRequired,
-    serviceName: PropTypes.string.isRequired,
+    serviceName: PropTypes.string,
     data: PropTypes.array.isRequired,
     handleToggleActionClick: PropTypes.func,
     handleSort: PropTypes.func,
