@@ -110,7 +110,7 @@ function TableHeader({ page, services, totalElement, handleRequestModalOpen }) {
                     }}
                 >
                     <Paginator
-                        onChange={(e, { page }) => setCurrentPage(page - 1)}
+                        onChange={(e, { pageNumber }) => setCurrentPage(pageNumber - 1)}
                         current={currentPage + 1}
                         alwaysShowLastPageLink
                         totalPages={Math.ceil(totalElement / pageSize)}
