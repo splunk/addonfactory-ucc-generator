@@ -50,6 +50,10 @@ class ModInput{{class_name}}(base_mi.BaseModInput):
         {% endfor %}
         return scheme
 
+    def validate_input(self, definition):
+        """validate the input stanza"""
+        """Implement your own validation logic to validate the input stanza configurations"""
+        pass
 
     def get_app_name(self):
         return "app_name" 
