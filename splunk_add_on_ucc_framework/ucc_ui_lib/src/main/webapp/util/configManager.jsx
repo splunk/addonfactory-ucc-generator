@@ -84,7 +84,7 @@ class ConfigManager extends Component {
 }
 
 ConfigManager.propTypes = {
-    children: PropTypes.string,
+    children: PropTypes.any,
 };
 
 export default ConfigManager;
