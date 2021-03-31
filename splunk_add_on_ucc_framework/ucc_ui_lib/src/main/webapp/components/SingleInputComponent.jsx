@@ -22,17 +22,15 @@ function SingleInputComponent(props) {
         allowList,
         placeholder = _('Select a value'),
         dependencies,
-        // eslint-disable-next-line no-unused-vars
         createSearchChoice,
         referenceName,
-        // eslint-disable-next-line no-unused-vars
         disableSearch,
         labelField,
         autoCompleteFields,
     } = controlOptions;
 
-    function handleChange(e, { val }) {
-        restProps.handleChange(field, val);
+    function handleChange(e, { value }) {
+        restProps.handleChange(field, value);
     }
 
     function generateOptions(items) {
