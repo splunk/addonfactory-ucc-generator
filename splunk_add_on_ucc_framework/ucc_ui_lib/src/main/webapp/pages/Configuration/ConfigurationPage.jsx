@@ -38,6 +38,7 @@ function ConfigurationPage() {
             {tabs.map((tab) => {
                 return tab.table ? (
                     <div
+                        key={tab.name}
                         style={
                             tab.name !== activeTabId ? { display: 'none' } : { display: 'block' }
                         }

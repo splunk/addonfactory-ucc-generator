@@ -9,9 +9,9 @@ import ToastMessages from '@splunk/react-toast-notifications/ToastMessages';
 import { getUnifiedConfigs } from '../../util/util';
 import { TitleComponent, SubTitleComponent } from './InputPageStyle';
 import { TableContextProvider } from '../../context/TableContext';
+import { MODE_CREATE } from '../../constants/modes';
 import TableWrapper from '../../components/table/TableWrapper';
 import EntityModal from '../../components/EntityModal';
-import { MODE_CREATE } from '../../constants/modes';
 import ErrorBoundary from '../../components/ErrorBoundary';
 
 function InputPage() {
@@ -84,15 +84,20 @@ function InputPage() {
                         </ColumnLayout.Column>
                     )}
                     {services && services.length === 1 && (
-                        <Button
-                            label="Create New Input"
-                            appearance="primary"
-                            onClick={() => {
-                                setServiceName(services[0].name);
-                                setServiceLabel(`Add ${services[0].title}`);
-                                handleRequestOpen();
-                            }}
-                        />
+                        <ColumnLayout.Column
+                            span={3}
+                            style={{ textAlign: 'right', marginRight: '0px' }}
+                        >
+                            <Button
+                                label="Create New Input"
+                                appearance="primary"
+                                onClick={() => {
+                                    setServiceName(services[0].name);
+                                    setServiceLabel(`Add ${services[0].title}`);
+                                    handleRequestOpen();
+                                }}
+                            />
+                        </ColumnLayout.Column>
                     )}
                 </ColumnLayout.Row>
             </ColumnLayout>

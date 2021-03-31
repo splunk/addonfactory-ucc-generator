@@ -11,7 +11,6 @@ import TableHeader from './TableHeader';
 import TableContext from '../../context/TableContext';
 
 function TableWrapper({ page, serviceName, handleRequestModalOpen }) {
-
     const [sortKey, setSortKey] = useState('name');
     const [sortDir, setSortDir] = useState('asc');
     const [loading, setLoading] = useState(true);
@@ -48,7 +47,6 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen }) {
     };
 
     const fetchInputs = () => {
-        setLoading(true);
         const requests = [];
         services.forEach((service) => {
             requests.push(
@@ -101,7 +99,7 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen }) {
         setRowData((currentRowData) => {
             return update(currentRowData, {
                 [row.serviceName]: {
-                    [row.name]: { __toggleDisable: { $set: true } },
+                    [row.name]: { __toggleShowSpinner: { $set: true } },
                 },
             });
         });
@@ -118,7 +116,7 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen }) {
                 setRowData((currentRowData) => {
                     return update(currentRowData, {
                         [row.serviceName]: {
-                            [row.name]: { __toggleDisable: { $set: false } },
+                            [row.name]: { __toggleShowSpinner: { $set: false } },
                         },
                     });
                 });
@@ -129,7 +127,7 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen }) {
                     [row.serviceName]: {
                         [row.name]: {
                             disabled: { $set: response.data.entry[0].content.disabled },
-                            __toggleDisable: { $set: false },
+                            __toggleShowSpinner: { $set: false },
                         },
                     },
                 });
@@ -197,7 +195,13 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen }) {
             return 0;
         });
 
-        return [sortedArr.slice(currentPage * pageSize, (currentPage + 1) * pageSize), arr.length];
+        let updatedArr = sortedArr.slice(currentPage * pageSize, (currentPage + 1) * pageSize);
+
+        if (currentPage > 0 && !updatedArr.length) {
+            updatedArr = sortedArr.slice((currentPage - 1) * pageSize, pageSize);
+        }
+
+        return [updatedArr, arr.length];
     };
 
     if (error?.uccErrorCode) {
@@ -205,7 +209,7 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen }) {
     }
 
     if (loading) {
-        return <WaitSpinnerWrapper size="large" />;
+        return <WaitSpinnerWrapper />;
     }
 
     const [filteredData, totalElement] = getRowData();
