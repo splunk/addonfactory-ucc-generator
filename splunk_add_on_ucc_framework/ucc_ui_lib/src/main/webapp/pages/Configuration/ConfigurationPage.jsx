@@ -36,7 +36,7 @@ function ConfigurationPage() {
         ) {
             setActiveTabId(query.get('tab'));
         }
-    }, [query]);
+    }, [history.location.search]);
 
     const handleChange = (e, { selectedTabId }) => {
         setActiveTabId(selectedTabId);

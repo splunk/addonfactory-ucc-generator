@@ -51,7 +51,7 @@ function CustomTable({
     useEffect(() => {
         // Only run when tab matches serviceName or if in input page where serviceName is undefined
         if (query && (query.get('tab') === serviceName || typeof serviceName === 'undefined')) {
-            // Open modal when record is available in query param and modal is not open
+            // Open modal when record is available in query params and modal is not open
             if (query.get('record') && !entityModal.open) {
                 const row = data.find((x) => x.name === query.get('record'));
                 setEntityModal({
@@ -61,12 +61,14 @@ function CustomTable({
                     stanzaName: row.name,
                     mode: MODE_EDIT,
                 });
-                // Close modal if record query param is not available and mode is edit
-            } else if (!query.get('record') && entityModal.open && entityModal.mode === MODE_EDIT) {
+                // Close modal if record query param is not available and modal is open
+                // NOTE: This should only be executed in case of MODE_EDIT which is handled by
+                // useEffect dependency
+            } else if (!query.get('record') && entityModal.open) {
                 setEntityModal({ ...entityModal, open: false });
             }
         }
-    }, [query]);
+    }, [history.location.search]);
 
     const generateColumns = () => {
         const column = [];
