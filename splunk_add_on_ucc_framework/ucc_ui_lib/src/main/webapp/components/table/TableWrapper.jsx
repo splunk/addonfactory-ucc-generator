@@ -195,13 +195,13 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen }) {
             return 0;
         });
 
-        let udpatedArr = sortedArr.slice(currentPage * pageSize, (currentPage + 1) * pageSize);
+        let updatedArr = sortedArr.slice(currentPage * pageSize, (currentPage + 1) * pageSize);
 
-        if (currentPage > 0 && !udpatedArr.length) {
-            udpatedArr = sortedArr.slice((currentPage - 1) * pageSize, pageSize);
+        if (currentPage > 0 && !updatedArr.length) {
+            updatedArr = sortedArr.slice((currentPage - 1) * pageSize, pageSize);
         }
 
-        return [udpatedArr, arr.length];
+        return [updatedArr, arr.length];
     };
 
     if (error?.uccErrorCode) {
