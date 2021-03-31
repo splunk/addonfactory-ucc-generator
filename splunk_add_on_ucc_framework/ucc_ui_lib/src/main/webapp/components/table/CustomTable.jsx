@@ -49,31 +49,24 @@ function CustomTable({
 
     // Run only once when component is mounted to load component based on initial query params
     useEffect(() => {
-        if (
-            query &&
-            query.get('record') &&
-            (query.get('tab') === serviceName || !query.get('tab'))
-        ) {
-            const row = data.find((x) => x.name === query.get('record'));
-            setEntityModal({
-                ...entityModal,
-                open: true,
-                serviceName: row.serviceName,
-                stanzaName: row.name,
-                mode: MODE_EDIT,
-            });
+        // Only run when tab matches serviceName or if in input page where serviceName is undefined
+        if (query && (query.get('tab') === serviceName || typeof serviceName === 'undefined')) {
+            // Open modal when record is available in query param and modal is not open
+            if (query.get('record') && !entityModal.open) {
+                const row = data.find((x) => x.name === query.get('record'));
+                setEntityModal({
+                    ...entityModal,
+                    open: true,
+                    serviceName: row.serviceName,
+                    stanzaName: row.name,
+                    mode: MODE_EDIT,
+                });
+                // Close modal if record query param is not available and mode is edit
+            } else if (!query.get('record') && entityModal.open && entityModal.mode === MODE_EDIT) {
+                setEntityModal({ ...entityModal, open: false });
+            }
         }
-    }, []);
-
-    // Update query params on input context change on modal
-    useEffect(() => {
-        if (entityModal.open && entityModal.mode === MODE_EDIT) {
-            query.set('record', entityModal.stanzaName);
-        } else {
-            query.delete('record');
-        }
-        history.push({ search: query.toString() });
-    }, [entityModal, history]);
+    }, [query]);
 
     const generateColumns = () => {
         const column = [];
@@ -91,6 +84,11 @@ function CustomTable({
 
     const handleEntityClose = () => {
         setEntityModal({ ...entityModal, open: false });
+        // remove query param and push to browser history only when mode is edit
+        if (entityModal.mode === MODE_EDIT) {
+            query.delete('record');
+            history.push({ search: query.toString() });
+        }
     };
 
     const handleDeleteClose = () => {
@@ -171,6 +169,9 @@ function CustomTable({
             stanzaName: row.name,
             mode: MODE_EDIT,
         });
+        // set query and push to history
+        query.set('record', row.name);
+        history.push({ search: query.toString() });
     };
 
     const handleCloneActionClick = (row) => {

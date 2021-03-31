@@ -24,8 +24,11 @@ function ConfigurationPage() {
     const history = useHistory();
     const query = useQuery();
 
-    // Run only once when component is mounted to load component based on initial query params
+    // Run initially and when query is updated to set active tab based on initial URL
+    // or while navigating browser history
     useEffect(() => {
+        // Only change active tab when provided tab in query is specified in globalConfig
+        // and if the current active tab is not same as provided in query
         if (
             query &&
             permittedTabNames.includes(query.get('tab')) &&
@@ -33,17 +36,13 @@ function ConfigurationPage() {
         ) {
             setActiveTabId(query.get('tab'));
         }
-    }, []);
+    }, [query]);
 
-    const handleChange = useCallback((e, { selectedTabId }) => {
+    const handleChange = (e, { selectedTabId }) => {
         setActiveTabId(selectedTabId);
-    }, []);
-
-    // Update query params on tab change
-    useEffect(() => {
-        query.set('tab', activeTabId);
+        query.set('tab', selectedTabId);
         history.push({ search: query.toString() });
-    }, [activeTabId, history]);
+    };
 
     return (
         <ErrorBoundary>
