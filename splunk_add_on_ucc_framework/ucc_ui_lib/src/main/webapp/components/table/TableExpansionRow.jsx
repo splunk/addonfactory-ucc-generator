@@ -6,7 +6,7 @@ import { _ } from '@splunk/ui-utils/i18n';
 function getExpansionRowData(row, moreInfo) {
     const DefinitionLists = [];
     if (moreInfo?.length) {
-        moreInfo.map((val) => {
+        moreInfo.forEach((val) => {
             const label = _(val.label);
             if (val.field in row) {
                 DefinitionLists.push(<DL.Term>{label}</DL.Term>);

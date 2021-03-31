@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import styled from 'styled-components';
 import * as _ from "lodash";
+import PropTypes from 'prop-types';
 
 import { validateSchema } from './uccConfigurationValidators';
 import { getFormattedMessage } from './messageUtil';
@@ -39,6 +40,7 @@ class ConfigManager extends Component {
             if (err && err.name === 'SyntaxError') {
                 this.setState({syntaxError: true, loading: false});
             } else {
+                // eslint-disable-next-line no-console
                 console.error("Error [configManager.js] [35]: ", err);
             }
         });
@@ -92,5 +94,7 @@ class ConfigManager extends Component {
         );
     }
 }
-
+ConfigManager.propTypes = {
+    children: PropTypes.string,
+};
 export default ConfigManager;

@@ -13,7 +13,6 @@ function HelpLinkComponent(props) {
 }
 
 HelpLinkComponent.propTypes = {
-    field: PropTypes.string,
     controlOptions: PropTypes.object
 };
 

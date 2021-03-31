@@ -24,7 +24,7 @@ export default {
     22: 'Field {{args[0]}} must be less than 1024 characters',
     23: '"name" feild must be provided for {{args[0]}} \'s entity in configuration file',
 
-    /* general messages, range [100, 499]*/
+    // general messages, range [100, 499]
     100: 'Create New Input',
     // Delete dialog title
     101: 'Delete Confirmation',
@@ -53,5 +53,5 @@ export default {
     116: 'Inputs',
     117: 'Configuration',
 
-    '__unknow__': 'An unknown error occurred'
-}
+    unknown: 'An unknown error occurred',
+};

@@ -13,7 +13,7 @@ export function SaveValidator(validatorFunc, formData) {
     if (error) {
         return { errorMsg: error };
     }
-    let ret = result(formData);
+    const ret = result(formData);
     if (typeof ret === 'string') {
         return { errorMsg: ret };
     }
@@ -33,6 +33,7 @@ class Validator {
         if (!this.checkIsFieldHasInput(data)) {
             return { errorField: field, errorMsg: getFormattedMessage(6, [label]) };
         }
+        return false;
     }
 
     // Validate the string length of field
@@ -57,6 +58,7 @@ class Validator {
                     : getFormattedMessage(17, [label, validator.minLength]),
             };
         }
+        return false;
     }
 
     // Validate the field should match the provided Regex
@@ -73,14 +75,16 @@ class Validator {
                     : getFormattedMessage(15, [label, validator.pattern]),
             };
         }
+        return false;
     }
 
     // Validate the custom component
     CustomValidator(validatorFunc, field, data) {
-        let ret = validatorFunc(field, data);
+        const ret = validatorFunc(field, data);
         if (typeof ret === 'string') {
             return { errorField: field, errorMsg: ret };
         }
+        return false;
     }
 
     // Validate the field should match predefined Regexes
@@ -97,6 +101,7 @@ class Validator {
                     : getFormattedMessage(19, [label, inputValueType]),
             };
         }
+        return false;
     }
 
     // Validate the range of numeric field
@@ -126,11 +131,15 @@ class Validator {
                     : getFormattedMessage(8, [label, validator.range[0], validator.range[1]]),
             };
         }
+        return false;
     }
 
     doValidation(data) {
         let ret;
-        for (var i = 0; i < this.entities.length; i++) {
+        let i;
+        let j;
+
+        for (i = 0; i < this.entities.length; i += 1) {
             if (this.entities[i].required === true) {
                 ret = this.RequiredValidator(
                     this.entities[i].field,
@@ -143,9 +152,9 @@ class Validator {
             }
         }
 
-        for (var i = 0; i < this.entities.length; i++) {
+        for (i = 0; i < this.entities.length; i += 1) {
             if (this.entities[i].validators) {
-                for (var j = 0; j < this.entities[i].validators.length; j++) {
+                for (j = 0; j < this.entities[i].validators.length; j += 1) {
                     switch (this.entities[i].validators[j].type) {
                         case 'string':
                             ret = this.StringValidator(
@@ -233,7 +242,7 @@ class Validator {
                             }
                             break;
                         case 'custom':
-                            ret = this.CustomValidator(
+                            ret = Validator.CustomValidator(
                                 this.entities[i].validators[j].validatorFunc,
                                 this.entities[i].field,
                                 data[this.entities[i].field]
@@ -247,6 +256,7 @@ class Validator {
                 }
             }
         }
+        return false;
     }
 }
 
