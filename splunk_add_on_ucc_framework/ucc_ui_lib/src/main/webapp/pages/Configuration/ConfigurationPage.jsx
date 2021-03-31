@@ -38,11 +38,19 @@ function ConfigurationPage() {
         }
     }, [history.location.search]);
 
-    const handleChange = (e, { selectedTabId }) => {
+    // Run only once to set initial default tab query param
+    useEffect(() => {
+        if (!query.get('tab')) {
+            query.set('tab', activeTabId);
+            history.push({ search: query.toString() });
+        }
+    }, []);
+
+    const handleChange = useCallback((e, { selectedTabId }) => {
         setActiveTabId(selectedTabId);
         query.set('tab', selectedTabId);
         history.push({ search: query.toString() });
-    };
+    }, []);
 
     return (
         <ErrorBoundary>
