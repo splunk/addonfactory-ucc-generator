@@ -99,7 +99,7 @@ function CustomTable({
     return (
         <>
             {columns && columns.length && (
-                <Table id="test" stripeRows {...(moreInfo ? { rowExpansion: 'single' } : {})}>
+                <Table stripeRows {...(moreInfo ? { rowExpansion: 'single' } : {})}>
                     {getTableHeaderCell()}
                     {getTableBody()}
                 </Table>
