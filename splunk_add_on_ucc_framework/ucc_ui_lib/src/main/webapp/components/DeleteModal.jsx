@@ -76,8 +76,7 @@ class DeleteModal extends Component {
             deleteMsg = _(`Are you sure you want to delete "`) + this.props.stanzaName + _(`" ? Ensure that no input is configured with "`) + this.props.stanzaName + _(`" as this will stop data collection for that input.`);
         }
         return (
-            <div>
-                <ModalWrapper onRequestClose={this.handleRequestClose} open={this.props.open}>
+            <ModalWrapper open={this.props.open}>
                     <Modal.Header
                         title={_("Delete Confirmation")}
                         onRequestClose={this.handleRequestClose}

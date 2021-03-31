@@ -113,6 +113,7 @@ function SingleInputComponent(props) {
             disabled={effectiveDisabled}
             onChange={handleChange}
             inline
+            style={{ width: '50%' }}
         >
             {options && options.length > 0 && options}
         </Select>

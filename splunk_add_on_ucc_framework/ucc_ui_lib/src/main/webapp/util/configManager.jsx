@@ -1,7 +1,5 @@
-import React, {Component} from "react";
-import WaitSpinner from '@splunk/react-ui/WaitSpinner';
-import styled from 'styled-components';
-import * as _ from "lodash";
+import React, { Component } from 'react';
+import * as _ from 'lodash';
 import PropTypes from 'prop-types';
 
 import { validateSchema } from './uccConfigurationValidators';
@@ -10,14 +8,7 @@ import { setMetaInfo, setUnifiedConfig } from './util';
 import { loadGlobalConfig } from './script';
 import ErrorModal from '../components/ErrorModal';
 
-const WaitSpinnerWrapper = styled(WaitSpinner)`
-    position: fixed;
-    top: 50%;
-    left: 50%;
-`;
-
 class ConfigManager extends Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -25,25 +16,27 @@ class ConfigManager extends Component {
             validationResult: {},
             appData: {},
             loading: true,
-            syntaxError: false
-        }
+            syntaxError: false,
+        };
     }
 
     componentDidMount() {
-        this.setState({loading: true});
-        loadGlobalConfig().then((val) => {
-            // The configuration object should be attached to global object,
-            // before executing the code below.
-            // this.unifiedConfig = window.__globalConfig;
-            this.attchPropertie(val);
-        }).catch((err) => {
-            if (err && err.name === 'SyntaxError') {
-                this.setState({syntaxError: true, loading: false});
-            } else {
-                // eslint-disable-next-line no-console
-                console.error("Error [configManager.js] [35]: ", err);
-            }
-        });
+        this.setState({ loading: true });
+        loadGlobalConfig()
+            .then((val) => {
+                // The configuration object should be attached to global object,
+                // before executing the code below.
+                // this.unifiedConfig = window.__globalConfig;
+                this.attchPropertie(val);
+            })
+            .catch((err) => {
+                if (err && err.name === 'SyntaxError') {
+                    this.setState({ syntaxError: true, loading: false });
+                } else {
+                    // eslint-disable-next-line no-console
+                    console.error('Error [configManager.js] [35]: ', err);
+                }
+            });
     }
 
     attchPropertie(unifiedConfig) {
@@ -53,7 +46,7 @@ class ConfigManager extends Component {
             app: meta.name,
             custom_rest: meta.restRoot,
             nullStr: 'NULL',
-            stanzaPrefix: meta.restRoot
+            stanzaPrefix: meta.restRoot,
         };
 
         setUnifiedConfig(unifiedConfig);
@@ -62,39 +55,36 @@ class ConfigManager extends Component {
             appData,
             validationResult,
             unifiedConfig,
-            loading: false
+            loading: false,
         });
     }
 
     renderComponents() {
         if (this.state.validationResult.failed) {
             return (
-                <ErrorModal message={getFormattedMessage(110, [_.unescape(this.state.validationResult.errors[0].stack)])} open />
+                <ErrorModal
+                    message={getFormattedMessage(110, [
+                        _.unescape(this.state.validationResult.errors[0].stack),
+                    ])}
+                    open
+                />
             );
-        } if (this.state.syntaxError) {
+        }
+        if (this.state.syntaxError) {
             return (
                 <ErrorModal message={getFormattedMessage(110, [getFormattedMessage(20)])} open />
             );
-        } 
-            return (
-                this.props.children(this.state)
-            );
-        
+        }
+        return this.props.children(this.state);
     }
 
     render() {
-        return (
-            <>
-                {
-                    this.state.loading ?
-                    <WaitSpinnerWrapper size="large" /> : 
-                    this.renderComponents()
-                }
-            </>
-        );
+        return <>{!this.state.loading && this.renderComponents()}</>;
     }
 }
+
 ConfigManager.propTypes = {
     children: PropTypes.string,
 };
+
 export default ConfigManager;

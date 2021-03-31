@@ -104,6 +104,7 @@ function MultiInputComponent(props) {
             allowNewValues={createSearchChoice}
             onChange={handleChange}
             inline
+            style={{ width: '100%' }}
         >
             {options && options.length > 0 && options}
         </Multiselect>

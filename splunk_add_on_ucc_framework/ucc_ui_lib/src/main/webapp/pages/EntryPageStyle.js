@@ -7,7 +7,7 @@ const StyledContainer = styled.div`
     display: block;
     font-size: ${variables.fontSizeLarge};
     line-height: 200%;
-    margin: calc(${variables.spacing} * 2) calc(${variables.spacing} * 2);
+    margin: calc(${variables.spacing} * 1) calc(${variables.spacing} * 1);
 `;
 
 const StyledGreeting = styled.div`

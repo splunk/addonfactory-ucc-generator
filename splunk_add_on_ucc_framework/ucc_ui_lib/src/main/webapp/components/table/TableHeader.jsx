@@ -1,7 +1,5 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-
-import ColumnLayout from '@splunk/react-ui/ColumnLayout';
 import Select from '@splunk/react-ui/Select';
 import Button from '@splunk/react-ui/Button';
 import Paginator from '@splunk/react-ui/Paginator';
@@ -9,7 +7,7 @@ import { _ } from '@splunk/ui-utils/i18n';
 
 import TableFilter from './TableFilter';
 import TableContext from '../../context/TableContext';
-import { TableCaptionComponent, TableSelectBoxWrapper } from './CustomTableStyle';
+import { TableSelectBoxWrapper } from './CustomTableStyle';
 
 function TableHeader({ page, services, totalElement, handleRequestModalOpen }) {
     const {
@@ -21,7 +19,9 @@ function TableHeader({ page, services, totalElement, handleRequestModalOpen }) {
         setSearchType,
         setSearchText,
     } = useContext(TableContext);
+
     const itemLabel = page === 'inputs' ? 'Input' : 'Item';
+
     const getSearchTypeDropdown = () => {
         if (services.length < 2) {
             return null;
@@ -44,90 +44,69 @@ function TableHeader({ page, services, totalElement, handleRequestModalOpen }) {
             </Select>
         );
     };
+
     return (
-        <ColumnLayout gutter={8}>
-            <ColumnLayout.Row
-                style={
-                    page === 'inputs'
-                        ? {
-                              borderTop: '1px solid #e1e6eb',
-                              padding: '5px 0px',
-                              marginTop: '25px',
-                          }
-                        : {
-                              padding: '5px 0px',
-                          }
-                }
+        <div
+            style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                borderTop: '1px solid #ccc',
+                paddingTop: '5px',
+                marginBottom: '5px',
+            }}
+        >
+            <div>
+                {totalElement}
+                {totalElement > 1 ? _(` ${itemLabel}s`) : _(` ${itemLabel}`)}
+                {page === 'inputs' ? (
+                    <TableSelectBoxWrapper>
+                        <Select
+                            value={pageSize}
+                            onChange={(e, { value }) => {
+                                setCurrentPage(0);
+                                setPageSize(value);
+                            }}
+                        >
+                            <Select.Option key="10" label={_('10 Per Page')} value={10} />
+                            <Select.Option key="25" label={_('25 Per Page')} value={25} />
+                            <Select.Option key="50" label={_('50 Per Page')} value={50} />
+                        </Select>
+                        {getSearchTypeDropdown()}
+                    </TableSelectBoxWrapper>
+                ) : null}
+            </div>
+            <div
+                style={{
+                    maxWidth: '300px',
+                    width: '100%',
+                }}
             >
-                <ColumnLayout.Column span={4}>
-                    <TableCaptionComponent>
-                        <div>
-                            {totalElement}
-                            {totalElement > 1 ? _(` ${itemLabel}s`) : _(` ${itemLabel}`)}
-                            {page === 'inputs' ? (
-                                <TableSelectBoxWrapper>
-                                    <Select
-                                        value={pageSize}
-                                        onChange={(e, { value }) => {
-                                            setCurrentPage(0);
-                                            setPageSize(value);
-                                        }}
-                                    >
-                                        <Select.Option
-                                            key="10"
-                                            label={_('10 Per Page')}
-                                            value={10}
-                                        />
-                                        <Select.Option
-                                            key="25"
-                                            label={_('25 Per Page')}
-                                            value={25}
-                                        />
-                                        <Select.Option
-                                            key="50"
-                                            label={_('50 Per Page')}
-                                            value={50}
-                                        />
-                                    </Select>
-                                    {getSearchTypeDropdown()}
-                                </TableSelectBoxWrapper>
-                            ) : null}
-                        </div>
-                    </TableCaptionComponent>
-                </ColumnLayout.Column>
-                <ColumnLayout.Column span={4}>
-                    <TableFilter
-                        handleChange={(e, { value }) => {
-                            setCurrentPage(0);
-                            setSearchText(value);
-                        }}
-                    />
-                </ColumnLayout.Column>
-                <ColumnLayout.Column
-                    span={4}
-                    style={{
-                        textAlign: 'right',
+                <TableFilter
+                    handleChange={(e, { value }) => {
+                        setCurrentPage(0);
+                        setSearchText(value);
                     }}
-                >
-                    <Paginator
-                        onChange={(e, { pageNumber }) => setCurrentPage(pageNumber - 1)}
-                        current={currentPage + 1}
-                        alwaysShowLastPageLink
-                        totalPages={Math.ceil(totalElement / pageSize)}
-                        style={{
-                            marginRight: '30px',
-                        }}
+                />
+            </div>
+            <div>
+                <Paginator
+                    onChange={(e, { pageNumber }) => setCurrentPage(pageNumber - 1)}
+                    current={currentPage + 1}
+                    alwaysShowLastPageLink
+                    totalPages={Math.ceil(totalElement / pageSize)}
+                    style={{
+                        marginRight: '30px',
+                    }}
+                />
+                {page === 'inputs' ? null : (
+                    <Button
+                        label={_('Add')}
+                        appearance="primary"
+                        onClick={handleRequestModalOpen}
                     />
-                    {page === 'inputs' ? null : (
-                        <Button
-                            label={_('Add')}
-                            appearance="primary"
-                            onClick={handleRequestModalOpen}
-                        />
-                    )}
-                </ColumnLayout.Column>
-            </ColumnLayout.Row>
-        </ColumnLayout>
+                )}
+            </div>
+        </div>
     );
 }
 

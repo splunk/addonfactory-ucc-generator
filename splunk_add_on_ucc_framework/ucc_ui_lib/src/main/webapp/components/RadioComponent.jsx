@@ -15,6 +15,7 @@ class RadioComponent extends Component {
                 onChange={this.handleChange}
                 value={this.props.value}
                 key={this.props.field}
+                style={{ width: `50% !important` }}
             >
                 {this.props.controlOptions.items.map(item => (
                     <RadioBar.Option key={item.value} value={item.value} label={item.label} />

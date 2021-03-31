@@ -1,0 +1,500 @@
+diff --git a/splunk_add_on_ucc_framework/ucc_ui_lib/package.json b/splunk_add_on_ucc_framework/ucc_ui_lib/package.json
+index ca79fef1..d5d1fb06 100644
+--- a/splunk_add_on_ucc_framework/ucc_ui_lib/package.json
++++ b/splunk_add_on_ucc_framework/ucc_ui_lib/package.json
+@@ -4,7 +4,7 @@
+   "license": "UNLICENSED",
+   "private": true,
+   "scripts": {
+-    "build": "cross-env NODE_ENV=production webpack --bail",
++    "build": "cross-env NODE_ENV=development webpack --bail",
+     "format": "git ls-files | grep -E \"\\.(jsx?|css)$\" | xargs prettier --write",
+     "format:verify": "git ls-files | grep -E \"\\.(jsx?|css)$\" | xargs prettier --list-different",
+     "eslint": "eslint src --ext \".js,.jsx\"",
+diff --git a/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/resources/splunk/appserver/templates/base.html b/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/resources/splunk/appserver/templates/base.html
+index ccef1a69..7d6082bd 100644
+--- a/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/resources/splunk/appserver/templates/base.html
++++ b/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/resources/splunk/appserver/templates/base.html
+@@ -1,31 +1,24 @@
+-<%!
+-app_name = cherrypy.request.path_info.split('/')[3]
+-
+-%>\
+-<!doctype html>
++<%! app_name = cherrypy.request.path_info.split('/')[3] %>\
++<!DOCTYPE html>
+ <html class="no-js" lang="">
++    <head>
++        <meta charset="utf-8" />
++        <meta http-equiv="x-ua-compatible" content="ie=edge" />
++        <title>${_('Loading')}</title>
++        <meta name="viewport" content="width=device-width, initial-scale=1" />
++        <link rel="apple-touch-icon" href="apple-touch-icon.png" />
++    </head>
+ 
+-<head>
+-    <meta charset="utf-8">
+-    <meta http-equiv="x-ua-compatible" content="ie=edge">
+-    <title>${_('Loading')}</title>
+-    <meta name="viewport" content="width=device-width, initial-scale=1">
+-    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+-</head>
+-
+-<body style="min-width:960px">
+-    <script src="${make_url('/config?autoload=1')}" crossorigin="use-credentials"></script>
+-    <script src="${make_url('/static/js/i18n.js')}"></script>
+-    <script src="${make_url('/i18ncatalog?autoload=1')}"></script>
+-    <script>
+-        __splunkd_partials__ = ${json_decode(splunkd)};
+-    </script>
+-
+-    <%
+-    page_path = "/static/app/" + app_name + "/js/build/entry_page.js"
+-    %>
++    <body style="min-width: 960px; background-color: #31373e">
++        <script src="${make_url('/config?autoload=1')}" crossorigin="use-credentials"></script>
++        <script src="${make_url('/static/js/i18n.js')}"></script>
++        <script src="${make_url('/i18ncatalog?autoload=1')}"></script>
++        <script>
++            __splunkd_partials__ = ${json_decode(splunkd)};
++        </script>
+ 
+-    <script src="${make_url(page_path)}"></script>
+-</body>
++        <% page_path = "/static/app/" + app_name + "/js/build/entry_page.js" %>
+ 
++        <script src="${make_url(page_path)}"></script>
++    </body>
+ </html>
+diff --git a/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/components/ControlWrapper.jsx b/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/components/ControlWrapper.jsx
+index 981a1340..9b912cee 100644
+--- a/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/components/ControlWrapper.jsx
++++ b/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/components/ControlWrapper.jsx
+@@ -7,10 +7,6 @@ import CONTROL_TYPE_MAP from '../constants/ControlTypeMap';
+ 
+ const CustomElement = styled.div`
+     margin-left: 30px;
+-
+-    div {
+-        width:100% !important
+-    }
+ `;
+ 
+ const ControlGroupWrapper = styled(ControlGroup)`
+diff --git a/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/components/MultiInputComponent.jsx b/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/components/MultiInputComponent.jsx
+index f727163f..dff748fa 100644
+--- a/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/components/MultiInputComponent.jsx
++++ b/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/components/MultiInputComponent.jsx
+@@ -101,6 +101,7 @@ function MultiInputComponent(props) {
+             allowNewValues={createSearchChoice}
+             onChange={handleChange}
+             inline
++            style={{ width: '100%' }}
+         >
+             {options && options.length > 0 && options}
+         </Multiselect>
+diff --git a/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/components/RadioComponent.jsx b/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/components/RadioComponent.jsx
+index e3d6b4a4..1fdd1ac5 100644
+--- a/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/components/RadioComponent.jsx
++++ b/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/components/RadioComponent.jsx
+@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
+ import RadioBar from '@splunk/react-ui/RadioBar';
+ 
+ class RadioComponent extends Component {
+-
+     handleChange = (e, { value }) => {
+         this.props.handleChange(this.props.field, value);
+     };
+@@ -15,8 +14,9 @@ class RadioComponent extends Component {
+                 onChange={this.handleChange}
+                 value={this.props.value}
+                 key={this.props.field}
++                style={{ width: `50% !important` }}
+             >
+-                {this.props.controlOptions.items.map(item => (
++                {this.props.controlOptions.items.map((item) => (
+                     <RadioBar.Option key={item.value} value={item.value} label={item.label} />
+                 ))}
+             </RadioBar>
+@@ -28,8 +28,7 @@ RadioComponent.propTypes = {
+     value: PropTypes.string,
+     handleChange: PropTypes.func.isRequired,
+     field: PropTypes.string,
+-    controlOptions: PropTypes.object
++    controlOptions: PropTypes.object,
+ };
+ 
+-
+-export default RadioComponent;
+\ No newline at end of file
++export default RadioComponent;
+diff --git a/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/components/SingleInputComponent.jsx b/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/components/SingleInputComponent.jsx
+index 44228d1f..c60e2323 100644
+--- a/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/components/SingleInputComponent.jsx
++++ b/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/components/SingleInputComponent.jsx
+@@ -110,6 +110,7 @@ function SingleInputComponent(props) {
+             disabled={effectiveDisabled}
+             onChange={handleChange}
+             inline
++            style={{ width: '50%' }}
+         >
+             {options && options.length > 0 && options}
+         </Select>
+diff --git a/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/components/TextComponent.jsx b/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/components/TextComponent.jsx
+index 60e97192..56ac6824 100644
+--- a/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/components/TextComponent.jsx
++++ b/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/components/TextComponent.jsx
+@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
+ import Text from '@splunk/react-ui/Text';
+ 
+ class TextComponent extends Component {
+-
+-    handleChange = (e, {value}) => {
++    handleChange = (e, { value }) => {
+         this.props.handleChange(this.props.field, value);
+     };
+ 
+@@ -19,6 +18,7 @@ class TextComponent extends Component {
+                 value={this.props.value}
+                 onChange={this.handleChange}
+                 type={this.props.encrypted ? 'password' : 'text'}
++                style={{ width: '100%' }}
+             />
+         );
+     }
+@@ -29,8 +29,8 @@ TextComponent.propTypes = {
+     handleChange: PropTypes.func.isRequired,
+     field: PropTypes.string,
+     controlOptions: PropTypes.object,
+-    encrypted:PropTypes.bool,
+-    disabled:PropTypes.bool
++    encrypted: PropTypes.bool,
++    disabled: PropTypes.bool,
+ };
+ 
+ export default TextComponent;
+diff --git a/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/components/table/CustomTable.jsx b/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/components/table/CustomTable.jsx
+index 74ea9f07..9b49c499 100644
+--- a/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/components/table/CustomTable.jsx
++++ b/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/components/table/CustomTable.jsx
+@@ -31,16 +31,20 @@ function CustomTable({
+     const [deleteModal, setDeleteModal] = useState({ open: false });
+ 
+     const unifiedConfigs = getUnifiedConfigs();
++
++    console.log('om custom table: ', unifiedConfigs.pages.configuration.tabs, serviceName);
+     const tableConfig =
+         page === 'inputs'
+             ? unifiedConfigs.pages.inputs.table
+             : unifiedConfigs.pages.configuration.tabs.filter((x) => x.name === serviceName)[0]
+                   .table;
+-    const { moreInfo } = tableConfig;
++    const { moreInfo, actions } = tableConfig;
+     const headers = tableConfig.header;
+     // TODO: add multi field mapping support
+     const statusMapping = moreInfo?.filter((a) => a.mapping);
+ 
++    console.log('Actions: ', actions);
++
+     const generateColumns = () => {
+         const column = [];
+         if (headers && headers.length) {
+@@ -290,7 +294,7 @@ function CustomTable({
+ 
+ CustomTable.propTypes = {
+     page: PropTypes.string.isRequired,
+-    serviceName: PropTypes.string.isRequired,
++    serviceName: PropTypes.string,
+     data: PropTypes.array.isRequired,
+     handleToggleActionClick: PropTypes.func,
+     handleSort: PropTypes.func,
+diff --git a/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/components/table/TableHeader.jsx b/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/components/table/TableHeader.jsx
+index 59a58537..09b99127 100644
+--- a/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/components/table/TableHeader.jsx
++++ b/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/components/table/TableHeader.jsx
+@@ -1,6 +1,5 @@
+ import React, { useContext } from 'react';
+ import PropTypes from 'prop-types';
+-
+ import ColumnLayout from '@splunk/react-ui/ColumnLayout';
+ import Select from '@splunk/react-ui/Select';
+ import Button from '@splunk/react-ui/Button';
+@@ -21,7 +20,9 @@ function TableHeader({ page, services, totalElement, handleRequestModalOpen }) {
+         setSearchType,
+         setSearchText,
+     } = useContext(TableContext);
++
+     const itemLabel = page === 'inputs' ? 'Input' : 'Item';
++
+     const getSearchTypeDropdown = () => {
+         if (services.length < 2) {
+             return null;
+@@ -44,90 +45,69 @@ function TableHeader({ page, services, totalElement, handleRequestModalOpen }) {
+             </Select>
+         );
+     };
++
+     return (
+-        <ColumnLayout gutter={8}>
+-            <ColumnLayout.Row
+-                style={
+-                    page === 'inputs'
+-                        ? {
+-                              borderTop: '1px solid #e1e6eb',
+-                              padding: '5px 0px',
+-                              marginTop: '25px',
+-                          }
+-                        : {
+-                              padding: '5px 0px',
+-                          }
+-                }
++        <div
++            style={{
++                display: 'flex',
++                justifyContent: 'space-between',
++                borderTop: '1px solid #ccc',
++                paddingTop: '5px',
++                marginBottom: '5px',
++            }}
++        >
++            <div>
++                {totalElement}
++                {totalElement > 1 ? _(` ${itemLabel}s`) : _(` ${itemLabel}`)}
++                {page === 'inputs' ? (
++                    <TableSelectBoxWrapper>
++                        <Select
++                            value={pageSize}
++                            onChange={(e, { value }) => {
++                                setCurrentPage(0);
++                                setPageSize(value);
++                            }}
++                        >
++                            <Select.Option key="10" label={_('10 Per Page')} value={10} />
++                            <Select.Option key="25" label={_('25 Per Page')} value={25} />
++                            <Select.Option key="50" label={_('50 Per Page')} value={50} />
++                        </Select>
++                        {getSearchTypeDropdown()}
++                    </TableSelectBoxWrapper>
++                ) : null}
++            </div>
++            <div
++                style={{
++                    maxWidth: '300px',
++                    width: '100%',
++                }}
+             >
+-                <ColumnLayout.Column span={4}>
+-                    <TableCaptionComponent>
+-                        <div>
+-                            {totalElement}
+-                            {totalElement > 1 ? _(` ${itemLabel}s`) : _(` ${itemLabel}`)}
+-                            {page === 'inputs' ? (
+-                                <TableSelectBoxWrapper>
+-                                    <Select
+-                                        value={pageSize}
+-                                        onChange={(e, { value }) => {
+-                                            setCurrentPage(0);
+-                                            setPageSize(value);
+-                                        }}
+-                                    >
+-                                        <Select.Option
+-                                            key="10"
+-                                            label={_('10 Per Page')}
+-                                            value={10}
+-                                        />
+-                                        <Select.Option
+-                                            key="25"
+-                                            label={_('25 Per Page')}
+-                                            value={25}
+-                                        />
+-                                        <Select.Option
+-                                            key="50"
+-                                            label={_('50 Per Page')}
+-                                            value={50}
+-                                        />
+-                                    </Select>
+-                                    {getSearchTypeDropdown()}
+-                                </TableSelectBoxWrapper>
+-                            ) : null}
+-                        </div>
+-                    </TableCaptionComponent>
+-                </ColumnLayout.Column>
+-                <ColumnLayout.Column span={4}>
+-                    <TableFilter
+-                        handleChange={(e, { value }) => {
+-                            setCurrentPage(0);
+-                            setSearchText(value);
+-                        }}
+-                    />
+-                </ColumnLayout.Column>
+-                <ColumnLayout.Column
+-                    span={4}
++                <TableFilter
++                    handleChange={(e, { value }) => {
++                        setCurrentPage(0);
++                        setSearchText(value);
++                    }}
++                />
++            </div>
++            <div>
++                <Paginator
++                    onChange={(e, { page }) => setCurrentPage(page - 1)}
++                    current={currentPage + 1}
++                    alwaysShowLastPageLink
++                    totalPages={Math.ceil(totalElement / pageSize)}
+                     style={{
+-                        textAlign: 'right',
++                        marginRight: '30px',
+                     }}
+-                >
+-                    <Paginator
+-                        onChange={(e, { page }) => setCurrentPage(page - 1)}
+-                        current={currentPage + 1}
+-                        alwaysShowLastPageLink
+-                        totalPages={Math.ceil(totalElement / pageSize)}
+-                        style={{
+-                            marginRight: '30px',
+-                        }}
++                />
++                {page === 'inputs' ? null : (
++                    <Button
++                        label={_('Add')}
++                        appearance="primary"
++                        onClick={handleRequestModalOpen}
+                     />
+-                    {page === 'inputs' ? null : (
+-                        <Button
+-                            label={_('Add')}
+-                            appearance="primary"
+-                            onClick={handleRequestModalOpen}
+-                        />
+-                    )}
+-                </ColumnLayout.Column>
+-            </ColumnLayout.Row>
+-        </ColumnLayout>
++                )}
++            </div>
++        </div>
+     );
+ }
+ 
+diff --git a/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/components/table/TableWrapper.jsx b/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/components/table/TableWrapper.jsx
+index 80c17a5e..b1f53778 100644
+--- a/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/components/table/TableWrapper.jsx
++++ b/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/components/table/TableWrapper.jsx
+@@ -11,7 +11,6 @@ import TableHeader from './TableHeader';
+ import TableContext from '../../context/TableContext';
+ 
+ function TableWrapper({ page, serviceName, handleRequestModalOpen }) {
+-
+     const [sortKey, setSortKey] = useState('name');
+     const [sortDir, setSortDir] = useState('asc');
+     const [loading, setLoading] = useState(true);
+diff --git a/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/context/TableContext.jsx b/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/context/TableContext.jsx
+index 458bf91f..2d16b786 100644
+--- a/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/context/TableContext.jsx
++++ b/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/context/TableContext.jsx
+@@ -13,6 +13,7 @@ export const TableContextProvider = ({ children }) => {
+     const [pageSize, setPageSize] = useState(10);
+     const [currentPage, setCurrentPage] = useState(0);
+ 
++    console.log('Set comtext : ', rowData);
+     return (
+         <TableContext.Provider
+             value={{
+diff --git a/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/pages/EntryPageStyle.js b/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/pages/EntryPageStyle.js
+index 34d77b51..bf764d16 100644
+--- a/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/pages/EntryPageStyle.js
++++ b/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/pages/EntryPageStyle.js
+@@ -7,7 +7,7 @@ const StyledContainer = styled.div`
+     display: block;
+     font-size: ${variables.fontSizeLarge};
+     line-height: 200%;
+-    margin: calc(${variables.spacing} * 2) calc(${variables.spacing} * 2);
++    margin: calc(${variables.spacing} * 1) calc(${variables.spacing} * 1);
+ `;
+ 
+ const StyledGreeting = styled.div`
+@@ -34,8 +34,6 @@ const defaultThemeSplunkThemeProviderMap = {
+     },
+ };
+ 
+-const ThemeProviderSettings =
+-    defaultThemeSplunkThemeProviderMap[defaultTheme()] ||
+-    defaultThemeSplunkThemeProviderMap.enterprise;
++const ThemeProviderSettings = defaultThemeSplunkThemeProviderMap.enterpriseDark;
+ 
+ export { StyledContainer, StyledGreeting, ThemeProviderSettings };
+diff --git a/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/pages/Input/InputPage.jsx b/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/pages/Input/InputPage.jsx
+index eb3b00b0..91eec757 100644
+--- a/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/pages/Input/InputPage.jsx
++++ b/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/pages/Input/InputPage.jsx
+@@ -84,15 +84,20 @@ function InputPage() {
+                         </ColumnLayout.Column>
+                     )}
+                     {services && services.length === 1 && (
+-                        <Button
+-                            label="Create New Input"
+-                            appearance="primary"
+-                            onClick={() => {
+-                                setServiceName(services[0].name);
+-                                setServiceLabel(`Add ${services[0].title}`);
+-                                handleRequestOpen();
+-                            }}
+-                        />
++                        <ColumnLayout.Column
++                            span={3}
++                            style={{ textAlign: 'right', marginRight: '0px' }}
++                        >
++                            <Button
++                                label="Create New Input"
++                                appearance="primary"
++                                onClick={() => {
++                                    setServiceName(services[0].name);
++                                    setServiceLabel(`Add ${services[0].title}`);
++                                    handleRequestOpen();
++                                }}
++                            />
++                        </ColumnLayout.Column>
+                     )}
+                 </ColumnLayout.Row>
+             </ColumnLayout>
+diff --git a/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/util/script.js b/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/util/script.js
+index 0eac1a2b..b7c72b32 100644
+--- a/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/util/script.js
++++ b/splunk_add_on_ucc_framework/ucc_ui_lib/src/main/webapp/util/script.js
+@@ -2,14 +2,17 @@
+ export function loadGlobalConfig() {
+     // Get the configuraiton json file in sync mode
+     return new Promise((resolve, reject) => {
+-        fetch(`${getBuildDirPath()}/globalConfig.json`).then((res) => {
+-            return res.json();     
+-        }).then((json) => {
+-            // window.__globalConfig = json;
+-            resolve(json);
+-        }).catch((err) => {
+-            reject(err);
+-        });
++        fetch(`${getBuildDirPath()}/globalConfig.json`)
++            .then((res) => {
++                return res.json();
++            })
++            .then((json) => {
++                // window.__globalConfig = json;
++                resolve(json);
++            })
++            .catch((err) => {
++                reject(err);
++            });
+     });
+ }
+ 
+@@ -19,7 +22,7 @@ export function getBuildDirPath() {
+     const scriptsCount = scripts.length;
+     for (let i = 0; i < scriptsCount; i++) {
+         const s = scripts[i];
+-        if(s.src && s.src.match(/js\/build/)) {
++        if (s.src && s.src.match(/js\/build/)) {
+             const lastSlashIndex = s.src.lastIndexOf('/');
+             return s.src.slice(0, lastSlashIndex);
+         }
