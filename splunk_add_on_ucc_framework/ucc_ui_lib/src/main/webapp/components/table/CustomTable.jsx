@@ -59,8 +59,8 @@ function CustomTable({
                 const serviceKey = Object.keys(rowData).find(
                     (x) => typeof rowData[x][query.get('record')] !== 'undefined'
                 );
-                const row = rowData[serviceKey][query.get('record')];
-                if (row) {
+                if (serviceKey) {
+                    const row = rowData[serviceKey][query.get('record')];
                     setEntityModal({
                         ...entityModal,
                         open: true,
@@ -68,14 +68,11 @@ function CustomTable({
                         stanzaName: row.name,
                         mode: MODE_EDIT,
                     });
-                } else {
-                    query.delete('record');
-                    history.push({ search: query.toString() });
                 }
+            } else if (!query.get('record') && entityModal.open) {
                 // Close modal if record query param is not available and modal is open
                 // NOTE: This should only be executed in case of MODE_EDIT which is handled by
-                // useEffect dependency
-            } else if (!query.get('record') && entityModal.open) {
+                // useEffect dependency which will only be changed in case of editing entity
                 setEntityModal({ ...entityModal, open: false });
             }
         }

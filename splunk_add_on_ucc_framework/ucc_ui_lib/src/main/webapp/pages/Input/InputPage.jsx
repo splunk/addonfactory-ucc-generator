@@ -119,25 +119,16 @@ function InputPage() {
     };
 
     useEffect(() => {
-        const serviceTitle = entity.formLabel
-            ? entity.formLabel
-            : services.find((x) => x.name === query.get('service'))?.title;
+        const service = services.find((x) => x.name === query.get('service'))
+        // Run only when service and action/mode is valid and modal/page is not open
         if (
             query &&
-            serviceTitle &&
+            service &&
             PERMITTED_MODES.includes(query.get('action')) &&
             !entity.open
         ) {
-            if (query.get('action') === MODE_CREATE) {
-                setEntity({
-                    ...entity,
-                    open: true,
-                    isInputPageStyle: true,
-                    serviceName: query.get('service'),
-                    mode: MODE_CREATE,
-                    formLabel: `Create ${serviceTitle}`,
-                });
-            } else if (entity.stanzaName) {
+            // run when mode is not create and previous state info is available
+            if (query.get('action') !== MODE_CREATE && entity.stanzaName) {
                 setEntity({
                     ...entity,
                     open: true,
@@ -146,12 +137,13 @@ function InputPage() {
                     mode: query.get('action'),
                 });
             } else {
+                // if previous state info is not available then default to create mode
                 setEntity({
                     ...entity,
                     open: true,
                     isInputPageStyle: true,
                     serviceName: query.get('service'),
-                    formLabel: `Create ${serviceTitle}`,
+                    formLabel: `Create ${service?.title}`,
                     mode: MODE_CREATE,
                 });
             }
@@ -160,6 +152,7 @@ function InputPage() {
             entity.open &&
             entity.isInputPageStyle
         ) {
+            // Close page when any of the required query params are not provided
             setEntity({ ...entity, open: false });
         }
     }, [history.location.search]);
