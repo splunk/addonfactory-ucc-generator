@@ -6,19 +6,20 @@ import messageDict from '../constants/messageDict';
  * @param code {Int} a int value.
  * @param ... {Array} arguments to format the message.
  */
-export const getFormattedMessage = (code, msg /* , ... , args */ ) => {
-    var template = messageDict[code] || messageDict.__unknow__;
+export const getFormattedMessage = (code, msg /* , ... , args */) => {
+    let template = messageDict[code] || messageDict.unknown;
     template = _(template);
-    var args = [].slice.call(arguments, 1);
     return __.template(template, {
-        escape: /\{\{(.+?)\}\}/g
+        escape: /\{\{(.+?)\}\}/g,
     })({
-        args: msg
+        args: msg,
     });
 };
 
 export const parseErrorMsg = (msg) => {
-    let errorMsg = ''; let regex; let matches;
+    let errorMsg = '';
+    let regex;
+    let matches;
     try {
         regex = /.+"REST Error \[[\d]+\]:\s+.+\s+--\s+([\s\S]*)"\.\s*See splunkd\.log(\/python.log)? for more details\./;
         matches = regex.exec(msg);
@@ -37,4 +38,4 @@ export const parseErrorMsg = (msg) => {
         errorMsg = _('Error in processing the request');
     }
     return errorMsg;
-}
+};

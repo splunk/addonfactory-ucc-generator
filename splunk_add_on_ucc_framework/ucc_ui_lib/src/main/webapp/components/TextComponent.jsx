@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import Text from '@splunk/react-ui/Text';
 
 class TextComponent extends Component {
-
-    handleChange = (e, {value}) => {
+    handleChange = (e, { value }) => {
         this.props.handleChange(this.props.field, value);
     };
 
@@ -19,6 +18,7 @@ class TextComponent extends Component {
                 value={this.props.value}
                 onChange={this.handleChange}
                 type={this.props.encrypted ? 'password' : 'text'}
+                style={{ width: '100%' }}
             />
         );
     }
@@ -28,9 +28,10 @@ TextComponent.propTypes = {
     value: PropTypes.string,
     handleChange: PropTypes.func.isRequired,
     field: PropTypes.string,
+    error: PropTypes.bool,
     controlOptions: PropTypes.object,
-    encrypted:PropTypes.bool,
-    disabled:PropTypes.bool
+    encrypted: PropTypes.bool,
+    disabled: PropTypes.bool,
 };
 
 export default TextComponent;

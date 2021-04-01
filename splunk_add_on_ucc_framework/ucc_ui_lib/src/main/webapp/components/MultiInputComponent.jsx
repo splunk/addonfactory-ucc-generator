@@ -33,8 +33,8 @@ function MultiInputComponent(props) {
         restProps.handleChange(field, values.join(delimiter));
     }
 
-    function generateOptions(items) {
-        return items.map((item) => (
+    function generateOptions(itemList) {
+        return itemList.map((item) => (
             <Multiselect.Option label={item.label} value={item.value} key={item.value} />
         ));
     }
@@ -51,6 +51,7 @@ function MultiInputComponent(props) {
         let current = true;
         const source = axios.CancelToken.source();
 
+        // eslint-disable-next-line no-shadow
         const options = { CancelToken: source.token, handleError: true };
         if (referenceName) {
             options.serviceName = referenceName;
@@ -74,16 +75,18 @@ function MultiInputComponent(props) {
                         setLoading(false);
                     }
                 })
-                .catch((error) => {
+                .catch(() => {
                     if (current) {
                         setLoading(false);
                     }
                 });
         }
+        // eslint-disable-next-line consistent-return
         return () => {
             source.cancel('Operation canceled.');
             current = false;
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dependencyValues]);
 
     const effectiveDisabled = loading ? true : disabled;
@@ -101,6 +104,7 @@ function MultiInputComponent(props) {
             allowNewValues={createSearchChoice}
             onChange={handleChange}
             inline
+            style={{ width: '100%' }}
         >
             {options && options.length > 0 && options}
         </Multiselect>

@@ -202,13 +202,18 @@ function InputPage() {
                                 </ColumnLayout.Column>
                             )}
                             {services && services.length === 1 && (
-                                <Button
-                                    label="Create New Input"
-                                    appearance="primary"
-                                    onClick={() => {
-                                        handleRequestOpen(services[0].name, services[0].title);
-                                    }}
-                                />
+                                <ColumnLayout.Column
+                                    span={3}
+                                    style={{ textAlign: 'right', marginRight: '0px' }}
+                                >
+                                    <Button
+                                        label="Create New Input"
+                                        appearance="primary"
+                                        onClick={() => {
+                                            handleRequestOpen(services[0].name, services[0].title);
+                                        }}
+                                    />
+                                </ColumnLayout.Column>
                             )}
                         </ColumnLayout.Row>
                     </ColumnLayout>

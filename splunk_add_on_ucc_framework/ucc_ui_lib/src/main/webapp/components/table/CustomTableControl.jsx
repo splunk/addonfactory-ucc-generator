@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { _ } from '@splunk/ui-utils/i18n';
 
-import { getUnifiedConfigs } from '../util/util';
+import { getUnifiedConfigs } from '../../util/util';
 
-class CustomCell extends Component {
+class CustomTableControl extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -21,8 +21,8 @@ class CustomCell extends Component {
                 globalConfig,
                 this.props.serviceName,
                 this.el,
-                this.props.field,
-                this.props.row
+                this.props.row,
+                this.props.field
             );
             customControl.render();
             this.setState({ loading: false });
@@ -65,11 +65,11 @@ class CustomCell extends Component {
     }
 }
 
-CustomCell.propTypes = {
+CustomTableControl.propTypes = {
     serviceName: PropTypes.string.isRequired,
     row: PropTypes.object.isRequired,
-    field: PropTypes.string.isRequired,
+    field: PropTypes.string,
     fileName: PropTypes.string.isRequired,
 };
 
-export default CustomCell;
+export default CustomTableControl;

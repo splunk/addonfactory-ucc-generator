@@ -7,10 +7,6 @@ import CONTROL_TYPE_MAP from '../constants/ControlTypeMap';
 
 const CustomElement = styled.div`
     margin-left: 30px;
-
-    div {
-        width:100% !important
-    }
 `;
 
 const ControlGroupWrapper = styled(ControlGroup)`
@@ -99,6 +95,7 @@ ControlWrapper.propTypes = {
     entity: PropTypes.object,
     disabled: PropTypes.bool,
     serviceName: PropTypes.string,
+    dependencyValues: PropTypes.object,
 };
 
 export default ControlWrapper;

@@ -63,6 +63,7 @@ function SingleInputComponent(props) {
         let current = true;
         const source = axios.CancelToken.source();
 
+        // eslint-disable-next-line no-shadow
         const options = { CancelToken: source.token, handleError: true };
         if (referenceName) {
             options.serviceName = referenceName;
@@ -86,16 +87,18 @@ function SingleInputComponent(props) {
                         setLoading(false);
                     }
                 })
-                .catch((error) => {
+                .catch(() => {
                     if (current) {
                         setLoading(false);
                     }
                 });
         }
+        // eslint-disable-next-line consistent-return
         return () => {
             source.cancel('Operation canceled.');
             current = false;
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dependencyValues]);
 
     const effectiveDisabled = loading ? true : disabled;
@@ -110,6 +113,7 @@ function SingleInputComponent(props) {
             disabled={effectiveDisabled}
             onChange={handleChange}
             inline
+            style={{ width: '50%' }}
         >
             {options && options.length > 0 && options}
         </Select>

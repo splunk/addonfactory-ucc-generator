@@ -98,13 +98,12 @@ class BaseFormView extends PureComponent {
                 tempEntity.display =
                     typeof e?.options?.display !== 'undefined' ? e.options.display : true;
                 tempEntity.error = false;
-                // eslint-disable-next-line no-nested-ternary
-                tempEntity.disabled =
-                    e.field === 'name'
-                        ? true
-                        : typeof e?.options?.disableonEdit !== 'undefined'
-                        ? e.options.disableonEdit
-                        : false;
+                tempEntity.disabled = false;
+                if (e.field === 'name') {
+                    tempEntity.disabled = true;
+                } else if (typeof e?.options?.disableonEdit !== 'undefined') {
+                    tempEntity.disabled = e.options.disableonEdit;
+                }
                 temState[e.field] = tempEntity;
             } else if (props.mode === MODE_CLONE) {
                 tempEntity.value = e.field === 'name' ? '' : this.currentInput[e.field];
@@ -122,13 +121,12 @@ class BaseFormView extends PureComponent {
                 tempEntity.display =
                     typeof e?.options?.display !== 'undefined' ? e.options.display : true;
                 tempEntity.error = false;
-                // eslint-disable-next-line no-nested-ternary
-                tempEntity.disabled =
-                    e.field === 'name'
-                        ? true
-                        : typeof e?.options?.disableonEdit !== 'undefined'
-                        ? e.options.disableonEdit
-                        : false;
+                tempEntity.disabled = false;
+                if (e.field === 'name') {
+                    tempEntity.disabled = true;
+                } else if (typeof e?.options?.disableonEdit !== 'undefined') {
+                    tempEntity.disabled = e.options.disableonEdit;
+                }
                 temState[e.field] = tempEntity;
             } else {
                 throw new Error('Invalid mode :', props.mode);
