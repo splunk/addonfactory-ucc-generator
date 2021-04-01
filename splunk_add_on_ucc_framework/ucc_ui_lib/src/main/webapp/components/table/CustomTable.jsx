@@ -14,18 +14,21 @@ import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 
 import useQuery from '../../hooks/useQuery';
 import { MODE_CLONE, MODE_EDIT } from '../../constants/modes';
+import { PAGE_INPUT } from '../../constants/pages';
 import { ActionButtonComponent } from './CustomTableStyle';
 import { getUnifiedConfigs } from '../../util/util';
 import { getExpansionRow } from './TableExpansionRow';
 import EntityModal from '../EntityModal';
 import DeleteModal from '../DeleteModal';
 import CustomCell from '../CustomCell';
+import { STYLE_MODAL, STYLE_PAGE } from '../../constants/dialogStyles';
 
 function CustomTable({
     page,
     serviceName,
     data,
     handleToggleActionClick,
+    handleOpenPageStyleDialog,
     handleSort,
     sortDir,
     sortKey,
@@ -35,7 +38,7 @@ function CustomTable({
 
     const unifiedConfigs = getUnifiedConfigs();
     const tableConfig =
-        page === 'inputs'
+        page === PAGE_INPUT
             ? unifiedConfigs.pages.inputs.table
             : unifiedConfigs.pages.configuration.tabs.filter((x) => x.name === serviceName)[0]
                   .table;
@@ -43,6 +46,11 @@ function CustomTable({
     const headers = tableConfig.header;
     // TODO: add multi field mapping support
     const statusMapping = moreInfo?.filter((a) => a.mapping);
+
+    const serviceToStyleMap = {};
+    unifiedConfigs.pages.inputs.services.forEach((x) => {
+        serviceToStyleMap[x.name] = x.style === STYLE_PAGE ? STYLE_PAGE : STYLE_MODAL;
+    });
 
     const history = useHistory();
     const query = useQuery();
@@ -100,7 +108,7 @@ function CustomTable({
     const generateModalDialog = () => {
         if (entityModal.open) {
             let label;
-            if (page === 'inputs') {
+            if (page === PAGE_INPUT) {
                 const { services } = unifiedConfigs.pages?.inputs;
                 label =
                     services[services.findIndex((x) => x.name === entityModal.serviceName)]?.title;
@@ -164,26 +172,34 @@ function CustomTable({
     };
 
     const handleEditActionClick = (row) => {
-        setEntityModal({
-            ...entityModal,
-            open: true,
-            serviceName: row.serviceName,
-            stanzaName: row.name,
-            mode: MODE_EDIT,
-        });
-        // set query and push to history
-        query.set('record', row.name);
-        history.push({ search: query.toString() });
+        if (serviceToStyleMap[row.serviceName] === 'page') {
+            handleOpenPageStyleDialog(row, MODE_EDIT);
+        } else {
+            setEntityModal({
+                ...entityModal,
+                open: true,
+                serviceName: row.serviceName,
+                stanzaName: row.name,
+                mode: MODE_EDIT,
+            });
+            // set query and push to history
+            query.set('record', row.name);
+            history.push({ search: query.toString() });
+        }
     };
 
     const handleCloneActionClick = (row) => {
-        setEntityModal({
-            ...entityModal,
-            open: true,
-            serviceName: row.serviceName,
-            stanzaName: row.name,
-            mode: MODE_CLONE,
-        });
+        if (serviceToStyleMap[row.serviceName] === 'page') {
+            handleOpenPageStyleDialog(row, MODE_CLONE);
+        } else {
+            setEntityModal({
+                ...entityModal,
+                open: true,
+                serviceName: row.serviceName,
+                stanzaName: row.name,
+                mode: MODE_CLONE,
+            });
+        }
     };
 
     const handleDeleteActionClick = (row) => {
@@ -331,6 +347,7 @@ CustomTable.propTypes = {
     serviceName: PropTypes.string,
     data: PropTypes.array.isRequired,
     handleToggleActionClick: PropTypes.func,
+    handleOpenPageStyleDialog: PropTypes.func,
     handleSort: PropTypes.func,
     sortDir: PropTypes.string,
     sortKey: PropTypes.string,

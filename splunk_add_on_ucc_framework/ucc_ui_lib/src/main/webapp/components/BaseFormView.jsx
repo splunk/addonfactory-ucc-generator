@@ -8,6 +8,7 @@ import ControlWrapper from './ControlWrapper';
 import { getUnifiedConfigs } from '../util/util';
 import Validator, { SaveValidator } from '../util/Validator';
 import { MODE_CLONE, MODE_CREATE, MODE_EDIT, MODE_CONFIG } from '../constants/modes';
+import { PAGE_INPUT } from '../constants/pages';
 import { axiosCallWrapper } from '../util/axiosCallWrapper';
 import TableContext from '../context/TableContext';
 import { parseErrorMsg } from '../util/messageUtil';
@@ -42,7 +43,7 @@ class BaseFormView extends PureComponent {
             utilCustomFunctions: this.util,
         };
 
-        if (props.page === 'inputs') {
+        if (props.page === PAGE_INPUT) {
             globalConfig.pages.inputs.services.forEach((service) => {
                 if (service.name === props.serviceName) {
                     this.entities = service.entity;
@@ -80,7 +81,7 @@ class BaseFormView extends PureComponent {
         const temState = {};
         this.entities.forEach((e) => {
             const tempEntity = {};
-            
+
             if (props.mode === MODE_CREATE) {
                 tempEntity.value = typeof e.defaultValue !== 'undefined' ? e.defaultValue : null;
                 tempEntity.display =
@@ -113,7 +114,7 @@ class BaseFormView extends PureComponent {
                 tempEntity.disabled = false;
                 temState[e.field] = tempEntity;
             } else if (props.mode === MODE_CONFIG) {
-                e.defaultValue =  typeof e.defaultValue !== 'undefined' ? e.defaultValue : null;
+                e.defaultValue = typeof e.defaultValue !== 'undefined' ? e.defaultValue : null;
                 tempEntity.value =
                     typeof this.currentInput[e.field] !== 'undefined'
                         ? this.currentInput[e.field]

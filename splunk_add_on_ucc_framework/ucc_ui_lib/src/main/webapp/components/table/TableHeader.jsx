@@ -9,6 +9,7 @@ import { _ } from '@splunk/ui-utils/i18n';
 
 import TableFilter from './TableFilter';
 import TableContext from '../../context/TableContext';
+import { PAGE_INPUT } from '../../constants/pages';
 import { TableCaptionComponent, TableSelectBoxWrapper } from './CustomTableStyle';
 
 function TableHeader({ page, services, totalElement, handleRequestModalOpen }) {
@@ -21,7 +22,7 @@ function TableHeader({ page, services, totalElement, handleRequestModalOpen }) {
         setSearchType,
         setSearchText,
     } = useContext(TableContext);
-    const itemLabel = page === 'inputs' ? 'Input' : 'Item';
+    const itemLabel = page === PAGE_INPUT ? 'Input' : 'Item';
     const getSearchTypeDropdown = () => {
         if (services.length < 2) {
             return null;
@@ -48,7 +49,7 @@ function TableHeader({ page, services, totalElement, handleRequestModalOpen }) {
         <ColumnLayout gutter={8}>
             <ColumnLayout.Row
                 style={
-                    page === 'inputs'
+                    page === PAGE_INPUT
                         ? {
                               borderTop: '1px solid #e1e6eb',
                               padding: '5px 0px',
@@ -64,7 +65,7 @@ function TableHeader({ page, services, totalElement, handleRequestModalOpen }) {
                         <div>
                             {totalElement}
                             {totalElement > 1 ? _(` ${itemLabel}s`) : _(` ${itemLabel}`)}
-                            {page === 'inputs' ? (
+                            {page === PAGE_INPUT ? (
                                 <TableSelectBoxWrapper>
                                     <Select
                                         value={pageSize}
@@ -118,7 +119,7 @@ function TableHeader({ page, services, totalElement, handleRequestModalOpen }) {
                             marginRight: '30px',
                         }}
                     />
-                    {page === 'inputs' ? null : (
+                    {page === PAGE_INPUT ? null : (
                         <Button
                             label={_('Add')}
                             appearance="primary"
