@@ -50,38 +50,36 @@ class EntityModal extends Component {
 
     render() {
         return (
-            <div>
-                <ModalWrapper open={this.props.open}>
-                    <Modal.Header
-                        title={this.props.formLabel}
-                        onRequestClose={this.handleRequestClose}
+            <ModalWrapper open={this.props.open}>
+                <Modal.Header
+                    title={this.props.formLabel}
+                    onRequestClose={this.handleRequestClose}
+                />
+                <Modal.Body>
+                    <BaseFormView
+                        ref={this.form}
+                        page={this.props.page}
+                        serviceName={this.props.serviceName}
+                        mode={this.props.mode}
+                        stanzaName={this.props.stanzaName}
+                        handleFormSubmit={this.handleFormSubmit}
                     />
-                    <Modal.Body>
-                        <BaseFormView
-                            ref={this.form}
-                            page={this.props.page}
-                            serviceName={this.props.serviceName}
-                            mode={this.props.mode}
-                            stanzaName={this.props.stanzaName}
-                            handleFormSubmit={this.handleFormSubmit}
-                        />
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button
-                            appearance="secondary"
-                            onClick={this.handleRequestClose}
-                            label={_('Cancel')}
-                            disabled={this.state.isSubmititng}
-                        />
-                        <Button
-                            appearance="primary"
-                            label={this.state.isSubmititng ? <WaitSpinner /> : this.buttonText}
-                            onClick={this.handleSubmit}
-                            disabled={this.state.isSubmititng}
-                        />
-                    </Modal.Footer>
-                </ModalWrapper>
-            </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button
+                        appearance="secondary"
+                        onClick={this.handleRequestClose}
+                        label={_('Cancel')}
+                        disabled={this.state.isSubmititng}
+                    />
+                    <Button
+                        appearance="primary"
+                        label={this.state.isSubmititng ? <WaitSpinner /> : this.buttonText}
+                        onClick={this.handleSubmit}
+                        disabled={this.state.isSubmititng}
+                    />
+                </Modal.Footer>
+            </ModalWrapper>
         );
     }
 }

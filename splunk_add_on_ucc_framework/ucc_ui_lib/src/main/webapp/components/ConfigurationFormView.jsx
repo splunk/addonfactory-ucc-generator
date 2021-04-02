@@ -3,13 +3,22 @@ import PropTypes from 'prop-types';
 
 import { _ } from '@splunk/ui-utils/i18n';
 import Button from '@splunk/react-ui/Button';
-import ControlGroup from '@splunk/react-ui/ControlGroup';
+import styled from 'styled-components';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 
 import BaseFormView from './BaseFormView';
 import { axiosCallWrapper } from '../util/axiosCallWrapper';
 import { MODE_CONFIG } from '../constants/modes';
 import { WaitSpinnerWrapper } from './table/CustomTableStyle';
+
+const ButtonWrapper = styled.div`
+    margin-left: 270px !important;
+    width: 150px;
+
+    .save_btn {
+        width: 100%;
+    }
+`;
 
 function ConfigurationFormView({ serviceName }) {
     const form = useRef();
@@ -54,16 +63,15 @@ function ConfigurationFormView({ serviceName }) {
                 currentServiceState={currentServiceState}
                 handleFormSubmit={handleFormSubmit}
             />
-            <ControlGroup label="">
-                <div style={{ flexGrow: 0 }}>
-                    <Button
-                        appearance="primary"
-                        label={isSubmitting ? <WaitSpinner /> : _('Save')}
-                        onClick={handleSubmit}
-                        disabled={isSubmitting}
-                    />
-                </div>
-            </ControlGroup>
+            <ButtonWrapper>
+                <Button
+                    className="save_btn"
+                    appearance="primary"
+                    label={isSubmitting ? <WaitSpinner /> : _('Save')}
+                    onClick={handleSubmit}
+                    disabled={isSubmitting}
+                />
+            </ButtonWrapper>
         </>
     ) : (
         <WaitSpinnerWrapper />

@@ -20,7 +20,12 @@
     "test:ci": "cross-env JEST_JUNIT_OUTPUT_DIR=./test-reports JEST_JUNIT_OUTPUT_NAME=unit-results.xml JEST_JUNIT_CLASSNAME=unit yarn run test --ci --reporters=default jest-junit --coverage --coverageDirectory=coverage_report/coverage_maps_unit --coverageReporters=json",
     "test:watch": "jest --watch"
   },
-  "dependencies": {},
+  "dependencies": {
+    "css-loader": "^5.2.0",
+    "node-sass": "^5.0.0",
+    "sass-loader": "10.1.1",
+    "style-loader": "^2.0.0"
+  },
   "devDependencies": {
     "@babel/core": "^7.2.0",
     "@splunk/babel-preset": "^3.0.0",

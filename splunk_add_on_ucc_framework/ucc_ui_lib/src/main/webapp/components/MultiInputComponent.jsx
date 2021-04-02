@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Multiselect from '@splunk/react-ui/Multiselect';
-import { _ } from '@splunk/ui-utils/i18n';
+import styled from 'styled-components';
 import axios from 'axios';
+import { _ } from '@splunk/ui-utils/i18n';
+
 import { axiosCallWrapper } from '../util/axiosCallWrapper';
 import { filterResponse } from '../util/util';
+
+const MultiSelectWrapper = styled(Multiselect)`
+    width: 300px !important;
+`;
 
 function MultiInputComponent(props) {
     const {
@@ -95,7 +101,7 @@ function MultiInputComponent(props) {
     const valueList = value ? value.split(delimiter) : [];
 
     return (
-        <Multiselect
+        <MultiSelectWrapper
             values={valueList}
             error={error}
             name={field}
@@ -104,10 +110,9 @@ function MultiInputComponent(props) {
             allowNewValues={createSearchChoice}
             onChange={handleChange}
             inline
-            style={{ width: '100%' }}
         >
             {options && options.length > 0 && options}
-        </Multiselect>
+        </MultiSelectWrapper>
     );
 }
 

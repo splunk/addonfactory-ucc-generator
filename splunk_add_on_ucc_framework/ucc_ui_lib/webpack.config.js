@@ -5,11 +5,19 @@ const baseConfig = require('@splunk/webpack-configs/base.config').default;
 
 module.exports = webpackMerge(baseConfig, {
     entry: {
-        entry_page: path.join(__dirname, 'src/main/webapp/pages/entry_page')
+        entry_page: path.join(__dirname, 'src/main/webapp/pages/entry_page'),
     },
     output: {
         path: path.join(__dirname, 'stage/appserver/static/js/build'),
         filename: '[name].js',
+    },
+    module: {
+        rules: [
+            {
+                test: /\.(s*)css$/,
+                use: ['style-loader', 'css-loader', 'sass-loader'],
+            },
+        ],
     },
     plugins: [
         new CopyWebpackPlugin([

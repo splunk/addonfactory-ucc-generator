@@ -408,7 +408,7 @@ class BaseFormView extends PureComponent {
         return (
             <div
                 className="form-horizontal"
-                style={this.props.mode === MODE_CONFIG ? { marginTop: '10px' } : {}}
+                style={this.props.mode === MODE_CONFIG ? { marginTop: '40px' } : {}}
             >
                 {this.generateWarningMessage()}
                 {this.generateErrorMessage()}

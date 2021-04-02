@@ -3,11 +3,29 @@ import PropTypes from 'prop-types';
 import Select from '@splunk/react-ui/Select';
 import Button from '@splunk/react-ui/Button';
 import Paginator from '@splunk/react-ui/Paginator';
+import styled from 'styled-components';
 import { _ } from '@splunk/ui-utils/i18n';
 
 import TableFilter from './TableFilter';
 import TableContext from '../../context/TableContext';
 import { TableSelectBoxWrapper } from './CustomTableStyle';
+
+const TableHeaderWrapper = styled.div`
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #ccc;
+    padding-top: 5px;
+    margin-bottom: 5px;
+`;
+
+const TableFilterWrapper = styled.div`
+    max-width: 300px;
+    width: 100%;
+`;
+
+const PaginatorWrapper = styled(Paginator)`
+    margin-right: 30px;
+`;
 
 function TableHeader({ page, services, totalElement, handleRequestModalOpen }) {
     const {
@@ -46,15 +64,7 @@ function TableHeader({ page, services, totalElement, handleRequestModalOpen }) {
     };
 
     return (
-        <div
-            style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                borderTop: '1px solid #ccc',
-                paddingTop: '5px',
-                marginBottom: '5px',
-            }}
-        >
+        <TableHeaderWrapper>
             <div>
                 {totalElement}
                 {totalElement > 1 ? _(` ${itemLabel}s`) : _(` ${itemLabel}`)}
@@ -75,28 +85,20 @@ function TableHeader({ page, services, totalElement, handleRequestModalOpen }) {
                     </TableSelectBoxWrapper>
                 ) : null}
             </div>
-            <div
-                style={{
-                    maxWidth: '300px',
-                    width: '100%',
-                }}
-            >
+            <TableFilterWrapper>
                 <TableFilter
                     handleChange={(e, { value }) => {
                         setCurrentPage(0);
                         setSearchText(value);
                     }}
                 />
-            </div>
+            </TableFilterWrapper>
             <div>
-                <Paginator
+                <PaginatorWrapper
                     onChange={(e, { pageNumber }) => setCurrentPage(pageNumber - 1)}
                     current={currentPage + 1}
                     alwaysShowLastPageLink
                     totalPages={Math.ceil(totalElement / pageSize)}
-                    style={{
-                        marginRight: '30px',
-                    }}
                 />
                 {page === 'inputs' ? null : (
                     <Button
@@ -106,7 +108,7 @@ function TableHeader({ page, services, totalElement, handleRequestModalOpen }) {
                     />
                 )}
             </div>
-        </div>
+        </TableHeaderWrapper>
     );
 }
 
