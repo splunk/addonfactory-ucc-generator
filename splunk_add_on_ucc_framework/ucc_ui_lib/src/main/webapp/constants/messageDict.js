@@ -52,6 +52,7 @@ export default {
     // Page title
     116: 'Inputs',
     117: 'Configuration',
+    118: 'configuration file not found',
 
     unknown: 'An unknown error occurred',
 };

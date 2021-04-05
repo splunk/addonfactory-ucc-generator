@@ -32,6 +32,8 @@ class ConfigManager extends Component {
             .catch((err) => {
                 if (err && err.name === 'SyntaxError') {
                     this.setState({ syntaxError: true, loading: false });
+                } else if (err && err.response && err.response.status === 404) {
+                    this.setState({ fileNotFoundError: true, loading: false });
                 } else {
                     // eslint-disable-next-line no-console
                     console.error('Error [configManager.js] [35]: ', err);
@@ -73,6 +75,11 @@ class ConfigManager extends Component {
         if (this.state.syntaxError) {
             return (
                 <ErrorModal message={getFormattedMessage(110, [getFormattedMessage(20)])} open />
+            );
+        }
+        if (this.state.fileNotFoundError) {
+            return (
+                <ErrorModal message={getFormattedMessage(110, [getFormattedMessage(118)])} open />
             );
         }
         return this.props.children(this.state);
