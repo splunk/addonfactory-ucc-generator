@@ -10,7 +10,7 @@ import CustomTable from './CustomTable';
 import TableHeader from './TableHeader';
 import TableContext from '../../context/TableContext';
 
-function TableWrapper({ page, serviceName, handleRequestModalOpen }) {
+function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPageStyleDialog }) {
     const [sortKey, setSortKey] = useState('name');
     const [sortDir, setSortDir] = useState('asc');
     const [loading, setLoading] = useState(true);
@@ -230,6 +230,7 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen }) {
                 handleSort={handleSort}
                 sortDir={sortDir}
                 sortKey={sortKey}
+                handleOpenPageStyleDialog={handleOpenPageStyleDialog}
             />
         </>
     );
@@ -239,6 +240,7 @@ TableWrapper.propTypes = {
     page: PropTypes.string,
     serviceName: PropTypes.string,
     handleRequestModalOpen: PropTypes.func,
+    handleOpenPageStyleDialog: PropTypes.func,
 };
 
 export default memo(TableWrapper);

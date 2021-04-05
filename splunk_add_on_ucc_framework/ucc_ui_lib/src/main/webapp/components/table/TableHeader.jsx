@@ -8,6 +8,7 @@ import { _ } from '@splunk/ui-utils/i18n';
 import TableFilter from './TableFilter';
 import TableContext from '../../context/TableContext';
 import { TableSelectBoxWrapper } from './CustomTableStyle';
+import { PAGE_INPUT } from '../../constants/pages';
 
 function TableHeader({ page, services, totalElement, handleRequestModalOpen }) {
     const {
@@ -20,7 +21,7 @@ function TableHeader({ page, services, totalElement, handleRequestModalOpen }) {
         setSearchText,
     } = useContext(TableContext);
 
-    const itemLabel = page === 'inputs' ? 'Input' : 'Item';
+    const itemLabel = page === PAGE_INPUT ? 'Input' : 'Item';
 
     const getSearchTypeDropdown = () => {
         if (services.length < 2) {
@@ -58,7 +59,7 @@ function TableHeader({ page, services, totalElement, handleRequestModalOpen }) {
             <div>
                 {totalElement}
                 {totalElement > 1 ? _(` ${itemLabel}s`) : _(` ${itemLabel}`)}
-                {page === 'inputs' ? (
+                {page === PAGE_INPUT ? (
                     <TableSelectBoxWrapper>
                         <Select
                             value={pageSize}
@@ -90,7 +91,7 @@ function TableHeader({ page, services, totalElement, handleRequestModalOpen }) {
             </div>
             <div>
                 <Paginator
-                    onChange={(e, { pageNumber }) => setCurrentPage(pageNumber - 1)}
+                    onChange={(e, val) => setCurrentPage(val.page - 1)}
                     current={currentPage + 1}
                     alwaysShowLastPageLink
                     totalPages={Math.ceil(totalElement / pageSize)}
@@ -98,7 +99,7 @@ function TableHeader({ page, services, totalElement, handleRequestModalOpen }) {
                         marginRight: '30px',
                     }}
                 />
-                {page === 'inputs' ? null : (
+                {page === PAGE_INPUT ? null : (
                     <Button
                         label={_('Add')}
                         appearance="primary"

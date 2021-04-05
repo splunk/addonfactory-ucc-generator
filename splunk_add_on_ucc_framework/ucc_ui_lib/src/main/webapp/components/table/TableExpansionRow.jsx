@@ -13,9 +13,9 @@ function getExpansionRowData(row, moreInfo) {
         moreInfo.forEach((val) => {
             const label = _(val.label);
             if (val.field in row) {
-                DefinitionLists.push(<DL.Term>{label}</DL.Term>);
+                DefinitionLists.push(<DL.Term key={val.field}>{label}</DL.Term>);
                 DefinitionLists.push(
-                    <DL.Description>
+                    <DL.Description key={`${val.field}_decr`}>
                         {val.mapping && val.mapping[row[val.field]]
                             ? val.mapping[row[val.field]]
                             : row[val.field]}
