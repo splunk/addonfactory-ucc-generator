@@ -29,8 +29,10 @@ class BaseFormView extends PureComponent {
                 : `${this.props.serviceName}`;
 
         this.util = {
-            setState: (state) => {
-                this.setState(state);
+            setState: (callback) => {
+                this.setState(previousState => {
+                    return callback(previousState)
+                  })
             },
             setErrorFieldMsg: this.setErrorFieldMsg,
             clearAllErrorMsg: this.clearAllErrorMsg,
@@ -167,18 +169,12 @@ class BaseFormView extends PureComponent {
 
     handleSubmit = () => {
         this.props.handleFormSubmit(true, false);
-        if (this.hook && typeof this.hook.onSave === 'function') {
-            const validationPass = this.hook.onSave();
-            if (!validationPass) {
-                this.props.handleFormSubmit(false, false);
-            }
-        }
         const datadict = {};
 
         Object.keys(this.state.data).forEach((field) => {
             datadict[field] = this.state.data[field].value;
         });
-
+        
         // Validation of form fields on Submit
         const validator = new Validator(this.entities);
         let error = validator.doValidation(datadict);
@@ -190,15 +186,17 @@ class BaseFormView extends PureComponent {
                 this.setErrorMsg(error.errorMsg);
             }
         }
-
-        if (error && this.hook && typeof this.hook.onSaveFail === 'function') {
-            this.hook.onSaveFail();
-            this.props.handleFormSubmit(false, false);
-        } else if (error) {
-            this.props.handleFormSubmit(false, false);
+        if (!error && this.hook && typeof this.hook.onSave === 'function') {
+            const validationPass = this.hook.onSave(datadict);
+            if (!validationPass) {
+                this.props.handleFormSubmit(false, false);
+            }
         }
 
-        if (!error) {
+        if (error) {
+            this.props.handleFormSubmit(false, false);
+        }
+        else{
             const body = new URLSearchParams();
 
             Object.keys(datadict).forEach((key) => {
@@ -245,6 +243,9 @@ class BaseFormView extends PureComponent {
                             })
                         );
                     }
+                    if (this.hook && typeof this.hook.onSaveSuccess === 'function') {
+                        this.hook.onSaveSuccess();
+                    }
                     this.props.handleFormSubmit(false, true);
                 });
         }
@@ -290,7 +291,7 @@ class BaseFormView extends PureComponent {
         if (this.hookDeferred) {
             this.hookDeferred.then(() => {
                 if (typeof this.hook.onChange === 'function') {
-                    this.hook.onChange(newFields[field]);
+                    this.hook.onChange(field, targetValue);
                 }
             });
         }
@@ -304,15 +305,18 @@ class BaseFormView extends PureComponent {
 
     // Set error message to display and set error in perticular field
     setErrorFieldMsg = (field, msg) => {
-        const newFields = update(this.state, { data: { [field]: { error: { $set: true } } } });
-        newFields.errorMsg = msg;
-        this.setState(newFields);
+        this.setState(previousState => {
+            const newFields = update(previousState, { data: { [field]: { error: { $set: true } } } });
+            newFields.errorMsg = msg;
+            return newFields;
+        })
     };
 
     // Set error in perticular field
     setErrorField = (field) => {
-        const newFields = update(this.state, { data: { [field]: { error: { $set: true } } } });
-        this.setState(newFields);
+        this.setState(previousState => {
+            return update(previousState, { data: { [field]: { error: { $set: true } } } });
+        })
     };
 
     // Clear error message
@@ -326,15 +330,16 @@ class BaseFormView extends PureComponent {
 
     // Set error message
     setErrorMsg = (msg) => {
-        const newFields = { ...this.state };
-        newFields.errorMsg = msg;
-        this.setState(newFields);
+        this.setState(previousState => {
+            return {...previousState, errorMsg:msg};
+        })
     };
 
-    // Clear error message and errors from fields
+    // Clear error/warning message and errors from fields
     clearAllErrorMsg = (State) => {
         const newFields = State ? { ...State } : { ...this.state };
         newFields.errorMsg = '';
+        newFields.warningMsg = '';
         const newData = State ? { ...State.data } : { ...this.state.data };
         const temData = {};
         Object.keys(newData).forEach((key) => {
@@ -396,7 +401,7 @@ class BaseFormView extends PureComponent {
             if (this.props.mode === MODE_EDIT) {
                 if (this.hookDeferred) {
                     this.hookDeferred.then(() => {
-                        if (typeof this.hook.onCreate === 'function') {
+                        if (typeof this.hook.onEditLoad === 'function') {
                             this.hook.onEditLoad();
                         }
                     });
