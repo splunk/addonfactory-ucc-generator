@@ -79,7 +79,7 @@ class Validator {
     }
 
     // Validate the custom component
-    CustomValidator(validatorFunc, field, data) {
+    static CustomValidator(validatorFunc, field, data) {
         const ret = validatorFunc(field, data);
         if (typeof ret === 'string') {
             return { errorField: field, errorMsg: ret };
