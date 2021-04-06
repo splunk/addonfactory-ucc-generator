@@ -381,7 +381,7 @@ class BaseFormView extends PureComponent {
     loadHook = (module, globalConfig) => {
         const myPromise = new Promise((myResolve) => {
             __non_webpack_require__([`app/${this.appName}/js/build/custom/${module}`], (Hook) => {
-                this.hook = new Hook(globalConfig, this.props.serviceName, this.state, this.util);
+                this.hook = new Hook(globalConfig, this.props.serviceName, this.state, this.props.mode, this.util);
                 myResolve(Hook);
             });
         });
