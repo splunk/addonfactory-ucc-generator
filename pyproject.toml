@@ -66,8 +66,9 @@ poetry-dynamic-versioning = "^0.12"
 
 [tool.poetry-dynamic-versioning]
 enable = true
-style = "semver"
-
+#style = "semver"
+#pattern = "(?x)^v(?P<base>\\d+\\.\\d+\\.\\d+)(-?((?P<stage>[a-zA-Z]{3})[a-zA-Z]+\\.?(?P<revision>\\d+)?))?"
+format-jinja = "{% if distance == 0 %}{{ base }}{% else %}{{ base }}+{{ distance }}.{{ commit }}{% endif %}"                                           
 
 [tool.poetry.scripts]
 ucc-gen="splunk_add_on_ucc_framework:main"
@@ -75,5 +76,5 @@ build-ucc="build:build_ucc"
 install-libs="splunk_add_on_ucc_framework:install_requirements"
 
 [build-system]
-requires = ["poetry>=1.0.0"]
+requires = ["poetry>=1.0.2", "poetry-dynamic-versioning"]
 build-backend = "poetry.masonry.api"
