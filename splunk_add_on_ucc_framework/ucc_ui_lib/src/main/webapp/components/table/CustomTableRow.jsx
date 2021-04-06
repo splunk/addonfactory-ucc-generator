@@ -1,5 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
+
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import Switch from '@splunk/react-ui/Switch';
 import Table from '@splunk/react-ui/Table';
@@ -11,10 +12,7 @@ import Trash from '@splunk/react-icons/Trash';
 import styled from 'styled-components';
 import { _ } from '@splunk/ui-utils/i18n';
 
-import EntityModal from '../EntityModal';
-import DeleteModal from '../DeleteModal';
 import CustomTableControl from './CustomTableControl';
-import { MODE_CLONE, MODE_EDIT } from '../../constants/modes';
 import { ActionButtonComponent } from './CustomTableStyle';
 
 const TableCellWrapper = styled(Table.Cell)`
@@ -31,10 +29,15 @@ const SwitchWrapper = styled.div`
 `;
 
 function CustomTableRow(props) {
-    const { row, columns, unifiedConfigs, statusMapping, handleToggleActionClick, page } = props;
-
-    const [entityModal, setEntityModal] = useState({ open: false });
-    const [deleteModal, setDeleteModal] = useState({ open: false });
+    const {
+        row,
+        columns,
+        statusMapping,
+        handleToggleActionClick,
+        handleEditActionClick,
+        handleCloneActionClick,
+        handleDeleteActionClick,
+    } = props;
 
     const getCustomCell = (customRow, header) => {
         return React.createElement(CustomTableControl, {
@@ -44,52 +47,6 @@ function CustomTableRow(props) {
             fileName: header.customCell.src,
         });
     };
-
-    const handleEntityClose = () => {
-        setEntityModal({ ...entityModal, open: false });
-    };
-
-    const handleEditActionClick = useCallback(
-        (selectedRow) => {
-            setEntityModal({
-                ...entityModal,
-                open: true,
-                serviceName: selectedRow.serviceName,
-                stanzaName: selectedRow.name,
-                mode: MODE_EDIT,
-            });
-        },
-        [entityModal]
-    );
-
-    const handleDeleteClose = () => {
-        setDeleteModal({ ...deleteModal, open: false });
-    };
-
-    const handleCloneActionClick = useCallback(
-        (selectedRow) => {
-            setEntityModal({
-                ...entityModal,
-                open: true,
-                serviceName: selectedRow.serviceName,
-                stanzaName: selectedRow.name,
-                mode: MODE_CLONE,
-            });
-        },
-        [entityModal]
-    );
-
-    const handleDeleteActionClick = useCallback(
-        (selectedRow) => {
-            setDeleteModal({
-                ...deleteModal,
-                open: true,
-                stanzaName: selectedRow.name,
-                serviceName: selectedRow.serviceName,
-            });
-        },
-        [deleteModal]
-    );
 
     const rowActionsPrimaryButton = useCallback(
         (selectedRow) => {
@@ -134,46 +91,6 @@ function CustomTableRow(props) {
                 ? statusMapping[0].mapping[row.disabled]
                 : 'Disabled';
     }
-
-    const generateModalDialog = () => {
-        if (entityModal.open) {
-            let label;
-            if (page === 'inputs') {
-                const { services } = unifiedConfigs.pages?.inputs;
-                label =
-                    services[services.findIndex((x) => x.name === entityModal.serviceName)]?.title;
-            } else {
-                const { tabs } = unifiedConfigs.pages?.configuration;
-                label = tabs[tabs.findIndex((x) => x.name === entityModal.serviceName)]?.title;
-            }
-            return (
-                <EntityModal
-                    page={page}
-                    open={entityModal.open}
-                    handleRequestClose={handleEntityClose}
-                    serviceName={entityModal.serviceName}
-                    stanzaName={entityModal.stanzaName}
-                    mode={entityModal.mode}
-                    formLabel={
-                        entityModal.mode === MODE_CLONE ? _(`Clone `) + label : _(`Update `) + label
-                    }
-                />
-            );
-        }
-        return null;
-    };
-
-    const generateDeleteDialog = () => {
-        return (
-            <DeleteModal
-                isInput
-                open={deleteModal.open}
-                handleRequestClose={handleDeleteClose}
-                serviceName={deleteModal.serviceName}
-                stanzaName={deleteModal.stanzaName}
-            />
-        );
-    };
 
     return (
         <>
@@ -229,8 +146,6 @@ function CustomTableRow(props) {
                         return cellHTML;
                     })}
             </Table.Row>
-            {generateModalDialog()}
-            {generateDeleteDialog()}
         </>
     );
 }
@@ -240,8 +155,9 @@ CustomTableRow.propTypes = {
     columns: PropTypes.array,
     statusMapping: PropTypes.array,
     handleToggleActionClick: PropTypes.func,
-    unifiedConfigs: PropTypes.any,
-    page: PropTypes.string,
+    handleEditActionClick: PropTypes.func,
+    handleCloneActionClick: PropTypes.func,
+    handleDeleteActionClick: PropTypes.func,
 };
 
 export default React.memo(CustomTableRow);

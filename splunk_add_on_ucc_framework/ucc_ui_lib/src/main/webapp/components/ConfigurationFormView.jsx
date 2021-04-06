@@ -10,6 +10,7 @@ import BaseFormView from './BaseFormView';
 import { axiosCallWrapper } from '../util/axiosCallWrapper';
 import { MODE_CONFIG } from '../constants/modes';
 import { WaitSpinnerWrapper } from './table/CustomTableStyle';
+import { PAGE_CONF } from '../constants/pages';
 
 const ButtonWrapper = styled.div`
     margin-left: 270px !important;
@@ -56,7 +57,7 @@ function ConfigurationFormView({ serviceName }) {
         <>
             <BaseFormView
                 ref={form}
-                page="configuration"
+                page={PAGE_CONF}
                 stanzaName={serviceName}
                 serviceName="settings"
                 mode={MODE_CONFIG}

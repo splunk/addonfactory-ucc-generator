@@ -9,6 +9,7 @@ import { _ } from '@splunk/ui-utils/i18n';
 import TableFilter from './TableFilter';
 import TableContext from '../../context/TableContext';
 import { TableSelectBoxWrapper } from './CustomTableStyle';
+import { PAGE_INPUT } from '../../constants/pages';
 
 const TableHeaderWrapper = styled.div`
     display: flex;
@@ -38,7 +39,7 @@ function TableHeader({ page, services, totalElement, handleRequestModalOpen }) {
         setSearchText,
     } = useContext(TableContext);
 
-    const itemLabel = page === 'inputs' ? 'Input' : 'Item';
+    const itemLabel = page === PAGE_INPUT ? 'Input' : 'Item';
 
     const getSearchTypeDropdown = () => {
         if (services.length < 2) {
@@ -68,7 +69,7 @@ function TableHeader({ page, services, totalElement, handleRequestModalOpen }) {
             <div>
                 {totalElement}
                 {totalElement > 1 ? _(` ${itemLabel}s`) : _(` ${itemLabel}`)}
-                {page === 'inputs' ? (
+                {page === PAGE_INPUT ? (
                     <TableSelectBoxWrapper>
                         <Select
                             value={pageSize}
@@ -94,13 +95,13 @@ function TableHeader({ page, services, totalElement, handleRequestModalOpen }) {
                 />
             </TableFilterWrapper>
             <div>
-                <PaginatorWrapper
-                    onChange={(e, { pageNumber }) => setCurrentPage(pageNumber - 1)}
+                <Paginator
+                    onChange={(e, val) => setCurrentPage(val.page - 1)}
                     current={currentPage + 1}
                     alwaysShowLastPageLink
                     totalPages={Math.ceil(totalElement / pageSize)}
                 />
-                {page === 'inputs' ? null : (
+                {page === PAGE_INPUT ? null : (
                     <Button
                         label={_('Add')}
                         appearance="primary"

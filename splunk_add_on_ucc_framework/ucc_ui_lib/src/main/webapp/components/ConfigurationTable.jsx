@@ -7,6 +7,7 @@ import { TableContextProvider } from '../context/TableContext';
 import TableWrapper from './table/TableWrapper';
 import EntityModal from './EntityModal';
 import { MODE_CREATE } from '../constants/modes';
+import { PAGE_CONF } from '../constants/pages';
 
 function ConfigurationTable({ serviceName, serviceTitle }) {
     const [open, setOpen] = useState(false);
@@ -23,7 +24,7 @@ function ConfigurationTable({ serviceName, serviceTitle }) {
         if (open) {
             return (
                 <EntityModal
-                    page="configuration"
+                    page={PAGE_CONF}
                     open={open}
                     handleRequestClose={handleRequestClose}
                     handleSaveData={() => {}}
@@ -39,7 +40,7 @@ function ConfigurationTable({ serviceName, serviceTitle }) {
         <>
             <TableContextProvider value={null}>
                 <TableWrapper
-                    page="configuration"
+                    page={PAGE_CONF}
                     serviceName={serviceName}
                     handleRequestModalOpen={() => handleRequestOpen()}
                 />
