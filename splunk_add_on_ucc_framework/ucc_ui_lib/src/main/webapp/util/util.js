@@ -35,9 +35,23 @@ export function getUnifiedConfigs() {
 }
 
 const createToast = makeCreateToast(Toaster);
-export const generateToast = (message, action = undefined) => {
+export const generateToast = (message, messageType, action = undefined) => {
+    let toastType;
+    switch (messageType) {
+        case 'success':
+            toastType = TOAST_TYPES.SUCCESS;
+            break;
+        case 'error':
+            toastType = TOAST_TYPES.ERROR;
+            break;
+        case 'warning':
+            toastType = TOAST_TYPES.ERROR;
+            break;
+        default:
+            toastType = TOAST_TYPES.INFO;
+    }
     createToast({
-        type: TOAST_TYPES.ERROR,
+        type: toastType,
         message,
         autoDismiss: true,
         dismissOnActionClick: true,

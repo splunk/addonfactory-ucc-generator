@@ -74,7 +74,7 @@ const axiosCallWrapper = ({
                   // Something happened in setting up the request that triggered an Error
                   message = `Error making ${method} request to ${endpointUrl}`;
               }
-              generateToast(message);
+              generateToast(message, "error");
               callbackOnError(error);
               return Promise.reject(error);
           })

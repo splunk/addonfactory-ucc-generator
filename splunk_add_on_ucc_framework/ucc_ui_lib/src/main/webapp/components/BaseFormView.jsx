@@ -5,7 +5,7 @@ import update from 'immutability-helper';
 import Message from '@splunk/react-ui/Message';
 
 import ControlWrapper from './ControlWrapper';
-import { getUnifiedConfigs } from '../util/util';
+import { getUnifiedConfigs, generateToast } from '../util/util';
 import Validator, { SaveValidator } from '../util/Validator';
 import { MODE_CLONE, MODE_CREATE, MODE_EDIT, MODE_CONFIG } from '../constants/modes';
 import { PAGE_INPUT } from '../constants/pages';
@@ -246,6 +246,11 @@ class BaseFormView extends PureComponent {
                     }
                     if (this.hook && typeof this.hook.onSaveSuccess === 'function') {
                         this.hook.onSaveSuccess();
+                    }
+                    if (this.props.mode === MODE_EDIT || this.props.mode === MODE_CONFIG) {
+                        generateToast(`Updated ${val.name}`, 'success');
+                    } else {
+                        generateToast(`Created ${val.name}`, 'success');
                     }
                     this.props.handleFormSubmit(/* isSubmititng */false,/* closeEntity */  true);
                 });
