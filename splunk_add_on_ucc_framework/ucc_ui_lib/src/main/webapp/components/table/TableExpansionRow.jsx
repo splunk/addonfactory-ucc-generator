@@ -1,10 +1,15 @@
 import React from 'react';
 import DL from '@splunk/react-ui/DefinitionList';
 import Table from '@splunk/react-ui/Table';
+import styled from 'styled-components';
 import { _ } from '@splunk/ui-utils/i18n';
 
 import CustomTableControl from './CustomTableControl';
 import { getUnifiedConfigs } from '../../util/util';
+
+const TableCellWrapper = styled(Table.Cell)`
+    border-top: none;
+`;
 
 function getExpansionRowData(row, moreInfo) {
     const DefinitionLists = [];
@@ -32,7 +37,7 @@ export function getExpansionRow(colSpan, row, moreInfo) {
 
     return (
         <Table.Row key={`${row.id}-expansion`}>
-            <Table.Cell style={{ borderTop: 'none' }} colSpan={colSpan}>
+            <TableCellWrapper colSpan={colSpan}>
                 {customRow && customRow.src ? (
                     <>
                         {React.createElement(CustomTableControl, {
@@ -44,7 +49,7 @@ export function getExpansionRow(colSpan, row, moreInfo) {
                 ) : (
                     <DL termWidth={250}>{getExpansionRowData(row, moreInfo)}</DL>
                 )}
-            </Table.Cell>
+            </TableCellWrapper>
         </Table.Row>
     );
 }

@@ -3,22 +3,37 @@ import { useHistory } from 'react-router-dom';
 
 import ColumnLayout from '@splunk/react-ui/ColumnLayout';
 import Button from '@splunk/react-ui/Button';
-import { _ } from '@splunk/ui-utils/i18n';
 import Dropdown from '@splunk/react-ui/Dropdown';
 import Menu from '@splunk/react-ui/Menu';
+import styled from 'styled-components';
 import ToastMessages from '@splunk/react-toast-notifications/ToastMessages';
+import { _ } from '@splunk/ui-utils/i18n';
 
-import useQuery from '../../hooks/useQuery';
 import { getUnifiedConfigs } from '../../util/util';
 import { TitleComponent, SubTitleComponent } from './InputPageStyle';
 import { TableContextProvider } from '../../context/TableContext';
-import TableWrapper from '../../components/table/TableWrapper';
-import EntityModal from '../../components/EntityModal';
 import { MODE_CREATE, MODE_CLONE, MODE_EDIT } from '../../constants/modes';
 import { PAGE_INPUT } from '../../constants/pages';
+import { STYLE_PAGE } from '../../constants/dialogStyles';
+import TableWrapper from '../../components/table/TableWrapper';
+import EntityModal from '../../components/EntityModal';
 import ErrorBoundary from '../../components/ErrorBoundary';
 import EntityPage from '../../components/EntityPage';
-import { STYLE_PAGE } from '../../constants/dialogStyles';
+import useQuery from '../../hooks/useQuery';
+import '../style.scss';
+
+const Row = styled(ColumnLayout.Row)`
+    padding: 5px 0px;
+
+    .dropdown {
+        text-align: right;
+    }
+
+    .input_button {
+        text-align: right;
+        margin-right: 0px;
+    }
+`;
 
 function InputPage() {
     const [entity, setEntity] = useState({ open: false });
@@ -119,14 +134,9 @@ function InputPage() {
     };
 
     useEffect(() => {
-        const service = services.find((x) => x.name === query.get('service'))
+        const service = services.find((x) => x.name === query.get('service'));
         // Run only when service and action/mode is valid and modal/page is not open
-        if (
-            query &&
-            service &&
-            PERMITTED_MODES.includes(query.get('action')) &&
-            !entity.open
-        ) {
+        if (query && service && PERMITTED_MODES.includes(query.get('action')) && !entity.open) {
             // run when mode is not create and previous state info is available
             if (query.get('action') !== MODE_CREATE && entity.stanzaName) {
                 setEntity({
@@ -169,13 +179,13 @@ function InputPage() {
                     }
                 >
                     <ColumnLayout gutter={8}>
-                        <ColumnLayout.Row style={{ padding: '5px 0px' }}>
+                        <Row>
                             <ColumnLayout.Column span={9}>
                                 <TitleComponent>{_(title)}</TitleComponent>
                                 <SubTitleComponent>{_(description)}</SubTitleComponent>
                             </ColumnLayout.Column>
                             {services && services.length > 1 && (
-                                <ColumnLayout.Column span={3} style={{ textAlign: 'right' }}>
+                                <ColumnLayout.Column className="dropdown" span={3}>
                                     <Dropdown toggle={toggle}>
                                         <Menu
                                             onClick={(event) => {
@@ -195,10 +205,7 @@ function InputPage() {
                                 </ColumnLayout.Column>
                             )}
                             {services && services.length === 1 && (
-                                <ColumnLayout.Column
-                                    span={3}
-                                    style={{ textAlign: 'right', marginRight: '0px' }}
-                                >
+                                <ColumnLayout.Column span={3} className="input_button">
                                     <Button
                                         label="Create New Input"
                                         appearance="primary"
@@ -208,7 +215,7 @@ function InputPage() {
                                     />
                                 </ColumnLayout.Column>
                             )}
-                        </ColumnLayout.Row>
+                        </Row>
                     </ColumnLayout>
 
                     <TableWrapper

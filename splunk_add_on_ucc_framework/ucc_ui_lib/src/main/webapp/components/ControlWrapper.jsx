@@ -15,10 +15,10 @@ const ControlGroupWrapper = styled(ControlGroup)`
 
     > * {
         &:first-child {
-            width: 170px !important;
+            width: 240px !important;
         }
         &:nth-child(3) {
-            margin-left: 200px !important;
+            margin-left: 270px !important;
         }
     }
 `;

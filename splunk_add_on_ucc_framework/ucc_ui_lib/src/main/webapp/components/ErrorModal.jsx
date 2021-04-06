@@ -1,13 +1,17 @@
-import React,  { useState } from 'react';
+import React, { useState } from 'react';
 import Button from '@splunk/react-ui/Button';
 import Modal from '@splunk/react-ui/Modal';
 import Message from '@splunk/react-ui/Message';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
-import {getFormattedMessage} from '../util/messageUtil';
+import { getFormattedMessage } from '../util/messageUtil';
+
+const ModalWrapper = styled(Modal)`
+    width: 600px;
+`;
 
 function ErrorModal(props) {
-
     const [open, setOpen] = useState(props.open);
 
     const handleRequestClose = () => {
@@ -15,15 +19,8 @@ function ErrorModal(props) {
     };
 
     return (
-        <Modal
-            onRequestClose={handleRequestClose}
-            open={open}
-            style={{ width: '600px' }}
-        >
-            <Modal.Header
-                onRequestClose={handleRequestClose}
-                title={getFormattedMessage(104)}
-            />
+        <ModalWrapper open={open}>
+            <Modal.Header onRequestClose={handleRequestClose} title={getFormattedMessage(104)} />
             <Modal.Body>
                 <Message appearance="fill" type="error">
                     {props.message}
@@ -32,7 +29,7 @@ function ErrorModal(props) {
             <Modal.Footer>
                 <Button appearance="primary" onClick={handleRequestClose} label="OK" />
             </Modal.Footer>
-        </Modal>
+        </ModalWrapper>
     );
 }
 ErrorModal.propTypes = {

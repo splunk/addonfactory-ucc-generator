@@ -105,7 +105,6 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPag
         });
         const body = new URLSearchParams();
         body.append('disabled', !row.disabled);
-
         axiosCallWrapper({
             serviceName: `${row.serviceName}/${row.name}`,
             body,
@@ -155,6 +154,7 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPag
             let found = false;
             Object.keys(data[v]).forEach((vv) => {
                 if (
+                    data[v].id === '' &&
                     typeof data[v][vv] === 'string' &&
                     data[v][vv].toLowerCase().includes(searchText.toLowerCase())
                 ) {

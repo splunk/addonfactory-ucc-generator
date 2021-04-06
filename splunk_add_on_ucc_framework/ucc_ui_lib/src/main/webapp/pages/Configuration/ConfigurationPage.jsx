@@ -4,13 +4,27 @@ import { useHistory } from 'react-router-dom';
 import { _ } from '@splunk/ui-utils/i18n';
 import TabBar from '@splunk/react-ui/TabBar';
 import ColumnLayout from '@splunk/react-ui/ColumnLayout';
+import styled from 'styled-components';
 
 import useQuery from '../../hooks/useQuery';
 import { getUnifiedConfigs } from '../../util/util';
-import ErrorBoundary from '../../components/ErrorBoundary';
 import { TitleComponent, SubTitleComponent } from '../Input/InputPageStyle';
+import ErrorBoundary from '../../components/ErrorBoundary';
 import ConfigurationFormView from '../../components/ConfigurationFormView';
 import ConfigurationTable from '../../components/ConfigurationTable';
+
+const Row = styled(ColumnLayout.Row)`
+    padding: 5px 0px;
+
+    .dropdown {
+        text-align: right;
+    }
+
+    .input_button {
+        text-align: right;
+        margin-right: 0px;
+    }
+`;
 
 function ConfigurationPage() {
     const unifiedConfigs = getUnifiedConfigs();
@@ -55,12 +69,12 @@ function ConfigurationPage() {
     return (
         <ErrorBoundary>
             <ColumnLayout gutter={8}>
-                <ColumnLayout.Row style={{ padding: '5px 0px' }}>
+                <Row>
                     <ColumnLayout.Column span={9}>
                         <TitleComponent>{_(title)}</TitleComponent>
                         <SubTitleComponent>{_(description)}</SubTitleComponent>
                     </ColumnLayout.Column>
-                </ColumnLayout.Row>
+                </Row>
             </ColumnLayout>
             <TabBar activeTabId={activeTabId} onChange={handleChange}>
                 {tabs.map((tab) => (

@@ -9,10 +9,24 @@ import Tooltip from '@splunk/react-ui/Tooltip';
 import Pencil from '@splunk/react-icons/Pencil';
 import Clone from '@splunk/react-icons/Clone';
 import Trash from '@splunk/react-icons/Trash';
+import styled from 'styled-components';
 import { _ } from '@splunk/ui-utils/i18n';
 
 import CustomTableControl from './CustomTableControl';
 import { ActionButtonComponent } from './CustomTableStyle';
+
+const TableCellWrapper = styled(Table.Cell)`
+    padding: 2px;
+`;
+
+const SwitchWrapper = styled.div`
+    display: flex;
+
+    .toggle_switch {
+        padding: 0;
+        margin-right: 10px;
+    }
+`;
 
 function CustomTableRow(props) {
     const {
@@ -37,7 +51,7 @@ function CustomTableRow(props) {
     const rowActionsPrimaryButton = useCallback(
         (selectedRow) => {
             return (
-                <Table.Cell key={selectedRow.id} style={{ padding: '2px' }}>
+                <TableCellWrapper key={selectedRow.id}>
                     <ButtonGroup>
                         <Tooltip content={_('Edit')}>
                             <ActionButtonComponent
@@ -61,7 +75,7 @@ function CustomTableRow(props) {
                             />
                         </Tooltip>
                     </ButtonGroup>
-                </Table.Cell>
+                </TableCellWrapper>
             );
         },
         [handleEditActionClick, handleCloneActionClick, handleDeleteActionClick]
@@ -95,7 +109,7 @@ function CustomTableRow(props) {
                         } else if (header.field === 'disabled') {
                             cellHTML = (
                                 <Table.Cell key={header.field}>
-                                    <div style={{ display: 'flex' }}>
+                                    <SwitchWrapper>
                                         <Switch
                                             key={row.name}
                                             value={row.disabled}
@@ -104,7 +118,7 @@ function CustomTableRow(props) {
                                             // eslint-disable-next-line no-underscore-dangle
                                             disabled={row.__toggleShowSpinner}
                                             appearance="toggle"
-                                            style={{ padding: 0, marginRight: '10px' }}
+                                            className="toggle_switch"
                                             selectedLabel={_(
                                                 statusMapping[0].mapping &&
                                                     statusMapping[0].mapping.false
@@ -119,7 +133,7 @@ function CustomTableRow(props) {
                                             )}
                                         />
                                         {statusContent}
-                                    </div>
+                                    </SwitchWrapper>
                                 </Table.Cell>
                             );
                         } else if (header.field === 'actions') {

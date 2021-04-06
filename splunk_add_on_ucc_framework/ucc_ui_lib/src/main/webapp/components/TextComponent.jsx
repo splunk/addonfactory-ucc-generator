@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Text from '@splunk/react-ui/Text';
+import styled from 'styled-components';
+
+const TextWrapper = styled(Text)`
+    width: 300px !important;
+`;
 
 class TextComponent extends Component {
     handleChange = (e, { value }) => {
@@ -9,7 +14,7 @@ class TextComponent extends Component {
 
     render() {
         return (
-            <Text
+            <TextWrapper
                 inline
                 error={this.props.error}
                 placeholder={this.props?.controlOptions?.placeholder}
@@ -18,7 +23,6 @@ class TextComponent extends Component {
                 value={this.props.value}
                 onChange={this.handleChange}
                 type={this.props.encrypted ? 'password' : 'text'}
-                style={{ width: '100%' }}
             />
         );
     }

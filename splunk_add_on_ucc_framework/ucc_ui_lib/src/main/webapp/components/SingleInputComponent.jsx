@@ -3,8 +3,14 @@ import PropTypes from 'prop-types';
 import Select from '@splunk/react-ui/Select';
 import { _ } from '@splunk/ui-utils/i18n';
 import axios from 'axios';
+import styled from 'styled-components';
+
 import { axiosCallWrapper } from '../util/axiosCallWrapper';
 import { filterResponse } from '../util/util';
+
+const SelectWrapper = styled(Select)`
+    width: 300px !important;
+`;
 
 function SingleInputComponent(props) {
     const {
@@ -105,7 +111,7 @@ function SingleInputComponent(props) {
     const effectivePlaceholder = loading ? _('Loading') : placeholder;
 
     return (
-        <Select
+        <SelectWrapper
             value={value}
             name={field}
             error={error}
@@ -113,10 +119,9 @@ function SingleInputComponent(props) {
             disabled={effectiveDisabled}
             onChange={handleChange}
             inline
-            style={{ width: '50%' }}
         >
             {options && options.length > 0 && options}
-        </Select>
+        </SelectWrapper>
     );
 }
 
