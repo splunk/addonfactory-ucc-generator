@@ -44,7 +44,7 @@ function ConfigurationTable({ serviceName, serviceTitle }) {
                     serviceName={serviceName}
                     handleRequestModalOpen={() => handleRequestOpen()}
                 />
-                <ToastMessages />
+                <ToastMessages position="top-right" />
                 {generateModalDialog()}
             </TableContextProvider>
         </>

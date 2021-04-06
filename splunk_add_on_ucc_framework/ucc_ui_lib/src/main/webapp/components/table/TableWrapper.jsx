@@ -131,6 +131,11 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPag
                     },
                 });
             });
+            if (response.data.entry[0].content.disabled === true) {
+                generateToast(`Disabled ${response.data.entry[0].name}`, "success");
+            } else {
+                generateToast(`Enabled ${response.data.entry[0].name}`, "success");
+            }
         });
     };
 

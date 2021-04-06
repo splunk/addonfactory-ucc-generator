@@ -222,7 +222,7 @@ function InputPage() {
                         page={PAGE_INPUT}
                         handleOpenPageStyleDialog={handleOpenPageStyleDialog}
                     />
-                    <ToastMessages />
+                    <ToastMessages position="top-right" />
                     {!entity.isInputPageStyle && entity.open ? generateModalDialog() : null}
                 </div>
             </TableContextProvider>

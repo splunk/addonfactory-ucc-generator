@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import update from 'immutability-helper';
 import { _ } from '@splunk/ui-utils/i18n';
+import { generateToast } from '../util/util';
 
 import { axiosCallWrapper } from '../util/axiosCallWrapper';
 import TableContext from '../context/TableContext';
@@ -55,6 +56,7 @@ class DeleteModal extends Component {
                         );
                         this.setState({ isDeleting: false });
                         this.handleRequestClose();
+                        generateToast(`Deleted ${this.props.stanzaName}`, 'success');
                     });
             }
         );
