@@ -66,7 +66,7 @@ poetry-dynamic-versioning = "^0.12"
 
 [tool.poetry-dynamic-versioning]
 enable = true
-style = pep440
+style = "pep440"
 
 [tool.poetry.scripts]
 ucc-gen="splunk_add_on_ucc_framework:main"
