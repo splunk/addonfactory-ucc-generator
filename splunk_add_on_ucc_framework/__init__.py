@@ -415,11 +415,16 @@ def add_modular_input(
         description = service.get("title")
         entity = service.get("entity")
         field_allow_list = ["name", "index", "sourcetype"]
+        template = "input.template"
+        # if the service has a template specified, use it.  Otherwise keep the default
+        if "template" in service:
+            template = service.get("template") + ".template"
+
         # filter fields in allow list
         entity = [x for x in entity if x.get("field") not in field_allow_list]
         import_declare = "import " + import_declare_name
 
-        content = j2_env.get_template("input.template").render(
+        content = j2_env.get_template(template).render(
             import_declare=import_declare,
             input_name=input_name,
             class_name=class_name,
