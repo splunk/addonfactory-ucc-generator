@@ -63,6 +63,44 @@ jobs:
           name: Install Tools
           command: |
             pip install /tmp/workspace/dist/* --use-deprecated=legacy-resolver
+  
+  semgrep:
+    environment:
+        SEMGREP_REPO_URL: << pipeline.project.git_url >>
+        SEMGREP_BRANCH: << pipeline.git.branch >>
+    docker:
+      - image: returntocorp/semgrep-agent:v1
+        user: root
+    resource_class: large
+    steps:
+      - checkout
+      - run:
+          name: "Install Dependencies"
+          command: |
+            pip3 install --upgrade semgrep
+      - run:
+          name: "Semgrep Scan"
+          no_output_timeout: 2h
+          command: |
+            export SEMGREP_REPO_NAME=splunk/${CIRCLE_PROJECT_REPONAME}
+            python -m semgrep_agent --publish-deployment ${SEMGREP_DEPLOYMENT_ID} --publish-token ${SEMGREP_PUBLISH_TOKEN}
+            # Generate the Semgrep Dashboard URL
+            export REPO_BRANCH=$(echo "<< pipeline.git.branch >>")
+            DASHBOARD_URL=$(python3 -c "from urllib.parse import quote; import os; print('https://semgrep.dev/manage/findings?repo=' + quote(os.environ['SEMGREP_REPO_NAME'], safe='') + '&tab=findings&ref_type=branch&ref=' + quote(os.environ['REPO_BRANCH'], safe=''))")
+            echo "View Result at Semgrep Dashboard: $DASHBOARD_URL"
+            
+            # Semgrep Exclude files
+            dos2unix .semgrepignore
+            SEMGREP_EXCLUDE=$(sed "/^#/d" .semgrepignore | sed "/^:/d" | sed -r '/^\s*$/d' | sed ':a;N;$!ba;s/\n/ --exclude /g')
+            echo "Excluding Semgrep Files: --exclude $SEMGREP_EXCLUDE"
+            # Generate xml file
+            semgrep --config="p/r2c-ci" --config="p/r2c-security-audit" --config="p/bandit" --error --strict --timeout=0 --junit-xml -o /root/project/test-results/semgrep-scan.xml --exclude $SEMGREP_EXCLUDE     
+      - store_artifacts:
+          path: test-results
+          destination: test-results
+      - store_test_results:
+          path: test-results
+
   release:
     docker:
       - image: circleci/node:12
@@ -124,6 +162,12 @@ workflows:
   build_test:
     jobs:
       - build
+      - semgrep:
+          context:
+            - gdi-semgrep      
+          filters:
+            branches:
+              only: /.*/
       - test:
           requires:
             - build
