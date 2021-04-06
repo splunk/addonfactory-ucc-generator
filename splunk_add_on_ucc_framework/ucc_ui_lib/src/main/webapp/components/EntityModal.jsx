@@ -41,6 +41,10 @@ class EntityModal extends Component {
         }
     };
 
+    /*
+         * @param {boolean} set: whether form is submitting
+         * @param {boolean} close : close the Entity modal   
+    */
     handleFormSubmit = (set, close) => {
         this.setState({ isSubmititng: set });
         if (close) {

@@ -169,7 +169,7 @@ class BaseFormView extends PureComponent {
     }
 
     handleSubmit = () => {
-        this.props.handleFormSubmit(true, false);
+        this.props.handleFormSubmit(/* isSubmititng */true, /* closeEntity */false);
         const datadict = {};
 
         Object.keys(this.state.data).forEach((field) => {
@@ -190,12 +190,12 @@ class BaseFormView extends PureComponent {
         if (!error && this.hook && typeof this.hook.onSave === 'function') {
             const validationPass = this.hook.onSave(datadict);
             if (!validationPass) {
-                this.props.handleFormSubmit(false, false);
+                this.props.handleFormSubmit(/* isSubmititng */false,/* closeEntity */ false);
             }
         }
 
         if (error) {
-            this.props.handleFormSubmit(false, false);
+            this.props.handleFormSubmit(/* isSubmititng */false,/* closeEntity */ false);
         }
         else{
             const body = new URLSearchParams();
@@ -223,7 +223,7 @@ class BaseFormView extends PureComponent {
                     if (this.hook && typeof this.hook.onSaveFail === 'function') {
                         this.hook.onSaveFail();
                     }
-                    this.props.handleFormSubmit(false, false);
+                    this.props.handleFormSubmit(/* isSubmititng */false,/* closeEntity */  false);
                     return Promise.reject(err);
                 })
                 .then((response) => {
@@ -247,7 +247,7 @@ class BaseFormView extends PureComponent {
                     if (this.hook && typeof this.hook.onSaveSuccess === 'function') {
                         this.hook.onSaveSuccess();
                     }
-                    this.props.handleFormSubmit(false, true);
+                    this.props.handleFormSubmit(/* isSubmititng */false,/* closeEntity */  true);
                 });
         }
     };
