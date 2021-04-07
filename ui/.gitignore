@@ -105,4 +105,4 @@ dist
 
 
 # output
-stage
+dist/**

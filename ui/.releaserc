@@ -1,0 +1,21 @@
+{
+  "branches": ["main",
+    {
+      "name": "develop",
+      "channel": "beta",
+      "prerelease": 'beta'
+    }
+  ],
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    ["@semantic-release/exec", {
+      "publishCmd": "tar -czf /tmp/splunk-ucc-ui.tgz -C dist ."
+    }],
+    ["@semantic-release/github", {
+      "assets": [
+        {"path": "/tmp/splunk-ucc-ui.tgz", "label": "splunk-ucc-ui"},
+      ]
+    }],
+  ]
+}

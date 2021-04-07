@@ -8,7 +8,7 @@ module.exports = webpackMerge(baseConfig, {
         entry_page: path.join(__dirname, 'src/main/webapp/pages/entry_page'),
     },
     output: {
-        path: path.join(__dirname, 'stage/appserver/static/js/build'),
+        path: path.join(__dirname, 'dist/appserver/static/js/build'),
         filename: '[name].js',
     },
     module: {
@@ -23,7 +23,7 @@ module.exports = webpackMerge(baseConfig, {
         new CopyWebpackPlugin([
             {
                 from: path.join(__dirname, 'src/main/resources/splunk'),
-                to: path.join(__dirname, 'stage'),
+                to: path.join(__dirname, 'dist'),
             },
         ]),
     ],
