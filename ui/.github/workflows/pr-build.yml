@@ -1,11 +1,9 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: build
+name: pr-build
 
 on:
-  push:
-    branches: [main, develop]
   pull_request:
     branches: [main, develop]
 
@@ -47,3 +45,24 @@ jobs:
         with:
           name: splunk-ucc-ui
           path: /tmp/splunk-ucc-ui.tgz
+  semgrep:
+    runs-on: ubuntu-latest
+    name: semgrep
+    steps:
+      - uses: actions/checkout@v1
+      - name: Semgrep
+        id: semgrep
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: p/r2c
+        env:        
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}          
+          
+  snyk:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Run Snyk to check for vulnerabilities
+      uses: snyk/actions/node@master
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}          
