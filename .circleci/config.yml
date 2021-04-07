@@ -19,7 +19,7 @@ jobs:
           name: Get UI
           command: |
             ./get-ucc-ui.sh
-            mkdir splunk_add_on_ucc_framework/package
+            mkdir -p splunk_add_on_ucc_framework/package || true
             tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/package
       - run:
           name: Build
@@ -56,11 +56,11 @@ jobs:
           name: Install Tools
           command: |
             pip install /tmp/workspace/dist/* --use-deprecated=legacy-resolver
-  
+
   semgrep:
     environment:
-        SEMGREP_REPO_URL: << pipeline.project.git_url >>
-        SEMGREP_BRANCH: << pipeline.git.branch >>
+      SEMGREP_REPO_URL: << pipeline.project.git_url >>
+      SEMGREP_BRANCH: << pipeline.git.branch >>
     docker:
       - image: returntocorp/semgrep-agent:v1
         user: root
@@ -81,13 +81,13 @@ jobs:
             export REPO_BRANCH=$(echo "<< pipeline.git.branch >>")
             DASHBOARD_URL=$(python3 -c "from urllib.parse import quote; import os; print('https://semgrep.dev/manage/findings?repo=' + quote(os.environ['SEMGREP_REPO_NAME'], safe='') + '&tab=findings&ref_type=branch&ref=' + quote(os.environ['REPO_BRANCH'], safe=''))")
             echo "View Result at Semgrep Dashboard: $DASHBOARD_URL"
-            
+
             # Semgrep Exclude files
             dos2unix .semgrepignore
             SEMGREP_EXCLUDE=$(sed "/^#/d" .semgrepignore | sed "/^:/d" | sed -r '/^\s*$/d' | sed ':a;N;$!ba;s/\n/ --exclude /g')
             echo "Excluding Semgrep Files: --exclude $SEMGREP_EXCLUDE"
             # Generate xml file
-            semgrep --config="p/r2c-ci" --config="p/r2c-security-audit" --config="p/bandit" --error --strict --timeout=0 --junit-xml -o /root/project/test-results/semgrep-scan.xml --exclude $SEMGREP_EXCLUDE     
+            semgrep --config="p/r2c-ci" --config="p/r2c-security-audit" --config="p/bandit" --error --strict --timeout=0 --junit-xml -o /root/project/test-results/semgrep-scan.xml --exclude $SEMGREP_EXCLUDE
       - store_artifacts:
           path: test-results
           destination: test-results
@@ -115,12 +115,12 @@ jobs:
       - run:
           name: Install Tools
           command: |
-            curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python       
+            curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
       - run:
           name: Get UI
           command: |
             ./get-ucc-ui.sh
-            mkdir splunk_add_on_ucc_framework/package
+            mkdir -p splunk_add_on_ucc_framework/package || true
             tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/package
       - run:
           name: Build
@@ -153,7 +153,7 @@ workflows:
       - build
       - semgrep:
           context:
-            - gdi-semgrep      
+            - gdi-semgrep
           filters:
             branches:
               only: /.*/
