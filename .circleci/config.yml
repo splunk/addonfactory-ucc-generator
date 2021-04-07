@@ -11,34 +11,27 @@ jobs:
       - restore_cache:
           keys:
             - poetry-cache-{{ checksum "poetry.lock" }}
-      - restore_cache:
-          keys:
-            - yarn-packages-{{ checksum "splunk_add_on_ucc_framework/ucc_ui_lib/yarn.lock" }}
       - run:
           name: Install Tools
           command: |
             curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
-            mkdir ~/.npm-global || true
-            npm config set prefix '~/.npm-global'
-            export PATH=~/.npm-global/bin:$PATH
-            npm install -g yarn
+      - run:
+          name: Get UI
+          command: |
+            ./get-ucc-ui.sh
+            mkdir splunk_add_on_ucc_framework/package
+            tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/package
       - run:
           name: Build
           command: |
             source $HOME/.poetry/env
-            export PATH=~/.npm-global/bin:$PATH
             poetry install
             poetry run poetry-dynamic-versioning
-            poetry run build-ucc
             poetry build
       - save_cache:
           key: poetry-cache-{{ checksum "poetry.lock" }}
           paths:
             - ~/.cache/poetry
-      - save_cache:
-          paths:
-            - ~/.npm-global # location depends on npm version
-          key: yarn-packages-{{ checksum "splunk_add_on_ucc_framework/ucc_ui_lib/yarn.lock" }}
       - store_artifacts:
           path: dist
       - store_artifacts:
@@ -122,28 +115,24 @@ jobs:
       - run:
           name: Install Tools
           command: |
-            curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
-            mkdir ~/.npm-global || true
-            npm config set prefix '~/.npm-global'
-            export PATH=~/.npm-global/bin:$PATH
-            npm install -g yarn
+            curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python       
+      - run:
+          name: Get UI
+          command: |
+            ./get-ucc-ui.sh
+            mkdir splunk_add_on_ucc_framework/package
+            tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/package
       - run:
           name: Build
           command: |
             source $HOME/.poetry/env
-            export PATH=~/.npm-global/bin:$PATH
             poetry install
             poetry run poetry-dynamic-versioning
-            poetry run build-ucc
             poetry publish --build -u $PYPI_USERNAME -p $PYPI_TOKEN
       - save_cache:
           key: poetry-cache-{{ checksum "poetry.lock" }}
           paths:
             - ~/.poetry
-      - save_cache:
-          paths:
-            - ~/.npm-global # location depends on npm version
-          key: yarn-packages-{{ checksum "splunk_add_on_ucc_framework/ucc_ui_lib/yarn.lock" }}
       - store_artifacts:
           path: dist
       - store_artifacts:
