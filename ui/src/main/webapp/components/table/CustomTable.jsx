@@ -75,6 +75,10 @@ function CustomTable({
                 // useEffect dependency which will only be changed in case of editing entity
                 setEntityModal({ ...entityModal, open: false });
             }
+        } else if (query.get('tab') !== serviceName && query.get('record')) {
+            // remove the record param in case of wrong tab
+            query.delete('record');
+            history.push({ search: query.toString() });
         }
     }, [history.location.search]);
 
