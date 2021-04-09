@@ -1,8 +1,0 @@
-// @import '@splunk/themes/variables' as variable;
-@use '@splunk/themes/variables' as contentColorDefault;
-
-body {
-    // @include variables.contentColorDefault;
-    min-width: 960px;
-    background-color: contentColorDefault;
-}

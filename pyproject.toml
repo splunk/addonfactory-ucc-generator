@@ -66,7 +66,6 @@ enable = true
 
 [tool.poetry.scripts]
 ucc-gen="splunk_add_on_ucc_framework:main"
-build-ucc="build:build_ucc"
 install-libs="splunk_add_on_ucc_framework:install_requirements"
 
 [build-system]
