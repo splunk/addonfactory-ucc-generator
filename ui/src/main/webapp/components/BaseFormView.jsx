@@ -6,13 +6,13 @@ import Message from '@splunk/react-ui/Message';
 import styled from 'styled-components';
 
 import ControlWrapper from './ControlWrapper';
-import { getUnifiedConfigs, generateToast } from '../util/util';
 import Validator, { SaveValidator } from '../util/Validator';
+import { getUnifiedConfigs, generateToast } from '../util/util';
 import { MODE_CLONE, MODE_CREATE, MODE_EDIT, MODE_CONFIG } from '../constants/modes';
 import { PAGE_INPUT } from '../constants/pages';
 import { axiosCallWrapper } from '../util/axiosCallWrapper';
-import TableContext from '../context/TableContext';
 import { parseErrorMsg } from '../util/messageUtil';
+import TableContext from '../context/TableContext';
 
 const CollapsiblePanelWrapper = styled(CollapsiblePanel)`
     span {
@@ -77,7 +77,7 @@ class BaseFormView extends PureComponent {
                 if (service.name === props.serviceName) {
                     this.groups = service.groups;
                     this.entities = service.entity;
-                    this.groupWiseEntities(service);
+                    this.updateEntitiesForGroup(service);
                     this.options = service.options;
                     if (service.hook) {
                         this.hookDeferred = this.loadHook(service.hook.src, globalConfig);
@@ -197,7 +197,7 @@ class BaseFormView extends PureComponent {
         }
     }
 
-    groupWiseEntities = (service) => {
+    updateEntitiesForGroup = (service) => {
         if (this.groups && this.groups.length) {
             this.groups.forEach((group) => {
                 if (group && group.fields?.length) {
@@ -516,6 +516,7 @@ class BaseFormView extends PureComponent {
                 {this.generateErrorMessage()}
                 {this.renderGroupElements()}
                 {this.entities.map((e) => {
+                    // Return null if we need to show element in a group
                     if (e.isGrouping) {
                         return null;
                     }
