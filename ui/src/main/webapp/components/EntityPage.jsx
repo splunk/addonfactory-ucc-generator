@@ -11,7 +11,7 @@ import { useSplunkTheme } from '@splunk/themes';
 import { MODE_CLONE, MODE_CREATE, MODE_EDIT } from '../constants/modes';
 import { PAGE_INPUT } from '../constants/pages';
 import BaseFormView from './BaseFormView';
-import { TitleComponent } from '../pages/Input/InputPageStyle';
+import { SubTitleComponent } from '../pages/Input/InputPageStyle';
 
 function EntityPage({ handleRequestClose, serviceName, mode, stanzaName, formLabel }) {
     const form = useRef();
@@ -29,7 +29,8 @@ function EntityPage({ handleRequestClose, serviceName, mode, stanzaName, formLab
     const { embossShadow } = useSplunkTheme();
     const colStyle = {
         boxShadow: embossShadow,
-        padding: '5%',
+        padding: '1%',
+        backgroundColor: 'white',
     };
 
     const handleSubmit = () => {
@@ -49,11 +50,11 @@ function EntityPage({ handleRequestClose, serviceName, mode, stanzaName, formLab
         <ColumnLayout gutter={8}>
             <ColumnLayout.Row style={{ padding: '5px 0px' }}>
                 <ColumnLayout.Column>
-                    <TitleComponent>
+                    <SubTitleComponent>
                         <Link onClick={handleRequestClose}>{_('Inputs')}</Link>
                         {' > '}
                         {_(formLabel)}
-                    </TitleComponent>
+                    </SubTitleComponent>
                 </ColumnLayout.Column>
             </ColumnLayout.Row>
             <ColumnLayout.Row>
