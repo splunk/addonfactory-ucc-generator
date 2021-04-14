@@ -1,14 +1,13 @@
 import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
-
 import layout from '@splunk/react-page';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { SplunkThemeProvider } from '@splunk/themes';
 
 import { StyledContainer, ThemeProviderSettings } from './EntryPageStyle';
+import { PAGE_CONF, PAGE_INPUT } from '../constants/pages';
 import ConfigManager from '../util/configManager';
 import InputPage from './Input/InputPage';
 import ConfigurationPage from './Configuration/ConfigurationPage';
-import { PAGE_CONF, PAGE_INPUT } from '../constants/pages';
 import messageDict from '../constants/messageDict';
 
 // Take in a component as argument WrappedComponent

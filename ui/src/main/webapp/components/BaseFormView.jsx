@@ -3,15 +3,16 @@ import PropTypes from 'prop-types';
 import update from 'immutability-helper';
 import { v4 as uuidv4 } from 'uuid';
 
+import CollapsiblePanel from '@splunk/react-ui/CollapsiblePanel';
 import Message from '@splunk/react-ui/Message';
+import styled from 'styled-components';
 
 import ControlWrapper from './ControlWrapper';
-import { getUnifiedConfigs, generateToast } from '../util/util';
 import Validator, { SaveValidator } from '../util/Validator';
+import { getUnifiedConfigs, generateToast } from '../util/util';
 import { MODE_CLONE, MODE_CREATE, MODE_EDIT, MODE_CONFIG } from '../constants/modes';
 import { PAGE_INPUT , PAGE_CONF } from '../constants/pages';
 import { axiosCallWrapper } from '../util/axiosCallWrapper';
-import TableContext from '../context/TableContext';
 import { parseErrorMsg } from '../util/messageUtil';
 import {
     ERROR_REQUEST_TIMEOUT_TRY_AGAIN,
@@ -20,6 +21,33 @@ import {
     ERROR_AUTH_PROCESS_TERMINATED_TRY_AGAIN,
     ERROR_STATE_MISSING_TRY_AGAIN
 } from '../constants/oAuthErrorMessage';
+import TableContext from '../context/TableContext';
+
+const CollapsiblePanelWrapper = styled(CollapsiblePanel)`
+    span {
+        button {
+            background-color: transparent;
+            font-size: 16px;
+            margin: 10px 0;
+
+            &:hover:not([disabled]),
+            &:focus:not([disabled]),
+            &:active:not([disabled]) {
+                background-color: transparent;
+                box-shadow: none;
+            }
+        }
+    }
+
+    .collapsible-element {
+        padding-top: 15px;
+    }
+`;
+
+const customGroupLabel = styled.div`
+    padding: 6px 10px;
+    background-color: #f2f4f5;
+`;
 
 class BaseFormView extends PureComponent {
     static contextType = TableContext;
@@ -57,7 +85,9 @@ class BaseFormView extends PureComponent {
         if (props.page === PAGE_INPUT) {
             globalConfig.pages.inputs.services.forEach((service) => {
                 if (service.name === props.serviceName) {
+                    this.groups = service.groups;
                     this.entities = service.entity;
+                    this.updateEntitiesForGroup(service);
                     this.options = service.options;
                     if (service.hook) {
                         this.hookDeferred = this.loadHook(service.hook.src, globalConfig);
@@ -269,6 +299,24 @@ class BaseFormView extends PureComponent {
         }
     }
 
+    updateEntitiesForGroup = (service) => {
+        if (this.groups && this.groups.length) {
+            this.groups.forEach((group) => {
+                if (group && group.fields?.length) {
+                    group.fields.forEach((fieldName) => {
+                        const index = service.entity.findIndex((e) => e.field === fieldName);
+
+                        if (index !== -1) {
+                            const updatedObj = JSON.parse(JSON.stringify(service.entity[index]));
+                            updatedObj.isGrouping = true;
+                            this.entities.splice(index, 1, updatedObj);
+                        }
+                    });
+                }
+            });
+        }
+    };
+
     handleSubmit = () => {
         this.clearErrorMsg()
         this.props.handleFormSubmit(/* isSubmititng */true, /* closeEntity */false);
@@ -359,7 +407,6 @@ class BaseFormView extends PureComponent {
                 await this.waitForAuthentication( this.oauthConf.authTimeout);
 
                 if (!this.isCalled && this.childWin.closed) {
-                    console.log("OAuth Test Flag 2 : Closed without any actions");
                     // Add error message if the user has close the authentication window without taking any action
                     this.setErrorMsg(ERROR_AUTH_PROCESS_TERMINATED_TRY_AGAIN);
                     this.props.handleFormSubmit(/* isSubmititng */false,/* closeEntity */ false);
@@ -368,7 +415,6 @@ class BaseFormView extends PureComponent {
 
                 if (!this.isCalled) {
                     // Add timeout error message
-                    console.log("OAuth Test Flag 3 : timeout error");
                     this.setErrorMsg(ERROR_REQUEST_TIMEOUT_TRY_AGAIN);
                     this.props.handleFormSubmit(/* isSubmititng */false,/* closeEntity */ false);
                     return false;
@@ -390,7 +436,6 @@ class BaseFormView extends PureComponent {
                 return true;
             })().then(() => {
                 if (!this.isError) {
-                    console.log("OAuth Test Flag 10 No Error :Call savedata");
                     this.saveData();
                 } else {
                     this.props.handleFormSubmit(/* isSubmititng */false,/* closeEntity */ false);
@@ -463,9 +508,6 @@ class BaseFormView extends PureComponent {
         const changes = {};
         if(field ==="auth_type"){
             Object.keys(this.authMap).forEach((type)=>{
-                // console.log("auth type : ",type);
-                // console.log("target value: ",targetValue);
-                // console.log("auth type array: ",this.authMap[type]);
                 if(type === targetValue){
                     this.authMap[type].forEach((e)=>{
                         changes[e] = { display:{ $set:true } };
@@ -745,6 +787,50 @@ class BaseFormView extends PureComponent {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
+    renderGroupElements = () => {
+        let el = null;
+        if (this.groups && this.groups.length) {
+            el = this.groups.map((group) => {
+                const collpsibleElement =
+                    group.fields?.length &&
+                    group.fields.map((fieldName) => {
+                        return this.entities.map((e) => {
+                            if (e.field === fieldName) {
+                                const temState = this.state.data[e.field];
+                                return (
+                                    <ControlWrapper
+                                        key={e.field}
+                                        utilityFuncts={this.utilControlWrapper}
+                                        value={temState.value}
+                                        display={temState.display}
+                                        error={temState.error}
+                                        entity={e}
+                                        serviceName={this.props.serviceName}
+                                        mode={this.props.mode}
+                                        disabled={temState.disabled}
+                                        dependencyValues={temState.dependencyValues || null}
+                                    />
+                                );
+                            }
+                            return null;
+                        });
+                    });
+
+                return group.options.isExpandable ? (
+                    <CollapsiblePanelWrapper title={group.label}>
+                        <div className="collapsible-element">{collpsibleElement}</div>
+                    </CollapsiblePanelWrapper>
+                ) : (
+                    <>
+                        <customGroupLabel>{group.label}</customGroupLabel>
+                        <div>{collpsibleElement}</div>
+                    </>
+                );
+            });
+        }
+        return el;
+    };
+
     render() {
         // onRender method of Hook
         if (this.flag) {
@@ -774,7 +860,12 @@ class BaseFormView extends PureComponent {
             >
                 {this.generateWarningMessage()}
                 {this.generateErrorMessage()}
+                {this.renderGroupElements()}
                 {this.entities.map((e) => {
+                    // Return null if we need to show element in a group
+                    if (e.isGrouping) {
+                        return null;
+                    }
                     const temState = this.state.data[e.field];
 
                     return (

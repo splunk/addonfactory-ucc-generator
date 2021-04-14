@@ -60,11 +60,14 @@ function ConfigurationPage() {
         }
     }, []);
 
-    const handleChange = useCallback((e, { selectedTabId }) => {
-        setActiveTabId(selectedTabId);
-        query.set('tab', selectedTabId);
-        history.push({ search: query.toString() });
-    }, []);
+    const handleChange = useCallback(
+        (e, { selectedTabId }) => {
+            setActiveTabId(selectedTabId);
+            query.set('tab', selectedTabId);
+            history.push({ search: query.toString() });
+        },
+        [activeTabId]
+    );
 
     return (
         <ErrorBoundary>
