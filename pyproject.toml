@@ -59,6 +59,7 @@ reuse = "*"
 #    { version = "20.8b1" , python = "^3.7" }
 #]
 
+jsonschema = "^3.2.0"
 [tool.poetry.dev-dependencies]
 pytest = "^6.0"
 pytest-splunk-addon = { version = "^1.6", extras = [ "docker" ] }
