@@ -377,7 +377,7 @@ sys.path = new_paths
             self.builder.output.bin,
             self.import_declare_py_name() + ".py",
         )
-        content = self._import_declare_content.format(ta_name=self.schema.namespace,)
+        content = self._import_declare_content.format(ta_name=self.schema.product,)
         with open(import_declare_file, "w") as f:
             f.write(content)
 
