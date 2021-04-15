@@ -15,6 +15,7 @@ import { TableContextProvider } from '../../context/TableContext';
 import { MODE_CREATE, MODE_CLONE, MODE_EDIT } from '../../constants/modes';
 import { PAGE_INPUT } from '../../constants/pages';
 import { STYLE_PAGE } from '../../constants/dialogStyles';
+import CustomMenu from '../../components/CustomMenu';
 import TableWrapper from '../../components/table/TableWrapper';
 import EntityModal from '../../components/EntityModal';
 import ErrorBoundary from '../../components/ErrorBoundary';
@@ -39,7 +40,7 @@ function InputPage() {
     const [entity, setEntity] = useState({ open: false });
 
     const unifiedConfigs = getUnifiedConfigs();
-    const { services, title, description } = unifiedConfigs.pages.inputs;
+    const { services, title, description, menu: customMenuField } = unifiedConfigs.pages.inputs;
     const toggle = <Button appearance="primary" label={_('Create New Input')} isMenu />;
     const PERMITTED_MODES = [MODE_CLONE, MODE_CREATE, MODE_EDIT];
 
@@ -167,6 +168,13 @@ function InputPage() {
         }
     }, [history.location.search]);
 
+    const changeRoute = (val) => {
+        Object.keys(val).forEach((key) => {
+            query.set(key, val[key]);
+        });
+        history.push({ search: query.toString() });
+    };
+
     return (
         <ErrorBoundary>
             <TableContextProvider value={null}>
@@ -184,7 +192,7 @@ function InputPage() {
                                 <TitleComponent>{_(title)}</TitleComponent>
                                 <SubTitleComponent>{_(description)}</SubTitleComponent>
                             </ColumnLayout.Column>
-                            {services && services.length > 1 && (
+                            {services && services.length > 1 && !customMenuField?.src && (
                                 <ColumnLayout.Column className="dropdown" span={3}>
                                     <Dropdown toggle={toggle}>
                                         <Menu
@@ -204,7 +212,7 @@ function InputPage() {
                                     </Dropdown>
                                 </ColumnLayout.Column>
                             )}
-                            {services && services.length === 1 && (
+                            {services && services.length === 1 && !customMenuField?.src && (
                                 <ColumnLayout.Column span={3} className="input_button">
                                     <Button
                                         label="Create New Input"
@@ -213,6 +221,14 @@ function InputPage() {
                                             handleRequestOpen(services[0].name, services[0].title);
                                         }}
                                     />
+                                </ColumnLayout.Column>
+                            )}
+                            {customMenuField?.src && (
+                                <ColumnLayout.Column span={3} className="input_button">
+                                    {React.createElement(CustomMenu, {
+                                        fileName: customMenuField.src,
+                                        handleChange: changeRoute,
+                                    })}
                                 </ColumnLayout.Column>
                             )}
                         </Row>
