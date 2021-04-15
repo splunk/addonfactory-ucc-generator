@@ -11,7 +11,7 @@ import ControlWrapper from './ControlWrapper';
 import Validator, { SaveValidator } from '../util/Validator';
 import { getUnifiedConfigs, generateToast } from '../util/util';
 import { MODE_CLONE, MODE_CREATE, MODE_EDIT, MODE_CONFIG } from '../constants/modes';
-import { PAGE_INPUT , PAGE_CONF } from '../constants/pages';
+import { PAGE_INPUT, PAGE_CONF } from '../constants/pages';
 import { axiosCallWrapper } from '../util/axiosCallWrapper';
 import { parseErrorMsg } from '../util/messageUtil';
 import {
@@ -19,7 +19,7 @@ import {
     ERROR_REQUEST_TIMEOUT_ACCESS_TOKEN_TRY_AGAIN,
     ERROR_OCCURRED_TRY_AGAIN,
     ERROR_AUTH_PROCESS_TERMINATED_TRY_AGAIN,
-    ERROR_STATE_MISSING_TRY_AGAIN
+    ERROR_STATE_MISSING_TRY_AGAIN,
 } from '../constants/oAuthErrorMessage';
 import TableContext from '../context/TableContext';
 
@@ -67,9 +67,9 @@ class BaseFormView extends PureComponent {
 
         this.util = {
             setState: (callback) => {
-                this.setState(previousState => {
-                    return callback(previousState)
-                  })
+                this.setState((previousState) => {
+                    return callback(previousState);
+                });
             },
             setErrorFieldMsg: this.setErrorFieldMsg,
             clearAllErrorMsg: this.clearAllErrorMsg,
@@ -121,100 +121,130 @@ class BaseFormView extends PureComponent {
         this.dependencyMap = new Map();
         this.isOAuth = false;
         this.isAuthVal = false;
-        this.authMap = {}
+        this.authMap = {};
         const temState = {};
-        const temEntities= []
+        const temEntities = [];
 
         this.entities.forEach((e) => {
-            if(e.type ==="oauth"){
+            if (e.type === 'oauth') {
                 this.isOAuth = true;
-                if(props.page === PAGE_CONF && props.serviceName === "account"){
+                if (props.page === PAGE_CONF && props.serviceName === 'account') {
                     const authType = e?.options?.auth_type;
-                    this.isoauthState = typeof e?.options?.oauth_state_enabled !== 'undefined' ? e?.options?.oauth_state_enabled : null;
-                    
-                    if(authType.length>1){
+                    this.isoauthState =
+                        typeof e?.options?.oauth_state_enabled !== 'undefined'
+                            ? e?.options?.oauth_state_enabled
+                            : null;
+
+                    if (authType.length > 1) {
                         this.isAuthVal = true;
                         // Defining state for auth_type in case of multiple Authentication
                         const tempEntity = {};
-                        tempEntity.value = props.mode === MODE_CREATE? authType[0]:this.currentInput.auth_type;
+                        tempEntity.value =
+                            props.mode === MODE_CREATE ? authType[0] : this.currentInput.auth_type;
                         tempEntity.display = true;
                         tempEntity.error = false;
                         tempEntity.disabled = false;
                         temState.auth_type = tempEntity;
 
                         // Defining Entity for auth_type in entitylist of globalConfig
-                        const entity = {}
-                        entity.field = "auth_type";
-                        entity.type = "singleSelect";
-                        entity.label = "Auth Type";
-                        const content = { "basic":"Basic Authentication", "oauth":"OAuth 2.0 Authentication"};
-                        entity.options = {}
-                        entity.options.autoCompleteFields = authType.map((type)=>{
-                            return {label:content[type],value:type} 
-                        })
+                        const entity = {};
+                        entity.field = 'auth_type';
+                        entity.type = 'singleSelect';
+                        entity.label = 'Auth Type';
+                        const content = {
+                            basic: 'Basic Authentication',
+                            oauth: 'OAuth 2.0 Authentication',
+                        };
+                        entity.options = {};
+                        entity.options.autoCompleteFields = authType.map((type) => {
+                            return { label: content[type], value: type };
+                        });
                         temEntities.push(entity);
-                    }
-                    else{
-                        this.isSingleOauth = authType.includes("oauth");
+                    } else {
+                        this.isSingleOauth = authType.includes('oauth');
                     }
 
                     // Adding State and Entity(in entitylist) for every Fields of "oauth" type
                     // Iterating over everytype of Authentication under "oauth" type
-                    authType.forEach((type)=>{
+                    authType.forEach((type) => {
                         const authfields = [];
                         const fields = e?.options[type];
-                        if(fields){
-
+                        if (fields) {
                             // For Particaular type iterating over fields
-                            fields.forEach((field)=>{
+                            fields.forEach((field) => {
                                 // every field for auth type
                                 const tempEntity = {};
 
-                                if(props.mode === MODE_CREATE){
-                                    tempEntity.value = typeof field?.defaultValue !== 'undefined' ? field.defaultValue : null;
+                                if (props.mode === MODE_CREATE) {
+                                    tempEntity.value =
+                                        typeof field?.defaultValue !== 'undefined'
+                                            ? field.defaultValue
+                                            : null;
+                                } else {
+                                    const isEncrypted =
+                                        typeof field?.encrypted !== 'undefined'
+                                            ? field?.encrypted
+                                            : false;
+                                    tempEntity.value = isEncrypted
+                                        ? ''
+                                        : this.currentInput[field.field];
                                 }
-                                else{
-                                    const isEncrypted = typeof field?.encrypted !== 'undefined' ? field?.encrypted : false;
-                                    tempEntity.value = isEncrypted? "" : this.currentInput[field.field];
-                                }
-                                tempEntity.display = typeof temState.auth_type !== "undefined" ? type===temState.auth_type.value : true;  
+                                tempEntity.display =
+                                    typeof temState.auth_type !== 'undefined'
+                                        ? type === temState.auth_type.value
+                                        : true;
                                 tempEntity.error = false;
                                 tempEntity.disabled = false;
                                 temState[field.field] = tempEntity;
                                 // eslint-disable-next-line no-param-reassign
                                 field.required = !this.isAuthVal;
                                 // eslint-disable-next-line no-param-reassign
-                                field.type = typeof field?.type !== 'undefined' ? field.type : "text";
-                                
+                                field.type =
+                                    typeof field?.type !== 'undefined' ? field.type : 'text';
+
                                 // Handled special case for redirect_url
-                                if(field.field==="redirect_url"){
-                                    tempEntity.value = window.location.href.split('?')[0].replace("configuration", `${this.appName.toLowerCase()}_redirect`);
+                                if (field.field === 'redirect_url') {
+                                    tempEntity.value = window.location.href
+                                        .split('?')[0]
+                                        .replace(
+                                            'configuration',
+                                            `${this.appName.toLowerCase()}_redirect`
+                                        );
                                     tempEntity.disabled = true;
                                 }
                                 temEntities.push(field);
                                 authfields.push(field.field);
-                            })
-                            this.authMap[type]=authfields;
+                            });
+                            this.authMap[type] = authfields;
                         }
-                    })
-                    if(authType.includes("oauth")){
+                    });
+                    if (authType.includes('oauth')) {
                         const oauthConfData = {};
                         // Storing O-Auth Configuration data to class variable to use later
-                        oauthConfData.popupWidth = (e.options.oauth_popup_width) ? e.options.oauth_popup_width : 600 ;
-                        oauthConfData.popupHeight = (e.options.oauth_popup_height) ? e.options.oauth_popup_height : 600 ;
-                        oauthConfData.authTimeout = (e.options.oauth_timeout) ? e.options.oauth_timeout : 180;
-                        oauthConfData.authCodeEndpoint = (e.options.auth_code_endpoint) ? e.options.auth_code_endpoint : null;
-                        oauthConfData.accessTokenEndpoint = (e.options.access_token_endpoint) ? e.options.access_token_endpoint : null;
+                        oauthConfData.popupWidth = e.options.oauth_popup_width
+                            ? e.options.oauth_popup_width
+                            : 600;
+                        oauthConfData.popupHeight = e.options.oauth_popup_height
+                            ? e.options.oauth_popup_height
+                            : 600;
+                        oauthConfData.authTimeout = e.options.oauth_timeout
+                            ? e.options.oauth_timeout
+                            : 180;
+                        oauthConfData.authCodeEndpoint = e.options.auth_code_endpoint
+                            ? e.options.auth_code_endpoint
+                            : null;
+                        oauthConfData.accessTokenEndpoint = e.options.access_token_endpoint
+                            ? e.options.access_token_endpoint
+                            : null;
 
                         this.oauthConf = oauthConfData;
                     }
-
                 }
-            }
-            else{
+            } else {
                 const tempEntity = {};
                 if (props.mode === MODE_CREATE) {
-                    tempEntity.value = typeof e.defaultValue !== 'undefined' ? e.defaultValue : null;
+                    tempEntity.value =
+                        typeof e.defaultValue !== 'undefined' ? e.defaultValue : null;
                     tempEntity.display =
                         typeof e?.options?.display !== 'undefined' ? e.options.display : true;
                     tempEntity.error = false;
@@ -318,8 +348,8 @@ class BaseFormView extends PureComponent {
     };
 
     handleSubmit = () => {
-        this.clearErrorMsg()
-        this.props.handleFormSubmit(/* isSubmititng */true, /* closeEntity */false);
+        this.clearErrorMsg();
+        this.props.handleFormSubmit(/* isSubmititng */ true, /* closeEntity */ false);
 
         this.datadict = {};
 
@@ -330,7 +360,7 @@ class BaseFormView extends PureComponent {
         if (this.hook && typeof this.hook.onSave === 'function') {
             const validationPass = this.hook.onSave(this.datadict);
             if (!validationPass) {
-                this.props.handleFormSubmit(/* isSubmititng */false,/* closeEntity */ false);
+                this.props.handleFormSubmit(/* isSubmititng */ false, /* closeEntity */ false);
                 return;
             }
         }
@@ -340,24 +370,23 @@ class BaseFormView extends PureComponent {
         });
 
         let temEntities;
-        if(this.isAuthVal){
-            let reqFields= []
-            Object.keys(this.authMap).forEach((type)=>{
-                if(type === this.datadict.auth_type){
-                    reqFields = [... reqFields, ...this.authMap[type]]; 
+        if (this.isAuthVal) {
+            let reqFields = [];
+            Object.keys(this.authMap).forEach((type) => {
+                if (type === this.datadict.auth_type) {
+                    reqFields = [...reqFields, ...this.authMap[type]];
                 }
-            })
-            temEntities = this.entities.map((e) =>{
-                if(reqFields.includes(e.field)){
-                    return {...e, required:true};
+            });
+            temEntities = this.entities.map((e) => {
+                if (reqFields.includes(e.field)) {
+                    return { ...e, required: true };
                 }
                 return e;
-            })
-        }
-        else{
+            });
+        } else {
             temEntities = this.entities;
         }
-        
+
         // Validation of form fields on Submit
         const validator = new Validator(temEntities);
         let error = validator.doValidation(this.datadict);
@@ -369,54 +398,61 @@ class BaseFormView extends PureComponent {
                 this.setErrorMsg(error.errorMsg);
             }
         }
-        
-        if (error){
-            this.props.handleFormSubmit(/* isSubmititng */false,/* closeEntity */ false);
-        }
-        else if(this.isOAuth && ( this.isSingleOauth || this.isAuthVal && this.datadict.auth_type==="oauth") ){
-            // handle oauth Authentication 
+
+        if (error) {
+            this.props.handleFormSubmit(/* isSubmititng */ false, /* closeEntity */ false);
+        } else if (
+            this.isOAuth &&
+            (this.isSingleOauth || (this.isAuthVal && this.datadict.auth_type === 'oauth'))
+        ) {
+            // handle oauth Authentication
             // Populate the parameter string with client_id, redirect_url and response_type
-            let parameters = `?response_type=code&client_id=${ this.datadict.client_id }&redirect_uri=${this.datadict.redirect_url}`;
+            let parameters = `?response_type=code&client_id=${this.datadict.client_id}&redirect_uri=${this.datadict.redirect_url}`;
             // Get the value for state_enabled
-            const stateEnabled = this.isoauthState != null? this.isoauthState : this.datadict.oauth_state_enabled;
-            if (stateEnabled === "true" || stateEnabled === true) {
+            const stateEnabled =
+                this.isoauthState != null ? this.isoauthState : this.datadict.oauth_state_enabled;
+            if (stateEnabled === 'true' || stateEnabled === true) {
                 this.state_enabled = true;
                 // Generating a cryptographically strong state parameter, which will be used ONLY during configuration
-                this.oauth_state = uuidv4().replace(/-/g,"");
+                this.oauth_state = uuidv4().replace(/-/g, '');
 
                 // Appending the state in the headers
                 parameters = `${parameters}&state=${this.oauth_state}`;
             }
 
-            const host = `https://${ this.datadict.endpoint}${this.oauthConf.authCodeEndpoint }${parameters}`;
-            (async() => {
+            const host = `https://${this.datadict.endpoint}${this.oauthConf.authCodeEndpoint}${parameters}`;
+            (async () => {
                 this.isCalled = false;
                 this.isError = false;
                 this.isResponse = false;
                 // Get auth_type element from global config json
 
                 // Open a popup to make auth request
-                this.childWin = window.open(host, `${this.appName} OAuth`, `width=${this.oauthConf.popupWidth}, height=${this.oauthConf.popupHeight}`);
+                this.childWin = window.open(
+                    host,
+                    `${this.appName} OAuth`,
+                    `width=${this.oauthConf.popupWidth}, height=${this.oauthConf.popupHeight}`
+                );
                 // Callback to receive data from redirect url
-                window.getMessage = (message)=> {
+                window.getMessage = (message) => {
                     this.isCalled = true;
                     // On Call back with Auth code this method will be called.
                     this.handleOauthToken(message);
                 };
                 // Wait till we get auth_code from calling site through redirect url, we will wait for 3 mins
-                await this.waitForAuthentication( this.oauthConf.authTimeout);
+                await this.waitForAuthentication(this.oauthConf.authTimeout);
 
                 if (!this.isCalled && this.childWin.closed) {
                     // Add error message if the user has close the authentication window without taking any action
                     this.setErrorMsg(ERROR_AUTH_PROCESS_TERMINATED_TRY_AGAIN);
-                    this.props.handleFormSubmit(/* isSubmititng */false,/* closeEntity */ false);
+                    this.props.handleFormSubmit(/* isSubmititng */ false, /* closeEntity */ false);
                     return false;
                 }
 
                 if (!this.isCalled) {
                     // Add timeout error message
                     this.setErrorMsg(ERROR_REQUEST_TIMEOUT_TRY_AGAIN);
-                    this.props.handleFormSubmit(/* isSubmititng */false,/* closeEntity */ false);
+                    this.props.handleFormSubmit(/* isSubmititng */ false, /* closeEntity */ false);
                     return false;
                 }
 
@@ -427,10 +463,10 @@ class BaseFormView extends PureComponent {
                 if (!this.isResponse && !this.isError) {
                     // Set error message to prevent saving.
                     this.isError = true;
-                    
+
                     // Add timeout error message
                     this.setErrorMsg(ERROR_REQUEST_TIMEOUT_ACCESS_TOKEN_TRY_AGAIN);
-                    this.props.handleFormSubmit(/* isSubmititng */false,/* closeEntity */ false);
+                    this.props.handleFormSubmit(/* isSubmititng */ false, /* closeEntity */ false);
                     return false;
                 }
                 return true;
@@ -438,16 +474,15 @@ class BaseFormView extends PureComponent {
                 if (!this.isError) {
                     this.saveData();
                 } else {
-                    this.props.handleFormSubmit(/* isSubmititng */false,/* closeEntity */ false);
+                    this.props.handleFormSubmit(/* isSubmititng */ false, /* closeEntity */ false);
                 }
             });
-        }
-        else{
+        } else {
             this.saveData();
-            }
+        }
     };
 
-    saveData = () =>{
+    saveData = () => {
         const body = new URLSearchParams();
         Object.keys(this.datadict).forEach((key) => {
             if (this.datadict[key] != null) {
@@ -465,13 +500,14 @@ class BaseFormView extends PureComponent {
             customHeaders: { 'Content-Type': 'application/x-www-form-urlencoded' },
             method: 'post',
             handleError: false,
-        }).catch((err) => {
+        })
+            .catch((err) => {
                 const errorSubmitMsg = parseErrorMsg(err?.response?.data?.messages[0]?.text);
                 this.setState({ errorMsg: errorSubmitMsg });
                 if (this.hook && typeof this.hook.onSaveFail === 'function') {
                     this.hook.onSaveFail();
                 }
-                this.props.handleFormSubmit(/* isSubmititng */false,/* closeEntity */  false);
+                this.props.handleFormSubmit(/* isSubmititng */ false, /* closeEntity */ false);
                 return Promise.reject(err);
             })
             .then((response) => {
@@ -500,25 +536,24 @@ class BaseFormView extends PureComponent {
                 } else {
                     generateToast(`Created ${val.name}`, 'success');
                 }
-                this.props.handleFormSubmit(/* isSubmititng */false,/* closeEntity */  true);
+                this.props.handleFormSubmit(/* isSubmititng */ false, /* closeEntity */ true);
             });
-    }
+    };
 
     handleChange = (field, targetValue) => {
         const changes = {};
-        if(field ==="auth_type"){
-            Object.keys(this.authMap).forEach((type)=>{
-                if(type === targetValue){
-                    this.authMap[type].forEach((e)=>{
-                        changes[e] = { display:{ $set:true } };
-                    })
+        if (field === 'auth_type') {
+            Object.keys(this.authMap).forEach((type) => {
+                if (type === targetValue) {
+                    this.authMap[type].forEach((e) => {
+                        changes[e] = { display: { $set: true } };
+                    });
+                } else {
+                    this.authMap[type].forEach((e) => {
+                        changes[e] = { display: { $set: false } };
+                    });
                 }
-                else{
-                    this.authMap[type].forEach((e)=>{
-                        changes[e] = {display:{ $set:false }}
-                    })
-                }
-            })
+            });
         }
 
         if (this.dependencyMap.has(field)) {
@@ -573,34 +608,36 @@ class BaseFormView extends PureComponent {
 
     // Set error message to display and set error in perticular field
     setErrorFieldMsg = (field, msg) => {
-        this.setState(previousState => {
-            const newFields = update(previousState, { data: { [field]: { error: { $set: true } } } });
+        this.setState((previousState) => {
+            const newFields = update(previousState, {
+                data: { [field]: { error: { $set: true } } },
+            });
             newFields.errorMsg = msg;
             return newFields;
-        })
+        });
     };
 
     // Set error in perticular field
     setErrorField = (field) => {
-        this.setState(previousState => {
+        this.setState((previousState) => {
             return update(previousState, { data: { [field]: { error: { $set: true } } } });
-        })
+        });
     };
 
     // Clear error message
     clearErrorMsg = () => {
         if (this.state.errorMsg) {
-            this.setState(previousState => {
-                return {...previousState, errorMsg:""};
-            })
+            this.setState((previousState) => {
+                return { ...previousState, errorMsg: '' };
+            });
         }
     };
 
     // Set error message
     setErrorMsg = (msg) => {
-        this.setState(previousState => {
-            return {...previousState, errorMsg:msg};
-        })
+        this.setState((previousState) => {
+            return { ...previousState, errorMsg: msg };
+        });
     };
 
     // Clear error/warning message and errors from fields
@@ -648,7 +685,13 @@ class BaseFormView extends PureComponent {
     loadHook = (module, globalConfig) => {
         const myPromise = new Promise((myResolve) => {
             __non_webpack_require__([`app/${this.appName}/js/build/custom/${module}`], (Hook) => {
-                this.hook = new Hook(globalConfig, this.props.serviceName, this.state, this.props.mode, this.util);
+                this.hook = new Hook(
+                    globalConfig,
+                    this.props.serviceName,
+                    this.state,
+                    this.props.mode,
+                    this.util
+                );
                 myResolve(Hook);
             });
         });
@@ -656,15 +699,14 @@ class BaseFormView extends PureComponent {
     };
 
     /*
-    * Function to get access token, refresh token and instance url
-    * using rest call once oauth code received from child window
-    */
+     * Function to get access token, refresh token and instance url
+     * using rest call once oauth code received from child window
+     */
     // eslint-disable-next-line consistent-return
     handleOauthToken = (message) => {
-
         // Check message for error. If error show error message.
         if (!message || (message && message.error) || message.code === undefined) {
-            this.setErrorMsg( ERROR_OCCURRED_TRY_AGAIN);
+            this.setErrorMsg(ERROR_OCCURRED_TRY_AGAIN);
             this.isError = true;
             this.isResponse = true;
             return false;
@@ -680,18 +722,18 @@ class BaseFormView extends PureComponent {
 
         const code = decodeURIComponent(message.code);
         const data = {
-                "method": "POST",
-                "url": `https://${ this.datadict.endpoint}${this.oauthConf.accessTokenEndpoint}`,
-                "grant_type": "authorization_code",
-                "client_id": this.datadict.client_id,
-                "client_secret": this.datadict.client_secret,
-                "code": code,
-                "redirect_uri": this.datadict.redirect_url
+            method: 'POST',
+            url: `https://${this.datadict.endpoint}${this.oauthConf.accessTokenEndpoint}`,
+            grant_type: 'authorization_code',
+            client_id: this.datadict.client_id,
+            client_secret: this.datadict.client_secret,
+            code,
+            redirect_uri: this.datadict.redirect_url,
         };
 
         const body = new URLSearchParams();
         Object.keys(data).forEach((key) => {
-                body.append(key, data[key]);
+            body.append(key, data[key]);
         });
 
         const OAuthEndpoint = `${this.appName}_oauth/oauth`;
@@ -701,48 +743,44 @@ class BaseFormView extends PureComponent {
             body,
             customHeaders: { 'Content-Type': 'application/x-www-form-urlencoded' },
             method: 'post',
-            handleError: false
+            handleError: false,
         })
-        .catch(
-            (err) => {
-                this.setErrorMsg( ERROR_OCCURRED_TRY_AGAIN );
+            .catch((err) => {
+                this.setErrorMsg(ERROR_OCCURRED_TRY_AGAIN);
                 this.isError = true;
                 this.isResponse = true;
                 // this.props.handleFormSubmit(/* isSubmititng */false,/* closeEntity */  false);
                 Promise.reject(err);
                 return false;
-        })
-        .then((response) => {
-            if (response.data.entry[0].content.error === undefined) {
-                
-                const accessToken = response.data.entry[0].content.access_token;
-                const instanceUrl = response.data.entry[0].content.instance_url;
-                const refreshToken = response.data.entry[0].content.refresh_token;
-                
-                this.datadict.instance_url = instanceUrl;
-                this.datadict.refresh_token =  refreshToken;
-                this.datadict.access_token = accessToken;
+            })
+            .then((response) => {
+                if (response.data.entry[0].content.error === undefined) {
+                    const accessToken = response.data.entry[0].content.access_token;
+                    const instanceUrl = response.data.entry[0].content.instance_url;
+                    const refreshToken = response.data.entry[0].content.refresh_token;
+
+                    this.datadict.instance_url = instanceUrl;
+                    this.datadict.refresh_token = refreshToken;
+                    this.datadict.access_token = accessToken;
+                    this.isResponse = true;
+                    return true;
+                }
+                this.setErrorMsg(response.data.entry[0].content.error);
+                this.isError = true;
                 this.isResponse = true;
-                return true;
-            } 
-            this.setErrorMsg(response.data.entry[0].content.error);
-            this.isError = true;
-            this.isResponse = true;
-            return false;
-        });
+                return false;
+            });
+    };
 
-    }
-
-    
     // Function to wait for authentication call back in child window.
     // eslint-disable-next-line consistent-return
     waitForAuthentication = async (count) => {
         // eslint-disable-next-line no-param-reassign
-        count-=1;
+        count -= 1;
         // Check if callback function called if called then exit from wait
         if (this.isCalled === true) {
             return true;
-        } 
+        }
         // If callback function is not called and count is not reached to 180 then return error for timeout
         if (count === 0 || this.childWin.closed) {
             this.isError = true;
@@ -750,27 +788,25 @@ class BaseFormView extends PureComponent {
         }
         // else call sleep and recall the same function
         await this.sleep(this.waitForAuthentication, count);
-    }
+    };
 
-    
-     // Function to wait for backend call get response from backend
-     
+    // Function to wait for backend call get response from backend
+
     // eslint-disable-next-line consistent-return
     waitForBackendResponse = async (count) => {
         // eslint-disable-next-line no-param-reassign
-        count+=1;
+        count += 1;
         // Check if callback function called if called then exit from wait
         if (this.isResponse === true) {
             return true;
-        } 
+        }
         // If callback function is not called and count is not reached to 60 then return error for timeout
         if (count === 60) {
             return false;
         }
         // else call sleep and recall the same function
         await this.sleep(this.waitForBackendResponse, count);
-
-    }
+    };
 
     /*
      * This function first add sleep for 1 secs and the call the function passed in argument
@@ -778,14 +814,14 @@ class BaseFormView extends PureComponent {
     sleep = async (fn, ...args) => {
         await this.timeout(1000);
         return fn(...args);
-    }
+    };
 
     /*
      * This function will resolve the promise once the provided timeout occurs
      */
-    timeout = (ms)=> {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
+    timeout = (ms) => {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+    };
 
     renderGroupElements = () => {
         let el = null;
