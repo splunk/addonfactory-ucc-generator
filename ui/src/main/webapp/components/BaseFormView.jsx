@@ -503,15 +503,6 @@ class BaseFormView extends PureComponent {
             method: 'post',
             handleError: false,
         })
-            .catch((err) => {
-                const errorSubmitMsg = parseErrorMsg(err?.response?.data?.messages[0]?.text);
-                this.setState({ errorMsg: errorSubmitMsg });
-                if (this.hook && typeof this.hook.onSaveFail === 'function') {
-                    this.hook.onSaveFail();
-                }
-                this.props.handleFormSubmit(/* isSubmititng */ false, /* closeEntity */ false);
-                return Promise.reject(err);
-            })
             .then((response) => {
                 const val = response?.data?.entry[0];
                 if (this.props.mode !== MODE_CONFIG) {
@@ -539,6 +530,14 @@ class BaseFormView extends PureComponent {
                     generateToast(`Created ${val.name}`, 'success');
                 }
                 this.props.handleFormSubmit(/* isSubmititng */ false, /* closeEntity */ true);
+            })
+            .catch((err) => {
+                const errorSubmitMsg = parseErrorMsg(err?.response?.data?.messages[0]?.text);
+                this.setState({ errorMsg: errorSubmitMsg });
+                if (this.hook && typeof this.hook.onSaveFail === 'function') {
+                    this.hook.onSaveFail();
+                }
+                this.props.handleFormSubmit(/* isSubmititng */ false, /* closeEntity */ false);
             });
     };
 
@@ -747,14 +746,6 @@ class BaseFormView extends PureComponent {
             method: 'post',
             handleError: false,
         })
-            .catch((err) => {
-                this.setErrorMsg(ERROR_OCCURRED_TRY_AGAIN);
-                this.isError = true;
-                this.isResponse = true;
-                // this.props.handleFormSubmit(/* isSubmititng */false,/* closeEntity */  false);
-                Promise.reject(err);
-                return false;
-            })
             .then((response) => {
                 if (response.data.entry[0].content.error === undefined) {
                     const accessToken = response.data.entry[0].content.access_token;
@@ -768,6 +759,12 @@ class BaseFormView extends PureComponent {
                     return true;
                 }
                 this.setErrorMsg(response.data.entry[0].content.error);
+                this.isError = true;
+                this.isResponse = true;
+                return false;
+            })
+            .catch(() => {
+                this.setErrorMsg(ERROR_OCCURRED_TRY_AGAIN);
                 this.isError = true;
                 this.isResponse = true;
                 return false;
@@ -892,35 +889,34 @@ class BaseFormView extends PureComponent {
             this.flag = false;
         }
         return (
-            <div
-                className="form-horizontal"
-                style={this.props.mode === MODE_CONFIG ? { marginTop: '40px' } : {}}
-            >
+            <div>
                 {this.generateWarningMessage()}
                 {this.generateErrorMessage()}
-                {this.renderGroupElements()}
-                {this.entities.map((e) => {
-                    // Return null if we need to show element in a group
-                    if (e.isGrouping) {
-                        return null;
-                    }
-                    const temState = this.state.data[e.field];
+                <form style={this.props.mode === MODE_CONFIG ? { marginTop: '40px' } : {}}>
+                    {this.renderGroupElements()}
+                    {this.entities.map((e) => {
+                        // Return null if we need to show element in a group
+                        if (e.isGrouping) {
+                            return null;
+                        }
+                        const temState = this.state.data[e.field];
 
-                    return (
-                        <ControlWrapper
-                            key={e.field}
-                            utilityFuncts={this.utilControlWrapper}
-                            value={temState.value}
-                            display={temState.display}
-                            error={temState.error}
-                            entity={e}
-                            serviceName={this.props.serviceName}
-                            mode={this.props.mode}
-                            disabled={temState.disabled}
-                            dependencyValues={temState.dependencyValues || null}
-                        />
-                    );
-                })}
+                        return (
+                            <ControlWrapper
+                                key={e.field}
+                                utilityFuncts={this.utilControlWrapper}
+                                value={temState.value}
+                                display={temState.display}
+                                error={temState.error}
+                                entity={e}
+                                serviceName={this.props.serviceName}
+                                mode={this.props.mode}
+                                disabled={temState.disabled}
+                                dependencyValues={temState.dependencyValues || null}
+                            />
+                        );
+                    })}
+                </form>
             </div>
         );
     }
