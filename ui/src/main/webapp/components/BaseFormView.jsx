@@ -410,7 +410,9 @@ class BaseFormView extends PureComponent {
             let parameters = `?response_type=code&client_id=${this.datadict.client_id}&redirect_uri=${this.datadict.redirect_url}`;
             // Get the value for state_enabled
             const stateEnabled =
-                this.isoauthState != null ? this.isoauthState : this.datadict.oauth_state_enabled;
+                this.isoauthState != null
+                    ? this.isoauthState
+                    : this.datadict.oauth_state_enabled != null;
             if (stateEnabled === 'true' || stateEnabled === true) {
                 this.state_enabled = true;
                 // Generating a cryptographically strong state parameter, which will be used ONLY during configuration
