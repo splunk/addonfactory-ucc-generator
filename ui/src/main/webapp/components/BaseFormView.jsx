@@ -13,7 +13,8 @@ import { getUnifiedConfigs, generateToast } from '../util/util';
 import { MODE_CLONE, MODE_CREATE, MODE_EDIT, MODE_CONFIG } from '../constants/modes';
 import { PAGE_INPUT, PAGE_CONF } from '../constants/pages';
 import { axiosCallWrapper } from '../util/axiosCallWrapper';
-import { parseErrorMsg } from '../util/messageUtil';
+import { parseErrorMsg, getFormattedMessage } from '../util/messageUtil';
+
 import {
     ERROR_REQUEST_TIMEOUT_TRY_AGAIN,
     ERROR_REQUEST_TIMEOUT_ACCESS_TOKEN_TRY_AGAIN,
@@ -369,6 +370,26 @@ class BaseFormView extends PureComponent {
             this.datadict[field] = this.state.data[field].value;
         });
 
+        // validation for unique name
+        if ([MODE_CREATE, MODE_CLONE].includes(this.props.mode)) {
+            const isExistingName = Boolean(
+                Object.values(this.context.rowData).find((val) =>
+                    Object.keys(val).find((name) => name === this.datadict.name)
+                )
+            );
+
+            if (isExistingName) {
+                const index = this.entities.findIndex((e) => e.field === 'name');
+                this.setErrorFieldMsg(
+                    'name',
+                    getFormattedMessage(2, [this.entities[index].label, this.datadict.name])
+                );
+                this.props.handleFormSubmit(/* isSubmititng */ false, /* closeEntity */ false);
+                return;
+            }
+        }
+
+        // validation condition of required fields in O-Auth
         let temEntities;
         if (this.isAuthVal) {
             let reqFields = [];
