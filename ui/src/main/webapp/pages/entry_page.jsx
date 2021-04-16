@@ -1,14 +1,22 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import layout from '@splunk/react-page';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { SplunkThemeProvider } from '@splunk/themes';
+import { WaitSpinnerWrapper } from '../components/table/CustomTableStyle';
 
 import { StyledContainer, ThemeProviderSettings } from './EntryPageStyle';
 import { PAGE_CONF, PAGE_INPUT } from '../constants/pages';
 import ConfigManager from '../util/configManager';
-import InputPage from './Input/InputPage';
-import ConfigurationPage from './Configuration/ConfigurationPage';
 import messageDict from '../constants/messageDict';
+import { getBuildDirPath } from '../util/script';
+
+// eslint-disable-next-line no-undef,camelcase
+__webpack_public_path__ = `${getBuildDirPath()}/`;
+
+const InputPage = React.lazy(() => import(/* webpackPrefetch: true */ './Input/InputPage'));
+const ConfigurationPage = React.lazy(() =>
+    import(/* webpackPrefetch: true */ './Configuration/ConfigurationPage')
+);
 
 // Take in a component as argument WrappedComponent
 function higherOrderComponent(WrappedComponent) {
@@ -23,7 +31,12 @@ function higherOrderComponent(WrappedComponent) {
                             <ConfigManager>
                                 {({ loading, appData }) => {
                                     return (
-                                        !loading && appData && <WrappedComponent {...this.props} />
+                                        !loading &&
+                                        appData && (
+                                            <Suspense fallback={<WaitSpinnerWrapper />}>
+                                                <WrappedComponent {...this.props} />
+                                            </Suspense>
+                                        )
                                     );
                                 }}
                             </ConfigManager>
