@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Select from '@splunk/react-ui/Select';
+import ComboBox from '@splunk/react-ui/ComboBox';
+import Button from "@splunk/react-ui/Button";
+import Clear from "@splunk/react-icons/Clear";
 import { _ } from '@splunk/ui-utils/i18n';
 import axios from 'axios';
 import styled from 'styled-components';
@@ -17,7 +20,6 @@ function SingleInputComponent(props) {
         field,
         disabled = false,
         error = false,
-        value,
         controlOptions,
         dependencyValues,
         ...restProps
@@ -35,8 +37,11 @@ function SingleInputComponent(props) {
         autoCompleteFields,
     } = controlOptions;
 
-    function handleChange(e, { value }) {
-        restProps.handleChange(field, value);
+    const [value, setSelectValue] = useState(props.value);
+
+    function handleChange(e, { value: currentValue }) {
+        setSelectValue(currentValue);
+        restProps.handleChange(field, currentValue);
     }
 
     function generateOptions(items) {
@@ -111,17 +116,40 @@ function SingleInputComponent(props) {
     const effectivePlaceholder = loading ? _('Loading') : placeholder;
 
     return (
-        <SelectWrapper
-            value={value}
-            name={field}
-            error={error}
-            placeholder={effectivePlaceholder}
-            disabled={effectiveDisabled}
-            onChange={handleChange}
-            inline
-        >
-            {options && options.length > 0 && options}
-        </SelectWrapper>
+        <>
+            {!disableSearch && createSearchChoice ?
+                <ComboBox
+                    value={value}
+                    name={field}
+                    error={error}
+                    placeholder={effectivePlaceholder}
+                    disabled={effectiveDisabled}
+                    onChange={handleChange}
+                    inline
+                >
+                    {options && options.length > 0 && options}
+                </ComboBox>
+                :
+                <>
+                    <SelectWrapper
+                        value={value}
+                        name={field}
+                        error={error}
+                        placeholder={effectivePlaceholder}
+                        disabled={effectiveDisabled}
+                        onChange={handleChange}
+                        inline
+                    >
+                        {options && options.length > 0 && options}
+                    </SelectWrapper>
+                    <Button
+                        appearance="secondary"
+                        icon={ <Clear /> }
+                        onClick={() => setSelectValue()}
+                    />
+                </>
+            }
+        </>
     );
 }
 
@@ -139,9 +167,9 @@ SingleInputComponent.propTypes = {
         allowList: PropTypes.string,
         placeholder: PropTypes.string,
         dependencies: PropTypes.array,
-        createSearchChoice: PropTypes.bool, // TODO: Not supported yet
+        createSearchChoice: PropTypes.bool,
         referenceName: PropTypes.string,
-        disableSearch: PropTypes.bool, // TODO: Not supported yet
+        disableSearch: PropTypes.bool,
         labelField: PropTypes.string,
     }),
 };
