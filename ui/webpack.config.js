@@ -10,6 +10,7 @@ module.exports = webpackMerge(baseConfig, {
     output: {
         path: path.join(__dirname, 'dist/appserver/static/js/build'),
         filename: '[name].js',
+        chunkFilename: '[name].js',
     },
     module: {
         rules: [
