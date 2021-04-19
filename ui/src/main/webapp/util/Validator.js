@@ -182,6 +182,10 @@ class Validator {
         }
 
         for (i = 0; i < this.entities.length; i += 1) {
+            if (data[this.entities[i].field] === '' || data[this.entities[i].field] === null) {
+                // eslint-disable-next-line no-continue
+                continue;
+            }
             if (this.entities[i].validators) {
                 for (j = 0; j < this.entities[i].validators.length; j += 1) {
                     switch (this.entities[i].validators[j].type) {
