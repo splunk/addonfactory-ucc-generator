@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Select from '@splunk/react-ui/Select';
 import ComboBox from '@splunk/react-ui/ComboBox';
-import Button from "@splunk/react-ui/Button";
-import Clear from "@splunk/react-icons/Clear";
+import Button from '@splunk/react-ui/Button';
+import Clear from '@splunk/react-icons/Clear';
 import { _ } from '@splunk/ui-utils/i18n';
 import axios from 'axios';
 import styled from 'styled-components';
@@ -43,19 +43,18 @@ function SingleInputComponent(props) {
         setSelectValue(currentValue);
         restProps.handleChange(field, currentValue);
     }
+    const Option = createSearchChoice ? ComboBox.Option : Select.Option;
 
     function generateOptions(items) {
         const data = [];
         items.forEach((item) => {
             if (item.value && item.label) {
-                data.push(<Select.Option label={item.label} value={item.value} key={item.value} />);
+                data.push(<Option label={item.label} value={item.value} key={item.value} />);
             }
             if (item.children && item.label) {
                 data.push(<Select.Heading key={item.label}>{item.label}</Select.Heading>);
                 item.children.forEach((child) => {
-                    data.push(
-                        <Select.Option label={child.label} value={child.value} key={child.value} />
-                    );
+                    data.push(<Option label={child.label} value={child.value} key={child.value} />);
                 });
             }
         });
@@ -117,7 +116,7 @@ function SingleInputComponent(props) {
 
     return (
         <>
-            {!disableSearch && createSearchChoice ?
+            {createSearchChoice ? (
                 <ComboBox
                     value={value}
                     name={field}
@@ -129,7 +128,7 @@ function SingleInputComponent(props) {
                 >
                     {options && options.length > 0 && options}
                 </ComboBox>
-                :
+            ) : (
                 <>
                     <SelectWrapper
                         value={value}
@@ -138,17 +137,18 @@ function SingleInputComponent(props) {
                         placeholder={effectivePlaceholder}
                         disabled={effectiveDisabled}
                         onChange={handleChange}
+                        filter={!disableSearch}
                         inline
                     >
                         {options && options.length > 0 && options}
                     </SelectWrapper>
                     <Button
                         appearance="secondary"
-                        icon={ <Clear /> }
+                        icon={<Clear />}
                         onClick={() => setSelectValue()}
                     />
                 </>
-            }
+            )}
         </>
     );
 }
