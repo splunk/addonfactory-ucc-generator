@@ -15,7 +15,7 @@ class CustomMenu extends Component {
     componentDidMount() {
         const globalConfig = getUnifiedConfigs();
         this.setState({ loading: true });
-        this.loadCustomControl().then((Control) => {
+        this.loadCustomMenu().then((Control) => {
             const customControl = new Control(globalConfig, this.el, this.setValue);
             customControl.render();
             this.setState({ loading: false });
@@ -34,7 +34,7 @@ class CustomMenu extends Component {
         this.props.handleChange(newValue);
     };
 
-    loadCustomControl = () => {
+    loadCustomMenu = () => {
         const globalConfig = getUnifiedConfigs();
         const appName = globalConfig.meta.name;
         return new Promise((resolve) => {
