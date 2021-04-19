@@ -16,11 +16,12 @@ export const getFormattedMessage = (code, msg /* , ... , args */) => {
     });
 };
 
-export const parseErrorMsg = (msg) => {
+export const parseErrorMsg = (err) => {
     let errorMsg = '';
     let regex;
     let matches;
     try {
+        const msg = err.response.data.messages[0].text;
         regex = /.+"REST Error \[[\d]+\]:\s+.+\s+--\s+([\s\S]*)"\.\s*See splunkd\.log(\/python.log)? for more details\./;
         matches = regex.exec(msg);
         if (matches && matches[1]) {
@@ -34,7 +35,7 @@ export const parseErrorMsg = (msg) => {
         } else {
             errorMsg = msg;
         }
-    } catch (err) {
+    } catch (e) {
         errorMsg = _('Error in processing the request');
     }
     return errorMsg;

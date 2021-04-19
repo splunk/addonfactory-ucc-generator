@@ -50,6 +50,7 @@ function ConfigurationPage() {
         ) {
             setActiveTabId(query.get('tab'));
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [history.location.search]);
 
     // Run only once to set initial default tab query param
@@ -58,6 +59,7 @@ function ConfigurationPage() {
             query.set('tab', activeTabId);
             history.push({ search: query.toString() });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleChange = useCallback(
@@ -66,6 +68,7 @@ function ConfigurationPage() {
             query.set('tab', selectedTabId);
             history.push({ search: query.toString() });
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [activeTabId]
     );
 
