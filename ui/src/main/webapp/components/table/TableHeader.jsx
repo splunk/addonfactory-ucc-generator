@@ -24,10 +24,6 @@ const TableFilterWrapper = styled.div`
     width: 100%;
 `;
 
-const PaginatorWrapper = styled(Paginator)`
-    margin-right: 30px;
-`;
-
 function TableHeader({ page, services, totalElement, handleRequestModalOpen }) {
     const {
         pageSize,
@@ -96,7 +92,7 @@ function TableHeader({ page, services, totalElement, handleRequestModalOpen }) {
             </TableFilterWrapper>
             <div>
                 <Paginator
-                    onChange={(e, val) => setCurrentPage(val.page - 1)}
+                    onChange={(e, { page: pageNumber }) => setCurrentPage(pageNumber - 1)}
                     current={currentPage + 1}
                     alwaysShowLastPageLink
                     totalPages={Math.ceil(totalElement / pageSize)}

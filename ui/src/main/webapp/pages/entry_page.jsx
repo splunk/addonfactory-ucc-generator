@@ -9,6 +9,7 @@ import { PAGE_CONF, PAGE_INPUT } from '../constants/pages';
 import ConfigManager from '../util/configManager';
 import messageDict from '../constants/messageDict';
 import { getBuildDirPath } from '../util/script';
+import './style.css';
 
 // eslint-disable-next-line no-undef,camelcase
 __webpack_public_path__ = `${getBuildDirPath()}/`;

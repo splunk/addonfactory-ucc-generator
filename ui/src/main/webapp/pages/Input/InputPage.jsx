@@ -8,7 +8,7 @@ import Menu from '@splunk/react-ui/Menu';
 import styled from 'styled-components';
 import ToastMessages from '@splunk/react-toast-notifications/ToastMessages';
 import { _ } from '@splunk/ui-utils/i18n';
-
+import { getFormattedMessage} from '../../util/messageUtil';
 import { getUnifiedConfigs } from '../../util/util';
 import { TitleComponent, SubTitleComponent } from './InputPageStyle';
 import { TableContextProvider } from '../../context/TableContext';
@@ -20,7 +20,6 @@ import EntityModal from '../../components/EntityModal';
 import ErrorBoundary from '../../components/ErrorBoundary';
 import EntityPage from '../../components/EntityPage';
 import useQuery from '../../hooks/useQuery';
-import '../style.scss';
 
 const Row = styled(ColumnLayout.Row)`
     padding: 5px 0px;
@@ -165,6 +164,7 @@ function InputPage() {
             // Close page when any of the required query params are not provided
             setEntity({ ...entity, open: false });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [history.location.search]);
 
     return (
@@ -207,7 +207,7 @@ function InputPage() {
                             {services && services.length === 1 && (
                                 <ColumnLayout.Column span={3} className="input_button">
                                     <Button
-                                        label="Create New Input"
+                                        label= {getFormattedMessage(100)}
                                         appearance="primary"
                                         onClick={() => {
                                             handleRequestOpen(services[0].name, services[0].title);

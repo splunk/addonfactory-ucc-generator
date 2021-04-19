@@ -35,8 +35,8 @@ function SingleInputComponent(props) {
         autoCompleteFields,
     } = controlOptions;
 
-    function handleChange(e, { value }) {
-        restProps.handleChange(field, value);
+    function handleChange(e, { value: currentValue }) {
+        restProps.handleChange(field, currentValue);
     }
 
     function generateOptions(items) {
