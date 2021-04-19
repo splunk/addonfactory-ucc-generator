@@ -913,9 +913,9 @@ class BaseFormView extends PureComponent {
         }
         return (
             <div>
-                {this.generateWarningMessage()}
-                {this.generateErrorMessage()}
-                <form style={this.props.mode === MODE_CONFIG ? { marginTop: '40px' } : {}}>
+                <form style={this.props.mode === MODE_CONFIG ? { marginTop: '25px' } : {}}>
+                    {this.generateWarningMessage()}
+                    {this.generateErrorMessage()}
                     {this.renderGroupElements()}
                     {this.entities.map((e) => {
                         // Return null if we need to show element in a group
