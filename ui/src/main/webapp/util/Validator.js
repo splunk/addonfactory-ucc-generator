@@ -22,6 +22,7 @@ export function SaveValidator(validatorFunc, formData) {
 class Validator {
     constructor(entities) {
         this.entities = entities;
+        this.isName = entities.find((e) => e.field === 'name');
     }
 
     checkIsFieldHasInput = (attrValue) => {
@@ -135,6 +136,34 @@ class Validator {
     }
 
     doValidation(data) {
+        if (this.isName) {
+            const targetValue = data.name;
+            const nameFieldLabel = this.isName.label;
+
+            if (typeof targetValue === 'undefined' || targetValue === '' || targetValue == null) {
+                return { errorField: 'name', errorMsg: getFormattedMessage(0, [nameFieldLabel]) };
+            }
+            if (!(typeof targetValue === 'string' || targetValue instanceof String)) {
+                return { errorField: 'name', errorMsg: getFormattedMessage(1, [nameFieldLabel]) };
+            }
+            if (
+                targetValue.startsWith('_') ||
+                targetValue === '.' ||
+                targetValue === '..' ||
+                targetValue.toLowerCase() === 'default'
+            ) {
+                return { errorField: 'name', errorMsg: getFormattedMessage(3, [nameFieldLabel]) };
+            }
+            const regexMetaCharacters = ['*', '\\', '[', ']', '(', ')', '?', ':'];
+            if (regexMetaCharacters.some((d) => targetValue.indexOf(d) > -1)) {
+                return { errorField: 'name', errorMsg: getFormattedMessage(3, [nameFieldLabel]) };
+            }
+
+            if (targetValue.length >= 1024) {
+                return { errorField: 'name', errorMsg: getFormattedMessage(22, [nameFieldLabel]) };
+            }
+        }
+
         let ret;
         let i;
         let j;
