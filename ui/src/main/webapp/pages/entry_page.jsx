@@ -26,7 +26,9 @@ function higherOrderComponent(WrappedComponent) {
     class HOC extends React.Component {
         render() {
             return (
-                <SplunkThemeProvider {...ThemeProviderSettings}>
+                <SplunkThemeProvider // nosemgrep: typescript.react.best-practice.react-props-spreading.react-props-spreading
+                    {...ThemeProviderSettings}
+                >
                     <StyledContainer>
                         <Router>
                             <ConfigManager>
@@ -35,7 +37,9 @@ function higherOrderComponent(WrappedComponent) {
                                         !loading &&
                                         appData && (
                                             <Suspense fallback={<WaitSpinnerWrapper />}>
-                                                <WrappedComponent {...this.props} />
+                                                <WrappedComponent // nosemgrep: typescript.react.best-practice.react-props-spreading.react-props-spreading
+                                                    {...this.props}
+                                                />
                                             </Suspense>
                                         )
                                     );
