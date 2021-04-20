@@ -16,7 +16,8 @@ const ModalWrapper = styled(Modal)`
 class EntityModal extends Component {
     constructor(props) {
         super(props);
-        this.form = React.createRef();
+        // Ref is used here to call submit method of form only
+        this.form = React.createRef(); // nosemgrep: typescript.react.security.audit.react-no-refs.react-no-refs
         this.state = { isSubmititng: false };
 
         if (props.mode === MODE_CREATE) {
@@ -42,9 +43,9 @@ class EntityModal extends Component {
     };
 
     /*
-         * @param {boolean} set: whether form is submitting
-         * @param {boolean} close : close the Entity modal   
-    */
+     * @param {boolean} set: whether form is submitting
+     * @param {boolean} close : close the Entity modal
+     */
     handleFormSubmit = (set, close) => {
         this.setState({ isSubmititng: set });
         if (close) {
@@ -60,7 +61,7 @@ class EntityModal extends Component {
                     onRequestClose={this.handleRequestClose}
                 />
                 <Modal.Body>
-                    <BaseFormView
+                    <BaseFormView // nosemgrep: typescript.react.security.audit.react-no-refs.react-no-refs
                         ref={this.form}
                         page={this.props.page}
                         serviceName={this.props.serviceName}

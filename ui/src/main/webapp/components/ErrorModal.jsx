@@ -12,7 +12,7 @@ const ModalWrapper = styled(Modal)`
 `;
 
 function ErrorModal(props) {
-    const [open, setOpen] = useState(props.open);
+    const [open, setOpen] = useState(props.open); // nosemgrep: typescript.react.best-practice.react-props-in-state.react-props-in-state
 
     const handleRequestClose = () => {
         setOpen(false);
