@@ -15,7 +15,6 @@ After this step, the following tasks will be available:
 
 * `start` – Run the `start` task
 * `build` – Create a production bundle
-* `test` – Run unit tests
 * `lint` – Run JS and CSS linters
 * `format` – Run prettier to auto-format `*.js`, `*.jsx` and `*.css` files. This command will overwrite files without 
 asking, `format:verify` won't.
