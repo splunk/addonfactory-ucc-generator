@@ -15,10 +15,7 @@
     "lint:ci": "yarn run eslint:ci && yarn run stylelint",
     "start": "webpack --watch",
     "setup": "yarn && yarn run build",
-    "stylelint": "stylelint \"src/**/*.{js,jsx}\" --config stylelint.config.js",
-    "test": "jest",
-    "test:ci": "cross-env JEST_JUNIT_OUTPUT_DIR=./test-reports JEST_JUNIT_OUTPUT_NAME=unit-results.xml JEST_JUNIT_CLASSNAME=unit yarn run test --ci --reporters=default jest-junit --coverage --coverageDirectory=coverage_report/coverage_maps_unit --coverageReporters=json",
-    "test:watch": "jest --watch"
+    "stylelint": "stylelint \"src/**/*.{js,jsx}\" --config stylelint.config.js"
   },
   "dependencies": {
     "@splunk/react-page": "^5.0.0",
@@ -60,8 +57,6 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "html-webpack-plugin": "^3.2.0",
     "immutability-helper": "^3.1.1",
-    "jest": "^26.6.3",
-    "jest-junit": "^10.0.0",
     "prettier": "^2.0.5",
     "semantic-release": "^17.4.2",
     "styled-components": "^5.1.1",
