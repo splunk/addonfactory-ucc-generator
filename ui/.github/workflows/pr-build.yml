@@ -50,11 +50,18 @@ jobs:
     name: semgrep
     steps:
       - uses: actions/checkout@v1
-      - name: Semgrep
-        id: semgrep
+      - name: Semgrep r2c
+        id: semgrep_r2c
         uses: returntocorp/semgrep-action@v1
         with:
-          config: p/r2c
+          config: p/r2c  
+        env:        
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Semgrep react
+        id: semgrep_react
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: p/react
         env:        
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}          
           
