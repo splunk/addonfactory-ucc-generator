@@ -32,7 +32,7 @@ function CustomTableRow(props) {
     const {
         row,
         columns,
-        statusMapping,
+        fieldMappings,
         handleToggleActionClick,
         handleEditActionClick,
         handleCloneActionClick,
@@ -87,8 +87,8 @@ function CustomTableRow(props) {
         statusContent = <WaitSpinner />;
     } else if (row.disabled) {
         statusContent =
-            statusMapping[0] && statusMapping[0].mapping[row.disabled]
-                ? statusMapping[0].mapping[row.disabled]
+            fieldMappings.disabled?.mapping && fieldMappings.disabled.mapping[row.disabled]
+                ? fieldMappings.disabled.mapping[row.disabled]
                 : 'Disabled';
     }
 
@@ -120,15 +120,15 @@ function CustomTableRow(props) {
                                             appearance="toggle"
                                             className="toggle_switch"
                                             selectedLabel={_(
-                                                statusMapping[0].mapping &&
-                                                    statusMapping[0].mapping.false
-                                                    ? statusMapping[0].mapping.false
+                                                fieldMappings.disabled?.mapping &&
+                                                    fieldMappings.disabled.mapping.false
+                                                    ? fieldMappings.disabled.mapping.false
                                                     : 'Enabled'
                                             )}
                                             unselectedLabel={_(
-                                                statusMapping[0].mapping &&
-                                                    statusMapping[0].mapping.true
-                                                    ? statusMapping[0].mapping.true
+                                                fieldMappings.disabled?.mapping &&
+                                                    fieldMappings.disabled.mapping.true
+                                                    ? fieldMappings.disabled.mapping.true
                                                     : 'Disabled'
                                             )}
                                         />
@@ -153,7 +153,7 @@ function CustomTableRow(props) {
 CustomTableRow.propTypes = {
     row: PropTypes.any,
     columns: PropTypes.array,
-    statusMapping: PropTypes.array,
+    fieldMappings: PropTypes.object,
     handleToggleActionClick: PropTypes.func,
     handleEditActionClick: PropTypes.func,
     handleCloneActionClick: PropTypes.func,

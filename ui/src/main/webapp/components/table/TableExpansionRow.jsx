@@ -23,7 +23,7 @@ function getExpansionRowData(row, moreInfo) {
                     <DL.Description key={`${val.field}_decr`}>
                         {val.mapping && val.mapping[row[val.field]]
                             ? val.mapping[row[val.field]]
-                            : row[val.field]}
+                            : String(row[val.field])}
                     </DL.Description>
                 );
             }

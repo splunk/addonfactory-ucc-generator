@@ -243,6 +243,8 @@ class BaseFormView extends PureComponent {
                 }
             } else {
                 const tempEntity = {};
+                e.encrypted = typeof e.encrypted !== 'undefined' ? e.encrypted : false;
+
                 if (props.mode === MODE_CREATE) {
                     tempEntity.value =
                         typeof e.defaultValue !== 'undefined' ? e.defaultValue : null;
@@ -256,6 +258,7 @@ class BaseFormView extends PureComponent {
                         typeof this.currentInput[e.field] !== 'undefined'
                             ? this.currentInput[e.field]
                             : null;
+                    tempEntity.value = e.encrypted ? '' : tempEntity.value;
 
                     tempEntity.display =
                         typeof e?.options?.display !== 'undefined' ? e.options.display : true;
@@ -268,7 +271,8 @@ class BaseFormView extends PureComponent {
                     }
                     temState[e.field] = tempEntity;
                 } else if (props.mode === MODE_CLONE) {
-                    tempEntity.value = e.field === 'name' ? '' : this.currentInput[e.field];
+                    tempEntity.value =
+                        e.field === 'name' || e.encrypted ? '' : this.currentInput[e.field];
                     tempEntity.display =
                         typeof e?.options?.display !== 'undefined' ? e.options.display : true;
                     tempEntity.error = false;
@@ -280,6 +284,7 @@ class BaseFormView extends PureComponent {
                         typeof this.currentInput[e.field] !== 'undefined'
                             ? this.currentInput[e.field]
                             : e.defaultValue;
+                    tempEntity.value = e.encrypted ? '' : tempEntity.value;
                     tempEntity.display =
                         typeof e?.options?.display !== 'undefined' ? e.options.display : true;
                     tempEntity.error = false;
@@ -553,7 +558,7 @@ class BaseFormView extends PureComponent {
                 this.props.handleFormSubmit(/* isSubmititng */ false, /* closeEntity */ true);
             })
             .catch((err) => {
-                const errorSubmitMsg = parseErrorMsg(err?.response?.data?.messages[0]?.text);
+                const errorSubmitMsg = parseErrorMsg(err);
                 this.setState({ errorMsg: errorSubmitMsg });
                 if (this.hook && typeof this.hook.onSaveFail === 'function') {
                     this.hook.onSaveFail();

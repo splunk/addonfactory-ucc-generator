@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import Multiselect from '@splunk/react-ui/Multiselect';
 import styled from 'styled-components';
 import axios from 'axios';
-import { _ } from '@splunk/ui-utils/i18n';
 
 import { axiosCallWrapper } from '../util/axiosCallWrapper';
 import { filterResponse } from '../util/util';
+import { getFormattedMessage } from '../util/messageUtil';
 
 const MultiSelectWrapper = styled(Multiselect)`
     width: 300px !important;
@@ -96,7 +96,7 @@ function MultiInputComponent(props) {
     }, [dependencyValues]);
 
     const effectiveDisabled = loading ? true : disabled;
-    const effectivePlaceholder = loading ? _('Loading') : placeholder;
+    const effectivePlaceholder = loading ? getFormattedMessage(115) : placeholder;
 
     const valueList = value ? value.split(delimiter) : [];
 

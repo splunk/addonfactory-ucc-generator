@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import Table from '@splunk/react-ui/Table';
+import { _ } from '@splunk/ui-utils/i18n';
 
 import useQuery from '../../hooks/useQuery';
 import { MODE_CLONE, MODE_EDIT } from '../../constants/modes';
@@ -14,6 +15,7 @@ import CustomTableRow from './CustomTableRow';
 import EntityModal from '../EntityModal';
 import DeleteModal from '../DeleteModal';
 import TableContext from '../../context/TableContext';
+import { NoRecordsDiv } from './CustomTableStyle';
 
 function CustomTable({
     page,
@@ -39,8 +41,10 @@ function CustomTable({
     const { moreInfo } = tableConfig;
     const headers = tableConfig.header;
 
-    // TODO: add multi field mapping support
-    const statusMapping = moreInfo?.filter((a) => a.mapping);
+    const fieldMappings = {};
+    moreInfo?.forEach((x) => {
+        fieldMappings[x.field] = x.mapping;
+    });
 
     const serviceToStyleMap = {};
     unifiedConfigs.pages.inputs.services.forEach((x) => {
@@ -51,6 +55,7 @@ function CustomTable({
     const query = useQuery();
 
     // Run only once when component is mounted to load component based on initial query params
+    // and when query params are updated
     useEffect(() => {
         // Only run when tab matches serviceName or if in input page where serviceName is undefined
         if (query && (query.get('tab') === serviceName || typeof serviceName === 'undefined')) {
@@ -80,6 +85,7 @@ function CustomTable({
             query.delete('record');
             history.push({ search: query.toString() });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [history.location.search]);
 
     const handleEntityClose = () => {
@@ -108,6 +114,7 @@ function CustomTable({
                 history.push({ search: query.toString() });
             }
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [entityModal]
     );
 
@@ -129,6 +136,7 @@ function CustomTable({
                 });
             }
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [entityModal]
     );
 
@@ -174,7 +182,7 @@ function CustomTable({
     const generateDeleteDialog = () => {
         return (
             <DeleteModal
-                isInput
+                page={page}
                 open={deleteModal.open}
                 handleRequestClose={handleDeleteClose}
                 serviceName={deleteModal.serviceName}
@@ -231,7 +239,7 @@ function CustomTable({
                                 key={row.id}
                                 row={row}
                                 columns={columns}
-                                statusMapping={statusMapping}
+                                fieldMappings={fieldMappings}
                                 {...{
                                     handleEditActionClick,
                                     handleCloneActionClick,
@@ -262,6 +270,7 @@ function CustomTable({
                     {getTableBody()}
                 </Table>
             )}
+            {!data.length ? <NoRecordsDiv>No records found</NoRecordsDiv> : null}
             {generateModalDialog()}
             {generateDeleteDialog()}
         </>

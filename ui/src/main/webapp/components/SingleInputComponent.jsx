@@ -15,6 +15,10 @@ const SelectWrapper = styled(Select)`
     width: 300px !important;
 `;
 
+const ComboBoxWrapper = styled(ComboBox)`
+    width: 300px !important;
+`;
+
 function SingleInputComponent(props) {
     const {
         field,
@@ -37,13 +41,11 @@ function SingleInputComponent(props) {
         autoCompleteFields,
     } = controlOptions;
 
-    const [value, setSelectValue] = useState(props.value);
-
     function handleChange(e, { value: currentValue }) {
-        setSelectValue(currentValue);
         restProps.handleChange(field, currentValue);
     }
     const Option = createSearchChoice ? ComboBox.Option : Select.Option;
+    const Heading = createSearchChoice ? ComboBox.Heading : Select.Heading;
 
     function generateOptions(items) {
         const data = [];
@@ -52,7 +54,7 @@ function SingleInputComponent(props) {
                 data.push(<Option label={item.label} value={item.value} key={item.value} />);
             }
             if (item.children && item.label) {
-                data.push(<Select.Heading key={item.label}>{item.label}</Select.Heading>);
+                data.push(<Heading key={item.label}>{item.label}</Heading>);
                 item.children.forEach((child) => {
                     data.push(<Option label={child.label} value={child.value} key={child.value} />);
                 });
@@ -117,8 +119,8 @@ function SingleInputComponent(props) {
     return (
         <>
             {createSearchChoice ? (
-                <ComboBox
-                    value={value}
+                <ComboBoxWrapper
+                    value={props.value === null ? '' : props.value}
                     name={field}
                     error={error}
                     placeholder={effectivePlaceholder}
@@ -127,11 +129,11 @@ function SingleInputComponent(props) {
                     inline
                 >
                     {options && options.length > 0 && options}
-                </ComboBox>
+                </ComboBoxWrapper>
             ) : (
                 <>
                     <SelectWrapper
-                        value={value}
+                        value={props.value}
                         name={field}
                         error={error}
                         placeholder={effectivePlaceholder}
@@ -145,7 +147,7 @@ function SingleInputComponent(props) {
                     <Button
                         appearance="secondary"
                         icon={<Clear />}
-                        onClick={() => setSelectValue()}
+                        onClick={() => restProps.handleChange(field, null)}
                     />
                 </>
             )}

@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import Button from '@splunk/react-ui/Button';
+import { variables } from '@splunk/themes';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 
 export const ActionButtonComponent = styled(Button)`
@@ -22,4 +23,9 @@ export const TableSelectBoxWrapper = styled.span`
         margin-left: 80px;
         min-width: 100px;
     }
+`;
+
+export const NoRecordsDiv = styled.div`
+    font-size: ${variables.fontSize};
+    text-align: center;
 `;
