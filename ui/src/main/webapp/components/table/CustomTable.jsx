@@ -41,10 +41,7 @@ function CustomTable({
     const { moreInfo } = tableConfig;
     const headers = tableConfig.header;
 
-    const fieldMappings = {};
-    moreInfo?.forEach((x) => {
-        fieldMappings[x.field] = x.mapping;
-    });
+    const statusMapping = moreInfo?.find((x) => x.field === 'disabled')?.mapping;
 
     const serviceToStyleMap = {};
     unifiedConfigs.pages.inputs.services.forEach((x) => {
@@ -239,7 +236,7 @@ function CustomTable({
                                 key={row.id}
                                 row={row}
                                 columns={columns}
-                                fieldMappings={fieldMappings}
+                                statusMapping={statusMapping}
                                 {...{
                                     handleEditActionClick,
                                     handleCloneActionClick,
