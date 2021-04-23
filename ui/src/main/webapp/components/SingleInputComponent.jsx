@@ -147,7 +147,7 @@ function SingleInputComponent(props) {
                     <Button
                         appearance="secondary"
                         icon={<Clear />}
-                        onClick={() => restProps.handleChange(field, null)}
+                        onClick={() => restProps.handleChange(field, '')}
                     />
                 </>
             )}

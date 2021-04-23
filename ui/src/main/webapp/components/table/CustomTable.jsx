@@ -38,10 +38,13 @@ function CustomTable({
             ? unifiedConfigs.pages.inputs.table
             : unifiedConfigs.pages.configuration.tabs.filter((x) => x.name === serviceName)[0]
                   .table;
-    const { moreInfo } = tableConfig;
+    const { moreInfo, header } = tableConfig;
     const headers = tableConfig.header;
 
-    const statusMapping = moreInfo?.find((x) => x.field === 'disabled')?.mapping;
+    const headerMapping = {}
+    header.forEach(x => {
+        headerMapping[x.field] = x.mapping
+    })
 
     const serviceToStyleMap = {};
     unifiedConfigs.pages.inputs.services.forEach((x) => {
@@ -236,7 +239,7 @@ function CustomTable({
                                 key={row.id}
                                 row={row}
                                 columns={columns}
-                                statusMapping={statusMapping}
+                                headerMapping={headerMapping}
                                 {...{
                                     handleEditActionClick,
                                     handleCloneActionClick,
