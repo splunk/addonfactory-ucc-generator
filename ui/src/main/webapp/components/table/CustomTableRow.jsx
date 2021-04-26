@@ -92,9 +92,13 @@ function CustomTableRow(props) {
                 : 'Disabled';
     }
 
+    // Fix set of props are passed to Table.Row element
     return (
         <>
-            <Table.Row key={row.id} {...props}>
+            <Table.Row // nosemgrep: typescript.react.security.audit.react-props-injection.react-props-injection, typescript.react.best-practice.react-props-spreading.react-props-spreading
+                key={row.id}
+                {...props}
+            >
                 {columns &&
                     columns.length &&
                     columns.map((header) => {

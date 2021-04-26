@@ -235,7 +235,7 @@ function CustomTable({
                     data.length &&
                     data.map((row) => {
                         return (
-                            <CustomTableRow
+                            <CustomTableRow // nosemgrep: typescript.react.best-practice.react-props-spreading.react-props-spreading
                                 key={row.id}
                                 row={row}
                                 columns={columns}
@@ -265,7 +265,10 @@ function CustomTable({
     return (
         <>
             {columns && columns.length && (
-                <Table stripeRows {...(moreInfo ? { rowExpansion: 'single' } : {})}>
+                <Table // nosemgrep: typescript.react.best-practice.react-props-spreading.react-props-spreading
+                    stripeRows
+                    {...(moreInfo ? { rowExpansion: 'single' } : {})}
+                >
                     {getTableHeaderCell()}
                     {getTableBody()}
                 </Table>

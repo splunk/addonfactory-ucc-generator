@@ -22,7 +22,7 @@ const ButtonWrapper = styled.div`
 `;
 
 function ConfigurationFormView({ serviceName }) {
-    const form = useRef();
+    const form = useRef(); // nosemgrep: typescript.react.security.audit.react-no-refs.react-no-refs
     const [error, setError] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [currentServiceState, setCurrentServiceState] = useState({});
@@ -53,9 +53,10 @@ function ConfigurationFormView({ serviceName }) {
         throw error;
     }
 
+    // Ref is used here to call submit method of form only
     return Object.keys(currentServiceState).length ? (
         <>
-            <BaseFormView
+            <BaseFormView // nosemgrep: typescript.react.security.audit.react-no-refs.react-no-refs
                 ref={form}
                 page={PAGE_CONF}
                 stanzaName={serviceName}

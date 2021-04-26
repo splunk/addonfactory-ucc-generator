@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { _ } from '@splunk/ui-utils/i18n';
+import { getUnifiedConfigs } from '../util/util';
 
-import { getUnifiedConfigs } from '../../util/util';
-
-class CustomTableControl extends Component {
+class CustomMenu extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -16,14 +15,8 @@ class CustomTableControl extends Component {
     componentDidMount() {
         const globalConfig = getUnifiedConfigs();
         this.setState({ loading: true });
-        this.loadCustomControl().then((Control) => {
-            const customControl = new Control(
-                globalConfig,
-                this.props.serviceName,
-                this.el,
-                this.props.row,
-                this.props.field
-            );
+        this.loadCustomMenu().then((Control) => {
+            const customControl = new Control(globalConfig, this.el, this.setValue);
             customControl.render();
             this.setState({ loading: false });
         });
@@ -37,7 +30,11 @@ class CustomTableControl extends Component {
         return false;
     }
 
-    loadCustomControl = () => {
+    setValue = (newValue) => {
+        this.props.handleChange(newValue);
+    };
+
+    loadCustomMenu = () => {
         const globalConfig = getUnifiedConfigs();
         const appName = globalConfig.meta.name;
         return new Promise((resolve) => {
@@ -53,7 +50,7 @@ class CustomTableControl extends Component {
             <>
                 {this.state.loading && _('Loading...')}
                 {
-                    <span // nosemgrep: typescript.react.security.audit.react-no-refs.react-no-refs
+                    <span
                         ref={(el) => {
                             this.el = el;
                         }}
@@ -65,11 +62,9 @@ class CustomTableControl extends Component {
     }
 }
 
-CustomTableControl.propTypes = {
-    serviceName: PropTypes.string.isRequired,
-    row: PropTypes.object.isRequired,
-    field: PropTypes.string,
+CustomMenu.propTypes = {
     fileName: PropTypes.string.isRequired,
+    handleChange: PropTypes.func,
 };
 
-export default CustomTableControl;
+export default CustomMenu;
