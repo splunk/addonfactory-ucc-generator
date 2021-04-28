@@ -10,12 +10,9 @@ import styled from 'styled-components';
 
 import { axiosCallWrapper } from '../util/axiosCallWrapper';
 import { filterResponse } from '../util/util';
+import ComboBoxWrapper from './ComboBoxWrapper';
 
 const SelectWrapper = styled(Select)`
-    width: 300px !important;
-`;
-
-const ComboBoxWrapper = styled(ComboBox)`
     width: 300px !important;
 `;
 
@@ -41,25 +38,39 @@ function SingleInputComponent(props) {
         autoCompleteFields,
     } = controlOptions;
 
-    function handleChange(e, { value: currentValue }) {
-        restProps.handleChange(field, currentValue);
+    function handleChange(e, obj) {
+        console.log(obj);
+        restProps.handleChange(field, obj.value);
     }
+    const [labelValueMapping, setLabelValueMapping] = useState(null);
+    // const [isGroup, setIsGroup] = useState(false);
     const Option = createSearchChoice ? ComboBox.Option : Select.Option;
     const Heading = createSearchChoice ? ComboBox.Heading : Select.Heading;
 
     function generateOptions(items) {
         const data = [];
+        const mapping = new Map();
+        // let groupFlag = false;
         items.forEach((item) => {
             if (item.value && item.label) {
+                // TODO: add conditional label in case of Select
                 data.push(<Option label={item.label} value={item.value} key={item.value} />);
+                mapping.set(item.label, item.value);
+                // data.push(<Option value={item.label} key={item.value} />);
             }
             if (item.children && item.label) {
+                // groupFlag = true;
+                mapping.set(item.label.toUpperCase(), new Map());
                 data.push(<Heading key={item.label}>{item.label}</Heading>);
                 item.children.forEach((child) => {
                     data.push(<Option label={child.label} value={child.value} key={child.value} />);
+                    mapping.get(item.label.toUpperCase()).set(child.label, child.value);
+                    // data.push(<Option value={child.label} key={child.value} />);
                 });
             }
         });
+        setLabelValueMapping(mapping);
+        // setIsGroup(groupFlag);
         return data;
     }
 
@@ -67,7 +78,7 @@ function SingleInputComponent(props) {
     const [options, setOptions] = useState(null);
 
     useEffect(() => {
-        if (autoCompleteFields) {
+        if (!endpointUrl && !referenceName && autoCompleteFields) {
             setOptions(generateOptions(autoCompleteFields));
             return;
         }
@@ -125,8 +136,9 @@ function SingleInputComponent(props) {
                     error={error}
                     placeholder={effectivePlaceholder}
                     disabled={effectiveDisabled}
-                    onChange={handleChange}
-                    inline
+                    labelValueMapping={labelValueMapping}
+                    // isGroup={isGroup}
+                    handleChange={handleChange}
                 >
                     {options && options.length > 0 && options}
                 </ComboBoxWrapper>
