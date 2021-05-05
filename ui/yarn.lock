@@ -1386,19 +1386,6 @@
   resolved "https://registry.yarnpkg.com/@splunk/eslint-config/-/eslint-config-4.0.0.tgz"
   integrity sha512-u2ZbzoLVJUtcBwX5RcAzET9cGuKjFrDOHLcA0FswmhPkrfSWVl7Ajd6ewGWCyG3tJxXSPvuYutD7SPeSBurIMg==
 
-"@splunk/react-icons@3.1.0-alpha.sha-696381af":
-  version "3.1.0-alpha.sha-696381af"
-  resolved "https://repo.splunk.com/artifactory/api/npm/npm-solutions-local/@splunk/react-icons/-/@splunk/react-icons-3.1.0-alpha.sha-696381af.tgz#15bd0066e3368db1f30c155f1d3288e20a2bfeed"
-  integrity sha1-Fb0AZuM2jbHzDBVfHTKI4gor/u0=
-  dependencies:
-    "@splunk/ui-utils" "1.4.0-alpha.sha-696381af"
-    "@types/lodash" "^4.14.156"
-    "@types/react" "^16.9.38"
-    "@types/react-dom" "^16.9.8"
-    "@types/styled-components" "^5.1.0"
-    lodash "^4.17.14"
-    prop-types "^15.6.2"
-
 "@splunk/react-icons@^3.0.1":
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@splunk/react-icons/-/react-icons-3.0.1.tgz"
@@ -1433,35 +1420,7 @@
     prop-types "^15.6.2"
     react-flip-move "^3.0.1"
 
-"@splunk/react-ui@4.1.0-alpha.sha-696381af":
-  version "4.1.0-alpha.sha-696381af"
-  resolved "https://repo.splunk.com/artifactory/api/npm/npm-solutions-local/@splunk/react-ui/-/@splunk/react-ui-4.1.0-alpha.sha-696381af.tgz#a8f5ceb5ac6c1ba2a4414b3ad17d32d0d0b492a6"
-  integrity sha1-qPXOtaxsG6KkQUs60X0y0NC0kqY=
-  dependencies:
-    "@splunk/react-icons" "3.1.0-alpha.sha-696381af"
-    "@splunk/themes" "0.9.0-alpha.sha-696381af"
-    "@splunk/ui-utils" "1.4.0-alpha.sha-696381af"
-    "@types/commonmark" "^0.27.0"
-    "@types/lodash" "^4.14.156"
-    "@types/react" "^16.9.38"
-    "@types/react-dom" "^16.9.8"
-    "@types/react-event-listener" "^0.4.10"
-    "@types/react-resize-detector" "^3.1.1"
-    "@types/styled-components" "^5.1.0"
-    "@types/tinycolor2" "^1.4.2"
-    commonmark "^0.27.0"
-    commonmark-react-renderer "^4.3.2"
-    decimal.js-light "^2.2.3"
-    lodash "^4.17.14"
-    moment "^2.22.2"
-    prop-types "^15.6.2"
-    react-event-listener "^0.6.2"
-    react-resize-detector "^3.2.1"
-    react-sortable-hoc "^1.11.0"
-    react-spring "^8.0.27"
-    tinycolor2 "^1.4.1"
-
-"@splunk/react-ui@^4.0.0":
+"@splunk/react-ui@4.0.0", "@splunk/react-ui@^4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@splunk/react-ui/-/react-ui-4.0.0.tgz"
   integrity sha512-E3zwmLa49v5BIBoeoK6Q1A0GLkKr6UCWgyAwrKxyrF9afnHEwrYS84JRyKbvUWc46JvzApviLl7e5DvuMzum/A==
@@ -1506,19 +1465,6 @@
     stylelint-config-styled-components "^0.1.1"
     stylelint-processor-styled-components "^1.9.0"
 
-"@splunk/themes@0.9.0-alpha.sha-696381af":
-  version "0.9.0-alpha.sha-696381af"
-  resolved "https://repo.splunk.com/artifactory/api/npm/npm-solutions-local/@splunk/themes/-/@splunk/themes-0.9.0-alpha.sha-696381af.tgz#25009c0fa39d0d31a4b1d0c6e63e97faf94391c3"
-  integrity sha1-JQCcD6OdDTGksdDG5j6X+vlDkcM=
-  dependencies:
-    "@types/lodash" "^4.14.156"
-    "@types/react" "^16.9.38"
-    "@types/styled-components" "^5.1.0"
-    "@types/tinycolor2" "^1.4.2"
-    color-blend "^2.0.9"
-    lodash "^4.17.14"
-    tinycolor2 "^1.4.1"
-
 "@splunk/themes@^0.7.0":
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/@splunk/themes/-/themes-0.7.0.tgz"
@@ -1531,14 +1477,6 @@
     color-blend "^2.0.9"
     lodash "^4.17.14"
     tinycolor2 "^1.4.1"
-
-"@splunk/ui-utils@1.4.0-alpha.sha-696381af":
-  version "1.4.0-alpha.sha-696381af"
-  resolved "https://repo.splunk.com/artifactory/api/npm/npm-solutions-local/@splunk/ui-utils/-/@splunk/ui-utils-1.4.0-alpha.sha-696381af.tgz#a6c8b9c0e413a43b7ae1d996f8398d2484b1acd0"
-  integrity sha1-psi5wOQTpDt64dmW+DmNJISxrNA=
-  dependencies:
-    keycode "^2.1.9"
-    lodash "^4.17.14"
 
 "@splunk/ui-utils@^1.2.0", "@splunk/ui-utils@^1.2.1":
   version "1.2.1"

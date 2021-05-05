@@ -39,7 +39,6 @@ function SingleInputComponent(props) {
     } = controlOptions;
 
     function handleChange(e, obj) {
-        console.log(obj);
         restProps.handleChange(field, obj.value);
     }
     const [labelValueMapping, setLabelValueMapping] = useState(null);
