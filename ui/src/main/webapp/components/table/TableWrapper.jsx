@@ -177,7 +177,7 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPag
                 if (
                     tableFields.includes(vv) &&
                     typeof data[v][vv] === 'string' &&
-                    data[v][vv].toLowerCase().includes(searchText.toLowerCase()) &&
+                    data[v][vv].toLowerCase().includes(searchText.toLowerCase().trim()) &&
                     !found
                 ) {
                     arr.push(data[v]);

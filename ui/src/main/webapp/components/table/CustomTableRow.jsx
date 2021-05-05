@@ -32,7 +32,7 @@ function CustomTableRow(props) {
     const {
         row,
         columns,
-        statusMapping,
+        headerMapping,
         handleToggleActionClick,
         handleEditActionClick,
         handleCloneActionClick,
@@ -87,8 +87,8 @@ function CustomTableRow(props) {
         statusContent = <WaitSpinner />;
     } else if (row.disabled) {
         statusContent =
-            statusMapping[0] && statusMapping[0].mapping[row.disabled]
-                ? statusMapping[0].mapping[row.disabled]
+            headerMapping?.disabled && headerMapping.disabled[row.disabled]
+                ? headerMapping.disabled[row.disabled]
                 : 'Disabled';
     }
 
@@ -124,15 +124,13 @@ function CustomTableRow(props) {
                                             appearance="toggle"
                                             className="toggle_switch"
                                             selectedLabel={_(
-                                                statusMapping[0].mapping &&
-                                                    statusMapping[0].mapping.false
-                                                    ? statusMapping[0].mapping.false
+                                                headerMapping?.disabled?.false
+                                                    ? headerMapping.disabled.false
                                                     : 'Enabled'
                                             )}
                                             unselectedLabel={_(
-                                                statusMapping[0].mapping &&
-                                                    statusMapping[0].mapping.true
-                                                    ? statusMapping[0].mapping.true
+                                                headerMapping?.disabled?.true
+                                                    ? headerMapping.disabled.true
                                                     : 'Disabled'
                                             )}
                                         />
@@ -144,7 +142,15 @@ function CustomTableRow(props) {
                             cellHTML = rowActionsPrimaryButton(row);
                         } else {
                             cellHTML = (
-                                <Table.Cell key={header.field}>{row[header.field]}</Table.Cell>
+                                <Table.Cell key={header.field}>
+                                    {headerMapping[header.field] &&
+                                    Object.prototype.hasOwnProperty.call(
+                                        headerMapping[header.field],
+                                        row[header.field]
+                                    )
+                                        ? headerMapping[header.field][row[header.field]]
+                                        : row[header.field]}
+                                </Table.Cell>
                             );
                         }
                         return cellHTML;
@@ -157,7 +163,7 @@ function CustomTableRow(props) {
 CustomTableRow.propTypes = {
     row: PropTypes.any,
     columns: PropTypes.array,
-    statusMapping: PropTypes.array,
+    headerMapping: PropTypes.object,
     handleToggleActionClick: PropTypes.func,
     handleEditActionClick: PropTypes.func,
     handleCloneActionClick: PropTypes.func,
