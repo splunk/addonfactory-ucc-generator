@@ -10,31 +10,7 @@ const StyledDiv = styled.div`
 `;
 
 function ComboBoxWrapper(props) {
-    const {
-        value,
-        name,
-        error,
-        placeholder,
-        disabled,
-        labelValueMapping,
-        // isGroup,
-        ...restProps
-    } = props;
-
-    // function getHeadingElement(elem) {
-    //     // Get the next sibling element
-    //     let sibling = elem.previousElementSibling;
-
-    //     // If the sibling matches our selector, use it
-    //     // If not, jump to the next sibling and continue the loop
-    //     while (sibling) {
-    //         if (!sibling.matches('[data-test="option"]')) {
-    //             return sibling.querySelector('[data-test="heading"]');
-    //         }
-    //         sibling = sibling.previousElementSibling;
-    //     }
-    //     return null;
-    // }
+    const { value, name, error, placeholder, disabled, labelValueMapping, ...restProps } = props;
 
     function handleChange(e, obj) {
         let effectiveValue = obj.value;
@@ -49,15 +25,7 @@ function ComboBoxWrapper(props) {
                 effectiveValue = entry[1] instanceof Map ? entry[1].get(obj.value) : entry[1];
             }
         }
-        // else if (isGroup) {
-        //     const target = e.target.closest('button[data-test="option"]');
-        //     const groupName = getHeadingElement(target).innerText.toUpperCase();
-        //     effectiveValue = labelValueMapping.get(groupName).get(obj.value);
-        // } else {
-        //     effectiveValue = labelValueMapping.get(obj.value);
-        // }
         restProps.handleChange(e, { ...obj, value: effectiveValue });
-        // restProps.handleChange(e, obj);
     }
 
     return (

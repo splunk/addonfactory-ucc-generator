@@ -30,7 +30,7 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPag
     const headers = tableConfig.header;
     const { moreInfo } = tableConfig;
     const services =
-        page === 'inputs'
+        page === PAGE_INPUT
             ? unifiedConfigs.pages.inputs.services
             : unifiedConfigs.pages.configuration.tabs.filter((x) => x.name === serviceName);
 
@@ -72,15 +72,15 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPag
                 if (error.response) {
                     // The request was made and the server responded with a status code
                     message = `Error received from server: ${error.response.data.messages[0].text}`;
-                    errorCode = 'ERR0001';
+                    errorCode = page === PAGE_INPUT ? 'ERR0001' : 'ERR0002';
                 } else if (error.request) {
                     // The request was made but no response was received
-                    message = `No response received while making request to input services`;
-                    errorCode = 'ERR0002';
+                    message = `No response received while making request to ${page} services`;
+                    errorCode = 'ERR0003';
                 } else {
                     // Something happened in setting up the request that triggered an Error
-                    message = `Error making request to input services`;
-                    errorCode = 'ERR0003';
+                    message = `Error making request to ${page} services`;
+                    errorCode = 'ERR0004';
                 }
                 // eslint-disable-next-line no-param-reassign
                 error.uccErrorCode = errorCode;
