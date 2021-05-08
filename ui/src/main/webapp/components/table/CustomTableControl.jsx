@@ -17,19 +17,21 @@ class CustomTableControl extends Component {
         const globalConfig = getUnifiedConfigs();
         this.setState({ loading: true });
         this.loadCustomControl().then((Control) => {
-            const customControl = new Control(
+            this.customControl = new Control(
                 globalConfig,
                 this.props.serviceName,
                 this.el,
                 this.props.row,
                 this.props.field
             );
-            customControl.render();
             this.setState({ loading: false });
         });
     }
 
     shouldComponentUpdate(nextProps, nextState) {
+        if (this.props.row !== nextProps.row) {
+            return true;
+        }
         if (!nextState.loading && this.shouldRender) {
             this.shouldRender = false;
             return true;
@@ -49,6 +51,9 @@ class CustomTableControl extends Component {
     };
 
     render() {
+        if (!this.state.loading) {
+            this.customControl.render();
+        }
         return (
             <>
                 {this.state.loading && _('Loading...')}
