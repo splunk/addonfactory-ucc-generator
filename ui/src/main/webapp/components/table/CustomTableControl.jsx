@@ -52,7 +52,7 @@ class CustomTableControl extends Component {
 
     render() {
         if (!this.state.loading) {
-            this.customControl.render();
+            this.customControl.render(this.props.row, this.props.field);
         }
         return (
             <>
