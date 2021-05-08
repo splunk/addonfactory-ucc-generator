@@ -42,34 +42,27 @@ function SingleInputComponent(props) {
         restProps.handleChange(field, obj.value);
     }
     const [labelValueMapping, setLabelValueMapping] = useState(null);
-    // const [isGroup, setIsGroup] = useState(false);
     const Option = createSearchChoice ? ComboBox.Option : Select.Option;
     const Heading = createSearchChoice ? ComboBox.Heading : Select.Heading;
 
     function generateOptions(items) {
         const data = [];
         const mapping = new Map();
-        // let groupFlag = false;
         items.forEach((item) => {
             if (item.value && item.label) {
-                // TODO: add conditional label in case of Select
                 data.push(<Option label={item.label} value={item.value} key={item.value} />);
                 mapping.set(item.label, item.value);
-                // data.push(<Option value={item.label} key={item.value} />);
             }
             if (item.children && item.label) {
-                // groupFlag = true;
                 mapping.set(item.label.toUpperCase(), new Map());
                 data.push(<Heading key={item.label}>{item.label}</Heading>);
                 item.children.forEach((child) => {
                     data.push(<Option label={child.label} value={child.value} key={child.value} />);
                     mapping.get(item.label.toUpperCase()).set(child.label, child.value);
-                    // data.push(<Option value={child.label} key={child.value} />);
                 });
             }
         });
         setLabelValueMapping(mapping);
-        // setIsGroup(groupFlag);
         return data;
     }
 
@@ -136,7 +129,6 @@ function SingleInputComponent(props) {
                     placeholder={effectivePlaceholder}
                     disabled={effectiveDisabled}
                     labelValueMapping={labelValueMapping}
-                    // isGroup={isGroup}
                     handleChange={handleChange}
                 >
                     {options && options.length > 0 && options}
