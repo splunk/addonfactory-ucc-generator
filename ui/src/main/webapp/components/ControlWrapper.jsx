@@ -9,7 +9,9 @@ const CustomElement = styled.div`
     margin-left: 30px;
 `;
 
-const ControlGroupWrapper = styled(ControlGroup)`
+const ControlGroupWrapper = styled(ControlGroup).attrs((props) => ({
+    'data-name': props.dataName,
+}))`
     width: 100%;
     max-width: 100%;
 
@@ -78,6 +80,7 @@ class ControlWrapper extends React.PureComponent {
                     help={help}
                     tooltip={tooltip}
                     error={this.props.error}
+                    dataName={field}
                 >
                     <CustomElement>{rowView}</CustomElement>
                 </ControlGroupWrapper>
