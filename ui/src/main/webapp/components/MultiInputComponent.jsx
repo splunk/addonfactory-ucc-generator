@@ -49,7 +49,7 @@ function MultiInputComponent(props) {
     const [options, setOptions] = useState(null);
 
     useEffect(() => {
-        if (items) {
+        if (!endpointUrl && items) {
             setOptions(generateOptions(items));
             return;
         }

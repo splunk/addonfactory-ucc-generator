@@ -19,8 +19,8 @@
   },
   "dependencies": {
     "@splunk/react-page": "^5.0.0",
-    "@splunk/react-toast-notifications": "^0.9.0",
-    "@splunk/react-ui": "4.0.0",
+    "@splunk/react-toast-notifications": "^0.10.0",
+    "@splunk/react-ui": "4.1.0",
     "@splunk/splunk-utils": "^2.0.0",
     "@splunk/themes": "^0.7.0",
     "axios": "^0.21.1",

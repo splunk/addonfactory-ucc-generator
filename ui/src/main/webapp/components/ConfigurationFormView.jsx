@@ -33,7 +33,7 @@ function ConfigurationFormView({ serviceName }) {
             handleError: true,
             callbackOnError: (err) => {
                 // eslint-disable-next-line no-param-reassign
-                err.uccErrorCode = 'ERR0004';
+                err.uccErrorCode = 'ERR0005';
                 setError(err);
             },
         }).then((response) => {
