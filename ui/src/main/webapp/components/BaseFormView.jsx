@@ -45,7 +45,7 @@ const CollapsiblePanelWrapper = styled(CollapsiblePanel)`
     }
 `;
 
-const customGroupLabel = styled.div`
+const CustomGroupLabel = styled.div`
     padding: 6px 10px;
     background-color: #f2f4f5;
 `;
@@ -68,8 +68,10 @@ class BaseFormView extends PureComponent {
 
         this.util = {
             setState: (callback) => {
-                this.setState((previousState) => {
-                    return callback(previousState);
+                this.onSavePromise = new Promise((resolve) => {
+                    this.setState((previousState) => {
+                        return callback(previousState);
+                    }, resolve);
                 });
             },
             setErrorFieldMsg: this.setErrorFieldMsg,
@@ -355,7 +357,7 @@ class BaseFormView extends PureComponent {
 
     handleSubmit = () => {
         this.clearErrorMsg();
-        this.props.handleFormSubmit(/* isSubmititng */ true, /* closeEntity */ false);
+        this.props.handleFormSubmit(/* isSubmitting */ true, /* closeEntity */ false);
 
         this.datadict = {};
 
@@ -370,140 +372,160 @@ class BaseFormView extends PureComponent {
                 return;
             }
         }
+        const executeValidationSubmit = () => {
+            Object.keys(this.state.data).forEach((field) => {
+                this.datadict[field] = this.state.data[field].value;
+            });
 
-        Object.keys(this.state.data).forEach((field) => {
-            this.datadict[field] = this.state.data[field].value;
-        });
-
-        // validation for unique name
-        if ([MODE_CREATE, MODE_CLONE].includes(this.props.mode)) {
-            const isExistingName = Boolean(
-                Object.values(this.context.rowData).find((val) =>
-                    Object.keys(val).find((name) => name === this.datadict.name)
-                )
-            );
-
-            if (isExistingName) {
-                const index = this.entities.findIndex((e) => e.field === 'name');
-                this.setErrorFieldMsg(
-                    'name',
-                    getFormattedMessage(2, [this.entities[index].label, this.datadict.name])
+            // validation for unique name
+            if ([MODE_CREATE, MODE_CLONE].includes(this.props.mode)) {
+                const isExistingName = Boolean(
+                    Object.values(this.context.rowData).find((val) =>
+                        Object.keys(val).find((name) => name === this.datadict.name)
+                    )
                 );
-                this.props.handleFormSubmit(/* isSubmititng */ false, /* closeEntity */ false);
-                return;
+
+                if (isExistingName) {
+                    const index = this.entities.findIndex((e) => e.field === 'name');
+                    this.setErrorFieldMsg(
+                        'name',
+                        getFormattedMessage(2, [this.entities[index].label, this.datadict.name])
+                    );
+                    this.props.handleFormSubmit(/* isSubmititng */ false, /* closeEntity */ false);
+                    return;
+                }
             }
-        }
 
-        // validation condition of required fields in O-Auth
-        let temEntities;
-        if (this.isAuthVal) {
-            let reqFields = [];
-            Object.keys(this.authMap).forEach((type) => {
-                if (type === this.datadict.auth_type) {
-                    reqFields = [...reqFields, ...this.authMap[type]];
-                }
-            });
-            temEntities = this.entities.map((e) => {
-                if (reqFields.includes(e.field)) {
-                    return { ...e, required: true };
-                }
-                return e;
-            });
-        } else {
-            temEntities = this.entities;
-        }
+            // validation condition of required fields in O-Auth
+            let temEntities;
+            if (this.isAuthVal) {
+                let reqFields = [];
+                Object.keys(this.authMap).forEach((type) => {
+                    if (type === this.datadict.auth_type) {
+                        reqFields = [...reqFields, ...this.authMap[type]];
+                    }
+                });
+                temEntities = this.entities.map((e) => {
+                    if (reqFields.includes(e.field)) {
+                        return { ...e, required: true };
+                    }
+                    return e;
+                });
+            } else {
+                temEntities = this.entities;
+            }
 
-        // Validation of form fields on Submit
-        const validator = new Validator(temEntities);
-        let error = validator.doValidation(this.datadict);
-        if (error) {
-            this.setErrorFieldMsg(error.errorField, error.errorMsg);
-        } else if (this.options && this.options.saveValidator) {
-            error = SaveValidator(this.options.saveValidator, this.datadict);
+            // Validation of form fields on Submit
+            const validator = new Validator(temEntities);
+            let error = validator.doValidation(this.datadict);
             if (error) {
-                this.setErrorMsg(error.errorMsg);
-            }
-        }
-
-        if (error) {
-            this.props.handleFormSubmit(/* isSubmititng */ false, /* closeEntity */ false);
-        } else if (
-            this.isOAuth &&
-            (this.isSingleOauth || (this.isAuthVal && this.datadict.auth_type === 'oauth'))
-        ) {
-            // handle oauth Authentication
-            // Populate the parameter string with client_id, redirect_url and response_type
-            let parameters = `?response_type=code&client_id=${this.datadict.client_id}&redirect_uri=${this.datadict.redirect_url}`;
-            // Get the value for state_enabled
-            const stateEnabled = this.isoauthState != null ? this.isoauthState : false;
-            if (stateEnabled === 'true' || stateEnabled === true) {
-                this.state_enabled = true;
-                // Generating a cryptographically strong state parameter, which will be used ONLY during configuration
-                this.oauth_state = uuidv4().replace(/-/g, '');
-
-                // Appending the state in the headers
-                parameters = `${parameters}&state=${this.oauth_state}`;
+                this.setErrorFieldMsg(error.errorField, error.errorMsg);
+            } else if (this.options && this.options.saveValidator) {
+                error = SaveValidator(this.options.saveValidator, this.datadict);
+                if (error) {
+                    this.setErrorMsg(error.errorMsg);
+                }
             }
 
-            const host = `https://${this.datadict.endpoint}${this.oauthConf.authCodeEndpoint}${parameters}`;
-            (async () => {
-                this.isCalled = false;
-                this.isError = false;
-                this.isResponse = false;
-                // Get auth_type element from global config json
+            if (error) {
+                this.props.handleFormSubmit(/* isSubmititng */ false, /* closeEntity */ false);
+            } else if (
+                this.isOAuth &&
+                (this.isSingleOauth || (this.isAuthVal && this.datadict.auth_type === 'oauth'))
+            ) {
+                // handle oauth Authentication
+                // Populate the parameter string with client_id, redirect_url and response_type
+                let parameters = `?response_type=code&client_id=${this.datadict.client_id}&redirect_uri=${this.datadict.redirect_url}`;
+                // Get the value for state_enabled
+                const stateEnabled = this.isoauthState != null ? this.isoauthState : false;
+                if (stateEnabled === 'true' || stateEnabled === true) {
+                    this.state_enabled = true;
+                    // Generating a cryptographically strong state parameter, which will be used ONLY during configuration
+                    this.oauth_state = uuidv4().replace(/-/g, '');
 
-                // Open a popup to make auth request
-                this.childWin = window.open(
-                    host,
-                    `${this.appName} OAuth`,
-                    `width=${this.oauthConf.popupWidth}, height=${this.oauthConf.popupHeight}`
-                );
-                // Callback to receive data from redirect url
-                window.getMessage = (message) => {
-                    this.isCalled = true;
-                    // On Call back with Auth code this method will be called.
-                    this.handleOauthToken(message);
-                };
-                // Wait till we get auth_code from calling site through redirect url, we will wait for 3 mins
-                await this.waitForAuthentication(this.oauthConf.authTimeout);
-
-                if (!this.isCalled && this.childWin.closed) {
-                    // Add error message if the user has close the authentication window without taking any action
-                    this.setErrorMsg(ERROR_AUTH_PROCESS_TERMINATED_TRY_AGAIN);
-                    this.props.handleFormSubmit(/* isSubmititng */ false, /* closeEntity */ false);
-                    return false;
+                    // Appending the state in the headers
+                    parameters = `${parameters}&state=${this.oauth_state}`;
                 }
 
-                if (!this.isCalled) {
-                    // Add timeout error message
-                    this.setErrorMsg(ERROR_REQUEST_TIMEOUT_TRY_AGAIN);
-                    this.props.handleFormSubmit(/* isSubmititng */ false, /* closeEntity */ false);
-                    return false;
-                }
+                const host = `https://${this.datadict.endpoint}${this.oauthConf.authCodeEndpoint}${parameters}`;
+                (async () => {
+                    this.isCalled = false;
+                    this.isError = false;
+                    this.isResponse = false;
+                    // Get auth_type element from global config json
 
-                // Reset called flag as we have to wait till we get the access_token, refresh_token and instance_url
-                // Wait till we get the response, here we have added wait for 30 secs
-                await this.waitForBackendResponse(30);
+                    // Open a popup to make auth request
+                    this.childWin = window.open(
+                        host,
+                        `${this.appName} OAuth`,
+                        `width=${this.oauthConf.popupWidth}, height=${this.oauthConf.popupHeight}`
+                    );
+                    // Callback to receive data from redirect url
+                    window.getMessage = (message) => {
+                        this.isCalled = true;
+                        // On Call back with Auth code this method will be called.
+                        this.handleOauthToken(message);
+                    };
+                    // Wait till we get auth_code from calling site through redirect url, we will wait for 3 mins
+                    await this.waitForAuthentication(this.oauthConf.authTimeout);
 
-                if (!this.isResponse && !this.isError) {
-                    // Set error message to prevent saving.
-                    this.isError = true;
+                    if (!this.isCalled && this.childWin.closed) {
+                        // Add error message if the user has close the authentication window without taking any action
+                        this.setErrorMsg(ERROR_AUTH_PROCESS_TERMINATED_TRY_AGAIN);
+                        this.props.handleFormSubmit(
+                            /* isSubmititng */ false,
+                            /* closeEntity */ false
+                        );
+                        return false;
+                    }
 
-                    // Add timeout error message
-                    this.setErrorMsg(ERROR_REQUEST_TIMEOUT_ACCESS_TOKEN_TRY_AGAIN);
-                    this.props.handleFormSubmit(/* isSubmititng */ false, /* closeEntity */ false);
-                    return false;
-                }
-                return true;
-            })().then(() => {
-                if (!this.isError) {
-                    this.saveData();
-                } else {
-                    this.props.handleFormSubmit(/* isSubmititng */ false, /* closeEntity */ false);
-                }
+                    if (!this.isCalled) {
+                        // Add timeout error message
+                        this.setErrorMsg(ERROR_REQUEST_TIMEOUT_TRY_AGAIN);
+                        this.props.handleFormSubmit(
+                            /* isSubmititng */ false,
+                            /* closeEntity */ false
+                        );
+                        return false;
+                    }
+
+                    // Reset called flag as we have to wait till we get the access_token, refresh_token and instance_url
+                    // Wait till we get the response, here we have added wait for 30 secs
+                    await this.waitForBackendResponse(30);
+
+                    if (!this.isResponse && !this.isError) {
+                        // Set error message to prevent saving.
+                        this.isError = true;
+
+                        // Add timeout error message
+                        this.setErrorMsg(ERROR_REQUEST_TIMEOUT_ACCESS_TOKEN_TRY_AGAIN);
+                        this.props.handleFormSubmit(
+                            /* isSubmititng */ false,
+                            /* closeEntity */ false
+                        );
+                        return false;
+                    }
+                    return true;
+                })().then(() => {
+                    if (!this.isError) {
+                        this.saveData();
+                    } else {
+                        this.props.handleFormSubmit(
+                            /* isSubmititng */ false,
+                            /* closeEntity */ false
+                        );
+                    }
+                });
+            } else {
+                this.saveData();
+            }
+        };
+        if (this.hook && typeof this.hook.onSave === 'function') {
+            this.onSavePromise.then(() => {
+                executeValidationSubmit();
             });
         } else {
-            this.saveData();
+            executeValidationSubmit();
         }
     };
 
@@ -880,7 +902,7 @@ class BaseFormView extends PureComponent {
                     </CollapsiblePanelWrapper>
                 ) : (
                     <>
-                        <customGroupLabel>{group.label}</customGroupLabel>
+                        <CustomGroupLabel>{group.label}</CustomGroupLabel>
                         <div>{collpsibleElement}</div>
                     </>
                 );
