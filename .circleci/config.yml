@@ -10,34 +10,27 @@ jobs:
       - restore_cache:
           keys:
             - poetry-cache-{{ checksum "poetry.lock" }}
-      - restore_cache:
-          keys:
-            - npm-deps-{{ checksum "splunk_add_on_ucc_framework/UCC-UI-lib/package-lock.json" }}
       - run:
           name: Install Tools
           command: |
             curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
-            mkdir ~/.npm-global || true
-            npm config set prefix '~/.npm-global'
-            export PATH=~/.npm-global/bin:$PATH
-            npm install -g bower
+      - run:
+          name: Get UI
+          command: |
+            ./get-ucc-ui.sh
+            mkdir -p splunk_add_on_ucc_framework/package || true
+            tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/package
       - run:
           name: Build
           command: |
             source $HOME/.poetry/env
-            export PATH=~/.npm-global/bin:$PATH
             poetry install
             poetry run poetry-dynamic-versioning
-            poetry run build-ucc
             poetry build
       - save_cache:
           key: poetry-cache-{{ checksum "poetry.lock" }}
           paths:
             - ~/.cache/poetry
-      - save_cache:
-          paths:
-            - ~/.npm-global # location depends on npm version
-          key: npm-deps-{{ checksum "splunk_add_on_ucc_framework/UCC-UI-lib/package-lock.json" }}
       - store_artifacts:
           path: dist
       - store_artifacts:
@@ -62,11 +55,11 @@ jobs:
           name: Install Tools
           command: |
             pip install /tmp/workspace/dist/* --use-deprecated=legacy-resolver
-  
+
   semgrep:
     environment:
-        SEMGREP_REPO_URL: << pipeline.project.git_url >>
-        SEMGREP_BRANCH: << pipeline.git.branch >>
+      SEMGREP_REPO_URL: << pipeline.project.git_url >>
+      SEMGREP_BRANCH: << pipeline.git.branch >>
     docker:
       - image: returntocorp/semgrep-agent:v1
         user: root
@@ -87,13 +80,13 @@ jobs:
             export REPO_BRANCH=$(echo "<< pipeline.git.branch >>")
             DASHBOARD_URL=$(python3 -c "from urllib.parse import quote; import os; print('https://semgrep.dev/manage/findings?repo=' + quote(os.environ['SEMGREP_REPO_NAME'], safe='') + '&tab=findings&ref_type=branch&ref=' + quote(os.environ['REPO_BRANCH'], safe=''))")
             echo "View Result at Semgrep Dashboard: $DASHBOARD_URL"
-            
+
             # Semgrep Exclude files
             dos2unix .semgrepignore
             SEMGREP_EXCLUDE=$(sed "/^#/d" .semgrepignore | sed "/^:/d" | sed -r '/^\s*$/d' | sed ':a;N;$!ba;s/\n/ --exclude /g')
             echo "Excluding Semgrep Files: --exclude $SEMGREP_EXCLUDE"
             # Generate xml file
-            semgrep --config="p/r2c-ci" --config="p/r2c-security-audit" --config="p/bandit" --error --strict --timeout=0 --junit-xml -o /root/project/test-results/semgrep-scan.xml --exclude $SEMGREP_EXCLUDE     
+            semgrep --config="p/r2c-ci" --config="p/r2c-security-audit" --config="p/bandit" --error --strict --timeout=0 --junit-xml -o /root/project/test-results/semgrep-scan.xml --exclude $SEMGREP_EXCLUDE
       - store_artifacts:
           path: test-results
           destination: test-results
@@ -117,32 +110,28 @@ jobs:
             - poetry-cache-{{ checksum "poetry.lock" }}
       - restore_cache:
           keys:
-            - npm-deps-{{ checksum "splunk_add_on_ucc_framework/UCC-UI-lib/package-lock.json" }}
+            - yarn-packages-{{ checksum "splunk_add_on_ucc_framework/ucc_ui_lib/yarn.lock" }}
       - run:
           name: Install Tools
           command: |
             curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
-            mkdir ~/.npm-global || true
-            npm config set prefix '~/.npm-global'
-            export PATH=~/.npm-global/bin:$PATH
-            npm install -g bower
+      - run:
+          name: Get UI
+          command: |
+            ./get-ucc-ui.sh
+            mkdir -p splunk_add_on_ucc_framework/package || true
+            tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/package
       - run:
           name: Build
           command: |
             source $HOME/.poetry/env
-            export PATH=~/.npm-global/bin:$PATH
             poetry install
             poetry run poetry-dynamic-versioning
-            poetry run build-ucc
             poetry publish --build -u $PYPI_USERNAME -p $PYPI_TOKEN
       - save_cache:
           key: poetry-cache-{{ checksum "poetry.lock" }}
           paths:
             - ~/.poetry
-      - save_cache:
-          paths:
-            - ~/.npm-global # location depends on npm version
-          key: npm-deps-{{ checksum "splunk_add_on_ucc_framework/UCC-UI-lib/package-lock.json" }}
       - store_artifacts:
           path: dist
       - store_artifacts:
@@ -163,7 +152,7 @@ workflows:
       - build
       - semgrep:
           context:
-            - gdi-semgrep      
+            - gdi-semgrep
           filters:
             branches:
               only: /.*/

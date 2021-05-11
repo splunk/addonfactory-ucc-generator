@@ -3,15 +3,6 @@ Upstream-Name: splunk_add_on_ucc_framework
 Upstream-Contact: Splunk, Inc. <addonfactory@splunk.com>
 Source: https://github.com/splunk/addonfactory-ucc-generator
 
-# Sample paragraph, commented out:
-#
-# Files: src/*
-# Copyright: $YEAR $NAME <$CONTACT>
-# License: ...
-Files: splunk_add_on_ucc_framework/UCC-UI-lib/*
-Copyright: 202 Splunk Inc. <addonfactory@splunk.com>
-License: Apache-2.0
-
 Files: CLA.md CODE_OF_CONDUCT.md .* poetry.lock tests tox.ini splunk_add_on_ucc_framework/templates/* splunk_add_on_ucc_framework/modular_alert_builder/build_core/* splunk_add_on_ucc_framework/arf_dir_templates/*
 Copyright: 2020 Splunk Inc. <addonfactory@splunk.com>
 License: Apache-2.0
