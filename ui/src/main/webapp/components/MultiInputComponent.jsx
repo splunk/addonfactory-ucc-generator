@@ -9,7 +9,7 @@ import { filterResponse } from '../util/util';
 import { getFormattedMessage } from '../util/messageUtil';
 
 const MultiSelectWrapper = styled(Multiselect)`
-    width: 300px !important;
+    width: 320px !important;
 `;
 
 function MultiInputComponent(props) {
