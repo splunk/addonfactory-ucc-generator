@@ -13,7 +13,7 @@ import { filterResponse } from '../util/util';
 import ComboBoxWrapper from './ComboBoxWrapper';
 
 const SelectWrapper = styled(Select)`
-    width: 300px !important;
+    width: 320px !important;
 `;
 
 function SingleInputComponent(props) {

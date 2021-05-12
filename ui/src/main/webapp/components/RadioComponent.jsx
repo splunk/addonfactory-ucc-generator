@@ -4,7 +4,7 @@ import RadioBar from '@splunk/react-ui/RadioBar';
 import styled from 'styled-components';
 
 const RadioBarWrapper = styled(RadioBar)`
-    width: 300px;
+    width: 320px;
 `;
 
 class RadioComponent extends Component {

@@ -42,7 +42,7 @@ function CustomTableRow(props) {
     const getCustomCell = (customRow, header) => {
         return React.createElement(CustomTableControl, {
             serviceName: row.serviceName,
-            field: row.name,
+            field: header.field,
             row: customRow,
             fileName: header.customCell.src,
         });
