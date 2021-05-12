@@ -29,6 +29,7 @@ class TextComponent extends Component {
 }
 
 TextComponent.propTypes = {
+    // Number is expected if provided number in globalConfig.json instead of a string.
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     handleChange: PropTypes.func.isRequired,
     field: PropTypes.string,
