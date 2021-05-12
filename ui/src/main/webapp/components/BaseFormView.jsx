@@ -888,6 +888,7 @@ class BaseFormView extends PureComponent {
                                         serviceName={this.props.serviceName}
                                         mode={this.props.mode}
                                         disabled={temState.disabled}
+                                        markdownMessage={temState.markdownMessage}
                                         dependencyValues={temState.dependencyValues || null}
                                     />
                                 );
@@ -957,6 +958,7 @@ class BaseFormView extends PureComponent {
                                 serviceName={this.props.serviceName}
                                 mode={this.props.mode}
                                 disabled={temState.disabled}
+                                markdownMessage={temState.markdownMessage}
                                 dependencyValues={temState.dependencyValues || null}
                             />
                         );
