@@ -42,7 +42,9 @@ class ControlWrapper extends React.PureComponent {
     render() {
         const { field, options, type, label, tooltip, help, encrypted = false } = this.props.entity;
         const { handleChange, addCustomValidator, utilCustomFunctions } = this.props.utilityFuncts;
-        const { text, link, color } = this.props.markDownMessage || {};
+        // We have to put empty object because markDownMessage prop can be undefined 
+        // because we are not explicitly setting it but expecting it from custom hooks only.
+        const { text, link, color, markdownType, token, linkText } = this.props.markDownMessage || {};
         let rowView;
         if (this.props.entity.type === 'custom') {
             const data = {
@@ -82,6 +84,9 @@ class ControlWrapper extends React.PureComponent {
                     text={ text || '' }
                     link={ link || '' }
                     color={ color || ''}
+                    markdownType={ markdownType || '' }
+                    token={ token || '' }
+                    linkText={ linkText || '' }
                 />
                 {help}
             </>

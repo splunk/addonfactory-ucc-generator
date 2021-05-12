@@ -9,14 +9,36 @@ const MarkdownWrapper = styled.div`
 `;
 
 function MarkDownMessage(props) {
+    
+    function flatMap(array, fn) {
+        var markdownText = [];
+        for (var i = 0; i < array.length; i++) {
+          var mapping = fn(array[i]);
+          markdownText = markdownText.concat(mapping);
+        }
+        return markdownText;
+    }
+    
+    var markdownText = props.text;
+    markdownText = flatMap(markdownText.split(props.token), function (part) {
+      return [part, <Link data-test="msg-markdown" key= {part} to={props.link}>{props.linkText}</Link>];
+    });
+    
+    markdownText.pop();
+    
     return (
         <>
-            {props.link !== '' ?
-                <Link to={props.link} >
+            {props.markdownType === 'link' ?
+                <Link data-test="msg-markdown" to={props.link}>
                     {props.text}
                 </Link>
                 :
-                <MarkdownWrapper color={props.color}>{props.text}</MarkdownWrapper>
+                props.markdownType === 'hybrid' ?
+                    markdownText
+                :
+                <MarkdownWrapper color={props.color} data-test="msg-markdown">
+                    {props.text}
+                </MarkdownWrapper>
             }
         </>
     );
@@ -26,7 +48,10 @@ function MarkDownMessage(props) {
 MarkDownMessage.propTypes = {
     text: PropTypes.string,
     link: PropTypes.string,
-    color: PropTypes.string
+    color: PropTypes.string,
+    markdownType: PropTypes.string,
+    token: PropTypes.string,
+    linkText: PropTypes.string
 };
 
 export default MarkDownMessage;
