@@ -154,9 +154,7 @@ function SingleInputComponent(props) {
                             icon={<Clear />}
                             onClick={() => restProps.handleChange(field, '')}
                         />
-                    ) : (
-                        <></>
-                    )}
+                    ) : null}
                 </>
             )}
         </>
