@@ -4,7 +4,7 @@ import Text from '@splunk/react-ui/Text';
 import styled from 'styled-components';
 
 const TextWrapper = styled(Text)`
-    width: 300px !important;
+    width: 320px !important;
 `;
 
 class TextComponent extends Component {
@@ -20,7 +20,7 @@ class TextComponent extends Component {
                 placeholder={this.props?.controlOptions?.placeholder}
                 className={this.props.field}
                 disabled={this.props.disabled}
-                value={this.props.value === null ? '' : this.props.value}
+                value={this.props.value === null ? '' : this.props.value.toString()}
                 onChange={this.handleChange}
                 type={this.props.encrypted ? 'password' : 'text'}
             />
@@ -29,7 +29,8 @@ class TextComponent extends Component {
 }
 
 TextComponent.propTypes = {
-    value: PropTypes.string,
+    // Number is expected if provided number in globalConfig.json instead of a string.
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     handleChange: PropTypes.func.isRequired,
     field: PropTypes.string,
     error: PropTypes.bool,

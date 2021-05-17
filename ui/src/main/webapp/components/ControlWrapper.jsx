@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import ControlGroup from '@splunk/react-ui/ControlGroup';
 import styled from 'styled-components';
 
+import MarkdownMessage from './MarkdownMessage';
 import CONTROL_TYPE_MAP from '../constants/ControlTypeMap';
 
 const CustomElement = styled.div`
@@ -21,6 +22,7 @@ const ControlGroupWrapper = styled(ControlGroup).attrs((props) => ({
         }
         &:nth-child(3) {
             margin-left: 270px !important;
+            width: 320px;
         }
     }
 `;
@@ -40,6 +42,9 @@ class ControlWrapper extends React.PureComponent {
     render() {
         const { field, options, type, label, tooltip, help, encrypted = false } = this.props.entity;
         const { handleChange, addCustomValidator, utilCustomFunctions } = this.props.utilityFuncts;
+        // We have to put empty object because markDownMessage prop can be undefined 
+        // because we are not explicitly setting it but expecting it from custom hooks only.
+        const { text, link, color, markdownType, token, linkText } = this.props.markdownMessage || {};
         let rowView;
         if (this.props.entity.type === 'custom') {
             const data = {
@@ -73,11 +78,25 @@ class ControlWrapper extends React.PureComponent {
                 : `No View Found for ${type} type`;
         }
 
+        let helpText = (
+            <>
+                <MarkdownMessage
+                    text={ text || '' }
+                    link={ link || '' }
+                    color={ color || ''}
+                    markdownType={ markdownType || '' }
+                    token={ token || '' }
+                    linkText={ linkText || '' }
+                />
+                {help}
+            </>
+        )
+
         return (
             this.props.display && (
                 <ControlGroupWrapper
                     label={label}
-                    help={help}
+                    help={helpText}
                     tooltip={tooltip}
                     error={this.props.error}
                     dataName={field}
@@ -97,6 +116,7 @@ ControlWrapper.propTypes = {
     error: PropTypes.bool,
     entity: PropTypes.object,
     disabled: PropTypes.bool,
+    markdownMessage: PropTypes.object,
     serviceName: PropTypes.string,
     dependencyValues: PropTypes.object,
 };
