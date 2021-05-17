@@ -164,6 +164,24 @@ def handle_update(config_path):
         # upadating new changes in globalConfig.json 
         with open(config_path, "w") as config_file:
             json.dump(schema_content,config_file, ensure_ascii=False, indent=4)
+    
+    # check for schemaVersion, if it's less than 0.0.2 then updating globalConfig.json
+    if version_tuple(version) < version_tuple("0.0.2"):
+        ta_tabs = schema_content.get("pages").get("configuration",{}).get("tabs",{})
+
+        for tab in ta_tabs:
+            conf_entities = tab.get("entity")
+            oauth_state_enabled_entity = {}
+            for entity in conf_entities:
+                if entity.get("field") == "oauth_state_enabled":
+                    logger.warning("oauth_state_enabled field is no longer a separate entity since schema version 0.0.2. It is now an option in the oauth field. Please update the globalconfig.json file accordingly.")
+                    oauth_state_enabled_entity = entity
+
+                if entity.get("field") == "oauth" and not entity.get("options",{}).get("oauth_state_enabled"):
+                        entity["options"].add({"oauth_state_enabled":"false"})
+            
+            conf_entities.remove(oauth_state_enabled_entity)
+    
     return schema_content
     
 
