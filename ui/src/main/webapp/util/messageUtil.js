@@ -22,7 +22,7 @@ export const parseErrorMsg = (err) => {
     let matches;
     try {
         const msg = err.response.data.messages[0].text;
-        regex = /.+"REST Error \[[\d]+\]:\s+.+\s+--\s+([\s\S]*)"\.\s*See splunkd\.log(\/python.log)? for more details\./;
+        regex = /.+"REST Error \[[\d]+\]:\s+.+\s+--\s+(?:b'([\s\S]*)'|([\s\S]*))"\.\s*See splunkd\.log(\/python.log)? for more details\./;
         matches = regex.exec(msg);
         if (matches && matches[1]) {
             try {

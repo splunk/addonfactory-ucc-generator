@@ -159,6 +159,7 @@ class BaseFormView extends PureComponent {
                             oauth: 'OAuth 2.0 Authentication',
                         };
                         entity.options = {};
+                        entity.options.isClearable = true;
                         entity.options.autoCompleteFields = authType.map((type) => {
                             return { label: content[type], value: type };
                         });
@@ -520,7 +521,7 @@ class BaseFormView extends PureComponent {
                 this.saveData();
             }
         };
-        if (this.hook && typeof this.hook.onSave === 'function') {
+        if (this.hook && typeof this.hook.onSave === 'function' && typeof  this.onSavePromise !== 'undefined') {
             this.onSavePromise.then(() => {
                 executeValidationSubmit();
             });
@@ -946,6 +947,10 @@ class BaseFormView extends PureComponent {
                             return null;
                         }
                         const temState = this.state.data[e.field];
+
+                        if(temState.placeholder) {
+                            e = { ...e, options: { ...e.options, placeholder: temState.placeholder }}
+                        }
 
                         return (
                             <ControlWrapper
