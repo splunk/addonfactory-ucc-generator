@@ -521,7 +521,11 @@ class BaseFormView extends PureComponent {
                 this.saveData();
             }
         };
-        if (this.hook && typeof this.hook.onSave === 'function' && typeof  this.onSavePromise !== 'undefined') {
+        if (
+            this.hook &&
+            typeof this.hook.onSave === 'function' &&
+            typeof this.onSavePromise !== 'undefined'
+        ) {
             this.onSavePromise.then(() => {
                 executeValidationSubmit();
             });
@@ -948,8 +952,11 @@ class BaseFormView extends PureComponent {
                         }
                         const temState = this.state.data[e.field];
 
-                        if(temState.placeholder) {
-                            e = { ...e, options: { ...e.options, placeholder: temState.placeholder }}
+                        if (temState.placeholder) {
+                            e = {
+                                ...e,
+                                options: { ...e.options, placeholder: temState.placeholder },
+                            };
                         }
 
                         return (

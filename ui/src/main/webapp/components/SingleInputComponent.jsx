@@ -148,7 +148,7 @@ function SingleInputComponent(props) {
                     >
                         {options && options.length > 0 && options}
                     </SelectWrapper>
-                    { isClearable !== true ? (
+                    {isClearable !== true ? (
                         <Button
                             appearance="secondary"
                             icon={<Clear />}
