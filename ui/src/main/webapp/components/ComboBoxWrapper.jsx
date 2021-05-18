@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 const StyledDiv = styled.div`
     div:first-child {
-        width: 300px !important;
+        width: 320px !important;
     }
 `;
 
