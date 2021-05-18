@@ -41,6 +41,7 @@ function SingleInputComponent(props) {
         disableSearch,
         labelField,
         autoCompleteFields,
+        isClearable,
     } = controlOptions;
 
     function handleChange(e, obj) {
@@ -150,11 +151,13 @@ function SingleInputComponent(props) {
                     >
                         {options && options.length > 0 && options}
                     </SelectWrapper>
-                    <Button
-                        appearance="secondary"
-                        icon={<Clear />}
-                        onClick={() => restProps.handleChange(field, '')}
-                    />
+                    {isClearable !== true ? (
+                        <Button
+                            appearance="secondary"
+                            icon={<Clear />}
+                            onClick={() => restProps.handleChange(field, '')}
+                        />
+                    ) : null}
                 </>
             )}
         </>
@@ -179,6 +182,7 @@ SingleInputComponent.propTypes = {
         referenceName: PropTypes.string,
         disableSearch: PropTypes.bool,
         labelField: PropTypes.string,
+        isClearable: PropTypes.bool,
     }),
 };
 
