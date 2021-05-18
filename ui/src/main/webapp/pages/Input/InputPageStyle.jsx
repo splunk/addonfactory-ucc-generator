@@ -4,7 +4,7 @@ import { variables } from '@splunk/themes';
 export const TitleComponent = styled.div.attrs({
     className: 'pageTitle',
 })`
-    &.page-title {
+    &.pageTitle {
         font-size: ${variables.fontSizeXXLarge};
         margin-bottom: 20px;
     }
@@ -13,7 +13,7 @@ export const TitleComponent = styled.div.attrs({
 export const SubTitleComponent = styled.div.attrs({
     className: 'pageSubtitle',
 })`
-    &.page-subtitle {
+    &.pageSubtitle {
         font-size: ${variables.fontSize};
         margin-bottom: 10px;
     }
