@@ -20,7 +20,7 @@ class TextComponent extends Component {
                 placeholder={this.props?.controlOptions?.placeholder}
                 className={this.props.field}
                 disabled={this.props.disabled}
-                value={this.props.value === null ? '' : this.props.value.toString()}
+                value={this.props.value === null || typeof this.props.value === 'undefined' ? '' : this.props.value.toString()}
                 onChange={this.handleChange}
                 type={this.props.encrypted ? 'password' : 'text'}
             />
