@@ -10,10 +10,15 @@ import styled from 'styled-components';
 
 import { axiosCallWrapper } from '../util/axiosCallWrapper';
 import { filterResponse } from '../util/util';
-import ComboBoxWrapper from './ComboBoxWrapper';
 
 const SelectWrapper = styled(Select)`
     width: 320px !important;
+`;
+
+const StyledDiv = styled.div`
+    div:first-child {
+        width: 320px !important;
+    }
 `;
 
 function SingleInputComponent(props) {
@@ -36,33 +41,30 @@ function SingleInputComponent(props) {
         disableSearch,
         labelField,
         autoCompleteFields,
+        isClearable,
     } = controlOptions;
 
     function handleChange(e, obj) {
         restProps.handleChange(field, obj.value);
     }
-    const [labelValueMapping, setLabelValueMapping] = useState(null);
     const Option = createSearchChoice ? ComboBox.Option : Select.Option;
     const Heading = createSearchChoice ? ComboBox.Heading : Select.Heading;
 
     function generateOptions(items) {
         const data = [];
-        const mapping = new Map();
         items.forEach((item) => {
+            // Known issue(ADDON-37036): In case of ComboBox, label/value abstraction is not supported
+            // So prop label is just a dummy prop for ComboBox.Option or ComboBox.Heading
             if (item.value && item.label) {
                 data.push(<Option label={item.label} value={item.value} key={item.value} />);
-                mapping.set(item.label, item.value);
             }
             if (item.children && item.label) {
-                mapping.set(item.label.toUpperCase(), new Map());
                 data.push(<Heading key={item.label}>{item.label}</Heading>);
                 item.children.forEach((child) => {
                     data.push(<Option label={child.label} value={child.value} key={child.value} />);
-                    mapping.get(item.label.toUpperCase()).set(child.label, child.value);
                 });
             }
         });
-        setLabelValueMapping(mapping);
         return data;
     }
 
@@ -122,18 +124,20 @@ function SingleInputComponent(props) {
     return (
         <>
             {createSearchChoice ? (
-                <ComboBoxWrapper
-                    className="dropdownBox"
-                    value={props.value === null ? '' : props.value}
-                    name={field}
-                    error={error}
-                    placeholder={effectivePlaceholder}
-                    disabled={effectiveDisabled}
-                    labelValueMapping={labelValueMapping}
-                    handleChange={handleChange}
-                >
-                    {options && options.length > 0 && options}
-                </ComboBoxWrapper>
+                <StyledDiv>
+                    <ComboBox
+                        className="dropdownBox"
+                        value={props.value === null ? '' : props.value}
+                        name={field}
+                        error={error}
+                        placeholder={effectivePlaceholder}
+                        disabled={effectiveDisabled}
+                        onChange={handleChange}
+                        inline
+                    >
+                        {options && options.length > 0 && options}
+                    </ComboBox>
+                </StyledDiv>
             ) : (
                 <>
                     <SelectWrapper
@@ -149,11 +153,13 @@ function SingleInputComponent(props) {
                     >
                         {options && options.length > 0 && options}
                     </SelectWrapper>
-                    <Button
-                        appearance="secondary"
-                        icon={<Clear />}
-                        onClick={() => restProps.handleChange(field, '')}
-                    />
+                    {isClearable !== true ? (
+                        <Button
+                            appearance="secondary"
+                            icon={<Clear />}
+                            onClick={() => restProps.handleChange(field, '')}
+                        />
+                    ) : null}
                 </>
             )}
         </>
@@ -178,6 +184,7 @@ SingleInputComponent.propTypes = {
         referenceName: PropTypes.string,
         disableSearch: PropTypes.bool,
         labelField: PropTypes.string,
+        isClearable: PropTypes.bool,
     }),
 };
 

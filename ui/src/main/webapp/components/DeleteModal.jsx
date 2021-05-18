@@ -27,6 +27,9 @@ class DeleteModal extends Component {
     }
 
     handleRequestClose = () => {
+        // set ErrorMsg to empty string on close or cancel
+        // so that on again open of modal it does not show the same ErrorMsg
+        this.state.ErrorMsg = '';
         this.props.handleRequestClose();
     };
 
@@ -43,9 +46,7 @@ class DeleteModal extends Component {
                     handleError: false,
                 })
                     .catch((err) => {
-                        const errorSubmitMsg = parseErrorMsg(
-                            err?.response?.data?.messages[0]?.text
-                        );
+                        const errorSubmitMsg = parseErrorMsg(err);
                         this.setState({ ErrorMsg: errorSubmitMsg, isDeleting: false });
                         return Promise.reject(err);
                     })
