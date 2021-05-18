@@ -94,6 +94,7 @@ function ConfigurationPage() {
                         style={
                             tab.name !== activeTabId ? { display: 'none' } : { display: 'block' }
                         }
+                        id={`${tab.name}Tab`}
                     >
                         <ConfigurationTable
                             key={tab.name}
@@ -107,6 +108,7 @@ function ConfigurationPage() {
                         style={
                             tab.name !== activeTabId ? { display: 'none' } : { display: 'block' }
                         }
+                        id={`${tab.name}Tab`}
                     >
                         <ConfigurationFormView key={tab.name} serviceName={tab.name} />
                     </div>

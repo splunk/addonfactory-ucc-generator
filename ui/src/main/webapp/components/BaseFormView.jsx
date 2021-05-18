@@ -369,7 +369,7 @@ class BaseFormView extends PureComponent {
         if (this.hook && typeof this.hook.onSave === 'function') {
             const validationPass = this.hook.onSave(this.datadict);
             if (!validationPass) {
-                this.props.handleFormSubmit(/* isSubmititng */ false, /* closeEntity */ false);
+                this.props.handleFormSubmit(/* isSubmitting */ false, /* closeEntity */ false);
                 return;
             }
         }
@@ -392,7 +392,7 @@ class BaseFormView extends PureComponent {
                         'name',
                         getFormattedMessage(2, [this.entities[index].label, this.datadict.name])
                     );
-                    this.props.handleFormSubmit(/* isSubmititng */ false, /* closeEntity */ false);
+                    this.props.handleFormSubmit(/* isSubmitting */ false, /* closeEntity */ false);
                     return;
                 }
             }
@@ -429,7 +429,7 @@ class BaseFormView extends PureComponent {
             }
 
             if (error) {
-                this.props.handleFormSubmit(/* isSubmititng */ false, /* closeEntity */ false);
+                this.props.handleFormSubmit(/* isSubmitting */ false, /* closeEntity */ false);
             } else if (
                 this.isOAuth &&
                 (this.isSingleOauth || (this.isAuthVal && this.datadict.auth_type === 'oauth'))
@@ -474,7 +474,7 @@ class BaseFormView extends PureComponent {
                         // Add error message if the user has close the authentication window without taking any action
                         this.setErrorMsg(ERROR_AUTH_PROCESS_TERMINATED_TRY_AGAIN);
                         this.props.handleFormSubmit(
-                            /* isSubmititng */ false,
+                            /* isSubmitting */ false,
                             /* closeEntity */ false
                         );
                         return false;
@@ -484,7 +484,7 @@ class BaseFormView extends PureComponent {
                         // Add timeout error message
                         this.setErrorMsg(ERROR_REQUEST_TIMEOUT_TRY_AGAIN);
                         this.props.handleFormSubmit(
-                            /* isSubmititng */ false,
+                            /* isSubmitting */ false,
                             /* closeEntity */ false
                         );
                         return false;
@@ -501,7 +501,7 @@ class BaseFormView extends PureComponent {
                         // Add timeout error message
                         this.setErrorMsg(ERROR_REQUEST_TIMEOUT_ACCESS_TOKEN_TRY_AGAIN);
                         this.props.handleFormSubmit(
-                            /* isSubmititng */ false,
+                            /* isSubmitting */ false,
                             /* closeEntity */ false
                         );
                         return false;
@@ -512,7 +512,7 @@ class BaseFormView extends PureComponent {
                         this.saveData();
                     } else {
                         this.props.handleFormSubmit(
-                            /* isSubmititng */ false,
+                            /* isSubmitting */ false,
                             /* closeEntity */ false
                         );
                     }
@@ -579,7 +579,7 @@ class BaseFormView extends PureComponent {
                 } else {
                     generateToast(`Created ${val.name}`, 'success');
                 }
-                this.props.handleFormSubmit(/* isSubmititng */ false, /* closeEntity */ true);
+                this.props.handleFormSubmit(/* isSubmitting */ false, /* closeEntity */ true);
             })
             .catch((err) => {
                 const errorSubmitMsg = parseErrorMsg(err);
@@ -587,7 +587,7 @@ class BaseFormView extends PureComponent {
                 if (this.hook && typeof this.hook.onSaveFail === 'function') {
                     this.hook.onSaveFail();
                 }
-                this.props.handleFormSubmit(/* isSubmititng */ false, /* closeEntity */ false);
+                this.props.handleFormSubmit(/* isSubmitting */ false, /* closeEntity */ false);
             });
     };
 

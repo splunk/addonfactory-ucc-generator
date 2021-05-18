@@ -8,7 +8,7 @@ import Menu from '@splunk/react-ui/Menu';
 import styled from 'styled-components';
 import ToastMessages from '@splunk/react-toast-notifications/ToastMessages';
 import { _ } from '@splunk/ui-utils/i18n';
-import { getFormattedMessage} from '../../util/messageUtil';
+import { getFormattedMessage } from '../../util/messageUtil';
 import { getUnifiedConfigs } from '../../util/util';
 import { TitleComponent, SubTitleComponent } from './InputPageStyle';
 import { TableContextProvider } from '../../context/TableContext';
@@ -40,7 +40,9 @@ function InputPage() {
 
     const unifiedConfigs = getUnifiedConfigs();
     const { services, title, description, menu: customMenuField } = unifiedConfigs.pages.inputs;
-    const toggle = <Button appearance="primary" label={_('Create New Input')} isMenu />;
+    const toggle = (
+        <Button appearance="primary" id="addInputBtn" label={_('Create New Input')} isMenu />
+    );
     const PERMITTED_MODES = [MODE_CLONE, MODE_CREATE, MODE_EDIT];
 
     const history = useHistory();
@@ -215,8 +217,9 @@ function InputPage() {
                             {services && services.length === 1 && !customMenuField?.src && (
                                 <ColumnLayout.Column span={3} className="input_button">
                                     <Button
-                                        label= {getFormattedMessage(100)}
+                                        label={getFormattedMessage(100)}
                                         appearance="primary"
+                                        id="addInputBtn"
                                         onClick={() => {
                                             handleRequestOpen(services[0].name, services[0].title);
                                         }}
