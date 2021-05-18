@@ -123,6 +123,7 @@ function SingleInputComponent(props) {
         <>
             {createSearchChoice ? (
                 <ComboBoxWrapper
+                    className="dropdownBox"
                     value={props.value === null ? '' : props.value}
                     name={field}
                     error={error}
@@ -136,6 +137,7 @@ function SingleInputComponent(props) {
             ) : (
                 <>
                     <SelectWrapper
+                        className="dropdownBox"
                         value={props.value}
                         name={field}
                         error={error}

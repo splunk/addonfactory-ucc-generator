@@ -50,6 +50,7 @@ function TableHeader({ page, services, totalElement, handleRequestModalOpen }) {
         return (
             <Select
                 value={searchType}
+                className="dropdownInput"
                 onChange={(e, { value }) => {
                     setCurrentPage(0);
                     setSearchType(value);
@@ -63,12 +64,15 @@ function TableHeader({ page, services, totalElement, handleRequestModalOpen }) {
     return (
         <TableHeaderWrapper>
             <div>
-                {totalElement}
-                {totalElement > 1 ? _(` ${itemLabel}s`) : _(` ${itemLabel}`)}
+                <span className="inputNumber">
+                    {totalElement}
+                    {totalElement > 1 ? _(` ${itemLabel}s`) : _(` ${itemLabel}`)}
+                </span>
                 {page === PAGE_INPUT ? (
                     <TableSelectBoxWrapper>
                         <Select
                             value={pageSize}
+                            className="dropdownPage"
                             onChange={(e, { value }) => {
                                 setCurrentPage(0);
                                 setPageSize(value);

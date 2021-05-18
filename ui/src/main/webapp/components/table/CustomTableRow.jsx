@@ -58,6 +58,7 @@ function CustomTableRow(props) {
                                 appearance="flat"
                                 icon={<Pencil screenReaderText={null} size={1} />}
                                 onClick={() => handleEditActionClick(selectedRow)}
+                                className="editBtn"
                             />
                         </Tooltip>
                         <Tooltip content={_('Clone')}>
@@ -65,6 +66,7 @@ function CustomTableRow(props) {
                                 appearance="flat"
                                 icon={<Clone screenReaderText={null} size={1} />}
                                 onClick={() => handleCloneActionClick(selectedRow)}
+                                className="cloneBtn"
                             />
                         </Tooltip>
                         <Tooltip content={_('Delete')}>
@@ -72,6 +74,7 @@ function CustomTableRow(props) {
                                 appearance="destructive"
                                 icon={<Trash screenReaderText={null} size={1} />}
                                 onClick={() => handleDeleteActionClick(selectedRow)}
+                                className="deleteBtn"
                             />
                         </Tooltip>
                     </ButtonGroup>
@@ -106,13 +109,13 @@ function CustomTableRow(props) {
 
                         if (header.customCell && header.customCell.src) {
                             cellHTML = (
-                                <Table.Cell key={header.field}>
+                                <Table.Cell data-column={header.field} key={header.field}>
                                     {getCustomCell(row, header)}
                                 </Table.Cell>
                             );
                         } else if (header.field === 'disabled') {
                             cellHTML = (
-                                <Table.Cell key={header.field}>
+                                <Table.Cell data-column={header.field} key={header.field}>
                                     <SwitchWrapper>
                                         <Switch
                                             key={row.name}
@@ -142,7 +145,7 @@ function CustomTableRow(props) {
                             cellHTML = rowActionsPrimaryButton(row);
                         } else {
                             cellHTML = (
-                                <Table.Cell key={header.field}>
+                                <Table.Cell data-column={header.field} key={header.field}>
                                     {headerMapping[header.field] &&
                                     Object.prototype.hasOwnProperty.call(
                                         headerMapping[header.field],

@@ -90,7 +90,7 @@ class DeleteModal extends Component {
                     title={getFormattedMessage(101)}
                     onRequestClose={this.handleRequestClose}
                 />
-                <Modal.Body>
+                <Modal.Body className="deletePrompt">
                     {this.generateErrorMessage()}
                     <p>{deleteMsg}</p>
                 </Modal.Body>
