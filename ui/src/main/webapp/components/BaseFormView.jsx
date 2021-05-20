@@ -14,6 +14,7 @@ import { MODE_CLONE, MODE_CREATE, MODE_EDIT, MODE_CONFIG } from '../constants/mo
 import { PAGE_INPUT, PAGE_CONF } from '../constants/pages';
 import { axiosCallWrapper } from '../util/axiosCallWrapper';
 import { parseErrorMsg, getFormattedMessage } from '../util/messageUtil';
+import { getBuildDirPath } from '../util/script';
 
 import {
     ERROR_REQUEST_TIMEOUT_TRY_AGAIN,
@@ -734,17 +735,20 @@ class BaseFormView extends PureComponent {
 
     // generatesubmitMessage
     loadHook = (module, globalConfig) => {
-        const myPromise = new Promise((myResolve) => {
-            __non_webpack_require__([`app/${this.appName}/js/build/custom/${module}`], (Hook) => {
-                this.hook = new Hook(
-                    globalConfig,
-                    this.props.serviceName,
-                    this.state,
-                    this.props.mode,
-                    this.util
-                );
-                myResolve(Hook);
-            });
+        const myPromise = new Promise((resolve) => {
+            import(/* webpackIgnore: true */ `${getBuildDirPath()}/custom/${module}.js`).then(
+                (external) => {
+                    const Hook = external.default;
+                    this.hook = new Hook(
+                        globalConfig,
+                        this.props.serviceName,
+                        this.state,
+                        this.props.mode,
+                        this.util
+                    );
+                    resolve(Hook);
+                }
+            );
         });
         return myPromise;
     };

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { _ } from '@splunk/ui-utils/i18n';
 
 import { getUnifiedConfigs } from '../../util/util';
+import { getBuildDirPath } from '../../util/script';
 
 class CustomTableControl extends Component {
     constructor(props) {
@@ -40,13 +41,13 @@ class CustomTableControl extends Component {
     }
 
     loadCustomControl = () => {
-        const globalConfig = getUnifiedConfigs();
-        const appName = globalConfig.meta.name;
         return new Promise((resolve) => {
-            __non_webpack_require__(
-                [`app/${appName}/js/build/custom/${this.props.fileName}`],
-                (Control) => resolve(Control)
-            );
+            import(
+                /* webpackIgnore: true */ `${getBuildDirPath()}/custom/${this.props.fileName}.js`
+            ).then((external) => {
+                const Control = external.default;
+                resolve(Control);
+            });
         });
     };
 

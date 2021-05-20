@@ -3,21 +3,21 @@ import PropTypes from 'prop-types';
 import { _ } from '@splunk/ui-utils/i18n';
 
 import { getUnifiedConfigs } from '../util/util';
+import { getBuildDirPath } from '../util/script';
 
 class CustomControl extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: true
+            loading: true,
         };
         this.shouldRender = true;
     }
 
     componentDidMount() {
         const globalConfig = getUnifiedConfigs();
-        const appName = globalConfig.meta.name;
 
-        this.loadCustomControl(this.props.controlOptions.src, appName).then((Control) => {
+        this.loadCustomControl(this.props.controlOptions.src).then((Control) => {
             const customControl = new Control(
                 globalConfig,
                 this.el,
@@ -30,7 +30,7 @@ class CustomControl extends Component {
             if (typeof customControl.validation === 'function') {
                 this.props.addCustomValidator(this.props.field, customControl.validation);
             }
-            this.setState({loading: false});
+            this.setState({ loading: false });
         });
     }
 
@@ -42,11 +42,14 @@ class CustomControl extends Component {
         return false;
     }
 
-    loadCustomControl = (module, appName) => {
-        const myPromise = new Promise((myResolve) => {
-            __non_webpack_require__([`app/${appName}/js/build/custom/${module}`], (Control) => {
-                myResolve(Control);
-            });
+    loadCustomControl = (module) => {
+        const myPromise = new Promise((resolve) => {
+            import(/* webpackIgnore: true */ `${getBuildDirPath()}/custom/${module}.js`).then(
+                (external) => {
+                    const Control = external.default;
+                    resolve(Control);
+                }
+            );
         });
         return myPromise;
     };
@@ -58,8 +61,15 @@ class CustomControl extends Component {
     render() {
         return (
             <>
-                {this.state.loading && _("Loading...")}
-                {<span ref={(el) => { this.el = el; }} style={{visibility: this.state.loading ? 'hidden': 'visible'}} />}
+                {this.state.loading && _('Loading...')}
+                {
+                    <span
+                        ref={(el) => {
+                            this.el = el;
+                        }}
+                        style={{ visibility: this.state.loading ? 'hidden' : 'visible' }}
+                    />
+                }
             </>
         );
     }
