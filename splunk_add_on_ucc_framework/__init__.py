@@ -667,28 +667,29 @@ def main():
         "--config",
         type=str,
         nargs='?',
-        help="Path to configuration file, Defaults to GlobalConfig.json in parent directory of source provided",
+        help="Path to configuration file, defaults to GlobalConfig.json in parent directory of source provided",
         default=None
     )
-    version = Version.from_git()
-    if not version.stage:
-        stage = 'R'
-    else:
-        stage = version.stage[:1]
-    
-    version_str = version.serialize(metadata=True,style=Style.SemVer)
-    version_splunk = f"{version.base}{stage}{version.commit}"
-    
     parser.add_argument(
         "--ta-version",
         type=str,
-        help="Version of TA, Deafult version is version specified in the package such as app.manifest, app.conf, and globalConfig.json",
-        default = version_splunk
+        help="Version of TA, default version is version specified in the package such as app.manifest, app.conf, and globalConfig.json",
+        default=None
     )
     args = parser.parse_args()
-    ta_version = args.ta_version.strip()
-    if not ta_version:
+    if not args.ta_version:
+        version = Version.from_git()
+        if not version.stage:
+            stage = 'R'
+        else:
+            stage = version.stage[:1]
+
+        version_str = version.serialize(metadata=True, style=Style.SemVer)
+        version_splunk = f"{version.base}{stage}{version.commit}"
         ta_version = version_splunk
+    else:
+        ta_version = args.ta_version.strip()
+
     if not os.path.exists(args.source):
         raise NotADirectoryError("{} not Found.".format(os.path.abspath(args.source)))
 
