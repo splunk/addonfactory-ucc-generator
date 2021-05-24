@@ -16,8 +16,13 @@ class CustomControl extends Component {
 
     componentDidMount() {
         const globalConfig = getUnifiedConfigs();
+        const appName = globalConfig.meta.name;
 
-        this.loadCustomControl(this.props.controlOptions.src).then((Control) => {
+        this.loadCustomControl(
+            this.props.controlOptions.src,
+            this.props.controlOptions.type,
+            appName
+        ).then((Control) => {
             const customControl = new Control(
                 globalConfig,
                 this.el,
@@ -42,16 +47,21 @@ class CustomControl extends Component {
         return false;
     }
 
-    loadCustomControl = (module) => {
-        const myPromise = new Promise((resolve) => {
-            import(/* webpackIgnore: true */ `${getBuildDirPath()}/custom/${module}.js`).then(
-                (external) => {
-                    const Control = external.default;
+    loadCustomControl = (module, type, appName) => {
+        return new Promise((resolve) => {
+            if (type === 'external') {
+                import(/* webpackIgnore: true */ `${getBuildDirPath()}/custom/${module}.js`).then(
+                    (external) => {
+                        const Control = external.default;
+                        resolve(Control);
+                    }
+                );
+            } else {
+                __non_webpack_require__([`app/${appName}/js/build/custom/${module}`], (Control) => {
                     resolve(Control);
-                }
-            );
+                });
+            }
         });
-        return myPromise;
     };
 
     setValue = (newValue) => {

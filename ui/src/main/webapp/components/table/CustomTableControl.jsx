@@ -42,18 +42,33 @@ class CustomTableControl extends Component {
 
     loadCustomControl = () => {
         return new Promise((resolve) => {
-            import(
-                /* webpackIgnore: true */ `${getBuildDirPath()}/custom/${this.props.fileName}.js`
-            ).then((external) => {
-                const Control = external.default;
-                resolve(Control);
-            });
+            if (this.props.type === 'external') {
+                import(
+                    /* webpackIgnore: true */ `${getBuildDirPath()}/custom/${
+                        this.props.fileName
+                    }.js`
+                ).then((external) => {
+                    const Control = external.default;
+                    resolve(Control);
+                });
+            } else {
+                const globalConfig = getUnifiedConfigs();
+                const appName = globalConfig.meta.name;
+                __non_webpack_require__(
+                    [`app/${appName}/js/build/custom/${this.props.fileName}`],
+                    (Control) => resolve(Control)
+                );
+            }
         });
     };
 
     render() {
         if (!this.state.loading) {
-            this.customControl.render(this.props.row, this.props.field);
+            try {
+                this.customControl.render(this.props.row, this.props.field);
+            } catch (err) {
+                console.error(err);
+            }
         }
         return (
             <>
@@ -76,6 +91,7 @@ CustomTableControl.propTypes = {
     row: PropTypes.object.isRequired,
     field: PropTypes.string,
     fileName: PropTypes.string.isRequired,
+    type: PropTypes.string,
 };
 
 export default CustomTableControl;

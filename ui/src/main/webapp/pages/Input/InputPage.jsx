@@ -230,6 +230,7 @@ function InputPage() {
                                 <ColumnLayout.Column span={3} className="input_button">
                                     {React.createElement(CustomMenu, {
                                         fileName: customMenuField.src,
+                                        type: customMenuField.type,
                                         handleChange: changeRoute,
                                     })}
                                 </ColumnLayout.Column>
