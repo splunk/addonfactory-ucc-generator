@@ -194,10 +194,10 @@ function CustomTable({
     const generateColumns = () => {
         const column = [];
         if (headers && headers.length) {
-            headers.forEach((header) => {
+            headers.forEach((item) => {
                 column.push({
-                    ...header,
-                    sortKey: header.field || null,
+                    ...item,
+                    sortKey: item.field || null,
                 });
             });
         }
