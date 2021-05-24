@@ -955,6 +955,7 @@ class BaseFormView extends PureComponent {
                         try {
                             this.hook.onRender();
                         } catch (err) {
+                            // eslint-disable-next-line no-console
                             console.error(err);
                         }
                     }
@@ -968,6 +969,7 @@ class BaseFormView extends PureComponent {
                             try {
                                 this.hook.onEditLoad();
                             } catch (err) {
+                                // eslint-disable-next-line no-console
                                 console.error(err);
                             }
                         }

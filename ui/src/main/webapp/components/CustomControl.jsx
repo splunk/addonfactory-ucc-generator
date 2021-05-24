@@ -73,7 +73,7 @@ class CustomControl extends Component {
             <>
                 {this.state.loading && _('Loading...')}
                 {
-                    <span
+                    <span // nosemgrep: typescript.react.security.audit.react-no-refs.react-no-refs
                         ref={(el) => {
                             this.el = el;
                         }}

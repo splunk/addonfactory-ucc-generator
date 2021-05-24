@@ -67,6 +67,7 @@ class CustomTableControl extends Component {
             try {
                 this.customControl.render(this.props.row, this.props.field);
             } catch (err) {
+                // eslint-disable-next-line no-console
                 console.error(err);
             }
         }
