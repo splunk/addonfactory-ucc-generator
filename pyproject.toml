@@ -61,7 +61,7 @@ reuse = "*"
 
 jsonschema = "^3.2.0"
 [tool.poetry.dev-dependencies]
-pytest = "^6.0"
+pytest = "^6.2"
 pytest-splunk-addon = { version = "^1.6", extras = [ "docker" ] }
 poetry-dynamic-versioning = "^0.12"
 
