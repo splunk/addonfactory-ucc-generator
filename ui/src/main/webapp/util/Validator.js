@@ -179,9 +179,6 @@ class Validator {
                     return ret;
                 }
             }
-        }
-
-        for (i = 0; i < this.entities.length; i += 1) {
             if (data[this.entities[i].field] === '' || data[this.entities[i].field] === null) {
                 // eslint-disable-next-line no-continue
                 continue;
