@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { _ } from '@splunk/ui-utils/i18n';
 import { getUnifiedConfigs } from '../util/util';
+import { getBuildDirPath } from '../util/script';
 
 class CustomMenu extends Component {
     constructor(props) {
@@ -35,13 +36,24 @@ class CustomMenu extends Component {
     };
 
     loadCustomMenu = () => {
-        const globalConfig = getUnifiedConfigs();
-        const appName = globalConfig.meta.name;
         return new Promise((resolve) => {
-            __non_webpack_require__(
-                [`app/${appName}/js/build/custom/${this.props.fileName}`],
-                (Control) => resolve(Control)
-            );
+            if (this.props.type === 'external') {
+                import(
+                    /* webpackIgnore: true */ `${getBuildDirPath()}/custom/${
+                        this.props.fileName
+                    }.js`
+                ).then((external) => {
+                    const Control = external.default;
+                    resolve(Control);
+                });
+            } else {
+                const globalConfig = getUnifiedConfigs();
+                const appName = globalConfig.meta.name;
+                __non_webpack_require__(
+                    [`app/${appName}/js/build/custom/${this.props.fileName}`],
+                    (Control) => resolve(Control)
+                );
+            }
         });
     };
 
@@ -64,6 +76,7 @@ class CustomMenu extends Component {
 
 CustomMenu.propTypes = {
     fileName: PropTypes.string.isRequired,
+    type: PropTypes.string,
     handleChange: PropTypes.func,
 };
 

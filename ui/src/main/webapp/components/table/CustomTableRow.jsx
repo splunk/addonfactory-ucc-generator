@@ -45,6 +45,7 @@ function CustomTableRow(props) {
             field: header.field,
             row: customRow,
             fileName: header.customCell.src,
+            type: header.customCell.type,
         });
     };
 

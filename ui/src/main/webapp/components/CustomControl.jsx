@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import { _ } from '@splunk/ui-utils/i18n';
 
 import { getUnifiedConfigs } from '../util/util';
+import { getBuildDirPath } from '../util/script';
 
 class CustomControl extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: true
+            loading: true,
         };
         this.shouldRender = true;
     }
@@ -17,7 +18,11 @@ class CustomControl extends Component {
         const globalConfig = getUnifiedConfigs();
         const appName = globalConfig.meta.name;
 
-        this.loadCustomControl(this.props.controlOptions.src, appName).then((Control) => {
+        this.loadCustomControl(
+            this.props.controlOptions.src,
+            this.props.controlOptions.type,
+            appName
+        ).then((Control) => {
             const customControl = new Control(
                 globalConfig,
                 this.el,
@@ -30,7 +35,7 @@ class CustomControl extends Component {
             if (typeof customControl.validation === 'function') {
                 this.props.addCustomValidator(this.props.field, customControl.validation);
             }
-            this.setState({loading: false});
+            this.setState({ loading: false });
         });
     }
 
@@ -42,13 +47,21 @@ class CustomControl extends Component {
         return false;
     }
 
-    loadCustomControl = (module, appName) => {
-        const myPromise = new Promise((myResolve) => {
-            __non_webpack_require__([`app/${appName}/js/build/custom/${module}`], (Control) => {
-                myResolve(Control);
-            });
+    loadCustomControl = (module, type, appName) => {
+        return new Promise((resolve) => {
+            if (type === 'external') {
+                import(/* webpackIgnore: true */ `${getBuildDirPath()}/custom/${module}.js`).then(
+                    (external) => {
+                        const Control = external.default;
+                        resolve(Control);
+                    }
+                );
+            } else {
+                __non_webpack_require__([`app/${appName}/js/build/custom/${module}`], (Control) => {
+                    resolve(Control);
+                });
+            }
         });
-        return myPromise;
     };
 
     setValue = (newValue) => {
@@ -58,8 +71,15 @@ class CustomControl extends Component {
     render() {
         return (
             <>
-                {this.state.loading && _("Loading...")}
-                {<span ref={(el) => { this.el = el; }} style={{visibility: this.state.loading ? 'hidden': 'visible'}} />}
+                {this.state.loading && _('Loading...')}
+                {
+                    <span // nosemgrep: typescript.react.security.audit.react-no-refs.react-no-refs
+                        ref={(el) => {
+                            this.el = el;
+                        }}
+                        style={{ visibility: this.state.loading ? 'hidden' : 'visible' }}
+                    />
+                }
             </>
         );
     }

@@ -28,5 +28,5 @@ module.exports = webpackMerge(baseConfig, {
             },
         ]),
     ],
-    devtool: 'eval-source-map',
+    devtool: 'inline-source-map',
 });

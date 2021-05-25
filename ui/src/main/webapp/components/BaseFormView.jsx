@@ -14,6 +14,7 @@ import { MODE_CLONE, MODE_CREATE, MODE_EDIT, MODE_CONFIG } from '../constants/mo
 import { PAGE_INPUT, PAGE_CONF } from '../constants/pages';
 import { axiosCallWrapper } from '../util/axiosCallWrapper';
 import { parseErrorMsg, getFormattedMessage } from '../util/messageUtil';
+import { getBuildDirPath } from '../util/script';
 
 import {
     ERROR_REQUEST_TIMEOUT_TRY_AGAIN,
@@ -93,7 +94,11 @@ class BaseFormView extends PureComponent {
                     this.updateEntitiesForGroup(service);
                     this.options = service.options;
                     if (service.hook) {
-                        this.hookDeferred = this.loadHook(service.hook.src, globalConfig);
+                        this.hookDeferred = this.loadHook(
+                            service.hook.src,
+                            service.hook.type,
+                            globalConfig
+                        );
                     }
                     if (props.mode === MODE_EDIT || props.mode === MODE_CLONE) {
                         this.currentInput = context.rowData[props.serviceName][props.stanzaName];
@@ -109,7 +114,11 @@ class BaseFormView extends PureComponent {
                     this.entities = tab.entity;
                     this.options = tab.options;
                     if (tab.hook) {
-                        this.hookDeferred = this.loadHook(tab.hook.src, globalConfig);
+                        this.hookDeferred = this.loadHook(
+                            tab.hook.src,
+                            tab.hook.type,
+                            globalConfig
+                        );
                     }
                     if (tab.table && (props.mode === MODE_EDIT || props.mode === MODE_CLONE)) {
                         this.currentInput = context.rowData[props.serviceName][props.stanzaName];
@@ -332,7 +341,12 @@ class BaseFormView extends PureComponent {
         if (this.hookDeferred) {
             this.hookDeferred.then(() => {
                 if (typeof this.hook.onCreate === 'function') {
-                    this.hook.onCreate();
+                    try {
+                        this.hook.onCreate();
+                    } catch (err) {
+                        // eslint-disable-next-line no-console
+                        console.error(err);
+                    }
                 }
             });
         }
@@ -733,18 +747,37 @@ class BaseFormView extends PureComponent {
     };
 
     // generatesubmitMessage
-    loadHook = (module, globalConfig) => {
-        const myPromise = new Promise((myResolve) => {
-            __non_webpack_require__([`app/${this.appName}/js/build/custom/${module}`], (Hook) => {
-                this.hook = new Hook(
-                    globalConfig,
-                    this.props.serviceName,
-                    this.state,
-                    this.props.mode,
-                    this.util
+    loadHook = (module, type, globalConfig) => {
+        const myPromise = new Promise((resolve) => {
+            if (type === 'external') {
+                import(/* webpackIgnore: true */ `${getBuildDirPath()}/custom/${module}.js`).then(
+                    (external) => {
+                        const Hook = external.default;
+                        this.hook = new Hook(
+                            globalConfig,
+                            this.props.serviceName,
+                            this.state,
+                            this.props.mode,
+                            this.util
+                        );
+                        resolve(Hook);
+                    }
                 );
-                myResolve(Hook);
-            });
+            } else {
+                __non_webpack_require__(
+                    [`app/${this.appName}/js/build/custom/${module}`],
+                    (Hook) => {
+                        this.hook = new Hook(
+                            globalConfig,
+                            this.props.serviceName,
+                            this.state,
+                            this.props.mode,
+                            this.util
+                        );
+                        resolve(Hook);
+                    }
+                );
+            }
         });
         return myPromise;
     };
@@ -923,7 +956,12 @@ class BaseFormView extends PureComponent {
             if (this.hookDeferred) {
                 this.hookDeferred.then(() => {
                     if (typeof this.hook.onRender === 'function') {
-                        this.hook.onRender();
+                        try {
+                            this.hook.onRender();
+                        } catch (err) {
+                            // eslint-disable-next-line no-console
+                            console.error(err);
+                        }
                     }
                 });
             }
@@ -932,7 +970,12 @@ class BaseFormView extends PureComponent {
                 if (this.hookDeferred) {
                     this.hookDeferred.then(() => {
                         if (typeof this.hook.onEditLoad === 'function') {
-                            this.hook.onEditLoad();
+                            try {
+                                this.hook.onEditLoad();
+                            } catch (err) {
+                                // eslint-disable-next-line no-console
+                                console.error(err);
+                            }
                         }
                     });
                 }
@@ -953,6 +996,7 @@ class BaseFormView extends PureComponent {
                         const temState = this.state.data[e.field];
 
                         if (temState.placeholder) {
+                            // eslint-disable-next-line no-param-reassign
                             e = {
                                 ...e,
                                 options: { ...e.options, placeholder: temState.placeholder },
