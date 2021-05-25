@@ -341,8 +341,12 @@ class BaseFormView extends PureComponent {
         if (this.hookDeferred) {
             this.hookDeferred.then(() => {
                 if (typeof this.hook.onCreate === 'function') {
-                    // TODO: try catch to stop UI break
-                    this.hook.onCreate();
+                    try {
+                        this.hook.onCreate();
+                    } catch (err) {
+                        // eslint-disable-next-line no-console
+                        console.error(err);
+                    }
                 }
             });
         }
