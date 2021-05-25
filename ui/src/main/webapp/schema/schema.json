@@ -940,6 +940,16 @@
         },
         "encrypted": {
           "type": "boolean"
+        },
+        "options": {
+          "type": "object",
+          "properties": {
+            "placeholder": {
+              "type": "string",
+              "maxLength": 250
+            }
+          },
+          "additionalProperties": false
         }
       },
       "additionalProperties": false
