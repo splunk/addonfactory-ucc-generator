@@ -542,6 +542,10 @@ class BaseFormView extends PureComponent {
             }
         });
 
+        if (this.isOAuth) {
+            // Prevent passing redirect_url field used in OAuth to backend conf file
+            body.delete('redirect_url');
+        }
         if (this.props.mode === MODE_EDIT) {
             body.delete('name');
         }
