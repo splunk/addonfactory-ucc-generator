@@ -1,0 +1,41 @@
+How To Use
+==========
+
+Prerequisites
+-------------
+
+* :code:`globalConfig.json`
+* :code:`package` folder
+
+Example of :code:`globalConfig.json` and :code:`package` folder can be found at https://github.com/splunk/splunk-add-on-for-ucc-example.
+
+Steps
+-----
+
+* Install :code:`splunk-add-on-ucc-framework` if it is not installed.
+* Run the :code:`ucc-gen`. command.
+* The final addon package will be generated, in the :code:`output` folder.
+
+:code:`ucc-gen` supports the following params:
+
+* :code:`source` - [optional] folder containing the app.manifest and app source.
+* :code:`config` - [optional] path to the configuration file, defaults to :code:`globalConfig.json` in the parent directory of source provided.
+* :code:`ta-version` - [optional] override current version of TA, default version is version specified in :code:`globalConfig.json`. Splunkbase compatible version of SEMVER will be used by default.
+
+What ucc-gen does
+-----------------
+
+* Cleans the :code:`output` folder.
+* Retrieve the package ID of addon.
+* Copy UCC template directory under :code:`output/<package_ID>` directory.
+* Copy :code:`globalConfig.json` file to :code:`output/<package_ID>/appserver/static/js/build` directory.
+* Collect and install Addon's requirements into :code:`output/<package_ID>/lib` directory of addon's package.
+* For the addon's requirements, packages are installed according to following table:
+
+  * :code:`lib/requirements.txt` - install Python2/Python3 compatible packages into :code:`output/<package_ID>/lib`
+  * :code:`lib/py2/requirements.txt` - install Python2 compatible packages into :code:`output/<package_ID>/lib2`
+  * :code:`lib/py3/requirements.txt` - install Python3 compatible packages into :code:`output/<package_ID>/lib3`
+
+* Replace tokens in views.
+* Copy addon's :code:`package/*` to :code:`output/<package_ID>/*` directory.
+* If an addon requires some additional configurations in packaging than implement the steps in additional_packaging.py
