@@ -1,7 +1,7 @@
 {
   "name": "@splunk/ucc_ui_lib",
   "version": "0.0.1",
-  "license": "UNLICENSED",
+  "license": "APACHE",
   "private": true,
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack --bail",
