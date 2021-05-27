@@ -2,6 +2,7 @@ const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const webpackMerge = require('webpack-merge');
 const baseConfig = require('@splunk/webpack-configs/base.config').default;
+const LicenseWebpackPlugin = require('license-webpack-plugin').LicenseWebpackPlugin;
 
 module.exports = webpackMerge(baseConfig, {
     entry: {
@@ -21,6 +22,7 @@ module.exports = webpackMerge(baseConfig, {
         ],
     },
     plugins: [
+        new LicenseWebpackPlugin(),
         new CopyWebpackPlugin([
             {
                 from: path.join(__dirname, 'src/main/resources/splunk'),
