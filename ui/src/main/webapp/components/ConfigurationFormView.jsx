@@ -67,7 +67,7 @@ function ConfigurationFormView({ serviceName }) {
             />
             <ButtonWrapper>
                 <Button
-                    className="save_btn"
+                    className="saveBtn"
                     appearance="primary"
                     label={isSubmitting ? <WaitSpinner /> : _('Save')}
                     onClick={handleSubmit}

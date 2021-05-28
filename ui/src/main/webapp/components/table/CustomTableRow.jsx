@@ -51,7 +51,7 @@ function CustomTableRow(props) {
     const rowActionsPrimaryButton = useCallback(
         (selectedRow) => {
             return (
-                <TableCellWrapper key={selectedRow.id}>
+                <TableCellWrapper data-column="actions" key={selectedRow.id}>
                     <ButtonGroup>
                         <Tooltip content={_('Edit')}>
                             <ActionButtonComponent
@@ -137,7 +137,7 @@ function CustomTableRow(props) {
                                                     : 'Disabled'
                                             )}
                                         />
-                                        {statusContent}
+                                        <span data-test="status">{statusContent}</span>
                                     </SwitchWrapper>
                                 </Table.Cell>
                             );
