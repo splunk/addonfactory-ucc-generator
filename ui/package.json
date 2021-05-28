@@ -1,7 +1,7 @@
 {
   "name": "@splunk/ucc_ui_lib",
   "version": "0.0.1",
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "private": true,
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack --bail",
@@ -26,6 +26,7 @@
     "axios": "^0.21.1",
     "immutability-helper": "^3.1.1",
     "jsonschema": "^1.4.0",
+    "license-webpack-plugin": "^2.3.18",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-router-dom": "^5.2.0",
