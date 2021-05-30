@@ -165,6 +165,53 @@ def handle_update(config_path):
         # upadating new changes in globalConfig.json 
         with open(config_path, "w") as config_file:
             json.dump(schema_content,config_file, ensure_ascii=False, indent=4)
+    
+    # check for schemaVersion, if it's less than 0.0.2 then updating globalConfig.json
+    if version_tuple(version) < version_tuple("0.0.2"):
+        ta_tabs = schema_content.get("pages").get("configuration",{}).get("tabs",{})
+
+        # check for schema changes in configuration page of globalConfig.json
+        for tab in ta_tabs:
+            if tab["name"] == "account":
+                conf_entities = tab.get("entity")
+                oauth_state_enabled_entity = {}
+                for entity in conf_entities:
+                    if entity.get("field") == "oauth_state_enabled":
+                        logger.warn("oauth_state_enabled field is no longer a separate entity since UCC version 5.0.0. It is now an option in the oauth field. Please update the globalconfig.json file accordingly.")
+                        oauth_state_enabled_entity = entity
+
+                    if entity.get("field") == "oauth" and not entity.get("options",{}).get("oauth_state_enabled"):
+                            entity["options"]["oauth_state_enabled"] = False
+                
+                if oauth_state_enabled_entity:
+                    conf_entities.remove(oauth_state_enabled_entity)
+            
+            tab_options = tab.get("options", {})
+            if tab_options.get("onChange"):
+                logger.error("The onChange option is no longer supported since UCC version 5.0.0. You can use custom hooks to implement these actions.")
+                del tab_options["onChange"]
+            if tab_options.get("onLoad"):
+                logger.error("The onLoad option is no longer supported since UCC version 5.0.0. You can use custom hooks to implement these actions.")
+                del tab_options["onLoad"]
+        
+        is_inputs = ("inputs" in schema_content.get("pages"))
+        if is_inputs:
+            services = schema_content.get("pages").get("inputs",{}).get("services",{})
+            # check in every Input service for onSave and onLoad options
+            for service in services:
+                service_options = service.get("options", {})
+                if service_options.get("onChange"):
+                    logger.error("The onChange option is no longer supported since UCC version 5.0.0. You can use custom hooks to implement these actions.")
+                    del service_options["onChange"]
+                if service_options.get("onLoad"):
+                    logger.error("The onLoad option is no longer supported since UCC version 5.0.0. You can use custom hooks to implement these actions.")
+                    del service_options["onLoad"]
+
+        schema_content["meta"]["schemaVersion"] = "0.0.2"
+        # upadating new changes in globalConfig.json 
+        with open(config_path, "w") as config_file:
+            json.dump(schema_content,config_file, ensure_ascii=False, indent=4)
+    
     return schema_content
     
 
