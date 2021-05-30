@@ -648,7 +648,7 @@ def validate_config_against_schema(config: dict):
     Validates config against JSON schema.
     Raises jsonschema.ValidationError if config is not valid.
     """
-    schema_path = os.path.join(sourcedir, "UCC-UI-lib", "schema", "schema.json")
+    schema_path = os.path.join(sourcedir, "schema", "schema.json")
     with open(schema_path, "r") as f_schema:
         schema_raw = f_schema.read()
         schema = json.loads(schema_raw)
