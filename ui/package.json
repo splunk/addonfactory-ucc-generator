@@ -10,7 +10,7 @@
     "eslint": "eslint src --ext \".js,.jsx\"",
     "eslint:ci": "yarn run eslint -f junit -o test-reports/lint-results.xml",
     "eslint:fix": "eslint src --ext \".js, .jsx\" --fix",
-    "link:app": "ln -s $PWD/dist $SPLUNK_HOME/etc/apps/my-splunk-app",
+    "link:app": "ln -s $PWD/dist/package_resources $SPLUNK_HOME/etc/apps/my-splunk-app",
     "lint": "yarn run eslint && yarn run stylelint",
     "lint:ci": "yarn run eslint:ci && yarn run stylelint",
     "start": "webpack --watch",
