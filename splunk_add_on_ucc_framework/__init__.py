@@ -21,6 +21,7 @@ from .uccrestbuilder.global_config import (
 from .uccrestbuilder import build
 from .start_alert_build import alert_build
 
+import jsonschema
 from jinja2 import Environment, FileSystemLoader
 from dunamai import Version, Style
 import configparser
@@ -641,6 +642,19 @@ def restore_comments(outputdir, ta_name, comment_map):
     with open(config_file, 'w') as file:
         file.write(''.join(lines))
 
+
+def validate_config_against_schema(config: dict):
+    """
+    Validates config against JSON schema.
+    Raises jsonschema.ValidationError if config is not valid.
+    """
+    schema_path = os.path.join(sourcedir, "UCC-UI-lib", "schema", "schema.json")
+    with open(schema_path, "r") as f_schema:
+        schema_raw = f_schema.read()
+        schema = json.loads(schema_raw)
+    return jsonschema.validate(instance=config, schema=schema)
+
+
 def main():
     parser = argparse.ArgumentParser(description="Build the add-on")
     parser.add_argument(
@@ -691,6 +705,16 @@ def main():
         ta_name = manifest['info']['id']['name']
 
     if os.path.exists(args.config):
+        try:
+            with open(args.config, "r") as f_config:
+                config_raw = f_config.read()
+                config = json.loads(config_raw)
+            validate_config_against_schema(config)
+            logger.info("Config is valid")
+        except jsonschema.ValidationError as e:
+            logger.error("Config is not valid. Error: {}".format(e))
+            sys.exit(1)
+
         update_ta_version(args.config, ta_version)
 
         # handle_update check schemaVersion and update globalConfig.json if required and return schema

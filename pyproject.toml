@@ -48,7 +48,7 @@ mako= "^1"
 munch= "^2"
 lxml = "^4.3"
 future = "^0"
-splunktaucclib = "^4"
+splunktaucclib = "4.2.0"
 wheel = "*"
 dunamai = "*"
 reuse = "*"
@@ -58,8 +58,9 @@ reuse = "*"
 
 Sphinx = "^4.0.2"
 sphinx-rtd-theme = "^0.5.2"
+jsonschema = "^3.2.0"
 [tool.poetry.dev-dependencies]
-pytest = "^6.0"
+pytest = "^6.2"
 pytest-splunk-addon = { version = "^1.6", extras = [ "docker" ] }
 poetry-dynamic-versioning = "^0.12"
 
