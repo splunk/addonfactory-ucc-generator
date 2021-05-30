@@ -35,4 +35,5 @@ jobs:
         with:
           node-version: 15.x
       - run: npm install --global yarn
+      - run: yarn
       - run: if [ -f package.json ]; then npx @houdiniproject/noticeme -f THIRDPARTY.npm; fi
