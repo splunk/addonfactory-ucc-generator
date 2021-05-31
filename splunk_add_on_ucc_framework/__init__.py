@@ -241,7 +241,6 @@ def replace_token(args, ta_name):
     # replace token in template
     logger.info("Replace tokens in views")
     views = ["inputs.xml", "configuration.xml", "redirect.xml"]
-    views = ["inputs.xml", "configuration.xml"]
     for view in views:
         template_dir = os.path.join(
             outputdir, ta_name, "default", "data", "ui", "views"
