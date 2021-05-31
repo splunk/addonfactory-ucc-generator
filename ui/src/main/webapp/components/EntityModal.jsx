@@ -78,6 +78,7 @@ class EntityModal extends Component {
                         disabled={this.state.isSubmititng}
                     />
                     <Button
+                        className="saveBtn"
                         appearance="primary"
                         label={this.state.isSubmititng ? <WaitSpinner /> : this.buttonText}
                         onClick={this.handleSubmit}

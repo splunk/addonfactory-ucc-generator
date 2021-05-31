@@ -124,9 +124,8 @@ function SingleInputComponent(props) {
     return (
         <>
             {createSearchChoice ? (
-                <StyledDiv>
+                <StyledDiv className="dropdownBox">
                     <ComboBox
-                        className="dropdownBox"
                         value={props.value === null ? '' : props.value}
                         name={field}
                         error={error}
@@ -142,6 +141,7 @@ function SingleInputComponent(props) {
                 <>
                     <SelectWrapper
                         className="dropdownBox"
+                        data-test-loading={loading}
                         value={props.value}
                         name={field}
                         error={error}
@@ -155,6 +155,7 @@ function SingleInputComponent(props) {
                     </SelectWrapper>
                     {isClearable !== true ? (
                         <Button
+                            data-test="clear"
                             appearance="secondary"
                             icon={<Clear />}
                             onClick={() => restProps.handleChange(field, '')}
