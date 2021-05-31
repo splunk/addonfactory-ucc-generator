@@ -141,6 +141,7 @@ function SingleInputComponent(props) {
                 <>
                     <SelectWrapper
                         className="dropdownBox"
+                        data-test-loading={loading}
                         value={props.value}
                         name={field}
                         error={error}
