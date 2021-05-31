@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-__version__ = "0.0.0"
+__version__ = "4.5.0"
 
 import logging
 import os, time
@@ -240,7 +240,7 @@ def replace_token(args, ta_name):
 
     # replace token in template
     logger.info("Replace tokens in views")
-    # views = ["inputs.xml", "configuration.xml", "redirect.xml"]
+    views = ["inputs.xml", "configuration.xml", "redirect.xml"]
     views = ["inputs.xml", "configuration.xml"]
     for view in views:
         template_dir = os.path.join(
@@ -252,8 +252,8 @@ def replace_token(args, ta_name):
         # Safely write the changed content, if found in the file
         with open(os.path.join(template_dir, view), "w") as f:
             s = s.replace("${package.name}", ta_name)
-            # if view == "redirect.xml":
-            #     s = s.replace("${ta.name}", ta_name.lower())
+            if view == "redirect.xml":
+                s = s.replace("${ta.name}", ta_name.lower())
             f.write(s)
 
 def install_libs(path, ucc_lib_target):
@@ -371,79 +371,79 @@ def is_oauth_configured(ta_tabs):
     return False
 
 
-# def replace_oauth_html_template_token(args, ta_name, ta_version):
-#     """
-#     Replace tokens with addon name and version in redirect.html.
+def replace_oauth_html_template_token(args, ta_name, ta_version):
+    """
+    Replace tokens with addon name and version in redirect.html.
 
-#     Args:
-#         args (argparse.Namespace): Object with command-line arguments.
-#         ta_name (str): Name of TA.
-#         ta_version (str): Version of TA.
-#     """
+    Args:
+        args (argparse.Namespace): Object with command-line arguments.
+        ta_name (str): Name of TA.
+        ta_version (str): Version of TA.
+    """
 
-#     html_template_path = os.path.join(
-#         outputdir, ta_name, "appserver", "templates"
-#     )
-#     with open(os.path.join(html_template_path, "redirect.html")) as f:
-#         s = f.read()
+    html_template_path = os.path.join(
+        outputdir, ta_name, "appserver", "templates"
+    )
+    with open(os.path.join(html_template_path, "redirect.html")) as f:
+        s = f.read()
 
-#     # Safely write the changed content, if found in the file
-#     with open(os.path.join(html_template_path, "redirect.html"), "w") as f:
-#         # replace addon name in html template
-#         s = s.replace("${ta.name}", ta_name.lower())
-#         # replace addon version in html template
-#         s = s.replace("${ta.version}", ta_version)
-#         f.write(s)
+    # Safely write the changed content, if found in the file
+    with open(os.path.join(html_template_path, "redirect.html"), "w") as f:
+        # replace addon name in html template
+        s = s.replace("${ta.name}", ta_name.lower())
+        # replace addon version in html template
+        s = s.replace("${ta.version}", ta_version)
+        f.write(s)
 
 
-# def modify_and_replace_token_for_oauth_templates(
-#     args, ta_name, ta_tabs, ta_version
-# ):
-#     """
-#     Rename templates with respect to addon name if OAuth is configured.
+def modify_and_replace_token_for_oauth_templates(
+    args, ta_name, ta_tabs, ta_version
+):
+    """
+    Rename templates with respect to addon name if OAuth is configured.
 
-#     Args:
-#         args (argparse.Namespace): Object with command-line arguments.
-#         ta_name (str): Name of TA.
-#         ta_version (str): Version of TA.
-#         ta_tabs (list): List of tabs mentioned in globalConfig.json.
+    Args:
+        args (argparse.Namespace): Object with command-line arguments.
+        ta_name (str): Name of TA.
+        ta_version (str): Version of TA.
+        ta_tabs (list): List of tabs mentioned in globalConfig.json.
 
-#     """
-#     redirect_xml_src = os.path.join(
-#         outputdir, ta_name, "default", "data", "ui", "views", "redirect.xml"
-#     )
-#     redirect_js_src = os.path.join(
-#         outputdir, ta_name, "appserver", "static", "js", "build", "redirect_page.js"
-#     )
-#     redirect_html_src = os.path.join(
-#         outputdir, ta_name, "appserver", "templates", "redirect.html"
-#     )
+    """
+    redirect_xml_src = os.path.join(
+        outputdir, ta_name, "default", "data", "ui", "views", "redirect.xml"
+    )
+    redirect_js_src = os.path.join(
+        outputdir, ta_name, "appserver", "static", "js", "build", "redirect_page.js"
+    )
+    redirect_html_src = os.path.join(
+        outputdir, ta_name, "appserver", "templates", "redirect.html"
+    )
 
-#     if is_oauth_configured(ta_tabs):
-#         replace_oauth_html_template_token(args, ta_name, ta_version)
+    if is_oauth_configured(ta_tabs):
+        replace_oauth_html_template_token(args, ta_name, ta_version)
 
-#         redirect_js_dest = (
-#             os.path.join(outputdir, ta_name, "appserver", "static", "js", "build", "")
-#             + ta_name.lower()
-#             + "_redirect_page."
-#             + ta_version
-#             + ".js"
-#         )
-#         redirect_html_dest = (
-#             os.path.join(outputdir, ta_name, "appserver", "templates", ta_name.lower() + "_redirect.html")
-#         )
-#         redirect_xml_dest = (
-#             os.path.join(outputdir, ta_name, "default", "data", "ui", "views", ta_name.lower() + "_redirect.xml")
-#         )
-#         os.rename(redirect_js_src, redirect_js_dest)
-#         os.rename(redirect_html_src, redirect_html_dest)
-#         os.rename(redirect_xml_src, redirect_xml_dest)
+        redirect_js_dest = (
+            os.path.join(outputdir, ta_name, "appserver", "static", "js", "build", "")
+            + ta_name.lower()
+            + "_redirect_page."
+            + ta_version
+            + ".js"
+        )
+        redirect_html_dest = (
+            os.path.join(outputdir, ta_name, "appserver", "templates", ta_name.lower() + "_redirect.html")
+        )
+        redirect_xml_dest = (
+            os.path.join(outputdir, ta_name, "default", "data", "ui", "views", ta_name.lower() + "_redirect.xml")
+        )
+        os.rename(redirect_js_src, redirect_js_dest)
+        os.rename(redirect_html_src, redirect_html_dest)
+        os.rename(redirect_xml_src, redirect_xml_dest)
 
-#     # if oauth is not configured remove the extra template
-#     else:
-#         os.remove(redirect_xml_src)
-#         os.remove(redirect_html_src)
-#         os.remove(redirect_js_src)
+    # if oauth is not configured remove the extra template
+    else:
+        os.remove(redirect_xml_src)
+        os.remove(redirect_html_src)
+        os.remove(redirect_js_src)
 
 def add_modular_input(
     args, ta_name, schema_content, import_declare_name
@@ -752,9 +752,9 @@ def main():
 
         generate_rest(args, ta_name, scheme, import_declare_name)
 
-        # modify_and_replace_token_for_oauth_templates(
-        #         args, ta_name, ta_tabs, schema_content.get('meta').get('version')
-        #     )
+        modify_and_replace_token_for_oauth_templates(
+                args, ta_name, ta_tabs, schema_content.get('meta').get('version')
+            )
         if is_inputs:
             add_modular_input(
                 args, ta_name, schema_content, import_declare_name
