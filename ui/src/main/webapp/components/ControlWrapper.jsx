@@ -35,7 +35,7 @@ class ControlWrapper extends React.PureComponent {
             : null;
         // Add 'optional' placeholder for optional field
         this.options = this.props.entity.options;
-        if (!this.props.entity.required) {
+        if (!this.props.entity.required && !this.options?.placeholder) {
             this.options = {
                 ...this.options,
                 placeholder: 'optional',
