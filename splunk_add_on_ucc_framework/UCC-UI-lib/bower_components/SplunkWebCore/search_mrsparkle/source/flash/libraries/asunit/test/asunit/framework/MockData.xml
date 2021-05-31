@@ -1,8 +1,0 @@
-<books>
-    <book publisher="Addison-Wesley" name="Design Patterns" />
-    <book publisher="Addison-Wesley" name="The Pragmatic Programmer" />
-    <book publisher="Addison-Wesley" name="Test Driven Development" />
-    <book publisher="Addison-Wesley" name="Refactoring to Patterns" />
-    <book publisher="O'Reilly Media" name="The Cathedral &amp; the Bazaar" />
-    <book publisher="O'Reilly Media" name="Unit Test Frameworks" />
-</books>

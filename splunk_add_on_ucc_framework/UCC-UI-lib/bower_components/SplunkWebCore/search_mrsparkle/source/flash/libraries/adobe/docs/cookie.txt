@@ -1,5 +1,0 @@
-FILE QUARANTINED
-----------------
-
-Antigen for Exchange removed corelib.zzz->cookies.js since it
-was found to match the FILE FILTER= unnamed: *.js file filter.

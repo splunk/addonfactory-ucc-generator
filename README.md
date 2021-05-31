@@ -19,6 +19,10 @@ UCC provides basic UI template for creating Addon's UI. It is helpful to control
 
 - Generate UCC based addons for your Splunk Technology Add-ons
 
+## UCC 5
+
+UCC5 has potentialy breaking changes to add-ons using hook extension in the UX. Previously such hooks were limited to un-optomized js files placed in the package.
+Add-ons may now package such extensions with webpack.
 
 ## Requirements
 

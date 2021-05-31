@@ -1,8 +1,0 @@
-<%page args="module"/>
-
-
-<fieldset>
-    <label for="${module['id']}_secondaryAxis.maximumNumber">${_("Max value")}</label>
-    <input type="text" id="${module['id']}_secondaryAxis.maximumNumber" value="${module.get('default', '') | h}" />
-</fieldset>
-
