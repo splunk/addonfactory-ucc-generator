@@ -64,7 +64,7 @@ class BaseFormView extends PureComponent {
         this.appName = globalConfig.meta.name;
         this.endpoint =
             props.mode === MODE_EDIT || props.mode === MODE_CONFIG
-                ? `${this.props.serviceName}/${this.props.stanzaName}`
+                ? `${this.props.serviceName}/${encodeURIComponent(this.props.stanzaName)}`
                 : `${this.props.serviceName}`;
 
         this.util = {

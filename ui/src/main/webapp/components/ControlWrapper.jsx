@@ -33,6 +33,14 @@ class ControlWrapper extends React.PureComponent {
         this.controlType = this.isString(props.entity.type)
             ? CONTROL_TYPE_MAP[props.entity.type]
             : null;
+        // Add 'optional' placeholder for optional field
+        this.options = this.props.entity.options;
+        if (!this.props.entity.required) {
+            this.options = {
+                ...this.options,
+                placeholder: 'optional',
+            };
+        }
     }
 
     isString = (str) => {
@@ -40,7 +48,7 @@ class ControlWrapper extends React.PureComponent {
     };
 
     render() {
-        const { field, options, type, label, tooltip, help, encrypted = false } = this.props.entity;
+        const { field, type, label, tooltip, help, encrypted = false } = this.props.entity;
         const { handleChange, addCustomValidator, utilCustomFunctions } = this.props.utilityFuncts;
         // We have to put empty object because markDownMessage prop can be undefined
         // because we are not explicitly setting it but expecting it from custom hooks only.
@@ -61,7 +69,7 @@ class ControlWrapper extends React.PureComponent {
                       handleChange,
                       addCustomValidator,
                       utilCustomFunctions,
-                      controlOptions: options,
+                      controlOptions: this.options,
                   })
                 : `No View Found for ${type} type`;
         } else {
@@ -70,7 +78,7 @@ class ControlWrapper extends React.PureComponent {
                       handleChange,
                       value: this.props.value,
                       field,
-                      controlOptions: options,
+                      controlOptions: this.options,
                       error: this.props.error,
                       disabled: this.props.disabled,
                       encrypted,

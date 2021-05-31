@@ -41,10 +41,10 @@ function CustomTable({
     const { moreInfo, header } = tableConfig;
     const headers = tableConfig.header;
 
-    const headerMapping = {}
-    header.forEach(x => {
-        headerMapping[x.field] = x.mapping
-    })
+    const headerMapping = {};
+    header.forEach((x) => {
+        headerMapping[x.field] = x.mapping;
+    });
 
     const serviceToStyleMap = {};
     unifiedConfigs.pages.inputs.services.forEach((x) => {
@@ -115,7 +115,7 @@ function CustomTable({
             }
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [entityModal]
+        [entityModal, history.location.search]
     );
 
     const handleDeleteClose = () => {

@@ -40,7 +40,9 @@ class DeleteModal extends Component {
             },
             () => {
                 axiosCallWrapper({
-                    serviceName: `${this.props.serviceName}/${this.props.stanzaName}`,
+                    serviceName: `${this.props.serviceName}/${encodeURIComponent(
+                        this.props.stanzaName
+                    )}`,
                     customHeaders: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     method: 'delete',
                     handleError: false,
