@@ -8,6 +8,8 @@ version = "0.0.0"
 description = "Splunk Add-on SDK formerly UCC is a build and code generation framework"
 authors = ["rfaircloth-splunk <rfaircloth@splunk.com>"]
 include = [
+"splunk_add_on_ucc_framework/schema",
+"splunk_add_on_ucc_framework/THIRDPARTY.npm",
 "splunk_add_on_ucc_framework/package",
 "splunk_add_on_ucc_framework/package/locale",
 "splunk_add_on_ucc_framework/package/locale/zh_CN",
