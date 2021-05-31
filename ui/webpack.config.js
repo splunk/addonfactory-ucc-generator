@@ -32,6 +32,10 @@ module.exports = webpackMerge(baseConfig, {
                 from: path.join(__dirname, 'src/main/webapp/schema/schema.json'),
                 to: path.join(__dirname, 'dist/schema'),
             },
+            {
+                from: path.join(__dirname, 'THIRDPARTY.npm'),
+                to: path.join(__dirname, 'dist'),
+            },
         ]),
     ],
     devtool: 'inline-source-map',
