@@ -7,10 +7,6 @@ name = "splunk_add_on_ucc_framework"
 version = "0.0.0"
 description = "Splunk Add-on SDK formerly UCC is a build and code generation framework"
 authors = ["rfaircloth-splunk <rfaircloth@splunk.com>"]
-exclude = [
-    "build.py",
-    "splunk_add_on_ucc_framework/ucc_ui_lib/",
-    ]
 include = [
 "splunk_add_on_ucc_framework/package",
 "splunk_add_on_ucc_framework/package/locale",
@@ -48,7 +44,7 @@ mako= "^1"
 munch= "^2"
 lxml = "^4.3"
 future = "^0"
-splunktaucclib = "^4"
+splunktaucclib = "4.2.0"
 wheel = "*"
 dunamai = "*"
 reuse = "*"
@@ -58,8 +54,9 @@ reuse = "*"
 
 Sphinx = "^4.0.2"
 sphinx-rtd-theme = "^0.5.2"
+jsonschema = "^3.2.0"
 [tool.poetry.dev-dependencies]
-pytest = "^6.0"
+pytest = "^6.2"
 pytest-splunk-addon = { version = "^1.6", extras = [ "docker" ] }
 poetry-dynamic-versioning = "^0.12"
 
