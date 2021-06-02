@@ -18,8 +18,8 @@ jobs:
           name: Get UI
           command: |
             ./get-ucc-ui.sh
-            mkdir -p splunk_add_on_ucc_framework/package || true
-            tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/package
+            # Puts package and schema subdirs along with NOTICE (THIRDPARTY.npm)
+            tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
       - run:
           name: Build
           command: |
@@ -119,8 +119,8 @@ jobs:
           name: Get UI
           command: |
             ./get-ucc-ui.sh
-            mkdir -p splunk_add_on_ucc_framework/package || true
-            tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/package
+            # Puts package and schema subdirs along with NOTICE (THIRDPARTY.npm)
+            tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
       - run:
           name: Build
           command: |
