@@ -46,9 +46,11 @@ function CustomTable({
     });
 
     const serviceToStyleMap = {};
-    unifiedConfigs.pages.inputs.services.forEach((x) => {
-        serviceToStyleMap[x.name] = x.style === STYLE_PAGE ? STYLE_PAGE : STYLE_MODAL;
-    });
+    if (page === PAGE_INPUT) {
+        unifiedConfigs.pages.inputs.services.forEach((x) => {
+            serviceToStyleMap[x.name] = x.style === STYLE_PAGE ? STYLE_PAGE : STYLE_MODAL;
+        });
+    }
 
     const query = useQuery();
 
