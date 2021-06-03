@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, memo, useState, useContext } from 'react';
-import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import Table from '@splunk/react-ui/Table';
@@ -51,7 +50,6 @@ function CustomTable({
         serviceToStyleMap[x.name] = x.style === STYLE_PAGE ? STYLE_PAGE : STYLE_MODAL;
     });
 
-    const history = useHistory();
     const query = useQuery();
 
     // Run only once when component is mounted to load component based on initial query params
@@ -80,21 +78,12 @@ function CustomTable({
                 // useEffect dependency which will only be changed in case of editing entity
                 setEntityModal({ ...entityModal, open: false });
             }
-        } else if (query.get('tab') !== serviceName && query.get('record')) {
-            // remove the record param in case of wrong tab
-            query.delete('record');
-            history.push({ search: query.toString() });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [history.location.search]);
+    }, []);
 
     const handleEntityClose = () => {
         setEntityModal({ ...entityModal, open: false });
-        // remove query param and push to browser history only when mode is edit
-        if (entityModal.mode === MODE_EDIT) {
-            query.delete('record');
-            history.push({ search: query.toString() });
-        }
     };
 
     const handleEditActionClick = useCallback(
@@ -109,13 +98,10 @@ function CustomTable({
                     stanzaName: selectedRow.name,
                     mode: MODE_EDIT,
                 });
-                // set query and push to history
-                query.set('record', selectedRow.name);
-                history.push({ search: query.toString() });
             }
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [entityModal, history.location.search]
+        [entityModal]
     );
 
     const handleDeleteClose = () => {
