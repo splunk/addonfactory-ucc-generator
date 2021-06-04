@@ -60,7 +60,7 @@ class DeleteModal extends Component {
                         );
                         this.setState({ isDeleting: false });
                         this.handleRequestClose();
-                        generateToast(`Deleted ${this.props.stanzaName}`, 'success');
+                        generateToast(`Deleted "${this.props.stanzaName}"`, 'success');
                     });
             }
         );
