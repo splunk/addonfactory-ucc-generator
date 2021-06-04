@@ -25,6 +25,7 @@ jobs:
           command: |
             source $HOME/.poetry/env
             poetry install
+            poetry run pytest
             poetry run poetry-dynamic-versioning
             poetry build
       - save_cache:
