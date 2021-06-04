@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { _ } from '@splunk/ui-utils/i18n';
 import TabBar from '@splunk/react-ui/TabBar';
@@ -35,7 +34,6 @@ function ConfigurationPage() {
 
     const [activeTabId, setActiveTabId] = useState(tabs[0].name);
 
-    const history = useHistory();
     const query = useQuery();
 
     // Run initially and when query is updated to set active tab based on initial URL
@@ -51,22 +49,11 @@ function ConfigurationPage() {
             setActiveTabId(query.get('tab'));
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [history.location.search]);
-
-    // Run only once to set initial default tab query param
-    useEffect(() => {
-        if (!query.get('tab')) {
-            query.set('tab', activeTabId);
-            history.push({ search: query.toString() });
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleChange = useCallback(
         (e, { selectedTabId }) => {
             setActiveTabId(selectedTabId);
-            query.set('tab', selectedTabId);
-            history.push({ search: query.toString() });
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [activeTabId]
