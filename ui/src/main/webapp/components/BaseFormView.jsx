@@ -124,6 +124,7 @@ class BaseFormView extends PureComponent {
                         this.currentInput = context.rowData[props.serviceName][props.stanzaName];
                     } else if (props.mode === MODE_CONFIG) {
                         this.currentInput = props.currentServiceState;
+                        this.mode_config_title = tab.title;
                     } else {
                         this.currentInput = context.rowData[props.serviceName];
                     }
@@ -592,10 +593,15 @@ class BaseFormView extends PureComponent {
                 if (this.hook && typeof this.hook.onSaveSuccess === 'function') {
                     this.hook.onSaveSuccess();
                 }
-                if (this.props.mode === MODE_EDIT || this.props.mode === MODE_CONFIG) {
-                    generateToast(`Updated ${val.name}`, 'success');
+                if (this.props.mode === MODE_EDIT) {
+                    generateToast(`Updated "${val.name}"`, 'success');
+                } else if (this.props.mode === MODE_CONFIG) {
+                    generateToast(
+                        `Updated "${this.mode_config_title ? this.mode_config_title : val.name}"`,
+                        'success'
+                    );
                 } else {
-                    generateToast(`Created ${val.name}`, 'success');
+                    generateToast(`Created "${val.name}"`, 'success');
                 }
                 this.props.handleFormSubmit(/* isSubmitting */ false, /* closeEntity */ true);
             })

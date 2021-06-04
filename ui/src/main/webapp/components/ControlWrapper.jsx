@@ -34,8 +34,14 @@ class ControlWrapper extends React.PureComponent {
             ? CONTROL_TYPE_MAP[props.entity.type]
             : null;
         // Add 'optional' placeholder for optional field
+        // Note: for oauth field it is possible required is false but the field is actually required
+        // based on what type of authentication is selected
         this.options = this.props.entity.options;
-        if (!this.props.entity.required && !this.options?.placeholder) {
+        if (
+            !this.props.entity.required &&
+            !Object.prototype.hasOwnProperty.call(this.props.entity, 'oauth_field') &&
+            !this.options?.placeholder
+        ) {
             this.options = {
                 ...this.options,
                 placeholder: 'optional',
