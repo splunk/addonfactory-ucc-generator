@@ -13,7 +13,7 @@ from . import alert_actions_exceptions as aae
 from munch import Munch
 from mako.template import Template
 from mako.lookup import TemplateLookup
-from lxml import etree, html
+from defusedxml import lxml as defused_lxml
 from re import search
 from .alert_actions_template import AlertActionsTemplateMgr
 from .alert_actions_helper import write_file
@@ -74,13 +74,13 @@ class AlertHtmlGenerator(AlertHtmlBase):
         alert_obj = Munch.fromDict(one_alert_setting)
         final_form = self._template.render(mod_alert=alert_obj,
                                            home_page=self._html_home)
-        final_form = html.fromstring(final_form)
+        final_form = defused_lxml.fromstring(final_form)
 # Checking python version before converting and encoding XML Tree to string.
         if sys.version_info < (3, 0):
-            final_string = etree.tostring(final_form, encoding='utf-8',
+            final_string = defused_lxml.tostring(final_form, encoding='utf-8',
                                           pretty_print=True)
         else:
-            final_string = etree.tostring(
+            final_string = defused_lxml.tostring(
                 final_form, encoding='utf-8', pretty_print=True)
         text = linesep.join(
             [s for s in final_string.decode('utf-8').splitlines() if not search(r'^\s*$', s)])
