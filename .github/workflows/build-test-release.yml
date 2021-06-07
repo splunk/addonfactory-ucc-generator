@@ -105,16 +105,18 @@ jobs:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  review_secrets:
-    name: security-detect-secrets
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Trufflehog Actions Scan
-        uses: edplato/trufflehog-actions-scan@v0.9f-beta
-        with:
-          scanArguments: "-x .github/workflows/exclude-patterns.txt"
+  # review_secrets:
+  #   name: security-detect-secrets
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #       with:
+  #         submodules: false
+  #     - name: Trufflehog Actions Scan
+  #       uses: edplato/trufflehog-actions-scan@v0.9f-beta
+  #       with:
+  #         scanArguments: "--max_dept 50 -x .github/workflows/exclude-patterns.txt --since_commit 2dc9e48a5861a9da45599e6d775c8450639c197d"
 
   semgrep:
     runs-on: ubuntu-latest
@@ -144,7 +146,7 @@ jobs:
     needs:
       - lint
       - test-unit
-      - review_secrets
+      #- review_secrets
       - compliance-copyrights
       - compliance-dependencies
     runs-on: ubuntu-latest
