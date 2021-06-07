@@ -13,7 +13,7 @@ import shutil
 import sys
 import argparse
 import json
-from xml.etree import cElementTree as et
+from defusedxml import cElementTree as defused_et
 from .uccrestbuilder.global_config import (
     GlobalConfigBuilderSchema,
     GlobalConfigPostProcessor,
@@ -586,7 +586,7 @@ def handle_no_inputs(ta_name):
         Args:
             path (str) : path to default.xml
         """
-        tree = et.parse(path)
+        tree = defused_et.parse(path)
         root = tree.getroot()
 
         for element in root:
