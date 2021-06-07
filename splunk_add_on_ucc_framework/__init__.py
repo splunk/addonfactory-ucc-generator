@@ -225,28 +225,14 @@ def handle_update(config_path):
             json.dump(schema_content,config_file, ensure_ascii=False, indent=4)
     
     return schema_content
-    
-
-def copy_package_source(args, ta_name):
-    """
-    Copy source package to output directory.
-
-    Args:
-        args (argparse.Namespace): Object with command-line arguments.
-        ta_name (str): Name of TA.
-    """
-
-    logger.info("Copy package directory ")
-    recursive_overwrite(args.source, os.path.join(outputdir, ta_name))
 
 
-def replace_token(args, ta_name):
+def replace_token(ta_name):
     """
     Replace token with addon name in inputs.xml, configuration.xml, redirect.xml.
     Replace token with addon version in redirect.xml.
 
     Args:
-        args (argparse.Namespace): Object with command-line arguments.
         ta_name (str): Name of TA.
     """
 
@@ -341,12 +327,11 @@ def remove_files(path):
     for rmdir in rmdirs:
         shutil.rmtree(rmdir)
 
-def generate_rest(args, ta_name, scheme, import_declare_name):
+def generate_rest(ta_name, scheme, import_declare_name):
     """
     Build REST for Add-on.
 
     Args:
-        args (argparse.Namespace): Object with command-line arguments.
         ta_name (str): Name of TA.
         scheme (GlobalConfigBuilderSchema): REST schema.
         import_declare_name (str): Name of import_declare_* file.
@@ -382,12 +367,11 @@ def is_oauth_configured(ta_tabs):
     return False
 
 
-def replace_oauth_html_template_token(args, ta_name, ta_version):
+def replace_oauth_html_template_token(ta_name, ta_version):
     """
     Replace tokens with addon name and version in redirect.html.
 
     Args:
-        args (argparse.Namespace): Object with command-line arguments.
         ta_name (str): Name of TA.
         ta_version (str): Version of TA.
     """
@@ -408,13 +392,12 @@ def replace_oauth_html_template_token(args, ta_name, ta_version):
 
 
 def modify_and_replace_token_for_oauth_templates(
-    args, ta_name, ta_tabs, ta_version
+    ta_name, ta_tabs, ta_version
 ):
     """
     Rename templates with respect to addon name if OAuth is configured.
 
     Args:
-        args (argparse.Namespace): Object with command-line arguments.
         ta_name (str): Name of TA.
         ta_version (str): Version of TA.
         ta_tabs (list): List of tabs mentioned in globalConfig.json.
@@ -431,7 +414,7 @@ def modify_and_replace_token_for_oauth_templates(
     )
 
     if is_oauth_configured(ta_tabs):
-        replace_oauth_html_template_token(args, ta_name, ta_version)
+        replace_oauth_html_template_token(ta_name, ta_version)
 
         redirect_js_dest = (
             os.path.join(outputdir, ta_name, "appserver", "static", "js", "build", "")
@@ -457,13 +440,12 @@ def modify_and_replace_token_for_oauth_templates(
         os.remove(redirect_js_src)
 
 def add_modular_input(
-    args, ta_name, schema_content, import_declare_name
+    ta_name, schema_content, import_declare_name
 ):
     """
     Generate Modular input for addon.
 
     Args:
-        args (argparse.Namespace): Object with command-line arguments.
         ta_name (str): Name of TA.
         schema_content (dict): JSON schema of globalConfig.json
     """
@@ -513,12 +495,11 @@ def add_modular_input(
            config.write(configfile)
 
 
-def make_modular_alerts(args, ta_name, ta_namespace, schema_content):
+def make_modular_alerts(ta_name, ta_namespace, schema_content):
     """
     Generate the alert schema with required structure.
 
     Args:
-        args (argparse.Namespace): Object with command-line arguments.
         ta_name (str): Name of TA.
         ta_namespace (str): restRoot of TA.
         schema_content (dict): JSON schema of globalConfig.json.
@@ -666,6 +647,187 @@ def validate_config_against_schema(config: dict):
     return jsonschema.validate(instance=config, schema=schema)
 
 
+def _generate(source, config, ta_version):
+    if not ta_version:
+        version = Version.from_git()
+        if not version.stage:
+            stage = 'R'
+        else:
+            stage = version.stage[:1]
+
+        version_str = version.serialize(metadata=True, style=Style.SemVer)
+        version_splunk = f"{version.base}{stage}{version.commit}"
+        ta_version = version_splunk
+    else:
+        ta_version = ta_version.strip()
+        version_str = ta_version
+
+    if not os.path.exists(source):
+        raise NotADirectoryError(
+            "{} not Found.".format(os.path.abspath(source)))
+
+    # Setting default value to Config argument
+    if not config:
+        config = os.path.abspath(
+            os.path.join(source, PARENT_DIR, "globalConfig.json"))
+
+    clean_before_build()
+
+    with open(os.path.abspath(os.path.join(source, "app.manifest")),
+              "r") as manifest_file:
+        manifest = json.load(manifest_file)
+        ta_name = manifest['info']['id']['name']
+
+    if os.path.exists(config):
+        try:
+            with open(config, "r") as f_config:
+                config_raw = f_config.read()
+            validate_config_against_schema(json.loads(config_raw))
+            logger.info("Config is valid")
+        except jsonschema.ValidationError as e:
+            logger.error("Config is not valid. Error: {}".format(e))
+            sys.exit(1)
+
+        update_ta_version(config, ta_version)
+
+        # handle_update check schemaVersion and update globalConfig.json if required and return schema
+        schema_content = handle_update(config)
+
+        scheme = GlobalConfigBuilderSchema(schema_content, j2_env)
+
+        ta_version = schema_content.get("meta").get("version")
+        logger.info("Addon Version : " + ta_version)
+        ta_tabs = schema_content.get("pages").get("configuration").get("tabs")
+        ta_namespace = schema_content.get("meta").get("restRoot")
+        import_declare_name = "import_declare_test"
+        is_inputs = ("inputs" in schema_content.get("pages"))
+
+        logger.info("Package ID is " + ta_name)
+
+        logger.info("Copy UCC template directory")
+        recursive_overwrite(
+            os.path.join(sourcedir, "package"), os.path.join(outputdir, ta_name)
+        )
+
+        logger.info("Copy globalConfig to output")
+        shutil.copyfile(
+            config,
+            os.path.join(outputdir, ta_name, "appserver", "static", "js",
+                         "build", "globalConfig.json"),
+        )
+        ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
+        logger.info(
+            f"Install Addon Requirements into {ucc_lib_target} from {source}")
+        install_libs(
+            source,
+            ucc_lib_target
+        )
+
+        replace_token(ta_name)
+
+        generate_rest(ta_name, scheme, import_declare_name)
+
+        modify_and_replace_token_for_oauth_templates(
+            ta_name, ta_tabs, schema_content.get('meta').get('version')
+        )
+        if is_inputs:
+            add_modular_input(
+                ta_name, schema_content, import_declare_name
+            )
+        else:
+            handle_no_inputs(ta_name)
+
+        make_modular_alerts(ta_name, ta_namespace, schema_content)
+
+    else:
+        logger.info("Addon Version : " + ta_version)
+        logger.warning(
+            "Skipped installing UCC required python modules as GlobalConfig.json does not exist.")
+        logger.warning(
+            "Skipped Generating UI components as GlobalConfig.json does not exist.")
+        logger.info("Setting TA name as generic")
+
+        ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
+
+        install_libs(
+            source,
+            ucc_lib_target=ucc_lib_target
+        )
+
+    ignore_list = get_ignore_list(ta_name, os.path.abspath(
+        os.path.join(source, PARENT_DIR, ".uccignore")))
+    remove_listed_files(ignore_list)
+    logger.info("Copy package directory ")
+    recursive_overwrite(source, os.path.join(outputdir, ta_name))
+
+    # Update app.manifest
+    with open(os.path.join(outputdir, ta_name, 'VERSION'), 'w') as version_file:
+        version_file.write(version_str)
+        version_file.write("\n")
+        version_file.write(ta_version)
+
+    manifest = None
+    with open(os.path.abspath(os.path.join(outputdir, ta_name, "app.manifest")),
+              "r") as manifest_file:
+        manifest = json.load(manifest_file)
+        manifest['info']['id']['version'] = ta_version
+
+    with open(os.path.abspath(os.path.join(outputdir, ta_name, "app.manifest")),
+              "w") as manifest_file:
+        manifest_file.write(json.dumps(manifest, indent=4, sort_keys=True))
+
+    comment_map = save_comments(outputdir, ta_name)
+    app_config = configparser.ConfigParser()
+    app_config.read_file(
+        open(os.path.join(outputdir, ta_name, 'default', "app.conf")))
+    if not 'launcher' in app_config:
+        app_config.add_section('launcher')
+    if not 'id' in app_config:
+        app_config.add_section('id')
+    if not 'install' in app_config:
+        app_config.add_section('install')
+    if not 'package' in app_config:
+        app_config.add_section('package')
+    if not 'ui' in app_config:
+        app_config.add_section('ui')
+
+    app_config['launcher']['version'] = ta_version
+    app_config['launcher']['description'] = manifest['info']['description']
+
+    app_config['id']['version'] = ta_version
+
+    app_config['install']['build'] = str(int(time.time()))
+    app_config['package']['id'] = manifest['info']['id']['name']
+
+    app_config['ui']['label'] = manifest['info']['title']
+
+    with open(os.path.join(outputdir, ta_name, 'default', "app.conf"),
+              'w') as configfile:
+        app_config.write(configfile)
+    # restore License header
+    restore_comments(outputdir, ta_name, comment_map)
+
+    # Copy Licenses
+    license_dir = os.path.abspath(
+        os.path.join(source, PARENT_DIR, "LICENSES"))
+
+    if os.path.exists(license_dir):
+        logger.info("Copy LICENSES directory ")
+        recursive_overwrite(license_dir,
+                            os.path.join(outputdir, ta_name, "LICENSES"))
+
+    if os.path.exists(os.path.abspath(
+            os.path.join(source, PARENT_DIR, "additional_packaging.py"))):
+        sys.path.insert(0,
+                        os.path.abspath(os.path.join(source, PARENT_DIR)))
+        from additional_packaging import additional_packaging
+        additional_packaging(ta_name)
+
+
+def generate(source="package", config=None, ta_version=None):
+    _generate(source, config, ta_version)
+
+
 def main():
     parser = argparse.ArgumentParser(description="Build the add-on")
     parser.add_argument(
@@ -689,163 +851,4 @@ def main():
         default=None
     )
     args = parser.parse_args()
-    if not args.ta_version:
-        version = Version.from_git()
-        if not version.stage:
-            stage = 'R'
-        else:
-            stage = version.stage[:1]
-
-        version_str = version.serialize(metadata=True, style=Style.SemVer)
-        version_splunk = f"{version.base}{stage}{version.commit}"
-        ta_version = version_splunk
-    else:
-        ta_version = args.ta_version.strip()
-
-    if not os.path.exists(args.source):
-        raise NotADirectoryError("{} not Found.".format(os.path.abspath(args.source)))
-
-    # Setting default value to Config argument
-    if not args.config:
-        args.config = os.path.abspath(os.path.join(args.source, PARENT_DIR, "globalConfig.json"))
-
-    clean_before_build()
-
-    manifest= None
-    with open(os.path.abspath(os.path.join(args.source, "app.manifest")), "r") as manifest_file:
-        manifest = json.load(manifest_file)
-        ta_name = manifest['info']['id']['name']
-
-    if os.path.exists(args.config):
-        try:
-            with open(args.config, "r") as f_config:
-                config_raw = f_config.read()
-                config = json.loads(config_raw)
-            validate_config_against_schema(config)
-            logger.info("Config is valid")
-        except jsonschema.ValidationError as e:
-            logger.error("Config is not valid. Error: {}".format(e))
-            sys.exit(1)
-
-        update_ta_version(args.config, ta_version)
-
-        # handle_update check schemaVersion and update globalConfig.json if required and return schema
-        schema_content = handle_update(args.config)
-
-        scheme = GlobalConfigBuilderSchema(schema_content, j2_env)
-        
-        ta_version = schema_content.get("meta").get("version")
-        logger.info("Addon Version : " + ta_version)
-        ta_tabs = schema_content.get("pages").get("configuration").get("tabs")
-        ta_namespace = schema_content.get("meta").get("restRoot")
-        import_declare_name = "import_declare_test"
-        is_inputs = ("inputs" in schema_content.get("pages"))
-
-        logger.info("Package ID is " + ta_name)
-
-        logger.info("Copy UCC template directory")
-        recursive_overwrite(
-            os.path.join(sourcedir,"package"), os.path.join(outputdir, ta_name)
-        )
-
-        logger.info("Copy globalConfig to output")
-        shutil.copyfile(
-            args.config,
-            os.path.join(outputdir, ta_name, "appserver", "static", "js", "build", "globalConfig.json"),
-        )
-        ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
-        logger.info(f"Install Addon Requirements into {ucc_lib_target} from {args.source}")
-        install_libs(
-            args.source ,
-            ucc_lib_target
-        )
-
-        replace_token(args, ta_name)
-
-        generate_rest(args, ta_name, scheme, import_declare_name)
-
-        modify_and_replace_token_for_oauth_templates(
-                args, ta_name, ta_tabs, schema_content.get('meta').get('version')
-            )
-        if is_inputs:
-            add_modular_input(
-                args, ta_name, schema_content, import_declare_name
-            )
-        else:
-            handle_no_inputs(ta_name)
-            
-        make_modular_alerts(args, ta_name, ta_namespace, schema_content)
-
-    else:
-        logger.info("Addon Version : " + ta_version)
-        logger.warning("Skipped installing UCC required python modules as GlobalConfig.json does not exist.")
-        logger.warning("Skipped Generating UI components as GlobalConfig.json does not exist.")
-        logger.info("Setting TA name as generic")
-
-        ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
-
-        install_libs(
-            args.source,
-            ucc_lib_target=ucc_lib_target
-        )
-
-    ignore_list = get_ignore_list(ta_name, os.path.abspath(os.path.join(args.source, PARENT_DIR, ".uccignore")))
-    remove_listed_files(ignore_list)
-    copy_package_source(args, ta_name)
-
-    #Update app.manifest
-    with open(os.path.join(outputdir, ta_name,'VERSION'), 'w') as version_file:
-        version_file.write(version_str)
-        version_file.write("\n")
-        version_file.write(ta_version)
-
-
-    manifest= None
-    with open(os.path.abspath(os.path.join(outputdir, ta_name, "app.manifest")), "r") as manifest_file:
-        manifest = json.load(manifest_file)
-        manifest['info']['id']['version'] = ta_version
-    
-    
-    with open(os.path.abspath(os.path.join(outputdir, ta_name, "app.manifest")), "w") as manifest_file:
-        manifest_file.write(json.dumps(manifest, indent=4, sort_keys=True))
-        
-    comment_map = save_comments(outputdir, ta_name)
-    app_config = configparser.ConfigParser()        
-    app_config.read_file(open(os.path.join(outputdir, ta_name,'default', "app.conf")))
-    if not 'launcher' in app_config:
-        app_config.add_section('launcher')
-    if not 'id' in app_config:
-        app_config.add_section('id')
-    if not 'install' in app_config:
-        app_config.add_section('install')
-    if not 'package' in app_config:
-        app_config.add_section('package')
-    if not 'ui' in app_config:
-        app_config.add_section('ui')
-
-    app_config['launcher']['version'] = ta_version
-    app_config['launcher']['description']=manifest['info']['description']
-    
-    app_config['id']['version'] = ta_version
-
-    app_config['install']['build']=str(int(time.time()))
-    app_config['package']['id']=manifest['info']['id']['name'] 
-
-    app_config['ui']['label']=manifest['info']['title']
-
-    with open(os.path.join(outputdir, ta_name,'default', "app.conf"), 'w') as configfile:
-        app_config.write(configfile)
-    #restore License header
-    restore_comments(outputdir, ta_name, comment_map)
-    
-    #Copy Licenses
-    license_dir = os.path.abspath(os.path.join(args.source, PARENT_DIR, "LICENSES"))
-    
-    if os.path.exists(license_dir):        
-        logger.info("Copy LICENSES directory ")
-        recursive_overwrite(license_dir, os.path.join(outputdir, ta_name,"LICENSES"))
-
-    if os.path.exists(os.path.abspath(os.path.join(args.source,PARENT_DIR,"additional_packaging.py"))):
-        sys.path.insert(0,os.path.abspath(os.path.join(args.source,PARENT_DIR)))
-        from additional_packaging import additional_packaging
-        additional_packaging(ta_name)
+    _generate(args.source, args.config, args.ta_version)
