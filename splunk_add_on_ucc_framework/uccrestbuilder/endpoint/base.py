@@ -2,13 +2,13 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from __future__ import absolute_import
 
-from past.builtins import basestring
+
+from past.builtins import str
 from splunktaucclib.rest_handler.schema import RestSchema
 from io import StringIO
 from builtins import object
-from six import string_types as basestring
+from six import string_types as str
 import six
 from future import standard_library
 
@@ -148,7 +148,7 @@ def quote_string(value):
     :param value:
     :return:
     """
-    if isinstance(value, basestring):
+    if isinstance(value, str):
         return "'%s'" % value
     else:
         return value
@@ -160,7 +160,7 @@ def quote_regex(value):
     :param value:
     :return:
     """
-    if isinstance(value, basestring):
+    if isinstance(value, str):
         return '"""%s"""' % value
     else:
         return value

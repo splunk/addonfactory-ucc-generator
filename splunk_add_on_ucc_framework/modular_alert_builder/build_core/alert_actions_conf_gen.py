@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from __future__ import absolute_import
+
 from builtins import object
 from os import path as op
 import os
@@ -112,7 +112,7 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
         try:
             final_string = template.render(mod_alerts=alert_obj)
         except:
-            print (exceptions.html_error_template().render())
+            print(exceptions.html_error_template().render())
             raise
         text = linesep.join([s.strip() for s in final_string.splitlines()])
         write_file(self._alert_conf_name,

@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from __future__ import absolute_import
+
 import sys
 import os.path as op
 from os import rename, remove, makedirs

@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from __future__ import absolute_import
+
 # encoding = utf-8
 from builtins import object
 from . import event_writer
