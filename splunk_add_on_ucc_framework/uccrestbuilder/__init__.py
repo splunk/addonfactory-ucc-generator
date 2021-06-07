@@ -6,7 +6,7 @@
 REST Builder.
 """
 
-from __future__ import absolute_import
+
 
 import collections
 from splunktaucclib.rest_handler.schema import RestSchema

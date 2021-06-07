@@ -2,12 +2,12 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from __future__ import absolute_import
+
 # encoding = utf-8
 
-from past.builtins import basestring
+from past.builtins import str
 from builtins import str
-from six import string_types as basestring
+from six import string_types as str
 import functools
 
 from . import monitor
@@ -63,7 +63,7 @@ def mask_credentials(data):
         for d in data:
             new_data.append(mask_credentials(d))
         return new_data
-    elif isinstance(data, (str, basestring)):
+    elif isinstance(data, str):
         d = data.lower()
         sensitive_word = False
         for w in CREDENTIAL_KEYS:
