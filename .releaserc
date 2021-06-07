@@ -33,6 +33,6 @@
           "message": "chore(release): ${nextRelease.version}\n\n${nextRelease.notes}",
         },
       ],
-      ["@semantic-release/github", { "assets": ["NOTICE"] }],
+      ["@semantic-release/github", { "assets": ["NOTICE", "dist/*"] }],
     ],
 }
