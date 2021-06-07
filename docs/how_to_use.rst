@@ -6,6 +6,7 @@ Prerequisites
 
 * :code:`globalConfig.json`
 * :code:`package` folder
+* :code:`git` for automatic versioning (when no :code:`ta-version` argument is specified)
 
 Example of :code:`globalConfig.json` and :code:`package` folder can be found at https://github.com/splunk/splunk-add-on-for-ucc-example.
 

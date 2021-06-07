@@ -94,7 +94,8 @@
                             "help": "This is an example radio button for the account entity",
                             "required": true,
                             "options": {
-                                "items": [{
+                                "items": [
+                                    {
                                         "value": "yes",
                                         "label": "Yes"
                                     },
@@ -113,7 +114,8 @@
                             "help": "This is an example multipleSelect for account entity",
                             "required": true,
                             "options": {
-                                "items": [{
+                                "items": [
+                                    {
                                         "value": "one",
                                         "label": "Option One"
                                     },
@@ -122,15 +124,6 @@
                                         "label": "Option Two"
                                     }
                                 ]
-                            }
-                        },
-                        {
-                            "type": "text",
-                            "label": "State",
-                            "help": "This is a boolean field for developers to decide whether state parameter will be passed in the OAuth flow. Value: true|false",
-                            "field": "oauth_state_enabled",
-                            "options": {
-                                "display": false
                             }
                         },
                         {
@@ -187,7 +180,8 @@
                                 ],
                                 "auth_code_endpoint": "/services/oauth2/authorize",
                                 "access_token_endpoint": "/services/oauth2/token",
-                                "oauth_timeout": 30
+                                "oauth_timeout": 30,
+                                "oauth_state_enabled": false
                             }
                         },
                         {
@@ -465,7 +459,8 @@
                             "help": "This is an example radio button for the input one entity",
                             "required": false,
                             "options": {
-                                "items": [{
+                                "items": [
+                                    {
                                         "value": "yes",
                                         "label": "Yes"
                                     },
@@ -759,7 +754,8 @@
                             "help": "This is an example multipleSelect for input two entity",
                             "required": true,
                             "options": {
-                                "items": [{
+                                "items": [
+                                    {
                                         "value": "one",
                                         "label": "Option One"
                                     },
@@ -784,7 +780,8 @@
                             "help": "This is an example radio button for the input two entity",
                             "required": false,
                             "options": {
-                                "items": [{
+                                "items": [
+                                    {
                                         "value": "yes",
                                         "label": "Yes"
                                     },
@@ -1029,7 +1026,8 @@
         "apiVersion": "3.2.0",
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "1.0.0",
-        "displayName": "Splunk UCC test Add-on"
+        "version": "5.0.0de0f47df5",
+        "displayName": "Splunk UCC test Add-on",
+        "schemaVersion": "0.0.2"
     }
 }
