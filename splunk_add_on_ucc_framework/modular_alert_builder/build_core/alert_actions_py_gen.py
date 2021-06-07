@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from __future__ import absolute_import
+
 from builtins import object
 from . import arf_consts as ac
 from os import path as op
