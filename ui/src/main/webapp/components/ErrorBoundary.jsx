@@ -37,23 +37,21 @@ class ErrorBoundary extends React.Component {
                     <Card.Header>
                         <Heading style={{ textAlign:"center" }} level={2}>
                             <WarningIcon style={{ fontSize: "120px", color: "#ff9900" }} /><br/><br/>
-                            {this.state.errorCode === 'ERR0001' ? 'Failed to load Inputs Page' : 'Something went wrong!'}
+                            {this.state.errorCode === _('ERR0001') ? _('Failed to load Inputs Page') : _('Something went wrong!')}
                         </Heading>
                     </Card.Header>
                     <Card.Body>
                         {this.state.errorCode ? (
-                            <>
                             <Message type="info">
                                 {errorCodes[this.state.errorCode]}
                             </Message>
-                            </>
                         ) : null}
                         <details style={{ whiteSpace: 'pre-wrap' }}>
-                            {this.state.error?.toString()}
+                            {_(this.state.error?.toString())}
                         </details>
                     </Card.Body>
                     <Card.Footer showBorder={false}>
-                        {this.state.errorCode ? `${this.state.errorCode}` : null}
+                        {this.state.errorCode ? this.state.errorCode : null}
                     </Card.Footer>
                 </Card>
                 </div>
