@@ -1,31 +1,24 @@
-#
-# Copyright 2021 Splunk Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
 {
-  "branches":
+  branches:
     [
       "+([0-9])?(.{+([0-9]),x}).x",
       "main",
       "next",
       "next-major",
-      { name: "develop", prerelease: true },
+      { name: "develop", prerelease: "beta", channel: "beta" },
     ],
   plugins:
     [
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
+      [
+        "@semantic-release/exec",
+        {
+          "prepareCmd": "source $HOME/.poetry/env ;poetry version ${nextRelease.version}; poetry build",
+          "publishCmd": "source $HOME/.poetry/env ;poetry publish ;poetry publish --build -u $PYPI_USERNAME -p $PYPI_TOKEN",
+          "shell": "bash"
+        },
+      ],
       [
         "@semantic-release/git",
         {
@@ -33,6 +26,6 @@
           "message": "chore(release): ${nextRelease.version}\n\n${nextRelease.notes}",
         },
       ],
-      ["@semantic-release/github", { "assets": ["NOTICE", "dist/*"] }],
+      ["@semantic-release/github", { "assets": ["NOTICE", "pyproject.toml"] }],
     ],
 }
