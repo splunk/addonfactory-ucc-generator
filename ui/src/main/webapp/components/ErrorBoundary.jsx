@@ -47,8 +47,6 @@ class ErrorBoundary extends React.Component {
                         ) : null}
                         <details style={{ whiteSpace: 'pre-wrap' }}>
                             {this.state.error?.toString()}
-                            {/* <br />
-                            {this.state.errorInfo?.componentStack} */}
                         </details>
                     </Card.Body>
                     <Card.Footer showBorder={false}>
