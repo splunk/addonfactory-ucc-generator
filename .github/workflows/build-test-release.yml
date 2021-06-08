@@ -241,7 +241,9 @@ jobs:
             @semantic-release/exec
             @semantic-release/git
         env:
-          GITHUB_TOKEN: ${{ secrets.SEMREL_TOKEN }} #
+          GITHUB_TOKEN: ${{ secrets.SEMREL_TOKEN }}
+          PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
+          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
   update-semver:
     name: Move Respository semver tags
     if: startsWith(github.ref, 'refs/tags/v')
