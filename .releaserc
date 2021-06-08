@@ -27,12 +27,19 @@
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
       [
+        "@semantic-release/exec",
+        {
+          "prepareCmd": "source $HOME/.poetry/env ;poetry version ${nextRelease.version}; poetry build"
+          "publishCmd": "source $HOME/.poetry/env ;poetry publish ;poetry publish --build -u $PYPI_USERNAME -p $PYPI_TOKEN"
+        },
+      ],
+      [
         "@semantic-release/git",
         {
           "assets": ["NOTICE"],
           "message": "chore(release): ${nextRelease.version}\n\n${nextRelease.notes}",
         },
       ],
-      ["@semantic-release/github", { "assets": ["NOTICE", "dist/*"] }],
+      ["@semantic-release/github", { "assets": ["NOTICE", "pyproject.toml"] }],
     ],
 }
