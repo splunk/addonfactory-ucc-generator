@@ -14,13 +14,11 @@
 # limitations under the License.
 #
 {
-  "branches":
+  branches:
     [
       "+([0-9])?(.{+([0-9]),x}).x",
       "main",
-      "next",
-      "next-major",
-      { name: "develop", prerelease: true },
+      { name: "develop", prerelease: "beta", channel: "beta" },
     ],
   plugins:
     [
@@ -29,8 +27,8 @@
       [
         "@semantic-release/exec",
         {
-          "prepareCmd": "source $HOME/.poetry/env ;poetry version ${nextRelease.version}; poetry build",
-          "publishCmd": "source $HOME/.poetry/env ;poetry publish ;poetry publish --build -u $PYPI_USERNAME -p $PYPI_TOKEN",
+          "prepareCmd": "./.github/workflows/sr-prepare.sh ${nextRelease.version}",
+          "publishCmd": "./.github/workflows/sr-release.sh",
           "shell": "bash"
         },
       ],

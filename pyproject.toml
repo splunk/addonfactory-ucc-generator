@@ -73,13 +73,8 @@ jsonschema = "^3.2.0"
 [tool.poetry.dev-dependencies]
 pytest = "^6.2"
 pytest-splunk-addon = { version = "^1.6", extras = [ "docker" ] }
-poetry-dynamic-versioning = "^0.13"
 pytest-cov = "^2.12.1"
 coverage = "^5.5"
-
-[tool.poetry-dynamic-versioning]
-enable = true
-format-jinja = "{% if stage == none %}{{ base }}{% else %}{{ base }}.{{ stage[0:3] }}{{ revision }}{% endif %}"
 
 [tool.poetry.scripts]
 ucc-gen="splunk_add_on_ucc_framework:main"
