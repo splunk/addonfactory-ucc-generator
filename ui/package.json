@@ -60,7 +60,6 @@
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.2.0",
     "html-webpack-plugin": "^3.2.0",
-    "postcss": "^8.2.10",
     "prettier": "^2.0.5",
     "semantic-release": "^17.4.2",
     "style-loader": "^2.0.0",
@@ -71,7 +70,8 @@
   },
   "resolutions": {
     "glob-parent": "^5.1.2",
-    "css-what": "^5.0.1"
+    "css-what": "^5.0.1",
+    "postcss": "^8.2.10"
   },
   "engines": {
     "node": ">=6"
