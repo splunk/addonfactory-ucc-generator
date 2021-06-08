@@ -144,7 +144,7 @@ jobs:
   build:
     name: Build Release
     needs:
-      - lint
+      #- lint
       - test-unit
       #- review_secrets
       - compliance-copyrights
