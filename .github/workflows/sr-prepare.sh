@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-set -eE -v
+set -eE
+set -v
 source $HOME/.poetry/env
 poetry version $1
 poetry build
