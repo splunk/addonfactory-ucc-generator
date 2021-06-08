@@ -41,6 +41,7 @@ include = [
 "splunk_add_on_ucc_framework/requirements_py2.txt",
 "splunk_add_on_ucc_framework/requirements_py3.txt",
 "splunk_add_on_ucc_framework/requirements.txt",
+"NOTICE"
     ]
 
 readme = 'README.md'  # Markdown files are supported
