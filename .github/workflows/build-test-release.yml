@@ -1,0 +1,253 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches:
+      - "main"
+      - "develop"
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  compliance-dependencies:
+    name: Compliance Dependencies
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: ort-action
+        uses: splunk/addonfactory-ort-action@v1.3
+        id: ort-action
+      - name: ort-action-artifacts-reports
+        uses: actions/upload-artifact@v2
+        with:
+          name: analysis-reports
+          path: |
+            .ort/reports/*
+        if: always()
+      - name: ort-action-artifacts-analyzer
+        uses: actions/upload-artifact@v2
+        with:
+          name: analysis-analyzer
+          path: |
+            .ort/analyzer/*
+        if: always()
+  compliance-copyrights:
+    name: Compliance Copyright Headers
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Check License Header
+        uses: apache/skywalking-eyes@main # always prefer to use a revision instead of `main`.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # needed only when you want License-Eye to comment on the pull request.
+  test-unit:
+    name: Test Unit Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version:
+          - "3.7"
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Poetry
+        run: curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python3 -
+      - name: Get UI Base
+        run: |
+          ./get-ucc-ui.sh
+          # Puts package and schema subdirs along with NOTICE (THIRDPARTY.npm)
+          tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
+      - name: Install Code
+        run: source $HOME/.poetry/env; poetry install
+      - name: Run Pytest with coverage
+        run: source $HOME/.poetry/env; poetry run pytest --cov=./ --cov-report=xml --junitxml=test-results/junit.xml
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml
+          directory: ./coverage/reports/
+          env_vars: OS,PYTHON
+          fail_ci_if_error: true
+          path_to_write_report: ./coverage/codecov_report.txt
+          verbose: true
+      - uses: actions/upload-artifact@v2 # upload test results
+        if: success() || failure() # run this step even if previous step failed
+        with:
+          name: test-results-unit-python_${{ matrix.python-version }}
+          path: test-results/*
+
+  lint:
+    runs-on: ubuntu-latest
+    name: Lint Code Base
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          # Full git history is needed to get a proper list of changed files within `super-linter`
+          fetch-depth: 0
+      - name: Lint Code Base
+        uses: github/super-linter@v4
+        env:
+          VALIDATE_ALL_CODEBASE: false
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  # review_secrets:
+  #   name: security-detect-secrets
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #       with:
+  #         submodules: false
+  #     - name: Trufflehog Actions Scan
+  #       uses: edplato/trufflehog-actions-scan@v0.9f-beta
+  #       with:
+  #         scanArguments: "--max_dept 50 -x .github/workflows/exclude-patterns.txt --since_commit 2dc9e48a5861a9da45599e6d775c8450639c197d"
+
+  semgrep:
+    runs-on: ubuntu-latest
+    name: security-sast-semgrep
+    steps:
+      - uses: actions/checkout@v2
+      - name: Semgrep
+        id: semgrep
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: p/r2c
+  snyk:
+    name: security-vuln-snyk
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/python-3.8@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      - name: Upload result to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: snyk.sarif
+  build:
+    name: Build Release
+    needs:
+      #- lint
+      - test-unit
+      #- review_secrets
+      - compliance-copyrights
+      - compliance-dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          #Very Important semantic-release won't trigger a tagged
+          #build if this is not set false
+          persist-credentials: false
+
+      - name: Setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.7"
+      - name: Install Poetry
+        run: curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python3 -
+      - name: Get UI Base
+        run: |
+          ./get-ucc-ui.sh
+          # Puts package and schema subdirs along with NOTICE (THIRDPARTY.npm)
+          tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
+      - name: Install Code
+        run: source $HOME/.poetry/env; poetry build
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to GitHub Packages Docker Registry
+        uses: docker/login-action@v1.9.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Docker meta
+        id: docker_meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=semver,pattern=v{{major}}.{{minor}}
+            type=semver,pattern=v{{major}}
+            type=semver,pattern=v{{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=semver,pattern={{version}}
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha
+            type=sha,format=long
+      - name: Build and push action
+        id: docker_action_build
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.docker_meta.outputs.tags }}
+          labels: ${{ steps.docker_meta.outputs.labels }}
+          cache-from: registry.access.redhat.com/ubi8/ubi
+          cache-to: type=inline
+          build-args: |
+            PYTHON_RUNTIME_VERSION="3.7"
+      - name: Run Snyk to check Docker image for vulnerabilities
+        # Snyk can be used to break the build when it detects vulnerabilities.
+        # In this case we want to upload the issues to GitHub Code Scanning
+        continue-on-error: true
+        uses: snyk/actions/docker@master
+        env:
+          # In order to use the Snyk Action you will need to have a Snyk API token.
+          # More details in https://github.com/snyk/actions#getting-your-snyk-token
+          # or you can signup for free at https://snyk.io/login
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          image: ${{ fromJSON(steps.docker_meta.outputs.json).tags[0] }}
+          args: --file=Dockerfile
+      - name: Upload result to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: snyk.sarif
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: analysis-reports
+          path: /tmp/analysis-reports
+      - name: Update Notices
+        run: cp -f /tmp/analysis-reports/NOTICE_summary NOTICE
+      - name: Semantic Release
+        uses: cycjimmy/semantic-release-action@v2.5.4
+        with:
+          semantic_version: 17
+          extra_plugins: |
+            @semantic-release/exec
+            @semantic-release/git
+        env:
+          GITHUB_TOKEN: ${{ secrets.SEMREL_TOKEN }}
+          PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
+          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+  update-semver:
+    name: Move Respository semver tags
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: haya14busa/action-update-semver@v1

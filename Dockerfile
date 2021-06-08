@@ -1,4 +1,3 @@
-# you may not use this file except in compliance with the License.
 #
 # Copyright 2021 Splunk Inc.
 #
@@ -14,5 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-[tox]
-isolated_build = True
+FROM python:3.7
+
+COPY dist/*.whl /tmp
+RUN pip3.7 install $(ls /tmp/*.whl); rm -f /tmp/*.whl
+WORKDIR /github/workspace
+ENTRYPOINT [ "ucc-gen" ]

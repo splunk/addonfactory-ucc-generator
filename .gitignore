@@ -32,3 +32,5 @@ output
 # splunk_add_on_ucc_framework/package/default/data/ui/views/inputs.xml
 # splunk_add_on_ucc_framework/package/default/data/ui/views/redirect.xml
 # splunk_add_on_ucc_framework/uccrestbuilder/builder.py
+.gitmodules
+.pytest_cache/**
