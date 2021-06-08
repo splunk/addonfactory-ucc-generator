@@ -5,7 +5,6 @@ import Heading from '@splunk/react-ui/Heading';
 import Message from '@splunk/react-ui/Message';
 import { _ } from '@splunk/ui-utils/i18n';
 import Card from '@splunk/react-ui/Card';
-import Link from '@splunk/react-ui/Link';
 import WarningIcon from '@splunk/react-icons/Warning'
 import errorCodes from '../constants/errorCodes';
 
@@ -38,12 +37,16 @@ class ErrorBoundary extends React.Component {
                     <Card.Header>
                         <Heading style={{ textAlign:"center" }} level={2}>
                             <WarningIcon style={{ fontSize: "120px", color: "#ff9900" }} /><br/><br/>
-                            {this.state.errorCode == 'ERR0001' ? 'Failed to load Inputs Page' : `${errorCodes[this.state.errorCode]}`}
+                            {this.state.errorCode === 'ERR0001' ? 'Failed to load Inputs Page' : 'Something went wrong!'}
                         </Heading>
                     </Card.Header>
                     <Card.Body>
-                        {this.state.errorCode == 'ERR0001' ? (
-                            <Message type="info">This is normal on Splunk search heads as they do not require an Input page. Click <Link to="configuration" >here</Link> to return to the configuration page.</Message>
+                        {this.state.errorCode ? (
+                            <>
+                            <Message type="info">
+                                {errorCodes[this.state.errorCode]}
+                            </Message>
+                            </>
                         ) : null}
                         <details style={{ whiteSpace: 'pre-wrap' }}>
                             {this.state.error?.toString()}
