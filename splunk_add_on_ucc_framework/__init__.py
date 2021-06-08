@@ -38,7 +38,6 @@ from jinja2 import Environment, FileSystemLoader
 from dunamai import Version, Style
 import configparser
 
-outputdir = os.path.join(os.getcwd(), "output")
 sourcedir = os.path.dirname(os.path.realpath(__file__))
 
 j2_env = Environment(
@@ -101,9 +100,12 @@ def recursive_overwrite(src, dest, ignore_list=None):
         shutil.copy(src, dest)
 
 
-def clean_before_build():
+def clean_before_build(outputdir):
     """
     Clean output directory before build process.
+
+    Args:
+        outputdir (str): output directory.
     """
 
     logger.info("Cleaning out directory " + outputdir)
@@ -227,13 +229,14 @@ def handle_update(config_path):
     return schema_content
 
 
-def replace_token(ta_name):
+def replace_token(ta_name, outputdir):
     """
     Replace token with addon name in inputs.xml, configuration.xml, redirect.xml.
     Replace token with addon version in redirect.xml.
 
     Args:
         ta_name (str): Name of TA.
+        outputdir (str): output directory.
     """
 
     # replace token in template
@@ -327,7 +330,7 @@ def remove_files(path):
     for rmdir in rmdirs:
         shutil.rmtree(rmdir)
 
-def generate_rest(ta_name, scheme, import_declare_name):
+def generate_rest(ta_name, scheme, import_declare_name, outputdir):
     """
     Build REST for Add-on.
 
@@ -335,6 +338,7 @@ def generate_rest(ta_name, scheme, import_declare_name):
         ta_name (str): Name of TA.
         scheme (GlobalConfigBuilderSchema): REST schema.
         import_declare_name (str): Name of import_declare_* file.
+        outputdir (str): output directory.
     """
 
     build(
@@ -367,13 +371,14 @@ def is_oauth_configured(ta_tabs):
     return False
 
 
-def replace_oauth_html_template_token(ta_name, ta_version):
+def replace_oauth_html_template_token(ta_name, ta_version, outputdir):
     """
     Replace tokens with addon name and version in redirect.html.
 
     Args:
         ta_name (str): Name of TA.
         ta_version (str): Version of TA.
+        outputdir (str): output directory.
     """
 
     html_template_path = os.path.join(
@@ -392,7 +397,7 @@ def replace_oauth_html_template_token(ta_name, ta_version):
 
 
 def modify_and_replace_token_for_oauth_templates(
-    ta_name, ta_tabs, ta_version
+    ta_name, ta_tabs, ta_version, outputdir
 ):
     """
     Rename templates with respect to addon name if OAuth is configured.
@@ -401,7 +406,7 @@ def modify_and_replace_token_for_oauth_templates(
         ta_name (str): Name of TA.
         ta_version (str): Version of TA.
         ta_tabs (list): List of tabs mentioned in globalConfig.json.
-
+        outputdir (str): output directory.
     """
     redirect_xml_src = os.path.join(
         outputdir, ta_name, "default", "data", "ui", "views", "redirect.xml"
@@ -414,7 +419,7 @@ def modify_and_replace_token_for_oauth_templates(
     )
 
     if is_oauth_configured(ta_tabs):
-        replace_oauth_html_template_token(ta_name, ta_version)
+        replace_oauth_html_template_token(ta_name, ta_version, outputdir)
 
         redirect_js_dest = (
             os.path.join(outputdir, ta_name, "appserver", "static", "js", "build", "")
@@ -440,14 +445,15 @@ def modify_and_replace_token_for_oauth_templates(
         os.remove(redirect_js_src)
 
 def add_modular_input(
-    ta_name, schema_content, import_declare_name
+    ta_name, schema_content, import_declare_name, outputdir
 ):
     """
     Generate Modular input for addon.
 
     Args:
         ta_name (str): Name of TA.
-        schema_content (dict): JSON schema of globalConfig.json
+        schema_content (dict): JSON schema of globalConfig.json.
+        outputdir (str): output directory.
     """
 
     services = schema_content.get("pages").get("inputs").get("services")
@@ -495,7 +501,7 @@ def add_modular_input(
            config.write(configfile)
 
 
-def make_modular_alerts(ta_name, ta_namespace, schema_content):
+def make_modular_alerts(ta_name, ta_namespace, schema_content, outputdir):
     """
     Generate the alert schema with required structure.
 
@@ -503,7 +509,7 @@ def make_modular_alerts(ta_name, ta_namespace, schema_content):
         ta_name (str): Name of TA.
         ta_namespace (str): restRoot of TA.
         schema_content (dict): JSON schema of globalConfig.json.
-
+        outputdir (str): output directory.
     """
 
     if schema_content.get("alerts"):
@@ -565,12 +571,13 @@ def update_ta_version(config, ta_version):
     with open(config, "w") as config_file:
         json.dump(schema_content, config_file, indent=4)
 
-def handle_no_inputs(ta_name):
+def handle_no_inputs(ta_name, outputdir):
     """
     Handle for configuration without input page.
 
     Args:
-        ta_name (str): Name of TA. 
+        ta_name (str): Name of TA.
+        outputdir (str): output directory.
     """
     def _removeinput(path):
         """
@@ -647,7 +654,9 @@ def validate_config_against_schema(config: dict):
     return jsonschema.validate(instance=config, schema=schema)
 
 
-def _generate(source, config, ta_version):
+def _generate(source, config, ta_version, outputdir=None):
+    if outputdir is None:
+        outputdir = os.path.join(os.getcwd(), "output")
     if not ta_version:
         version = Version.from_git()
         if not version.stage:
@@ -671,7 +680,7 @@ def _generate(source, config, ta_version):
         config = os.path.abspath(
             os.path.join(source, PARENT_DIR, "globalConfig.json"))
 
-    clean_before_build()
+    clean_before_build(outputdir)
 
     with open(os.path.abspath(os.path.join(source, "app.manifest")),
               "r") as manifest_file:
@@ -723,21 +732,21 @@ def _generate(source, config, ta_version):
             ucc_lib_target
         )
 
-        replace_token(ta_name)
+        replace_token(ta_name, outputdir)
 
-        generate_rest(ta_name, scheme, import_declare_name)
+        generate_rest(ta_name, scheme, import_declare_name, outputdir)
 
         modify_and_replace_token_for_oauth_templates(
-            ta_name, ta_tabs, schema_content.get('meta').get('version')
+            ta_name, ta_tabs, schema_content.get('meta').get('version'), outputdir
         )
         if is_inputs:
             add_modular_input(
-                ta_name, schema_content, import_declare_name
+                ta_name, schema_content, import_declare_name, outputdir
             )
         else:
-            handle_no_inputs(ta_name)
+            handle_no_inputs(ta_name, outputdir)
 
-        make_modular_alerts(ta_name, ta_namespace, schema_content)
+        make_modular_alerts(ta_name, ta_namespace, schema_content, outputdir)
 
     else:
         logger.info("Addon Version : " + ta_version)
@@ -824,8 +833,8 @@ def _generate(source, config, ta_version):
         additional_packaging(ta_name)
 
 
-def generate(source="package", config=None, ta_version=None):
-    _generate(source, config, ta_version)
+def generate(source="package", config=None, ta_version=None, outputdir=None):
+    _generate(source, config, ta_version, outputdir)
 
 
 def main():
