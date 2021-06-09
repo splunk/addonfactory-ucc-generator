@@ -42,9 +42,10 @@ class ErrorBoundary extends React.Component {
                     </Card.Header>
                     <Card.Body>
                         {this.state.errorCode ? (
-                            <Message type="info">
+                            <>
                                 {errorCodes[this.state.errorCode]}
-                            </Message>
+                                <br/><br/>
+                            </>
                         ) : null}
                         <details style={{ whiteSpace: 'pre-wrap' }}>
                             {_(this.state.error?.toString())}

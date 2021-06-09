@@ -4,7 +4,7 @@ import Link from '@splunk/react-ui/Link';
 export default {
     ERR0001: (
         <>
-            This is normal on Splunk search heads as they do not require an Input page. Click <Link to="configuration">here</Link> to return to the configuration page.
+            This is normal on Splunk search heads as they do not require an Input page. Check your installation or return to the <Link to="configuration">configuration page</Link>.
         </>
     ),
     ERR0002: 'Configuration page failed to load, the server reported internal errors which may indicate you do not have access to this page.',
