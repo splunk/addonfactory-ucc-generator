@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Heading from '@splunk/react-ui/Heading';
-import Message from '@splunk/react-ui/Message';
 import { _ } from '@splunk/ui-utils/i18n';
-
+import Card from '@splunk/react-ui/Card';
+import WarningIcon from '@splunk/react-icons/Warning'
 import errorCodes from '../constants/errorCodes';
 
 class ErrorBoundary extends React.Component {
@@ -31,20 +31,30 @@ class ErrorBoundary extends React.Component {
         if (this.state.error) {
             // Error path
             return (
-                <>
-                    <Heading level={2}>
-                        {_('Something went wrong!')}
-                        {this.state.errorCode ? ` ERROR_CODE: ${this.state.errorCode}` : null}
-                    </Heading>
-                    {this.state.errorCode ? (
-                        <Message type="info">{errorCodes[this.state.errorCode]}</Message>
-                    ) : null}
-                    <details style={{ whiteSpace: 'pre-wrap' }}>
-                        {this.state.error?.toString()}
-                        <br />
-                        {this.state.errorInfo?.componentStack}
-                    </details>
-                </>
+                <div align="center" style={{ marginTop : "10%" }}>
+                <Card style={{ boxShadow : "10px 10px 5px #aaaaaa" }} >
+                    <Card.Header>
+                        <Heading style={{ textAlign:"center" }} level={2}>
+                            <WarningIcon style={{ fontSize: "120px", color: "#ff9900" }} /><br/><br/>
+                            {this.state.errorCode === 'ERR0001' ? _('Failed to load Inputs Page') : _('Something went wrong!')}
+                        </Heading>
+                    </Card.Header>
+                    <Card.Body>
+                        {this.state.errorCode ? (
+                            <>
+                                {_(errorCodes[this.state.errorCode])}
+                                <br/><br/>
+                            </>
+                        ) : null}
+                        <details style={{ whiteSpace: 'pre-wrap' }}>
+                            {this.state.error?.toString()}
+                        </details>
+                    </Card.Body>
+                    <Card.Footer showBorder={false}>
+                        {this.state.errorCode ? this.state.errorCode : null}
+                    </Card.Footer>
+                </Card>
+                </div>
             );
         }
         // Normally, just render children
