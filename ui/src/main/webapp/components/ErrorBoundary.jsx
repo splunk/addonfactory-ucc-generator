@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Heading from '@splunk/react-ui/Heading';
-import Message from '@splunk/react-ui/Message';
 import { _ } from '@splunk/ui-utils/i18n';
 import Card from '@splunk/react-ui/Card';
 import WarningIcon from '@splunk/react-icons/Warning'
