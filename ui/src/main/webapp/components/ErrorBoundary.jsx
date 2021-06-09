@@ -43,7 +43,7 @@ class ErrorBoundary extends React.Component {
                     <Card.Body>
                         {this.state.errorCode ? (
                             <>
-                                {errorCodes[this.state.errorCode]}
+                                {_(errorCodes[this.state.errorCode])}
                                 <br/><br/>
                             </>
                         ) : null}
