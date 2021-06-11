@@ -192,7 +192,7 @@ function InputPage() {
                         <Row>
                             <ColumnLayout.Column span={9}>
                                 <TitleComponent>{_(title)}</TitleComponent>
-                                <SubTitleComponent>{_(description)}</SubTitleComponent>
+                                <SubTitleComponent>{_(description || '')}</SubTitleComponent>
                             </ColumnLayout.Column>
                             {services && services.length > 1 && !customMenuField?.src && (
                                 <ColumnLayout.Column className="dropdown" span={3}>
