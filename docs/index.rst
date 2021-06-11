@@ -12,6 +12,7 @@ Welcome to addonfactory-ucc-generator's documentation!
 
    overview
    how_to_use
+   example
    troubleshooting
 
 

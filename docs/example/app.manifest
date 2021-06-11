@@ -1,0 +1,51 @@
+{
+    "dependencies": null,
+    "incompatibleApps": null,
+    "info": {
+        "author": [
+            {
+                "company": null,
+                "email": null,
+                "name": ""
+            }
+        ],
+        "classification": {
+            "categories": [],
+            "developmentStatus": null,
+            "intendedAudience": null
+        },
+        "commonInformationModels": null,
+        "description": "Splunk Add-on to choose index",
+        "id": {
+            "group": null,
+            "name": "Splunk_TA_choose_index",
+            "version": "1.0.0"
+        },
+        "license": {
+            "name": null,
+            "text": "./LICENSE.txt",
+            "uri": null
+        },
+        "privacyPolicy": {
+            "name": null,
+            "text": null,
+            "uri": null
+        },
+        "releaseDate": null,
+        "releaseNotes": {
+            "name": null,
+            "text": "./README.txt",
+            "uri": null
+        },
+        "title": "Splunk Add-on to choose index"
+    },
+    "inputGroups": null,
+    "platformRequirements": null,
+    "schemaVersion": "2.0.0",
+    "supportedDeployments": [
+        "_standalone",
+        "_distributed"
+    ],
+    "targetWorkloads": null,
+    "tasks": null
+}
