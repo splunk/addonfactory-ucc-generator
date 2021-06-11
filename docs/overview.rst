@@ -12,13 +12,15 @@ It includes UI, Rest handler, Modular input, Oauth, Alert action templates.
 What is UCC?
 ------------
 UCC stands for Universal Configuration Console.
-It is a service for generating Splunk Add-ons which is easily customizable and flexible.
-UCC provides basic UI template for creating Addon's UI.
-It is helpful to control the activity by using hooks and other functionalities.
+The purpose of having a framework for add-on generation is to simplify the
+process of add-on creation for the developers.
+UCC 5.X uses SplunkUI which is a new UI framework based on React.
 
 Features
 --------
 * Generate UCC based addons for your Splunk Technology Add-ons
+
+.. _installation:
 
 Installation
 ------------
