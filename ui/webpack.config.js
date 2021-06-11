@@ -33,7 +33,7 @@ module.exports = webpackMerge(baseConfig, {
                 to: path.join(__dirname, 'dist/schema'),
             },
             {
-                from: path.join(__dirname, 'THIRDPARTY.npm'),
+                from: path.join(__dirname, 'THIRDPARTY'),
                 to: path.join(__dirname, 'dist'),
             },
         ]),

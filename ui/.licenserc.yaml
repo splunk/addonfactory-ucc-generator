@@ -13,24 +13,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-name: Release-Notes-Preview
+header:
+  license:
+    spdx-id: Apache-2.0
+    copyright-owner: Splunk Inc.
 
-on:
-  pull_request:
-    branches: [main, develop]
-  issue_comment:
-    types: [edited]
-
-jobs:
-  preview:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - run: |
-          git fetch --prune --unshallow --tags
-      - uses: snyk/release-notes-preview@v1.6.1
-        with:
-          releaseBranch: master
-        env:
-          GITHUB_PR_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  paths-ignore:
+    - ".circleci/"
+    - ".github/"
+    - ".vscode/"
+    - "dist"
+    - "licenses"
+    - "**/*.md"
+    - "LICENSE"
+    - "NOTICE"
+    - "*.lock"
+    - "tests/data/**"
+    - "tests/unit/testdata/*"
+    - ".*"
+    - "*.pot"
+    - "*.po"
+    - "test/functional/sample_ta/**"
+    - "test/functional/data/**"
+    - "src/main/resources/splunk/default/app.conf"
+    - "**/*.js"
+    - "**/*.jsx"
+    - "package.json"
+    - "src/main/webapp/schema/schema.json"
+  comment: on-failure
