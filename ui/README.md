@@ -4,7 +4,6 @@
 
 The project contains UI framework that renders UI components dynamically based on provided `globalConfig.json`.
 
-
 ## Getting Started
 
 1. Clone the repo.
