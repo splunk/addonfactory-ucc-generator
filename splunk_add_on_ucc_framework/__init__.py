@@ -306,14 +306,15 @@ def install_libs(path, ucc_lib_target):
     #Prevent certain packages from being included pip could be dangerous others are just wasted space
     noshipdirs = ['setuptools', 'bin', 'pip', 'distribute', 'wheel']
     p = Path(ucc_lib_target)
-    try:
-        for nsd in noshipdirs:
+    for nsd in noshipdirs:
+        try:
+            #Glob can return FileNotFoundError exception if no match
             for o in p.glob(nsd + '*'):
                 if o.is_dir():
                     logging.info(f"  removing directory {o} from output must not ship")  
                     shutil.rmtree(o)
-    except FileNotFoundError:
-        pass
+        except FileNotFoundError:
+            pass
 
     #Remove execute bit from any object in lib
     NO_USER_EXEC = ~stat.S_IEXEC
