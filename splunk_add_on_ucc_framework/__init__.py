@@ -310,6 +310,7 @@ def install_libs(path, ucc_lib_target):
         for nsd in noshipdirs:
             for o in p.glob(nsd + '*'):
                 if o.is_dir():
+                    logging.info(f"  removing directory {o} from output must not ship")  
                     shutil.rmtree(o)
     except FileNotFoundError:
         pass
