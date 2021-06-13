@@ -16,6 +16,7 @@
 FROM python:3.7-slim
 
 COPY dist/*.whl /tmp
-RUN pip3.7 install $(ls /tmp/*.whl); rm -f /tmp/*.whl
+# hadolint ignore=DL3013
+RUN pip3.7 install  --no-cache-dir "$(ls /tmp/*.whl)"; rm -f /tmp/*.whl
 WORKDIR /github/workspace
 ENTRYPOINT [ "ucc-gen" ]
