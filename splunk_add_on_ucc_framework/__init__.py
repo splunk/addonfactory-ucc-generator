@@ -26,6 +26,9 @@ import sys
 import argparse
 import json
 from defusedxml import cElementTree as defused_et
+from pathlib import Path
+import stat
+
 from .uccrestbuilder.global_config import (
     GlobalConfigBuilderSchema,
     GlobalConfigPostProcessor,
@@ -297,7 +300,34 @@ def install_libs(path, ucc_lib_target):
         logging.info(f"  Uses common requirements")    
         _install_libs(requirements=os.path.join(os.path.abspath(os.path.join(path, os.pardir)), "requirements.txt"), ucc_target=ucc_lib_target)
     else:
-        logging.info(f"  Not using common requirements")
+        logging.info(f"  Not using common requirements")    
+
+
+    #Prevent certain packages from being included pip could be dangerous others are just wasted space
+    noshipdirs = ['setuptools', 'bin', 'pip', 'distribute', 'wheel']
+    p = Path(ucc_lib_target)
+    for nsd in noshipdirs:
+        try:
+            #Glob can return FileNotFoundError exception if no match
+            for o in p.glob(nsd + '*'):
+                if o.is_dir():
+                    logging.info(f"  removing directory {o} from output must not ship")  
+                    shutil.rmtree(o)
+        except FileNotFoundError:
+            pass
+
+    #Remove execute bit from any object in lib
+    NO_USER_EXEC = ~stat.S_IEXEC
+    NO_GROUP_EXEC = ~stat.S_IXGRP
+    NO_OTHER_EXEC = ~stat.S_IXOTH
+    NO_EXEC = NO_USER_EXEC & NO_GROUP_EXEC & NO_OTHER_EXEC
+
+    for o in p.rglob("*"):
+        if not o.is_dir() and os.access(o, os.X_OK):
+            logging.info(f"  fixing {o} execute bit")   
+            current_permissions = stat.S_IMODE(os.lstat(o).st_mode)
+            os.chmod(o, current_permissions & NO_EXEC)
+
 
 
 def remove_files(path):
