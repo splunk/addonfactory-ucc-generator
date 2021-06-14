@@ -65,7 +65,7 @@ function ConfigurationPage() {
                 <Row>
                     <ColumnLayout.Column span={9}>
                         <TitleComponent>{_(title)}</TitleComponent>
-                        <SubTitleComponent>{_(description)}</SubTitleComponent>
+                        <SubTitleComponent>{_(description || '')}</SubTitleComponent>
                     </ColumnLayout.Column>
                 </Row>
             </ColumnLayout>
