@@ -72,7 +72,7 @@ export function filterByDenyList(fields, denyList) {
 
 export function filterResponse(items, labelField, allowList, denyList) {
     let newItems = items.map((item) => {
-        return { label: labelField ? item[labelField] : item.name, value: item.name };
+        return { label: labelField ? item.content?.[labelField] : item.name, value: item.name };
     });
 
     if (allowList) {

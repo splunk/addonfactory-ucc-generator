@@ -135,7 +135,7 @@ class BaseFormView extends PureComponent {
         this.isOAuth = false;
         this.isAuthVal = false;
         this.authMap = {};
-        const temState = {};
+        let temState = {};
         const temEntities = [];
 
         this.entities.forEach((e) => {
@@ -332,6 +332,42 @@ class BaseFormView extends PureComponent {
 
         this.entities = temEntities;
 
+        // flatten the dependencyMap to remove redundant iterations for resolving them
+        // one-by-one in following loop
+        let flattenedMap = {};
+        this.dependencyMap.forEach((value) => {
+            flattenedMap = { ...flattenedMap, ...value };
+        });
+
+        const changes = {};
+        Object.keys(flattenedMap).forEach((field) => {
+            const values = flattenedMap[field];
+            const data = {};
+            let load = true;
+
+            values.forEach((dependency) => {
+                const required = !!this.entities.find((e) => {
+                    return e.field === dependency;
+                }).required;
+
+                const currentValue = temState[dependency].value;
+                if (required && !currentValue) {
+                    load = false;
+                    data[dependency] = null;
+                } else {
+                    data[dependency] = currentValue;
+                }
+            });
+
+            if (load) {
+                changes[field] = {
+                    dependencyValues: { $set: data },
+                };
+            }
+        });
+
+        // apply dependency field changes in state
+        temState = update(temState, changes);
         this.state = {
             data: temState,
             errorMsg: '',
