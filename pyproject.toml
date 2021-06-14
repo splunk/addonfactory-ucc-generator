@@ -53,13 +53,11 @@ keywords = ['splunk']
 
 [tool.poetry.dependencies]
 python = "^3.7"
-solnlib = '^3'
 jinja2 = "^2"
 mako= "^1"
 munch= "^2"
 lxml = "^4.3"
 future = "^0"
-splunktaucclib = "4.2.0"
 wheel = "*"
 dunamai = "*"
 reuse = "*"
@@ -71,6 +69,9 @@ Sphinx = "^4.0.2"
 sphinx-rtd-theme = "^0.5.2"
 defusedxml = "^0.7.1"
 jsonschema = "^3.2.0"
+solnlib = "^4.1.0"
+splunktalib = "^2.0.0"
+splunktaucclib = "^5.0.2"
 [tool.poetry.dev-dependencies]
 pytest = "^6.2"
 pytest-splunk-addon = { version = "^1.6", extras = [ "docker" ] }
