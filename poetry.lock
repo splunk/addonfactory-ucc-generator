@@ -729,11 +729,11 @@ python-versions = "*"
 
 [[package]]
 name = "solnlib"
-version = "3.0.5"
+version = "4.1.0"
 description = "The Splunk Software Development Kit for Splunk Solutions"
 category = "main"
 optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*, !=3.6.*"
+python-versions = ">=3.7,<4.0"
 
 [package.dependencies]
 future = ">=0,<1"
@@ -741,7 +741,7 @@ requests = ">=2.24,<3.0"
 schematics = ">=2.1,<3.0"
 six = "*"
 sortedcontainers = ">=2.2,<3.0"
-splunk-sdk = "*"
+splunk-sdk = ">=1.6,<2.0"
 
 [[package]]
 name = "sortedcontainers"
@@ -907,7 +907,7 @@ six = "1.12.0"
 
 [[package]]
 name = "splunk-sdk"
-version = "1.6.15"
+version = "1.6.16"
 description = "The Splunk Software Development Kit for Python."
 category = "main"
 optional = false
@@ -915,30 +915,30 @@ python-versions = "*"
 
 [[package]]
 name = "splunktalib"
-version = "1.2.1"
+version = "2.0.0"
 description = "Supporting library for Splunk Add-ons"
 category = "main"
 optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*, !=3.6.*"
+python-versions = ">=3.7,<4.0"
 
 [package.dependencies]
-defusedxml = ">=0.7.1,<0.8.0"
-httplib2 = "0.19.1"
-sortedcontainers = ">=2.2,<3.0"
+defusedxml = ">=0,<1"
+httplib2 = ">=0,<1"
+sortedcontainers = ">=2,<3"
 
 [[package]]
 name = "splunktaucclib"
-version = "4.2.0"
+version = "5.0.2"
 description = ""
 category = "main"
 optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*, !=3.6.*"
+python-versions = ">=3.7,<4.0"
 
 [package.dependencies]
 future = ">=0,<1"
-solnlib = ">=3,<4"
-splunk-sdk = ">=1.6,<2.0"
-splunktalib = "1.2.1"
+solnlib = ">=4.0.0,<5.0.0"
+splunk-sdk = "1.6.16"
+splunktalib = ">=2.0.0,<3.0.0"
 
 [[package]]
 name = "text-unidecode"
@@ -992,7 +992,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "290c951c17adaa809d577daf37eb27cd6fb371653c69e1ffd21b23a85ece4561"
+content-hash = "bbdf65c4fb769dad41af4c12fb7827ea5d8124a727b1467251fa605ed149ff87"
 
 [metadata.files]
 alabaster = [
@@ -1042,6 +1042,7 @@ click = [
 ]
 colorama = [
     {file = "colorama-0.4.4-py2.py3-none-any.whl", hash = "sha256:9f47eda37229f68eee03b24b9748937c7dc3868f906e8ba69fbcbdd3bc5dc3e2"},
+    {file = "colorama-0.4.4.tar.gz", hash = "sha256:5941b2b48a20143d2267e95b1c2a7603ce057ee39fd88e7329b0c292aa16869b"},
 ]
 coverage = [
     {file = "coverage-5.5-cp27-cp27m-macosx_10_9_x86_64.whl", hash = "sha256:b6d534e4b2ab35c9f93f46229363e17f63c53ad01330df9f2d6bd1187e5eaacf"},
@@ -1153,6 +1154,7 @@ importlib-metadata = [
     {file = "importlib_metadata-4.5.0.tar.gz", hash = "sha256:b142cc1dd1342f31ff04bb7d022492b09920cb64fed867cd3ea6f80fe3ebd139"},
 ]
 iniconfig = [
+    {file = "iniconfig-1.1.1-py2.py3-none-any.whl", hash = "sha256:011e24c64b7f47f6ebd835bb12a743f2fbe9a26d4cecaa7f53bc4f35ee9da8b3"},
     {file = "iniconfig-1.1.1.tar.gz", hash = "sha256:bc3af051d7d14b2ee5ef9969666def0cd1a000e121eaea580d4a313df4b37f32"},
 ]
 ipaddress = [
@@ -1384,18 +1386,26 @@ pyyaml = [
     {file = "PyYAML-5.4.1-cp27-cp27mu-manylinux1_x86_64.whl", hash = "sha256:bb4191dfc9306777bc594117aee052446b3fa88737cd13b7188d0e7aa8162185"},
     {file = "PyYAML-5.4.1-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:6c78645d400265a062508ae399b60b8c167bf003db364ecb26dcab2bda048253"},
     {file = "PyYAML-5.4.1-cp36-cp36m-manylinux1_x86_64.whl", hash = "sha256:4e0583d24c881e14342eaf4ec5fbc97f934b999a6828693a99157fde912540cc"},
+    {file = "PyYAML-5.4.1-cp36-cp36m-manylinux2014_aarch64.whl", hash = "sha256:72a01f726a9c7851ca9bfad6fd09ca4e090a023c00945ea05ba1638c09dc3347"},
+    {file = "PyYAML-5.4.1-cp36-cp36m-manylinux2014_s390x.whl", hash = "sha256:895f61ef02e8fed38159bb70f7e100e00f471eae2bc838cd0f4ebb21e28f8541"},
     {file = "PyYAML-5.4.1-cp36-cp36m-win32.whl", hash = "sha256:3bd0e463264cf257d1ffd2e40223b197271046d09dadf73a0fe82b9c1fc385a5"},
     {file = "PyYAML-5.4.1-cp36-cp36m-win_amd64.whl", hash = "sha256:e4fac90784481d221a8e4b1162afa7c47ed953be40d31ab4629ae917510051df"},
     {file = "PyYAML-5.4.1-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:5accb17103e43963b80e6f837831f38d314a0495500067cb25afab2e8d7a4018"},
     {file = "PyYAML-5.4.1-cp37-cp37m-manylinux1_x86_64.whl", hash = "sha256:e1d4970ea66be07ae37a3c2e48b5ec63f7ba6804bdddfdbd3cfd954d25a82e63"},
+    {file = "PyYAML-5.4.1-cp37-cp37m-manylinux2014_aarch64.whl", hash = "sha256:cb333c16912324fd5f769fff6bc5de372e9e7a202247b48870bc251ed40239aa"},
+    {file = "PyYAML-5.4.1-cp37-cp37m-manylinux2014_s390x.whl", hash = "sha256:fe69978f3f768926cfa37b867e3843918e012cf83f680806599ddce33c2c68b0"},
     {file = "PyYAML-5.4.1-cp37-cp37m-win32.whl", hash = "sha256:dd5de0646207f053eb0d6c74ae45ba98c3395a571a2891858e87df7c9b9bd51b"},
     {file = "PyYAML-5.4.1-cp37-cp37m-win_amd64.whl", hash = "sha256:08682f6b72c722394747bddaf0aa62277e02557c0fd1c42cb853016a38f8dedf"},
     {file = "PyYAML-5.4.1-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:d2d9808ea7b4af864f35ea216be506ecec180628aced0704e34aca0b040ffe46"},
     {file = "PyYAML-5.4.1-cp38-cp38-manylinux1_x86_64.whl", hash = "sha256:8c1be557ee92a20f184922c7b6424e8ab6691788e6d86137c5d93c1a6ec1b8fb"},
+    {file = "PyYAML-5.4.1-cp38-cp38-manylinux2014_aarch64.whl", hash = "sha256:fd7f6999a8070df521b6384004ef42833b9bd62cfee11a09bda1079b4b704247"},
+    {file = "PyYAML-5.4.1-cp38-cp38-manylinux2014_s390x.whl", hash = "sha256:bfb51918d4ff3d77c1c856a9699f8492c612cde32fd3bcd344af9be34999bfdc"},
     {file = "PyYAML-5.4.1-cp38-cp38-win32.whl", hash = "sha256:fa5ae20527d8e831e8230cbffd9f8fe952815b2b7dae6ffec25318803a7528fc"},
     {file = "PyYAML-5.4.1-cp38-cp38-win_amd64.whl", hash = "sha256:0f5f5786c0e09baddcd8b4b45f20a7b5d61a7e7e99846e3c799b05c7c53fa696"},
     {file = "PyYAML-5.4.1-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:294db365efa064d00b8d1ef65d8ea2c3426ac366c0c4368d930bf1c5fb497f77"},
     {file = "PyYAML-5.4.1-cp39-cp39-manylinux1_x86_64.whl", hash = "sha256:74c1485f7707cf707a7aef42ef6322b8f97921bd89be2ab6317fd782c2d53183"},
+    {file = "PyYAML-5.4.1-cp39-cp39-manylinux2014_aarch64.whl", hash = "sha256:d483ad4e639292c90170eb6f7783ad19490e7a8defb3e46f97dfe4bacae89122"},
+    {file = "PyYAML-5.4.1-cp39-cp39-manylinux2014_s390x.whl", hash = "sha256:fdc842473cd33f45ff6bce46aea678a54e3d21f1b61a7750ce3c498eedfe25d6"},
     {file = "PyYAML-5.4.1-cp39-cp39-win32.whl", hash = "sha256:49d4cdd9065b9b6e206d0595fee27a96b5dd22618e7520c33204a4a3239d5b10"},
     {file = "PyYAML-5.4.1-cp39-cp39-win_amd64.whl", hash = "sha256:c20cfa2d49991c8b4147af39859b167664f2ad4561704ee74c1de03318e898db"},
     {file = "PyYAML-5.4.1.tar.gz", hash = "sha256:607774cbba28732bfa802b54baa7484215f530991055bb562efbed5b2f20a45e"},
@@ -1434,8 +1444,8 @@ snowballstemmer = [
     {file = "snowballstemmer-2.1.0.tar.gz", hash = "sha256:e997baa4f2e9139951b6f4c631bad912dfd3c792467e2f03d7239464af90e914"},
 ]
 solnlib = [
-    {file = "solnlib-3.0.5-py2.py3-none-any.whl", hash = "sha256:c433a4abf7f460a04c6b52d06e663bce3bc3f132bf5c34e11707bddc9847bbdd"},
-    {file = "solnlib-3.0.5.tar.gz", hash = "sha256:f09b5c97c92741e3bc3cc94e647398166be7d0fd8c8f78f17f3863c444f4842c"},
+    {file = "solnlib-4.1.0-py3-none-any.whl", hash = "sha256:4e467e9135d59f15e6d546157e1978cf92931708e1e0844472b5a1c21cd8eb7a"},
+    {file = "solnlib-4.1.0.tar.gz", hash = "sha256:5876006bef6f6bf94c62e0af7d184ecbce6aa625115916811893d7e6fdc8b575"},
 ]
 sortedcontainers = [
     {file = "sortedcontainers-2.4.0-py2.py3-none-any.whl", hash = "sha256:a163dcaede0f1c021485e957a39245190e74249897e2ae4b2aa38595db237ee0"},
@@ -1481,15 +1491,15 @@ splunk-appinspect = [
     {file = "splunk-appinspect-2.5.2.tar.gz", hash = "sha256:c6126f37716dba3ab11606e4ae4a56d355b468f596d61e10800df705c018b164"},
 ]
 splunk-sdk = [
-    {file = "splunk-sdk-1.6.15.tar.gz", hash = "sha256:922b4541b9764a65e450e5437638a357f8aff5c7e6a4cd2637355a7a4197301a"},
+    {file = "splunk-sdk-1.6.16.tar.gz", hash = "sha256:b4963a983f1538686cf3f83f9e5ee5e48419cc71744fc8bc0f60f8b8576efb98"},
 ]
 splunktalib = [
-    {file = "splunktalib-1.2.1-py2.py3-none-any.whl", hash = "sha256:61d632018f97c5971ff604dd2822185bb1eaf5706c72843616718cb5119c27cc"},
-    {file = "splunktalib-1.2.1.tar.gz", hash = "sha256:e6e4d0c1503f5b93399fe5435bc153910b3fc59602fca7f04827ad9b08ab9fff"},
+    {file = "splunktalib-2.0.0-py3-none-any.whl", hash = "sha256:db249b99c15e06d797457f208a0764c84b0bfda81511fe183ce0f32c65b8d03a"},
+    {file = "splunktalib-2.0.0.tar.gz", hash = "sha256:b42c9e23fa92deb87f1a07fd1bd42479baba57bc240e5ed71cafda89b600eee0"},
 ]
 splunktaucclib = [
-    {file = "splunktaucclib-4.2.0-py2.py3-none-any.whl", hash = "sha256:34c29020008d39f2634333340019e890b99c83a6e709ff2147e3b596f15bf59c"},
-    {file = "splunktaucclib-4.2.0.tar.gz", hash = "sha256:46c798222b829521fdacf675b708dc16a905efd09d894b0134ab7e336851b5ce"},
+    {file = "splunktaucclib-5.0.2-py3-none-any.whl", hash = "sha256:dc8a7544ab88195fd2032f724dc6fb0a4dd42fd086b7b3e4548b5f4fd168992f"},
+    {file = "splunktaucclib-5.0.2.tar.gz", hash = "sha256:84c2ba811f4be9354afdb19cc3301895ede69dac1baf57bd439a805565ebc72a"},
 ]
 text-unidecode = [
     {file = "text-unidecode-1.3.tar.gz", hash = "sha256:bad6603bb14d279193107714b288be206cac565dfa49aa5b105294dd5c4aab93"},
