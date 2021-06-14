@@ -329,6 +329,7 @@ def install_libs(path, ucc_lib_target):
             os.chmod(o, current_permissions & NO_EXEC)
 
 
+
 def remove_files(path):
     """
     Remove *.egg-info and *.dist-info files in given path.

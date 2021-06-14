@@ -33,9 +33,7 @@ What ucc-gen does
 * Collect and install Addon's requirements into :code:`output/<package_ID>/lib` directory of addon's package.
 * For the addon's requirements, packages are installed according to following table:
 
-  * :code:`lib/requirements.txt` - install Python2/Python3 compatible packages into :code:`output/<package_ID>/lib`
-  * :code:`lib/py2/requirements.txt` - install Python2 compatible packages into :code:`output/<package_ID>/lib2`
-  * :code:`lib/py3/requirements.txt` - install Python3 compatible packages into :code:`output/<package_ID>/lib3`
+  * :code:`lib/requirements.txt` - install Python3 compatible packages into :code:`output/<package_ID>/lib`
 
 * Replace tokens in views.
 * Copy addon's :code:`package/*` to :code:`output/<package_ID>/*` directory.
