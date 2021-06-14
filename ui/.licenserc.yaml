@@ -27,6 +27,7 @@ header:
     - "**/*.md"
     - "LICENSE"
     - "NOTICE"
+    - "THIRDPARTY"
     - "*.lock"
     - "tests/data/**"
     - "tests/unit/testdata/*"
