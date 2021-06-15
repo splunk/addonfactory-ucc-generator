@@ -70,7 +70,6 @@ sphinx-rtd-theme = "^0.5.2"
 defusedxml = "^0.7.1"
 jsonschema = "^3.2.0"
 solnlib = "^4.1.0"
-splunktalib = "^2.0.0"
 splunktaucclib = "^5.0.2"
 [tool.poetry.dev-dependencies]
 pytest = "^6.2"
