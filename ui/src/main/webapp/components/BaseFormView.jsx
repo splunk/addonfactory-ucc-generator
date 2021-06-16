@@ -593,6 +593,17 @@ class BaseFormView extends PureComponent {
             }
         });
 
+        // clear out fields of other authentication methods when using one
+        if (this.isAuthVal) {
+            Object.keys(this.authMap).forEach((type) => {
+                if (this.datadict.auth_type !== type) {
+                    this.authMap[type].forEach((e) => {
+                        body.set(e, '');
+                    });
+                }
+            });
+        }
+
         if (this.isOAuth) {
             // Prevent passing redirect_url field used in OAuth to backend conf file
             body.delete('redirect_url');
