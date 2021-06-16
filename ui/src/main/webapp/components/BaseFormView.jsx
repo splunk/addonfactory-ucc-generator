@@ -485,6 +485,9 @@ class BaseFormView extends PureComponent {
                 this.isOAuth &&
                 (this.isSingleOauth || (this.isAuthVal && this.datadict.auth_type === 'oauth'))
             ) {
+                // clear out Basic Authentication fields before doing OAuth Authentication
+                this.datadict.username = '';
+                this.datadict.password = '';
                 // handle oauth Authentication
                 // Populate the parameter string with client_id, redirect_url and response_type
                 let parameters = `?response_type=code&client_id=${this.datadict.client_id}&redirect_uri=${this.datadict.redirect_url}`;
@@ -569,6 +572,9 @@ class BaseFormView extends PureComponent {
                     }
                 });
             } else {
+                // clear out OAuth Authentication fields before doing Basic Authentication
+                this.datadict.client_id = '';
+                this.datadict.client_secret = '';
                 this.saveData();
             }
         };
