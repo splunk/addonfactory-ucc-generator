@@ -41,7 +41,7 @@ function SingleInputComponent(props) {
         disableSearch,
         labelField,
         autoCompleteFields,
-        isClearable,
+        hideClearBtn,
     } = controlOptions;
 
     function handleChange(e, obj) {
@@ -120,6 +120,8 @@ function SingleInputComponent(props) {
 
     const effectiveDisabled = loading ? true : disabled;
     const effectivePlaceholder = loading ? _('Loading') : placeholder;
+    // hideClearBtn=true only passed for OAuth else its undefined
+    const effectiveIsClearable = effectiveDisabled ? false : !hideClearBtn;
 
     return (
         <>
@@ -153,7 +155,7 @@ function SingleInputComponent(props) {
                     >
                         {options && options.length > 0 && options}
                     </SelectWrapper>
-                    {isClearable !== true ? (
+                    {effectiveIsClearable ? (
                         <Button
                             data-test="clear"
                             appearance="secondary"
@@ -185,7 +187,7 @@ SingleInputComponent.propTypes = {
         referenceName: PropTypes.string,
         disableSearch: PropTypes.bool,
         labelField: PropTypes.string,
-        isClearable: PropTypes.bool,
+        hideClearBtn: PropTypes.bool,
     }),
 };
 

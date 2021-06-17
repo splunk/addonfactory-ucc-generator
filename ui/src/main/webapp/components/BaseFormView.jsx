@@ -169,7 +169,7 @@ class BaseFormView extends PureComponent {
                             oauth: 'OAuth 2.0 Authentication',
                         };
                         entity.options = {};
-                        entity.options.isClearable = true;
+                        entity.options.hideClearBtn = true;
                         entity.options.autoCompleteFields = authType.map((type) => {
                             return { label: content[type], value: type };
                         });
