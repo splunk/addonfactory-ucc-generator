@@ -16,7 +16,6 @@
 
 # encode=utf-8
 
-import time
 from builtins import object, range
 
 

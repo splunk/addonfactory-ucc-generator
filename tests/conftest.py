@@ -20,7 +20,6 @@ import pytest
 
 pytest_plugins = "pytester"
 import json
-import urllib.parse
 
 from solnlib.splunk_rest_client import SplunkRestClient
 from splunklib import binding

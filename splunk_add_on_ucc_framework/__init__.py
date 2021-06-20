@@ -27,7 +27,6 @@ import shutil
 import stat
 import sys
 import time
-from os import system
 from pathlib import Path
 
 import jsonschema

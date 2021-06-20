@@ -18,7 +18,6 @@
 import os
 import os.path as op
 from os.path import basename as bn
-from os.path import dirname as dn
 from shutil import copy
 
 from splunk_add_on_ucc_framework.alert_utils.alert_utils_common.conf_parser import \
