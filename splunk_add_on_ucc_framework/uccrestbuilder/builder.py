@@ -16,9 +16,10 @@
 
 
 
-from builtins import object
 import os
 import os.path as op
+from builtins import object
+
 from .rest_conf import RestmapConf, WebConf
 
 __all__ = [

@@ -1,5 +1,5 @@
-from os import path
 import unittest
+from os import path
 
 import splunk_add_on_ucc_framework as ucc
 

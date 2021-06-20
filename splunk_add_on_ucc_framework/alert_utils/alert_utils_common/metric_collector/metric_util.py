@@ -17,13 +17,14 @@
 
 # encoding = utf-8
 
-from past.builtins import str
-from builtins import str
-from six import string_types as str
 import functools
+import time
+from builtins import str
+
+from past.builtins import str
+from six import string_types as str
 
 from . import monitor
-import time
 
 __all__ = ['initialize_metric_collector', 'function_run_time']
 

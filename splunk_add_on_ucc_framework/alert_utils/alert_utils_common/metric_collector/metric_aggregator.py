@@ -16,9 +16,8 @@
 
 # encode=utf-8
 
-from builtins import range
-from builtins import object
 import time
+from builtins import object, range
 
 
 class NumberMetricArregator(object):

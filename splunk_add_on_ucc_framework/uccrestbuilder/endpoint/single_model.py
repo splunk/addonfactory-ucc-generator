@@ -16,7 +16,7 @@
 
 
 
-from .base import RestEntityBuilder, RestEndpointBuilder
+from .base import RestEndpointBuilder, RestEntityBuilder
 
 
 class SingleModelEntityBuilder(RestEntityBuilder):

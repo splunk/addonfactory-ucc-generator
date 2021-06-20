@@ -15,20 +15,22 @@
 #
 
 
-from builtins import object
-from os import path as op
 import os
-from . import arf_consts as ac
-from . import alert_actions_exceptions as aae
-from shutil import copy
-from os import linesep
-from mako.template import Template
-from mako import exceptions
-from munch import Munch
-from .alert_actions_template import AlertActionsTemplateMgr
+from builtins import object
 from json import loads as jloads
+from os import linesep
+from os import path as op
+from shutil import copy
+
+from mako import exceptions
+from mako.template import Template
+from munch import Munch
+
+from . import alert_actions_exceptions as aae
+from . import arf_consts as ac
 from .alert_actions_helper import write_file
 from .alert_actions_merge import remove_alert_from_conf_file
+from .alert_actions_template import AlertActionsTemplateMgr
 
 
 class AlertActionsConfBase(object):

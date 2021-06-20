@@ -14,13 +14,15 @@
 # limitations under the License.
 #
 
-from builtins import object
 import json
 import logging
 import logging.handlers
 import re
+from builtins import object
+
 import splunk.rest as rest
 from splunk.util import normalizeBoolean
+
 
 class InvalidResultID(Exception):
     pass

@@ -20,36 +20,27 @@ Global config schema.
 
 
 
-from builtins import map
-from builtins import object
+import json
 import os
 import os.path as op
-import stat
 import shutil
+import stat
+from builtins import map, object
+
 from solnlib.utils import is_true
 from splunktaucclib.global_config import GlobalConfigSchema
-from splunktaucclib.rest_handler.endpoint.field import (
-    RestField,
-)
-import json
+from splunktaucclib.rest_handler.endpoint.field import RestField
 
+from .endpoint.base import indent, quote_regex
+from .endpoint.datainput import (DataInputEndpointBuilder,
+                                 DataInputEntityBuilder)
 from .endpoint.field import RestFieldBuilder
-from .endpoint.single_model import (
-    SingleModelEntityBuilder,
-    SingleModelEndpointBuilder,
-)
-from .endpoint.multiple_model import (
-    MultipleModelEntityBuilder,
-    MultipleModelEndpointBuilder,
-)
-from .endpoint.datainput import (
-    DataInputEndpointBuilder,
-    DataInputEntityBuilder,
-)
-
+from .endpoint.multiple_model import (MultipleModelEndpointBuilder,
+                                      MultipleModelEntityBuilder)
 # model to get accesstoken for oauth
 from .endpoint.oauth_model import OAuthModelEndpointBuilder
-from .endpoint.base import indent, quote_regex
+from .endpoint.single_model import (SingleModelEndpointBuilder,
+                                    SingleModelEntityBuilder)
 
 
 class GlobalConfigBuilderSchema(GlobalConfigSchema):

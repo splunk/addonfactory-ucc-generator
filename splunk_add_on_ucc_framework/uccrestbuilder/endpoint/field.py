@@ -17,7 +17,8 @@
 
 
 from builtins import object
-from .base import quote_string, indent
+
+from .base import indent, quote_string
 
 
 class RestFieldBuilder(object):
