@@ -31,15 +31,21 @@ from splunktaucclib.global_config import GlobalConfigSchema
 from splunktaucclib.rest_handler.endpoint.field import RestField
 
 from .endpoint.base import indent, quote_regex
-from .endpoint.datainput import (DataInputEndpointBuilder,
-                                 DataInputEntityBuilder)
+from .endpoint.datainput import (
+    DataInputEndpointBuilder,
+    DataInputEntityBuilder,
+)
 from .endpoint.field import RestFieldBuilder
-from .endpoint.multiple_model import (MultipleModelEndpointBuilder,
-                                      MultipleModelEntityBuilder)
+from .endpoint.multiple_model import (
+    MultipleModelEndpointBuilder,
+    MultipleModelEntityBuilder,
+)
 # model to get accesstoken for oauth
 from .endpoint.oauth_model import OAuthModelEndpointBuilder
-from .endpoint.single_model import (SingleModelEndpointBuilder,
-                                    SingleModelEntityBuilder)
+from .endpoint.single_model import (
+    SingleModelEndpointBuilder,
+    SingleModelEntityBuilder,
+)
 
 
 class GlobalConfigBuilderSchema(GlobalConfigSchema):
