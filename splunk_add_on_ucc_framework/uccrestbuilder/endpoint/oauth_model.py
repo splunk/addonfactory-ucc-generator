@@ -18,7 +18,6 @@
 
 from .base import RestEndpointBuilder
 
-
 """
 This class is used to generate the endpoint for getting access token from auth code and 
 extends RestEndpointBuilder class

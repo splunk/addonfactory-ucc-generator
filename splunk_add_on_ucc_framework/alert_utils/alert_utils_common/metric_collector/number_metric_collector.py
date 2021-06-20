@@ -16,15 +16,17 @@
 
 
 from future import standard_library
+
 standard_library.install_aliases()
-from builtins import object
-import threading
 import queue
+import threading
 import time
+from builtins import object
 
 from solnlib import log
-from .metric_exception import MetricException
+
 from . import metric_aggregator
+from .metric_exception import MetricException
 
 __all__ = ['NumberMetricCollector']
 

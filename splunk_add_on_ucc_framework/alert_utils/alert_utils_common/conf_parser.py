@@ -26,9 +26,10 @@ please search: ######## tab_update ########
 """
 
 from future import standard_library
+
 standard_library.install_aliases()
-from builtins import str
 import configparser
+from builtins import str
 
 try:
     from collections import OrderedDict as _default_dict
@@ -46,7 +47,8 @@ class TABConfigParser(configparser.RawConfigParser):
         """
         Override the built-in _read() method to read comments
         """
-        from configparser import DEFAULTSECT, MissingSectionHeaderError, ParsingError
+        from configparser import (DEFAULTSECT, MissingSectionHeaderError,
+                                  ParsingError)
 
         cursect = None                        # None, or a dictionary
         optname = None

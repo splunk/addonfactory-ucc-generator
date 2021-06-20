@@ -16,13 +16,14 @@
 
 
 
-from past.builtins import str
-from splunktaucclib.rest_handler.schema import RestSchema
-from io import StringIO
 from builtins import object
-from six import string_types as str
+from io import StringIO
+
 import six
 from future import standard_library
+from past.builtins import str
+from six import string_types as str
+from splunktaucclib.rest_handler.schema import RestSchema
 
 standard_library.install_aliases()
 

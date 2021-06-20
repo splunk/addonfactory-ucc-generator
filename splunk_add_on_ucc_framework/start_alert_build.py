@@ -15,11 +15,12 @@
 #
 
 
-from . import normalize
 import logging
 import os
-from .modular_alert_builder.build_core import generate_alerts
 import traceback
+
+from . import normalize
+from .modular_alert_builder.build_core import generate_alerts
 
 
 class LoggerAdapter(logging.LoggerAdapter):

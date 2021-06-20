@@ -17,13 +17,15 @@
 
 import os
 import os.path as op
-from os.path import dirname as dn
 from os.path import basename as bn
+from os.path import dirname as dn
 from shutil import copy
+
+from splunk_add_on_ucc_framework.alert_utils.alert_utils_common.conf_parser import \
+    TABConfigParser
+
 from . import alert_actions_exceptions as aae
 from . import arf_consts as ac
-
-from splunk_add_on_ucc_framework.alert_utils.alert_utils_common.conf_parser import TABConfigParser
 
 merge_deny_list = ['default.meta', 'README.txt']
 merge_mode_config = {

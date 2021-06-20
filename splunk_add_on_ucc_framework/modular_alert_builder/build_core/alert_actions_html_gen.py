@@ -15,20 +15,22 @@
 #
 
 
-from builtins import object
-from . import arf_consts as ac
 import os
 import sys
-from os import path as op
+from builtins import object
 from os import linesep
-from . import alert_actions_exceptions as aae
-from munch import Munch
-from mako.template import Template
-from mako.lookup import TemplateLookup
-from defusedxml import lxml as defused_lxml
+from os import path as op
 from re import search
-from .alert_actions_template import AlertActionsTemplateMgr
+
+from defusedxml import lxml as defused_lxml
+from mako.lookup import TemplateLookup
+from mako.template import Template
+from munch import Munch
+
+from . import alert_actions_exceptions as aae
+from . import arf_consts as ac
 from .alert_actions_helper import write_file
+from .alert_actions_template import AlertActionsTemplateMgr
 
 
 class AlertHtmlBase(object):

@@ -14,8 +14,8 @@
 # limitations under the License.
 #
 
-from builtins import object
 import os.path as op
+from builtins import object
 
 
 class AlertActionsTemplateMgr(object):

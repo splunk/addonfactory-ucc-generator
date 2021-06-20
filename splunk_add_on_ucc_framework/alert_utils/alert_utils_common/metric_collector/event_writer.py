@@ -16,12 +16,13 @@
 
 # encoding = utf-8
 
-from builtins import object
-import time
-import logging
 import json
+import logging
+import time
+from builtins import object
 
 from solnlib import log
+
 
 def message(app, current_time, event, tags):
     final_event = dict(event)

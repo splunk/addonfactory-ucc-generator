@@ -18,6 +18,8 @@
 
 
 from builtins import object
+
+
 class RestmapConf(object):
 
     _admin_template = """

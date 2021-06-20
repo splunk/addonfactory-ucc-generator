@@ -15,13 +15,14 @@
 #
 
 
-import solnlib.log as log
-from . import builder_constant
+import copy
 import logging
 import threading
-import copy
 
+import solnlib.log as log
 from alert_utils.alert_utils_common.metric_collector import metric_util
+
+from . import builder_constant
 
 LOGS = {
     "validation": "ta_builder_validation",

@@ -15,9 +15,12 @@
 #
 
 from future import standard_library
+
 standard_library.install_aliases()
-from alert_utils.alert_utils_common.metric_collector.event_writer import *
 import queue
+
+from alert_utils.alert_utils_common.metric_collector.event_writer import *
+
 
 class MemoryEventWriter(MetricEventWriter):
     '''

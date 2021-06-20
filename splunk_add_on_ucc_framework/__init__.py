@@ -16,30 +16,29 @@
 
 __version__ = "5.0.0"
 
-import logging
-import os, time
-import re
-import glob
-from os import system
-import shutil
-import sys
 import argparse
+import configparser
+import glob
 import json
-from defusedxml import cElementTree as defused_et
-from pathlib import Path
+import logging
+import os
+import re
+import shutil
 import stat
-
-from .uccrestbuilder.global_config import (
-    GlobalConfigBuilderSchema,
-    GlobalConfigPostProcessor,
-)
-from .uccrestbuilder import build
-from .start_alert_build import alert_build
+import sys
+import time
+from os import system
+from pathlib import Path
 
 import jsonschema
+from defusedxml import cElementTree as defused_et
+from dunamai import Style, Version
 from jinja2 import Environment, FileSystemLoader
-from dunamai import Version, Style
-import configparser
+
+from .start_alert_build import alert_build
+from .uccrestbuilder import build
+from .uccrestbuilder.global_config import (GlobalConfigBuilderSchema,
+                                           GlobalConfigPostProcessor)
 
 sourcedir = os.path.dirname(os.path.realpath(__file__))
 

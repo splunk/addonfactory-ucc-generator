@@ -21,12 +21,10 @@ REST Builder.
 
 
 import collections
+
 from splunktaucclib.rest_handler.schema import RestSchema
 
-from .builder import (
-    RestBuilder,
-    RestBuilderError,
-)
+from .builder import RestBuilder, RestBuilderError
 
 __all__ = [
     "RestBuilder",

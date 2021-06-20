@@ -15,12 +15,16 @@
 #
 
 import os
+
 import pytest
+
 pytest_plugins = "pytester"
-import urllib.parse
 import json
+import urllib.parse
+
 from solnlib.splunk_rest_client import SplunkRestClient
 from splunklib import binding
+
 
 def pytest_configure(config):
     config.addinivalue_line("markers", "external: Test search time only")

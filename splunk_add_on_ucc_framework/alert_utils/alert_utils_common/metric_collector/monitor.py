@@ -15,18 +15,16 @@
 #
 
 
+import threading
 # encoding = utf-8
 from builtins import object
-from . import event_writer
-from . import memory_event_writer
+
+from future.utils import with_metaclass
+from solnlib import log, pattern
+
+from . import event_writer, memory_event_writer
 from .metric_exception import MetricException
 from .number_metric_collector import NumberMetricCollector
-
-from solnlib import pattern
-from solnlib import log
-
-import threading
-from future.utils import with_metaclass
 
 __all__ = ['Monitor']
 

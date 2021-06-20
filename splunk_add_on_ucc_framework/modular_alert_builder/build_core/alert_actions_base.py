@@ -16,10 +16,10 @@
 
 
 
-from builtins import str
 import csv
 import gzip
 import sys
+from builtins import str
 
 try:
     from splunk.clilib.bundle_paths import make_splunkhome_path
@@ -27,8 +27,9 @@ except ImportError:
     from splunk.appserver.mrsparkle.lib.util import make_splunkhome_path
 sys.path.append(make_splunkhome_path(["etc", "apps", "Splunk_SA_CIM", "lib"]))
 
-from .cim_actions import ModularAction
 from solnlib.log import Logs
+
+from .cim_actions import ModularAction
 
 
 class ModularAlertBase(ModularAction):

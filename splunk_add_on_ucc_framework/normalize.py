@@ -14,11 +14,11 @@
 # limitations under the License.
 #
 
-from builtins import zip
-import json
-import sys
 import copy
 import itertools
+import json
+import sys
+from builtins import zip
 
 mapping_keys = {
     "activeResponse": "active_response",
