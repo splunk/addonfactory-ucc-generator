@@ -17,7 +17,7 @@
 
 import os.path as op
 import sys
-from os import makedirs, remove, rename
+from os import makedirs, remove
 
 from splunk_add_on_ucc_framework.alert_utils.alert_utils_common.conf_parser import \
     TABConfigParser

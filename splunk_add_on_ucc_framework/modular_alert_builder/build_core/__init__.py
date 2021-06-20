@@ -18,7 +18,6 @@
 import os
 import re
 import shutil
-import traceback
 
 from .alert_actions_conf_gen import generate_alert_actions_conf
 from .alert_actions_html_gen import generate_alert_actions_html_files

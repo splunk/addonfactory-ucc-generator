@@ -24,7 +24,6 @@ import json
 import os
 import os.path as op
 import shutil
-import stat
 from builtins import map, object
 
 from solnlib.utils import is_true

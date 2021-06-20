@@ -20,7 +20,6 @@ from builtins import object
 from json import loads as jloads
 from os import linesep
 from os import path as op
-from shutil import copy
 
 from mako import exceptions
 from mako.template import Template

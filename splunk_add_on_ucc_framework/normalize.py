@@ -15,8 +15,6 @@
 #
 
 import copy
-import itertools
-import json
 import sys
 from builtins import zip
 

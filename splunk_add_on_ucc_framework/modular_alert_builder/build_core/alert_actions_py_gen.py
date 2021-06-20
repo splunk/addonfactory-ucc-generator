@@ -18,7 +18,6 @@
 import re
 from builtins import object
 from os import path as op
-from os import remove
 
 from mako.lookup import TemplateLookup
 from mako.template import Template
