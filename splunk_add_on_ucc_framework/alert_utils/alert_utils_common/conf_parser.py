@@ -47,8 +47,7 @@ class TABConfigParser(configparser.RawConfigParser):
         """
         Override the built-in _read() method to read comments
         """
-        from configparser import (DEFAULTSECT, MissingSectionHeaderError,
-                                  ParsingError)
+        from configparser import DEFAULTSECT, ParsingError
 
         cursect = None                        # None, or a dictionary
         optname = None

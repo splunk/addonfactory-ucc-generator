@@ -36,8 +36,10 @@ from jinja2 import Environment, FileSystemLoader
 
 from .start_alert_build import alert_build
 from .uccrestbuilder import build
-from .uccrestbuilder.global_config import (GlobalConfigBuilderSchema,
-                                           GlobalConfigPostProcessor)
+from .uccrestbuilder.global_config import (
+    GlobalConfigBuilderSchema,
+    GlobalConfigPostProcessor,
+)
 
 sourcedir = os.path.dirname(os.path.realpath(__file__))
 
