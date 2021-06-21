@@ -625,6 +625,8 @@ class BaseFormView extends PureComponent {
                     const tmpObj = {};
 
                     tmpObj[val.name] = {
+                        // ADDON-38581: `datadict` provides fallback values if rh skips
+                        ...this.datadict,
                         ...val.content,
                         id: val.id,
                         name: val.name,
