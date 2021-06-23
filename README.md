@@ -7,7 +7,10 @@
 
 A framework to generate UI based Splunk Add-ons. It includes UI, Rest handler, Modular input, Oauth, Alert action templates.
 
-> Note: add-ons created by UCC 5 are working starting with Splunk 8.
+> Note: after UCC 5.2 Python 2 specific libraries are not supported anymore.
+> This means if the add-on has `package/lib/py2/requirements.txt` they will 
+> not be installed while running `ucc-gen` command. Therefore modular inputs 
+> that are supposed to run on Python 2 will not be supported by UCC. 
 
 ## What is UCC?
 
