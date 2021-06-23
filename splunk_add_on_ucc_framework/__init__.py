@@ -130,6 +130,37 @@ def version_tuple(version_str):
         filled.append(point.zfill(8))
     return tuple(filled)
 
+
+def _handle_biased_terms(conf_entities: dict) -> dict:
+    for entity in conf_entities:
+        entity_option = entity.get("options")
+        if entity_option and "whiteList" in entity_option:
+            entity_option["allowList"] = entity_option.get("whiteList")
+            del entity_option["whiteList"]
+        if entity_option and "blackList" in entity_option:
+            entity_option["denyList"] = entity_option.get("blackList")
+            del entity_option["blackList"]
+    return conf_entities
+
+
+def handle_biased_terms_update(schema_content: dict) -> dict:
+    pages = schema_content.get("pages")
+    ta_tabs = pages.get("configuration", {}).get("tabs", {})
+
+    for tab in ta_tabs:
+        conf_entities = tab.get("entity")
+        tab["entity"] = _handle_biased_terms(conf_entities)
+
+    if "inputs" in pages:
+        services = pages.get("inputs", {}).get("services", {})
+        for service in services:
+            conf_entities = service.get("entity")
+            service["entity"] = _handle_biased_terms(conf_entities)
+
+    schema_content["meta"]["schemaVersion"] = "0.0.1"
+    return schema_content
+
+
 def handle_update(config_path):
     """
     handle changes in globalConfig.json
@@ -142,46 +173,13 @@ def handle_update(config_path):
     """
     with open(config_path, "r") as config_file:
         schema_content = json.load(config_file)
-    # check for schemaVersion in meta, if not availble then set default 0.0.0 
-    version = schema_content.get("meta").get("schemaVersion","0.0.0")
 
-    # check for schemaVersion, if it's less than 0.0.1 then updating globalConfig.json 
+    version = schema_content.get("meta").get("schemaVersion", "0.0.0")
+
     if version_tuple(version) < version_tuple("0.0.1"):
-        ta_tabs = schema_content.get("pages").get("configuration",{}).get("tabs",{})
-
-        # check in every Account tab for biased term
-        for tab in ta_tabs:
-            conf_entitties= tab.get("entity")
-            for entity in conf_entitties:
-                entity_option = entity.get("options")
-                if entity_option and "whiteList" in entity_option:
-                    entity_option["allowList"] = entity_option.get("whiteList")
-                    del entity_option["whiteList"]
-                if entity_option and "blackList" in entity_option:
-                    entity_option["denyList"] = entity_option.get("blackList")
-                    del entity_option["blackList"]
-
-        is_inputs = ("inputs" in schema_content.get("pages"))
-        if is_inputs:
-            services = schema_content.get("pages").get("inputs",{}).get("services",{})
-            # check in every Input service for biased term
-            for service in services:
-                conf_entitties= service.get("entity")
-                for entity in conf_entitties:
-                    entity_option = entity.get("options")
-                    if entity_option and "whiteList" in entity_option:
-                        entity_option["allowList"] = entity_option.get("whiteList")
-                        del entity_option["whiteList"]
-                    if entity_option and "blackList" in entity_option:
-                        entity_option["denyList"] = entity_option.get("blackList")
-                        del entity_option["blackList"]
-
-        # set schemaVersion to 0.0.1 as updated globalConfig.json according to new update
-        schema_content["meta"]["schemaVersion"]="0.0.1"
-
-        # upadating new changes in globalConfig.json 
+        schema_content = handle_biased_terms_update(schema_content)
         with open(config_path, "w") as config_file:
-            json.dump(schema_content,config_file, ensure_ascii=False, indent=4)
+            json.dump(schema_content, config_file, ensure_ascii=False, indent=4)
     
     # check for schemaVersion, if it's less than 0.0.2 then updating globalConfig.json
     if version_tuple(version) < version_tuple("0.0.2"):
@@ -214,7 +212,6 @@ def handle_update(config_path):
         is_inputs = ("inputs" in schema_content.get("pages"))
         if is_inputs:
             services = schema_content.get("pages").get("inputs",{}).get("services",{})
-            # check in every Input service for onSave and onLoad options
             for service in services:
                 service_options = service.get("options", {})
                 if service_options.get("onChange"):
@@ -225,7 +222,6 @@ def handle_update(config_path):
                     del service_options["onLoad"]
 
         schema_content["meta"]["schemaVersion"] = "0.0.2"
-        # upadating new changes in globalConfig.json 
         with open(config_path, "w") as config_file:
             json.dump(schema_content,config_file, ensure_ascii=False, indent=4)
     
