@@ -7,6 +7,11 @@
 
 A framework to generate UI based Splunk Add-ons. It includes UI, Rest handler, Modular input, Oauth, Alert action templates.
 
+> Note: after UCC 5.2 Python 2 specific libraries are not supported anymore.
+> This means if the add-on has `package/lib/py2/requirements.txt` they will 
+> not be installed while running `ucc-gen` command. Therefore modular inputs 
+> that are supposed to run on Python 2 will not be supported by UCC. 
+
 ## What is UCC?
 
 UCC stands for  Universal Configuration Console. It is a service for generating Splunk Add-ons which is easily customizable and flexible.
@@ -19,7 +24,7 @@ UCC provides basic UI template for creating Addon's UI. It is helpful to control
 
 ## UCC 5
 
-UCC5 has potentialy breaking changes to add-ons using hook extension in the UX. Previously such hooks were limited to un-optomized js files placed in the package.
+UCC 5 has potentially breaking changes to add-ons using hook extension in the UX. Previously such hooks were limited to un-optimized js files placed in the package.
 Add-ons may now package such extensions with webpack.
 
 ## Requirements
