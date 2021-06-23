@@ -53,8 +53,6 @@ function SingleInputComponent(props) {
     function generateOptions(items) {
         const data = [];
         items.forEach((item) => {
-            // Known issue(ADDON-37036): In case of ComboBox, label/value abstraction is not supported
-            // So prop label is just a dummy prop for ComboBox.Option or ComboBox.Heading
             if (item.value && item.label) {
                 data.push(<Option label={item.label} value={item.value} key={item.value} />);
             }
