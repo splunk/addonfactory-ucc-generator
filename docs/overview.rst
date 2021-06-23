@@ -3,6 +3,8 @@ Overview
 splunk-add-on-ucc-framework is a framework to generate UI based Splunk Add-ons.
 It includes UI, Rest handler, Modular input, Oauth, Alert action templates.
 
+Note: add-ons created by UCC 5 are working starting with Splunk 8.
+
 What is UCC?
 ------------
 UCC stands for Universal Configuration Console.

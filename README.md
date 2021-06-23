@@ -7,6 +7,8 @@
 
 A framework to generate UI based Splunk Add-ons. It includes UI, Rest handler, Modular input, Oauth, Alert action templates.
 
+> Note: add-ons created by UCC 5 are working starting with Splunk 8.
+
 ## What is UCC?
 
 UCC stands for  Universal Configuration Console. It is a service for generating Splunk Add-ons which is easily customizable and flexible.
@@ -19,7 +21,7 @@ UCC provides basic UI template for creating Addon's UI. It is helpful to control
 
 ## UCC 5
 
-UCC5 has potentialy breaking changes to add-ons using hook extension in the UX. Previously such hooks were limited to un-optomized js files placed in the package.
+UCC 5 has potentially breaking changes to add-ons using hook extension in the UX. Previously such hooks were limited to un-optimized js files placed in the package.
 Add-ons may now package such extensions with webpack.
 
 ## Requirements
