@@ -59,12 +59,12 @@ class ValidatorBase(DocumentWithoutAddProp):
     errorMsg = StringField(max_length=400)
 
 
-# MetaData component for detailing brief imformation of document/component
+# MetaData component for detailing brief information of document/component
 class Meta(DocumentWithoutAddProp):
     displayName = StringField(required=True, max_length=200)
     name = StringField(required=True, pattern="^[^<>\:\"\/\\\|\?\*]+$")
     restRoot = StringField(required=True, pattern="^\w+$")
-    apiVersion = StringField(required=True, pattern="^(?:\d{1,3}\.){2}\d{1,3}$")
+    apiVersion = StringField(required=False, pattern="^(?:\d{1,3}\.){2}\d{1,3}$")
     version = StringField(required=True)
     schemaVersion = StringField( pattern="^(?:\d{1,3}\.){2}\d{1,3}$")
 
@@ -349,7 +349,7 @@ class Technology(DocumentWithoutAddProp):
 
 
 ##
-# Main Component holding the alert actions 
+# Main Component holding the alert actions
 ##
 class Alerts(DocumentWithoutAddProp):
     name = StringField(required=True, pattern="^[a-zA-Z0-9_]+$", max_length=100)

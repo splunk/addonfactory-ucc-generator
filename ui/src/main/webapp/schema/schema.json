@@ -895,7 +895,7 @@
           "pattern": "^(?:\\d{1,3}\\.){2}\\d{1,3}$"
         }
       },
-      "required": ["displayName", "name", "restRoot", "apiVersion", "version"],
+      "required": ["displayName", "name", "restRoot", "version"],
       "additionalProperties": false
     },
     "NumberValidator": {
