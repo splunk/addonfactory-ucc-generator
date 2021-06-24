@@ -941,6 +941,9 @@
         "encrypted": {
           "type": "boolean"
         },
+        "required": {
+          "type": "boolean"
+        },
         "options": {
           "type": "object",
           "properties": {

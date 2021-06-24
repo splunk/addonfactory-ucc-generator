@@ -211,8 +211,6 @@ class BaseFormView extends PureComponent {
                                 tempEntity.disabled = false;
                                 temState[field.field] = tempEntity;
                                 // eslint-disable-next-line no-param-reassign
-                                field.required = !this.isAuthVal;
-                                // eslint-disable-next-line no-param-reassign
                                 field.type =
                                     typeof field?.type !== 'undefined' ? field.type : 'text';
 
@@ -450,16 +448,18 @@ class BaseFormView extends PureComponent {
 
             // validation condition of required fields in O-Auth
             let temEntities;
-            if (this.isAuthVal) {
+            if (this.isOAuth) {
                 let reqFields = [];
                 Object.keys(this.authMap).forEach((type) => {
-                    if (type === this.datadict.auth_type) {
+                    // `isAuthVal` is required in a case where only single auth type is provided
+                    if (type === this.datadict.auth_type || !this.isAuthVal) {
                         reqFields = [...reqFields, ...this.authMap[type]];
                     }
                 });
                 temEntities = this.entities.map((e) => {
                     if (reqFields.includes(e.field)) {
-                        return { ...e, required: true };
+                        // All oauth fields are required except if explicitely `required` is set to `false`
+                        return { required: true, ...e };
                     }
                     return e;
                 });
