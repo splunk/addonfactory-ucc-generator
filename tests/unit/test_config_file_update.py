@@ -17,7 +17,10 @@ import json
 import unittest
 
 import tests.unit.helpers as helpers
-from splunk_add_on_ucc_framework import handle_biased_terms_update
+from splunk_add_on_ucc_framework import (
+    handle_biased_terms_update,
+    handle_dropping_api_version_update,
+)
 
 
 class ConfigFileUpdateTest(unittest.TestCase):
@@ -49,3 +52,13 @@ class ConfigFileUpdateTest(unittest.TestCase):
         ][0]["entity"][1]["options"].keys()
         self.assertIn("allowList", configuration_entity_2_options_keys)
         self.assertNotIn("whiteList", configuration_entity_2_options_keys)
+
+    def test_handle_dropping_api_version_update(self):
+        config = helpers.get_testdata_file("config_with_biased_terms.json")
+        config = json.loads(config)
+        updated_config = handle_dropping_api_version_update(config)
+        expected_schema_version = "0.0.3"
+        self.assertEqual(
+            expected_schema_version, updated_config["meta"]["schemaVersion"]
+        )
+        self.assertNotIn("apiVersion", updated_config["meta"])

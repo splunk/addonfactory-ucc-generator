@@ -169,6 +169,13 @@ def handle_biased_terms_update(schema_content: dict) -> dict:
     return schema_content
 
 
+def handle_dropping_api_version_update(schema_content: dict) -> dict:
+    if schema_content["meta"].get("apiVersion"):
+        del schema_content["meta"]["apiVersion"]
+    schema_content["meta"]["schemaVersion"] = "0.0.3"
+    return schema_content
+
+
 def handle_update(config_path):
     """
     handle changes in globalConfig.json
@@ -189,11 +196,9 @@ def handle_update(config_path):
         with open(config_path, "w") as config_file:
             json.dump(schema_content, config_file, ensure_ascii=False, indent=4)
 
-    # check for schemaVersion, if it's less than 0.0.2 then updating globalConfig.json
     if version_tuple(version) < version_tuple("0.0.2"):
         ta_tabs = schema_content.get("pages").get("configuration", {}).get("tabs", {})
 
-        # check for schema changes in configuration page of globalConfig.json
         for tab in ta_tabs:
             if tab["name"] == "account":
                 conf_entities = tab.get("entity")
@@ -253,6 +258,11 @@ def handle_update(config_path):
                     del service_options["onLoad"]
 
         schema_content["meta"]["schemaVersion"] = "0.0.2"
+        with open(config_path, "w") as config_file:
+            json.dump(schema_content, config_file, ensure_ascii=False, indent=4)
+
+    if version_tuple(version) < version_tuple("0.0.3"):
+        schema_content = handle_dropping_api_version_update(schema_content)
         with open(config_path, "w") as config_file:
             json.dump(schema_content, config_file, ensure_ascii=False, indent=4)
 

@@ -419,11 +419,10 @@
         }
     },
     "meta": {
-        "apiVersion": "3.2.0",
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.6.2R6cc76bdf",
+        "version": "5.7.0Rc1c9ff9f",
         "displayName": "Splunk UCC test Add-on",
-        "schemaVersion": "0.0.2"
+        "schemaVersion": "0.0.3"
     }
 }
