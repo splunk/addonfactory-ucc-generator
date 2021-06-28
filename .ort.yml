@@ -1,0 +1,17 @@
+---
+excludes:
+  paths:
+    - pattern: "docs/requirements.txt"
+      reason: "DOCUMENTATION_OF"
+      comment: "Licenses for Docs tools"
+  paths:
+    - pattern: "tests/**/requirements.txt"
+      reason: "TEST_DEPENDENCY_OF"
+      comment: "Licenses for Docs tools"
+  scopes:
+    - pattern: "(test.*|funTest.*)"
+      reason: "TEST_DEPENDENCY_OF"
+      comment: "Packages for testing only. Not part of released artifacts."
+    - pattern: "devDependencies"
+      reason: "DEV_DEPENDENCY_OF"
+      comment: "Packages for development only. Not part of released artifacts"
