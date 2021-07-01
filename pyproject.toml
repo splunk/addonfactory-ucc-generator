@@ -60,13 +60,10 @@ lxml = "^4.3"
 future = "^0"
 wheel = "*"
 dunamai = "*"
-reuse = "*"
 #black = [
 #    { version = "20.8b1" , python = "^3.7" }
 #]
 
-Sphinx = "^4.0.2"
-sphinx-rtd-theme = "^0.5.2"
 defusedxml = "^0.7.1"
 jsonschema = "^3.2.0"
 solnlib = "^4.1.0"
