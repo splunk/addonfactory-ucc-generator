@@ -115,18 +115,3 @@ def function_run_time(tags=[]):
         return func_wrappers
 
     return apm_decorator
-
-
-# TODO: should put this into unit test
-# class A(object):
-#     def __init__(self):
-#         self.password = 'abc'
-#
-# if __name__ == "__main__":
-#     aa = {'a': {'token': '123'}, 'b': A()}
-#     print mask_credentials(aa)
-#     print aa
-#     print mask_credentials(123)
-#     bb = {'l': [{'token': 123, 'password': '444'}]}
-#     print mask_credentials(bb)
-#     print bb
