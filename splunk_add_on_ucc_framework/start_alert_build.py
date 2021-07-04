@@ -25,11 +25,11 @@ from .modular_alert_builder.build_core import generate_alerts
 
 class LoggerAdapter(logging.LoggerAdapter):
     def __init__(self, prefix, logger):
-        super(LoggerAdapter, self).__init__(logger, {})
+        super().__init__(logger, {})
         self.prefix = prefix
 
     def process(self, msg, kwargs):
-        return '[%s] %s' % (self.prefix, msg), kwargs
+        return '[{}] {}'.format(self.prefix, msg), kwargs
 
 
 def validate(alert, logger):

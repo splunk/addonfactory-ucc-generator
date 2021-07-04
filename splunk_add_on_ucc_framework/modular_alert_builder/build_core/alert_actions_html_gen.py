@@ -17,7 +17,6 @@
 
 import os
 import sys
-from builtins import object
 from os import linesep
 from os import path as op
 from re import search
@@ -33,7 +32,7 @@ from .alert_actions_helper import write_file
 from .alert_actions_template import AlertActionsTemplateMgr
 
 
-class AlertHtmlBase(object):
+class AlertHtmlBase:
 
     def __init__(self, input_setting=None, package_path=None, logger=None):
         self._all_setting = input_setting
@@ -65,7 +64,7 @@ class AlertHtmlGenerator(AlertHtmlBase):
                  html_template=None,
                  html_home=None,
                  html_theme=None):
-        super(AlertHtmlGenerator, self).__init__(input_setting, package_path,
+        super().__init__(input_setting, package_path,
                                                  logger)
         if not input_setting or not logger:
             msg = 'required_args="input_setting, logger"'
@@ -90,12 +89,8 @@ class AlertHtmlGenerator(AlertHtmlBase):
                                            home_page=self._html_home)
         final_form = defused_lxml.fromstring(final_form)
 # Checking python version before converting and encoding XML Tree to string.
-        if sys.version_info < (3, 0):
-            final_string = defused_lxml.tostring(final_form, encoding='utf-8',
-                                          pretty_print=True)
-        else:
-            final_string = defused_lxml.tostring(
-                final_form, encoding='utf-8', pretty_print=True)
+        final_string = defused_lxml.tostring(
+            final_form, encoding='utf-8', pretty_print=True)
         text = linesep.join(
             [s for s in final_string.decode('utf-8').splitlines() if not search(r'^\s*$', s)])
 
@@ -117,7 +112,7 @@ class AlertHtmlGenerator(AlertHtmlBase):
                                     self._html_template)
 
         self._logger.debug("Reading template_file=%s", template_path)
-        with open(template_path, 'r') as tp:
+        with open(template_path) as tp:
             template_text = tp.read()
 
         self._template = Template(text=template_text,

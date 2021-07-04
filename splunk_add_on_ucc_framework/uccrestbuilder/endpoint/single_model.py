@@ -21,7 +21,7 @@ from .base import RestEndpointBuilder, RestEntityBuilder
 
 class SingleModelEntityBuilder(RestEntityBuilder):
     def __init__(self, name, fields, **kwargs):
-        super(SingleModelEntityBuilder, self).__init__(name, fields, **kwargs)
+        super().__init__(name, fields, **kwargs)
 
     @property
     def name_spec(self):

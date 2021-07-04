@@ -15,10 +15,9 @@
 #
 
 import os.path as op
-from builtins import object
 
 
-class AlertActionsTemplateMgr(object):
+class AlertActionsTemplateMgr:
     CURRENT_DIR = op.dirname(op.abspath(__file__))
     DEFAULT_TEMPLATE_DIR = op.join(CURRENT_DIR, "arf_template")
     DEFAULT_HTML_LOOKUP_DIR = op.join(DEFAULT_TEMPLATE_DIR, "default_html_theme")

@@ -171,7 +171,7 @@ def handle_update(config_path):
     Returns:
         dictionary : schema_content (globalConfig.json)     
     """
-    with open(config_path, "r") as config_file:
+    with open(config_path) as config_file:
         schema_content = json.load(config_file)
 
     version = schema_content.get("meta").get("schemaVersion", "0.0.0")
@@ -573,7 +573,7 @@ def update_ta_version(config, ta_version):
         args (argparse.Namespace): Object with command-line arguments.
     """
 
-    with open(config, "r") as config_file:
+    with open(config) as config_file:
         schema_content = json.load(config_file)
     schema_content.setdefault("meta", {})["version"] = ta_version
     with open(config, "w") as config_file:
@@ -628,7 +628,7 @@ def save_comments(outputdir, ta_name):
     """
     config_file = os.path.join(outputdir, ta_name,'default', "app.conf")
     comment_map = {}
-    with open(config_file, 'r') as file:
+    with open(config_file) as file:
         i = 0
         lines = file.readlines()
         for line in lines:
@@ -642,7 +642,7 @@ def restore_comments(outputdir, ta_name, comment_map):
     Write comments to conf file at their original indices
     """
     config_file = os.path.join(outputdir, ta_name,'default', "app.conf")
-    with open(config_file, 'r') as file:
+    with open(config_file) as file:
         lines = file.readlines()
     for (index, comment) in sorted(comment_map.items()):
         lines.insert(index, comment)
@@ -656,7 +656,7 @@ def validate_config_against_schema(config: dict):
     Raises jsonschema.ValidationError if config is not valid.
     """
     schema_path = os.path.join(sourcedir, "schema", "schema.json")
-    with open(schema_path, "r") as f_schema:
+    with open(schema_path) as f_schema:
         schema_raw = f_schema.read()
         schema = json.loads(schema_raw)
     return jsonschema.validate(instance=config, schema=schema)
@@ -690,14 +690,13 @@ def _generate(source, config, ta_version, outputdir=None):
 
     clean_before_build(outputdir)
 
-    with open(os.path.abspath(os.path.join(source, "app.manifest")),
-              "r") as manifest_file:
+    with open(os.path.abspath(os.path.join(source, "app.manifest"))) as manifest_file:
         manifest = json.load(manifest_file)
         ta_name = manifest['info']['id']['name']
 
     if os.path.exists(config):
         try:
-            with open(config, "r") as f_config:
+            with open(config) as f_config:
                 config_raw = f_config.read()
             validate_config_against_schema(json.loads(config_raw))
             logger.info("Config is valid")
@@ -784,8 +783,7 @@ def _generate(source, config, ta_version, outputdir=None):
         version_file.write(ta_version)
 
     manifest = None
-    with open(os.path.abspath(os.path.join(outputdir, ta_name, "app.manifest")),
-              "r") as manifest_file:
+    with open(os.path.abspath(os.path.join(outputdir, ta_name, "app.manifest"))) as manifest_file:
         manifest = json.load(manifest_file)
         manifest['info']['id']['version'] = ta_version
 

@@ -29,7 +29,6 @@ from future import standard_library
 
 standard_library.install_aliases()
 import configparser
-from builtins import str
 
 try:
     from collections import OrderedDict as _default_dict
@@ -189,7 +188,7 @@ class TABConfigParser(configparser.RawConfigParser):
         if self._defaults:
             fp.write("[%s]\n" % DEFAULTSECT)
             for (key, value) in list(self._defaults.items()):
-                fp.write("%s = %s\n" % (key, str(value).replace('\n', '\n\t')))
+                fp.write("{} = {}\n".format(key, str(value).replace('\n', '\n\t')))
             fp.write("\n")
         for section in self._sections:
             fp.write("[%s]\n" % section)

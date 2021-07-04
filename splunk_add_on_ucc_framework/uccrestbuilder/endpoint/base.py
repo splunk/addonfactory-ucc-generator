@@ -16,7 +16,6 @@
 
 
 
-from builtins import object
 from io import StringIO
 
 import six
@@ -35,7 +34,7 @@ __all__ = [
 ]
 
 
-class RestEntityBuilder(object):
+class RestEntityBuilder:
 
     _title_template = "[{}]"
     _rh_template = """
@@ -102,7 +101,7 @@ field.RestField(
         )
 
 
-class RestEndpointBuilder(object):
+class RestEndpointBuilder:
     def __init__(self, name, namespace, **kwargs):
         self._name = name
         self._namespace = namespace
@@ -188,7 +187,7 @@ def indent(lines, spaces=1):
     :param spaces: times of four
     :return:
     """
-    string_io = StringIO(six.text_type(lines))
+    string_io = StringIO(str(lines))
     indentation = spaces * 4
     prefix = " " * indentation
     lines = []

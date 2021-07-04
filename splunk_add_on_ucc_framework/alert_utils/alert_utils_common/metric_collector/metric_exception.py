@@ -18,4 +18,4 @@
 
 class MetricException(Exception):
     def __init__(self, *args, **kwargs):
-        super(MetricException, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)

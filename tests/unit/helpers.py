@@ -21,6 +21,6 @@ def get_config(config_name: str) -> dict:
     config_path = os.path.join(
         os.path.dirname(os.path.realpath(__file__)), "testdata", config_name
     )
-    with open(config_path, "r") as f_config:
+    with open(config_path) as f_config:
         valid_config_raw = f_config.read()
         return json.loads(valid_config_raw)

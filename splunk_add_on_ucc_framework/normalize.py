@@ -16,7 +16,6 @@
 
 import copy
 import sys
-from builtins import zip
 
 mapping_keys = {
     "activeResponse": "active_response",
@@ -68,11 +67,7 @@ def iterdict(dictionary, result):
     for key in dictionary:
         if key in mapping_keys:
             value = result.pop(key)
-            if sys.version_info > (3, 0):
-                result[mapping_keys[key]] =  value
-            else:
-                result[mapping_keys[key]] = value.encode(
-                    'ascii', 'ignore') if isinstance(value, str) else value
+            result[mapping_keys[key]] =  value
             mapped_key = mapping_keys[key]
         else:
             mapped_key = key

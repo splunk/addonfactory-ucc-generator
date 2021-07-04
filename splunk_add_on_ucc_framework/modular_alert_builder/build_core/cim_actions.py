@@ -18,7 +18,6 @@ import json
 import logging
 import logging.handlers
 import re
-from builtins import object
 
 import splunk.rest as rest
 from splunk.util import normalizeBoolean
@@ -27,7 +26,7 @@ from splunk.util import normalizeBoolean
 class InvalidResultID(Exception):
     pass
 
-class ModularAction(object):
+class ModularAction:
     DEFAULT_MESSAGE = 'sendmodaction - signature="%s" action_name="%s" search_name="%s" sid="%s" orig_sid="%s" rid="%s" orig_rid="%s" app="%s" user="%s" action_mode="%s" action_status="%s"'
 
     ## we require a logging instance
@@ -71,7 +70,7 @@ u'search_name': u'demo_okta_alert_002'
         ## if sid contains rt_scheduler with snapshot-sid; drop snapshot-sid
         ## sometimes self.sid may be an integer (1465593470.1228)
         try:
-            rtsid    = re.match('^(rt_scheduler.*)\.\d+$', self.sid)
+            rtsid    = re.match(r'^(rt_scheduler.*)\.\d+$', self.sid)
             if rtsid:
                 self.sid = rtsid.group(1)
         except:
@@ -127,7 +126,7 @@ u'search_name': u'demo_okta_alert_002'
         status  = status or self.action_status or ''
         message = ModularAction.DEFAULT_MESSAGE % (signature or '', self.action_name or '', self.search_name or '', self.sid or '', self.orig_sid or '', self.rid or '', self.orig_rid or '', self.app or '', self.user or '', self.action_mode or '', status)
         ## prune empty string key-value pairs
-        for match in re.finditer('[A-Za-z_]+=\"\"(\s|$)', message):
+        for match in re.finditer('[A-Za-z_]+=\"\"(\\s|$)', message):
             message = message.replace(match.group(0),'',1)
         return message.rstrip()
 

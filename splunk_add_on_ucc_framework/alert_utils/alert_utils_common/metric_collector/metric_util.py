@@ -19,7 +19,6 @@
 
 import functools
 import time
-from builtins import str
 
 from past.builtins import str
 from six import string_types as str

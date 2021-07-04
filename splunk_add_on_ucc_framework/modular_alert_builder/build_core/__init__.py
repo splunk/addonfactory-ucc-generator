@@ -42,7 +42,7 @@ def check_file_name(file_name, env):
         if gp in env:
             new_str = new_str.replace("${%s}" % gp, env[gp], re.MULTILINE)
             new_str = new_str.replace("${!%s}" % gp,
-                                      re.sub("[^\w]+", "_", env[gp].lower()),
+                                      re.sub(r"[^\w]+", "_", env[gp].lower()),
                                       re.MULTILINE)
 
     # Disable the cache to avoid conflict

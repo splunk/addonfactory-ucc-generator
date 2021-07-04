@@ -16,12 +16,11 @@
 
 
 
-from builtins import object
 
 from .base import indent, quote_string
 
 
-class RestFieldBuilder(object):
+class RestFieldBuilder:
 
     _kv_template = '{name} = {value}'
     _rh_template = """field.RestField(

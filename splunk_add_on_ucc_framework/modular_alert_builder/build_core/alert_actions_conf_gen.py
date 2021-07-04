@@ -16,7 +16,6 @@
 
 
 import os
-from builtins import object
 from json import loads as jloads
 from os import linesep
 from os import path as op
@@ -32,7 +31,7 @@ from .alert_actions_merge import remove_alert_from_conf_file
 from .alert_actions_template import AlertActionsTemplateMgr
 
 
-class AlertActionsConfBase(object):
+class AlertActionsConfBase:
     def __init__(self, input_setting=None, package_path=None, logger=None,
                  template_dir=None, default_settings_file=None,
                  global_settings=None, **kwargs):
@@ -101,7 +100,7 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
             msg = 'status="failed", required_args="input_setting, logger"'
             raise aae.AlertActionsInValidArgs(msg)
 
-        super(AlertActionsConfGeneration, self).__init__(
+        super().__init__(
             input_setting=input_setting,
             package_path=package_path, logger=logger, template_dir=template_dir,
             default_settings_file=default_settings_file,
@@ -211,7 +210,7 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
 
     def add_default_settings(self):
         default_settings = None
-        with open(self._default_settings_file, 'r') as df:
+        with open(self._default_settings_file) as df:
             default_settings = jloads(df.read())
 
         for alert in self._alert_settings:
