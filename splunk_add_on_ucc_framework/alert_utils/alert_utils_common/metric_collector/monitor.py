@@ -16,7 +16,6 @@
 
 
 import threading
-# encoding = utf-8
 
 from future.utils import with_metaclass
 from solnlib import log, pattern
