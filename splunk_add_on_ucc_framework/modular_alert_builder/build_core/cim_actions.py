@@ -27,41 +27,6 @@ class InvalidResultID(Exception):
     pass
 
 class ModularAction:
-    DEFAULT_MESSAGE = 'sendmodaction - signature="%s" action_name="%s" search_name="%s" sid="%s" orig_sid="%s" rid="%s" orig_rid="%s" app="%s" user="%s" action_mode="%s" action_status="%s"'
-
-    ## we require a logging instance
-    '''
-2015-03-07T01:41:42.430696 got arguments ['/opt/splunk/etc/apps/logger_app/bin/logger.py', '--execute']
-2015-03-07T01:41:42.430718 got payload: <?xml version="1.0" encoding="UTF-8"?>
-<alert>
-  <app> logger_app </app>
-  <owner>admin</owner>
-  <results_file>/opt/splunk/var/run/splunk/dispatch/rt_scheduler__admin__ logger_app__RMD5910195c23186c103_at_1425692383_0.0/results.csv.gz</results_file>
-  <results_link>http://myserver:8000/app/logger_app/@go?sid=rt_scheduler__admin__ logger_app__RMD5910195c23186c103_at_1425692383_0.0</results_link>
-  <server_host>myserver</server_host>
-  <server_uri>https://127.0.0.1:8089</server_uri>
-  <session_key>OCmOZHf37O^9fDktTrvNc6Kidz^68zs0Y7scufwRo6Lpdi5ZGmtxsPbIUlUKtjt9ZPG7gKz4Dq8_eVntQ5EGR^N9rqkmg1dREAp8FFCduDwwvl6pEXEB^4w3MS6suwp9acw7JOlb</session_key>
-  <sid>rt_scheduler__admin__ logger_app__RMD5910195c23186c103_at_1425692383_0.0</sid>
-  <search_name>my_saved_search</search_name>
-  <configuration>
-     <stanza name= my_saved_search"/>
-  </configuration>
-</alert>
-
-json format
-{
-u'results_file': u'/Users/zhanghong/splunk_env/splunk_env_6.3.3/splunk/var/run/splunk/dispatch/scheduler__admin__search__RMD5f2f82c6b0b712cbb_at_1469423700_4185/per_result_alert/tmp_1.csv.gz',
-u'server_host': u'hozhang-mbpo.sv.splunk.com',
-u'sid': u'scheduler__admin__search__RMD5f2f82c6b0b712cbb_at_1469423700_4185',
-u'result': {u'_bkt': u'main~899~DC01C3FC-2111-4BA8-BA2E-B6F07C5C9C30', u'gid': u'00g17z5bhl0Dpv2FF1d8', u'splunk_server': u'hozhang-mbpo.sv.splunk.com', u'_time': u'1467171788', u'_raw': u'demo_case=101 uid=00u17z584iaBW2Biz1d8 gid=00g17z5bhl0Dpv2FF1d8', u'demo_case': u'101', u'uid': u'00u17z584iaBW2Biz1d8', u'_serial': u'1', u'tag::eventtype': u'', u'_si': [u'hozhang-mbpo.sv.splunk.com', u'main'], u'index': u'main', u'sourcetype': u'okta_demo', u'uname': u'', u'eventtype': u'', u'_kv': u'1', u'host': u'hozhang-mbpo.sv.splunk.com', u'_sourcetype': u'okta_demo', u'punct': u'=_=_=', u'gname': u'', u'_indextime': u'1467337748', u'splunk_server_group': u'', u'tag': u'', u'linecount': u'1', u'_cd': u'899:181', u'product': u'', u'vendor': u'', u'ids_type': u'', u'source': u'/Users/zhanghong/Downloads/okta_demo_cases', u'timestamp': u'none'}, u'configuration': {u'group_id': u'00g17z5bhl0Dpv2FF1d8', u'action': u'add', u'user_id': u'00u17z584iaBW2Biz1d8'},
-u'owner': u'admin',
-u'results_link': u'http://hozhang-mbpo.sv.splunk.com:8000/app/search/search?q=%7Cloadjob%20scheduler__admin__search__RM...',
-u'session_key': u'e6w4SwfYg5BLuXZ6u78^TMWz1rdMGzSbpIWD8kv0SzFIyuuCt_qk2Lxv1zOzC4vue7OaWGVggaLJN5tyn_uQSE_rLm^l3Z0TA8UNmX1TamWTDsAR9kdtCL67Vz0trb3wfMrWFkYOR3mUur0',
-u'app': u'search',
-u'server_uri': u'https://127.0.0.1:8089',
-u'search_name': u'demo_okta_alert_002'
-}
-    '''
     def __init__(self, settings, logger, action_name='unknown'):
         self.settings      = json.loads(settings)
         self.logger        = logger
@@ -123,11 +88,24 @@ u'search_name': u'demo_okta_alert_002'
 
     ## The purpose of this method is to provide a common messaging interface
     def message(self, signature, status=None):
-        status  = status or self.action_status or ''
-        message = ModularAction.DEFAULT_MESSAGE % (signature or '', self.action_name or '', self.search_name or '', self.sid or '', self.orig_sid or '', self.rid or '', self.orig_rid or '', self.app or '', self.user or '', self.action_mode or '', status)
-        ## prune empty string key-value pairs
-        for match in re.finditer('[A-Za-z_]+=\"\"(\\s|$)', message):
-            message = message.replace(match.group(0),'',1)
+        message = "sendmodaction - "
+        message_params = {
+            "signature": signature or "",
+            "action_name": self.action_name or "",
+            "search_name": self.search_name or "",
+            "sid": self.sid or "",
+            "orig_sid": self.orig_sid or "",
+            "rid": self.rid or "",
+            "orig_rid": self.orig_rid or "",
+            "app": self.app or "",
+            "user": self.user or "",
+            "action_mode": self.action_mode or "",
+            "action_status": status or self.action_status or "",
+        }
+        for k, v in message_params.items():
+            # Do not include empty value params in the message.
+            if v != "":
+                message += f"{k}=\"{v}\" "
         return message.rstrip()
 
     ## The purpose of this method is to update per-result ModAction attributes
