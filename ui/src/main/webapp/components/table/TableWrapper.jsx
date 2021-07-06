@@ -60,6 +60,7 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPag
             requests.push(
                 axiosCallWrapper({
                     serviceName: service.name,
+                    params: { count: -1 },
                 })
             );
         });
