@@ -34,6 +34,12 @@ from defusedxml import cElementTree as defused_et
 from dunamai import Style, Version
 from jinja2 import Environment, FileSystemLoader
 
+from .app_manifest import (
+    APP_MANIFEST_FILE_NAME,
+    APP_MANIFEST_WEBSITE,
+    AppManifest,
+    AppManifestFormatException,
+)
 from .start_alert_build import alert_build
 from .uccrestbuilder import build
 from .uccrestbuilder.global_config import (
@@ -690,9 +696,21 @@ def _generate(source, config, ta_version, outputdir=None):
 
     clean_before_build(outputdir)
 
-    with open(os.path.abspath(os.path.join(source, "app.manifest"))) as manifest_file:
-        manifest = json.load(manifest_file)
-        ta_name = manifest['info']['id']['name']
+    app_manifest_path = os.path.abspath(
+        os.path.join(source, APP_MANIFEST_FILE_NAME),
+    )
+    with open(app_manifest_path) as manifest_file:
+        app_manifest_content = manifest_file.read()
+    manifest = AppManifest()
+    try:
+        manifest.read(app_manifest_content)
+    except app_manifest.AppManifestFormatException:
+        logger.error(
+            f"Manifest file @ {app_manifest_path} has invalid format.\n"
+            f"Please refer to {APP_MANIFEST_WEBSITE}.\n"
+            f"Lines with comments are supported if they start with \"#\".\n")
+        sys.exit(1)
+    ta_name = manifest.get_addon_name()
 
     if os.path.exists(config):
         try:
@@ -782,14 +800,12 @@ def _generate(source, config, ta_version, outputdir=None):
         version_file.write("\n")
         version_file.write(ta_version)
 
-    manifest = None
-    with open(os.path.abspath(os.path.join(outputdir, ta_name, "app.manifest"))) as manifest_file:
-        manifest = json.load(manifest_file)
-        manifest['info']['id']['version'] = ta_version
-
-    with open(os.path.abspath(os.path.join(outputdir, ta_name, "app.manifest")),
-              "w") as manifest_file:
-        manifest_file.write(json.dumps(manifest, indent=4, sort_keys=True))
+    manifest.update_addon_version(ta_version)
+    output_manifest_path = os.path.abspath(
+        os.path.join(outputdir, ta_name, APP_MANIFEST_FILE_NAME)
+    )
+    with open(output_manifest_path, "w") as manifest_file:
+        manifest_file.write(str(manifest))
 
     comment_map = save_comments(outputdir, ta_name)
     app_config = configparser.ConfigParser()
@@ -807,14 +823,14 @@ def _generate(source, config, ta_version, outputdir=None):
         app_config.add_section('ui')
 
     app_config['launcher']['version'] = ta_version
-    app_config['launcher']['description'] = manifest['info']['description']
+    app_config['launcher']['description'] = manifest.get_description()
 
     app_config['id']['version'] = ta_version
 
     app_config['install']['build'] = str(int(time.time()))
-    app_config['package']['id'] = manifest['info']['id']['name']
+    app_config['package']['id'] = ta_name
 
-    app_config['ui']['label'] = manifest['info']['title']
+    app_config['ui']['label'] = manifest.get_title()
 
     with open(os.path.join(outputdir, ta_name, 'default', "app.conf"),
               'w') as configfile:

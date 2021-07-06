@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import json
 import unittest
 
 import tests.unit.helpers as helpers
@@ -21,7 +22,8 @@ from splunk_add_on_ucc_framework import handle_biased_terms_update
 
 class ConfigFileUpdateTest(unittest.TestCase):
     def test_handle_biased_terms_update(self):
-        config = helpers.get_config("config_with_biased_terms.json")
+        config = helpers.get_testdata_file("config_with_biased_terms.json")
+        config = json.loads(config)
         updated_config = handle_biased_terms_update(config)
         expected_schema_version = "0.0.1"
         self.assertEqual(
