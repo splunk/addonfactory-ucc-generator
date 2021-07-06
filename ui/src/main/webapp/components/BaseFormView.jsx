@@ -153,7 +153,9 @@ class BaseFormView extends PureComponent {
                         // Defining state for auth_type in case of multiple Authentication
                         const tempEntity = {};
                         tempEntity.value =
-                            props.mode === MODE_CREATE ? authType[0] : this.currentInput.auth_type;
+                            typeof this.currentInput.auth_type !== 'undefined'
+                                ? this.currentInput.auth_type
+                                : authType[0];
                         tempEntity.display = true;
                         tempEntity.error = false;
                         tempEntity.disabled = false;
