@@ -79,7 +79,7 @@ function SingleInputComponent(props) {
         const source = axios.CancelToken.source();
 
         // eslint-disable-next-line no-shadow
-        const options = { CancelToken: source.token, handleError: true };
+        const options = { cancelToken: source.token, handleError: true, params: { count: -1 } };
         if (referenceName) {
             options.serviceName = referenceName;
         } else if (endpointUrl) {
@@ -87,7 +87,7 @@ function SingleInputComponent(props) {
         }
 
         if (dependencyValues) {
-            options.params = dependencyValues;
+            options.params = { ...options.params, ...dependencyValues };
         }
         if (!dependencies || dependencyValues) {
             setLoading(true);
