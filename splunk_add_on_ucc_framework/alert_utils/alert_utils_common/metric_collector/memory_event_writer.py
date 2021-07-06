@@ -23,14 +23,14 @@ from alert_utils.alert_utils_common.metric_collector.event_writer import *
 
 
 class MemoryEventWriter(MetricEventWriter):
-    '''
-        This class is used to mock a in memory event sink.
-        Be careful: all the events are stored in the memory queue
-    '''
+    """
+    This class is used to mock a in memory event sink.
+    Be careful: all the events are stored in the memory queue
+    """
 
     def __init__(self, app, config):
         super().__init__(app, config)
-        max_queue_size = config.get('max_queue_size', 0)
+        max_queue_size = config.get("max_queue_size", 0)
         self.q = queue.Queue(maxsize=max_queue_size)
 
     def _flush_msg(self, msg):

@@ -27,14 +27,14 @@ from solnlib import log
 from . import metric_aggregator
 from .metric_exception import MetricException
 
-__all__ = ['NumberMetricCollector']
+__all__ = ["NumberMetricCollector"]
 
-logger = log.Logs().get_logger('metric_collector')
+logger = log.Logs().get_logger("metric_collector")
+
 
 class AggregatorWorker(threading.Thread):
-
     def __init__(self, collector):
-        super().__init__(name='AggregatorWorker')
+        super().__init__(name="AggregatorWorker")
         self.daemon = True
         self.collector = collector
         self.metric_aggregators = dict()
@@ -48,8 +48,8 @@ class AggregatorWorker(threading.Thread):
 
 
 class NumberMetricCollector:
-    SUM_METRIC = 'sum'
-    AVG_METRIC = 'avg'
+    SUM_METRIC = "sum"
+    AVG_METRIC = "avg"
 
     def __init__(self, event_writer):
         self.event_writer = event_writer
@@ -66,46 +66,48 @@ class NumberMetricCollector:
         else:
             return not self.worker.is_alive()
 
-    def register_metric(self,
-                        metric_name,
-                        metric_type=SUM_METRIC,
-                        metric_tags=[],
-                        max_time_span=10):
+    def register_metric(
+        self, metric_name, metric_type=SUM_METRIC, metric_tags=[], max_time_span=10
+    ):
         if metric_name in self.aggregators:
-            raise MetricException('metric {} has been registered.'.format(
-                metric_name))
+            raise MetricException("metric {} has been registered.".format(metric_name))
         if metric_type == self.AVG_METRIC:
-            self.aggregators[
-                metric_name] = metric_aggregator.NumberMetricAverage(
-                    metric_name, self.event_writer, metric_tags, max_time_span)
+            self.aggregators[metric_name] = metric_aggregator.NumberMetricAverage(
+                metric_name, self.event_writer, metric_tags, max_time_span
+            )
         elif metric_type == self.SUM_METRIC:
             self.aggregators[metric_name] = metric_aggregator.NumberMetricSum(
-                metric_name, self.event_writer, metric_tags, max_time_span)
+                metric_name, self.event_writer, metric_tags, max_time_span
+            )
         else:
-            raise MetricException('Metric type {} is unsupported.'.format(
-                metric_type))
+            raise MetricException("Metric type {} is unsupported.".format(metric_type))
 
     def record_metric(self, metric_name, metric_value, metric_timestamp=None):
         if metric_name not in self.aggregators:
-            raise MetricException('metric {} is not registered yet.'.format(
-                metric_name))
+            raise MetricException(
+                "metric {} is not registered yet.".format(metric_name)
+            )
         if metric_timestamp is None:
             metric_timestamp = int(time.time())
-        self.record_queue.put({'type': 'metric',
-                               'ts': metric_timestamp,
-                               'v': metric_value,
-                               'n': metric_name})
+        self.record_queue.put(
+            {
+                "type": "metric",
+                "ts": metric_timestamp,
+                "v": metric_value,
+                "n": metric_name,
+            }
+        )
 
     def start(self):
         if self.is_stopped() == False:
-            raise RuntimeError('collector worker has been started.')
+            raise RuntimeError("collector worker has been started.")
         if self.worker:
-            raise RuntimeError('Worker thread is stopped, but the worker is not None.')
+            raise RuntimeError("Worker thread is stopped, but the worker is not None.")
         self.worker = AggregatorWorker(self)
         self.worker.start()
 
     def stop(self, graceful=True):
-        self.record_queue.put({'type': 'stop'})
+        self.record_queue.put({"type": "stop"})
         if graceful:
             self.join()
         self.worker = None
@@ -115,9 +117,9 @@ class NumberMetricCollector:
             self.worker.join()
 
     def process(self):
-        '''
+        """
         the entry point for the worker thread
-        '''
+        """
         is_stop = False
         skip_metrics = []
         record = None
@@ -126,10 +128,10 @@ class NumberMetricCollector:
         except queue.Empty:
             pass
         if record:
-            if record['type'] == 'stop':
+            if record["type"] == "stop":
                 is_stop = True
             else:
-                metric_name = record['n']
+                metric_name = record["n"]
                 self.aggregators[metric_name].aggregate_metric(record)
                 skip_metrics.append(metric_name)
         self._flush_events(skip_metrics)

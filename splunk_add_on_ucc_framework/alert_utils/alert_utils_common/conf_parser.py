@@ -40,18 +40,18 @@ except ImportError:
 COMMENT_PREFIX = ";#*"
 COMMENT_KEY = "__COMMENTS__"
 
-class TABConfigParser(configparser.RawConfigParser):
 
+class TABConfigParser(configparser.RawConfigParser):
     def _read(self, fp, fpname):
         """
         Override the built-in _read() method to read comments
         """
         from configparser import DEFAULTSECT, ParsingError
 
-        cursect = None                        # None, or a dictionary
+        cursect = None  # None, or a dictionary
         optname = None
         lineno = 0
-        e = None                              # None, or an exception
+        e = None  # None, or an exception
 
         ######## tab_update ########
         comment_index = 0
@@ -67,10 +67,10 @@ class TABConfigParser(configparser.RawConfigParser):
             lineno = lineno + 1
             line = line.strip(" ")
             # comment or blank line?
-            if line.strip() == '' or line[0] in COMMENT_PREFIX:
+            if line.strip() == "" or line[0] in COMMENT_PREFIX:
 
-            ######## tab_update ########
-            # save the lineno & comments
+                ######## tab_update ########
+                # save the lineno & comments
                 if cursect:
                     name = "{}{}".format(COMMENT_KEY, comment_index)
                     comment_index += 1
@@ -80,7 +80,7 @@ class TABConfigParser(configparser.RawConfigParser):
                 continue
             ############################
 
-            if line.split(None, 1)[0].lower() == 'rem' and line[0] in "rR":
+            if line.split(None, 1)[0].lower() == "rem" and line[0] in "rR":
                 # no leading whitespace
                 continue
             # continuation line?
@@ -106,14 +106,14 @@ class TABConfigParser(configparser.RawConfigParser):
                 # is it a section header?
                 mo = self.SECTCRE.match(line)
                 if mo:
-                    sectname = mo.group('header')
+                    sectname = mo.group("header")
                     if sectname in self._sections:
                         cursect = self._sections[sectname]
                     elif sectname == DEFAULTSECT:
                         cursect = self._defaults
                     else:
                         cursect = self._dict()
-                        cursect['__name__'] = sectname
+                        cursect["__name__"] = sectname
                         self._sections[sectname] = cursect
                     # So sections can't start with a continuation line
                     optname = None
@@ -122,28 +122,28 @@ class TABConfigParser(configparser.RawConfigParser):
                 elif cursect is None:
                     ######## tab_update ########
                     # disable the exception since splunk allows the field outside stanzas
-#                     raise MissingSectionHeaderError(fpname, lineno, line)
+                    #                     raise MissingSectionHeaderError(fpname, lineno, line)
                     self.fields_outside_stanza.append(line)
                 ############################
                 # an option line?
                 else:
                     mo = self._optcre.match(line)
                     if mo:
-                        optname, vi, optval = mo.group('option', 'vi', 'value')
+                        optname, vi, optval = mo.group("option", "vi", "value")
                         optname = self.optionxform(optname.rstrip())
                         # This check is fine because the OPTCRE cannot
                         # match if it would set optval to None
                         if optval is not None:
-                            if vi in ('=', ':') and ';' in optval:
+                            if vi in ("=", ":") and ";" in optval:
                                 # ';' is a comment delimiter only if it follows
                                 # a spacing character
-                                pos = optval.find(';')
-                                if pos != -1 and optval[pos-1].isspace():
+                                pos = optval.find(";")
+                                if pos != -1 and optval[pos - 1].isspace():
                                     optval = optval[:pos]
                             optval = optval.strip()
                             # allow empty values
                             if optval == '""':
-                                optval = ''
+                                optval = ""
                             cursect[optname] = [optval]
                         else:
                             # valueless option handling
@@ -166,8 +166,7 @@ class TABConfigParser(configparser.RawConfigParser):
         for options in all_sections:
             for name, val in list(options.items()):
                 if isinstance(val, list):
-                    options[name] = '\n'.join(val)
-
+                    options[name] = "\n".join(val)
 
     def write(self, fp):
         """
@@ -188,7 +187,7 @@ class TABConfigParser(configparser.RawConfigParser):
         if self._defaults:
             fp.write("[%s]\n" % DEFAULTSECT)
             for (key, value) in list(self._defaults.items()):
-                fp.write("{} = {}\n".format(key, str(value).replace('\n', '\n\t')))
+                fp.write("{} = {}\n".format(key, str(value).replace("\n", "\n\t")))
             fp.write("\n")
         for section in self._sections:
             fp.write("[%s]\n" % section)
@@ -206,7 +205,7 @@ class TABConfigParser(configparser.RawConfigParser):
                 ############################
 
                 if (value is not None) or (self._optcre == self.OPTCRE):
-                    key = " = ".join((key, str(value).replace('\n', '\n\t')))
+                    key = " = ".join((key, str(value).replace("\n", "\n\t")))
                 fp.write("%s\n" % (key))
             ######## tab_update ########
             # write the seperator line for stanza
@@ -223,10 +222,10 @@ class TABConfigParser(configparser.RawConfigParser):
         items = configparser.RawConfigParser.items(self, section)
 
         res = []
-        for k,v in items:
+        for k, v in items:
             if k.startswith(COMMENT_KEY):
                 continue
-            res.append((k,v))
+            res.append((k, v))
         return res
 
     def options(self, section):
@@ -245,8 +244,12 @@ class TABConfigParser(configparser.RawConfigParser):
         sections = dict(self._sections)
         for section, key_values in list(sections.items()):
             kv = {}
-            for k,v in list(key_values.items()):
-                if not isinstance(k, str) or k.startswith(COMMENT_KEY) or k == "__name__":
+            for k, v in list(key_values.items()):
+                if (
+                    not isinstance(k, str)
+                    or k.startswith(COMMENT_KEY)
+                    or k == "__name__"
+                ):
                     continue
                 kv[k] = v
             if kv:

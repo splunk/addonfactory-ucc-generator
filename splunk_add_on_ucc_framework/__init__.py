@@ -49,13 +49,11 @@ from .uccrestbuilder.global_config import (
 
 sourcedir = os.path.dirname(os.path.realpath(__file__))
 
-j2_env = Environment(
-    loader=FileSystemLoader(os.path.join(sourcedir, "templates"))
-)
+j2_env = Environment(loader=FileSystemLoader(os.path.join(sourcedir, "templates")))
 
-logger = logging.getLogger('UCC')
+logger = logging.getLogger("UCC")
 logger.setLevel(logging.INFO)
-formatter = logging.Formatter('%(asctime)s [%(name)s] %(levelname)s: %(message)s')
+formatter = logging.Formatter("%(asctime)s [%(name)s] %(levelname)s: %(message)s")
 shandler = logging.StreamHandler()
 shandler.setLevel(logging.INFO)
 shandler.setFormatter(formatter)
@@ -81,6 +79,7 @@ def get_os_path(path):
         path = path.replace("\\", os.sep)
     path = path.replace("/", os.sep)
     return path.strip(os.sep)
+
 
 def recursive_overwrite(src, dest, ignore_list=None):
     """
@@ -121,6 +120,7 @@ def clean_before_build(outputdir):
     shutil.rmtree(os.path.join(outputdir), ignore_errors=True)
     os.makedirs(os.path.join(outputdir))
     logger.info("Cleaned out directory " + outputdir)
+
 
 def version_tuple(version_str):
     """
@@ -175,7 +175,7 @@ def handle_update(config_path):
         config_path : path to globalConfig.json
 
     Returns:
-        dictionary : schema_content (globalConfig.json)     
+        dictionary : schema_content (globalConfig.json)
     """
     with open(config_path) as config_file:
         schema_content = json.load(config_file)
@@ -186,10 +186,10 @@ def handle_update(config_path):
         schema_content = handle_biased_terms_update(schema_content)
         with open(config_path, "w") as config_file:
             json.dump(schema_content, config_file, ensure_ascii=False, indent=4)
-    
+
     # check for schemaVersion, if it's less than 0.0.2 then updating globalConfig.json
     if version_tuple(version) < version_tuple("0.0.2"):
-        ta_tabs = schema_content.get("pages").get("configuration",{}).get("tabs",{})
+        ta_tabs = schema_content.get("pages").get("configuration", {}).get("tabs", {})
 
         # check for schema changes in configuration page of globalConfig.json
         for tab in ta_tabs:
@@ -198,39 +198,51 @@ def handle_update(config_path):
                 oauth_state_enabled_entity = {}
                 for entity in conf_entities:
                     if entity.get("field") == "oauth_state_enabled":
-                        logger.warn("oauth_state_enabled field is no longer a separate entity since UCC version 5.0.0. It is now an option in the oauth field. Please update the globalconfig.json file accordingly.")
+                        logger.warn(
+                            "oauth_state_enabled field is no longer a separate entity since UCC version 5.0.0. It is now an option in the oauth field. Please update the globalconfig.json file accordingly."
+                        )
                         oauth_state_enabled_entity = entity
 
-                    if entity.get("field") == "oauth" and not entity.get("options",{}).get("oauth_state_enabled"):
-                            entity["options"]["oauth_state_enabled"] = False
-                
+                    if entity.get("field") == "oauth" and not entity.get(
+                        "options", {}
+                    ).get("oauth_state_enabled"):
+                        entity["options"]["oauth_state_enabled"] = False
+
                 if oauth_state_enabled_entity:
                     conf_entities.remove(oauth_state_enabled_entity)
-            
+
             tab_options = tab.get("options", {})
             if tab_options.get("onChange"):
-                logger.error("The onChange option is no longer supported since UCC version 5.0.0. You can use custom hooks to implement these actions.")
+                logger.error(
+                    "The onChange option is no longer supported since UCC version 5.0.0. You can use custom hooks to implement these actions."
+                )
                 del tab_options["onChange"]
             if tab_options.get("onLoad"):
-                logger.error("The onLoad option is no longer supported since UCC version 5.0.0. You can use custom hooks to implement these actions.")
+                logger.error(
+                    "The onLoad option is no longer supported since UCC version 5.0.0. You can use custom hooks to implement these actions."
+                )
                 del tab_options["onLoad"]
-        
-        is_inputs = ("inputs" in schema_content.get("pages"))
+
+        is_inputs = "inputs" in schema_content.get("pages")
         if is_inputs:
-            services = schema_content.get("pages").get("inputs",{}).get("services",{})
+            services = schema_content.get("pages").get("inputs", {}).get("services", {})
             for service in services:
                 service_options = service.get("options", {})
                 if service_options.get("onChange"):
-                    logger.error("The onChange option is no longer supported since UCC version 5.0.0. You can use custom hooks to implement these actions.")
+                    logger.error(
+                        "The onChange option is no longer supported since UCC version 5.0.0. You can use custom hooks to implement these actions."
+                    )
                     del service_options["onChange"]
                 if service_options.get("onLoad"):
-                    logger.error("The onLoad option is no longer supported since UCC version 5.0.0. You can use custom hooks to implement these actions.")
+                    logger.error(
+                        "The onLoad option is no longer supported since UCC version 5.0.0. You can use custom hooks to implement these actions."
+                    )
                     del service_options["onLoad"]
 
         schema_content["meta"]["schemaVersion"] = "0.0.2"
         with open(config_path, "w") as config_file:
-            json.dump(schema_content,config_file, ensure_ascii=False, indent=4)
-    
+            json.dump(schema_content, config_file, ensure_ascii=False, indent=4)
+
     return schema_content
 
 
@@ -261,6 +273,7 @@ def replace_token(ta_name, outputdir):
                 s = s.replace("${ta.name}", ta_name.lower())
             f.write(s)
 
+
 def install_libs(path, ucc_lib_target):
     """
     Install 3rd Party libraries in addon.
@@ -285,40 +298,51 @@ def install_libs(path, ucc_lib_target):
             if not os.path.exists(ucc_target):
                 os.makedirs(ucc_target)
             install_cmd = (
-                installer +" -m pip install -r \""
+                installer
+                + ' -m pip install -r "'
                 + requirements
-                + "\" --no-compile --prefer-binary --ignore-installed --use-deprecated=legacy-resolver --target \""
+                + '" --no-compile --prefer-binary --ignore-installed --use-deprecated=legacy-resolver --target "'
                 + ucc_target
-                + "\""
+                + '"'
             )
-            os.system(installer +" -m pip install pip --upgrade")
+            os.system(installer + " -m pip install pip --upgrade")
             os.system(install_cmd)
             remove_files(ucc_target)
+
     logging.info(f"  Checking for requirements in {path}")
-    if os.path.exists(os.path.join(path,"lib", "requirements.txt")):
-        logging.info(f"  Uses common requirements")    
-        _install_libs(requirements=os.path.join(path, "lib","requirements.txt"), ucc_target=ucc_lib_target)
-    elif os.path.exists(os.path.join(os.path.abspath(os.path.join(path, os.pardir)), "requirements.txt")):
-        logging.info(f"  Uses common requirements")    
-        _install_libs(requirements=os.path.join(os.path.abspath(os.path.join(path, os.pardir)), "requirements.txt"), ucc_target=ucc_lib_target)
+    if os.path.exists(os.path.join(path, "lib", "requirements.txt")):
+        logging.info(f"  Uses common requirements")
+        _install_libs(
+            requirements=os.path.join(path, "lib", "requirements.txt"),
+            ucc_target=ucc_lib_target,
+        )
+    elif os.path.exists(
+        os.path.join(os.path.abspath(os.path.join(path, os.pardir)), "requirements.txt")
+    ):
+        logging.info(f"  Uses common requirements")
+        _install_libs(
+            requirements=os.path.join(
+                os.path.abspath(os.path.join(path, os.pardir)), "requirements.txt"
+            ),
+            ucc_target=ucc_lib_target,
+        )
     else:
-        logging.info(f"  Not using common requirements")    
+        logging.info(f"  Not using common requirements")
 
-
-    #Prevent certain packages from being included pip could be dangerous others are just wasted space
-    noshipdirs = ['setuptools', 'bin', 'pip', 'distribute', 'wheel']
+    # Prevent certain packages from being included pip could be dangerous others are just wasted space
+    noshipdirs = ["setuptools", "bin", "pip", "distribute", "wheel"]
     p = Path(ucc_lib_target)
     for nsd in noshipdirs:
         try:
-            #Glob can return FileNotFoundError exception if no match
-            for o in p.glob(nsd + '*'):
+            # Glob can return FileNotFoundError exception if no match
+            for o in p.glob(nsd + "*"):
                 if o.is_dir():
-                    logging.info(f"  removing directory {o} from output must not ship")  
+                    logging.info(f"  removing directory {o} from output must not ship")
                     shutil.rmtree(o)
         except FileNotFoundError:
             pass
 
-    #Remove execute bit from any object in lib
+    # Remove execute bit from any object in lib
     NO_USER_EXEC = ~stat.S_IEXEC
     NO_GROUP_EXEC = ~stat.S_IXGRP
     NO_OTHER_EXEC = ~stat.S_IXOTH
@@ -326,10 +350,9 @@ def install_libs(path, ucc_lib_target):
 
     for o in p.rglob("*"):
         if not o.is_dir() and os.access(o, os.X_OK):
-            logging.info(f"  fixing {o} execute bit")   
+            logging.info(f"  fixing {o} execute bit")
             current_permissions = stat.S_IMODE(os.lstat(o).st_mode)
             os.chmod(o, current_permissions & NO_EXEC)
-
 
 
 def remove_files(path):
@@ -340,9 +363,12 @@ def remove_files(path):
         path (str): Path to remove *.egg-info and *.dist-info files.
     """
 
-    rmdirs = glob.glob(os.path.join(path, "*.egg-info")) + glob.glob(os.path.join(path, "*.dist-info"))
+    rmdirs = glob.glob(os.path.join(path, "*.egg-info")) + glob.glob(
+        os.path.join(path, "*.dist-info")
+    )
     for rmdir in rmdirs:
         shutil.rmtree(rmdir)
+
 
 def generate_rest(ta_name, scheme, import_declare_name, outputdir):
     """
@@ -395,9 +421,7 @@ def replace_oauth_html_template_token(ta_name, ta_version, outputdir):
         outputdir (str): output directory.
     """
 
-    html_template_path = os.path.join(
-        outputdir, ta_name, "appserver", "templates"
-    )
+    html_template_path = os.path.join(outputdir, ta_name, "appserver", "templates")
     with open(os.path.join(html_template_path, "redirect.html")) as f:
         s = f.read()
 
@@ -442,11 +466,21 @@ def modify_and_replace_token_for_oauth_templates(
             + ta_version
             + ".js"
         )
-        redirect_html_dest = (
-            os.path.join(outputdir, ta_name, "appserver", "templates", ta_name.lower() + "_redirect.html")
+        redirect_html_dest = os.path.join(
+            outputdir,
+            ta_name,
+            "appserver",
+            "templates",
+            ta_name.lower() + "_redirect.html",
         )
-        redirect_xml_dest = (
-            os.path.join(outputdir, ta_name, "default", "data", "ui", "views", ta_name.lower() + "_redirect.xml")
+        redirect_xml_dest = os.path.join(
+            outputdir,
+            ta_name,
+            "default",
+            "data",
+            "ui",
+            "views",
+            ta_name.lower() + "_redirect.xml",
         )
         os.rename(redirect_js_src, redirect_js_dest)
         os.rename(redirect_html_src, redirect_html_dest)
@@ -458,9 +492,8 @@ def modify_and_replace_token_for_oauth_templates(
         os.remove(redirect_html_src)
         os.remove(redirect_js_src)
 
-def add_modular_input(
-    ta_name, schema_content, import_declare_name, outputdir
-):
+
+def add_modular_input(ta_name, schema_content, import_declare_name, outputdir):
     """
     Generate Modular input for addon.
 
@@ -493,26 +526,22 @@ def add_modular_input(
             description=description,
             entity=entity,
         )
-        input_file_name = os.path.join(
-            outputdir, ta_name, "bin", input_name + ".py"
-        )
+        input_file_name = os.path.join(outputdir, ta_name, "bin", input_name + ".py")
         with open(input_file_name, "w") as input_file:
             input_file.write(content)
 
-        input_default = os.path.join(
-            outputdir, ta_name, "default",  "inputs.conf"
-        )   
+        input_default = os.path.join(outputdir, ta_name, "default", "inputs.conf")
         config = configparser.ConfigParser()
         if os.path.exists(input_default):
             config.read(input_default)
-        
+
         if config.has_section(input_name):
-            config[input_name]['python.version'] = 'python3'
+            config[input_name]["python.version"] = "python3"
         else:
-            config[input_name] = {'python.version': 'python3'}
-        
-        with open(input_default, 'w') as configfile:
-           config.write(configfile)
+            config[input_name] = {"python.version": "python3"}
+
+        with open(input_default, "w") as configfile:
+            config.write(configfile)
 
 
 def make_modular_alerts(ta_name, ta_namespace, schema_content, outputdir):
@@ -535,6 +564,7 @@ def make_modular_alerts(ta_name, ta_namespace, schema_content, outputdir):
             sourcedir,
         )
 
+
 def get_ignore_list(ta_name, path):
     """
     Return path of files/folders to be removed.
@@ -551,8 +581,12 @@ def get_ignore_list(ta_name, path):
     else:
         with open(path) as ignore_file:
             ignore_list = ignore_file.readlines()
-        ignore_list = [(os.path.join("output", ta_name, get_os_path(path))).strip() for path in ignore_list]
+        ignore_list = [
+            (os.path.join("output", ta_name, get_os_path(path))).strip()
+            for path in ignore_list
+        ]
         return ignore_list
+
 
 def remove_listed_files(ignore_list):
     """
@@ -569,7 +603,12 @@ def remove_listed_files(ignore_list):
             elif os.path.isdir(path):
                 shutil.rmtree(path, ignore_errors=True)
         else:
-            logger.info("While ignoring the files mentioned in .uccignore {} was not found".format(path))
+            logger.info(
+                "While ignoring the files mentioned in .uccignore {} was not found".format(
+                    path
+                )
+            )
+
 
 def update_ta_version(config, ta_version):
     """
@@ -585,6 +624,7 @@ def update_ta_version(config, ta_version):
     with open(config, "w") as config_file:
         json.dump(schema_content, config_file, indent=4)
 
+
 def handle_no_inputs(ta_name, outputdir):
     """
     Handle for configuration without input page.
@@ -593,6 +633,7 @@ def handle_no_inputs(ta_name, outputdir):
         ta_name (str): Name of TA.
         outputdir (str): output directory.
     """
+
     def _removeinput(path):
         """
         Remove "inputs" view from default.xml
@@ -604,56 +645,64 @@ def handle_no_inputs(ta_name, outputdir):
         root = tree.getroot()
 
         for element in root:
-            if element.tag =="view" and element.get('name') == "inputs":
+            if element.tag == "view" and element.get("name") == "inputs":
                 root.remove(element)
 
         tree.write(path)
 
     default_xml_file = os.path.join(
-        outputdir, ta_name, "default", "data", "ui", "nav","default.xml"
+        outputdir, ta_name, "default", "data", "ui", "nav", "default.xml"
     )
     # Remove "inputs" view from default.xml
     _removeinput(default_xml_file)
 
     file_remove_list = []
-    file_remove_list.append(os.path.join(
-        outputdir, ta_name, "default", "data", "ui", "views","inputs.xml"
-    ))
-    file_remove_list.append(os.path.join(outputdir,ta_name,"appserver","static","css","inputs.css"))
-    file_remove_list.append(os.path.join(outputdir,ta_name,"appserver","static","css","createInput.css"))
+    file_remove_list.append(
+        os.path.join(outputdir, ta_name, "default", "data", "ui", "views", "inputs.xml")
+    )
+    file_remove_list.append(
+        os.path.join(outputdir, ta_name, "appserver", "static", "css", "inputs.css")
+    )
+    file_remove_list.append(
+        os.path.join(
+            outputdir, ta_name, "appserver", "static", "css", "createInput.css"
+        )
+    )
     # Remove unnecessary files
     for fl in file_remove_list:
         try:
             os.remove(fl)
         except OSError:
             pass
-    
+
+
 def save_comments(outputdir, ta_name):
     """
     Save index and content of comments in conf file and return dictionary thereof
     """
-    config_file = os.path.join(outputdir, ta_name,'default', "app.conf")
+    config_file = os.path.join(outputdir, ta_name, "default", "app.conf")
     comment_map = {}
     with open(config_file) as file:
         i = 0
         lines = file.readlines()
         for line in lines:
-            if re.match( r'^\s*#.*?$', line):
+            if re.match(r"^\s*#.*?$", line):
                 comment_map[i] = line
             i += 1
     return comment_map
+
 
 def restore_comments(outputdir, ta_name, comment_map):
     """
     Write comments to conf file at their original indices
     """
-    config_file = os.path.join(outputdir, ta_name,'default', "app.conf")
+    config_file = os.path.join(outputdir, ta_name, "default", "app.conf")
     with open(config_file) as file:
         lines = file.readlines()
     for (index, comment) in sorted(comment_map.items()):
         lines.insert(index, comment)
-    with open(config_file, 'w') as file:
-        file.write(''.join(lines))
+    with open(config_file, "w") as file:
+        file.write("".join(lines))
 
 
 def validate_config_against_schema(config: dict):
@@ -674,7 +723,7 @@ def _generate(source, config, ta_version, outputdir=None):
     if not ta_version:
         version = Version.from_git()
         if not version.stage:
-            stage = 'R'
+            stage = "R"
         else:
             stage = version.stage[:1]
 
@@ -686,13 +735,11 @@ def _generate(source, config, ta_version, outputdir=None):
         version_str = ta_version
 
     if not os.path.exists(source):
-        raise NotADirectoryError(
-            "{} not Found.".format(os.path.abspath(source)))
+        raise NotADirectoryError("{} not Found.".format(os.path.abspath(source)))
 
     # Setting default value to Config argument
     if not config:
-        config = os.path.abspath(
-            os.path.join(source, PARENT_DIR, "globalConfig.json"))
+        config = os.path.abspath(os.path.join(source, PARENT_DIR, "globalConfig.json"))
 
     clean_before_build(outputdir)
 
@@ -708,7 +755,8 @@ def _generate(source, config, ta_version, outputdir=None):
         logger.error(
             f"Manifest file @ {app_manifest_path} has invalid format.\n"
             f"Please refer to {APP_MANIFEST_WEBSITE}.\n"
-            f"Lines with comments are supported if they start with \"#\".\n")
+            f'Lines with comments are supported if they start with "#".\n'
+        )
         sys.exit(1)
     ta_name = manifest.get_addon_name()
 
@@ -734,7 +782,7 @@ def _generate(source, config, ta_version, outputdir=None):
         ta_tabs = schema_content.get("pages").get("configuration").get("tabs")
         ta_namespace = schema_content.get("meta").get("restRoot")
         import_declare_name = "import_declare_test"
-        is_inputs = ("inputs" in schema_content.get("pages"))
+        is_inputs = "inputs" in schema_content.get("pages")
 
         logger.info("Package ID is " + ta_name)
 
@@ -746,28 +794,29 @@ def _generate(source, config, ta_version, outputdir=None):
         logger.info("Copy globalConfig to output")
         shutil.copyfile(
             config,
-            os.path.join(outputdir, ta_name, "appserver", "static", "js",
-                         "build", "globalConfig.json"),
+            os.path.join(
+                outputdir,
+                ta_name,
+                "appserver",
+                "static",
+                "js",
+                "build",
+                "globalConfig.json",
+            ),
         )
         ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
-        logger.info(
-            f"Install Addon Requirements into {ucc_lib_target} from {source}")
-        install_libs(
-            source,
-            ucc_lib_target
-        )
+        logger.info(f"Install Addon Requirements into {ucc_lib_target} from {source}")
+        install_libs(source, ucc_lib_target)
 
         replace_token(ta_name, outputdir)
 
         generate_rest(ta_name, scheme, import_declare_name, outputdir)
 
         modify_and_replace_token_for_oauth_templates(
-            ta_name, ta_tabs, schema_content.get('meta').get('version'), outputdir
+            ta_name, ta_tabs, schema_content.get("meta").get("version"), outputdir
         )
         if is_inputs:
-            add_modular_input(
-                ta_name, schema_content, import_declare_name, outputdir
-            )
+            add_modular_input(ta_name, schema_content, import_declare_name, outputdir)
         else:
             handle_no_inputs(ta_name, outputdir)
 
@@ -776,26 +825,26 @@ def _generate(source, config, ta_version, outputdir=None):
     else:
         logger.info("Addon Version : " + ta_version)
         logger.warning(
-            "Skipped installing UCC required python modules as GlobalConfig.json does not exist.")
+            "Skipped installing UCC required python modules as GlobalConfig.json does not exist."
+        )
         logger.warning(
-            "Skipped Generating UI components as GlobalConfig.json does not exist.")
+            "Skipped Generating UI components as GlobalConfig.json does not exist."
+        )
         logger.info("Setting TA name as generic")
 
         ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
 
-        install_libs(
-            source,
-            ucc_lib_target=ucc_lib_target
-        )
+        install_libs(source, ucc_lib_target=ucc_lib_target)
 
-    ignore_list = get_ignore_list(ta_name, os.path.abspath(
-        os.path.join(source, PARENT_DIR, ".uccignore")))
+    ignore_list = get_ignore_list(
+        ta_name, os.path.abspath(os.path.join(source, PARENT_DIR, ".uccignore"))
+    )
     remove_listed_files(ignore_list)
     logger.info("Copy package directory ")
     recursive_overwrite(source, os.path.join(outputdir, ta_name))
 
     # Update app.manifest
-    with open(os.path.join(outputdir, ta_name, 'VERSION'), 'w') as version_file:
+    with open(os.path.join(outputdir, ta_name, "VERSION"), "w") as version_file:
         version_file.write(version_str)
         version_file.write("\n")
         version_file.write(ta_version)
@@ -809,49 +858,48 @@ def _generate(source, config, ta_version, outputdir=None):
 
     comment_map = save_comments(outputdir, ta_name)
     app_config = configparser.ConfigParser()
-    app_config.read_file(
-        open(os.path.join(outputdir, ta_name, 'default', "app.conf")))
-    if not 'launcher' in app_config:
-        app_config.add_section('launcher')
-    if not 'id' in app_config:
-        app_config.add_section('id')
-    if not 'install' in app_config:
-        app_config.add_section('install')
-    if not 'package' in app_config:
-        app_config.add_section('package')
-    if not 'ui' in app_config:
-        app_config.add_section('ui')
+    app_config.read_file(open(os.path.join(outputdir, ta_name, "default", "app.conf")))
+    if not "launcher" in app_config:
+        app_config.add_section("launcher")
+    if not "id" in app_config:
+        app_config.add_section("id")
+    if not "install" in app_config:
+        app_config.add_section("install")
+    if not "package" in app_config:
+        app_config.add_section("package")
+    if not "ui" in app_config:
+        app_config.add_section("ui")
 
-    app_config['launcher']['version'] = ta_version
-    app_config['launcher']['description'] = manifest.get_description()
+    app_config["launcher"]["version"] = ta_version
+    app_config["launcher"]["description"] = manifest.get_description()
 
-    app_config['id']['version'] = ta_version
+    app_config["id"]["version"] = ta_version
 
-    app_config['install']['build'] = str(int(time.time()))
-    app_config['package']['id'] = ta_name
+    app_config["install"]["build"] = str(int(time.time()))
+    app_config["package"]["id"] = ta_name
 
-    app_config['ui']['label'] = manifest.get_title()
+    app_config["ui"]["label"] = manifest.get_title()
 
-    with open(os.path.join(outputdir, ta_name, 'default', "app.conf"),
-              'w') as configfile:
+    with open(
+        os.path.join(outputdir, ta_name, "default", "app.conf"), "w"
+    ) as configfile:
         app_config.write(configfile)
     # restore License header
     restore_comments(outputdir, ta_name, comment_map)
 
     # Copy Licenses
-    license_dir = os.path.abspath(
-        os.path.join(source, PARENT_DIR, "LICENSES"))
+    license_dir = os.path.abspath(os.path.join(source, PARENT_DIR, "LICENSES"))
 
     if os.path.exists(license_dir):
         logger.info("Copy LICENSES directory ")
-        recursive_overwrite(license_dir,
-                            os.path.join(outputdir, ta_name, "LICENSES"))
+        recursive_overwrite(license_dir, os.path.join(outputdir, ta_name, "LICENSES"))
 
-    if os.path.exists(os.path.abspath(
-            os.path.join(source, PARENT_DIR, "additional_packaging.py"))):
-        sys.path.insert(0,
-                        os.path.abspath(os.path.join(source, PARENT_DIR)))
+    if os.path.exists(
+        os.path.abspath(os.path.join(source, PARENT_DIR, "additional_packaging.py"))
+    ):
+        sys.path.insert(0, os.path.abspath(os.path.join(source, PARENT_DIR)))
         from additional_packaging import additional_packaging
+
         additional_packaging(ta_name)
 
 
@@ -864,22 +912,22 @@ def main():
     parser.add_argument(
         "--source",
         type=str,
-        nargs='?',
+        nargs="?",
         help="Folder containing the app.manifest and app source",
         default="package",
     )
     parser.add_argument(
         "--config",
         type=str,
-        nargs='?',
+        nargs="?",
         help="Path to configuration file, defaults to GlobalConfig.json in parent directory of source provided",
-        default=None
+        default=None,
     )
     parser.add_argument(
         "--ta-version",
         type=str,
         help="Version of TA, default version is version specified in the package such as app.manifest, app.conf, and globalConfig.json",
-        default=None
+        default=None,
     )
     args = parser.parse_args()
     _generate(args.source, args.config, args.ta_version)

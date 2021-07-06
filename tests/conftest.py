@@ -30,7 +30,6 @@ def pytest_configure(config):
     config.addinivalue_line("markers", "docker: Test search time only")
 
 
-
 @pytest.fixture(scope="session")
 def docker_compose_files(request):
     """
@@ -42,21 +41,26 @@ def docker_compose_files(request):
     docker_compose_path = os.path.join(
         str(request.config.invocation_dir), "docker-compose.yml"
     )
-    #LOGGER.info("docker-compose path: %s", docker_compose_path)
+    # LOGGER.info("docker-compose path: %s", docker_compose_path)
 
     return [docker_compose_path]
 
+
 @pytest.fixture(scope="session")
 def get_session_key(splunk, request):
-    
-    
+
     uri = f'https://{splunk["host"]}:{splunk["port"]}/services/auth/login'
     _rest_client = SplunkRestClient(
-        None, '-', 'nobody', "https", splunk["host"], splunk["port"])
+        None, "-", "nobody", "https", splunk["host"], splunk["port"]
+    )
     try:
         response = _rest_client.http.post(
-            uri, username=splunk["username"], password=splunk["password"],output_mode='json')
+            uri,
+            username=splunk["username"],
+            password=splunk["password"],
+            output_mode="json",
+        )
     except binding.HTTPError as e:
         raise
 
-    return uri, json.loads(response.body.read())['sessionKey']
+    return uri, json.loads(response.body.read())["sessionKey"]

@@ -32,9 +32,16 @@ from .alert_actions_template import AlertActionsTemplateMgr
 
 
 class AlertActionsConfBase:
-    def __init__(self, input_setting=None, package_path=None, logger=None,
-                 template_dir=None, default_settings_file=None,
-                 global_settings=None, **kwargs):
+    def __init__(
+        self,
+        input_setting=None,
+        package_path=None,
+        logger=None,
+        template_dir=None,
+        default_settings_file=None,
+        global_settings=None,
+        **kwargs
+    ):
         self._alert_conf_name = "alert_actions.conf"
         self._alert_spec_name = "alert_actions.conf.spec"
         self._eventtypes_conf = "eventtypes.conf"
@@ -81,8 +88,10 @@ class AlertActionsConfBase:
         return "alert_" + alert[ac.SHORT_NAME] + ".png"
 
     def get_icon_path(self, alert, create_dir_path=True):
-        return op.join(self.get_icon_dir(create_dir_path=create_dir_path),
-                       self.get_icon_name(alert))
+        return op.join(
+            self.get_icon_dir(create_dir_path=create_dir_path),
+            self.get_icon_name(alert),
+        )
 
 
 class AlertActionsConfGeneration(AlertActionsConfBase):
@@ -94,32 +103,49 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
     DEFAULT_TAGS_TEMPLATE = "tags.conf.template"
     DEFAULT_APP_TEMPLATE = "app.conf.template"
 
-    def __init__(self, input_setting=None, package_path=None, logger=None,
-                 template_dir=None, default_settings_file=None, **kwargs):
+    def __init__(
+        self,
+        input_setting=None,
+        package_path=None,
+        logger=None,
+        template_dir=None,
+        default_settings_file=None,
+        **kwargs
+    ):
         if not input_setting or not logger:
             msg = 'status="failed", required_args="input_setting, logger"'
             raise aae.AlertActionsInValidArgs(msg)
 
         super().__init__(
             input_setting=input_setting,
-            package_path=package_path, logger=logger, template_dir=template_dir,
+            package_path=package_path,
+            logger=logger,
+            template_dir=template_dir,
             default_settings_file=default_settings_file,
             **kwargs
         )
 
-        self._html_fields = [ac.PARAMETERS, ]
+        self._html_fields = [
+            ac.PARAMETERS,
+        ]
         self._remove_fields = [ac.SHORT_NAME] + self._html_fields
         self._temp_obj = AlertActionsTemplateMgr(template_dir)
-        self._default_settings_file = default_settings_file or \
-            op.join(op.dirname(op.abspath(__file__)),
-                    AlertActionsConfGeneration.DEFAULT_SETTINGS_FILE)
+        self._default_settings_file = default_settings_file or op.join(
+            op.dirname(op.abspath(__file__)),
+            AlertActionsConfGeneration.DEFAULT_SETTINGS_FILE,
+        )
 
     def generate_conf(self):
-        self._logger.info('status="starting", operation="generate", ' +
-                          'object="alert_actions.conf", object_type="file"')
-        template = Template(filename=op.join(
-            self._temp_obj.get_template_dir(),
-            AlertActionsConfGeneration.DEFAULT_CONF_TEMPLATE))
+        self._logger.info(
+            'status="starting", operation="generate", '
+            + 'object="alert_actions.conf", object_type="file"'
+        )
+        template = Template(
+            filename=op.join(
+                self._temp_obj.get_template_dir(),
+                AlertActionsConfGeneration.DEFAULT_CONF_TEMPLATE,
+            )
+        )
         alert_obj = Munch.fromDict(self._alert_settings)
         try:
             final_string = template.render(mod_alerts=alert_obj)
@@ -127,76 +153,91 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
             print(exceptions.html_error_template().render())
             raise
         text = linesep.join([s.strip() for s in final_string.splitlines()])
-        write_file(self._alert_conf_name,
-                   self.get_local_conf_file_path(),
-                   text,
-                   self._logger)
-        self._logger.info('status="success", operation="generate", ' +
-                          'object="alert_actions.conf", object_type="file"')
+        write_file(
+            self._alert_conf_name, self.get_local_conf_file_path(), text, self._logger
+        )
+        self._logger.info(
+            'status="success", operation="generate", '
+            + 'object="alert_actions.conf", object_type="file"'
+        )
 
     def generate_eventtypes(self):
-        self._logger.info('status="starting", operation="generate", ' +
-                          'object="eventtypes.conf", object_type="file"')
-        template = Template(filename=op.join(
-            self._temp_obj.get_template_dir(),
-            AlertActionsConfGeneration.DEFAULT_EVENTTYPES_TEMPLATE))
+        self._logger.info(
+            'status="starting", operation="generate", '
+            + 'object="eventtypes.conf", object_type="file"'
+        )
+        template = Template(
+            filename=op.join(
+                self._temp_obj.get_template_dir(),
+                AlertActionsConfGeneration.DEFAULT_EVENTTYPES_TEMPLATE,
+            )
+        )
         alert_obj = Munch.fromDict(self._alert_settings)
         final_string = template.render(mod_alerts=alert_obj)
         text = linesep.join([s.strip() for s in final_string.splitlines()])
         file_path = self.get_local_conf_file_path(conf_name=self._eventtypes_conf)
-        write_file(self._eventtypes_conf,
-                   file_path,
-                   text,
-                   self._logger)
+        write_file(self._eventtypes_conf, file_path, text, self._logger)
 
         # remove the stanza if not checked
         for alert in self._alert_settings:
-            if alert.get("active_response") and alert["active_response"].get("sourcetype"):
+            if alert.get("active_response") and alert["active_response"].get(
+                "sourcetype"
+            ):
                 continue
             remove_alert_from_conf_file(alert, file_path, self._logger)
-        self._logger.info('status="success", operation="generate", ' +
-                          'object="eventtypes.conf", object_type="file"')
-
+        self._logger.info(
+            'status="success", operation="generate", '
+            + 'object="eventtypes.conf", object_type="file"'
+        )
 
     def generate_tags(self):
-        self._logger.info('status="starting", operation="generate", ' +
-                          'object="tags.conf", object_type="file"')
-        template = Template(filename=op.join(
-            self._temp_obj.get_template_dir(),
-            AlertActionsConfGeneration.DEFAULT_TAGS_TEMPLATE))
+        self._logger.info(
+            'status="starting", operation="generate", '
+            + 'object="tags.conf", object_type="file"'
+        )
+        template = Template(
+            filename=op.join(
+                self._temp_obj.get_template_dir(),
+                AlertActionsConfGeneration.DEFAULT_TAGS_TEMPLATE,
+            )
+        )
         alert_obj = Munch.fromDict(self._alert_settings)
         final_string = template.render(mod_alerts=alert_obj)
         text = linesep.join([s.strip() for s in final_string.splitlines()])
         file_path = self.get_local_conf_file_path(conf_name=self._tags_conf)
-        write_file(self._tags_conf,
-                   file_path,
-                   text,
-                   self._logger)
+        write_file(self._tags_conf, file_path, text, self._logger)
 
         # remove the stanza if not checked
         for alert in self._alert_settings:
-            if alert.get("active_response") and alert["active_response"].get("sourcetype"):
+            if alert.get("active_response") and alert["active_response"].get(
+                "sourcetype"
+            ):
                 continue
             remove_alert_from_conf_file(alert, file_path, self._logger)
-        self._logger.info('status="success", operation="generate", ' +
-                          'object="tags.conf", object_type="file"')
+        self._logger.info(
+            'status="success", operation="generate", '
+            + 'object="tags.conf", object_type="file"'
+        )
 
     def generate_spec(self):
-        self._logger.info('status="starting", operation="generate", ' +
-                          'object="alert_actions.conf.spec", object_type="file"')
-        template = Template(filename=op.join(
-            self._temp_obj.get_template_dir(),
-            AlertActionsConfGeneration.DEFAULT_SPEC_TEMPLATE))
+        self._logger.info(
+            'status="starting", operation="generate", '
+            + 'object="alert_actions.conf.spec", object_type="file"'
+        )
+        template = Template(
+            filename=op.join(
+                self._temp_obj.get_template_dir(),
+                AlertActionsConfGeneration.DEFAULT_SPEC_TEMPLATE,
+            )
+        )
         alert_obj = Munch.fromDict(self._alert_settings)
         final_string = template.render(mod_alerts=alert_obj)
         text = linesep.join([s.strip() for s in final_string.splitlines()])
-        write_file(self._alert_spec_name,
-                   self.get_spec_file_path(),
-                   text,
-                   self._logger)
-        self._logger.info('status="success", operation="generate", ' +
-                          'object="alert_actions.conf.spec", object_type="file"')
-
+        write_file(self._alert_spec_name, self.get_spec_file_path(), text, self._logger)
+        self._logger.info(
+            'status="success", operation="generate", '
+            + 'object="alert_actions.conf.spec", object_type="file"'
+        )
 
     def handle(self):
         self.add_default_settings()
@@ -206,7 +247,6 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
         self.generate_eventtypes()
         self.generate_tags()
         # self.generate_app_conf()
-
 
     def add_default_settings(self):
         default_settings = None
@@ -221,15 +261,19 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
                     continue
 
                 alert[ac.ALERT_PROPS][k] = v
-                self._logger.info('status="success", operation="Add default setting", alert_name="%s", "%s"="%s"',
-                                  alert[ac.SHORT_NAME], k, v)
+                self._logger.info(
+                    'status="success", operation="Add default setting", alert_name="%s", "%s"="%s"',
+                    alert[ac.SHORT_NAME],
+                    k,
+                    v,
+                )
 
 
-def generate_alert_actions_conf(input_setting=None, package_path=None,
-                                logger=None, **kwargs):
-    obj = AlertActionsConfGeneration(input_setting=input_setting,
-                                     package_path=package_path,
-                                     logger=logger,
-                                     **kwargs)
+def generate_alert_actions_conf(
+    input_setting=None, package_path=None, logger=None, **kwargs
+):
+    obj = AlertActionsConfGeneration(
+        input_setting=input_setting, package_path=package_path, logger=logger, **kwargs
+    )
     obj.handle()
     return None

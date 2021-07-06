@@ -19,7 +19,6 @@ Global config schema.
 """
 
 
-
 import json
 import os
 import os.path as op
@@ -39,6 +38,7 @@ from .endpoint.multiple_model import (
     MultipleModelEndpointBuilder,
     MultipleModelEntityBuilder,
 )
+
 # model to get accesstoken for oauth
 from .endpoint.oauth_model import OAuthModelEndpointBuilder
 from .endpoint.single_model import (
@@ -158,7 +158,8 @@ class GlobalConfigBuilderSchema(GlobalConfigSchema):
             default=content.get("defaultValue"),
         )
         return RestFieldBuilder(
-            field, self._parse_validation(content.get("validators")),
+            field,
+            self._parse_validation(content.get("validators")),
         )
 
     def _parse_validation(self, validation):
@@ -224,7 +225,8 @@ class GlobalConfigValidation:
             arguments = arguments or {}
             self._validators.append(
                 self._validation_template.format(
-                    validator=validator, arguments=self._arguments(**arguments),
+                    validator=validator,
+                    arguments=self._arguments(**arguments),
                 )
             )
 
@@ -240,7 +242,10 @@ class GlobalConfigValidation:
         if not kwargs:
             return ""
         args = list(
-            map(lambda k_v: "{}={}, ".format(k_v[0], k_v[1]), list(kwargs.items()),)
+            map(
+                lambda k_v: "{}={}, ".format(k_v[0], k_v[1]),
+                list(kwargs.items()),
+            )
         )
         args.insert(0, "")
         args.append("")
@@ -308,7 +313,9 @@ class GlobalConfigValidation:
     def multiple_validators(cls, validators):
         validators_str = ", \n".join(validators)
         _template = """validator.AllOf(\n{validators}\n)"""
-        return _template.format(validators=indent(validators_str),)
+        return _template.format(
+            validators=indent(validators_str),
+        )
 
 
 GlobalConfigValidation.validation_mapping = {
@@ -359,8 +366,14 @@ sys.path = new_paths
         return self.schema.namespace
 
     def default_to_local(self):
-        default_dir = op.join(self.root_path, self.builder.output.default,)
-        local_dir = op.join(self.root_path, self.output_local,)
+        default_dir = op.join(
+            self.root_path,
+            self.builder.output.default,
+        )
+        local_dir = op.join(
+            self.root_path,
+            self.output_local,
+        )
         if not op.isdir(local_dir):
             os.makedirs(local_dir)
         for i in os.listdir(default_dir):
@@ -384,7 +397,9 @@ sys.path = new_paths
             self.builder.output.bin,
             self.import_declare_py_name() + ".py",
         )
-        content = self._import_declare_content.format(ta_name=self.schema.product,)
+        content = self._import_declare_content.format(
+            ta_name=self.schema.product,
+        )
         with open(import_declare_file, "w") as f:
             f.write(content)
 

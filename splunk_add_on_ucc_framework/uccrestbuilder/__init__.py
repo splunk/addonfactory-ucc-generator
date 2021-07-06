@@ -19,7 +19,6 @@ REST Builder.
 """
 
 
-
 import collections
 
 from splunktaucclib.rest_handler.schema import RestSchema
@@ -36,7 +35,10 @@ __all__ = [
 __version__ = "0.0.0"
 
 
-RestHandlerClass = collections.namedtuple("RestHandlerClass", ("module", "name"),)
+RestHandlerClass = collections.namedtuple(
+    "RestHandlerClass",
+    ("module", "name"),
+)
 
 
 def build(schema, handler, output_path, j2_env, post_process=None, *args, **kwargs):
@@ -64,7 +66,10 @@ def build(schema, handler, output_path, j2_env, post_process=None, *args, **kwar
                 "Invalid handler specified. "
                 'It should be in form "module.sub_module.RestHandlerClass".'
             )
-        return RestHandlerClass(module=".".join(parts[:-1]), name=parts[-1],)
+        return RestHandlerClass(
+            module=".".join(parts[:-1]),
+            name=parts[-1],
+        )
 
     builder_obj = RestBuilder(schema, _parse_handler(handler), output_path)
     builder_obj.build()

@@ -15,10 +15,6 @@
 #
 
 
-
-
-
-
 class RestmapConf:
 
     _admin_template = """
@@ -39,22 +35,22 @@ handlerpersistentmode = true
     @classmethod
     def build(cls, endpoints, namespace, admin_match):
         if not endpoints:
-            return ''
+            return ""
         externals = [
             cls._admin_template.format(
                 namespace=namespace,
                 admin_match=admin_match,
-                endpoints=', '.join([ep.name for ep in endpoints])
+                endpoints=", ".join([ep.name for ep in endpoints]),
             )
         ]
         for endpoint in endpoints:
             external = cls._external_template.format(
                 name=endpoint.name,
                 rh_name=endpoint.rh_name,
-                actions=', '.join(endpoint.actions()),
+                actions=", ".join(endpoint.actions()),
             )
             externals.append(external)
-        return ''.join(externals)
+        return "".join(externals)
 
     @classmethod
     def admin_externals(cls, endpoints):
@@ -99,9 +95,6 @@ methods = GET
             )
         # add splunkd data endpoint
         stanzas.append(
-            cls._internal_template.format(
-                name='_splunkd_data',
-                endpoint='data/*'
-            )
+            cls._internal_template.format(name="_splunkd_data", endpoint="data/*")
         )
-        return ''.join(stanzas)
+        return "".join(stanzas)

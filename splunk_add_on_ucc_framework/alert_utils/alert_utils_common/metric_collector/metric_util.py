@@ -25,18 +25,18 @@ from six import string_types as str
 
 from . import monitor
 
-__all__ = ['initialize_metric_collector', 'function_run_time']
+__all__ = ["initialize_metric_collector", "function_run_time"]
 
 
 def initialize_metric_collector(config, update_config=False):
-    '''
+    """
     config is a configuration dict.
      - app: required field, define the app name for the monitor
      - event_writer: event writer type, must be one of ['file', 'hec']
      - writer_config: a dict, define the configuration for the event writer.
                      different event writer has different configurations.
     update_config: force to update the configure
-    '''
+    """
     m = monitor.Monitor().configure(config, force_update=update_config)
     m.start()
 
@@ -45,14 +45,14 @@ def write_event(ev, tags=[]):
     monitor.Monitor().write_event(ev, tags)
 
 
-CREDENTIAL_KEYS = ['password', 'passwords', 'token']
+CREDENTIAL_KEYS = ["password", "passwords", "token"]
 
 
 def mask_credentials(data):
-    '''
+    """
     The argument will be cloned
-    '''
-    masked_str = '******'
+    """
+    masked_str = "******"
     if isinstance(data, dict):
         new_data = {}
         for k in list(data.keys()):
@@ -85,7 +85,7 @@ def mask_credentials(data):
         if sensitive_word:
             return masked_str
     elif not isinstance(data, (int, float)):
-        return 'Class:' + data.__class__.__name__
+        return "Class:" + data.__class__.__name__
     return data
 
 
@@ -97,17 +97,18 @@ def function_run_time(tags=[]):
         @functools.wraps(func)
         def func_wrappers(*args, **kwargs):
             m = monitor.Monitor()
-            func_attr = {'function_name': func.__name__,
-                         'positional_args': str(mask_credentials(args))[0:max_length],
-                         'keyword_arguments': str(mask_credentials(kwargs))[0:max_length]}
-            ev = {'action': 'invoke'}
+            func_attr = {
+                "function_name": func.__name__,
+                "positional_args": str(mask_credentials(args))[0:max_length],
+                "keyword_arguments": str(mask_credentials(kwargs))[0:max_length],
+            }
+            ev = {"action": "invoke"}
             ev.update(func_attr)
             m.write_event(ev, tags)
             before_invoke = int(time.time() * 1000)
             ret = func(*args, **kwargs)
             after_invoke = int(time.time() * 1000)
-            ev = {'action': 'done',
-                  'time_cost': (after_invoke - before_invoke)}
+            ev = {"action": "done", "time_cost": (after_invoke - before_invoke)}
             ev.update(func_attr)
             m.write_event(ev, tags)
             return ret

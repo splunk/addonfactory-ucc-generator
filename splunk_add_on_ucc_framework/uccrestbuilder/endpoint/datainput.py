@@ -15,7 +15,6 @@
 #
 
 
-
 from .single_model import RestEndpointBuilder, RestEntityBuilder
 
 

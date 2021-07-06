@@ -15,14 +15,12 @@
 #
 
 
-
-
 from .base import indent, quote_string
 
 
 class RestFieldBuilder:
 
-    _kv_template = '{name} = {value}'
+    _kv_template = "{name} = {value}"
     _rh_template = """field.RestField(
     {name},
     required={required},
@@ -38,7 +36,7 @@ class RestFieldBuilder:
     def generate_spec(self):
         return self._kv_template.format(
             name=self._field.name,
-            value='',
+            value="",
         )
 
     def _indent_validator(self):

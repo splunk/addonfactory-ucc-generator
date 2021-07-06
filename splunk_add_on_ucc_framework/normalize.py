@@ -28,12 +28,12 @@ mapping_keys = {
     "type": "format_type",
     "valueField": "value-field",
     "labelField": "label-field",
-    "name": "short_name"
+    "name": "short_name",
 }
 
 mapping_values = {
     "singleSelect": "dropdownlist",
-    "singleSelectSplunkSearch": "dropdownlist_splunk_search"
+    "singleSelectSplunkSearch": "dropdownlist_splunk_search",
 }
 
 
@@ -54,20 +54,20 @@ def transform_params(parameter_list):
             label_field = param.pop("label-field")
             search = param.pop("search")
             param["ctrl_props"] = {
-                'value-field': value_field,
-                'label-field': label_field,
-                'search': search
+                "value-field": value_field,
+                "label-field": label_field,
+                "search": search,
             }
 
 
 def iterdict(dictionary, result):
-    '''
+    """
     This function replaces key and value with the ones required by add-on alert builder
-    '''
+    """
     for key in dictionary:
         if key in mapping_keys:
             value = result.pop(key)
-            result[mapping_keys[key]] =  value
+            result[mapping_keys[key]] = value
             mapped_key = mapping_keys[key]
         else:
             mapped_key = key
@@ -75,7 +75,9 @@ def iterdict(dictionary, result):
         if isinstance(dictionary[key], dict):
             iterdict(dictionary[key], result[mapped_key])
         elif isinstance(dictionary[key], list):
-            for dictionary_item, result_item in zip(dictionary[key], result[mapped_key]):
+            for dictionary_item, result_item in zip(
+                dictionary[key], result[mapped_key]
+            ):
                 if isinstance(dictionary_item, dict):
                     iterdict(dictionary_item, result_item)
         else:
@@ -84,31 +86,27 @@ def iterdict(dictionary, result):
 
 
 def form_main_dict(alert, product_id, short_name):
-    '''
+    """
     Forms the final dictionary required by add-on alert generator
-    '''
+    """
     return {
         "product_id": product_id,
         "short_name": short_name,
         "global_settings": "",
         "html_setting": None,
-        "build_components": {
-            "conf": "True",
-            "py": "True",
-            "html": "True"
-        },
+        "build_components": {"conf": "True", "py": "True", "html": "True"},
         "schema.content": {
             "product_id": product_id,
             "short_name": short_name,
-            "modular_alerts": alert
-        }
+            "modular_alerts": alert,
+        },
     }
 
 
 def normalize(schema_content, product_id, short_name):
-    '''
+    """
     Process the globalConfig alert schema to generate structure required by add-on alert generator
-    '''
+    """
     result = copy.deepcopy(schema_content)
     iterdict(schema_content, result)
     for alert in result["alerts"]:
