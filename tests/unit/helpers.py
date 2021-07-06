@@ -17,10 +17,9 @@ import json
 import os
 
 
-def get_config(config_name: str) -> dict:
-    config_path = os.path.join(
-        os.path.dirname(os.path.realpath(__file__)), "testdata", config_name
+def get_testdata_file(file_name: str) -> str:
+    file_path = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)), "testdata", file_name
     )
-    with open(config_path, "r") as f_config:
-        valid_config_raw = f_config.read()
-        return json.loads(valid_config_raw)
+    with open(file_path) as fp:
+        return fp.read()

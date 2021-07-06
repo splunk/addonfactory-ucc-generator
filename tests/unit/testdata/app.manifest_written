@@ -1,0 +1,51 @@
+{
+    "dependencies": null,
+    "incompatibleApps": null,
+    "info": {
+        "author": [
+            {
+                "company": null,
+                "email": null,
+                "name": "Splunk"
+            }
+        ],
+        "classification": {
+            "categories": [],
+            "developmentStatus": null,
+            "intendedAudience": null
+        },
+        "commonInformationModels": null,
+        "description": "Description of Splunk Add-on for UCC Example",
+        "id": {
+            "group": null,
+            "name": "Splunk_TA_UCCExample",
+            "version": "7.0.1"
+        },
+        "license": {
+            "name": null,
+            "text": "LICENSES/Apache-2.0.txt",
+            "uri": null
+        },
+        "privacyPolicy": {
+            "name": null,
+            "text": null,
+            "uri": null
+        },
+        "releaseDate": null,
+        "releaseNotes": {
+            "name": null,
+            "text": "./README.txt",
+            "uri": null
+        },
+        "title": "Splunk Add-on for UCC Example"
+    },
+    "inputGroups": null,
+    "platformRequirements": null,
+    "schemaVersion": "2.0.0",
+    "supportedDeployments": [
+        "_standalone",
+        "_distributed"
+    ],
+    "targetWorkloads": null,
+    "tasks": null
+}
