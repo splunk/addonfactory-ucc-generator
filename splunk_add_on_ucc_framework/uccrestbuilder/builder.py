@@ -18,7 +18,6 @@
 
 import os
 import os.path as op
-from builtins import object
 
 from .rest_conf import RestmapConf, WebConf
 
@@ -32,7 +31,7 @@ class RestBuilderError(Exception):
     pass
 
 
-class _RestBuilderOutput(object):
+class _RestBuilderOutput:
 
     readme = 'README'
     default = 'default'
@@ -62,7 +61,7 @@ class _RestBuilderOutput(object):
                 f.writelines(full_content)
 
 
-class RestBuilder(object):
+class RestBuilder:
 
     def __init__(
             self,

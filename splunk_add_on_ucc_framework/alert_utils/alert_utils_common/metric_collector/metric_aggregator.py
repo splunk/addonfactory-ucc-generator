@@ -16,10 +16,9 @@
 
 # encode=utf-8
 
-from builtins import object, range
 
 
-class NumberMetricArregator(object):
+class NumberMetricArregator:
     '''
     aggregate the metric with the the second interval.
     for minute and hour aggregate, use splunk to do it.
@@ -80,7 +79,7 @@ class NumberMetricSum(NumberMetricArregator):
     add all the numbers in the same time slot
     '''
     def __init__(self, metric_name, event_writer, metric_tags=None, max_time_span=10):
-        super(NumberMetricSum, self).__init__(metric_name, event_writer, metric_tags, max_time_span)
+        super().__init__(metric_name, event_writer, metric_tags, max_time_span)
 
     def _aggregate_metric(self, record):
         ts = record['ts']
@@ -101,7 +100,7 @@ class NumberMetricAverage(NumberMetricArregator):
     calculate the average number for the metric
     '''
     def __init__(self, metric_name, event_writer, metric_tags=None, max_time_span=10):
-        super(NumberMetricAverage, self).__init__(metric_name, event_writer, metric_tags, max_time_span)
+        super().__init__(metric_name, event_writer, metric_tags, max_time_span)
 
     def _format_metric(self, metric):
         return {'avg': float(metric['sum'])/metric['count'], 'max': metric['max'], 'min': metric['min']}

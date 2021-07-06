@@ -24,7 +24,6 @@ import json
 import os
 import os.path as op
 import shutil
-from builtins import map, object
 
 from solnlib.utils import is_true
 from splunktaucclib.global_config import GlobalConfigSchema
@@ -50,7 +49,7 @@ from .endpoint.single_model import (
 
 class GlobalConfigBuilderSchema(GlobalConfigSchema):
     def __init__(self, content, j2_env, *args, **kwargs):
-        super(GlobalConfigBuilderSchema, self).__init__(content, *args, **kwargs)
+        super().__init__(content, *args, **kwargs)
         self.j2_env = j2_env
         self._endpoints = {}
         self._parse_builder_schema()
@@ -204,7 +203,7 @@ class GlobalConfigBuilderSchema(GlobalConfigSchema):
         return content
 
 
-class GlobalConfigValidation(object):
+class GlobalConfigValidation:
 
     _validation_template = """validator.{validator}({arguments})"""
 
@@ -323,7 +322,7 @@ GlobalConfigValidation.validation_mapping = {
 }
 
 
-class GlobalConfigPostProcessor(object):
+class GlobalConfigPostProcessor:
     """
     Post process for REST builder.
     """

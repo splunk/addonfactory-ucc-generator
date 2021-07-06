@@ -16,7 +16,6 @@
 
 
 import re
-from builtins import object
 from os import path as op
 
 from mako.lookup import TemplateLookup
@@ -29,7 +28,7 @@ from .alert_actions_helper import write_file
 from .alert_actions_template import AlertActionsTemplateMgr
 
 
-class AlertActionsPyBase(object):
+class AlertActionsPyBase:
 
     def __init__(self, input_setting=None, package_path=None, logger=None,
                  template_py=None, lookup_dir=None, global_settings=None,
@@ -44,7 +43,7 @@ class AlertActionsPyBase(object):
         self._lib_dir = self.get_python_lib_dir_name(self._ta_name)
 
     def get_python_lib_dir_name(self, app_name):
-        space_replace = re.compile('[^\w]+')
+        space_replace = re.compile(r'[^\w]+')
         return space_replace.sub('_', app_name.lower())
 
     def get_alert_py_name(self, helper=""):
@@ -100,7 +99,7 @@ class AlertActionsPyGenerator(AlertActionsPyBase):
         if not input_setting or not logger:
             msg = 'required_args="input_setting, logger"'
             raise aae.AlertActionsInValidArgs(msg)
-        super(AlertActionsPyGenerator, self).__init__(
+        super().__init__(
             input_setting=input_setting, package_path=package_path,
             logger=logger, template_py=template_py, lookup_dir=lookup_dir,
             global_settings=global_settings, **kwargs)

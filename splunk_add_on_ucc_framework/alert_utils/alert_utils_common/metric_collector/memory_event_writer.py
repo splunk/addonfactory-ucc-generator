@@ -29,7 +29,7 @@ class MemoryEventWriter(MetricEventWriter):
     '''
 
     def __init__(self, app, config):
-        super(MemoryEventWriter, self).__init__(app, config)
+        super().__init__(app, config)
         max_queue_size = config.get('max_queue_size', 0)
         self.q = queue.Queue(maxsize=max_queue_size)
 

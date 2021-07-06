@@ -19,7 +19,6 @@
 import csv
 import gzip
 import sys
-from builtins import str
 
 try:
     from splunk.clilib.bundle_paths import make_splunkhome_path
@@ -38,7 +37,7 @@ class ModularAlertBase(ModularAction):
         # self._logger_name = "modalert_" + alert_name
         self._logger_name = alert_name + "_modalert"
         self._logger = Logs().get_logger(self._logger_name)
-        super(ModularAlertBase, self).__init__(
+        super().__init__(
             sys.stdin.read(), self._logger, alert_name)
 
     def log_error(self, msg):

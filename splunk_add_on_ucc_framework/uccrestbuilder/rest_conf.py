@@ -17,10 +17,9 @@
 
 
 
-from builtins import object
 
 
-class RestmapConf(object):
+class RestmapConf:
 
     _admin_template = """
 [admin:{namespace}]
@@ -62,7 +61,7 @@ handlerpersistentmode = true
         return [endpoint.name for endpoint in endpoints]
 
 
-class WebConf(object):
+class WebConf:
 
     _template = """
 [expose:{name}]

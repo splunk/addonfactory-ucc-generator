@@ -19,7 +19,6 @@
 import json
 import logging
 import time
-from builtins import object
 
 from solnlib import log
 
@@ -33,7 +32,7 @@ def message(app, current_time, event, tags):
     return json.dumps(final_event)
 
 
-class MetricEventWriter(object):
+class MetricEventWriter:
     def __init__(self, app, config):
         '''
         config is a dict, which contains all the params for file writer
@@ -84,7 +83,7 @@ class MetricEventWriter(object):
 
 class FileEventWriter(MetricEventWriter):
     def __init__(self, app, config):
-        super(FileEventWriter, self).__init__(app, config)
+        super().__init__(app, config)
         self._logger_name = config.get('logger', 'default') + '_metric_events'
         self._logger = log.Logs().get_logger(self._logger_name)
         self._log_level = config.get('loglevel', 'INFO')
@@ -94,7 +93,7 @@ class FileEventWriter(MetricEventWriter):
             handler.setFormatter(logging.Formatter('%(message)s'))
 
     def update_config(self, config):
-        super(FileEventWriter, self).update_config(config)
+        super().update_config(config)
         l_name = config.get('logger', 'default') + '_metric_events'
         if l_name != self._logger_name:
             self._logger_name = l_name
@@ -112,7 +111,7 @@ class SplunkStashFileWriter(MetricEventWriter):
     write a small file and use splunk rest upload this file
     '''
     def __init__(self, app, config):
-        super(SplunkStashFileWriter, self).__init__(app, config)
+        super().__init__(app, config)
         pass
 
     def update_config(self, config):

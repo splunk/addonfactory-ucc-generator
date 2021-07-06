@@ -13,16 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-
-
-from builtins import object
-from io import StringIO
-
-import six
 from future import standard_library
-from past.builtins import str
-from six import string_types as str
 from splunktaucclib.rest_handler.schema import RestSchema
 
 standard_library.install_aliases()
@@ -35,7 +26,7 @@ __all__ = [
 ]
 
 
-class RestEntityBuilder(object):
+class RestEntityBuilder:
 
     _title_template = "[{}]"
     _rh_template = """
@@ -102,7 +93,7 @@ field.RestField(
         )
 
 
-class RestEndpointBuilder(object):
+class RestEndpointBuilder:
     def __init__(self, name, namespace, **kwargs):
         self._name = name
         self._namespace = namespace
@@ -188,12 +179,13 @@ def indent(lines, spaces=1):
     :param spaces: times of four
     :return:
     """
-    string_io = StringIO(six.text_type(lines))
+    if lines is None:
+        return ""
     indentation = spaces * 4
     prefix = " " * indentation
-    lines = []
-    for line in string_io:
+    intended_lines = []
+    for line in lines:
         if line != "\n":
             line = prefix + line
-        lines.append(line)
-    return "".join(lines)
+        intended_lines.append(line)
+    return "".join(intended_lines)

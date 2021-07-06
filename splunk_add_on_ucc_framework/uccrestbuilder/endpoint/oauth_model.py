@@ -31,7 +31,7 @@ class OAuthModelEndpointBuilder(RestEndpointBuilder):
     """
 
     def __init__(self, name, j2_env, namespace, **kwargs):
-        super(OAuthModelEndpointBuilder, self).__init__(name, namespace, **kwargs)
+        super().__init__(name, namespace, **kwargs)
         self._app_name = kwargs.get("app_name")
         self.j2_env = j2_env
 

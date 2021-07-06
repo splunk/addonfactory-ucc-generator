@@ -21,7 +21,6 @@ standard_library.install_aliases()
 import queue
 import threading
 import time
-from builtins import object
 
 from solnlib import log
 
@@ -35,7 +34,7 @@ logger = log.Logs().get_logger('metric_collector')
 class AggregatorWorker(threading.Thread):
 
     def __init__(self, collector):
-        super(AggregatorWorker, self).__init__(name='AggregatorWorker')
+        super().__init__(name='AggregatorWorker')
         self.daemon = True
         self.collector = collector
         self.metric_aggregators = dict()
@@ -48,7 +47,7 @@ class AggregatorWorker(threading.Thread):
         self.collector.flush_all_event()
 
 
-class NumberMetricCollector(object):
+class NumberMetricCollector:
     SUM_METRIC = 'sum'
     AVG_METRIC = 'avg'
 
