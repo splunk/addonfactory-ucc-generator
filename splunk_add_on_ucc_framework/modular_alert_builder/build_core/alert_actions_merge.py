@@ -27,10 +27,8 @@ from splunk_add_on_ucc_framework.alert_utils.alert_utils_common.conf_parser impo
 from . import alert_actions_exceptions as aae
 from . import arf_consts as ac
 
-merge_deny_list = ['default.meta', 'README.txt']
-merge_mode_config = {
-    "app.conf": "item_overwrite"
-}
+merge_deny_list = ["default.meta", "README.txt"]
+merge_mode_config = {"app.conf": "item_overwrite"}
 
 
 def remove_alert_from_conf_file(alert, conf_file, logger):
@@ -39,7 +37,9 @@ def remove_alert_from_conf_file(alert, conf_file, logger):
         return
 
     if not isinstance(alert, dict):
-        msg = 'alert="{}", event="alert is not a dict, don\'t remove anything form file {}"'.format(alert, conf_file)
+        msg = 'alert="{}", event="alert is not a dict, don\'t remove anything form file {}"'.format(
+            alert, conf_file
+        )
         raise aae.AlertCleaningFormatFailure(msg)
 
     parser = TABConfigParser()
@@ -47,12 +47,17 @@ def remove_alert_from_conf_file(alert, conf_file, logger):
     conf_dict = parser.item_dict()
 
     for stanza, key_values in list(conf_dict.items()):
-        if stanza == alert[ac.SHORT_NAME] or \
-            stanza == alert[ac.SHORT_NAME] + "_modaction_result" or \
-                stanza == "eventtype=" + alert[ac.SHORT_NAME] + "_modaction_result":
-            logger.info('alert="%s", conf_file="%s", stanza="%s"',
-                        alert[ac.SHORT_NAME],
-                        conf_file, stanza)
+        if (
+            stanza == alert[ac.SHORT_NAME]
+            or stanza == alert[ac.SHORT_NAME] + "_modaction_result"
+            or stanza == "eventtype=" + alert[ac.SHORT_NAME] + "_modaction_result"
+        ):
+            logger.info(
+                'alert="%s", conf_file="%s", stanza="%s"',
+                alert[ac.SHORT_NAME],
+                conf_file,
+                stanza,
+            )
             parser.remove_section(stanza)
 
     with open(conf_file, "w") as cf:
@@ -79,7 +84,7 @@ def merge_conf_file(src_file, dst_file, merge_mode="stanza_overwrite"):
             if stanza not in dst_dict:
                 parser.add_section(stanza)
             else:
-                parser.remove_section(stanza,false)
+                parser.remove_section(stanza, false)
                 parser.add_section(stanza)
 
             for k, v in list(key_values.items()):
@@ -118,14 +123,16 @@ def merge(src, dst, no_deny_list=True):
 
             if file.endswith("pyo") or file.endswith("pyc"):
                 continue
-            if file in dst_files and (file.endswith('.conf') or file.endswith('.conf.spec')):
+            if file in dst_files and (
+                file.endswith(".conf") or file.endswith(".conf.spec")
+            ):
                 if file in list(merge_mode_config.keys()):
                     merge_mode = merge_mode_config[file]
                 merge_conf_file(f_path, op.join(dst, file), merge_mode)
             else:
                 copy(f_path, dst)
         elif op.isdir(f_path):
-            if file.startswith('.'):
+            if file.startswith("."):
                 continue
             if file not in dst_files:
                 os.makedirs(op.join(dst, file))

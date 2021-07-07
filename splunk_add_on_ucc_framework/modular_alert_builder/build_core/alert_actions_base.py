@@ -15,7 +15,6 @@
 #
 
 
-
 import csv
 import gzip
 import sys
@@ -37,8 +36,7 @@ class ModularAlertBase(ModularAction):
         # self._logger_name = "modalert_" + alert_name
         self._logger_name = alert_name + "_modalert"
         self._logger = Logs().get_logger(self._logger_name)
-        super().__init__(
-            sys.stdin.read(), self._logger, alert_name)
+        super().__init__(sys.stdin.read(), self._logger, alert_name)
 
     def log_error(self, msg):
         self._logger.error(msg)
@@ -62,12 +60,12 @@ class ModularAlertBase(ModularAction):
             sys.exit(1)
 
         try:
-            with gzip.open(self.results_file, 'rb') as rh:
+            with gzip.open(self.results_file, "rb") as rh:
                 for num, result in enumerate(csv.DictReader(rh)):
-                    result.setdefault('rid', str(num))
+                    result.setdefault("rid", str(num))
                     self.update(result)
                     self.dowork(result)
         except Exception as e:
-            self._logger.error(self.message(e, 'failure'))
+            self._logger.error(self.message(e, "failure"))
             self._logger.exception("exception=")
             sys.exit(2)

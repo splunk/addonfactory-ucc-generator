@@ -41,9 +41,9 @@ def check_file_name(file_name, env):
     for gp in search:
         if gp in env:
             new_str = new_str.replace("${%s}" % gp, env[gp], re.MULTILINE)
-            new_str = new_str.replace("${!%s}" % gp,
-                                      re.sub(r"[^\w]+", "_", env[gp].lower()),
-                                      re.MULTILINE)
+            new_str = new_str.replace(
+                "${!%s}" % gp, re.sub(r"[^\w]+", "_", env[gp].lower()), re.MULTILINE
+            )
 
     # Disable the cache to avoid conflict
     # cache_path[file_name] = new_str
@@ -73,23 +73,21 @@ def prepare_ta_directory_tree(src, dest, logger, envs):
         return output_dir
 
     if os.path.exists(output_dir):
-        logger.info('event="output_dir=%s already exist"',
-                    output_dir)
-        output_dir = os.path.join(output_dir,
-                                  envs["product_id"] + "_temp_output")
+        logger.info('event="output_dir=%s already exist"', output_dir)
+        output_dir = os.path.join(output_dir, envs["product_id"] + "_temp_output")
         logger.info('event="generate a new output_dir=%s"', output_dir)
         if os.path.exists(output_dir):
             shutil.rmtree(output_dir)
 
     try:
         # copy file
-        logger.info('event="Copying directory tree: src=%s dest=%s"',
-                    src, output_dir)
+        logger.info('event="Copying directory tree: src=%s dest=%s"', src, output_dir)
         shutil.copytree(src, output_dir)
 
         # process each file's name
-        logger.info('event="Replace each file name\'s placeholder under dir=%s"',
-                    output_dir)
+        logger.info(
+            'event="Replace each file name\'s placeholder under dir=%s"', output_dir
+        )
         move_list = []
         for dirName, subdirList, fileList in os.walk(output_dir):
             move_list.extend(check_file_list(dirName, subdirList, envs))
@@ -106,8 +104,7 @@ def prepare_ta_directory_tree(src, dest, logger, envs):
     return output_dir
 
 
-def generate_alerts(src, dest, logger, envs, process_list=None,
-                          skip_list=None):
+def generate_alerts(src, dest, logger, envs, process_list=None, skip_list=None):
     process_list = process_list or []
     skip_list = skip_list or []
     output_dir = dest
@@ -129,21 +126,23 @@ def generate_alerts(src, dest, logger, envs, process_list=None,
                 input_setting=envs["schema.content"],
                 package_path=package_dir,
                 logger=logger,
-                global_settings=global_settings)
+                global_settings=global_settings,
+            )
 
         if build_components["html"]:
             html_return = generate_alert_actions_html_files(
                 input_setting=envs["schema.content"],
                 package_path=package_dir,
                 logger=logger,
-                html_setting=envs["html_setting"])
+                html_setting=envs["html_setting"],
+            )
 
         if build_components["py"]:
             py_return = generate_alert_actions_py_files(
                 input_setting=envs["schema.content"],
                 package_path=package_dir,
                 logger=logger,
-                global_settings=global_settings
+                global_settings=global_settings,
             )
 
         if conf_return:
@@ -158,9 +157,11 @@ def generate_alerts(src, dest, logger, envs, process_list=None,
             Which means the previous output_dir already there
             """
             from . import alert_actions_merge
+
             alert_actions_merge.merge(
                 os.path.join(output_dir, envs["product_id"]),
-                os.path.join(dest, envs["product_id"]))
+                os.path.join(dest, envs["product_id"]),
+            )
             logger.info('event="merged %s to %s', output_dir, dest)
     finally:
         if output_dir != dest and os.path.exists(output_dir):

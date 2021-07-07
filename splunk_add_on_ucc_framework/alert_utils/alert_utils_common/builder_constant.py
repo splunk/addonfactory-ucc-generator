@@ -22,13 +22,14 @@ ADDON_BUILDER_APP_CATEGORY = "Splunk App Add-on Builder"
 
 # can not use common_util.make_splunk_path here. cylic import
 BUILDER_WORKSPACE_ROOT = make_splunkhome_path(
-    ['etc', 'apps', ADDON_BUILDER_APP_NAME, 'local', 'builder_workspace'])
+    ["etc", "apps", ADDON_BUILDER_APP_NAME, "local", "builder_workspace"]
+)
 
 # cookie related keys
-TA_NAME = 'ta_builder_current_ta_name'
-TA_DISPLAY_NAME = 'ta_builder_current_ta_display_name'
+TA_NAME = "ta_builder_current_ta_name"
+TA_DISPLAY_NAME = "ta_builder_current_ta_display_name"
 TA_WIZARD_STEP = "ta_builder_wizard"
-BUILT_FLAG = 'built_by_tabuilder'
+BUILT_FLAG = "built_by_tabuilder"
 COOKIE_KEYS = [TA_NAME, TA_WIZARD_STEP, BUILT_FLAG, TA_DISPLAY_NAME]
 COOKIE_EXPIRES_DAY = 30
 
@@ -43,22 +44,18 @@ GLOBAL_SETTING_CONF_NAME = "settings"
 APP_CERT_STANZA = "app_cert"
 
 # global settings
-USR_CREDENTIAL_SETTING = 'credential_settings'
-PROXY_SETTING = 'proxy_settings'
-LOG_SETTINGS = 'log_settings'
-CUSTOMIZED_SETTINGS = 'customized_settings'
-CREDENTIAL_SCHEMA = 'default_account'
-LOG_SCHEMA = 'default_logging'
-PROXY_SCHEMA = 'default_proxy'
-CUSTOMIZED_BOOL_SCHEMA = 'bool'
-CUSTOMIZED_TEXT_SCHEMA = 'text'
-CUSTOMIZED_PASSWORD_SCHEMA = 'password'
+USR_CREDENTIAL_SETTING = "credential_settings"
+PROXY_SETTING = "proxy_settings"
+LOG_SETTINGS = "log_settings"
+CUSTOMIZED_SETTINGS = "customized_settings"
+CREDENTIAL_SCHEMA = "default_account"
+LOG_SCHEMA = "default_logging"
+PROXY_SCHEMA = "default_proxy"
+CUSTOMIZED_BOOL_SCHEMA = "bool"
+CUSTOMIZED_TEXT_SCHEMA = "text"
+CUSTOMIZED_PASSWORD_SCHEMA = "password"
 
-CUSTOMIZED_TYPE_MAP = {
-    "text": "text",
-    "checkbox": "bool",
-    "password": "password"
-}
+CUSTOMIZED_TYPE_MAP = {"text": "text", "checkbox": "bool", "password": "password"}
 
 # cim mapping settings
 CONF_MODELS = "aob_models"

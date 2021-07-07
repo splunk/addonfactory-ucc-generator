@@ -11,7 +11,9 @@ class UccGenerateTest(unittest.TestCase):
 
     def test_ucc_generate_with_custom_output_folder(self):
         package_folder = path.join(path.dirname(path.realpath(__file__)), "package")
-        output_folder = path.join(path.dirname(path.realpath(__file__)), "custom_output")
+        output_folder = path.join(
+            path.dirname(path.realpath(__file__)), "custom_output"
+        )
         ucc.generate(source=package_folder, outputdir=output_folder)
 
 

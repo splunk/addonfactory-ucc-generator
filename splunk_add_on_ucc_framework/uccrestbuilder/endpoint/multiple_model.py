@@ -15,7 +15,6 @@
 #
 
 
-
 from .base import indent
 from .single_model import RestEndpointBuilder, RestEntityBuilder
 
