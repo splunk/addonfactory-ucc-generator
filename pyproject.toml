@@ -70,7 +70,7 @@ solnlib = "^4.1.0"
 splunktaucclib = "^5.0.2"
 [tool.poetry.dev-dependencies]
 pytest = "^6.2"
-pytest-splunk-addon = { version = "^1.6", extras = [ "docker" ] }
+pytest-splunk-addon = { version = "^1.7", extras = [ "docker" ] }
 pytest-cov = "^2.12.1"
 coverage = "^5.5"
 
