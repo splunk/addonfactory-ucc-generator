@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from io import StringIO
+
 from future import standard_library
 from splunktaucclib.rest_handler.schema import RestSchema
 
@@ -179,13 +181,12 @@ def indent(lines, spaces=1):
     :param spaces: times of four
     :return:
     """
-    if lines is None:
-        return ""
+    string_io = StringIO(str(lines))
     indentation = spaces * 4
     prefix = " " * indentation
-    intended_lines = []
-    for line in lines:
+    lines = []
+    for line in string_io:
         if line != "\n":
             line = prefix + line
-        intended_lines.append(line)
-    return "".join(intended_lines)
+        lines.append(line)
+    return "".join(lines)

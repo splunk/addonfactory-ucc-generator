@@ -73,6 +73,7 @@ pytest = "^6.2"
 pytest-splunk-addon = { version = "^1.7", extras = [ "docker" ] }
 pytest-cov = "^2.12.1"
 coverage = "^5.5"
+parameterized = "^0.8.1"
 
 [tool.poetry.scripts]
 ucc-gen="splunk_add_on_ucc_framework:main"
