@@ -160,7 +160,6 @@ class AlertActionsPyGenerator(AlertActionsPyBase):
         template = Template(filename=template_path, lookup=tmp_lookup)
 
         # start to render new py file
-        rendered_content = None
         settings = None
         if self._global_settings:
             settings = self._global_settings["settings"]

@@ -7,7 +7,7 @@ import os
 import sys
 
 from splunktaucclib.alert_actions_base import ModularAlertBase
-import ${helper_name}
+from ${lib_name} import ${helper_name}
 
 class AlertActionWorker${mod_alert.short_name}(ModularAlertBase):
 
