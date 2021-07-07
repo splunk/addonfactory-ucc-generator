@@ -60,20 +60,18 @@ lxml = "^4.3"
 future = "^0"
 wheel = "*"
 dunamai = "*"
-#black = [
-#    { version = "20.8b1" , python = "^3.7" }
-#]
-
 defusedxml = "^0.7.1"
 jsonschema = "^3.2.0"
 solnlib = "^4.1.0"
 splunktaucclib = "^5.0.2"
+
 [tool.poetry.dev-dependencies]
 pytest = "^6.2"
 pytest-splunk-addon = { version = "^1.7", extras = [ "docker" ] }
 pytest-cov = "^2.12.1"
 coverage = "^5.5"
 parameterized = "^0.8.1"
+pre-commit = "^2.13.0"
 
 [tool.poetry.scripts]
 ucc-gen="splunk_add_on_ucc_framework:main"
