@@ -42,6 +42,10 @@ Add-ons may now package such extensions with webpack.
 $ pip3 install splunk-add-on-ucc-framework
 ```
 
+## pre-commit
+
+Please visit `pre-commit` quick start [section](https://pre-commit.com/#quick-start).
+
 ## How to use
 
 To build the UCC based addon follow the below steps:
