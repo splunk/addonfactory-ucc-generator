@@ -29,7 +29,6 @@ import sys
 import time
 from pathlib import Path
 
-import jsonschema
 from defusedxml import cElementTree as defused_et
 from dunamai import Style, Version
 from jinja2 import Environment, FileSystemLoader
@@ -39,6 +38,10 @@ from .app_manifest import (
     APP_MANIFEST_WEBSITE,
     AppManifest,
     AppManifestFormatException,
+)
+from .global_config_validator import (
+    GlobalConfigValidator,
+    GlobalConfigValidatorException,
 )
 from .start_alert_build import alert_build
 from .uccrestbuilder import build
@@ -705,18 +708,6 @@ def restore_comments(outputdir, ta_name, comment_map):
         file.write("".join(lines))
 
 
-def validate_config_against_schema(config: dict):
-    """
-    Validates config against JSON schema.
-    Raises jsonschema.ValidationError if config is not valid.
-    """
-    schema_path = os.path.join(sourcedir, "schema", "schema.json")
-    with open(schema_path) as f_schema:
-        schema_raw = f_schema.read()
-        schema = json.loads(schema_raw)
-    return jsonschema.validate(instance=config, schema=schema)
-
-
 def _generate(source, config, ta_version, outputdir=None):
     if outputdir is None:
         outputdir = os.path.join(os.getcwd(), "output")
@@ -751,7 +742,7 @@ def _generate(source, config, ta_version, outputdir=None):
     manifest = AppManifest()
     try:
         manifest.read(app_manifest_content)
-    except app_manifest.AppManifestFormatException:
+    except AppManifestFormatException:
         logger.error(
             f"Manifest file @ {app_manifest_path} has invalid format.\n"
             f"Please refer to {APP_MANIFEST_WEBSITE}.\n"
@@ -764,10 +755,11 @@ def _generate(source, config, ta_version, outputdir=None):
         try:
             with open(config) as f_config:
                 config_raw = f_config.read()
-            validate_config_against_schema(json.loads(config_raw))
+            validator = GlobalConfigValidator(sourcedir, json.loads(config_raw))
+            validator.validate()
             logger.info("Config is valid")
-        except jsonschema.ValidationError as e:
-            logger.error("Config is not valid. Error: {}".format(e))
+        except GlobalConfigValidatorException as e:
+            logger.error(f"Config is not valid. Error: {e}")
             sys.exit(1)
 
         update_ta_version(config, ta_version)
