@@ -24,11 +24,8 @@ TA builder needs to support:
 There are a lot of legacy codes here. If you want to see our changes,
 please search: ######## tab_update ########
 """
-
-from future import standard_library
-
-standard_library.install_aliases()
 import configparser
+
 
 try:
     from collections import OrderedDict as _default_dict
