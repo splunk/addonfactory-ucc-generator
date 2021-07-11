@@ -16,6 +16,7 @@
 import unittest
 
 from parameterized import parameterized
+
 from splunk_add_on_ucc_framework.uccrestbuilder.endpoint import base
 
 
