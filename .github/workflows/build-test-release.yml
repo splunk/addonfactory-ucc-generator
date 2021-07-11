@@ -102,9 +102,12 @@ jobs:
       - name: Lint Code Base
         uses: docker://ghcr.io/github/super-linter:slim-v4
         env:
-          VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          VALIDATE_ALL_CODEBASE: false
+          LINTER_RULES_PATH: /
+          PYTHON_ISORT_CONFIG_FILE: pyproject.toml
   # review_secrets:
   #   name: security-detect-secrets
   #   runs-on: ubuntu-latest

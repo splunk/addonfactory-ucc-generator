@@ -17,6 +17,7 @@ import json
 import unittest
 
 import jsonschema
+
 import tests.unit.helpers as helpers
 from splunk_add_on_ucc_framework import validate_config_against_schema
 

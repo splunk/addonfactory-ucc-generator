@@ -38,8 +38,6 @@ from .endpoint.multiple_model import (
     MultipleModelEndpointBuilder,
     MultipleModelEntityBuilder,
 )
-
-# model to get accesstoken for oauth
 from .endpoint.oauth_model import OAuthModelEndpointBuilder
 from .endpoint.single_model import (
     SingleModelEndpointBuilder,

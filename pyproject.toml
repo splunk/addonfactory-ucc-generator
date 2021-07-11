@@ -77,6 +77,10 @@ pre-commit = "^2.13.0"
 ucc-gen="splunk_add_on_ucc_framework:main"
 install-libs="splunk_add_on_ucc_framework:install_requirements"
 
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+
 [build-system]
 requires = ["poetry>=1.0.2"]
 build-backend = "poetry.masonry.api"
