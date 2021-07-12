@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import { WaitSpinnerWrapper } from './CustomTableStyle';
 import { axiosCallWrapper } from '../../util/axiosCallWrapper';
-import { getUnifiedConfigs, generateToast } from '../../util/util';
+import { getUnifiedConfigs, generateToast, isTrue } from '../../util/util';
 import CustomTable from './CustomTable';
 import TableHeader from './TableHeader';
 import TableContext from '../../context/TableContext';
@@ -138,7 +138,8 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPag
                 return update(currentRowData, {
                     [row.serviceName]: {
                         [row.name]: {
-                            disabled: { $set: response.data.entry[0].content.disabled },
+                            // ADDON-39125: isTrue required if splunktaucclib resthandlers' super() is not invoked
+                            disabled: { $set: isTrue(response.data.entry[0].content.disabled) },
                             __toggleShowSpinner: { $set: false },
                         },
                     },
@@ -208,10 +209,14 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPag
         // Sort the array based on the sort value
         const sortedArr = arr.sort((rowA, rowB) => {
             if (sortDir === 'asc') {
-                return rowA[sortKey] > rowB[sortKey] ? 1 : -1;
+                const rowAValue = rowA[sortKey] === undefined ? '' : rowA[sortKey];
+                const rowBValue = rowB[sortKey] === undefined ? '' : rowB[sortKey];
+                return rowAValue > rowBValue ? 1 : -1;
             }
             if (sortDir === 'desc') {
-                return rowB[sortKey] > rowA[sortKey] ? 1 : -1;
+                const rowAValue = rowA[sortKey] === undefined ? '' : rowA[sortKey];
+                const rowBValue = rowB[sortKey] === undefined ? '' : rowB[sortKey];
+                return rowBValue > rowAValue ? 1 : -1;
             }
             return 0;
         });
