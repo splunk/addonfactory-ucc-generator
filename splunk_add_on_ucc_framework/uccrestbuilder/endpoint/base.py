@@ -15,10 +15,7 @@
 #
 from io import StringIO
 
-from future import standard_library
 from splunktaucclib.rest_handler.schema import RestSchema
-
-standard_library.install_aliases()
 
 __all__ = [
     "RestEntityBuilder",

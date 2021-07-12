@@ -57,7 +57,6 @@ jinja2 = "^2"
 mako= "^1"
 munch= "^2"
 lxml = "^4.3"
-future = "^0"
 wheel = "*"
 dunamai = "*"
 defusedxml = "^0.7.1"
@@ -76,6 +75,10 @@ pre-commit = "^2.13.0"
 [tool.poetry.scripts]
 ucc-gen="splunk_add_on_ucc_framework:main"
 install-libs="splunk_add_on_ucc_framework:install_requirements"
+
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
 
 [build-system]
 requires = ["poetry>=1.0.2"]
