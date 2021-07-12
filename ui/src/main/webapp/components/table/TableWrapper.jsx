@@ -209,10 +209,14 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPag
         // Sort the array based on the sort value
         const sortedArr = arr.sort((rowA, rowB) => {
             if (sortDir === 'asc') {
-                return rowA[sortKey] > rowB[sortKey] ? 1 : -1;
+                const rowAValue = rowA[sortKey] === undefined ? '' : rowA[sortKey];
+                const rowBValue = rowB[sortKey] === undefined ? '' : rowB[sortKey];
+                return rowAValue > rowBValue ? 1 : -1;
             }
             if (sortDir === 'desc') {
-                return rowB[sortKey] > rowA[sortKey] ? 1 : -1;
+                const rowAValue = rowA[sortKey] === undefined ? '' : rowA[sortKey];
+                const rowBValue = rowB[sortKey] === undefined ? '' : rowB[sortKey];
+                return rowBValue > rowAValue ? 1 : -1;
             }
             return 0;
         });
