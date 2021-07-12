@@ -42,9 +42,10 @@ class AlertActionsPyBase:
         self._alert_actions_setting = input_setting[ac.MODULAR_ALERTS]
         self._ta_name = self._all_setting.get(ac.SHORT_NAME)
         self._lib_dir = self.get_python_lib_dir_name(self._ta_name)
-        sourcedir = op.dirname(op.realpath(__file__))
         self._templates = Environment(
-            loader=FileSystemLoader(op.join(sourcedir, "arf_template")),
+            loader=FileSystemLoader(
+                op.join(op.dirname(op.realpath(__file__)), "arf_template")
+            ),
             trim_blocks=True,
             lstrip_blocks=True,
             keep_trailing_newline=True,
@@ -125,7 +126,6 @@ class AlertActionsPyGenerator(AlertActionsPyBase):
         )
         self._logger.info("template_py=%s", self._template_py)
         self._output = {}
-        self.other_setting = kwargs
 
     def merge_py_code(self, init, new):
         if not init:
@@ -157,7 +157,6 @@ class AlertActionsPyGenerator(AlertActionsPyBase):
     def gen_main_py_file(self):
         template = self._templates.get_template(self._template_py)
 
-        # start to render new py file
         settings = None
         if self._global_settings:
             settings = self._global_settings["settings"]
@@ -191,7 +190,6 @@ class AlertActionsPyGenerator(AlertActionsPyBase):
         if self._current_alert.get("code"):
             init_content = self._current_alert.get("code")
 
-        # start to render new py file
         settings = {}
         if self._global_settings:
             settings = self._global_settings.get("settings", {})
