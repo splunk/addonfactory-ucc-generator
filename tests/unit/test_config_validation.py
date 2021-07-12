@@ -14,22 +14,42 @@
 # limitations under the License.
 #
 import json
+import os
 import unittest
 
-import jsonschema
-
 import tests.unit.helpers as helpers
-from splunk_add_on_ucc_framework import validate_config_against_schema
+from splunk_add_on_ucc_framework.global_config_validator import (
+    GlobalConfigValidator,
+    GlobalConfigValidatorException,
+)
+
+
+def _path_to_source_dir() -> str:
+    return os.path.join(
+        os.getcwd(),
+        "splunk_add_on_ucc_framework",
+    )
 
 
 class ConfigValidationTest(unittest.TestCase):
     def test_config_validation_when_valid_config_then_no_exception(self):
         config = helpers.get_testdata_file("valid_config.json")
         config = json.loads(config)
-        validate_config_against_schema(config)
+        validator = GlobalConfigValidator(_path_to_source_dir(), config)
+        validator.validate()
 
     def test_config_validation_when_invalid_config_then_exception(self):
         config = helpers.get_testdata_file("invalid_config_no_configuration_tabs.json")
         config = json.loads(config)
-        with self.assertRaises(jsonschema.ValidationError):
-            validate_config_against_schema(config)
+        validator = GlobalConfigValidator(_path_to_source_dir(), config)
+        with self.assertRaises(GlobalConfigValidatorException):
+            validator.validate()
+
+    def test_config_validation_when_configuration_tab_table_has_no_name_field(self):
+        config = helpers.get_testdata_file(
+            "invalid_config_no_name_field_in_configuration_tab_table.json"
+        )
+        config = json.loads(config)
+        validator = GlobalConfigValidator(_path_to_source_dir(), config)
+        with self.assertRaises(GlobalConfigValidatorException):
+            validator.validate()
