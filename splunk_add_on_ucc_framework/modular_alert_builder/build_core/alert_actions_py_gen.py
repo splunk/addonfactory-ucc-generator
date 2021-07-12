@@ -19,7 +19,6 @@ import re
 from os import path as op
 
 from jinja2 import Environment, FileSystemLoader
-from munch import Munch
 
 from . import alert_actions_exceptions as aae
 from . import arf_consts as ac
@@ -163,10 +162,10 @@ class AlertActionsPyGenerator(AlertActionsPyBase):
         if self._global_settings:
             settings = self._global_settings["settings"]
         rendered_content = template.render(
-            input=Munch.fromDict(self._all_setting),
+            input=self._all_setting,
             lib_name=self._lib_dir,
-            mod_alert=Munch.fromDict(self._current_alert),
-            global_settings=Munch.fromDict(settings),
+            mod_alert=self._current_alert,
+            global_settings=settings,
             helper_name=op.splitext(self.get_alert_helper_py_name())[0],
         )
 
@@ -197,9 +196,9 @@ class AlertActionsPyGenerator(AlertActionsPyBase):
         if self._global_settings:
             settings = self._global_settings.get("settings", {})
         rendered_content = template.render(
-            input=Munch.fromDict(self._all_setting),
-            mod_alert=Munch.fromDict(self._current_alert),
-            global_settings=Munch.fromDict(settings),
+            input=self._all_setting,
+            mod_alert=self._current_alert,
+            global_settings=settings,
         )
 
         final_content = self.merge_py_code(init_content, rendered_content)
