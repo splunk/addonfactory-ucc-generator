@@ -199,6 +199,10 @@ class AlertActionsPyGenerator(AlertActionsPyBase):
             rendered_content,
             self._logger,
         )
+        name = self._current_alert[ac.SHORT_NAME]
+        if not self._output.get(name):
+            self._output[name] = {}
+        self._output[name][self.get_alert_py_name()] = rendered_content
 
     def gen_helper_py_file(self):
         current_dir = op.dirname(op.abspath(__file__))
