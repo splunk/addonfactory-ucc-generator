@@ -1,6 +1,0 @@
----
-excludes:
-  paths:
-  - pattern: "tests/**"
-    reason: "TEST_OF"
-    comment: "This directory contains test data which are not distributed."
