@@ -17,7 +17,6 @@
 
 import threading
 
-from future.utils import with_metaclass
 from solnlib import log, pattern
 
 from . import event_writer, memory_event_writer
@@ -29,7 +28,7 @@ __all__ = ["Monitor"]
 logger = log.Logs().get_logger("metric_collector")
 
 
-class Monitor(with_metaclass(pattern.Singleton, object)):
+class Monitor(metaclass=pattern.Singleton):
     EVENT_WRITERS = {
         "memory": memory_event_writer.MemoryEventWriter,
         "file": event_writer.FileEventWriter,

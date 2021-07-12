@@ -20,9 +20,6 @@
 import functools
 import time
 
-from past.builtins import str
-from six import string_types as str
-
 from . import monitor
 
 __all__ = ["initialize_metric_collector", "function_run_time"]
