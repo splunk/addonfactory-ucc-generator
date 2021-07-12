@@ -18,7 +18,6 @@
 import re
 from os import path as op
 
-from mako.lookup import TemplateLookup
 from mako.template import Template
 from munch import Munch
 
@@ -34,8 +33,6 @@ class AlertActionsPyBase:
         input_setting=None,
         package_path=None,
         logger=None,
-        template_py=None,
-        lookup_dir=None,
         global_settings=None,
         **kwargs
     ):
@@ -82,7 +79,6 @@ class AlertActionsPyBase:
     def get_template_py_files(self):
         bin_dir = op.join(self._package_path, "bin")
         return [
-            #            op.join(bin_dir, self._lib_dir + "_declare.py"),
             op.join(bin_dir, self._lib_dir + "_declare.pyc"),
             op.join(bin_dir, self._lib_dir + "_declare.pyo"),
             op.join(bin_dir, self._lib_dir, "setup_util_helper.py"),
@@ -92,11 +88,8 @@ class AlertActionsPyBase:
 
 
 class AlertActionsPyGenerator(AlertActionsPyBase):
-    DEFAULT_TEMPLATE_DECLARE_PY = "python_lib_declare.py.template"
     DEFAULT_TEMPLATE_PY = "alert_action.py.template"
     DEFAULT_TEMPLATE_HELPER_PY = "alert_action_helper.py.template"
-    CURRENT_DIR = op.dirname(op.abspath(__file__))
-    DEFAULT_LOOKUP_DIR = op.join(CURRENT_DIR, "default_py")
 
     def __init__(
         self,
@@ -105,8 +98,6 @@ class AlertActionsPyGenerator(AlertActionsPyBase):
         logger=None,
         template_py=None,
         template_helper_py=None,
-        template_declare_py=None,
-        lookup_dir=None,
         global_settings=None,
         **kwargs
     ):
@@ -118,7 +109,6 @@ class AlertActionsPyGenerator(AlertActionsPyBase):
             package_path=package_path,
             logger=logger,
             template_py=template_py,
-            lookup_dir=lookup_dir,
             global_settings=global_settings,
             **kwargs
         )
@@ -129,13 +119,7 @@ class AlertActionsPyGenerator(AlertActionsPyBase):
         self._template_helper_py = (
             template_helper_py or AlertActionsPyGenerator.DEFAULT_TEMPLATE_HELPER_PY
         )
-        self._template_declare_py = (
-            template_declare_py or AlertActionsPyGenerator.DEFAULT_TEMPLATE_DECLARE_PY
-        )
-        self._lookup_dir = lookup_dir or AlertActionsPyGenerator.DEFAULT_LOOKUP_DIR
-        self._logger.info(
-            "template_py=%s lookup_dir=%s", self._template_py, self._lookup_dir
-        )
+        self._logger.info("template_py=%s", self._template_py)
         self._output = {}
         self.other_setting = kwargs
 
@@ -167,16 +151,12 @@ class AlertActionsPyGenerator(AlertActionsPyBase):
         self.gen_helper_py_file()
 
     def gen_main_py_file(self):
-        current_dir = op.dirname(op.abspath(__file__))
-        lookup_dir = op.join(current_dir, "default_py")
-        tmp_lookup = TemplateLookup(directories=[lookup_dir])
-
         template_path = self._template_py
         if not op.isabs(self._template_py):
             template_path = op.join(
                 self._temp_obj.get_template_dir(), self._template_py
             )
-        template = Template(filename=template_path, lookup=tmp_lookup)
+        template = Template(filename=template_path)
 
         # start to render new py file
         settings = None
@@ -205,20 +185,14 @@ class AlertActionsPyGenerator(AlertActionsPyBase):
         self._output[name][self.get_alert_py_name()] = rendered_content
 
     def gen_helper_py_file(self):
-        current_dir = op.dirname(op.abspath(__file__))
-        lookup_dir = op.join(current_dir, "default_py")
-        tmp_lookup = TemplateLookup(directories=[lookup_dir])
-
         template_path = self._template_helper_py
         if not op.isabs(self._template_helper_py):
             template_path = op.join(
                 self._temp_obj.get_template_dir(), self._template_helper_py
             )
-        template = Template(filename=template_path, lookup=tmp_lookup)
+        template = Template(filename=template_path)
 
         name = self._current_alert[ac.SHORT_NAME]
-        final_content = None
-        rendered_content = None
         init_content = None
         if self._current_alert.get("code"):
             init_content = self._current_alert.get("code")
