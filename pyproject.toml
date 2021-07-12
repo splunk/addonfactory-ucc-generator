@@ -64,6 +64,7 @@ defusedxml = "^0.7.1"
 jsonschema = "^3.2.0"
 solnlib = "^4.1.0"
 splunktaucclib = "^5.0.2"
+pytest-splunk-addon = {version = "^1.7", extras = ["docker"]}
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2"
