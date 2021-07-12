@@ -1,4 +1,3 @@
-
 # encoding = utf-8
 # Always put this line at the beginning of this file
 import import_declare_test
@@ -15,6 +14,7 @@ class AlertActionWorkertest_alert(ModularAlertBase):
         super(AlertActionWorkertest_alert, self).__init__(ta_name, alert_name)
 
     def validate_params(self):
+
 
         if not self.get_param("name"):
             self.log_error('name is a mandatory parameter, but its value is None.')

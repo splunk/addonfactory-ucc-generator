@@ -1,4 +1,3 @@
-<%page args="input, mod_alert, global_settings"/>
 # encoding = utf-8
 
 def process_event(helper, *args, **kwargs):
@@ -10,13 +9,13 @@ def process_event(helper, *args, **kwargs):
     # are updated.
 
     [sample_code_macro:start]
-    % if global_settings:
-    % for type, setting in global_settings.items():
-        %if type == 'log_settings':
+    {% if global_settings %}
+    {% for type, setting in global_settings.items() %}
+        {% if type == 'log_settings' %}
 
     # The following example gets and sets the log level
     helper.set_log_level(helper.log_level)
-        %elif type == 'proxy_settings':
+        {% elif type == 'proxy_settings' %}
 
     # The following example sends rest requests to some endpoint
     # response is a response object in python requests library
@@ -37,41 +36,41 @@ def process_event(helper, *args, **kwargs):
     # check the response status, if the status is not sucessful, raise requests.HTTPError
     response.raise_for_status()
 
-        %elif type == 'credential_settings':
+        {% elif type == 'credential_settings' %}
 
     # The following example gets account information
     user_account = helper.get_user_credential("<account_name>")
-        %elif type == 'customized_settings' and setting:
+        {% elif type == 'customized_settings' and setting %}
 
     # The following example gets the setup parameters and prints them to the log
-             %for param in setting:
-    ${param.name} = helper.get_global_setting("${param.name}")
-    helper.log_info("${param.name}={}".format(${param.name}))
-             %endfor
-         %endif
-    %endfor
-    %endif
-    %if mod_alert.get("parameters"):
+             {% for param in setting %}
+    {{ param.name }} = helper.get_global_setting("{{ param.name }}")
+    helper.log_info("{{ param.name }}={}".format({{ param.name }}))
+             {% endfor %}
+         {% endif %}
+    {% endfor %}
+    {% endif %}
+    {% if mod_alert.get("parameters") %}
 
     # The following example gets the alert action parameters and prints them to the log
-        % for param in mod_alert.parameters:
-    ${param.name} = helper.get_param("${param.name}")
-    helper.log_info("${param.name}={}".format(${param.name}))
+        {% for param in mod_alert.parameters %}
+    {{ param.name }} = helper.get_param("{{ param.name }}")
+    helper.log_info("{{ param.name }}={}".format({{ param.name }}))
 
-        %endfor
-    %endif
+        {% endfor %}
+    {% endif %}
 
     # The following example adds two sample events ("hello", "world")
     # and writes them to Splunk
     # NOTE: Call helper.writeevents() only once after all events
     # have been added
-    %if mod_alert.get("active_response") and mod_alert.active_response.get("sourcetype"):
-    helper.addevent("hello", sourcetype="${mod_alert.active_response.sourcetype}")
-    helper.addevent("world", sourcetype="${mod_alert.active_response.sourcetype}")
-    %else:
+    {% if mod_alert.get("active_response") and mod_alert.active_response.get("sourcetype") %}
+    helper.addevent("hello", sourcetype="{{ mod_alert.active_response.sourcetype }}")
+    helper.addevent("world", sourcetype="{{ mod_alert.active_response.sourcetype }}")
+    {% else %}
     helper.addevent("hello", sourcetype="sample_sourcetype")
     helper.addevent("world", sourcetype="sample_sourcetype")
-    %endif
+    {% endif %}
     helper.writeevents(index="summary", host="localhost", source="localhost")
 
     # The following example gets the events that trigger the alert
@@ -85,7 +84,7 @@ def process_event(helper, *args, **kwargs):
     [sample_code_macro:end]
     """
 
-    helper.log_info("Alert action ${mod_alert.short_name} started.")
+    helper.log_info("Alert action {{ mod_alert.short_name }} started.")
 
     # TODO: Implement your alert action logic here
     return 0

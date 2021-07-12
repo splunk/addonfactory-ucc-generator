@@ -1,4 +1,3 @@
-<%page args="input, lib_name, mod_alert, global_settings, helper_name"/>
 # encoding = utf-8
 # Always put this line at the beginning of this file
 import import_declare_test
@@ -7,38 +6,38 @@ import os
 import sys
 
 from splunktaucclib.alert_actions_base import ModularAlertBase
-from ${lib_name} import ${helper_name}
+from {{ lib_name }} import {{ helper_name }}
 
-class AlertActionWorker${mod_alert.short_name}(ModularAlertBase):
+class AlertActionWorker{{ mod_alert.short_name }}(ModularAlertBase):
 
     def __init__(self, ta_name, alert_name):
-        super(AlertActionWorker${mod_alert.short_name}, self).__init__(ta_name, alert_name)
+        super(AlertActionWorker{{ mod_alert.short_name }}, self).__init__(ta_name, alert_name)
 
     def validate_params(self):
-    % if global_settings:
-    % for type, setting in global_settings.items():
-        %if type == 'customized_settings':
-             %for param in setting:
-                 % if param.get("required", False):
+    {% if global_settings %}
+        {% for type, setting in global_settings.items() %}
+            {% if type == 'customized_settings' %}
+                {% for param in setting %}
+                    {% if param.get("required", False) %}
+            if not self.get_global_setting("{{ param.name }}"):
+                self.log_error('{{ param.name }} is a mandatory setup parameter, but its value is None.')
+                return False
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
 
-        if not self.get_global_setting("${param.name}"):
-            self.log_error('${param.name} is a mandatory setup parameter, but its value is None.')
-            return False
-                 %endif
-             %endfor
-        %endif
-    %endfor
-    %endif
-    %if mod_alert.get("parameters"):
-        % for param in mod_alert.parameters:
-            % if param.get("required", False):
+    {% if mod_alert.get("parameters") %}
+        {% for param in mod_alert.parameters %}
+            {% if param.get("required", False): %}
 
-        if not self.get_param("${param.name}"):
-            self.log_error('${param.name} is a mandatory parameter, but its value is None.')
+        if not self.get_param("{{ param.name }}"):
+            self.log_error('{{ param.name }} is a mandatory parameter, but its value is None.')
             return False
-            %endif
-        %endfor
-    %endif
+            {% endif %}
+        {% endfor %}
+    {% endif %}
         return True
 
     def process_event(self, *args, **kwargs):
@@ -46,7 +45,7 @@ class AlertActionWorker${mod_alert.short_name}(ModularAlertBase):
         try:
             if not self.validate_params():
                 return 3
-            status = ${helper_name}.process_event(self, *args, **kwargs)
+            status = {{ helper_name }}.process_event(self, *args, **kwargs)
         except (AttributeError, TypeError) as ae:
             self.log_error("Error: {}. Please double check spelling and also verify that a compatible version of Splunk_SA_CIM is installed.".format(str(ae)))#ae.message replaced with str(ae)
             return 4
@@ -61,5 +60,5 @@ class AlertActionWorker${mod_alert.short_name}(ModularAlertBase):
         return status
 
 if __name__ == "__main__":
-    exitcode = AlertActionWorker${mod_alert.short_name}("${input.product_id}", "${mod_alert.short_name}").run(sys.argv)
+    exitcode = AlertActionWorker{{ mod_alert.short_name }}("{{ input.product_id }}", "{{ mod_alert.short_name }}").run(sys.argv)
     sys.exit(exitcode)

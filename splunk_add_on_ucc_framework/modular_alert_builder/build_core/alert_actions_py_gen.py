@@ -18,13 +18,12 @@
 import re
 from os import path as op
 
-from mako.template import Template
+from jinja2 import Environment, FileSystemLoader
 from munch import Munch
 
 from . import alert_actions_exceptions as aae
 from . import arf_consts as ac
 from .alert_actions_helper import write_file
-from .alert_actions_template import AlertActionsTemplateMgr
 
 
 class AlertActionsPyBase:
@@ -44,6 +43,13 @@ class AlertActionsPyBase:
         self._alert_actions_setting = input_setting[ac.MODULAR_ALERTS]
         self._ta_name = self._all_setting.get(ac.SHORT_NAME)
         self._lib_dir = self.get_python_lib_dir_name(self._ta_name)
+        sourcedir = op.dirname(op.realpath(__file__))
+        self._templates = Environment(
+            loader=FileSystemLoader(op.join(sourcedir, "arf_template")),
+            trim_blocks=True,
+            lstrip_blocks=True,
+            keep_trailing_newline=True,
+        )
 
     def get_python_lib_dir_name(self, app_name):
         space_replace = re.compile(r"[^\w]+")
@@ -113,7 +119,6 @@ class AlertActionsPyGenerator(AlertActionsPyBase):
             **kwargs
         )
 
-        self._temp_obj = AlertActionsTemplateMgr()
         self._template = None
         self._template_py = template_py or AlertActionsPyGenerator.DEFAULT_TEMPLATE_PY
         self._template_helper_py = (
@@ -151,12 +156,7 @@ class AlertActionsPyGenerator(AlertActionsPyBase):
         self.gen_helper_py_file()
 
     def gen_main_py_file(self):
-        template_path = self._template_py
-        if not op.isabs(self._template_py):
-            template_path = op.join(
-                self._temp_obj.get_template_dir(), self._template_py
-            )
-        template = Template(filename=template_path)
+        template = self._templates.get_template(self._template_py)
 
         # start to render new py file
         settings = None
@@ -185,12 +185,7 @@ class AlertActionsPyGenerator(AlertActionsPyBase):
         self._output[name][self.get_alert_py_name()] = rendered_content
 
     def gen_helper_py_file(self):
-        template_path = self._template_helper_py
-        if not op.isabs(self._template_helper_py):
-            template_path = op.join(
-                self._temp_obj.get_template_dir(), self._template_helper_py
-            )
-        template = Template(filename=template_path)
+        template = self._templates.get_template(self._template_helper_py)
 
         name = self._current_alert[ac.SHORT_NAME]
         init_content = None
