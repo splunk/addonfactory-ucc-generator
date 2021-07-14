@@ -18,14 +18,11 @@
 import re
 from os import path as op
 
-from mako.lookup import TemplateLookup
-from mako.template import Template
-from munch import Munch
+from jinja2 import Environment, FileSystemLoader
 
 from . import alert_actions_exceptions as aae
 from . import arf_consts as ac
 from .alert_actions_helper import write_file
-from .alert_actions_template import AlertActionsTemplateMgr
 
 
 class AlertActionsPyBase:
@@ -34,8 +31,6 @@ class AlertActionsPyBase:
         input_setting=None,
         package_path=None,
         logger=None,
-        template_py=None,
-        lookup_dir=None,
         global_settings=None,
         **kwargs
     ):
@@ -47,6 +42,14 @@ class AlertActionsPyBase:
         self._alert_actions_setting = input_setting[ac.MODULAR_ALERTS]
         self._ta_name = self._all_setting.get(ac.SHORT_NAME)
         self._lib_dir = self.get_python_lib_dir_name(self._ta_name)
+        self._templates = Environment(
+            loader=FileSystemLoader(
+                op.join(op.dirname(op.realpath(__file__)), "arf_template")
+            ),
+            trim_blocks=True,
+            lstrip_blocks=True,
+            keep_trailing_newline=True,
+        )
 
     def get_python_lib_dir_name(self, app_name):
         space_replace = re.compile(r"[^\w]+")
@@ -82,7 +85,6 @@ class AlertActionsPyBase:
     def get_template_py_files(self):
         bin_dir = op.join(self._package_path, "bin")
         return [
-            #            op.join(bin_dir, self._lib_dir + "_declare.py"),
             op.join(bin_dir, self._lib_dir + "_declare.pyc"),
             op.join(bin_dir, self._lib_dir + "_declare.pyo"),
             op.join(bin_dir, self._lib_dir, "setup_util_helper.py"),
@@ -92,11 +94,8 @@ class AlertActionsPyBase:
 
 
 class AlertActionsPyGenerator(AlertActionsPyBase):
-    DEFAULT_TEMPLATE_DECLARE_PY = "python_lib_declare.py.template"
     DEFAULT_TEMPLATE_PY = "alert_action.py.template"
     DEFAULT_TEMPLATE_HELPER_PY = "alert_action_helper.py.template"
-    CURRENT_DIR = op.dirname(op.abspath(__file__))
-    DEFAULT_LOOKUP_DIR = op.join(CURRENT_DIR, "default_py")
 
     def __init__(
         self,
@@ -105,8 +104,6 @@ class AlertActionsPyGenerator(AlertActionsPyBase):
         logger=None,
         template_py=None,
         template_helper_py=None,
-        template_declare_py=None,
-        lookup_dir=None,
         global_settings=None,
         **kwargs
     ):
@@ -118,26 +115,17 @@ class AlertActionsPyGenerator(AlertActionsPyBase):
             package_path=package_path,
             logger=logger,
             template_py=template_py,
-            lookup_dir=lookup_dir,
             global_settings=global_settings,
             **kwargs
         )
 
-        self._temp_obj = AlertActionsTemplateMgr()
         self._template = None
         self._template_py = template_py or AlertActionsPyGenerator.DEFAULT_TEMPLATE_PY
         self._template_helper_py = (
             template_helper_py or AlertActionsPyGenerator.DEFAULT_TEMPLATE_HELPER_PY
         )
-        self._template_declare_py = (
-            template_declare_py or AlertActionsPyGenerator.DEFAULT_TEMPLATE_DECLARE_PY
-        )
-        self._lookup_dir = lookup_dir or AlertActionsPyGenerator.DEFAULT_LOOKUP_DIR
-        self._logger.info(
-            "template_py=%s lookup_dir=%s", self._template_py, self._lookup_dir
-        )
+        self._logger.info("template_py=%s", self._template_py)
         self._output = {}
-        self.other_setting = kwargs
 
     def merge_py_code(self, init, new):
         if not init:
@@ -167,26 +155,16 @@ class AlertActionsPyGenerator(AlertActionsPyBase):
         self.gen_helper_py_file()
 
     def gen_main_py_file(self):
-        current_dir = op.dirname(op.abspath(__file__))
-        lookup_dir = op.join(current_dir, "default_py")
-        tmp_lookup = TemplateLookup(directories=[lookup_dir])
+        template = self._templates.get_template(self._template_py)
 
-        template_path = self._template_py
-        if not op.isabs(self._template_py):
-            template_path = op.join(
-                self._temp_obj.get_template_dir(), self._template_py
-            )
-        template = Template(filename=template_path, lookup=tmp_lookup)
-
-        # start to render new py file
         settings = None
         if self._global_settings:
             settings = self._global_settings["settings"]
         rendered_content = template.render(
-            input=Munch.fromDict(self._all_setting),
+            input=self._all_setting,
             lib_name=self._lib_dir,
-            mod_alert=Munch.fromDict(self._current_alert),
-            global_settings=Munch.fromDict(settings),
+            mod_alert=self._current_alert,
+            global_settings=settings,
             helper_name=op.splitext(self.get_alert_helper_py_name())[0],
         )
 
@@ -199,34 +177,26 @@ class AlertActionsPyGenerator(AlertActionsPyBase):
             rendered_content,
             self._logger,
         )
+        name = self._current_alert[ac.SHORT_NAME]
+        if not self._output.get(name):
+            self._output[name] = {}
+        self._output[name][self.get_alert_py_name()] = rendered_content
 
     def gen_helper_py_file(self):
-        current_dir = op.dirname(op.abspath(__file__))
-        lookup_dir = op.join(current_dir, "default_py")
-        tmp_lookup = TemplateLookup(directories=[lookup_dir])
-
-        template_path = self._template_helper_py
-        if not op.isabs(self._template_helper_py):
-            template_path = op.join(
-                self._temp_obj.get_template_dir(), self._template_helper_py
-            )
-        template = Template(filename=template_path, lookup=tmp_lookup)
+        template = self._templates.get_template(self._template_helper_py)
 
         name = self._current_alert[ac.SHORT_NAME]
-        final_content = None
-        rendered_content = None
         init_content = None
         if self._current_alert.get("code"):
             init_content = self._current_alert.get("code")
 
-        # start to render new py file
         settings = {}
         if self._global_settings:
             settings = self._global_settings.get("settings", {})
         rendered_content = template.render(
-            input=Munch.fromDict(self._all_setting),
-            mod_alert=Munch.fromDict(self._current_alert),
-            global_settings=Munch.fromDict(settings),
+            input=self._all_setting,
+            mod_alert=self._current_alert,
+            global_settings=settings,
         )
 
         final_content = self.merge_py_code(init_content, rendered_content)
