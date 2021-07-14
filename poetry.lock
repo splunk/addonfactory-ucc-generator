@@ -572,14 +572,14 @@ pytest = "*"
 
 [[package]]
 name = "pytest-splunk-addon"
-version = "1.7.0"
+version = "1.7.2"
 description = "A Dynamic test tool for Splunk Apps and Add-ons"
 category = "dev"
 optional = false
 python-versions = ">=3.7,<4.0"
 
 [package.dependencies]
-faker = ">=4.1,<7.0"
+faker = ">=4.1,<9.0"
 filelock = ">=3.0,<4.0"
 httplib2 = "*"
 jsonschema = ">=3.2,<4.0"
@@ -1217,8 +1217,8 @@ pytest-ordering = [
     {file = "pytest_ordering-0.6-py3-none-any.whl", hash = "sha256:3f314a178dbeb6777509548727dc69edf22d6d9a2867bf2d310ab85c403380b6"},
 ]
 pytest-splunk-addon = [
-    {file = "pytest-splunk-addon-1.7.0.tar.gz", hash = "sha256:014871a8a183a3abecb80fcb6fa9b2a22edd09a8e64c8bfa571ac3ccea424f33"},
-    {file = "pytest_splunk_addon-1.7.0-py3-none-any.whl", hash = "sha256:d81f9652126e222ff9b1e37fcdd20d7f4c1f27a09445407ea053972535f19167"},
+    {file = "pytest-splunk-addon-1.7.2.tar.gz", hash = "sha256:1a24313b15837acebaae9e0412b67841ebc9c9385455a9e77cf51e14ed8b519c"},
+    {file = "pytest_splunk_addon-1.7.2-py3-none-any.whl", hash = "sha256:ec2eeddc1200f0e0eb74e4dd8aea9a3752a3cbbd693930435aee19e55d2f0b8d"},
 ]
 pytest-xdist = [
     {file = "pytest-xdist-2.2.1.tar.gz", hash = "sha256:718887296892f92683f6a51f25a3ae584993b06f7076ce1e1fd482e59a8220a2"},
