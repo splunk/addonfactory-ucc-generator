@@ -83,6 +83,7 @@ class AlertHtmlGenerator(AlertHtmlBase):
             self._html_template,
             self._html_home,
         )
+        self._output = {}
 
     def handle_one_alert(self, one_alert_setting):
         self._current_alert = one_alert_setting
@@ -111,6 +112,7 @@ class AlertHtmlGenerator(AlertHtmlBase):
         write_file(
             self.get_alert_html_name(), self.get_alert_html_path(), text, self._logger
         )
+        self._output[self._current_alert["short_name"]] = text
 
     def handle(self):
         self._logger.info("html_theme=%s", self._html_theme)
@@ -153,4 +155,4 @@ def generate_alert_actions_html_files(
         html_theme=html_theme,
     )
     html_gen.handle()
-    return None
+    return html_gen._output
