@@ -1,23 +1,10 @@
-<%page args="mod_alert, param"/>
+{% from "helper.html" import show_help with context %}
 <div class="control-group">
-	<% 
-	required_span=''
-	if param.get("required") and param.required:
-			required_span='<span class="required">*</span>'
-	%>
-	<label class="control-label" for="${mod_alert.short_name}_${param.name}">${param.label} ${required_span} </label>
+    <label class="control-label" for="{{ mod_alert.short_name }}_{{ param.name }}">{{ param.label }} {{ '<span class="required">*</span>' if param.get("required") and param.required else '' }} </label>
     <div class="controls">
-        <%block name="control" args="mod_alert, param"/>
-        <%block name="show_help" args="param">
-            %if param.get("help_string"):
-                <span class="help-block">
-                    ${param.help_string | h,trim}
-                    %if param.get("help_link"):
-                        <a href="${param.help_link.link_url}" target="_blank" title="${param.help_link.link_tip}">${param.help_link.link_text}<i class="icon-external"></i></a>
-                    %endif
-                </span>
-            %endif
-        </%block>
+        {% block control %}
+        {% endblock %}
+        {{ show_help(param) }}
     </div>
 </div>
 

@@ -1,8 +1,9 @@
-<%page args="mod_alert"/>
 <form class="form-horizontal form-complex">
-%if mod_alert.get("parameters"):
-	% for param in mod_alert.parameters:
-		<%include file="/${param.format_type}.html" args="mod_alert=mod_alert, param=param"/>
-	% endfor
-%endif
+{% if mod_alert.get("parameters") %}
+	{% for param in mod_alert.parameters %}
+		{% with mod_alert=mod_alert, param=param %}
+			{% include param.format_type + ".html" %}
+		{% endwith %}
+	{% endfor %}
+{% endif %}
 </form>

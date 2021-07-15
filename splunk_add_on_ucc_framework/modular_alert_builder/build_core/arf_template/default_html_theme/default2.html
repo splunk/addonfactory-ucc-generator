@@ -1,14 +1,13 @@
-<%page args="mod_alert"/>
 <form class="form-horizontal form-complex">
 <table>
     <tr>
-        % for param in mod_alert.parameters:
+        {% for param in mod_alert.parameters %}
             <td>
-            <%include file="/${param.type}.html" args="mod_alert=mod_alert, param=param"/>
+            {% with mod_alert=mod_alert, param=param %}
+                {% include param.format_type + ".html" %}
+            {% endwith %}
             </td>
-        % endfor
-
+        {% endfor %}
     </tr>
 </table>
-
 </form>
