@@ -102,7 +102,6 @@ class AlertHtmlGenerator(AlertHtmlBase):
             mod_alert=self._current_alert, home_page=self._html_home
         )
         final_form = defused_lxml.fromstring(final_form)
-        # Checking python version before converting and encoding XML Tree to string.
         final_string = defused_lxml.tostring(
             final_form, encoding="utf-8", pretty_print=True
         )
