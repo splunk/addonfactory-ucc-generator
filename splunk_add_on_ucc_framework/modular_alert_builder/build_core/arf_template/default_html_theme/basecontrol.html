@@ -10,7 +10,7 @@
         <%block name="control" args="mod_alert, param"/>
         <%block name="show_help" args="param">
             %if param.get("help_string"):
-                <span class="help-block"> 
+                <span class="help-block">
                     ${param.help_string | h,trim}
                     %if param.get("help_link"):
                         <a href="${param.help_link.link_url}" target="_blank" title="${param.help_link.link_tip}">${param.help_link.link_text}<i class="icon-external"></i></a>
