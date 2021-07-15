@@ -1,0 +1,4 @@
+
+
+[test_alert_modaction_result]
+search = sourcetype="test:incident"

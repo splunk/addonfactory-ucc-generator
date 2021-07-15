@@ -134,6 +134,7 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
             op.dirname(op.abspath(__file__)),
             AlertActionsConfGeneration.DEFAULT_SETTINGS_FILE,
         )
+        self._output = {}
 
     def generate_conf(self):
         self._logger.info(
@@ -156,6 +157,7 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
         write_file(
             self._alert_conf_name, self.get_local_conf_file_path(), text, self._logger
         )
+        self._output["alert_actions.conf"] = text
         self._logger.info(
             'status="success", operation="generate", '
             + 'object="alert_actions.conf", object_type="file"'
@@ -185,6 +187,7 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
             ):
                 continue
             remove_alert_from_conf_file(alert, file_path, self._logger)
+        self._output["eventtypes.conf"] = text
         self._logger.info(
             'status="success", operation="generate", '
             + 'object="eventtypes.conf", object_type="file"'
@@ -214,6 +217,7 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
             ):
                 continue
             remove_alert_from_conf_file(alert, file_path, self._logger)
+        self._output["tags.conf"] = text
         self._logger.info(
             'status="success", operation="generate", '
             + 'object="tags.conf", object_type="file"'
@@ -234,6 +238,7 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
         final_string = template.render(mod_alerts=alert_obj)
         text = linesep.join([s.strip() for s in final_string.splitlines()])
         write_file(self._alert_spec_name, self.get_spec_file_path(), text, self._logger)
+        self._output["alert_actions.conf.spec"] = text
         self._logger.info(
             'status="success", operation="generate", '
             + 'object="alert_actions.conf.spec", object_type="file"'
@@ -276,4 +281,4 @@ def generate_alert_actions_conf(
         input_setting=input_setting, package_path=package_path, logger=logger, **kwargs
     )
     obj.handle()
-    return None
+    return obj._output
