@@ -27,7 +27,6 @@ from . import alert_actions_exceptions as aae
 from . import arf_consts as ac
 from .alert_actions_helper import write_file
 from .alert_actions_merge import remove_alert_from_conf_file
-from .alert_actions_template import AlertActionsTemplateMgr
 
 
 class AlertActionsConfBase:
@@ -36,21 +35,16 @@ class AlertActionsConfBase:
         input_setting=None,
         package_path=None,
         logger=None,
-        template_dir=None,
-        default_settings_file=None,
-        global_settings=None,
         **kwargs,
     ):
         self._alert_conf_name = "alert_actions.conf"
         self._alert_spec_name = "alert_actions.conf.spec"
         self._eventtypes_conf = "eventtypes.conf"
         self._tags_conf = "tags.conf"
-        self._app_conf = "app.conf"
         self._all_settings = input_setting
         self._alert_settings = input_setting[ac.MODULAR_ALERTS]
         self._package_path = package_path
         self._logger = logger
-        self._global_settings = global_settings
         self._templates = Environment(
             loader=FileSystemLoader(
                 op.join(op.dirname(op.realpath(__file__)), "arf_template")
@@ -105,17 +99,14 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
     DEFAULT_CONF_TEMPLATE = "alert_actions.conf.template"
     DEFAULT_SPEC_TEMPLATE = "alert_actions.conf.spec.template"
     DEFAULT_SETTINGS_FILE = "alert_actions_conf_default_settings.json"
-    DEFAULT_ALERT_ICON = "alerticon.png"
     DEFAULT_EVENTTYPES_TEMPLATE = "eventtypes.conf.template"
     DEFAULT_TAGS_TEMPLATE = "tags.conf.template"
-    DEFAULT_APP_TEMPLATE = "app.conf.template"
 
     def __init__(
         self,
         input_setting=None,
         package_path=None,
         logger=None,
-        template_dir=None,
         default_settings_file=None,
         **kwargs,
     ):
@@ -127,7 +118,6 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
             input_setting=input_setting,
             package_path=package_path,
             logger=logger,
-            template_dir=template_dir,
             default_settings_file=default_settings_file,
             **kwargs,
         )
@@ -136,7 +126,6 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
             ac.PARAMETERS,
         ]
         self._remove_fields = [ac.SHORT_NAME] + self._html_fields
-        self._temp_obj = AlertActionsTemplateMgr(template_dir)
         self._default_settings_file = default_settings_file or op.join(
             op.dirname(op.abspath(__file__)),
             AlertActionsConfGeneration.DEFAULT_SETTINGS_FILE,
@@ -302,15 +291,12 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
 
     def handle(self):
         self.add_default_settings()
-        # self.handler_all_icons()
         self.generate_conf()
         self.generate_spec()
         self.generate_eventtypes()
         self.generate_tags()
-        # self.generate_app_conf()
 
     def add_default_settings(self):
-        default_settings = None
         with open(self._default_settings_file) as df:
             default_settings = jloads(df.read())
 
