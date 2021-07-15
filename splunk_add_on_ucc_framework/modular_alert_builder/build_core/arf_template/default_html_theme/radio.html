@@ -1,17 +1,16 @@
-<%page args="mod_alert, param"/>
-<%namespace file="basecontrol.html" import="show_help"/>
-<%namespace file="helper.html" import="expand_ctrl_props"/>
+{% from "helper.html" import expand_ctrl_props with context %}
+{% from "helper.html" import show_help with context %}
 <div class="control-group">
-	<label class="control-label">${param.label}</label>
+	<label class="control-label">{{ param.label }}</label>
 		<div class="controls">
-			% for option, value in param.possible_values.items():
-				<label class="radio" for="${mod_alert.short_name}_${param.name}_${value}">
+			{% for option, value in param.possible_values.items() %}
+				<label class="radio" for="{{ mod_alert.short_name }}_{{ param.name }}_{{ value }}">
 					<input type="radio"
-					name="action.${mod_alert.short_name}.param.${param.name}" id="${mod_alert.short_name}_${param.name}_${value}" value="${value}"
-					${expand_ctrl_props(param)} />
-					${option}
+					name="action.{{ mod_alert.short_name }}.param.{{ param.name }}" id="{{ mod_alert.short_name }}_{{ param.name }}_{{ value }}" value="{{ value }}"
+				    {{ expand_ctrl_props(param) }} />
+					{{ option }}
 				</label>
-			% endfor
-			${show_help(param)}
+			{% endfor %}
+			{{ show_help(param) }}
 		</div>
 </div>

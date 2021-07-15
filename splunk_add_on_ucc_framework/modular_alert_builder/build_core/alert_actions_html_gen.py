@@ -16,15 +16,12 @@
 
 
 import os
-import sys
 from os import linesep
 from os import path as op
 from re import search
 
 from defusedxml import lxml as defused_lxml
-from mako.lookup import TemplateLookup
-from mako.template import Template
-from munch import Munch
+from jinja2 import Environment, FileSystemLoader
 
 from . import alert_actions_exceptions as aae
 from . import arf_consts as ac
@@ -38,6 +35,21 @@ class AlertHtmlBase:
         self._logger = logger
         self._package_path = package_path
         self._current_alert = None
+        self._templates = Environment(
+            loader=FileSystemLoader(
+                [
+                    op.join(
+                        op.dirname(op.realpath(__file__)),
+                        "arf_template",
+                        "default_html_theme",
+                    ),
+                    op.join(op.dirname(op.realpath(__file__)), "arf_template"),
+                ]
+            ),
+            trim_blocks=True,
+            lstrip_blocks=True,
+            keep_trailing_newline=True,
+        )
 
     def get_alert_html_name(self):
         return self._current_alert[ac.SHORT_NAME] + ".html"
@@ -72,7 +84,6 @@ class AlertHtmlGenerator(AlertHtmlBase):
             raise aae.AlertActionsInValidArgs(msg)
 
         self._alert_actions_setting = input_setting[ac.MODULAR_ALERTS]
-        self._template = None
         self._html_template = html_template or AlertHtmlGenerator.DEFAULT_TEMPLATE_HTML
         self._html_home = html_home or AlertHtmlGenerator.DEFAULT_HOME_HTML
         self._temp_obj = AlertActionsTemplateMgr(html_theme=html_theme)
@@ -85,11 +96,10 @@ class AlertHtmlGenerator(AlertHtmlBase):
         )
         self._output = {}
 
-    def handle_one_alert(self, one_alert_setting):
+    def handle_one_alert(self, template, one_alert_setting):
         self._current_alert = one_alert_setting
-        alert_obj = Munch.fromDict(one_alert_setting)
-        final_form = self._template.render(
-            mod_alert=alert_obj, home_page=self._html_home
+        final_form = template.render(
+            mod_alert=self._current_alert, home_page=self._html_home
         )
         final_form = defused_lxml.fromstring(final_form)
         # Checking python version before converting and encoding XML Tree to string.
@@ -116,23 +126,10 @@ class AlertHtmlGenerator(AlertHtmlBase):
 
     def handle(self):
         self._logger.info("html_theme=%s", self._html_theme)
-        tmp_lookup = TemplateLookup(directories=[self._html_theme])
-        template_text = None
-        template_path = self._html_template
-        if not op.isabs(self._html_template):
-            template_path = op.join(
-                self._temp_obj.get_template_dir(), self._html_template
-            )
-
-        self._logger.debug("Reading template_file=%s", template_path)
-        with open(template_path) as tp:
-            template_text = tp.read()
-
-        self._template = Template(text=template_text, lookup=tmp_lookup)
-
+        template = self._templates.get_template(self._html_template)
         self._logger.info("Start to generate alert actions html files")
         for alert in self._alert_actions_setting:
-            self.handle_one_alert(alert)
+            self.handle_one_alert(template, alert)
         self._logger.info("Finished generating alert actions html files")
 
 

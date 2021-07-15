@@ -1,14 +1,25 @@
-<%block name="expand_ctrl_props" args="param, skip_list=['name', 'id'], allow_list=[]" >
-    %if param.get("ctrl_props"):
-        %for prop_name, prop_value in param.ctrl_props.items():
-            %if (allow_list and prop_name not in allow_list) or (skip_list and prop_name in skip_list):
+{% macro expand_ctrl_props(param, skip_list=['name', 'id'], allow_list=[]) -%}
+    {% if param.get("ctrl_props") %}
+        {% for prop_name, prop_value in param.ctrl_props.items() %}
+            {% if (allow_list and prop_name not in allow_list) or (skip_list and prop_name in skip_list) %}
                 <% continue %>
-            %endif
-            %if param.ctrl_props.get(prop_name):
-                ${prop_name}="${prop_value}"
-            %else:
-                ${prop_name}="${prop_name}"
-            %endif
-        %endfor
-    %endif
-</%block>
+            {% endif %}
+            {% if param.ctrl_props.get(prop_name) %}
+                {{ prop_name }}="{{ prop_value }}"
+            {% else %}
+                {{ prop_name }}="{{ prop_name }}"
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{%- endmacro %}
+
+{% macro show_help(param) %}
+    {% if param.get("help_string") %}
+    <span class="help-block">
+        {{ param.help_string | trim }}
+        {% if param.get("help_link") %}
+            <a href="{{ param.help_link.link_url }}" target="_blank" title="{{ param.help_link.link_tip }}">{{ param.help_link.link_text }}<i class="icon-external"></i></a>
+        {% endif %}
+    </span>
+    {% endif %}
+{% endmacro %}
