@@ -15,14 +15,13 @@
 #
 
 
+import json
 import os
 from json import loads as jloads
 from os import linesep
 from os import path as op
 
-from mako import exceptions
-from mako.template import Template
-from munch import Munch
+from jinja2 import Environment, FileSystemLoader
 
 from . import alert_actions_exceptions as aae
 from . import arf_consts as ac
@@ -40,7 +39,7 @@ class AlertActionsConfBase:
         template_dir=None,
         default_settings_file=None,
         global_settings=None,
-        **kwargs
+        **kwargs,
     ):
         self._alert_conf_name = "alert_actions.conf"
         self._alert_spec_name = "alert_actions.conf.spec"
@@ -52,6 +51,14 @@ class AlertActionsConfBase:
         self._package_path = package_path
         self._logger = logger
         self._global_settings = global_settings
+        self._templates = Environment(
+            loader=FileSystemLoader(
+                op.join(op.dirname(op.realpath(__file__)), "arf_template")
+            ),
+            trim_blocks=True,
+            lstrip_blocks=True,
+            keep_trailing_newline=True,
+        )
 
     def get_local_conf_file_path(self, conf_name=None, create_dir_path=True):
         if not self._package_path:
@@ -110,7 +117,7 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
         logger=None,
         template_dir=None,
         default_settings_file=None,
-        **kwargs
+        **kwargs,
     ):
         if not input_setting or not logger:
             msg = 'status="failed", required_args="input_setting, logger"'
@@ -122,7 +129,7 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
             logger=logger,
             template_dir=template_dir,
             default_settings_file=default_settings_file,
-            **kwargs
+            **kwargs,
         )
 
         self._html_fields = [
@@ -141,18 +148,51 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
             'status="starting", operation="generate", '
             + 'object="alert_actions.conf", object_type="file"'
         )
-        template = Template(
-            filename=op.join(
-                self._temp_obj.get_template_dir(),
-                AlertActionsConfGeneration.DEFAULT_CONF_TEMPLATE,
-            )
-        )
-        alert_obj = Munch.fromDict(self._alert_settings)
-        try:
-            final_string = template.render(mod_alerts=alert_obj)
-        except:
-            print(exceptions.html_error_template().render())
-            raise
+        template = self._templates.get_template(self.DEFAULT_CONF_TEMPLATE)
+        deny_list = [
+            "short_name",
+            "alert_props",
+            "parameters",
+            "uuid",
+            "code",
+            "largeIcon",
+            "smallIcon",
+            "index",
+        ]
+        alerts = {}
+        for alert in self._alert_settings:
+            alert_name = alert["short_name"]
+            alerts[alert_name] = []
+            for k, v in alert.items():
+                if k == "active_response":
+                    new_cam = {
+                        sub_k: sub_v
+                        for sub_k, sub_v in list(v.items())
+                        if sub_k != "sourcetype" and sub_v
+                    }
+                    value = f"param._cam = {json.dumps(new_cam)}"
+                    alerts[alert_name].append(value)
+                elif k == "alert_props":
+                    for pk, pv in v.items():
+                        value = f"{str(pk).strip()} = {str(pv).strip()}"
+                        alerts[alert_name].append(value)
+                elif k not in deny_list:
+                    value = f"{str(k).strip()} = {str(v).strip()}"
+                    alerts[alert_name].append(value)
+            for k, v in alert.items():
+                if k == "parameters":
+                    for param in v:
+                        param_name = param["name"].strip()
+                        if param.get("default_value"):
+                            param_default_value = str(
+                                param.get("default_value")
+                            ).strip()
+                            alerts[alert_name].append(
+                                f"param.{param_name} = {param_default_value}"
+                            )
+                        else:
+                            alerts[alert_name].append(f"param.{param_name} = ")
+        final_string = template.render(alerts=alerts)
         text = linesep.join([s.strip() for s in final_string.splitlines()])
         write_file(
             self._alert_conf_name, self.get_local_conf_file_path(), text, self._logger
@@ -168,14 +208,8 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
             'status="starting", operation="generate", '
             + 'object="eventtypes.conf", object_type="file"'
         )
-        template = Template(
-            filename=op.join(
-                self._temp_obj.get_template_dir(),
-                AlertActionsConfGeneration.DEFAULT_EVENTTYPES_TEMPLATE,
-            )
-        )
-        alert_obj = Munch.fromDict(self._alert_settings)
-        final_string = template.render(mod_alerts=alert_obj)
+        template = self._templates.get_template(self.DEFAULT_EVENTTYPES_TEMPLATE)
+        final_string = template.render(mod_alerts=self._alert_settings)
         text = linesep.join([s.strip() for s in final_string.splitlines()])
         file_path = self.get_local_conf_file_path(conf_name=self._eventtypes_conf)
         write_file(self._eventtypes_conf, file_path, text, self._logger)
@@ -198,14 +232,8 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
             'status="starting", operation="generate", '
             + 'object="tags.conf", object_type="file"'
         )
-        template = Template(
-            filename=op.join(
-                self._temp_obj.get_template_dir(),
-                AlertActionsConfGeneration.DEFAULT_TAGS_TEMPLATE,
-            )
-        )
-        alert_obj = Munch.fromDict(self._alert_settings)
-        final_string = template.render(mod_alerts=alert_obj)
+        template = self._templates.get_template(self.DEFAULT_TAGS_TEMPLATE)
+        final_string = template.render(mod_alerts=self._alert_settings)
         text = linesep.join([s.strip() for s in final_string.splitlines()])
         file_path = self.get_local_conf_file_path(conf_name=self._tags_conf)
         write_file(self._tags_conf, file_path, text, self._logger)
@@ -228,14 +256,42 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
             'status="starting", operation="generate", '
             + 'object="alert_actions.conf.spec", object_type="file"'
         )
-        template = Template(
-            filename=op.join(
-                self._temp_obj.get_template_dir(),
-                AlertActionsConfGeneration.DEFAULT_SPEC_TEMPLATE,
-            )
-        )
-        alert_obj = Munch.fromDict(self._alert_settings)
-        final_string = template.render(mod_alerts=alert_obj)
+        template = self._templates.get_template(self.DEFAULT_SPEC_TEMPLATE)
+        _router = {
+            "dropdownlist": "list",
+            "text": "string",
+            "textarea": "string",
+            "checkbox": "bool",
+            "password": "password",
+            "dropdownlist_splunk_search": "list",
+            "radio": "list",
+        }
+        alerts = {}
+        for alert in self._alert_settings:
+            alert_name = alert["short_name"]
+            alerts[alert_name] = []
+            for k, v in alert.items():
+                if k == "active_response":
+                    alerts[alert_name].append(
+                        "param._cam = <json> Active response parameters."
+                    )
+                elif k == "parameters":
+                    for param in v:
+                        format_type = _router[param["format_type"]]
+                        is_required = (
+                            "It's a required parameter."
+                            if param.get("required") and param["required"]
+                            else ""
+                        )
+                        param_default_value = param.get("default_value")
+                        default_value = (
+                            f"It's default value is {param_default_value}."
+                            if param_default_value
+                            else ""
+                        )
+                        value = f'param.{param["name"]} = <{format_type}> {param["label"]}. {is_required} {default_value}'
+                        alerts[alert_name].append(value)
+        final_string = template.render(alerts=alerts)
         text = linesep.join([s.strip() for s in final_string.splitlines()])
         write_file(self._alert_spec_name, self.get_spec_file_path(), text, self._logger)
         self._output["alert_actions.conf.spec"] = text
