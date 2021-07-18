@@ -111,6 +111,9 @@ class TABConfigParser(configparser.RawConfigParser):
                         cursect = self._dict()
                         cursect["__name__"] = sectname
                         self._sections[sectname] = cursect
+                        self._proxies[sectname] = configparser.SectionProxy(
+                            self, sectname
+                        )
                     # So sections can't start with a continuation line
                     optname = None
                 # no section header in the file?
