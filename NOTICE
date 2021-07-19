@@ -3,6 +3,7 @@ This project contains or depends on third-party software components pursuant to 
 ----
 
 Copyright (C) Grant Jenks
+Copyright (C) Jason R. Coombs
 Copyright (C) Kenneth Reitz
 Copyright (C) Splunk
 Copyright (C) Splunk, Inc.
@@ -212,8 +213,10 @@ Copyright (C) rfaircloth-splunk
 
 ----
 
+Copyright (C) Armin Ronacher
 Copyright (C) James Dennis, Jökull Sólberg, Jóhann Þorvaldur Bergþórsson, Kalle Tuure, Paul Eipper
 Copyright (C) Kim Davies
+Copyright (C) lxml dev team
 
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
@@ -242,7 +245,7 @@ THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ----
 
-Copyright (C) Mark Pilgrim
+Copyright (C) Daniel Blanchard
 
 This library is free software; you can redistribute it and/or modify it under
 the terms of the GNU Library General Public License as published by the Free
@@ -741,7 +744,7 @@ That's all there is to it!
 
 ----
 
-Copyright (C) Mark Pilgrim
+Copyright (C) Daniel Blanchard
 
 This library is free software; you can redistribute it and/or modify it under
 the terms of the GNU Lesser General Public License as published by the Free
@@ -1271,11 +1274,20 @@ That's all there is to it!
 
 ----
 
+Copyright (C) Ahmed TAHRI @Ousret
 Copyright (C) Andrey Petrov
 Copyright (C) Benjamin Peterson
 Copyright (C) Ed Schofield
+Copyright (C) Hynek Schlawack
+Copyright (C) Jason R. Coombs
 Copyright (C) Joe Gregorio
+Copyright (C) Julian Berman
+Copyright (C) Matthew T. Kennerly
+Copyright (C) Mike Bayer
 Copyright (C) Paul McGuire
+Copyright (C) Python Packaging Authority
+Copyright (C) Rotem Yaari
+Copyright (C) Tobias Gustafsson
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -1677,6 +1689,7 @@ Exhibit B - "Incompatible With Secondary Licenses" Notice
 ----
 
 Copyright (C) Christian Heimes
+Copyright (C) Guido van Rossum, Jukka Lehtosalo, Łukasz Langa, Michael Lee
 
 PYTHON SOFTWARE FOUNDATION LICENSE VERSION 2
 
