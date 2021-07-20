@@ -53,7 +53,7 @@ keywords = ['splunk']
 
 [tool.poetry.dependencies]
 python = "^3.7"
-jinja2 = "^2"
+jinja2 = ">=2,<4"
 mako= "^1"
 munch= "^2"
 lxml = "^4.3"
