@@ -395,14 +395,6 @@ security = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)"]
 socks = ["PySocks (>=1.5.6,!=1.5.7)", "win-inet-pton"]
 
 [[package]]
-name = "schematics"
-version = "2.1.0"
-description = "Python Data Structures for Humans"
-category = "main"
-optional = false
-python-versions = "*"
-
-[[package]]
 name = "six"
 version = "1.12.0"
 description = "Python 2 and 3 compatibility utilities"
@@ -412,19 +404,16 @@ python-versions = ">=2.6, !=3.0.*, !=3.1.*"
 
 [[package]]
 name = "solnlib"
-version = "4.1.0"
+version = "4.2.0"
 description = "The Splunk Software Development Kit for Splunk Solutions"
 category = "main"
 optional = false
 python-versions = ">=3.7,<4.0"
 
 [package.dependencies]
-future = ">=0,<1"
 requests = ">=2.24,<3.0"
-schematics = ">=2.1,<3.0"
-six = "*"
 sortedcontainers = ">=2.2,<3.0"
-splunk-sdk = ">=1.6,<2.0"
+splunk-sdk = "1.6.16"
 
 [[package]]
 name = "sortedcontainers"
@@ -829,17 +818,13 @@ requests = [
     {file = "requests-2.25.1-py2.py3-none-any.whl", hash = "sha256:c210084e36a42ae6b9219e00e48287def368a26d03a048ddad7bfee44f75871e"},
     {file = "requests-2.25.1.tar.gz", hash = "sha256:27973dd4a904a4f13b263a19c866c13b92a39ed1c964655f025f3f8d3d75b804"},
 ]
-schematics = [
-    {file = "schematics-2.1.0-py2.py3-none-any.whl", hash = "sha256:8fcc6182606fd0b24410a1dbb066d9bbddbe8da9c9509f47b743495706239283"},
-    {file = "schematics-2.1.0.tar.gz", hash = "sha256:a40b20635c0e43d18d3aff76220f6cd95ea4decb3f37765e49529b17d81b0439"},
-]
 six = [
     {file = "six-1.12.0-py2.py3-none-any.whl", hash = "sha256:3350809f0555b11f552448330d0b52d5f24c91a322ea4a15ef22629740f3761c"},
     {file = "six-1.12.0.tar.gz", hash = "sha256:d16a0141ec1a18405cd4ce8b4613101da75da0e9a7aec5bdd4fa804d0e0eba73"},
 ]
 solnlib = [
-    {file = "solnlib-4.1.0-py3-none-any.whl", hash = "sha256:4e467e9135d59f15e6d546157e1978cf92931708e1e0844472b5a1c21cd8eb7a"},
-    {file = "solnlib-4.1.0.tar.gz", hash = "sha256:5876006bef6f6bf94c62e0af7d184ecbce6aa625115916811893d7e6fdc8b575"},
+    {file = "solnlib-4.2.0-py3-none-any.whl", hash = "sha256:11152d8aece1cc1830b311f024e7dede09e36ac56cb1e9c2cf897c788c461ded"},
+    {file = "solnlib-4.2.0.tar.gz", hash = "sha256:d31981768f280a49ed9997672b83231804254fb88a40af347b963c7a63ca0aa4"},
 ]
 sortedcontainers = [
     {file = "sortedcontainers-2.4.0-py2.py3-none-any.whl", hash = "sha256:a163dcaede0f1c021485e957a39245190e74249897e2ae4b2aa38595db237ee0"},
