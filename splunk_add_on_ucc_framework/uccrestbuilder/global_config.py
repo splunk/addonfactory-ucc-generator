@@ -24,7 +24,6 @@ import os
 import os.path as op
 import shutil
 
-from solnlib.utils import is_true
 from splunktaucclib.global_config import GlobalConfigSchema
 from splunktaucclib.rest_handler.endpoint.field import RestField
 
@@ -43,6 +42,10 @@ from .endpoint.single_model import (
     SingleModelEndpointBuilder,
     SingleModelEntityBuilder,
 )
+
+
+def _is_true(val):
+    return str(val).strip().upper() in ("1", "TRUE", "T", "Y", "YES")
 
 
 class GlobalConfigBuilderSchema(GlobalConfigSchema):
@@ -151,8 +154,8 @@ class GlobalConfigBuilderSchema(GlobalConfigSchema):
     def _parse_field(self, content):
         field = RestField(
             content["field"],
-            required=is_true(content.get("required")),
-            encrypted=is_true(content.get("encrypted")),
+            required=_is_true(content.get("required")),
+            encrypted=_is_true(content.get("encrypted")),
             default=content.get("defaultValue"),
         )
         return RestFieldBuilder(
