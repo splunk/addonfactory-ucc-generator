@@ -17,9 +17,7 @@ import configparser
 import io
 import unittest
 
-from splunk_add_on_ucc_framework.alert_utils.alert_utils_common import (
-    conf_parser,
-)
+from splunk_add_on_ucc_framework import conf_parser
 
 
 class TABConfigParserTest(unittest.TestCase):

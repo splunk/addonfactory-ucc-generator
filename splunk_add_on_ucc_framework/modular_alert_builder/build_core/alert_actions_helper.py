@@ -19,9 +19,7 @@ import os.path as op
 import sys
 from os import makedirs, remove
 
-from splunk_add_on_ucc_framework.alert_utils.alert_utils_common.conf_parser import (
-    TABConfigParser,
-)
+from splunk_add_on_ucc_framework import conf_parser
 
 from .alert_actions_merge import merge_conf_file
 
@@ -58,7 +56,7 @@ def write_file(file_name, file_path, content, logger, merge="stanza_overwrite"):
                 fhandler.write(content)
             if do_merge:
                 # need to process the file with conf parser
-                parser = TABConfigParser()
+                parser = conf_parser.TABConfigParser()
                 parser.read(file_path)
                 with open(file_path, "w") as df:
                     parser.write(df)
