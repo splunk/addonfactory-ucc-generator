@@ -82,7 +82,7 @@ def merge_conf_file(src_file, dst_file, merge_mode="stanza_overwrite"):
             if stanza not in dst_dict:
                 parser.add_section(stanza)
             else:
-                parser.remove_section(stanza, false)
+                parser.remove_section(stanza)
                 parser.add_section(stanza)
 
             for k, v in list(key_values.items()):
