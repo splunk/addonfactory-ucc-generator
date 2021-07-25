@@ -16,9 +16,13 @@
 import os
 
 
-def get_testdata_file(file_name: str) -> str:
-    file_path = os.path.join(
+def get_testdata_file_path(file_name: str) -> str:
+    return os.path.join(
         os.path.dirname(os.path.realpath(__file__)), "testdata", file_name
     )
+
+
+def get_testdata_file(file_name: str) -> str:
+    file_path = get_testdata_file_path(file_name)
     with open(file_path) as fp:
         return fp.read()
