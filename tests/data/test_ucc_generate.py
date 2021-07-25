@@ -1,3 +1,4 @@
+import tempfile
 import unittest
 from os import path
 
@@ -10,11 +11,9 @@ class UccGenerateTest(unittest.TestCase):
         ucc.generate(source=package_folder)
 
     def test_ucc_generate_with_custom_output_folder(self):
-        package_folder = path.join(path.dirname(path.realpath(__file__)), "package")
-        output_folder = path.join(
-            path.dirname(path.realpath(__file__)), "custom_output"
-        )
-        ucc.generate(source=package_folder, outputdir=output_folder)
+        with tempfile.TemporaryDirectory() as temp_dir:
+            package_folder = path.join(path.dirname(path.realpath(__file__)), "package")
+            ucc.generate(source=package_folder, outputdir=temp_dir)
 
 
 if __name__ == "__main__":
