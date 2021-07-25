@@ -1,0 +1,6 @@
+---
+excludes:
+  paths:
+    - pattern: "docs/**"
+      reason: "DOCUMENTATION_OF"
+      comment: "The files are only used for documentation. Not included in released artifacts."
