@@ -20,9 +20,7 @@ import os.path as op
 from os.path import basename as bn
 from shutil import copy
 
-from splunk_add_on_ucc_framework.alert_utils.alert_utils_common.conf_parser import (
-    TABConfigParser,
-)
+from splunk_add_on_ucc_framework import conf_parser
 
 from . import alert_actions_exceptions as aae
 from . import arf_consts as ac
@@ -42,7 +40,7 @@ def remove_alert_from_conf_file(alert, conf_file, logger):
         )
         raise aae.AlertCleaningFormatFailure(msg)
 
-    parser = TABConfigParser()
+    parser = conf_parser.TABConfigParser()
     parser.read(conf_file)
     conf_dict = parser.item_dict()
 
@@ -72,10 +70,10 @@ def merge_conf_file(src_file, dst_file, merge_mode="stanza_overwrite"):
     if bn(src_file) in merge_deny_list:
         return
 
-    sparser = TABConfigParser()
+    sparser = conf_parser.TABConfigParser()
     sparser.read(src_file)
     src_dict = sparser.item_dict()
-    parser = TABConfigParser()
+    parser = conf_parser.TABConfigParser()
     parser.read(dst_file)
     dst_dict = parser.item_dict()
 
