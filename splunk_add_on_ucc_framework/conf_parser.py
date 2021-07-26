@@ -26,13 +26,6 @@ please search: ######## tab_update ########
 """
 import configparser
 
-try:
-    from collections import OrderedDict as _default_dict
-except ImportError:
-    # fallback for setup.py which hasn't yet built _collections
-    _default_dict = dict
-
-
 COMMENT_PREFIX = ";#*"
 COMMENT_KEY = "__COMMENTS__"
 

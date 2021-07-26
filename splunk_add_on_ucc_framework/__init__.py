@@ -153,7 +153,7 @@ def _handle_biased_terms(conf_entities: dict) -> dict:
 
 
 def handle_biased_terms_update(schema_content: dict) -> dict:
-    pages = schema_content.get("pages")
+    pages = schema_content.get("pages", {})
     ta_tabs = pages.get("configuration", {}).get("tabs", {})
 
     for tab in ta_tabs:
