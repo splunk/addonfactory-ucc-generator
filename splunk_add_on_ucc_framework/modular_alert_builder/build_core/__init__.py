@@ -23,7 +23,7 @@ from .alert_actions_conf_gen import generate_alert_actions_conf
 from .alert_actions_html_gen import generate_alert_actions_html_files
 from .alert_actions_py_gen import generate_alert_actions_py_files
 
-cache_path = {}
+cache_path = {}  # type: ignore
 
 
 def check_file_name(file_name, env):

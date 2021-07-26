@@ -212,12 +212,21 @@ class GlobalConfigValidation:
     def __init__(self, validation):
         self._validators = []
         self._validation = validation
+        self._validation_mapping = {
+            "string": GlobalConfigValidation.string,
+            "number": GlobalConfigValidation.number,
+            "regex": GlobalConfigValidation.regex,
+            "email": GlobalConfigValidation.email,
+            "ipv4": GlobalConfigValidation.ipv4,
+            "date": GlobalConfigValidation.date,
+            "url": GlobalConfigValidation.url,
+        }
 
     def build(self):
         if not self._validation:
             return None
         for item in self._validation:
-            parser = GlobalConfigValidation.validation_mapping.get(item["type"], None)
+            parser = self._validation_mapping.get(item["type"], None)
             if parser is None:
                 continue
             validator, arguments = parser(item)
@@ -317,17 +326,6 @@ class GlobalConfigValidation:
         return _template.format(
             validators=indent(validators_str),
         )
-
-
-GlobalConfigValidation.validation_mapping = {
-    "string": GlobalConfigValidation.string,
-    "number": GlobalConfigValidation.number,
-    "regex": GlobalConfigValidation.regex,
-    "email": GlobalConfigValidation.email,
-    "ipv4": GlobalConfigValidation.ipv4,
-    "date": GlobalConfigValidation.date,
-    "url": GlobalConfigValidation.url,
-}
 
 
 class GlobalConfigPostProcessor:
