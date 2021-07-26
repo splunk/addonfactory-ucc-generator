@@ -59,7 +59,7 @@ wheel = "*"
 dunamai = "*"
 defusedxml = "^0.7.1"
 jsonschema = "^3.2.0"
-splunktaucclib = "^5.0.2"
+splunktaucclib = ">=5,<6"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2"
