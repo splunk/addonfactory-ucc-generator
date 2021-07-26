@@ -1,0 +1,12 @@
+[test_alert]
+label = Test Alert
+description = Description for test Alert Action
+param._cam = {"task": ["Create", "Update"], "subject": ["endpoint"], "category": ["Information Conveyance", "Information Portrayal"], "technology": [{"version": ["1.0.0"], "product": "Test Incident Update", "vendor": "Splunk"}], "supports_adhoc": true, "drilldown_uri": "search?q=search%20index%3D\"_internal\"&earliest=0&latest="}
+python.version = python3
+is_custom = 1
+payload_format = json
+param.name = xyz
+param.all_incidents =
+param.table_list = problem
+param.action = two
+param.account =

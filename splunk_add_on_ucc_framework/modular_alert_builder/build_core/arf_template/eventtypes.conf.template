@@ -1,11 +1,7 @@
-<%page args="mod_alerts"/>
-% for alert in mod_alerts:
-    % if alert.get("active_response") and alert.active_response.get("sourcetype"):
-<%
-    source_type_str = 'sourcetype="' + alert.active_response.sourcetype + '"'
-%>
-[${alert.short_name}_modaction_result]
-search = ${source_type_str}
-    %endif
-%endfor
+{% for alert in mod_alerts %}
+    {% if alert.get("active_response") and alert.active_response.get("sourcetype") %}
+[{{ alert.short_name }}_modaction_result]
+search = {{ 'sourcetype="' + alert.active_response.sourcetype + '"' }}
+    {% endif %}
+{% endfor %}
 
