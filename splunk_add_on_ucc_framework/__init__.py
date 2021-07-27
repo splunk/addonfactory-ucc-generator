@@ -22,17 +22,16 @@ import glob
 import json
 import logging
 import os
-import re
 import shutil
 import stat
 import sys
-import time
 from pathlib import Path
 
 from defusedxml import cElementTree as defused_et
 from dunamai import Style, Version
 from jinja2 import Environment, FileSystemLoader
 
+from .app_conf import AppConf
 from .app_manifest import (
     APP_MANIFEST_FILE_NAME,
     APP_MANIFEST_WEBSITE,
@@ -679,35 +678,6 @@ def handle_no_inputs(ta_name, outputdir):
             pass
 
 
-def save_comments(outputdir, ta_name):
-    """
-    Save index and content of comments in conf file and return dictionary thereof
-    """
-    config_file = os.path.join(outputdir, ta_name, "default", "app.conf")
-    comment_map = {}
-    with open(config_file) as file:
-        i = 0
-        lines = file.readlines()
-        for line in lines:
-            if re.match(r"^\s*#.*?$", line):
-                comment_map[i] = line
-            i += 1
-    return comment_map
-
-
-def restore_comments(outputdir, ta_name, comment_map):
-    """
-    Write comments to conf file at their original indices
-    """
-    config_file = os.path.join(outputdir, ta_name, "default", "app.conf")
-    with open(config_file) as file:
-        lines = file.readlines()
-    for (index, comment) in sorted(comment_map.items()):
-        lines.insert(index, comment)
-    with open(config_file, "w") as file:
-        file.write("".join(lines))
-
-
 def _generate(source, config, ta_version, outputdir=None):
     if outputdir is None:
         outputdir = os.path.join(os.getcwd(), "output")
@@ -848,36 +818,14 @@ def _generate(source, config, ta_version, outputdir=None):
     with open(output_manifest_path, "w") as manifest_file:
         manifest_file.write(str(manifest))
 
-    comment_map = save_comments(outputdir, ta_name)
-    app_config = configparser.ConfigParser()
-    app_config.read_file(open(os.path.join(outputdir, ta_name, "default", "app.conf")))
-    if not "launcher" in app_config:
-        app_config.add_section("launcher")
-    if not "id" in app_config:
-        app_config.add_section("id")
-    if not "install" in app_config:
-        app_config.add_section("install")
-    if not "package" in app_config:
-        app_config.add_section("package")
-    if not "ui" in app_config:
-        app_config.add_section("ui")
-
-    app_config["launcher"]["version"] = ta_version
-    app_config["launcher"]["description"] = manifest.get_description()
-
-    app_config["id"]["version"] = ta_version
-
-    app_config["install"]["build"] = str(int(time.time()))
-    app_config["package"]["id"] = ta_name
-
-    app_config["ui"]["label"] = manifest.get_title()
-
-    with open(
-        os.path.join(outputdir, ta_name, "default", "app.conf"), "w"
-    ) as configfile:
-        app_config.write(configfile)
-    # restore License header
-    restore_comments(outputdir, ta_name, comment_map)
+    app_config = AppConf()
+    path = os.path.join(outputdir, ta_name, "default", "app.conf")
+    app_config.read(path)
+    app_config.update(
+        ta_version, ta_name, manifest.get_description(), manifest.get_title()
+    )
+    with open(path, "w") as app_conf_fd:
+        app_config.write(app_conf_fd)
 
     # Copy Licenses
     license_dir = os.path.abspath(os.path.join(source, PARENT_DIR, "LICENSES"))

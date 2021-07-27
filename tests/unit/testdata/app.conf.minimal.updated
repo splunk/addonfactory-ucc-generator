@@ -1,0 +1,16 @@
+[id]
+version = 1.0.0
+
+[launcher]
+version = 1.0.0
+description = Description for Splunk_TA_UCCExample
+
+[install]
+build = 12345
+
+[package]
+id = Splunk_TA_UCCExample
+
+[ui]
+label = Title for Splunk_TA_UCCExample
+

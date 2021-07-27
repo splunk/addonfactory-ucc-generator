@@ -1,0 +1,27 @@
+######################################################
+#
+# ${package.name}
+#
+# ${copyright}
+#
+######################################################
+
+[install]
+build = 12345
+
+[launcher]
+author = Splunk Inc.
+version = 1.0.0
+description = Description for Splunk_TA_UCCExample
+
+[ui]
+is_visible = true
+label = Title for Splunk_TA_UCCExample
+docs_section_override = AddOns:released
+
+[package]
+id = Splunk_TA_UCCExample
+
+[id]
+version = 1.0.0
+
