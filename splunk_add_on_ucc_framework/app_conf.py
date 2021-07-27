@@ -16,7 +16,7 @@
 import time
 from typing import IO
 
-from .alert_utils.alert_utils_common import conf_parser
+from . import conf_parser
 
 
 class AppConf:
