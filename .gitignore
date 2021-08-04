@@ -9,7 +9,6 @@ package/.idea
 dist/*
 
 *.egg-info
-output
 tests/.DS_Store
 pip-wheel-metadata/UNKNOWN.dist-info/top_level.txt
 pip-wheel-metadata/UNKNOWN.dist-info/METADATA

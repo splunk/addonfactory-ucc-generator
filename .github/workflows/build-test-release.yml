@@ -111,6 +111,7 @@ jobs:
           VALIDATE_ALL_CODEBASE: false
           LINTER_RULES_PATH: /
           PYTHON_ISORT_CONFIG_FILE: pyproject.toml
+          FILTER_REGEX_EXCLUDE: .*tests/expected_output/.*
   # review_secrets:
   #   name: security-detect-secrets
   #   runs-on: ubuntu-latest
