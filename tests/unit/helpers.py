@@ -16,6 +16,14 @@
 import os
 
 
+def assert_identical_files(expected_file_path: str, file_path: str) -> bool:
+    with open(expected_file_path) as expected_fd:
+        expected_content = expected_fd.read()
+    with open(file_path) as fd:
+        content = fd.read()
+    return expected_content == content
+
+
 def get_testdata_file_path(file_name: str) -> str:
     return os.path.join(
         os.path.dirname(os.path.realpath(__file__)), "testdata", file_name
