@@ -721,6 +721,9 @@ def _generate(source, config, ta_version, outputdir=None):
         sys.exit(1)
     ta_name = manifest.get_addon_name()
 
+    logger.info("Copy package directory ")
+    recursive_overwrite(source, os.path.join(outputdir, ta_name))
+
     if os.path.exists(config):
         try:
             with open(config) as f_config:
@@ -802,8 +805,6 @@ def _generate(source, config, ta_version, outputdir=None):
         ta_name, os.path.abspath(os.path.join(source, PARENT_DIR, ".uccignore"))
     )
     remove_listed_files(ignore_list)
-    logger.info("Copy package directory ")
-    recursive_overwrite(source, os.path.join(outputdir, ta_name))
 
     # Update app.manifest
     with open(os.path.join(outputdir, ta_name, "VERSION"), "w") as version_file:
