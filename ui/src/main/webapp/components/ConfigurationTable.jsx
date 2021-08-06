@@ -1,8 +1,6 @@
 import React, { useState, memo } from 'react';
 import PropTypes from 'prop-types';
 
-import ToastMessages from '@splunk/react-toast-notifications/ToastMessages';
-
 import { TableContextProvider } from '../context/TableContext';
 import TableWrapper from './table/TableWrapper';
 import EntityModal from './EntityModal';
@@ -44,7 +42,6 @@ function ConfigurationTable({ serviceName, serviceTitle }) {
                     serviceName={serviceName}
                     handleRequestModalOpen={() => handleRequestOpen()}
                 />
-                <ToastMessages position="top-right" />
                 {generateModalDialog()}
             </TableContextProvider>
         </>

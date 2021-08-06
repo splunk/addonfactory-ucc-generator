@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 
 import { _ } from '@splunk/ui-utils/i18n';
 import TabBar from '@splunk/react-ui/TabBar';
+import ToastMessages from '@splunk/react-toast-notifications/ToastMessages';
 import ColumnLayout from '@splunk/react-ui/ColumnLayout';
 import styled from 'styled-components';
 
@@ -101,6 +102,7 @@ function ConfigurationPage() {
                     </div>
                 );
             })}
+            <ToastMessages position="top-right" />
         </ErrorBoundary>
     );
 }
