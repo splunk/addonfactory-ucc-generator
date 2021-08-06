@@ -1,8 +1,0 @@
-.github/workflows/
-(?i)splunk_add_on_ucc_framework/package/appserver/static/js/
-(?i)splunk_add_on_ucc_framework/UCC-UI-lib/
-(?i)UCC-REST-lib/
-.*\.lock
-tests/data/.*
-tests/unit/testdata/.*
-ui-dist/.*
