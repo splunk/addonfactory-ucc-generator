@@ -54,6 +54,35 @@ jobs:
         uses: apache/skywalking-eyes@main # always prefer to use a revision instead of `main`.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # needed only when you want License-Eye to comment on the pull request.
+  appinspect-for-expected-outputs:
+    name: Appinspect ${{ matrix.tags }} for ${{ matrix.output }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        output:
+          - "tests/expected_output/Splunk_TA_UCCExample"
+        tags:
+          - "cloud"
+          - "appapproval"
+          - "deprecated_feature"
+          - "developer_guidance"
+          - "future"
+          - "self-service"
+          - "splunk_appinspect"
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.7"
+      - name: Install slim
+        run: pip install splunk-packaging-toolkit
+      - name: Slim ${{ matrix.output }}
+        run: mkdir tests/slimmed; slim package ${{ matrix.output }} -o tests/slimmed
+      - uses: splunk/appinspect-cli-action@main
+        with:
+          app_path: tests/slimmed
+          included_tags: ${{ matrix.tags }}
   test-unit:
     name: Test Unit Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
