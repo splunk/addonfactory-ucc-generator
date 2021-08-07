@@ -122,6 +122,44 @@ class UccGenerateTest(unittest.TestCase):
                     msg=f"Expected file {expected_file_path} is different from {actual_file_path}",
                 )
 
+    def test_ucc_generate_with_configuration_files_only(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            package_folder = path.join(
+                path.dirname(path.realpath(__file__)),
+                "package_no_global_config",
+                "package",
+            )
+            ucc.generate(source=package_folder, outputdir=temp_dir)
+
+            expected_folder = path.join(
+                path.dirname(__file__),
+                "..",
+                "expected_output_no_global_config",
+                "Splunk_TA_UCCExample",
+            )
+            actual_folder = path.join(temp_dir, "Splunk_TA_UCCExample")
+
+            # app.manifest and appserver/static/js/build/globalConfig.json
+            # should be included too, but they may introduce flaky tests as
+            # their content depends on the git commit.
+            # Expected add-on package folder does not have "lib" in it.
+            files_to_be_equal = [
+                ("README.txt",),
+                ("default", "eventtypes.conf"),
+                ("default", "props.conf"),
+                ("default", "tags.conf"),
+            ]
+            for f in files_to_be_equal:
+                expected_file_path = path.join(expected_folder, *f)
+                actual_file_path = path.join(actual_folder, *f)
+                self.assertTrue(
+                    assert_identical_files(
+                        expected_file_path,
+                        actual_file_path,
+                    ),
+                    msg=f"Expected file {expected_file_path} is different from {actual_file_path}",
+                )
+
 
 if __name__ == "__main__":
     unittest.main()
