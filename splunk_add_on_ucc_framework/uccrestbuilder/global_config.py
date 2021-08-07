@@ -24,9 +24,6 @@ import os
 import os.path as op
 import shutil
 
-from splunktaucclib.global_config import GlobalConfigSchema
-from splunktaucclib.rest_handler.endpoint.field import RestField
-
 from .endpoint.base import indent, quote_regex
 from .endpoint.datainput import (
     DataInputEndpointBuilder,
@@ -48,16 +45,68 @@ def _is_true(val):
     return str(val).strip().upper() in ("1", "TRUE", "T", "Y", "YES")
 
 
-class GlobalConfigBuilderSchema(GlobalConfigSchema):
-    def __init__(self, content, j2_env, *args, **kwargs):
-        super().__init__(content, *args, **kwargs)
+class GlobalConfigBuilderSchema:
+    def __init__(self, content, j2_env):
+        self._content = content
+        self._inputs = []
+        self._configs = []
+        self._settings = []
         self.j2_env = j2_env
         self._endpoints = {}
+        self._parse()
         self._parse_builder_schema()
+
+    @property
+    def product(self):
+        return self._meta["name"]
+
+    @property
+    def namespace(self):
+        return self._meta["restRoot"]
+
+    @property
+    def admin_match(self):
+        return ""
+
+    @property
+    def version(self):
+        return self._meta["apiVersion"]
+
+    @property
+    def inputs(self):
+        return self._inputs
+
+    @property
+    def configs(self):
+        return self._configs
+
+    @property
+    def settings(self):
+        return self._settings
 
     @property
     def endpoints(self):
         return [endpoint for _, endpoint in list(self._endpoints.items())]
+
+    def _parse(self):
+        self._meta = self._content["meta"]
+        pages = self._content["pages"]
+        self._parse_configuration(pages.get("configuration"))
+        self._parse_inputs(pages.get("inputs"))
+
+    def _parse_configuration(self, configurations):
+        if not configurations or "tabs" not in configurations:
+            return
+        for configuration in configurations["tabs"]:
+            if "table" in configuration:
+                self._configs.append(configuration)
+            else:
+                self._settings.append(configuration)
+
+    def _parse_inputs(self, inputs):
+        if not inputs or "services" not in inputs:
+            return
+        self._inputs = inputs["services"]
 
     def _parse_builder_schema(self):
         self._builder_configs()
@@ -152,14 +201,11 @@ class GlobalConfigBuilderSchema(GlobalConfigSchema):
         return self._endpoints[name]
 
     def _parse_field(self, content):
-        field = RestField(
-            content["field"],
-            required=_is_true(content.get("required")),
-            encrypted=_is_true(content.get("encrypted")),
-            default=content.get("defaultValue"),
-        )
         return RestFieldBuilder(
-            field,
+            content["field"],
+            _is_true(content.get("required")),
+            _is_true(content.get("encrypted")),
+            content.get("defaultValue"),
             self._parse_validation(content.get("validators")),
         )
 

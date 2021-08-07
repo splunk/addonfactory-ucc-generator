@@ -29,13 +29,16 @@ class RestFieldBuilder:
     validator={validator}
 )"""
 
-    def __init__(self, field, validator):
-        self._field = field
+    def __init__(self, name, required, encrypted, default, validator):
+        self._name = name
+        self._required = required
+        self._encrypted = encrypted
+        self._default = default
         self._validator = validator
 
     def generate_spec(self):
         return self._kv_template.format(
-            name=self._field.name,
+            name=self._name,
             value="",
         )
 
@@ -45,9 +48,9 @@ class RestFieldBuilder:
 
     def generate_rh(self):
         return self._rh_template.format(
-            name=quote_string(self._field.name),
-            required=self._field.required,
-            encrypted=self._field.encrypted,
-            default=quote_string(self._field.default),
+            name=quote_string(self._name),
+            required=self._required,
+            encrypted=self._encrypted,
+            default=quote_string(self._default),
             validator=self._indent_validator(),
         )
