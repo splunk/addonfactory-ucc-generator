@@ -33,3 +33,10 @@ output
 # splunk_add_on_ucc_framework/uccrestbuilder/builder.py
 .gitmodules
 .pytest_cache/**
+
+# UCC UI repository files
+splunk-ucc-ui.tgz
+splunk_add_on_ucc_framework/THIRDPARTY
+splunk_add_on_ucc_framework/VERSION
+splunk_add_on_ucc_framework/package/
+splunk_add_on_ucc_framework/schema/
