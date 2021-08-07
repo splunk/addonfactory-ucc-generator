@@ -111,8 +111,7 @@ jobs:
           VALIDATE_ALL_CODEBASE: false
           LINTER_RULES_PATH: /
           PYTHON_ISORT_CONFIG_FILE: pyproject.toml
-          FILTER_REGEX_EXCLUDE: .*tests/expected_output/.*
-
+          FILTER_REGEX_EXCLUDE: .*tests/expected_output.*
   semgrep:
     runs-on: ubuntu-latest
     name: security-sast-semgrep
