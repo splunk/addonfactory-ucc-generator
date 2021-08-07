@@ -8,16 +8,27 @@ from tests.unit.helpers import assert_identical_files
 
 class UccGenerateTest(unittest.TestCase):
     def test_ucc_generate(self):
-        package_folder = path.join(path.dirname(path.realpath(__file__)), "package")
+        package_folder = path.join(
+            path.dirname(path.realpath(__file__)),
+            "package_global_config_inputs_configuration_alerts",
+            "package",
+        )
         ucc.generate(source=package_folder)
 
     def test_ucc_generate_with_custom_output_folder(self):
         with tempfile.TemporaryDirectory() as temp_dir:
-            package_folder = path.join(path.dirname(path.realpath(__file__)), "package")
+            package_folder = path.join(
+                path.dirname(path.realpath(__file__)),
+                "package_global_config_inputs_configuration_alerts",
+                "package",
+            )
             ucc.generate(source=package_folder, outputdir=temp_dir)
 
             expected_folder = path.join(
-                path.dirname(__file__), "..", "expected_output", "Splunk_TA_UCCExample"
+                path.dirname(__file__),
+                "..",
+                "expected_output_global_config_inputs_configuration_alerts",
+                "Splunk_TA_UCCExample",
             )
             actual_folder = path.join(temp_dir, "Splunk_TA_UCCExample")
 
