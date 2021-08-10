@@ -63,6 +63,7 @@ class UccGenerateTest(unittest.TestCase):
                 ("README", "inputs.conf.spec"),
                 ("README", "splunk_ta_uccexample_account.conf.spec"),
                 ("README", "splunk_ta_uccexample_settings.conf.spec"),
+                ("metadata", "default.meta"),
             ]
             for f in files_to_be_equal:
                 expected_file_path = path.join(expected_folder, *f)
@@ -110,6 +111,7 @@ class UccGenerateTest(unittest.TestCase):
                 ("bin", "splunk_ta_uccexample_rh_settings.py"),
                 ("README", "splunk_ta_uccexample_account.conf.spec"),
                 ("README", "splunk_ta_uccexample_settings.conf.spec"),
+                ("metadata", "default.meta"),
             ]
             for f in files_to_be_equal:
                 expected_file_path = path.join(expected_folder, *f)
@@ -148,6 +150,7 @@ class UccGenerateTest(unittest.TestCase):
                 ("default", "eventtypes.conf"),
                 ("default", "props.conf"),
                 ("default", "tags.conf"),
+                ("metadata", "default.meta"),
             ]
             for f in files_to_be_equal:
                 expected_file_path = path.join(expected_folder, *f)
