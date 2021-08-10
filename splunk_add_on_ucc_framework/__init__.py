@@ -42,6 +42,7 @@ from .global_config_validator import (
     GlobalConfigValidator,
     GlobalConfigValidatorException,
 )
+from .meta_conf import MetaConf
 from .start_alert_build import alert_build
 from .uccrestbuilder import build
 from .uccrestbuilder.global_config import (
@@ -802,8 +803,16 @@ def _generate(source, config, ta_version, outputdir=None):
         ta_name, os.path.abspath(os.path.join(source, PARENT_DIR, ".uccignore"))
     )
     remove_listed_files(ignore_list)
-    logger.info("Copy package directory ")
+    logger.info("Copy package directory")
     recursive_overwrite(source, os.path.join(outputdir, ta_name))
+
+    default_meta_conf_path = os.path.join(
+        outputdir, ta_name, "metadata", "default.meta"
+    )
+    if not os.path.exists(default_meta_conf_path):
+        os.makedirs(os.path.join(outputdir, ta_name, "metadata"))
+        with open(default_meta_conf_path, "w") as default_meta_conf_fd:
+            MetaConf().create_default(default_meta_conf_fd)
 
     # Update app.manifest
     with open(os.path.join(outputdir, ta_name, "VERSION"), "w") as version_file:
