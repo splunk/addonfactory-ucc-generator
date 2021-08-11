@@ -55,7 +55,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # needed only when you want License-Eye to comment on the pull request.
   appinspect-for-expected-outputs:
-    name: Appinspect tests/package_global_config_inputs_configuration_alerts/Splunk_TA_UCCExample
+    name: Appinspect tests/expected_output_global_config_inputs_configuration_alerts/Splunk_TA_UCCExample
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -65,8 +65,8 @@ jobs:
           python-version: "3.7"
       - name: Install slim
         run: pip install splunk-packaging-toolkit
-      - name: Slim tests/expected_output/Splunk_TA_UCCExample
-        run: mkdir tests/slimmed; slim package tests/package_global_config_inputs_configuration_alerts/Splunk_TA_UCCExample -o tests/slimmed
+      - name: Slim tests/expected_output_global_config_inputs_configuration_alerts/Splunk_TA_UCCExample
+        run: mkdir tests/slimmed; slim package tests/expected_output_global_config_inputs_configuration_alerts/Splunk_TA_UCCExample -o tests/slimmed
       - uses: splunk/appinspect-cli-action@main
         with:
           app_path: tests/slimmed
