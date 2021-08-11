@@ -57,6 +57,7 @@ jobs:
   appinspect-for-expected-outputs:
     name: Appinspect ${{ matrix.tags }} tests/expected_output_global_config_inputs_configuration_alerts/Splunk_TA_UCCExample
     runs-on: ubuntu-latest
+    continue-on-error: true
     strategy:
       matrix:
         tags:
