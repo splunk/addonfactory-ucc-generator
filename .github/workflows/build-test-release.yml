@@ -81,7 +81,7 @@ jobs:
       - uses: splunk/appinspect-cli-action@main
         with:
           app_path: tests/slimmed
-          included_tags: ${{ matrix.tags }}
+          included_tags: splunk_appinspect
   test-unit:
     name: Test Unit Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
