@@ -56,6 +56,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # needed only when you want License-Eye to comment on the pull request.
   appinspect-for-expected-outputs:
     name: Appinspect ${{ matrix.tags }} for ${{ matrix.output }}
+    continue-on-error: true
     runs-on: ubuntu-latest
     strategy:
       matrix:
