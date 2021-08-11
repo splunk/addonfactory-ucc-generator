@@ -55,21 +55,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # needed only when you want License-Eye to comment on the pull request.
   appinspect-for-expected-outputs:
-    name: Appinspect ${{ matrix.tags }} for ${{ matrix.output }}
-    continue-on-error: true
+    name: Appinspect tests/expected_output/Splunk_TA_UCCExample
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        output:
-          - "tests/expected_output/Splunk_TA_UCCExample"
-        tags:
-          - "cloud"
-          - "appapproval"
-          - "deprecated_feature"
-          - "developer_guidance"
-          - "future"
-          - "self-service"
-          - "splunk_appinspect"
     steps:
       - uses: actions/checkout@v2
       - name: Setup python
@@ -78,12 +65,12 @@ jobs:
           python-version: "3.7"
       - name: Install slim
         run: pip install splunk-packaging-toolkit
-      - name: Slim ${{ matrix.output }}
-        run: mkdir tests/slimmed; slim package ${{ matrix.output }} -o tests/slimmed
+      - name: Slim tests/expected_output/Splunk_TA_UCCExample
+        run: mkdir tests/slimmed; slim package tests/expected_output/Splunk_TA_UCCExample -o tests/slimmed
       - uses: splunk/appinspect-cli-action@main
         with:
           app_path: tests/slimmed
-          included_tags: ${{ matrix.tags }}
+          included_tags: splunk_appinspect
   test-unit:
     name: Test Unit Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
