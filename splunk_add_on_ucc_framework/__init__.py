@@ -365,9 +365,17 @@ def remove_files(path):
         path (str): Path to remove *.egg-info and *.dist-info files.
     """
 
-    rmdirs = glob.glob(os.path.join(path, "*.egg-info")) + glob.glob(
-        os.path.join(path, "*.dist-info")
-    )
+    delete_list = ["*.egg-info", "*.dist-info"]
+    # the jsonschema is not working when metadata files are not present hence not removing jsonschema dist-info/egg-info directory
+    do_not_delete_list = ["jsonschema-*"]
+
+    rmdirs = set()
+    for item in delete_list:
+        rmdirs.update(set(glob.glob(os.path.join(path, item))))
+    
+    for item in do_not_delete_list:
+        rmdirs.difference_update(set(glob.glob(os.path.join(path, item))))
+
     for rmdir in rmdirs:
         shutil.rmtree(rmdir)
 
