@@ -33,9 +33,44 @@
         },
       ],
       [
+        "@google/semantic-release-replace-plugin",
+        {
+          "replacements": [
+            {
+              "files": ["splunk_add_on_ucc_framework/__init__.py"],
+              "from": "__version__ = \".*\"",
+              "to": "__version__ = \"${nextRelease.version}\"",
+              "results": [
+                {
+                  "file": "splunk_add_on_ucc_framework/__init__.py",
+                  "hasChanged": true,
+                  "numMatches": 1,
+                  "numReplacements": 1
+                }
+              ],
+              "countMatches": true
+            },
+            {
+              "files": ["pyproject.toml"],
+              "from": "version = \".*\"",
+              "to": "version = \"${nextRelease.version}\"",
+              "results": [
+                {
+                  "file": "pyproject.toml",
+                  "hasChanged": true,
+                  "numMatches": 1,
+                  "numReplacements": 1
+                }
+              ],
+              "countMatches": true
+            }
+          ]
+        }
+      ],
+      [
         "@semantic-release/git",
         {
-          "assets": ["NOTICE"],
+          "assets": ["NOTICE", "pyproject.toml", "splunk_add_on_ucc_framework/__init__.py"],
           "message": "chore(release): ${nextRelease.version}\n\n${nextRelease.notes}",
         },
       ],
