@@ -278,6 +278,7 @@ jobs:
           extra_plugins: |
             @semantic-release/exec
             @semantic-release/git
+            @google/semantic-release-replace-plugin
         env:
           GITHUB_TOKEN: ${{ secrets.SEMREL_TOKEN }}
           PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
