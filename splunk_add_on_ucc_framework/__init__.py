@@ -18,7 +18,6 @@ __version__ = "5.7.0"
 
 import argparse
 import configparser
-import glob
 import json
 import logging
 import os
