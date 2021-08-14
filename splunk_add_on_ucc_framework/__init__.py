@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-__version__ = "5.0.0"
+__version__ = "5.7.0-beta.1"
 
 import argparse
 import configparser
