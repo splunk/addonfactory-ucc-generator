@@ -309,7 +309,6 @@ def install_libs(path, ucc_lib_target):
             )
             os.system(installer + " -m pip install pip --upgrade")
             os.system(install_cmd)
-            remove_files(ucc_target)
 
     logging.info(f"  Checking for requirements in {path}")
     if os.path.exists(os.path.join(path, "lib", "requirements.txt")):
@@ -355,29 +354,6 @@ def install_libs(path, ucc_lib_target):
             logging.info(f"  fixing {o} execute bit")
             current_permissions = stat.S_IMODE(os.lstat(o).st_mode)
             os.chmod(o, current_permissions & NO_EXEC)
-
-
-def remove_files(path):
-    """
-    Remove *.egg-info and *.dist-info files in given path.
-
-    Args:
-        path (str): Path to remove *.egg-info and *.dist-info files.
-    """
-
-    delete_list = ["*.egg-info", "*.dist-info"]
-    # the jsonschema is not working when metadata files are not present hence not removing jsonschema dist-info/egg-info directory
-    do_not_delete_list = ["jsonschema-*"]
-
-    rmdirs = set()
-    for item in delete_list:
-        rmdirs.update(set(glob.glob(os.path.join(path, item))))
-    
-    for item in do_not_delete_list:
-        rmdirs.difference_update(set(glob.glob(os.path.join(path, item))))
-
-    for rmdir in rmdirs:
-        shutil.rmtree(rmdir)
 
 
 def generate_rest(ta_name, scheme, import_declare_name, outputdir):
