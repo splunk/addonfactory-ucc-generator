@@ -23,22 +23,13 @@
   plugins:
     [
       "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      [
-        "@semantic-release/exec",
-        {
-          "prepareCmd": "./.github/workflows/sr-prepare.sh ${nextRelease.version}",
-          "publishCmd": "./.github/workflows/sr-release.sh",
-          "shell": "bash"
-        },
-      ],
       [
         "@google/semantic-release-replace-plugin",
         {
           "replacements": [
             {
               "files": ["splunk_add_on_ucc_framework/__init__.py"],
-              "from": "__version__ = \".*\"",
+              "from": "__version__ ?=.*",
               "to": "__version__ = \"${nextRelease.version}\"",
               "results": [
                 {
@@ -52,20 +43,29 @@
             },
             {
               "files": ["pyproject.toml"],
-              "from": "version = \".*\"",
+              "from": "version ?=.*",
               "to": "version = \"${nextRelease.version}\"",
               "results": [
                 {
                   "file": "pyproject.toml",
-                  "hasChanged": false,
+                  "hasChanged": True,
                   "numMatches": 1,
-                  "numReplacements": 0
+                  "numReplacements": 1
                 }
               ],
               "countMatches": true
             }
           ]
         }
+      ],
+      "@semantic-release/release-notes-generator",
+      [
+        "@semantic-release/exec",
+        {
+          "prepareCmd": "./.github/workflows/sr-prepare.sh ${nextRelease.version}",
+          "publishCmd": "./.github/workflows/sr-release.sh",
+          "shell": "bash"
+        },
       ],
       [
         "@semantic-release/git",
