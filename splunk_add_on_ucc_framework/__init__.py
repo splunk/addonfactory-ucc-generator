@@ -201,8 +201,11 @@ def handle_update(config_path):
                 oauth_state_enabled_entity = {}
                 for entity in conf_entities:
                     if entity.get("field") == "oauth_state_enabled":
-                        logger.warn(
-                            "oauth_state_enabled field is no longer a separate entity since UCC version 5.0.0. It is now an option in the oauth field. Please update the globalconfig.json file accordingly."
+                        logger.warning(
+                            "oauth_state_enabled field is no longer a separate "
+                            "entity since UCC version 5.0.0. It is now an "
+                            "option in the oauth field. Please update the "
+                            "globalconfig.json file accordingly."
                         )
                         oauth_state_enabled_entity = entity
 
@@ -217,12 +220,16 @@ def handle_update(config_path):
             tab_options = tab.get("options", {})
             if tab_options.get("onChange"):
                 logger.error(
-                    "The onChange option is no longer supported since UCC version 5.0.0. You can use custom hooks to implement these actions."
+                    "The onChange option is no longer supported since UCC "
+                    "version 5.0.0. You can use custom hooks to implement "
+                    "these actions."
                 )
                 del tab_options["onChange"]
             if tab_options.get("onLoad"):
                 logger.error(
-                    "The onLoad option is no longer supported since UCC version 5.0.0. You can use custom hooks to implement these actions."
+                    "The onLoad option is no longer supported since UCC "
+                    "version 5.0.0. You can use custom hooks to implement "
+                    "these actions."
                 )
                 del tab_options["onLoad"]
 
@@ -233,12 +240,16 @@ def handle_update(config_path):
                 service_options = service.get("options", {})
                 if service_options.get("onChange"):
                     logger.error(
-                        "The onChange option is no longer supported since UCC version 5.0.0. You can use custom hooks to implement these actions."
+                        "The onChange option is no longer supported since UCC "
+                        "version 5.0.0. You can use custom hooks to implement "
+                        "these actions."
                     )
                     del service_options["onChange"]
                 if service_options.get("onLoad"):
                     logger.error(
-                        "The onLoad option is no longer supported since UCC version 5.0.0. You can use custom hooks to implement these actions."
+                        "The onLoad option is no longer supported since UCC "
+                        "version 5.0.0. You can use custom hooks to implement "
+                        "these actions."
                     )
                     del service_options["onLoad"]
 
@@ -314,7 +325,7 @@ def install_libs(path, ucc_lib_target):
 
     logging.info(f"  Checking for requirements in {path}")
     if os.path.exists(os.path.join(path, "lib", "requirements.txt")):
-        logging.info(f"  Uses common requirements")
+        logging.info("  Uses common requirements")
         _install_libs(
             requirements=os.path.join(path, "lib", "requirements.txt"),
             ucc_target=ucc_lib_target,
@@ -322,7 +333,7 @@ def install_libs(path, ucc_lib_target):
     elif os.path.exists(
         os.path.join(os.path.abspath(os.path.join(path, os.pardir)), "requirements.txt")
     ):
-        logging.info(f"  Uses common requirements")
+        logging.info("  Uses common requirements")
         _install_libs(
             requirements=os.path.join(
                 os.path.abspath(os.path.join(path, os.pardir)), "requirements.txt"
@@ -330,7 +341,7 @@ def install_libs(path, ucc_lib_target):
             ucc_target=ucc_lib_target,
         )
     else:
-        logging.info(f"  Not using common requirements")
+        logging.info("  Not using common requirements")
 
     # Prevent certain packages from being included pip could be dangerous others are just wasted space
     noshipdirs = ["setuptools", "bin", "pip", "distribute", "wheel"]
@@ -875,7 +886,8 @@ def main():
     parser.add_argument(
         "--ta-version",
         type=str,
-        help="Version of TA, default version is version specified in the package such as app.manifest, app.conf, and globalConfig.json",
+        help="Version of TA, default version is version specified in the "
+        "package such as app.manifest, app.conf, and globalConfig.json",
         default=None,
     )
     args = parser.parse_args()
