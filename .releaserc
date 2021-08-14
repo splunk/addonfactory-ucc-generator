@@ -57,9 +57,9 @@
               "results": [
                 {
                   "file": "pyproject.toml",
-                  "hasChanged": true,
+                  "hasChanged": false,
                   "numMatches": 1,
-                  "numReplacements": 1
+                  "numReplacements": 0
                 }
               ],
               "countMatches": true
