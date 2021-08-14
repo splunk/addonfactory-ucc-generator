@@ -30,9 +30,6 @@ __all__ = [
     "build",
 ]
 
-__version__ = "0.0.0"
-
-
 RestHandlerClass = collections.namedtuple(
     "RestHandlerClass",
     ("module", "name"),
