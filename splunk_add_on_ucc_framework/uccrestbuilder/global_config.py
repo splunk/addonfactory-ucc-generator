@@ -231,7 +231,10 @@ class GlobalConfigBuilderSchema:
                     content = content + entity_element["options"]["oauth"]
                     # Append auth_type, access_token, refresh_token & instance_url fields
                     content = content + json.loads(
-                        '[{"field": "access_token","encrypted": true},{"field": "refresh_token","encrypted":true},{"field": "instance_url"},{"field": "auth_type"}]'
+                        '[{"field": "access_token","encrypted": true},'
+                        '{"field": "refresh_token","encrypted":true},'
+                        '{"field": "instance_url"},'
+                        '{"field": "auth_type"}]'
                     )
                 # If only oauth type authentication is required
                 elif "oauth" in entity_element["options"]["auth_type"]:
@@ -239,7 +242,9 @@ class GlobalConfigBuilderSchema:
                     content = content + entity_element["options"]["oauth"]
                     # Append access_token, refresh_token & instance_url fields
                     content = content + json.loads(
-                        '[{"field": "access_token","encrypted": true},{"field": "refresh_token","encrypted":true},{"field": "instance_url"}]'
+                        '[{"field": "access_token","encrypted": true},'
+                        '{"field": "refresh_token","encrypted":true},'
+                        '{"field": "instance_url"}]'
                     )
                 # We will remove the oauth type entity as we have replaced it with all the entity fields
                 content.remove(entity_element)
@@ -446,7 +451,7 @@ sys.path = new_paths
 
     def import_declare(self, rh_file):
         with open(rh_file) as f:
-            cont = [l for l in f]
+            cont = f.readlines()
         import_declare = self._import_declare_template.format(
             import_declare_name=self.import_declare_py_name()
         )
