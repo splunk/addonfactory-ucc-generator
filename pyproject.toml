@@ -16,7 +16,7 @@
 
 [tool.poetry]
 name = "splunk_add_on_ucc_framework"
-version = "5.7.0"
+version = "5.8.0"
 description = "Splunk Add-on SDK formerly UCC is a build and code generation framework"
 authors = ["rfaircloth-splunk <rfaircloth@splunk.com>"]
 include = [
