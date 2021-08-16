@@ -69,7 +69,6 @@ pre-commit = "^2.14.0"
 
 [tool.poetry.scripts]
 ucc-gen="splunk_add_on_ucc_framework:main"
-install-libs="splunk_add_on_ucc_framework:install_requirements"
 
 [tool.isort]
 multi_line_output = 3
