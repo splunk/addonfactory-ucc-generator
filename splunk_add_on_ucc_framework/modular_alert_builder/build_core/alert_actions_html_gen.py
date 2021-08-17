@@ -20,7 +20,6 @@ from os import linesep
 from os import path as op
 from re import search
 
-from defusedxml import lxml as defused_lxml
 from jinja2 import Environment, FileSystemLoader
 
 from . import alert_actions_exceptions as aae
@@ -101,16 +100,8 @@ class AlertHtmlGenerator(AlertHtmlBase):
         final_form = template.render(
             mod_alert=self._current_alert, home_page=self._html_home
         )
-        final_form = defused_lxml.fromstring(final_form)
-        final_string = defused_lxml.tostring(
-            final_form, encoding="utf-8", pretty_print=True
-        )
         text = linesep.join(
-            [
-                s
-                for s in final_string.decode("utf-8").splitlines()
-                if not search(r"^\s*$", s)
-            ]
+            [s for s in final_form.splitlines() if not search(r"^\s*$", s)]
         )
 
         self._logger.debug(
