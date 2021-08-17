@@ -2,7 +2,8 @@
 <div class="control-group">
     <label class="control-label" for="test_alert_name">Name <span class="required">*</span> </label>
     <div class="controls">
-<input type="text" name="action.test_alert.param.name" id="test_alert_name"/>
+<input type="text" name="action.test_alert.param.name"
+		id="test_alert_name" />
             <span class="help-block">
         Please enter your name
     </span>
@@ -11,7 +12,7 @@
 <div class="control-group">
     <div class="controls">
 		<label class="checkbox" for="test_alert_all_incidents">
-			<input type="checkbox" name="action.test_alert.param.all_incidents" id="test_alert_all_incidents"/>
+			<input type="checkbox" name="action.test_alert.param.all_incidents" id="test_alert_all_incidents"  />
 			All Incidents
 		</label>
 		    <span class="help-block">
@@ -35,11 +36,15 @@
 	<label class="control-label">Action:</label>
 		<div class="controls">
 				<label class="radio" for="test_alert_action_Update">
-					<input type="radio" name="action.test_alert.param.action" id="test_alert_action_Update" value="Update"/>
+					<input type="radio"
+					name="action.test_alert.param.action" id="test_alert_action_Update" value="Update"
+				     />
 					update
 				</label>
 				<label class="radio" for="test_alert_action_Delete">
-					<input type="radio" name="action.test_alert.param.action" id="test_alert_action_Delete" value="Delete"/>
+					<input type="radio"
+					name="action.test_alert.param.action" id="test_alert_action_Delete" value="Delete"
+				     />
 					delete
 				</label>
 			    <span class="help-block">
@@ -50,7 +55,10 @@
 <div class="control-group">
     <label class="control-label" for="test_alert_account">Select Account <span class="required">*</span> </label>
     <div class="controls">
-		<splunk-search-dropdown name="action.test_alert.param.account" id="test_alert_account" value-field="title" label-field="title" search="| rest /servicesNS/nobody/TA-SNOW/admin/TA_SNOW_account | dedup title"/>
+		<splunk-search-dropdown name="action.test_alert.param.account" id="test_alert_account"                 value-field="title"
+                label-field="title"
+                search="| rest /servicesNS/nobody/TA-SNOW/admin/TA_SNOW_account | dedup title"
+ />
             <span class="help-block">
         Select the account from the dropdown
     </span>

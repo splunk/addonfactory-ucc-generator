@@ -83,6 +83,13 @@ class AlertActionsHtmlGenTest(unittest.TestCase):
                                     },
                                 },
                                 {
+                                    "label": "Scripted Endpoint",
+                                    "required": False,
+                                    "format_type": "text",
+                                    "name": "scripted_endpoint",
+                                    "help_string": "Scripted REST endpoint to create incident at. Format: /api/<API namespace>/<API ID>/<Relative path>. Default: /api/now/incident",  # noqa: E501
+                                },
+                                {
                                     "label": "Action:",
                                     "required": True,
                                     "format_type": "radio",
@@ -103,7 +110,7 @@ class AlertActionsHtmlGenTest(unittest.TestCase):
                                     "ctrl_props": {
                                         "value-field": "title",
                                         "label-field": "title",
-                                        "search": "| rest /servicesNS/nobody/TA-SNOW/admin/TA_SNOW_account | dedup title",
+                                        "search": "| rest /servicesNS/nobody/TA-SNOW/admin/TA_SNOW_account | dedup title",  # noqa: E501
                                     },
                                 },
                             ],
