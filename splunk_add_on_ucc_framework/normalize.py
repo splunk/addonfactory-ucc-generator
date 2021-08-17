@@ -15,7 +15,6 @@
 #
 
 import copy
-import sys
 
 mapping_keys = {
     "activeResponse": "active_response",

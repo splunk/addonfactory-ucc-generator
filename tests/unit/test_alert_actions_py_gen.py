@@ -103,7 +103,7 @@ class AlertActionsPyGenTest(unittest.TestCase):
                                     "ctrl_props": {
                                         "value-field": "title",
                                         "label-field": "title",
-                                        "search": "| rest /servicesNS/nobody/TA-SNOW/admin/TA_SNOW_account | dedup title",
+                                        "search": "| rest /servicesNS/nobody/TA-SNOW/admin/TA_SNOW_account | dedup title",  # noqa: E501
                                     },
                                 },
                             ],
