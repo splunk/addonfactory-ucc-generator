@@ -22,7 +22,7 @@ TA builder needs to support:
 3. Support multiline end with \
 
 There are a lot of legacy codes here. If you want to see our changes,
-please search: ######## tab_update ########
+please search: # update
 """
 import configparser
 
@@ -42,12 +42,12 @@ class TABConfigParser(configparser.RawConfigParser):
         lineno = 0
         e = None  # None, or an exception
 
-        ######## tab_update ########
+        # update
         comment_index = 0
         self.top_comments = []
         self.fields_outside_stanza = []
         add_space_to_next_line = False
-        ############################
+        # finish update
 
         while True:
             line = fp.readline()
@@ -58,7 +58,7 @@ class TABConfigParser(configparser.RawConfigParser):
             # comment or blank line?
             if line.strip() == "" or line[0] in COMMENT_PREFIX:
 
-                ######## tab_update ########
+                # update
                 # save the lineno & comments
                 if cursect:
                     name = "{}{}".format(COMMENT_KEY, comment_index)
@@ -67,14 +67,14 @@ class TABConfigParser(configparser.RawConfigParser):
                 else:
                     self.top_comments.append(line)
                 continue
-            ############################
+            # finish update
 
             if line.split(None, 1)[0].lower() == "rem" and line[0] in "rR":
                 # no leading whitespace
                 continue
             # continuation line?
 
-            ######## tab_update ########
+            # update
             # support multiline with \
             if add_space_to_next_line:
                 line = " " + line
@@ -84,7 +84,7 @@ class TABConfigParser(configparser.RawConfigParser):
                 add_space_to_next_line = True
             else:
                 add_space_to_next_line = False
-            ############################
+            # finish update
 
             if line[0].isspace() and cursect is not None and optname:
                 value = line.strip()
@@ -112,11 +112,11 @@ class TABConfigParser(configparser.RawConfigParser):
                 # no section header in the file?
 
                 elif cursect is None:
-                    ######## tab_update ########
+                    # update
                     # disable the exception since splunk allows the field outside stanzas
                     #                     raise MissingSectionHeaderError(fpname, lineno, line)
                     self.fields_outside_stanza.append(line)
-                ############################
+                # finish update
                 # an option line?
                 else:
                     mo = self._optcre.match(line)
@@ -166,7 +166,7 @@ class TABConfigParser(configparser.RawConfigParser):
         """
         DEFAULTSECT = "DEFAULT"
 
-        ######## tab_update ########
+        # update
         if hasattr(self, "top_comments"):
             for comment in self.top_comments:
                 fp.write(comment)
@@ -174,7 +174,7 @@ class TABConfigParser(configparser.RawConfigParser):
         if hasattr(self, "fields_outside_stanza"):
             for field in self.fields_outside_stanza:
                 fp.write(field)
-        ############################
+        # finish update
 
         if self._defaults:
             fp.write("[%s]\n" % DEFAULTSECT)
@@ -187,22 +187,22 @@ class TABConfigParser(configparser.RawConfigParser):
                 if key == "__name__":
                     continue
 
-                ######## tab_update ########
+                # update
                 if key.startswith(COMMENT_KEY):
                     # only write the non empty line
                     if len(value.strip()) > 0:
                         fp.write(value)
                     # should continue as long as it is a comment line
                     continue
-                ############################
+                # finish update
 
                 if (value is not None) or (self._optcre == self.OPTCRE):
                     key = " = ".join((key, str(value).replace("\n", "\n\t")))
                 fp.write("%s\n" % (key))
-            ######## tab_update ########
+            # update
             # write the seperator line for stanza
             fp.write("\n")
-            ############################
+            # finish update
 
     def optionxform(self, optionstr):
         return optionstr

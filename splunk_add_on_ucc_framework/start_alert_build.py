@@ -82,7 +82,7 @@ def validate(alert, logger):
                         )
                     )
 
-    except:
+    except Exception:
         logger.error(traceback.format_exc())
         raise
 

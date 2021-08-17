@@ -278,7 +278,10 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
                             if param_default_value
                             else ""
                         )
-                        value = f'param.{param["name"]} = <{format_type}> {param["label"]}. {is_required} {default_value}'
+                        value = (
+                            f'param.{param["name"]} = <{format_type}> '
+                            f'{param["label"]}. {is_required} {default_value}'
+                        )
                         alerts[alert_name].append(value)
         final_string = template.render(alerts=alerts)
         text = linesep.join([s.strip() for s in final_string.splitlines()])
