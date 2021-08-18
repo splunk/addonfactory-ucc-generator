@@ -38,6 +38,7 @@ class UccGenerateTest(unittest.TestCase):
             # Expected add-on package folder does not have "lib" in it.
             files_to_be_equal = [
                 ("README.txt",),
+                ("default", "alert_actions.conf"),
                 ("default", "eventtypes.conf"),
                 ("default", "inputs.conf"),
                 ("default", "restmap.conf"),
