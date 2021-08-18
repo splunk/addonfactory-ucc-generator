@@ -128,6 +128,7 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
             "python.version": "python3",
             "is_custom": 1,
             "payload_format": "json",
+            "icon_path": "alerticon.png",
         }
         self._output = {}
 
