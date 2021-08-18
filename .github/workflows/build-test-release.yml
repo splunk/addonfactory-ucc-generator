@@ -103,7 +103,34 @@ jobs:
         with:
           name: test-results-unit-python_${{ matrix.python-version }}
           path: test-results/*
-
+  appinspect-for-expected-outputs:
+    name: Appinspect ${{ matrix.tags }} tests/expected_output_global_config_inputs_configuration_alerts/Splunk_TA_UCCExample
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    strategy:
+      matrix:
+        tags:
+          - "cloud"
+          - "appapproval"
+          - "deprecated_feature"
+          - "developer_guidance"
+          - "future"
+          - "self-service"
+          - "splunk_appinspect"
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.7"
+      - name: Install slim
+        run: pip install splunk-packaging-toolkit
+      - name: Slim tests/expected_output_global_config_inputs_configuration_alerts/Splunk_TA_UCCExample
+        run: mkdir tests/slimmed; slim package tests/expected_output_global_config_inputs_configuration_alerts/Splunk_TA_UCCExample -o tests/slimmed
+      - uses: splunk/appinspect-cli-action@main
+        with:
+          app_path: tests/slimmed
+          included_tags: ${{ matrix.tags }}
   lint:
     runs-on: ubuntu-latest
     name: Lint Code Base
