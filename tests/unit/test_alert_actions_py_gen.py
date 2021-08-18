@@ -107,11 +107,6 @@ class AlertActionsPyGenTest(unittest.TestCase):
                                     },
                                 },
                             ],
-                            "alert_props": {
-                                "python.version": "python3",
-                                "is_custom": 1,
-                                "payload_format": "json",
-                            },
                         }
                     ],
                 },

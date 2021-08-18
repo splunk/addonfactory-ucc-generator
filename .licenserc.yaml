@@ -33,7 +33,6 @@ header:
     - "splunk_add_on_ucc_framework/templates/*"
     - "splunk_add_on_ucc_framework/arf_dir_templates/modular_alert_package.settings"
     - "splunk_add_on_ucc_framework/modular_alert_builder/build_core/arf_template/**"
-    - "splunk_add_on_ucc_framework/modular_alert_builder/build_core/alert_actions_conf_default_settings.json"
     - "tests/**"
     - ".*"
 

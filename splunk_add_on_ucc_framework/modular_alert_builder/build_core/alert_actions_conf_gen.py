@@ -17,7 +17,6 @@
 
 import json
 import os
-from json import loads as jloads
 from os import linesep
 from os import path as op
 
@@ -98,7 +97,6 @@ class AlertActionsConfBase:
 class AlertActionsConfGeneration(AlertActionsConfBase):
     DEFAULT_CONF_TEMPLATE = "alert_actions.conf.template"
     DEFAULT_SPEC_TEMPLATE = "alert_actions.conf.spec.template"
-    DEFAULT_SETTINGS_FILE = "alert_actions_conf_default_settings.json"
     DEFAULT_EVENTTYPES_TEMPLATE = "eventtypes.conf.template"
     DEFAULT_TAGS_TEMPLATE = "tags.conf.template"
 
@@ -126,10 +124,11 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
             ac.PARAMETERS,
         ]
         self._remove_fields = [ac.SHORT_NAME] + self._html_fields
-        self._default_settings_file = default_settings_file or op.join(
-            op.dirname(op.abspath(__file__)),
-            AlertActionsConfGeneration.DEFAULT_SETTINGS_FILE,
-        )
+        self._default_conf_settings = {
+            "python.version": "python3",
+            "is_custom": 1,
+            "payload_format": "json",
+        }
         self._output = {}
 
     def generate_conf(self):
@@ -300,13 +299,10 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
         self.generate_tags()
 
     def add_default_settings(self):
-        with open(self._default_settings_file) as df:
-            default_settings = jloads(df.read())
-
         for alert in self._alert_settings:
             if ac.ALERT_PROPS not in list(alert.keys()):
                 alert[ac.ALERT_PROPS] = {}
-            for k, v in list(default_settings.items()):
+            for k, v in list(self._default_conf_settings.items()):
                 if k in list(alert[ac.ALERT_PROPS].keys()):
                     continue
 
