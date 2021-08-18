@@ -76,6 +76,15 @@ class UccGenerateTest(unittest.TestCase):
                     ),
                     msg=f"Expected file {expected_file_path} is different from {actual_file_path}",
                 )
+            files_to_exist = [
+                ("static", "appIcon.png"),
+                ("static", "appIcon_2x.png"),
+                ("static", "appIconAlt.png"),
+                ("static", "appIconAlt_2x.png"),
+            ]
+            for f in files_to_exist:
+                expected_file_path = path.join(expected_folder, *f)
+                self.assertTrue(path.exists(expected_file_path))
 
     def test_ucc_generate_with_configuration(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -124,6 +133,15 @@ class UccGenerateTest(unittest.TestCase):
                     ),
                     msg=f"Expected file {expected_file_path} is different from {actual_file_path}",
                 )
+            files_to_exist = [
+                ("static", "appIcon.png"),
+                ("static", "appIcon_2x.png"),
+                ("static", "appIconAlt.png"),
+                ("static", "appIconAlt_2x.png"),
+            ]
+            for f in files_to_exist:
+                expected_file_path = path.join(expected_folder, *f)
+                self.assertTrue(path.exists(expected_file_path))
 
     def test_ucc_generate_with_configuration_files_only(self):
         with tempfile.TemporaryDirectory() as temp_dir:
