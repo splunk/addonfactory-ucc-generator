@@ -772,7 +772,7 @@ def _generate(source, config, ta_version, outputdir=None):
             ),
         )
         ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
-        logger.info(f"Install Addon Requirements into {ucc_lib_target} from {source}")
+        logger.info(f"Install add-on requirements into {ucc_lib_target} from {source}")
         install_libs(source, ucc_lib_target)
 
         replace_token(ta_name, outputdir)
@@ -792,15 +792,11 @@ def _generate(source, config, ta_version, outputdir=None):
     else:
         logger.info("Addon Version : " + ta_version)
         logger.warning(
-            "Skipped installing UCC required python modules as GlobalConfig.json does not exist."
+            "Skipped generating UI components as globalConfig.json does not exist."
         )
-        logger.warning(
-            "Skipped Generating UI components as GlobalConfig.json does not exist."
-        )
-        logger.info("Setting TA name as generic")
-
         ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
 
+        logger.info(f"Install add-on requirements into {ucc_lib_target} from {source}")
         install_libs(source, ucc_lib_target=ucc_lib_target)
 
     ignore_list = get_ignore_list(
