@@ -71,8 +71,7 @@ pre-commit = "^2.14.0"
 ucc-gen="splunk_add_on_ucc_framework:main"
 
 [tool.isort]
-multi_line_output = 3
-include_trailing_comma = true
+profile = "black"
 
 [build-system]
 requires = ["poetry>=1.0.2"]

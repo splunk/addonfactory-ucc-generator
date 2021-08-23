@@ -25,20 +25,14 @@ import os.path as op
 import shutil
 
 from .endpoint.base import indent, quote_regex
-from .endpoint.datainput import (
-    DataInputEndpointBuilder,
-    DataInputEntityBuilder,
-)
+from .endpoint.datainput import DataInputEndpointBuilder, DataInputEntityBuilder
 from .endpoint.field import RestFieldBuilder
 from .endpoint.multiple_model import (
     MultipleModelEndpointBuilder,
     MultipleModelEntityBuilder,
 )
 from .endpoint.oauth_model import OAuthModelEndpointBuilder
-from .endpoint.single_model import (
-    SingleModelEndpointBuilder,
-    SingleModelEntityBuilder,
-)
+from .endpoint.single_model import SingleModelEndpointBuilder, SingleModelEntityBuilder
 
 
 def _is_true(val):
