@@ -684,6 +684,7 @@ def handle_no_inputs(ta_name, outputdir):
 
 
 def _generate(source, config, ta_version, outputdir=None):
+    logger.info(f"ucc-gen version {__version__} is used")
     if outputdir is None:
         outputdir = os.path.join(os.getcwd(), "output")
     if not ta_version:
