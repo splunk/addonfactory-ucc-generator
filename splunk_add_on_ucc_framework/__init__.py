@@ -316,7 +316,7 @@ def install_libs(path, ucc_lib_target):
             installer (str): Pip version(pip2/pip3).
         """
         if not os.path.exists(requirements):
-            logging.warning("Unable to find requirements file. {}".format(requirements))
+            logger.warning("Unable to find requirements file. {}".format(requirements))
         else:
             if not os.path.exists(ucc_target):
                 os.makedirs(ucc_target)
@@ -331,9 +331,9 @@ def install_libs(path, ucc_lib_target):
             os.system(installer + " -m pip install pip --upgrade")
             os.system(install_cmd)
 
-    logging.info(f"  Checking for requirements in {path}")
+    logger.info(f"  Checking for requirements in {path}")
     if os.path.exists(os.path.join(path, "lib", "requirements.txt")):
-        logging.info("  Uses common requirements")
+        logger.info("  Uses common requirements")
         _install_libs(
             requirements=os.path.join(path, "lib", "requirements.txt"),
             ucc_target=ucc_lib_target,
@@ -341,7 +341,7 @@ def install_libs(path, ucc_lib_target):
     elif os.path.exists(
         os.path.join(os.path.abspath(os.path.join(path, os.pardir)), "requirements.txt")
     ):
-        logging.info("  Uses common requirements")
+        logger.info("  Uses common requirements")
         _install_libs(
             requirements=os.path.join(
                 os.path.abspath(os.path.join(path, os.pardir)), "requirements.txt"
@@ -349,7 +349,7 @@ def install_libs(path, ucc_lib_target):
             ucc_target=ucc_lib_target,
         )
     else:
-        logging.info("  Not using common requirements")
+        logger.info("  Not using common requirements")
 
     # Prevent certain packages from being included pip could be dangerous others are just wasted space
     noshipdirs = ["setuptools", "bin", "pip", "distribute", "wheel"]
