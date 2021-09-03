@@ -58,7 +58,7 @@ lxml = "^4.3"
 wheel = "*"
 defusedxml = "^0.7.1"
 jsonschema = "^3.2.0"
-dunamai = "1.5.5"
+dunamai = "1.6.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2"
