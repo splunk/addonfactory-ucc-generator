@@ -65,7 +65,7 @@ pytest = "^6.2"
 pytest-cov = "^2.12.1"
 coverage = "^5.5"
 parameterized = "^0.8.1"
-pre-commit = "^2.14.1"
+pre-commit = "^2.15.0"
 
 [tool.poetry.scripts]
 ucc-gen="splunk_add_on_ucc_framework:main"
