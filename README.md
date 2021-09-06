@@ -31,7 +31,7 @@ Add-ons may now package such extensions with webpack.
 
 - Addon package and globalConfig.json file
 
-> Note: You may refer the globalConfig.json file [here](https://github.com/splunk/addonfactory-ucc-generator/blob/master/tests/data/globalConfig.json)
+> Note: You may refer the globalConfig.json file [here](https://github.com/splunk/addonfactory-ucc-generator/blob/main/tests/data/package_global_config_configuration/globalConfig.json)
 
 
 ## Installation
