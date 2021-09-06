@@ -26,7 +26,7 @@ import stat
 import sys
 from pathlib import Path
 
-from defusedxml import cElementTree as defused_et
+from defusedxml import ElementTree as defused_et
 from dunamai import Style, Version
 from jinja2 import Environment, FileSystemLoader
 
