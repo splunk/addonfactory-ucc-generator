@@ -28,7 +28,6 @@ header:
     - "LICENSE"
     - "NOTICE"
     - "*.lock"
-    - "ui-dist/**/*"
     - "docs/**"
     - "splunk_add_on_ucc_framework/templates/*"
     - "splunk_add_on_ucc_framework/arf_dir_templates/modular_alert_package.settings"
