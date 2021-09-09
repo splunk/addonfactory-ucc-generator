@@ -15,7 +15,7 @@
 #
 from typing import IO
 
-from . import conf_parser
+import addonfactory_splunk_conf_parser_lib as conf_parser
 
 DEFAULT = """
 # Application-level permissions

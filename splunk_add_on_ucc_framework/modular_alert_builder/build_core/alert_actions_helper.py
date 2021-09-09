@@ -19,7 +19,7 @@ import os.path as op
 import sys
 from os import makedirs, remove
 
-from splunk_add_on_ucc_framework import conf_parser
+import addonfactory_splunk_conf_parser_lib as conf_parser
 
 from .alert_actions_merge import merge_conf_file
 

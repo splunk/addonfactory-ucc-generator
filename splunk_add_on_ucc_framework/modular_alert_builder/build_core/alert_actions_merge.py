@@ -20,7 +20,7 @@ import os.path as op
 from os.path import basename as bn
 from shutil import copy
 
-from splunk_add_on_ucc_framework import conf_parser
+import addonfactory_splunk_conf_parser_lib as conf_parser
 
 from . import alert_actions_exceptions as aae
 from . import arf_consts as ac
