@@ -139,24 +139,6 @@ jobs:
         with:
           python-version: "3.7"
       - uses: pre-commit/action@v2.0.3
-  lint:
-    runs-on: ubuntu-latest
-    name: Lint Code Base
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          # Full git history is needed to get a proper list of changed files within `super-linter`
-          fetch-depth: 0
-      - name: Lint Code Base
-        uses: docker://ghcr.io/github/super-linter:slim-v4
-        env:
-          DEFAULT_BRANCH: main
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-          VALIDATE_ALL_CODEBASE: false
-          LINTER_RULES_PATH: /
-          PYTHON_ISORT_CONFIG_FILE: pyproject.toml
-          FILTER_REGEX_EXCLUDE: .*tests/expected_output.*
   semgrep:
     runs-on: ubuntu-latest
     name: security-sast-semgrep
