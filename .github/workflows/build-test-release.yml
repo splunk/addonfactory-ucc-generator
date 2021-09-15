@@ -76,16 +76,19 @@ jobs:
           tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
       - name: Install Code
         run: |
+          # shellcheck disable=SC1090
           source "$HOME/.poetry/env"
           poetry install
       - name: Build
         run: |
+          # shellcheck disable=SC1090
           source "$HOME/.poetry/env"
           poetry build
       - name: Ensure all UCC UI files are in the final package
         run: ./.github/workflows/check_ucc_ui_files.sh
       - name: Run Pytest with coverage
         run: |
+          # shellcheck disable=SC1090
           source "$HOME/.poetry/env"
           poetry run pytest --cov=./splunk_add_on_ucc_framework --cov-report=xml --junitxml=test-results/junit.xml
       - name: Upload coverage to Codecov
@@ -138,6 +141,9 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: "3.7"
+      - name: Install actionlint
+        run: |
+          bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/v1.6.3/scripts/download-actionlint.bash)
       - uses: pre-commit/action@v2.0.3
   semgrep:
     runs-on: ubuntu-latest
@@ -191,6 +197,7 @@ jobs:
           tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
       - name: Build
         run: |
+          # shellcheck disable=SC1090
           source "$HOME/.poetry/env"
           poetry build
       - name: Ensure all UCC UI files are in the final package
