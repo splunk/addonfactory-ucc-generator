@@ -12,6 +12,8 @@ A framework to generate UI based Splunk Add-ons. It includes UI, Rest handler, M
 > not be installed while running `ucc-gen` command. Therefore modular inputs 
 > that are supposed to run on Python 2 will not be supported by UCC. 
 
+Available as a Github action here: https://github.com/splunk/addonfactory-ucc-generator-action
+
 ## What is UCC?
 
 UCC stands for  Universal Configuration Console. It is a service for generating Splunk Add-ons which is easily customizable and flexible.

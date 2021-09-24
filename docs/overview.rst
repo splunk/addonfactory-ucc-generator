@@ -9,6 +9,8 @@ It includes UI, Rest handler, Modular input, Oauth, Alert action templates.
     not be installed while running :code:`ucc-gen` command. Therefore modular inputs
     that are supposed to run on Python 2 will not be supported by UCC.
 
+Available as a Github action here: https://github.com/splunk/addonfactory-ucc-generator-action
+
 What is UCC?
 ------------
 UCC stands for Universal Configuration Console.
