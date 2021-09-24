@@ -54,7 +54,6 @@ keywords = ['splunk']
 [tool.poetry.dependencies]
 python = "^3.7"
 jinja2 = ">=2,<4"
-lxml = "^4.3"
 wheel = "*"
 defusedxml = "^0.7.1"
 jsonschema = "^3.2.0"
