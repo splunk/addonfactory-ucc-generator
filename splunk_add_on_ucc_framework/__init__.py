@@ -572,51 +572,6 @@ def make_modular_alerts(ta_name, ta_namespace, schema_content, outputdir):
         )
 
 
-def get_ignore_list(ta_name, path):
-    """
-    Return path of files/folders to be removed.
-
-    Args:
-        ta_name (str): Name of TA.
-        path (str): Path of '.uccignore'.
-
-    Returns:
-        list: List of paths to be removed from output directory.
-    """
-    if not os.path.exists(path):
-        return []
-    else:
-        with open(path) as ignore_file:
-            ignore_list = ignore_file.readlines()
-        ignore_list = [
-            (os.path.join("output", ta_name, get_os_path(path))).strip()
-            for path in ignore_list
-        ]
-        return ignore_list
-
-
-def remove_listed_files(ignore_list):
-    """
-    Return path of files/folders to removed in output folder.
-
-    Args:
-        ignore_list (list): List of files/folder to removed in output directory.
-
-    """
-    for path in ignore_list:
-        if os.path.exists(path):
-            if os.path.isfile(path):
-                os.remove(path)
-            elif os.path.isdir(path):
-                shutil.rmtree(path, ignore_errors=True)
-        else:
-            logger.info(
-                "While ignoring the files mentioned in .uccignore {} was not found".format(
-                    path
-                )
-            )
-
-
 def update_ta_version(config, ta_version):
     """
     Update version of TA in globalConfig.json.
@@ -800,10 +755,6 @@ def _generate(source, config, ta_version, outputdir=None):
         logger.info(f"Install add-on requirements into {ucc_lib_target} from {source}")
         install_libs(source, ucc_lib_target=ucc_lib_target)
 
-    ignore_list = get_ignore_list(
-        ta_name, os.path.abspath(os.path.join(source, PARENT_DIR, ".uccignore"))
-    )
-    remove_listed_files(ignore_list)
     logger.info("Copy package directory")
     recursive_overwrite(source, os.path.join(outputdir, ta_name))
 
