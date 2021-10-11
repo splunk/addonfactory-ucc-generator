@@ -2,7 +2,6 @@ name: Release-Notes-Preview
 
 on:
   pull_request:
-#    branches: [main, develop]
   issue_comment:
     types: [edited]
 
