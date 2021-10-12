@@ -61,9 +61,7 @@ def write_file(file_name, file_path, content, logger, merge="stanza_overwrite"):
                 with open(file_path, "w") as df:
                     parser.write(df)
     else:
-        sys.stdout.write(
-            "\n##################File {}##################\n".format(file_name)
-        )
+        sys.stdout.write(f"\n##################File {file_name}##################\n")
         sys.stdout.write(content)
 
 
@@ -369,7 +367,7 @@ def convert_test_global_settings(test_global_settings, logger):
             for setting in settings:
                 type = get_test_parameter_type(setting)
                 if not type:
-                    msg = "No type for {} in customized_settings".format(setting)
+                    msg = f"No type for {setting} in customized_settings"
                     raise NotImplementedError(msg)
 
                 converted["customized_settings"][setting["name"]] = {
