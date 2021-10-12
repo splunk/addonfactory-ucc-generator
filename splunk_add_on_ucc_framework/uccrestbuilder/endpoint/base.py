@@ -103,7 +103,7 @@ class RestEndpointBuilder:
         if kwargs.get("rest_handler_name") is not None:
             self._rest_handler_name = kwargs.get("rest_handler_name")
         else:
-            self._rest_handler_name = "{}_rh_{}".format(self._namespace, self._name)
+            self._rest_handler_name = f"{self._namespace}_rh_{self._name}"
 
     @property
     def name(self):

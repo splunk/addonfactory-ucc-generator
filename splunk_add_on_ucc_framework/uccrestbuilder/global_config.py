@@ -185,7 +185,7 @@ class GlobalConfigBuilderSchema:
                 namespace=self._meta["restRoot"],
                 j2_env=self.j2_env,
                 *args,
-                **kwargs
+                **kwargs,
             )
             self._endpoints[name] = endpoint
         return self._endpoints[name]
@@ -294,7 +294,7 @@ class GlobalConfigValidation:
             return ""
         args = list(
             map(
-                lambda k_v: "{}={}, ".format(k_v[0], k_v[1]),
+                lambda k_v: f"{k_v[0]}={k_v[1]}, ",
                 list(kwargs.items()),
             )
         )
@@ -429,7 +429,7 @@ sys.path = new_paths
     def import_declare_py_name(self):
         if self.import_declare_name:
             return self.import_declare_name
-        return "{}_import_declare".format(self.schema.namespace)
+        return f"{self.schema.namespace}_import_declare"
 
     def import_declare_py_content(self):
         import_declare_file = op.join(
