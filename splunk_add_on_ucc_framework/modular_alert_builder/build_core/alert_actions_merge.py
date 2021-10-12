@@ -136,4 +136,4 @@ def merge(src, dst, no_deny_list=True):
                 os.makedirs(op.join(dst, file))
             merge(f_path, op.join(dst, file))
         else:
-            raise Exception("Unsupported file type {}".format(f_path))
+            raise Exception(f"Unsupported file type {f_path}")

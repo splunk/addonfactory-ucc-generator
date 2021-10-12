@@ -29,7 +29,7 @@ class LoggerAdapter(logging.LoggerAdapter):
         self.prefix = prefix
 
     def process(self, msg, kwargs):
-        return "[{}] {}".format(self.prefix, msg), kwargs
+        return f"[{self.prefix}] {msg}", kwargs
 
 
 def validate(alert, logger):
@@ -92,7 +92,7 @@ def alert_build(schema_content, product_id, short_name, output_dir, sourcedir):
     # Initializing logger
     logging.basicConfig()
     logger = logging.getLogger("Alert Logger")
-    logger = LoggerAdapter('ta="{}" Creating Alerts'.format(short_name), logger)
+    logger = LoggerAdapter(f'ta="{short_name}" Creating Alerts', logger)
 
     # Validation
     for alert in schema_content["alerts"]:

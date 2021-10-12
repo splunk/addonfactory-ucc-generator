@@ -103,7 +103,7 @@ def recursive_overwrite(src, dest, ignore_list=None):
                     os.path.join(src, f), os.path.join(dest, f), ignore_list
                 )
             else:
-                logger.info("Excluding : {}".format(os.path.join(dest, f)))
+                logger.info(f"Excluding : {os.path.join(dest, f)}")
     else:
         if os.path.exists(dest):
             os.remove(dest)
@@ -316,7 +316,7 @@ def install_libs(path, ucc_lib_target):
             installer (str): Pip version(pip2/pip3).
         """
         if not os.path.exists(requirements):
-            logger.warning("Unable to find requirements file. {}".format(requirements))
+            logger.warning(f"Unable to find requirements file. {requirements}")
         else:
             if not os.path.exists(ucc_target):
                 os.makedirs(ucc_target)
@@ -702,7 +702,7 @@ def _generate(source, config, ta_version, outputdir=None):
         version_str = ta_version
 
     if not os.path.exists(source):
-        raise NotADirectoryError("{} not Found.".format(os.path.abspath(source)))
+        raise NotADirectoryError(f"{os.path.abspath(source)} not Found.")
 
     # Setting default value to Config argument
     if not config:

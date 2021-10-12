@@ -25,7 +25,7 @@ class DataInputEntityBuilder(RestEntityBuilder):
 
     @property
     def name_spec(self):
-        return "{}://<name>".format(self._input_type)
+        return f"{self._input_type}://<name>"
 
     @property
     def name_default(self):
