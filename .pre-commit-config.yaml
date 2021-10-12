@@ -20,6 +20,10 @@ repos:
     hooks:
     -   id: check-merge-conflict
     -   id: debug-statements
+    -   id: end-of-file-fixer
+        exclude: ^tests/data
+    -   id: trailing-whitespace
+        exclude: ^tests/data
 -   repo: https://github.com/asottile/pyupgrade
     rev: v2.29.0
     hooks:

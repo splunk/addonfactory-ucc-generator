@@ -23,7 +23,7 @@ jobs:
         id: ort-action
         with:
           WorkDir: .
-          UsePython3: "3.7"        
+          UsePython3: "3.7"
       - name: ort-action-artifacts-reports
         uses: actions/upload-artifact@v2
         with:

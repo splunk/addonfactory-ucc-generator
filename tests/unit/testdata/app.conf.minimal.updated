@@ -13,4 +13,3 @@ id = Splunk_TA_UCCExample
 
 [ui]
 label = Title for Splunk_TA_UCCExample
-

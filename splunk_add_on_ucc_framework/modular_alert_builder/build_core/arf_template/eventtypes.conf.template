@@ -4,4 +4,3 @@
 search = {{ 'sourcetype="' + alert.active_response.sourcetype + '"' }}
     {% endif %}
 {% endfor %}
-
