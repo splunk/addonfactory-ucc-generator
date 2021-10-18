@@ -33,3 +33,4 @@ output
 # splunk_add_on_ucc_framework/uccrestbuilder/builder.py
 .gitmodules
 .pytest_cache/**
+site/

@@ -1,0 +1,25 @@
+site_name: Splunk Add-on UCC Framework
+
+extra:
+  version:
+    provider: mike
+
+markdown_extensions:
+  - toc:
+      permalink: True
+  - smarty
+  - fenced_code
+  - sane_lists
+  - codehilite
+
+theme:
+  name: "material"
+  palette:
+    primary: "black"
+    accent: "orange"
+
+nav:
+  - Home: "index.md"
+  - "How to use": "how_to_use.md"
+  - Example: "example.md"
+  - Troubleshooting: "troubleshooting.md"
