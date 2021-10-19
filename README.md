@@ -10,7 +10,7 @@ UCC provides basic UI template for creating Addon's UI. It is helpful to control
 
 ## Usage
 
-For full usage instructions, please visit the Splunk Connect for Syslog [documentation](https://splunk.github.io/addonfactory-ucc-generator/).
+For full usage instructions, please visit the [documentation](https://splunk.github.io/addonfactory-ucc-generator/).
 
 ## pre-commit
 
