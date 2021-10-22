@@ -18,43 +18,25 @@
 name = "splunk_add_on_ucc_framework"
 version = "5.9.0"
 description = "Splunk Add-on SDK formerly UCC is a build and code generation framework"
-authors = ["rfaircloth-splunk <rfaircloth@splunk.com>"]
-include = [
-"splunk_add_on_ucc_framework/schema",
-"splunk_add_on_ucc_framework/THIRDPARTY.npm",
-"splunk_add_on_ucc_framework/package",
-"splunk_add_on_ucc_framework/package/locale",
-"splunk_add_on_ucc_framework/package/locale/zh_CN",
-"splunk_add_on_ucc_framework/package/locale/zh_CN/LC_MESSAGES",
-"splunk_add_on_ucc_framework/package/default",
-"splunk_add_on_ucc_framework/package/default/data",
-"splunk_add_on_ucc_framework/package/default/data/ui",
-"splunk_add_on_ucc_framework/package/default/data/ui/nav",
-"splunk_add_on_ucc_framework/package/default/data/ui/views",
-"splunk_add_on_ucc_framework/package/appserver",
-"splunk_add_on_ucc_framework/package/appserver/static",
-"splunk_add_on_ucc_framework/package/appserver/static/css",
-"splunk_add_on_ucc_framework/package/appserver/static/js",
-"splunk_add_on_ucc_framework/package/appserver/static/js/build",
-"splunk_add_on_ucc_framework/package/appserver/static/styles",
-"splunk_add_on_ucc_framework/package/appserver/templates",
-"splunk_add_on_ucc_framework/requirements_py2.txt",
-"splunk_add_on_ucc_framework/requirements_py3.txt",
-"splunk_add_on_ucc_framework/requirements.txt",
-"NOTICE"
-    ]
-
-readme = 'README.md'  # Markdown files are supported
-
-repository = "https://github.com/splunk/splunk-add-on-sdk-python/"
-homepage = "https://github.com/splunk/splunk-add-on-sdk-python/"
-
-keywords = ['splunk']
+license = "Apache-2.0"
+authors = ["Splunk <addonfactory@splunk.com>"]
+include = ["NOTICE"]
+readme = "README.md"
+repository = "https://github.com/splunk/addonfactory-ucc-generator"
+homepage = "https://github.com/splunk/addonfactory-ucc-generator"
+keywords = ["splunk"]
+classifiers = [
+    "Programming Language :: Python",
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Code Generators",
+    "License :: OSI Approved :: Apache Software License"
+]
 
 [tool.poetry.dependencies]
 python = "^3.7"
 jinja2 = ">=2,<4"
-wheel = "*"
 defusedxml = "^0.7.1"
 jsonschema = ">=3.2,<5.0"
 dunamai = "1.6.0"
