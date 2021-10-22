@@ -138,7 +138,7 @@ jobs:
       - name: Install actionlint
         run: |
           bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/v1.6.3/scripts/download-actionlint.bash)
-      - uses: pre-commit/action@v2.0.3
+      - uses: pre-commit/action@v2
   semgrep:
     runs-on: ubuntu-latest
     name: security-sast-semgrep
