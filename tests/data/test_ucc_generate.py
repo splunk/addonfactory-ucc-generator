@@ -182,6 +182,27 @@ class UccGenerateTest(unittest.TestCase):
                     msg=f"Expected file {expected_file_path} is different from {actual_file_path}",
                 )
 
+    def test_ucc_generate_uccignore(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            package_folder = path.join(
+                path.dirname(path.realpath(__file__)),
+                "package_with_dot_uccignore",
+                "package",
+            )
+            ucc.generate(source=package_folder, outputdir=temp_dir)
+
+            ignored_file_exists = path.exists(
+                path.join(
+                    temp_dir,
+                    "Splunk_TA_UCCExample",
+                    "default",
+                    "pytest-splunk-addon-data.conf",
+                )
+            )
+            self.assertFalse(
+                ignored_file_exists, "Ignored file still exists after ucc-gen"
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

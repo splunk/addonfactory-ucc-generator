@@ -572,24 +572,26 @@ def make_modular_alerts(ta_name, ta_namespace, schema_content, outputdir):
         )
 
 
-def get_ignore_list(ta_name, path):
+def get_ignore_list(ta_name: str, uccignore_path: str, output_path: str):
     """
     Return path of files/folders to be removed.
 
     Args:
-        ta_name (str): Name of TA.
-        path (str): Path of '.uccignore'.
+        ta_name: Name of TA.
+        uccignore_path: Path of '.uccignore'.
+        output_path: Path to output directory.
 
     Returns:
         list: List of paths to be removed from output directory.
     """
-    if not os.path.exists(path):
+    if not os.path.exists(uccignore_path):
+        logger.info("No .uccignore specified - nothing to ignore")
         return []
     else:
-        with open(path) as ignore_file:
+        with open(uccignore_path) as ignore_file:
             ignore_list = ignore_file.readlines()
         ignore_list = [
-            (os.path.join("output", ta_name, get_os_path(path))).strip()
+            (os.path.join(output_path, ta_name, get_os_path(path))).strip()
             for path in ignore_list
         ]
         return ignore_list
@@ -606,8 +608,10 @@ def remove_listed_files(ignore_list):
     for path in ignore_list:
         if os.path.exists(path):
             if os.path.isfile(path):
+                logger.info(f"Removing file {path} because of .uccignore")
                 os.remove(path)
             elif os.path.isdir(path):
+                logger.info(f"Removing directory {path} because of .uccignore")
                 shutil.rmtree(path, ignore_errors=True)
         else:
             logger.info(
@@ -800,12 +804,12 @@ def _generate(source, config, ta_version, outputdir=None):
         logger.info(f"Install add-on requirements into {ucc_lib_target} from {source}")
         install_libs(source, ucc_lib_target=ucc_lib_target)
 
-    ignore_list = get_ignore_list(
-        ta_name, os.path.abspath(os.path.join(source, PARENT_DIR, ".uccignore"))
-    )
-    remove_listed_files(ignore_list)
     logger.info("Copy package directory")
     recursive_overwrite(source, os.path.join(outputdir, ta_name))
+
+    uccignore_path = os.path.abspath(os.path.join(source, PARENT_DIR, ".uccignore"))
+    ignore_list = get_ignore_list(ta_name, uccignore_path, outputdir)
+    remove_listed_files(ignore_list)
 
     default_meta_conf_path = os.path.join(
         outputdir, ta_name, "metadata", "default.meta"
