@@ -38,7 +38,7 @@ classifiers = [
 python = "^3.7"
 jinja2 = ">=2,<4"
 defusedxml = "^0.7.1"
-jsonschema = ">=3.2,<5.0"
+jsonschema = "^4.1.2"
 dunamai = "1.6.0"
 
 [tool.poetry.dev-dependencies]
