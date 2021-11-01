@@ -44,7 +44,7 @@ dunamai = "1.6.0"
 [tool.poetry.dev-dependencies]
 pytest = "^6.2"
 pytest-cov = "^3.0.0"
-coverage = "^6.0"
+coverage = "^6.1"
 parameterized = "^0.8.1"
 pre-commit = "^2.15.0"
 
