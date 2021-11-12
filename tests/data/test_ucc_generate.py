@@ -69,12 +69,14 @@ class UccGenerateTest(unittest.TestCase):
             for f in files_to_be_equal:
                 expected_file_path = path.join(expected_folder, *f)
                 actual_file_path = path.join(actual_folder, *f)
+                identical, expected_content, content = assert_identical_files(
+                    expected_file_path,
+                    actual_file_path,
+                )
                 self.assertTrue(
-                    assert_identical_files(
-                        expected_file_path,
-                        actual_file_path,
-                    ),
-                    msg=f"Expected file {expected_file_path} is different from {actual_file_path}",
+                    identical,
+                    msg=f"Expected file {expected_file_path} is different from {actual_file_path}\n"
+                    f"Expected content:\n{expected_content}.\nContent:\n{content}",
                 )
             files_to_exist = [
                 ("static", "appIcon.png"),
@@ -126,12 +128,14 @@ class UccGenerateTest(unittest.TestCase):
             for f in files_to_be_equal:
                 expected_file_path = path.join(expected_folder, *f)
                 actual_file_path = path.join(actual_folder, *f)
+                identical, expected_content, content = assert_identical_files(
+                    expected_file_path,
+                    actual_file_path,
+                )
                 self.assertTrue(
-                    assert_identical_files(
-                        expected_file_path,
-                        actual_file_path,
-                    ),
-                    msg=f"Expected file {expected_file_path} is different from {actual_file_path}",
+                    identical,
+                    msg=f"Expected file {expected_file_path} is different from {actual_file_path}\n"
+                    f"Expected content:\n{expected_content}.\nContent:\n{content}",
                 )
             files_to_exist = [
                 ("static", "appIcon.png"),
@@ -174,12 +178,14 @@ class UccGenerateTest(unittest.TestCase):
             for f in files_to_be_equal:
                 expected_file_path = path.join(expected_folder, *f)
                 actual_file_path = path.join(actual_folder, *f)
+                identical, expected_content, content = assert_identical_files(
+                    expected_file_path,
+                    actual_file_path,
+                )
                 self.assertTrue(
-                    assert_identical_files(
-                        expected_file_path,
-                        actual_file_path,
-                    ),
-                    msg=f"Expected file {expected_file_path} is different from {actual_file_path}",
+                    identical,
+                    msg=f"Expected file {expected_file_path} is different from {actual_file_path}\n"
+                    f"Expected content:\n{expected_content}.\nContent:\n{content}",
                 )
 
 

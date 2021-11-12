@@ -14,14 +14,17 @@
 # limitations under the License.
 #
 import os
+from typing import Tuple
 
 
-def assert_identical_files(expected_file_path: str, file_path: str) -> bool:
+def assert_identical_files(
+    expected_file_path: str, file_path: str
+) -> Tuple[bool, str, str]:
     with open(expected_file_path) as expected_fd:
         expected_content = expected_fd.read()
     with open(file_path) as fd:
         content = fd.read()
-    return expected_content == content
+    return expected_content == content, expected_content, content
 
 
 def get_testdata_file_path(file_name: str) -> str:
