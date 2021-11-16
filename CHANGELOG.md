@@ -1,3 +1,10 @@
+# [5.10.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.9.0...v5.10.0) (2021-11-16)
+
+
+### Features
+
+* migrate to separate conf-parser library ([2ab9fe9](https://github.com/splunk/addonfactory-ucc-generator/commit/2ab9fe94157da0000a2360c008a9c78cb93782c2))
+
 # [5.9.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.8.2...v5.9.0) (2021-10-04)
 
 
@@ -482,6 +489,3 @@
 
 
 ## [4.0.4](https://github.com/splunk/addonfactory-ucc-generator/compare/v4.0.3...v4.0.4) (2020-09-17)
-
-
-
