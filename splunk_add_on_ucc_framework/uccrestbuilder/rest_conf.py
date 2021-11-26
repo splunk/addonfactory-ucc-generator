@@ -71,12 +71,6 @@ pattern = {name}/*
 methods = POST, GET, DELETE
 """
 
-    _internal_template = """
-[expose:{name}]
-pattern = {endpoint}
-methods = GET
-"""
-
     @classmethod
     def build(cls, endpoints):
         stanzas = []
@@ -93,8 +87,4 @@ methods = GET
                     name=endpoint.name,
                 )
             )
-        # add splunkd data endpoint
-        stanzas.append(
-            cls._internal_template.format(name="_splunkd_data", endpoint="data/*")
-        )
         return "".join(stanzas)
