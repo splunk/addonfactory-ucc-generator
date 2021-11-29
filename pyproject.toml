@@ -45,7 +45,7 @@ addonfactory-splunk-conf-parser-lib = "^0.3.3"
 [tool.poetry.dev-dependencies]
 pytest = "^6.2"
 pytest-cov = "^3.0.0"
-coverage = "^6.1"
+coverage = "^6.2"
 parameterized = "^0.8.1"
 
 [tool.poetry.scripts]
