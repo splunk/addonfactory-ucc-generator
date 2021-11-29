@@ -1,3 +1,10 @@
+## [5.10.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.10.0...v5.10.1) (2021-11-29)
+
+
+### Bug Fixes
+
+* remove generation of `expose:_splunkd_data` stanza in web.conf ([df6441e](https://github.com/splunk/addonfactory-ucc-generator/commit/df6441ebfe9de340c511cb57860e22dc1bc86f1e)), closes [#303](https://github.com/splunk/addonfactory-ucc-generator/issues/303)
+
 # [5.10.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.9.0...v5.10.0) (2021-11-16)
 
 
