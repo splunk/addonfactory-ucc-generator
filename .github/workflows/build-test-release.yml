@@ -137,7 +137,7 @@ jobs:
           python-version: "3.7"
       - name: Install actionlint
         run: |
-          bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/v1.6.3/scripts/download-actionlint.bash)
+          bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/v1.6.8/scripts/download-actionlint.bash)
       - uses: pre-commit/action@v2.0.3
   semgrep:
     runs-on: ubuntu-latest
