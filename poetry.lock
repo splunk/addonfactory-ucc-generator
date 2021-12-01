@@ -1,6 +1,6 @@
 [[package]]
 name = "addonfactory-splunk-conf-parser-lib"
-version = "0.3.3"
+version = "0.3.4"
 description = "Splunk .conf files parser"
 category = "main"
 optional = false
@@ -291,8 +291,8 @@ content-hash = "0690e66b644bdb00cfa9ac2d196ca6a5c669dd5ae12c936ca630f88e353ddf20
 
 [metadata.files]
 addonfactory-splunk-conf-parser-lib = [
-    {file = "addonfactory_splunk_conf_parser_lib-0.3.3-py3-none-any.whl", hash = "sha256:c9cbf039a3b3820e42e4c15ac5c376d9caf5e681eeed9155a3e273f0067bed82"},
-    {file = "addonfactory_splunk_conf_parser_lib-0.3.3.tar.gz", hash = "sha256:ad9dab900450f642cd1dd08c5dfc79d54e6f11cfad8a279fa8dcf2e7e8b33c39"},
+    {file = "addonfactory_splunk_conf_parser_lib-0.3.4-py3-none-any.whl", hash = "sha256:f2eb25bd03d4fd464b8b0304a87d5dc1e2935c42a6c262c6461b9b73b8e30217"},
+    {file = "addonfactory_splunk_conf_parser_lib-0.3.4.tar.gz", hash = "sha256:e550105c8c85a6f553688e5b1f4f55ae7ca758a1a428cbce1e0b9b73b9f4e35d"},
 ]
 atomicwrites = [
     {file = "atomicwrites-1.4.0-py2.py3-none-any.whl", hash = "sha256:6d1784dea7c0c8d4a5172b6c620f40b6e4cbfdf96d783691f2e1302a7b88e197"},
