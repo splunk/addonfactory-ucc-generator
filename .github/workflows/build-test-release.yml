@@ -11,43 +11,14 @@ on:
     branches: [main, develop]
 
 jobs:
-  compliance-dependencies:
-    name: Compliance Dependencies
-    runs-on: ubuntu-latest
+  compliance:
+    uses: splunk/addonfactory-github-workflows/.github/workflows/reusable-components-compliance.yaml@feature/open-source
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: ort-action
-        uses: splunk/addonfactory-ort-action@v1
-        id: ort-action
-        with:
-          WorkDir: .
-          UsePython3: "3.7"        
-      - name: ort-action-artifacts-reports
-        uses: actions/upload-artifact@v2
-        with:
-          name: analysis-reports
-          path: |
-            .ort/reports/*
-        if: always()
-      - name: ort-action-artifacts-analyzer
-        uses: actions/upload-artifact@v2
-        with:
-          name: analysis-analyzer
-          path: |
-            .ort/analyzer/*
-        if: always()
-  compliance-copyrights:
-    name: Compliance Copyright Headers
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Check License Header
-        uses: apache/skywalking-eyes@main # always prefer to use a revision instead of `main`.
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # needed only when you want License-Eye to comment on the pull request.
+  code-checks:
+    uses: splunk/addonfactory-github-workflows/.github/workflows/reusable-components-code-checks.yaml@feature/open-source
+    secrets:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
   test-unit:
     name: Test Unit Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
@@ -128,48 +99,13 @@ jobs:
         with:
           app_path: tests/slimmed
           included_tags: ${{ matrix.tags }}
-  pre-commit:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: "3.7"
-      - name: Install actionlint
-        run: |
-          bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/v1.6.8/scripts/download-actionlint.bash)
-      - uses: pre-commit/action@v2.0.3
-  semgrep:
-    runs-on: ubuntu-latest
-    name: security-sast-semgrep
-    steps:
-      - uses: actions/checkout@v2
-      - name: Semgrep
-        id: semgrep
-        uses: returntocorp/semgrep-action@v1
-        with:
-          config: p/r2c
-  snyk:
-    name: security-vuln-snyk
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/python-3.8@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: --sarif-file-output=snyk.sarif
-      - name: Upload result to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v1
-        with:
-          sarif_file: snyk.sarif
+
   build:
     name: Build Release
     needs:
       - test-unit
-      - compliance-copyrights
-      - compliance-dependencies
+      - compliance
+      - code-checks
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -276,6 +212,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.SEMREL_TOKEN }}
           PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
           PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+
   update-semver:
     name: Move Respository semver tags
     if: startsWith(github.ref, 'refs/tags/v')
