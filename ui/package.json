@@ -23,7 +23,7 @@
     "@splunk/react-ui": "^4.2.0",
     "@splunk/splunk-utils": "^2.0.0",
     "@splunk/themes": "^0.7.0",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "immutability-helper": "^3.1.1",
     "jsonschema": "^1.4.0",
     "license-webpack-plugin": "^2.3.18",
