@@ -9,5 +9,5 @@ jobs:
   call-workflow-agreements:
     uses: splunk/addonfactory-github-workflows/.github/workflows/reusable-agreements.yaml@v1
     secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       PERSONAL_ACCESS_TOKEN: ${{ secrets.PAT_CLATOOL }}
