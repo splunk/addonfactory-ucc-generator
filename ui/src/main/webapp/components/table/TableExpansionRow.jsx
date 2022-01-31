@@ -45,6 +45,7 @@ export function getExpansionRow(colSpan, row, moreInfo) {
                             serviceName: row.serviceName,
                             row,
                             fileName: customRow.src,
+                            type: customRow.type,
                         })}
                     </>
                 ) : (

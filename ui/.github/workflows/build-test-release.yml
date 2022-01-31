@@ -107,7 +107,7 @@ jobs:
     name: Build Release
     strategy:
       matrix:
-        node-version: [15.x]
+        node-version: [14.x]
     needs:
       #- lint
       #- test-unit
