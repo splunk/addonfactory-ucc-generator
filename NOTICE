@@ -2,15 +2,6 @@ This project contains or depends on third-party software components pursuant to 
 
 ----
 
-Copyright (C) Barry Warsaw
-Copyright (C) Donald Stufft and individual contributors
-Copyright (C) Grant Jenks
-Copyright (C) Jason R. Coombs
-Copyright (C) Kenneth Reitz
-Copyright (C) Splunk
-Copyright (C) Splunk, Inc.
-Copyright (C) rfaircloth-splunk
-
                                  Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
@@ -215,8 +206,6 @@ Copyright (C) rfaircloth-splunk
 
 ----
 
-Copyright (C) Donald Stufft and individual contributors
-
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
@@ -239,9 +228,6 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ----
-
-Copyright (C) Armin Ronacher
-Copyright (C) Kim Davies
 
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
@@ -270,16 +256,6 @@ THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ----
 
-Copyright (C) Ahmed TAHRI @Ousret
-Copyright (C) Andrey Petrov
-Copyright (C) Hynek Schlawack
-Copyright (C) Jason R. Coombs
-Copyright (C) Joe Gregorio
-Copyright (C) Julian Berman
-Copyright (C) Matthew T. Kennerly
-Copyright (C) Paul McGuire
-Copyright (C) Tobias Gustafsson
-
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -300,8 +276,6 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ----
-
-Copyright (C) Kenneth Reitz
 
 Mozilla Public License Version 2.0
 ==================================
@@ -678,9 +652,6 @@ Exhibit B - "Incompatible With Secondary Licenses" Notice
   defined by the Mozilla Public License, v. 2.0.
 
 ----
-
-Copyright (C) Christian Heimes
-Copyright (C) Guido van Rossum, Jukka Lehtosalo, Łukasz Langa, Michael Lee
 
 PYTHON SOFTWARE FOUNDATION LICENSE VERSION 2
 
