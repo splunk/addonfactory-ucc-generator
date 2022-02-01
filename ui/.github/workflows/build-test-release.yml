@@ -1,10 +1,5 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
-
-# Controls when the action will run.
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches:
       - "main"
@@ -17,7 +12,6 @@ on:
 jobs:
   compliance-dependencies:
     name: Compliance Dependencies
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
     steps:
@@ -65,18 +59,6 @@ jobs:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  # review_secrets:
-  #   name: security-detect-secrets
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
-  #       with:
-  #         submodules: false
-  #     - name: Trufflehog Actions Scan
-  #       uses: edplato/trufflehog-actions-scan@v0.9f-beta
-  #       with:
-  #         scanArguments: "--max_dept 50 -x .github/workflows/exclude-patterns.txt --since_commit 2dc9e48a5861a9da45599e6d775c8450639c197d"
 
   semgrep:
     runs-on: ubuntu-latest
@@ -87,31 +69,14 @@ jobs:
         id: semgrep
         uses: returntocorp/semgrep-action@v1
         with:
-          config: p/r2c
-  snyk:
-    name: security-vuln-snyk
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/python-3.8@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: --sarif-file-output=snyk.sarif
-      - name: Upload result to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v1
-        with:
-          sarif_file: snyk.sarif
+          publishToken: ${{ secrets.SEMGREP_PUBLISH_TOKEN }}
+
   build:
     name: Build Release
     strategy:
       matrix:
         node-version: [14.x]
     needs:
-      #- lint
-      #- test-unit
-      #- review_secrets
       - compliance-copyrights
       - compliance-dependencies
     runs-on: ubuntu-latest
