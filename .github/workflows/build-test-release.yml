@@ -256,6 +256,6 @@ jobs:
             @semantic-release/changelog
             @google/semantic-release-replace-plugin
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
           PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
           PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
