@@ -48,6 +48,7 @@ class AlertHtmlBase:
             trim_blocks=True,
             lstrip_blocks=True,
             keep_trailing_newline=True,
+            autoescape=True,
         )
 
     def get_alert_html_name(self):

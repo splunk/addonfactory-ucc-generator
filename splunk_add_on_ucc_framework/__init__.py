@@ -51,7 +51,10 @@ from .uccrestbuilder.global_config import (
 
 sourcedir = os.path.dirname(os.path.realpath(__file__))
 
-j2_env = Environment(loader=FileSystemLoader(os.path.join(sourcedir, "templates")))
+j2_env = Environment(
+    loader=FileSystemLoader(os.path.join(sourcedir, "templates")),
+    autoescape=True,
+)
 
 logger = logging.getLogger("UCC")
 logger.setLevel(logging.INFO)
