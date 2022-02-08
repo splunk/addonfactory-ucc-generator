@@ -45,9 +45,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Check License Header
-        uses: apache/skywalking-eyes@main # always prefer to use a revision instead of `main`.
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # needed only when you want License-Eye to comment on the pull request.
+        uses: apache/skywalking-eyes@v0.2.0
   test-unit:
     name: Test Unit Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
@@ -124,7 +122,7 @@ jobs:
         run: pip install splunk-packaging-toolkit
       - name: Slim tests/expected_output_global_config_inputs_configuration_alerts/Splunk_TA_UCCExample
         run: mkdir tests/slimmed; slim package tests/expected_output_global_config_inputs_configuration_alerts/Splunk_TA_UCCExample -o tests/slimmed
-      - uses: splunk/appinspect-cli-action@main
+      - uses: splunk/appinspect-cli-action@v1
         with:
           app_path: tests/slimmed
           included_tags: ${{ matrix.tags }}
@@ -148,7 +146,7 @@ jobs:
         id: semgrep
         uses: returntocorp/semgrep-action@v1
         with:
-          config: p/r2c
+          publishToken: ${{ secrets.SEMGREP_PUBLISH_TOKEN }}
   build:
     name: Build Release
     needs:
@@ -258,14 +256,6 @@ jobs:
             @semantic-release/changelog
             @google/semantic-release-replace-plugin
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
           PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
-  update-semver:
-    name: Move Respository semver tags
-    if: startsWith(github.ref, 'refs/tags/v')
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: haya14busa/action-update-semver@v1
