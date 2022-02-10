@@ -71,8 +71,6 @@ jobs:
         run: ./.github/workflows/check_ucc_ui_files.sh
       - name: Run Pytest with coverage
         run: |
-          # shellcheck disable=SC1090
-          source "$HOME/.poetry/env"
           poetry run pytest --cov=./splunk_add_on_ucc_framework --cov-report=xml --junitxml=test-results/junit.xml
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2.1.0
