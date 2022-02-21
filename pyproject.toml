@@ -39,7 +39,7 @@ python = "^3.7"
 jinja2 = ">=2,<4"
 defusedxml = "^0.7.1"
 jsonschema = "^4.1.2"
-dunamai = "1.7.0"
+dunamai = "1.9.0"
 addonfactory-splunk-conf-parser-lib = "^0.3.3"
 
 [tool.poetry.dev-dependencies]
