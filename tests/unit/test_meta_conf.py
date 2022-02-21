@@ -14,15 +14,13 @@
 # limitations under the License.
 #
 import io
-import unittest
 
 from splunk_add_on_ucc_framework import meta_conf
 
 
-class MetaConfTest(unittest.TestCase):
-    def test_update(self):
-        meta_config = meta_conf.MetaConf()
-        actual_output = io.StringIO()
-        meta_config.create_default(actual_output)
-        expected_output = meta_conf.DEFAULT
-        self.assertEqual(expected_output, actual_output.getvalue())
+def test_update():
+    meta_config = meta_conf.MetaConf()
+    actual_output = io.StringIO()
+    meta_config.create_default(actual_output)
+    expected_output = meta_conf.DEFAULT
+    assert expected_output == actual_output.getvalue()

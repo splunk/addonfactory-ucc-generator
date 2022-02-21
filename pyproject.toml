@@ -45,7 +45,6 @@ addonfactory-splunk-conf-parser-lib = "^0.3.3"
 [tool.poetry.dev-dependencies]
 pytest = "^7.0"
 pytest-cov = "^3.0.0"
-parameterized = "^0.8.1"
 
 [tool.poetry.scripts]
 ucc-gen="splunk_add_on_ucc_framework:main"

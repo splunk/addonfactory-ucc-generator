@@ -14,40 +14,39 @@
 # limitations under the License.
 #
 import io
-import unittest
 from unittest import mock
 
 from splunk_add_on_ucc_framework import app_conf
 from tests.unit.helpers import get_testdata_file, get_testdata_file_path
 
 
-class AppConfTest(unittest.TestCase):
-    @mock.patch("time.time", mock.MagicMock(return_value=12345))
-    def test_update(self):
-        app_config = app_conf.AppConf()
-        app_config.read(get_testdata_file_path("app.conf"))
-        app_config.update(
-            "1.0.0",
-            "Splunk_TA_UCCExample",
-            "Description for Splunk_TA_UCCExample",
-            "Title for Splunk_TA_UCCExample",
-        )
-        app_conf_output = io.StringIO()
-        app_config.write(app_conf_output)
-        app_conf_expected = get_testdata_file("app.conf.updated")
-        self.assertEqual(app_conf_expected, app_conf_output.getvalue())
+@mock.patch("time.time", mock.MagicMock(return_value=12345))
+def test_update():
+    app_config = app_conf.AppConf()
+    app_config.read(get_testdata_file_path("app.conf"))
+    app_config.update(
+        "1.0.0",
+        "Splunk_TA_UCCExample",
+        "Description for Splunk_TA_UCCExample",
+        "Title for Splunk_TA_UCCExample",
+    )
+    app_conf_output = io.StringIO()
+    app_config.write(app_conf_output)
+    app_conf_expected = get_testdata_file("app.conf.updated")
+    assert app_conf_expected == app_conf_output.getvalue()
 
-    @mock.patch("time.time", mock.MagicMock(return_value=12345))
-    def test_update_when_minimal_app_conf(self):
-        app_config = app_conf.AppConf()
-        app_config.read(get_testdata_file_path("app.conf.minimal"))
-        app_config.update(
-            "1.0.0",
-            "Splunk_TA_UCCExample",
-            "Description for Splunk_TA_UCCExample",
-            "Title for Splunk_TA_UCCExample",
-        )
-        app_conf_output = io.StringIO()
-        app_config.write(app_conf_output)
-        app_conf_expected = get_testdata_file("app.conf.minimal.updated")
-        self.assertEqual(app_conf_expected, app_conf_output.getvalue())
+
+@mock.patch("time.time", mock.MagicMock(return_value=12345))
+def test_update_when_minimal_app_conf():
+    app_config = app_conf.AppConf()
+    app_config.read(get_testdata_file_path("app.conf.minimal"))
+    app_config.update(
+        "1.0.0",
+        "Splunk_TA_UCCExample",
+        "Description for Splunk_TA_UCCExample",
+        "Title for Splunk_TA_UCCExample",
+    )
+    app_conf_output = io.StringIO()
+    app_config.write(app_conf_output)
+    app_conf_expected = get_testdata_file("app.conf.minimal.updated")
+    assert app_conf_expected == app_conf_output.getvalue()

@@ -13,26 +13,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import unittest
-
-from parameterized import parameterized
+import pytest
 
 from splunk_add_on_ucc_framework.uccrestbuilder.endpoint import base
 
 
-class IndentTest(unittest.TestCase):
-    @parameterized.expand(
-        [
-            (None, "    None"),
-            (
-                "\nmax_len=4096,\nmin_len=0,\n",
-                "\n    max_len=4096,\n    min_len=0,\n",
-            ),
-            (
-                "validator.String(\n    max_len=4096,\n    min_len=0,\n)",
-                "    validator.String(\n        max_len=4096,\n        min_len=0,\n    )",
-            ),
-        ]
-    )
-    def test_indent(self, lines, expected):
-        self.assertEqual(base.indent(lines), expected)
+@pytest.mark.parametrize(
+    "lines,expected",
+    [
+        (None, "    None"),
+        (
+            "\nmax_len=4096,\nmin_len=0,\n",
+            "\n    max_len=4096,\n    min_len=0,\n",
+        ),
+        (
+            "validator.String(\n    max_len=4096,\n    min_len=0,\n)",
+            "    validator.String(\n        max_len=4096,\n        min_len=0,\n    )",
+        ),
+    ],
+)
+def test_indent(lines, expected):
+    assert base.indent(lines) == expected
