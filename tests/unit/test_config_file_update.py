@@ -14,7 +14,6 @@
 # limitations under the License.
 #
 import json
-import unittest
 
 import tests.unit.helpers as helpers
 from splunk_add_on_ucc_framework import (
@@ -23,42 +22,38 @@ from splunk_add_on_ucc_framework import (
 )
 
 
-class ConfigFileUpdateTest(unittest.TestCase):
-    def test_handle_biased_terms_update(self):
-        config = helpers.get_testdata_file("config_with_biased_terms.json")
-        config = json.loads(config)
-        updated_config = handle_biased_terms_update(config)
-        expected_schema_version = "0.0.1"
-        self.assertEqual(
-            expected_schema_version, updated_config["meta"]["schemaVersion"]
-        )
-        input_entity_1_options_keys = updated_config["pages"]["inputs"]["services"][0][
-            "entity"
-        ][0]["options"].keys()
-        self.assertIn("denyList", input_entity_1_options_keys)
-        self.assertNotIn("blackList", input_entity_1_options_keys)
-        input_entity_2_options_keys = updated_config["pages"]["inputs"]["services"][0][
-            "entity"
-        ][1]["options"].keys()
-        self.assertIn("allowList", input_entity_2_options_keys)
-        self.assertNotIn("whiteList", input_entity_2_options_keys)
-        configuration_entity_1_options_keys = updated_config["pages"]["configuration"][
-            "tabs"
-        ][0]["entity"][0]["options"].keys()
-        self.assertIn("denyList", configuration_entity_1_options_keys)
-        self.assertNotIn("blackList", configuration_entity_1_options_keys)
-        configuration_entity_2_options_keys = updated_config["pages"]["configuration"][
-            "tabs"
-        ][0]["entity"][1]["options"].keys()
-        self.assertIn("allowList", configuration_entity_2_options_keys)
-        self.assertNotIn("whiteList", configuration_entity_2_options_keys)
+def test_handle_biased_terms_update():
+    config = helpers.get_testdata_file("config_with_biased_terms.json")
+    config = json.loads(config)
+    updated_config = handle_biased_terms_update(config)
+    expected_schema_version = "0.0.1"
+    assert expected_schema_version == updated_config["meta"]["schemaVersion"]
+    input_entity_1_options_keys = updated_config["pages"]["inputs"]["services"][0][
+        "entity"
+    ][0]["options"].keys()
+    assert "denyList" in input_entity_1_options_keys
+    assert "blackList" not in input_entity_1_options_keys
+    input_entity_2_options_keys = updated_config["pages"]["inputs"]["services"][0][
+        "entity"
+    ][1]["options"].keys()
+    assert "allowList" in input_entity_2_options_keys
+    assert "whileList" not in input_entity_2_options_keys
+    configuration_entity_1_options_keys = updated_config["pages"]["configuration"][
+        "tabs"
+    ][0]["entity"][0]["options"].keys()
+    assert "denyList" in configuration_entity_1_options_keys
+    assert "blackList" not in configuration_entity_1_options_keys
+    configuration_entity_2_options_keys = updated_config["pages"]["configuration"][
+        "tabs"
+    ][0]["entity"][1]["options"].keys()
+    assert "allowList" in configuration_entity_2_options_keys
+    assert "whileList" not in configuration_entity_2_options_keys
 
-    def test_handle_dropping_api_version_update(self):
-        config = helpers.get_testdata_file("config_with_biased_terms.json")
-        config = json.loads(config)
-        updated_config = handle_dropping_api_version_update(config)
-        expected_schema_version = "0.0.3"
-        self.assertEqual(
-            expected_schema_version, updated_config["meta"]["schemaVersion"]
-        )
-        self.assertNotIn("apiVersion", updated_config["meta"])
+
+def test_handle_dropping_api_version_update():
+    config = helpers.get_testdata_file("config_with_biased_terms.json")
+    config = json.loads(config)
+    updated_config = handle_dropping_api_version_update(config)
+    expected_schema_version = "0.0.3"
+    assert expected_schema_version == updated_config["meta"]["schemaVersion"]
+    assert "apiVersion" not in updated_config["meta"]
