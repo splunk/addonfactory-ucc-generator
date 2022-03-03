@@ -231,7 +231,7 @@ jobs:
       - name: Update Notices
         run: cp -f /tmp/analysis-reports/NOTICE_summary NOTICE
       - name: Semantic Release
-        uses: cycjimmy/semantic-release-action@v2.7.0
+        uses: cycjimmy/semantic-release-action@v3.0.0
         with:
           semantic_version: 17
           extra_plugins: |
