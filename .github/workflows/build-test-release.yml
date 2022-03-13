@@ -149,7 +149,7 @@ jobs:
           # Very important: semantic-release won't trigger a tagged
           # build if this is not set false
           persist-credentials: false
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: '14'
       - name: Setup python
