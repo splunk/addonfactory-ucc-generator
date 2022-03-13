@@ -17,7 +17,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: ort-action
         uses: splunk/addonfactory-ort-action@v1
         id: ort-action
@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Check License Header
         uses: apache/skywalking-eyes@v0.2.0
   test-unit:
@@ -54,7 +54,7 @@ jobs:
         python-version:
           - "3.7"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup python
         uses: actions/setup-python@v2
         with:
@@ -102,7 +102,7 @@ jobs:
           - "self-service"
           - "splunk_appinspect"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup python
         uses: actions/setup-python@v2
         with:
@@ -118,7 +118,7 @@ jobs:
   pre-commit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/setup-python@v2
         with:
           python-version: "3.7"
@@ -130,7 +130,7 @@ jobs:
     runs-on: ubuntu-latest
     name: security-sast-semgrep
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Semgrep
         id: semgrep
         uses: returntocorp/semgrep-action@v1
@@ -144,7 +144,7 @@ jobs:
       - compliance-dependencies
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           # Very important: semantic-release won't trigger a tagged
           # build if this is not set false
