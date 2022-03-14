@@ -43,7 +43,7 @@ dunamai = "^1.9.0"
 jsonschema = "^4.4.0"
 
 [tool.poetry.dev-dependencies]
-pytest = "^7.0"
+pytest = "^7.1"
 pytest-cov = "^3.0.0"
 
 [tool.poetry.scripts]
