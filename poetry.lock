@@ -60,7 +60,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
 name = "dunamai"
-version = "1.10.0"
+version = "1.11.0"
 description = "Dynamic version generation"
 category = "main"
 optional = false
@@ -336,8 +336,8 @@ defusedxml = [
     {file = "defusedxml-0.7.1.tar.gz", hash = "sha256:1bb3032db185915b62d7c6209c5a8792be6a32ab2fedacc84e01b52c51aa3e69"},
 ]
 dunamai = [
-    {file = "dunamai-1.10.0-py3-none-any.whl", hash = "sha256:74d09e3e903fd7a1218120ede557bcf30fd274fd80a3f1ad71921bd943944500"},
-    {file = "dunamai-1.10.0.tar.gz", hash = "sha256:8f880666168bf7be6d795e39a6c80451caf7ec430f0f0c2d920e5d9bbb439b15"},
+    {file = "dunamai-1.11.0-py3-none-any.whl", hash = "sha256:356308618710b4e32d5b614571c850e7b19f57217ecf311f600f4638ccda5e2c"},
+    {file = "dunamai-1.11.0.tar.gz", hash = "sha256:338f9be40c9aa974c4bdc4fb6d49a630692315593c45b23b5941c5298c075567"},
 ]
 importlib-metadata = [
     {file = "importlib_metadata-4.8.2-py3-none-any.whl", hash = "sha256:53ccfd5c134223e497627b9815d5030edf77d2ed573922f7a0b8f8bb81a1c100"},
