@@ -171,7 +171,7 @@ jobs:
       - name: Semantic Release
         uses: cycjimmy/semantic-release-action@v3.0.0
         with:
-          semantic_version: 17
+          semantic_version: 19.0.2
           extra_plugins: |
             @semantic-release/exec
             @semantic-release/git
