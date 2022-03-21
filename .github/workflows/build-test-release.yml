@@ -149,9 +149,6 @@ jobs:
           # Very important: semantic-release won't trigger a tagged
           # build if this is not set false
           persist-credentials: false
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '14'
       - name: Setup python
         uses: actions/setup-python@v3
         with:
@@ -172,7 +169,7 @@ jobs:
       - name: Update Notices
         run: cp -f /tmp/analysis-reports/NOTICE_summary NOTICE
       - name: Semantic Release
-        uses: cycjimmy/semantic-release-action@v2.7.0
+        uses: cycjimmy/semantic-release-action@v3.0.0
         with:
           semantic_version: 17
           extra_plugins: |
