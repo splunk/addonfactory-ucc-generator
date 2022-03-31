@@ -129,6 +129,7 @@ jobs:
   semgrep:
     runs-on: ubuntu-latest
     name: security-sast-semgrep
+    if: github.actor != 'dependabot[bot]'
     steps:
       - uses: actions/checkout@v3
       - name: Semgrep
