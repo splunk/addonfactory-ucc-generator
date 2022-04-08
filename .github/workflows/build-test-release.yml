@@ -160,7 +160,7 @@ jobs:
           poetry build
       - name: Ensure all UCC UI files are in the final package
         run: ./.github/workflows/check_ucc_ui_files.sh
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: analysis-reports
           path: /tmp/analysis-reports
