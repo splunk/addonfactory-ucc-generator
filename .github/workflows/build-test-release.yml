@@ -25,14 +25,14 @@ jobs:
           WorkDir: .
           UsePython3: "3.7"        
       - name: ort-action-artifacts-reports
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: analysis-reports
           path: |
             .ort/reports/*
         if: always()
       - name: ort-action-artifacts-analyzer
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: analysis-analyzer
           path: |
@@ -82,7 +82,7 @@ jobs:
           fail_ci_if_error: true
           path_to_write_report: ./coverage/codecov_report.txt
           verbose: true
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         if: success() || failure()
         with:
           name: test-results-unit-python_${{ matrix.python-version }}
