@@ -126,7 +126,7 @@ i18n = ["Babel (>=2.7)"]
 
 [[package]]
 name = "jsonschema"
-version = "4.4.0"
+version = "4.5.0"
 description = "An implementation of JSON Schema validation for Python"
 category = "main"
 optional = false
@@ -356,8 +356,8 @@ jinja2 = [
     {file = "Jinja2-3.1.2.tar.gz", hash = "sha256:31351a702a408a9e7595a8fc6150fc3f43bb6bf7e319770cbc0db9df9437e852"},
 ]
 jsonschema = [
-    {file = "jsonschema-4.4.0-py3-none-any.whl", hash = "sha256:77281a1f71684953ee8b3d488371b162419767973789272434bbc3f29d9c8823"},
-    {file = "jsonschema-4.4.0.tar.gz", hash = "sha256:636694eb41b3535ed608fe04129f26542b59ed99808b4f688aa32dcf55317a83"},
+    {file = "jsonschema-4.5.0-py3-none-any.whl", hash = "sha256:71440faf604ccc4958f0a54fad16fa24e4977256f9666a21e8ad59a5447bd0b0"},
+    {file = "jsonschema-4.5.0.tar.gz", hash = "sha256:19462141d4efb2d8046cd4a7076126c5bdb1dd04f6fb9129b46b4b8f7b0de355"},
 ]
 markupsafe = [
     {file = "MarkupSafe-2.0.1-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:d8446c54dc28c01e5a2dbac5a25f071f6653e6e40f3a8818e8b45d790fe6ef53"},
