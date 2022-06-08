@@ -17,11 +17,21 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from builtins import object
 import json
 import os
-from jsl import AnyOfField, ArrayField, BooleanField, DictField, Document
-from jsl import DocumentField, NumberField, OneOfField, StringField, UriField
+
+from jsl import (
+    AnyOfField,
+    ArrayField,
+    BooleanField,
+    DictField,
+    Document,
+    DocumentField,
+    NumberField,
+    OneOfField,
+    StringField,
+    UriField,
+)
 
 ###
 # TODO Need to fix this: Make sure schemagenerator generates proper element for hook
@@ -29,19 +39,16 @@ from jsl import DocumentField, NumberField, OneOfField, StringField, UriField
 # replace: "hook": {"$ref": "#/definitions/Hooks"} with "hook": {"type": "object"}
 ###
 
+
 # Base Document Class with restricting properties population
 class DocumentWithoutAddProp(Document):
-    class Options(object):
+    class Options:
         additional_properties = False
 
 
 # Document Element with Label and Value element. Possible values are text, numeric and boolean types
 class ValueLabelPair(DocumentWithoutAddProp):
-    value = OneOfField([
-        NumberField(),
-        StringField(max_length=250),
-        BooleanField()
-    ])
+    value = OneOfField([NumberField(), StringField(max_length=250), BooleanField()])
     label = StringField(required=True, max_length=100)
 
 
@@ -53,7 +60,6 @@ class OAuthFields(DocumentWithoutAddProp):
     encrypted = BooleanField()
 
 
-
 # Base Validator Wrapper component which is extension of DocumentWithoutAddProp Wrapper Component
 class ValidatorBase(DocumentWithoutAddProp):
     errorMsg = StringField(max_length=400)
@@ -62,11 +68,11 @@ class ValidatorBase(DocumentWithoutAddProp):
 # MetaData component for detailing brief information of document/component
 class Meta(DocumentWithoutAddProp):
     displayName = StringField(required=True, max_length=200)
-    name = StringField(required=True, pattern="^[^<>\:\"\/\\\|\?\*]+$")
-    restRoot = StringField(required=True, pattern="^\w+$")
-    apiVersion = StringField(required=False, pattern="^(?:\d{1,3}\.){2}\d{1,3}$")
+    name = StringField(required=True, pattern='^[^<>\\:"\\/\\\\|\\?\\*]+$')
+    restRoot = StringField(required=True, pattern=r"^\w+$")
+    apiVersion = StringField(required=False, pattern=r"^(?:\d{1,3}\.){2}\d{1,3}$")
     version = StringField(required=True)
-    schemaVersion = StringField( pattern="^(?:\d{1,3}\.){2}\d{1,3}$")
+    schemaVersion = StringField(pattern=r"^(?:\d{1,3}\.){2}\d{1,3}$")
 
 
 # Text validator for the String Field Value input
@@ -107,56 +113,73 @@ class DateValidator(ValidatorBase):
 class UrlValidator(ValidatorBase):
     type = StringField(required=True, enum=["url"])
 
+
 # Entity for Alert Actions
 class AlertEntity(DocumentWithoutAddProp):
-    field = StringField(required=True, pattern="^\w+$")
+    field = StringField(required=True, pattern=r"^\w+$")
     label = StringField(required=True, max_length=30)
-    type = StringField(required=True,
-                       enum=["text", "singleSelect", "checkbox", "radio", "singleSelectSplunkSearch"])
+    type = StringField(
+        required=True,
+        enum=["text", "singleSelect", "checkbox", "radio", "singleSelectSplunkSearch"],
+    )
     help = StringField(max_length=200)
-    defaultValue = OneOfField([
-        NumberField(),
-        StringField(max_length=250),
-        BooleanField()
-    ])
+    defaultValue = OneOfField(
+        [NumberField(), StringField(max_length=250), BooleanField()]
+    )
     required = BooleanField()
     search = StringField(max_length=200)
     valueField = StringField(max_length=200)
     labelField = StringField(max_length=200)
     options = DictField(
-        properties={
-            "items": ArrayField(DocumentField(ValueLabelPair, as_ref=True))
-        }
+        properties={"items": ArrayField(DocumentField(ValueLabelPair, as_ref=True))}
     )
+
 
 ##
 #  Entity Form Field Component Wrapper having field name, label, field types, help/tooltips support, default value
 #  Validators and UI Controls such as visibility etc
 ##
 class Entity(DocumentWithoutAddProp):
-    field = StringField(required=True, pattern="^\w+$")
+    field = StringField(required=True, pattern=r"^\w+$")
     label = StringField(required=True, max_length=30)
-    type = StringField(required=True,
-                       enum=["custom", "text", "singleSelect", "checkbox", "multipleSelect", "radio", "placeholder", "oauth", "helpLink"])
+    type = StringField(
+        required=True,
+        enum=[
+            "custom",
+            "text",
+            "singleSelect",
+            "checkbox",
+            "multipleSelect",
+            "radio",
+            "placeholder",
+            "oauth",
+            "helpLink",
+        ],
+    )
     help = StringField(max_length=200)
     tooltip = StringField(max_length=250)
-    defaultValue = OneOfField([
-        NumberField(),
-        StringField(max_length=250),
-        BooleanField()
-    ])
+    defaultValue = OneOfField(
+        [NumberField(), StringField(max_length=250), BooleanField()]
+    )
     options = DictField(
         properties={
             "disableSearch": BooleanField(),
-            "autoCompleteFields": OneOfField([
-                ArrayField(DictField(
-                    properties={
-                        "label": StringField(required=True, max_length=150),
-                        "children": ArrayField(DocumentField(ValueLabelPair, as_ref=True), required=True)
-                    }
-                )),
-                ArrayField(DocumentField(ValueLabelPair, as_ref=True))
-            ]),
+            "autoCompleteFields": OneOfField(
+                [
+                    ArrayField(
+                        DictField(
+                            properties={
+                                "label": StringField(required=True, max_length=150),
+                                "children": ArrayField(
+                                    DocumentField(ValueLabelPair, as_ref=True),
+                                    required=True,
+                                ),
+                            }
+                        )
+                    ),
+                    ArrayField(DocumentField(ValueLabelPair, as_ref=True)),
+                ]
+            ),
             "endpointUrl": StringField(max_length=350),
             "denyList": StringField(max_length=350),
             "allowList": StringField(max_length=350),
@@ -180,21 +203,25 @@ class Entity(DocumentWithoutAddProp):
             "auth_code_endpoint": StringField(max_length=350),
             "access_token_endpoint": StringField(max_length=350),
             "text": StringField(max_length=50),
-            "link": StringField()
+            "link": StringField(),
         }
     )
     required = BooleanField()
     encrypted = BooleanField()
     # List of inbuilt field validator
-    validators = ArrayField(AnyOfField([
-        DocumentField(StringValidator, as_ref=True),
-        DocumentField(NumberValidator, as_ref=True),
-        DocumentField(RegexValidator, as_ref=True),
-        DocumentField(EmailValidator, as_ref=True),
-        DocumentField(Ipv4Validator, as_ref=True),
-        DocumentField(UrlValidator, as_ref=True),
-        DocumentField(DateValidator, as_ref=True)
-    ]))
+    validators = ArrayField(
+        AnyOfField(
+            [
+                DocumentField(StringValidator, as_ref=True),
+                DocumentField(NumberValidator, as_ref=True),
+                DocumentField(RegexValidator, as_ref=True),
+                DocumentField(EmailValidator, as_ref=True),
+                DocumentField(Ipv4Validator, as_ref=True),
+                DocumentField(UrlValidator, as_ref=True),
+                DocumentField(DateValidator, as_ref=True),
+            ]
+        )
+    )
 
 
 ##
@@ -206,7 +233,7 @@ class InputsEntity(Entity):
 
     field = StringField(
         required=True,
-        pattern="(?!^(?:persistentQueueSize|queueSize|start_by_shell|output_mode|output_field|owner|app|sharing)$)(?:^\w+$)"
+        pattern=r"(?!^(?:persistentQueueSize|queueSize|start_by_shell|output_mode|output_field|owner|app|sharing)$)(?:^\w+$)",
     )
 
 
@@ -221,7 +248,7 @@ class InputsEntity(Entity):
 class ConfigurationEntity(Entity):
     field = StringField(
         required=True,
-        pattern="(?!^(?:output_mode|output_field|owner|app|sharing)$)(?:^\w+$)"
+        pattern=r"(?!^(?:output_mode|output_field|owner|app|sharing)$)(?:^\w+$)",
     )
 
 
@@ -229,22 +256,27 @@ class ConfigurationEntity(Entity):
 # Table component schema with headers, additional info and customization row extension
 ##
 class Table(DocumentWithoutAddProp):
-    moreInfo = ArrayField(DictField(
-        properties={
-            "field": StringField(required=True, pattern="^\w+$"),
-            "label": StringField(required=True, max_length=30),
-            "mapping": DictField(required=False)
-        }
-    ))
+    moreInfo = ArrayField(
+        DictField(
+            properties={
+                "field": StringField(required=True, pattern=r"^\w+$"),
+                "label": StringField(required=True, max_length=30),
+                "mapping": DictField(required=False),
+            }
+        )
+    )
     # Header field names needs to be display on UI
-    header = ArrayField(DictField(
-        properties={
-            "field": StringField(required=True, pattern="^\w+$"),
-            "label": StringField(required=True, max_length=30),
-            "mapping": DictField(required=False),
-            "customCell": DictField(required=False)
-        }
-    ), required=True)
+    header = ArrayField(
+        DictField(
+            properties={
+                "field": StringField(required=True, pattern=r"^\w+$"),
+                "label": StringField(required=True, max_length=30),
+                "mapping": DictField(required=False),
+                "customCell": DictField(required=False),
+            }
+        ),
+        required=True,
+    )
     # custom Row implementation if required for special cases
     customRow = DictField(required=False)
 
@@ -253,7 +285,9 @@ class Table(DocumentWithoutAddProp):
 # Input table having all functions of table and edit|delete|clone|enable/disable actions for each row
 ##
 class InputsTable(Table):
-    actions = ArrayField(StringField(enum=["edit", "delete", "clone", "enable"]), required=True)
+    actions = ArrayField(
+        StringField(enum=["edit", "delete", "clone", "enable"]), required=True
+    )
 
 
 ##
@@ -277,7 +311,7 @@ class Hooks(DocumentWithoutAddProp):
 ##
 class TabContent(DocumentWithoutAddProp):
     entity = ArrayField(DocumentField(ConfigurationEntity, as_ref=True), required=True)
-    name = StringField(required=True, pattern="^[\/\w]+$", max_length=250)
+    name = StringField(required=True, pattern=r"^[\/\w]+$", max_length=250)
     title = StringField(required=True, max_length=50)
     options = DocumentField(Hooks, as_ref=True)
     table = DocumentField(ConfigurationTable, as_ref=True)
@@ -294,7 +328,9 @@ class TabContent(DocumentWithoutAddProp):
 class ConfigurationPage(DocumentWithoutAddProp):
     title = StringField(required=True, max_length=60)
     description = StringField(max_length=200)
-    tabs = ArrayField(DocumentField(TabContent, as_ref=True), required=True, min_items=1)
+    tabs = ArrayField(
+        DocumentField(TabContent, as_ref=True), required=True, min_items=1
+    )
 
 
 ##
@@ -304,30 +340,42 @@ class InputsPage(DocumentWithoutAddProp):
     title = StringField(required=True, max_length=60)
     description = StringField(max_length=200)
     table = DocumentField(InputsTable, as_ref=True, required=True)
-    services = ArrayField(DictField(
-        properties={
-            "name": StringField(required=True, pattern="^[0-9a-zA-Z][0-9a-zA-Z_-]*$", max_length=50),
-            "title": StringField(required=True, max_length=100),
-            "entity": ArrayField(DocumentField(InputsEntity, as_ref=True), required=True),
-            "options": DocumentField(Hooks, as_ref=True),
-            "groups": ArrayField(DictField(
-                properties={
-                    "options": DictField(
+    services = ArrayField(
+        DictField(
+            properties={
+                "name": StringField(
+                    required=True, pattern="^[0-9a-zA-Z][0-9a-zA-Z_-]*$", max_length=50
+                ),
+                "title": StringField(required=True, max_length=100),
+                "entity": ArrayField(
+                    DocumentField(InputsEntity, as_ref=True), required=True
+                ),
+                "options": DocumentField(Hooks, as_ref=True),
+                "groups": ArrayField(
+                    DictField(
                         properties={
-                            "isExpandable": BooleanField(),
-                            "expand": BooleanField()
+                            "options": DictField(
+                                properties={
+                                    "isExpandable": BooleanField(),
+                                    "expand": BooleanField(),
+                                }
+                            ),
+                            "label": StringField(required=True, max_length=100),
+                            "field": ArrayField(
+                                StringField(required=True, pattern=r"^\w+$")
+                            ),
                         }
                     ),
-                    "label": StringField(required=True, max_length=100),
-                    "field": ArrayField(StringField(required=True, pattern="^\w+$"))
-                }
-            ), required=False),
-            "style": StringField(required=False, enum=["page", "dialog"]),
-            "hook": DictField(required=False),
-            "conf": StringField(required=False, max_length=100),
-            "restHandlerName": StringField(required=False, max_length=100)
-        }
-    ), required=True)
+                    required=False,
+                ),
+                "style": StringField(required=False, enum=["page", "dialog"]),
+                "hook": DictField(required=False),
+                "conf": StringField(required=False, max_length=100),
+                "restHandlerName": StringField(required=False, max_length=100),
+            }
+        ),
+        required=True,
+    )
     menu = DictField(required=False)
 
 
@@ -343,7 +391,11 @@ class Pages(DocumentWithoutAddProp):
 # Component holding Technology dict in active_response
 ##
 class Technology(DocumentWithoutAddProp):
-    version = ArrayField(StringField(required=True, pattern="^\d+(?:\.\d+)*$"),required=True, min_items=1)
+    version = ArrayField(
+        StringField(required=True, pattern=r"^\d+(?:\.\d+)*$"),
+        required=True,
+        min_items=1,
+    )
     product = StringField(required=True, max_length=100)
     vendor = StringField(required=True, max_length=100)
 
@@ -355,16 +407,28 @@ class Alerts(DocumentWithoutAddProp):
     name = StringField(required=True, pattern="^[a-zA-Z0-9_]+$", max_length=100)
     label = StringField(required=True, max_length=100)
     description = StringField(required=True)
-    activeResponse = DictField(properties={
-                            "task": ArrayField(StringField(required=True), required=True, min_items=1),
-                            "supportsAdhoc": BooleanField(required=True),
-                            "subject": ArrayField(StringField(required=True), required=True, min_items=1),
-                            "category": ArrayField(StringField(required=True), required=True, min_items=1),
-                            "technology": ArrayField(DocumentField(Technology,as_ref=True),required=True, min_items=1),
-                            "drilldownUri":StringField(required=False),
-                            "sourcetype":StringField(required=False, pattern="^[a-zA-Z0-9:-_]+$", max_length=50)
-                        }, required=False)
+    activeResponse = DictField(
+        properties={
+            "task": ArrayField(StringField(required=True), required=True, min_items=1),
+            "supportsAdhoc": BooleanField(required=True),
+            "subject": ArrayField(
+                StringField(required=True), required=True, min_items=1
+            ),
+            "category": ArrayField(
+                StringField(required=True), required=True, min_items=1
+            ),
+            "technology": ArrayField(
+                DocumentField(Technology, as_ref=True), required=True, min_items=1
+            ),
+            "drilldownUri": StringField(required=False),
+            "sourcetype": StringField(
+                required=False, pattern="^[a-zA-Z0-9:-_]+$", max_length=50
+            ),
+        },
+        required=False,
+    )
     entity = ArrayField(DocumentField(AlertEntity, as_ref=True))
+
 
 ##
 # Root Component holding all pages and meta information
@@ -374,6 +438,7 @@ class UCCConfig(DocumentWithoutAddProp):
     pages = DocumentField(Pages, as_ref=True, required=True)
     alerts = ArrayField(DocumentField(Alerts, as_ref=True), required=False, min_items=1)
 
+
 ##
 # SchemaGenerator responsible to generate schema json file holding information of Flow of UI based on UCCConfig Object
 ##
@@ -382,5 +447,5 @@ if __name__ == "__main__":
     formated = formated.replace("__main__.", "")
 
     cur_dir = os.path.dirname(__file__)
-    with open(os.path.join(cur_dir, 'schema.json'), 'w+') as schema_handler:
+    with open(os.path.join(cur_dir, "schema.json"), "w+") as schema_handler:
         schema_handler.write(formated)

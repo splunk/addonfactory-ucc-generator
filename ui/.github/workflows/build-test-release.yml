@@ -10,30 +10,29 @@ on:
     branches: [main, develop]
 
 jobs:
-  compliance-dependencies:
-    name: Compliance Dependencies
+  fossa-scan:
+    continue-on-error: true
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: ort-action
-        uses: splunk/addonfactory-ort-action@v1.4
-        id: ort-action
-      - name: ort-action-artifacts-reports
+      - uses: actions/checkout@v3
+      - name: run fossa anlyze and create report
+        run: |
+          curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install-latest.sh | bash
+          fossa analyze --debug
+          fossa report attribution --format text > /tmp/THIRDPARTY
+        env:
+          FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
+      - name: upload THIRDPARTY file
         uses: actions/upload-artifact@v2
         with:
-          name: analysis-reports
-          path: |
-            .ort/reports/*
-        if: always()
-      - name: ort-action-artifacts-analyzer
-        uses: actions/upload-artifact@v2
-        with:
-          name: analysis-analyzer
-          path: |
-            .ort/analyzer/*
-        if: always()
+          name: THIRDPARTY
+          path: /tmp/THIRDPARTY
+      - name: run fossa test
+        run: |
+          fossa test --debug
+        env:
+          FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
+
   compliance-copyrights:
     name: Compliance Copyright Headers
     runs-on: ubuntu-latest
@@ -43,20 +42,14 @@ jobs:
       - name: Check License Header
         uses: apache/skywalking-eyes@v0.2.0
 
-  lint:
+  pre-commit:
     runs-on: ubuntu-latest
-    name: Lint Code Base
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
         with:
-          # Full git history is needed to get a proper list of changed files within `super-linter`
-          fetch-depth: 0
-      - name: Lint Code Base
-        uses: github/super-linter@v4
-        env:
-          VALIDATE_ALL_CODEBASE: false
-          DEFAULT_BRANCH: main
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          python-version: "3.7"
+      - uses: pre-commit/action@v2.0.3
 
   semgrep:
     runs-on: ubuntu-latest
@@ -76,7 +69,7 @@ jobs:
         node-version: [14.x]
     needs:
       - compliance-copyrights
-      - compliance-dependencies
+      - fossa-scan
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -103,16 +96,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-${{ matrix.node-version }}
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
-          name: analysis-reports
-          path: /tmp/analysis-reports
-
-      - name: Update Notices
-        #Note while in most projects we use "NOTICE" the size of this file breaks
-        #NPM in some unusual way
-        run: |
-          cp -f /tmp/analysis-reports/NOTICE_default THIRDPARTY
+          name: THIRDPARTY
 
       - run: yarn run setup
       - run: yarn run build
