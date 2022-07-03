@@ -811,7 +811,7 @@ def _generate(source, config, ta_version, outputdir=None):
         outputdir, ta_name, "metadata", "default.meta"
     )
     if not os.path.exists(default_meta_conf_path):
-        os.makedirs(os.path.join(outputdir, ta_name, "metadata"))
+        os.makedirs(os.path.join(outputdir, ta_name, "metadata"), exist_ok=True)
         with open(default_meta_conf_path, "w") as default_meta_conf_fd:
             MetaConf().create_default(default_meta_conf_fd)
 
