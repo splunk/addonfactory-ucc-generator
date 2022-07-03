@@ -1,3 +1,10 @@
+## [5.10.3](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.10.2...v5.10.3) (2022-07-03)
+
+
+### Bug Fixes
+
+* no crash if metadata folder exists ([#474](https://github.com/splunk/addonfactory-ucc-generator/issues/474)) ([03aa2ae](https://github.com/splunk/addonfactory-ucc-generator/commit/03aa2aeb09ee7e536696f08c41c0149fd6ba7cf7))
+
 ## [5.10.2](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.10.1...v5.10.2) (2022-02-01)
 
 
