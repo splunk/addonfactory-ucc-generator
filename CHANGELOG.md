@@ -1,3 +1,10 @@
+## [5.10.4](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.10.3...v5.10.4) (2022-07-04)
+
+
+### Bug Fixes
+
+* better exception handling when could not get the version from git tags ([#476](https://github.com/splunk/addonfactory-ucc-generator/issues/476)) ([2aafc09](https://github.com/splunk/addonfactory-ucc-generator/commit/2aafc09517982e9c701b073181cdd3b9da6807b0))
+
 ## [5.10.3](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.10.2...v5.10.3) (2022-07-03)
 
 
