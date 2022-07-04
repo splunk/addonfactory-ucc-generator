@@ -694,7 +694,15 @@ def _generate(source, config, ta_version, outputdir=None):
         else:
             stage = version.stage[:1]
 
-        version_str = version.serialize(metadata=True, style=Style.SemVer)
+        try:
+            version_str = version.serialize(metadata=True, style=Style.SemVer)
+        except ValueError:
+            logger.error(
+                "Could not find the proper version from git tags. "
+                "Check out "
+                "https://github.com/splunk/addonfactory-ucc-generator/issues/404"
+            )
+            exit(1)
         version_splunk = f"{version.base}{stage}{version.commit}"
         ta_version = version_splunk
     else:
