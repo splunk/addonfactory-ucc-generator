@@ -22,7 +22,7 @@ DEFAULT = """
 
 []
 owner = admin
-access = read : [ * ], write : [ admin ]
+access = read : [ * ], write : [ admin, sc_admin ]
 export = system
 """
 
