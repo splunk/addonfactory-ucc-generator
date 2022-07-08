@@ -83,6 +83,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.7"
+
       - run: npm install --global yarn
 
       - name: Get yarn cache directory path
@@ -103,6 +107,8 @@ jobs:
 
       - run: yarn run setup
       - run: yarn run build
+      - run: |
+            yarn list --prod --depth 0 | python .github/scripts/format_yarn_deps.py --output-file=dist/package/appserver/static/js/dependencies.txt
 
       - run: tar -czvf /tmp/splunk-ucc-ui.tgz -C dist .
       - uses: actions/upload-artifact@v3
