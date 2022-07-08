@@ -1,3 +1,10 @@
+# [5.11.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.10.4...v5.11.0) (2022-07-08)
+
+
+### Features
+
+* add sc_admin to default.meta ([#477](https://github.com/splunk/addonfactory-ucc-generator/issues/477)) ([4298fa3](https://github.com/splunk/addonfactory-ucc-generator/commit/4298fa39b34e07fa583bb671651fb877066ac935))
+
 ## [5.10.4](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.10.3...v5.10.4) (2022-07-04)
 
 
