@@ -4,9 +4,9 @@ import axios from 'axios';
 export function getBuildDirPath() {
     const scripts = document.getElementsByTagName('script');
     const scriptsCount = scripts.length;
-    for (let i = 0; i < scriptsCount; i+=1) {
+    for (let i = 0; i < scriptsCount; i += 1) {
         const s = scripts[i];
-        if(s.src && s.src.match(/js\/build/)) {
+        if (s.src && s.src.match(/js\/build/)) {
             const lastSlashIndex = s.src.lastIndexOf('/');
             return s.src.slice(0, lastSlashIndex);
         }
@@ -20,5 +20,3 @@ export function loadGlobalConfig() {
         return typeof res.data === 'object' ? res.data : JSON.parse(res.data);
     });
 }
-
-

@@ -13,7 +13,7 @@ function HelpLinkComponent(props) {
 }
 
 HelpLinkComponent.propTypes = {
-    controlOptions: PropTypes.object
+    controlOptions: PropTypes.object,
 };
 
 export default HelpLinkComponent;

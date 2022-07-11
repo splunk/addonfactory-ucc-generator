@@ -51,7 +51,7 @@ export const parseStringValidator = (minLength, maxLength) => {
 };
 
 export const parseFunctionRawStr = (rawStr) => {
-    let error
+    let error;
     let result;
 
     try {
