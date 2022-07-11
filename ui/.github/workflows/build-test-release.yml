@@ -40,7 +40,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Check License Header
-        uses: apache/skywalking-eyes@v0.3.0
+        uses: apache/skywalking-eyes@v0.4.0
 
   pre-commit:
     runs-on: ubuntu-latest
