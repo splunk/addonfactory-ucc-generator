@@ -24,15 +24,23 @@ import os
 import os.path as op
 import shutil
 
-from .endpoint.base import indent, quote_regex
-from .endpoint.datainput import DataInputEndpointBuilder, DataInputEntityBuilder
-from .endpoint.field import RestFieldBuilder
-from .endpoint.multiple_model import (
+from splunk_add_on_ucc_framework.uccrestbuilder.endpoint.base import indent, quote_regex
+from splunk_add_on_ucc_framework.uccrestbuilder.endpoint.datainput import (
+    DataInputEndpointBuilder,
+    DataInputEntityBuilder,
+)
+from splunk_add_on_ucc_framework.uccrestbuilder.endpoint.field import RestFieldBuilder
+from splunk_add_on_ucc_framework.uccrestbuilder.endpoint.multiple_model import (
     MultipleModelEndpointBuilder,
     MultipleModelEntityBuilder,
 )
-from .endpoint.oauth_model import OAuthModelEndpointBuilder
-from .endpoint.single_model import SingleModelEndpointBuilder, SingleModelEntityBuilder
+from splunk_add_on_ucc_framework.uccrestbuilder.endpoint.oauth_model import (
+    OAuthModelEndpointBuilder,
+)
+from splunk_add_on_ucc_framework.uccrestbuilder.endpoint.single_model import (
+    SingleModelEndpointBuilder,
+    SingleModelEntityBuilder,
+)
 
 
 def _is_true(val):

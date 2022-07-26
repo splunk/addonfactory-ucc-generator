@@ -21,7 +21,10 @@ REST Builder.
 
 import collections
 
-from .builder import RestBuilder, RestBuilderError
+from splunk_add_on_ucc_framework.uccrestbuilder.builder import (
+    RestBuilder,
+    RestBuilderError,
+)
 
 __all__ = [
     "RestBuilder",

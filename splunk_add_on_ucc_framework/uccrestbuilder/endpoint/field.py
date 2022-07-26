@@ -15,7 +15,10 @@
 #
 
 
-from .base import indent, quote_string
+from splunk_add_on_ucc_framework.uccrestbuilder.endpoint.base import (
+    indent,
+    quote_string,
+)
 
 
 class RestFieldBuilder:

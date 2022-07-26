@@ -30,21 +30,21 @@ from defusedxml import ElementTree as defused_et
 from dunamai import Style, Version
 from jinja2 import Environment, FileSystemLoader
 
-from .app_conf import AppConf
-from .app_manifest import (
+from splunk_add_on_ucc_framework.app_conf import AppConf
+from splunk_add_on_ucc_framework.app_manifest import (
     APP_MANIFEST_FILE_NAME,
     APP_MANIFEST_WEBSITE,
     AppManifest,
     AppManifestFormatException,
 )
-from .global_config_validator import (
+from splunk_add_on_ucc_framework.global_config_validator import (
     GlobalConfigValidator,
     GlobalConfigValidatorException,
 )
-from .meta_conf import MetaConf
-from .start_alert_build import alert_build
-from .uccrestbuilder import build
-from .uccrestbuilder.global_config import (
+from splunk_add_on_ucc_framework.meta_conf import MetaConf
+from splunk_add_on_ucc_framework.start_alert_build import alert_build
+from splunk_add_on_ucc_framework.uccrestbuilder import build
+from splunk_add_on_ucc_framework.uccrestbuilder.global_config import (
     GlobalConfigBuilderSchema,
     GlobalConfigPostProcessor,
 )
