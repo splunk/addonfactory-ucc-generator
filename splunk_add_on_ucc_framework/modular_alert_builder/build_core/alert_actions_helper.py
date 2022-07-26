@@ -21,7 +21,9 @@ from os import makedirs, remove
 
 import addonfactory_splunk_conf_parser_lib as conf_parser
 
-from .alert_actions_merge import merge_conf_file
+from splunk_add_on_ucc_framework.modular_alert_builder.build_core.alert_actions_merge import (
+    merge_conf_file,
+)
 
 
 def write_file(file_name, file_path, content, logger, merge="stanza_overwrite"):

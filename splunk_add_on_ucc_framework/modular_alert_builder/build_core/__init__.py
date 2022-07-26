@@ -19,9 +19,15 @@ import os
 import re
 import shutil
 
-from .alert_actions_conf_gen import generate_alert_actions_conf
-from .alert_actions_html_gen import generate_alert_actions_html_files
-from .alert_actions_py_gen import generate_alert_actions_py_files
+from splunk_add_on_ucc_framework.modular_alert_builder.build_core.alert_actions_conf_gen import (
+    generate_alert_actions_conf,
+)
+from splunk_add_on_ucc_framework.modular_alert_builder.build_core.alert_actions_html_gen import (
+    generate_alert_actions_html_files,
+)
+from splunk_add_on_ucc_framework.modular_alert_builder.build_core.alert_actions_py_gen import (
+    generate_alert_actions_py_files,
+)
 
 cache_path = {}  # type: ignore
 

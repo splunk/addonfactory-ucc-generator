@@ -22,8 +22,12 @@ from shutil import copy
 
 import addonfactory_splunk_conf_parser_lib as conf_parser
 
-from . import alert_actions_exceptions as aae
-from . import arf_consts as ac
+from splunk_add_on_ucc_framework.modular_alert_builder.build_core import (
+    alert_actions_exceptions as aae,
+)
+from splunk_add_on_ucc_framework.modular_alert_builder.build_core import (
+    arf_consts as ac,
+)
 
 merge_deny_list = ["default.meta", "README.txt"]
 merge_mode_config = {"app.conf": "item_overwrite"}

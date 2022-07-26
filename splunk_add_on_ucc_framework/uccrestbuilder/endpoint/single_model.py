@@ -15,7 +15,10 @@
 #
 
 
-from .base import RestEndpointBuilder, RestEntityBuilder
+from splunk_add_on_ucc_framework.uccrestbuilder.endpoint.base import (
+    RestEndpointBuilder,
+    RestEntityBuilder,
+)
 
 
 class SingleModelEntityBuilder(RestEntityBuilder):

@@ -18,7 +18,7 @@
 import os
 import os.path as op
 
-from .rest_conf import RestmapConf, WebConf
+from splunk_add_on_ucc_framework.uccrestbuilder.rest_conf import RestmapConf, WebConf
 
 __all__ = ["RestBuilderError", "RestBuilder"]
 

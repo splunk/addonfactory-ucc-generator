@@ -19,8 +19,8 @@ import logging
 import os
 import traceback
 
-from . import normalize
-from .modular_alert_builder.build_core import generate_alerts
+from splunk_add_on_ucc_framework import normalize
+from splunk_add_on_ucc_framework.modular_alert_builder.build_core import generate_alerts
 
 
 class LoggerAdapter(logging.LoggerAdapter):

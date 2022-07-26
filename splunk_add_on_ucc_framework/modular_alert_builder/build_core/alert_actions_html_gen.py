@@ -22,10 +22,18 @@ from re import search
 
 from jinja2 import Environment, FileSystemLoader
 
-from . import alert_actions_exceptions as aae
-from . import arf_consts as ac
-from .alert_actions_helper import write_file
-from .alert_actions_template import AlertActionsTemplateMgr
+from splunk_add_on_ucc_framework.modular_alert_builder.build_core import (
+    alert_actions_exceptions as aae,
+)
+from splunk_add_on_ucc_framework.modular_alert_builder.build_core import (
+    arf_consts as ac,
+)
+from splunk_add_on_ucc_framework.modular_alert_builder.build_core.alert_actions_helper import (
+    write_file,
+)
+from splunk_add_on_ucc_framework.modular_alert_builder.build_core.alert_actions_template import (
+    AlertActionsTemplateMgr,
+)
 
 
 class AlertHtmlBase:
