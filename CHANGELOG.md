@@ -1,3 +1,10 @@
+# [5.13.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.12.0...v5.13.0) (2022-08-02)
+
+
+### Features
+
+* add --python-binary-name flag to specify Python name to install libraries ([#485](https://github.com/splunk/addonfactory-ucc-generator/issues/485)) ([bc46170](https://github.com/splunk/addonfactory-ucc-generator/commit/bc46170d889b31a192fe553bad7ccab3f91001f7))
+
 # [5.12.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.11.0...v5.12.0) (2022-07-08)
 
 
