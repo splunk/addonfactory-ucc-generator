@@ -21,13 +21,13 @@ from pathlib import Path
 from typing import Sequence
 
 
-def install_libs(
+def install_python_libraries(
     logger: logging.Logger, path: str, ucc_lib_target: str, python_binary_name: str
 ):
     logger.info(f"  Checking for requirements in {path}")
     if os.path.exists(os.path.join(path, "lib", "requirements.txt")):
         logger.info("  Uses common requirements")
-        _install_libraries(
+        install_libraries(
             logger,
             os.path.join(path, "lib", "requirements.txt"),
             ucc_lib_target,
@@ -37,7 +37,7 @@ def install_libs(
         os.path.join(os.path.abspath(os.path.join(path, os.pardir)), "requirements.txt")
     ):
         logger.info("  Uses common requirements")
-        _install_libraries(
+        install_libraries(
             logger,
             os.path.join(
                 os.path.abspath(os.path.join(path, os.pardir)), "requirements.txt"
@@ -49,16 +49,16 @@ def install_libs(
         logger.info("  Not using common requirements")
 
     packages_to_remove = ["setuptools", "bin", "pip", "distribute", "wheel"]
-    _remove_package_from_installed_path(
+    remove_package_from_installed_path(
         logger,
         ucc_lib_target,
         packages_to_remove,
     )
 
-    _remove_execute_bit(logger, ucc_lib_target)
+    remove_execute_bit(logger, ucc_lib_target)
 
 
-def _install_libraries(
+def install_libraries(
     logger: logging.Logger,
     requirements_file_path: str,
     installation_path: str,
@@ -81,7 +81,7 @@ def _install_libraries(
         os.system(install_cmd)
 
 
-def _remove_package_from_installed_path(
+def remove_package_from_installed_path(
     logger: logging.Logger, installation_path: str, package_names: Sequence[str]
 ):
     p = Path(installation_path)
@@ -95,7 +95,7 @@ def _remove_package_from_installed_path(
         pass
 
 
-def _remove_execute_bit(logger: logging.Logger, installation_path: str):
+def remove_execute_bit(logger: logging.Logger, installation_path: str):
     p = Path(installation_path)
     no_user_exec = ~stat.S_IEXEC
     no_group_exec = ~stat.S_IXGRP

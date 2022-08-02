@@ -39,7 +39,9 @@ from splunk_add_on_ucc_framework.global_config_validator import (
     GlobalConfigValidator,
     GlobalConfigValidatorException,
 )
-from splunk_add_on_ucc_framework.install_libs import install_libs
+from splunk_add_on_ucc_framework.install_python_libraries import (
+    install_python_libraries,
+)
 from splunk_add_on_ucc_framework.meta_conf import MetaConf
 from splunk_add_on_ucc_framework.start_alert_build import alert_build
 from splunk_add_on_ucc_framework.uccrestbuilder import build
@@ -702,7 +704,7 @@ def _generate(source, config, ta_version, outputdir=None, python_binary_name="py
         )
         ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
         logger.info(f"Install add-on requirements into {ucc_lib_target} from {source}")
-        install_libs(logger, source, ucc_lib_target, python_binary_name)
+        install_python_libraries(logger, source, ucc_lib_target, python_binary_name)
 
         replace_token(ta_name, outputdir)
 
@@ -726,7 +728,7 @@ def _generate(source, config, ta_version, outputdir=None, python_binary_name="py
         ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
 
         logger.info(f"Install add-on requirements into {ucc_lib_target} from {source}")
-        install_libs(logger, source, ucc_lib_target, python_binary_name)
+        install_python_libraries(logger, source, ucc_lib_target, python_binary_name)
 
     ignore_list = get_ignore_list(
         ta_name, os.path.abspath(os.path.join(source, PARENT_DIR, ".uccignore"))
