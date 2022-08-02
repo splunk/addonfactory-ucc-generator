@@ -15,7 +15,10 @@ Example of globalConfig.json and package folder can be found at
 Steps
 -----
 
--   Install `splunk-add-on-ucc-framework` if it is not installed.
+-   Use Python virtual environment:
+    -  `python3 -m venv .venv`
+    -  `source .venv/bin/activate`        
+-   Install `splunk-add-on-ucc-framework`.
 -   Run the `ucc-gen` command.
 -   The final addon package will be generated, in the `output` folder.
 
@@ -28,6 +31,8 @@ ucc-gen supports the following params:
 -   ta-version - [optional] override current version of TA, default
     version is version specified in `globalConfig.json`. Splunkbase
     compatible version of SEMVER will be used by default.
+-   python-binary-name - [optional] Python binary name to use when
+    installing Python libraries.
 
 ```
 pip install splunk-packaging-toolkit
@@ -51,6 +56,9 @@ What ucc-gen does
     following table:
     -   `lib/requirements.txt` - install Python3 compatible packages into
         `output/<package_ID>/lib`
+    -   Removes `setuptools*`, `bin*`, `pip*`, `distribute*`, `wheel*` if 
+        they exist from `output/<package_ID>/lib`
+    -   Removes execute bit from every file under `output/<package_ID>/lib`
 -   Replace tokens in views.
 -   Copy addon's `package/*` to `output/<package_ID>/*` directory.
 -   If an addon requires some additional configurations in packaging

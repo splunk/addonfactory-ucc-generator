@@ -22,9 +22,7 @@ import json
 import logging
 import os
 import shutil
-import stat
 import sys
-from pathlib import Path
 
 from defusedxml import ElementTree as defused_et
 from dunamai import Style, Version
@@ -40,6 +38,9 @@ from splunk_add_on_ucc_framework.app_manifest import (
 from splunk_add_on_ucc_framework.global_config_validator import (
     GlobalConfigValidator,
     GlobalConfigValidatorException,
+)
+from splunk_add_on_ucc_framework.install_python_libraries import (
+    install_python_libraries,
 )
 from splunk_add_on_ucc_framework.meta_conf import MetaConf
 from splunk_add_on_ucc_framework.start_alert_build import alert_build
@@ -295,86 +296,6 @@ def replace_token(ta_name, outputdir):
             if view == "redirect.xml":
                 s = s.replace("${ta.name}", ta_name.lower())
             f.write(s)
-
-
-def install_libs(path, ucc_lib_target):
-    """
-    Install 3rd Party libraries in addon.
-
-    Args:
-        parent_path (str): Path of parent directory.
-        ucc_lib_target (str): Target path to install libraries.
-    """
-
-    def _install_libs(requirements, ucc_target, installer="python3"):
-        """
-        Install 3rd Party libraries using pip2/pip3
-
-        Args:
-            requirements (str): Path to requirements file.
-            ucc_target (str): Target path to install libraries.
-            installer (str): Pip version(pip2/pip3).
-        """
-        if not os.path.exists(requirements):
-            logger.warning(f"Unable to find requirements file. {requirements}")
-        else:
-            if not os.path.exists(ucc_target):
-                os.makedirs(ucc_target)
-            install_cmd = (
-                installer
-                + ' -m pip install -r "'
-                + requirements
-                + '" --no-compile --prefer-binary --ignore-installed --use-deprecated=legacy-resolver --target "'
-                + ucc_target
-                + '"'
-            )
-            os.system(installer + " -m pip install pip --upgrade")
-            os.system(install_cmd)
-
-    logger.info(f"  Checking for requirements in {path}")
-    if os.path.exists(os.path.join(path, "lib", "requirements.txt")):
-        logger.info("  Uses common requirements")
-        _install_libs(
-            requirements=os.path.join(path, "lib", "requirements.txt"),
-            ucc_target=ucc_lib_target,
-        )
-    elif os.path.exists(
-        os.path.join(os.path.abspath(os.path.join(path, os.pardir)), "requirements.txt")
-    ):
-        logger.info("  Uses common requirements")
-        _install_libs(
-            requirements=os.path.join(
-                os.path.abspath(os.path.join(path, os.pardir)), "requirements.txt"
-            ),
-            ucc_target=ucc_lib_target,
-        )
-    else:
-        logger.info("  Not using common requirements")
-
-    # Prevent certain packages from being included pip could be dangerous others are just wasted space
-    noshipdirs = ["setuptools", "bin", "pip", "distribute", "wheel"]
-    p = Path(ucc_lib_target)
-    for nsd in noshipdirs:
-        try:
-            # Glob can return FileNotFoundError exception if no match
-            for o in p.glob(nsd + "*"):
-                if o.is_dir():
-                    logging.info(f"  removing directory {o} from output must not ship")
-                    shutil.rmtree(o)
-        except FileNotFoundError:
-            pass
-
-    # Remove execute bit from any object in lib
-    NO_USER_EXEC = ~stat.S_IEXEC
-    NO_GROUP_EXEC = ~stat.S_IXGRP
-    NO_OTHER_EXEC = ~stat.S_IXOTH
-    NO_EXEC = NO_USER_EXEC & NO_GROUP_EXEC & NO_OTHER_EXEC
-
-    for o in p.rglob("*"):
-        if not o.is_dir() and os.access(o, os.X_OK):
-            logging.info(f"  fixing {o} execute bit")
-            current_permissions = stat.S_IMODE(os.lstat(o).st_mode)
-            os.chmod(o, current_permissions & NO_EXEC)
 
 
 def generate_rest(ta_name, scheme, import_declare_name, outputdir):
@@ -683,8 +604,9 @@ def handle_no_inputs(ta_name, outputdir):
             pass
 
 
-def _generate(source, config, ta_version, outputdir=None):
+def _generate(source, config, ta_version, outputdir=None, python_binary_name="python3"):
     logger.info(f"ucc-gen version {__version__} is used")
+    logger.info(f"Python binary name to use: {python_binary_name}")
     if outputdir is None:
         outputdir = os.path.join(os.getcwd(), "output")
     if not ta_version:
@@ -782,7 +704,7 @@ def _generate(source, config, ta_version, outputdir=None):
         )
         ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
         logger.info(f"Install add-on requirements into {ucc_lib_target} from {source}")
-        install_libs(source, ucc_lib_target)
+        install_python_libraries(logger, source, ucc_lib_target, python_binary_name)
 
         replace_token(ta_name, outputdir)
 
@@ -806,7 +728,7 @@ def _generate(source, config, ta_version, outputdir=None):
         ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
 
         logger.info(f"Install add-on requirements into {ucc_lib_target} from {source}")
-        install_libs(source, ucc_lib_target=ucc_lib_target)
+        install_python_libraries(logger, source, ucc_lib_target, python_binary_name)
 
     ignore_list = get_ignore_list(
         ta_name, os.path.abspath(os.path.join(source, PARENT_DIR, ".uccignore"))
@@ -861,8 +783,14 @@ def _generate(source, config, ta_version, outputdir=None):
         additional_packaging(ta_name)
 
 
-def generate(source="package", config=None, ta_version=None, outputdir=None):
-    _generate(source, config, ta_version, outputdir)
+def generate(
+    source="package",
+    config=None,
+    ta_version=None,
+    outputdir=None,
+    python_binary_name="python3",
+):
+    _generate(source, config, ta_version, outputdir, python_binary_name)
 
 
 def main():
@@ -888,5 +816,16 @@ def main():
         "package such as app.manifest, app.conf, and globalConfig.json",
         default=None,
     )
+    parser.add_argument(
+        "--python-binary-name",
+        type=str,
+        help="Python binary name to use to install requirements",
+        default="python3",
+    )
     args = parser.parse_args()
-    _generate(args.source, args.config, args.ta_version)
+    _generate(
+        args.source,
+        args.config,
+        args.ta_version,
+        python_binary_name=args.python_binary_name,
+    )
