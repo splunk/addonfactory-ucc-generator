@@ -12,6 +12,9 @@ Prerequisites
 Example of globalConfig.json and package folder can be found at
 <https://github.com/splunk/splunk-add-on-for-ucc-example>.
 
+The JSON schema for the `globalConfig.json` can be found 
+[here](https://github.com/splunk/addonfactory-ucc-base-ui/blob/main/src/main/webapp/schema/schema.json).
+
 Steps
 -----
 
