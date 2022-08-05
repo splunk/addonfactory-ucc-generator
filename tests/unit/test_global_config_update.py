@@ -16,16 +16,16 @@
 import json
 
 import tests.unit.helpers as helpers
-from splunk_add_on_ucc_framework import (
-    handle_biased_terms_update,
-    handle_dropping_api_version_update,
+from splunk_add_on_ucc_framework.global_config_update import (
+    _handle_biased_terms_update,
+    _handle_dropping_api_version_update,
 )
 
 
 def test_handle_biased_terms_update():
     config = helpers.get_testdata_file("config_with_biased_terms.json")
     config = json.loads(config)
-    updated_config = handle_biased_terms_update(config)
+    updated_config = _handle_biased_terms_update(config)
     expected_schema_version = "0.0.1"
     assert expected_schema_version == updated_config["meta"]["schemaVersion"]
     input_entity_1_options_keys = updated_config["pages"]["inputs"]["services"][0][
@@ -53,7 +53,7 @@ def test_handle_biased_terms_update():
 def test_handle_dropping_api_version_update():
     config = helpers.get_testdata_file("config_with_biased_terms.json")
     config = json.loads(config)
-    updated_config = handle_dropping_api_version_update(config)
+    updated_config = _handle_dropping_api_version_update(config)
     expected_schema_version = "0.0.3"
     assert expected_schema_version == updated_config["meta"]["schemaVersion"]
     assert "apiVersion" not in updated_config["meta"]
