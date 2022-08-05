@@ -13,6 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from typing import Sequence
+
+from splunk_add_on_ucc_framework.uccrestbuilder.endpoint.base import RestEndpointBuilder
 
 
 class RestmapConf:
@@ -33,7 +36,10 @@ handlerpersistentmode = true
 """
 
     @classmethod
-    def build(cls, endpoints, namespace, admin_match):
+    def build(
+        cls, endpoints: Sequence[RestEndpointBuilder], namespace: str, admin_match: str
+    ) -> str:
+        # admin_match is always an empty string, so it will be probably removed in the future releases.
         if not endpoints:
             return ""
         externals = [
@@ -72,7 +78,7 @@ methods = POST, GET, DELETE
 """
 
     @classmethod
-    def build(cls, endpoints):
+    def build(cls, endpoints: Sequence[RestEndpointBuilder]) -> str:
         stanzas = []
         for endpoint in endpoints:
             stanzas.append(
