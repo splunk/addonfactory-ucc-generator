@@ -14,7 +14,7 @@ For full usage instructions, please visit the [documentation](https://splunk.git
 
 ## Slacks
 
-If you are a Splunkers use: https://splunk.slack.com/archives/C03T8QCHBTJ
+If you are a Splunker use: https://splunk.slack.com/archives/C03T8QCHBTJ
 If you are a part of the community use: https://splunk-usergroups.slack.com/archives/C03SG3ZL4S1
 
 
