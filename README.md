@@ -12,11 +12,11 @@ UCC provides basic UI template for creating Addon's UI. It is helpful to control
 
 For full usage instructions, please visit the [documentation](https://splunk.github.io/addonfactory-ucc-generator/).
 
-## Slacks
+## Communication channels
 
 If you are a Splunker use: https://splunk.slack.com/archives/C03T8QCHBTJ
-If you are a part of the community use: https://splunk-usergroups.slack.com/archives/C03SG3ZL4S1
 
+If you are a part of the community use: https://splunk-usergroups.slack.com/archives/C03SG3ZL4S1
 
 ## pre-commit
 
