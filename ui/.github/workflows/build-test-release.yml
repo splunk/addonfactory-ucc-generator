@@ -117,7 +117,7 @@ jobs:
           path: /tmp/splunk-ucc-ui.tgz
 
       - name: Semantic Release
-        uses: cycjimmy/semantic-release-action@v3.0.0
+        uses: cycjimmy/semantic-release-action@v3.1.0
         with:
           semantic_version: 19.0.3
           extra_plugins: |
