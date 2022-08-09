@@ -25,9 +25,9 @@ import shutil
 import sys
 
 from defusedxml import ElementTree as defused_et
-from dunamai import Style, Version
 from jinja2 import Environment, FileSystemLoader
 
+from splunk_add_on_ucc_framework import exceptions, utils
 from splunk_add_on_ucc_framework.app_conf import AppConf
 from splunk_add_on_ucc_framework.app_manifest import (
     APP_MANIFEST_FILE_NAME,
@@ -610,29 +610,20 @@ def _generate(source, config, ta_version, outputdir=None, python_binary_name="py
     if outputdir is None:
         outputdir = os.path.join(os.getcwd(), "output")
     if not ta_version:
-        version = Version.from_git()
-        if not version.stage:
-            stage = "R"
-        else:
-            stage = version.stage[:1]
-
         try:
-            version_str = version.serialize(metadata=True, style=Style.SemVer)
-        except ValueError:
+            ta_version = utils.get_version_from_git()
+        except exceptions.CouldNotVersionFromGitException:
             logger.error(
                 "Could not find the proper version from git tags. "
                 "Check out "
                 "https://github.com/splunk/addonfactory-ucc-generator/issues/404"
             )
             exit(1)
-        version_splunk = f"{version.base}{stage}{version.commit}"
-        ta_version = version_splunk
     else:
         ta_version = ta_version.strip()
-        version_str = ta_version
 
     if not os.path.exists(source):
-        raise NotADirectoryError(f"{os.path.abspath(source)} not Found.")
+        raise NotADirectoryError(f"{os.path.abspath(source)} not found.")
 
     # Setting default value to Config argument
     if not config:
@@ -747,7 +738,7 @@ def _generate(source, config, ta_version, outputdir=None, python_binary_name="py
 
     # Update app.manifest
     with open(os.path.join(outputdir, ta_name, "VERSION"), "w") as version_file:
-        version_file.write(version_str)
+        version_file.write(ta_version)
         version_file.write("\n")
         version_file.write(ta_version)
 
