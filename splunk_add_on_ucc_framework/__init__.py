@@ -35,6 +35,7 @@ from splunk_add_on_ucc_framework.app_manifest import (
     AppManifest,
     AppManifestFormatException,
 )
+from splunk_add_on_ucc_framework.global_config_update import handle_global_config_update
 from splunk_add_on_ucc_framework.global_config_validator import (
     GlobalConfigValidator,
     GlobalConfigValidatorException,
@@ -123,151 +124,6 @@ def clean_before_build(outputdir):
     shutil.rmtree(os.path.join(outputdir), ignore_errors=True)
     os.makedirs(os.path.join(outputdir))
     logger.info("Cleaned out directory " + outputdir)
-
-
-def version_tuple(version_str):
-    """
-    convert string into tuple to compare version
-
-    Args:
-        version_str : raw string
-    Returns:
-        tuple : version into tupleformat
-    """
-    filled = []
-    for point in version_str.split("."):
-        filled.append(point.zfill(8))
-    return tuple(filled)
-
-
-def _handle_biased_terms(conf_entities: dict) -> dict:
-    for entity in conf_entities:
-        entity_option = entity.get("options")
-        if entity_option and "whiteList" in entity_option:
-            entity_option["allowList"] = entity_option.get("whiteList")
-            del entity_option["whiteList"]
-        if entity_option and "blackList" in entity_option:
-            entity_option["denyList"] = entity_option.get("blackList")
-            del entity_option["blackList"]
-    return conf_entities
-
-
-def handle_biased_terms_update(schema_content: dict) -> dict:
-    pages = schema_content.get("pages", {})
-    ta_tabs = pages.get("configuration", {}).get("tabs", {})
-
-    for tab in ta_tabs:
-        conf_entities = tab.get("entity")
-        tab["entity"] = _handle_biased_terms(conf_entities)
-
-    if "inputs" in pages:
-        services = pages.get("inputs", {}).get("services", {})
-        for service in services:
-            conf_entities = service.get("entity")
-            service["entity"] = _handle_biased_terms(conf_entities)
-
-    schema_content["meta"]["schemaVersion"] = "0.0.1"
-    return schema_content
-
-
-def handle_dropping_api_version_update(schema_content: dict) -> dict:
-    if schema_content["meta"].get("apiVersion"):
-        del schema_content["meta"]["apiVersion"]
-    schema_content["meta"]["schemaVersion"] = "0.0.3"
-    return schema_content
-
-
-def handle_update(config_path):
-    """
-    handle changes in globalConfig.json
-
-    Args:
-        config_path : path to globalConfig.json
-
-    Returns:
-        dictionary : schema_content (globalConfig.json)
-    """
-    with open(config_path) as config_file:
-        schema_content = json.load(config_file)
-
-    version = schema_content.get("meta").get("schemaVersion", "0.0.0")
-
-    if version_tuple(version) < version_tuple("0.0.1"):
-        schema_content = handle_biased_terms_update(schema_content)
-        with open(config_path, "w") as config_file:
-            json.dump(schema_content, config_file, ensure_ascii=False, indent=4)
-
-    if version_tuple(version) < version_tuple("0.0.2"):
-        ta_tabs = schema_content.get("pages").get("configuration", {}).get("tabs", {})
-
-        for tab in ta_tabs:
-            if tab["name"] == "account":
-                conf_entities = tab.get("entity")
-                oauth_state_enabled_entity = {}
-                for entity in conf_entities:
-                    if entity.get("field") == "oauth_state_enabled":
-                        logger.warning(
-                            "oauth_state_enabled field is no longer a separate "
-                            "entity since UCC version 5.0.0. It is now an "
-                            "option in the oauth field. Please update the "
-                            "globalconfig.json file accordingly."
-                        )
-                        oauth_state_enabled_entity = entity
-
-                    if entity.get("field") == "oauth" and not entity.get(
-                        "options", {}
-                    ).get("oauth_state_enabled"):
-                        entity["options"]["oauth_state_enabled"] = False
-
-                if oauth_state_enabled_entity:
-                    conf_entities.remove(oauth_state_enabled_entity)
-
-            tab_options = tab.get("options", {})
-            if tab_options.get("onChange"):
-                logger.error(
-                    "The onChange option is no longer supported since UCC "
-                    "version 5.0.0. You can use custom hooks to implement "
-                    "these actions."
-                )
-                del tab_options["onChange"]
-            if tab_options.get("onLoad"):
-                logger.error(
-                    "The onLoad option is no longer supported since UCC "
-                    "version 5.0.0. You can use custom hooks to implement "
-                    "these actions."
-                )
-                del tab_options["onLoad"]
-
-        is_inputs = "inputs" in schema_content.get("pages")
-        if is_inputs:
-            services = schema_content.get("pages").get("inputs", {}).get("services", {})
-            for service in services:
-                service_options = service.get("options", {})
-                if service_options.get("onChange"):
-                    logger.error(
-                        "The onChange option is no longer supported since UCC "
-                        "version 5.0.0. You can use custom hooks to implement "
-                        "these actions."
-                    )
-                    del service_options["onChange"]
-                if service_options.get("onLoad"):
-                    logger.error(
-                        "The onLoad option is no longer supported since UCC "
-                        "version 5.0.0. You can use custom hooks to implement "
-                        "these actions."
-                    )
-                    del service_options["onLoad"]
-
-        schema_content["meta"]["schemaVersion"] = "0.0.2"
-        with open(config_path, "w") as config_file:
-            json.dump(schema_content, config_file, ensure_ascii=False, indent=4)
-
-    if version_tuple(version) < version_tuple("0.0.3"):
-        schema_content = handle_dropping_api_version_update(schema_content)
-        with open(config_path, "w") as config_file:
-            json.dump(schema_content, config_file, ensure_ascii=False, indent=4)
-
-    return schema_content
 
 
 def replace_token(ta_name, outputdir):
@@ -662,7 +518,7 @@ def _generate(source, config, ta_version, outputdir=None, python_binary_name="py
         update_ta_version(config, ta_version)
 
         # handle_update check schemaVersion and update globalConfig.json if required and return schema
-        schema_content = handle_update(config)
+        schema_content = handle_global_config_update(logger, config)
 
         scheme = GlobalConfigBuilderSchema(schema_content, j2_env)
 
