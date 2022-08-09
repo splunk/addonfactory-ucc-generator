@@ -1,8 +1,6 @@
-Troubleshooting
-===============
+# Troubleshooting
 
-Splunk calls your modular input only once
------------------------------------------
+## Splunk calls your modular input only once
 
 In case Splunk calls your modular input only once however you are
 specifying an interval within it should call your script - check

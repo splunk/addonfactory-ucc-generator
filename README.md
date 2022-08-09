@@ -18,6 +18,6 @@ If you are a Splunker use: https://splunk.slack.com/archives/C03T8QCHBTJ
 
 If you are a part of the community use: https://splunk-usergroups.slack.com/archives/C03SG3ZL4S1
 
-## pre-commit
+## Contributing Guidelines
 
-Please visit `pre-commit` quick start [section](https://pre-commit.com/#quick-start).
+Go to [Contributing Guidelines](https://splunk.github.io/addonfactory-ucc-generator/contributing/).
