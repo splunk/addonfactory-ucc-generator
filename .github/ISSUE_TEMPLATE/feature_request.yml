@@ -13,7 +13,6 @@ body:
       Please:
 
       - [ ] Check for duplicate requests.
-      - [ ] Describe your goal.
 - type: textarea
   attributes:
     label: Description
