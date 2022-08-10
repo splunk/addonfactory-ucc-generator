@@ -1,5 +1,4 @@
-Overview
-========
+# Overview
 
 splunk-add-on-ucc-framework is a framework to generate UI based Splunk
 Add-ons. It includes UI, Rest handler, Modular input, Oauth, Alert
@@ -12,24 +11,21 @@ action templates.
 >     supported by UCC.
 >
 
-Available as a Github action here:
+Available as a GitHub action here:
 <https://github.com/splunk/addonfactory-ucc-generator-action>
 
-What is UCC?
-------------
+## What is UCC?
 
 UCC stands for Universal Configuration Console. The purpose of having a
 framework for add-on generation is to simplify the process of add-on
 creation for the developers. UCC 5.X uses SplunkUI which is a new UI
 framework based on React.
 
-Features
---------
+## Features
 
 -   Generate UCC based addons for your Splunk Technology Add-ons
 
-Installation
-------------
+## Installation
 
 splunk-add-on-ucc-framework can be installed via pip from PyPI:
 

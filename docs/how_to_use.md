@@ -1,8 +1,6 @@
-How To Use
-==========
+# How To Use
 
-Prerequisites
--------------
+## Prerequisites
 
 -   `globalConfig.json`
 -   `package` folder
@@ -15,8 +13,7 @@ Example of globalConfig.json and package folder can be found at
 The JSON schema for the `globalConfig.json` can be found 
 [here](https://github.com/splunk/addonfactory-ucc-base-ui/blob/main/src/main/webapp/schema/schema.json).
 
-Steps
------
+## Steps
 
 -   Use Python virtual environment:
     -  `python3 -m venv .venv`
@@ -45,8 +42,7 @@ slim package output/<package_ID>
 After completing the packaging slim should also output path to the
 package for distribution.
 
-What ucc-gen does
------------------
+## What ucc-gen does
 
 -   Cleans the output folder.
 -   Retrieve the package ID of addon.

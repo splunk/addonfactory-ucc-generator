@@ -1,5 +1,4 @@
-UCC usage
-=========
+# UCC usage
 
 Let's assume that you want to create a Splunk add-on with UI to specify
 Splunk index that is going to be used in the add-on. Let's also assume
