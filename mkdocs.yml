@@ -21,6 +21,7 @@ theme:
 nav:
   - Home: "index.md"
   - "How to use": "how_to_use.md"
+  - Tabs: "tabs.md"
   - Example: "example.md"
   - Troubleshooting: "troubleshooting.md"
   - Contributing: "contributing.md"

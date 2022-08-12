@@ -5,7 +5,7 @@ Splunk index that is going to be used in the add-on. Let's also assume
 that you do not want to show indexes that are for internal use only
 (like, `_internal`).
 
-For this you can create a globalConfig.json file and specify that you
+For this you can create a `globalConfig.json` file and specify that you
 want one configuration tab called "Global Settings", one UI component on
 that tab that will handle index management and store selected index in
 specific add-on configuration file.
@@ -39,7 +39,7 @@ achieve that we run:
 ucc-gen --ta-version=1.0.0
 ```
 
-After that, output folder should be created. It should contain
+After that, `output` folder should be created. It should contain
 `Splunk_TA_choose_index` folder. And the structure of
 `Splunk_TA_choose_index` is following:
 
@@ -53,18 +53,19 @@ After that, output folder should be created. It should contain
     ├── appserver
     │   ├── static
     │   │   └── js
-    │   │       └── build
-    │   │           ├── 0.js
-    │   │           ├── 0.licenses.txt
-    │   │           ├── 1.js
-    │   │           ├── 1.licenses.txt
-    │   │           ├── 3.js
-    │   │           ├── 3.licenses.txt
-    │   │           ├── 4.js
-    │   │           ├── 4.licenses.txt
-    │   │           ├── entry_page.js
-    │   │           ├── entry_page.licenses.txt
-    │   │           └── globalConfig.json
+    │   │       ├── build
+    │   │       |   ├── 0.js
+    │   │       |   ├── 0.licenses.txt
+    │   │       |   ├── 1.js
+    │   │       |   ├── 1.licenses.txt
+    │   │       |   ├── 3.js
+    │   │       |   ├── 3.licenses.txt
+    │   │       |   ├── 4.js
+    │   │       |   ├── 4.licenses.txt
+    │   │       |   ├── entry_page.js
+    │   │       |   ├── entry_page.licenses.txt
+    │   │       |   └── globalConfig.json
+    |   |       └── dependencies.txt
     │   └── templates
     │       └── base.html
     ├── bin
@@ -73,22 +74,30 @@ After that, output folder should be created. It should contain
     ├── lib
     │   ├── <libraries>
     │   └── ...
-    └── default
-        ├── app.conf
-        ├── data
-        │   └── ui
-        │       ├── nav
-        │       │   └── default.xml
-        │       └── views
-        │           └── configuration.xml
-        ├── restmap.conf
-        ├── splunk_ta_choose_index_settings.conf
-        └── web.conf
+    ├── default
+    │   ├── app.conf
+    │   ├── data
+    |   │   └── ui
+    |   │       ├── nav
+    |   │       │   └── default.xml
+    |   │       └── views
+    |   │           └── configuration.xml
+    |   ├── restmap.conf
+    |   ├── splunk_ta_choose_index_settings.conf
+    |   └── web.conf
+    └── metadata
+        └── default.meta
 
 Now it's time to package our add-on and install it to Splunk. To install
 slim refer to steps.
 
-To package this particular add-on run:
+To package this particular add-on, you need to install `slim` first:
+
+```
+pip install splunk-packaging-toolkit
+```
+
+And then run:
 
 ```
 slim package output/Splunk_TA_choose_index
