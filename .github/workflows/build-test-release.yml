@@ -35,24 +35,27 @@ jobs:
           FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
 
   compliance-copyrights:
-    name: Compliance Copyright Headers
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Check License Header
         uses: apache/skywalking-eyes@v0.4.0
+
   test-unit:
-    name: Test Unit Python ${{ matrix.python-version }}
+    name: test-unit ${{ matrix.python-version }}
     runs-on: ubuntu-latest
+    continue-on-error: true
     strategy:
       matrix:
         python-version:
           - "3.7"
+          - "3.8"
+          - "3.9"
+          - "3.10"
     steps:
       - uses: actions/checkout@v3
-      - name: Setup python
-        uses: actions/setup-python@v4
+      - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install and build
@@ -83,8 +86,9 @@ jobs:
         with:
           name: test-results-unit-python_${{ matrix.python-version }}
           path: test-results/*
+
   appinspect-for-expected-outputs:
-    name: Appinspect ${{ matrix.tags }} tests/expected_output_global_config_inputs_configuration_alerts/Splunk_TA_UCCExample
+    name: splunk-appinspect ${{ matrix.tags }} tests/expected_output_global_config_inputs_configuration_alerts/Splunk_TA_UCCExample
     runs-on: ubuntu-latest
     continue-on-error: true
     strategy:
@@ -111,6 +115,7 @@ jobs:
         with:
           app_path: tests/slimmed
           included_tags: ${{ matrix.tags }}
+
   pre-commit:
     runs-on: ubuntu-latest
     steps:
@@ -119,9 +124,9 @@ jobs:
         with:
           python-version: "3.7"
       - uses: pre-commit/action@v3.0.0
+
   semgrep:
     runs-on: ubuntu-latest
-    name: security-sast-semgrep
     if: github.actor != 'dependabot[bot]'
     steps:
       - uses: actions/checkout@v3
@@ -130,8 +135,8 @@ jobs:
         uses: returntocorp/semgrep-action@v1
         with:
           publishToken: ${{ secrets.SEMGREP_PUBLISH_TOKEN }}
+
   build:
-    name: Build Release
     needs:
       - test-unit
       - compliance-copyrights
@@ -143,8 +148,7 @@ jobs:
           # Very important: semantic-release won't trigger a tagged
           # build if this is not set false
           persist-credentials: false
-      - name: Setup python
-        uses: actions/setup-python@v4
+      - uses: actions/setup-python@v4
         with:
           python-version: "3.7"
       - name: Install Poetry
