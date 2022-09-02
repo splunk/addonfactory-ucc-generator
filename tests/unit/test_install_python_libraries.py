@@ -30,7 +30,6 @@ def test_install_libraries(mock_os_path_exists, mock_os_system):
     mock_os_path_exists.return_value = True
 
     install_libraries(
-        mock.MagicMock(),
         "package/lib/requirements.txt",
         "/path/to/output/addon_name/lib",
         "python3",
@@ -64,7 +63,6 @@ def test_remove_package_from_installed_path(tmp_path):
     tmp_lib_path_baz.mkdir()
 
     remove_package_from_installed_path(
-        mock.MagicMock(),
         str(tmp_lib_path),
         ["foo", "bar"],
     )
@@ -89,7 +87,6 @@ def test_remove_execute_bit(tmp_path):
     tmp_lib_path_bar_file.write_text("normal")
 
     remove_execute_bit(
-        mock.MagicMock(),
         str(tmp_lib_path),
     )
 

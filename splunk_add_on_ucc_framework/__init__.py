@@ -54,15 +54,15 @@ sourcedir = os.path.dirname(os.path.realpath(__file__))
 
 j2_env = Environment(loader=FileSystemLoader(os.path.join(sourcedir, "templates")))
 
-logger = logging.getLogger("UCC")
-logger.setLevel(logging.INFO)
-formatter = logging.Formatter("%(asctime)s [%(name)s] %(levelname)s: %(message)s")
-shandler = logging.StreamHandler()
-shandler.setLevel(logging.INFO)
-shandler.setFormatter(formatter)
-logger.addHandler(shandler)
-
 PARENT_DIR = ".."
+
+logger = logging.getLogger("ucc_gen")
+logger.setLevel(logging.INFO)
+formatter = logging.Formatter("%(asctime)s %(levelname)s: %(message)s")
+stream_handler = logging.StreamHandler()
+stream_handler.setLevel(logging.INFO)
+stream_handler.setFormatter(formatter)
+logger.addHandler(stream_handler)
 
 
 def get_os_path(path):
@@ -517,7 +517,7 @@ def _generate(source, config, ta_version, outputdir=None, python_binary_name="py
         update_ta_version(config, ta_version)
 
         # handle_update check schemaVersion and update globalConfig.json if required and return schema
-        schema_content = handle_global_config_update(logger, config)
+        schema_content = handle_global_config_update(config)
 
         scheme = GlobalConfigBuilderSchema(schema_content, j2_env)
 
@@ -550,7 +550,7 @@ def _generate(source, config, ta_version, outputdir=None, python_binary_name="py
         )
         ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
         logger.info(f"Install add-on requirements into {ucc_lib_target} from {source}")
-        install_python_libraries(logger, source, ucc_lib_target, python_binary_name)
+        install_python_libraries(source, ucc_lib_target, python_binary_name)
 
         replace_token(ta_name, outputdir)
 
@@ -574,7 +574,7 @@ def _generate(source, config, ta_version, outputdir=None, python_binary_name="py
         ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
 
         logger.info(f"Install add-on requirements into {ucc_lib_target} from {source}")
-        install_python_libraries(logger, source, ucc_lib_target, python_binary_name)
+        install_python_libraries(source, ucc_lib_target, python_binary_name)
 
     ignore_list = get_ignore_list(
         ta_name, os.path.abspath(os.path.join(source, PARENT_DIR, ".uccignore"))
@@ -617,7 +617,7 @@ def _generate(source, config, ta_version, outputdir=None, python_binary_name="py
     license_dir = os.path.abspath(os.path.join(source, PARENT_DIR, "LICENSES"))
 
     if os.path.exists(license_dir):
-        logger.info("Copy LICENSES directory ")
+        logger.info("Copy LICENSES directory")
         recursive_overwrite(license_dir, os.path.join(outputdir, ta_name, "LICENSES"))
 
     if os.path.exists(

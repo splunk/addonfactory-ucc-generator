@@ -13,8 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-
+import logging
 import re
 from os import path as op
 
@@ -30,18 +29,14 @@ from splunk_add_on_ucc_framework.modular_alert_builder.build_core.alert_actions_
     write_file,
 )
 
+logger = logging.getLogger("ucc_gen")
+
 
 class AlertActionsPyBase:
     def __init__(
-        self,
-        input_setting=None,
-        package_path=None,
-        logger=None,
-        global_settings=None,
-        **kwargs
+        self, input_setting=None, package_path=None, global_settings=None, **kwargs
     ):
         self._all_setting = input_setting
-        self._logger = logger
         self._package_path = package_path
         self._global_settings = global_settings
         self._current_alert = None
@@ -107,19 +102,17 @@ class AlertActionsPyGenerator(AlertActionsPyBase):
         self,
         input_setting=None,
         package_path=None,
-        logger=None,
         template_py=None,
         template_helper_py=None,
         global_settings=None,
         **kwargs
     ):
-        if not input_setting or not logger:
-            msg = 'required_args="input_setting, logger"'
+        if not input_setting:
+            msg = 'required_args="input_setting""'
             raise aae.AlertActionsInValidArgs(msg)
         super().__init__(
             input_setting=input_setting,
             package_path=package_path,
-            logger=logger,
             template_py=template_py,
             global_settings=global_settings,
             **kwargs
@@ -130,12 +123,12 @@ class AlertActionsPyGenerator(AlertActionsPyBase):
         self._template_helper_py = (
             template_helper_py or AlertActionsPyGenerator.DEFAULT_TEMPLATE_HELPER_PY
         )
-        self._logger.info("template_py=%s", self._template_py)
+        logger.info("template_py=%s", self._template_py)
         self._output = {}
 
     def merge_py_code(self, init, new):
         if not init:
-            self._logger.info("No previous code, don't merge new parameters in")
+            logger.info("No previous code, don't merge new parameters in")
             return new
 
         start = r"\[sample_code_macro:start\]"
@@ -145,7 +138,7 @@ class AlertActionsPyGenerator(AlertActionsPyBase):
         pattern = re.compile(start + r"((.|[\r\n])*)" + end, re.MULTILINE)
         matched = pattern.search(init)
         if not matched:
-            self._logger.info("No macro anymore, don't merge new parameters in")
+            logger.info("No macro anymore, don't merge new parameters in")
             return init
 
         matched = pattern.search(new)
@@ -174,14 +167,11 @@ class AlertActionsPyGenerator(AlertActionsPyBase):
             helper_name=op.splitext(self.get_alert_helper_py_name())[0],
         )
 
-        self._logger.debug(
-            'operation="Writing file", file="%s"', self.get_alert_py_path()
-        )
+        logger.debug('operation="Writing file", file="%s"', self.get_alert_py_path())
         write_file(
             self.get_alert_py_name(),
             self.get_alert_py_path(),
             rendered_content,
-            self._logger,
         )
         name = self._current_alert[ac.SHORT_NAME]
         if not self._output.get(name):
@@ -206,14 +196,11 @@ class AlertActionsPyGenerator(AlertActionsPyBase):
         )
 
         final_content = self.merge_py_code(init_content, rendered_content)
-        self._logger.debug(
-            'operation="Writing file", file="%s"', self.get_alert_py_path()
-        )
+        logger.debug('operation="Writing file", file="%s"', self.get_alert_py_path())
         write_file(
             self.get_alert_helper_py_name(),
             self.get_alert_helper_py_path(),
             final_content,
-            self._logger,
         )
         if not self._output.get(name):
             self._output[name] = {}
@@ -221,19 +208,18 @@ class AlertActionsPyGenerator(AlertActionsPyBase):
 
     def handle(self):
         for alert in self._alert_actions_setting:
-            self._logger.info(
+            logger.info(
                 'operation="Generate py file", alert_action="%s"', alert[ac.SHORT_NAME]
             )
             self.gen_py_file(alert)
 
 
 def generate_alert_actions_py_files(
-    input_setting=None, package_path=None, logger=None, global_settings=None, **kwargs
+    input_setting=None, package_path=None, global_settings=None, **kwargs
 ):
     py_gen = AlertActionsPyGenerator(
         input_setting=input_setting,
         package_path=package_path,
-        logger=logger,
         global_settings=global_settings,
         **kwargs
     )

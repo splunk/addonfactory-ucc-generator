@@ -22,17 +22,10 @@ import traceback
 from splunk_add_on_ucc_framework import normalize
 from splunk_add_on_ucc_framework.modular_alert_builder.build_core import generate_alerts
 
-
-class LoggerAdapter(logging.LoggerAdapter):
-    def __init__(self, prefix, logger):
-        super().__init__(logger, {})
-        self.prefix = prefix
-
-    def process(self, msg, kwargs):
-        return f"[{self.prefix}] {msg}", kwargs
+logger = logging.getLogger("ucc_gen")
 
 
-def validate(alert, logger):
+def validate(alert):
     try:
         fields = []
         if alert.get("entity"):
@@ -88,18 +81,11 @@ def validate(alert, logger):
 
 
 def alert_build(schema_content, product_id, short_name, output_dir, sourcedir):
-
-    # Initializing logger
-    logging.basicConfig()
-    logger = logging.getLogger("Alert Logger")
-    logger = LoggerAdapter(f'ta="{short_name}" Creating Alerts', logger)
-
-    # Validation
     for alert in schema_content["alerts"]:
-        validate(alert, logger)
+        validate(alert)
 
     # Get the alert schema with required structure
     envs = normalize.normalize(schema_content, product_id, short_name)
     pack_folder = os.path.join(sourcedir, "arf_dir_templates", "modular_alert_package")
     # Generate Alerts
-    generate_alerts(pack_folder, output_dir, logger, envs)
+    generate_alerts(pack_folder, output_dir, envs)

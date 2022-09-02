@@ -13,8 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from unittest import mock
-
 from splunk_add_on_ucc_framework.modular_alert_builder.build_core import (
     alert_actions_conf_gen,
 )
@@ -106,7 +104,6 @@ def test_generate_alert_action(tmp_path):
                 }
             ],
         },
-        logger=mock.MagicMock(),
         package_path=tmp_path,
     )
     expected_alert_actions_conf = get_testdata_file("alert_actions.conf.generated")

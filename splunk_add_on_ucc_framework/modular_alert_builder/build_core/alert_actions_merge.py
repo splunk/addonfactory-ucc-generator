@@ -13,8 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-
+import logging
 import os
 import os.path as op
 from os.path import basename as bn
@@ -32,8 +31,10 @@ from splunk_add_on_ucc_framework.modular_alert_builder.build_core import (
 merge_deny_list = ["default.meta", "README.txt"]
 merge_mode_config = {"app.conf": "item_overwrite"}
 
+logger = logging.getLogger("ucc_gen")
 
-def remove_alert_from_conf_file(alert, conf_file, logger):
+
+def remove_alert_from_conf_file(alert, conf_file):
     if not alert or not conf_file:
         logger.info('alert="%s", conf_file="%s"', alert, conf_file)
         return
@@ -102,7 +103,7 @@ def merge_conf_file(src_file, dst_file, merge_mode="stanza_overwrite"):
                 else:
                     parser.remove_option(stanza, k)
     else:
-        # overwrit the whole file
+        # overwrite the whole file
         parser.read(src_file)
 
     with open(dst_file, "w") as df:

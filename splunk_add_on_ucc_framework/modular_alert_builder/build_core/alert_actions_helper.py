@@ -13,8 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-
+import logging
 import os.path as op
 import sys
 from os import makedirs, remove
@@ -25,8 +24,10 @@ from splunk_add_on_ucc_framework.modular_alert_builder.build_core.alert_actions_
     merge_conf_file,
 )
 
+logger = logging.getLogger("ucc_gen")
 
-def write_file(file_name, file_path, content, logger, merge="stanza_overwrite"):
+
+def write_file(file_name, file_path, content, merge="stanza_overwrite"):
     logger.debug('operation="write", object="%s" object_type="file"', file_path)
 
     do_merge = False
