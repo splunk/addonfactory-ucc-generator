@@ -13,8 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-
+import logging
 import os
 from os import linesep
 from os import path as op
@@ -35,11 +34,12 @@ from splunk_add_on_ucc_framework.modular_alert_builder.build_core.alert_actions_
     AlertActionsTemplateMgr,
 )
 
+logger = logging.getLogger("ucc_gen")
+
 
 class AlertHtmlBase:
-    def __init__(self, input_setting=None, package_path=None, logger=None):
+    def __init__(self, input_setting=None, package_path=None):
         self._all_setting = input_setting
-        self._logger = logger
         self._package_path = package_path
         self._current_alert = None
         self._templates = Environment(
@@ -80,14 +80,13 @@ class AlertHtmlGenerator(AlertHtmlBase):
         self,
         input_setting=None,
         package_path=None,
-        logger=None,
         html_template=None,
         html_home=None,
         html_theme=None,
     ):
-        super().__init__(input_setting, package_path, logger)
-        if not input_setting or not logger:
-            msg = 'required_args="input_setting, logger"'
+        super().__init__(input_setting, package_path)
+        if not input_setting:
+            msg = 'required_args="input_setting"'
             raise aae.AlertActionsInValidArgs(msg)
 
         self._alert_actions_setting = input_setting[ac.MODULAR_ALERTS]
@@ -95,7 +94,7 @@ class AlertHtmlGenerator(AlertHtmlBase):
         self._html_home = html_home or AlertHtmlGenerator.DEFAULT_HOME_HTML
         self._temp_obj = AlertActionsTemplateMgr(html_theme=html_theme)
         self._html_theme = self._temp_obj.get_html_lookup_dir()
-        self._logger.info(
+        logger.info(
             'html_theme="%s" html_template="%s", html_home="%s"',
             self._html_theme,
             self._html_template,
@@ -112,27 +111,29 @@ class AlertHtmlGenerator(AlertHtmlBase):
             [s for s in final_form.splitlines() if not search(r"^\s*$", s)]
         )
 
-        self._logger.debug(
+        logger.debug(
             'operation="Write", object_type="File", object="%s"',
             self.get_alert_html_path(),
         )
 
         write_file(
-            self.get_alert_html_name(), self.get_alert_html_path(), text, self._logger
+            self.get_alert_html_name(),
+            self.get_alert_html_path(),
+            text,
         )
         self._output[self._current_alert["short_name"]] = text
 
     def handle(self):
-        self._logger.info("html_theme=%s", self._html_theme)
+        logger.info("html_theme=%s", self._html_theme)
         template = self._templates.get_template(self._html_template)
-        self._logger.info("Start to generate alert actions html files")
+        logger.info("Start to generate alert actions html files")
         for alert in self._alert_actions_setting:
             self.handle_one_alert(template, alert)
-        self._logger.info("Finished generating alert actions html files")
+        logger.info("Finished generating alert actions html files")
 
 
 def generate_alert_actions_html_files(
-    input_setting=None, package_path=None, logger=None, html_setting=None
+    input_setting=None, package_path=None, html_setting=None
 ):
     html_template = None
     html_home = None
@@ -144,7 +145,6 @@ def generate_alert_actions_html_files(
     html_gen = AlertHtmlGenerator(
         input_setting=input_setting,
         package_path=package_path,
-        logger=logger,
         html_template=html_template,
         html_home=html_home,
         html_theme=html_theme,

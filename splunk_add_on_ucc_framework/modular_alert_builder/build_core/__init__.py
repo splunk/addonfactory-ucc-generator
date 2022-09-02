@@ -15,6 +15,7 @@
 #
 
 
+import logging
 import os
 import re
 import shutil
@@ -28,6 +29,8 @@ from splunk_add_on_ucc_framework.modular_alert_builder.build_core.alert_actions_
 from splunk_add_on_ucc_framework.modular_alert_builder.build_core.alert_actions_py_gen import (
     generate_alert_actions_py_files,
 )
+
+logger = logging.getLogger("ucc_gen")
 
 cache_path = {}  # type: ignore
 
@@ -66,7 +69,7 @@ def check_file_list(dirName, file_list, env):
     return ret
 
 
-def prepare_ta_directory_tree(src, dest, logger, envs):
+def prepare_ta_directory_tree(src, dest, envs):
     """
     If dest doesn't exist, then generate a new TA directory tree.
     If dest exists, then merge with the new one
@@ -110,9 +113,7 @@ def prepare_ta_directory_tree(src, dest, logger, envs):
     return output_dir
 
 
-def generate_alerts(src, dest, logger, envs, process_list=None, skip_list=None):
-    process_list = process_list or []
-    skip_list = skip_list or []
+def generate_alerts(src, dest, envs):
     output_dir = dest
     package_dir = None
     output_content = {}
@@ -123,7 +124,7 @@ def generate_alerts(src, dest, logger, envs, process_list=None, skip_list=None):
 
     try:
         if dest:
-            output_dir = prepare_ta_directory_tree(src, dest, logger, envs)
+            output_dir = prepare_ta_directory_tree(src, dest, envs)
             package_dir = os.path.join(dest, envs["product_id"])
 
         build_components = envs["build_components"]
@@ -131,7 +132,6 @@ def generate_alerts(src, dest, logger, envs, process_list=None, skip_list=None):
             conf_return = generate_alert_actions_conf(
                 input_setting=envs["schema.content"],
                 package_path=package_dir,
-                logger=logger,
                 global_settings=global_settings,
             )
 
@@ -139,7 +139,6 @@ def generate_alerts(src, dest, logger, envs, process_list=None, skip_list=None):
             html_return = generate_alert_actions_html_files(
                 input_setting=envs["schema.content"],
                 package_path=package_dir,
-                logger=logger,
                 html_setting=envs["html_setting"],
             )
 
@@ -147,7 +146,6 @@ def generate_alerts(src, dest, logger, envs, process_list=None, skip_list=None):
             py_return = generate_alert_actions_py_files(
                 input_setting=envs["schema.content"],
                 package_path=package_dir,
-                logger=logger,
                 global_settings=global_settings,
             )
 

@@ -16,6 +16,8 @@
 import json
 import logging
 
+logger = logging.getLogger("ucc_gen")
+
 
 def _version_tuple(version_str):
     """
@@ -69,7 +71,7 @@ def _handle_dropping_api_version_update(schema_content: dict) -> dict:
     return schema_content
 
 
-def handle_global_config_update(logger: logging.Logger, config_path: str) -> dict:
+def handle_global_config_update(config_path: str) -> dict:
     """Handle changes in globalConfig.json.
 
     Args:
