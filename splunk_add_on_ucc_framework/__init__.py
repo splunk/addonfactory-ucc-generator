@@ -16,7 +16,6 @@
 
 __version__ = "5.13.0"
 
-import argparse
 import configparser
 import json
 import logging
@@ -638,41 +637,3 @@ def generate(
     python_binary_name="python3",
 ):
     _generate(source, config, ta_version, outputdir, python_binary_name)
-
-
-def main():
-    parser = argparse.ArgumentParser(description="Build the add-on")
-    parser.add_argument(
-        "--source",
-        type=str,
-        nargs="?",
-        help="Folder containing the app.manifest and app source",
-        default="package",
-    )
-    parser.add_argument(
-        "--config",
-        type=str,
-        nargs="?",
-        help="Path to configuration file, defaults to GlobalConfig.json in parent directory of source provided",
-        default=None,
-    )
-    parser.add_argument(
-        "--ta-version",
-        type=str,
-        help="Version of TA, default version is version specified in the "
-        "package such as app.manifest, app.conf, and globalConfig.json",
-        default=None,
-    )
-    parser.add_argument(
-        "--python-binary-name",
-        type=str,
-        help="Python binary name to use to install requirements",
-        default="python3",
-    )
-    args = parser.parse_args()
-    _generate(
-        args.source,
-        args.config,
-        args.ta_version,
-        python_binary_name=args.python_binary_name,
-    )
