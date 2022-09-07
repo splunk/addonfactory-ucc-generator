@@ -1,8 +1,11 @@
 site_name: Splunk Add-on UCC Framework
+site_author: Splunk
+site_url: "https://splunk.github.io/addonfactory-ucc-generator/"
+edit_uri: "tree/main/docs/"
+remote_branch: gh-pages
 
-extra:
-  version:
-    provider: mike
+repo_name: Splunk Add-on UCC Framework
+repo_url: "https://github.com/splunk/addonfactory-ucc-generator"
 
 markdown_extensions:
   - toc:
@@ -23,5 +26,6 @@ nav:
   - "How to use": "how_to_use.md"
   - Tabs: "tabs.md"
   - Example: "example.md"
+  - "Custom REST Handler": "custom_rest_handler.md"
   - Troubleshooting: "troubleshooting.md"
   - Contributing: "contributing.md"
