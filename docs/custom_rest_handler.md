@@ -1,4 +1,4 @@
-# Custom HEST Handlers
+# Custom REST Handlers
 
 It is possible to extend the default behaviour of the UCC-generated REST handlers.
 
