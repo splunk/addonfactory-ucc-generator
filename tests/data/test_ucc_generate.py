@@ -85,6 +85,12 @@ class UccGenerateTest(unittest.TestCase):
             for f in files_to_exist:
                 expected_file_path = path.join(expected_folder, *f)
                 self.assertTrue(path.exists(expected_file_path))
+            files_to_not_exist = [
+                ("default", "data", "ui", "nav", "default_no_input.xml"),
+            ]
+            for f in files_to_not_exist:
+                expected_file_path = path.join(expected_folder, *f)
+                self.assertFalse(path.exists(expected_file_path))
 
     def test_ucc_generate_with_configuration(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -142,6 +148,12 @@ class UccGenerateTest(unittest.TestCase):
             for f in files_to_exist:
                 expected_file_path = path.join(expected_folder, *f)
                 self.assertTrue(path.exists(expected_file_path))
+            files_to_not_exist = [
+                ("default", "data", "ui", "nav", "default_no_input.xml"),
+            ]
+            for f in files_to_not_exist:
+                expected_file_path = path.join(expected_folder, *f)
+                self.assertFalse(path.exists(expected_file_path))
 
     def test_ucc_generate_with_configuration_files_only(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -181,6 +193,12 @@ class UccGenerateTest(unittest.TestCase):
                     ),
                     msg=f"Expected file {expected_file_path} is different from {actual_file_path}",
                 )
+            files_to_not_exist = [
+                ("default", "data", "ui", "nav", "default_no_input.xml"),
+            ]
+            for f in files_to_not_exist:
+                expected_file_path = path.join(expected_folder, *f)
+                self.assertFalse(path.exists(expected_file_path))
 
 
 if __name__ == "__main__":

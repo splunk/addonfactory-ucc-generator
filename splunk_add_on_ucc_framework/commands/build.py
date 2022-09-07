@@ -20,7 +20,6 @@ import os
 import shutil
 import sys
 
-from defusedxml import ElementTree as defused_et
 from jinja2 import Environment, FileSystemLoader
 
 from splunk_add_on_ucc_framework import (
@@ -366,42 +365,26 @@ def _handle_no_inputs(ta_name, outputdir):
         ta_name (str): Name of TA.
         outputdir (str): output directory.
     """
-
-    def _removeinput(path):
-        """
-        Remove "inputs" view from default.xml
-
-        Args:
-            path (str) : path to default.xml
-        """
-        tree = defused_et.parse(path)
-        root = tree.getroot()
-
-        for element in root:
-            if element.tag == "view" and element.get("name") == "inputs":
-                root.remove(element)
-
-        tree.write(path)
-
     default_xml_file = os.path.join(
         outputdir, ta_name, "default", "data", "ui", "nav", "default.xml"
     )
-    # Remove "inputs" view from default.xml
-    _removeinput(default_xml_file)
-
-    file_remove_list = []
-    file_remove_list.append(
-        os.path.join(outputdir, ta_name, "default", "data", "ui", "views", "inputs.xml")
+    default_no_input_xml_file = os.path.join(
+        outputdir, ta_name, "default", "data", "ui", "nav", "default_no_input.xml"
     )
-    file_remove_list.append(
-        os.path.join(outputdir, ta_name, "appserver", "static", "css", "inputs.css")
+    os.remove(default_xml_file)
+    os.rename(
+        default_no_input_xml_file,
+        default_xml_file,
     )
-    file_remove_list.append(
+    file_remove_list = [
+        os.path.join(
+            outputdir, ta_name, "default", "data", "ui", "views", "inputs.xml"
+        ),
+        os.path.join(outputdir, ta_name, "appserver", "static", "css", "inputs.css"),
         os.path.join(
             outputdir, ta_name, "appserver", "static", "css", "createInput.css"
-        )
-    )
-    # Remove unnecessary files
+        ),
+    ]
     for fl in file_remove_list:
         try:
             os.remove(fl)
@@ -533,6 +516,16 @@ def generate(source, config, ta_version, outputdir=None, python_binary_name="pyt
             ta_name, ta_tabs, schema_content.get("meta").get("version"), outputdir
         )
         if is_inputs:
+            default_no_input_xml_file = os.path.join(
+                outputdir,
+                ta_name,
+                "default",
+                "data",
+                "ui",
+                "nav",
+                "default_no_input.xml",
+            )
+            os.remove(default_no_input_xml_file)
             _add_modular_input(ta_name, schema_content, import_declare_name, outputdir)
         else:
             _handle_no_inputs(ta_name, outputdir)

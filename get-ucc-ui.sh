@@ -13,6 +13,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-if [ -z ${1+x} ]; then source .ucc-ui-version; else VERSION=$1; fi
-
-wget https://github.com/splunk/addonfactory-ucc-base-ui/releases/download/${VERSION}/splunk-ucc-ui.tgz
+wget https://github.com/splunk/addonfactory-ucc-base-ui/releases/download/1.11.0/splunk-ucc-ui.tgz
