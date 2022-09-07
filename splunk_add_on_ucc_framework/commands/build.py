@@ -43,7 +43,9 @@ logger = logging.getLogger("ucc_gen")
 
 PARENT_DIR = ".."
 internal_root_dir = os.path.dirname(os.path.dirname(__file__))
-j2_env = Environment(loader=FileSystemLoader(os.path.join(internal_root_dir, "templates")))
+j2_env = Environment(
+    loader=FileSystemLoader(os.path.join(internal_root_dir, "templates"))
+)
 
 
 def _update_ta_version(config, ta_version):
