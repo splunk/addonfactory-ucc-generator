@@ -45,7 +45,7 @@ jsonschema = "^4.4.0"
 pytest = "^7.1"
 pytest-cov = "^3.0.0"
 mkdocs = "^1.3.1"
-mkdocs-material = "^8.5.0"
+mkdocs-material = "^8.5.1"
 
 [tool.poetry.scripts]
 ucc-gen="splunk_add_on_ucc_framework.main:main"
