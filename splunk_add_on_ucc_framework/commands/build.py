@@ -33,7 +33,7 @@ from splunk_add_on_ucc_framework import (
     utils,
 )
 from splunk_add_on_ucc_framework.install_python_libraries import (
-    install_python_libraries,
+    install_python_libraries, SplunktaucclibNotFound,
 )
 from splunk_add_on_ucc_framework.start_alert_build import alert_build
 from splunk_add_on_ucc_framework.uccrestbuilder import build, global_config
@@ -506,7 +506,13 @@ def generate(source, config, ta_version, outputdir=None, python_binary_name="pyt
         )
         ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
         logger.info(f"Install add-on requirements into {ucc_lib_target} from {source}")
-        install_python_libraries(source, ucc_lib_target, python_binary_name)
+        try:
+            install_python_libraries(
+                source, ucc_lib_target, python_binary_name, includes_ui=True
+            )
+        except SplunktaucclibNotFound as e:
+            logger.error(str(e))
+            sys.exit(1)
 
         _replace_token(ta_name, outputdir)
 
