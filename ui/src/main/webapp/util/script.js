@@ -14,9 +14,19 @@ export function getBuildDirPath() {
     return '';
 }
 
-export function loadGlobalConfig() {
-    // Get the configuraiton json file in sync mode
+function loadJSONFile() {
     return axios.get(`${getBuildDirPath()}/globalConfig.json`).then((res) => {
         return typeof res.data === 'object' ? res.data : JSON.parse(res.data);
     });
+}
+
+function loadYAMLFile() {
+    const yaml = require('js-yaml');
+    return axios.get(`${getBuildDirPath()}/globalConfig.yaml`).then((res) => {
+        return typeof res.data === 'object' ? res.data : yaml.load(res.data);
+    });
+}
+
+export function loadGlobalConfig() {
+    return loadJSONFile().catch(e => loadYAMLFile());
 }
