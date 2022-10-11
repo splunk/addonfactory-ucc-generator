@@ -13,10 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import functools
 import json
 import logging
 
+import yaml
+
 logger = logging.getLogger("ucc_gen")
+
+Loader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+yaml_load = functools.partial(yaml.load, Loader=Loader)
 
 
 def _version_tuple(version_str):
@@ -71,25 +77,32 @@ def _handle_dropping_api_version_update(schema_content: dict) -> dict:
     return schema_content
 
 
-def handle_global_config_update(config_path: str) -> dict:
-    """Handle changes in globalConfig.json.
+def handle_global_config_update(config_path: str, is_global_config_yaml: bool) -> dict:
+    """Handle changes in globalConfig file.
 
     Args:
         logger: Logger instance
-        config_path: Path to globalConfig.json file
+        config_path: Path to globalConfig file
+        is_global_config_yaml: True if globalconfig file is of type yaml
 
     Returns:
-        Content of the updated globalConfig.json file in a dictionary format.
+        Content of the updated globalConfig file in a dictionary format.
     """
     with open(config_path) as config_file:
-        schema_content = json.load(config_file)
+        if is_global_config_yaml:
+            schema_content = yaml_load(config_file)
+        else:
+            schema_content = json.load(config_file)
 
     version = schema_content.get("meta").get("schemaVersion", "0.0.0")
 
     if _version_tuple(version) < _version_tuple("0.0.1"):
         schema_content = _handle_biased_terms_update(schema_content)
         with open(config_path, "w") as config_file:
-            json.dump(schema_content, config_file, ensure_ascii=False, indent=4)
+            if is_global_config_yaml:
+                yaml.dump(schema_content, config_file, indent=4)
+            else:
+                json.dump(schema_content, config_file, ensure_ascii=False, indent=4)
 
     if _version_tuple(version) < _version_tuple("0.0.2"):
         ta_tabs = schema_content.get("pages").get("configuration", {}).get("tabs", {})
@@ -104,7 +117,7 @@ def handle_global_config_update(config_path: str) -> dict:
                             "oauth_state_enabled field is no longer a separate "
                             "entity since UCC version 5.0.0. It is now an "
                             "option in the oauth field. Please update the "
-                            "globalconfig.json file accordingly."
+                            "globalconfig file accordingly."
                         )
                         oauth_state_enabled_entity = entity
 
@@ -154,11 +167,17 @@ def handle_global_config_update(config_path: str) -> dict:
 
         schema_content["meta"]["schemaVersion"] = "0.0.2"
         with open(config_path, "w") as config_file:
-            json.dump(schema_content, config_file, ensure_ascii=False, indent=4)
+            if is_global_config_yaml:
+                yaml.dump(schema_content, config_file, indent=4)
+            else:
+                json.dump(schema_content, config_file, ensure_ascii=False, indent=4)
 
     if _version_tuple(version) < _version_tuple("0.0.3"):
         schema_content = _handle_dropping_api_version_update(schema_content)
         with open(config_path, "w") as config_file:
-            json.dump(schema_content, config_file, ensure_ascii=False, indent=4)
+            if is_global_config_yaml:
+                yaml.dump(schema_content, config_file, indent=4)
+            else:
+                json.dump(schema_content, config_file, ensure_ascii=False, indent=4)
 
     return schema_content

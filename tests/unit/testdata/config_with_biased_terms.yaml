@@ -1,0 +1,91 @@
+---
+pages:
+  configuration:
+    tabs:
+    - name: configuration_tab
+      entity:
+      - type: singleSelect
+        label: Index 1
+        help: An index is a type of data repository. Select the index in which you
+          want to collect the events.
+        defaultValue: main
+        required: true
+        validators:
+        - type: string
+          maxLength: 80
+          errorMsg: Maximum length allowed for index is 80
+          minLength: 1
+        field: index_1
+        options:
+          createSearchChoice: true
+          blackList: "^_.*$"
+          endpointUrl: data/indexes
+      - type: singleSelect
+        label: Index 2
+        help: An index is a type of data repository. Select the index in which you
+          want to collect the events.
+        defaultValue: main
+        required: true
+        validators:
+        - type: string
+          maxLength: 80
+          errorMsg: Maximum length allowed for index is 80
+          minLength: 1
+        field: index_2
+        options:
+          createSearchChoice: true
+          whiteList: "^_.*$"
+          endpointUrl: data/indexes
+      title: Configuration tab
+    title: Configuration
+    description: Set up your add-on
+  inputs:
+    services:
+    - name: example_input_one
+      entity:
+      - type: singleSelect
+        label: Index 1
+        validators:
+        - type: string
+          errorMsg: Length of index name should be between 1 and 80.
+          minLength: 1
+          maxLength: 80
+        defaultValue: default
+        options:
+          endpointUrl: data/indexes
+          blackList: "^_.*$"
+          createSearchChoice: true
+        field: index_1
+        required: true
+      - type: singleSelect
+        label: Index 2
+        validators:
+        - type: string
+          errorMsg: Length of index name should be between 1 and 80.
+          minLength: 1
+          maxLength: 80
+        defaultValue: default
+        options:
+          endpointUrl: data/indexes
+          whiteList: "^_.*$"
+          createSearchChoice: true
+        field: index_2
+        required: true
+      title: Example Input One
+    title: Inputs
+    description: Manage your data inputs
+    table:
+      actions:
+      - edit
+      - enable
+      - delete
+      - clone
+      header:
+      - label: Name
+        field: name
+meta:
+  apiVersion: 3.2.0
+  name: Splunk_TA_UCCExample
+  restRoot: splunk_ta_uccexample
+  version: 1.0.0
+  displayName: Splunk UCC test Add-on

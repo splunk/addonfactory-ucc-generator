@@ -13,8 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import json
 import os
+from contextlib import nullcontext as does_not_raise
 
 import pytest
 
@@ -32,26 +32,31 @@ def _path_to_source_dir() -> str:
     )
 
 
-def test_config_validation_when_valid_config_then_no_exception():
-    config = helpers.get_testdata_file("valid_config.json")
-    config = json.loads(config)
+@pytest.mark.parametrize(
+    "filename,expectation",
+    [
+        ("valid_config.json", does_not_raise()),
+        (
+            "invalid_config_no_configuration_tabs.json",
+            pytest.raises(GlobalConfigValidatorException),
+        ),
+        (
+            "invalid_config_no_name_field_in_configuration_tab_table.json",
+            pytest.raises(GlobalConfigValidatorException),
+        ),
+        ("valid_config.yaml", does_not_raise()),
+        (
+            "invalid_config_no_configuration_tabs.yaml",
+            pytest.raises(GlobalConfigValidatorException),
+        ),
+        (
+            "invalid_config_no_name_field_in_configuration_tab_table.yaml",
+            pytest.raises(GlobalConfigValidatorException),
+        ),
+    ],
+)
+def test_config_validation(filename, expectation):
+    config = helpers.get_testdata(filename)
     validator = GlobalConfigValidator(_path_to_source_dir(), config)
-    validator.validate()
-
-
-def test_config_validation_when_invalid_config_then_exception():
-    config = helpers.get_testdata_file("invalid_config_no_configuration_tabs.json")
-    config = json.loads(config)
-    validator = GlobalConfigValidator(_path_to_source_dir(), config)
-    with pytest.raises(GlobalConfigValidatorException):
-        validator.validate()
-
-
-def test_config_validation_when_configuration_tab_table_has_no_name_field():
-    config = helpers.get_testdata_file(
-        "invalid_config_no_name_field_in_configuration_tab_table.json"
-    )
-    config = json.loads(config)
-    validator = GlobalConfigValidator(_path_to_source_dir(), config)
-    with pytest.raises(GlobalConfigValidatorException):
+    with expectation:
         validator.validate()
