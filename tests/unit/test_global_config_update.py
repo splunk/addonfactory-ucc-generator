@@ -15,6 +15,8 @@
 #
 import json
 
+import yaml
+import pytest
 import tests.unit.helpers as helpers
 from splunk_add_on_ucc_framework.global_config_update import (
     _handle_biased_terms_update,
@@ -22,9 +24,9 @@ from splunk_add_on_ucc_framework.global_config_update import (
 )
 
 
-def test_handle_biased_terms_update():
-    config = helpers.get_testdata_file("config_with_biased_terms.json")
-    config = json.loads(config)
+@pytest.mark.parametrize("file_name", ["config_with_biased_terms.json", "config_with_biased_terms.yaml"])
+def test_handle_biased_terms_update(file_name):
+    config = helpers.get_testdata(file_name)
     updated_config = _handle_biased_terms_update(config)
     expected_schema_version = "0.0.1"
     assert expected_schema_version == updated_config["meta"]["schemaVersion"]
@@ -49,10 +51,9 @@ def test_handle_biased_terms_update():
     assert "allowList" in configuration_entity_2_options_keys
     assert "whileList" not in configuration_entity_2_options_keys
 
-
-def test_handle_dropping_api_version_update():
-    config = helpers.get_testdata_file("config_with_biased_terms.json")
-    config = json.loads(config)
+@pytest.mark.parametrize("file_name", ["config_with_biased_terms.json", "config_with_biased_terms.yaml"])
+def test_handle_dropping_api_version_update(file_name):
+    config = helpers.get_testdata(file_name)
     updated_config = _handle_dropping_api_version_update(config)
     expected_schema_version = "0.0.3"
     assert expected_schema_version == updated_config["meta"]["schemaVersion"]

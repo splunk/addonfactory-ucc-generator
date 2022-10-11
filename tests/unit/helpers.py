@@ -14,7 +14,9 @@
 # limitations under the License.
 #
 import os
+from typing import Dict
 
+import yaml
 
 def assert_identical_files(expected_file_path: str, file_path: str) -> bool:
     with open(expected_file_path) as expected_fd:
@@ -34,3 +36,10 @@ def get_testdata_file(file_name: str) -> str:
     file_path = get_testdata_file_path(file_name)
     with open(file_path) as fp:
         return fp.read()
+
+def get_testdata(file_name: str) -> Dict:
+    config = get_testdata_file(file_name)
+    if file_name[-4] == "json":
+        return json.loads(config)
+    else:
+        return yaml.safe_load(config)
