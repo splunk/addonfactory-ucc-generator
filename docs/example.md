@@ -5,7 +5,7 @@ Splunk index that is going to be used in the add-on. Let's also assume
 that you do not want to show indexes that are for internal use only
 (like, `_internal`).
 
-For this you can create a `globalConfig.json` file and specify that you
+For this you can create a `globalConfig.json` or `globalConfig.yaml` it can be of json or yaml type and specify that you
 want one configuration tab called "Global Settings", one UI component on
 that tab that will handle index management and store selected index in
 specific add-on configuration file.
@@ -24,7 +24,7 @@ installed, please refer to installation section.
 The structure of the add-on before running `ucc-gen` command should be
 like this:
 
-    ├── globalConfig.json
+    ├── globalConfig.json or globalConfig.yaml
     └── package
         ├── LICENSE.txt
         ├── README.txt
@@ -64,7 +64,7 @@ After that, `output` folder should be created. It should contain
     │   │       |   ├── 4.licenses.txt
     │   │       |   ├── entry_page.js
     │   │       |   ├── entry_page.licenses.txt
-    │   │       |   └── globalConfig.json
+    │   │       |   └── globalConfig.json or globalConfig.yaml
     |   |       └── dependencies.txt
     │   └── templates
     │       └── base.html

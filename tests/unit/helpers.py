@@ -13,10 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import functools
+import json
 import os
 from typing import Dict
 
 import yaml
+
+Loader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+yaml_load = functools.partial(yaml.load, Loader=Loader)
+
 
 def assert_identical_files(expected_file_path: str, file_path: str) -> bool:
     with open(expected_file_path) as expected_fd:
@@ -37,9 +43,10 @@ def get_testdata_file(file_name: str) -> str:
     with open(file_path) as fp:
         return fp.read()
 
+
 def get_testdata(file_name: str) -> Dict:
     config = get_testdata_file(file_name)
     if file_name[-4] == "json":
         return json.loads(config)
     else:
-        return yaml.safe_load(config)
+        return yaml_load(config)

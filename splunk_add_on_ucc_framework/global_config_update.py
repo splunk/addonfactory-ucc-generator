@@ -13,12 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import functools
 import json
 import logging
 
 import yaml
 
 logger = logging.getLogger("ucc_gen")
+
+Loader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+yaml_load = functools.partial(yaml.load, Loader=Loader)
 
 
 def _version_tuple(version_str):
@@ -86,7 +90,7 @@ def handle_global_config_update(config_path: str, is_global_config_yaml: bool) -
     """
     with open(config_path) as config_file:
         if is_global_config_yaml:
-            schema_content = yaml.safe_load(config_file)
+            schema_content = yaml_load(config_file)
         else:
             schema_content = json.load(config_file)
 

@@ -13,12 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import json
 import os
+from contextlib import nullcontext as does_not_raise
 
 import pytest
-from contextlib import nullcontext as does_not_raise
-import yaml
 
 import tests.unit.helpers as helpers
 from splunk_add_on_ucc_framework.global_config_validator import (

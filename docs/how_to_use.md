@@ -2,14 +2,14 @@
 
 ## Prerequisites
 
--   `globalConfig.json`
+-   `globalConfig.json` or `globalConfig.yaml`
 -   `package` folder
 -   `git` for automatic versioning (when no `ta-version` argument is
     specified)
 
 Example of `globalConfig.json` and `package` folder can be found [here](https://github.com/splunk/splunk-add-on-for-ucc-example).
 
-The JSON schema for the `globalConfig.json` can be found 
+The JSON schema for the globalConfig file can be found
 [here](https://github.com/splunk/addonfactory-ucc-base-ui/blob/main/src/main/webapp/schema/schema.json).
 
 ## Steps
@@ -26,9 +26,9 @@ The JSON schema for the `globalConfig.json` can be found
 * `source` - [optional] folder containing the `app.manifest` and app 
     source.
 * `config` - [optional] path to the configuration file, defaults to
-    `globalConfig.json` in the parent directory of source provided.
+    globalConfig file in the parent directory of source provided.
 * `ta-version` - [optional] override current version of TA, default
-    version is version specified in `globalConfig.json`. Splunkbase
+    version is version specified in `globalConfig.json` or `globalConfig.yaml`. Splunkbase
     compatible version of SEMVER will be used by default.
 * `python-binary-name` - [optional] Python binary name to use when
     installing Python libraries.
@@ -46,7 +46,7 @@ package for distribution.
 * Cleans the output folder.
 * Retrieve the package ID of addon.
 * Copy UCC template directory under `output/<package_ID>` directory.
-* Copy globalConfig.json file to
+* Copy globalConfig.json or globalConfig.yaml file to
     `output/<package_ID>/appserver/static/js/build` directory.
 * Collect and install Addon's requirements into
     `output/<package_ID>/lib` directory of addon's package.
@@ -64,7 +64,7 @@ package for distribution.
 
 ## `additional_packaging.py` file
 
-To extend the build process, you can create `additional_packaging.py` file in the same file level where you have your `globalConfig.json`.
+To extend the build process, you can create `additional_packaging.py` file in the same file level where you have your globalConfig file.
 
 This file should have `additional_packaging` function which accepts 1 argument: add-on name.
 

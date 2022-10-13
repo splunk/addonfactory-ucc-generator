@@ -14,14 +14,15 @@
 # limitations under the License.
 #
 import configparser
+import functools
 import json
 import logging
 import os
 import shutil
 import sys
 
-from jinja2 import Environment, FileSystemLoader
 import yaml
+from jinja2 import Environment, FileSystemLoader
 
 from splunk_add_on_ucc_framework import (
     __version__,
@@ -47,6 +48,9 @@ j2_env = Environment(
     loader=FileSystemLoader(os.path.join(internal_root_dir, "templates"))
 )
 
+Loader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+yaml_load = functools.partial(yaml.load, Loader=Loader)
+
 
 def _update_ta_version(config, ta_version, is_global_config_yaml):
     """
@@ -58,7 +62,7 @@ def _update_ta_version(config, ta_version, is_global_config_yaml):
 
     with open(config) as config_file:
         if is_global_config_yaml:
-            schema_content = yaml.safe_load(config_file)
+            schema_content = yaml_load(config_file)
         else:
             schema_content = json.load(config_file)
     schema_content.setdefault("meta", {})["version"] = ta_version
@@ -444,7 +448,9 @@ def generate(source, config, ta_version, outputdir=None, python_binary_name="pyt
         is_global_config_yaml = False
         config = os.path.abspath(os.path.join(source, PARENT_DIR, "globalConfig.json"))
         if not os.path.isfile(config):
-            config = os.path.abspath(os.path.join(source, PARENT_DIR, "globalConfig.yaml"))
+            config = os.path.abspath(
+                os.path.join(source, PARENT_DIR, "globalConfig.yaml")
+            )
             is_global_config_yaml = True
 
     logger.info(f"Cleaning out directory {outputdir}")
@@ -476,8 +482,8 @@ def generate(source, config, ta_version, outputdir=None, python_binary_name="pyt
 
             if is_global_config_yaml:
                 validator = global_config_validator.GlobalConfigValidator(
-                    internal_root_dir, yaml.safe_load(config_raw)
-                )                
+                    internal_root_dir, yaml_load(config_raw)
+                )
             else:
                 validator = global_config_validator.GlobalConfigValidator(
                     internal_root_dir, json.loads(config_raw)
@@ -491,7 +497,9 @@ def generate(source, config, ta_version, outputdir=None, python_binary_name="pyt
 
         _update_ta_version(config, ta_version, is_global_config_yaml)
 
-        schema_content = global_config_update.handle_global_config_update(config, is_global_config_yaml)
+        schema_content = global_config_update.handle_global_config_update(
+            config, is_global_config_yaml
+        )
 
         scheme = global_config.GlobalConfigBuilderSchema(schema_content, j2_env)
 
@@ -510,34 +518,21 @@ def generate(source, config, ta_version, outputdir=None, python_binary_name="pyt
         )
 
         logger.info("Copy globalConfig to output")
-        
-        if is_global_config_yaml:
-            shutil.copyfile(
-                config,
-                os.path.join(
-                    outputdir,
-                    ta_name,
-                    "appserver",
-                    "static",
-                    "js",
-                    "build",
-                    "globalConfig.yaml",
-                ),
-            )
-        else:
-            shutil.copyfile(
-                config,
-                os.path.join(
-                    outputdir,
-                    ta_name,
-                    "appserver",
-                    "static",
-                    "js",
-                    "build",
-                    "globalConfig.json",
-                ),
-            )
-
+        global_config_file = (
+            "globalConfig.yaml" if is_global_config_yaml else "globalConfig.json"
+        )
+        shutil.copyfile(
+            config,
+            os.path.join(
+                outputdir,
+                ta_name,
+                "appserver",
+                "static",
+                "js",
+                "build",
+                global_config_file,
+            ),
+        )
         ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
         logger.info(f"Install add-on requirements into {ucc_lib_target} from {source}")
         install_python_libraries(source, ucc_lib_target, python_binary_name)
