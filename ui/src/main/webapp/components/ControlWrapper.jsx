@@ -33,20 +33,6 @@ class ControlWrapper extends React.PureComponent {
         this.controlType = this.isString(props.entity.type)
             ? CONTROL_TYPE_MAP[props.entity.type]
             : null;
-        // Add 'optional' placeholder for optional field
-        // Note: for oauth field it is possible required is false but the field is actually required
-        // based on what type of authentication is selected
-        this.options = this.props.entity.options;
-        if (
-            !this.props.entity.required &&
-            !Object.prototype.hasOwnProperty.call(this.props.entity, 'oauth_field') &&
-            !this.options?.placeholder
-        ) {
-            this.options = {
-                ...this.options,
-                placeholder: 'optional',
-            };
-        }
     }
 
     isString = (str) => {
@@ -70,26 +56,26 @@ class ControlWrapper extends React.PureComponent {
 
             rowView = this.controlType
                 ? React.createElement(this.controlType, {
-                      data,
-                      field,
-                      handleChange,
-                      addCustomValidator,
-                      utilCustomFunctions,
-                      controlOptions: this.options,
-                  })
+                    data,
+                    field,
+                    handleChange,
+                    addCustomValidator,
+                    utilCustomFunctions,
+                    controlOptions: this.props.entity.options,
+                })
                 : `No View Found for ${type} type`;
         } else {
             rowView = this.controlType
                 ? React.createElement(this.controlType, {
-                      handleChange,
-                      value: this.props.value,
-                      field,
-                      controlOptions: this.options,
-                      error: this.props.error,
-                      disabled: this.props.disabled,
-                      encrypted,
-                      dependencyValues: this.props.dependencyValues,
-                  })
+                    handleChange,
+                    value: this.props.value,
+                    field,
+                    controlOptions: this.props.entity.options,
+                    error: this.props.error,
+                    disabled: this.props.disabled,
+                    encrypted,
+                    dependencyValues: this.props.dependencyValues,
+                })
                 : `No View Found for ${type} type`;
         }
 

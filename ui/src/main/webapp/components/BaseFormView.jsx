@@ -1064,6 +1064,20 @@ class BaseFormView extends PureComponent {
                             };
                         }
 
+                        // Add 'optional' placeholder for optional field
+                        // Note: for oauth field it is possible required is false but the field is actually required
+                        // based on what type of authentication is selected
+                        if (
+                            !e.required &&
+                            !Object.prototype.hasOwnProperty.call(e, 'oauth_field') &&
+                            !e.options?.placeholder
+                        ) {
+                            e.options = {
+                                ...e.options,
+                                placeholder: 'optional',
+                            };
+                        }
+
                         return (
                             <ControlWrapper
                                 key={e.field}
