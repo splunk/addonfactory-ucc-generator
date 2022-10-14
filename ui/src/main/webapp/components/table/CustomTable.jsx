@@ -186,6 +186,7 @@ function CustomTable({
                 column.push({
                     ...item,
                     sortKey: item.field || null,
+                    isCustomMapping: item.mapping ? true : false
                 });
             });
         }
@@ -203,7 +204,7 @@ function CustomTable({
                     columns.map((headData) => (
                         <Table.HeadCell
                             key={headData.field}
-                            onSort={headData.sortKey ? handleSort : null}
+                            onSort={(e) => headData.sortKey ? handleSort(e, headData) : null}
                             sortKey={headData.sortKey ? headData.sortKey : null}
                             sortDir={
                                 headData.sortKey && headData.sortKey === sortKey ? sortDir : 'none'

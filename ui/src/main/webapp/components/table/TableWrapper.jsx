@@ -14,6 +14,7 @@ import { PAGE_INPUT } from '../../constants/pages';
 function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPageStyleDialog }) {
     const [sortKey, setSortKey] = useState('name');
     const [sortDir, setSortDir] = useState('asc');
+    const [isCustomMapping, setCustomMappingStatus] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -45,6 +46,7 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPag
                         id: val.id,
                         name: val.name,
                         serviceName: service.name,
+                        serviceTitle: service.title || ''
                     };
                 });
                 obj[service.name] = tmpObj;
@@ -154,6 +156,7 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPag
         const nextSortDir = prevSortDir === 'asc' ? 'desc' : 'asc';
         setSortDir(nextSortDir);
         setSortKey(val.sortKey);
+        setCustomMappingStatus(val.isCustomMapping);
     };
 
     /**
@@ -206,16 +209,18 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPag
             arr = findByMatchingValue(rowData[searchType]);
         }
 
+        const _sortKey = isCustomMapping ? 'serviceTitle' : sortKey;
+
         // Sort the array based on the sort value
         const sortedArr = arr.sort((rowA, rowB) => {
             if (sortDir === 'asc') {
-                const rowAValue = rowA[sortKey] === undefined ? '' : rowA[sortKey];
-                const rowBValue = rowB[sortKey] === undefined ? '' : rowB[sortKey];
+                const rowAValue = rowA[_sortKey] === undefined ? '' : rowA[_sortKey];
+                const rowBValue = rowB[_sortKey] === undefined ? '' : rowB[_sortKey];
                 return rowAValue > rowBValue ? 1 : -1;
             }
             if (sortDir === 'desc') {
-                const rowAValue = rowA[sortKey] === undefined ? '' : rowA[sortKey];
-                const rowBValue = rowB[sortKey] === undefined ? '' : rowB[sortKey];
+                const rowAValue = rowA[_sortKey] === undefined ? '' : rowA[_sortKey];
+                const rowBValue = rowB[_sortKey] === undefined ? '' : rowB[_sortKey];
                 return rowBValue > rowAValue ? 1 : -1;
             }
             return 0;
