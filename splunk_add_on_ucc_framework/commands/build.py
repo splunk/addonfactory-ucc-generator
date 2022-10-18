@@ -14,12 +14,14 @@
 # limitations under the License.
 #
 import configparser
+import functools
 import json
 import logging
 import os
 import shutil
 import sys
 
+import yaml
 from jinja2 import Environment, FileSystemLoader
 
 from splunk_add_on_ucc_framework import (
@@ -46,20 +48,29 @@ j2_env = Environment(
     loader=FileSystemLoader(os.path.join(internal_root_dir, "templates"))
 )
 
+Loader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+yaml_load = functools.partial(yaml.load, Loader=Loader)
 
-def _update_ta_version(config, ta_version):
+
+def _update_ta_version(config, ta_version, is_global_config_yaml):
     """
-    Update version of TA in globalConfig.json.
+    Update version of TA in globalConfig file.
 
     Args:
         args (argparse.Namespace): Object with command-line arguments.
     """
 
     with open(config) as config_file:
-        schema_content = json.load(config_file)
+        if is_global_config_yaml:
+            schema_content = yaml_load(config_file)
+        else:
+            schema_content = json.load(config_file)
     schema_content.setdefault("meta", {})["version"] = ta_version
     with open(config, "w") as config_file:
-        json.dump(schema_content, config_file, indent=4)
+        if is_global_config_yaml:
+            yaml.dump(schema_content, config_file)
+        else:
+            json.dump(schema_content, config_file, ensure_ascii=False, indent=4)
 
 
 def _recursive_overwrite(src, dest, ignore_list=None):
@@ -140,10 +151,10 @@ def _generate_rest(ta_name, scheme, import_declare_name, outputdir):
 
 def _is_oauth_configured(ta_tabs):
     """
-    Check if oauth is configured in globalConfig.json.
+    Check if oauth is configured in globalConfig file.
 
     Args:
-        ta_tabs (list): List of tabs mentioned in globalConfig.json.
+        ta_tabs (list): List of tabs mentioned in globalConfig file.
 
     Returns:
         bool: True if oauth is configured, False otherwise.
@@ -190,7 +201,7 @@ def _modify_and_replace_token_for_oauth_templates(
     Args:
         ta_name (str): Name of TA.
         ta_version (str): Version of TA.
-        ta_tabs (list): List of tabs mentioned in globalConfig.json.
+        ta_tabs (list): List of tabs mentioned in globalConfig file.
         outputdir (str): output directory.
     """
     redirect_xml_src = os.path.join(
@@ -246,7 +257,7 @@ def _add_modular_input(ta_name, schema_content, import_declare_name, outputdir):
 
     Args:
         ta_name (str): Name of TA.
-        schema_content (dict): JSON schema of globalConfig.json.
+        schema_content (dict): schema of globalConfig file.
         outputdir (str): output directory.
     """
 
@@ -298,7 +309,7 @@ def _make_modular_alerts(ta_name, ta_namespace, schema_content, outputdir):
     Args:
         ta_name (str): Name of TA.
         ta_namespace (str): restRoot of TA.
-        schema_content (dict): JSON schema of globalConfig.json.
+        schema_content (dict): schema of globalConfig file.
         outputdir (str): output directory.
     """
 
@@ -434,7 +445,13 @@ def generate(source, config, ta_version, outputdir=None, python_binary_name="pyt
 
     # Setting default value to Config argument
     if not config:
+        is_global_config_yaml = False
         config = os.path.abspath(os.path.join(source, PARENT_DIR, "globalConfig.json"))
+        if not os.path.isfile(config):
+            config = os.path.abspath(
+                os.path.join(source, PARENT_DIR, "globalConfig.yaml")
+            )
+            is_global_config_yaml = True
 
     logger.info(f"Cleaning out directory {outputdir}")
     shutil.rmtree(os.path.join(outputdir), ignore_errors=True)
@@ -458,22 +475,31 @@ def generate(source, config, ta_version, outputdir=None, python_binary_name="pyt
         sys.exit(1)
     ta_name = manifest.get_addon_name()
 
-    if os.path.exists(config):
+    if os.path.isfile(config):
         try:
             with open(config) as f_config:
                 config_raw = f_config.read()
-            validator = global_config_validator.GlobalConfigValidator(
-                internal_root_dir, json.loads(config_raw)
-            )
+
+            if is_global_config_yaml:
+                validator = global_config_validator.GlobalConfigValidator(
+                    internal_root_dir, yaml_load(config_raw)
+                )
+            else:
+                validator = global_config_validator.GlobalConfigValidator(
+                    internal_root_dir, json.loads(config_raw)
+                )
+
             validator.validate()
             logger.info("Config is valid")
         except global_config_validator.GlobalConfigValidatorException as e:
             logger.error(f"Config is not valid. Error: {e}")
             sys.exit(1)
 
-        _update_ta_version(config, ta_version)
+        _update_ta_version(config, ta_version, is_global_config_yaml)
 
-        schema_content = global_config_update.handle_global_config_update(config)
+        schema_content = global_config_update.handle_global_config_update(
+            config, is_global_config_yaml
+        )
 
         scheme = global_config.GlobalConfigBuilderSchema(schema_content, j2_env)
 
@@ -492,6 +518,9 @@ def generate(source, config, ta_version, outputdir=None, python_binary_name="pyt
         )
 
         logger.info("Copy globalConfig to output")
+        global_config_file = (
+            "globalConfig.yaml" if is_global_config_yaml else "globalConfig.json"
+        )
         shutil.copyfile(
             config,
             os.path.join(
@@ -501,7 +530,7 @@ def generate(source, config, ta_version, outputdir=None, python_binary_name="pyt
                 "static",
                 "js",
                 "build",
-                "globalConfig.json",
+                global_config_file,
             ),
         )
         ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
@@ -535,7 +564,7 @@ def generate(source, config, ta_version, outputdir=None, python_binary_name="pyt
     else:
         logger.info("Addon Version : " + ta_version)
         logger.warning(
-            "Skipped generating UI components as globalConfig.json does not exist."
+            "Skipped generating UI components as globalConfig file does not exist."
         )
         ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
 
