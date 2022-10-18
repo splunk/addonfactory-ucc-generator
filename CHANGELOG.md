@@ -1,3 +1,10 @@
+## [5.14.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.14.0...v5.14.1) (2022-10-18)
+
+
+### Bug Fixes
+
+* **code:** ADDON-56381 Using the latest version of UCC UI ([#540](https://github.com/splunk/addonfactory-ucc-generator/issues/540)) ([d760a31](https://github.com/splunk/addonfactory-ucc-generator/commit/d760a312d04fafa3e5e7f84090cce5c7ef1756ab))
+
 # [5.14.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.13.0...v5.14.0) (2022-10-18)
 
 
