@@ -1,3 +1,10 @@
+# [5.14.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.13.0...v5.14.0) (2022-10-18)
+
+
+### Features
+
+* added support for YAML file ([#536](https://github.com/splunk/addonfactory-ucc-generator/issues/536)) ([10eebaa](https://github.com/splunk/addonfactory-ucc-generator/commit/10eebaa4a8d9f51f47b8e86262866d592940054b))
+
 # [5.13.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.12.0...v5.13.0) (2022-08-02)
 
 
