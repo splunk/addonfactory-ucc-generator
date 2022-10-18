@@ -12,6 +12,10 @@ Example of `globalConfig.json` and `package` folder can be found [here](https://
 The JSON schema for the globalConfig file can be found
 [here](https://github.com/splunk/addonfactory-ucc-base-ui/blob/main/src/main/webapp/schema/schema.json).
 
+```
+If both globalConfig.json and globalConfig.yaml files are present, then the globalConfig.json file will take precedence.
+```
+
 ## Steps
 
 * Use Python virtual environment:
