@@ -25,6 +25,7 @@ nav:
   - Home: "index.md"
   - "How to use": "how_to_use.md"
   - Tabs: "tabs.md"
+  - Custom UI Extensions: "custom_ui.md"
   - Example: "example.md"
   - "Custom REST Handler": "custom_rest_handler.md"
   - Troubleshooting: "troubleshooting.md"
