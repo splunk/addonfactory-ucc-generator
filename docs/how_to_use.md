@@ -14,28 +14,29 @@ The JSON schema for the globalConfig file can be found
 [here](https://github.com/splunk/addonfactory-ucc-base-ui/blob/main/src/main/webapp/schema/schema.json).
 
 ```
-If both globalConfig.json and globalConfig.yaml files are present, then the globalConfig.json file will take precedence.
+If both globalConfig.json and globalConfig.yaml files are present, 
+then the globalConfig.json file will take precedence.
 ```
 
 ## Steps
 
 * Use Python virtual environment:
-    ```
-    python3 -m venv .venv
-    source .venv/bin/activate
-    ```        
+```
+python3 -m venv .venv
+source .venv/bin/activate
+```
 * Install `splunk-add-on-ucc-framework`.
-    ```
-    pip3 install splunk-add-on-ucc-framework
-    ```
+```
+pip3 install splunk-add-on-ucc-framework
+```
 * Clone `splunk-add-on-for-ucc-example` repository
-    ```
-    git clone https://github.com/splunk/splunk-add-on-for-ucc-example
-    ```
+```
+git clone https://github.com/splunk/splunk-add-on-for-ucc-example
+```
 * Go to the repository
-    ```
-    cd splunk-add-on-for-ucc-example
-    ```
+```
+cd splunk-add-on-for-ucc-example
+```
 * Run the `ucc-gen` command.
 * The final addon package will be generated, in the `output` folder.
 
