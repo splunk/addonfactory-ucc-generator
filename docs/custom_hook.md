@@ -1,5 +1,3 @@
-## Custom Hook
-
 Custom Hook is a JavaScript function that allows us to reuse some code throughout the app. It is used to validate form/dialog inputs.
 
 Hook is nothing more than Javascript event handling on the events `onCreate`, `onChange`, `onRender`, `onSave`, `onSaveSuccess`, `onSaveFail` and `onEditLoad`.
@@ -42,7 +40,7 @@ We can use these methods to overirde existing methods according to the functiona
 | Property          | Description |
 | ----------------- | ----------- |
 | onCreate      | This method is called when we click on the "Add/Create" button for creating a new record on the page. |
-| debounce       | This method is used to create another special method which does not get executed on every call. This functionality can be useful when listening for an event. For Example, we only want to show help text/error when the user has stopped typing for 500ms in a text-box and not on every key press.  In this scenario, the debounce method will induce a time wait every time a key is pressed and the method will only execute when there is no other call to it within that time wait. |
+| debounce       | This method is used to create another special method which does not get executed on every call. This functionality can be useful when listening for an event. <p>For Example, we only want to show help text/error when the user has stopped typing for 500ms in a text-box and not on every key press.  In this scenario, the debounce method will induce a time wait every time a key is pressed and the method will only execute when there is no other call to it within that time wait.</p> |
 | onChange             | This method is called when the value of any field is changed. |
 | onRender              | This method is called once whenever the user clicks on a "Add", "Edit" or "Clone" button. |
 | onSave              | This method is called when the user clicks the "Save" button after creating, editing or cloning a record. |
