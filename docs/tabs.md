@@ -11,5 +11,5 @@ level configuration.
 
 ## Inputs
 
-"Inputs" tab can have multiple type of inputs as well, for example, for 2 
-completely different APIs that require different parameters.
+Holds input configuration information for data collection. 
+If we have a variety of input configurations, we can create more than one input service under the input page.
