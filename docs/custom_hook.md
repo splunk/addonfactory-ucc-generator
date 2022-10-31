@@ -14,9 +14,9 @@ The configuration and code for adding a hook to an entity are shown below.
 ```
 The type key needs to be set as external to webpack the custom extensions. UCC  expects scripts marked as external to follow the ESM syntax for exporting and importing modules. Any other value or not specifying type will default to old requireJS (AMD) import syntax. Aditionally, the custom javascript file and the imported modules will not get webpack-ed.
 
-The custom_hook file's relative path to globalConfig.json is `appserver/static/js/build/custom/custom_hook.js`
+The custom_hook file's relative path to globalConfig file is `appserver/static/js/build/custom/custom_hook.js`
 
-### Example:
+### Example
 
 Use hook in the services:
 ![image](images/Use_Hook_in_the_services.png)
@@ -24,17 +24,17 @@ Use hook in the services:
 Use hook in the tabs:
 ![image](images/Use_Hook_in_the_tabs.png)
 
-### Properties of the Hook class:
+### Properties of the Hook class
 
 | Property          | Description |
 | ----------------- | ----------- |
 | globalConfig      | It is an hierarchical object having the properties and their values same as the globalConfig.json file. |
-| serviceName       | The name of the service/tab specified in the globalConfig.json. |
+| serviceName       | The name of the service/tab specified in the globalConfig. |
 | state             | State is an object that represents the actual state value of the components in the service/tab when the hook's constructor is called. Updating this object will not update the state of the page. Use the `util.setState` method to update the page's state. |
 | mode              | Text |
 | util              | This is a utility object with various functions that can be used to manipulate the page UI. There are 4 methods associated : <ul><li>`clearAllErrorMsg`: ƒ (State)</li><li>`setErrorFieldMsg`: ƒ (field, msg)</li><li>`setErrorMsg`: ƒ (msg)</li><li>`setState`: ƒ setState(callback)</li></ul>|
 
-### Methods of the Hook class:
+### Methods of the Hook class
 We can use these methods to overirde existing methods according to the functionality desired:
 
 | Property          | Description |
@@ -49,7 +49,7 @@ We can use these methods to overirde existing methods according to the functiona
 | onEditLoad              | This method is called when the user clicks on a "Edit" button for an existing record. |
 
 
-### Custom Hook Example:
+### Custom Hook Example
 
 ```
 import _ from "underscore"; // example of a ESM import
