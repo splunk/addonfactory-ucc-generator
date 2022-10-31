@@ -89,7 +89,7 @@ function SingleInputComponent(props) {
         if (dependencyValues) {
             options.params = { ...options.params, ...dependencyValues };
         }
-        if (!dependencies || dependencyValues) {
+        if (!dependencies || (dependencyValues && Object.keys(dependencyValues).length)) {
             setLoading(true);
             axiosCallWrapper(options)
                 .then((response) => {
@@ -107,6 +107,8 @@ function SingleInputComponent(props) {
                         setLoading(false);
                     }
                 });
+        } else {
+            setOptions(null);
         }
         // eslint-disable-next-line consistent-return
         return () => {
@@ -158,7 +160,7 @@ function SingleInputComponent(props) {
                             data-test="clear"
                             appearance="secondary"
                             icon={<Clear />}
-                            onClick={() => restProps.handleChange(field, '')}
+                            onClick={() => restProps.handleChange(field, 'RESET_VALUE')}
                         />
                     ) : null}
                 </>

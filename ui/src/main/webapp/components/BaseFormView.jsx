@@ -698,6 +698,8 @@ class BaseFormView extends PureComponent {
                     if (required && !currentValue) {
                         load = false;
                         data[dependency] = null;
+                    } else if (currentValue === 'RESET_VALUE') {
+                        load = true;
                     } else {
                         data[dependency] = currentValue;
                     }
