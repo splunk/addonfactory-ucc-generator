@@ -109,7 +109,7 @@ class BaseFormView extends PureComponent {
             globalConfig.pages.configuration.tabs.forEach((tab) => {
                 const flag = tab.table
                     ? tab.name === props.serviceName
-                    : tab.name === props.stanzaName;
+                    : tab.name === props.stanzaName && props.serviceName === 'settings';
                 if (flag) {
                     this.entities = tab.entity;
                     this.options = tab.options;
