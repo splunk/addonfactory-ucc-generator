@@ -46,7 +46,7 @@ PyYAML = "^6.0"
 pytest = "^7.1"
 pytest-cov = "^3.0.0"
 mkdocs = "^1.4.2"
-mkdocs-material = "^8.5.3"
+mkdocs-material = "^8.5.7"
 
 [tool.poetry.scripts]
 ucc-gen="splunk_add_on_ucc_framework.main:main"
