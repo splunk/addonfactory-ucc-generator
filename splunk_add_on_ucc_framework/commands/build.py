@@ -35,7 +35,8 @@ from splunk_add_on_ucc_framework import (
     utils,
 )
 from splunk_add_on_ucc_framework.install_python_libraries import (
-    install_python_libraries, SplunktaucclibNotFound,
+    SplunktaucclibNotFound,
+    install_python_libraries,
 )
 from splunk_add_on_ucc_framework.start_alert_build import alert_build
 from splunk_add_on_ucc_framework.uccrestbuilder import build, global_config
