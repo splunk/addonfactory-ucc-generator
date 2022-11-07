@@ -18,27 +18,60 @@ If both globalConfig.json and globalConfig.yaml files are present,
 then the globalConfig.json file will take precedence.
 ```
 
-## Steps
+## Steps to generate the TA
 
-* Use Python virtual environment:
+1. Setup and activate python virtual environment (Python version must be >3.7)
 ```
 python3 -m venv .venv
 source .venv/bin/activate
 ```
-* Install `splunk-add-on-ucc-framework`.
+
+2. Install `splunk-add-on-ucc-framework`
 ```
 pip3 install splunk-add-on-ucc-framework
 ```
-* Clone `splunk-add-on-for-ucc-example` repository
+
+3. Clone `splunk-add-on-for-ucc-example` repository
 ```
 git clone https://github.com/splunk/splunk-add-on-for-ucc-example
 ```
-* Go to the repository
+
+4. Go to the repository
 ```
 cd splunk-add-on-for-ucc-example
 ```
-* Run the `ucc-gen` command.
-* The final addon package will be generated, in the `output` folder.
+
+5. Generate **requirements.txt** in package/lib from pyproject.toml and Install Python Dependencies using poetry commands:
+```
+pip3 install poetry
+```
+```
+poetry export --without-hashes -o package/lib/requirements.txt
+```
+```
+poetry install
+```
+
+6. Generate build using the **splunk-addon-ucc-framework**:
+```
+ucc-gen
+```
+
+7. This command will perform following tasks:
+    - Generate `Splunk_TA_UCCExample` build in the `output/` folder.
+    - Install all python dependencies defined in the `package/lib/requirements.txt`
+
+8. (optional) Create a soft link from `output/Splunk_TA_UCCExample` to `$SPLUNK_HOME/etc/splunk/etc/apps/`
+
+Example:
+```
+ln -s /splunk-add-on-for-ucc-example/output/Splunk_TA_UCCExample $SPLUNK_HOME/etc/apps
+```
+
+9. Restart the Splunk
+```
+$SPLUNK_HOME/bin/splunk restart
+```
 
 `ucc-gen` supports the following params:
 
