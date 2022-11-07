@@ -23,30 +23,58 @@ from typing import Sequence
 logger = logging.getLogger("ucc_gen")
 
 
-def install_python_libraries(path: str, ucc_lib_target: str, python_binary_name: str):
-    logger.info(f"  Checking for requirements in {path}")
+class SplunktaucclibNotFound(Exception):
+    pass
+
+
+def _check_ucc_library_in_requirements_file(path_to_requirements: str) -> bool:
+    with open(path_to_requirements) as f_reqs:
+        content = f_reqs.readlines()
+    for line in content:
+        if "splunktaucclib" in line:
+            return True
+    return False
+
+
+def install_python_libraries(
+    path: str, ucc_lib_target: str, python_binary_name: str, includes_ui: bool = False
+):
     if os.path.exists(os.path.join(path, "lib", "requirements.txt")):
-        logger.info("  Uses common requirements")
-        install_libraries(
-            os.path.join(path, "lib", "requirements.txt"),
-            ucc_lib_target,
-            python_binary_name,
-        )
+        path_to_reqs_file = os.path.join(path, "lib", "requirements.txt")
     elif os.path.exists(
         os.path.join(os.path.abspath(os.path.join(path, os.pardir)), "requirements.txt")
     ):
-        logger.info("  Uses common requirements")
+        path_to_reqs_file = os.path.join(
+            os.path.abspath(os.path.join(path, os.pardir)), "requirements.txt"
+        )
+    else:
+        path_to_reqs_file = None
+    if path_to_reqs_file is not None:
+        logger.info(f"Installing requirements from {path_to_reqs_file}")
+        if includes_ui:
+            ucc_library_present = _check_ucc_library_in_requirements_file(
+                path_to_reqs_file
+            )
+            if not ucc_library_present:
+                raise SplunktaucclibNotFound(
+                    f"splunktaucclib is not found in {path_to_reqs_file}. "
+                    f"Please add it there because this add-on has UI."
+                )
         install_libraries(
-            os.path.join(
-                os.path.abspath(os.path.join(path, os.pardir)), "requirements.txt"
-            ),
+            path_to_reqs_file,
             ucc_lib_target,
             python_binary_name,
         )
     else:
-        logger.info("  Not using common requirements")
+        logger.info("Could not find requirements file, nothing to install")
 
-    packages_to_remove = ["setuptools", "bin", "pip", "distribute", "wheel"]
+    packages_to_remove = (
+        "setuptools",
+        "bin",
+        "pip",
+        "distribute",
+        "wheel",
+    )
     remove_package_from_installed_path(
         ucc_lib_target,
         packages_to_remove,
