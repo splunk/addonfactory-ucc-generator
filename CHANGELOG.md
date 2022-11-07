@@ -1,3 +1,10 @@
+# [5.15.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.14.2...v5.15.0) (2022-11-07)
+
+
+### Features
+
+* add validation for the splunktaucclib to be included ([#549](https://github.com/splunk/addonfactory-ucc-generator/issues/549)) ([b7eacb6](https://github.com/splunk/addonfactory-ucc-generator/commit/b7eacb6678efd26b6fe846c045996e86a562a1ca))
+
 ## [5.14.2](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.14.1...v5.14.2) (2022-11-02)
 
 
