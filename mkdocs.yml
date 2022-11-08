@@ -23,11 +23,19 @@ theme:
 
 nav:
   - Home: "index.md"
-  - "How to use": "how_to_use.md"
+  - How to use: "how_to_use.md"
+  - Example: "example.md"
   - Tabs: "tabs.md"
   - Custom UI Extensions:
     - Custom Hook: "custom_hook.md"
-  - Example: "example.md"
-  - "Custom REST Handler": "custom_rest_handler.md"
+    - Custom Control: "custom_control.md"
+    - Custom Row: "custom_row.md"
+    - Custom Cell: "custom_cell.md"
+    - Custom Menu: "custom_menu.md"
+  - Advanced:
+    - Custom Mapping: "custom_mapping.md"
+    - Dependent Dropdown: "dependent_dropdown.md"
+    - OAuth Support: "oAuth_support.md"
+    - Custom REST Handler: "custom_rest_handler.md"
   - Troubleshooting: "troubleshooting.md"
   - Contributing: "contributing.md"
