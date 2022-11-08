@@ -1,4 +1,4 @@
-Splunk Ta UI Platform allows you to add Auth support in the configuration page.
+UCC allows you to add Auth support in the configuration page.
 
 Auth can be used inside the entity tag. Use `type: "oauth"` in the entity list and also need to specify the `options` next to the `type: "oauth"`.
 

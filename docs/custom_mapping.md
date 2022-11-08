@@ -1,4 +1,4 @@
-Splunk Ta UI Platform allows you to map field values, for example, in the data collection field of input, if the user wants to display Enabled/Disabled instead of false/true, write the following in the table's header section:
+UCC allows you to map field values, for example, in the data collection field of input, if the user wants to display Enabled/Disabled instead of false/true, write the following in the table's header section:
 
 ```
 "mapping": {

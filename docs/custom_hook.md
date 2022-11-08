@@ -31,7 +31,7 @@ Use hook in the tabs:
 | globalConfig      | It is an hierarchical object having the properties and their values same as the globalConfig file. |
 | serviceName       | The name of the service/tab specified in the globalConfig. |
 | state             | State is an object that represents the actual state value of the components in the service/tab when the hook's constructor is called. Updating this object will not update the state of the page. Use the `util.setState` method to update the page's state. |
-| mode              | Text |
+| mode              | There are three possible modes: Edit, Clone and Delete. Which are used in service/tab components. |
 | util              | This is a utility object with various functions that can be used to manipulate the page UI. There are 4 methods associated : <ul><li>`clearAllErrorMsg`: ƒ (State)</li><li>`setErrorFieldMsg`: ƒ (field, msg)</li><li>`setErrorMsg`: ƒ (msg)</li><li>`setState`: ƒ setState(callback)</li></ul>|
 
 ### Methods
