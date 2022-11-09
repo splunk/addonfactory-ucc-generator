@@ -1,3 +1,10 @@
+## [5.15.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.15.0...v5.15.1) (2022-11-09)
+
+
+### Bug Fixes
+
+* build add-on if config param is present ([536634a](https://github.com/splunk/addonfactory-ucc-generator/commit/536634af784685b98f563c3ae5543ac63e064825))
+
 # [5.15.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.14.2...v5.15.0) (2022-11-07)
 
 
