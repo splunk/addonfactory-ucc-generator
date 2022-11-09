@@ -454,7 +454,7 @@ def generate(source, config, ta_version, outputdir=None, python_binary_name="pyt
             )
             is_global_config_yaml = True
     else:
-        is_global_config_yaml = True if config.endswith('.yaml') else False
+        is_global_config_yaml = True if config.endswith(".yaml") else False
 
     logger.info(f"Cleaning out directory {outputdir}")
     shutil.rmtree(os.path.join(outputdir), ignore_errors=True)
