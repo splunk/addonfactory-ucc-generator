@@ -34,14 +34,14 @@ def main(argv: Optional[Sequence[str]] = None):
         "--config",
         type=str,
         nargs="?",
-        help="Path to configuration file, defaults to globalConfig.json in parent directory of source provided",
+        help="Path to configuration file, defaults to globalConfig file in parent directory of source provided",
         default=None,
     )
     parser.add_argument(
         "--ta-version",
         type=str,
         help="Version of TA, default version is version specified in the "
-        "package such as app.manifest, app.conf, and globalConfig.json",
+        "package such as app.manifest, app.conf, and globalConfig file.",
         default=None,
     )
     parser.add_argument(
