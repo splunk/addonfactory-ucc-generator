@@ -15,6 +15,22 @@ class UccGenerateTest(unittest.TestCase):
         )
         ucc.generate(source=package_folder)
 
+    def test_ucc_generate_with_config_param(self):
+        """
+        Checks whether the package is build when the `config` flag is provided in the CLI
+        """
+        package_folder = path.join(
+            path.dirname(path.realpath(__file__)),
+            "package_global_config_inputs_configuration_alerts",
+            "package",
+        )
+        config_path = path.join(
+            path.dirname(path.realpath(__file__)),
+            "package_global_config_inputs_configuration_alerts",
+            "globalConfig.json",
+        )
+        ucc.generate(source=package_folder, config=config_path)
+
     def test_ucc_generate_with_inputs_configuration_alerts(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             package_folder = path.join(

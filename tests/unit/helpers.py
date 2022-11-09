@@ -46,7 +46,7 @@ def get_testdata_file(file_name: str) -> str:
 
 def get_testdata(file_name: str) -> Dict:
     config = get_testdata_file(file_name)
-    if file_name[-4] == "json":
+    if file_name.endswith(".json"):
         return json.loads(config)
     else:
         return yaml_load(config)
