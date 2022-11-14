@@ -22,8 +22,10 @@ from pytest_splunk_addon_ui_smartx.pages.logging import Logging
 @pytest.fixture(autouse=True)
 def reset_configuration(ucc_smartx_rest_helper, example_ta):
     yield
-    logging = Logging(example_ta['name'], ucc_smartx_rest_helper=ucc_smartx_rest_helper)
-    logging.backend_conf.update_parameters({"loglevel": example_ta['default_log_level']})
+    logging = Logging(example_ta["name"], ucc_smartx_rest_helper=ucc_smartx_rest_helper)
+    logging.backend_conf.update_parameters(
+        {"loglevel": example_ta["default_log_level"]}
+    )
 
 
 class TestLogging(UccTester):
@@ -32,18 +34,18 @@ class TestLogging(UccTester):
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, example_ta
     ):
         logging = Logging(
-            example_ta['name'],
+            example_ta["name"],
             ucc_smartx_selenium_helper=ucc_smartx_selenium_helper,
             ucc_smartx_rest_helper=ucc_smartx_rest_helper,
         )
         self.assert_util(logging.backend_conf.get_parameter("disabled"), False)
-        self.assert_util(logging.log_level.get_value, example_ta['default_log_level'])
+        self.assert_util(logging.log_level.get_value, example_ta["default_log_level"])
 
     def test_logging_list_log_levels(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, example_ta
     ):
         logging = Logging(
-            example_ta['name'],
+            example_ta["name"],
             ucc_smartx_selenium_helper=ucc_smartx_selenium_helper,
             ucc_smartx_rest_helper=ucc_smartx_rest_helper,
         )
@@ -55,7 +57,7 @@ class TestLogging(UccTester):
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, example_ta
     ):
         logging = Logging(
-            example_ta['name'],
+            example_ta["name"],
             ucc_smartx_selenium_helper=ucc_smartx_selenium_helper,
             ucc_smartx_rest_helper=ucc_smartx_rest_helper,
         )
@@ -70,7 +72,7 @@ class TestLogging(UccTester):
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, example_ta
     ):
         logging = Logging(
-            example_ta['name'],
+            example_ta["name"],
             ucc_smartx_selenium_helper=ucc_smartx_selenium_helper,
             ucc_smartx_rest_helper=ucc_smartx_rest_helper,
         )
@@ -85,7 +87,7 @@ class TestLogging(UccTester):
     ):
         selection_log = "DEBUG"
         logging = Logging(
-            example_ta['name'],
+            example_ta["name"],
             ucc_smartx_selenium_helper=ucc_smartx_selenium_helper,
             ucc_smartx_rest_helper=ucc_smartx_rest_helper,
         )
@@ -98,7 +100,7 @@ class TestLogging(UccTester):
     ):
         selection_log = "ERROR"
         logging = Logging(
-            example_ta['name'],
+            example_ta["name"],
             ucc_smartx_selenium_helper=ucc_smartx_selenium_helper,
             ucc_smartx_rest_helper=ucc_smartx_rest_helper,
         )

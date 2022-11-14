@@ -14,7 +14,6 @@
 # limitations under the License.
 #
 import pytest
-
 from pytest_splunk_addon_ui_smartx.base_test import UccTester
 from pytest_splunk_addon_ui_smartx.pages.proxy import Proxy
 
@@ -25,8 +24,8 @@ class TestProxy(UccTester):
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, example_ta
     ):
         proxy = Proxy(
-            example_ta['name'],
-            example_ta['proxy_url'],
+            example_ta["name"],
+            example_ta["proxy_url"],
             ucc_smartx_selenium_helper=ucc_smartx_selenium_helper,
             ucc_smartx_rest_helper=ucc_smartx_rest_helper,
         )
