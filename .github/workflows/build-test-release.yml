@@ -100,6 +100,35 @@ jobs:
         run: ./.github/workflows/check_ucc_ui_files.sh
       - run: poetry run pytest tests/unit
 
+  test-ui:
+    name: test-ui
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.7"
+      - name: Install and build ucc
+        run: |
+          pipx install poetry
+          ./get-ucc-ui.sh
+          tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
+          poetry install
+          poetry build
+      - name: Create Example TA
+        run: ucc-gen --source tests/data/package_global_config_configuration/package
+      - name: Run Splunk in docker
+        run: ./run_splunk.sh
+      - name: Run Pytest
+        run: |
+          poetry run pytest tests/ui --junitxml=test-results/junit.xml
+      - uses: actions/upload-artifact@v3
+        if: success() || failure()
+        with:
+          name: test-results-ui
+          path: test-results/*
+
   appinspect-for-expected-outputs:
     name: splunk-appinspect ${{ matrix.tags }} tests/testdata/expected_addons/expected_output_global_config_inputs_configuration_alerts/Splunk_TA_UCCExample
     runs-on: ubuntu-latest
