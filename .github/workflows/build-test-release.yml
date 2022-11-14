@@ -117,7 +117,7 @@ jobs:
           poetry install
           poetry build
       - name: Create Example TA
-        run: ucc-gen --source tests/data/package_global_config_configuration/package
+        run: poetry run ucc-gen --source tests/data/package_global_config_configuration/package
       - name: Run Splunk in docker
         run: ./run_splunk.sh
       - name: Run Pytest
