@@ -88,7 +88,7 @@ jobs:
           python-version: "3.7"
       - name: Install and build ucc
         run: |
-          pipx install poetry
+          curl -sSL https://install.python-poetry.org | python3 -
           ./get-ucc-ui.sh
           tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
           poetry install
