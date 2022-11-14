@@ -844,6 +844,14 @@
               "restHandlerName": {
                 "type": "string",
                 "maxLength": 100
+              },
+              "restHandlerModule": {
+                "type": "string",
+                "maxLength": 100
+              },
+              "restHandlerClass": {
+                "type": "string",
+                "maxLength": 100
               }
             },
             "required": [
@@ -1149,6 +1157,14 @@
           "maxLength": 100
         },
         "restHandlerName": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "restHandlerModule": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "restHandlerClass": {
           "type": "string",
           "maxLength": 100
         },
