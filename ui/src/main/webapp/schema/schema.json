@@ -14,7 +14,13 @@
         },
         "type": {
           "type": "string",
-          "enum": ["text", "singleSelect", "checkbox", "radio", "singleSelectSplunkSearch"]
+          "enum": [
+            "text",
+            "singleSelect",
+            "checkbox",
+            "radio",
+            "singleSelectSplunkSearch"
+          ]
         },
         "help": {
           "type": "string",
@@ -61,7 +67,11 @@
           }
         }
       },
-      "required": ["field", "label", "type"],
+      "required": [
+        "field",
+        "label",
+        "type"
+      ],
       "additionalProperties": false
     },
     "Alerts": {
@@ -122,7 +132,13 @@
               "maxLength": 50
             }
           },
-          "required": ["task", "supportsAdhoc", "subject", "category", "technology"]
+          "required": [
+            "task",
+            "supportsAdhoc",
+            "subject",
+            "category",
+            "technology"
+          ]
         },
         "entity": {
           "type": "array",
@@ -131,7 +147,11 @@
           }
         }
       },
-      "required": ["name", "label", "description"],
+      "required": [
+        "name",
+        "label",
+        "description"
+      ],
       "additionalProperties": false
     },
     "ConfigurationEntity": {
@@ -205,7 +225,10 @@
                         }
                       }
                     },
-                    "required": ["label", "children"]
+                    "required": [
+                      "label",
+                      "children"
+                    ]
                   }
                 },
                 {
@@ -354,7 +377,11 @@
           }
         }
       },
-      "required": ["field", "label", "type"],
+      "required": [
+        "field",
+        "label",
+        "type"
+      ],
       "additionalProperties": false
     },
     "ConfigurationPage": {
@@ -376,7 +403,10 @@
           "minItems": 1
         }
       },
-      "required": ["title", "tabs"],
+      "required": [
+        "title",
+        "tabs"
+      ],
       "additionalProperties": false
     },
     "ConfigurationTable": {
@@ -399,7 +429,10 @@
                 "type": "object"
               }
             },
-            "required": ["field", "label"]
+            "required": [
+              "field",
+              "label"
+            ]
           }
         },
         "header": {
@@ -422,7 +455,10 @@
                 "type": "object"
               }
             },
-            "required": ["field", "label"]
+            "required": [
+              "field",
+              "label"
+            ]
           }
         },
         "customRow": {
@@ -432,11 +468,18 @@
           "type": "array",
           "items": {
             "type": "string",
-            "enum": ["edit", "delete", "clone"]
+            "enum": [
+              "edit",
+              "delete",
+              "clone"
+            ]
           }
         }
       },
-      "required": ["header", "actions"],
+      "required": [
+        "header",
+        "actions"
+      ],
       "additionalProperties": false
     },
     "DateValidator": {
@@ -448,10 +491,14 @@
         },
         "type": {
           "type": "string",
-          "enum": ["date"]
+          "enum": [
+            "date"
+          ]
         }
       },
-      "required": ["type"],
+      "required": [
+        "type"
+      ],
       "additionalProperties": false
     },
     "EmailValidator": {
@@ -463,10 +510,14 @@
         },
         "type": {
           "type": "string",
-          "enum": ["email"]
+          "enum": [
+            "email"
+          ]
         }
       },
-      "required": ["type"],
+      "required": [
+        "type"
+      ],
       "additionalProperties": false
     },
     "Hooks": {
@@ -550,7 +601,10 @@
                         }
                       }
                     },
-                    "required": ["label", "children"]
+                    "required": [
+                      "label",
+                      "children"
+                    ]
                   }
                 },
                 {
@@ -696,7 +750,11 @@
           }
         }
       },
-      "required": ["field", "label", "type"],
+      "required": [
+        "field",
+        "label",
+        "type"
+      ],
       "additionalProperties": false
     },
     "InputsPage": {
@@ -764,12 +822,17 @@
                       }
                     }
                   },
-                  "required": ["label"]
+                  "required": [
+                    "label"
+                  ]
                 }
               },
               "style": {
                 "type": "string",
-                "enum": ["page", "dialog"]
+                "enum": [
+                  "page",
+                  "dialog"
+                ]
               },
               "hook": {
                 "type": "object"
@@ -783,14 +846,22 @@
                 "maxLength": 100
               }
             },
-            "required": ["name", "title", "entity"]
+            "required": [
+              "name",
+              "title",
+              "entity"
+            ]
           }
         },
         "menu": {
           "type": "object"
         }
       },
-      "required": ["title", "table", "services"],
+      "required": [
+        "title",
+        "table",
+        "services"
+      ],
       "additionalProperties": false
     },
     "InputsTable": {
@@ -813,7 +884,10 @@
                 "type": "object"
               }
             },
-            "required": ["field", "label"]
+            "required": [
+              "field",
+              "label"
+            ]
           }
         },
         "header": {
@@ -836,7 +910,10 @@
                 "type": "object"
               }
             },
-            "required": ["field", "label"]
+            "required": [
+              "field",
+              "label"
+            ]
           }
         },
         "customRow": {
@@ -846,11 +923,19 @@
           "type": "array",
           "items": {
             "type": "string",
-            "enum": ["edit", "delete", "clone", "enable"]
+            "enum": [
+              "edit",
+              "delete",
+              "clone",
+              "enable"
+            ]
           }
         }
       },
-      "required": ["header", "actions"],
+      "required": [
+        "header",
+        "actions"
+      ],
       "additionalProperties": false
     },
     "Ipv4Validator": {
@@ -862,10 +947,14 @@
         },
         "type": {
           "type": "string",
-          "enum": ["ipv4"]
+          "enum": [
+            "ipv4"
+          ]
         }
       },
-      "required": ["type"],
+      "required": [
+        "type"
+      ],
       "additionalProperties": false
     },
     "Meta": {
@@ -895,7 +984,12 @@
           "pattern": "^(?:\\d{1,3}\\.){2}\\d{1,3}$"
         }
       },
-      "required": ["displayName", "name", "restRoot", "version"],
+      "required": [
+        "displayName",
+        "name",
+        "restRoot",
+        "version"
+      ],
       "additionalProperties": false
     },
     "NumberValidator": {
@@ -907,7 +1001,9 @@
         },
         "type": {
           "type": "string",
-          "enum": ["number"]
+          "enum": [
+            "number"
+          ]
         },
         "range": {
           "type": "array",
@@ -916,7 +1012,10 @@
           }
         }
       },
-      "required": ["type", "range"],
+      "required": [
+        "type",
+        "range"
+      ],
       "additionalProperties": false
     },
     "OAuthFields": {
@@ -978,13 +1077,18 @@
         },
         "type": {
           "type": "string",
-          "enum": ["regex"]
+          "enum": [
+            "regex"
+          ]
         },
         "pattern": {
           "type": "string"
         }
       },
-      "required": ["type", "pattern"],
+      "required": [
+        "type",
+        "pattern"
+      ],
       "additionalProperties": false
     },
     "StringValidator": {
@@ -996,7 +1100,9 @@
         },
         "type": {
           "type": "string",
-          "enum": ["string"]
+          "enum": [
+            "string"
+          ]
         },
         "minLength": {
           "type": "number",
@@ -1007,7 +1113,11 @@
           "minimum": 0
         }
       },
-      "required": ["type", "minLength", "maxLength"],
+      "required": [
+        "type",
+        "minLength",
+        "maxLength"
+      ],
       "additionalProperties": false
     },
     "TabContent": {
@@ -1046,7 +1156,11 @@
           "type": "object"
         }
       },
-      "required": ["entity", "name", "title"],
+      "required": [
+        "entity",
+        "name",
+        "title"
+      ],
       "additionalProperties": false
     },
     "Technology": {
@@ -1069,7 +1183,11 @@
           "maxLength": 100
         }
       },
-      "required": ["version", "product", "vendor"],
+      "required": [
+        "version",
+        "product",
+        "vendor"
+      ],
       "additionalProperties": false
     },
     "UrlValidator": {
@@ -1081,10 +1199,14 @@
         },
         "type": {
           "type": "string",
-          "enum": ["url"]
+          "enum": [
+            "url"
+          ]
         }
       },
-      "required": ["type"],
+      "required": [
+        "type"
+      ],
       "additionalProperties": false
     },
     "ValueLabelPair": {
@@ -1109,7 +1231,9 @@
           "maxLength": 100
         }
       },
-      "required": ["label"],
+      "required": [
+        "label"
+      ],
       "additionalProperties": false
     }
   },
@@ -1129,6 +1253,9 @@
       "minItems": 1
     }
   },
-  "required": ["meta", "pages"],
+  "required": [
+    "meta",
+    "pages"
+  ],
   "additionalProperties": false
 }
