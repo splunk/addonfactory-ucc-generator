@@ -24,3 +24,6 @@ input_two_radio =
 use_existing_checkpoint = 
 start_date = 
 example_help_link = 
+
+[example_input_three://<name>]
+interval = 
