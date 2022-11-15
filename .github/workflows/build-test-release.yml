@@ -101,9 +101,14 @@ jobs:
       - run: poetry run pytest tests/unit
 
   test-ui:
-    name: test-ui
+    name: test-ui -m ${{ matrix.test-mark }}
     runs-on: ubuntu-latest
     continue-on-error: true
+    strategy:
+      matrix:
+        test-mark:
+          - "default"
+          - "loggin_page and not default"
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
@@ -125,7 +130,7 @@ jobs:
       - name: Run Pytest
         run: |
           sleep 1m
-          poetry run pytest tests/ui --headless --junitxml=test-results/junit.xml
+          poetry run pytest tests/ui -m "${{ matrix.test-mark }}" --headless --junitxml=test-results/junit.xml
       - uses: actions/upload-artifact@v3
         if: success() || failure()
         with:
