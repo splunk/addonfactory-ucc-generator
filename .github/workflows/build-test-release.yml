@@ -123,7 +123,7 @@ jobs:
       - name: Run Pytest
         run: |
           sleep 1m
-          poetry run pytest tests/ui --splunk-hec-scheme=http --junitxml=test-results/junit.xml
+          poetry run pytest tests/ui --junitxml=test-results/junit.xml
       - uses: actions/upload-artifact@v3
         if: success() || failure()
         with:
