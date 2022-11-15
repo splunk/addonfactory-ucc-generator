@@ -139,12 +139,14 @@ def _generate_rest(ta_name, scheme, import_declare_name, outputdir):
         import_declare_name (str): Name of import_declare_* file.
         outputdir (str): output directory.
     """
+    rest_handler_module = "splunktaucclib.rest_handler.admin_external"
+    rest_handler_class = "AdminExternalHandler"
 
     build(
         scheme,
-        "splunktaucclib.rest_handler.admin_external.AdminExternalHandler",
+        rest_handler_module,
+        rest_handler_class,
         os.path.join(outputdir, ta_name),
-        j2_env,
         post_process=global_config.GlobalConfigPostProcessor(),
         import_declare_name=import_declare_name,
     )
