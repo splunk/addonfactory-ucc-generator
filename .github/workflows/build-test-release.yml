@@ -132,14 +132,14 @@ jobs:
       - name: Run Splunk in docker
         run: |
           ./run_splunk.sh
-          until curl -Lsk "https://localhost:8088/services/collector/health" &>/dev/null ; do echo -n "Waiting for HEC\n" && sleep 5 ; done
+          until curl -Lsk "https://localhost:8088/services/collector/health" &>/dev/null ; do echo -n "Waiting for HEC-" && sleep 5 ; done
         timeout-minutes: 5
       - name: Run Pytest
         run: poetry run pytest tests/ui -m "${{ matrix.test-mark }}" --headless --junitxml=test-results/junit.xml
       - uses: actions/upload-artifact@v3
         if: success() || failure()
         with:
-          name: test-results-ui
+          name: test-results-ui-${{ matrix.test-mark|replace(" ", "-") }}
           path: test-results/*
 
   appinspect-for-expected-outputs:
