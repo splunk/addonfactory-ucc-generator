@@ -108,7 +108,7 @@ jobs:
       matrix:
         test-mark:
           - "default"
-          - "loggin_page and not default"
+          - "logging_page and not default"
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
@@ -125,8 +125,11 @@ jobs:
         run: poetry run ucc-gen --source tests/testdata/test_addons/package_global_config_configuration/package
       - name: Run Splunk in docker
         run: ./run_splunk.sh
-      - name: Install chromium webdriver
-        run: sudo apt-get install chromium-chromedriver -y
+      - name: Link chromedriver
+        run: | 
+          echo $CHROMEWEBDRIVER
+          export PATH=$PATH:$CHROMEWEBDRIVER
+          chromedriver --version
       - name: Run Pytest
         run: |
           sleep 1m
