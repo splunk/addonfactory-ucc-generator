@@ -119,7 +119,7 @@ jobs:
           curl -sSL https://install.python-poetry.org | python3 -
           poetry install
       - name: Link chromedriver
-        # Use installed chromedriver https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2004-Readme.md
+        # Use installed chromedriver https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2204-Readme.md
         run: |
           export PATH=$PATH:$CHROMEWEBDRIVER
           chromedriver --version

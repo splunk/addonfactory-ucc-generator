@@ -10,13 +10,13 @@ To build a new local version of `ucc-gen`:
 poetry build
 ```
 
-To run the unit tests: 
+### Unit tests
 
 ```
 poetry run pytest tests/unit
 ```
 
-To run the ui tests: 
+### UI tests
 
 1. With local version of ucc-gen create UCCExample TA to output directory:
     ```
