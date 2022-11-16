@@ -16,6 +16,25 @@ To run the unit tests:
 poetry run pytest tests/unit
 ```
 
+To run the ui tests: 
+
+1. With local version of ucc-gen create UCCExample TA to output directory:
+    ```
+    poetry run ucc-gen --source tests/testdata/test_addons/package_global_config_configuration/package
+    ```
+2. Install docker and run containerized Splunk Enterprise using script:
+    ```
+    ./run_splunk.sh
+    ```
+   There are mapped default Splunk ports to host. To use different configuration see [docker-splunk](https://splunk.github.io/docker-splunk/). Remember to mount output package to Splunk apps directory.
+3. Install any browser and specific to this browser driver such as [chromedriver](https://chromedriver.chromium.org/getting-started/) for Chrome.
+4. Run tests using command:
+    ```
+    poetry run pytest tests/ui 
+    ```
+   Default test parameters are using Splunk connection details and credentials from earlier step and `chromedriver` is used as a default webdriver.  
+   To use different browser or Splunk configuration set proper parameters according to the [smartx-ui-test-library](https://addon-factory-smartx-ui-test-library.readthedocs.io/en/latest/how_to_use.html) documentation.
+
 ## Linting and Type-checking
 
 `ucc-gen` uses [`pre-commit`](https://pre-commit.com) framework for linting and type-checking.
