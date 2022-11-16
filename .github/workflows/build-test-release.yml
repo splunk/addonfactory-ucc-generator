@@ -100,6 +100,49 @@ jobs:
         run: ./.github/workflows/check_ucc_ui_files.sh
       - run: poetry run pytest tests/unit
 
+  test-ui:
+    name: test-ui -m ${{ matrix.test-mark }}
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    strategy:
+      matrix:
+        test-mark:
+          - "default"
+          - "logging_page and not default"
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.7"
+      - name: Install Poetry and Python dependencies
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          poetry install
+      - name: Link chromedriver
+        # Use installed chromedriver https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2204-Readme.md
+        run: |
+          export PATH=$PATH:$CHROMEWEBDRIVER
+          chromedriver --version
+      - name: Build UCC
+        run: |
+          ./get-ucc-ui.sh
+          tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
+          poetry build
+      - name: Create Example TA
+        run: poetry run ucc-gen --source tests/testdata/test_addons/package_global_config_configuration/package
+      - name: Run Splunk in docker
+        run: |
+          ./run_splunk.sh
+          until curl -Lsk "https://localhost:8088/services/collector/health" &>/dev/null ; do echo -n "Waiting for HEC-" && sleep 5 ; done
+        timeout-minutes: 5
+      - name: Run Pytest
+        run: poetry run pytest tests/ui -m "${{ matrix.test-mark }}" --headless --junitxml=test-results/junit.xml
+      - uses: actions/upload-artifact@v3
+        if: success() || failure()
+        with:
+          name: test-results-ui-${{ matrix.test-mark }}
+          path: test-results/*
+
   appinspect-for-expected-outputs:
     name: splunk-appinspect ${{ matrix.tags }} tests/testdata/expected_addons/expected_output_global_config_inputs_configuration_alerts/Splunk_TA_UCCExample
     runs-on: ubuntu-latest
