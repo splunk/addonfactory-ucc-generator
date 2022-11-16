@@ -758,119 +758,240 @@
       "additionalProperties": false
     },
     "InputsPage": {
-      "type": "object",
-      "properties": {
-        "title": {
-          "type": "string",
-          "maxLength": 60
-        },
-        "description": {
-          "type": "string",
-          "maxLength": 200
-        },
-        "table": {
-          "$ref": "#/definitions/InputsTable"
-        },
-        "services": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string",
-                "pattern": "^[0-9a-zA-Z][0-9a-zA-Z_-]*$",
-                "maxLength": 50
-              },
-              "title": {
-                "type": "string",
-                "maxLength": 100
-              },
-              "entity": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/definitions/InputsEntity"
-                }
-              },
-              "options": {
-                "$ref": "#/definitions/Hooks"
-              },
-              "groups": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "options": {
-                      "type": "object",
-                      "properties": {
-                        "isExpandable": {
-                          "type": "boolean"
-                        },
-                        "expand": {
-                          "type": "boolean"
-                        }
-                      }
-                    },
-                    "label": {
-                      "type": "string",
-                      "maxLength": 100
-                    },
-                    "field": {
-                      "type": "array",
-                      "items": {
-                        "type": "string",
-                        "pattern": "^\\w+$"
-                      }
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "maxLength": 60
+            },
+            "description": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "menu": {
+              "type": "object"
+            },
+            "table": {
+              "$ref": "#/definitions/InputsTable"
+            },
+            "services": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "pattern": "^[0-9a-zA-Z][0-9a-zA-Z_-]*$",
+                    "maxLength": 50
+                  },
+                  "title": {
+                    "type": "string",
+                    "maxLength": 100
+                  },
+                  "entity": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/definitions/InputsEntity"
                     }
                   },
+                  "options": {
+                    "$ref": "#/definitions/Hooks"
+                  },
+                  "groups": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "options": {
+                          "type": "object",
+                          "properties": {
+                            "isExpandable": {
+                              "type": "boolean"
+                            },
+                            "expand": {
+                              "type": "boolean"
+                            }
+                          }
+                        },
+                        "label": {
+                          "type": "string",
+                          "maxLength": 100
+                        },
+                        "field": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "pattern": "^\\w+$"
+                          }
+                        }
+                      },
+                      "required": [
+                        "label"
+                      ]
+                    }
+                  },
+                  "style": {
+                    "type": "string",
+                    "enum": [
+                      "page",
+                      "dialog"
+                    ]
+                  },
+                  "hook": {
+                    "type": "object"
+                  },
+                  "conf": {
+                    "type": "string",
+                    "maxLength": 100
+                  },
+                  "restHandlerName": {
+                    "type": "string",
+                    "maxLength": 100
+                  },
+                  "restHandlerModule": {
+                    "type": "string",
+                    "maxLength": 100
+                  },
+                  "restHandlerClass": {
+                    "type": "string",
+                    "maxLength": 100
+                  }
+                },
+                "not": {
                   "required": [
-                    "label"
+                    "table"
                   ]
-                }
-              },
-              "style": {
-                "type": "string",
-                "enum": [
-                  "page",
-                  "dialog"
+                },
+                "required": [
+                  "name",
+                  "title",
+                  "entity"
                 ]
-              },
-              "hook": {
-                "type": "object"
-              },
-              "conf": {
-                "type": "string",
-                "maxLength": 100
-              },
-              "restHandlerName": {
-                "type": "string",
-                "maxLength": 100
-              },
-              "restHandlerModule": {
-                "type": "string",
-                "maxLength": 100
-              },
-              "restHandlerClass": {
-                "type": "string",
-                "maxLength": 100
               }
-            },
-            "required": [
-              "name",
-              "title",
-              "entity"
-            ]
-          }
+            }
+          },
+          "required": [
+            "title",
+            "table",
+            "services"
+          ],
+          "additionalProperties": false
         },
-        "menu": {
-          "type": "object"
+        {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "maxLength": 60
+            },
+            "services": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "pattern": "^[0-9a-zA-Z][0-9a-zA-Z_-]*$",
+                    "maxLength": 50
+                  },
+                  "title": {
+                    "type": "string",
+                    "maxLength": 100
+                  },
+                  "description": {
+                    "type": "string",
+                    "maxLength": 200
+                  },
+                  "table": {
+                    "$ref": "#/definitions/InputsTable"
+                  },
+                  "entity": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/definitions/InputsEntity"
+                    }
+                  },
+                  "options": {
+                    "$ref": "#/definitions/Hooks"
+                  },
+                  "groups": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "options": {
+                          "type": "object",
+                          "properties": {
+                            "isExpandable": {
+                              "type": "boolean"
+                            },
+                            "expand": {
+                              "type": "boolean"
+                            }
+                          }
+                        },
+                        "label": {
+                          "type": "string",
+                          "maxLength": 100
+                        },
+                        "field": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "pattern": "^\\w+$"
+                          }
+                        }
+                      },
+                      "required": [
+                        "label"
+                      ]
+                    }
+                  },
+                  "style": {
+                    "type": "string",
+                    "enum": [
+                      "page",
+                      "dialog"
+                    ]
+                  },
+                  "hook": {
+                    "type": "object"
+                  },
+                  "conf": {
+                    "type": "string",
+                    "maxLength": 100
+                  },
+                  "restHandlerName": {
+                    "type": "string",
+                    "maxLength": 100
+                  },
+                  "restHandlerModule": {
+                    "type": "string",
+                    "maxLength": 100
+                  },
+                  "restHandlerClass": {
+                    "type": "string",
+                    "maxLength": 100
+                  }
+                },
+                "required": [
+                  "name",
+                  "title",
+                  "table",
+                  "entity"
+                ]
+              }
+            }
+          },
+          "required": [
+            "title",
+            "services"
+          ],
+          "additionalProperties": false
         }
-      },
-      "required": [
-        "title",
-        "table",
-        "services"
-      ],
-      "additionalProperties": false
+      ]
     },
     "InputsTable": {
       "type": "object",

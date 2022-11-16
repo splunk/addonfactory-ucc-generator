@@ -24,7 +24,7 @@ const TableFilterWrapper = styled.div`
     width: 100%;
 `;
 
-function TableHeader({ page, services, totalElement, handleRequestModalOpen }) {
+function TableHeader({ page, isOuterTable, services, totalElement, handleRequestModalOpen }) {
     const {
         pageSize,
         currentPage,
@@ -82,7 +82,7 @@ function TableHeader({ page, services, totalElement, handleRequestModalOpen }) {
                             <Select.Option key="25" label={_('25 Per Page')} value={25} />
                             <Select.Option key="50" label={_('50 Per Page')} value={50} />
                         </Select>
-                        {getSearchTypeDropdown()}
+                        {isOuterTable ? getSearchTypeDropdown() : null}
                     </TableSelectBoxWrapper>
                 ) : null}
             </div>
@@ -101,7 +101,7 @@ function TableHeader({ page, services, totalElement, handleRequestModalOpen }) {
                     alwaysShowLastPageLink
                     totalPages={Math.ceil(totalElement / pageSize)}
                 />
-                {page === PAGE_INPUT ? null : (
+                {page === PAGE_INPUT && isOuterTable ? null : (
                     <Button
                         label={_('Add')}
                         appearance="primary"

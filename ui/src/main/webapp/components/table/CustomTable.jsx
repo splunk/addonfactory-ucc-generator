@@ -25,6 +25,7 @@ function CustomTable({
     handleSort,
     sortDir,
     sortKey,
+    tableConfig
 }) {
     const unifiedConfigs = getUnifiedConfigs();
     const [entityModal, setEntityModal] = useState({ open: false });
@@ -32,11 +33,6 @@ function CustomTable({
 
     const { rowData } = useContext(TableContext);
 
-    const tableConfig =
-        page === PAGE_INPUT
-            ? unifiedConfigs.pages.inputs.table
-            : unifiedConfigs.pages.configuration.tabs.filter((x) => x.name === serviceName)[0]
-                  .table;
     const { moreInfo, header } = tableConfig;
     const headers = tableConfig.header;
 
@@ -237,12 +233,12 @@ function CustomTable({
                                 handleToggleActionClick={handleToggleActionClick}
                                 {...(moreInfo
                                     ? {
-                                          expansionRow: getExpansionRow(
-                                              columns.length,
-                                              row,
-                                              moreInfo
-                                          ),
-                                      }
+                                        expansionRow: getExpansionRow(
+                                            columns.length,
+                                            row,
+                                            moreInfo
+                                        ),
+                                    }
                                     : {})}
                             />
                         );

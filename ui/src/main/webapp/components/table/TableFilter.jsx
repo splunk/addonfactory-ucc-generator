@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Text from '@splunk/react-ui/Text';
 import PropTypes from 'prop-types';
+import TableContext from '../../context/TableContext';
 
 function TableFilter(props) {
+
+    const { searchText } = useContext(TableContext);
+
+    // We need to remove this function later
     const debounce = (func, wait) => {
         let timeout;
 
@@ -34,7 +39,8 @@ function TableFilter(props) {
         <Text
             appearance="search"
             placeholder="filter"
-            onChange={debounce(props.handleChange, 200)}
+            onChange={props.handleChange}
+            value={searchText}
         />
     );
 }

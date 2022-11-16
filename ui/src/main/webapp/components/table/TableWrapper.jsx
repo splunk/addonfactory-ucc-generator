@@ -23,17 +23,23 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPag
     );
 
     const unifiedConfigs = getUnifiedConfigs();
-    const tableConfig =
-        page === PAGE_INPUT
-            ? unifiedConfigs.pages.inputs.table
-            : unifiedConfigs.pages.configuration.tabs.filter((x) => x.name === serviceName)[0]
-                  .table;
-    const headers = tableConfig.header;
-    const { moreInfo } = tableConfig;
+
+    const outerTable = unifiedConfigs.pages.inputs?.table;
+
     const services =
         page === PAGE_INPUT
             ? unifiedConfigs.pages.inputs.services
             : unifiedConfigs.pages.configuration.tabs.filter((x) => x.name === serviceName);
+
+    const tableConfig =
+        page === PAGE_INPUT
+            ? (outerTable ? outerTable : services.find((x) => x.name === serviceName).table)
+            : unifiedConfigs.pages.configuration.tabs.find((x) => x.name === serviceName)
+                .table;
+
+    const { moreInfo } = tableConfig;
+    const headers = tableConfig.header;
+    const isOuterTable = outerTable ? true : false;
 
     const modifyAPIResponse = (data) => {
         const obj = {};
@@ -209,6 +215,11 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPag
             arr = findByMatchingValue(rowData[searchType]);
         }
 
+        // For Inputs page, filter the data when tab change
+        if (!isOuterTable) {
+            arr = arr.filter((v) => v.serviceName === serviceName);
+        }
+
         const _sortKey = isCustomMapping ? 'serviceTitle' : sortKey;
 
         // Sort the array based on the sort value
@@ -252,6 +263,7 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPag
                 services={services}
                 totalElement={totalElement}
                 handleRequestModalOpen={handleRequestModalOpen}
+                isOuterTable={isOuterTable}
             />
             <CustomTable
                 page={page}
@@ -262,6 +274,8 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPag
                 sortDir={sortDir}
                 sortKey={sortKey}
                 handleOpenPageStyleDialog={handleOpenPageStyleDialog}
+                tableConfig={tableConfig}
+                services={services}
             />
         </>
     );

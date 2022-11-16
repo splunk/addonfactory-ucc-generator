@@ -34,7 +34,12 @@ function getExpansionRowData(row, moreInfo) {
 }
 
 export function getExpansionRow(colSpan, row, moreInfo) {
-    const { customRow } = getUnifiedConfigs().pages.inputs.table;
+
+    const inputs = getUnifiedConfigs().pages?.inputs;
+
+    const customRow = inputs?.table
+        ? (inputs.table.customRow)
+        : (inputs.services.find((service) => service.name === row.serviceName).table?.customRow);
 
     return (
         <Table.Row key={`${row.id}-expansion`}>
