@@ -146,7 +146,7 @@ function CustomTableRow(props) {
                             cellHTML = rowActionsPrimaryButton(row);
                         } else {
                             cellHTML = (
-                                <Table.Cell data-column={header.field} key={header.field}>
+                                <Table.Cell style={{ wordBreak:'break-all' }} data-column={header.field} key={header.field}>
                                     {headerMapping[header.field] &&
                                     Object.prototype.hasOwnProperty.call(
                                         headerMapping[header.field],
