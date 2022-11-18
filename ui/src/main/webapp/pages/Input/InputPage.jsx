@@ -192,11 +192,9 @@ function InputPage() {
         );
     };
 
-    const changeRoute = (val) => {
-        Object.keys(val).forEach((key) => {
-            query.set(key, val[key]);
-        });
-        history.push({ search: query.toString() });
+    const handleChangeCustomMenu = (val) => {
+        const { service } = val;
+        handleRequestOpen(service, services.find((x) => x.name === service).title);
     };
 
     const onTabChange = useCallback((e, { selectedTabId }) => {
@@ -260,7 +258,7 @@ function InputPage() {
                 {React.createElement(CustomMenu, {
                     fileName: customMenuField.src,
                     type: customMenuField.type,
-                    handleChange: changeRoute,
+                    handleChange: handleChangeCustomMenu
                 })}
             </ColumnLayout.Column>
         )
