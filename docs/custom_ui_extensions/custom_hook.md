@@ -19,10 +19,10 @@ The custom_hook file's relative path to globalConfig file is `appserver/static/j
 ### Usage
 
 Use hook in the services:
-![image](images/Use_Hook_in_the_services.png)
+![image](../images/Use_Hook_in_the_services.png)
 
 Use hook in the tabs:
-![image](images/Use_Hook_in_the_tabs.png)
+![image](../images/Use_Hook_in_the_tabs.png)
 
 ### Properties
 

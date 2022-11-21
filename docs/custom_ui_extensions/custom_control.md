@@ -15,7 +15,7 @@ The custom_control file's relative path to globalConfig is `appserver/static/js/
 ### Usage
 
 Use custom control in the tabs:
-![image](images/Custom_Control_GlobalConfig.png)
+![image](../images/Custom_Control_GlobalConfig.png)
 
 ### Properties
 
@@ -97,7 +97,7 @@ export default CustomControl;
 ### Output
 
 This is how custom control looks:
-![image](images/Custom_Control_Output.png)
+![image](../images/Custom_Control_Output.png)
 
 Here's how custom validations look:
-![image](images/Custom_Control_Validations.png)
+![image](../images/Custom_Control_Validations.png)

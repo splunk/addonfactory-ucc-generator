@@ -141,7 +141,7 @@ Auth can be used inside the entity tag. Use `type: "oauth"` in the entity list a
 This is how the Add Account modal looks after adding the above code to the globalConfig.json file:
 
 This is how Add Account looks when auth_type is basic:
-![image](images/Basic_Auth_Output.png)
+![image](../images/Basic_Auth_Output.png)
 
 This is how Add Account looks when auth_type is oauth:
-![image](images/OAuth_Output.png)
+![image](../images/OAuth_Output.png)

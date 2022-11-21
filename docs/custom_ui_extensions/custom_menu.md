@@ -14,7 +14,7 @@ The custom_menu file's relative path to globalConfig file is `appserver/static/j
 ### Usage
 
 Use Custom Menu in the configuration table:
-![image](images/Custom_Menu_GlobalConfig.png)
+![image](../images/Custom_Menu_GlobalConfig.png)
 
 ### Properties
 
@@ -65,4 +65,4 @@ export default CustomMenu;
 ### Output
 
 This is how custom menu looks:
-![image](images/Custom_Menu_Output.png)
+![image](../images/Custom_Menu_Output.png)

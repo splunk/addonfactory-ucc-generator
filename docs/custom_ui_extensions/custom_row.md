@@ -1,19 +1,19 @@
-Custom Cell is used when the content of a table cell needs to be updated.
-We can use Custom Cell inside the table header in the inputs and configuration page.
+When clicking on the left side icon provided in each row, the input specific details are displayed.
+To update the existing details, we can use the Custom Row feature.
 
-Here is how you specify a custom cell hook:
+Here is how you specify a custom row hook:
 ```
-"customCell": {
-  "src": "custom_cell",
+"customRow": {
+  "src": "custom_row",
   "type": "external"
 }
 ```
-The custom_cell file's relative path to globalConfig file is `appserver/static/js/build/custom/custom_cell.js`
+The custom_row file's relative path to globalConfig file is `appserver/static/js/build/custom/custom_row.js`
 
 ### Usage
 
-Use Custom Cell in the configuration table:
-![image](images/Custom_Cell_GlobalConfig.png)
+Use Custom Row in the inputs table:
+![image](../images/Custom_Row_GlobalConfig.png)
 
 ### Properties
 
@@ -23,7 +23,6 @@ Use Custom Cell in the configuration table:
 | el                | The html element of the custom cell. |
 | serviceName       | The name of the service/tab specified in the globalConfig file. |
 | row               | The object of the record for which the CustomRowInput constructor is called. |
-| field             | The name of the field as specified in the globalConfig file. |
 
 ### Methods
 
@@ -34,7 +33,7 @@ Use Custom Cell in the configuration table:
 ### Example
 
 ```
-class CustomInputCell {
+class CustomInputRow {
     /**
      * Custom Row Cell
      * @constructor
@@ -42,33 +41,25 @@ class CustomInputCell {
      * @param {string} serviceName - Input service name.
      * @param {element} el - The element of the custom cell.
      * @param {Object} row - custom row object.
-     * @param {string} field - The cell field name.
      */
-    constructor(globalConfig, serviceName, el, row, field) {
+    constructor(globalConfig, serviceName, el, row) {
         this.globalConfig = globalConfig;
         this.serviceName = serviceName;
         this.el = el;
         this.row = row;
-        this.field = field;
     }
+
     render() {
-        let html = "";
-        // Check for missing configuration in account
-        if (this.row.account_multiple_select === "one") {
-            html = "Option One";
-        } else if(this.row.account_multiple_select === "two"){
-            html = "Option Two";
-        } else {
-            html = "Option is not available"
-       }
-        this.el.innerHTML = html;
+        const content_html_template = 'Custom Input Row';
+        this.el.innerHTML = content_html_template;
         return this;
     }
 }
-export default CustomInputCell; 
+ 
+export default CustomInputRow;
 ```
 
 ### Output
 
-This is how custom cell looks:
-![image](images/Custom_Cell_Output.png)
+This is how custom row looks:
+![image](../images/Custom_Row_Output.png)
