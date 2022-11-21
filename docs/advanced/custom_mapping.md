@@ -10,4 +10,4 @@ UCC allows you to map field values, for example, in the data collection field of
 ### Usage
 
 Use mapping in the table header:
-![image](images/Custom_Mapping_GlobalConfig.png)
+![image](../images/Custom_Mapping_GlobalConfig.png)
