@@ -28,7 +28,7 @@ Use Custom Menu in the configuration table:
 
 | Property          | Description |
 | ----------------- | ----------- |
-| Render            | This method should contain the rendering logic for the custom component. This method is called when the create, edit or clone form is rendered. |
+| Render            | This method should contain the rendering logic for the custom component. |
 
 ### Example
 
@@ -53,8 +53,7 @@ class CustomMenu {
         this.el.innerHTML = '<button type="button">Click Me! I am a button for custom menu</button>'
         this.el.onclick = () => {
             this.setValue({
-                service: "example_input_one",
-                action: "create"
+                service: "example_input_one" // The value of service can be the name of any services, specified in the globalConfig file.
             })
         }
     }
