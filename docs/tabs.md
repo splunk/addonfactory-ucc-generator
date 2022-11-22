@@ -53,7 +53,7 @@ This is how globalConfig looks like without tabs in the inputs page:
 },
 ```
 
-### Tabs:
+### Tabs
 If there are multiple types of input services and want to use the Tabs feature, each input service is represented by a separate tab. As a result, each input service will have its own tab.
 
 To enable the tabs feature, `table` property must be provided under the services.
@@ -106,7 +106,7 @@ Title and Description would change when changing the tab (If provided in the glo
 },
 ```
 
-> #### Note:
+> Note:
 >
 > If the `table` property is provided in both the `inputs` and the `services`, the following error will be shown. ```instance.pages.inputs is not exactly one from [subschema 0],[subschema 1]```
 >
