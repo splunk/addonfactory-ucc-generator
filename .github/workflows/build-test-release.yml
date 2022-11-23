@@ -198,7 +198,6 @@ jobs:
       - test-smoke
       - pre-commit
       - appinspect-for-expected-outputs
-      - semgrep
       - compliance-copyrights
       - fossa-scan
     runs-on: ubuntu-latest
