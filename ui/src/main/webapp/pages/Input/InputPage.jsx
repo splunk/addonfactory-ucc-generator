@@ -43,7 +43,7 @@ function InputPage() {
 
     // Used for outer table is present or not
     const table = unifiedConfigs.pages.inputs?.table;
-    const isOuterTable = table ? true : false;
+    const isOuterTable = !!table;
 
     const [activeTabId, setActiveTabId] = useState(services[0].name);
     const [selectedTabDescription, setSelectedTabDescription] = useState(services[0]?.description || "");
@@ -173,7 +173,6 @@ function InputPage() {
     // handle close request for page style dialog
     const handlePageDialogClose = () => {
         setEntity({ ...entity, open: false });
-        query.delete('service');
         query.delete('action');
         history.push({ search: query.toString() });
     };
@@ -207,8 +206,10 @@ function InputPage() {
         }
 
         query.set('service', selectedTabId);
+        query.delete('action');
         history.push({ search: query.toString() });
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeTabId]);
 
     // Making a dropdown if we have more than one service
