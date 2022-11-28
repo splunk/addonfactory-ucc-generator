@@ -37,5 +37,6 @@ nav:
     - Dependent Dropdown: "advanced/dependent_dropdown.md"
     - OAuth Support: "advanced/oAuth_support.md"
     - Custom REST Handler: "advanced/custom_rest_handler.md"
+  - Other UCC-related components: "other_ucc_related_components.md" 
   - Troubleshooting: "troubleshooting.md"
   - Contributing: "contributing.md"
