@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import ColumnLayout from '@splunk/react-ui/ColumnLayout';
 import Button from '@splunk/react-ui/Button';
@@ -57,13 +57,13 @@ function InputPage() {
         return service.name;
     });
 
-    const history = useHistory();
+    let navigate = useNavigate();
     const query = useQuery();
 
     useEffect(() => {
         setServiceEntity();
         setActiveTab();
-    }, [history.location.search]);
+    }, [useLocation().search]);
 
     const setServiceEntity = () => {
         const service = services.find((x) => x.name === query.get('service'));
@@ -126,10 +126,10 @@ function InputPage() {
             isInputPageStyle,
         });
         if (isInputPageStyle) {
-            // set query and push to history
+            // set query and push to navigate
             query.set('service', serviceName);
             query.set('action', MODE_CREATE);
-            history.push({ search: query.toString() });
+            navigate({ search: query.toString() });
         }
     };
 
@@ -167,14 +167,14 @@ function InputPage() {
         // set query and push to history
         query.set('service', row.serviceName);
         query.set('action', mode);
-        history.push({ search: query.toString() });
+        navigate({ search: query.toString() });
     };
 
     // handle close request for page style dialog
     const handlePageDialogClose = () => {
         setEntity({ ...entity, open: false });
         query.delete('action');
-        history.push({ search: query.toString() });
+        navigate({ search: query.toString() });
     };
 
     // generate page style dialog
@@ -206,10 +206,8 @@ function InputPage() {
         }
 
         query.set('service', selectedTabId);
-        query.delete('action');
-        history.push({ search: query.toString() });
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        navigate({ search: query.toString() });
+g    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeTabId]);
 
     // Making a dropdown if we have more than one service

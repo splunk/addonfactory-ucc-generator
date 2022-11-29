@@ -7,6 +7,10 @@ const RadioBarWrapper = styled(RadioBar)`
     width: 320px;
 `;
 
+const RadioBarOption = styled(RadioBar.Option)`
+    margin-left: 0px !important;
+`;
+
 class RadioComponent extends Component {
     handleChange = (e, { value }) => {
         this.props.handleChange(this.props.field, value);
@@ -21,7 +25,7 @@ class RadioComponent extends Component {
                 key={this.props.field}
             >
                 {this.props.controlOptions.items.map((item) => (
-                    <RadioBar.Option key={item.value} value={item.value} label={item.label} />
+                    <RadioBarOption key={item.value} value={item.value} label={item.label} />
                 ))}
             </RadioBarWrapper>
         );
