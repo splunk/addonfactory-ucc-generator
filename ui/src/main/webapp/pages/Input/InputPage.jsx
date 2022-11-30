@@ -205,9 +205,10 @@ function InputPage() {
             setSelectedTabTitle(selectedTabInfo.title);
         }
 
+        query.delete("action");
         query.set('service', selectedTabId);
         navigate({ search: query.toString() });
-g    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeTabId]);
 
     // Making a dropdown if we have more than one service
