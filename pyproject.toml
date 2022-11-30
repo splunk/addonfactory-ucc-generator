@@ -45,7 +45,7 @@ PyYAML = "^6.0"
 [tool.poetry.dev-dependencies]
 pytest = "^6.2"
 mkdocs = "^1.4.2"
-mkdocs-material = "^8.5.10"
+mkdocs-material = "^8.5.11"
 pytest-splunk-addon-ui-smartx = "^2.3.0"
 pytest-splunk-addon = "^4.0.3"
 
