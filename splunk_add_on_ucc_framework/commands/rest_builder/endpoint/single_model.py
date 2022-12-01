@@ -15,38 +15,37 @@
 #
 
 
-from splunk_add_on_ucc_framework.uccrestbuilder.endpoint.single_model import (
+from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import (
     RestEndpointBuilder,
     RestEntityBuilder,
 )
 
 
-class DataInputEntityBuilder(RestEntityBuilder):
-    def __init__(self, name, fields, input_type, **kwargs):
+class SingleModelEntityBuilder(RestEntityBuilder):
+    def __init__(self, name, fields, **kwargs):
         super().__init__(name, fields, **kwargs)
-        self._input_type = input_type
 
     @property
     def name_spec(self):
-        return f"{self._input_type}://<name>"
+        return "<name>"
 
     @property
     def name_default(self):
-        return self._input_type
+        return "default"
 
     @property
     def name_rh(self):
         return ""
 
 
-class DataInputEndpointBuilder(RestEndpointBuilder):
+class SingleModelEndpointBuilder(RestEndpointBuilder):
 
     _rh_template = """
 from splunktaucclib.rest_handler.endpoint import (
     field,
     validator,
     RestModel,
-    DataInputModel,
+    SingleModel,
 )
 from splunktaucclib.rest_handler import admin_external, util
 from {handler_module} import {handler_class}
@@ -56,10 +55,10 @@ util.remove_http_proxy_env_vars()
 
 {entity}
 
-
-endpoint = DataInputModel(
-    '{input_type}',
+endpoint = SingleModel(
+    '{conf_name}',
     model,
+    config_name='{config_name}'
 )
 
 
@@ -71,14 +70,6 @@ if __name__ == '__main__':
     )
 """
 
-    def __init__(self, name, namespace, input_type, **kwargs):
-        super().__init__(name, namespace, **kwargs)
-        self.input_type = input_type
-
-    @property
-    def conf_name(self):
-        return "inputs"
-
     def actions(self):
         return ["edit", "list", "remove", "create"]
 
@@ -88,5 +79,6 @@ if __name__ == '__main__':
             handler_module=self.rh_module,
             handler_class=self.rh_class,
             entity=entity.generate_rh(),
-            input_type=self.input_type,
+            conf_name=self.conf_name,
+            config_name=self._name,
         )

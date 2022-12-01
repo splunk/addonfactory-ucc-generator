@@ -24,20 +24,25 @@ import os
 import os.path as op
 import shutil
 
-from splunk_add_on_ucc_framework.uccrestbuilder.endpoint.base import indent, quote_regex
-from splunk_add_on_ucc_framework.uccrestbuilder.endpoint.datainput import (
+from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import (
+    indent,
+    quote_regex,
+)
+from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.datainput import (
     DataInputEndpointBuilder,
     DataInputEntityBuilder,
 )
-from splunk_add_on_ucc_framework.uccrestbuilder.endpoint.field import RestFieldBuilder
-from splunk_add_on_ucc_framework.uccrestbuilder.endpoint.multiple_model import (
+from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.field import (
+    RestFieldBuilder,
+)
+from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.multiple_model import (
     MultipleModelEndpointBuilder,
     MultipleModelEntityBuilder,
 )
-from splunk_add_on_ucc_framework.uccrestbuilder.endpoint.oauth_model import (
+from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.oauth_model import (
     OAuthModelEndpointBuilder,
 )
-from splunk_add_on_ucc_framework.uccrestbuilder.endpoint.single_model import (
+from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.single_model import (
     SingleModelEndpointBuilder,
     SingleModelEntityBuilder,
 )

@@ -13,12 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-
 import os
 import os.path as op
 
-from splunk_add_on_ucc_framework.uccrestbuilder.rest_conf import RestmapConf, WebConf
+from splunk_add_on_ucc_framework.rest_conf import RestmapConf, WebConf
 
 __all__ = ["RestBuilder"]
 

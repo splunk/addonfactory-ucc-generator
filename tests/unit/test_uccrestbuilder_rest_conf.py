@@ -13,16 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from splunk_add_on_ucc_framework.uccrestbuilder.endpoint.datainput import (
+from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.datainput import (
     DataInputEndpointBuilder,
 )
-from splunk_add_on_ucc_framework.uccrestbuilder.endpoint.multiple_model import (
+from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.multiple_model import (
     MultipleModelEndpointBuilder,
 )
-from splunk_add_on_ucc_framework.uccrestbuilder.endpoint.single_model import (
+from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.single_model import (
     SingleModelEndpointBuilder,
 )
-from splunk_add_on_ucc_framework.uccrestbuilder.rest_conf import RestmapConf, WebConf
+from splunk_add_on_ucc_framework.rest_conf import RestmapConf, WebConf
 
 
 def test_rest_conf_build():

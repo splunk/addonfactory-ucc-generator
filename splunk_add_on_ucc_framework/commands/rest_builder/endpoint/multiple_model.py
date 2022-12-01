@@ -15,8 +15,8 @@
 #
 
 
-from splunk_add_on_ucc_framework.uccrestbuilder.endpoint.base import indent
-from splunk_add_on_ucc_framework.uccrestbuilder.endpoint.single_model import (
+from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import indent
+from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.single_model import (
     RestEndpointBuilder,
     RestEntityBuilder,
 )

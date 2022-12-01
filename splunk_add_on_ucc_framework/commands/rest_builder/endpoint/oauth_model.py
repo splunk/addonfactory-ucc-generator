@@ -15,7 +15,9 @@
 #
 
 
-from splunk_add_on_ucc_framework.uccrestbuilder.endpoint.base import RestEndpointBuilder
+from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import (
+    RestEndpointBuilder,
+)
 
 """
 This class is used to generate the endpoint for getting access token from

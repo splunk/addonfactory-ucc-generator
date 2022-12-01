@@ -15,7 +15,7 @@
 #
 import pytest
 
-from splunk_add_on_ucc_framework.uccrestbuilder.endpoint import base
+from splunk_add_on_ucc_framework.commands.rest_builder.endpoint import base
 
 
 @pytest.mark.parametrize(

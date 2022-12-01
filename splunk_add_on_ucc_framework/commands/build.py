@@ -34,13 +34,13 @@ from splunk_add_on_ucc_framework import (
     meta_conf,
     utils,
 )
+from splunk_add_on_ucc_framework.commands.rest_builder import global_config
+from splunk_add_on_ucc_framework.commands.rest_builder.builder import RestBuilder
 from splunk_add_on_ucc_framework.install_python_libraries import (
     SplunktaucclibNotFound,
     install_python_libraries,
 )
 from splunk_add_on_ucc_framework.start_alert_build import alert_build
-from splunk_add_on_ucc_framework.uccrestbuilder import global_config
-from splunk_add_on_ucc_framework.uccrestbuilder.builder import RestBuilder
 
 logger = logging.getLogger("ucc_gen")
 

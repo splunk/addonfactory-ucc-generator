@@ -15,7 +15,7 @@
 #
 
 
-from splunk_add_on_ucc_framework.uccrestbuilder.endpoint.base import (
+from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import (
     indent,
     quote_string,
 )
