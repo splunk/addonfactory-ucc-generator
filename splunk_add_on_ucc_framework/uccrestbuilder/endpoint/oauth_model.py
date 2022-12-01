@@ -45,7 +45,7 @@ class OAuthModelEndpointBuilder(RestEndpointBuilder):
     This will actually populate the jinja template with the token values and return it
     """
 
-    def generate_rh(self, handler):
+    def generate_rh(self):
         return self.j2_env.get_template("oauth.template").render(
             app_name=self._app_name,
         )

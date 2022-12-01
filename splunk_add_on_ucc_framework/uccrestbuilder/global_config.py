@@ -114,6 +114,14 @@ class GlobalConfigBuilderSchema:
     def _builder_configs(self):
         # SingleModel
         for config in self._configs:
+            rest_handler_module = config.get(
+                "restHandlerModule",
+                "splunktaucclib.rest_handler.admin_external",
+            )
+            rest_handler_class = config.get(
+                "restHandlerClass",
+                "AdminExternalHandler",
+            )
             self._builder_entity(
                 None,
                 config["entity"],
@@ -122,8 +130,10 @@ class GlobalConfigBuilderSchema:
                 SingleModelEntityBuilder,
                 conf_name=config.get("conf"),
                 rest_handler_name=config.get("restHandlerName"),
+                rest_handler_module=rest_handler_module,
+                rest_handler_class=rest_handler_class,
             )
-            # If we have have given oauth support then we have to add endpoint for accesstoken
+            # If we have given oauth support then we have to add endpoint for accesstoken
             for entity_element in config["entity"]:
                 if entity_element["type"] == "oauth":
                     self._get_endpoint(
@@ -139,14 +149,22 @@ class GlobalConfigBuilderSchema:
                 "settings",
                 MultipleModelEndpointBuilder,
                 MultipleModelEntityBuilder,
+                rest_handler_module="splunktaucclib.rest_handler.admin_external",
+                rest_handler_class="AdminExternalHandler",
             )
 
     def _builder_inputs(self):
         # DataInput
         for input_item in self._inputs:
-            rest_handler_name = None
-            if "restHandlerName" in input_item:
-                rest_handler_name = input_item["restHandlerName"]
+            rest_handler_name = input_item.get("restHandlerName")
+            rest_handler_module = input_item.get(
+                "restHandlerModule",
+                "splunktaucclib.rest_handler.admin_external",
+            )
+            rest_handler_class = input_item.get(
+                "restHandlerClass",
+                "AdminExternalHandler",
+            )
             if "conf" in input_item:
                 self._builder_entity(
                     None,
@@ -156,6 +174,8 @@ class GlobalConfigBuilderSchema:
                     SingleModelEntityBuilder,
                     conf_name=input_item["conf"],
                     rest_handler_name=rest_handler_name,
+                    rest_handler_module=rest_handler_module,
+                    rest_handler_class=rest_handler_class,
                 )
             else:
                 self._builder_entity(
@@ -166,6 +186,8 @@ class GlobalConfigBuilderSchema:
                     DataInputEntityBuilder,
                     input_type=input_item["name"],
                     rest_handler_name=rest_handler_name,
+                    rest_handler_module=rest_handler_module,
+                    rest_handler_class=rest_handler_class,
                 )
 
     def _builder_entity(

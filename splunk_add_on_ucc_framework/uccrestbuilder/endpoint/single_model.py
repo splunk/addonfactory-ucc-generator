@@ -48,7 +48,7 @@ from splunktaucclib.rest_handler.endpoint import (
     SingleModel,
 )
 from splunktaucclib.rest_handler import admin_external, util
-from {handler_module} import {handler_name}
+from {handler_module} import {handler_class}
 import logging
 
 util.remove_http_proxy_env_vars()
@@ -66,18 +66,18 @@ if __name__ == '__main__':
     logging.getLogger().addHandler(logging.NullHandler())
     admin_external.handle(
         endpoint,
-        handler={handler_name},
+        handler={handler_class},
     )
 """
 
     def actions(self):
         return ["edit", "list", "remove", "create"]
 
-    def generate_rh(self, handler):
+    def generate_rh(self):
         entity = self._entities[0]
         return self._rh_template.format(
-            handler_module=handler.module,
-            handler_name=handler.name,
+            handler_module=self.rh_module,
+            handler_class=self.rh_class,
             entity=entity.generate_rh(),
             conf_name=self.conf_name,
             config_name=self._name,

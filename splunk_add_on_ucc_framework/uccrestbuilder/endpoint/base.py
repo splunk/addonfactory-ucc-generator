@@ -32,7 +32,7 @@ fields{name_rh} = [
 ]
 model{name_rh} = RestModel(fields{name_rh}, name={name})
 """
-    _disabled_feild_template = """
+    _disabled_field_template = """
 field.RestField(
     'disabled',
     required=False,
@@ -81,7 +81,7 @@ field.RestField(
             or entity_builder == "SingleModelEntityBuilder"
             and self._conf_name
         ):
-            fields.append(self._disabled_feild_template)
+            fields.append(self._disabled_field_template)
         fields_lines = ", \n".join(fields)
         return self._rh_template.format(
             fields=indent(fields_lines),
@@ -104,6 +104,8 @@ class RestEndpointBuilder:
             self._rest_handler_name = kwargs.get("rest_handler_name")
         else:
             self._rest_handler_name = f"{self._namespace}_rh_{self._name}"
+        self._rest_handler_module = kwargs.get("rest_handler_module")
+        self._rest_handler_class = kwargs.get("rest_handler_class")
 
     @property
     def name(self):
@@ -120,6 +122,14 @@ class RestEndpointBuilder:
     @property
     def rh_name(self):
         return self._rest_handler_name
+
+    @property
+    def rh_module(self):
+        return self._rest_handler_module
+
+    @property
+    def rh_class(self):
+        return self._rest_handler_class
 
     @property
     def entities(self):
@@ -139,7 +149,7 @@ class RestEndpointBuilder:
         specs = [entity.generate_spec(True) for entity in self._entities]
         return "\n\n".join(specs)
 
-    def generate_rh(self, handler):
+    def generate_rh(self):
         raise NotImplementedError()
 
 

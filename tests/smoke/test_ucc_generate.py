@@ -1,8 +1,8 @@
+import difflib
 import tempfile
 from os import path
 
 import splunk_add_on_ucc_framework as ucc
-from tests.unit.helpers import assert_identical_files
 
 
 def test_ucc_generate():
@@ -84,11 +84,14 @@ def test_ucc_generate_with_inputs_configuration_alerts():
             ("bin", "example_input_one.py"),
             ("bin", "example_input_two.py"),
             ("bin", "example_input_three.py"),
+            ("bin", "example_input_four.py"),
             ("bin", "import_declare_test.py"),
             ("bin", "splunk_ta_uccexample_rh_account.py"),
             ("bin", "splunk_ta_uccexample_rh_example_input_one.py"),
             ("bin", "splunk_ta_uccexample_rh_example_input_two.py"),
             ("bin", "splunk_ta_uccexample_rh_three_custom.py"),
+            ("bin", "splunk_ta_uccexample_rh_example_input_four.py"),
+            ("bin", "splunk_ta_uccexample_custom_rh.py"),
             ("bin", "splunk_ta_uccexample_rh_oauth.py"),
             ("bin", "splunk_ta_uccexample_rh_settings.py"),
             ("bin", "test_alert.py"),
@@ -98,13 +101,26 @@ def test_ucc_generate_with_inputs_configuration_alerts():
             ("README", "splunk_ta_uccexample_settings.conf.spec"),
             ("metadata", "default.meta"),
         ]
+        diff_results = []
         for f in files_to_be_equal:
             expected_file_path = path.join(expected_folder, *f)
             actual_file_path = path.join(actual_folder, *f)
-            assert assert_identical_files(
-                expected_file_path,
-                actual_file_path,
-            ), f"Expected file {expected_file_path} is different from {actual_file_path}"
+            with open(expected_file_path) as expected_file:
+                expected_file_lines = expected_file.readlines()
+            with open(actual_file_path) as actual_file:
+                actual_file_lines = actual_file.readlines()
+            for line in difflib.unified_diff(
+                actual_file_lines,
+                expected_file_lines,
+                fromfile=actual_file_path,
+                tofile=expected_file_path,
+                lineterm="",
+            ):
+                diff_results.append(line)
+        if diff_results:
+            for result in diff_results:
+                print(result)
+            assert False, "Some diffs were found"
         files_to_exist = [
             ("static", "appIcon.png"),
             ("static", "appIcon_2x.png"),
@@ -164,13 +180,26 @@ def test_ucc_generate_with_configuration():
             ("README", "splunk_ta_uccexample_settings.conf.spec"),
             ("metadata", "default.meta"),
         ]
+        diff_results = []
         for f in files_to_be_equal:
             expected_file_path = path.join(expected_folder, *f)
             actual_file_path = path.join(actual_folder, *f)
-            assert assert_identical_files(
-                expected_file_path,
-                actual_file_path,
-            ), f"Expected file {expected_file_path} is different from {actual_file_path}"
+            with open(expected_file_path) as expected_file:
+                expected_file_lines = expected_file.readlines()
+            with open(actual_file_path) as actual_file:
+                actual_file_lines = actual_file.readlines()
+            for line in difflib.unified_diff(
+                actual_file_lines,
+                expected_file_lines,
+                fromfile=actual_file_path,
+                tofile=expected_file_path,
+                lineterm="",
+            ):
+                diff_results.append(line)
+        if diff_results:
+            for result in diff_results:
+                print(result)
+            assert False, "Some diffs were found"
         files_to_exist = [
             ("static", "appIcon.png"),
             ("static", "appIcon_2x.png"),
@@ -221,13 +250,26 @@ def test_ucc_generate_with_configuration_files_only():
             ("default", "tags.conf"),
             ("metadata", "default.meta"),
         ]
+        diff_results = []
         for f in files_to_be_equal:
             expected_file_path = path.join(expected_folder, *f)
             actual_file_path = path.join(actual_folder, *f)
-            assert assert_identical_files(
-                expected_file_path,
-                actual_file_path,
-            ), f"Expected file {expected_file_path} is different from {actual_file_path}"
+            with open(expected_file_path) as expected_file:
+                expected_file_lines = expected_file.readlines()
+            with open(actual_file_path) as actual_file:
+                actual_file_lines = actual_file.readlines()
+            for line in difflib.unified_diff(
+                actual_file_lines,
+                expected_file_lines,
+                fromfile=actual_file_path,
+                tofile=expected_file_path,
+                lineterm="",
+            ):
+                diff_results.append(line)
+        if diff_results:
+            for result in diff_results:
+                print(result)
+            assert False, "Some diffs were found"
         files_to_not_exist = [
             ("default", "data", "ui", "nav", "default_no_input.xml"),
         ]
