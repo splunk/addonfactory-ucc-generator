@@ -71,6 +71,7 @@ def _validate_organization(organization_id, organization_api_key):
     # Some code to validate the API key.
     # Should return nothing if the configuration is valid.
     # Should raise an exception splunktaucclib.rest_handler.error.RestError if the configuration is not valid.
+    ...
 
 
 class CustomRestHandler(AdminExternalHandler):
@@ -103,5 +104,174 @@ if __name__ == "__main__":
     admin_external.handle(
         endpoint,
         handler=CustomRestHandler,
+    )
+```
+
+### Native support from UCC
+
+> UCC 5.18.0 natively supports custom REST handlers for the modular inputs.
+
+One of the common scenarios is to delete a checkpoint after you are deleting an
+input in the Inputs page. Otherwise, users may face the wierd consequences if 
+they create an input with the same name as the input that was deleted and this 
+newly created input will be reusing the old checkpoint because the names of 
+the inputs are the same. We would like to avoid this situation in the add-on.
+
+This can be done without a need to modify the REST handler code generated 
+automatically by running `ucc-gen`.
+
+Below is the automatically generated REST handler code for a modular input REST 
+handler.
+
+```python
+
+import import_declare_test
+
+from splunktaucclib.rest_handler.endpoint import (
+    field,
+    validator,
+    RestModel,
+    DataInputModel,
+)
+from splunktaucclib.rest_handler import admin_external, util
+from splunktaucclib.rest_handler.admin_external import AdminExternalHandler
+import logging
+
+util.remove_http_proxy_env_vars()
+
+
+fields = [
+    field.RestField(
+        'interval',
+        required=True,
+        encrypted=False,
+        default=None,
+        validator=validator.Pattern(
+            regex=r"""^\-[1-9]\d*$|^\d*$""", 
+        )
+    ),  
+
+    field.RestField(
+        'disabled',
+        required=False,
+        validator=None
+    )
+
+]
+model = RestModel(fields, name=None)
+
+
+
+endpoint = DataInputModel(
+    'example_input_one',
+    model,
+)
+
+
+if __name__ == '__main__':
+    logging.getLogger().addHandler(logging.NullHandler())
+    admin_external.handle(
+        endpoint,
+        handler=AdminExternalHandler,
+    )
+```
+
+New file needs to be created in the `bin` folder of the add-on. Let's call it 
+`splunk_ta_uccexample_delete_checkpoint_rh.py` (name can be different).
+
+And put the following content into the file.
+
+```python
+import import_declare_test
+
+from splunktaucclib.rest_handler.admin_external import AdminExternalHandler
+
+
+class CustomRestHandlerDeleteCheckpoint(AdminExternalHandler):
+    def __init__(self, *args, **kwargs):
+        AdminExternalHandler.__init__(self, *args, **kwargs)
+
+    def handleList(self, confInfo):
+        AdminExternalHandler.handleList(self, confInfo)
+
+    def handleEdit(self, confInfo):
+        AdminExternalHandler.handleEdit(self, confInfo)
+
+    def handleCreate(self, confInfo):
+        AdminExternalHandler.handleCreate(self, confInfo)
+
+    def handleRemove(self, confInfo):
+        # Add your code here to delete the checkpoint!
+        AdminExternalHandler.handleRemove(self, confInfo)
+```
+
+Then, in globalConfig file you need to change the behaviour of the UCC to reuse
+the REST handler that was just created.
+
+```
+{
+    "name": "example_input_one",
+    "restHandlerModule": "splunk_ta_uccexample_delete_checkpoint_rh",  <----- new field
+    "restHandlerClass": "CustomRestHandlerDeleteCheckpoint",  <----- new field
+    "entity": [
+        "..."
+    ],
+    "title": "Example Input One"
+}
+```
+
+After `ucc-gen` command is executed again, the generated REST handler for this
+input will be changed to the following.
+
+```python
+
+import import_declare_test
+
+from splunktaucclib.rest_handler.endpoint import (
+    field,
+    validator,
+    RestModel,
+    DataInputModel,
+)
+from splunktaucclib.rest_handler import admin_external, util
+from splunk_ta_uccexample_delete_checkpoint_rh import CustomRestHandlerDeleteCheckpoint  # <----- changed
+import logging
+
+util.remove_http_proxy_env_vars()
+
+
+fields = [
+    field.RestField(
+        'interval',
+        required=True,
+        encrypted=False,
+        default=None,
+        validator=validator.Pattern(
+            regex=r"""^\-[1-9]\d*$|^\d*$""", 
+        )
+    ),  
+
+    field.RestField(
+        'disabled',
+        required=False,
+        validator=None
+    )
+
+]
+model = RestModel(fields, name=None)
+
+
+
+endpoint = DataInputModel(
+    'example_input_one',
+    model,
+)
+
+
+if __name__ == '__main__':
+    logging.getLogger().addHandler(logging.NullHandler())
+    admin_external.handle(
+        endpoint,
+        handler=CustomRestHandlerDeleteCheckpoint,  # <----- changed
     )
 ```
