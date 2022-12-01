@@ -170,6 +170,7 @@
           "enum": [
             "custom",
             "text",
+            "textarea",
             "singleSelect",
             "checkbox",
             "multipleSelect",
@@ -339,6 +340,12 @@
             },
             "link": {
               "type": "string"
+            },
+            "rowsMin": {
+              "type": "number"
+            },
+            "rowsMax": {
+              "type": "number"
             }
           }
         },
@@ -546,6 +553,7 @@
           "enum": [
             "custom",
             "text",
+            "textarea",
             "singleSelect",
             "checkbox",
             "multipleSelect",
@@ -712,6 +720,12 @@
             },
             "link": {
               "type": "string"
+            },
+            "rowsMin": {
+              "type": "number"
+            },
+            "rowsMax": {
+              "type": "number"
             }
           }
         },
