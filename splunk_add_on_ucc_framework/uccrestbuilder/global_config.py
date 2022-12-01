@@ -42,6 +42,9 @@ from splunk_add_on_ucc_framework.uccrestbuilder.endpoint.single_model import (
     SingleModelEntityBuilder,
 )
 
+REST_HANDLER_DEFAULT_MODULE = "splunktaucclib.rest_handler.admin_external"
+REST_HANDLER_DEFAULT_CLASS = "AdminExternalHandler"
+
 
 def _is_true(val):
     return str(val).strip().upper() in ("1", "TRUE", "T", "Y", "YES")
@@ -112,16 +115,7 @@ class GlobalConfigBuilderSchema:
         self._builder_inputs()
 
     def _builder_configs(self):
-        # SingleModel
         for config in self._configs:
-            rest_handler_module = config.get(
-                "restHandlerModule",
-                "splunktaucclib.rest_handler.admin_external",
-            )
-            rest_handler_class = config.get(
-                "restHandlerClass",
-                "AdminExternalHandler",
-            )
             self._builder_entity(
                 None,
                 config["entity"],
@@ -130,8 +124,8 @@ class GlobalConfigBuilderSchema:
                 SingleModelEntityBuilder,
                 conf_name=config.get("conf"),
                 rest_handler_name=config.get("restHandlerName"),
-                rest_handler_module=rest_handler_module,
-                rest_handler_class=rest_handler_class,
+                rest_handler_module=REST_HANDLER_DEFAULT_MODULE,
+                rest_handler_class=REST_HANDLER_DEFAULT_CLASS,
             )
             # If we have given oauth support then we have to add endpoint for accesstoken
             for entity_element in config["entity"]:
@@ -141,7 +135,6 @@ class GlobalConfigBuilderSchema:
                     )
 
     def _builder_settings(self):
-        # MultipleModel
         for setting in self._settings:
             self._builder_entity(
                 setting["name"],
@@ -149,21 +142,20 @@ class GlobalConfigBuilderSchema:
                 "settings",
                 MultipleModelEndpointBuilder,
                 MultipleModelEntityBuilder,
-                rest_handler_module="splunktaucclib.rest_handler.admin_external",
-                rest_handler_class="AdminExternalHandler",
+                rest_handler_module=REST_HANDLER_DEFAULT_MODULE,
+                rest_handler_class=REST_HANDLER_DEFAULT_CLASS,
             )
 
     def _builder_inputs(self):
-        # DataInput
         for input_item in self._inputs:
             rest_handler_name = input_item.get("restHandlerName")
             rest_handler_module = input_item.get(
                 "restHandlerModule",
-                "splunktaucclib.rest_handler.admin_external",
+                REST_HANDLER_DEFAULT_MODULE,
             )
             rest_handler_class = input_item.get(
                 "restHandlerClass",
-                "AdminExternalHandler",
+                REST_HANDLER_DEFAULT_CLASS,
             )
             if "conf" in input_item:
                 self._builder_entity(
