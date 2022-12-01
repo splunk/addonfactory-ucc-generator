@@ -116,17 +116,21 @@ class GlobalConfigBuilderSchema:
 
     def _builder_configs(self):
         for config in self._configs:
-            self._builder_entity(
-                None,
-                config["entity"],
+            endpoint_obj = self._get_endpoint(
                 config["name"],
                 SingleModelEndpointBuilder,
-                SingleModelEntityBuilder,
-                conf_name=config.get("conf"),
                 rest_handler_name=config.get("restHandlerName"),
                 rest_handler_module=REST_HANDLER_DEFAULT_MODULE,
                 rest_handler_class=REST_HANDLER_DEFAULT_CLASS,
             )
+            content = self._get_oauth_enitities(config["entity"])
+            fields = self._parse_fields(content)
+            entity = SingleModelEntityBuilder(
+                None,
+                fields,
+                conf_name=config.get("conf"),
+            )
+            endpoint_obj.add_entity(entity)
             # If we have given oauth support then we have to add endpoint for accesstoken
             for entity_element in config["entity"]:
                 if entity_element["type"] == "oauth":
@@ -136,15 +140,19 @@ class GlobalConfigBuilderSchema:
 
     def _builder_settings(self):
         for setting in self._settings:
-            self._builder_entity(
-                setting["name"],
-                setting["entity"],
+            endpoint_obj = self._get_endpoint(
                 "settings",
                 MultipleModelEndpointBuilder,
-                MultipleModelEntityBuilder,
                 rest_handler_module=REST_HANDLER_DEFAULT_MODULE,
                 rest_handler_class=REST_HANDLER_DEFAULT_CLASS,
             )
+            content = self._get_oauth_enitities(setting["entity"])
+            fields = self._parse_fields(content)
+            entity = MultipleModelEntityBuilder(
+                setting["name"],
+                fields,
+            )
+            endpoint_obj.add_entity(entity)
 
     def _builder_inputs(self):
         for input_item in self._inputs:
@@ -158,40 +166,38 @@ class GlobalConfigBuilderSchema:
                 REST_HANDLER_DEFAULT_CLASS,
             )
             if "conf" in input_item:
-                self._builder_entity(
-                    None,
-                    input_item["entity"],
+                endpoint_obj = self._get_endpoint(
                     input_item["name"],
                     SingleModelEndpointBuilder,
-                    SingleModelEntityBuilder,
-                    conf_name=input_item["conf"],
                     rest_handler_name=rest_handler_name,
                     rest_handler_module=rest_handler_module,
                     rest_handler_class=rest_handler_class,
                 )
-            else:
-                self._builder_entity(
+                content = self._get_oauth_enitities(input_item["entity"])
+                fields = self._parse_fields(content)
+                entity = SingleModelEntityBuilder(
                     None,
-                    input_item["entity"],
+                    fields,
+                    conf_name=input_item["conf"],
+                )
+                endpoint_obj.add_entity(entity)
+            else:
+                endpoint_obj = self._get_endpoint(
                     input_item["name"],
                     DataInputEndpointBuilder,
-                    DataInputEntityBuilder,
                     input_type=input_item["name"],
                     rest_handler_name=rest_handler_name,
                     rest_handler_module=rest_handler_module,
                     rest_handler_class=rest_handler_class,
                 )
-
-    def _builder_entity(
-        self, name, content, endpoint, endpoint_builder, entity_builder, *args, **kwargs
-    ):
-        endpoint_obj = self._get_endpoint(endpoint, endpoint_builder, *args, **kwargs)
-        # If the entity contains type oauth then we need to alter the content to generate proper entities to generate
-        # the rest handler with the oauth fields
-        content = self._get_oauth_enitities(content)
-        fields = self._parse_fields(content)
-        entity = entity_builder(name, fields, *args, **kwargs)
-        endpoint_obj.add_entity(entity)
+                content = self._get_oauth_enitities(input_item["entity"])
+                fields = self._parse_fields(content)
+                entity = DataInputEntityBuilder(
+                    None,
+                    fields,
+                    input_type=input_item["name"],
+                )
+                endpoint_obj.add_entity(entity)
 
     def _parse_fields(self, fields_content):
         return [
