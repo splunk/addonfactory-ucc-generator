@@ -36,6 +36,9 @@ from splunk_add_on_ucc_framework import (
 )
 from splunk_add_on_ucc_framework.commands.rest_builder import global_config
 from splunk_add_on_ucc_framework.commands.rest_builder.builder import RestBuilder
+from splunk_add_on_ucc_framework.commands.rest_builder.global_config import (
+    GlobalConfigBuilderSchema,
+)
 from splunk_add_on_ucc_framework.install_python_libraries import (
     SplunktaucclibNotFound,
     install_python_libraries,
@@ -130,7 +133,9 @@ def _replace_token(ta_name, outputdir):
             f.write(s)
 
 
-def _generate_rest(ta_name, scheme, import_declare_name, outputdir):
+def _generate_rest(
+    ta_name, scheme: GlobalConfigBuilderSchema, import_declare_name, outputdir
+):
     """
     Build REST for Add-on.
 

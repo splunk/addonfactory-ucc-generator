@@ -1,0 +1,4 @@
+validator.Number(
+    max_val=65535, 
+    min_val=1, 
+)

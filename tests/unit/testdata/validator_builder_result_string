@@ -1,0 +1,4 @@
+validator.String(
+    max_len=100, 
+    min_len=1, 
+)

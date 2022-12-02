@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
+from typing import List
 
 from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import indent
 from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.single_model import (
@@ -69,10 +69,10 @@ if __name__ == '__main__':
     )
 """
 
-    def actions(self):
+    def actions(self) -> List[str]:
         return ["edit", "list"]
 
-    def generate_rh(self):
+    def generate_rh(self) -> str:
         entities = [entity.generate_rh() for entity in self._entities]
         models = ["model" + entity.name_rh for entity in self._entities]
         models_lines = ", \n".join(models)

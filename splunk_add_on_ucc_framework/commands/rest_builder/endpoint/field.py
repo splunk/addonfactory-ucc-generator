@@ -39,17 +39,17 @@ class RestFieldBuilder:
         self._default = default
         self._validator = validator
 
-    def generate_spec(self):
+    def generate_spec(self) -> str:
         return self._kv_template.format(
             name=self._name,
             value="",
         )
 
-    def _indent_validator(self):
+    def _indent_validator(self) -> str:
         validator = indent(self._validator)
         return validator[4:]
 
-    def generate_rh(self):
+    def generate_rh(self) -> str:
         return self._rh_template.format(
             name=quote_string(self._name),
             required=self._required,

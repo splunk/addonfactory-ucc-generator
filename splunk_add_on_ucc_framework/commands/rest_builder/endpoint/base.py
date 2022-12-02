@@ -22,6 +22,8 @@ __all__ = [
     "indent",
 ]
 
+from typing import List, Sequence
+
 
 class RestEntityBuilder:
 
@@ -138,7 +140,7 @@ class RestEndpointBuilder:
     def add_entity(self, entity):
         self._entities.append(entity)
 
-    def actions(self):
+    def actions(self) -> List[str]:
         raise NotImplementedError()
 
     def generate_spec(self):
@@ -149,11 +151,11 @@ class RestEndpointBuilder:
         specs = [entity.generate_spec(True) for entity in self._entities]
         return "\n\n".join(specs)
 
-    def generate_rh(self):
+    def generate_rh(self) -> str:
         raise NotImplementedError()
 
 
-def quote_string(value):
+def quote_string(value) -> str:
     """
     Quote a string
     :param value:
@@ -165,7 +167,7 @@ def quote_string(value):
         return value
 
 
-def quote_regex(value):
+def quote_regex(value) -> str:
     """
     Quote a regex
     :param value:
@@ -177,7 +179,7 @@ def quote_regex(value):
         return value
 
 
-def indent(lines, spaces=1):
+def indent(lines: Sequence[str], spaces: int = 1) -> str:
     """
     Indent code block.
 

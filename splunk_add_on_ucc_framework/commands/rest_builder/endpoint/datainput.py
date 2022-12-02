@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
+from typing import List
 
 from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.single_model import (
     RestEndpointBuilder,
@@ -79,10 +79,10 @@ if __name__ == '__main__':
     def conf_name(self):
         return "inputs"
 
-    def actions(self):
+    def actions(self) -> List[str]:
         return ["edit", "list", "remove", "create"]
 
-    def generate_rh(self):
+    def generate_rh(self) -> str:
         entity = self._entities[0]
         return self._rh_template.format(
             handler_module=self.rh_module,
