@@ -182,7 +182,7 @@ function CustomTable({
                 column.push({
                     ...item,
                     sortKey: item.field || null,
-                    isCustomMapping: item.mapping ? true : false
+                    isCustomMapping: !!item.mapping
                 });
             });
         }
@@ -252,6 +252,7 @@ function CustomTable({
             {columns && columns.length && (
                 <Table // nosemgrep: typescript.react.best-practice.react-props-spreading.react-props-spreading
                     stripeRows
+                    headType='docked'
                     {...(moreInfo ? { rowExpansion: 'single' } : {})}
                 >
                     {getTableHeaderCell()}
@@ -274,6 +275,7 @@ CustomTable.propTypes = {
     handleSort: PropTypes.func,
     sortDir: PropTypes.string,
     sortKey: PropTypes.string,
+    tableConfig: PropTypes.object.isRequired,
 };
 
 export default memo(CustomTable);
