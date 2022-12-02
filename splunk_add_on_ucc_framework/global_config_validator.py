@@ -71,6 +71,46 @@ class GlobalConfigValidator:
                         f"Tab '{tab['name']}' should have entity with field 'name'"
                     )
 
+    def _validate_custom_rest_handlers(self) -> None:
+        """
+        Validates that only "restHandlerName" or both "restHandlerModule" and
+        "restHandlerClass" is present in the input configuration. Also validates
+        that both "restHandlerModule" and "restHandlerClass" is present if any
+        of them are present.
+
+        The valid scenarios:
+            * only restHandlerName is present
+            * both restHandlerModule and restHandlerClass is present
+        Everything other combination is considered invalid.
+        """
+        pages = self._config["pages"]
+        inputs = pages.get("inputs")
+        if inputs is None:
+            return
+        services = inputs["services"]
+        for service in services:
+            rest_handler_name = service.get("restHandlerName")
+            rest_handler_module = service.get("restHandlerModule")
+            rest_handler_class = service.get("restHandlerClass")
+            if rest_handler_name is not None and (
+                rest_handler_module is not None or rest_handler_class is not None
+            ):
+                raise GlobalConfigValidatorException(
+                    f"Input '{service['name']}' has both 'restHandlerName' and "
+                    f"'restHandlerModule' or 'restHandlerClass' fields present. "
+                    f"Please use only 'restHandlerName' or 'restHandlerModule' "
+                    f"and 'restHandlerClass'."
+                )
+            if (rest_handler_module is not None and rest_handler_class is None) or (
+                rest_handler_module is None and rest_handler_class is not None
+            ):
+                raise GlobalConfigValidatorException(
+                    f"Input '{service['name']}' should have both "
+                    f"'restHandlerModule' and 'restHandlerClass' fields "
+                    f"present, only 1 of them was found."
+                )
+
     def validate(self) -> None:
         self._validate_config_against_schema()
         self._validate_configuration_tab_table_has_name_field()
+        self._validate_custom_rest_handlers()

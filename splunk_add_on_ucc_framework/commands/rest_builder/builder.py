@@ -13,18 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-
 import os
 import os.path as op
 
-from splunk_add_on_ucc_framework.uccrestbuilder.rest_conf import RestmapConf, WebConf
+from splunk_add_on_ucc_framework.commands.rest_builder.global_config import (
+    GlobalConfigBuilderSchema,
+)
+from splunk_add_on_ucc_framework.rest_map_conf import RestmapConf
+from splunk_add_on_ucc_framework.web_conf import WebConf
 
-__all__ = ["RestBuilderError", "RestBuilder"]
-
-
-class RestBuilderError(Exception):
-    pass
+__all__ = ["RestBuilder"]
 
 
 class _RestBuilderOutput:
@@ -58,18 +56,18 @@ class _RestBuilderOutput:
 
 
 class RestBuilder:
-    def __init__(self, schema, handler, output_path, *args, **kwargs):
+    def __init__(
+        self, schema: GlobalConfigBuilderSchema, output_path: str, *args, **kwargs
+    ):
         """
 
         :param schema:
         :param schema: RestSchema
-        :param handler:
         :param output_path:
         :param args:
         :param kwargs:
         """
         self._schema = schema
-        self._handler = handler
         self._output_path = output_path
         self._args = args
         self._kwargs = kwargs
@@ -116,7 +114,7 @@ class RestBuilder:
             self.output.put(
                 self.output.bin,
                 endpoint.rh_name + ".py",
-                endpoint.generate_rh(self._handler),
+                endpoint.generate_rh(),
             )
 
         self.output.put(

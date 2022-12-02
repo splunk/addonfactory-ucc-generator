@@ -34,12 +34,16 @@ from splunk_add_on_ucc_framework import (
     meta_conf,
     utils,
 )
+from splunk_add_on_ucc_framework.commands.rest_builder import global_config
+from splunk_add_on_ucc_framework.commands.rest_builder.builder import RestBuilder
+from splunk_add_on_ucc_framework.commands.rest_builder.global_config import (
+    GlobalConfigBuilderSchema,
+)
 from splunk_add_on_ucc_framework.install_python_libraries import (
     SplunktaucclibNotFound,
     install_python_libraries,
 )
 from splunk_add_on_ucc_framework.start_alert_build import alert_build
-from splunk_add_on_ucc_framework.uccrestbuilder import build, global_config
 
 logger = logging.getLogger("ucc_gen")
 
@@ -129,7 +133,9 @@ def _replace_token(ta_name, outputdir):
             f.write(s)
 
 
-def _generate_rest(ta_name, scheme, import_declare_name, outputdir):
+def _generate_rest(
+    ta_name, scheme: GlobalConfigBuilderSchema, import_declare_name, outputdir
+):
     """
     Build REST for Add-on.
 
@@ -139,17 +145,11 @@ def _generate_rest(ta_name, scheme, import_declare_name, outputdir):
         import_declare_name (str): Name of import_declare_* file.
         outputdir (str): output directory.
     """
-    rest_handler_module = "splunktaucclib.rest_handler.admin_external"
-    rest_handler_class = "AdminExternalHandler"
-
-    build(
-        scheme,
-        rest_handler_module,
-        rest_handler_class,
-        os.path.join(outputdir, ta_name),
-        post_process=global_config.GlobalConfigPostProcessor(),
-        import_declare_name=import_declare_name,
-    )
+    builder_obj = RestBuilder(scheme, os.path.join(outputdir, ta_name))
+    builder_obj.build()
+    post_process = global_config.GlobalConfigPostProcessor()
+    post_process(builder_obj, scheme, import_declare_name=import_declare_name)
+    return builder_obj
 
 
 def _is_oauth_configured(ta_tabs):

@@ -23,24 +23,35 @@ import json
 import os
 import os.path as op
 import shutil
+from typing import Any, Dict, List, Type
 
-from splunk_add_on_ucc_framework.uccrestbuilder.endpoint.base import indent, quote_regex
-from splunk_add_on_ucc_framework.uccrestbuilder.endpoint.datainput import (
+from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import (
+    RestEndpointBuilder,
+)
+from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.datainput import (
     DataInputEndpointBuilder,
     DataInputEntityBuilder,
 )
-from splunk_add_on_ucc_framework.uccrestbuilder.endpoint.field import RestFieldBuilder
-from splunk_add_on_ucc_framework.uccrestbuilder.endpoint.multiple_model import (
+from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.field import (
+    RestFieldBuilder,
+)
+from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.multiple_model import (
     MultipleModelEndpointBuilder,
     MultipleModelEntityBuilder,
 )
-from splunk_add_on_ucc_framework.uccrestbuilder.endpoint.oauth_model import (
+from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.oauth_model import (
     OAuthModelEndpointBuilder,
 )
-from splunk_add_on_ucc_framework.uccrestbuilder.endpoint.single_model import (
+from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.single_model import (
     SingleModelEndpointBuilder,
     SingleModelEntityBuilder,
 )
+from splunk_add_on_ucc_framework.commands.rest_builder.validator_builder import (
+    ValidatorBuilder,
+)
+
+REST_HANDLER_DEFAULT_MODULE = "splunktaucclib.rest_handler.admin_external"
+REST_HANDLER_DEFAULT_CLASS = "AdminExternalHandler"
 
 
 def _is_true(val):
@@ -54,16 +65,16 @@ class GlobalConfigBuilderSchema:
         self._configs = []
         self._settings = []
         self.j2_env = j2_env
-        self._endpoints = {}
+        self._endpoints: Dict[str, RestEndpointBuilder] = {}
         self._parse()
         self._parse_builder_schema()
 
     @property
-    def product(self):
+    def product(self) -> str:
         return self._meta["name"]
 
     @property
-    def namespace(self):
+    def namespace(self) -> str:
         return self._meta["restRoot"]
 
     @property
@@ -83,8 +94,8 @@ class GlobalConfigBuilderSchema:
         return self._settings
 
     @property
-    def endpoints(self):
-        return [endpoint for _, endpoint in list(self._endpoints.items())]
+    def endpoints(self) -> List[RestEndpointBuilder]:
+        return list(self._endpoints.values())
 
     def _parse(self):
         self._meta = self._content["meta"]
@@ -112,18 +123,23 @@ class GlobalConfigBuilderSchema:
         self._builder_inputs()
 
     def _builder_configs(self):
-        # SingleModel
         for config in self._configs:
-            self._builder_entity(
-                None,
-                config["entity"],
+            endpoint_obj = self._get_endpoint(
                 config["name"],
                 SingleModelEndpointBuilder,
-                SingleModelEntityBuilder,
-                conf_name=config.get("conf"),
                 rest_handler_name=config.get("restHandlerName"),
+                rest_handler_module=REST_HANDLER_DEFAULT_MODULE,
+                rest_handler_class=REST_HANDLER_DEFAULT_CLASS,
             )
-            # If we have have given oauth support then we have to add endpoint for accesstoken
+            content = self._get_oauth_enitities(config["entity"])
+            fields = self._parse_fields(content)
+            entity = SingleModelEntityBuilder(
+                None,
+                fields,
+                conf_name=config.get("conf"),
+            )
+            endpoint_obj.add_entity(entity)
+            # If we have given oauth support then we have to add endpoint for accesstoken
             for entity_element in config["entity"]:
                 if entity_element["type"] == "oauth":
                     self._get_endpoint(
@@ -131,53 +147,65 @@ class GlobalConfigBuilderSchema:
                     )
 
     def _builder_settings(self):
-        # MultipleModel
         for setting in self._settings:
-            self._builder_entity(
-                setting["name"],
-                setting["entity"],
+            endpoint_obj = self._get_endpoint(
                 "settings",
                 MultipleModelEndpointBuilder,
-                MultipleModelEntityBuilder,
+                rest_handler_module=REST_HANDLER_DEFAULT_MODULE,
+                rest_handler_class=REST_HANDLER_DEFAULT_CLASS,
             )
+            content = self._get_oauth_enitities(setting["entity"])
+            fields = self._parse_fields(content)
+            entity = MultipleModelEntityBuilder(
+                setting["name"],
+                fields,
+            )
+            endpoint_obj.add_entity(entity)
 
     def _builder_inputs(self):
-        # DataInput
         for input_item in self._inputs:
-            rest_handler_name = None
-            if "restHandlerName" in input_item:
-                rest_handler_name = input_item["restHandlerName"]
+            rest_handler_name = input_item.get("restHandlerName")
+            rest_handler_module = input_item.get(
+                "restHandlerModule",
+                REST_HANDLER_DEFAULT_MODULE,
+            )
+            rest_handler_class = input_item.get(
+                "restHandlerClass",
+                REST_HANDLER_DEFAULT_CLASS,
+            )
             if "conf" in input_item:
-                self._builder_entity(
-                    None,
-                    input_item["entity"],
+                endpoint_obj = self._get_endpoint(
                     input_item["name"],
                     SingleModelEndpointBuilder,
-                    SingleModelEntityBuilder,
-                    conf_name=input_item["conf"],
                     rest_handler_name=rest_handler_name,
+                    rest_handler_module=rest_handler_module,
+                    rest_handler_class=rest_handler_class,
                 )
-            else:
-                self._builder_entity(
+                content = self._get_oauth_enitities(input_item["entity"])
+                fields = self._parse_fields(content)
+                entity = SingleModelEntityBuilder(
                     None,
-                    input_item["entity"],
+                    fields,
+                    conf_name=input_item["conf"],
+                )
+                endpoint_obj.add_entity(entity)
+            else:
+                endpoint_obj = self._get_endpoint(
                     input_item["name"],
                     DataInputEndpointBuilder,
-                    DataInputEntityBuilder,
                     input_type=input_item["name"],
                     rest_handler_name=rest_handler_name,
+                    rest_handler_module=rest_handler_module,
+                    rest_handler_class=rest_handler_class,
                 )
-
-    def _builder_entity(
-        self, name, content, endpoint, endpoint_builder, entity_builder, *args, **kwargs
-    ):
-        endpoint_obj = self._get_endpoint(endpoint, endpoint_builder, *args, **kwargs)
-        # If the entity contains type oauth then we need to alter the content to generate proper entities to generate
-        # the rest handler with the oauth fields
-        content = self._get_oauth_enitities(content)
-        fields = self._parse_fields(content)
-        entity = entity_builder(name, fields, *args, **kwargs)
-        endpoint_obj.add_entity(entity)
+                content = self._get_oauth_enitities(input_item["entity"])
+                fields = self._parse_fields(content)
+                entity = DataInputEntityBuilder(
+                    None,
+                    fields,
+                    input_type=input_item["name"],
+                )
+                endpoint_obj.add_entity(entity)
 
     def _parse_fields(self, fields_content):
         return [
@@ -186,30 +214,27 @@ class GlobalConfigBuilderSchema:
             if field["field"] != "name"
         ]
 
-    def _get_endpoint(self, name, endpoint_builder, *args, **kwargs):
+    def _get_endpoint(
+        self, name: str, endpoint_builder: Type[RestEndpointBuilder], **kwargs: Any
+    ):
         if name not in self._endpoints:
             endpoint = endpoint_builder(
                 name=name,
                 namespace=self._meta["restRoot"],
                 j2_env=self.j2_env,
-                *args,
                 **kwargs,
             )
             self._endpoints[name] = endpoint
         return self._endpoints[name]
 
-    def _parse_field(self, content):
+    def _parse_field(self, content) -> RestFieldBuilder:
         return RestFieldBuilder(
             content["field"],
             _is_true(content.get("required")),
             _is_true(content.get("encrypted")),
             content.get("defaultValue"),
-            self._parse_validation(content.get("validators")),
+            ValidatorBuilder().build(content.get("validators")),
         )
-
-    def _parse_validation(self, validation):
-        global_config_validation = GlobalConfigValidation(validation)
-        return global_config_validation.build()
 
     """
     If the entity contains type oauth then we need to alter the content to generate proper entities to generate
@@ -252,129 +277,6 @@ class GlobalConfigBuilderSchema:
                 content.remove(entity_element)
                 break
         return content
-
-
-class GlobalConfigValidation:
-
-    _validation_template = """validator.{validator}({arguments})"""
-
-    def __init__(self, validation):
-        self._validators = []
-        self._validation = validation
-        self._validation_mapping = {
-            "string": GlobalConfigValidation.string,
-            "number": GlobalConfigValidation.number,
-            "regex": GlobalConfigValidation.regex,
-            "email": GlobalConfigValidation.email,
-            "ipv4": GlobalConfigValidation.ipv4,
-            "date": GlobalConfigValidation.date,
-            "url": GlobalConfigValidation.url,
-        }
-
-    def build(self):
-        if not self._validation:
-            return None
-        for item in self._validation:
-            parser = self._validation_mapping.get(item["type"], None)
-            if parser is None:
-                continue
-            validator, arguments = parser(item)
-            if validator is None:
-                continue
-            arguments = arguments or {}
-            self._validators.append(
-                self._validation_template.format(
-                    validator=validator,
-                    arguments=self._arguments(**arguments),
-                )
-            )
-
-        if not self._validators:
-            return None
-        if len(self._validators) > 1:
-            return self.multiple_validators(self._validators)
-        else:
-            return self._validators[0]
-
-    @classmethod
-    def _arguments(cls, **kwargs):
-        if not kwargs:
-            return ""
-        args = list(
-            map(
-                lambda k_v: f"{k_v[0]}={k_v[1]}, ",
-                list(kwargs.items()),
-            )
-        )
-        args.insert(0, "")
-        args.append("")
-        return indent("\n".join(args))
-
-    @classmethod
-    def _content(cls, validator, arguments):
-        pass
-
-    @classmethod
-    def string(cls, validation):
-        return (
-            "String",
-            {
-                "max_len": validation.get("maxLength"),
-                "min_len": validation.get("minLength"),
-            },
-        )
-
-    @classmethod
-    def number(cls, validation):
-        ranges = validation.get("range", [None, None])
-        return ("Number", {"max_val": ranges[1], "min_val": ranges[0]})
-
-    @classmethod
-    def regex(cls, validation):
-        return ("Pattern", {"regex": "r" + quote_regex(validation.get("pattern"))})
-
-    @classmethod
-    def email(cls, validation):
-        regex = (
-            r"^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}"
-            r"[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
-        )
-        return ("Pattern", {"regex": "r" + quote_regex(regex)})
-
-    @classmethod
-    def ipv4(cls, validation):
-        regex = r"^(?:(?:[0-1]?\d{1,2}|2[0-4]\d|25[0-5])(?:\.|$)){4}$"
-        return ("Pattern", {"regex": "r" + quote_regex(regex)})
-
-    @classmethod
-    def date(cls, validation):
-        # iso8601 date time format
-        regex = (
-            r"^\s*((?:[+-]\d{6}|\d{4})-(?:\d\d-\d\d|W\d\d-\d|W\d\d|\d\d\d|\d\d))"
-            r"(?:(T| )(\d\d(?::\d\d(?::\d\d(?:[.,]\d+)?)?)?)([\+\-]\d\d(?::?\d\d)?|\s*Z)?)?$"
-        )
-        return ("Pattern", {"regex": "r" + quote_regex(regex)})
-
-    @classmethod
-    def url(cls, validation):
-        regex = (
-            r"^(?:(?:https?|ftp|opc\.tcp):\/\/)?(?:\S+(?::\S*)?@)?"
-            r"(?:(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])"
-            r"(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}"
-            r"(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|"
-            r"(?:(?:[a-z\u00a1-\uffff0-9]+-?_?)*[a-z\u00a1-\uffff0-9]+)"
-            r"(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*"
-            r"(?:\.(?:[a-z\u00a1-\uffff]{2,}))?)(?::\d{2,5})?(?:\/[^\s]*)?$"
-        )
-        return ("Pattern", {"regex": "r" + quote_regex(regex)})
-
-    @classmethod
-    def multiple_validators(cls, validators):
-        validators_str = ", \n".join(validators)
-        _template = """validator.AllOf(\n{validators}\n)"""
-        return _template.format(
-            validators=indent(validators_str),
-        )
 
 
 class GlobalConfigPostProcessor:

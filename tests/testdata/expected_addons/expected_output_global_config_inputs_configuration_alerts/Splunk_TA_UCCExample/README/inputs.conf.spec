@@ -27,3 +27,6 @@ example_help_link =
 
 [example_input_three://<name>]
 interval = 
+
+[example_input_four://<name>]
+interval = 
