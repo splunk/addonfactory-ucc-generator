@@ -20,51 +20,6 @@ from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import (
 )
 
 
-class RestmapConf:
-
-    _admin_template = """
-[admin:{namespace}]
-match = /{admin_match}
-members = {endpoints}
-"""
-
-    _external_template = """
-[admin_external:{name}]
-handlertype = python
-python.version = python3
-handlerfile = {rh_name}.py
-handleractions = {actions}
-handlerpersistentmode = true
-"""
-
-    @classmethod
-    def build(
-        cls, endpoints: Sequence[RestEndpointBuilder], namespace: str, admin_match: str
-    ) -> str:
-        # admin_match is always an empty string, so it will be probably removed in the future releases.
-        if not endpoints:
-            return ""
-        externals = [
-            cls._admin_template.format(
-                namespace=namespace,
-                admin_match=admin_match,
-                endpoints=", ".join([ep.name for ep in endpoints]),
-            )
-        ]
-        for endpoint in endpoints:
-            external = cls._external_template.format(
-                name=endpoint.name,
-                rh_name=endpoint.rh_name,
-                actions=", ".join(endpoint.actions()),
-            )
-            externals.append(external)
-        return "".join(externals)
-
-    @classmethod
-    def admin_externals(cls, endpoints):
-        return [endpoint.name for endpoint in endpoints]
-
-
 class WebConf:
 
     _template = """

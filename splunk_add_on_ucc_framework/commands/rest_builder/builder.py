@@ -19,7 +19,8 @@ import os.path as op
 from splunk_add_on_ucc_framework.commands.rest_builder.global_config import (
     GlobalConfigBuilderSchema,
 )
-from splunk_add_on_ucc_framework.rest_conf import RestmapConf, WebConf
+from splunk_add_on_ucc_framework.rest_map_conf import RestmapConf
+from splunk_add_on_ucc_framework.web_conf import WebConf
 
 __all__ = ["RestBuilder"]
 
