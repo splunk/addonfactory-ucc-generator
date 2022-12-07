@@ -165,7 +165,7 @@ dev = ["flake8", "markdown", "twine", "wheel"]
 
 [[package]]
 name = "httplib2"
-version = "0.21.0"
+version = "0.20.4"
 description = "A comprehensive HTTP client library."
 category = "dev"
 optional = false
@@ -515,7 +515,7 @@ pytest = "*"
 
 [[package]]
 name = "pytest-splunk-addon"
-version = "4.0.4"
+version = "4.1.1"
 description = "A Dynamic test tool for Splunk Apps and Add-ons"
 category = "dev"
 optional = false
@@ -526,12 +526,12 @@ addonfactory-splunk-conf-parser-lib = ">=0.3.3,<0.4.0"
 defusedxml = ">=0.7.1,<0.8.0"
 Faker = ">=13.12.0,<14.0.0"
 filelock = ">=3.0,<4.0"
-httplib2 = "*"
+httplib2 = "<=0.20.4"
 jsonschema = ">=4.2.1,<5.0.0"
 junitparser = ">=2.2.0,<3.0.0"
-pytest = ">5.4.0,<6.3"
-pytest-ordering = "*"
-pytest-xdist = "*"
+pytest = ">5.4.0,<7.3"
+pytest-ordering = ">=0.6,<0.7"
+pytest-xdist = ">=2.3.0"
 requests = ">=2,<3"
 splunk-sdk = ">=1.6,<2.0"
 xmlschema = ">=1.11.3,<2.0.0"
@@ -770,7 +770,7 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "88d8b07a118b7056ee519661354ccda99eb1c07ac03fd1e593de0c320ded209f"
+content-hash = "09db272b92521de7a09dea823d4467b4499ca867b31b2d618c863eeb338fba52"
 
 [metadata.files]
 addonfactory-splunk-conf-parser-lib = [
@@ -836,8 +836,8 @@ ghp-import = [
     {file = "ghp_import-2.1.0-py3-none-any.whl", hash = "sha256:8337dd7b50877f163d4c0289bc1f1c7f127550241988d568c1db512c4324a619"},
 ]
 httplib2 = [
-    {file = "httplib2-0.21.0-py3-none-any.whl", hash = "sha256:987c8bb3eb82d3fa60c68699510a692aa2ad9c4bd4f123e51dfb1488c14cdd01"},
-    {file = "httplib2-0.21.0.tar.gz", hash = "sha256:fc144f091c7286b82bec71bdbd9b27323ba709cc612568d3000893bfd9cb4b34"},
+    {file = "httplib2-0.20.4-py3-none-any.whl", hash = "sha256:8b6a905cb1c79eefd03f8669fd993c36dc341f7c558f056cb5a33b5c2f458543"},
+    {file = "httplib2-0.20.4.tar.gz", hash = "sha256:58a98e45b4b1a48273073f905d2961666ecf0fbac4250ea5b47aef259eb5c585"},
 ]
 idna = [
     {file = "idna-3.4-py3-none-any.whl", hash = "sha256:90b77e79eaa3eba6de819a0c442c0b4ceefc341a7a2ab77d7562bf49f425c5c2"},
@@ -1075,8 +1075,8 @@ pytest-ordering = [
     {file = "pytest_ordering-0.6-py3-none-any.whl", hash = "sha256:3f314a178dbeb6777509548727dc69edf22d6d9a2867bf2d310ab85c403380b6"},
 ]
 pytest-splunk-addon = [
-    {file = "pytest_splunk_addon-4.0.4-py3-none-any.whl", hash = "sha256:26c7e47c1f7d369b7605593ac6992f0ee84fa96715995c87aaca5721dce327a8"},
-    {file = "pytest_splunk_addon-4.0.4.tar.gz", hash = "sha256:2939989b10fd3703a6a2d242b73289b1ab6bfcf476da948407357740f28d517c"},
+    {file = "pytest_splunk_addon-4.1.1-py3-none-any.whl", hash = "sha256:8b07718fde87c41423f4dba1b9d15f7880a3443277506a1c4d8c574e5c34f6c7"},
+    {file = "pytest_splunk_addon-4.1.1.tar.gz", hash = "sha256:486d08c73e54e677bb00232208c58f89aa5c5d30d4858b419e55f8e8ae0c3f02"},
 ]
 pytest-splunk-addon-ui-smartx = [
     {file = "pytest-splunk-addon-ui-smartx-2.3.0.tar.gz", hash = "sha256:42a7bb49d32be377f2e4d9b2546d946b95766e3dd395675103c326e90e05c5ea"},
