@@ -698,7 +698,7 @@ class BaseFormView extends PureComponent {
                     if (required && !currentValue) {
                         load = false;
                         data[dependency] = null;
-                    } else if (currentValue === 'RESET_VALUE') {
+                    } else if (currentValue === 'RESET_DROPDOWN_VALUE') {
                         load = true;
                     } else {
                         data[dependency] = currentValue;
@@ -713,7 +713,10 @@ class BaseFormView extends PureComponent {
                 }
             });
         }
-        changes[field] = { value: { $set: targetValue } };
+
+        // This is the custom logic to handle the dropdown's reset value, and we are setting null value
+        const target_value = targetValue === 'RESET_DROPDOWN_VALUE' ? null : targetValue;
+        changes[field] = { value: { $set: target_value } };
 
         const newFields = update(this.state, { data: changes });
         const tempState = this.clearAllErrorMsg(newFields);
@@ -722,7 +725,7 @@ class BaseFormView extends PureComponent {
         if (this.hookDeferred) {
             this.hookDeferred.then(() => {
                 if (typeof this.hook.onChange === 'function') {
-                    this.hook.onChange(field, targetValue, tempState);
+                    this.hook.onChange(field, target_value, tempState);
                 }
             });
         }

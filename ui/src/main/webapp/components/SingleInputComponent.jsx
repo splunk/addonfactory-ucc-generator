@@ -160,7 +160,7 @@ function SingleInputComponent(props) {
                             data-test="clear"
                             appearance="secondary"
                             icon={<Clear />}
-                            onClick={() => restProps.handleChange(field, 'RESET_VALUE')}
+                            onClick={() => restProps.handleChange(field, 'RESET_DROPDOWN_VALUE')}
                         />
                     ) : null}
                 </>
