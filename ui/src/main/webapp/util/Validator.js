@@ -5,7 +5,9 @@ import {
     parseRegexRawStr,
     parseStringValidator,
     parseFunctionRawStr,
+    parseFileValidator
 } from './uccConfigurationValidators';
+import FILE from "../constants/constant";
 
 // Validate provided saveValidator function
 export function SaveValidator(validatorFunc, formData) {
@@ -131,6 +133,32 @@ class Validator {
                     ? validator.errorMsg
                     : getFormattedMessage(8, [label, validator.range[0], validator.range[1]]),
             };
+        }
+        return false;
+    }
+
+    FileValidator(field, validator, data) {
+        if(data) {
+            const { isValidExtension, fileSize, isValidContent } = parseFileValidator(data, validator.supportedFileTypes);
+            if(!isValidExtension) {
+                return {
+                    errorField: field,
+                    errorMsg: validator.errorMsg || getFormattedMessage(24, [validator.supportedFileTypes])
+                };
+            }
+            if(fileSize > FILE.FILE_MAX_SIZE) {
+                const file_size = FILE.FILE_MAX_SIZE/1024 + "KB";
+                return {
+                    errorField: field,
+                    errorMsg: getFormattedMessage(25, [file_size])
+                };
+            }
+            if (!isValidContent) {
+                return {
+                    errorField: field,
+                    errorMsg: getFormattedMessage(26)
+                };
+            }
         }
         return false;
     }
@@ -266,6 +294,16 @@ class Validator {
                                 data[this.entities[i].field],
                                 PREDEFINED_VALIDATORS_DICT.ipv4.regex,
                                 PREDEFINED_VALIDATORS_DICT.ipv4.inputValueType
+                            );
+                            if (ret) {
+                                return ret;
+                            }
+                            break;
+                        case 'file':
+                            ret = this.FileValidator(
+                                this.entities[i].field,
+                                this.entities[i].validators[j],
+                                data[this.entities[i].field]
                             );
                             if (ret) {
                                 return ret;

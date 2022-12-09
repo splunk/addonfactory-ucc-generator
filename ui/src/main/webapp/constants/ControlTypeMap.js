@@ -7,6 +7,7 @@ import CheckBoxComponent from '../components/CheckBoxComponent';
 import RadioComponent from '../components/RadioComponent';
 import PlaceholderComponent from '../components/PlaceholderComponent';
 import CustomControl from '../components/CustomControl';
+import FileInputComponent from '../components/FileInputComponent';
 
 export default {
     text: TextComponent,
@@ -16,6 +17,7 @@ export default {
     multipleSelect: MultiInputComponent,
     checkbox: CheckBoxComponent,
     radio: RadioComponent,
+    file: FileInputComponent,
     placeholder: PlaceholderComponent,
     custom: CustomControl,
 };

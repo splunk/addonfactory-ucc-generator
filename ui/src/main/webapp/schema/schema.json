@@ -177,7 +177,8 @@
             "radio",
             "placeholder",
             "oauth",
-            "helpLink"
+            "helpLink",
+            "file"
           ]
         },
         "help": {
@@ -241,6 +242,10 @@
               ]
             },
             "endpointUrl": {
+              "type": "string",
+              "maxLength": 350
+            },
+            "fileSupportMessage": {
               "type": "string",
               "maxLength": 350
             },
@@ -379,6 +384,9 @@
               },
               {
                 "$ref": "#/definitions/DateValidator"
+              },
+              {
+                "$ref": "#/definitions/FileValidator"
               }
             ]
           }
@@ -497,10 +505,7 @@
           "maxLength": 400
         },
         "type": {
-          "type": "string",
-          "enum": [
-            "date"
-          ]
+          "const": "date"
         }
       },
       "required": [
@@ -516,10 +521,7 @@
           "maxLength": 400
         },
         "type": {
-          "type": "string",
-          "enum": [
-            "email"
-          ]
+          "const": "email"
         }
       },
       "required": [
@@ -560,7 +562,8 @@
             "radio",
             "placeholder",
             "oauth",
-            "helpLink"
+            "helpLink",
+            "file"
           ]
         },
         "help": {
@@ -759,6 +762,9 @@
               },
               {
                 "$ref": "#/definitions/DateValidator"
+              },
+              {
+                "$ref": "#/definitions/FileValidator"
               }
             ]
           }
@@ -1089,10 +1095,7 @@
           "maxLength": 400
         },
         "type": {
-          "type": "string",
-          "enum": [
-            "ipv4"
-          ]
+          "const": "ipv4"
         }
       },
       "required": [
@@ -1143,10 +1146,7 @@
           "maxLength": 400
         },
         "type": {
-          "type": "string",
-          "enum": [
-            "number"
-          ]
+          "const": "number"
         },
         "range": {
           "type": "array",
@@ -1159,6 +1159,25 @@
         "type",
         "range"
       ],
+      "additionalProperties": false
+    },
+    "FileValidator": {
+      "type": "object",
+      "properties": {
+        "errorMsg": {
+          "type": "string",
+          "maxLength": 400
+        },
+        "type": {
+          "const": "file"
+        },
+        "supportedFileTypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
       "additionalProperties": false
     },
     "OAuthFields": {
@@ -1219,10 +1238,7 @@
           "maxLength": 400
         },
         "type": {
-          "type": "string",
-          "enum": [
-            "regex"
-          ]
+          "const": "regex"
         },
         "pattern": {
           "type": "string"
@@ -1242,10 +1258,7 @@
           "maxLength": 400
         },
         "type": {
-          "type": "string",
-          "enum": [
-            "string"
-          ]
+          "const": "string"
         },
         "minLength": {
           "type": "number",
@@ -1349,10 +1362,7 @@
           "maxLength": 400
         },
         "type": {
-          "type": "string",
-          "enum": [
-            "url"
-          ]
+          "const": "url"
         }
       },
       "required": [
