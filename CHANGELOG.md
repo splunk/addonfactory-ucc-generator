@@ -1,3 +1,10 @@
+# [5.18.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.17.1...v5.18.0) (2022-12-12)
+
+
+### Features
+
+* v5.18.0 release ([#583](https://github.com/splunk/addonfactory-ucc-generator/issues/583)) ([312839e](https://github.com/splunk/addonfactory-ucc-generator/commit/312839ea0888c673ddd706578a2891d6e9662d37))
+
 ## [5.17.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.17.0...v5.17.1) (2022-11-30)
 
 
