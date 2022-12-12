@@ -22,6 +22,8 @@ __all__ = [
     "indent",
 ]
 
+from typing import List, Sequence
+
 
 class RestEntityBuilder:
 
@@ -32,7 +34,7 @@ fields{name_rh} = [
 ]
 model{name_rh} = RestModel(fields{name_rh}, name={name})
 """
-    _disabled_feild_template = """
+    _disabled_field_template = """
 field.RestField(
     'disabled',
     required=False,
@@ -81,7 +83,7 @@ field.RestField(
             or entity_builder == "SingleModelEntityBuilder"
             and self._conf_name
         ):
-            fields.append(self._disabled_feild_template)
+            fields.append(self._disabled_field_template)
         fields_lines = ", \n".join(fields)
         return self._rh_template.format(
             fields=indent(fields_lines),
@@ -104,6 +106,8 @@ class RestEndpointBuilder:
             self._rest_handler_name = kwargs.get("rest_handler_name")
         else:
             self._rest_handler_name = f"{self._namespace}_rh_{self._name}"
+        self._rest_handler_module = kwargs.get("rest_handler_module")
+        self._rest_handler_class = kwargs.get("rest_handler_class")
 
     @property
     def name(self):
@@ -122,13 +126,21 @@ class RestEndpointBuilder:
         return self._rest_handler_name
 
     @property
+    def rh_module(self):
+        return self._rest_handler_module
+
+    @property
+    def rh_class(self):
+        return self._rest_handler_class
+
+    @property
     def entities(self):
         return self._entities
 
     def add_entity(self, entity):
         self._entities.append(entity)
 
-    def actions(self):
+    def actions(self) -> List[str]:
         raise NotImplementedError()
 
     def generate_spec(self):
@@ -139,11 +151,11 @@ class RestEndpointBuilder:
         specs = [entity.generate_spec(True) for entity in self._entities]
         return "\n\n".join(specs)
 
-    def generate_rh(self, handler):
+    def generate_rh(self) -> str:
         raise NotImplementedError()
 
 
-def quote_string(value):
+def quote_string(value) -> str:
     """
     Quote a string
     :param value:
@@ -155,7 +167,7 @@ def quote_string(value):
         return value
 
 
-def quote_regex(value):
+def quote_regex(value) -> str:
     """
     Quote a regex
     :param value:
@@ -167,7 +179,7 @@ def quote_regex(value):
         return value
 
 
-def indent(lines, spaces=1):
+def indent(lines: Sequence[str], spaces: int = 1) -> str:
     """
     Indent code block.
 

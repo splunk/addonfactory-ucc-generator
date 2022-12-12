@@ -1,0 +1,3 @@
+validator.Pattern(
+    regex=r"""^[a-zA-Z]\w*$""", 
+)

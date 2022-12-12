@@ -13,9 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from typing import List
 
-
-from splunk_add_on_ucc_framework.uccrestbuilder.endpoint.single_model import (
+from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.single_model import (
     RestEndpointBuilder,
     RestEntityBuilder,
 )
@@ -49,7 +49,7 @@ from splunktaucclib.rest_handler.endpoint import (
     DataInputModel,
 )
 from splunktaucclib.rest_handler import admin_external, util
-from {handler_module} import {handler_name}
+from {handler_module} import {handler_class}
 import logging
 
 util.remove_http_proxy_env_vars()
@@ -67,7 +67,7 @@ if __name__ == '__main__':
     logging.getLogger().addHandler(logging.NullHandler())
     admin_external.handle(
         endpoint,
-        handler={handler_name},
+        handler={handler_class},
     )
 """
 
@@ -79,14 +79,14 @@ if __name__ == '__main__':
     def conf_name(self):
         return "inputs"
 
-    def actions(self):
+    def actions(self) -> List[str]:
         return ["edit", "list", "remove", "create"]
 
-    def generate_rh(self, handler):
+    def generate_rh(self) -> str:
         entity = self._entities[0]
         return self._rh_template.format(
-            handler_module=handler.module,
-            handler_name=handler.name,
+            handler_module=self.rh_module,
+            handler_class=self.rh_class,
             entity=entity.generate_rh(),
             input_type=self.input_type,
         )

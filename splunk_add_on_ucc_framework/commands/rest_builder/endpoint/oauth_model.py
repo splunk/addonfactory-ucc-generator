@@ -13,9 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from typing import List
 
-
-from splunk_add_on_ucc_framework.uccrestbuilder.endpoint.base import RestEndpointBuilder
+from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import (
+    RestEndpointBuilder,
+)
 
 """
 This class is used to generate the endpoint for getting access token from
@@ -38,14 +40,14 @@ class OAuthModelEndpointBuilder(RestEndpointBuilder):
     Action will return the possible action for the endpoint
     """
 
-    def actions(self):
+    def actions(self) -> List[str]:
         return ["edit"]
 
     """
     This will actually populate the jinja template with the token values and return it
     """
 
-    def generate_rh(self, handler):
+    def generate_rh(self) -> str:
         return self.j2_env.get_template("oauth.template").render(
             app_name=self._app_name,
         )
