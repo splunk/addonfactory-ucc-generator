@@ -132,6 +132,18 @@ pages:
         options:
           text: Help Link
           link: https://docs.splunk.com/Documentation
+      - type: file
+        field: service_account
+        help: Upload service account's certificate
+        encrypted: true
+        required: true
+        label: Upload file
+        options:
+          fileSupportMessage: Here is the support message
+        validators:
+        - type: file
+          supportedFileTypes:
+          - json
       title: Account
     - name: proxy
       entity:

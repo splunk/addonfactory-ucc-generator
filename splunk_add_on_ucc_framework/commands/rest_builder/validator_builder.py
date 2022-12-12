@@ -141,6 +141,8 @@ class ValidatorBuilder:
         "ipv4": Ipv4Validator,
         "date": DateValidator,
         "url": UrlValidator,
+        # file validator does not need any generated code, everything is
+        # validated in the UI
     }
 
     def _format_multiple_validators(self, validators: Sequence[str]) -> str:
