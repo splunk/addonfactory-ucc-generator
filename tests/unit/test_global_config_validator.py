@@ -102,6 +102,28 @@ def test_config_validation_when_valid(filename):
             ),
         ),
         (
+            "invalid_config_validators_missing_for_file_input.json",
+            pytest.raises(GlobalConfigValidatorException),
+            ("File validator should be present for " "'service_account' field."),
+        ),
+        (
+            "invalid_config_supported_file_types_field_is_missing.json",
+            pytest.raises(GlobalConfigValidatorException),
+            (
+                "`json` should be present in the "
+                "'supportedFileTypes' for "
+                "'service_account' field."
+            ),
+        ),
+        (
+            "invalid_config_json_is_missing_in_supported_file_types.json",
+            pytest.raises(GlobalConfigValidatorException),
+            (
+                "`json` is only currently supported for "
+                "file input for 'service_account' field."
+            ),
+        ),
+        (
             "invalid_config_no_configuration_tabs.yaml",
             pytest.raises(GlobalConfigValidatorException),
             "[] is too short",
@@ -116,7 +138,7 @@ def test_config_validation_when_valid(filename):
 def test_config_validation_when_error(filename, expectation, exception_message):
     config = helpers.get_testdata(filename)
     validator = GlobalConfigValidator(_path_to_source_dir(), config)
-    with expectation as excinfo:
+    with expectation as exc_info:
         validator.validate()
-    (msg,) = excinfo.value.args
+    (msg,) = exc_info.value.args
     assert msg == exception_message

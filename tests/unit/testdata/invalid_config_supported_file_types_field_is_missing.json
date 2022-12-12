@@ -1,0 +1,233 @@
+{
+    "pages": {
+        "configuration": {
+            "tabs": [
+                {
+                    "name": "account",
+                    "table": {
+                        "actions": [
+                            "edit",
+                            "delete",
+                            "clone"
+                        ],
+                        "header": [
+                            {
+                                "label": "Name",
+                                "field": "name"
+                            },
+                            {
+                                "label": "Auth Type",
+                                "field": "auth_type"
+                            }
+                        ]
+                    },
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Length of ID should be between 1 and 50",
+                                    "minLength": 1,
+                                    "maxLength": 50
+                                },
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+                                    "pattern": "^[a-zA-Z]\\w*$"
+                                }
+                            ],
+                            "options": {
+                                "placeholder": "Required"
+                            },
+                            "field": "name",
+                            "help": "Enter a unique name for this account.",
+                            "required": true
+                        },
+                        {
+                            "type": "singleSelect",
+                            "label": "Example Environment",
+                            "options": {
+                                "disableSearch": true,
+                                "autoCompleteFields": [
+                                    {
+                                        "value": "login.example.com",
+                                        "label": "Value1"
+                                    },
+                                    {
+                                        "value": "test.example.com",
+                                        "label": "Value2"
+                                    },
+                                    {
+                                        "value": "other",
+                                        "label": "Other"
+                                    }
+                                ],
+                                "display": true
+                            },
+                            "help": "",
+                            "field": "custom_endpoint",
+                            "defaultValue": "login.example.com",
+                            "required": true
+                        },
+                        {
+                            "type": "text",
+                            "label": "Endpoint URL",
+                            "help": "Enter the endpoint URL.",
+                            "field": "endpoint",
+                            "options": {
+                                "display": false
+                            }
+                        },
+                        {
+                            "type": "checkbox",
+                            "label": "Example Checkbox",
+                            "field": "account_checkbox",
+                            "help": "This is an example checkbox for the account entity"
+                        },
+                        {
+                            "type": "radio",
+                            "label": "Example Radio",
+                            "field": "account_radio",
+                            "defaultValue": "yes",
+                            "help": "This is an example radio button for the account entity",
+                            "required": true,
+                            "options": {
+                                "items": [{
+                                        "value": "yes",
+                                        "label": "Yes"
+                                    },
+                                    {
+                                        "value": "no",
+                                        "label": "No"
+                                    }
+                                ],
+                                "display": true
+                            }
+                        },
+                        {
+                            "type": "multipleSelect",
+                            "label": "Example Multiple Select",
+                            "field": "account_multiple_select",
+                            "help": "This is an example multipleSelect for account entity",
+                            "required": true,
+                            "options": {
+                                "items": [{
+                                        "value": "one",
+                                        "label": "Option One"
+                                    },
+                                    {
+                                        "value": "two",
+                                        "label": "Option Two"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "text",
+                            "label": "State",
+                            "help": "This is a boolean field for developers to decide whether state parameter will be passed in the OAuth flow. Value: true|false",
+                            "field": "oauth_state_enabled",
+                            "options": {
+                                "display": false
+                            }
+                        },
+                        {
+                            "type": "oauth",
+                            "field": "oauth",
+                            "label": "Not used",
+                            "options": {
+                                "auth_type": [
+                                    "basic",
+                                    "oauth"
+                                ],
+                                "basic": [
+                                    {
+                                        "oauth_field": "username",
+                                        "label": "Username",
+                                        "help": "Enter the username for this account.",
+                                        "field": "username"
+                                    },
+                                    {
+                                        "oauth_field": "password",
+                                        "label": "Password",
+                                        "encrypted": true,
+                                        "help": "Enter the password for this account.",
+                                        "field": "password"
+                                    },
+                                    {
+                                        "oauth_field": "security_token",
+                                        "label": "Security Token",
+                                        "encrypted": true,
+                                        "help": "Enter the security token.",
+                                        "field": "token"
+                                    }
+                                ],
+                                "oauth": [
+                                    {
+                                        "oauth_field": "client_id",
+                                        "label": "Client Id",
+                                        "field": "client_id",
+                                        "help": "Enter the Client Id for this account."
+                                    },
+                                    {
+                                        "oauth_field": "client_secret",
+                                        "label": "Client Secret",
+                                        "field": "client_secret",
+                                        "encrypted": true,
+                                        "help": "Enter the Client Secret key for this account."
+                                    },
+                                    {
+                                        "oauth_field": "redirect_url",
+                                        "label": "Redirect url",
+                                        "field": "redirect_url",
+                                        "help": "Copy and paste this URL into your app."
+                                    }
+                                ],
+                                "auth_code_endpoint": "/services/oauth2/authorize",
+                                "access_token_endpoint": "/services/oauth2/token",
+                                "oauth_timeout": 30
+                            }
+                        },
+                        {
+                            "field": "example_help_link",
+                            "label": "",
+                            "type": "helpLink",
+                            "options": {
+                                "text": "Help Link",
+                                "link": "https://docs.splunk.com/Documentation"
+                            }
+                        },
+                        {
+                            "type": "file",
+                            "label": "Upload File",
+                            "help": "Upload service account's certificate",
+                            "field": "service_account",
+                            "options": {
+                                "fileSupportMessage": "Here is the support message"
+                            },
+                            "validators": [
+                                {
+                                    "type": "file"
+                                }
+                            ],
+                            "encrypted": true,
+                            "required": true
+                        }
+                    ],
+                    "title": "Account"
+                }
+            ],
+            "title": "Configuration",
+            "description": "Set up your add-on"
+        }
+    },
+    "meta": {
+        "apiVersion": "3.2.0",
+        "name": "Splunk_TA_UCCExample",
+        "restRoot": "splunk_ta_uccexample",
+        "version": "1.0.0",
+        "displayName": "Splunk UCC test Add-on"
+    }
+}
