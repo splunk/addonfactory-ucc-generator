@@ -198,7 +198,18 @@
                                 "text": "Help Link",
                                 "link": "https://docs.splunk.com/Documentation"
                             }
-                        },                        
+                        },
+                        {
+                            "type": "textarea",
+                            "label": "Textarea Field",
+                            "field": "textarea_field",
+                            "help": "Help message",
+                            "options": {
+                                "rowsMin": 3,
+                                "rowsMax": 15
+                            },
+                            "required": true
+                        },             
                         {
                             "type": "file",
                             "label": "Upload File",
