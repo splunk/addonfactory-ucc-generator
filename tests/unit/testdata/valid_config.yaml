@@ -132,6 +132,13 @@ pages:
         options:
           text: Help Link
           link: https://docs.splunk.com/Documentation
+      - type: textarea
+        field: textarea_field
+        label: Textarea Field
+        help: Help message
+        options:
+          rowsMin: 3
+          rowsMax: 15  
       - type: file
         field: service_account
         help: Upload service account's certificate
