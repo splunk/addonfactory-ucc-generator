@@ -4,7 +4,7 @@
 
 You need to have Python 3.7+ and Git available in the machine to be able to utilize `ucc-gen` command.
 
-> Git is used to generate the add-on version from Git tags. Alternatively you can use `--ta-version` parameter. More info [here](#parameters).
+> Git is used to generate the add-on version from Git tags. Alternatively you can use `--ta-version` parameter. More info below.
 
 To be able to create an add-on using UCC framework, you need to have at least:
 
@@ -70,19 +70,29 @@ folder and extending their functionality. The generated inputs are using
 update the modular input code, you can run `ucc-gen` again and `ucc-gen` will 
 use updated modular inputs from `package/bin` instead of generating new ones.
 
+## Subcommands
+
+As of now, running `ucc-gen` does the same thing as running `ucc-gen build`, 
+but eventually calling `ucc-gen` without specifying a subcommand will be 
+deprecated. 
+
+* `build` - [optional] used to build the add-on 
+
+    * `source` - [optional] folder containing the `app.manifest` and app 
+        source.
+    * `config` - [optional] path to the configuration file, defaults to
+        globalConfig file in the parent directory of source provided.
+    * `ta-version` - [optional] override current version of TA, default
+        version is version specified in `globalConfig.json` or `globalConfig.yaml`. 
+        Splunkbase compatible version of SEMVER will be used by default.
+    * `python-binary-name` - [optional] Python binary name to use when
+        installing Python libraries.
+
 ## Parameters
 
 `ucc-gen` supports the following params:
 
-* `source` - [optional] folder containing the `app.manifest` and app 
-    source.
-* `config` - [optional] path to the configuration file, defaults to
-    globalConfig file in the parent directory of source provided.
-* `ta-version` - [optional] override current version of TA, default
-    version is version specified in `globalConfig.json` or `globalConfig.yaml`. 
-    Splunkbase compatible version of SEMVER will be used by default.
-* `python-binary-name` - [optional] Python binary name to use when
-    installing Python libraries.
+
 
 ## What `ucc-gen` does
 
