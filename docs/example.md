@@ -1,116 +1,35 @@
-# UCC usage
+# Example
 
-Let's assume that you want to create a Splunk add-on with UI to specify
-Splunk index that is going to be used in the add-on. Let's also assume
-that you do not want to show indexes that are for internal use only
-(like, `_internal`).
+Let's assume that you want to create a simple Splunk add-on with UI to push 
+some data to Splunk. In our example add-on we will push some dummy data just
+to showcase the power of UCC.
 
-For this you can create a `globalConfig.json` or `globalConfig.yaml` it can be of json or yaml type and specify that you
-want one configuration tab called "Global Settings", one UI component on
-that tab that will handle index management and store selected index in
-specific add-on configuration file.
+If you want to try this example, all the files can be found in the [example 
+folder](https://github.com/splunk/addonfactory-ucc-generator/tree/main/example)
+in the repository itself.
 
-You also need a package folder and `app.manifest` inside it.
+The `globalConfig.json` file declares 2 pages:
 
-As well as `README.txt` and `LICENSE.txt` files inside package folder. Those
-files may be empty to simplify the showcase of UCC.
+* Configuration page is this example only has 1 tab, and it displays logging level
+you want to have in your add-on.
+* Input page has only 1 input available which will ingest some dummy data.
 
-To be able to utilise UI features of an add-on you need to create lib
-folder in package folder and create `requirements.txt`.
+To build and package this add-on follow the steps [here](../how_to_use/#steps-to-generate-the-add-on).
 
-Now you are ready to run `ucc-gen` command. If you don't have it
-installed, please refer to installation section.
+> After the add-on was built with `ucc-gen` you can copy the `dummy_input.py`
+> into `package/bin` folder and make changes as you need.
 
-The structure of the add-on before running `ucc-gen` command should be
-like this:
+In this example you already see the modified content of the modular input to 
+ingest some dummy data.
 
-    ├── globalConfig.json or globalConfig.yaml
-    └── package
-        ├── LICENSE.txt
-        ├── README.txt
-        ├── app.manifest
-        └── lib
-            └── requirements.txt
+Once you have built, packaged and installed the add-on, you need to restart 
+Splunk. After that you can go to "Apps > Splunk Add-on to ingest dummy data" and 
+check out the add-on. Below are the screenshot on how it should look like.
 
-Let's assume we want to generate an add-on with version 1.0.0, to
-achieve that we run:
+Configuration page:
 
-```
-ucc-gen --ta-version=1.0.0
-```
+![image](images/example/splunk_add_on_dummy_data_configuration.png)
 
-After that, `output` folder should be created. It should contain
-`Splunk_TA_choose_index` folder. And the structure of
-`Splunk_TA_choose_index` is following:
+Inputs page:
 
-    Splunk_TA_choose_index
-    ├── LICENSE.txt
-    ├── README
-    │   └── splunk_ta_choose_index_settings.conf.spec
-    ├── README.txt
-    ├── VERSION
-    ├── app.manifest
-    ├── appserver
-    │   ├── static
-    │   │   └── js
-    │   │       ├── build
-    │   │       |   ├── 0.js
-    │   │       |   ├── 0.licenses.txt
-    │   │       |   ├── 1.js
-    │   │       |   ├── 1.licenses.txt
-    │   │       |   ├── 3.js
-    │   │       |   ├── 3.licenses.txt
-    │   │       |   ├── 4.js
-    │   │       |   ├── 4.licenses.txt
-    │   │       |   ├── entry_page.js
-    │   │       |   ├── entry_page.licenses.txt
-    │   │       |   └── globalConfig.json or globalConfig.yaml
-    |   |       └── dependencies.txt
-    │   └── templates
-    │       └── base.html
-    ├── bin
-    │   ├── Splunk_TA_choose_index_rh_settings.py
-    │   └── import_declare_test.py
-    ├── lib
-    │   ├── <libraries>
-    │   └── ...
-    ├── default
-    │   ├── app.conf
-    │   ├── data
-    |   │   └── ui
-    |   │       ├── nav
-    |   │       │   └── default.xml
-    |   │       └── views
-    |   │           └── configuration.xml
-    |   ├── restmap.conf
-    |   ├── splunk_ta_choose_index_settings.conf
-    |   └── web.conf
-    └── metadata
-        └── default.meta
-
-Now it's time to package our add-on and install it to Splunk. To install
-slim refer to steps.
-
-To package this particular add-on, you need to install `slim` first:
-
-```
-pip install splunk-packaging-toolkit
-```
-
-And then run:
-
-```
-slim package output/Splunk_TA_choose_index
-```
-
-After it runs, you should see an archive created in the root folder of
-your add-on. In our case, it should have name:
-`Splunk_TA_choose_index-1.0.0.tar.gz`.
-
-This is an archive that can be loaded into Splunk through "Apps >
-Manage Apps > Install app from file" interface.
-
-Once you load it and restart Splunk, you can go to "Apps > Splunk
-Add-on to choose index" and see interface like this one.
-
-![image](images/splunk_add_on_choose_index.png)
+![image](images/example/splunk_add_on_dummy_data_inputs.png)

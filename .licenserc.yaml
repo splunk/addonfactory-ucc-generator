@@ -34,5 +34,4 @@ header:
     - "README.md"
     - "mkdocs.yml"
     - ".*"
-
-  comment: on-failure
+    - "example/**"
