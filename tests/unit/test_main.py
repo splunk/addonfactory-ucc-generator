@@ -33,7 +33,25 @@ from splunk_add_on_ucc_framework import main
             },
         ),
         (
+            ["build"],
+            {
+                "source": "package",
+                "config": None,
+                "ta_version": None,
+                "python_binary_name": "python3",
+            },
+        ),
+        (
             ["--source", "package"],
+            {
+                "source": "package",
+                "config": None,
+                "ta_version": None,
+                "python_binary_name": "python3",
+            },
+        ),
+        (
+            ["build", "--source", "package"],
             {
                 "source": "package",
                 "config": None,
@@ -86,6 +104,25 @@ from splunk_add_on_ucc_framework import main
         ),
         (
             [
+                "--source",
+                "package",
+                "--config",
+                "/path/to/globalConfig.yaml",
+                "--ta-version",
+                "2.2.0",
+                "--python-binary-name",
+                "python.exe",
+            ],
+            {
+                "source": "package",
+                "config": "/path/to/globalConfig.yaml",
+                "ta_version": "2.2.0",
+                "python_binary_name": "python.exe",
+            },
+        ),
+        (
+            [
+                "build",
                 "--source",
                 "package",
                 "--config",
