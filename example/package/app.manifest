@@ -15,10 +15,10 @@
             "intendedAudience": null
         },
         "commonInformationModels": null,
-        "description": "Splunk Add-on to choose index",
+        "description": "Splunk Add-on to ingest dummy data",
         "id": {
             "group": null,
-            "name": "Splunk_TA_choose_index",
+            "name": "Splunk_TA_dummy_data",
             "version": "1.0.0"
         },
         "license": {
@@ -37,7 +37,7 @@
             "text": "./README.txt",
             "uri": null
         },
-        "title": "Splunk Add-on to choose index"
+        "title": "Splunk Add-on to ingest dummy data"
     },
     "inputGroups": null,
     "platformRequirements": null,

@@ -17,6 +17,24 @@ def test_ucc_generate():
     ucc.generate(source=package_folder)
 
 
+def test_ucc_generate_with_add_on_from_example_folder():
+    package_folder = path.join(
+        path.dirname(path.realpath(__file__)),
+        "..",
+        "..",
+        "example",
+        "package",
+    )
+    config_path = path.join(
+        path.dirname(path.realpath(__file__)),
+        "..",
+        "..",
+        "example",
+        "globalConfig.json",
+    )
+    ucc.generate(source=package_folder, config=config_path)
+
+
 def test_ucc_generate_with_config_param():
     """
     Checks whether the package is build when the `config` flag is provided in the CLI

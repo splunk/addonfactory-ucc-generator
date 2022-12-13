@@ -1,12 +1,12 @@
 # Overview
 
-splunk-add-on-ucc-framework is a framework to generate UI based Splunk
+`splunk-add-on-ucc-framework` is a framework to generate UI based Splunk
 Add-ons. It includes UI, Rest handler, Modular input, Oauth, Alert
 action templates.
 
 > After UCC 5.2 Python 2 specific libraries are not supported anymore.
 > This means if the add-on has package/lib/py2/requirements.txt they
-> will not be installed while running ucc-gen command. Therefore
+> will not be installed while running ucc-gen command. Therefore,
 > modular inputs that are supposed to run on Python 2 will not be
 > supported by UCC.
 
@@ -17,7 +17,7 @@ Available as a GitHub action here:
 
 UCC stands for Universal Configuration Console. The purpose of having a
 framework for add-on generation is to simplify the process of add-on
-creation for the developers. UCC 5.X uses [SplunkUI](https://splunkui.splunk.com/) 
+creation for the developers. UCC 5 uses [SplunkUI](https://splunkui.splunk.com/) 
 which is a new UI framework based on React.
 
 ## Features
@@ -25,6 +25,7 @@ which is a new UI framework based on React.
 * Generate UI (`appserver` folder)
 * Generate Python REST handlers to support UI CRUD operations (`bin` folder)
 * Generate UI-related `.conf` files (`web.conf`, `restmap.conf`)
+* Generate `README` folder (with `.conf.spec` files)
 * Generate other `.conf` files (`inputs.conf`)
 * Install Python requirements (`lib` folder)
 * Generate metadata files (`metadata` folder)
@@ -33,11 +34,7 @@ which is a new UI framework based on React.
 
 ## Installation
 
-splunk-add-on-ucc-framework can be installed via pip from PyPI:
-
-```
-pip3 install splunk-add-on-ucc-framework
-```
+`splunk-add-on-ucc-framework` is available on [PyPI](https://pypi.org/project/splunk-add-on-ucc-framework/).
 
 ## Caveats
 

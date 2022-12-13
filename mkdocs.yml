@@ -24,8 +24,8 @@ theme:
 nav:
   - Home: "index.md"
   - How to use: "how_to_use.md"
-  - Components: "components.md"
   - Example: "example.md"
+  - Components: "components.md"
   - Tabs: "tabs.md"
   - Custom UI Extensions:
     - Custom Hook: "custom_ui_extensions/custom_hook.md"
