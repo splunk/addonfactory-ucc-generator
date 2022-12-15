@@ -6,12 +6,18 @@ UCC currently supports 2 different types of tabs: "Configuration" and "Inputs".
 ## Configuration
 
 "Configuration" tab can have multiple different subtabs, for example, a tab
-for account configuration (name and API key), proxy configuration and logging 
+for account configuration (name and API key), proxy configuration and logging
 level configuration.
+
+### Tabs Properties
+
+| Property | Description |
+| -------- | ----------- |
+| style    | By specifying this property in the global config file, the forms can either be opened as a new page or in a dialog. <p>Supported values are "page" or "dialog".</p> <p> Default value is **dialog**. </p> |
 
 ## Inputs
 
-Holds input configuration information for data collection. 
+Holds input configuration information for data collection.
 If we have a variety of input configurations, we can create more than one input service under the input page.
 
 If there are multiple services in the globalConfig file, a dropdown will appear on the Input page.
