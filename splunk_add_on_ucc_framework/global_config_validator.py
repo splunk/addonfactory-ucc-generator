@@ -16,6 +16,8 @@
 
 import json
 import os
+import re
+from typing import Any, Dict
 
 import jsonschema
 
@@ -110,7 +112,14 @@ class GlobalConfigValidator:
                     f"present, only 1 of them was found."
                 )
 
-    def _validate_file_input_configuration(self) -> None:
+    def _validate_file_type_entity(self) -> None:
+        """
+        Validates that file-based field has all necessary fields.
+        Things should be provided in case of file field:
+            * validators field
+            * at least 1 validator (file validator)
+            * only `json` is now supported in `supportedFileTypes` field
+        """
         pages = self._config["pages"]
         configuration = pages["configuration"]
         tabs = configuration["tabs"]
@@ -139,8 +148,86 @@ class GlobalConfigValidator:
                                     f"file input for '{entity['field']}' field."
                                 )
 
+    def _validate_string_validator(self, entity_field: str, validator: Dict[str, Any]):
+        """
+        Validates string validator. maxLength should be greater or equal
+        than minLength.
+        """
+        if validator["maxLength"] < validator["minLength"]:
+            raise GlobalConfigValidatorException(
+                f"Entity '{entity_field}' has incorrect string validator, "
+                f"'maxLength' should be greater or equal than 'minLength'."
+            )
+
+    def _validate_number_validator(self, entity_field: str, validator: Dict[str, Any]):
+        """
+        Validates number validator, both values in range should be numbers and
+        first one should be smaller than the second one.
+        """
+        validator_range = validator["range"]
+        if len(validator_range) != 2:
+            raise GlobalConfigValidatorException(
+                f"Entity '{entity_field}' has incorrect number validator, "
+                f"it should have 2 elements under 'range' field."
+            )
+        # Schema already checks that the values in the 'range' field are
+        # numbers.
+        if validator_range[1] < validator_range[0]:
+            raise GlobalConfigValidatorException(
+                f"Entity '{entity_field}' has incorrect number validator, "
+                f"second element should be greater or equal than first element."
+            )
+
+    def _validate_regex_validator(self, entity_field: str, validator: Dict[str, Any]):
+        """
+        Validates regex validator, provided regex should at least be compilable.
+        """
+        try:
+            re.compile(validator["pattern"])
+        except re.error:
+            raise GlobalConfigValidatorException(
+                f"Entity '{entity_field}' has incorrect regex validator, "
+                f"pattern provided in the 'pattern' field is not compilable."
+            )
+
+    def _validate_entity_validators(self, entity: Dict[str, Any]):
+        """
+        Validates entity validators.
+        """
+        validators = entity.get("validators", [])
+        for validator in validators:
+            if validator["type"] == "string":
+                self._validate_string_validator(entity["field"], validator)
+            if validator["type"] == "number":
+                self._validate_number_validator(entity["field"], validator)
+            if validator["type"] == "regex":
+                self._validate_regex_validator(entity["field"], validator)
+
+    def _validate_validators(self):
+        """
+        Validates both configuration and services validators, currently string,
+        number and regex are supported.
+        """
+        pages = self._config["pages"]
+        configuration = pages["configuration"]
+        tabs = configuration["tabs"]
+        for tab in tabs:
+            entities = tab["entity"]
+            for entity in entities:
+                self._validate_entity_validators(entity)
+
+        inputs = pages.get("inputs")
+        if inputs is None:
+            return
+        services = inputs["services"]
+        for service in services:
+            entities = service["entity"]
+            for entity in entities:
+                self._validate_entity_validators(entity)
+
     def validate(self) -> None:
         self._validate_config_against_schema()
         self._validate_configuration_tab_table_has_name_field()
         self._validate_custom_rest_handlers()
-        self._validate_file_input_configuration()
+        self._validate_file_type_entity()
+        self._validate_validators()

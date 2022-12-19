@@ -124,6 +124,38 @@ def test_config_validation_when_valid(filename):
             ),
         ),
         (
+            "invalid_config_string_validator_maxLength_less_than_minLength.json",
+            pytest.raises(GlobalConfigValidatorException),
+            (
+                "Entity 'name' has incorrect string validator, "
+                "'maxLength' should be greater or equal than 'minLength'."
+            ),
+        ),
+        (
+            "invalid_config_number_validator_range_should_have_2_elements.json",
+            pytest.raises(GlobalConfigValidatorException),
+            (
+                "Entity 'interval' has incorrect number validator, "
+                "it should have 2 elements under 'range' field."
+            ),
+        ),
+        (
+            "invalid_config_number_validator_range_second_element_smaller_than_first.json",
+            pytest.raises(GlobalConfigValidatorException),
+            (
+                "Entity 'interval' has incorrect number validator, "
+                "second element should be greater or equal than first element."
+            ),
+        ),
+        (
+            "invalid_config_regex_validator_non_compilable_pattern.json",
+            pytest.raises(GlobalConfigValidatorException),
+            (
+                "Entity 'name' has incorrect regex validator, "
+                "pattern provided in the 'pattern' field is not compilable."
+            ),
+        ),
+        (
             "invalid_config_no_configuration_tabs.yaml",
             pytest.raises(GlobalConfigValidatorException),
             "[] is too short",
