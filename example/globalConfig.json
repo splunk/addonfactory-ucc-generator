@@ -15,8 +15,8 @@
                                 {
                                     "type": "string",
                                     "maxLength": 80,
-                                    "errorMsg": "Maximum length allowed for index is 80",
-                                    "minLength": 1
+                                    "minLength": 1,
+                                    "errorMsg": "Maximum length allowed for index is 80"
                                 }
                             ],
                             "field": "index",

@@ -1,0 +1,87 @@
+{
+    "pages": {
+        "configuration": {
+            "tabs": [
+                {
+                    "name": "account",
+                    "table": {
+                        "actions": [
+                            "edit",
+                            "delete",
+                            "clone"
+                        ],
+                        "header": [
+                            {
+                                "label": "Name",
+                                "field": "name"
+                            },
+                            {
+                                "label": "Auth Type",
+                                "field": "auth_type"
+                            }
+                        ]
+                    },
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Length of ID should be between 1 and 50",
+                                    "minLength": 1,
+                                    "maxLength": 50
+                                },
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+                                    "pattern": "^[a-zA-Z]\\w*$"
+                                }
+                            ],
+                            "options": {
+                                "placeholder": "Required"
+                            },
+                            "field": "name",
+                            "help": "Enter a unique name for this account.",
+                            "required": true
+                        },
+                        {
+                            "type": "text",
+                            "label": "Interval",
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Interval must be an integer.",
+                                    "pattern": "^\\-[1-9]\\d*$|^\\d*$"
+                                },
+                                {
+                                    "type": "number",
+                                    "errorMsg": "Interval must be an integer. Between 20 and 3600 seconds.",
+                                    "range": [
+                                        20,
+                                        3600,
+                                        7200
+                                    ]
+                                }
+                            ],
+                            "defaultValue": "300",
+                            "field": "interval",
+                            "help": "Time interval of the data input, in seconds.",
+                            "required": true
+                        }
+                    ],
+                    "title": "Account"
+                }
+            ],
+            "title": "Configuration",
+            "description": "Set up your add-on"
+        }
+    },
+    "meta": {
+        "apiVersion": "3.2.0",
+        "name": "Splunk_TA_UCCExample",
+        "restRoot": "splunk_ta_uccexample",
+        "version": "1.0.0",
+        "displayName": "Splunk UCC test Add-on"
+    }
+}
