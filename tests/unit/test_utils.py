@@ -38,3 +38,39 @@ def test_get_version_from_git_when_(mock_version_from_git):
 
     expected_result = "2.2.1b2e0d120"
     assert expected_result == utils.get_version_from_git()
+
+
+def test_dump_json_config(tmp_path):
+    tmp_file_to_dump = tmp_path / "globalConfig.json"
+    config = {"hello": "world", "test": "config_to_dump"}
+
+    utils.dump_json_config(config, str(tmp_file_to_dump))
+
+    # Due to usage of end-of-line check in the add-on's repositories,
+    # we need to ensure that the empty line is being added to the end of the
+    # file, otherwise it conflicts with `pre-commit` configuration and
+    # `pre-commit` tries to add it again before commit.
+    expected_content = """{
+    "hello": "world",
+    "test": "config_to_dump"
+}
+"""
+
+    with open(tmp_file_to_dump) as f:
+        content = f.read()
+
+    assert expected_content == content
+
+
+def test_dump_yaml_config(tmp_path):
+    tmp_file_to_dump = tmp_path / "globalConfig.yaml"
+    config = {"hello": "world", "test": "config_to_dump"}
+
+    utils.dump_yaml_config(config, str(tmp_file_to_dump))
+
+    expected_content = "hello: world\ntest: config_to_dump\n"
+
+    with open(tmp_file_to_dump) as f:
+        content = f.read()
+
+    assert expected_content == content

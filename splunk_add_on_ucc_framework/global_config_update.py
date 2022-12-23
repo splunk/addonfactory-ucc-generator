@@ -19,6 +19,8 @@ import logging
 
 import yaml
 
+from splunk_add_on_ucc_framework import utils
+
 logger = logging.getLogger("ucc_gen")
 
 Loader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
@@ -98,11 +100,10 @@ def handle_global_config_update(config_path: str, is_global_config_yaml: bool) -
 
     if _version_tuple(version) < _version_tuple("0.0.1"):
         schema_content = _handle_biased_terms_update(schema_content)
-        with open(config_path, "w") as config_file:
-            if is_global_config_yaml:
-                yaml.dump(schema_content, config_file, indent=4)
-            else:
-                json.dump(schema_content, config_file, ensure_ascii=False, indent=4)
+        if is_global_config_yaml:
+            utils.dump_yaml_config(schema_content, config_path)
+        else:
+            utils.dump_json_config(schema_content, config_path)
 
     if _version_tuple(version) < _version_tuple("0.0.2"):
         ta_tabs = schema_content.get("pages").get("configuration", {}).get("tabs", {})
@@ -166,18 +167,16 @@ def handle_global_config_update(config_path: str, is_global_config_yaml: bool) -
                     del service_options["onLoad"]
 
         schema_content["meta"]["schemaVersion"] = "0.0.2"
-        with open(config_path, "w") as config_file:
-            if is_global_config_yaml:
-                yaml.dump(schema_content, config_file, indent=4)
-            else:
-                json.dump(schema_content, config_file, ensure_ascii=False, indent=4)
+        if is_global_config_yaml:
+            utils.dump_yaml_config(schema_content, config_path)
+        else:
+            utils.dump_json_config(schema_content, config_path)
 
     if _version_tuple(version) < _version_tuple("0.0.3"):
         schema_content = _handle_dropping_api_version_update(schema_content)
-        with open(config_path, "w") as config_file:
-            if is_global_config_yaml:
-                yaml.dump(schema_content, config_file, indent=4)
-            else:
-                json.dump(schema_content, config_file, ensure_ascii=False, indent=4)
+        if is_global_config_yaml:
+            utils.dump_yaml_config(schema_content, config_path)
+        else:
+            utils.dump_json_config(schema_content, config_path)
 
     return schema_content
