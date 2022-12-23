@@ -13,9 +13,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import json
+from typing import Any, Dict
+
 import dunamai
+import yaml
 
 from splunk_add_on_ucc_framework import exceptions
+
+
+def dump_json_config(config: Dict[Any, Any], file_path: str):
+    with open(file_path, "w") as f:
+        json.dump(config, f, ensure_ascii=False, indent=4)
+        f.write("\n")
+
+
+def dump_yaml_config(config: Dict[Any, Any], file_path: str):
+    with open(file_path, "w") as f:
+        yaml.dump(config, f, indent=4)
 
 
 def get_version_from_git():

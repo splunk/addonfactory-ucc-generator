@@ -57,25 +57,23 @@ Loader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
 yaml_load = functools.partial(yaml.load, Loader=Loader)
 
 
-def _update_ta_version(config, ta_version, is_global_config_yaml):
+def _update_ta_version(
+    config_path: str, addon_version: str, is_global_config_yaml: bool
+):
     """
     Update version of TA in globalConfig file.
-
-    Args:
-        args (argparse.Namespace): Object with command-line arguments.
     """
 
-    with open(config) as config_file:
+    with open(config_path) as config_file:
         if is_global_config_yaml:
             schema_content = yaml_load(config_file)
         else:
             schema_content = json.load(config_file)
-    schema_content.setdefault("meta", {})["version"] = ta_version
-    with open(config, "w") as config_file:
-        if is_global_config_yaml:
-            yaml.dump(schema_content, config_file)
-        else:
-            json.dump(schema_content, config_file, ensure_ascii=False, indent=4)
+    schema_content.setdefault("meta", {})["version"] = addon_version
+    if is_global_config_yaml:
+        utils.dump_yaml_config(schema_content, config_path)
+    else:
+        utils.dump_json_config(schema_content, config_path)
 
 
 def _recursive_overwrite(src, dest, ignore_list=None):
@@ -425,14 +423,16 @@ def _get_os_path(path):
     return path.strip(os.sep)
 
 
-def generate(source, config, ta_version, outputdir=None, python_binary_name="python3"):
+def generate(
+    source, config_path, addon_version, outputdir=None, python_binary_name="python3"
+):
     logger.info(f"ucc-gen version {__version__} is used")
     logger.info(f"Python binary name to use: {python_binary_name}")
     if outputdir is None:
         outputdir = os.path.join(os.getcwd(), "output")
-    if not ta_version:
+    if not addon_version:
         try:
-            ta_version = utils.get_version_from_git()
+            addon_version = utils.get_version_from_git()
         except exceptions.CouldNotVersionFromGitException:
             logger.error(
                 "Could not find the proper version from git tags. "
@@ -441,22 +441,24 @@ def generate(source, config, ta_version, outputdir=None, python_binary_name="pyt
             )
             exit(1)
     else:
-        ta_version = ta_version.strip()
+        addon_version = addon_version.strip()
 
     if not os.path.exists(source):
         raise NotADirectoryError(f"{os.path.abspath(source)} not found.")
 
     # Setting default value to Config argument
-    if not config:
+    if not config_path:
         is_global_config_yaml = False
-        config = os.path.abspath(os.path.join(source, PARENT_DIR, "globalConfig.json"))
-        if not os.path.isfile(config):
-            config = os.path.abspath(
+        config_path = os.path.abspath(
+            os.path.join(source, PARENT_DIR, "globalConfig.json")
+        )
+        if not os.path.isfile(config_path):
+            config_path = os.path.abspath(
                 os.path.join(source, PARENT_DIR, "globalConfig.yaml")
             )
             is_global_config_yaml = True
     else:
-        is_global_config_yaml = True if config.endswith(".yaml") else False
+        is_global_config_yaml = True if config_path.endswith(".yaml") else False
 
     logger.info(f"Cleaning out directory {outputdir}")
     shutil.rmtree(os.path.join(outputdir), ignore_errors=True)
@@ -480,36 +482,34 @@ def generate(source, config, ta_version, outputdir=None, python_binary_name="pyt
         sys.exit(1)
     ta_name = manifest.get_addon_name()
 
-    if os.path.isfile(config):
+    if os.path.isfile(config_path):
         try:
-            with open(config) as f_config:
+            with open(config_path) as f_config:
                 config_raw = f_config.read()
-
-            if is_global_config_yaml:
-                validator = global_config_validator.GlobalConfigValidator(
-                    internal_root_dir, yaml_load(config_raw)
-                )
-            else:
-                validator = global_config_validator.GlobalConfigValidator(
-                    internal_root_dir, json.loads(config_raw)
-                )
-
+            config_content = (
+                yaml_load(config_raw)
+                if is_global_config_yaml
+                else json.loads(config_raw)
+            )
+            validator = global_config_validator.GlobalConfigValidator(
+                internal_root_dir, config_content
+            )
             validator.validate()
             logger.info("Config is valid")
         except global_config_validator.GlobalConfigValidatorException as e:
             logger.error(f"Config is not valid. Error: {e}")
             sys.exit(1)
 
-        _update_ta_version(config, ta_version, is_global_config_yaml)
+        _update_ta_version(config_path, addon_version, is_global_config_yaml)
 
         schema_content = global_config_update.handle_global_config_update(
-            config, is_global_config_yaml
+            config_path, is_global_config_yaml
         )
 
         scheme = global_config.GlobalConfigBuilderSchema(schema_content, j2_env)
 
-        ta_version = schema_content.get("meta").get("version")
-        logger.info("Addon Version : " + ta_version)
+        addon_version = schema_content.get("meta").get("version")
+        logger.info("Addon Version : " + addon_version)
         ta_tabs = schema_content.get("pages").get("configuration").get("tabs")
         ta_namespace = schema_content.get("meta").get("restRoot")
         import_declare_name = "import_declare_test"
@@ -527,7 +527,7 @@ def generate(source, config, ta_version, outputdir=None, python_binary_name="pyt
             "globalConfig.yaml" if is_global_config_yaml else "globalConfig.json"
         )
         shutil.copyfile(
-            config,
+            config_path,
             os.path.join(
                 outputdir,
                 ta_name,
@@ -573,7 +573,7 @@ def generate(source, config, ta_version, outputdir=None, python_binary_name="pyt
         _make_modular_alerts(ta_name, ta_namespace, schema_content, outputdir)
 
     else:
-        logger.info("Addon Version : " + ta_version)
+        logger.info("Addon Version : " + addon_version)
         logger.warning(
             "Skipped generating UI components as globalConfig file does not exist."
         )
@@ -597,13 +597,12 @@ def generate(source, config, ta_version, outputdir=None, python_binary_name="pyt
         with open(default_meta_conf_path, "w") as default_meta_conf_fd:
             meta_conf.MetaConf().create_default(default_meta_conf_fd)
 
-    # Update app.manifest
     with open(os.path.join(outputdir, ta_name, "VERSION"), "w") as version_file:
-        version_file.write(ta_version)
+        version_file.write(addon_version)
         version_file.write("\n")
-        version_file.write(ta_version)
+        version_file.write(addon_version)
 
-    manifest.update_addon_version(ta_version)
+    manifest.update_addon_version(addon_version)
     output_manifest_path = os.path.abspath(
         os.path.join(outputdir, ta_name, app_manifest.APP_MANIFEST_FILE_NAME)
     )
@@ -614,12 +613,11 @@ def generate(source, config, ta_version, outputdir=None, python_binary_name="pyt
     path = os.path.join(outputdir, ta_name, "default", "app.conf")
     app_config.read(path)
     app_config.update(
-        ta_version, ta_name, manifest.get_description(), manifest.get_title()
+        addon_version, ta_name, manifest.get_description(), manifest.get_title()
     )
     with open(path, "w") as app_conf_fd:
         app_config.write(app_conf_fd)
 
-    # Copy Licenses
     license_dir = os.path.abspath(os.path.join(source, PARENT_DIR, "LICENSES"))
 
     if os.path.exists(license_dir):
