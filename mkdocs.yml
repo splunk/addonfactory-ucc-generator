@@ -1,4 +1,4 @@
-site_name: Splunk Add-on UCC Framework
+site_name: UCC Framework
 site_author: Splunk
 site_url: "https://splunk.github.io/addonfactory-ucc-generator/"
 edit_uri: "tree/main/docs/"
@@ -23,10 +23,11 @@ theme:
 
 nav:
   - Home: "index.md"
-  - How to use: "how_to_use.md"
+  - Quickstart: "quickstart.md"
   - Example: "example.md"
   - Components: "components.md"
   - Tabs: "tabs.md"
+  - Additional packaging: "additional_packaging.md"
   - Custom UI Extensions:
     - Custom Hook: "custom_ui_extensions/custom_hook.md"
     - Custom Control: "custom_ui_extensions/custom_control.md"

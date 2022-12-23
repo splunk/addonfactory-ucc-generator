@@ -18,6 +18,7 @@ import sys
 from typing import Optional, Sequence
 
 from splunk_add_on_ucc_framework import generate
+from splunk_add_on_ucc_framework.commands import init
 
 
 # This is a necessary change to have, so we don't release a breaking change.
@@ -52,9 +53,10 @@ class DefaultSubcommandArgumentParser(argparse.ArgumentParser):
 
 def main(argv: Optional[Sequence[str]] = None):
     argv = argv if argv is not None else sys.argv[1:]
-    parser = DefaultSubcommandArgumentParser(description="Build the add-on")
+    parser = DefaultSubcommandArgumentParser()
     parser.set_default_subparser("build")
-    subparsers = parser.add_subparsers(dest="command")
+    subparsers = parser.add_subparsers(dest="command", description="Build an add-on")
+
     build_parser = subparsers.add_parser("build")
     build_parser.add_argument(
         "--source",
@@ -83,6 +85,34 @@ def main(argv: Optional[Sequence[str]] = None):
         help="Python binary name to use to install requirements",
         default="python3",
     )
+
+    init_parser = subparsers.add_parser("init", description="Bootstrap an add-on")
+    init_parser.add_argument(
+        "--addon-name",
+        type=str,
+        help="Add-on name",
+        required=True,
+    )
+    init_parser.add_argument(
+        "--addon-display-name",
+        type=str,
+        help="Add-on display name",
+        required=True,
+    )
+    init_parser.add_argument(
+        "--addon-input-name",
+        type=str,
+        help="Add-on input name",
+        required=True,
+    )
+    init_parser.add_argument(
+        "--addon-version",
+        type=str,
+        help="Add-on version",
+        default="0.0.1",
+    )
+    init_parser.add_argument("--overwrite", action="store_true", default=False)
+
     args = parser.parse_args(argv)
     if args.command == "build":
         generate(
@@ -90,6 +120,14 @@ def main(argv: Optional[Sequence[str]] = None):
             config=args.config,
             ta_version=args.ta_version,
             python_binary_name=args.python_binary_name,
+        )
+    if args.command == "init":
+        init.init(
+            addon_name=args.addon_name,
+            addon_display_name=args.addon_display_name,
+            addon_input_name=args.addon_input_name,
+            addon_version=args.addon_version,
+            overwrite=args.overwrite,
         )
 
 
