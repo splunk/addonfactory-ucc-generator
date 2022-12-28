@@ -33,6 +33,7 @@ Use hook in the tabs:
 | state             | State is an object that represents the actual state value of the components in the service/tab when the hook's constructor is called. Updating this object will not update the state of the page. Use the `util.setState` method to update the page's state. |
 | mode              | There are three possible modes: Edit, Clone and Delete. Which are used in service/tab components. |
 | util              | This is a utility object with various functions that can be used to manipulate the page UI. There are 4 methods associated : <ul><li>`clearAllErrorMsg`: ƒ (State)</li><li>`setErrorFieldMsg`: ƒ (field, msg)</li><li>`setErrorMsg`: ƒ (msg)</li><li>`setState`: ƒ setState(callback)</li></ul>|
+| groupName         | The name of the menu group from which the inputs service is called. This parameter should only be used with the multi-level menu feature. |
 
 ### Methods
 
@@ -65,12 +66,13 @@ class Hook {
      * @param {string} mode - edit,create or clone
      * @param {object} util - the utility object
      */
-    constructor(globalConfig, serviceName, state, mode, util) {
+    constructor(globalConfig, serviceName, state, mode, util, groupName) {
         this.globalConfig = globalConfig;
         this.serviceName = serviceName;
         this.state = state;
         this.mode = mode;
         this.util = util;
+        this.groupName = groupName;
         this._debouncedNameChange = this.debounce(this._nameChange.bind(this), 200);
         console.log('Inside Hook mode: ', mode);
     }
@@ -78,6 +80,12 @@ class Hook {
     onCreate() {
         if (this.mode == "create") {
             console.log('in Hook: onCreate');
+            // This is an example of how to store groupName value for a particular form field.
+            this.util.setState((prevState) => {
+                let data = { ...prevState.data };
+                data.test_field.value = this.groupName;
+                return { data };
+            });
         }
     }
 
