@@ -131,7 +131,7 @@ This feature allows you to organize the input services into different categories
         {
             "groupName": "group_one",
             "groupTitle": "Group One",
-            "groupServices": ["example_input_one","example_input_two"]
+            "groupServices": ["example_input_one", "example_input_two"]
         },
         {
             "groupName": "example_input_three", 
@@ -140,7 +140,7 @@ This feature allows you to organize the input services into different categories
         {
             "groupName": "group_two",
             "groupTitle": "Group Two",
-            "groupServices": ["example_input_two","example_input_four"]
+            "groupServices": ["example_input_two", "example_input_four"]
         }
     ]
     "services": [
