@@ -122,6 +122,10 @@ Title and Description would change when changing the tab (If provided in the glo
 
 This feature allows you to organize the input services into different categories. As a result, each group/category will have a separate sub-menu that can include numerous types of input services. Inputs services can also belong to multiple groups/categories.
 
+Using the [Custom Hook](https://splunk.github.io/addonfactory-ucc-generator/custom_ui_extensions/custom_hook/), `groupName` can be saved in any form field for a specific inputs service stanza.
+
+> `Tabs` and the `multi-level menu` cannot be used together.
+
 #### Usage
 ```
 "inputs": {
@@ -172,10 +176,5 @@ This feature allows you to organize the input services into different categories
 #### Output
 This is how the Multi-level Menu will look:
 
-![image](images/Multi_level_Menu_in_inputs-page.png)
-
-> Note: 
->
-> Using [Custom Hook](https://splunk.github.io/addonfactory-ucc-generator/custom_ui_extensions/custom_hook/), `groupName` can be saved in any form field for a specific inputs service stanza.
->
-> Tabs and the multi-level menu cannot be used together.
+![image](images/Main_Menu_on_inputs_page.png)
+![image](images/Sub_Menu_on_inputs_page.png)
