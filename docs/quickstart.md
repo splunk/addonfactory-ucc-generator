@@ -1,4 +1,4 @@
-# How To Use
+# Quickstart
 
 ## Prerequisites
 
@@ -14,13 +14,7 @@ To be able to create an add-on using UCC framework, you need to have at least:
 
 > If both globalConfig.json and globalConfig.yaml files are present, then the globalConfig.json file will take precedence.
 
-An example of creating a basic add-on can be found [here](example.md).
-
-### VSCode extension
-
-You can use [Splunk Extension for VSCode](https://marketplace.visualstudio.com/items?itemName=Splunk.splunk) as well.
-
-### JSON schema for globalConfig
+An example of creating a basic add-on from scratch can be found [here](example.md).
 
 The JSON schema for the `globalConfig` file can be found
 [here](https://github.com/splunk/addonfactory-ucc-base-ui/blob/main/src/main/webapp/schema/schema.json).
@@ -31,7 +25,9 @@ Refer to Splunkbase documentation
 [here](https://dev.splunk.com/enterprise/docs/releaseapps/splunkbase/namingguidelines/) 
 to figure out what should be the name of your add-on.
 
-## Steps to generate the add-on
+## Initialize new add-on
+
+> Initialization of the new add-on is available from `5.19.0` version of `ucc-gen`.
 
 Commands below are macOS and Linux specific.
 
@@ -42,7 +38,33 @@ python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-* Install `splunk-add-on-ucc-framework` and `splunk-packaging-toolkit`
+* Install `splunk-add-on-ucc-framework`
+
+```bash
+pip install splunk-add-on-ucc-framework
+```
+
+* Initialize new add-on
+
+```bash
+ucc-gen init --addon-name "demo_addon_for_splunk" --addon-display-name "Demo Add-on for Splunk" --addon-input-name demo_input
+```
+
+The new add-on is located in `demo_addon_for_splunk` folder and can be built using 
+the commands [below](#steps-to-build-already-existing-add-on).
+
+## Build already existing add-on
+
+Commands below are macOS and Linux specific.
+
+* Set up and activate Python virtual environment (skip if you already have an environment)
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+* Install `splunk-add-on-ucc-framework` and `splunk-packaging-toolkit` (skip if you already installed libraries)
 
 ```bash
 pip install splunk-add-on-ucc-framework splunk-packaging-toolkit
@@ -57,6 +79,8 @@ ucc-gen
 slim package output/<add-on-name>
 ```
 
+> Please use `ucc-gen build` instead of `ucc-gen` if you are using UCC `v5.19.0` and higher.
+
 Now you should see an archive created in the same level as your 
 `globalConfig.json` is located.
 
@@ -70,29 +94,42 @@ folder and extending their functionality. The generated inputs are using
 update the modular input code, you can run `ucc-gen` again and `ucc-gen` will 
 use updated modular inputs from `package/bin` instead of generating new ones.
 
-## Subcommands
+## Commands
 
 As of now, running `ucc-gen` does the same thing as running `ucc-gen build`, 
 but eventually calling `ucc-gen` without specifying a subcommand will be 
 deprecated. 
 
-* `build` - [optional] used to build the add-on 
+* `build` - build the add-on.
 
-    * `source` - [optional] folder containing the `app.manifest` and app 
+    * `--source` - [optional] folder containing the `app.manifest` and app 
         source.
-    * `config` - [optional] path to the configuration file, defaults to
+    * `--config` - [optional] path to the configuration file, defaults to
         globalConfig file in the parent directory of source provided.
-    * `ta-version` - [optional] override current version of TA, default
+    * `--ta-version` - [optional] override current version of TA, default
         version is version specified in `globalConfig.json` or `globalConfig.yaml`. 
         Splunkbase compatible version of SEMVER will be used by default.
-    * `python-binary-name` - [optional] Python binary name to use when
+    * `--python-binary-name` - [optional] Python binary name to use when
         installing Python libraries.
 
-## Parameters
+* `init` - initialize the add-on (available from `v5.19.0`).
 
-`ucc-gen` supports the following params:
+    * `--addon-name` - [required] add-on name. Consult with 
+        [official naming convention guide](https://dev.splunk.com/enterprise/docs/releaseapps/splunkbase/namingguidelines/).
+    * `--addon-display-name` - [required] add-on "official" name.
+    * `--addon-input-name` - [required] name of the generated input. 
+    * `--addon-version` - [optional] version of the generated add-on, `0.0.1` by default.
+    * `--overwrite` - [optional] overwrites already existing folder if used, 
+        by default you can't generate a new add-on to already existing folder.
 
+`ucc-gen init` command initializes the add-on and bootstraps some code in the 
+modular input which you, as a developer, can extend for your needs.
 
+Apart from standard files needed for the add-on, it also adds search head 
+clustering files in `default/server.conf` file and reload triggers in 
+`default/app.conf` file. Those files will be generated automatically soon by 
+`ucc-gen build` command itself, for now you need to include them manually 
+during the add-on development.
 
 ## What `ucc-gen` does
 
@@ -114,14 +151,3 @@ deprecated.
 * Copies addon's `package/*` to `output/<package_ID>/*` directory.
 * If an addon requires some additional configurations in packaging
     then `ucc-gen` runs the code in the `additional_packaging.py` file as well.
-
-## `additional_packaging.py` file
-
-To extend the build process, you can create `additional_packaging.py` file in the same file level where you have your globalConfig file.
-
-This file should have `additional_packaging` function which accepts 1 argument: add-on name.
-
-Example of how to utilize it:
-
-* Build custom UI after `ucc-gen` finishes all its necessary steps.
-* Workaround a `ucc-gen` feature which was not implemented.

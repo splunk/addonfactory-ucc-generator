@@ -21,7 +21,7 @@ from splunk_add_on_ucc_framework import main
 
 
 @pytest.mark.parametrize(
-    "args,expected_args_to_generate",
+    "args,expected_parameters",
     [
         (
             [],
@@ -142,7 +142,37 @@ from splunk_add_on_ucc_framework import main
     ],
 )
 @mock.patch("splunk_add_on_ucc_framework.main.generate")
-def test_main_with_parameters(ucc_gen_generate, args, expected_args_to_generate):
+def test_build_command(mock_ucc_gen_generate, args, expected_parameters):
     main.main(args)
 
-    ucc_gen_generate.assert_called_with(**expected_args_to_generate)
+    mock_ucc_gen_generate.assert_called_with(**expected_parameters)
+
+
+@pytest.mark.parametrize(
+    "args,expected_parameters",
+    [
+        (
+            [
+                "init",
+                "--addon-name",
+                "splunk_add_on_for_demo",
+                "--addon-display-name",
+                "Splunk Add-on for Demo",
+                "--addon-input-name",
+                "demo_input",
+            ],
+            {
+                "addon_name": "splunk_add_on_for_demo",
+                "addon_display_name": "Splunk Add-on for Demo",
+                "addon_input_name": "demo_input",
+                "addon_version": "0.0.1",
+                "overwrite": False,
+            },
+        ),
+    ],
+)
+@mock.patch("splunk_add_on_ucc_framework.commands.init.init")
+def test_init_command(mock_init_command, args, expected_parameters):
+    main.main(args)
+
+    mock_init_command.assert_called_with(**expected_parameters)

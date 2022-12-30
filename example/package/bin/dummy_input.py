@@ -45,7 +45,7 @@ class DUMMY_INPUT(smi.Script):
                 {"dummy": "data"},
             ]
             event = smi.Event(
-                data=json.dumps(dummy_data_to_ingest),
+                data=json.dumps(dummy_data_to_ingest, ensure_ascii=False, default=str),
                 sourcetype='dummy_input',
             )
             ew.write_event(event)

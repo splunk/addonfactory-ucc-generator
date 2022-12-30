@@ -1,0 +1,57 @@
+{
+    "schemaVersion": "2.0.0",
+    "info": {
+        "title": "Demo Add-on for Splunk",
+        "id": {
+            "group": null,
+            "name": "demo_addon_for_splunk",
+            "version": "0.0.1"
+        },
+        "author": [
+            {
+                "name": "",
+                "email": null,
+                "company": null
+            }
+        ],
+        "releaseDate": null,
+        "description": "Demo Add-on for Splunk",
+        "classification": {
+            "intendedAudience": "IT Professionals",
+            "categories": [
+                "Security, Fraud & Compliance"
+            ],
+            "developmentStatus": "Production/Stable"
+        },
+        "commonInformationModels": null,
+        "license": {
+            "name": null,
+            "text": "LICENSE.txt",
+            "uri": null
+        },
+        "privacyPolicy": {
+            "name": null,
+            "text": null,
+            "uri": null
+        },
+        "releaseNotes": {
+            "name": "README",
+            "text": "README.txt",
+            "uri": ""
+        }
+    },
+    "dependencies": null,
+    "tasks": null,
+    "inputGroups": null,
+    "incompatibleApps": null,
+    "platformRequirements": null,
+    "supportedDeployments": [
+        "_standalone",
+        "_distributed",
+        "_search_head_clustering"
+    ],
+    "targetWorkloads": [
+        "_search_heads",
+        "_indexers"
+    ]
+}
