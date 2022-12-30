@@ -44,3 +44,4 @@ repos:
     rev: 4.0.1
     hooks:
     -   id: flake8
+        exclude: ^splunk_add_on_ucc_framework/commands/init_template/

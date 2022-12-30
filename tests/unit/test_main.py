@@ -21,7 +21,7 @@ from splunk_add_on_ucc_framework import main
 
 
 @pytest.mark.parametrize(
-    "args,expected_args_to_generate",
+    "args,expected_parameters",
     [
         (
             [],
@@ -33,7 +33,25 @@ from splunk_add_on_ucc_framework import main
             },
         ),
         (
+            ["build"],
+            {
+                "source": "package",
+                "config": None,
+                "ta_version": None,
+                "python_binary_name": "python3",
+            },
+        ),
+        (
             ["--source", "package"],
+            {
+                "source": "package",
+                "config": None,
+                "ta_version": None,
+                "python_binary_name": "python3",
+            },
+        ),
+        (
+            ["build", "--source", "package"],
             {
                 "source": "package",
                 "config": None,
@@ -102,10 +120,59 @@ from splunk_add_on_ucc_framework import main
                 "python_binary_name": "python.exe",
             },
         ),
+        (
+            [
+                "build",
+                "--source",
+                "package",
+                "--config",
+                "/path/to/globalConfig.yaml",
+                "--ta-version",
+                "2.2.0",
+                "--python-binary-name",
+                "python.exe",
+            ],
+            {
+                "source": "package",
+                "config": "/path/to/globalConfig.yaml",
+                "ta_version": "2.2.0",
+                "python_binary_name": "python.exe",
+            },
+        ),
     ],
 )
 @mock.patch("splunk_add_on_ucc_framework.main.generate")
-def test_main_with_parameters(ucc_gen_generate, args, expected_args_to_generate):
+def test_build_command(mock_ucc_gen_generate, args, expected_parameters):
     main.main(args)
 
-    ucc_gen_generate.assert_called_with(**expected_args_to_generate)
+    mock_ucc_gen_generate.assert_called_with(**expected_parameters)
+
+
+@pytest.mark.parametrize(
+    "args,expected_parameters",
+    [
+        (
+            [
+                "init",
+                "--addon-name",
+                "splunk_add_on_for_demo",
+                "--addon-display-name",
+                "Splunk Add-on for Demo",
+                "--addon-input-name",
+                "demo_input",
+            ],
+            {
+                "addon_name": "splunk_add_on_for_demo",
+                "addon_display_name": "Splunk Add-on for Demo",
+                "addon_input_name": "demo_input",
+                "addon_version": "0.0.1",
+                "overwrite": False,
+            },
+        ),
+    ],
+)
+@mock.patch("splunk_add_on_ucc_framework.commands.init.init")
+def test_init_command(mock_init_command, args, expected_parameters):
+    main.main(args)
+
+    mock_init_command.assert_called_with(**expected_parameters)

@@ -13,6 +13,9 @@ action templates.
 Available as a GitHub action here:
 <https://github.com/splunk/addonfactory-ucc-generator-action>
 
+You can use [Splunk Extension for VSCode](https://marketplace.visualstudio.com/items?itemName=Splunk.splunk) 
+as well.
+
 ## What is UCC?
 
 UCC stands for Universal Configuration Console. The purpose of having a

@@ -3,31 +3,88 @@
         "configuration": {
             "tabs": [
                 {
-                    "name": "global_settings",
+                    "name": "account",
+                    "table": {
+                        "actions": [
+                            "edit",
+                            "delete",
+                            "clone"
+                        ],
+                        "header": [
+                            {
+                                "label": "Name",
+                                "field": "name"
+                            }
+                        ]
+                    },
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Input Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+                                    "pattern": "^[a-zA-Z]\\w*$"
+                                },
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Length of input name should be between 1 and 100",
+                                    "minLength": 1,
+                                    "maxLength": 100
+                                }
+                            ],
+                            "field": "name",
+                            "help": "A unique name for the data input.",
+                            "required": true
+                        },
+                        {
+                            "type": "text",
+                            "label": "API key",
+                            "field": "api_key",
+                            "help": "API key",
+                            "required": true,
+                            "encrypted": true
+                        }
+                    ],
+                    "title": "Accounts"
+                },
+                {
+                    "name": "logging",
                     "entity": [
                         {
                             "type": "singleSelect",
-                            "label": "Index",
-                            "help": "An index is a type of data repository. Select the index in which you want to collect the events.",
-                            "defaultValue": "main",
-                            "required": true,
-                            "validators": [
-                                {
-                                    "type": "string",
-                                    "maxLength": 80,
-                                    "minLength": 1,
-                                    "errorMsg": "Maximum length allowed for index is 80"
-                                }
-                            ],
-                            "field": "index",
+                            "label": "Log level",
                             "options": {
-                                "createSearchChoice": true,
-                                "denyList": "^_.*$",
-                                "endpointUrl": "data/indexes"
-                            }
+                                "disableSearch": true,
+                                "autoCompleteFields": [
+                                    {
+                                        "value": "DEBUG",
+                                        "label": "DEBUG"
+                                    },
+                                    {
+                                        "value": "INFO",
+                                        "label": "INFO"
+                                    },
+                                    {
+                                        "value": "WARN",
+                                        "label": "WARN"
+                                    },
+                                    {
+                                        "value": "ERROR",
+                                        "label": "ERROR"
+                                    },
+                                    {
+                                        "value": "CRITICAL",
+                                        "label": "CRITICAL"
+                                    }
+                                ]
+                            },
+                            "defaultValue": "INFO",
+                            "field": "loglevel"
                         }
                     ],
-                    "title": "Global settings"
+                    "title": "Logging"
                 }
             ],
             "title": "Configuration",
@@ -36,7 +93,7 @@
         "inputs": {
             "services": [
                 {
-                    "name": "dummy_input",
+                    "name": "{{cookiecutter.addon_input_name}}",
                     "entity": [
                         {
                             "type": "text",
@@ -66,14 +123,6 @@
                                     "type": "regex",
                                     "errorMsg": "Interval must be an integer.",
                                     "pattern": "^\\-[1-9]\\d*$|^\\d*$"
-                                },
-                                {
-                                    "type": "number",
-                                    "errorMsg": "Interval must be an integer. Between 20 and 3600 seconds.",
-                                    "range": [
-                                        20,
-                                        3600
-                                    ]
                                 }
                             ],
                             "defaultValue": "300",
@@ -83,27 +132,16 @@
                         },
                         {
                             "type": "singleSelect",
-                            "label": "Index",
-                            "help": "Index where data is going to be ingested.",
-                            "validators": [
-                                {
-                                    "type": "string",
-                                    "errorMsg": "Length of index name should be between 1 and 80.",
-                                    "minLength": 1,
-                                    "maxLength": 80
-                                }
-                            ],
-                            "defaultValue": "default",
+                            "label": "Account to use",
                             "options": {
-                                "endpointUrl": "data/indexes",
-                                "createSearchChoice": true,
-                                "denyList": "^_.*$"
+                                "referenceName": "account"
                             },
-                            "field": "index",
+                            "help": "Account to use for this input.",
+                            "field": "account",
                             "required": true
                         }
                     ],
-                    "title": "Dummy input"
+                    "title": "{{cookiecutter.addon_input_name}}"
                 }
             ],
             "title": "Inputs",
@@ -159,10 +197,10 @@
         }
     },
     "meta": {
-        "name": "Splunk_TA_dummy_data",
-        "restRoot": "Splunk_TA_dummy_data",
-        "version": "5.18.0R05a4667a",
-        "displayName": "Splunk_TA_dummy_data",
+        "name": "{{cookiecutter.addon_name}}",
+        "restRoot": "{{cookiecutter.addon_name}}",
+        "version": "{{cookiecutter.addon_version}}",
+        "displayName": "{{cookiecutter.addon_display_name}}",
         "schemaVersion": "0.0.3"
     }
 }
