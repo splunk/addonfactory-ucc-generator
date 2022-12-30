@@ -4,53 +4,97 @@ import PropTypes from 'prop-types';
 import { TableContextProvider } from '../context/TableContext';
 import TableWrapper from './table/TableWrapper';
 import EntityModal from './EntityModal';
-import { MODE_CREATE } from '../constants/modes';
+import EntityPage from './EntityPage';
+import { MODE_CREATE, MODE_CLONE } from '../constants/modes';
 import { PAGE_CONF } from '../constants/pages';
+import { STYLE_PAGE } from '../constants/dialogStyles';
 
-function ConfigurationTable({ serviceName, serviceTitle }) {
-    const [open, setOpen] = useState(false);
-    const serviceLabel = `Add ${serviceTitle}`;
+function ConfigurationTable({ selectedTab, updateIsPageOpen }) {
+    const [entity, setEntity] = useState({ open: false });
+
+    const isConfigurationPageStyle = selectedTab.style === STYLE_PAGE;
 
     const handleRequestOpen = () => {
-        setOpen(true);
+        setEntity({
+            ...entity,
+            open: true,
+            mode: MODE_CREATE,
+            formLabel: `Add ${selectedTab.title}`,
+        });
     };
 
-    const handleRequestClose = () => {
-        setOpen(false);
+    // handle close request for modal style dialog
+    const handleModalDialogClose = () => {
+        setEntity({ ...entity, open: false });
     };
-    const generateModalDialog = () => {
-        if (open) {
-            return (
-                <EntityModal
-                    page={PAGE_CONF}
-                    open={open}
-                    handleRequestClose={handleRequestClose}
-                    handleSaveData={() => {}}
-                    serviceName={serviceName}
-                    mode={MODE_CREATE}
-                    formLabel={serviceLabel}
-                />
-            );
-        }
-        return null;
+
+    // generate modal style dialog
+    const generateModalDialog = () => (
+        <EntityModal
+            page={PAGE_CONF}
+            open={entity.open}
+            handleRequestClose={handleModalDialogClose}
+            serviceName={selectedTab.name}
+            mode={MODE_CREATE}
+            formLabel={entity.formLabel}
+        />
+    );
+
+    // handle clone/edit request per row from table for page style dialog
+    const handleOpenPageStyleDialog = (row, mode) => {
+        setEntity({
+            ...entity,
+            open: true,
+            stanzaName: row.name,
+            formLabel:
+                mode === MODE_CLONE ? `Clone ${selectedTab.title}` : `Update ${selectedTab.title}`,
+            mode,
+        });
     };
+
+    // handle close request for page style dialog
+    const handlePageDialogClose = () => {
+        setEntity({ ...entity, open: false });
+        updateIsPageOpen(false);
+    };
+
+    // generate page style dialog
+    const generatePageDialog = () => {
+        updateIsPageOpen(true);
+        return (
+            <EntityPage
+                open={entity.open}
+                handleRequestClose={handlePageDialogClose}
+                serviceName={selectedTab.name}
+                stanzaName={entity.stanzaName}
+                mode={entity.mode}
+                formLabel={entity.formLabel}
+                page={PAGE_CONF}
+            />
+        );
+    };
+
+    const getTableWrapper = () => (
+        <TableWrapper
+            page={PAGE_CONF}
+            serviceName={selectedTab.name}
+            handleRequestModalOpen={() => handleRequestOpen()}
+            handleOpenPageStyleDialog={handleOpenPageStyleDialog}
+        />
+    );
+
     return (
-        <>
-            <TableContextProvider value={null}>
-                <TableWrapper
-                    page={PAGE_CONF}
-                    serviceName={serviceName}
-                    handleRequestModalOpen={() => handleRequestOpen()}
-                />
-                {generateModalDialog()}
-            </TableContextProvider>
-        </>
+        <TableContextProvider value={null}>
+            {isConfigurationPageStyle && entity.open ? generatePageDialog() : null}
+            {!(isConfigurationPageStyle && entity.open) ? getTableWrapper() : null}
+            {!isConfigurationPageStyle && entity.open ? generateModalDialog() : null}
+        </TableContextProvider>
     );
 }
 
 ConfigurationTable.propTypes = {
-    serviceName: PropTypes.string.isRequired,
-    serviceTitle: PropTypes.string.isRequired,
+    selectedTab: PropTypes.object,
+    updateIsPageOpen: PropTypes.func,
 };
 
 export default memo(ConfigurationTable);

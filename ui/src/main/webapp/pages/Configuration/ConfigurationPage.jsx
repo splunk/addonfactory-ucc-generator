@@ -29,11 +29,10 @@ const Row = styled(ColumnLayout.Row)`
 function ConfigurationPage() {
     const unifiedConfigs = getUnifiedConfigs();
     const { title, description, tabs } = unifiedConfigs.pages.configuration;
-    const permittedTabNames = tabs.map((tab) => {
-        return tab.name;
-    });
+    const permittedTabNames = tabs.map((tab) => tab.name);
 
     const [activeTabId, setActiveTabId] = useState(tabs[0].name);
+    const [isPageOpen, setIsPageOpen] = useState(false);
 
     const query = useQuery();
 
@@ -55,28 +54,35 @@ function ConfigurationPage() {
     const handleChange = useCallback(
         (e, { selectedTabId }) => {
             setActiveTabId(selectedTabId);
+            setIsPageOpen(false);
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [activeTabId]
     );
 
+    const updateIsPageOpen = (data) => {
+        setIsPageOpen(data);
+    };
+
     return (
         <ErrorBoundary>
-            <ColumnLayout gutter={8}>
-                <Row>
-                    <ColumnLayout.Column span={9}>
-                        <TitleComponent>{_(title)}</TitleComponent>
-                        <SubTitleComponent>{_(description || '')}</SubTitleComponent>
-                    </ColumnLayout.Column>
-                </Row>
-            </ColumnLayout>
-            <TabBar activeTabId={activeTabId} onChange={handleChange}>
-                {tabs.map((tab) => (
-                    <TabBar.Tab key={tab.name} label={_(tab.title)} tabId={tab.name} />
-                ))}
-            </TabBar>
-            {tabs.map((tab) => {
-                return tab.table ? (
+            <div style={isPageOpen ? { display: 'none' } : { display: 'block' }}>
+                <ColumnLayout gutter={8}>
+                    <Row>
+                        <ColumnLayout.Column span={9}>
+                            <TitleComponent>{_(title)}</TitleComponent>
+                            <SubTitleComponent>{_(description || '')}</SubTitleComponent>
+                        </ColumnLayout.Column>
+                    </Row>
+                </ColumnLayout>
+                <TabBar activeTabId={activeTabId} onChange={handleChange}>
+                    {tabs.map((tab) => (
+                        <TabBar.Tab key={tab.name} label={_(tab.title)} tabId={tab.name} />
+                    ))}
+                </TabBar>
+            </div>
+            {tabs.map((tab) =>
+                tab.table ? (
                     <div
                         key={tab.name}
                         style={
@@ -86,8 +92,8 @@ function ConfigurationPage() {
                     >
                         <ConfigurationTable
                             key={tab.name}
-                            serviceName={tab.name}
-                            serviceTitle={tab.title}
+                            selectedTab={tab}
+                            updateIsPageOpen={updateIsPageOpen}
                         />
                     </div>
                 ) : (
@@ -100,8 +106,8 @@ function ConfigurationPage() {
                     >
                         <ConfigurationFormView key={tab.name} serviceName={tab.name} />
                     </div>
-                );
-            })}
+                )
+            )}
             <ToastMessages position="top-right" />
         </ErrorBoundary>
     );

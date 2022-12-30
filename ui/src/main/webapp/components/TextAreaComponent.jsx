@@ -8,7 +8,6 @@ const TextWrapper = styled(TextArea)`
 `;
 
 function TextAreaComponent(props) {
-
     const handleChange = (e, { value }) => {
         props.handleChange(props.field, value);
     };
@@ -27,7 +26,6 @@ function TextAreaComponent(props) {
             rowsMin={props?.controlOptions?.rowsMin ? props?.controlOptions?.rowsMin : 8}
         />
     );
-
 }
 
 TextAreaComponent.propTypes = {

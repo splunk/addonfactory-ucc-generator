@@ -10,7 +10,7 @@ import errorCodes from '../constants/errorCodes';
 class ErrorBoundary extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { errorCode: null, error: null, errorInfo: null };
+        this.state = { errorCode: null, error: null };
     }
 
     static getDerivedStateFromError(error) {
@@ -18,11 +18,10 @@ class ErrorBoundary extends React.Component {
         return { errorCode: error.uccErrorCode };
     }
 
-    componentDidCatch(error, errorInfo) {
+    componentDidCatch(error) {
         // Catch errors in any components below and re-render with error message
         this.setState({
             error,
-            errorInfo,
         });
         // You can also log error messages to an error reporting service here
     }
@@ -31,7 +30,7 @@ class ErrorBoundary extends React.Component {
         if (this.state.error) {
             // Error path
             return (
-                <div align="center" style={{ marginTop: '10%' }}>
+                <div style={{ marginTop: '10%' }}>
                     <Card style={{ boxShadow: '10px 10px 5px #aaaaaa' }}>
                         <Card.Header>
                             <Heading style={{ textAlign: 'center' }} level={2}>

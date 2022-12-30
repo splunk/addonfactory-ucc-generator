@@ -6,7 +6,7 @@ const TableContext = createContext({
     setRowData: () => {},
 });
 
-export const TableContextProvider = ({ children }) => {
+export function TableContextProvider({ children }) {
     const [rowData, setRowData] = useState({});
     const [searchText, setSearchText] = useState('');
     const [searchType, setSearchType] = useState('all');
@@ -15,6 +15,7 @@ export const TableContextProvider = ({ children }) => {
 
     return (
         <TableContext.Provider
+            // eslint-disable-next-line react/jsx-no-constructed-context-values
             value={{
                 rowData,
                 setRowData,
@@ -31,7 +32,7 @@ export const TableContextProvider = ({ children }) => {
             {children}
         </TableContext.Provider>
     );
-};
+}
 
 TableContextProvider.propTypes = {
     children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,

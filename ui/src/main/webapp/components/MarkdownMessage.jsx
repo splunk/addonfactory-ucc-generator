@@ -26,14 +26,12 @@ function MarkdownMessage(props) {
             markdownText = <Link to={props.link}>{props.text}</Link>;
         } else if (props.markdownType === 'hybrid') {
             // markdownType hybrid is for support of both text and link
-            markdownText = flatMap(markdownText.split(props.token), (part) => {
-                return [
-                    part,
-                    <Link key={part} to={props.link}>
-                        {props.linkText}
-                    </Link>,
-                ];
-            });
+            markdownText = flatMap(markdownText.split(props.token), (part) => [
+                part,
+                <Link key={part} to={props.link}>
+                    {props.linkText}
+                </Link>,
+            ]);
             markdownText.pop();
         } else if (props.markdownType === 'text') {
             markdownText = <MarkdownWrapper color={props.color}>{props.text}</MarkdownWrapper>;

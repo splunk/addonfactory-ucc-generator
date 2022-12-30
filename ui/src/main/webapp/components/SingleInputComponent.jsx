@@ -123,48 +123,44 @@ function SingleInputComponent(props) {
     // hideClearBtn=true only passed for OAuth else its undefined
     const effectiveIsClearable = effectiveDisabled ? false : !hideClearBtn;
 
-    return (
+    return createSearchChoice ? (
+        <StyledDiv className="dropdownBox">
+            <ComboBox
+                value={props.value === null ? '' : props.value}
+                name={field}
+                error={error}
+                placeholder={effectivePlaceholder}
+                disabled={effectiveDisabled}
+                onChange={handleChange} // eslint-disable-line react/jsx-no-bind
+                inline
+            >
+                {options && options.length > 0 && options}
+            </ComboBox>
+        </StyledDiv>
+    ) : (
         <>
-            {createSearchChoice ? (
-                <StyledDiv className="dropdownBox">
-                    <ComboBox
-                        value={props.value === null ? '' : props.value}
-                        name={field}
-                        error={error}
-                        placeholder={effectivePlaceholder}
-                        disabled={effectiveDisabled}
-                        onChange={handleChange}
-                        inline
-                    >
-                        {options && options.length > 0 && options}
-                    </ComboBox>
-                </StyledDiv>
-            ) : (
-                <>
-                    <SelectWrapper
-                        className="dropdownBox"
-                        data-test-loading={loading}
-                        value={props.value}
-                        name={field}
-                        error={error}
-                        placeholder={effectivePlaceholder}
-                        disabled={effectiveDisabled}
-                        onChange={handleChange}
-                        filter={!disableSearch}
-                        inline
-                    >
-                        {options && options.length > 0 && options}
-                    </SelectWrapper>
-                    {effectiveIsClearable ? (
-                        <Button
-                            data-test="clear"
-                            appearance="secondary"
-                            icon={<Clear />}
-                            onClick={() => restProps.handleChange(field, 'RESET_DROPDOWN_VALUE')}
-                        />
-                    ) : null}
-                </>
-            )}
+            <SelectWrapper
+                className="dropdownBox"
+                data-test-loading={loading}
+                value={props.value}
+                name={field}
+                error={error}
+                placeholder={effectivePlaceholder}
+                disabled={effectiveDisabled}
+                onChange={handleChange} // eslint-disable-line react/jsx-no-bind
+                filter={!disableSearch}
+                inline
+            >
+                {options && options.length > 0 && options}
+            </SelectWrapper>
+            {effectiveIsClearable ? (
+                <Button
+                    data-test="clear"
+                    appearance="secondary"
+                    icon={<Clear />}
+                    onClick={() => restProps.handleChange(field, 'RESET_DROPDOWN_VALUE')}
+                />
+            ) : null}
         </>
     );
 }

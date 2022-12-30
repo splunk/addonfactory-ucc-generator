@@ -40,8 +40,8 @@ class CustomTableControl extends Component {
         return false;
     }
 
-    loadCustomControl = () => {
-        return new Promise((resolve) => {
+    loadCustomControl = () =>
+        new Promise((resolve) => {
             if (this.props.type === 'external') {
                 import(
                     /* webpackIgnore: true */ `${getBuildDirPath()}/custom/${
@@ -60,7 +60,6 @@ class CustomTableControl extends Component {
                 );
             }
         });
-    };
 
     render() {
         if (!this.state.loading) {

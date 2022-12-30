@@ -35,9 +35,7 @@ class DeleteModal extends Component {
 
     handleDelete = () => {
         this.setState(
-            (prevState) => {
-                return { ...prevState, isDeleting: true, ErrorMsg: '' };
-            },
+            (prevState) => ({ ...prevState, isDeleting: true, ErrorMsg: '' }),
             () => {
                 axiosCallWrapper({
                     serviceName: `${this.props.serviceName}/${encodeURIComponent(

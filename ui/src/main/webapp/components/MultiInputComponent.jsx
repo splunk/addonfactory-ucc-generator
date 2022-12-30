@@ -108,7 +108,7 @@ function MultiInputComponent(props) {
             placeholder={effectivePlaceholder}
             disabled={effectiveDisabled}
             allowNewValues={createSearchChoice}
-            onChange={handleChange}
+            onChange={handleChange} // eslint-disable-line react/jsx-no-bind
             inline
         >
             {options && options.length > 0 && options}

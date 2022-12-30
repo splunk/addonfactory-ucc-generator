@@ -2,21 +2,17 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 import ColumnLayout from '@splunk/react-ui/ColumnLayout';
-import Button from '@splunk/react-ui/Button';
-import Dropdown from '@splunk/react-ui/Dropdown';
-import Menu from '@splunk/react-ui/Menu';
 import styled from 'styled-components';
 import ToastMessages from '@splunk/react-toast-notifications/ToastMessages';
 import TabBar from '@splunk/react-ui/TabBar';
 import { _ } from '@splunk/ui-utils/i18n';
-import { getFormattedMessage } from '../../util/messageUtil';
 import { getUnifiedConfigs } from '../../util/util';
 import { TitleComponent, SubTitleComponent } from './InputPageStyle';
 import { TableContextProvider } from '../../context/TableContext';
 import { MODE_CREATE, MODE_CLONE, MODE_EDIT } from '../../constants/modes';
 import { PAGE_INPUT } from '../../constants/pages';
 import { STYLE_PAGE } from '../../constants/dialogStyles';
-import CustomMenu from '../../components/CustomMenu';
+import MenuInput from '../../components/MenuInput';
 import TableWrapper from '../../components/table/TableWrapper';
 import EntityModal from '../../components/EntityModal';
 import ErrorBoundary from '../../components/ErrorBoundary';
@@ -39,31 +35,30 @@ const Row = styled(ColumnLayout.Row)`
 function InputPage() {
     const [entity, setEntity] = useState({ open: false });
     const unifiedConfigs = getUnifiedConfigs();
-    const { services, title, description, menu: customMenuField } = unifiedConfigs.pages.inputs;
+    const { services, title, description } = unifiedConfigs.pages.inputs;
 
     // Used for outer table is present or not
     const table = unifiedConfigs.pages.inputs?.table;
     const isOuterTable = !!table;
 
     const [activeTabId, setActiveTabId] = useState(services[0].name);
-    const [selectedTabDescription, setSelectedTabDescription] = useState(services[0]?.description || "");
+    const [selectedTabDescription, setSelectedTabDescription] = useState(
+        services[0]?.description || ''
+    );
     const [selectedTabTitle, setSelectedTabTitle] = useState(services[0].title);
 
-    const toggle = (
-        <Button appearance="primary" id="addInputBtn" label={_('Create New Input')} isMenu />
-    );
     const PERMITTED_MODES = [MODE_CLONE, MODE_CREATE, MODE_EDIT];
-    const permittedTabNames = services.map((service) => {
-        return service.name;
-    });
+    const permittedTabNames = services.map((service) => service.name);
 
-    let navigate = useNavigate();
+    const navigate = useNavigate();
     const query = useQuery();
 
     useEffect(() => {
+        // eslint-disable-next-line no-use-before-define
         setServiceEntity();
+        // eslint-disable-next-line no-use-before-define
         setActiveTab();
-    }, [useLocation().search]);
+    }, [useLocation().search]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const setServiceEntity = () => {
         const service = services.find((x) => x.name === query.get('service'));
@@ -97,25 +92,19 @@ function InputPage() {
             // Close page when any of the required query params are not provided
             setEntity({ ...entity, open: false });
         }
-    }
+    };
 
     const setActiveTab = () => {
         if (query && permittedTabNames.includes(query.get('service'))) {
             setActiveTabId(query.get('service'));
         }
-    }
-
-    const getInputMenu = () => {
-        let arr = [];
-        arr = services.map((service) => {
-            return <Menu.Item key={service.name}>{service.title}</Menu.Item>;
-        });
-        return arr;
     };
 
     // handle modal/page open request on create/add entity button
-    const handleRequestOpen = (serviceName, serviceTitle) => {
-        const isInputPageStyle = services.find((x) => x.name === serviceName).style === STYLE_PAGE;
+    const handleRequestOpen = (serviceName, groupName) => {
+        const service = services.find((x) => x.name === serviceName);
+        const serviceTitle = service.title;
+        const isInputPageStyle = service.style === STYLE_PAGE;
 
         setEntity({
             ...entity,
@@ -124,6 +113,7 @@ function InputPage() {
             mode: MODE_CREATE,
             formLabel: `Add ${serviceTitle}`,
             isInputPageStyle,
+            groupName,
         });
         if (isInputPageStyle) {
             // set query and push to navigate
@@ -139,18 +129,17 @@ function InputPage() {
     };
 
     // generate modal style dialog
-    const generateModalDialog = () => {
-        return (
-            <EntityModal
-                page={PAGE_INPUT}
-                open={entity.open}
-                handleRequestClose={handleModalDialogClose}
-                serviceName={entity.serviceName}
-                mode={MODE_CREATE}
-                formLabel={entity.formLabel}
-            />
-        );
-    };
+    const generateModalDialog = () => (
+        <EntityModal
+            page={PAGE_INPUT}
+            open={entity.open}
+            handleRequestClose={handleModalDialogClose}
+            serviceName={entity.serviceName}
+            mode={MODE_CREATE}
+            formLabel={entity.formLabel}
+            groupName={entity.groupName}
+        />
+    );
 
     // handle clone/edit request per row from table for page style dialog
     const handleOpenPageStyleDialog = (row, mode) => {
@@ -178,91 +167,36 @@ function InputPage() {
     };
 
     // generate page style dialog
-    const generatePageDialog = () => {
-        return (
-            <EntityPage
-                open={entity.open}
-                handleRequestClose={handlePageDialogClose}
-                serviceName={entity.serviceName}
-                stanzaName={entity.stanzaName}
-                mode={entity.mode}
-                formLabel={entity.formLabel}
-            />
-        );
-    };
+    const generatePageDialog = () => (
+        <EntityPage
+            open={entity.open}
+            handleRequestClose={handlePageDialogClose}
+            serviceName={entity.serviceName}
+            stanzaName={entity.stanzaName}
+            mode={entity.mode}
+            formLabel={entity.formLabel}
+            page={PAGE_INPUT}
+            groupName={entity.groupName}
+        />
+    );
 
-    const handleChangeCustomMenu = (val) => {
-        const { service } = val;
-        handleRequestOpen(service, services.find((x) => x.name === service).title);
-    };
+    const onTabChange = useCallback(
+        (e, { selectedTabId }) => {
+            setActiveTabId(selectedTabId);
 
-    const onTabChange = useCallback((e, { selectedTabId }) => {
-        setActiveTabId(selectedTabId);
+            const selectedTabInfo = services.find((service) => service.name === selectedTabId);
+            if (selectedTabInfo) {
+                setSelectedTabDescription(selectedTabInfo.description);
+                setSelectedTabTitle(selectedTabInfo.title);
+            }
 
-        const selectedTabInfo = services.find((service) => service.name === selectedTabId);
-        if (selectedTabInfo) {
-            setSelectedTabDescription(selectedTabInfo.description);
-            setSelectedTabTitle(selectedTabInfo.title);
-        }
-
-        query.delete("action");
-        query.set('service', selectedTabId);
-        navigate({ search: query.toString() });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [activeTabId]);
-
-    // Making a dropdown if we have more than one service
-    const makeSingleSelectDropDown = () => {
-        return (
-            <ColumnLayout.Column className="dropdown" span={3}>
-                <Dropdown toggle={toggle}>
-                    <Menu
-                        onClick={(event) => {
-                            const findname =
-                                services[
-                                    services.findIndex(
-                                        (x) =>
-                                            x.title === event.target.innerText
-                                    )
-                                ].name;
-                            handleRequestOpen(findname, event.target.innerText);
-                        }}
-                    >
-                        {getInputMenu()}
-                    </Menu>
-                </Dropdown>
-            </ColumnLayout.Column>
-        )
-    }
-
-    // Making a dropdown if we have one service
-    const makeInputButton = () => {
-        return (
-            <ColumnLayout.Column span={3} className="input_button">
-                <Button
-                    label={getFormattedMessage(100)}
-                    appearance="primary"
-                    id="addInputBtn"
-                    onClick={() => {
-                        handleRequestOpen(services[0].name, services[0].title);
-                    }}
-                />
-            </ColumnLayout.Column>
-        )
-    }
-
-    // Making a custom menu
-    const makeCustomMenu = () => {
-        return (
-            <ColumnLayout.Column span={3} className="input_button">
-                {React.createElement(CustomMenu, {
-                    fileName: customMenuField.src,
-                    type: customMenuField.type,
-                    handleChange: handleChangeCustomMenu
-                })}
-            </ColumnLayout.Column>
-        )
-    }
+            query.delete('action');
+            query.set('service', selectedTabId);
+            navigate({ search: query.toString() });
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        },
+        [activeTabId] // eslint-disable-line react-hooks/exhaustive-deps
+    );
 
     return (
         <ErrorBoundary>
@@ -278,54 +212,60 @@ function InputPage() {
                     <ColumnLayout gutter={8}>
                         <Row>
                             <ColumnLayout.Column span={9}>
-                                <TitleComponent>{ isOuterTable ? _(title || "") : _(selectedTabTitle) }</TitleComponent>
-                                <SubTitleComponent>{ isOuterTable ? _(description || "") :  _(selectedTabDescription || '') }</SubTitleComponent>
+                                <TitleComponent>
+                                    {isOuterTable ? _(title || '') : _(selectedTabTitle)}
+                                </TitleComponent>
+                                <SubTitleComponent>
+                                    {isOuterTable
+                                        ? _(description || '')
+                                        : _(selectedTabDescription || '')}
+                                </SubTitleComponent>
                             </ColumnLayout.Column>
-                            {
-                                isOuterTable ? (
-                                    (services && !customMenuField?.src) ?
-                                    ((services.length > 1) ? makeSingleSelectDropDown() : makeInputButton()) :
-                                    makeCustomMenu()
-                                ) : null
-                            }
+                            <ColumnLayout.Column className="dropdown" span={3}>
+                                {isOuterTable && (
+                                    <MenuInput handleRequestOpen={handleRequestOpen} />
+                                )}
+                            </ColumnLayout.Column>
                         </Row>
                     </ColumnLayout>
-                    {
-                        isOuterTable ? (
-                            <TableWrapper
-                                page={PAGE_INPUT}
-                                handleOpenPageStyleDialog={handleOpenPageStyleDialog}
-                            />
-                        ) : (
-                            <>
-                                <TabBar activeTabId={activeTabId} onChange={onTabChange}>
-                                    {services.map((service) => {
-                                        return (<TabBar.Tab key={service.name} label={_(service.title)} tabId={service.name}> </TabBar.Tab>)
-                                    })}
-                                </TabBar>
-                                {
-                                    services.map((service) => {
-                                        return (
-                                            <div
-                                                key={service.name}
-                                                style={
-                                                    service.name !== activeTabId ? { display: 'none' } : { display: 'block' }
-                                                }
-                                                id={`${service.name}Tab`}
-                                            >
-                                                <TableWrapper
-                                                    page={PAGE_INPUT}
-                                                    serviceName={service.name}
-                                                    handleRequestModalOpen={() => handleRequestOpen(service.name, service.title)}
-                                                    handleOpenPageStyleDialog={handleOpenPageStyleDialog}
-                                                />
-                                            </div>
-                                        )
-                                    })
-                                }
-                            </>
-                        )
-                    }
+                    {isOuterTable ? (
+                        <TableWrapper
+                            page={PAGE_INPUT}
+                            handleOpenPageStyleDialog={handleOpenPageStyleDialog}
+                        />
+                    ) : (
+                        <>
+                            <TabBar activeTabId={activeTabId} onChange={onTabChange}>
+                                {services.map((service) => (
+                                    <TabBar.Tab
+                                        key={service.name}
+                                        label={_(service.title)}
+                                        tabId={service.name}
+                                    />
+                                ))}
+                            </TabBar>
+                            {services.map((service) => (
+                                <div
+                                    key={service.name}
+                                    style={
+                                        service.name !== activeTabId
+                                            ? { display: 'none' }
+                                            : { display: 'block' }
+                                    }
+                                    id={`${service.name}Tab`}
+                                >
+                                    <TableWrapper
+                                        page={PAGE_INPUT}
+                                        serviceName={service.name}
+                                        handleRequestModalOpen={() =>
+                                            handleRequestOpen(service.name)
+                                        }
+                                        handleOpenPageStyleDialog={handleOpenPageStyleDialog}
+                                    />
+                                </div>
+                            ))}
+                        </>
+                    )}
 
                     <ToastMessages position="top-right" />
                     {!entity.isInputPageStyle && entity.open ? generateModalDialog() : null}

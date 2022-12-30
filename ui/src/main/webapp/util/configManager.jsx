@@ -86,7 +86,7 @@ class ConfigManager extends Component {
     }
 
     render() {
-        return <>{!this.state.loading && this.renderComponents()}</>;
+        return !this.state.loading && this.renderComponents();
     }
 }
 

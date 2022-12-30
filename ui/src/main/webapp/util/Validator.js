@@ -5,9 +5,9 @@ import {
     parseRegexRawStr,
     parseStringValidator,
     parseFunctionRawStr,
-    parseFileValidator
+    parseFileValidator,
 } from './uccConfigurationValidators';
-import FILE from "../constants/constant";
+import FILE from '../constants/constant';
 
 // Validate provided saveValidator function
 export function SaveValidator(validatorFunc, formData) {
@@ -27,9 +27,9 @@ class Validator {
         this.isName = entities.find((e) => e.field === 'name');
     }
 
-    checkIsFieldHasInput = (attrValue) => {
-        return attrValue !== undefined && attrValue !== '' && attrValue !== null;
-    };
+    // eslint-disable-next-line class-methods-use-this
+    checkIsFieldHasInput = (attrValue) =>
+        attrValue !== undefined && attrValue !== '' && attrValue !== null;
 
     // Validate the required field has value
     RequiredValidator(field, label, data) {
@@ -137,26 +137,32 @@ class Validator {
         return false;
     }
 
+    // eslint-disable-next-line class-methods-use-this
     FileValidator(field, validator, data) {
-        if(data) {
-            const { isValidExtension, fileSize, isValidContent } = parseFileValidator(data, validator.supportedFileTypes);
-            if(!isValidExtension) {
+        if (data) {
+            const { isValidExtension, fileSize, isValidContent } = parseFileValidator(
+                data,
+                validator.supportedFileTypes
+            );
+            if (!isValidExtension) {
                 return {
                     errorField: field,
-                    errorMsg: validator.errorMsg || getFormattedMessage(24, [validator.supportedFileTypes])
+                    errorMsg:
+                        validator.errorMsg ||
+                        getFormattedMessage(24, [validator.supportedFileTypes]),
                 };
             }
-            if(fileSize > FILE.FILE_MAX_SIZE) {
-                const file_size = FILE.FILE_MAX_SIZE/1024 + "KB";
+            if (fileSize > FILE.FILE_MAX_SIZE) {
+                const fileSizeInKb = `${FILE.FILE_MAX_SIZE / 1024}KB`;
                 return {
                     errorField: field,
-                    errorMsg: getFormattedMessage(25, [file_size])
+                    errorMsg: getFormattedMessage(25, [fileSizeInKb]),
                 };
             }
             if (!isValidContent) {
                 return {
                     errorField: field,
-                    errorMsg: getFormattedMessage(26)
+                    errorMsg: getFormattedMessage(26),
                 };
             }
         }

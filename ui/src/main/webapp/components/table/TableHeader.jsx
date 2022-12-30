@@ -42,9 +42,9 @@ function TableHeader({ page, isOuterTable, services, totalElement, handleRequest
             return null;
         }
         let arr = [];
-        arr = services.map((service) => {
-            return <Select.Option key={service.name} label={service.title} value={service.name} />;
-        });
+        arr = services.map((service) => (
+            <Select.Option key={service.name} label={service.title} value={service.name} />
+        ));
 
         arr.unshift(<Select.Option key="all" label={_('All')} value="all" />);
         return (
@@ -117,6 +117,7 @@ TableHeader.propTypes = {
     page: PropTypes.string,
     services: PropTypes.array,
     totalElement: PropTypes.number,
+    isOuterTable: PropTypes.bool,
     handleRequestModalOpen: PropTypes.func,
 };
 

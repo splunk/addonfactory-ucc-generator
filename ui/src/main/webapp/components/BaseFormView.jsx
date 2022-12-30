@@ -70,9 +70,7 @@ class BaseFormView extends PureComponent {
         this.util = {
             setState: (callback) => {
                 this.onSavePromise = new Promise((resolve) => {
-                    this.setState((previousState) => {
-                        return callback(previousState);
-                    }, resolve);
+                    this.setState((previousState) => callback(previousState), resolve);
                 });
             },
             setErrorFieldMsg: this.setErrorFieldMsg,
@@ -172,9 +170,10 @@ class BaseFormView extends PureComponent {
                         };
                         entity.options = {};
                         entity.options.hideClearBtn = true;
-                        entity.options.autoCompleteFields = authType.map((type) => {
-                            return { label: content[type], value: type };
-                        });
+                        entity.options.autoCompleteFields = authType.map((type) => ({
+                            label: content[type],
+                            value: type,
+                        }));
                         temEntities.push(entity);
                     } else {
                         this.isSingleOauth = authType.includes('oauth');
@@ -346,9 +345,7 @@ class BaseFormView extends PureComponent {
             let load = true;
 
             values.forEach((dependency) => {
-                const required = !!this.entities.find((e) => {
-                    return e.field === dependency;
-                }).required;
+                const required = !!this.entities.find((e) => e.field === dependency).required;
 
                 const currentValue = temState[dependency].value;
                 if (required && !currentValue) {
@@ -407,6 +404,7 @@ class BaseFormView extends PureComponent {
         }
     };
 
+    // eslint-disable-next-line react/no-unused-class-component-methods
     handleSubmit = () => {
         this.clearErrorMsg();
         this.props.handleFormSubmit(/* isSubmitting */ true, /* closeEntity */ false);
@@ -591,7 +589,14 @@ class BaseFormView extends PureComponent {
         const body = new URLSearchParams();
         Object.keys(this.datadict).forEach((key) => {
             if (this.datadict[key] != null) {
-                body.append(key, this.datadict[key]);
+                if (
+                    typeof this.datadict[key] === 'object' &&
+                    this.entities.find((x) => x.field === key).type === 'file'
+                ) {
+                    body.append(key, this.datadict[key].fileContent);
+                } else {
+                    body.append(key, this.datadict[key]);
+                }
             }
         });
 
@@ -689,9 +694,7 @@ class BaseFormView extends PureComponent {
                 let load = true;
 
                 value[loadField].forEach((dependency) => {
-                    const required = !!this.entities.find((e) => {
-                        return e.field === dependency;
-                    }).required;
+                    const required = !!this.entities.find((e) => e.field === dependency).required;
 
                     const currentValue =
                         dependency === field ? targetValue : this.state.data[dependency].value;
@@ -714,9 +717,14 @@ class BaseFormView extends PureComponent {
             });
         }
 
-        // This is the custom logic to handle the dropdown's reset value, and we are setting null value
-        const target_value = targetValue === 'RESET_DROPDOWN_VALUE' ? null : targetValue;
-        changes[field] = { value: { $set: target_value } };
+        /*
+         * Custom logic to handle the dropdown's reset value by clicking "X" button.
+         * DO NOT CHANGE: value of targetValue to null or any other value. Keep it as blank string only.
+         * Reason: We are sending a blank string value in the API, and this validation is inside the saveData().
+         */
+
+        const updatedTargetValue = targetValue === 'RESET_DROPDOWN_VALUE' ? '' : targetValue;
+        changes[field] = { value: { $set: updatedTargetValue } };
 
         const newFields = update(this.state, { data: changes });
         const tempState = this.clearAllErrorMsg(newFields);
@@ -725,7 +733,7 @@ class BaseFormView extends PureComponent {
         if (this.hookDeferred) {
             this.hookDeferred.then(() => {
                 if (typeof this.hook.onChange === 'function') {
-                    this.hook.onChange(field, target_value, tempState);
+                    this.hook.onChange(field, updatedTargetValue, tempState);
                 }
             });
         }
@@ -749,26 +757,23 @@ class BaseFormView extends PureComponent {
     };
 
     // Set error in perticular field
+    // eslint-disable-next-line react/no-unused-class-component-methods
     setErrorField = (field) => {
-        this.setState((previousState) => {
-            return update(previousState, { data: { [field]: { error: { $set: true } } } });
-        });
+        this.setState((previousState) =>
+            update(previousState, { data: { [field]: { error: { $set: true } } } })
+        );
     };
 
     // Clear error message
     clearErrorMsg = () => {
         if (this.state.errorMsg) {
-            this.setState((previousState) => {
-                return { ...previousState, errorMsg: '' };
-            });
+            this.setState((previousState) => ({ ...previousState, errorMsg: '' }));
         }
     };
 
     // Set error message
     setErrorMsg = (msg) => {
-        this.setState((previousState) => {
-            return { ...previousState, errorMsg: msg };
-        });
+        this.setState((previousState) => ({ ...previousState, errorMsg: msg }));
     };
 
     // Clear error/warning message and errors from fields
@@ -824,7 +829,8 @@ class BaseFormView extends PureComponent {
                             this.props.serviceName,
                             this.state,
                             this.props.mode,
-                            this.util
+                            this.util,
+                            this.props.groupName
                         );
                         resolve(Hook);
                     }
@@ -967,9 +973,8 @@ class BaseFormView extends PureComponent {
     /*
      * This function will resolve the promise once the provided timeout occurs
      */
-    timeout = (ms) => {
-        return new Promise((resolve) => setTimeout(resolve, ms));
-    };
+    // eslint-disable-next-line class-methods-use-this
+    timeout = (ms) => new Promise((resolve) => setTimeout(resolve, ms)); // eslint-disable-line no-promise-executor-return
 
     renderGroupElements = () => {
         let el = null;
@@ -977,8 +982,8 @@ class BaseFormView extends PureComponent {
             el = this.groups.map((group) => {
                 const collpsibleElement =
                     group.fields?.length &&
-                    group.fields.map((fieldName) => {
-                        return this.entities.map((e) => {
+                    group.fields.map((fieldName) =>
+                        this.entities.map((e) => {
                             if (e.field === fieldName) {
                                 const temState = this.state.data[e.field];
                                 return (
@@ -998,8 +1003,8 @@ class BaseFormView extends PureComponent {
                                 );
                             }
                             return null;
-                        });
-                    });
+                        })
+                    );
 
                 return group.options.isExpandable ? (
                     <CollapsiblePanelWrapper title={group.label}>
@@ -1112,6 +1117,7 @@ BaseFormView.propTypes = {
     currentServiceState: PropTypes.object,
     mode: PropTypes.string,
     handleFormSubmit: PropTypes.func,
+    groupName: PropTypes.string,
 };
 
 export default BaseFormView;

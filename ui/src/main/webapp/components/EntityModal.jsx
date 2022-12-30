@@ -68,6 +68,7 @@ class EntityModal extends Component {
                         mode={this.props.mode}
                         stanzaName={this.props.stanzaName}
                         handleFormSubmit={this.handleFormSubmit}
+                        groupName={this.props.groupName}
                     />
                 </Modal.Body>
                 <Modal.Footer>
@@ -98,6 +99,7 @@ EntityModal.propTypes = {
     mode: PropTypes.string,
     stanzaName: PropTypes.string,
     formLabel: PropTypes.string,
+    groupName: PropTypes.string,
 };
 
 export default EntityModal;

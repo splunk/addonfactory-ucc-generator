@@ -18,9 +18,8 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPag
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const { rowData, setRowData, pageSize, currentPage, searchText, searchType } = useContext(
-        TableContext
-    );
+    const { rowData, setRowData, pageSize, currentPage, searchText, searchType } =
+        useContext(TableContext);
 
     const unifiedConfigs = getUnifiedConfigs();
 
@@ -33,13 +32,12 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPag
 
     const tableConfig =
         page === PAGE_INPUT
-            ? (outerTable ? outerTable : services.find((x) => x.name === serviceName).table)
-            : unifiedConfigs.pages.configuration.tabs.find((x) => x.name === serviceName)
-                .table;
+            ? outerTable || services.find((x) => x.name === serviceName).table
+            : unifiedConfigs.pages.configuration.tabs.find((x) => x.name === serviceName).table;
 
     const { moreInfo } = tableConfig;
     const headers = tableConfig.header;
-    const isOuterTable = outerTable ? true : false;
+    const isOuterTable = !!outerTable;
 
     const modifyAPIResponse = (data) => {
         const obj = {};
@@ -52,7 +50,7 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPag
                         id: val.id,
                         name: val.name,
                         serviceName: service.name,
-                        serviceTitle: service.title || ''
+                        serviceTitle: service.title || '',
                     };
                 });
                 obj[service.name] = tmpObj;
@@ -113,15 +111,15 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPag
      * @param row {Object} row
      */
     const changeToggleStatus = (row) => {
-        setRowData((currentRowData) => {
-            return update(currentRowData, {
+        setRowData((currentRowData) =>
+            update(currentRowData, {
                 [row.serviceName]: {
                     [row.name]: {
                         __toggleShowSpinner: { $set: true },
                     },
                 },
-            });
-        });
+            })
+        );
         const body = new URLSearchParams();
         body.append('disabled', !row.disabled);
         axiosCallWrapper({
@@ -131,19 +129,19 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPag
             method: 'post',
             handleError: true,
             callbackOnError: () => {
-                setRowData((currentRowData) => {
-                    return update(currentRowData, {
+                setRowData((currentRowData) =>
+                    update(currentRowData, {
                         [row.serviceName]: {
                             [row.name]: {
                                 __toggleShowSpinner: { $set: false },
                             },
                         },
-                    });
-                });
+                    })
+                );
             },
         }).then((response) => {
-            setRowData((currentRowData) => {
-                return update(currentRowData, {
+            setRowData((currentRowData) =>
+                update(currentRowData, {
                     [row.serviceName]: {
                         [row.name]: {
                             // ADDON-39125: isTrue required if splunktaucclib resthandlers' super() is not invoked
@@ -151,8 +149,8 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPag
                             __toggleShowSpinner: { $set: false },
                         },
                     },
-                });
-            });
+                })
+            );
         });
     };
 
@@ -220,18 +218,18 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPag
             arr = arr.filter((v) => v.serviceName === serviceName);
         }
 
-        const _sortKey = isCustomMapping ? 'serviceTitle' : sortKey;
+        const updatedSortKey = isCustomMapping ? 'serviceTitle' : sortKey;
 
         // Sort the array based on the sort value
         const sortedArr = arr.sort((rowA, rowB) => {
             if (sortDir === 'asc') {
-                const rowAValue = rowA[_sortKey] === undefined ? '' : rowA[_sortKey];
-                const rowBValue = rowB[_sortKey] === undefined ? '' : rowB[_sortKey];
+                const rowAValue = rowA[updatedSortKey] === undefined ? '' : rowA[updatedSortKey];
+                const rowBValue = rowB[updatedSortKey] === undefined ? '' : rowB[updatedSortKey];
                 return rowAValue > rowBValue ? 1 : -1;
             }
             if (sortDir === 'desc') {
-                const rowAValue = rowA[_sortKey] === undefined ? '' : rowA[_sortKey];
-                const rowBValue = rowB[_sortKey] === undefined ? '' : rowB[_sortKey];
+                const rowAValue = rowA[updatedSortKey] === undefined ? '' : rowA[updatedSortKey];
+                const rowBValue = rowB[updatedSortKey] === undefined ? '' : rowB[updatedSortKey];
                 return rowBValue > rowAValue ? 1 : -1;
             }
             return 0;

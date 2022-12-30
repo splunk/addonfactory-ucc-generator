@@ -35,8 +35,8 @@ class CustomMenu extends Component {
         this.props.handleChange(newValue);
     };
 
-    loadCustomMenu = () => {
-        return new Promise((resolve) => {
+    loadCustomMenu = () =>
+        new Promise((resolve) => {
             if (this.props.type === 'external') {
                 import(
                     /* webpackIgnore: true */ `${getBuildDirPath()}/custom/${
@@ -55,20 +55,17 @@ class CustomMenu extends Component {
                 );
             }
         });
-    };
 
     render() {
         return (
             <>
                 {this.state.loading && _('Loading...')}
-                {
-                    <span
-                        ref={(el) => {
-                            this.el = el;
-                        }}
-                        style={{ visibility: this.state.loading ? 'hidden' : 'visible' }}
-                    />
-                }
+                <span
+                    ref={(el) => {
+                        this.el = el;
+                    }}
+                    style={{ visibility: this.state.loading ? 'hidden' : 'visible' }}
+                />
             </>
         );
     }

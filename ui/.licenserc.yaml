@@ -41,4 +41,5 @@ header:
     - "**/*.jsx"
     - "package.json"
     - "src/main/webapp/schema/schema.json"
+    - ".husky/pre-commit"
   comment: on-failure

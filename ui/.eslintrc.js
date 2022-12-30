@@ -1,6 +1,14 @@
 module.exports = {
-    extends: '@splunk/eslint-config/browser-prettier',
+    parser: '@babel/eslint-parser',
+    extends: ['@splunk/eslint-config/browser', 'prettier'],
+    plugins: ['prettier'],
     globals: {
-        __non_webpack_require__: true,
+        __DEV__: true,
+        window: true,
+        __non_webpack_require__: 'readonly',
     },
+    rules: {
+        'prettier/prettier': 2,
+        indent: 'off',
+    }
 };

@@ -15,7 +15,8 @@
     "lint:ci": "yarn run eslint:ci && yarn run stylelint",
     "start": "webpack --watch",
     "setup": "yarn && yarn run build",
-    "stylelint": "stylelint \"src/**/*.{js,jsx}\" --config stylelint.config.js"
+    "stylelint": "stylelint \"src/**/*.{js,jsx}\" --config stylelint.config.js",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@splunk/react-page": "^6.0.2",
@@ -35,6 +36,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.2",
+    "@babel/eslint-parser": "^7.19.1",
     "@babel/plugin-transform-runtime": "^7.19.6",
     "@babel/runtime": "^7.20.1",
     "@semantic-release/exec": "semantic-release/exec",
@@ -57,8 +59,10 @@
     "eslint-import-resolver-webpack": "^0.13.2",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.6.1",
+    "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.31.11",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "husky": "^8.0.2",
     "prettier": "^2.7.1",
     "semantic-release": "^19.0.5",
     "style-loader": "^3.3.1",
@@ -66,7 +70,16 @@
     "url": "^0.11.0",
     "webpack": "^5.75.0",
     "webpack-cli": "^5.0.0",
-    "webpack-merge": "^5.8.0"
+    "webpack-merge": "^5.8.0",
+    "lint-staged": "^12.4.0"
+  },
+  "lint-staged": {
+    "*.{jsx,js}": [
+      "eslint --fix"
+    ],
+    "*.{json, html, css}": [
+      "prettier --write"
+    ]
   },
   "resolutions": {
     "glob-parent": "^5.1.2",

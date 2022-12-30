@@ -65,10 +65,10 @@ export const parseFunctionRawStr = (rawStr) => {
 };
 
 export const parseFileValidator = (data, validFileTypes) => {
-    
     const { fileName, fileSize, fileContent } = data;
-    const givenFileExtension = fileName.split(".").pop();
-    const isValidExtension = validFileTypes.findIndex((fileExtension) => fileExtension === givenFileExtension) !== -1;
+    const givenFileExtension = fileName.split('.').pop();
+    const isValidExtension =
+        validFileTypes.findIndex((fileExtension) => fileExtension === givenFileExtension) !== -1;
 
     let isValidContent = true;
 

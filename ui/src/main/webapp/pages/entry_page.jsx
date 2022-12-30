@@ -32,18 +32,16 @@ function higherOrderComponent(WrappedComponent) {
                     <StyledContainer>
                         <Router>
                             <ConfigManager>
-                                {({ loading, appData }) => {
-                                    return (
-                                        !loading &&
-                                        appData && (
-                                            <Suspense fallback={<WaitSpinnerWrapper />}>
-                                                <WrappedComponent // nosemgrep: typescript.react.best-practice.react-props-spreading.react-props-spreading
-                                                    {...this.props}
-                                                />
-                                            </Suspense>
-                                        )
-                                    );
-                                }}
+                                {({ loading, appData }) =>
+                                    !loading &&
+                                    appData && (
+                                        <Suspense fallback={<WaitSpinnerWrapper />}>
+                                            <WrappedComponent // nosemgrep: typescript.react.best-practice.react-props-spreading.react-props-spreading
+                                                {...this.props}
+                                            />
+                                        </Suspense>
+                                    )
+                                }
                             </ConfigManager>
                         </Router>
                     </StyledContainer>
