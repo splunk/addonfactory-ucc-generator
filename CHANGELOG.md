@@ -1,3 +1,10 @@
+# [5.19.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.18.0...v5.19.0) (2023-01-03)
+
+
+### Features
+
+* release v5.19.0 ([#601](https://github.com/splunk/addonfactory-ucc-generator/issues/601)) ([2dc1ae1](https://github.com/splunk/addonfactory-ucc-generator/commit/2dc1ae16b8b69d09d386802e7030b4d9a1718992)), closes [#593](https://github.com/splunk/addonfactory-ucc-generator/issues/593) [#594](https://github.com/splunk/addonfactory-ucc-generator/issues/594) [#595](https://github.com/splunk/addonfactory-ucc-generator/issues/595) [/github.com/splunk/addonfactory-ucc-base-ui/blob/283d5abcf8f462ac10de876464bc1719fd19ff90/src/main/webapp/util/uccConfigurationValidators.js#L170-L184](https://github.com//github.com/splunk/addonfactory-ucc-base-ui/blob/283d5abcf8f462ac10de876464bc1719fd19ff90/src/main/webapp/util/uccConfigurationValidators.js/issues/L170-L184) [#584](https://github.com/splunk/addonfactory-ucc-generator/issues/584)
+
 # [5.18.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.17.1...v5.18.0) (2022-12-12)
 
 
