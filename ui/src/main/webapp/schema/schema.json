@@ -14,13 +14,7 @@
         },
         "type": {
           "type": "string",
-          "enum": [
-            "text",
-            "singleSelect",
-            "checkbox",
-            "radio",
-            "singleSelectSplunkSearch"
-          ]
+          "enum": ["text", "singleSelect", "checkbox", "radio", "singleSelectSplunkSearch"]
         },
         "help": {
           "type": "string",
@@ -67,11 +61,7 @@
           }
         }
       },
-      "required": [
-        "field",
-        "label",
-        "type"
-      ],
+      "required": ["field", "label", "type"],
       "additionalProperties": false
     },
     "Alerts": {
@@ -132,13 +122,7 @@
               "maxLength": 50
             }
           },
-          "required": [
-            "task",
-            "supportsAdhoc",
-            "subject",
-            "category",
-            "technology"
-          ]
+          "required": ["task", "supportsAdhoc", "subject", "category", "technology"]
         },
         "entity": {
           "type": "array",
@@ -147,11 +131,7 @@
           }
         }
       },
-      "required": [
-        "name",
-        "label",
-        "description"
-      ],
+      "required": ["name", "label", "description"],
       "additionalProperties": false
     },
     "ConfigurationEntity": {
@@ -227,10 +207,7 @@
                         }
                       }
                     },
-                    "required": [
-                      "label",
-                      "children"
-                    ]
+                    "required": ["label", "children"]
                   }
                 },
                 {
@@ -392,11 +369,7 @@
           }
         }
       },
-      "required": [
-        "field",
-        "label",
-        "type"
-      ],
+      "required": ["field", "label", "type"],
       "additionalProperties": false
     },
     "ConfigurationPage": {
@@ -418,10 +391,7 @@
           "minItems": 1
         }
       },
-      "required": [
-        "title",
-        "tabs"
-      ],
+      "required": ["title", "tabs"],
       "additionalProperties": false
     },
     "ConfigurationTable": {
@@ -444,10 +414,7 @@
                 "type": "object"
               }
             },
-            "required": [
-              "field",
-              "label"
-            ]
+            "required": ["field", "label"]
           }
         },
         "header": {
@@ -470,10 +437,7 @@
                 "type": "object"
               }
             },
-            "required": [
-              "field",
-              "label"
-            ]
+            "required": ["field", "label"]
           }
         },
         "customRow": {
@@ -483,18 +447,11 @@
           "type": "array",
           "items": {
             "type": "string",
-            "enum": [
-              "edit",
-              "delete",
-              "clone"
-            ]
+            "enum": ["edit", "delete", "clone"]
           }
         }
       },
-      "required": [
-        "header",
-        "actions"
-      ],
+      "required": ["header", "actions"],
       "additionalProperties": false
     },
     "DateValidator": {
@@ -508,9 +465,7 @@
           "const": "date"
         }
       },
-      "required": [
-        "type"
-      ],
+      "required": ["type"],
       "additionalProperties": false
     },
     "EmailValidator": {
@@ -524,9 +479,7 @@
           "const": "email"
         }
       },
-      "required": [
-        "type"
-      ],
+      "required": ["type"],
       "additionalProperties": false
     },
     "Hooks": {
@@ -612,10 +565,7 @@
                         }
                       }
                     },
-                    "required": [
-                      "label",
-                      "children"
-                    ]
+                    "required": ["label", "children"]
                   }
                 },
                 {
@@ -770,11 +720,7 @@
           }
         }
       },
-      "required": [
-        "field",
-        "label",
-        "type"
-      ],
+      "required": ["field", "label", "type"],
       "additionalProperties": false
     },
     "InputsPage": {
@@ -819,10 +765,7 @@
                     }
                   }
                 },
-                "required": [
-                  "groupTitle",
-                  "groupName"
-                ]
+                "required": ["groupTitle", "groupName"]
               }
             },
             "services": {
@@ -876,17 +819,12 @@
                           }
                         }
                       },
-                      "required": [
-                        "label"
-                      ]
+                      "required": ["label"]
                     }
                   },
                   "style": {
                     "type": "string",
-                    "enum": [
-                      "page",
-                      "dialog"
-                    ]
+                    "enum": ["page", "dialog"]
                   },
                   "hook": {
                     "type": "object"
@@ -909,23 +847,13 @@
                   }
                 },
                 "not": {
-                  "required": [
-                    "table"
-                  ]
+                  "required": ["table"]
                 },
-                "required": [
-                  "name",
-                  "title",
-                  "entity"
-                ]
+                "required": ["name", "title", "entity"]
               }
             }
           },
-          "required": [
-            "title",
-            "table",
-            "services"
-          ],
+          "required": ["title", "table", "services"],
           "additionalProperties": false
         },
         {
@@ -985,7 +913,7 @@
                           "type": "string",
                           "maxLength": 100
                         },
-                        "field": {
+                        "fields": {
                           "type": "array",
                           "items": {
                             "type": "string",
@@ -993,17 +921,13 @@
                           }
                         }
                       },
-                      "required": [
-                        "label"
-                      ]
+                      "required": ["label", "fields"],
+                      "additionalProperties": false
                     }
                   },
                   "style": {
                     "type": "string",
-                    "enum": [
-                      "page",
-                      "dialog"
-                    ]
+                    "enum": ["page", "dialog"]
                   },
                   "hook": {
                     "type": "object"
@@ -1025,19 +949,11 @@
                     "maxLength": 100
                   }
                 },
-                "required": [
-                  "name",
-                  "title",
-                  "table",
-                  "entity"
-                ]
+                "required": ["name", "title", "table", "entity"]
               }
             }
           },
-          "required": [
-            "title",
-            "services"
-          ],
+          "required": ["title", "services"],
           "additionalProperties": false
         }
       ]
@@ -1062,10 +978,7 @@
                 "type": "object"
               }
             },
-            "required": [
-              "field",
-              "label"
-            ]
+            "required": ["field", "label"]
           }
         },
         "header": {
@@ -1088,10 +1001,7 @@
                 "type": "object"
               }
             },
-            "required": [
-              "field",
-              "label"
-            ]
+            "required": ["field", "label"]
           }
         },
         "customRow": {
@@ -1101,19 +1011,11 @@
           "type": "array",
           "items": {
             "type": "string",
-            "enum": [
-              "edit",
-              "delete",
-              "clone",
-              "enable"
-            ]
+            "enum": ["edit", "delete", "clone", "enable"]
           }
         }
       },
-      "required": [
-        "header",
-        "actions"
-      ],
+      "required": ["header", "actions"],
       "additionalProperties": false
     },
     "Ipv4Validator": {
@@ -1127,9 +1029,7 @@
           "const": "ipv4"
         }
       },
-      "required": [
-        "type"
-      ],
+      "required": ["type"],
       "additionalProperties": false
     },
     "Meta": {
@@ -1159,12 +1059,7 @@
           "pattern": "^(?:\\d{1,3}\\.){2}\\d{1,3}$"
         }
       },
-      "required": [
-        "displayName",
-        "name",
-        "restRoot",
-        "version"
-      ],
+      "required": ["displayName", "name", "restRoot", "version"],
       "additionalProperties": false
     },
     "NumberValidator": {
@@ -1184,10 +1079,7 @@
           }
         }
       },
-      "required": [
-        "type",
-        "range"
-      ],
+      "required": ["type", "range"],
       "additionalProperties": false
     },
     "FileValidator": {
@@ -1273,10 +1165,7 @@
           "type": "string"
         }
       },
-      "required": [
-        "type",
-        "pattern"
-      ],
+      "required": ["type", "pattern"],
       "additionalProperties": false
     },
     "StringValidator": {
@@ -1298,11 +1187,7 @@
           "minimum": 0
         }
       },
-      "required": [
-        "type",
-        "minLength",
-        "maxLength"
-      ],
+      "required": ["type", "minLength", "maxLength"],
       "additionalProperties": false
     },
     "TabContent": {
@@ -1331,10 +1216,7 @@
         },
         "style": {
           "type": "string",
-          "enum": [
-            "page",
-            "dialog"
-          ]
+          "enum": ["page", "dialog"]
         },
         "conf": {
           "type": "string",
@@ -1356,11 +1238,7 @@
           "type": "object"
         }
       },
-      "required": [
-        "entity",
-        "name",
-        "title"
-      ],
+      "required": ["entity", "name", "title"],
       "additionalProperties": false
     },
     "Technology": {
@@ -1383,11 +1261,7 @@
           "maxLength": 100
         }
       },
-      "required": [
-        "version",
-        "product",
-        "vendor"
-      ],
+      "required": ["version", "product", "vendor"],
       "additionalProperties": false
     },
     "UrlValidator": {
@@ -1401,9 +1275,7 @@
           "const": "url"
         }
       },
-      "required": [
-        "type"
-      ],
+      "required": ["type"],
       "additionalProperties": false
     },
     "ValueLabelPair": {
@@ -1428,9 +1300,7 @@
           "maxLength": 100
         }
       },
-      "required": [
-        "label"
-      ],
+      "required": ["label"],
       "additionalProperties": false
     }
   },
@@ -1450,9 +1320,6 @@
       "minItems": 1
     }
   },
-  "required": [
-    "meta",
-    "pages"
-  ],
+  "required": ["meta", "pages"],
   "additionalProperties": false
 }

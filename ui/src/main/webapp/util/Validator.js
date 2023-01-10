@@ -29,7 +29,7 @@ class Validator {
 
     // eslint-disable-next-line class-methods-use-this
     checkIsFieldHasInput = (attrValue) =>
-        attrValue !== undefined && attrValue !== '' && attrValue !== null;
+        attrValue !== undefined && attrValue !== null && attrValue.trim() !== '';
 
     // Validate the required field has value
     RequiredValidator(field, label, data) {

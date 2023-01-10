@@ -22,7 +22,6 @@
 /.babelrc*
 .eslintrc.*
 .eslintignore
-/stylelint.config.js
 .stylelintignore
 /webpack.config.js
 

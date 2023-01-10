@@ -28,27 +28,25 @@ import TableContext from '../context/TableContext';
 const CollapsiblePanelWrapper = styled(CollapsiblePanel)`
     span {
         button {
-            background-color: transparent;
+            background-color: #f2f4f5;
             font-size: 16px;
-            margin: 10px 0;
+            margin: 15px 0;
 
             &:hover:not([disabled]),
             &:focus:not([disabled]),
             &:active:not([disabled]) {
-                background-color: transparent;
+                background-color: #f2f4f5;
                 box-shadow: none;
             }
         }
-    }
-
-    .collapsible-element {
-        padding-top: 15px;
     }
 `;
 
 const CustomGroupLabel = styled.div`
     padding: 6px 10px;
     background-color: #f2f4f5;
+    margin: 0 0 15px 0;
+    font-size: 16px;
 `;
 
 class BaseFormView extends PureComponent {
@@ -62,6 +60,7 @@ class BaseFormView extends PureComponent {
         this.currentInput = {};
         const globalConfig = getUnifiedConfigs();
         this.appName = globalConfig.meta.name;
+        this.groupEntities = [];
         this.endpoint =
             props.mode === MODE_EDIT || props.mode === MODE_CONFIG
                 ? `${this.props.serviceName}/${encodeURIComponent(this.props.stanzaName)}`
@@ -89,7 +88,7 @@ class BaseFormView extends PureComponent {
                 if (service.name === props.serviceName) {
                     this.groups = service.groups;
                     this.entities = service.entity;
-                    this.updateEntitiesForGroup(service);
+                    this.updateGroupEntities();
                     this.options = service.options;
                     if (service.hook) {
                         this.hookDeferred = this.loadHook(
@@ -386,20 +385,10 @@ class BaseFormView extends PureComponent {
         }
     }
 
-    updateEntitiesForGroup = (service) => {
-        if (this.groups && this.groups.length) {
+    updateGroupEntities = () => {
+        if (this.groups) {
             this.groups.forEach((group) => {
-                if (group && group.fields?.length) {
-                    group.fields.forEach((fieldName) => {
-                        const index = service.entity.findIndex((e) => e.field === fieldName);
-
-                        if (index !== -1) {
-                            const updatedObj = JSON.parse(JSON.stringify(service.entity[index]));
-                            updatedObj.isGrouping = true;
-                            this.entities.splice(index, 1, updatedObj);
-                        }
-                    });
-                }
+                group.fields.forEach((fieldName) => this.groupEntities.push(fieldName));
             });
         }
     };
@@ -1006,8 +995,11 @@ class BaseFormView extends PureComponent {
                         })
                     );
 
-                return group.options.isExpandable ? (
-                    <CollapsiblePanelWrapper title={group.label}>
+                return group.options?.isExpandable ? (
+                    <CollapsiblePanelWrapper
+                        title={group.label}
+                        defaultOpen={group.options?.expand}
+                    >
                         <div className="collapsible-element">{collpsibleElement}</div>
                     </CollapsiblePanelWrapper>
                 ) : (
@@ -1058,10 +1050,9 @@ class BaseFormView extends PureComponent {
                 <form style={this.props.mode === MODE_CONFIG ? { marginTop: '25px' } : {}}>
                     {this.generateWarningMessage()}
                     {this.generateErrorMessage()}
-                    {this.renderGroupElements()}
                     {this.entities.map((e) => {
                         // Return null if we need to show element in a group
-                        if (e.isGrouping) {
+                        if (this.groupEntities.includes(e.field)) {
                             return null;
                         }
                         const temState = this.state.data[e.field];
@@ -1104,6 +1095,7 @@ class BaseFormView extends PureComponent {
                             />
                         );
                     })}
+                    {this.renderGroupElements()}
                 </form>
             </div>
         );
