@@ -224,6 +224,68 @@ class GlobalConfigValidator:
             entities = service["entity"]
             for entity in entities:
                 self._validate_entity_validators(entity)
+    @staticmethod
+    def _find_duplicates_in_list(_list) -> list:
+        dup = [x for x in _list if _list.count(x) > 1]
+        return dup if dup else False
+
+
+    def _validate_autoCompleteFields_duplicates(self, options) -> None:
+        labels, values = [], []
+        for field in options["autoCompleteFields"]:
+            labels.append(field["label"])
+            values.append(field["value"])
+        if self._find_duplicates_in_list(values) or self._find_duplicates_in_list(labels):
+            raise GlobalConfigValidatorException(
+                f"`Duplicates found for autoCompleteFields: {options['autoCompleteFields']}"
+            )
+
+    def _validate_entity_duplicates(self, entity) -> None:
+        fields, labels = [], []
+        for _entity in entity:
+            fields.append(_entity['field'])
+            labels.append(_entity['label'])
+            temp = _entity.get("options")
+            if temp and temp.get("autoCompleteFields"):
+                self._validate_autoCompleteFields_duplicates(_entity["options"])
+        if self._find_duplicates_in_list(fields) or self._find_duplicates_in_list(labels):
+            raise GlobalConfigValidatorException(
+                f"`Duplicates found for entity: {entity}"
+            )
+
+    def _validate_tabs_duplicates(self, tabs) -> None:
+        names, titles = [], []
+        for tab in tabs:
+            names.append(tab['name'])
+            titles.append(tab['title'])
+
+            self._validate_entity_duplicates(tab['entity'])
+        if self._find_duplicates_in_list(names) or self._find_duplicates_in_list(titles):
+            raise GlobalConfigValidatorException(
+                f"`Duplicates found for tabs: {tabs}"
+            )
+
+    def _validate_inputs_duplicates(self, inputs) -> None:
+        names, titles = [], []
+        for service in inputs['services']:
+            names.append(service['name'])
+            titles.append(service['title'])
+
+            self._validate_entity_duplicates(service['entity'])
+
+        if self._find_duplicates_in_list(names) or self._find_duplicates_in_list(titles):
+            raise GlobalConfigValidatorException(
+                f"`Duplicates found for inputs: {inputs}"
+            )
+
+    def _validate_duplicates(self) -> None:
+        pages = self._config.get("pages")
+
+        self._validate_tabs_duplicates(pages['configuration']['tabs'])
+
+        inputs = pages.get("inputs")
+        if inputs:
+            self._validate_inputs_duplicates(inputs)
 
     def validate(self) -> None:
         self._validate_config_against_schema()
@@ -231,3 +293,4 @@ class GlobalConfigValidator:
         self._validate_custom_rest_handlers()
         self._validate_file_type_entity()
         self._validate_validators()
+        self._validate_duplicates()
