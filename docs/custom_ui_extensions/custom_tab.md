@@ -27,7 +27,6 @@ Use Custom Tab in the Configuration page:
         {
             "name": "custom_tab",
             "title": "Customized Tab",
-            "entity": []
             "customTab": {
                 "src": "custom_tab",
                 "type": "external"
