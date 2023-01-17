@@ -1,4 +1,4 @@
-With the help of this functionality, we can build and apply a custom component to the configuration page. When we don't want a table or forms in a tab, this would be useful.
+Custom Tab feature can be used to render any customized UI component in the TA. With this feature, the developer can design and render any complex input with ease. This is an advanced feature and can be leveraged with limitless functionalities. Modern TAs are receiving complex use cases and this feature will allow them to design the UI perfectly for their case without having to depend on the newer releases of UCC supporting their component.
 
 ### Usage
 
