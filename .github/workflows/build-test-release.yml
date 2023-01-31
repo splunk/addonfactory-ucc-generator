@@ -226,7 +226,7 @@ jobs:
       - name: Update Notices
         run: cp -f THIRDPARTY NOTICE
       - name: Semantic Release
-        uses: splunk/semantic-release-action@v1.3
+        uses: splunk/semantic-release-action@v1.2
         with:
           extra_plugins: |
             @google/semantic-release-replace-plugin
