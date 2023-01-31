@@ -168,7 +168,7 @@ jobs:
         run: pip install splunk-packaging-toolkit
       - name: Slim tests/expected_output_global_config_inputs_configuration_alerts/Splunk_TA_UCCExample
         run: mkdir tests/slimmed; slim package tests/testdata/expected_addons/expected_output_global_config_inputs_configuration_alerts/Splunk_TA_UCCExample -o tests/slimmed
-      - uses: splunk/appinspect-cli-action@v1
+      - uses: splunk/appinspect-cli-action@v1.5
         with:
           app_path: tests/slimmed
           included_tags: ${{ matrix.tags }}
@@ -226,13 +226,9 @@ jobs:
       - name: Update Notices
         run: cp -f THIRDPARTY NOTICE
       - name: Semantic Release
-        uses: cycjimmy/semantic-release-action@v3.2.0
+        uses: splunk/semantic-release-action@v1.2
         with:
-          semantic_version: 19.0.2
           extra_plugins: |
-            @semantic-release/exec
-            @semantic-release/git
-            @semantic-release/changelog
             @google/semantic-release-replace-plugin
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
