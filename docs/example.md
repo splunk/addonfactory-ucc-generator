@@ -14,7 +14,7 @@ The `globalConfig.json` file declares 2 pages:
 you want to have in your add-on.
 * Input page has only 1 input available which will ingest some dummy data.
 
-To build and package this add-on follow the steps [here](../quickstart/#steps-to-generate-the-add-on).
+To build and package this add-on follow the steps [here](../quickstart/#build-already-existing-add-on).
 
 > After the add-on was built with `ucc-gen` you can copy the `dummy_input.py`
 > into `package/bin` folder and make changes as you need.
