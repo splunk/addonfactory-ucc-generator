@@ -80,9 +80,11 @@ def test_check_ucc_library_in_requirements_file(
 
 
 @mock.patch("os.system", autospec=True)
-@mock.patch("os.path.exists", autospec=True)
-def test_install_libraries(mock_os_path_exists, mock_os_system):
-    mock_os_path_exists.return_value = True
+@mock.patch("os.path.isfile", autospec=True)
+@mock.patch("os.path.isdir", autospec=True)
+def test_install_libraries(mock_os_path_isdir, mock_os_path_isfile, mock_os_system):
+    mock_os_path_isfile.return_value = True
+    mock_os_path_isdir.return_value = True
 
     install_libraries(
         "package/lib/requirements.txt",
