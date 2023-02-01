@@ -51,7 +51,7 @@ ucc-gen init --addon-name "demo_addon_for_splunk" --addon-display-name "Demo Add
 ```
 
 The new add-on is located in `demo_addon_for_splunk` folder and can be built using 
-the commands [below](#steps-to-build-already-existing-add-on).
+the commands [below](#build-already-existing-add-on).
 
 ## Build already existing add-on
 
