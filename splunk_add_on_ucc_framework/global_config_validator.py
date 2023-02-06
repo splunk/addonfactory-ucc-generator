@@ -250,7 +250,7 @@ class GlobalConfigValidator:
                 values.append(field.get("value"))
         if self._find_duplicates_in_list(values) or self._find_duplicates_in_list(labels):
             raise GlobalConfigValidatorException(
-                f"`Duplicates found for autoCompleteFields: {options['autoCompleteFields']}"
+                f"`Duplicates found for autoCompleteFields: {options}"
             )
 
     def _validate_entity_duplicates(self, entity) -> None:
@@ -258,8 +258,8 @@ class GlobalConfigValidator:
         for _entity in entity:
             fields.append(_entity['field'])
             labels.append(_entity['label'])
-            temp = _entity.get("options")
-            if temp and temp.get("autoCompleteFields"):
+            options = _entity.get("options")
+            if options and options.get("autoCompleteFields"):
                 self._validate_autoCompleteFields_duplicates(_entity["options"])
         if self._find_duplicates_in_list(fields) or self._find_duplicates_in_list(labels):
             raise GlobalConfigValidatorException(
