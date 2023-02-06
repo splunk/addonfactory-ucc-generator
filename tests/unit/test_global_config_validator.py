@@ -197,6 +197,11 @@ def test_config_validation_when_valid(filename):
             pytest.raises(GlobalConfigValidatorException),
             "Tab 'account' should have entity with field 'name'",
         ),
+        (
+            "invalid_config_configuration_autoCompleteFields_duplicates.json",
+            pytest.raises(GlobalConfigValidatorException),
+            "Duplicates found for autoCompleteFields: Duplicate",
+        ),
     ],
 )
 def test_config_validation_when_error(filename, expectation, exception_message):
