@@ -95,7 +95,7 @@ class GlobalConfigValidator:
             rest_handler_module = service.get("restHandlerModule")
             rest_handler_class = service.get("restHandlerClass")
             if rest_handler_name is not None and (
-                rest_handler_module is not None or rest_handler_class is not None
+                    rest_handler_module is not None or rest_handler_class is not None
             ):
                 raise GlobalConfigValidatorException(
                     f"Input '{service['name']}' has both 'restHandlerName' and "
@@ -104,7 +104,7 @@ class GlobalConfigValidator:
                     f"and 'restHandlerClass'."
                 )
             if (rest_handler_module is not None and rest_handler_class is None) or (
-                rest_handler_module is None and rest_handler_class is not None
+                    rest_handler_module is None and rest_handler_class is not None
             ):
                 raise GlobalConfigValidatorException(
                     f"Input '{service['name']}' should have both "
@@ -224,17 +224,30 @@ class GlobalConfigValidator:
             entities = service["entity"]
             for entity in entities:
                 self._validate_entity_validators(entity)
+
     @staticmethod
     def _find_duplicates_in_list(_list) -> list:
-        dup = [x for x in _list if _list.count(x) > 1]
-        return dup if dup else False
+        return len(set(_list)) != len(_list)
 
+    def _validate_children_duplicates(self, children):
+        labels, values = [], []
+        for child in children:
+            labels.append(child["label"])
+            values.append(child['value'])
+        if self._find_duplicates_in_list(values) or self._find_duplicates_in_list(labels):
+            raise GlobalConfigValidatorException(
+                f"`Duplicates found for autoCompleteFields: {children}"
+            )
 
     def _validate_autoCompleteFields_duplicates(self, options) -> None:
         labels, values = [], []
         for field in options["autoCompleteFields"]:
-            labels.append(field["label"])
-            values.append(field["value"])
+            labels.append(field.get("label"))
+            children = field.get("children")
+            if children:
+                self._validate_children_duplicates(children)
+            else:
+                values.append(field.get("value"))
         if self._find_duplicates_in_list(values) or self._find_duplicates_in_list(labels):
             raise GlobalConfigValidatorException(
                 f"`Duplicates found for autoCompleteFields: {options['autoCompleteFields']}"
