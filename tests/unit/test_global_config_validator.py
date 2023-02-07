@@ -202,6 +202,21 @@ def test_config_validation_when_valid(filename):
             pytest.raises(GlobalConfigValidatorException),
             "Duplicates found for autoCompleteFields: Duplicate",
         ),
+        (
+            "invalid_config_configuration_children_duplicates.json",
+            pytest.raises(GlobalConfigValidatorException),
+            "Duplicates found for autoCompleteFields children in entity Duplicate"
+        ),
+        (
+            "invalid_config_configuration_entity_duplicates.json",
+            pytest.raises(GlobalConfigValidatorException),
+            "Duplicates found for entity field or label"
+        ),
+        (
+            "invalid_config_configuration_tabs_duplicates.json",
+            pytest.raises(GlobalConfigValidatorException),
+            "Duplicates found for tabs names or titles"
+        )
     ],
 )
 def test_config_validation_when_error(filename, expectation, exception_message):
