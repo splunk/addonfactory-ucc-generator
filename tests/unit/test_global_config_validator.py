@@ -200,12 +200,12 @@ def test_config_validation_when_valid(filename):
         (
             "invalid_config_configuration_autoCompleteFields_duplicates.json",
             pytest.raises(GlobalConfigValidatorException),
-            "Duplicates found for autoCompleteFields: Duplicate",
+            "Duplicates found for autoCompleteFields: 'Duplicate'",
         ),
         (
             "invalid_config_configuration_children_duplicates.json",
             pytest.raises(GlobalConfigValidatorException),
-            "Duplicates found for autoCompleteFields children in entity Duplicate",
+            "Duplicates found for autoCompleteFields children in entity 'Duplicate'",
         ),
         (
             "invalid_config_configuration_entity_duplicates.json",
@@ -230,12 +230,12 @@ def test_config_validation_when_valid(filename):
         (
             "invalid_config_inputs_children_duplicates.json",
             pytest.raises(GlobalConfigValidatorException),
-            "Duplicates found for autoCompleteFields children in entity Single Select",
+            "Duplicates found for autoCompleteFields children in entity 'Single Select'",
         ),
         (
             "invalid_config_inputs_autoCompleteFields_duplicates.json",
             pytest.raises(GlobalConfigValidatorException),
-            "Duplicates found for autoCompleteFields: Single Select",
+            "Duplicates found for autoCompleteFields: 'Single Select'",
         ),
     ],
 )

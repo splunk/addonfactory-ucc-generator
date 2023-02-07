@@ -226,10 +226,10 @@ class GlobalConfigValidator:
                 self._validate_entity_validators(entity)
 
     @staticmethod
-    def _find_duplicates_in_list(_list) -> bool:
+    def _find_duplicates_in_list(_list: list) -> bool:
         return len(set(_list)) != len(_list)
 
-    def _validate_children_duplicates(self, children, entity_label):
+    def _validate_children_duplicates(self, children: Dict[str, Any], entity_label: str):
         """
         Validates duplicates under children key in autoCompleteFields
         for fields under keys: label, value
@@ -242,10 +242,10 @@ class GlobalConfigValidator:
             labels
         ):
             raise GlobalConfigValidatorException(
-                f"Duplicates found for autoCompleteFields children in entity {entity_label}"
+                f"Duplicates found for autoCompleteFields children in entity '{entity_label}'"
             )
 
-    def _validate_autoCompleteFields_duplicates(self, options, entity_label) -> None:
+    def _validate_autoCompleteFields_duplicates(self, options: Dict[str, Any], entity_label: str) -> None:
         """
         Validates duplicates in autoCompleteFields keys
         for fields under keys: label, value
@@ -263,10 +263,10 @@ class GlobalConfigValidator:
             labels
         ):
             raise GlobalConfigValidatorException(
-                f"Duplicates found for autoCompleteFields: {entity_label}"
+                f"Duplicates found for autoCompleteFields: '{entity_label}'"
             )
 
-    def _validate_entity_duplicates(self, entity) -> None:
+    def _validate_entity_duplicates(self, entity: Dict[str, Any]) -> None:
         """
         Validates duplicates in entity keys
         for fields under keys: field, label
@@ -288,7 +288,7 @@ class GlobalConfigValidator:
                 "Duplicates found for entity field or label"
             )
 
-    def _validate_tabs_duplicates(self, tabs) -> None:
+    def _validate_tabs_duplicates(self, tabs: Dict[str, Any]) -> None:
         """
         Validates duplicates in tab keys under configuration
         for fields under keys: name, title
@@ -307,7 +307,7 @@ class GlobalConfigValidator:
                 "Duplicates found for tabs names or titles"
             )
 
-    def _validate_inputs_duplicates(self, inputs) -> None:
+    def _validate_inputs_duplicates(self, inputs: Dict[str, Any]) -> None:
         """
         Validates duplicates in tab keys under configuration
         for fields under keys: name, title
@@ -330,7 +330,7 @@ class GlobalConfigValidator:
     def _validate_duplicates(self) -> None:
         """
         Validates duplicates for both tabs and services (inputs). Inputs however are
-        not required in schema, so this checks if globalConfigJson has inputs
+        not required in schema, so this checks if globalConfig has inputs
         """
         pages = self._config["pages"]
 
