@@ -95,7 +95,7 @@ class GlobalConfigValidator:
             rest_handler_module = service.get("restHandlerModule")
             rest_handler_class = service.get("restHandlerClass")
             if rest_handler_name is not None and (
-                    rest_handler_module is not None or rest_handler_class is not None
+                rest_handler_module is not None or rest_handler_class is not None
             ):
                 raise GlobalConfigValidatorException(
                     f"Input '{service['name']}' has both 'restHandlerName' and "
@@ -104,7 +104,7 @@ class GlobalConfigValidator:
                     f"and 'restHandlerClass'."
                 )
             if (rest_handler_module is not None and rest_handler_class is None) or (
-                    rest_handler_module is None and rest_handler_class is not None
+                rest_handler_module is None and rest_handler_class is not None
             ):
                 raise GlobalConfigValidatorException(
                     f"Input '{service['name']}' should have both "
@@ -226,15 +226,17 @@ class GlobalConfigValidator:
                 self._validate_entity_validators(entity)
 
     @staticmethod
-    def _find_duplicates_in_list(_list) -> list:
+    def _find_duplicates_in_list(_list) -> bool:
         return len(set(_list)) != len(_list)
 
     def _validate_children_duplicates(self, children, entity_label):
         labels, values = [], []
         for child in children:
             labels.append(child["label"])
-            values.append(child['value'])
-        if self._find_duplicates_in_list(values) or self._find_duplicates_in_list(labels):
+            values.append(child["value"])
+        if self._find_duplicates_in_list(values) or self._find_duplicates_in_list(
+            labels
+        ):
             raise GlobalConfigValidatorException(
                 f"Duplicates found for autoCompleteFields children in entity {entity_label}"
             )
@@ -248,7 +250,9 @@ class GlobalConfigValidator:
                 self._validate_children_duplicates(children, entity_label)
             else:
                 values.append(field.get("value"))
-        if self._find_duplicates_in_list(values) or self._find_duplicates_in_list(labels):
+        if self._find_duplicates_in_list(values) or self._find_duplicates_in_list(
+            labels
+        ):
             raise GlobalConfigValidatorException(
                 f"Duplicates found for autoCompleteFields: {entity_label}"
             )
@@ -256,45 +260,53 @@ class GlobalConfigValidator:
     def _validate_entity_duplicates(self, entity) -> None:
         fields, labels = [], []
         for _entity in entity:
-            fields.append(_entity['field'])
-            labels.append(_entity['label'])
+            fields.append(_entity["field"])
+            labels.append(_entity["label"])
             options = _entity.get("options")
             if options and options.get("autoCompleteFields"):
-                self._validate_autoCompleteFields_duplicates(_entity["options"], _entity['label'])
-        if self._find_duplicates_in_list(fields) or self._find_duplicates_in_list(labels):
+                self._validate_autoCompleteFields_duplicates(
+                    _entity["options"], _entity["label"]
+                )
+        if self._find_duplicates_in_list(fields) or self._find_duplicates_in_list(
+            labels
+        ):
             raise GlobalConfigValidatorException(
-                f"Duplicates found for entity field or label"
+                "Duplicates found for entity field or label"
             )
 
     def _validate_tabs_duplicates(self, tabs) -> None:
         names, titles = [], []
         for tab in tabs:
-            names.append(tab['name'])
-            titles.append(tab['title'])
+            names.append(tab["name"])
+            titles.append(tab["title"])
 
-            self._validate_entity_duplicates(tab['entity'])
-        if self._find_duplicates_in_list(names) or self._find_duplicates_in_list(titles):
+            self._validate_entity_duplicates(tab["entity"])
+        if self._find_duplicates_in_list(names) or self._find_duplicates_in_list(
+            titles
+        ):
             raise GlobalConfigValidatorException(
                 "Duplicates found for tabs names or titles"
             )
 
     def _validate_inputs_duplicates(self, inputs) -> None:
         names, titles = [], []
-        for service in inputs['services']:
-            names.append(service['name'])
-            titles.append(service['title'])
+        for service in inputs["services"]:
+            names.append(service["name"])
+            titles.append(service["title"])
 
-            self._validate_entity_duplicates(service['entity'])
+            self._validate_entity_duplicates(service["entity"])
 
-        if self._find_duplicates_in_list(names) or self._find_duplicates_in_list(titles):
+        if self._find_duplicates_in_list(names) or self._find_duplicates_in_list(
+            titles
+        ):
             raise GlobalConfigValidatorException(
                 "Duplicates found for inputs names or titles"
             )
 
     def _validate_duplicates(self) -> None:
-        pages = self._config.get("pages")
+        pages = self._config["pages"]
 
-        self._validate_tabs_duplicates(pages['configuration']['tabs'])
+        self._validate_tabs_duplicates(pages["configuration"]["tabs"])
 
         inputs = pages.get("inputs")
         if inputs:
