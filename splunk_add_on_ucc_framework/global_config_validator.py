@@ -230,6 +230,10 @@ class GlobalConfigValidator:
         return len(set(_list)) != len(_list)
 
     def _validate_children_duplicates(self, children, entity_label):
+        """
+        Validates duplicates under children key in autoCompleteFields
+        for fields under keys: label, value
+        """
         labels, values = [], []
         for child in children:
             labels.append(child["label"])
@@ -242,6 +246,11 @@ class GlobalConfigValidator:
             )
 
     def _validate_autoCompleteFields_duplicates(self, options, entity_label) -> None:
+        """
+        Validates duplicates in autoCompleteFields keys
+        for fields under keys: label, value
+        If autoCompleteFields has children key, children validator is called
+        """
         labels, values = [], []
         for field in options["autoCompleteFields"]:
             labels.append(field.get("label"))
@@ -258,6 +267,11 @@ class GlobalConfigValidator:
             )
 
     def _validate_entity_duplicates(self, entity) -> None:
+        """
+        Validates duplicates in entity keys
+        for fields under keys: field, label
+        If entity has autoCompleteFields key, autoCompleteFields validator is called
+        """
         fields, labels = [], []
         for _entity in entity:
             fields.append(_entity["field"])
@@ -275,6 +289,11 @@ class GlobalConfigValidator:
             )
 
     def _validate_tabs_duplicates(self, tabs) -> None:
+        """
+        Validates duplicates in tab keys under configuration
+        for fields under keys: name, title
+        Calls for entity validator, as at least one entity is required in schema
+        """
         names, titles = [], []
         for tab in tabs:
             names.append(tab["name"])
@@ -289,6 +308,11 @@ class GlobalConfigValidator:
             )
 
     def _validate_inputs_duplicates(self, inputs) -> None:
+        """
+        Validates duplicates in tab keys under configuration
+        for fields under keys: name, title
+        Inputs are not required in schema
+        """
         names, titles = [], []
         for service in inputs["services"]:
             names.append(service["name"])
@@ -300,10 +324,14 @@ class GlobalConfigValidator:
             titles
         ):
             raise GlobalConfigValidatorException(
-                "Duplicates found for inputs names or titles"
+                "Duplicates found for inputs (services) names or titles"
             )
 
     def _validate_duplicates(self) -> None:
+        """
+        Validates duplicates for both tabs and services (inputs). Inputs however are
+        not required in schema, so this checks if globalConfigJson has inputs
+        """
         pages = self._config["pages"]
 
         self._validate_tabs_duplicates(pages["configuration"]["tabs"])
