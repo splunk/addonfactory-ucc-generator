@@ -44,6 +44,8 @@ from splunk_add_on_ucc_framework.install_python_libraries import (
     install_python_libraries,
 )
 from splunk_add_on_ucc_framework.start_alert_build import alert_build
+from splunk_add_on_ucc_framework.commands.openapi_generator import ucc_to_oas,json_to_object
+
 
 logger = logging.getLogger("ucc_gen")
 
@@ -424,7 +426,7 @@ def _get_os_path(path):
 
 
 def generate(
-    source, config_path, addon_version, outputdir=None, python_binary_name="python3"
+    source, config_path, addon_version, outputdir=None, python_binary_name="python3", openapi=False
 ):
     logger.info(f"ucc-gen version {__version__} is used")
     logger.info(f"Python binary name to use: {python_binary_name}")
@@ -631,3 +633,8 @@ def generate(
         from additional_packaging import additional_packaging
 
         additional_packaging(ta_name)
+    if openapi:
+        app_manifest_object = json_to_object.DataClasses(json=manifest.manifest)
+        global_config_json = yaml_load(config_path) if is_global_config_yaml else json.load(config_path)
+        global_config_object = json_to_object.DataClasses(json=global_config_json)
+        ucc_to_oas.transform(app_manifest=app_manifest_object,global_config=global_config_object)

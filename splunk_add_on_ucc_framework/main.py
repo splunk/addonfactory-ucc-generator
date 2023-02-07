@@ -85,6 +85,12 @@ def main(argv: Optional[Sequence[str]] = None):
         help="Python binary name to use to install requirements",
         default="python3",
     )
+    build_parser.add_argument(
+        '--openapi',
+        type=bool,
+        help="Generate OpenAPI Description document and expose in /static/openapi.json endpoint",
+        default=False,
+        )
 
     init_parser = subparsers.add_parser("init", description="Bootstrap an add-on")
     init_parser.add_argument(

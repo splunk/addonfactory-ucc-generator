@@ -34,5 +34,6 @@ def generate(
     ta_version=None,
     outputdir=None,
     python_binary_name="python3",
+    openapi=False,
 ):
-    build.generate(source, config, ta_version, outputdir, python_binary_name)
+    build.generate(source, config, ta_version, outputdir, python_binary_name,openapi)

@@ -15,6 +15,7 @@
 #
 
 import json
+from typing import Any
 import warnings
 
 APP_MANIFEST_FILE_NAME = "app.manifest"
@@ -43,6 +44,10 @@ class AppManifest:
 
     def get_description(self) -> str:
         return self._manifest["info"]["description"]
+
+    @property
+    def manifest(self) -> Any:
+        return self._manifest
 
     def read(self, content: str) -> None:
         try:
