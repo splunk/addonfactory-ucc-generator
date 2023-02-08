@@ -7,7 +7,7 @@
                     "entity": [
                         {
                             "type": "text",
-                            "label": "Duplicate",
+                            "label": "duplicate",
                             "validators": [
                                 {
                                     "type": "string",
