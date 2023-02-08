@@ -229,15 +229,15 @@ class GlobalConfigValidator:
     def _find_duplicates_in_list(_list: list) -> bool:
         return len(set(_list)) != len(_list)
 
-    def _validate_children_duplicates(self, children: Dict[str, Any], entity_label: str):
+    def _validate_children_duplicates(self, children: Dict, entity_label: str):
         """
         Validates duplicates under children key in autoCompleteFields
         for fields under keys: label, value
         """
         labels, values = [], []
         for child in children:
-            labels.append(child["label"])
-            values.append(child["value"])
+            labels.append(child["label"].lower())
+            values.append(child["value"].lower())
         if self._find_duplicates_in_list(values) or self._find_duplicates_in_list(
             labels
         ):
@@ -245,7 +245,9 @@ class GlobalConfigValidator:
                 f"Duplicates found for autoCompleteFields children in entity '{entity_label}'"
             )
 
-    def _validate_autoCompleteFields_duplicates(self, options: Dict[str, Any], entity_label: str) -> None:
+    def _validate_autoCompleteFields_duplicates(
+        self, options: Dict[str, Any], entity_label: str
+    ) -> None:
         """
         Validates duplicates in autoCompleteFields keys
         for fields under keys: label, value
@@ -253,12 +255,12 @@ class GlobalConfigValidator:
         """
         labels, values = [], []
         for field in options["autoCompleteFields"]:
-            labels.append(field.get("label"))
+            labels.append(field.get("label").lower())
             children = field.get("children")
             if children:
                 self._validate_children_duplicates(children, entity_label)
             else:
-                values.append(field.get("value"))
+                values.append(field.get("value").lower())
         if self._find_duplicates_in_list(values) or self._find_duplicates_in_list(
             labels
         ):
@@ -266,7 +268,7 @@ class GlobalConfigValidator:
                 f"Duplicates found for autoCompleteFields: '{entity_label}'"
             )
 
-    def _validate_entity_duplicates(self, entity: Dict[str, Any]) -> None:
+    def _validate_entity_duplicates(self, entity: list) -> None:
         """
         Validates duplicates in entity keys
         for fields under keys: field, label
@@ -274,8 +276,8 @@ class GlobalConfigValidator:
         """
         fields, labels = [], []
         for _entity in entity:
-            fields.append(_entity["field"])
-            labels.append(_entity["label"])
+            fields.append(_entity["field"].lower())
+            labels.append(_entity["label"].lower())
             options = _entity.get("options")
             if options and options.get("autoCompleteFields"):
                 self._validate_autoCompleteFields_duplicates(
@@ -288,7 +290,7 @@ class GlobalConfigValidator:
                 "Duplicates found for entity field or label"
             )
 
-    def _validate_tabs_duplicates(self, tabs: Dict[str, Any]) -> None:
+    def _validate_tabs_duplicates(self, tabs: list) -> None:
         """
         Validates duplicates in tab keys under configuration
         for fields under keys: name, title
@@ -296,8 +298,8 @@ class GlobalConfigValidator:
         """
         names, titles = [], []
         for tab in tabs:
-            names.append(tab["name"])
-            titles.append(tab["title"])
+            names.append(tab["name"].lower())
+            titles.append(tab["title"].lower())
 
             self._validate_entity_duplicates(tab["entity"])
         if self._find_duplicates_in_list(names) or self._find_duplicates_in_list(
@@ -315,8 +317,8 @@ class GlobalConfigValidator:
         """
         names, titles = [], []
         for service in inputs["services"]:
-            names.append(service["name"])
-            titles.append(service["title"])
+            names.append(service["name"].lower())
+            titles.append(service["title"].lower())
 
             self._validate_entity_duplicates(service["entity"])
 
