@@ -23,6 +23,7 @@ import sys
 
 import yaml
 from jinja2 import Environment, FileSystemLoader
+from openapi3 import OpenAPI
 
 from splunk_add_on_ucc_framework import (
     __version__,
@@ -633,8 +634,15 @@ def generate(
         from additional_packaging import additional_packaging
 
         additional_packaging(ta_name)
+    logger.info(f'openapi={openapi}')
     if openapi:
         app_manifest_object = json_to_object.DataClasses(json=manifest.manifest)
-        global_config_json = yaml_load(config_path) if is_global_config_yaml else json.load(config_path)
-        global_config_object = json_to_object.DataClasses(json=global_config_json)
-        ucc_to_oas.transform(app_manifest=app_manifest_object,global_config=global_config_object)
+        global_config_object = json_to_object.DataClasses(json=config_content)
+        open_api_object = ucc_to_oas.transform(ucc_project_path=None, app_manifest=app_manifest_object,global_config=global_config_object)
+        open_api = OpenAPI(open_api_object.json)
+
+        output_openapi_path = os.path.abspath(
+            os.path.join(outputdir, ta_name, 'openapi.json')
+        )
+        with open(output_openapi_path, "w") as openapi_file:
+            json.dump(open_api.raw_element, openapi_file, indent=4)

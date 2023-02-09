@@ -80,6 +80,13 @@ def main(argv: Optional[Sequence[str]] = None):
         default=None,
     )
     build_parser.add_argument(
+        "--outputdir",
+        type=str,
+        nargs="?",
+        help="Path to output directory, defaults to output in project directory",
+        default=None,
+    )
+    build_parser.add_argument(
         "--python-binary-name",
         type=str,
         help="Python binary name to use to install requirements",
@@ -125,7 +132,9 @@ def main(argv: Optional[Sequence[str]] = None):
             source=args.source,
             config=args.config,
             ta_version=args.ta_version,
+            outputdir=args.outputdir,
             python_binary_name=args.python_binary_name,
+            openapi=args.openapi
         )
     if args.command == "init":
         init.init(
