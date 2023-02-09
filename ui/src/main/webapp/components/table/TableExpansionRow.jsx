@@ -41,7 +41,7 @@ export function getExpansionRow(colSpan, row, moreInfo) {
         : inputs.services.find((service) => service.name === row.serviceName).table?.customRow;
 
     return (
-        <Table.Row key={`${row.id}-expansion`}>
+        <Table.Row key={`${row.id}-expansion`} style={{ wordBreak: 'break-word' }}>
             <TableCellWrapper colSpan={colSpan}>
                 {customRow && customRow.src ? (
                     <>

@@ -22,30 +22,29 @@ import useQuery from '../../hooks/useQuery';
 const Row = styled(ColumnLayout.Row)`
     padding: 5px 0px;
 
-    .dropdown {
-        text-align: right;
+    .title_menu_column {
+        width: auto !important;
     }
 
-    .input_button {
+    .page_subtitle {
+        min-height: 20px;
+    }
+
+    .dropdown {
         text-align: right;
-        margin-right: 0px;
     }
 `;
 
 function InputPage() {
     const [entity, setEntity] = useState({ open: false });
     const unifiedConfigs = getUnifiedConfigs();
-    const { services, title, description } = unifiedConfigs.pages.inputs;
+    const { services, title, table, description } = unifiedConfigs.pages.inputs;
 
-    // Used for outer table is present or not
-    const table = unifiedConfigs.pages.inputs?.table;
-    const isOuterTable = !!table;
+    // check if the tabs feature is enabled or not.
+    const isTabs = !table;
 
     const [activeTabId, setActiveTabId] = useState(services[0].name);
-    const [selectedTabDescription, setSelectedTabDescription] = useState(
-        services[0]?.description || ''
-    );
-    const [selectedTabTitle, setSelectedTabTitle] = useState(services[0].title);
+    const selectedTab = services.find((x) => x.name === activeTabId);
 
     const PERMITTED_MODES = [MODE_CLONE, MODE_CREATE, MODE_EDIT];
     const permittedTabNames = services.map((service) => service.name);
@@ -162,6 +161,9 @@ function InputPage() {
     // handle close request for page style dialog
     const handlePageDialogClose = () => {
         setEntity({ ...entity, open: false });
+        if (!isTabs) {
+            query.delete('service');
+        }
         query.delete('action');
         navigate({ search: query.toString() });
     };
@@ -183,13 +185,6 @@ function InputPage() {
     const onTabChange = useCallback(
         (e, { selectedTabId }) => {
             setActiveTabId(selectedTabId);
-
-            const selectedTabInfo = services.find((service) => service.name === selectedTabId);
-            if (selectedTabInfo) {
-                setSelectedTabDescription(selectedTabInfo.description);
-                setSelectedTabTitle(selectedTabInfo.title);
-            }
-
             query.delete('action');
             query.set('service', selectedTabId);
             navigate({ search: query.toString() });
@@ -211,29 +206,23 @@ function InputPage() {
                 >
                     <ColumnLayout gutter={8}>
                         <Row>
-                            <ColumnLayout.Column span={9}>
+                            <ColumnLayout.Column className={isTabs && 'title_menu_column'} span={9}>
                                 <TitleComponent>
-                                    {isOuterTable ? _(title || '') : _(selectedTabTitle)}
+                                    {isTabs ? _(selectedTab.title) : _(title || '')}
                                 </TitleComponent>
-                                <SubTitleComponent>
-                                    {isOuterTable
-                                        ? _(description || '')
-                                        : _(selectedTabDescription || '')}
+                                <SubTitleComponent className={isTabs && 'page_subtitle'}>
+                                    {isTabs ? _(selectedTab.description) : _(description || '')}
                                 </SubTitleComponent>
                             </ColumnLayout.Column>
-                            <ColumnLayout.Column className="dropdown" span={3}>
-                                {isOuterTable && (
-                                    <MenuInput handleRequestOpen={handleRequestOpen} />
-                                )}
+                            <ColumnLayout.Column
+                                className={isTabs ? 'title_menu_column' : 'dropdown'}
+                                span={3}
+                            >
+                                {!isTabs && <MenuInput handleRequestOpen={handleRequestOpen} />}
                             </ColumnLayout.Column>
                         </Row>
                     </ColumnLayout>
-                    {isOuterTable ? (
-                        <TableWrapper
-                            page={PAGE_INPUT}
-                            handleOpenPageStyleDialog={handleOpenPageStyleDialog}
-                        />
-                    ) : (
+                    {isTabs ? (
                         <>
                             <TabBar activeTabId={activeTabId} onChange={onTabChange}>
                                 {services.map((service) => (
@@ -265,6 +254,11 @@ function InputPage() {
                                 </div>
                             ))}
                         </>
+                    ) : (
+                        <TableWrapper
+                            page={PAGE_INPUT}
+                            handleOpenPageStyleDialog={handleOpenPageStyleDialog}
+                        />
                     )}
 
                     <ToastMessages position="top-right" />

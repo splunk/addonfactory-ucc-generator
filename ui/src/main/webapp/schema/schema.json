@@ -811,7 +811,7 @@
                           "type": "string",
                           "maxLength": 100
                         },
-                        "field": {
+                        "fields": {
                           "type": "array",
                           "items": {
                             "type": "string",
@@ -819,7 +819,8 @@
                           }
                         }
                       },
-                      "required": ["label"]
+                      "required": ["label", "fields"],
+                      "additionalProperties": false
                     }
                   },
                   "style": {
@@ -1236,9 +1237,19 @@
         },
         "hook": {
           "type": "object"
+        },
+        "customTab": {
+          "type": "object"
         }
       },
-      "required": ["entity", "name", "title"],
+      "anyOf": [
+        {
+          "required": ["entity", "name", "title"]
+        },
+        {
+          "required": ["customTab", "name", "title"]
+        }
+      ],
       "additionalProperties": false
     },
     "Technology": {

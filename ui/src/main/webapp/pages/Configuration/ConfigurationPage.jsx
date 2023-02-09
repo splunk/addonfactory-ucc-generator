@@ -10,6 +10,7 @@ import useQuery from '../../hooks/useQuery';
 import { getUnifiedConfigs } from '../../util/util';
 import { TitleComponent, SubTitleComponent } from '../Input/InputPageStyle';
 import ErrorBoundary from '../../components/ErrorBoundary';
+import CustomTab from '../../components/CustomTab';
 import ConfigurationFormView from '../../components/ConfigurationFormView';
 import ConfigurationTable from '../../components/ConfigurationTable';
 
@@ -64,6 +65,35 @@ function ConfigurationPage() {
         setIsPageOpen(data);
     };
 
+    const getCustomTab = (tab) => React.createElement(CustomTab, { tab });
+
+    const getTabContent = (tab) => {
+        let TabComponent;
+        if (tab?.customTab) {
+            TabComponent = getCustomTab(tab);
+        } else {
+            TabComponent = tab?.table ? (
+                <ConfigurationTable
+                    key={tab.name}
+                    selectedTab={tab}
+                    updateIsPageOpen={updateIsPageOpen}
+                />
+            ) : (
+                <ConfigurationFormView key={tab.name} serviceName={tab.name} />
+            );
+        }
+
+        return (
+            <div
+                key={tab.name}
+                style={tab.name !== activeTabId ? { display: 'none' } : { display: 'block' }}
+                id={`${tab.name}Tab`}
+            >
+                {TabComponent}
+            </div>
+        );
+    };
+
     return (
         <ErrorBoundary>
             <div style={isPageOpen ? { display: 'none' } : { display: 'block' }}>
@@ -81,33 +111,7 @@ function ConfigurationPage() {
                     ))}
                 </TabBar>
             </div>
-            {tabs.map((tab) =>
-                tab.table ? (
-                    <div
-                        key={tab.name}
-                        style={
-                            tab.name !== activeTabId ? { display: 'none' } : { display: 'block' }
-                        }
-                        id={`${tab.name}Tab`}
-                    >
-                        <ConfigurationTable
-                            key={tab.name}
-                            selectedTab={tab}
-                            updateIsPageOpen={updateIsPageOpen}
-                        />
-                    </div>
-                ) : (
-                    <div
-                        key={tab.name}
-                        style={
-                            tab.name !== activeTabId ? { display: 'none' } : { display: 'block' }
-                        }
-                        id={`${tab.name}Tab`}
-                    >
-                        <ConfigurationFormView key={tab.name} serviceName={tab.name} />
-                    </div>
-                )
-            )}
+            {tabs.map((tab) => getTabContent(tab))}
             <ToastMessages position="top-right" />
         </ErrorBoundary>
     );

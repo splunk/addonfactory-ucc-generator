@@ -14,7 +14,6 @@ import { PAGE_INPUT } from '../../constants/pages';
 function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPageStyleDialog }) {
     const [sortKey, setSortKey] = useState('name');
     const [sortDir, setSortDir] = useState('asc');
-    const [isCustomMapping, setCustomMappingStatus] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -23,8 +22,6 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPag
 
     const unifiedConfigs = getUnifiedConfigs();
 
-    const outerTable = unifiedConfigs.pages.inputs?.table;
-
     const services =
         page === PAGE_INPUT
             ? unifiedConfigs.pages.inputs.services
@@ -32,12 +29,13 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPag
 
     const tableConfig =
         page === PAGE_INPUT
-            ? outerTable || services.find((x) => x.name === serviceName).table
+            ? unifiedConfigs.pages.inputs.table ||
+              services.find((x) => x.name === serviceName).table
             : unifiedConfigs.pages.configuration.tabs.find((x) => x.name === serviceName).table;
 
     const { moreInfo } = tableConfig;
     const headers = tableConfig.header;
-    const isOuterTable = !!outerTable;
+    const isTabs = !!serviceName;
 
     const modifyAPIResponse = (data) => {
         const obj = {};
@@ -160,7 +158,6 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPag
         const nextSortDir = prevSortDir === 'asc' ? 'desc' : 'asc';
         setSortDir(nextSortDir);
         setSortKey(val.sortKey);
-        setCustomMappingStatus(val.isCustomMapping);
     };
 
     /**
@@ -214,22 +211,20 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPag
         }
 
         // For Inputs page, filter the data when tab change
-        if (!isOuterTable) {
+        if (isTabs) {
             arr = arr.filter((v) => v.serviceName === serviceName);
         }
-
-        const updatedSortKey = isCustomMapping ? 'serviceTitle' : sortKey;
 
         // Sort the array based on the sort value
         const sortedArr = arr.sort((rowA, rowB) => {
             if (sortDir === 'asc') {
-                const rowAValue = rowA[updatedSortKey] === undefined ? '' : rowA[updatedSortKey];
-                const rowBValue = rowB[updatedSortKey] === undefined ? '' : rowB[updatedSortKey];
+                const rowAValue = rowA[sortKey] === undefined ? '' : rowA[sortKey];
+                const rowBValue = rowB[sortKey] === undefined ? '' : rowB[sortKey];
                 return rowAValue > rowBValue ? 1 : -1;
             }
             if (sortDir === 'desc') {
-                const rowAValue = rowA[updatedSortKey] === undefined ? '' : rowA[updatedSortKey];
-                const rowBValue = rowB[updatedSortKey] === undefined ? '' : rowB[updatedSortKey];
+                const rowAValue = rowA[sortKey] === undefined ? '' : rowA[sortKey];
+                const rowBValue = rowB[sortKey] === undefined ? '' : rowB[sortKey];
                 return rowBValue > rowAValue ? 1 : -1;
             }
             return 0;
@@ -261,7 +256,7 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPag
                 services={services}
                 totalElement={totalElement}
                 handleRequestModalOpen={handleRequestModalOpen}
-                isOuterTable={isOuterTable}
+                isTabs={isTabs}
             />
             <CustomTable
                 page={page}

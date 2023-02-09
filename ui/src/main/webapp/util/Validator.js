@@ -8,6 +8,7 @@ import {
     parseFileValidator,
 } from './uccConfigurationValidators';
 import FILE from '../constants/constant';
+import { isJsonString } from './util';
 
 // Validate provided saveValidator function
 export function SaveValidator(validatorFunc, formData) {
@@ -29,7 +30,9 @@ class Validator {
 
     // eslint-disable-next-line class-methods-use-this
     checkIsFieldHasInput = (attrValue) =>
-        attrValue !== undefined && attrValue !== null && attrValue.trim() !== '';
+        attrValue !== undefined &&
+        attrValue !== null &&
+        (typeof attrValue === 'string' ? attrValue.trim() !== '' : true);
 
     // Validate the required field has value
     RequiredValidator(field, label, data) {
@@ -140,11 +143,13 @@ class Validator {
     // eslint-disable-next-line class-methods-use-this
     FileValidator(field, validator, data) {
         if (data) {
-            const { isValidExtension, fileSize, isValidContent } = parseFileValidator(
-                data,
-                validator.supportedFileTypes
-            );
-            if (!isValidExtension) {
+            const { error } = parseFileValidator(validator.supportedFileTypes);
+            if (error) {
+                return { errorField: field, errorMsg: error };
+            }
+            const { fileName, fileSize, fileContent } = data;
+            const givenFileExtension = fileName.split('.').pop();
+            if (!validator.supportedFileTypes.includes(givenFileExtension)) {
                 return {
                     errorField: field,
                     errorMsg:
@@ -159,7 +164,7 @@ class Validator {
                     errorMsg: getFormattedMessage(25, [fileSizeInKb]),
                 };
             }
-            if (!isValidContent) {
+            if (!isJsonString(fileContent)) {
                 return {
                     errorField: field,
                     errorMsg: getFormattedMessage(26),

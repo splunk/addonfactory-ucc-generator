@@ -1,4 +1,4 @@
-import React, { useState, memo } from 'react';
+import React, { useState, memo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import { TableContextProvider } from '../context/TableContext';
@@ -13,6 +13,12 @@ function ConfigurationTable({ selectedTab, updateIsPageOpen }) {
     const [entity, setEntity] = useState({ open: false });
 
     const isConfigurationPageStyle = selectedTab.style === STYLE_PAGE;
+
+    useEffect(() => {
+        if (isConfigurationPageStyle) {
+            updateIsPageOpen(!!entity.open);
+        }
+    }, [entity]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const handleRequestOpen = () => {
         setEntity({
@@ -55,39 +61,41 @@ function ConfigurationTable({ selectedTab, updateIsPageOpen }) {
     // handle close request for page style dialog
     const handlePageDialogClose = () => {
         setEntity({ ...entity, open: false });
-        updateIsPageOpen(false);
     };
 
     // generate page style dialog
-    const generatePageDialog = () => {
-        updateIsPageOpen(true);
-        return (
-            <EntityPage
-                open={entity.open}
-                handleRequestClose={handlePageDialogClose}
-                serviceName={selectedTab.name}
-                stanzaName={entity.stanzaName}
-                mode={entity.mode}
-                formLabel={entity.formLabel}
-                page={PAGE_CONF}
-            />
-        );
-    };
+    const generatePageDialog = () => (
+        <EntityPage
+            open={entity.open}
+            handleRequestClose={handlePageDialogClose}
+            serviceName={selectedTab.name}
+            stanzaName={entity.stanzaName}
+            mode={entity.mode}
+            formLabel={entity.formLabel}
+            page={PAGE_CONF}
+        />
+    );
 
     const getTableWrapper = () => (
-        <TableWrapper
-            page={PAGE_CONF}
-            serviceName={selectedTab.name}
-            handleRequestModalOpen={() => handleRequestOpen()}
-            handleOpenPageStyleDialog={handleOpenPageStyleDialog}
-        />
+        <div
+            style={
+                isConfigurationPageStyle && entity.open ? { display: 'none' } : { display: 'block' }
+            }
+        >
+            <TableWrapper
+                page={PAGE_CONF}
+                serviceName={selectedTab.name}
+                handleRequestModalOpen={() => handleRequestOpen()}
+                handleOpenPageStyleDialog={handleOpenPageStyleDialog}
+            />
+        </div>
     );
 
     return (
         <TableContextProvider value={null}>
-            {isConfigurationPageStyle && entity.open ? generatePageDialog() : null}
-            {!(isConfigurationPageStyle && entity.open) ? getTableWrapper() : null}
-            {!isConfigurationPageStyle && entity.open ? generateModalDialog() : null}
+            {isConfigurationPageStyle && entity.open && generatePageDialog()}
+            {getTableWrapper()}
+            {!isConfigurationPageStyle && entity.open && generateModalDialog()}
         </TableContextProvider>
     );
 }

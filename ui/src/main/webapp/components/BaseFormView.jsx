@@ -270,7 +270,11 @@ class BaseFormView extends PureComponent {
                             ? this.currentInput[e.field]
                             : null;
                     tempEntity.value = e.encrypted ? '' : tempEntity.value;
-
+                    /*
+                     * Custom logic to handle edit/clone scenarios for the unencrypted file type field
+                     * Reason: We are only getting file content in string format for API. and for validations object with file name, file size, and file content is expected.
+                     */
+                    tempEntity.value = e.type === 'file' ? '' : tempEntity.value;
                     tempEntity.display =
                         typeof e?.options?.display !== 'undefined' ? e.options.display : true;
                     tempEntity.error = false;
@@ -284,6 +288,11 @@ class BaseFormView extends PureComponent {
                 } else if (props.mode === MODE_CLONE) {
                     tempEntity.value =
                         e.field === 'name' || e.encrypted ? '' : this.currentInput[e.field];
+                    /*
+                     * Custom logic to handle edit/clone scenarios for the unencrypted file type field
+                     * Reason: We are only getting file content in string format for API. and for validations object with file name, file size, and file content is expected.
+                     */
+                    tempEntity.value = e.type === 'file' ? '' : tempEntity.value;
                     tempEntity.display =
                         typeof e?.options?.display !== 'undefined' ? e.options.display : true;
                     tempEntity.error = false;
@@ -578,6 +587,7 @@ class BaseFormView extends PureComponent {
         const body = new URLSearchParams();
         Object.keys(this.datadict).forEach((key) => {
             if (this.datadict[key] != null) {
+                // Custom logic for only sending file content in payload, not file name and file size.
                 if (
                     typeof this.datadict[key] === 'object' &&
                     this.entities.find((x) => x.field === key).type === 'file'

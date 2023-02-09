@@ -64,21 +64,12 @@ export const parseFunctionRawStr = (rawStr) => {
     return { error, result };
 };
 
-export const parseFileValidator = (data, validFileTypes) => {
-    const { fileName, fileSize, fileContent } = data;
-    const givenFileExtension = fileName.split('.').pop();
-    const isValidExtension =
-        validFileTypes.findIndex((fileExtension) => fileExtension === givenFileExtension) !== -1;
-
-    let isValidContent = true;
-
-    try {
-        JSON.parse(fileContent);
-    } catch (err) {
-        isValidContent = false;
-    }
-
-    return { isValidExtension, fileSize, isValidContent };
+export const parseFileValidator = (validFileTypes) => {
+    const listSupportFileTypes = ['json'];
+    const error = validFileTypes.every((x) => listSupportFileTypes.includes(x))
+        ? null
+        : getFormattedMessage(27, validFileTypes.toString());
+    return { error };
 };
 
 export const checkDupKeyValues = (config, isInput, location) => {

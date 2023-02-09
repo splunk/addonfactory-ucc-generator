@@ -104,6 +104,7 @@ jobs:
 
       - run: yarn
       - run: yarn run eslint
+      - run: yarn run test
       - run: yarn run build
       - run: |
             yarn list --prod --depth 0 | python .github/scripts/format_yarn_deps.py --output-file=dist/package/appserver/static/js/dependencies.txt

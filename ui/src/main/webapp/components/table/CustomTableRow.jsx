@@ -32,6 +32,7 @@ function CustomTableRow(props) {
     const {
         row,
         columns,
+        rowActions,
         headerMapping,
         handleToggleActionClick,
         handleEditActionClick,
@@ -52,33 +53,40 @@ function CustomTableRow(props) {
         (selectedRow) => (
             <TableCellWrapper data-column="actions" key={selectedRow.id}>
                 <ButtonGroup>
-                    <Tooltip content={_('Edit')}>
-                        <ActionButtonComponent
-                            appearance="flat"
-                            icon={<Pencil screenReaderText={null} size={1} />}
-                            onClick={() => handleEditActionClick(selectedRow)}
-                            className="editBtn"
-                        />
-                    </Tooltip>
-                    <Tooltip content={_('Clone')}>
-                        <ActionButtonComponent
-                            appearance="flat"
-                            icon={<Clone screenReaderText={null} size={1} />}
-                            onClick={() => handleCloneActionClick(selectedRow)}
-                            className="cloneBtn"
-                        />
-                    </Tooltip>
-                    <Tooltip content={_('Delete')}>
-                        <ActionButtonComponent
-                            appearance="destructive"
-                            icon={<Trash screenReaderText={null} size={1} />}
-                            onClick={() => handleDeleteActionClick(selectedRow)}
-                            className="deleteBtn"
-                        />
-                    </Tooltip>
+                    {rowActions.includes('edit') && (
+                        <Tooltip content={_('Edit')}>
+                            <ActionButtonComponent
+                                appearance="flat"
+                                icon={<Pencil screenReaderText={null} size={1} />}
+                                onClick={() => handleEditActionClick(selectedRow)}
+                                className="editBtn"
+                            />
+                        </Tooltip>
+                    )}
+                    {rowActions.includes('clone') && (
+                        <Tooltip content={_('Clone')}>
+                            <ActionButtonComponent
+                                appearance="flat"
+                                icon={<Clone screenReaderText={null} size={1} />}
+                                onClick={() => handleCloneActionClick(selectedRow)}
+                                className="cloneBtn"
+                            />
+                        </Tooltip>
+                    )}
+                    {rowActions.includes('delete') && (
+                        <Tooltip content={_('Delete')}>
+                            <ActionButtonComponent
+                                appearance="flat"
+                                icon={<Trash screenReaderText={null} size={1} />}
+                                onClick={() => handleDeleteActionClick(selectedRow)}
+                                className="deleteBtn"
+                            />
+                        </Tooltip>
+                    )}
                 </ButtonGroup>
             </TableCellWrapper>
         ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [handleEditActionClick, handleCloneActionClick, handleDeleteActionClick]
     );
 
@@ -143,7 +151,7 @@ function CustomTableRow(props) {
                     } else {
                         cellHTML = (
                             <Table.Cell
-                                style={{ wordBreak: 'break-all' }}
+                                style={{ wordBreak: 'break-word' }}
                                 data-column={header.field}
                                 key={header.field}
                             >
@@ -166,6 +174,7 @@ function CustomTableRow(props) {
 CustomTableRow.propTypes = {
     row: PropTypes.any,
     columns: PropTypes.array,
+    rowActions: PropTypes.array,
     headerMapping: PropTypes.object,
     handleToggleActionClick: PropTypes.func,
     handleEditActionClick: PropTypes.func,

@@ -33,11 +33,10 @@ function CustomTable({
 
     const { rowData } = useContext(TableContext);
 
-    const { moreInfo, header } = tableConfig;
-    const headers = tableConfig.header;
+    const { moreInfo, header: headers, actions } = tableConfig;
 
     const headerMapping = {};
-    header.forEach((x) => {
+    headers.forEach((x) => {
         headerMapping[x.field] = x.mapping;
     });
 
@@ -184,11 +183,14 @@ function CustomTable({
                 column.push({
                     ...item,
                     sortKey: item.field || null,
-                    isCustomMapping: !!item.mapping,
                 });
             });
         }
-        column.push({ label: 'Actions', field: 'actions', sortKey: '' });
+
+        if (actions && actions.length) {
+            column.push({ label: 'Actions', field: 'actions', sortKey: '' });
+        }
+
         return column;
     };
 
@@ -202,7 +204,7 @@ function CustomTable({
                     columns.map((headData) => (
                         <Table.HeadCell
                             key={headData.field}
-                            onSort={(e) => (headData.sortKey ? handleSort(e, headData) : null)}
+                            onSort={headData.sortKey ? handleSort : null}
                             sortKey={headData.sortKey ? headData.sortKey : null}
                             sortDir={
                                 headData.sortKey && headData.sortKey === sortKey ? sortDir : 'none'
@@ -225,6 +227,7 @@ function CustomTable({
                         key={row.id}
                         row={row}
                         columns={columns}
+                        rowActions={actions}
                         headerMapping={headerMapping}
                         {...{
                             handleEditActionClick,

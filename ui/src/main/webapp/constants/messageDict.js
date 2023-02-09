@@ -26,6 +26,7 @@ export default {
     24: 'The file must be in {{args[0]}} format',
     25: 'The file size should not exceed {{args[0]}}',
     26: 'Invalid JSON file',
+    27: '{{args[0]}} type is not present in supported File Types',
 
     // general messages, range [100, 499]
     100: 'Create New Input',
