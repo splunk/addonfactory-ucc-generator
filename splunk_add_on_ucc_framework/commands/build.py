@@ -642,7 +642,7 @@ def generate(
         open_api = OpenAPI(open_api_object.json)
 
         output_openapi_path = os.path.abspath(
-            os.path.join(outputdir, ta_name, 'openapi.json')
+            os.path.join(outputdir, ta_name, 'static', 'openapi.json')
         )
         with open(output_openapi_path, "w") as openapi_file:
             json.dump(open_api.raw_element, openapi_file, indent=4)
