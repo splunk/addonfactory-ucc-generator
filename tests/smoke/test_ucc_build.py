@@ -321,7 +321,7 @@ def test_ucc_generate_openapi_with_configuration():
             "package_global_config_configuration",
             "package",
         )
-        ucc.generate(source=package_folder, outputdir=temp_dir, openapi=True)
+        ucc.generate(source=package_folder, outputdir=temp_dir, openapi=True, ta_version='1.1.1')
         expected_folder = path.join(
             path.dirname(__file__),
             "..",
@@ -330,10 +330,7 @@ def test_ucc_generate_openapi_with_configuration():
             "expected_output_global_config_configuration",
             "Splunk_TA_UCCExample",
         )
-        actual_folder = Path(Path(temp_dir) / "Splunk_TA_UCCExample")
-        openapi_file = Path(actual_folder / "static/openapi.json")
-        assert openapi_file.exists()
-        
+        actual_folder = path.join(temp_dir , "Splunk_TA_UCCExample")        
         files_to_be_equal = [
             ("static", "openapi.json"),
         ]
