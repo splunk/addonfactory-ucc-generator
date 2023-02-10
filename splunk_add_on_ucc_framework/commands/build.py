@@ -635,7 +635,7 @@ def generate(
 
         additional_packaging(ta_name)
     logger.info(f'openapi={openapi}')
-    if openapi:
+    if os.path.isfile(config_path) and openapi:
         app_manifest_object = json_to_object.DataClasses(json=manifest.manifest)
         global_config_object = json_to_object.DataClasses(json=config_content)
         open_api_object = ucc_to_oas.transform(ucc_project_path=None, app_manifest=app_manifest_object,global_config=global_config_object)

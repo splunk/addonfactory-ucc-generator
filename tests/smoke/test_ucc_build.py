@@ -1,6 +1,7 @@
 import difflib
 import tempfile
 from os import path
+from pathlib import Path
 
 import splunk_add_on_ucc_framework as ucc
 
@@ -294,3 +295,65 @@ def test_ucc_generate_with_configuration_files_only():
         for f in files_to_not_exist:
             expected_file_path = path.join(expected_folder, *f)
             assert not path.exists(expected_file_path)
+
+def test_ucc_generate_openapi_with_configuration_files_only():
+    with tempfile.TemporaryDirectory() as temp_dir:
+        package_folder = path.join(
+            path.dirname(path.realpath(__file__)),
+            "..",
+            "testdata",
+            "test_addons",
+            "package_no_global_config",
+            "package",
+        )
+        ucc.generate(source=package_folder, outputdir=temp_dir, openapi=True)
+
+        openapi_file = Path(Path(temp_dir) / "Splunk_TA_UCCExample/static/openapi.json")
+        assert not openapi_file.exists()
+        
+def test_ucc_generate_openapi_with_configuration():
+    with tempfile.TemporaryDirectory() as temp_dir:
+        package_folder = path.join(
+            path.dirname(path.realpath(__file__)),
+            "..",
+            "testdata",
+            "test_addons",
+            "package_global_config_configuration",
+            "package",
+        )
+        ucc.generate(source=package_folder, outputdir=temp_dir, openapi=True)
+        expected_folder = path.join(
+            path.dirname(__file__),
+            "..",
+            "testdata",
+            "expected_addons",
+            "expected_output_global_config_configuration",
+            "Splunk_TA_UCCExample",
+        )
+        actual_folder = Path(Path(temp_dir) / "Splunk_TA_UCCExample")
+        openapi_file = Path(actual_folder / "static/openapi.json")
+        assert openapi_file.exists()
+        
+        files_to_be_equal = [
+            ("static", "openapi.json"),
+        ]
+        diff_results = []
+        for f in files_to_be_equal:
+            expected_file_path = path.join(expected_folder, *f)
+            actual_file_path = path.join(actual_folder, *f)
+            with open(expected_file_path) as expected_file:
+                expected_file_lines = expected_file.readlines()
+            with open(actual_file_path) as actual_file:
+                actual_file_lines = actual_file.readlines()
+            for line in difflib.unified_diff(
+                actual_file_lines,
+                expected_file_lines,
+                fromfile=actual_file_path,
+                tofile=expected_file_path,
+                lineterm="",
+            ):
+                diff_results.append(line)
+        if diff_results:
+            for result in diff_results:
+                print(result)
+            assert False, "Some diffs were found"

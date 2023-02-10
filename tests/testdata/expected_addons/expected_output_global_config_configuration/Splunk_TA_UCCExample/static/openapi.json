@@ -1,0 +1,400 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Splunk_TA_UCCExample",
+        "version": "5.19.0R873bf662",
+        "description": "Splunk UCC test Add-on",
+        "contact": {
+            "name": "Splunk"
+        }
+    },
+    "servers": [
+        {
+            "url": "https://{domain}:{port}/servicesNS/-/Splunk_TA_UCCExample",
+            "variables": {
+                "domain": {
+                    "default": "localhost"
+                },
+                "port": {
+                    "default": "8089"
+                }
+            },
+            "description": "Access via management interface"
+        }
+    ],
+    "components": {
+        "schemas": {
+            "account": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "custom_endpoint": {
+                        "type": "string",
+                        "enum": [
+                            "login.example.com",
+                            "test.example.com",
+                            "other"
+                        ]
+                    },
+                    "endpoint": {
+                        "type": "string"
+                    },
+                    "account_checkbox": {
+                        "type": "string"
+                    },
+                    "account_radio": {
+                        "type": "string"
+                    },
+                    "account_multiple_select": {
+                        "type": "string"
+                    },
+                    "oauth": {
+                        "type": "string"
+                    }
+                }
+            },
+            "proxy": {
+                "type": "object",
+                "properties": {
+                    "proxy_enabled": {
+                        "type": "string"
+                    },
+                    "proxy_type": {
+                        "type": "string",
+                        "enum": [
+                            "http",
+                            "socks4",
+                            "socks5"
+                        ]
+                    },
+                    "proxy_url": {
+                        "type": "string"
+                    },
+                    "proxy_port": {
+                        "type": "string"
+                    },
+                    "proxy_username": {
+                        "type": "string"
+                    },
+                    "proxy_password": {
+                        "type": "string",
+                        "format": "password"
+                    },
+                    "proxy_rdns": {
+                        "type": "string"
+                    }
+                }
+            },
+            "logging": {
+                "type": "object",
+                "properties": {
+                    "loglevel": {
+                        "type": "string",
+                        "enum": [
+                            "DEBUG",
+                            "INFO",
+                            "WARNING",
+                            "ERROR",
+                            "CRITICAL"
+                        ]
+                    }
+                }
+            },
+            "custom_abc": {
+                "type": "object",
+                "properties": {
+                    "testString": {
+                        "type": "string"
+                    },
+                    "testNumber": {
+                        "type": "string"
+                    },
+                    "testRegex": {
+                        "type": "string"
+                    },
+                    "testEmail": {
+                        "type": "string"
+                    },
+                    "testIpv4": {
+                        "type": "string"
+                    },
+                    "testDate": {
+                        "type": "string"
+                    },
+                    "testUrl": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "BasicAuth": {
+                "type": "http",
+                "scheme": "basic"
+            }
+        }
+    },
+    "paths": {
+        "/static/openapi.json": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Get OpenAPI description document (openapi.json) for Splunk UCC test Add-on"
+                    }
+                },
+                "description": "Get OpenAPI description document (openapi.json) for Splunk UCC test Add-on",
+                "deprecated": false
+            }
+        },
+        "/splunk_ta_uccexample_account": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Get list of items for account"
+                    }
+                },
+                "description": "Get list of items for account",
+                "deprecated": false
+            },
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Create item in account"
+                    }
+                },
+                "description": "Create item in account",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/account"
+                            }
+                        }
+                    },
+                    "required": false
+                },
+                "deprecated": false
+            },
+            "parameters": [
+                {
+                    "name": "output_mode",
+                    "in": "query",
+                    "required": false,
+                    "description": "The name of the item to operate on",
+                    "schema": {
+                        "type": "string",
+                        "enum": [
+                            "xml",
+                            "json"
+                        ]
+                    }
+                }
+            ]
+        },
+        "/splunk_ta_uccexample_account/{name}": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Get account item details"
+                    }
+                },
+                "description": "Get account item details",
+                "deprecated": false
+            },
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Update account item"
+                    }
+                },
+                "description": "Update account item",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/account"
+                            }
+                        }
+                    },
+                    "required": false
+                },
+                "deprecated": false
+            },
+            "delete": {
+                "responses": {
+                    "200": {
+                        "description": "Delete account item"
+                    }
+                },
+                "description": "Delete account item",
+                "deprecated": false
+            },
+            "parameters": [
+                {
+                    "name": "name",
+                    "in": "path",
+                    "required": true,
+                    "description": "The name of the item to operate on",
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "output_mode",
+                    "in": "query",
+                    "required": false,
+                    "description": "The name of the item to operate on",
+                    "schema": {
+                        "type": "string",
+                        "enum": [
+                            "xml",
+                            "json"
+                        ]
+                    }
+                }
+            ]
+        },
+        "/splunk_ta_uccexample_settings/proxy": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Get list of items for proxy"
+                    }
+                },
+                "description": "Get list of items for proxy",
+                "deprecated": false
+            },
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Create item in proxy"
+                    }
+                },
+                "description": "Create item in proxy",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/proxy"
+                            }
+                        }
+                    },
+                    "required": false
+                },
+                "deprecated": false
+            },
+            "parameters": [
+                {
+                    "name": "output_mode",
+                    "in": "query",
+                    "required": false,
+                    "description": "The name of the item to operate on",
+                    "schema": {
+                        "type": "string",
+                        "enum": [
+                            "xml",
+                            "json"
+                        ]
+                    }
+                }
+            ]
+        },
+        "/splunk_ta_uccexample_settings/logging": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Get list of items for logging"
+                    }
+                },
+                "description": "Get list of items for logging",
+                "deprecated": false
+            },
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Create item in logging"
+                    }
+                },
+                "description": "Create item in logging",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/logging"
+                            }
+                        }
+                    },
+                    "required": false
+                },
+                "deprecated": false
+            },
+            "parameters": [
+                {
+                    "name": "output_mode",
+                    "in": "query",
+                    "required": false,
+                    "description": "The name of the item to operate on",
+                    "schema": {
+                        "type": "string",
+                        "enum": [
+                            "xml",
+                            "json"
+                        ]
+                    }
+                }
+            ]
+        },
+        "/splunk_ta_uccexample_custom_abc": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Get list of items for custom_abc"
+                    }
+                },
+                "description": "Get list of items for custom_abc",
+                "deprecated": false
+            },
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Create item in custom_abc"
+                    }
+                },
+                "description": "Create item in custom_abc",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/custom_abc"
+                            }
+                        }
+                    },
+                    "required": false
+                },
+                "deprecated": false
+            },
+            "parameters": [
+                {
+                    "name": "output_mode",
+                    "in": "query",
+                    "required": false,
+                    "description": "The name of the item to operate on",
+                    "schema": {
+                        "type": "string",
+                        "enum": [
+                            "xml",
+                            "json"
+                        ]
+                    }
+                }
+            ]
+        }
+    },
+    "security": [
+        {
+            "BasicAuth": []
+        }
+    ]
+}
