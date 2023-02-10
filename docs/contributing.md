@@ -2,6 +2,13 @@
 
 ## Build and Test
 
+Download UCC UI and unpack it using the following commands:
+
+```
+./get-ucc-ui.sh
+tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
+```
+
 This project uses [`poetry`](https://python-poetry.org/).
 
 To build a new local version of `ucc-gen`:

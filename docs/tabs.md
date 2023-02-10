@@ -59,12 +59,21 @@ This is how globalConfig looks like without tabs on the inputs page:
 },
 ```
 
+> Note: It is no longer recommended to use the `enable` field in table actions. It will be removed in the next major release of ucc-gen.
+
+### List of built-in table fields
+
+| Field Name   | description      |
+| ----------------- | ----------- |
+| serviceName       | It indicates the name of Input service to be displayed in the table. <br>Eg: example_input_one  |
+| serviceTitle      | It indicates the title of Input service to be displayed in the table. <br>Eg: Example Input One  |
+
 ### Tabs
 If there are multiple types of input services and want to use the Tabs feature, each input service is represented by a separate tab. As a result, each input service will have its own tab.
 
 To enable the tabs feature, `table` property must be provided under the services.
 
-Title and Description would change when changing the tab (If provided in the globalConfig file).
+`Title` and `Description` would change when changing the tab (If provided in the globalConfig file).
 
 ```
 "pages": {
@@ -146,7 +155,7 @@ Using the [Custom Hook](https://splunk.github.io/addonfactory-ucc-generator/cust
             "groupTitle": "Group Two",
             "groupServices": ["example_input_two", "example_input_four"]
         }
-    ]
+    ],
     "services": [
         {
             "name": "example_input_one",

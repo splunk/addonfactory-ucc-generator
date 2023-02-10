@@ -225,9 +225,127 @@ class GlobalConfigValidator:
             for entity in entities:
                 self._validate_entity_validators(entity)
 
+    @staticmethod
+    def _find_duplicates_in_list(_list: list) -> bool:
+        return len(set(_list)) != len(_list)
+
+    def _validate_children_duplicates(self, children: Dict, entity_label: str):
+        """
+        Validates duplicates under children key in autoCompleteFields
+        for fields under keys: label, value
+        """
+        labels, values = [], []
+        for child in children:
+            labels.append(child["label"].lower())
+            values.append(child["value"].lower())
+        if self._find_duplicates_in_list(values) or self._find_duplicates_in_list(
+            labels
+        ):
+            raise GlobalConfigValidatorException(
+                f"Duplicates found for autoCompleteFields children in entity '{entity_label}'"
+            )
+
+    def _validate_autoCompleteFields_duplicates(
+        self, options: Dict[str, Any], entity_label: str
+    ) -> None:
+        """
+        Validates duplicates in autoCompleteFields keys
+        for fields under keys: label, value
+        If autoCompleteFields has children key, children validator is called
+        """
+        labels, values = [], []
+        for field in options["autoCompleteFields"]:
+            labels.append(field.get("label").lower())
+            children = field.get("children")
+            if children:
+                self._validate_children_duplicates(children, entity_label)
+            else:
+                values.append(field.get("value").lower())
+        if self._find_duplicates_in_list(values) or self._find_duplicates_in_list(
+            labels
+        ):
+            raise GlobalConfigValidatorException(
+                f"Duplicates found for autoCompleteFields: '{entity_label}'"
+            )
+
+    def _validate_entity_duplicates(self, entity: list) -> None:
+        """
+        Validates duplicates in entity keys
+        for fields under keys: field, label
+        If entity has autoCompleteFields key, autoCompleteFields validator is called
+        """
+        fields, labels = [], []
+        for _entity in entity:
+            fields.append(_entity["field"].lower())
+            labels.append(_entity["label"].lower())
+            options = _entity.get("options")
+            if options and options.get("autoCompleteFields"):
+                self._validate_autoCompleteFields_duplicates(
+                    _entity["options"], _entity["label"]
+                )
+        if self._find_duplicates_in_list(fields) or self._find_duplicates_in_list(
+            labels
+        ):
+            raise GlobalConfigValidatorException(
+                "Duplicates found for entity field or label"
+            )
+
+    def _validate_tabs_duplicates(self, tabs: list) -> None:
+        """
+        Validates duplicates in tab keys under configuration
+        for fields under keys: name, title
+        Calls for entity validator, as at least one entity is required in schema
+        """
+        names, titles = [], []
+        for tab in tabs:
+            names.append(tab["name"].lower())
+            titles.append(tab["title"].lower())
+
+            self._validate_entity_duplicates(tab["entity"])
+        if self._find_duplicates_in_list(names) or self._find_duplicates_in_list(
+            titles
+        ):
+            raise GlobalConfigValidatorException(
+                "Duplicates found for tabs names or titles"
+            )
+
+    def _validate_inputs_duplicates(self, inputs: Dict[str, Any]) -> None:
+        """
+        Validates duplicates in tab keys under configuration
+        for fields under keys: name, title
+        Inputs are not required in schema
+        """
+        names, titles = [], []
+        for service in inputs["services"]:
+            names.append(service["name"].lower())
+            titles.append(service["title"].lower())
+
+            self._validate_entity_duplicates(service["entity"])
+
+        if self._find_duplicates_in_list(names) or self._find_duplicates_in_list(
+            titles
+        ):
+            raise GlobalConfigValidatorException(
+                "Duplicates found for inputs (services) names or titles"
+            )
+
+    def _validate_duplicates(self) -> None:
+        """
+        Validates duplicates for both tabs and services (inputs). Inputs however are
+        not required in schema, so this checks if globalConfig has inputs
+        """
+        pages = self._config["pages"]
+
+        self._validate_tabs_duplicates(pages["configuration"]["tabs"])
+
+        inputs = pages.get("inputs")
+        if inputs:
+            self._validate_inputs_duplicates(inputs)
+
     def validate(self) -> None:
         self._validate_config_against_schema()
         self._validate_configuration_tab_table_has_name_field()
         self._validate_custom_rest_handlers()
         self._validate_file_type_entity()
         self._validate_validators()
+        self._validate_duplicates()

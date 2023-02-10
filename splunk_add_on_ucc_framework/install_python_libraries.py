@@ -39,9 +39,9 @@ def _check_ucc_library_in_requirements_file(path_to_requirements: str) -> bool:
 def install_python_libraries(
     path: str, ucc_lib_target: str, python_binary_name: str, includes_ui: bool = False
 ):
-    if os.path.exists(os.path.join(path, "lib", "requirements.txt")):
+    if os.path.isfile(os.path.join(path, "lib", "requirements.txt")):
         path_to_reqs_file = os.path.join(path, "lib", "requirements.txt")
-    elif os.path.exists(
+    elif os.path.isfile(
         os.path.join(os.path.abspath(os.path.join(path, os.pardir)), "requirements.txt")
     ):
         path_to_reqs_file = os.path.join(
@@ -88,10 +88,10 @@ def install_libraries(
     installation_path: str,
     installer: str,
 ):
-    if not os.path.exists(requirements_file_path):
+    if not os.path.isfile(requirements_file_path):
         logger.warning(f"Unable to find requirements file: {requirements_file_path}")
     else:
-        if not os.path.exists(installation_path):
+        if not os.path.isdir(installation_path):
             os.makedirs(installation_path)
         install_cmd = (
             installer
