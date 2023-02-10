@@ -1,0 +1,181 @@
+{
+    "pages": {
+        "configuration": {
+            "tabs": [
+                {
+                    "name": "logging",
+                    "entity": [
+                        {
+                            "type": "singleSelect",
+                            "label": "Log level",
+                            "options": {
+                                "disableSearch": true,
+                                "autoCompleteFields": [
+                                    {
+                                        "value": "DEBUG",
+                                        "label": "DEBUG"
+                                    },
+                                    {
+                                        "value": "INFO",
+                                        "label": "INFO"
+                                    },
+                                    {
+                                        "value": "WARNING",
+                                        "label": "WARNING"
+                                    },
+                                    {
+                                        "value": "ERROR",
+                                        "label": "ERROR"
+                                    },
+                                    {
+                                        "value": "CRITICAL",
+                                        "label": "CRITICAL"
+                                    }
+                                ]
+                            },
+                            "defaultValue": "INFO",
+                            "field": "loglevel"
+                        }
+                    ],
+                    "title": "Logging"
+                }
+            ],
+            "title": "Configuration",
+            "description": "Set up your add-on"
+        },
+        "inputs": {
+            "services": [
+                {
+                    "hook": {
+                        "src": "Hook"
+                    },
+                    "name": "example_input_one",
+                    "entity": [
+                        {
+                            "field": "singleSelectTest",
+                            "label": "Single Select",
+                            "type": "singleSelect",
+                            "options": {
+                                "createSearchChoice": true,
+                                "autoCompleteFields": [
+                                    {
+                                        "label": "Group1",
+                                        "children": [
+                                            {
+                                                "value": "duplication",
+                                                "label": "One"
+                                            },
+                                            {
+                                                "value": "duplication",
+                                                "label": "Two"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "label": "Group2",
+                                        "children": [
+                                            {
+                                                "value": "three",
+                                                "label": "Three"
+                                            },
+                                            {
+                                                "value": "four",
+                                                "label": "Four"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "title": "Example Input One"
+                }
+            ],
+            "title": "Inputs",
+            "description": "Manage your data inputs",
+            "table": {
+                "actions": [
+                    "edit",
+                    "enable",
+                    "delete",
+                    "clone"
+                ],
+                "header": [
+                    {
+                        "label": "Name",
+                        "field": "name"
+                    },
+                    {
+                        "label": "Account Name",
+                        "field": "account"
+                    },
+                    {
+                        "label": "Interval",
+                        "field": "interval"
+                    },
+                    {
+                        "label": "Index",
+                        "field": "index"
+                    },
+                    {
+                        "label": "Status",
+                        "field": "disabled"
+                    }
+                ],
+                "moreInfo": [
+                    {
+                        "label": "Name",
+                        "field": "name"
+                    },
+                    {
+                        "label": "Interval",
+                        "field": "interval"
+                    },
+                    {
+                        "label": "Index",
+                        "field": "index"
+                    },
+                    {
+                        "label": "Status",
+                        "field": "disabled",
+                        "mapping": {
+                            "true": "Disabled",
+                            "false": "Enabled"
+                        }
+                    },
+                    {
+                        "label": "Example Account",
+                        "field": "account"
+                    },
+                    {
+                        "label": "Object",
+                        "field": "object"
+                    },
+                    {
+                        "label": "Object Fields",
+                        "field": "object_fields"
+                    },
+                    {
+                        "label": "Order By",
+                        "field": "order_by"
+                    },
+                    {
+                        "label": "Query Start Date",
+                        "field": "start_date"
+                    },
+                    {
+                        "label": "Limit",
+                        "field": "limit"
+                    }
+                ]
+            }
+        }
+    },
+    "meta": {
+        "apiVersion": "3.2.0",
+        "name": "Splunk_TA_UCCExample",
+        "restRoot": "splunk_ta_uccexample",
+        "version": "1.0.0",
+        "displayName": "Splunk UCC test Add-on"
+    }
+}

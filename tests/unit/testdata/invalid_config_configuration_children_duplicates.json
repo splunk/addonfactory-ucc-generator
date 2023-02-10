@@ -1,0 +1,47 @@
+{
+    "pages": {
+        "configuration": {
+            "tabs": [
+                {
+                    "name": "logging",
+                    "entity": [
+                        {
+                            "type": "singleSelect",
+                            "label": "Duplicate",
+                            "options": {
+                                "disableSearch": true,
+                                "autoCompleteFields": [
+                                   {
+                                        "label": "Group1",
+                                        "children": [
+                                            {
+                                                "value": "one",
+                                                "label": "One"
+                                            },
+                                            {
+                                                "value": "two",
+                                                "label": "One"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            "defaultValue": "INFO",
+                            "field": "loglevel"
+                        }
+                    ],
+                    "title": "Logging"
+                }
+            ],
+            "title": "Configuration",
+            "description": "Set up your add-on"
+        }
+    },
+    "meta": {
+        "apiVersion": "3.2.0",
+        "name": "Splunk_TA_UCCExample",
+        "restRoot": "splunk_ta_uccexample",
+        "version": "1.0.0",
+        "displayName": "Splunk UCC test Add-on"
+    }
+}
