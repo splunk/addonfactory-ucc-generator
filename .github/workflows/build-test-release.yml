@@ -243,7 +243,6 @@ jobs:
           PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
           PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
       - name: Publish to pypi
-        if: ${{ steps.semantic.outputs.new_release_published == 'true' }}
         run: |
           echo "*** check strings value ***"
           echo "__init__.py"
