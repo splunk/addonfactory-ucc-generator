@@ -43,7 +43,7 @@
             },
             {
               "files": ["pyproject.toml"],
-              "from": "version = \"[0-9]+.[0-9]+.[0-9]+\"",
+              "from": "version = \"[0-9]+.[0-9]+.[0-9]+\"|version = \"[0-9]+.[0-9]+.[0-9]+-beta.[0-9]+\"",
               "to": "version = \"${nextRelease.version}\"",
               "results": [
                 {
@@ -62,9 +62,6 @@
       [
         "@semantic-release/exec",
         {
-          "prepareCmd": "./.github/workflows/sr-prepare.sh ${nextRelease.version}",
-          "publishCmd": "./.github/workflows/sr-release.sh",
-          "shell": "bash",
           "verifyReleaseCmd": "echo \"version=${nextRelease.version}\" >> $GITHUB_OUTPUT",
           "successCmd": "echo \"new_release_published=${'true'}\" >> $GITHUB_OUTPUT"
         },
