@@ -5,7 +5,7 @@ from splunk_add_on_ucc_framework.commands.openapi_generator.utils import Load
 
 class Init(object):
     def __init__(self, *, json: Any=None, json_path: Path=None) -> None:
-        if json==None and json_path==None:
+        if json is None and json_path is None:
             raise Exception("Neither json nor json_path defined")
         if json and json_path:
             raise Exception("Both json and json_path defined")
