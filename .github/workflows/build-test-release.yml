@@ -226,11 +226,17 @@ jobs:
       - name: Update Notices
         run: cp -f THIRDPARTY NOTICE
       - name: Semantic Release
+      id: semantic
         uses: splunk/semantic-release-action@v1.2
         with:
           extra_plugins: |
             @google/semantic-release-replace-plugin
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
-          PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
-          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+      - name: Publish to pypi
+        if: ${{ steps.semantic.outputs.new_release_published == 'true' }}
+        uses: splunk/pypi-publish-action@v1.0
+        with:
+          pypi_username: ${{ secrets.PYPI_USERNAME }}
+          pypi_token: ${{ secrets.PYPI_TOKEN }}
+
