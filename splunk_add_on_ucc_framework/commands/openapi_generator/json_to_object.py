@@ -9,7 +9,7 @@ class Init(object):
             raise Exception("Neither json nor json_path defined")
         if json and json_path:
             raise Exception("Both json and json_path defined")
-        self._json = json if json!=None else Load.json(path=json_path)
+        self._json = json if json is not None else Load.json(path=json_path)
 
 class DataClasses(Init):
     def __getattr__(self, name: str):
