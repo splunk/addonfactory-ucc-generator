@@ -1,3 +1,11 @@
+# [5.20.0-beta.2](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.20.0-beta.1...v5.20.0-beta.2) (2023-02-13)
+
+
+### Bug Fixes
+
+* internal pypi action test ([#644](https://github.com/splunk/addonfactory-ucc-generator/issues/644)) ([540b145](https://github.com/splunk/addonfactory-ucc-generator/commit/540b145cdca7d850dc28e21fcfc9503ca8d1ead5))
+* update .releaserc to accept beta versions ([#645](https://github.com/splunk/addonfactory-ucc-generator/issues/645)) ([dc26696](https://github.com/splunk/addonfactory-ucc-generator/commit/dc2669647f1e26371bd901111d439972de5c9094))
+
 # [5.20.0-beta.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.19.0...v5.20.0-beta.1) (2023-02-13)
 
 
