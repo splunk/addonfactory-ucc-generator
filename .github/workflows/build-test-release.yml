@@ -219,14 +219,21 @@ jobs:
           tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
           poetry build
       - name: Ensure all UCC UI files are in the final package
-        run: ./.github/workflows/check_ucc_ui_files.sh
+        run: |
+          ./.github/workflows/check_ucc_ui_files.sh
+          echo "*** check strings value ***"
+          echo "__init__.py"
+          cat splunk_add_on_ucc_framework/__init__.py
+          echo "***"
+          echo "pyproject.toml"
+          cat pyproject.toml
       - uses: actions/download-artifact@v3
         with:
           name: THIRDPARTY
       - name: Update Notices
         run: cp -f THIRDPARTY NOTICE
       - name: Semantic Release
-      id: semantic
+        id: semantic
         uses: splunk/semantic-release-action@v1.2
         with:
           extra_plugins: |
@@ -239,4 +246,3 @@ jobs:
         with:
           pypi_username: ${{ secrets.PYPI_USERNAME }}
           pypi_token: ${{ secrets.PYPI_TOKEN }}
-
