@@ -20,6 +20,7 @@ import logging
 import os
 import shutil
 import sys
+from typing import Dict
 
 import yaml
 from jinja2 import Environment, FileSystemLoader
@@ -485,7 +486,7 @@ def generate(
         sys.exit(1)
     ta_name = manifest.get_addon_name()
 
-    if os.path.isfile(config_path):
+    def read_config_content(config_path: str) -> Dict:
         try:
             with open(config_path) as f_config:
                 config_raw = f_config.read()
@@ -499,10 +500,14 @@ def generate(
             )
             validator.validate()
             logger.info("Config is valid")
+            return config_content
         except global_config_validator.GlobalConfigValidatorException as e:
             logger.error(f"Config is not valid. Error: {e}")
             sys.exit(1)
-
+    
+    output_global_config_path = None
+    if os.path.isfile(config_path):
+        config_content = read_config_content(config_path=config_path)
         _update_ta_version(config_path, addon_version, is_global_config_yaml)
 
         schema_content = global_config_update.handle_global_config_update(
@@ -529,17 +534,18 @@ def generate(
         global_config_file = (
             "globalConfig.yaml" if is_global_config_yaml else "globalConfig.json"
         )
+        output_global_config_path = os.path.join(
+                    outputdir,
+                    ta_name,
+                    "appserver",
+                    "static",
+                    "js",
+                    "build",
+                    global_config_file,
+                )
         shutil.copyfile(
             config_path,
-            os.path.join(
-                outputdir,
-                ta_name,
-                "appserver",
-                "static",
-                "js",
-                "build",
-                global_config_file,
-            ),
+            output_global_config_path,
         )
         ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
         logger.info(f"Install add-on requirements into {ucc_lib_target} from {source}")
@@ -634,12 +640,15 @@ def generate(
         from additional_packaging import additional_packaging
 
         additional_packaging(ta_name)
-    logger.info(f'''Is there globalConfig.json? {os.path.isfile(config_path)}
+    
+    output_global_config_exists = output_global_config_path is not None and os.path.exists(output_global_config_path)
+    logger.info(f'''Is there globalConfig.json? {output_global_config_exists}
 Is OpenAPI flag set? {openapi}
-Will OpenAPI description document be generated? {os.path.isfile(config_path) and openapi}''')
-    if os.path.isfile(config_path) and openapi:
+Will OpenAPI description document be generated? {output_global_config_exists and openapi}''')
+    if output_global_config_exists and openapi:
+        output_global_config_content = read_config_content(output_global_config_path)
+        global_config_object = json_to_object.DataClasses(json=output_global_config_content)
         app_manifest_object = json_to_object.DataClasses(json=manifest.manifest)
-        global_config_object = json_to_object.DataClasses(json=config_content)
         open_api_object = ucc_to_oas.transform(ucc_project_path=None, app_manifest=app_manifest_object,global_config=global_config_object)
         open_api = OpenAPI(open_api_object.json)
 
