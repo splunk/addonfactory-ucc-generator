@@ -634,7 +634,9 @@ def generate(
         from additional_packaging import additional_packaging
 
         additional_packaging(ta_name)
-    logger.info(f'openapi={openapi}')
+    logger.info(f'''Is there globalConfig.json? {os.path.isfile(config_path)}
+Is OpenAPI flag set? {openapi}
+Will OpenAPI description document be generated? {os.path.isfile(config_path) and openapi}''')
     if os.path.isfile(config_path) and openapi:
         app_manifest_object = json_to_object.DataClasses(json=manifest.manifest)
         global_config_object = json_to_object.DataClasses(json=config_content)

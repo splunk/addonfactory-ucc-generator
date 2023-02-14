@@ -1,7 +1,6 @@
 import difflib
 import tempfile
 from os import path
-from pathlib import Path
 
 import splunk_add_on_ucc_framework as ucc
 
@@ -308,8 +307,8 @@ def test_ucc_generate_openapi_with_configuration_files_only():
         )
         ucc.generate(source=package_folder, outputdir=temp_dir, openapi=True)
 
-        openapi_file = Path(Path(temp_dir) / "Splunk_TA_UCCExample/static/openapi.json")
-        assert not openapi_file.exists()
+        expected_file_path = path.join(temp_dir, "Splunk_TA_UCCExample", "static", "openapi.json")
+        assert path.exists(expected_file_path)
         
 def test_ucc_generate_openapi_with_configuration():
     with tempfile.TemporaryDirectory() as temp_dir:

@@ -15,7 +15,7 @@
 #
 
 import json
-from typing import Any
+from typing import Dict
 import warnings
 
 APP_MANIFEST_FILE_NAME = "app.manifest"

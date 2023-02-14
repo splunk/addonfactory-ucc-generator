@@ -1,7 +1,5 @@
 
-import functools
 import os
-import yaml
 from pathlib import Path
 from splunk_add_on_ucc_framework import app_manifest
 from splunk_add_on_ucc_framework.commands.openapi_generator import json_to_object, ucc_object
@@ -38,13 +36,5 @@ class TestUccToOas:
 
         app_manifest_object = json_to_object.DataClasses(json=manifest.manifest)
         oas = transform(ucc_project_path=None, global_config=valid_config,app_manifest=app_manifest_object)
-        # Loader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
-        # yaml_load = functools.partial(yaml.load, Loader=Loader)
-        # global_config_json = yaml_load(config_path) if is_global_config_yaml else json.load(config_path)
-        # global_config_object = json_to_object.DataClasses(json=global_config_json)
-
-        # app_manifest_with_comments_file = helpers.get_testdata_file_path("app.manifest_with_comments")
-        # app_manifest_with_comments = ucc_object.AppManifest(json_path=Path(app_manifest_with_comments_file))
-        # oas = transform(ucc_project_path=None, global_config=valid_config,app_manifest=app_manifest_with_comments)
 
         assert 1 == 1
