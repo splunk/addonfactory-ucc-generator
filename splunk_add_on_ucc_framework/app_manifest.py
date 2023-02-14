@@ -46,7 +46,7 @@ class AppManifest:
         return self._manifest["info"]["description"]
 
     @property
-    def manifest(self) -> Any:
+    def manifest(self) -> Dict:
         return self._manifest
 
     def read(self, content: str) -> None:
