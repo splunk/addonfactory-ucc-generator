@@ -62,14 +62,15 @@ def main(argv: Optional[Sequence[str]] = None):
         "--source",
         type=str,
         nargs="?",
-        help="Folder containing the app.manifest and app source",
+        help="Folder containing the app.manifest and app source.",
         default="package",
     )
     build_parser.add_argument(
         "--config",
         type=str,
         nargs="?",
-        help="Path to configuration file, defaults to globalConfig file in parent directory of source provided",
+        help="Path to configuration file, defaults to globalConfig file in "
+        "parent directory of source provided.",
         default=None,
     )
     build_parser.add_argument(
@@ -77,6 +78,13 @@ def main(argv: Optional[Sequence[str]] = None):
         type=str,
         help="Version of TA, default version is version specified in the "
         "package such as app.manifest, app.conf, and globalConfig file.",
+        default=None,
+    )
+    build_parser.add_argument(
+        "--output-directory",
+        type=str,
+        nargs="?",
+        help="Path to output directory, defaults to output in project directory.",
         default=None,
     )
     build_parser.add_argument(
@@ -119,6 +127,7 @@ def main(argv: Optional[Sequence[str]] = None):
             source=args.source,
             config=args.config,
             ta_version=args.ta_version,
+            outputdir=args.output_directory,
             python_binary_name=args.python_binary_name,
         )
     if args.command == "init":

@@ -109,6 +109,8 @@ deprecated.
     * `--ta-version` - [optional] override current version of TA, default
         version is version specified in `globalConfig.json` or `globalConfig.yaml`. 
         Splunkbase compatible version of SEMVER will be used by default.
+    * `--output-directory` - [optional] path to output directory, defaults to 
+        `output` in project directory.
     * `--python-binary-name` - [optional] Python binary name to use when
         installing Python libraries.
 

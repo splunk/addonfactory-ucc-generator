@@ -424,7 +424,7 @@ def _get_os_path(path):
 
 
 def generate(
-    source, config_path, addon_version, outputdir=None, python_binary_name="python3"
+    source, config_path, addon_version, outputdir, python_binary_name="python3"
 ):
     logger.info(f"ucc-gen version {__version__} is used")
     logger.info(f"Python binary name to use: {python_binary_name}")
