@@ -25,6 +25,14 @@ class ServerObject(Init): #   https://spec.openapis.org/oas/latest.html#server-o
     description: str = None
 
 @dataclass
+class XMLObject(Init):  #   https://spec.openapis.org/oas/latest.html#xml-object
+    name: str = None
+    namespace: str = None
+    prefix: str = None
+    attribute: bool = False
+    wrapped: bool = False
+
+@dataclass
 class SchemaObject(Init): #   https://spec.openapis.org/oas/latest.html#schema-object
     # discriminator	Discriminator Object
     # xml	XML Object
@@ -32,8 +40,10 @@ class SchemaObject(Init): #   https://spec.openapis.org/oas/latest.html#schema-o
     # example	Any
     # above is a theory
     # below is practice
-    type: str
-    properties: dict
+    type: str = None
+    properties: dict = None
+    items: Dict[str, str] = None
+    xml: XMLObject = None
 
 @dataclass
 class ExampleObject(Init):

@@ -1,3 +1,4 @@
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, Dict, List
 from splunk_add_on_ucc_framework.commands.openapi_generator.ucc_object import GlobalConfig, AppManifest, UccProject
@@ -50,9 +51,10 @@ def __add_security_scheme_object(*, open_api_object: OpenAPIObject) -> OpenAPIOb
             )}
     return open_api_object
 
-def __get_schema_object(*, entities: list) -> oas.ServerObject:
+def __get_schema_object(*, name: str, entities: list) -> oas.SchemaObject:
     schema_object = oas.SchemaObject(
             type = "object",
+            xml=oas.XMLObject(name=name),
             properties = { }
         )
     for entity in entities:
@@ -70,7 +72,7 @@ def __get_schema_object(*, entities: list) -> oas.ServerObject:
 def __add_schemas_object(*, open_api_object: OpenAPIObject, global_config: GlobalConfig) -> OpenAPIObject:
     open_api_object.components.schemas = {}
     for tab in global_config.pages.configuration.tabs:
-        open_api_object.components.schemas[tab.name] = __get_schema_object(entities=tab.entity)
+        open_api_object.components.schemas[tab.name] = __get_schema_object(name=tab.name, entities=tab.entity)
     additional_input_entities = [ 
         json_to_object.DataClasses(
             json = {
@@ -91,22 +93,40 @@ def __add_schemas_object(*, open_api_object: OpenAPIObject, global_config: Globa
     ]
     if hasattr(global_config.pages,"inputs") and hasattr(global_config.pages.inputs,"services"):
         for service in global_config.pages.inputs.services:
-            open_api_object.components.schemas[service.name] = __get_schema_object(entities=service.entity+additional_input_entities)
+            open_api_object.components.schemas[service.name] = __get_schema_object(name=service.name, entities=service.entity+additional_input_entities)
     return open_api_object
 
-def __get_path_get(*, name: str, description: str) -> oas.OperationObject:
+#   consider changing to 'cache' once python is upgraded to >=3.9
+@lru_cache(maxsize=None)
+def __get_media_type_object_with_schema_ref(*, schema_name: str, schema_type: str=None, is_xml: bool=False) -> oas.MediaTypeObject:
+    ref_dict = { "$ref": f"#/components/schemas/{schema_name}" }
+    schema = oas.SchemaObject(
+            type=schema_type,
+            items=ref_dict,
+            xml=oas.XMLObject(
+                name=f'{schema_name}_list',
+                wrapped=True
+                ) if is_xml else None
+        ) if schema_type else ref_dict
+    return oas.MediaTypeObject( schema = schema )
+
+def __get_path_get(*, name: str, description: str, schema_type: str=None) -> oas.OperationObject:
     return oas.OperationObject(
                     description=description,
                     responses={
                         "200": oas.ResponseObject(
-                            description=description
+                            description=description,
+                            content={
+                                "application/json": __get_media_type_object_with_schema_ref(schema_name=name, schema_type=schema_type),
+                                "application/xml": __get_media_type_object_with_schema_ref(schema_name=name, schema_type=schema_type, is_xml=True),
+                            }
                         )
                     }
                 )
 
 def __get_path_get_for_list(*, name: str) -> oas.OperationObject:
     description = f"Get list of items for {name}"
-    return __get_path_get(name=name, description=description)
+    return __get_path_get(name=name, description=description, schema_type="array")
 
 def __get_path_get_for_item(*, name: str) -> oas.OperationObject:
     description = f"Get {name} item details"
@@ -117,16 +137,16 @@ def __get_path_post(*, name: str, description: str) -> oas.OperationObject:
                     description=description,
                     requestBody=oas.RequestBodyObject(
                         content={
-                            "application/x-www-form-urlencoded":{
-                                "schema": {
-                                    "$ref": f"#/components/schemas/{name}"
-                                }
-                            }
+                            "application/x-www-form-urlencoded": __get_media_type_object_with_schema_ref(schema_name=name)
                         }
                     ),
                     responses={
                         "200": oas.ResponseObject(
-                            description=description
+                            description=description,
+                            content={
+                                "application/json":  __get_media_type_object_with_schema_ref(schema_name=name),
+                                "application/xml": __get_media_type_object_with_schema_ref(schema_name=name, is_xml=True),
+                            }
                         )
                     }
                 )
@@ -145,7 +165,11 @@ def __get_path_delete(*, name: str) -> oas.OperationObject:
                     description=description,
                     responses={
                         "200": oas.ResponseObject(
-                            description=description
+                            description=description,
+                            content={
+                                "application/json":  __get_media_type_object_with_schema_ref(schema_name=name, schema_type="array"),
+                                "application/xml": __get_media_type_object_with_schema_ref(schema_name=name, schema_type="array", is_xml=True),
+                            }
                         )
                     }
                 )
