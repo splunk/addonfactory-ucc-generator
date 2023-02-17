@@ -33,6 +33,7 @@ header:
     - "tests/**"
     - "README.md"
     - "mkdocs.yml"
+    - "renovate.json"
     - ".*"
     - "example/**"
     - "splunk_add_on_ucc_framework/commands/init_template/**"
