@@ -123,7 +123,6 @@ class RestBuilder:
             RestmapConf.build(
                 self._schema.endpoints,
                 self._schema.namespace,
-                self._schema.admin_match,
             ),
         )
         self.output.put(

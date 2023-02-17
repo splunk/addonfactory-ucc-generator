@@ -78,10 +78,6 @@ class GlobalConfigBuilderSchema:
         return self._meta["restRoot"]
 
     @property
-    def admin_match(self):
-        return ""
-
-    @property
     def inputs(self):
         return self._inputs
 
