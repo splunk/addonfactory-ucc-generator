@@ -35,7 +35,10 @@ from splunk_add_on_ucc_framework import (
     meta_conf,
     utils,
 )
-from splunk_add_on_ucc_framework.commands.rest_builder import global_config
+from splunk_add_on_ucc_framework.commands.rest_builder import (
+    global_config,
+    global_config_post_processor,
+)
 from splunk_add_on_ucc_framework.commands.rest_builder.builder import RestBuilder
 from splunk_add_on_ucc_framework.commands.rest_builder.global_config import (
     GlobalConfigBuilderSchema,
@@ -146,7 +149,7 @@ def _generate_rest(
     """
     builder_obj = RestBuilder(scheme, os.path.join(outputdir, ta_name))
     builder_obj.build()
-    post_process = global_config.GlobalConfigPostProcessor()
+    post_process = global_config_post_processor.GlobalConfigPostProcessor()
     post_process(builder_obj, scheme, import_declare_name=import_declare_name)
     return builder_obj
 
