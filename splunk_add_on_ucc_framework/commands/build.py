@@ -20,6 +20,7 @@ import logging
 import os
 import shutil
 import sys
+from typing import Optional
 
 import yaml
 from jinja2 import Environment, FileSystemLoader
@@ -34,11 +35,11 @@ from splunk_add_on_ucc_framework import (
     meta_conf,
     utils,
 )
-from splunk_add_on_ucc_framework.commands.rest_builder import global_config
-from splunk_add_on_ucc_framework.commands.rest_builder.builder import RestBuilder
-from splunk_add_on_ucc_framework.commands.rest_builder.global_config import (
-    GlobalConfigBuilderSchema,
+from splunk_add_on_ucc_framework.commands.rest_builder import (
+    global_config_builder_schema,
+    global_config_post_processor,
 )
+from splunk_add_on_ucc_framework.commands.rest_builder.builder import RestBuilder
 from splunk_add_on_ucc_framework.install_python_libraries import (
     SplunktaucclibNotFound,
     install_python_libraries,
@@ -132,7 +133,9 @@ def _replace_token(ta_name, outputdir):
 
 
 def _generate_rest(
-    ta_name, scheme: GlobalConfigBuilderSchema, import_declare_name, outputdir
+    ta_name,
+    scheme: global_config_builder_schema.GlobalConfigBuilderSchema,
+    outputdir,
 ):
     """
     Build REST for Add-on.
@@ -140,13 +143,12 @@ def _generate_rest(
     Args:
         ta_name (str): Name of TA.
         scheme (GlobalConfigBuilderSchema): REST schema.
-        import_declare_name (str): Name of import_declare_* file.
         outputdir (str): output directory.
     """
     builder_obj = RestBuilder(scheme, os.path.join(outputdir, ta_name))
     builder_obj.build()
-    post_process = global_config.GlobalConfigPostProcessor()
-    post_process(builder_obj, scheme, import_declare_name=import_declare_name)
+    post_process = global_config_post_processor.GlobalConfigPostProcessor()
+    post_process(builder_obj, scheme)
     return builder_obj
 
 
@@ -252,7 +254,7 @@ def _modify_and_replace_token_for_oauth_templates(
         os.remove(redirect_js_src)
 
 
-def _add_modular_input(ta_name, schema_content, import_declare_name, outputdir):
+def _add_modular_input(ta_name, schema_content, outputdir):
     """
     Generate Modular input for addon.
 
@@ -276,7 +278,7 @@ def _add_modular_input(ta_name, schema_content, import_declare_name, outputdir):
 
         # filter fields in allow list
         entity = [x for x in entity if x.get("field") not in field_allow_list]
-        import_declare = "import " + import_declare_name
+        import_declare = "import import_declare_test"
 
         content = j2_env.get_template(template).render(
             import_declare=import_declare,
@@ -423,16 +425,10 @@ def _get_os_path(path):
     return path.strip(os.sep)
 
 
-def generate(
-    source, config_path, addon_version, outputdir=None, python_binary_name="python3"
-):
-    logger.info(f"ucc-gen version {__version__} is used")
-    logger.info(f"Python binary name to use: {python_binary_name}")
-    if outputdir is None:
-        outputdir = os.path.join(os.getcwd(), "output")
+def _get_addon_version(addon_version: Optional[str]) -> str:
     if not addon_version:
         try:
-            addon_version = utils.get_version_from_git()
+            return utils.get_version_from_git()
         except exceptions.CouldNotVersionFromGitException:
             logger.error(
                 "Could not find the proper version from git tags. "
@@ -440,8 +436,17 @@ def generate(
                 "https://github.com/splunk/addonfactory-ucc-generator/issues/404"
             )
             exit(1)
-    else:
-        addon_version = addon_version.strip()
+    return addon_version.strip()
+
+
+def generate(
+    source, config_path, addon_version, outputdir=None, python_binary_name="python3"
+):
+    logger.info(f"ucc-gen version {__version__} is used")
+    logger.info(f"Python binary name to use: {python_binary_name}")
+    if outputdir is None:
+        outputdir = os.path.join(os.getcwd(), "output")
+    addon_version = _get_addon_version(addon_version)
 
     if not os.path.exists(source):
         raise NotADirectoryError(f"{os.path.abspath(source)} not found.")
@@ -506,13 +511,14 @@ def generate(
             config_path, is_global_config_yaml
         )
 
-        scheme = global_config.GlobalConfigBuilderSchema(schema_content, j2_env)
+        scheme = global_config_builder_schema.GlobalConfigBuilderSchema(
+            schema_content, j2_env
+        )
 
         addon_version = schema_content.get("meta").get("version")
         logger.info("Addon Version : " + addon_version)
         ta_tabs = schema_content.get("pages").get("configuration").get("tabs")
         ta_namespace = schema_content.get("meta").get("restRoot")
-        import_declare_name = "import_declare_test"
         is_inputs = "inputs" in schema_content.get("pages")
 
         logger.info("Package ID is " + ta_name)
@@ -550,7 +556,7 @@ def generate(
 
         _replace_token(ta_name, outputdir)
 
-        _generate_rest(ta_name, scheme, import_declare_name, outputdir)
+        _generate_rest(ta_name, scheme, outputdir)
 
         _modify_and_replace_token_for_oauth_templates(
             ta_name, ta_tabs, schema_content.get("meta").get("version"), outputdir
@@ -566,7 +572,7 @@ def generate(
                 "default_no_input.xml",
             )
             os.remove(default_no_input_xml_file)
-            _add_modular_input(ta_name, schema_content, import_declare_name, outputdir)
+            _add_modular_input(ta_name, schema_content, outputdir)
         else:
             _handle_no_inputs(ta_name, outputdir)
 
