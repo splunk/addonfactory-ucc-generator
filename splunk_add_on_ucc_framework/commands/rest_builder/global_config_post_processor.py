@@ -15,7 +15,6 @@
 #
 import os
 import os.path as op
-import shutil
 
 
 class GlobalConfigPostProcessor:
@@ -50,30 +49,6 @@ sys.path = new_paths
     @property
     def root_path(self):
         return getattr(self.builder.output, "_path")
-
-    def third_path(self):
-        return self.schema.namespace
-
-    def default_to_local(self):
-        default_dir = op.join(
-            self.root_path,
-            self.builder.output.default,
-        )
-        local_dir = op.join(
-            self.root_path,
-            self.output_local,
-        )
-        if not op.isdir(local_dir):
-            os.makedirs(local_dir)
-        for i in os.listdir(default_dir):
-            child = op.join(default_dir, i)
-            if op.isdir(child):
-                shutil.copytree(child, local_dir)
-            else:
-                shutil.copy(child, op.join(local_dir, i))
-
-        # remove the default folder
-        shutil.rmtree(default_dir, ignore_errors=True)
 
     def import_declare_py_name(self):
         if self.import_declare_name:
@@ -120,7 +95,6 @@ sys.path = new_paths
                 endpoint.rh_name + ".py",
             )
             self.import_declare(rh_file)
-        # self.default_to_local()
 
         # add executable permission to files under bin folder
         def add_executable_attribute(file_path):
