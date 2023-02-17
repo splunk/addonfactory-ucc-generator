@@ -35,6 +35,7 @@ from splunk_add_on_ucc_framework import (
     meta_conf,
     utils,
 )
+from splunk_add_on_ucc_framework import global_config
 from splunk_add_on_ucc_framework.commands.rest_builder import (
     global_config_builder_schema,
     global_config_post_processor,
@@ -56,25 +57,6 @@ j2_env = Environment(
 
 Loader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
 yaml_load = functools.partial(yaml.load, Loader=Loader)
-
-
-def _update_ta_version(
-    config_path: str, addon_version: str, is_global_config_yaml: bool
-):
-    """
-    Update version of TA in globalConfig file.
-    """
-
-    with open(config_path) as config_file:
-        if is_global_config_yaml:
-            schema_content = yaml_load(config_file)
-        else:
-            schema_content = json.load(config_file)
-    schema_content.setdefault("meta", {})["version"] = addon_version
-    if is_global_config_yaml:
-        utils.dump_yaml_config(schema_content, config_path)
-    else:
-        utils.dump_json_config(schema_content, config_path)
 
 
 def _recursive_overwrite(src, dest, ignore_list=None):
@@ -451,20 +433,6 @@ def generate(
     if not os.path.exists(source):
         raise NotADirectoryError(f"{os.path.abspath(source)} not found.")
 
-    # Setting default value to Config argument
-    if not config_path:
-        is_global_config_yaml = False
-        config_path = os.path.abspath(
-            os.path.join(source, PARENT_DIR, "globalConfig.json")
-        )
-        if not os.path.isfile(config_path):
-            config_path = os.path.abspath(
-                os.path.join(source, PARENT_DIR, "globalConfig.yaml")
-            )
-            is_global_config_yaml = True
-    else:
-        is_global_config_yaml = True if config_path.endswith(".yaml") else False
-
     logger.info(f"Cleaning out directory {outputdir}")
     shutil.rmtree(os.path.join(outputdir), ignore_errors=True)
     os.makedirs(os.path.join(outputdir))
@@ -487,7 +455,20 @@ def generate(
         sys.exit(1)
     ta_name = manifest.get_addon_name()
 
+    if not config_path:
+        is_global_config_yaml = False
+        config_path = os.path.abspath(os.path.join(source, "..", "globalConfig.json"))
+        if not os.path.isfile(config_path):
+            config_path = os.path.abspath(
+                os.path.join(source, "..", "globalConfig.yaml")
+            )
+            is_global_config_yaml = True
+    else:
+        is_global_config_yaml = True if config_path.endswith(".yaml") else False
+
     if os.path.isfile(config_path):
+        global_config_obj = global_config.GlobalConfig()
+        global_config_obj.parse(config_path, is_global_config_yaml)
         try:
             with open(config_path) as f_config:
                 config_raw = f_config.read()
@@ -505,7 +486,8 @@ def generate(
             logger.error(f"Config is not valid. Error: {e}")
             sys.exit(1)
 
-        _update_ta_version(config_path, addon_version, is_global_config_yaml)
+        global_config_obj.update_addon_version(addon_version)
+        global_config_obj.dump(global_config_obj.original_path)
 
         schema_content = global_config_update.handle_global_config_update(
             config_path, is_global_config_yaml
