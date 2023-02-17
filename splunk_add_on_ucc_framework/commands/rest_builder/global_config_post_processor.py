@@ -44,7 +44,7 @@ sys.path = new_paths
     def __init__(self):
         self.builder = None
         self.schema = None
-        self.import_declare_name = None
+        self.import_declare_name = "import_declare_test"
 
     @property
     def root_path(self):
@@ -77,7 +77,7 @@ sys.path = new_paths
         with open(rh_file, "w") as f:
             f.write("".join(cont))
 
-    def __call__(self, builder, schema, import_declare_name=None):
+    def __call__(self, builder, schema):
         """
         :param builder: REST builder
         :param schema: Global Config Schema
@@ -85,7 +85,6 @@ sys.path = new_paths
         """
         self.builder = builder
         self.schema = schema
-        self.import_declare_name = import_declare_name
 
         self.import_declare_py_content()
         for endpoint in schema.endpoints:
