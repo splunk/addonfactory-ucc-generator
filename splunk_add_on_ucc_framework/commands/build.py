@@ -14,15 +14,12 @@
 # limitations under the License.
 #
 import configparser
-import functools
-import json
 import logging
 import os
 import shutil
 import sys
 from typing import Optional
 
-import yaml
 from jinja2 import Environment, FileSystemLoader
 
 from splunk_add_on_ucc_framework import (
@@ -35,7 +32,7 @@ from splunk_add_on_ucc_framework import (
     meta_conf,
     utils,
 )
-from splunk_add_on_ucc_framework import global_config
+from splunk_add_on_ucc_framework import global_config as global_config_lib
 from splunk_add_on_ucc_framework.commands.rest_builder import (
     global_config_builder_schema,
     global_config_post_processor,
@@ -54,9 +51,6 @@ internal_root_dir = os.path.dirname(os.path.dirname(__file__))
 j2_env = Environment(
     loader=FileSystemLoader(os.path.join(internal_root_dir, "templates"))
 )
-
-Loader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
-yaml_load = functools.partial(yaml.load, Loader=Loader)
 
 
 def _recursive_overwrite(src, dest, ignore_list=None):
@@ -467,18 +461,11 @@ def generate(
         is_global_config_yaml = True if config_path.endswith(".yaml") else False
 
     if os.path.isfile(config_path):
-        global_config_obj = global_config.GlobalConfig()
-        global_config_obj.parse(config_path, is_global_config_yaml)
+        global_config = global_config_lib.GlobalConfig()
+        global_config.parse(config_path, is_global_config_yaml)
         try:
-            with open(config_path) as f_config:
-                config_raw = f_config.read()
-            config_content = (
-                yaml_load(config_raw)
-                if is_global_config_yaml
-                else json.loads(config_raw)
-            )
             validator = global_config_validator.GlobalConfigValidator(
-                internal_root_dir, config_content
+                internal_root_dir, global_config
             )
             validator.validate()
             logger.info("Config is valid")
@@ -486,8 +473,8 @@ def generate(
             logger.error(f"Config is not valid. Error: {e}")
             sys.exit(1)
 
-        global_config_obj.update_addon_version(addon_version)
-        global_config_obj.dump(global_config_obj.original_path)
+        global_config.update_addon_version(addon_version)
+        global_config.dump(global_config.original_path)
 
         schema_content = global_config_update.handle_global_config_update(
             config_path, is_global_config_yaml
@@ -501,7 +488,6 @@ def generate(
         logger.info("Addon Version : " + addon_version)
         ta_tabs = schema_content.get("pages").get("configuration").get("tabs")
         ta_namespace = schema_content.get("meta").get("restRoot")
-        is_inputs = "inputs" in schema_content.get("pages")
 
         logger.info("Package ID is " + ta_name)
 
@@ -543,7 +529,7 @@ def generate(
         _modify_and_replace_token_for_oauth_templates(
             ta_name, ta_tabs, schema_content.get("meta").get("version"), outputdir
         )
-        if is_inputs:
+        if global_config.has_inputs():
             default_no_input_xml_file = os.path.join(
                 outputdir,
                 ta_name,

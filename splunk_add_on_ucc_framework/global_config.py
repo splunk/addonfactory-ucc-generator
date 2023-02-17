@@ -27,8 +27,6 @@ yaml_load = functools.partial(yaml.load, Loader=Loader)
 class GlobalConfig:
     def __init__(self):
         self._content = None
-        self._inputs = []
-        self._tabs = []
         self._configs = []
         self._settings = []
         self._is_global_config_yaml = None
@@ -49,19 +47,6 @@ class GlobalConfig:
         else:
             utils.dump_json_config(self._content, path)
 
-    def _parse_components(self):
-        pages = self._content["pages"]
-        configuration = pages.get("configuration", {})
-        self._tabs = configuration.get("tabs", [])
-        # TODO: do we need this?
-        for tab in self._tabs:
-            if "table" in tab:
-                self._configs.append(tab)
-            else:
-                self._settings.append(tab)
-        if "inputs" in pages:
-            self._inputs = pages["inputs"]["services"]
-
     @property
     def is_global_config_yaml(self) -> bool:
         return self._is_global_config_yaml
@@ -76,11 +61,13 @@ class GlobalConfig:
 
     @property
     def inputs(self):
-        return self._inputs
+        if "inputs" in self._content["pages"]:
+            return self._content["pages"]["inputs"]["services"]
+        return []
 
     @property
     def tabs(self):
-        return self._tabs
+        return self._content["pages"]["configuration"]["tabs"]
 
     @property
     def configs(self):
@@ -112,3 +99,6 @@ class GlobalConfig:
 
     def update_addon_version(self, version: str) -> None:
         self._content.setdefault("meta", {})["version"] = version
+
+    def has_inputs(self) -> bool:
+        return bool(self.inputs)
