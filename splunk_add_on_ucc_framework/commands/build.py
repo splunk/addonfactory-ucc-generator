@@ -20,6 +20,7 @@ import logging
 import os
 import shutil
 import sys
+from typing import Optional
 
 import yaml
 from jinja2 import Environment, FileSystemLoader
@@ -423,16 +424,10 @@ def _get_os_path(path):
     return path.strip(os.sep)
 
 
-def generate(
-    source, config_path, addon_version, outputdir=None, python_binary_name="python3"
-):
-    logger.info(f"ucc-gen version {__version__} is used")
-    logger.info(f"Python binary name to use: {python_binary_name}")
-    if outputdir is None:
-        outputdir = os.path.join(os.getcwd(), "output")
+def _get_addon_version(addon_version: Optional[str]) -> str:
     if not addon_version:
         try:
-            addon_version = utils.get_version_from_git()
+            return utils.get_version_from_git()
         except exceptions.CouldNotVersionFromGitException:
             logger.error(
                 "Could not find the proper version from git tags. "
@@ -440,8 +435,17 @@ def generate(
                 "https://github.com/splunk/addonfactory-ucc-generator/issues/404"
             )
             exit(1)
-    else:
-        addon_version = addon_version.strip()
+    return addon_version.strip()
+
+
+def generate(
+    source, config_path, addon_version, outputdir=None, python_binary_name="python3"
+):
+    logger.info(f"ucc-gen version {__version__} is used")
+    logger.info(f"Python binary name to use: {python_binary_name}")
+    if outputdir is None:
+        outputdir = os.path.join(os.getcwd(), "output")
+    addon_version = _get_addon_version(addon_version)
 
     if not os.path.exists(source):
         raise NotADirectoryError(f"{os.path.abspath(source)} not found.")
