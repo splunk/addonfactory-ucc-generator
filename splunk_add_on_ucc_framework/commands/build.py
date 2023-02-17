@@ -172,16 +172,15 @@ def _replace_oauth_html_template_token(ta_name, ta_version, outputdir):
 
 
 def _modify_and_replace_token_for_oauth_templates(
-    ta_name, ta_tabs, ta_version, outputdir
+    ta_name: str, global_config: global_config_lib.GlobalConfig, outputdir: str
 ):
     """
     Rename templates with respect to addon name if OAuth is configured.
 
     Args:
-        ta_name (str): Name of TA.
-        ta_version (str): Version of TA.
-        ta_tabs (list): List of tabs mentioned in globalConfig file.
-        outputdir (str): output directory.
+        ta_name: Add-on name.
+        global_config: Object representing globalConfig.
+        outputdir: output directory.
     """
     redirect_xml_src = os.path.join(
         outputdir, ta_name, "default", "data", "ui", "views", "redirect.xml"
@@ -193,14 +192,14 @@ def _modify_and_replace_token_for_oauth_templates(
         outputdir, ta_name, "appserver", "templates", "redirect.html"
     )
 
-    if _is_oauth_configured(ta_tabs):
-        _replace_oauth_html_template_token(ta_name, ta_version, outputdir)
+    if _is_oauth_configured(global_config.tabs):
+        _replace_oauth_html_template_token(ta_name, global_config.version, outputdir)
 
         redirect_js_dest = (
             os.path.join(outputdir, ta_name, "appserver", "static", "js", "build", "")
             + ta_name.lower()
             + "_redirect_page."
-            + ta_version
+            + global_config.version
             + ".js"
         )
         redirect_html_dest = os.path.join(
@@ -281,22 +280,23 @@ def _add_modular_input(ta_name, schema_content, outputdir):
             config.write(configfile)
 
 
-def _make_modular_alerts(ta_name, ta_namespace, schema_content, outputdir):
+def _make_modular_alerts(
+    ta_name: str, global_config: global_config_lib.GlobalConfig, outputdir: str
+):
     """
     Generate the alert schema with required structure.
 
     Args:
-        ta_name (str): Name of TA.
-        ta_namespace (str): restRoot of TA.
-        schema_content (dict): schema of globalConfig file.
-        outputdir (str): output directory.
+        ta_name: Add-on name.
+        global_config: Object representing globalConfig.
+        outputdir: Output directory.
     """
 
-    if schema_content.get("alerts"):
+    if global_config.content.get("alerts"):
         alert_build(
-            {"alerts": schema_content["alerts"]},
+            {"alerts": global_config.content["alerts"]},
             ta_name,
-            ta_namespace,
+            global_config.namespace,
             outputdir,
             internal_root_dir,
         )
@@ -484,13 +484,8 @@ def generate(
             schema_content, j2_env
         )
 
-        addon_version = schema_content.get("meta").get("version")
-        logger.info("Addon Version : " + addon_version)
-        ta_tabs = schema_content.get("pages").get("configuration").get("tabs")
-        ta_namespace = schema_content.get("meta").get("restRoot")
-
-        logger.info("Package ID is " + ta_name)
-
+        logger.info(f"Building add-on with version {addon_version}")
+        logger.info(f"Package ID is {ta_name}")
         logger.info("Copy UCC template directory")
         _recursive_overwrite(
             os.path.join(internal_root_dir, "package"), os.path.join(outputdir, ta_name)
@@ -527,7 +522,9 @@ def generate(
         _generate_rest(ta_name, scheme, outputdir)
 
         _modify_and_replace_token_for_oauth_templates(
-            ta_name, ta_tabs, schema_content.get("meta").get("version"), outputdir
+            ta_name,
+            global_config,
+            outputdir,
         )
         if global_config.has_inputs():
             default_no_input_xml_file = os.path.join(
@@ -544,10 +541,10 @@ def generate(
         else:
             _handle_no_inputs(ta_name, outputdir)
 
-        _make_modular_alerts(ta_name, ta_namespace, schema_content, outputdir)
+        _make_modular_alerts(ta_name, global_config, outputdir)
 
     else:
-        logger.info("Addon Version : " + addon_version)
+        logger.info(f"Building add-on with version {addon_version}")
         logger.warning(
             "Skipped generating UI components as globalConfig file does not exist."
         )
