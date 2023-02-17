@@ -36,13 +36,10 @@ from splunk_add_on_ucc_framework import (
     utils,
 )
 from splunk_add_on_ucc_framework.commands.rest_builder import (
-    global_config,
+    global_config_builder_schema,
     global_config_post_processor,
 )
 from splunk_add_on_ucc_framework.commands.rest_builder.builder import RestBuilder
-from splunk_add_on_ucc_framework.commands.rest_builder.global_config import (
-    GlobalConfigBuilderSchema,
-)
 from splunk_add_on_ucc_framework.install_python_libraries import (
     SplunktaucclibNotFound,
     install_python_libraries,
@@ -136,7 +133,10 @@ def _replace_token(ta_name, outputdir):
 
 
 def _generate_rest(
-    ta_name, scheme: GlobalConfigBuilderSchema, import_declare_name, outputdir
+    ta_name,
+    scheme: global_config_builder_schema.GlobalConfigBuilderSchema,
+    import_declare_name,
+    outputdir,
 ):
     """
     Build REST for Add-on.
@@ -513,7 +513,9 @@ def generate(
             config_path, is_global_config_yaml
         )
 
-        scheme = global_config.GlobalConfigBuilderSchema(schema_content, j2_env)
+        scheme = global_config_builder_schema.GlobalConfigBuilderSchema(
+            schema_content, j2_env
+        )
 
         addon_version = schema_content.get("meta").get("version")
         logger.info("Addon Version : " + addon_version)
