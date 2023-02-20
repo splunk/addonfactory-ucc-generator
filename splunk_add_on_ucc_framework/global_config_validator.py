@@ -21,6 +21,8 @@ from typing import Any, Dict
 
 import jsonschema
 
+from splunk_add_on_ucc_framework import global_config as global_config_lib
+
 
 class GlobalConfigValidatorException(Exception):
     pass
@@ -34,9 +36,9 @@ class GlobalConfigValidator:
     Custom validation should be implemented here.
     """
 
-    def __init__(self, source_dir: str, config: dict):
+    def __init__(self, source_dir: str, global_config: global_config_lib.GlobalConfig):
         self._source_dir = source_dir
-        self._config = config
+        self._config = global_config.content
 
     def _validate_config_against_schema(self) -> None:
         """
@@ -285,7 +287,9 @@ class GlobalConfigValidator:
                                 for service in inputs.get("services")
                             ):
                                 raise GlobalConfigValidatorException(
-                                    f"{serviceName} ServiceName in the multi-level menu does not match any services name."
+                                    f"{serviceName} ServiceName in the "
+                                    f"multi-level menu does not match any "
+                                    f"services name."
                                 )
                     else:
                         if not any(
@@ -294,7 +298,10 @@ class GlobalConfigValidator:
                             for service in inputs.get("services")
                         ):
                             raise GlobalConfigValidatorException(
-                                f'{group.get("groupName")} groupName or {group.get("groupTitle")} groupTitle in the multi-level menu does not match any services name or title.'
+                                f'{group.get("groupName")} groupName or '
+                                f'{group.get("groupTitle")} groupTitle in the '
+                                f"multi-level menu does not match any services "
+                                f"name or title."
                             )
 
                 if self._find_duplicates_in_list(
