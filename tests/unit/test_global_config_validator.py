@@ -267,6 +267,31 @@ def test_config_validation_when_valid(filename, is_yaml):
             pytest.raises(GlobalConfigValidatorException),
             "Duplicates found for autoCompleteFields: 'Single Select'",
         ),
+        (
+            "invalid_config_inputs_multilevel_menu_duplicate_groups.json",
+            False,
+            pytest.raises(GlobalConfigValidatorException),
+            "Duplicates found for multi-level menu groups' names or titles.",
+        ),
+        (
+            "invalid_config_inputs_multilevel_menu_invalid_groupservices.json",
+            False,
+            pytest.raises(GlobalConfigValidatorException),
+            (
+                "example_input_three ServiceName in the multi-level menu does "
+                "not match any services name."
+            ),
+        ),
+        (
+            "invalid_config_inputs_multilevel_menu_invalid_groupname_or_grouptitle.json",
+            False,
+            pytest.raises(GlobalConfigValidatorException),
+            (
+                "example_input_three groupName or Example Input Three "
+                "groupTitle in the multi-level menu does not match any "
+                "services name or title."
+            ),
+        ),
     ],
 )
 def test_config_validation_when_error(
