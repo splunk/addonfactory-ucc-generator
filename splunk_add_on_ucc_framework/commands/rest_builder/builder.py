@@ -16,8 +16,8 @@
 import os
 import os.path as op
 
-from splunk_add_on_ucc_framework.commands.rest_builder.global_config import (
-    GlobalConfigBuilderSchema,
+from splunk_add_on_ucc_framework.commands.rest_builder import (
+    global_config_builder_schema,
 )
 from splunk_add_on_ucc_framework.rest_map_conf import RestmapConf
 from splunk_add_on_ucc_framework.web_conf import WebConf
@@ -57,7 +57,11 @@ class _RestBuilderOutput:
 
 class RestBuilder:
     def __init__(
-        self, schema: GlobalConfigBuilderSchema, output_path: str, *args, **kwargs
+        self,
+        schema: global_config_builder_schema.GlobalConfigBuilderSchema,
+        output_path: str,
+        *args,
+        **kwargs
     ):
         """
 
@@ -123,7 +127,6 @@ class RestBuilder:
             RestmapConf.build(
                 self._schema.endpoints,
                 self._schema.namespace,
-                self._schema.admin_match,
             ),
         )
         self.output.put(

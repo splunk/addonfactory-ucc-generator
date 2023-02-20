@@ -21,6 +21,8 @@ from typing import Any, Dict
 
 import jsonschema
 
+from splunk_add_on_ucc_framework import global_config as global_config_lib
+
 
 class GlobalConfigValidatorException(Exception):
     pass
@@ -34,9 +36,9 @@ class GlobalConfigValidator:
     Custom validation should be implemented here.
     """
 
-    def __init__(self, source_dir: str, config: dict):
+    def __init__(self, source_dir: str, global_config: global_config_lib.GlobalConfig):
         self._source_dir = source_dir
-        self._config = config
+        self._config = global_config.content
 
     def _validate_config_against_schema(self) -> None:
         """
@@ -268,6 +270,47 @@ class GlobalConfigValidator:
                 f"Duplicates found for autoCompleteFields: '{entity_label}'"
             )
 
+    def _validate_multilevel_menu(self) -> None:
+        inputs = self._config.get("pages").get("inputs")
+        if inputs:
+            groups_menu = inputs.get("groupsMenu")
+            if groups_menu:
+                names, titles = [], []
+                for group in groups_menu:
+                    names.append(group.get("groupName").lower())
+                    titles.append(group.get("groupTitle").lower())
+                    group_services = group.get("groupServices")
+                    if group_services:
+                        for serviceName in group_services:
+                            if not any(
+                                serviceName == service.get("name")
+                                for service in inputs.get("services")
+                            ):
+                                raise GlobalConfigValidatorException(
+                                    f"{serviceName} ServiceName in the "
+                                    f"multi-level menu does not match any "
+                                    f"services name."
+                                )
+                    else:
+                        if not any(
+                            group.get("groupName") == service.get("name")
+                            and group.get("groupTitle") == service.get("title")
+                            for service in inputs.get("services")
+                        ):
+                            raise GlobalConfigValidatorException(
+                                f'{group.get("groupName")} groupName or '
+                                f'{group.get("groupTitle")} groupTitle in the '
+                                f"multi-level menu does not match any services "
+                                f"name or title."
+                            )
+
+                if self._find_duplicates_in_list(
+                    names
+                ) or self._find_duplicates_in_list(titles):
+                    raise GlobalConfigValidatorException(
+                        "Duplicates found for multi-level menu groups' names or titles."
+                    )
+
     def _validate_entity_duplicates(self, entity: list) -> None:
         """
         Validates duplicates in entity keys
@@ -348,4 +391,5 @@ class GlobalConfigValidator:
         self._validate_custom_rest_handlers()
         self._validate_file_type_entity()
         self._validate_validators()
+        self._validate_multilevel_menu()
         self._validate_duplicates()

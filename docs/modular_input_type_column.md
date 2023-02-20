@@ -10,15 +10,8 @@ Go to `header` field under `pages > inputs > table` and add another element ther
     ...
     {
         "label": "Input Type",
-        "field": "serviceName",
-        "mapping": {
-            "input_name_1": "Input name 1",
-            "input_name_2": "Input name 2"
-        }
+        "field": "serviceTitle"
     }
     ...
 ]
 ```
-
-The key under `mapping` field is the name of your modular input and the value is
-how it will be rendered in the UI.
