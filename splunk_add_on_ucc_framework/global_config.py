@@ -28,8 +28,6 @@ yaml_load = functools.partial(yaml.load, Loader=Loader)
 class GlobalConfig:
     def __init__(self):
         self._content = None
-        self._configs = []
-        self._settings = []
         self._is_global_config_yaml = None
         self._original_path = None
 
