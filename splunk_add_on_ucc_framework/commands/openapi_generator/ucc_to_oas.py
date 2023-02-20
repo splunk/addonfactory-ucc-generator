@@ -216,23 +216,7 @@ def __assign_ta_paths(*, open_api_object: OpenAPIObject, global_config: GlobalCo
         __append_output_mode(parameters=open_api_object.paths[path].parameters)
     return open_api_object
 
-def __assign_open_api_paths(*, open_api_object: OpenAPIObject, global_config: GlobalConfig) -> OpenAPIObject:
-    path = "/static/openapi.json"
-    description = f"Get OpenAPI description document (openapi.json) for {global_config.meta.displayName}"
-    open_api_object.paths[path]=oas.PathItemObject(
-        get = oas.OperationObject(
-                    description=description,
-                    responses={
-                        "200": oas.ResponseObject(
-                            description=description
-                        )
-                    }
-                )
-    )
-    return open_api_object
-
 def __add_paths(*, open_api_object: OpenAPIObject, global_config: GlobalConfig) -> OpenAPIObject:
-    open_api_object = __assign_open_api_paths(open_api_object=open_api_object, global_config=global_config)
     for tab in global_config.pages.configuration.tabs:
         open_api_object = __assign_ta_paths(
             open_api_object=open_api_object,

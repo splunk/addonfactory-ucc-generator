@@ -157,17 +157,6 @@
         }
     },
     "paths": {
-        "/static/openapi.json": {
-            "get": {
-                "responses": {
-                    "200": {
-                        "description": "Get OpenAPI description document (openapi.json) for Splunk UCC test Add-on"
-                    }
-                },
-                "description": "Get OpenAPI description document (openapi.json) for Splunk UCC test Add-on",
-                "deprecated": false
-            }
-        },
         "/splunk_ta_uccexample_account": {
             "get": {
                 "responses": {
