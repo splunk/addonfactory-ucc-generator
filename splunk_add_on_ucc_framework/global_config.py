@@ -15,6 +15,7 @@
 #
 import functools
 import json
+from typing import Optional
 
 import yaml
 
@@ -48,16 +49,8 @@ class GlobalConfig:
             utils.dump_json_config(self._content, path)
 
     @property
-    def is_global_config_yaml(self) -> bool:
-        return self._is_global_config_yaml
-
-    @property
     def content(self):
         return self._content
-
-    @content.setter
-    def content(self, new_content):
-        self._content = new_content
 
     @property
     def inputs(self):
@@ -68,14 +61,6 @@ class GlobalConfig:
     @property
     def tabs(self):
         return self._content["pages"]["configuration"]["tabs"]
-
-    @property
-    def configs(self):
-        return self._configs
-
-    @property
-    def settings(self):
-        return self._settings
 
     @property
     def meta(self):
@@ -96,6 +81,13 @@ class GlobalConfig:
     @property
     def original_path(self) -> str:
         return self._original_path
+
+    @property
+    def schema_version(self) -> Optional[str]:
+        return self.meta.get("schemaVersion")
+
+    def update_schema_version(self, new_schema_version):
+        self.meta["schemaVersion"] = new_schema_version
 
     def update_addon_version(self, version: str) -> None:
         self._content.setdefault("meta", {})["version"] = version

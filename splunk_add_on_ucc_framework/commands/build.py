@@ -229,18 +229,18 @@ def _modify_and_replace_token_for_oauth_templates(
         os.remove(redirect_js_src)
 
 
-def _add_modular_input(ta_name, schema_content, outputdir):
+def _add_modular_input(
+    ta_name: str, global_config: global_config_lib.GlobalConfig, outputdir: str
+):
     """
     Generate Modular input for addon.
 
     Args:
-        ta_name (str): Name of TA.
-        schema_content (dict): schema of globalConfig file.
-        outputdir (str): output directory.
+        ta_name: Add-on name.
+        global_config: Object representing globalConfig.
+        outputdir: output directory.
     """
-
-    services = schema_content.get("pages").get("inputs").get("services")
-    for service in services:
+    for service in global_config.inputs:
         input_name = service.get("name")
         class_name = input_name.upper()
         description = service.get("title")
@@ -423,15 +423,12 @@ def generate(
     if outputdir is None:
         outputdir = os.path.join(os.getcwd(), "output")
     addon_version = _get_addon_version(addon_version)
-
     if not os.path.exists(source):
         raise NotADirectoryError(f"{os.path.abspath(source)} not found.")
-
     logger.info(f"Cleaning out directory {outputdir}")
     shutil.rmtree(os.path.join(outputdir), ignore_errors=True)
     os.makedirs(os.path.join(outputdir))
     logger.info(f"Cleaned out directory {outputdir}")
-
     app_manifest_path = os.path.abspath(
         os.path.join(source, app_manifest.APP_MANIFEST_FILE_NAME),
     )
@@ -448,7 +445,6 @@ def generate(
         )
         sys.exit(1)
     ta_name = manifest.get_addon_name()
-
     if not config_path:
         is_global_config_yaml = False
         config_path = os.path.abspath(os.path.join(source, "..", "globalConfig.json"))
@@ -468,29 +464,22 @@ def generate(
                 internal_root_dir, global_config
             )
             validator.validate()
-            logger.info("Config is valid")
+            logger.info("globalConfig file is valid")
         except global_config_validator.GlobalConfigValidatorException as e:
-            logger.error(f"Config is not valid. Error: {e}")
+            logger.error(f"globalConfig file is not valid. Error: {e}")
             sys.exit(1)
-
         global_config.update_addon_version(addon_version)
         global_config.dump(global_config.original_path)
-
-        schema_content = global_config_update.handle_global_config_update(
-            config_path, is_global_config_yaml
-        )
-
+        global_config_update.handle_global_config_update(global_config)
         scheme = global_config_builder_schema.GlobalConfigBuilderSchema(
-            schema_content, j2_env
+            global_config, j2_env
         )
-
         logger.info(f"Building add-on with version {addon_version}")
         logger.info(f"Package ID is {ta_name}")
         logger.info("Copy UCC template directory")
         _recursive_overwrite(
             os.path.join(internal_root_dir, "package"), os.path.join(outputdir, ta_name)
         )
-
         logger.info("Copy globalConfig to output")
         global_config_file = (
             "globalConfig.yaml" if is_global_config_yaml else "globalConfig.json"
@@ -516,11 +505,8 @@ def generate(
         except SplunktaucclibNotFound as e:
             logger.error(str(e))
             sys.exit(1)
-
         _replace_token(ta_name, outputdir)
-
         _generate_rest(ta_name, scheme, outputdir)
-
         _modify_and_replace_token_for_oauth_templates(
             ta_name,
             global_config,
@@ -537,12 +523,10 @@ def generate(
                 "default_no_input.xml",
             )
             os.remove(default_no_input_xml_file)
-            _add_modular_input(ta_name, schema_content, outputdir)
+            _add_modular_input(ta_name, global_config, outputdir)
         else:
             _handle_no_inputs(ta_name, outputdir)
-
         _make_modular_alerts(ta_name, global_config, outputdir)
-
     else:
         logger.info(f"Building add-on with version {addon_version}")
         logger.warning(
