@@ -22,6 +22,8 @@ Global config schema.
 import json
 from typing import Any, Dict, List, Type
 
+from splunk_add_on_ucc_framework import global_config as global_config_lib
+
 from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import (
     RestEndpointBuilder,
 )
@@ -56,27 +58,26 @@ def _is_true(val):
 
 
 class GlobalConfigBuilderSchema:
-    def __init__(self, content, j2_env):
-        self._content = content
-        self._inputs = []
+    def __init__(self, global_config: global_config_lib.GlobalConfig, j2_env):
+        self.global_config = global_config
         self._configs = []
         self._settings = []
+        for configuration in self.global_config.tabs:
+            if "table" in configuration:
+                self._configs.append(configuration)
+            else:
+                self._settings.append(configuration)
         self.j2_env = j2_env
         self._endpoints: Dict[str, RestEndpointBuilder] = {}
-        self._parse()
         self._parse_builder_schema()
 
     @property
     def product(self) -> str:
-        return self._meta["name"]
+        return self.global_config.product
 
     @property
     def namespace(self) -> str:
-        return self._meta["restRoot"]
-
-    @property
-    def inputs(self):
-        return self._inputs
+        return self.global_config.namespace
 
     @property
     def configs(self):
@@ -89,26 +90,6 @@ class GlobalConfigBuilderSchema:
     @property
     def endpoints(self) -> List[RestEndpointBuilder]:
         return list(self._endpoints.values())
-
-    def _parse(self):
-        self._meta = self._content["meta"]
-        pages = self._content["pages"]
-        self._parse_configuration(pages.get("configuration"))
-        self._parse_inputs(pages.get("inputs"))
-
-    def _parse_configuration(self, configurations):
-        if not configurations or "tabs" not in configurations:
-            return
-        for configuration in configurations["tabs"]:
-            if "table" in configuration:
-                self._configs.append(configuration)
-            else:
-                self._settings.append(configuration)
-
-    def _parse_inputs(self, inputs):
-        if not inputs or "services" not in inputs:
-            return
-        self._inputs = inputs["services"]
 
     def _parse_builder_schema(self):
         self._builder_configs()
@@ -136,7 +117,9 @@ class GlobalConfigBuilderSchema:
             for entity_element in config["entity"]:
                 if entity_element["type"] == "oauth":
                     self._get_endpoint(
-                        "oauth", OAuthModelEndpointBuilder, app_name=self._meta["name"]
+                        "oauth",
+                        OAuthModelEndpointBuilder,
+                        app_name=self.global_config.product,
                     )
 
     def _builder_settings(self):
@@ -156,7 +139,7 @@ class GlobalConfigBuilderSchema:
             endpoint_obj.add_entity(entity)
 
     def _builder_inputs(self):
-        for input_item in self._inputs:
+        for input_item in self.global_config.inputs:
             rest_handler_name = input_item.get("restHandlerName")
             rest_handler_module = input_item.get(
                 "restHandlerModule",
@@ -213,7 +196,7 @@ class GlobalConfigBuilderSchema:
         if name not in self._endpoints:
             endpoint = endpoint_builder(
                 name=name,
-                namespace=self._meta["restRoot"],
+                namespace=self.global_config.namespace,
                 j2_env=self.j2_env,
                 **kwargs,
             )

@@ -21,6 +21,8 @@ from typing import Any, Dict
 
 import jsonschema
 
+from splunk_add_on_ucc_framework import global_config as global_config_lib
+
 
 class GlobalConfigValidatorException(Exception):
     pass
@@ -34,9 +36,9 @@ class GlobalConfigValidator:
     Custom validation should be implemented here.
     """
 
-    def __init__(self, source_dir: str, config: dict):
+    def __init__(self, source_dir: str, global_config: global_config_lib.GlobalConfig):
         self._source_dir = source_dir
-        self._config = config
+        self._config = global_config.content
 
     def _validate_config_against_schema(self) -> None:
         """
