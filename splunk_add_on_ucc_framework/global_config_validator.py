@@ -279,9 +279,9 @@ class GlobalConfigValidator:
                 for group in groups_menu:
                     names.append(group.get("groupName").lower())
                     titles.append(group.get("groupTitle").lower())
-                    groupservices = group.get("groupServices")
-                    if groupservices:
-                        for serviceName in groupservices:
+                    group_services = group.get("groupServices")
+                    if group_services:
+                        for serviceName in group_services:
                             if not any(
                                 serviceName == service.get("name")
                                 for service in inputs.get("services")
