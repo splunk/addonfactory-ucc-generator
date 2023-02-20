@@ -268,6 +268,42 @@ class GlobalConfigValidator:
                 f"Duplicates found for autoCompleteFields: '{entity_label}'"
             )
 
+    def _validate_multilevel_menu(self) -> None:
+        inputs = self._config.get("pages").get("inputs")
+        if inputs:
+            groups_menu = inputs.get("groupsMenu")
+            if groups_menu:
+                names, titles = [], []
+                for group in groups_menu:
+                    names.append(group.get("groupName").lower())
+                    titles.append(group.get("groupTitle").lower())
+                    groupservices = group.get("groupServices")
+                    if groupservices:
+                        for serviceName in groupservices:
+                            if not any(
+                                serviceName == service.get("name")
+                                for service in inputs.get("services")
+                            ):
+                                raise GlobalConfigValidatorException(
+                                    f"{serviceName} ServiceName in the multi-level menu does not match any services name."
+                                )
+                    else:
+                        if not any(
+                            group.get("groupName") == service.get("name")
+                            and group.get("groupTitle") == service.get("title")
+                            for service in inputs.get("services")
+                        ):
+                            raise GlobalConfigValidatorException(
+                                f'{group.get("groupName")} groupName or {group.get("groupTitle")} groupTitle in the multi-level menu does not match any services name or title.'
+                            )
+
+                if self._find_duplicates_in_list(
+                    names
+                ) or self._find_duplicates_in_list(titles):
+                    raise GlobalConfigValidatorException(
+                        "Duplicates found for multi-level menu groups' names or titles."
+                    )
+
     def _validate_entity_duplicates(self, entity: list) -> None:
         """
         Validates duplicates in entity keys
@@ -348,4 +384,5 @@ class GlobalConfigValidator:
         self._validate_custom_rest_handlers()
         self._validate_file_type_entity()
         self._validate_validators()
+        self._validate_multilevel_menu()
         self._validate_duplicates()
