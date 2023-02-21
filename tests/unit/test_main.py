@@ -30,7 +30,7 @@ from splunk_add_on_ucc_framework import main
                 "config": None,
                 "ta_version": None,
                 "python_binary_name": "python3",
-                "openapi": False,
+                "openapi": True,
             },
         ),
         (
@@ -40,7 +40,7 @@ from splunk_add_on_ucc_framework import main
                 "config": None,
                 "ta_version": None,
                 "python_binary_name": "python3",
-                "openapi": False,
+                "openapi": True,
             },
         ),
         (
@@ -50,7 +50,7 @@ from splunk_add_on_ucc_framework import main
                 "config": None,
                 "ta_version": None,
                 "python_binary_name": "python3",
-                "openapi": False,
+                "openapi": True,
             },
         ),
         (
@@ -60,7 +60,7 @@ from splunk_add_on_ucc_framework import main
                 "config": None,
                 "ta_version": None,
                 "python_binary_name": "python3",
-                "openapi": False,
+                "openapi": True,
             },
         ),
         (
@@ -70,7 +70,7 @@ from splunk_add_on_ucc_framework import main
                 "config": None,
                 "ta_version": "2.1.0",
                 "python_binary_name": "python3",
-                "openapi": False,
+                "openapi": True,
             },
         ),
         (
@@ -87,7 +87,7 @@ from splunk_add_on_ucc_framework import main
                 "config": None,
                 "ta_version": "2.2.0",
                 "python_binary_name": "python.exe",
-                "openapi": False,
+                "openapi": True,
             },
         ),
         (
@@ -106,7 +106,7 @@ from splunk_add_on_ucc_framework import main
                 "config": "/path/to/globalConfig.json",
                 "ta_version": "2.2.0",
                 "python_binary_name": "python.exe",
-                "openapi": False,
+                "openapi": True,
             },
         ),
         (
@@ -125,7 +125,7 @@ from splunk_add_on_ucc_framework import main
                 "config": "/path/to/globalConfig.yaml",
                 "ta_version": "2.2.0",
                 "python_binary_name": "python.exe",
-                "openapi": False,
+                "openapi": True,
             },
         ),
         (
@@ -145,7 +145,7 @@ from splunk_add_on_ucc_framework import main
                 "config": "/path/to/globalConfig.yaml",
                 "ta_version": "2.2.0",
                 "python_binary_name": "python.exe",
-                "openapi": False,
+                "openapi": True,
             },
         ),
     ],
