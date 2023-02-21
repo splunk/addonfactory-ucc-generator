@@ -15,7 +15,7 @@
 #
 
 import json
-from typing import Dict
+from typing import Dict, List
 import warnings
 
 APP_MANIFEST_FILE_NAME = "app.manifest"
@@ -44,6 +44,15 @@ class AppManifest:
 
     def get_description(self) -> str:
         return self._manifest["info"]["description"]
+
+    def get_license_name(self) -> str:
+        return self._manifest["info"]["license"]["name"]
+
+    def get_license_uri(self) -> str:
+        return self._manifest["info"]["license"]["uri"]
+
+    def get_authors(self) -> List[Dict[str, str]]:
+        return self._manifest["info"]["author"]
 
     @property
     def manifest(self) -> Dict:

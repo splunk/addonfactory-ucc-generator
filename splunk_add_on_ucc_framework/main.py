@@ -93,11 +93,11 @@ def main(argv: Optional[Sequence[str]] = None):
         default="python3",
     )
     build_parser.add_argument(
-        '--openapi',
+        "--openapi",
         type=bool,
         help="Generate OpenAPI Description document and expose in /static/openapi.json endpoint",
         default=False,
-        )
+    )
 
     init_parser = subparsers.add_parser("init", description="Bootstrap an add-on")
     init_parser.add_argument(
@@ -134,7 +134,7 @@ def main(argv: Optional[Sequence[str]] = None):
             ta_version=args.ta_version,
             outputdir=args.outputdir,
             python_binary_name=args.python_binary_name,
-            openapi=args.openapi
+            openapi=args.openapi,
         )
     if args.command == "init":
         init.init(

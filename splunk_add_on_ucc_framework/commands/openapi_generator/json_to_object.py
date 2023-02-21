@@ -1,17 +1,28 @@
-from pathlib import Path
-from typing import Any
-from splunk_add_on_ucc_framework.commands.openapi_generator.utils import Load
+#
+# Copyright 2021 Splunk Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+from typing import Any, Dict
 
 
-class Init(object):
-    def __init__(self, *, json: Any=None, json_path: Path=None) -> None:
-        if json is None and json_path is None:
-            raise Exception("Neither json nor json_path defined")
-        if json and json_path:
-            raise Exception("Both json and json_path defined")
-        self._json = json if json is not None else Load.json(path=json_path)
+class DataClasses:
+    def __init__(self, json: Dict) -> None:
+        self._json = json
+        self.__dict__.update(self._iterator(self._json))
+        #   __dict__ contains references to base object
+        #   update, do not override!
 
-class DataClasses(Init):
     def __getattr__(self, name: str):
         _name = f"_{name}"
         if _name in self.__dict__:
@@ -21,29 +32,21 @@ class DataClasses(Init):
             #   hasattr expects AttributeError exception
 
     def _iteration_manager(self, element: Any) -> Any:
-        if type(element) is dict:
-            return DataClasses(json=element)
-        elif type(element) is list:
+        if isinstance(element, dict):
+            return DataClasses(element)
+        elif isinstance(element, list):
             return self._list_iterator(element)
         else:
             return element
-    
-    def _list_iterator(self, l: list) -> list:
+
+    def _list_iterator(self, _list: list) -> list:
         return_list = []
-        for i in l:
+        for i in _list:
             return_list.append(self._iteration_manager(i))
         return return_list
-    
+
     def _iterator(self, json: Any):
         d = json
-        for k,v in json.items():
+        for k, v in json.items():
             d[k] = self._iteration_manager(v)
         return d
-    
-    def __init__(self, *, json: Any = None, json_path: Path=None) -> None:
-        super().__init__(json=json, json_path=json_path)
-        if type(self._json) is not dict:
-            raise TypeError("Json used to create DataClasses has to contain dict at root level")
-        self.__dict__.update(self._iterator(self._json))
-        #   __dict__ contains references to base object
-        #   update, do not override!

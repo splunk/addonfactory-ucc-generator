@@ -1,4 +1,19 @@
-from typing import Any, Dict, List, Optional, Set
+#
+# Copyright 2021 Splunk Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+from typing import Any, Dict, List, Set, Optional, Union
 from dataclasses import dataclass
 from splunk_add_on_ucc_framework.commands.openapi_generator.object_to_json import Init
 
@@ -6,169 +21,199 @@ from splunk_add_on_ucc_framework.commands.openapi_generator.object_to_json impor
 # type	    format	    Comments
 # integer	int32	    signed 32 bits
 # integer	int64	    signed 64 bits (a.k.a long)
-# number	float	
-# number	double	
+# number	float
+# number	double
 # string	password	A hint to UIs to obscure input.
 
 OPENAPI_300 = "3.0.0"
 
-@dataclass
-class ServerVariableObject(Init): #   https://spec.openapis.org/oas/latest.html#server-variable-object
-    # enum: Set[str]  #   cannot be empty    
-    default: str    #   REQUIRED
-    description: str = None
 
 @dataclass
-class ServerObject(Init): #   https://spec.openapis.org/oas/latest.html#server-object
+class ServerVariableObject(
+    Init
+):  # https://spec.openapis.org/oas/latest.html#server-variable-object
+    # enum: Set[str]  # cannot be empty
+    default: str  # REQUIRED
+    description: Optional[str] = None
+
+
+@dataclass
+class ServerObject(Init):  # https://spec.openapis.org/oas/latest.html#server-object
     url: str
-    variables: Dict[str,ServerVariableObject]
-    description: str = None
+    variables: Dict[str, ServerVariableObject]
+    description: Optional[str] = None
+
 
 @dataclass
-class XMLObject(Init):  #   https://spec.openapis.org/oas/latest.html#xml-object
-    name: str = None
-    namespace: str = None
-    prefix: str = None
-    attribute: bool = False
-    wrapped: bool = False
+class XMLObject(Init):  # https://spec.openapis.org/oas/latest.html#xml-object
+    name: Optional[str] = None
+    namespace: Optional[str] = None
+    prefix: Optional[str] = None
+    attribute: Optional[bool] = False
+    wrapped: Optional[bool] = False
+
 
 @dataclass
-class SchemaObject(Init): #   https://spec.openapis.org/oas/latest.html#schema-object
+class SchemaObject(Init):  # https://spec.openapis.org/oas/latest.html#schema-object
     # discriminator	Discriminator Object
     # xml	XML Object
     # externalDocs	External Documentation Object
     # example	Any
     # above is a theory
     # below is practice
-    type: str = None
-    properties: dict = None
-    items: Dict[str, str] = None
-    xml: XMLObject = None
+    type: Optional[str] = None
+    properties: Optional[dict] = None
+    items: Optional[Dict[str, str]] = None
+    xml: Optional[XMLObject] = None
+
 
 @dataclass
 class ExampleObject(Init):
     pass
 
+
 @dataclass
 class EncodingObject(Init):
     pass
 
-@dataclass
-class MediaTypeObject(Init):  #   https://spec.openapis.org/oas/latest.html#media-type-object
-    schema: SchemaObject = None
-    example: Any = None
-    examples: Dict[str, ExampleObject] = None
-    encoding: Dict[str, EncodingObject] = None
 
 @dataclass
-class RequestBodyObject(Init):    #   https://spec.openapis.org/oas/latest.html#request-body-object
+class MediaTypeObject(
+    Init
+):  # https://spec.openapis.org/oas/latest.html#media-type-object
+    schema: Optional[Union[SchemaObject, Dict]] = None
+    example: Optional[Any] = None
+    examples: Optional[Dict[str, ExampleObject]] = None
+    encoding: Optional[Dict[str, EncodingObject]] = None
+
+
+@dataclass
+class RequestBodyObject(
+    Init
+):  # https://spec.openapis.org/oas/latest.html#request-body-object
     content: Dict[str, MediaTypeObject]
-    description: str = None
-    required: bool = False
+    description: Optional[str] = None
+    required: Optional[bool] = False
+
 
 @dataclass
 class ExternalDocumentationObject(Init):
     pass
 
+
 @dataclass
 class ParameterObject(Init):
     pass
+
 
 @dataclass
 class HeaderObject(Init):
     pass
 
+
 @dataclass
 class LinkObject(Init):
     pass
 
+
 @dataclass
-class ResponseObject(Init): #   https://spec.openapis.org/oas/latest.html#response-object
+class ResponseObject(Init):  # https://spec.openapis.org/oas/latest.html#response-object
     description: str
-    headers: Dict[str, HeaderObject] = None
-    content: Dict[str, MediaTypeObject] = None
-    links: Dict[str, LinkObject] = None
+    headers: Optional[Dict[str, HeaderObject]] = None
+    content: Optional[Dict[str, MediaTypeObject]] = None
+    links: Optional[Dict[str, LinkObject]] = None
+
 
 # @dataclass
 # class ResponsesObject(Init):
-#     pass
+#   pass
+
 
 @dataclass
 class CallbackObjects(Init):
     pass
 
+
 # @dataclass
 # class SecurityRequirementObject(Init):
-#     pass
+#   pass
+
 
 @dataclass
-class OperationObject(Init):  #   https://spec.openapis.org/oas/latest.html#operation-object
+class OperationObject(
+    Init
+):  # https://spec.openapis.org/oas/latest.html#operation-object
     # responses: ResponsesObject = None
-    responses: Dict[str,ResponseObject] #   required by openapi3
-    tags: Set[str] = None
-    summary: str = None
-    description: str = None
-    externalDocs:   ExternalDocumentationObject = None
-    operationId: str = None
-    parameters: ParameterObject = None
-    requestBody: RequestBodyObject = None
-    callbacks: CallbackObjects = None
-    deprecated: bool = False
+    responses: Dict[str, ResponseObject]  # required by openapi3
+    tags: Optional[Set[str]] = None
+    summary: Optional[str] = None
+    description: Optional[str] = None
+    externalDocs: Optional[ExternalDocumentationObject] = None
+    operationId: Optional[str] = None
+    parameters: Optional[ParameterObject] = None
+    requestBody: Optional[RequestBodyObject] = None
+    callbacks: Optional[CallbackObjects] = None
+    deprecated: Optional[bool] = False
     # security: List[SecurityRequirementObject] = None
-    security: List[dict] = None
-    
-    servers: ServerObject = None
+    security: Optional[List[dict]] = None
+
+    servers: Optional[ServerObject] = None
+
 
 @dataclass
-class PathItemObject(Init):   #   https://spec.openapis.org/oas/latest.html#path-item-object
-    _ref: str = None
-    summary: str = None
-    get: OperationObject = None
+class PathItemObject(
+    Init
+):  # https://spec.openapis.org/oas/latest.html#path-item-object
+    _ref: Optional[str] = None
+    summary: Optional[str] = None
+    get: Optional[OperationObject] = None
     # put: OperationObject = None
-    post: OperationObject = None
-    delete: OperationObject = None
+    post: Optional[OperationObject] = None
+    delete: Optional[OperationObject] = None
     # options: OperationObject = None
     # head: OperationObject = None
     # patch: OperationObject = None
     # trace: OperationObject = None
-    servers: ServerObject = None
-    parameters: ParameterObject = None
-    description: str = None
-    
+    servers: Optional[ServerObject] = None
+    parameters: Optional[List[Dict[str, Any]]] = None
+    description: Optional[str] = None
+
 
 # @dataclass
-# class PathsObject(Init):  #   https://spec.openapis.org/oas/latest.html#paths-object
-#     pass
+# class PathsObject(Init):  # https://spec.openapis.org/oas/latest.html#paths-object
+#   pass
 # not implementable
 
-@dataclass
-class ContactObject(Init):  #   https://spec.openapis.org/oas/latest.html#contact-object
-    name: str = None
-    url: str = None
-    email: str = None
 
 @dataclass
-class LicenseObject(Init):  #   https://spec.openapis.org/oas/latest.html#licenseObject
+class ContactObject(Init):  # https://spec.openapis.org/oas/latest.html#contact-object
+    name: Optional[str] = None
+    url: Optional[str] = None
+    email: Optional[str] = None
+
+
+@dataclass
+class LicenseObject(Init):  # https://spec.openapis.org/oas/latest.html#licenseObject
     name: str
-    identifier: str = None
-    url: str = None
+    identifier: Optional[str] = None
+    url: Optional[str] = None
+
 
 @dataclass
-class InfoObject(Init): #   https://spec.openapis.org/oas/latest.html#infoObject
+class InfoObject(Init):  # https://spec.openapis.org/oas/latest.html#infoObject
     title: str
     version: str
-    summary: str = None
-    description: str = None
-    termsOfService: str = None
-    contact: ContactObject = None
-    license: LicenseObject = None
+    summary: Optional[str] = None
+    description: Optional[str] = None
+    termsOfService: Optional[str] = None
+    contact: Optional[ContactObject] = None
+    license: Optional[LicenseObject] = None
+
 
 @dataclass
-class ParameterObject(Init):
-    pass
-
-@dataclass
-class SecuritySchemeObjects(Init):  #   https://spec.openapis.org/oas/latest.html#security-scheme-object
+class SecuritySchemeObjects(
+    Init
+):  # https://spec.openapis.org/oas/latest.html#security-scheme-object
     type: str
     # name : str
     # in: str
@@ -177,40 +222,46 @@ class SecuritySchemeObjects(Init):  #   https://spec.openapis.org/oas/latest.htm
     # flows: OAuthFlowsObject
     # openIdConnectUrl: str
 
+
 @dataclass
 class LinkObjects(Init):
     pass
+
 
 @dataclass
 class TagObject(Init):
     pass
 
-@dataclass
-class ComponentsObject(Init):   #   https://spec.openapis.org/oas/latest.html#components-object
-    schemas: Dict[str,SchemaObject] = None
-    responses: Dict[str, ResponseObject] = None
-    parameters: Dict[str, ParameterObject] = None
-    examples: Dict[str, ExampleObject] = None
-    requestBodies: Dict[str, RequestBodyObject] = None
-    headers: Dict[str, HeaderObject] = None
-    securitySchemes: Dict[str, SecuritySchemeObjects] = None
-    links: Dict[str, LinkObjects] = None
-    callbacks: Dict[str, CallbackObjects] = None
-    pathItems: Dict[str, PathItemObject] = None
 
 @dataclass
-class OpenAPIObject(Init):    #    https://spec.openapis.org/oas/latest.html#openapi-object
+class ComponentsObject(
+    Init
+):  # https://spec.openapis.org/oas/latest.html#components-object
+    schemas: Optional[Dict[str, SchemaObject]] = None
+    responses: Optional[Dict[str, ResponseObject]] = None
+    parameters: Optional[Dict[str, ParameterObject]] = None
+    examples: Optional[Dict[str, ExampleObject]] = None
+    requestBodies: Optional[Dict[str, RequestBodyObject]] = None
+    headers: Optional[Dict[str, HeaderObject]] = None
+    securitySchemes: Optional[Dict[str, SecuritySchemeObjects]] = None
+    links: Optional[Dict[str, LinkObjects]] = None
+    callbacks: Optional[Dict[str, CallbackObjects]] = None
+    pathItems: Optional[Dict[str, PathItemObject]] = None
+
+
+@dataclass
+class OpenAPIObject(Init):  # https://spec.openapis.org/oas/latest.html#openapi-object
     openapi: str
     info: InfoObject
-    jsonSchemaDialect: str = None
-    servers: List[ServerObject] = None
-    webhooks: Dict[str,PathItemObject] = None
-    components: ComponentsObject = None
-    tags: List[TagObject] = None
-    externalDocs: ExternalDocumentationObject = None
+    jsonSchemaDialect: Optional[str] = None
+    servers: Optional[List[ServerObject]] = None
+    webhooks: Optional[Dict[str, PathItemObject]] = None
+    components: Optional[ComponentsObject] = None
+    tags: Optional[List[TagObject]] = None
+    externalDocs: Optional[ExternalDocumentationObject] = None
     # paths: Optional[PathsObject] = None
     # security: List[SecurityRequirementObject] = None
     # despite above follows strict definition,
     # below needs to be used, to be implementable
-    paths: Dict[str, PathItemObject] = None
-    security: List[dict] = None
+    paths: Optional[Dict[str, PathItemObject]] = None
+    security: Optional[List[dict]] = None

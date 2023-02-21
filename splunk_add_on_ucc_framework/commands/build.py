@@ -47,7 +47,6 @@ from splunk_add_on_ucc_framework.install_python_libraries import (
 from splunk_add_on_ucc_framework.start_alert_build import alert_build
 from splunk_add_on_ucc_framework.commands.openapi_generator import (
     ucc_to_oas,
-    json_to_object,
 )
 
 
@@ -446,9 +445,9 @@ def generate(
     )
     with open(app_manifest_path) as manifest_file:
         app_manifest_content = manifest_file.read()
-    manifest = app_manifest_lib.AppManifest()
+    app_manifest = app_manifest_lib.AppManifest()
     try:
-        manifest.read(app_manifest_content)
+        app_manifest.read(app_manifest_content)
     except app_manifest_lib.AppManifestFormatException:
         logger.error(
             f"Manifest file @ {app_manifest_path} has invalid format.\n"
@@ -456,7 +455,7 @@ def generate(
             f'Lines with comments are supported if they start with "#".\n'
         )
         sys.exit(1)
-    ta_name = manifest.get_addon_name()
+    ta_name = app_manifest.get_addon_name()
     if not config_path:
         is_global_config_yaml = False
         config_path = os.path.abspath(os.path.join(source, "..", "globalConfig.json"))
@@ -570,18 +569,18 @@ def generate(
         version_file.write("\n")
         version_file.write(addon_version)
 
-    manifest.update_addon_version(addon_version)
+    app_manifest.update_addon_version(addon_version)
     output_manifest_path = os.path.abspath(
         os.path.join(outputdir, ta_name, app_manifest_lib.APP_MANIFEST_FILE_NAME)
     )
     with open(output_manifest_path, "w") as manifest_file:
-        manifest_file.write(str(manifest))
+        manifest_file.write(str(app_manifest))
 
     app_config = app_conf.AppConf()
     path = os.path.join(outputdir, ta_name, "default", "app.conf")
     app_config.read(path)
     app_config.update(
-        addon_version, ta_name, manifest.get_description(), manifest.get_title()
+        addon_version, ta_name, app_manifest.get_description(), app_manifest.get_title()
     )
     with open(path, "w") as app_conf_fd:
         app_config.write(app_conf_fd)
@@ -602,17 +601,15 @@ def generate(
 
     if os.path.isfile(config_path) and openapi:
         logger.info("Generating OpenAPI file")
-        global_config_object = json_to_object.DataClasses(json=global_config.content)
-        app_manifest_object = json_to_object.DataClasses(json=manifest.manifest)
-        open_api_object = ucc_to_oas.transform(
-            ucc_project_path=None,
-            app_manifest=app_manifest_object,
-            global_config=global_config_object,
-        )
+        open_api_object = ucc_to_oas.transform(global_config, app_manifest)
         open_api = OpenAPI(open_api_object.json)
 
-        output_openapi_path = os.path.abspath(
-            os.path.join(outputdir, ta_name, "static", "openapi.json")
+        output_openapi_folder = os.path.abspath(
+            os.path.join(outputdir, ta_name, "static")
         )
+        output_openapi_path = os.path.join(output_openapi_folder, "openapi.json")
+        if not os.path.isdir(output_openapi_folder):
+            os.makedirs(os.path.join(output_openapi_folder))
+            logger.info(f"Creating {output_openapi_folder} folder")
         with open(output_openapi_path, "w") as openapi_file:
             json.dump(open_api.raw_element, openapi_file, indent=4)
