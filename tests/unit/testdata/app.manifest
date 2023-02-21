@@ -10,7 +10,7 @@
     "author": [
       {
         "name": "Splunk",
-        "email": null,
+        "email": "addonfactory@splunk.com",
         "company": null
       }
     ],
@@ -23,9 +23,9 @@
     },
     "commonInformationModels": null,
     "license": {
-      "name": null,
+      "name": "Apache-2.0",
       "text": "LICENSES/Apache-2.0.txt",
-      "uri": null
+      "uri": "https://www.apache.org/licenses/LICENSE-2.0"
     },
     "privacyPolicy": {
       "name": null,

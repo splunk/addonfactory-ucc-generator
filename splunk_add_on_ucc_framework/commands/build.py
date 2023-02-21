@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 import configparser
+import json
 import logging
 import os
 import shutil
@@ -21,17 +22,18 @@ import sys
 from typing import Optional
 
 from jinja2 import Environment, FileSystemLoader
+from openapi3 import OpenAPI
 
 from splunk_add_on_ucc_framework import (
     __version__,
     app_conf,
-    app_manifest,
     exceptions,
     global_config_update,
     global_config_validator,
     meta_conf,
     utils,
 )
+from splunk_add_on_ucc_framework import app_manifest as app_manifest_lib
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 from splunk_add_on_ucc_framework.commands.rest_builder import (
     global_config_builder_schema,
@@ -43,6 +45,10 @@ from splunk_add_on_ucc_framework.install_python_libraries import (
     install_python_libraries,
 )
 from splunk_add_on_ucc_framework.start_alert_build import alert_build
+from splunk_add_on_ucc_framework.commands.openapi_generator import (
+    ucc_to_oas,
+)
+
 
 logger = logging.getLogger("ucc_gen")
 
@@ -416,7 +422,12 @@ def _get_addon_version(addon_version: Optional[str]) -> str:
 
 
 def generate(
-    source, config_path, addon_version, outputdir=None, python_binary_name="python3"
+    source,
+    config_path,
+    addon_version,
+    outputdir=None,
+    python_binary_name="python3",
+    openapi=True,
 ):
     logger.info(f"ucc-gen version {__version__} is used")
     logger.info(f"Python binary name to use: {python_binary_name}")
@@ -430,21 +441,21 @@ def generate(
     os.makedirs(os.path.join(outputdir))
     logger.info(f"Cleaned out directory {outputdir}")
     app_manifest_path = os.path.abspath(
-        os.path.join(source, app_manifest.APP_MANIFEST_FILE_NAME),
+        os.path.join(source, app_manifest_lib.APP_MANIFEST_FILE_NAME),
     )
     with open(app_manifest_path) as manifest_file:
         app_manifest_content = manifest_file.read()
-    manifest = app_manifest.AppManifest()
+    app_manifest = app_manifest_lib.AppManifest()
     try:
-        manifest.read(app_manifest_content)
-    except app_manifest.AppManifestFormatException:
+        app_manifest.read(app_manifest_content)
+    except app_manifest_lib.AppManifestFormatException:
         logger.error(
             f"Manifest file @ {app_manifest_path} has invalid format.\n"
-            f"Please refer to {app_manifest.APP_MANIFEST_WEBSITE}.\n"
+            f"Please refer to {app_manifest_lib.APP_MANIFEST_WEBSITE}.\n"
             f'Lines with comments are supported if they start with "#".\n'
         )
         sys.exit(1)
-    ta_name = manifest.get_addon_name()
+    ta_name = app_manifest.get_addon_name()
     if not config_path:
         is_global_config_yaml = False
         config_path = os.path.abspath(os.path.join(source, "..", "globalConfig.json"))
@@ -484,17 +495,18 @@ def generate(
         global_config_file = (
             "globalConfig.yaml" if is_global_config_yaml else "globalConfig.json"
         )
+        output_global_config_path = os.path.join(
+            outputdir,
+            ta_name,
+            "appserver",
+            "static",
+            "js",
+            "build",
+            global_config_file,
+        )
         shutil.copyfile(
             config_path,
-            os.path.join(
-                outputdir,
-                ta_name,
-                "appserver",
-                "static",
-                "js",
-                "build",
-                global_config_file,
-            ),
+            output_global_config_path,
         )
         ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
         logger.info(f"Install add-on requirements into {ucc_lib_target} from {source}")
@@ -557,18 +569,18 @@ def generate(
         version_file.write("\n")
         version_file.write(addon_version)
 
-    manifest.update_addon_version(addon_version)
+    app_manifest.update_addon_version(addon_version)
     output_manifest_path = os.path.abspath(
-        os.path.join(outputdir, ta_name, app_manifest.APP_MANIFEST_FILE_NAME)
+        os.path.join(outputdir, ta_name, app_manifest_lib.APP_MANIFEST_FILE_NAME)
     )
     with open(output_manifest_path, "w") as manifest_file:
-        manifest_file.write(str(manifest))
+        manifest_file.write(str(app_manifest))
 
     app_config = app_conf.AppConf()
     path = os.path.join(outputdir, ta_name, "default", "app.conf")
     app_config.read(path)
     app_config.update(
-        addon_version, ta_name, manifest.get_description(), manifest.get_title()
+        addon_version, ta_name, app_manifest.get_description(), app_manifest.get_title()
     )
     with open(path, "w") as app_conf_fd:
         app_config.write(app_conf_fd)
@@ -586,3 +598,18 @@ def generate(
         from additional_packaging import additional_packaging
 
         additional_packaging(ta_name)
+
+    if os.path.isfile(config_path) and openapi:
+        logger.info("Generating OpenAPI file")
+        open_api_object = ucc_to_oas.transform(global_config, app_manifest)
+        open_api = OpenAPI(open_api_object.json)
+
+        output_openapi_folder = os.path.abspath(
+            os.path.join(outputdir, ta_name, "static")
+        )
+        output_openapi_path = os.path.join(output_openapi_folder, "openapi.json")
+        if not os.path.isdir(output_openapi_folder):
+            os.makedirs(os.path.join(output_openapi_folder))
+            logger.info(f"Creating {output_openapi_folder} folder")
+        with open(output_openapi_path, "w") as openapi_file:
+            json.dump(open_api.raw_element, openapi_file, indent=4)

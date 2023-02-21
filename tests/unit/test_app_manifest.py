@@ -65,6 +65,30 @@ def test_get_description():
     assert expected_description == manifest.get_description()
 
 
+def test_get_license_name():
+    manifest = get_manifest("app.manifest")
+    expected_license_name = "Apache-2.0"
+    assert expected_license_name == manifest.get_license_name()
+
+
+def test_get_license_uri():
+    manifest = get_manifest("app.manifest")
+    expected_license_name = "https://www.apache.org/licenses/LICENSE-2.0"
+    assert expected_license_name == manifest.get_license_uri()
+
+
+def test_get_authors():
+    manifest = get_manifest("app.manifest")
+    expected_authors = [
+        {
+            "name": "Splunk",
+            "email": "addonfactory@splunk.com",
+            "company": None,
+        }
+    ]
+    assert expected_authors == manifest.get_authors()
+
+
 def test_update_addon_version():
     manifest = get_manifest("app.manifest")
     expected_addon_version = "v1.1.1"

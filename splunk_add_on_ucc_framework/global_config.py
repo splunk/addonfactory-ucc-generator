@@ -73,6 +73,10 @@ class GlobalConfig:
         return self.meta["name"]
 
     @property
+    def display_name(self) -> str:
+        return self.meta["displayName"]
+
+    @property
     def version(self) -> str:
         return self.meta["version"]
 

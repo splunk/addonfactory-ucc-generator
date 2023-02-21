@@ -28,6 +28,7 @@ nav:
   - Components: "components.md"
   - Tabs: "tabs.md"
   - Additional packaging: "additional_packaging.md"
+  - OpenAPI: "openapi.md"
   - Modular Input Type column: "modular_input_type_column.md"
   - Custom UI Extensions:
     - Custom Hook: "custom_ui_extensions/custom_hook.md"
