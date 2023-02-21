@@ -13,18 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import functools
-import json
 import logging
 
-import yaml
-
-from splunk_add_on_ucc_framework import utils
+from splunk_add_on_ucc_framework import global_config as global_config_lib
 
 logger = logging.getLogger("ucc_gen")
-
-Loader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
-yaml_load = functools.partial(yaml.load, Loader=Loader)
 
 
 def _version_tuple(version_str):
@@ -54,61 +47,33 @@ def _handle_biased_terms(conf_entities: dict) -> dict:
     return conf_entities
 
 
-def _handle_biased_terms_update(schema_content: dict) -> dict:
-    pages = schema_content.get("pages", {})
-    ta_tabs = pages.get("configuration", {}).get("tabs", {})
-
-    for tab in ta_tabs:
+def _handle_biased_terms_update(global_config: global_config_lib.GlobalConfig):
+    for tab in global_config.tabs:
         conf_entities = tab.get("entity")
         tab["entity"] = _handle_biased_terms(conf_entities)
-
-    if "inputs" in pages:
-        services = pages.get("inputs", {}).get("services", {})
-        for service in services:
-            conf_entities = service.get("entity")
-            service["entity"] = _handle_biased_terms(conf_entities)
-
-    schema_content["meta"]["schemaVersion"] = "0.0.1"
-    return schema_content
+    for service in global_config.inputs:
+        conf_entities = service.get("entity")
+        service["entity"] = _handle_biased_terms(conf_entities)
+    global_config.update_schema_version("0.0.1")
 
 
-def _handle_dropping_api_version_update(schema_content: dict) -> dict:
-    if schema_content["meta"].get("apiVersion"):
-        del schema_content["meta"]["apiVersion"]
-    schema_content["meta"]["schemaVersion"] = "0.0.3"
-    return schema_content
+def _handle_dropping_api_version_update(global_config: global_config_lib.GlobalConfig):
+    if global_config.meta.get("apiVersion"):
+        del global_config.meta["apiVersion"]
+    global_config.update_schema_version("0.0.3")
 
 
-def handle_global_config_update(config_path: str, is_global_config_yaml: bool) -> dict:
-    """Handle changes in globalConfig file.
-
-    Args:
-        logger: Logger instance
-        config_path: Path to globalConfig file
-        is_global_config_yaml: True if globalconfig file is of type yaml
-
-    Returns:
-        Content of the updated globalConfig file in a dictionary format.
-    """
-    with open(config_path) as config_file:
-        if is_global_config_yaml:
-            schema_content = yaml_load(config_file)
-        else:
-            schema_content = json.load(config_file)
-
-    version = schema_content.get("meta").get("schemaVersion", "0.0.0")
+def handle_global_config_update(global_config: global_config_lib.GlobalConfig):
+    """Handle changes in globalConfig file."""
+    current_schema_version = global_config.schema_version
+    version = current_schema_version if current_schema_version else "0.0.0"
 
     if _version_tuple(version) < _version_tuple("0.0.1"):
-        schema_content = _handle_biased_terms_update(schema_content)
-        if is_global_config_yaml:
-            utils.dump_yaml_config(schema_content, config_path)
-        else:
-            utils.dump_json_config(schema_content, config_path)
+        _handle_biased_terms_update(global_config)
+        global_config.dump(global_config.original_path)
 
     if _version_tuple(version) < _version_tuple("0.0.2"):
-        ta_tabs = schema_content.get("pages").get("configuration", {}).get("tabs", {})
-
-        for tab in ta_tabs:
+        for tab in global_config.tabs:
             if tab["name"] == "account":
                 conf_entities = tab.get("entity")
                 oauth_state_enabled_entity = {}
@@ -118,7 +83,7 @@ def handle_global_config_update(config_path: str, is_global_config_yaml: bool) -
                             "oauth_state_enabled field is no longer a separate "
                             "entity since UCC version 5.0.0. It is now an "
                             "option in the oauth field. Please update the "
-                            "globalconfig file accordingly."
+                            "globalConfig file accordingly."
                         )
                         oauth_state_enabled_entity = entity
 
@@ -146,10 +111,8 @@ def handle_global_config_update(config_path: str, is_global_config_yaml: bool) -
                 )
                 del tab_options["onLoad"]
 
-        is_inputs = "inputs" in schema_content.get("pages")
-        if is_inputs:
-            services = schema_content.get("pages").get("inputs", {}).get("services", {})
-            for service in services:
+        if global_config.has_inputs():
+            for service in global_config.inputs:
                 service_options = service.get("options", {})
                 if service_options.get("onChange"):
                     logger.error(
@@ -165,18 +128,9 @@ def handle_global_config_update(config_path: str, is_global_config_yaml: bool) -
                         "these actions."
                     )
                     del service_options["onLoad"]
-
-        schema_content["meta"]["schemaVersion"] = "0.0.2"
-        if is_global_config_yaml:
-            utils.dump_yaml_config(schema_content, config_path)
-        else:
-            utils.dump_json_config(schema_content, config_path)
+        global_config.update_schema_version("0.0.2")
+        global_config.dump(global_config.original_path)
 
     if _version_tuple(version) < _version_tuple("0.0.3"):
-        schema_content = _handle_dropping_api_version_update(schema_content)
-        if is_global_config_yaml:
-            utils.dump_yaml_config(schema_content, config_path)
-        else:
-            utils.dump_json_config(schema_content, config_path)
-
-    return schema_content
+        _handle_dropping_api_version_update(global_config)
+        global_config.dump(global_config.original_path)
