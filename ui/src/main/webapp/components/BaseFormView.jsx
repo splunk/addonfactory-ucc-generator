@@ -700,8 +700,6 @@ class BaseFormView extends PureComponent {
                     if (required && !currentValue) {
                         load = false;
                         data[dependency] = null;
-                    } else if (currentValue === 'RESET_DROPDOWN_VALUE') {
-                        load = true;
                     } else {
                         data[dependency] = currentValue;
                     }
@@ -716,14 +714,7 @@ class BaseFormView extends PureComponent {
             });
         }
 
-        /*
-         * Custom logic to handle the dropdown's reset value by clicking "X" button.
-         * DO NOT CHANGE: value of targetValue to null or any other value. Keep it as blank string only.
-         * Reason: We are sending a blank string value in the API, and this validation is inside the saveData().
-         */
-
-        const updatedTargetValue = targetValue === 'RESET_DROPDOWN_VALUE' ? '' : targetValue;
-        changes[field] = { value: { $set: updatedTargetValue } };
+        changes[field] = { value: { $set: targetValue } };
 
         const newFields = update(this.state, { data: changes });
         const tempState = this.clearAllErrorMsg(newFields);
@@ -732,7 +723,7 @@ class BaseFormView extends PureComponent {
         if (this.hookDeferred) {
             this.hookDeferred.then(() => {
                 if (typeof this.hook.onChange === 'function') {
-                    this.hook.onChange(field, updatedTargetValue, tempState);
+                    this.hook.onChange(field, targetValue, tempState);
                 }
             });
         }

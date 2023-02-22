@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import Select from '@splunk/react-ui/Select';
-import Button from '@splunk/react-ui/Button';
 import Paginator from '@splunk/react-ui/Paginator';
 import styled from 'styled-components';
 import { _ } from '@splunk/ui-utils/i18n';
@@ -10,6 +9,7 @@ import TableFilter from './TableFilter';
 import TableContext from '../../context/TableContext';
 import { TableSelectBoxWrapper } from './CustomTableStyle';
 import { PAGE_INPUT } from '../../constants/pages';
+import { StyledButton } from '../../pages/EntryPageStyle';
 
 const TableHeaderWrapper = styled.div`
     display: flex;
@@ -102,7 +102,7 @@ function TableHeader({ page, isTabs, services, totalElement, handleRequestModalO
                     totalPages={Math.ceil(totalElement / pageSize)}
                 />
                 {isTabs && (
-                    <Button
+                    <StyledButton
                         label={_('Add')}
                         appearance="primary"
                         onClick={handleRequestModalOpen}

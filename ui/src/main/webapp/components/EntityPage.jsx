@@ -1,7 +1,6 @@
 import React, { memo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import Button from '@splunk/react-ui/Button';
 import Link from '@splunk/react-ui/Link';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import ColumnLayout from '@splunk/react-ui/ColumnLayout';
@@ -12,6 +11,7 @@ import { MODE_CLONE, MODE_CREATE, MODE_EDIT } from '../constants/modes';
 import BaseFormView from './BaseFormView';
 import { SubTitleComponent } from '../pages/Input/InputPageStyle';
 import { PAGE_INPUT } from '../constants/pages';
+import { StyledButton } from '../pages/EntryPageStyle';
 
 function EntityPage({
     handleRequestClose,
@@ -86,14 +86,14 @@ function EntityPage({
             <ColumnLayout.Row>
                 <ColumnLayout.Column span={7} />
                 <ColumnLayout.Column span={3} style={{ textAlign: 'right' }}>
-                    <Button
+                    <StyledButton
                         appearance="secondary"
                         onClick={handleRequestClose}
                         label={_('Cancel')}
                         disabled={isSubmitting}
                         style={{ width: '80px' }}
                     />
-                    <Button
+                    <StyledButton
                         appearance="primary"
                         label={isSubmitting ? <WaitSpinner /> : buttonText}
                         onClick={handleSubmit}

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Button from '@splunk/react-ui/Button';
 import Modal from '@splunk/react-ui/Modal';
 import Message from '@splunk/react-ui/Message';
 import styled from 'styled-components';
@@ -8,6 +7,7 @@ import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import update from 'immutability-helper';
 import { _ } from '@splunk/ui-utils/i18n';
 import { generateToast } from '../util/util';
+import { StyledButton } from '../pages/EntryPageStyle';
 
 import { axiosCallWrapper } from '../util/axiosCallWrapper';
 import TableContext from '../context/TableContext';
@@ -96,13 +96,13 @@ class DeleteModal extends Component {
                     <p>{deleteMsg}</p>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button
+                    <StyledButton
                         appearance="secondary"
                         onClick={this.handleRequestClose}
                         label={_('Cancel')}
                         disabled={this.state.isDeleting}
                     />
-                    <Button
+                    <StyledButton
                         appearance="primary"
                         label={this.state.isDeleting ? <WaitSpinner /> : _('Delete')}
                         onClick={this.handleDelete}

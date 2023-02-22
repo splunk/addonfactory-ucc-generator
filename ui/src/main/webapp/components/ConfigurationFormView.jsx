@@ -2,11 +2,11 @@ import React, { useRef, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { _ } from '@splunk/ui-utils/i18n';
-import Button from '@splunk/react-ui/Button';
 import styled from 'styled-components';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 
 import BaseFormView from './BaseFormView';
+import { StyledButton } from '../pages/EntryPageStyle';
 import { axiosCallWrapper } from '../util/axiosCallWrapper';
 import { MODE_CONFIG } from '../constants/modes';
 import { WaitSpinnerWrapper } from './table/CustomTableStyle';
@@ -15,10 +15,6 @@ import { PAGE_CONF } from '../constants/pages';
 const ButtonWrapper = styled.div`
     margin-left: 270px !important;
     width: 150px;
-
-    .save_btn {
-        width: 100%;
-    }
 `;
 
 function ConfigurationFormView({ serviceName }) {
@@ -66,7 +62,7 @@ function ConfigurationFormView({ serviceName }) {
                 handleFormSubmit={handleFormSubmit}
             />
             <ButtonWrapper>
-                <Button
+                <StyledButton
                     className="saveBtn"
                     appearance="primary"
                     label={isSubmitting ? <WaitSpinner /> : _('Save')}
@@ -76,7 +72,7 @@ function ConfigurationFormView({ serviceName }) {
             </ButtonWrapper>
         </>
     ) : (
-        <WaitSpinnerWrapper />
+        <WaitSpinnerWrapper size="medium" />
     );
 }
 

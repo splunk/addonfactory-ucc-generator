@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import Button from '@splunk/react-ui/Button';
 import Modal from '@splunk/react-ui/Modal';
 import Message from '@splunk/react-ui/Message';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
 import { getFormattedMessage } from '../util/messageUtil';
+import { StyledButton } from '../pages/EntryPageStyle';
 
 const ModalWrapper = styled(Modal)`
     width: 600px;
@@ -27,13 +27,13 @@ function ErrorModal(props) {
                 </Message>
             </Modal.Body>
             <Modal.Footer>
-                <Button appearance="primary" onClick={handleRequestClose} label="OK" />
+                <StyledButton appearance="primary" onClick={handleRequestClose} label="OK" />
             </Modal.Footer>
         </ModalWrapper>
     );
 }
 ErrorModal.propTypes = {
     message: PropTypes.string,
-    open: PropTypes.string,
+    open: PropTypes.bool,
 };
 export default ErrorModal;

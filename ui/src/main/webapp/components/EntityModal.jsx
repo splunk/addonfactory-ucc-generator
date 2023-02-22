@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Button from '@splunk/react-ui/Button';
 import Modal from '@splunk/react-ui/Modal';
 import styled from 'styled-components';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import { _ } from '@splunk/ui-utils/i18n';
 
 import { MODE_CLONE, MODE_CREATE, MODE_EDIT } from '../constants/modes';
+import { StyledButton } from '../pages/EntryPageStyle';
 import BaseFormView from './BaseFormView';
 
 const ModalWrapper = styled(Modal)`
@@ -72,13 +72,13 @@ class EntityModal extends Component {
                     />
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button
+                    <StyledButton
                         appearance="secondary"
                         onClick={this.handleRequestClose}
                         label={_('Cancel')}
                         disabled={this.state.isSubmititng}
                     />
-                    <Button
+                    <StyledButton
                         className="saveBtn"
                         appearance="primary"
                         label={this.state.isSubmititng ? <WaitSpinner /> : this.buttonText}

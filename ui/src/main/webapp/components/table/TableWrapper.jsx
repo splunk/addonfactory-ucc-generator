@@ -244,7 +244,7 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPag
     }
 
     if (loading) {
-        return <WaitSpinnerWrapper />;
+        return <WaitSpinnerWrapper size="medium" />;
     }
 
     const [filteredData, totalElement] = getRowData();

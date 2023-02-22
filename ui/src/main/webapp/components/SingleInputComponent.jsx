@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Select from '@splunk/react-ui/Select';
 import ComboBox from '@splunk/react-ui/ComboBox';
-import Button from '@splunk/react-ui/Button';
 import Clear from '@splunk/react-icons/Clear';
 import { _ } from '@splunk/ui-utils/i18n';
 import axios from 'axios';
@@ -10,6 +9,7 @@ import styled from 'styled-components';
 
 import { axiosCallWrapper } from '../util/axiosCallWrapper';
 import { filterResponse } from '../util/util';
+import { StyledButton } from '../pages/EntryPageStyle';
 
 const SelectWrapper = styled(Select)`
     width: 320px !important;
@@ -89,7 +89,7 @@ function SingleInputComponent(props) {
         if (dependencyValues) {
             options.params = { ...options.params, ...dependencyValues };
         }
-        if (!dependencies || (dependencyValues && Object.keys(dependencyValues).length)) {
+        if (!dependencies || dependencyValues) {
             setLoading(true);
             axiosCallWrapper(options)
                 .then((response) => {
@@ -106,6 +106,7 @@ function SingleInputComponent(props) {
                     if (current) {
                         setLoading(false);
                     }
+                    setOptions(null);
                 });
         } else {
             setOptions(null);
@@ -121,7 +122,8 @@ function SingleInputComponent(props) {
     const effectiveDisabled = loading ? true : disabled;
     const effectivePlaceholder = loading ? _('Loading') : placeholder;
     // hideClearBtn=true only passed for OAuth else its undefined
-    const effectiveIsClearable = effectiveDisabled ? false : !hideClearBtn;
+    // effectiveIsClearable button will be visible only for the required=false and createSearchChoice=false single-select fields.
+    const effectiveIsClearable = !(effectiveDisabled || restProps.required || hideClearBtn);
 
     return createSearchChoice ? (
         <StyledDiv className="dropdownBox">
@@ -154,11 +156,11 @@ function SingleInputComponent(props) {
                 {options && options.length > 0 && options}
             </SelectWrapper>
             {effectiveIsClearable ? (
-                <Button
+                <StyledButton
                     data-test="clear"
                     appearance="secondary"
                     icon={<Clear />}
-                    onClick={() => restProps.handleChange(field, 'RESET_DROPDOWN_VALUE')}
+                    onClick={() => restProps.handleChange(field, '')}
                 />
             ) : null}
         </>
@@ -185,6 +187,7 @@ SingleInputComponent.propTypes = {
         labelField: PropTypes.string,
         hideClearBtn: PropTypes.bool,
     }),
+    required: PropTypes.bool,
 };
 
 export default SingleInputComponent;

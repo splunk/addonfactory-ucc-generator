@@ -38,7 +38,15 @@ class ControlWrapper extends React.PureComponent {
     }
 
     render() {
-        const { field, type, label, tooltip, help, encrypted = false } = this.props.entity;
+        const {
+            field,
+            type,
+            label,
+            tooltip,
+            help,
+            encrypted = false,
+            required,
+        } = this.props.entity;
         const { handleChange, addCustomValidator, utilCustomFunctions } = this.props.utilityFuncts;
         // We have to put empty object because markDownMessage prop can be undefined
         // because we are not explicitly setting it but expecting it from custom hooks only.
@@ -73,6 +81,7 @@ class ControlWrapper extends React.PureComponent {
                       disabled: this.props.disabled,
                       encrypted,
                       dependencyValues: this.props.dependencyValues,
+                      required,
                   })
                 : `No View Found for ${type} type`;
         }

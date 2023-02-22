@@ -35,7 +35,7 @@ function higherOrderComponent(WrappedComponent) {
                                 {({ loading, appData }) =>
                                     !loading &&
                                     appData && (
-                                        <Suspense fallback={<WaitSpinnerWrapper />}>
+                                        <Suspense fallback={<WaitSpinnerWrapper size="medium" />}>
                                             <WrappedComponent // nosemgrep: typescript.react.best-practice.react-props-spreading.react-props-spreading
                                                 {...this.props}
                                             />
