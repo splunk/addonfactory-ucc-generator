@@ -63,11 +63,15 @@ field.RestField(
     def name_rh(self):
         raise NotImplementedError()
 
-    def generate_spec(self, omit_kv_pairs=False):
+    def generate_spec(self):
         title = self._title_template.format(self.name_spec)
-        if omit_kv_pairs:
-            return title
         lines = [field.generate_spec() for field in self._fields]
+        lines.insert(0, title)
+        return "\n".join(lines)
+
+    def generate_conf_with_default_values(self):
+        title = self._title_template.format(self.name_spec)
+        lines = [field.generate_conf_with_default_value() for field in self._fields]
         lines.insert(0, title)
         return "\n".join(lines)
 
@@ -147,8 +151,10 @@ class RestEndpointBuilder:
         specs = [entity.generate_spec() for entity in self._entities]
         return "\n\n".join(specs)
 
-    def generate_default_conf(self):
-        specs = [entity.generate_spec(True) for entity in self._entities]
+    def generate_conf_with_default_values(self):
+        specs = [
+            entity.generate_conf_with_default_values() for entity in self._entities
+        ]
         return "\n\n".join(specs)
 
     def generate_rh(self) -> str:

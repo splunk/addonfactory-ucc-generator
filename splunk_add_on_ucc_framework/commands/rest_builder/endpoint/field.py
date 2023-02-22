@@ -45,6 +45,11 @@ class RestFieldBuilder:
             value="",
         )
 
+    def generate_conf_with_default_value(self) -> str:
+        return self._kv_template.format(
+            name=self._name, value=self._default if self._default is not None else ""
+        )
+
     def _indent_validator(self) -> str:
         validator = indent(self._validator)
         return validator[4:]
