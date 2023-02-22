@@ -96,7 +96,7 @@ class RestBuilder:
                     self.output.put(
                         self.output.default,
                         endpoint.conf_name + ".conf",
-                        endpoint.generate_default_conf(),
+                        endpoint.generate_conf_with_default_values(),
                     )
 
                 self.output.put(
