@@ -14,36 +14,41 @@
 # limitations under the License.
 #
 import configparser
-import functools
 import json
 import logging
 import os
 import shutil
 import sys
+from typing import Optional
 
-import yaml
 from jinja2 import Environment, FileSystemLoader
+from openapi3 import OpenAPI
 
 from splunk_add_on_ucc_framework import (
     __version__,
     app_conf,
-    app_manifest,
     exceptions,
     global_config_update,
     global_config_validator,
     meta_conf,
     utils,
 )
-from splunk_add_on_ucc_framework.commands.rest_builder import global_config
-from splunk_add_on_ucc_framework.commands.rest_builder.builder import RestBuilder
-from splunk_add_on_ucc_framework.commands.rest_builder.global_config import (
-    GlobalConfigBuilderSchema,
+from splunk_add_on_ucc_framework import app_manifest as app_manifest_lib
+from splunk_add_on_ucc_framework import global_config as global_config_lib
+from splunk_add_on_ucc_framework.commands.rest_builder import (
+    global_config_builder_schema,
+    global_config_post_processor,
 )
+from splunk_add_on_ucc_framework.commands.rest_builder.builder import RestBuilder
 from splunk_add_on_ucc_framework.install_python_libraries import (
     SplunktaucclibNotFound,
     install_python_libraries,
 )
 from splunk_add_on_ucc_framework.start_alert_build import alert_build
+from splunk_add_on_ucc_framework.commands.openapi_generator import (
+    ucc_to_oas,
+)
+
 
 logger = logging.getLogger("ucc_gen")
 
@@ -52,28 +57,6 @@ internal_root_dir = os.path.dirname(os.path.dirname(__file__))
 j2_env = Environment(
     loader=FileSystemLoader(os.path.join(internal_root_dir, "templates"))
 )
-
-Loader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
-yaml_load = functools.partial(yaml.load, Loader=Loader)
-
-
-def _update_ta_version(
-    config_path: str, addon_version: str, is_global_config_yaml: bool
-):
-    """
-    Update version of TA in globalConfig file.
-    """
-
-    with open(config_path) as config_file:
-        if is_global_config_yaml:
-            schema_content = yaml_load(config_file)
-        else:
-            schema_content = json.load(config_file)
-    schema_content.setdefault("meta", {})["version"] = addon_version
-    if is_global_config_yaml:
-        utils.dump_yaml_config(schema_content, config_path)
-    else:
-        utils.dump_json_config(schema_content, config_path)
 
 
 def _recursive_overwrite(src, dest, ignore_list=None):
@@ -132,7 +115,9 @@ def _replace_token(ta_name, outputdir):
 
 
 def _generate_rest(
-    ta_name, scheme: GlobalConfigBuilderSchema, import_declare_name, outputdir
+    ta_name,
+    scheme: global_config_builder_schema.GlobalConfigBuilderSchema,
+    outputdir,
 ):
     """
     Build REST for Add-on.
@@ -140,13 +125,12 @@ def _generate_rest(
     Args:
         ta_name (str): Name of TA.
         scheme (GlobalConfigBuilderSchema): REST schema.
-        import_declare_name (str): Name of import_declare_* file.
         outputdir (str): output directory.
     """
     builder_obj = RestBuilder(scheme, os.path.join(outputdir, ta_name))
     builder_obj.build()
-    post_process = global_config.GlobalConfigPostProcessor()
-    post_process(builder_obj, scheme, import_declare_name=import_declare_name)
+    post_process = global_config_post_processor.GlobalConfigPostProcessor()
+    post_process(builder_obj, scheme)
     return builder_obj
 
 
@@ -194,16 +178,15 @@ def _replace_oauth_html_template_token(ta_name, ta_version, outputdir):
 
 
 def _modify_and_replace_token_for_oauth_templates(
-    ta_name, ta_tabs, ta_version, outputdir
+    ta_name: str, global_config: global_config_lib.GlobalConfig, outputdir: str
 ):
     """
     Rename templates with respect to addon name if OAuth is configured.
 
     Args:
-        ta_name (str): Name of TA.
-        ta_version (str): Version of TA.
-        ta_tabs (list): List of tabs mentioned in globalConfig file.
-        outputdir (str): output directory.
+        ta_name: Add-on name.
+        global_config: Object representing globalConfig.
+        outputdir: output directory.
     """
     redirect_xml_src = os.path.join(
         outputdir, ta_name, "default", "data", "ui", "views", "redirect.xml"
@@ -215,14 +198,14 @@ def _modify_and_replace_token_for_oauth_templates(
         outputdir, ta_name, "appserver", "templates", "redirect.html"
     )
 
-    if _is_oauth_configured(ta_tabs):
-        _replace_oauth_html_template_token(ta_name, ta_version, outputdir)
+    if _is_oauth_configured(global_config.tabs):
+        _replace_oauth_html_template_token(ta_name, global_config.version, outputdir)
 
         redirect_js_dest = (
             os.path.join(outputdir, ta_name, "appserver", "static", "js", "build", "")
             + ta_name.lower()
             + "_redirect_page."
-            + ta_version
+            + global_config.version
             + ".js"
         )
         redirect_html_dest = os.path.join(
@@ -252,18 +235,18 @@ def _modify_and_replace_token_for_oauth_templates(
         os.remove(redirect_js_src)
 
 
-def _add_modular_input(ta_name, schema_content, import_declare_name, outputdir):
+def _add_modular_input(
+    ta_name: str, global_config: global_config_lib.GlobalConfig, outputdir: str
+):
     """
     Generate Modular input for addon.
 
     Args:
-        ta_name (str): Name of TA.
-        schema_content (dict): schema of globalConfig file.
-        outputdir (str): output directory.
+        ta_name: Add-on name.
+        global_config: Object representing globalConfig.
+        outputdir: output directory.
     """
-
-    services = schema_content.get("pages").get("inputs").get("services")
-    for service in services:
+    for service in global_config.inputs:
         input_name = service.get("name")
         class_name = input_name.upper()
         description = service.get("title")
@@ -276,7 +259,7 @@ def _add_modular_input(ta_name, schema_content, import_declare_name, outputdir):
 
         # filter fields in allow list
         entity = [x for x in entity if x.get("field") not in field_allow_list]
-        import_declare = "import " + import_declare_name
+        import_declare = "import import_declare_test"
 
         content = j2_env.get_template(template).render(
             import_declare=import_declare,
@@ -303,22 +286,23 @@ def _add_modular_input(ta_name, schema_content, import_declare_name, outputdir):
             config.write(configfile)
 
 
-def _make_modular_alerts(ta_name, ta_namespace, schema_content, outputdir):
+def _make_modular_alerts(
+    ta_name: str, global_config: global_config_lib.GlobalConfig, outputdir: str
+):
     """
     Generate the alert schema with required structure.
 
     Args:
-        ta_name (str): Name of TA.
-        ta_namespace (str): restRoot of TA.
-        schema_content (dict): schema of globalConfig file.
-        outputdir (str): output directory.
+        ta_name: Add-on name.
+        global_config: Object representing globalConfig.
+        outputdir: Output directory.
     """
 
-    if schema_content.get("alerts"):
+    if global_config.content.get("alerts"):
         alert_build(
-            {"alerts": schema_content["alerts"]},
+            {"alerts": global_config.content["alerts"]},
             ta_name,
-            ta_namespace,
+            global_config.namespace,
             outputdir,
             internal_root_dir,
         )
@@ -423,16 +407,10 @@ def _get_os_path(path):
     return path.strip(os.sep)
 
 
-def generate(
-    source, config_path, addon_version, outputdir=None, python_binary_name="python3"
-):
-    logger.info(f"ucc-gen version {__version__} is used")
-    logger.info(f"Python binary name to use: {python_binary_name}")
-    if outputdir is None:
-        outputdir = os.path.join(os.getcwd(), "output")
+def _get_addon_version(addon_version: Optional[str]) -> str:
     if not addon_version:
         try:
-            addon_version = utils.get_version_from_git()
+            return utils.get_version_from_git()
         except exceptions.CouldNotVersionFromGitException:
             logger.error(
                 "Could not find the proper version from git tags. "
@@ -440,103 +418,95 @@ def generate(
                 "https://github.com/splunk/addonfactory-ucc-generator/issues/404"
             )
             exit(1)
-    else:
-        addon_version = addon_version.strip()
+    return addon_version.strip()
 
+
+def generate(
+    source,
+    config_path,
+    addon_version,
+    outputdir=None,
+    python_binary_name="python3",
+    openapi=True,
+):
+    logger.info(f"ucc-gen version {__version__} is used")
+    logger.info(f"Python binary name to use: {python_binary_name}")
+    if outputdir is None:
+        outputdir = os.path.join(os.getcwd(), "output")
+    addon_version = _get_addon_version(addon_version)
     if not os.path.exists(source):
         raise NotADirectoryError(f"{os.path.abspath(source)} not found.")
-
-    # Setting default value to Config argument
+    logger.info(f"Cleaning out directory {outputdir}")
+    shutil.rmtree(os.path.join(outputdir), ignore_errors=True)
+    os.makedirs(os.path.join(outputdir))
+    logger.info(f"Cleaned out directory {outputdir}")
+    app_manifest_path = os.path.abspath(
+        os.path.join(source, app_manifest_lib.APP_MANIFEST_FILE_NAME),
+    )
+    with open(app_manifest_path) as manifest_file:
+        app_manifest_content = manifest_file.read()
+    app_manifest = app_manifest_lib.AppManifest()
+    try:
+        app_manifest.read(app_manifest_content)
+    except app_manifest_lib.AppManifestFormatException:
+        logger.error(
+            f"Manifest file @ {app_manifest_path} has invalid format.\n"
+            f"Please refer to {app_manifest_lib.APP_MANIFEST_WEBSITE}.\n"
+            f'Lines with comments are supported if they start with "#".\n'
+        )
+        sys.exit(1)
+    ta_name = app_manifest.get_addon_name()
     if not config_path:
         is_global_config_yaml = False
-        config_path = os.path.abspath(
-            os.path.join(source, PARENT_DIR, "globalConfig.json")
-        )
+        config_path = os.path.abspath(os.path.join(source, "..", "globalConfig.json"))
         if not os.path.isfile(config_path):
             config_path = os.path.abspath(
-                os.path.join(source, PARENT_DIR, "globalConfig.yaml")
+                os.path.join(source, "..", "globalConfig.yaml")
             )
             is_global_config_yaml = True
     else:
         is_global_config_yaml = True if config_path.endswith(".yaml") else False
 
-    logger.info(f"Cleaning out directory {outputdir}")
-    shutil.rmtree(os.path.join(outputdir), ignore_errors=True)
-    os.makedirs(os.path.join(outputdir))
-    logger.info(f"Cleaned out directory {outputdir}")
-
-    app_manifest_path = os.path.abspath(
-        os.path.join(source, app_manifest.APP_MANIFEST_FILE_NAME),
-    )
-    with open(app_manifest_path) as manifest_file:
-        app_manifest_content = manifest_file.read()
-    manifest = app_manifest.AppManifest()
-    try:
-        manifest.read(app_manifest_content)
-    except app_manifest.AppManifestFormatException:
-        logger.error(
-            f"Manifest file @ {app_manifest_path} has invalid format.\n"
-            f"Please refer to {app_manifest.APP_MANIFEST_WEBSITE}.\n"
-            f'Lines with comments are supported if they start with "#".\n'
-        )
-        sys.exit(1)
-    ta_name = manifest.get_addon_name()
-
     if os.path.isfile(config_path):
+        global_config = global_config_lib.GlobalConfig()
+        global_config.parse(config_path, is_global_config_yaml)
         try:
-            with open(config_path) as f_config:
-                config_raw = f_config.read()
-            config_content = (
-                yaml_load(config_raw)
-                if is_global_config_yaml
-                else json.loads(config_raw)
-            )
             validator = global_config_validator.GlobalConfigValidator(
-                internal_root_dir, config_content
+                internal_root_dir, global_config
             )
             validator.validate()
-            logger.info("Config is valid")
+            logger.info("globalConfig file is valid")
         except global_config_validator.GlobalConfigValidatorException as e:
-            logger.error(f"Config is not valid. Error: {e}")
+            logger.error(f"globalConfig file is not valid. Error: {e}")
             sys.exit(1)
-
-        _update_ta_version(config_path, addon_version, is_global_config_yaml)
-
-        schema_content = global_config_update.handle_global_config_update(
-            config_path, is_global_config_yaml
+        global_config.update_addon_version(addon_version)
+        global_config.dump(global_config.original_path)
+        global_config_update.handle_global_config_update(global_config)
+        scheme = global_config_builder_schema.GlobalConfigBuilderSchema(
+            global_config, j2_env
         )
-
-        scheme = global_config.GlobalConfigBuilderSchema(schema_content, j2_env)
-
-        addon_version = schema_content.get("meta").get("version")
-        logger.info("Addon Version : " + addon_version)
-        ta_tabs = schema_content.get("pages").get("configuration").get("tabs")
-        ta_namespace = schema_content.get("meta").get("restRoot")
-        import_declare_name = "import_declare_test"
-        is_inputs = "inputs" in schema_content.get("pages")
-
-        logger.info("Package ID is " + ta_name)
-
+        logger.info(f"Building add-on with version {addon_version}")
+        logger.info(f"Package ID is {ta_name}")
         logger.info("Copy UCC template directory")
         _recursive_overwrite(
             os.path.join(internal_root_dir, "package"), os.path.join(outputdir, ta_name)
         )
-
         logger.info("Copy globalConfig to output")
         global_config_file = (
             "globalConfig.yaml" if is_global_config_yaml else "globalConfig.json"
         )
+        output_global_config_path = os.path.join(
+            outputdir,
+            ta_name,
+            "appserver",
+            "static",
+            "js",
+            "build",
+            global_config_file,
+        )
         shutil.copyfile(
             config_path,
-            os.path.join(
-                outputdir,
-                ta_name,
-                "appserver",
-                "static",
-                "js",
-                "build",
-                global_config_file,
-            ),
+            output_global_config_path,
         )
         ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
         logger.info(f"Install add-on requirements into {ucc_lib_target} from {source}")
@@ -547,15 +517,14 @@ def generate(
         except SplunktaucclibNotFound as e:
             logger.error(str(e))
             sys.exit(1)
-
         _replace_token(ta_name, outputdir)
-
-        _generate_rest(ta_name, scheme, import_declare_name, outputdir)
-
+        _generate_rest(ta_name, scheme, outputdir)
         _modify_and_replace_token_for_oauth_templates(
-            ta_name, ta_tabs, schema_content.get("meta").get("version"), outputdir
+            ta_name,
+            global_config,
+            outputdir,
         )
-        if is_inputs:
+        if global_config.has_inputs():
             default_no_input_xml_file = os.path.join(
                 outputdir,
                 ta_name,
@@ -566,14 +535,12 @@ def generate(
                 "default_no_input.xml",
             )
             os.remove(default_no_input_xml_file)
-            _add_modular_input(ta_name, schema_content, import_declare_name, outputdir)
+            _add_modular_input(ta_name, global_config, outputdir)
         else:
             _handle_no_inputs(ta_name, outputdir)
-
-        _make_modular_alerts(ta_name, ta_namespace, schema_content, outputdir)
-
+        _make_modular_alerts(ta_name, global_config, outputdir)
     else:
-        logger.info("Addon Version : " + addon_version)
+        logger.info(f"Building add-on with version {addon_version}")
         logger.warning(
             "Skipped generating UI components as globalConfig file does not exist."
         )
@@ -602,18 +569,18 @@ def generate(
         version_file.write("\n")
         version_file.write(addon_version)
 
-    manifest.update_addon_version(addon_version)
+    app_manifest.update_addon_version(addon_version)
     output_manifest_path = os.path.abspath(
-        os.path.join(outputdir, ta_name, app_manifest.APP_MANIFEST_FILE_NAME)
+        os.path.join(outputdir, ta_name, app_manifest_lib.APP_MANIFEST_FILE_NAME)
     )
     with open(output_manifest_path, "w") as manifest_file:
-        manifest_file.write(str(manifest))
+        manifest_file.write(str(app_manifest))
 
     app_config = app_conf.AppConf()
     path = os.path.join(outputdir, ta_name, "default", "app.conf")
     app_config.read(path)
     app_config.update(
-        addon_version, ta_name, manifest.get_description(), manifest.get_title()
+        addon_version, ta_name, app_manifest.get_description(), app_manifest.get_title()
     )
     with open(path, "w") as app_conf_fd:
         app_config.write(app_conf_fd)
@@ -631,3 +598,18 @@ def generate(
         from additional_packaging import additional_packaging
 
         additional_packaging(ta_name)
+
+    if os.path.isfile(config_path) and openapi:
+        logger.info("Generating OpenAPI file")
+        open_api_object = ucc_to_oas.transform(global_config, app_manifest)
+        open_api = OpenAPI(open_api_object.json)
+
+        output_openapi_folder = os.path.abspath(
+            os.path.join(outputdir, ta_name, "static")
+        )
+        output_openapi_path = os.path.join(output_openapi_folder, "openapi.json")
+        if not os.path.isdir(output_openapi_folder):
+            os.makedirs(os.path.join(output_openapi_folder))
+            logger.info(f"Creating {output_openapi_folder} folder")
+        with open(output_openapi_path, "w") as openapi_file:
+            json.dump(open_api.raw_element, openapi_file, indent=4)

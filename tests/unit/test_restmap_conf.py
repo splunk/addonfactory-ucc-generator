@@ -59,6 +59,6 @@ handleractions = edit, list, remove, create
 handlerpersistentmode = true
 """
 
-    result = RestmapConf.build(endpoints, "addon_name", "")
+    result = RestmapConf.build(endpoints, "addon_name")
 
     assert expected_result == result

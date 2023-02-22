@@ -24,7 +24,7 @@ class RestmapConf:
 
     _admin_template = """
 [admin:{namespace}]
-match = /{admin_match}
+match = /
 members = {endpoints}
 """
 
@@ -38,16 +38,12 @@ handlerpersistentmode = true
 """
 
     @classmethod
-    def build(
-        cls, endpoints: Sequence[RestEndpointBuilder], namespace: str, admin_match: str
-    ) -> str:
-        # admin_match is always an empty string, so it will be probably removed in the future releases.
+    def build(cls, endpoints: Sequence[RestEndpointBuilder], namespace: str) -> str:
         if not endpoints:
             return ""
         externals = [
             cls._admin_template.format(
                 namespace=namespace,
-                admin_match=admin_match,
                 endpoints=", ".join([ep.name for ep in endpoints]),
             )
         ]

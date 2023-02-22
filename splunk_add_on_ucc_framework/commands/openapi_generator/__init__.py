@@ -13,4 +13,3 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-wget https://github.com/splunk/addonfactory-ucc-base-ui/releases/download/v1.22.0/splunk-ucc-ui.tgz

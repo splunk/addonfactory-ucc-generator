@@ -1,0 +1,203 @@
+{
+    "pages": {
+        "configuration": {
+            "tabs": [
+                {
+                    "name": "logging",
+                    "entity": [
+                        {
+                            "type": "singleSelect",
+                            "label": "Log level",
+                            "options": {
+                                "disableSearch": true,
+                                "autoCompleteFields": [
+                                    {
+                                        "value": "DEBUG",
+                                        "label": "DEBUG"
+                                    },
+                                    {
+                                        "value": "INFO",
+                                        "label": "INFO"
+                                    },
+                                    {
+                                        "value": "WARNING",
+                                        "label": "WARNING"
+                                    },
+                                    {
+                                        "value": "ERROR",
+                                        "label": "ERROR"
+                                    },
+                                    {
+                                        "value": "CRITICAL",
+                                        "label": "CRITICAL"
+                                    }
+                                ]
+                            },
+                            "defaultValue": "INFO",
+                            "field": "loglevel"
+                        }
+                    ],
+                    "title": "Logging"
+                }
+            ],
+            "title": "Configuration",
+            "description": "Set up your add-on"
+        },
+        "inputs": {
+            "services": [
+                {
+                    "hook": {
+                        "src": "Hook"
+                    },
+                    "name": "example_input_one",
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Input Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+                                    "pattern": "^[a-zA-Z]\\w*$"
+                                },
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Length of input name should be between 1 and 100",
+                                    "minLength": 1,
+                                    "maxLength": 100
+                                }
+                            ],
+                            "field": "name",
+                            "help": "A unique name for the data input.",
+                            "required": true
+                        }
+                    ],
+                    "title": "Example Input One"
+                },
+                {
+                    "name": "example_input_two",
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Input Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+                                    "pattern": "^[a-zA-Z]\\w*$"
+                                },
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Length of input name should be between 1 and 100",
+                                    "minLength": 1,
+                                    "maxLength": 100
+                                }
+                            ],
+                            "field": "name",
+                            "help": "A unique name for the data input.",
+                            "required": true
+                        }
+                    ],
+                    "title": "Example Input Two"
+                }
+            ],
+            "title": "Inputs",
+            "description": "Manage your data inputs",
+            "table": {
+                "actions": [
+                    "edit",
+                    "enable",
+                    "delete",
+                    "clone"
+                ],
+                "header": [
+                    {
+                        "label": "Name",
+                        "field": "name"
+                    },
+                    {
+                        "label": "Account Name",
+                        "field": "account"
+                    },
+                    {
+                        "label": "Interval",
+                        "field": "interval"
+                    },
+                    {
+                        "label": "Index",
+                        "field": "index"
+                    },
+                    {
+                        "label": "Status",
+                        "field": "disabled"
+                    }
+                ],
+                "moreInfo": [
+                    {
+                        "label": "Name",
+                        "field": "name"
+                    },
+                    {
+                        "label": "Interval",
+                        "field": "interval"
+                    },
+                    {
+                        "label": "Index",
+                        "field": "index"
+                    },
+                    {
+                        "label": "Status",
+                        "field": "disabled",
+                        "mapping": {
+                            "true": "Disabled",
+                            "false": "Enabled"
+                        }
+                    },
+                    {
+                        "label": "Example Account",
+                        "field": "account"
+                    },
+                    {
+                        "label": "Object",
+                        "field": "object"
+                    },
+                    {
+                        "label": "Object Fields",
+                        "field": "object_fields"
+                    },
+                    {
+                        "label": "Order By",
+                        "field": "order_by"
+                    },
+                    {
+                        "label": "Query Start Date",
+                        "field": "start_date"
+                    },
+                    {
+                        "label": "Limit",
+                        "field": "limit"
+                    }
+                ]
+            },
+            "groupsMenu": [
+                {
+                    "groupName": "group_one",
+                    "groupTitle": "Group One",
+                    "groupServices": ["example_input_one", "example_input_two"]
+                },
+                {
+                    "groupName": "example_input_three",
+                    "groupTitle": "Example Input Three"
+                }
+            ]
+        
+        }
+    },
+    "meta": {
+        "apiVersion": "3.2.0",
+        "name": "Splunk_TA_UCCExample",
+        "restRoot": "splunk_ta_uccexample",
+        "version": "1.0.0",
+        "displayName": "Splunk UCC test Add-on"
+    }
+}
