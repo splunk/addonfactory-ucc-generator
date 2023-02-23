@@ -35,6 +35,8 @@ from splunk_add_on_ucc_framework import (
 )
 from splunk_add_on_ucc_framework import app_manifest as app_manifest_lib
 from splunk_add_on_ucc_framework import global_config as global_config_lib
+from splunk_add_on_ucc_framework import normalize
+from splunk_add_on_ucc_framework.modular_alert_builder.build_core import generate_alerts
 from splunk_add_on_ucc_framework.commands.rest_builder import (
     global_config_builder_schema,
     global_config_post_processor,
@@ -44,7 +46,6 @@ from splunk_add_on_ucc_framework.install_python_libraries import (
     SplunktaucclibNotFound,
     install_python_libraries,
 )
-from splunk_add_on_ucc_framework.start_alert_build import alert_build
 from splunk_add_on_ucc_framework.commands.openapi_generator import (
     ucc_to_oas,
 )
@@ -297,15 +298,15 @@ def _make_modular_alerts(
         global_config: Object representing globalConfig.
         outputdir: Output directory.
     """
-
-    if global_config.content.get("alerts"):
-        alert_build(
-            {"alerts": global_config.content["alerts"]},
+    if global_config.has_alerts():
+        envs = normalize.normalize(
+            {
+                "alerts": global_config.alerts,
+            },
             ta_name,
             global_config.namespace,
-            outputdir,
-            internal_root_dir,
         )
+        generate_alerts(internal_root_dir, outputdir, envs)
 
 
 def _get_ignore_list(ta_name, path):
