@@ -161,7 +161,7 @@
     "meta": {
         "name": "Splunk_TA_dummy_data",
         "restRoot": "Splunk_TA_dummy_data",
-        "version": "5.21.0Rb6fb43f1",
+        "version": "5.21.0R64db1b47",
         "displayName": "Splunk_TA_dummy_data",
         "schemaVersion": "0.0.3"
     }

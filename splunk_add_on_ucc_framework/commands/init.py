@@ -15,6 +15,7 @@
 #
 import logging
 import os
+import sys
 
 from cookiecutter import exceptions, main
 
@@ -27,7 +28,7 @@ def init(
     addon_input_name: str,
     addon_version: str,
     overwrite: bool = False,
-):
+) -> str:
     try:
         generated_addon_path = main.cookiecutter(
             template=os.path.join(
@@ -48,8 +49,10 @@ def init(
             "LICENSE.txt and README.txt are empty, "
             "you may need to modify the content of those files. "
         )
+        return generated_addon_path
     except exceptions.OutputDirExistsException:
         logger.error(
             "The location is already taken, use `--overwrite` "
             "option to overwrite the content of existing folder."
         )
+        sys.exit(1)

@@ -5,7 +5,7 @@
         "id": {
             "group": null,
             "name": "demo_addon_for_splunk",
-            "version": "0.0.1"
+            "version": "1.0.0"
         },
         "author": [
             {

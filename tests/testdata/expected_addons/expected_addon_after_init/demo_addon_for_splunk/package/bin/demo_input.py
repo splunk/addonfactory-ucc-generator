@@ -35,7 +35,7 @@ def get_data_from_api(logger: logging.Logger, api_key: str):
         },
         {
             "line2": "world",
-        }
+        },
     ]
     return dummy_data
 

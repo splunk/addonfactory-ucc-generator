@@ -62,14 +62,14 @@ def main(argv: Optional[Sequence[str]] = None):
         "--source",
         type=str,
         nargs="?",
-        help="Folder containing the app.manifest and app source",
+        help="Folder containing the app.manifest and app source.",
         default="package",
     )
     build_parser.add_argument(
         "--config",
         type=str,
         nargs="?",
-        help="Path to configuration file, defaults to globalConfig file in parent directory of source provided",
+        help="Path to configuration file, defaults to globalConfig file in parent directory of source provided.",
         default=None,
     )
     build_parser.add_argument(
@@ -82,42 +82,47 @@ def main(argv: Optional[Sequence[str]] = None):
     build_parser.add_argument(
         "--python-binary-name",
         type=str,
-        help="Python binary name to use to install requirements",
+        help="Python binary name to use to install requirements.",
         default="python3",
     )
     build_parser.add_argument(
         "--openapi",
         type=bool,
-        help="Generate OpenAPI Description document and expose in /static/openapi.json endpoint",
+        help="Generate OpenAPI Description document and expose in /static/openapi.json endpoint.",
         default=True,
     )
 
-    init_parser = subparsers.add_parser("init", description="Bootstrap an add-on")
+    init_parser = subparsers.add_parser("init", description="Bootstrap an add-on.")
     init_parser.add_argument(
         "--addon-name",
         type=str,
-        help="Add-on name",
+        help="Add-on name.",
         required=True,
     )
     init_parser.add_argument(
         "--addon-display-name",
         type=str,
-        help="Add-on display name",
+        help="Add-on display name.",
         required=True,
     )
     init_parser.add_argument(
         "--addon-input-name",
         type=str,
-        help="Add-on input name",
+        help="Add-on input name.",
         required=True,
     )
     init_parser.add_argument(
         "--addon-version",
         type=str,
-        help="Add-on version",
+        help="Add-on version.",
         default="0.0.1",
     )
-    init_parser.add_argument("--overwrite", action="store_true", default=False)
+    init_parser.add_argument(
+        "--overwrite",
+        action="store_true",
+        default=False,
+        help="Overwrite already generated add-on folder.",
+    )
 
     args = parser.parse_args(argv)
     if args.command == "build":
