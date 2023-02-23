@@ -1,6 +1,7 @@
-import difflib
 import tempfile
 from os import path
+
+from tests.smoke import helpers
 
 import splunk_add_on_ucc_framework as ucc
 
@@ -119,26 +120,11 @@ def test_ucc_generate_with_inputs_configuration_alerts():
             ("README", "splunk_ta_uccexample_settings.conf.spec"),
             ("metadata", "default.meta"),
         ]
-        diff_results = []
-        for f in files_to_be_equal:
-            expected_file_path = path.join(expected_folder, *f)
-            actual_file_path = path.join(actual_folder, *f)
-            with open(expected_file_path) as expected_file:
-                expected_file_lines = expected_file.readlines()
-            with open(actual_file_path) as actual_file:
-                actual_file_lines = actual_file.readlines()
-            for line in difflib.unified_diff(
-                actual_file_lines,
-                expected_file_lines,
-                fromfile=actual_file_path,
-                tofile=expected_file_path,
-                lineterm="",
-            ):
-                diff_results.append(line)
-        if diff_results:
-            for result in diff_results:
-                print(result)
-            assert False, "Some diffs were found"
+        helpers.compare_file_content(
+            files_to_be_equal,
+            expected_folder,
+            actual_folder,
+        )
         files_to_exist = [
             ("static", "appIcon.png"),
             ("static", "appIcon_2x.png"),
@@ -199,26 +185,11 @@ def test_ucc_generate_with_configuration():
             ("metadata", "default.meta"),
             ("static", "openapi.json"),
         ]
-        diff_results = []
-        for f in files_to_be_equal:
-            expected_file_path = path.join(expected_folder, *f)
-            actual_file_path = path.join(actual_folder, *f)
-            with open(expected_file_path) as expected_file:
-                expected_file_lines = expected_file.readlines()
-            with open(actual_file_path) as actual_file:
-                actual_file_lines = actual_file.readlines()
-            for line in difflib.unified_diff(
-                actual_file_lines,
-                expected_file_lines,
-                fromfile=actual_file_path,
-                tofile=expected_file_path,
-                lineterm="",
-            ):
-                diff_results.append(line)
-        if diff_results:
-            for result in diff_results:
-                print(result)
-            assert False, "Some diffs were found"
+        helpers.compare_file_content(
+            files_to_be_equal,
+            expected_folder,
+            actual_folder,
+        )
         files_to_exist = [
             ("static", "appIcon.png"),
             ("static", "appIcon_2x.png"),
@@ -269,26 +240,11 @@ def test_ucc_generate_with_configuration_files_only():
             ("default", "tags.conf"),
             ("metadata", "default.meta"),
         ]
-        diff_results = []
-        for f in files_to_be_equal:
-            expected_file_path = path.join(expected_folder, *f)
-            actual_file_path = path.join(actual_folder, *f)
-            with open(expected_file_path) as expected_file:
-                expected_file_lines = expected_file.readlines()
-            with open(actual_file_path) as actual_file:
-                actual_file_lines = actual_file.readlines()
-            for line in difflib.unified_diff(
-                actual_file_lines,
-                expected_file_lines,
-                fromfile=actual_file_path,
-                tofile=expected_file_path,
-                lineterm="",
-            ):
-                diff_results.append(line)
-        if diff_results:
-            for result in diff_results:
-                print(result)
-            assert False, "Some diffs were found"
+        helpers.compare_file_content(
+            files_to_be_equal,
+            expected_folder,
+            actual_folder,
+        )
         files_to_not_exist = [
             ("default", "data", "ui", "nav", "default_no_input.xml"),
         ]
