@@ -199,7 +199,7 @@
     "meta": {
         "name": "demo_addon_for_splunk",
         "restRoot": "demo_addon_for_splunk",
-        "version": "5.18.0R2b855ba9",
+        "version": "1.0.0",
         "displayName": "Demo Add-on for Splunk",
         "schemaVersion": "0.0.3"
     }
