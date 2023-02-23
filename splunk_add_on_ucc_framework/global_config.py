@@ -61,6 +61,10 @@ class GlobalConfig:
         return self._content["pages"]["configuration"]["tabs"]
 
     @property
+    def alerts(self):
+        return self._content.get("alerts", [])
+
+    @property
     def meta(self):
         return self._content["meta"]
 
@@ -96,3 +100,6 @@ class GlobalConfig:
 
     def has_inputs(self) -> bool:
         return bool(self.inputs)
+
+    def has_alerts(self) -> bool:
+        return bool(self.alerts)
