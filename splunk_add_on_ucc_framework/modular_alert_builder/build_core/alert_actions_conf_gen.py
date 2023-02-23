@@ -179,7 +179,7 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
                 if k == "parameters":
                     for param in v:
                         param_name = param["name"].strip()
-                        if param.get("default_value"):
+                        if param.get("default_value") is not None:
                             param_default_value = str(
                                 param.get("default_value")
                             ).strip()
