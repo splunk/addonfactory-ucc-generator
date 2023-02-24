@@ -61,6 +61,22 @@ class GlobalConfig:
         return self._content["pages"]["configuration"]["tabs"]
 
     @property
+    def settings(self):
+        settings = []
+        for tab in self.tabs:
+            if "table" not in tab:
+                settings.append(tab)
+        return settings
+
+    @property
+    def configs(self):
+        configs = []
+        for tab in self.tabs:
+            if "table" in tab:
+                configs.append(tab)
+        return configs
+
+    @property
     def alerts(self):
         return self._content.get("alerts", [])
 

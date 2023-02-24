@@ -14,9 +14,10 @@
 # limitations under the License.
 #
 import time
-from typing import IO
 
 import addonfactory_splunk_conf_parser_lib as conf_parser
+
+APP_CONF_FILE_NAME = "app.conf"
 
 
 class AppConf:
@@ -45,5 +46,6 @@ class AppConf:
         self._app_conf["package"]["id"] = name
         self._app_conf["ui"]["label"] = title
 
-    def write(self, fd: IO) -> None:
-        self._app_conf.write(fd)
+    def write(self, path: str) -> None:
+        with open(path, "w") as fd:
+            self._app_conf.write(fd)

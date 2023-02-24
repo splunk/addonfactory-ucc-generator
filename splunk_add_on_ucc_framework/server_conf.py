@@ -13,26 +13,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from typing import Sequence
+
 import addonfactory_splunk_conf_parser_lib as conf_parser
 
-DEFAULT = """
-# Application-level permissions
-
-[]
-owner = admin
-access = read : [ * ], write : [ admin, sc_admin ]
-export = system
-"""
-DEFAULT_META_FILE_NAME = "default.meta"
+SERVER_CONF_FILE_NAME = "server.conf"
 
 
-class MetaConf:
+class ServerConf:
     def __init__(self):
-        self._meta_conf = conf_parser.TABConfigParser()
+        self._server_conf = conf_parser.TABConfigParser()
 
-    def create_default(self) -> None:
-        self._meta_conf.read_string(DEFAULT)
+    def create_default(self, conf_file_names: Sequence[str]):
+        self._server_conf.add_section("shclustering")
+        for conf_file_name in conf_file_names:
+            self._server_conf["shclustering"][
+                f"conf_replication_include.{conf_file_name}"
+            ] = "true"
 
     def write(self, path: str) -> None:
         with open(path, "w") as fd:
-            self._meta_conf.write(fd)
+            self._server_conf.write(fd)

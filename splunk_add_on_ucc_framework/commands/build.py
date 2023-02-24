@@ -26,13 +26,14 @@ from openapi3 import OpenAPI
 
 from splunk_add_on_ucc_framework import (
     __version__,
-    app_conf,
     exceptions,
     global_config_update,
     global_config_validator,
-    meta_conf,
     utils,
 )
+from splunk_add_on_ucc_framework import app_conf as app_conf_lib
+from splunk_add_on_ucc_framework import meta_conf as meta_conf_lib
+from splunk_add_on_ucc_framework import server_conf as server_conf_lib
 from splunk_add_on_ucc_framework import app_manifest as app_manifest_lib
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 from splunk_add_on_ucc_framework import normalize
@@ -540,6 +541,21 @@ def generate(
         else:
             _handle_no_inputs(ta_name, outputdir)
         _make_modular_alerts(ta_name, global_config, outputdir)
+
+        source_server_conf_path = os.path.join(source, "default", "server.conf")
+        # For now, only create server.conf only if no server.conf is present in
+        # the source package.
+        if not os.path.isfile(source_server_conf_path):
+            server_conf = server_conf_lib.ServerConf()
+            conf_file_names = []
+            conf_file_names.extend(list(scheme.settings_conf_file_names))
+            conf_file_names.extend(list(scheme.configs_conf_file_names))
+            conf_file_names.extend(list(scheme.oauth_conf_file_names))
+            server_conf.create_default(conf_file_names)
+            output_server_conf_path = os.path.join(
+                outputdir, ta_name, "default", server_conf_lib.SERVER_CONF_FILE_NAME
+            )
+            server_conf.write(output_server_conf_path)
     else:
         logger.info(f"Building add-on with version {addon_version}")
         logger.warning(
@@ -558,12 +574,13 @@ def generate(
     _recursive_overwrite(source, os.path.join(outputdir, ta_name))
 
     default_meta_conf_path = os.path.join(
-        outputdir, ta_name, "metadata", "default.meta"
+        outputdir, ta_name, "metadata", meta_conf_lib.DEFAULT_META_FILE_NAME
     )
     if not os.path.exists(default_meta_conf_path):
         os.makedirs(os.path.join(outputdir, ta_name, "metadata"), exist_ok=True)
-        with open(default_meta_conf_path, "w") as default_meta_conf_fd:
-            meta_conf.MetaConf().create_default(default_meta_conf_fd)
+        meta_conf = meta_conf_lib.MetaConf()
+        meta_conf.create_default()
+        meta_conf.write(default_meta_conf_path)
 
     with open(os.path.join(outputdir, ta_name, "VERSION"), "w") as version_file:
         version_file.write(addon_version)
@@ -577,14 +594,15 @@ def generate(
     with open(output_manifest_path, "w") as manifest_file:
         manifest_file.write(str(app_manifest))
 
-    app_config = app_conf.AppConf()
-    path = os.path.join(outputdir, ta_name, "default", "app.conf")
-    app_config.read(path)
-    app_config.update(
+    app_conf = app_conf_lib.AppConf()
+    output_app_conf_path = os.path.join(
+        outputdir, ta_name, "default", app_conf_lib.APP_CONF_FILE_NAME
+    )
+    app_conf.read(output_app_conf_path)
+    app_conf.update(
         addon_version, ta_name, app_manifest.get_description(), app_manifest.get_title()
     )
-    with open(path, "w") as app_conf_fd:
-        app_config.write(app_conf_fd)
+    app_conf.write(output_app_conf_path)
 
     license_dir = os.path.abspath(os.path.join(source, PARENT_DIR, "LICENSES"))
 
