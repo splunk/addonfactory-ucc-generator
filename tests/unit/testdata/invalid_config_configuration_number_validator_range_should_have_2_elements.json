@@ -14,10 +14,6 @@
                             {
                                 "label": "Name",
                                 "field": "name"
-                            },
-                            {
-                                "label": "Auth Type",
-                                "field": "auth_type"
                             }
                         ]
                     },
@@ -78,10 +74,10 @@
         }
     },
     "meta": {
-        "apiVersion": "3.2.0",
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
         "version": "1.0.0",
-        "displayName": "Splunk UCC test Add-on"
+        "displayName": "Splunk UCC test Add-on",
+        "schemaVersion": "0.0.3"
     }
 }

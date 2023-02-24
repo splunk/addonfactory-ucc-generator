@@ -669,8 +669,8 @@ alerts:
     help: Select the account from the dropdown
     required: true
 meta:
-  apiVersion: 3.2.0
   name: Splunk_TA_UCCExample
   restRoot: splunk_ta_uccexample
   version: 1.0.0
   displayName: Splunk UCC test Add-on
+  schemaVersion: 0.0.3
