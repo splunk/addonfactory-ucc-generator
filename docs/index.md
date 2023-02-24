@@ -28,6 +28,7 @@ which is a new UI framework based on React.
 * Generate UI (`appserver` folder)
 * Generate Python REST handlers to support UI CRUD operations (`bin` folder)
 * Generate OpenAPI description document (`static/openapi.json` file)
+* Generate `shclustering` stanza for `server.conf` file
 * Generate UI-related `.conf` files (`web.conf`, `restmap.conf`)
 * Generate `README` folder (with `.conf.spec` files)
 * Generate other `.conf` files (`inputs.conf`)
