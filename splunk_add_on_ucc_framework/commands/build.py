@@ -430,7 +430,6 @@ def generate(
     addon_version,
     outputdir=None,
     python_binary_name="python3",
-    openapi=True,
 ):
     logger.info(f"ucc-gen version {__version__} is used")
     logger.info(f"Python binary name to use: {python_binary_name}")
@@ -634,7 +633,7 @@ def generate(
 
         additional_packaging(ta_name)
 
-    if os.path.isfile(config_path) and openapi:
+    if os.path.isfile(config_path):
         logger.info("Generating OpenAPI file")
         open_api_object = ucc_to_oas.transform(global_config, app_manifest)
         open_api = OpenAPI(open_api_object.json)
