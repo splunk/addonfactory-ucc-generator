@@ -20,7 +20,7 @@ Global config schema.
 
 
 import json
-from typing import Any, Dict, List, Type
+from typing import Any, Dict, List, Type, Set
 
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 
@@ -60,14 +60,10 @@ def _is_true(val):
 class GlobalConfigBuilderSchema:
     def __init__(self, global_config: global_config_lib.GlobalConfig, j2_env):
         self.global_config = global_config
-        self._configs = []
-        self._settings = []
-        for configuration in self.global_config.tabs:
-            if "table" in configuration:
-                self._configs.append(configuration)
-            else:
-                self._settings.append(configuration)
         self.j2_env = j2_env
+        self._settings_conf_file_names: Set[str] = set()
+        self._configs_conf_file_names: Set[str] = set()
+        self._oauth_conf_file_names: Set[str] = set()
         self._endpoints: Dict[str, RestEndpointBuilder] = {}
         self._parse_builder_schema()
 
@@ -80,12 +76,16 @@ class GlobalConfigBuilderSchema:
         return self.global_config.namespace
 
     @property
-    def configs(self):
-        return self._configs
+    def settings_conf_file_names(self):
+        return self._settings_conf_file_names
 
     @property
-    def settings(self):
-        return self._settings
+    def configs_conf_file_names(self):
+        return self._configs_conf_file_names
+
+    @property
+    def oauth_conf_file_names(self):
+        return self._oauth_conf_file_names
 
     @property
     def endpoints(self) -> List[RestEndpointBuilder]:
@@ -97,7 +97,7 @@ class GlobalConfigBuilderSchema:
         self._builder_inputs()
 
     def _builder_configs(self):
-        for config in self._configs:
+        for config in self.global_config.configs:
             endpoint_obj = self._get_endpoint(
                 config["name"],
                 SingleModelEndpointBuilder,
@@ -116,14 +116,16 @@ class GlobalConfigBuilderSchema:
             # If we have given oauth support then we have to add endpoint for accesstoken
             for entity_element in config["entity"]:
                 if entity_element["type"] == "oauth":
-                    self._get_endpoint(
+                    oauth_endpoint = self._get_endpoint(
                         "oauth",
                         OAuthModelEndpointBuilder,
                         app_name=self.global_config.product,
                     )
+                    self._oauth_conf_file_names.add(oauth_endpoint.conf_name)
+            self._configs_conf_file_names.add(endpoint_obj.conf_name)
 
     def _builder_settings(self):
-        for setting in self._settings:
+        for setting in self.global_config.settings:
             endpoint_obj = self._get_endpoint(
                 "settings",
                 MultipleModelEndpointBuilder,
@@ -137,6 +139,7 @@ class GlobalConfigBuilderSchema:
                 fields,
             )
             endpoint_obj.add_entity(entity)
+            self._settings_conf_file_names.add(endpoint_obj.conf_name)
 
     def _builder_inputs(self):
         for input_item in self.global_config.inputs:
