@@ -35,5 +35,5 @@ def test_global_config_parse(filename, is_yaml):
     assert global_config.namespace == "splunk_ta_uccexample"
     assert global_config.product == "Splunk_TA_UCCExample"
     assert global_config.original_path == global_config_path
-    assert global_config.schema_version is None
+    assert global_config.schema_version == "0.0.3"
     assert global_config.has_inputs() is True
