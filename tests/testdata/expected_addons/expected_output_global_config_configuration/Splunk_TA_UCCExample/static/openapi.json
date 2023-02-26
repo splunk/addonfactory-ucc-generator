@@ -507,7 +507,7 @@
                 }
             ]
         },
-        "/splunk_ta_uccexample_custom_abc": {
+        "/splunk_ta_uccexample_settings/custom_abc": {
             "get": {
                 "responses": {
                     "200": {

@@ -309,9 +309,9 @@ def __add_paths(
     for tab in global_config.pages.configuration.tabs:
         open_api_object = __assign_ta_paths(
             open_api_object=open_api_object,
-            path=f"/{global_config.meta.restRoot}_settings/{tab.name}"
-            if tab.name in ["logging", "proxy"]
-            else f"/{global_config.meta.restRoot}_{tab.name}",
+            path= f"/{global_config.meta.restRoot}_{tab.name}"
+            if hasattr(tab, "table")
+            else f"/{global_config.meta.restRoot}_settings/{tab.name}",
             path_name=tab.name,
             actions=tab.table.actions
             if hasattr(tab, "table") and hasattr(tab.table, "actions")
