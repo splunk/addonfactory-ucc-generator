@@ -1,9 +1,7 @@
 # OpenAPI description document
 
-`ucc-gen` command is executed with `--openapi` argument enabled by default.
-There have to be defined valid `globalConfi.json` and `app.manifest` to have OpenAPI description document (`static/openapi.json` file) generated.
-
-To disable OpenAPI functionality for `ucc-gen` run, call it with `--openapi=0` argument.
+OpenAPI description document is generated with `ucc-gen` command. 
+There has to be defined valid `globalConfi.json` and `app.manifest` to have the document (`static/openapi.json` file) generated.
 
 ## How to find the document?
 
