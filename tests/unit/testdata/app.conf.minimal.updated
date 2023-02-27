@@ -1,16 +1,21 @@
 [id]
 version = 1.0.0
+name = Splunk_TA_UCCExample
 
 [launcher]
 version = 1.0.0
 description = Description for Splunk_TA_UCCExample
+author = Company name
 
 [install]
 build = 12345
+is_configured = true
+state = enabled
 
 [package]
 id = Splunk_TA_UCCExample
 
 [ui]
 label = Title for Splunk_TA_UCCExample
+is_visible = true
 

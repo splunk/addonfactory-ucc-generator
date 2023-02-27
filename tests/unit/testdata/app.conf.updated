@@ -1,16 +1,10 @@
-######################################################
-#
-# ${package.name}
-#
-# ${copyright}
-#
-######################################################
-
 [install]
 build = 12345
+is_configured = true
+state = enabled
 
 [launcher]
-author = Splunk Inc.
+author = Company name
 version = 1.0.0
 description = Description for Splunk_TA_UCCExample
 
@@ -24,4 +18,9 @@ id = Splunk_TA_UCCExample
 
 [id]
 version = 1.0.0
+name = Splunk_TA_UCCExample
+
+[triggers]
+reload.splunk_ta_uccexample_settings = simple
+reload.splunk_ta_uccexample_accounts = simple
 
