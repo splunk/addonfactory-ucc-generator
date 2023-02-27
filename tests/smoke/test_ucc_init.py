@@ -31,7 +31,6 @@ def test_ucc_init():
         ("package", "README.txt"),
         ("package", "LICENSE.txt"),
         ("package", "app.manifest"),
-        ("package", "default", "app.conf"),
         ("package", "bin", "demo_input.py"),
         ("package", "lib", "requirements.txt"),
     ]

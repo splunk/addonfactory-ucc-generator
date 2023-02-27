@@ -547,15 +547,16 @@ def generate(
             _handle_no_inputs(ta_name, outputdir)
         _make_modular_alerts(ta_name, global_config, outputdir)
 
+        conf_file_names = []
+        conf_file_names.extend(list(scheme.settings_conf_file_names))
+        conf_file_names.extend(list(scheme.configs_conf_file_names))
+        conf_file_names.extend(list(scheme.oauth_conf_file_names))
+
         source_server_conf_path = os.path.join(source, "default", "server.conf")
         # For now, only create server.conf only if no server.conf is present in
         # the source package.
         if not os.path.isfile(source_server_conf_path):
             server_conf = server_conf_lib.ServerConf()
-            conf_file_names = []
-            conf_file_names.extend(list(scheme.settings_conf_file_names))
-            conf_file_names.extend(list(scheme.configs_conf_file_names))
-            conf_file_names.extend(list(scheme.oauth_conf_file_names))
             server_conf.create_default(conf_file_names)
             output_server_conf_path = os.path.join(
                 outputdir, ta_name, "default", server_conf_lib.SERVER_CONF_FILE_NAME
@@ -565,6 +566,8 @@ def generate(
                 f"Created default {server_conf_lib.SERVER_CONF_FILE_NAME} file in the output folder"
             )
     else:
+        global_config = None
+        conf_file_names = []
         logger.warning(
             "Skipped generating UI components as globalConfig file does not exist"
         )
@@ -615,9 +618,7 @@ def generate(
         outputdir, ta_name, "default", app_conf_lib.APP_CONF_FILE_NAME
     )
     app_conf.read(output_app_conf_path)
-    app_conf.update(
-        addon_version, ta_name, app_manifest.get_description(), app_manifest.get_title()
-    )
+    app_conf.update(addon_version, app_manifest, conf_file_names)
     app_conf.write(output_app_conf_path)
     logger.info(f"Updated {app_conf_lib.APP_CONF_FILE_NAME} file in the output folder")
 
@@ -634,7 +635,7 @@ def generate(
 
         additional_packaging(ta_name)
 
-    if os.path.isfile(config_path) and openapi:
+    if global_config and openapi:
         logger.info("Generating OpenAPI file")
         open_api_object = ucc_to_oas.transform(global_config, app_manifest)
         open_api = OpenAPI(open_api_object.json)
