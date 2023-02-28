@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from splunk_add_on_ucc_framework.commands.modular_alert_builder.build_core import (
+from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
     alert_actions_conf_gen,
 )
 from tests.unit.helpers import get_testdata_file
