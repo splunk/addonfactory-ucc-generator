@@ -27,8 +27,8 @@ from splunk_add_on_ucc_framework import main
             [],
             {
                 "source": "package",
-                "config": None,
-                "ta_version": None,
+                "config_path": None,
+                "addon_version": None,
                 "python_binary_name": "python3",
             },
         ),
@@ -36,8 +36,8 @@ from splunk_add_on_ucc_framework import main
             ["build"],
             {
                 "source": "package",
-                "config": None,
-                "ta_version": None,
+                "config_path": None,
+                "addon_version": None,
                 "python_binary_name": "python3",
             },
         ),
@@ -45,8 +45,8 @@ from splunk_add_on_ucc_framework import main
             ["--source", "package"],
             {
                 "source": "package",
-                "config": None,
-                "ta_version": None,
+                "config_path": None,
+                "addon_version": None,
                 "python_binary_name": "python3",
             },
         ),
@@ -54,8 +54,8 @@ from splunk_add_on_ucc_framework import main
             ["build", "--source", "package"],
             {
                 "source": "package",
-                "config": None,
-                "ta_version": None,
+                "config_path": None,
+                "addon_version": None,
                 "python_binary_name": "python3",
             },
         ),
@@ -63,8 +63,8 @@ from splunk_add_on_ucc_framework import main
             ["--source", "package", "--ta-version", "2.1.0"],
             {
                 "source": "package",
-                "config": None,
-                "ta_version": "2.1.0",
+                "config_path": None,
+                "addon_version": "2.1.0",
                 "python_binary_name": "python3",
             },
         ),
@@ -79,8 +79,8 @@ from splunk_add_on_ucc_framework import main
             ],
             {
                 "source": "package",
-                "config": None,
-                "ta_version": "2.2.0",
+                "config_path": None,
+                "addon_version": "2.2.0",
                 "python_binary_name": "python.exe",
             },
         ),
@@ -97,8 +97,8 @@ from splunk_add_on_ucc_framework import main
             ],
             {
                 "source": "package",
-                "config": "/path/to/globalConfig.json",
-                "ta_version": "2.2.0",
+                "config_path": "/path/to/globalConfig.json",
+                "addon_version": "2.2.0",
                 "python_binary_name": "python.exe",
             },
         ),
@@ -115,8 +115,8 @@ from splunk_add_on_ucc_framework import main
             ],
             {
                 "source": "package",
-                "config": "/path/to/globalConfig.yaml",
-                "ta_version": "2.2.0",
+                "config_path": "/path/to/globalConfig.yaml",
+                "addon_version": "2.2.0",
                 "python_binary_name": "python.exe",
             },
         ),
@@ -134,14 +134,14 @@ from splunk_add_on_ucc_framework import main
             ],
             {
                 "source": "package",
-                "config": "/path/to/globalConfig.yaml",
-                "ta_version": "2.2.0",
+                "config_path": "/path/to/globalConfig.yaml",
+                "addon_version": "2.2.0",
                 "python_binary_name": "python.exe",
             },
         ),
     ],
 )
-@mock.patch("splunk_add_on_ucc_framework.main.generate")
+@mock.patch("splunk_add_on_ucc_framework.commands.build.generate")
 def test_build_command(mock_ucc_gen_generate, args, expected_parameters):
     main.main(args)
 

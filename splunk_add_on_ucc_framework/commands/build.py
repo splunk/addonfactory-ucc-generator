@@ -426,11 +426,11 @@ def _get_addon_version(addon_version: Optional[str]) -> str:
 
 
 def generate(
-    source,
-    config_path,
-    addon_version,
-    outputdir=None,
-    python_binary_name="python3",
+    source: str,
+    config_path: Optional[str] = None,
+    addon_version: Optional[str] = None,
+    outputdir: Optional[str] = None,
+    python_binary_name: str = "python3",
 ):
     logger.info(f"ucc-gen version {__version__} is used")
     logger.info(f"Python binary name to use: {python_binary_name}")

@@ -3,7 +3,7 @@ from os import path
 
 from tests.smoke import helpers
 
-import splunk_add_on_ucc_framework as ucc
+from splunk_add_on_ucc_framework.commands import build
 
 
 def test_ucc_generate():
@@ -15,7 +15,7 @@ def test_ucc_generate():
         "package_global_config_inputs_configuration_alerts",
         "package",
     )
-    ucc.generate(source=package_folder)
+    build.generate(source=package_folder)
 
 
 def test_ucc_generate_with_add_on_from_example_folder():
@@ -33,7 +33,7 @@ def test_ucc_generate_with_add_on_from_example_folder():
         "example",
         "globalConfig.json",
     )
-    ucc.generate(source=package_folder, config=config_path)
+    build.generate(source=package_folder, config_path=config_path)
 
 
 def test_ucc_generate_with_config_param():
@@ -56,7 +56,7 @@ def test_ucc_generate_with_config_param():
         "package_global_config_inputs_configuration_alerts",
         "globalConfig.json",
     )
-    ucc.generate(source=package_folder, config=config_path)
+    build.generate(source=package_folder, config_path=config_path)
 
 
 def test_ucc_generate_with_inputs_configuration_alerts():
@@ -69,7 +69,7 @@ def test_ucc_generate_with_inputs_configuration_alerts():
             "package_global_config_inputs_configuration_alerts",
             "package",
         )
-        ucc.generate(source=package_folder, outputdir=temp_dir)
+        build.generate(source=package_folder, outputdir=temp_dir)
 
         expected_folder = path.join(
             path.dirname(__file__),
@@ -153,7 +153,7 @@ def test_ucc_generate_with_configuration():
             "package_global_config_configuration",
             "package",
         )
-        ucc.generate(source=package_folder, outputdir=temp_dir, ta_version="1.1.1")
+        build.generate(source=package_folder, outputdir=temp_dir, addon_version="1.1.1")
 
         expected_folder = path.join(
             path.dirname(__file__),
@@ -219,7 +219,7 @@ def test_ucc_generate_with_configuration_files_only():
             "package_no_global_config",
             "package",
         )
-        ucc.generate(source=package_folder, outputdir=temp_dir)
+        build.generate(source=package_folder, outputdir=temp_dir)
 
         expected_folder = path.join(
             path.dirname(__file__),
@@ -265,7 +265,7 @@ def test_ucc_generate_openapi_with_configuration_files_only():
             "package_no_global_config",
             "package",
         )
-        ucc.generate(source=package_folder, outputdir=temp_dir)
+        build.generate(source=package_folder, outputdir=temp_dir)
 
         expected_file_path = path.join(
             temp_dir, "Splunk_TA_UCCExample", "static", "openapi.json"

@@ -17,7 +17,7 @@ import argparse
 import sys
 from typing import Optional, Sequence
 
-from splunk_add_on_ucc_framework import generate
+from splunk_add_on_ucc_framework.commands import build
 from splunk_add_on_ucc_framework.commands import init
 
 
@@ -120,10 +120,10 @@ def main(argv: Optional[Sequence[str]] = None):
 
     args = parser.parse_args(argv)
     if args.command == "build":
-        generate(
+        build.generate(
             source=args.source,
-            config=args.config,
-            ta_version=args.ta_version,
+            config_path=args.config,
+            addon_version=args.ta_version,
             python_binary_name=args.python_binary_name,
         )
     if args.command == "init":
