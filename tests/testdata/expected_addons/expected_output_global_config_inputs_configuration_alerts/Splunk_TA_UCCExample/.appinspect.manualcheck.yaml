@@ -1,0 +1,34 @@
+check_for_remote_code_execution_in_javascript:
+  comment: 'Y'
+check_external_data_sources:
+  comment: 'Y'
+check_splunk_logo:
+  comment: 'Y'
+check_hard_coded_paths:
+  comment: 'Y'
+check_editing_and_proofreading:
+  comment: 'Y'
+check_install_on_claimed_targets:
+  comment: 'Y'
+check_link_includes_contact_info:
+  comment: 'Y'
+check_for_auto_update_features:
+  comment: 'Y'
+check_for_known_vulnerabilities_in_third_party_libraries:
+  comment: 'Y'
+check_for_reverse_shells:
+  comment: 'Y'
+check_authorization_credentials:
+  comment: 'Y'
+check_embedded_links:
+  comment: 'Y'
+check_fs_writes:
+  comment: 'Y'
+check_for_stacktrace_returned_to_user:
+  comment: 'Y'
+check_dependencies:
+  comment: 'Y'
+check_documented_included_open_source:
+  comment: 'Y'
+check_requires_access_to_files_outside_apps_dir:
+  comment: 'Y'
