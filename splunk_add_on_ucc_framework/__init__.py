@@ -17,8 +17,6 @@ __version__ = "5.21.0"
 
 import logging
 
-from splunk_add_on_ucc_framework.commands import build
-
 logger = logging.getLogger("ucc_gen")
 logger.setLevel(logging.INFO)
 formatter = logging.Formatter("%(asctime)s %(levelname)s: %(message)s")
@@ -26,13 +24,3 @@ stream_handler = logging.StreamHandler()
 stream_handler.setLevel(logging.INFO)
 stream_handler.setFormatter(formatter)
 logger.addHandler(stream_handler)
-
-
-def generate(
-    source="package",
-    config=None,
-    ta_version=None,
-    outputdir=None,
-    python_binary_name="python3",
-):
-    build.generate(source, config, ta_version, outputdir, python_binary_name)
