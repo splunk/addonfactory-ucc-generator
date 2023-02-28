@@ -69,7 +69,7 @@ def test_ucc_generate_with_inputs_configuration_alerts():
             "package_global_config_inputs_configuration_alerts",
             "package",
         )
-        build.generate(source=package_folder, outputdir=temp_dir)
+        build.generate(source=package_folder, output_directory=temp_dir)
 
         expected_folder = path.join(
             path.dirname(__file__),
@@ -153,7 +153,9 @@ def test_ucc_generate_with_configuration():
             "package_global_config_configuration",
             "package",
         )
-        build.generate(source=package_folder, outputdir=temp_dir, addon_version="1.1.1")
+        build.generate(
+            source=package_folder, output_directory=temp_dir, addon_version="1.1.1"
+        )
 
         expected_folder = path.join(
             path.dirname(__file__),
@@ -219,7 +221,7 @@ def test_ucc_generate_with_configuration_files_only():
             "package_no_global_config",
             "package",
         )
-        build.generate(source=package_folder, outputdir=temp_dir)
+        build.generate(source=package_folder, output_directory=temp_dir)
 
         expected_folder = path.join(
             path.dirname(__file__),
@@ -265,7 +267,7 @@ def test_ucc_generate_openapi_with_configuration_files_only():
             "package_no_global_config",
             "package",
         )
-        build.generate(source=package_folder, outputdir=temp_dir)
+        build.generate(source=package_folder, output_directory=temp_dir)
 
         expected_file_path = path.join(
             temp_dir, "Splunk_TA_UCCExample", "static", "openapi.json"
