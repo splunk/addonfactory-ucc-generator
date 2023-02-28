@@ -168,10 +168,12 @@ jobs:
         run: pip install splunk-packaging-toolkit
       - name: Slim tests/expected_output_global_config_inputs_configuration_alerts/Splunk_TA_UCCExample
         run: mkdir tests/slimmed; slim package tests/testdata/expected_addons/expected_output_global_config_inputs_configuration_alerts/Splunk_TA_UCCExample -o tests/slimmed
-      - uses: splunk/appinspect-cli-action@v1.5
+      - uses: splunk/appinspect-cli-action@v1.6
         with:
           app_path: tests/slimmed
           included_tags: ${{ matrix.tags }}
+          appinspect_manual_checks: tests/testdata/expected_addons/expected_output_global_config_inputs_configuration_alerts/.appinspect.manualcheck.yaml
+          appinspect_expected_failures: tests/testdata/expected_addons/expected_output_global_config_inputs_configuration_alerts/.appinspect.expect.yaml
 
   pre-commit:
     runs-on: ubuntu-latest
