@@ -1,0 +1,4 @@
+check_that_extracted_splunk_app_does_not_contain_prohibited_directories_or_files:
+  comment: 'Y'
+check_that_splunk_app_package_does_not_contain_files_outside_of_app:
+  comment: 'Y'
