@@ -88,21 +88,6 @@ class AlertActionsConfBase:
             os.makedirs(readme_path)
         return op.join(readme_path, spec_file)
 
-    def get_icon_dir(self, create_dir_path=True):
-        icon_dir = op.join(self._package_path, "appserver", "static")
-        if not op.exists(icon_dir) and create_dir_path:
-            os.makedirs(icon_dir)
-        return icon_dir
-
-    def get_icon_name(self, alert):
-        return "alert_" + alert[ac.SHORT_NAME] + ".png"
-
-    def get_icon_path(self, alert, create_dir_path=True):
-        return op.join(
-            self.get_icon_dir(create_dir_path=create_dir_path),
-            self.get_icon_name(alert),
-        )
-
 
 class AlertActionsConfGeneration(AlertActionsConfBase):
     DEFAULT_CONF_TEMPLATE = "alert_actions.conf.template"
