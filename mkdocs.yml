@@ -43,5 +43,6 @@ nav:
     - Dependent Dropdown: "advanced/dependent_dropdown.md"
     - OAuth Support: "advanced/oAuth_support.md"
     - Custom REST Handler: "advanced/custom_rest_handler.md"
+    - Groups Feature: "advanced/groups_feature.md"
   - Troubleshooting: "troubleshooting.md"
   - Contributing: "contributing.md"
