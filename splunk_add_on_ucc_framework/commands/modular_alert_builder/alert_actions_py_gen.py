@@ -19,13 +19,13 @@ from os import path as op
 
 from jinja2 import Environment, FileSystemLoader
 
-from splunk_add_on_ucc_framework.modular_alert_builder.build_core import (
+from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
     alert_actions_exceptions as aae,
 )
-from splunk_add_on_ucc_framework.modular_alert_builder.build_core import (
+from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
     arf_consts as ac,
 )
-from splunk_add_on_ucc_framework.modular_alert_builder.build_core.alert_actions_helper import (
+from splunk_add_on_ucc_framework.commands.modular_alert_builder.alert_actions_helper import (
     write_file,
 )
 
@@ -60,7 +60,7 @@ class AlertActionsPyBase:
     def get_alert_py_name(self, helper=""):
         return self._current_alert[ac.SHORT_NAME] + helper + ".py"
 
-    def get_alert_py_path(self, helper=""):
+    def get_alert_py_path(self):
         if not self._package_path:
             return None
         return op.join(self._package_path, "bin", self.get_alert_py_name())
@@ -74,15 +74,6 @@ class AlertActionsPyBase:
         return op.join(
             self._package_path, "bin", self._lib_dir, self.get_alert_helper_py_name()
         )
-
-    def get_declare_py_name(self):
-        return self._lib_dir + "_declare.py"
-
-    def get_decalre_py_path(self):
-        if not self._package_path:
-            return None
-        bin_dir = op.join(self._package_path, "bin")
-        return op.join(bin_dir, self.get_declare_py_name())
 
     def get_template_py_files(self):
         bin_dir = op.join(self._package_path, "bin")

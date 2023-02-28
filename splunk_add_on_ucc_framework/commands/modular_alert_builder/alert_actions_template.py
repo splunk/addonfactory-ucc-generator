@@ -13,4 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-#
+
+import os.path as op
+
+
+class AlertActionsTemplateMgr:
+    CURRENT_DIR = op.dirname(op.abspath(__file__))
+    DEFAULT_TEMPLATE_DIR = op.join(CURRENT_DIR, "arf_template")
+    DEFAULT_HTML_LOOKUP_DIR = op.join(DEFAULT_TEMPLATE_DIR, "default_html_theme")
+
+    def __init__(self, html_theme=None):
+        self._html_theme = html_theme or AlertActionsTemplateMgr.DEFAULT_HTML_LOOKUP_DIR
+
+    def get_html_lookup_dir(self):
+        return self._html_theme

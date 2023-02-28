@@ -23,16 +23,16 @@ from os import path as op
 
 from jinja2 import Environment, FileSystemLoader
 
-from splunk_add_on_ucc_framework.modular_alert_builder.build_core import (
+from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
     alert_actions_exceptions as aae,
 )
-from splunk_add_on_ucc_framework.modular_alert_builder.build_core import (
+from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
     arf_consts as ac,
 )
-from splunk_add_on_ucc_framework.modular_alert_builder.build_core.alert_actions_helper import (
+from splunk_add_on_ucc_framework.commands.modular_alert_builder.alert_actions_helper import (
     write_file,
 )
-from splunk_add_on_ucc_framework.modular_alert_builder.build_core.alert_actions_merge import (
+from splunk_add_on_ucc_framework.commands.modular_alert_builder.alert_actions_merge import (
     remove_alert_from_conf_file,
 )
 
@@ -87,21 +87,6 @@ class AlertActionsConfBase:
         if not op.exists(readme_path) and create_dir_path:
             os.makedirs(readme_path)
         return op.join(readme_path, spec_file)
-
-    def get_icon_dir(self, create_dir_path=True):
-        icon_dir = op.join(self._package_path, "appserver", "static")
-        if not op.exists(icon_dir) and create_dir_path:
-            os.makedirs(icon_dir)
-        return icon_dir
-
-    def get_icon_name(self, alert):
-        return "alert_" + alert[ac.SHORT_NAME] + ".png"
-
-    def get_icon_path(self, alert, create_dir_path=True):
-        return op.join(
-            self.get_icon_dir(create_dir_path=create_dir_path),
-            self.get_icon_name(alert),
-        )
 
 
 class AlertActionsConfGeneration(AlertActionsConfBase):

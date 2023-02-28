@@ -19,9 +19,7 @@ header:
     copyright-owner: Splunk Inc.
 
   paths-ignore:
-    - ".circleci/"
     - ".github/"
-    - ".vscode/"
     - "dist"
     - "**/*.md"
     - "LICENSE"
@@ -29,7 +27,7 @@ header:
     - "*.lock"
     - "docs/**"
     - "splunk_add_on_ucc_framework/templates/*"
-    - "splunk_add_on_ucc_framework/modular_alert_builder/build_core/arf_template/**"
+    - "splunk_add_on_ucc_framework/commands/modular_alert_builder/arf_template/**"
     - "tests/**"
     - "README.md"
     - "mkdocs.yml"
