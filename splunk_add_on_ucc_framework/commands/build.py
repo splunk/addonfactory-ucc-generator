@@ -37,7 +37,9 @@ from splunk_add_on_ucc_framework import server_conf as server_conf_lib
 from splunk_add_on_ucc_framework import app_manifest as app_manifest_lib
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 from splunk_add_on_ucc_framework import normalize
-from splunk_add_on_ucc_framework.modular_alert_builder.build_core import generate_alerts
+from splunk_add_on_ucc_framework.commands.modular_alert_builder.build_core import (
+    generate_alerts,
+)
 from splunk_add_on_ucc_framework.commands.rest_builder import (
     global_config_builder_schema,
     global_config_post_processor,

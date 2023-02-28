@@ -21,10 +21,10 @@ from shutil import copy
 
 import addonfactory_splunk_conf_parser_lib as conf_parser
 
-from splunk_add_on_ucc_framework.modular_alert_builder.build_core import (
+from splunk_add_on_ucc_framework.commands.modular_alert_builder.build_core import (
     alert_actions_exceptions as aae,
 )
-from splunk_add_on_ucc_framework.modular_alert_builder.build_core import (
+from splunk_add_on_ucc_framework.commands.modular_alert_builder.build_core import (
     arf_consts as ac,
 )
 
