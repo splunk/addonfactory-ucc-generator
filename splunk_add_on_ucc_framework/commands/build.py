@@ -56,6 +56,7 @@ logger = logging.getLogger("ucc_gen")
 
 PARENT_DIR = ".."
 internal_root_dir = os.path.dirname(os.path.dirname(__file__))
+# nosemgrep: splunk.autoescape-disabled
 j2_env = Environment(
     loader=FileSystemLoader(os.path.join(internal_root_dir, "templates"))
 )

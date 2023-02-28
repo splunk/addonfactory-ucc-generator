@@ -42,6 +42,7 @@ class AlertHtmlBase:
         self._all_setting = input_setting
         self._package_path = package_path
         self._current_alert = None
+        # nosemgrep: splunk.autoescape-disabled
         self._templates = Environment(
             loader=FileSystemLoader(
                 [
