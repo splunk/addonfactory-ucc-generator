@@ -13,4 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-docker run -v "$PWD/output:/opt/splunk/etc/apps/" -p 8000:8000 -p 8088:8088 -p 8089:8089 -p 9997:9997 -e "SPLUNK_START_ARGS=--accept-license" -e "SPLUNK_PASSWORD=Chang3d!" -e "SPLUNK_HEC_TOKEN=4a8a737d-5452-426c-a6f7-106dca4e813f" -d --rm --name splunk splunk/splunk:latest
+docker run \
+  -v "$PWD/output:/opt/splunk/etc/apps/" \
+  -p 8000:8000 \
+  -p 8088:8088 \
+  -p 8089:8089 \
+  -p 9997:9997 \
+  -e "SPLUNK_START_ARGS=--accept-license" \
+  -e "SPLUNK_PASSWORD=Chang3d!" \
+  -e "SPLUNK_HEC_TOKEN=4a8a737d-5452-426c-a6f7-106dca4e813f" \
+  -d \
+  --rm \
+  --name splunk splunk/splunk:${1:-latest}

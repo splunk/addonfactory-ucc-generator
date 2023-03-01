@@ -12,6 +12,16 @@ on:
     branches: [main, develop, "release/**"]
 
 jobs:
+  meta:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix_supportedSplunk: ${{ steps.matrix.outputs.supportedSplunk }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: matrix
+        id: matrix
+        uses: splunk/addonfactory-test-matrix-action@v1
+
   fossa-scan:
     continue-on-error: true
     runs-on: ubuntu-latest
@@ -102,11 +112,14 @@ jobs:
       - run: poetry run pytest tests/unit
 
   test-ui:
-    name: test-ui -m ${{ matrix.test-mark }}
+    name: test-ui Splunk ${{ matrix.splunk.version }} -m ${{ matrix.test-mark }} 
     runs-on: ubuntu-latest
     continue-on-error: true
+    needs:
+      - meta
     strategy:
       matrix:
+        splunk: ${{ fromJson(needs.meta.outputs.matrix_supportedSplunk) }}
         test-mark:
           - "default"
           - "logging_page and not default"
@@ -133,7 +146,7 @@ jobs:
         run: poetry run ucc-gen --source tests/testdata/test_addons/package_global_config_configuration/package
       - name: Run Splunk in docker
         run: |
-          ./run_splunk.sh
+          ./run_splunk.sh ${{ matrix.splunk.version }}
           until curl -Lsk "https://localhost:8088/services/collector/health" &>/dev/null ; do echo -n "Waiting for HEC-" && sleep 5 ; done
         timeout-minutes: 5
       - name: Run Pytest
