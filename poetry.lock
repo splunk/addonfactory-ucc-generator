@@ -19,14 +19,6 @@ python-dateutil = ">=2.7.0"
 typing-extensions = {version = "*", markers = "python_version < \"3.8\""}
 
 [[package]]
-name = "atomicwrites"
-version = "1.4.1"
-description = "Atomic file writes."
-category = "dev"
-optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-
-[[package]]
 name = "attrs"
 version = "22.2.0"
 description = "Classes Without Boilerplate"
@@ -154,6 +146,17 @@ python-versions = ">=3.7"
 dev = ["coverage", "flake8", "lxml", "memory-profiler", "mypy (==0.950)", "sphinx", "tox", "xmlschema (>=1.9.0)"]
 
 [[package]]
+name = "exceptiongroup"
+version = "1.1.0"
+description = "Backport of PEP 654 (exception groups)"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[package.extras]
+test = ["pytest (>=6)"]
+
+[[package]]
 name = "execnet"
 version = "1.9.0"
 description = "execnet: rapid multi-Python deployment"
@@ -212,7 +215,7 @@ dev = ["flake8", "markdown", "twine", "wheel"]
 
 [[package]]
 name = "httplib2"
-version = "0.20.4"
+version = "0.21.0"
 description = "A comprehensive HTTP client library."
 category = "dev"
 optional = false
@@ -531,25 +534,24 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "pytest"
-version = "6.2.5"
+version = "7.2.1"
 description = "pytest: simple powerful testing with Python"
 category = "dev"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.7"
 
 [package.dependencies]
-atomicwrites = {version = ">=1.0", markers = "sys_platform == \"win32\""}
 attrs = ">=19.2.0"
 colorama = {version = "*", markers = "sys_platform == \"win32\""}
+exceptiongroup = {version = ">=1.0.0rc8", markers = "python_version < \"3.11\""}
 importlib-metadata = {version = ">=0.12", markers = "python_version < \"3.8\""}
 iniconfig = "*"
 packaging = "*"
 pluggy = ">=0.12,<2.0"
-py = ">=1.8.2"
-toml = "*"
+tomli = {version = ">=1.0.0", markers = "python_version < \"3.11\""}
 
 [package.extras]
-testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "requests", "xmlschema"]
+testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "pygments (>=2.7.2)", "requests", "xmlschema"]
 
 [[package]]
 name = "pytest-html"
@@ -588,7 +590,7 @@ pytest = "*"
 
 [[package]]
 name = "pytest-splunk-addon"
-version = "4.1.2"
+version = "5.0.0"
 description = "A Dynamic test tool for Splunk Apps and Add-ons"
 category = "dev"
 optional = false
@@ -599,7 +601,6 @@ addonfactory-splunk-conf-parser-lib = ">=0.3.3,<0.4.0"
 defusedxml = ">=0.7.1,<0.8.0"
 Faker = ">=13.12.0,<14.0.0"
 filelock = ">=3.0,<4.0"
-httplib2 = "<=0.20.4"
 jsonschema = ">=4.2.1,<5.0.0"
 junitparser = ">=2.2.0,<3.0.0"
 pytest = ">5.4.0,<7.3"
@@ -607,6 +608,7 @@ pytest-ordering = ">=0.6,<0.7"
 pytest-xdist = ">=2.3.0"
 requests = ">=2,<3"
 splunk-sdk = ">=1.6,<2.0"
+splunksplwrapper = ">=1.0.1,<2.0.0"
 xmlschema = ">=1.11.3,<2.0.0"
 xmltodict = ">=0.13.0,<0.14.0"
 
@@ -615,7 +617,7 @@ docker = ["lovely-pytest-docker (>=0,<1)"]
 
 [[package]]
 name = "pytest-splunk-addon-ui-smartx"
-version = "2.3.0"
+version = "2.3.1"
 description = "Library to support testing Splunk Add-on UX"
 category = "dev"
 optional = false
@@ -623,7 +625,6 @@ python-versions = ">=3.7,<4.0"
 
 [package.dependencies]
 cssselect = "*"
-future = ">=0.18,<0.19"
 lxml = ">=4.8.0,<5.0.0"
 msedge-selenium-tools = "*"
 pytest-html = "*"
@@ -633,7 +634,7 @@ webdriver-manager = "*"
 
 [[package]]
 name = "pytest-xdist"
-version = "3.1.0"
+version = "3.2.0"
 description = "pytest xdist plugin for distributed testing, most importantly across multiple CPUs"
 category = "dev"
 optional = false
@@ -750,11 +751,24 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
 name = "splunk-sdk"
-version = "1.7.2"
+version = "1.7.3"
 description = "The Splunk Software Development Kit for Python."
 category = "dev"
 optional = false
 python-versions = "*"
+
+[[package]]
+name = "splunksplwrapper"
+version = "1.0.1"
+description = "Package to interact with Splunk"
+category = "dev"
+optional = false
+python-versions = ">=3.7,<4.0"
+
+[package.dependencies]
+defusedxml = ">=0.7.1,<0.8.0"
+httplib2 = ">=0.21.0,<0.22.0"
+splunk-sdk = ">=1.6.18,<2.0.0"
 
 [[package]]
 name = "text-unidecode"
@@ -765,12 +779,12 @@ optional = false
 python-versions = "*"
 
 [[package]]
-name = "toml"
-version = "0.10.2"
-description = "Python Library for Tom's Obvious, Minimal Language"
+name = "tomli"
+version = "2.0.1"
+description = "A lil' TOML parser"
 category = "dev"
 optional = false
-python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
+python-versions = ">=3.7"
 
 [[package]]
 name = "tqdm"
@@ -874,7 +888,7 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "44f023628066ed2517a84e969718e12db051a8ff8195b0107324276ce68f6d73"
+content-hash = "8ea5b42d590217db5b177b81f6016a74d5992e7b0ffc4ad14f848fe271d07e95"
 
 [metadata.files]
 addonfactory-splunk-conf-parser-lib = [
@@ -884,9 +898,6 @@ addonfactory-splunk-conf-parser-lib = [
 arrow = [
     {file = "arrow-1.2.3-py3-none-any.whl", hash = "sha256:5a49ab92e3b7b71d96cd6bfcc4df14efefc9dfa96ea19045815914a6ab6b1fe2"},
     {file = "arrow-1.2.3.tar.gz", hash = "sha256:3934b30ca1b9f292376d9db15b19446088d12ec58629bc3f0da28fd55fb633a1"},
-]
-atomicwrites = [
-    {file = "atomicwrites-1.4.1.tar.gz", hash = "sha256:81b2c9071a49367a7f770170e5eec8cb66567cfbbc8c73d20ce5ca4a8d71cf11"},
 ]
 attrs = [
     {file = "attrs-22.2.0-py3-none-any.whl", hash = "sha256:29e95c7f6778868dbd49170f98f8818f78f3dc5e0e37c0b1f474e3561b240836"},
@@ -1022,6 +1033,10 @@ elementpath = [
     {file = "elementpath-2.5.3-py3-none-any.whl", hash = "sha256:5ef1d51e8daa670f007914ff0f78ca7b2ecaa47e0ea0c5c699a29e6bc5f50385"},
     {file = "elementpath-2.5.3.tar.gz", hash = "sha256:b8aeb6f27dddc10fb9201b62090628a846cbae8577f3544cb1075fa38d0817f6"},
 ]
+exceptiongroup = [
+    {file = "exceptiongroup-1.1.0-py3-none-any.whl", hash = "sha256:327cbda3da756e2de031a3107b81ab7b3770a602c4d16ca618298c526f4bec1e"},
+    {file = "exceptiongroup-1.1.0.tar.gz", hash = "sha256:bcb67d800a4497e1b404c2dd44fca47d3b7a5e5433dbab67f96c1a685cdfdf23"},
+]
 execnet = [
     {file = "execnet-1.9.0-py2.py3-none-any.whl", hash = "sha256:a295f7cc774947aac58dde7fdc85f4aa00c42adf5d8f5468fc630c1acf30a142"},
     {file = "execnet-1.9.0.tar.gz", hash = "sha256:8f694f3ba9cc92cab508b152dcfe322153975c29bda272e2fd7f3f00f36e47c5"},
@@ -1042,8 +1057,8 @@ ghp-import = [
     {file = "ghp_import-2.1.0-py3-none-any.whl", hash = "sha256:8337dd7b50877f163d4c0289bc1f1c7f127550241988d568c1db512c4324a619"},
 ]
 httplib2 = [
-    {file = "httplib2-0.20.4-py3-none-any.whl", hash = "sha256:8b6a905cb1c79eefd03f8669fd993c36dc341f7c558f056cb5a33b5c2f458543"},
-    {file = "httplib2-0.20.4.tar.gz", hash = "sha256:58a98e45b4b1a48273073f905d2961666ecf0fbac4250ea5b47aef259eb5c585"},
+    {file = "httplib2-0.21.0-py3-none-any.whl", hash = "sha256:987c8bb3eb82d3fa60c68699510a692aa2ad9c4bd4f123e51dfb1488c14cdd01"},
+    {file = "httplib2-0.21.0.tar.gz", hash = "sha256:fc144f091c7286b82bec71bdbd9b27323ba709cc612568d3000893bfd9cb4b34"},
 ]
 idna = [
     {file = "idna-3.4-py3-none-any.whl", hash = "sha256:90b77e79eaa3eba6de819a0c442c0b4ceefc341a7a2ab77d7562bf49f425c5c2"},
@@ -1292,8 +1307,8 @@ pyrsistent = [
     {file = "pyrsistent-0.19.3.tar.gz", hash = "sha256:1a2994773706bbb4995c31a97bc94f1418314923bd1048c6d964837040376440"},
 ]
 pytest = [
-    {file = "pytest-6.2.5-py3-none-any.whl", hash = "sha256:7310f8d27bc79ced999e760ca304d69f6ba6c6649c0b60fb0e04a4a77cacc134"},
-    {file = "pytest-6.2.5.tar.gz", hash = "sha256:131b36680866a76e6781d13f101efb86cf674ebb9762eb70d3082b6f29889e89"},
+    {file = "pytest-7.2.1-py3-none-any.whl", hash = "sha256:c7c6ca206e93355074ae32f7403e8ea12163b1163c976fee7d4d84027c162be5"},
+    {file = "pytest-7.2.1.tar.gz", hash = "sha256:d45e0952f3727241918b8fd0f376f5ff6b301cc0777c6f9a556935c92d8a7d42"},
 ]
 pytest-html = [
     {file = "pytest-html-3.2.0.tar.gz", hash = "sha256:c4e2f4bb0bffc437f51ad2174a8a3e71df81bbc2f6894604e604af18fbe687c3"},
@@ -1309,16 +1324,16 @@ pytest-ordering = [
     {file = "pytest_ordering-0.6-py3-none-any.whl", hash = "sha256:3f314a178dbeb6777509548727dc69edf22d6d9a2867bf2d310ab85c403380b6"},
 ]
 pytest-splunk-addon = [
-    {file = "pytest_splunk_addon-4.1.2-py3-none-any.whl", hash = "sha256:a32e3e0c1221582e7b689d44d3e359cae1ad053a7868c6397be529b2abfea4ee"},
-    {file = "pytest_splunk_addon-4.1.2.tar.gz", hash = "sha256:5883b6f40432c71ab4edb9d387b81d3e958eca523bf6c98d719bdbfcfcbffb88"},
+    {file = "pytest_splunk_addon-5.0.0-py3-none-any.whl", hash = "sha256:3826ff3461d19e73f96659bc23fbc54c8aab733891a5c1659b14db71a5aca7b0"},
+    {file = "pytest_splunk_addon-5.0.0.tar.gz", hash = "sha256:0cc2d43be34e7c1494082ece859771e4c1e7de69cdad89a6a6f7ccb270b97c22"},
 ]
 pytest-splunk-addon-ui-smartx = [
-    {file = "pytest-splunk-addon-ui-smartx-2.3.0.tar.gz", hash = "sha256:42a7bb49d32be377f2e4d9b2546d946b95766e3dd395675103c326e90e05c5ea"},
-    {file = "pytest_splunk_addon_ui_smartx-2.3.0-py3-none-any.whl", hash = "sha256:e5a5ed885022667283d4dfad6e902ed043a5ca292f77155e8036624d3b2f9e65"},
+    {file = "pytest_splunk_addon_ui_smartx-2.3.1-py3-none-any.whl", hash = "sha256:2bc28eda5849e2a4c2b3296d727aba9c1252ae590304a85caa569391d5ed972d"},
+    {file = "pytest_splunk_addon_ui_smartx-2.3.1.tar.gz", hash = "sha256:4c738429555fdfc472521c593b447f8ab7b9d95fbe49630b5f3bd29f00aae1b2"},
 ]
 pytest-xdist = [
-    {file = "pytest-xdist-3.1.0.tar.gz", hash = "sha256:40fdb8f3544921c5dfcd486ac080ce22870e71d82ced6d2e78fa97c2addd480c"},
-    {file = "pytest_xdist-3.1.0-py3-none-any.whl", hash = "sha256:70a76f191d8a1d2d6be69fc440cdf85f3e4c03c08b520fd5dc5d338d6cf07d89"},
+    {file = "pytest-xdist-3.2.0.tar.gz", hash = "sha256:fa10f95a2564cd91652f2d132725183c3b590d9fdcdec09d3677386ecf4c1ce9"},
+    {file = "pytest_xdist-3.2.0-py3-none-any.whl", hash = "sha256:336098e3bbd8193276867cc87db8b22903c3927665dff9d1ac8684c02f597b68"},
 ]
 python-dateutil = [
     {file = "python-dateutil-2.8.2.tar.gz", hash = "sha256:0123cacc1627ae19ddf3c27a5de5bd67ee4586fbdd6440d9748f8abb483d3e86"},
@@ -1481,15 +1496,19 @@ six = [
     {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
 ]
 splunk-sdk = [
-    {file = "splunk-sdk-1.7.2.tar.gz", hash = "sha256:36d27f83e7cc8309be6e3b92e46c547caea566b0c006238025073843e586e5a8"},
+    {file = "splunk-sdk-1.7.3.tar.gz", hash = "sha256:21c4564095e04857b8c206db8197cdda64708bf7b6cefddf2fd9ac88cfd45196"},
+]
+splunksplwrapper = [
+    {file = "splunksplwrapper-1.0.1-py3-none-any.whl", hash = "sha256:3ba28266a6a093d2c39ccdf56edbd6528a84abebd0b7ff23cf24244a43a8f14d"},
+    {file = "splunksplwrapper-1.0.1.tar.gz", hash = "sha256:d6102ab03fea642ed445adf38f11a151668e07a1a2dd5f2c1ff62d8c5626414e"},
 ]
 text-unidecode = [
     {file = "text-unidecode-1.3.tar.gz", hash = "sha256:bad6603bb14d279193107714b288be206cac565dfa49aa5b105294dd5c4aab93"},
     {file = "text_unidecode-1.3-py2.py3-none-any.whl", hash = "sha256:1311f10e8b895935241623731c2ba64f4c455287888b18189350b67134a822e8"},
 ]
-toml = [
-    {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},
-    {file = "toml-0.10.2.tar.gz", hash = "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f"},
+tomli = [
+    {file = "tomli-2.0.1-py3-none-any.whl", hash = "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc"},
+    {file = "tomli-2.0.1.tar.gz", hash = "sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f"},
 ]
 tqdm = [
     {file = "tqdm-4.64.1-py2.py3-none-any.whl", hash = "sha256:6fee160d6ffcd1b1c68c65f14c829c22832bc401726335ce92c52d395944a6a1"},
