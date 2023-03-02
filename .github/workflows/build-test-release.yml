@@ -124,8 +124,9 @@ jobs:
       matrix:
         splunk: ${{ fromJson(needs.meta.outputs.matrix_supportedSplunk) }}
         test-mark:
-          - "default"
-          - "logging_page and not default"
+          - "logging"
+          - "proxy"
+          - "account"
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4

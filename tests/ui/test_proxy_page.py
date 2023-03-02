@@ -19,7 +19,7 @@ from pytest_splunk_addon_ui_smartx.pages.proxy import Proxy
 
 
 class TestProxy(UccTester):
-    @pytest.mark.default
+    @pytest.mark.proxy
     def test_proxy_default_configs(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, example_ta
     ):

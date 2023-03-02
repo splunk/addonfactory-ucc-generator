@@ -30,7 +30,7 @@ def reset_configuration(ucc_smartx_rest_helper, example_ta):
 
 class TestLogging(UccTester):
     @pytest.mark.default
-    @pytest.mark.logging_page
+    @pytest.mark.logging
     def test_logging_default_log_level(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, example_ta
     ):
@@ -43,7 +43,7 @@ class TestLogging(UccTester):
         self.assert_util(logging.log_level.get_value, example_ta["default_log_level"])
 
     @pytest.mark.default
-    @pytest.mark.logging_page
+    @pytest.mark.logging
     def test_logging_list_log_levels(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, example_ta
     ):
@@ -55,7 +55,7 @@ class TestLogging(UccTester):
         expected_list = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
         self.assert_util(list(logging.log_level.list_of_values()), expected_list)
 
-    @pytest.mark.logging_page
+    @pytest.mark.logging
     @pytest.mark.xfail
     def test_logging_required_field_log_level(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, example_ta
@@ -72,7 +72,7 @@ class TestLogging(UccTester):
             left_args={"expect_error": True},
         )
 
-    @pytest.mark.logging_page
+    @pytest.mark.logging
     def test_logging_select_random_log_level(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, example_ta
     ):
@@ -87,7 +87,7 @@ class TestLogging(UccTester):
             logging.save()
             self.assert_util(logging.log_level.get_value, log_level)
 
-    @pytest.mark.logging_page
+    @pytest.mark.logging
     def test_logging_selected_log_level_frontend(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, example_ta
     ):
@@ -101,7 +101,7 @@ class TestLogging(UccTester):
         logging.save()
         self.assert_util(logging.log_level.get_value().lower(), selection_log.lower())
 
-    @pytest.mark.logging_page
+    @pytest.mark.logging
     def test_logging_selected_log_level_backend(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, example_ta
     ):
