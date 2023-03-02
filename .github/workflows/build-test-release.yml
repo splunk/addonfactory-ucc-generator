@@ -112,11 +112,14 @@ jobs:
       - run: poetry run pytest tests/unit
 
   test-ui:
-    name: test-ui Splunk ${{ matrix.splunk.version }} -m ${{ matrix.test-mark }} 
+    name: test-ui Splunk ${{ matrix.splunk.version }} -m ${{ matrix.test-mark }}
+    if: github.event.action == 'labeled' || github.event.label.name == 'run-ui-tests'
     runs-on: ubuntu-latest
     continue-on-error: true
     needs:
       - meta
+      - test-unit
+      - test-smoke
     strategy:
       matrix:
         splunk: ${{ fromJson(needs.meta.outputs.matrix_supportedSplunk) }}
