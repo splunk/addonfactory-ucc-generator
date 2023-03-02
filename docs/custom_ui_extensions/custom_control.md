@@ -1,38 +1,52 @@
-Custom Control class is used to create a custom input component.
-
-Here is how you specify a custom control hook for a service/tab in the globalConfig.json file:
-```
-{
-    "type": "custom",
-    "options": {
-        "src": "custom_control",
-        "type": "external"
-    }
-}
-```
-The custom_control file's relative path to globalConfig is `appserver/static/js/build/custom/custom_control.js`
-
-### Usage
-
-Use custom control in the tabs:
-![image](../images/Custom_Control_GlobalConfig.png)
+The Custom Control feature allows you to display any customised input component in the form. The developer can easily design and render any complex input component with this feature. Modern TAs frequently require the use of complex input components, and this feature will allow them to use the custom component in the form that is best suited to their needs without relying on newer releases of UCC that support their component.
 
 ### Properties
 
 | Property          | Description |
 | ----------------- | ----------- |
-| globalConfig      | It is an hierarchical object having the properties and their values same as the globalConfig file. |
-| el                | The html element of the custom row. |
-| data              | This object has information about the value, mode of execution (create, edit, clone), service/tab name in which the custom component resides, etc. |
+| globalConfig       | It is a hierarchical object that contains the globalConfig file's properties and values. |
+| el                | The `el` is used to render a custom input element in a form. |
+| data              | The `data` object holds details regarding the execution mode (create, edit, clone), the value of a field, and the service name where this custom component is being rendered. |
 | setValue          | This method is used to set the value of the custom component. <p>setValue: ƒ (newValue)</p> |
-| util              | This is a utility object with various functions that can be used to manipulate the page UI. There are 4 methods associated : <ul><li>`clearAllErrorMsg`: ƒ (State)</li><li>`setErrorFieldMsg`: ƒ (field, msg)</li><li>`setErrorMsg`: ƒ (msg)</li><li>`setState`: ƒ setState(callback)</li></ul>|
+| util              | This is a utility object with various functions that can be used to manipulate the UI. <br>There are 4 methods associated : <ul><li>`clearAllErrorMsg`: ƒ (State)</li><li>`setErrorFieldMsg`: ƒ (field, msg)</li><li>`setErrorMsg`: ƒ (msg)</li><li>`setState`: ƒ setState(callback)</li></ul> |
 
 ### Methods
 
 | Property          | Description |
 | ----------------- | ----------- |
-| Render            | This method should contain the rendering logic for the custom component. This method is called when the create, edit or clone form is rendered. |
-| Validation        | This method should contain the validation logic for the value of the custom component. |
+| render            | `render` is a method which should have logic for the custom component, and it will be executed automatically when the create, edit, or clone actions performed. |
+| validation        | This method should contain the validation logic for the value of the custom component. |
+
+### Usage
+```
+{
+    "name": "account",
+    "table": {},
+    "entity": [
+        {
+            "type": "custom",
+            "label": "Example Custom Control",
+            "field": "custom_control_field",
+            "help": "This is an example multipleSelect for account entity",
+            "options":{
+                "src": "custom_control",
+                "type": "external"
+            },
+            "required": true
+        },
+        {
+            "type": "text",
+            "label": "Name",
+            "options": {
+                "placeholder": "Required"
+            },
+            "field": "name",
+            "help": "Enter a unique name for this account.",
+            "required": true
+        },
+    ]
+}
+```
 
 ### Example
 
@@ -41,11 +55,11 @@ class CustomControl {
     /**
      *
      * @constructor
-     * @param {Object} globalConfig - Global configuration.
+     * @param {object} globalConfig - Global configuration.
      * @param {element} el - The element of the custom row.
-     * @param {string} data - Service name.
-     * @param {object} util - the utility object
-     * @param {function} setValue - set value of the custom field
+     * @param {object} data - Mode, serviceName, and value.
+     * @param {object} util - The utility object.
+     * @param {function} setValue - set value of the custom field.
      */
     constructor(globalConfig, el, data, setValue, util) {
         this.globalConfig = globalConfig;
@@ -54,6 +68,8 @@ class CustomControl {
         this.util = util;
         this.setValue = setValue;
     }
+
+    _onSelectOptionChange() { }
 
     render() {
         let content_html = `
@@ -65,39 +81,18 @@ class CustomControl {
 
         this.el.innerHTML = content_html;
 
-        $('select#custom_control').on('change', () => this._onCheckBoxChange());
+        $('select#custom_control').on('change', () => this._onSelectOptionChange());
         return this;
-    }
-
-    // This method is called when checkbox changed
-    _onCheckBoxChange() {
-        this._updateState();
-    }
-
-    _updateState() {
-        const btn = document.querySelector('#custom_control');
-        this.util.setState((prevState) => {
-            const data = { ...prevState.data };
-            data.custom_control_field.value = btn.value;
-            return { data };
-        });
-    }
-
-    validation(field, value) {
-        // Validation logic for value. Return the error message if failed.
-        if (value === 'input_two') {
-            return 'Wrong value selected.';
-        }
     }
 }
 
 export default CustomControl;
 ```
 
+> Note: The Javascript file for the custom control should be saved in the custom folder at `appserver/static/js/build/custom/`.
+
 ### Output
 
-This is how custom control looks:
-![image](../images/Custom_Control_Output.png)
+This is how it looks like in the UI:
 
-Here's how custom validations look:
-![image](../images/Custom_Control_Validations.png)
+![image](../images/custom_ui_extensions/Custom_Control_Output.png)
