@@ -71,6 +71,13 @@ class CustomControl {
 
     _onSelectOptionChange() { }
 
+    validation(field, value) {
+        // Validation logic for value. Return the error message if failed.
+        if (value === 'input_two') {
+            return 'Wrong value selected.';
+        }
+    }
+
     render() {
         let content_html = `
             <select id="custom_control">
