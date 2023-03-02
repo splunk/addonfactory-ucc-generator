@@ -18,6 +18,7 @@ The Custom Control feature allows you to display any customised input component 
 | validation        | This method should contain the validation logic for the value of the custom component. |
 
 ### Usage
+
 ```
 {
     "name": "account",

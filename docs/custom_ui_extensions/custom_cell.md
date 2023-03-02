@@ -19,6 +19,7 @@ A Custom Cell is used to update the content of a table cell.
 | Render            | This method should contain the rendering logic for the custom component. This method is called when the create, edit, or clone form is rendered. |
 
 ### Usage
+
 ```
 {
     "name": "account",
