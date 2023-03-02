@@ -1,25 +1,12 @@
-Custom Cell is used when the content of a table cell needs to be updated.
-We can use Custom Cell inside the table header in the inputs and configuration page.
+A Custom Cell is used to update the content of a table cell. 
 
-Here is how you specify a custom cell hook:
-```
-"customCell": {
-  "src": "custom_cell",
-  "type": "external"
-}
-```
-The custom_cell file's relative path to globalConfig file is `appserver/static/js/build/custom/custom_cell.js`
-
-### Usage
-
-Use Custom Cell in the configuration table:
-![image](../images/Custom_Cell_GlobalConfig.png)
+`customCell` attribute will be used in the table header on the inputs and configuration page.
 
 ### Properties
 
 | Property          | Description |
 | ----------------- | ----------- |
-| globalConfig      | It is an hierarchical object having the properties and their values same as the globalConfig file. |
+| globalConfig      | It is a hierarchical object that contains the globalConfig file's properties and values. |
 | el                | The html element of the custom cell. |
 | serviceName       | The name of the service/tab specified in the globalConfig file. |
 | row               | The object of the record for which the CustomRowInput constructor is called. |
@@ -29,7 +16,34 @@ Use Custom Cell in the configuration table:
 
 | Property          | Description |
 | ----------------- | ----------- |
-| Render            | This method should contain the rendering logic for the custom component. This method is called when the create, edit or clone form is rendered. |
+| Render            | This method should contain the rendering logic for the custom component. This method is called when the create, edit, or clone form is rendered. |
+
+### Usage
+
+```
+{
+    "name": "account",
+    "title": "Account"
+    "entity": [],
+    "table": {
+        "actions": ["edit", "delete", "clone"],
+        "header": [{
+            "label": "Name",
+            "field": "name"
+        }, {
+            "label": "Auth Type",
+            "field": "auth_type"
+        }, {
+            "label": "Test Custom Cell",
+            "field": "test_custom_cell",
+            "customCell": {
+                "src": "CustomInputCell",
+                "type": "external"
+            }
+        }]
+    }
+}
+```
 
 ### Example
 
@@ -68,7 +82,10 @@ class CustomInputCell {
 export default CustomInputCell; 
 ```
 
+> Note: The Javascript file for the custom cell should be saved in the custom folder at `appserver/static/js/build/custom/`.
+
 ### Output
 
-This is how custom cell looks:
-![image](../images/Custom_Cell_Output.png)
+This is how it looks like in the UI:
+
+![image](../images/custom_ui_extensions/Custom_Cell_Output.png)
