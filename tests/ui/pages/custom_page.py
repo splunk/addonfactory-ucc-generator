@@ -22,7 +22,9 @@ class CustomPage(Entity):
 
         # Components
         if ucc_smartx_selenium_helper:
-            super().__init__(ucc_smartx_selenium_helper.browser, entity_container)
+            super().__init__(
+                ucc_smartx_selenium_helper.browser, entity_container, open_page
+            )
             self.splunk_web_url = ucc_smartx_selenium_helper.splunk_web_url
             self.open()
             self.test_string = TextBox(
