@@ -113,7 +113,7 @@ jobs:
 
   test-ui:
     name: test-ui Splunk ${{ matrix.splunk.version }} -m ${{ matrix.test-mark }}
-    if: github.event.action == 'labeled' || github.event.label.name == 'run-ui-tests'
+    if: github.event.action == 'labeled' && github.event.label.name == 'run-ui-tests'
     runs-on: ubuntu-latest
     continue-on-error: true
     needs:
