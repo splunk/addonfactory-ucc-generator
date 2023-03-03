@@ -13,7 +13,6 @@ class CustomPage(Entity):
         self,
         ucc_smartx_selenium_helper=None,
         ucc_smartx_rest_helper=None,
-        open_page=True,
     ):
         """
         :param ucc_smartx_selenium_helper: fixture contains browser, urls and session key
@@ -22,9 +21,7 @@ class CustomPage(Entity):
 
         # Components
         if ucc_smartx_selenium_helper:
-            super().__init__(
-                ucc_smartx_selenium_helper.browser, entity_container, open_page
-            )
+            super().__init__(ucc_smartx_selenium_helper.browser, entity_container)
             self.splunk_web_url = ucc_smartx_selenium_helper.splunk_web_url
             self.open()
             self.test_string = TextBox(
@@ -90,7 +87,7 @@ class CustomPage(Entity):
             )
         )
         tab = Tab(self.browser)
-        tab.open_tab("custom_tab")
+        tab.open_tab("custom_abc")
 
     def _get_custom_url(self):
         """
