@@ -1,26 +1,11 @@
-When clicking on the left side icon provided in each row, the input specific details are displayed.
-To update the existing details, we can use the Custom Row feature.
-
-Here is how you specify a custom row hook:
-```
-"customRow": {
-  "src": "custom_row",
-  "type": "external"
-}
-```
-The custom_row file's relative path to globalConfig file is `appserver/static/js/build/custom/custom_row.js`
-
-### Usage
-
-Use Custom Row in the inputs table:
-![image](../images/Custom_Row_GlobalConfig.png)
+When a row is expanded on the Inputs table, Custom Row is utilized to incorporate a customized element. By clicking on the icon provided on the left side of each row, the input-specific details are displayed.
 
 ### Properties
 
 | Property          | Description |
 | ----------------- | ----------- |
-| globalConfig      | It is an hierarchical object having the properties and their values same as the globalConfig file. |
-| el                | The html element of the custom cell. |
+| globalConfig       | It is a hierarchical object that contains the globalConfig file's properties and values. |
+| el                | The `el` is used to render a customized element on the Inputs table when a row is expanded. |
 | serviceName       | The name of the service/tab specified in the globalConfig file. |
 | row               | The object of the record for which the CustomRowInput constructor is called. |
 
@@ -28,7 +13,26 @@ Use Custom Row in the inputs table:
 
 | Property          | Description |
 | ----------------- | ----------- |
-| Render            | This method should contain the rendering logic for the custom component. This method is called when the create, edit or clone form is rendered. |
+| render            | `render` is a method which should have logic for the custom row component, and it will be executed automatically when the create, edit, or clone actions performed. |
+
+### Usage
+
+```
+"inputs": {
+    "title": "Inputs",
+    "description": "Manage your data inputs",
+    "services": [],
+    "table": {
+        "actions": ["edit", "enable", "delete", "clone"],
+        "header": [],
+        "customRow": {
+            "src": "custom_input_row",
+            "type": "external"
+        }
+    }
+}
+```
+
 
 ### Example
 
@@ -59,7 +63,10 @@ class CustomInputRow {
 export default CustomInputRow;
 ```
 
+> Note: The Javascript file for the custom control should be saved in the custom folder at `appserver/static/js/build/custom/`.
+
 ### Output
 
-This is how custom row looks:
-![image](../images/Custom_Row_Output.png)
+This is how it looks like in the UI:
+
+![image](../images/custom_ui_extensions/Custom_Row_Output.png)
