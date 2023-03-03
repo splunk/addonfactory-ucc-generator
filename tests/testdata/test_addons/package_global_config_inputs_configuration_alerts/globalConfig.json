@@ -347,7 +347,7 @@
                         },
                         {
                             "field": "testNumber",
-                            "label": "Test number",
+                            "label": "Test Number",
                             "type": "text",
                             "validators": [
                                 {
@@ -361,7 +361,7 @@
                         },
                         {
                             "field": "testRegex",
-                            "label": "Test regex",
+                            "label": "Test Regex",
                             "type": "text",
                             "validators": [
                                 {
@@ -383,7 +383,7 @@
                         },
                         {
                             "field": "testIpv4",
-                            "label": "Test ipv4",
+                            "label": "Test Ipv4",
                             "type": "text",
                             "validators": [
                                 {
@@ -393,7 +393,7 @@
                         },
                         {
                             "field": "testDate",
-                            "label": "Test date",
+                            "label": "Test Date",
                             "type": "text",
                             "validators": [
                                 {
@@ -403,7 +403,7 @@
                         },
                         {
                             "field": "testUrl",
-                            "label": "Test url",
+                            "label": "Test Url",
                             "type": "text",
                             "validators": [
                                 {

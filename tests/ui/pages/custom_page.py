@@ -2,9 +2,6 @@ from pytest_splunk_addon_ui_smartx.components.base_component import Selector
 from pytest_splunk_addon_ui_smartx.components.tabs import Tab
 from pytest_splunk_addon_ui_smartx.components.entity import Entity
 from pytest_splunk_addon_ui_smartx.components.controls.textbox import TextBox
-from pytest_splunk_addon_ui_smartx.components.controls.toggle import Toggle
-from pytest_splunk_addon_ui_smartx.components.controls.multi_select import MultiSelect
-from pytest_splunk_addon_ui_smartx.components.controls.learn_more import LearnMore
 from pytest_splunk_addon_ui_smartx.backend_confs import SingleBackendConf
 
 
@@ -26,47 +23,31 @@ class CustomPage(Entity):
             self.open()
             self.test_string = TextBox(
                 ucc_smartx_selenium_helper.browser,
-                Selector(select='[data-test="control-group"][data-name="test_string"]'),
+                Selector(select='[data-test="control-group"][data-name="testString"]'),
             )
             self.test_number = TextBox(
                 ucc_smartx_selenium_helper.browser,
-                Selector(select='[data-test="control-group"][data-name="test_number"]'),
+                Selector(select='[data-test="control-group"][data-name="testNumber"]'),
             )
             self.test_regex = TextBox(
                 ucc_smartx_selenium_helper.browser,
-                Selector(select='[data-test="control-group"][data-name="test_regex"]'),
+                Selector(select='[data-test="control-group"][data-name="testRegex"]'),
             )
             self.test_email = TextBox(
                 ucc_smartx_selenium_helper.browser,
-                Selector(select='[data-test="control-group"][data-name="test_email"]'),
+                Selector(select='[data-test="control-group"][data-name="testEmail"]'),
             )
             self.test_ipv4 = TextBox(
                 ucc_smartx_selenium_helper.browser,
-                Selector(select='[data-test="control-group"][data-name="test_ipv4"]'),
+                Selector(select='[data-test="control-group"][data-name="testIpv4"]'),
             )
             self.test_date = TextBox(
                 ucc_smartx_selenium_helper.browser,
-                Selector(select='[data-test="control-group"][data-name="test_date"]'),
+                Selector(select='[data-test="control-group"][data-name="testDate"]'),
             )
             self.test_url = TextBox(
                 ucc_smartx_selenium_helper.browser,
-                Selector(select='[data-test="control-group"][data-name="test_url"]'),
-            )
-            self.test_radio = Toggle(
-                ucc_smartx_selenium_helper.browser,
-                Selector(select='[data-test="control-group"][data-name="test_radio"]'),
-            )
-            self.test_multiselect = MultiSelect(
-                ucc_smartx_selenium_helper.browser,
-                Selector(
-                    select='[data-test="control-group"][data-name="test_multiselect"]'
-                ),
-            )
-            self.test_help_link = LearnMore(
-                ucc_smartx_selenium_helper.browser,
-                Selector(
-                    select='[data-test="control-group"][data-name="test_help_link"]'
-                ),
+                Selector(select='[data-test="control-group"][data-name="testUrl"]'),
             )
 
         if ucc_smartx_rest_helper:
@@ -93,6 +74,6 @@ class CustomPage(Entity):
         """
         get rest endpoint for the configuration
         """
-        return "{}/servicesNS/nobody/Splunk_TA_UCCExample/configs/conf-splunk_ta_uccexample_settings/custom_tab".format(
+        return "{}/servicesNS/nobody/Splunk_TA_UCCExample/configs/conf-splunk_ta_uccexample_settings/custom_abc".format(
             self.splunk_mgmt_url
         )
