@@ -15,7 +15,6 @@ def reset_configuration(ucc_smartx_rest_helper):
 
 
 class TestLoggingPage(UccTester):
-    @pytest.mark.default
     @pytest.mark.logging
     def test_logging_default_log_level(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
@@ -28,7 +27,6 @@ class TestLoggingPage(UccTester):
         self.assert_util(logging.backend_conf.get_parameter("disabled"), False)
         self.assert_util(logging.log_level.get_value, DEFAULT_LOG_LEVEL)
 
-    @pytest.mark.default
     @pytest.mark.logging
     def test_logging_list_log_levels(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
@@ -44,7 +42,7 @@ class TestLoggingPage(UccTester):
     @pytest.mark.logging
     @pytest.mark.xfail
     def test_logging_required_field_log_level(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, reset_configuration
     ):
         logging = Logging(
             C.ADDON_NAME,
