@@ -1,5 +1,5 @@
 from pytest_splunk_addon_ui_smartx.base_test import UccTester
-from tests.ui.account_page import AccountPage
+from tests.ui.pages.account_page import AccountPage
 
 import pytest
 import copy
@@ -1056,7 +1056,7 @@ class TestAccount(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.account
     def test_account_delete_account_in_use(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_account, add_input
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_account
     ):
         """Verifies by deleting the input used account"""
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
