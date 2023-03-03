@@ -124,6 +124,9 @@ jobs:
       matrix:
         splunk: ${{ fromJson(needs.meta.outputs.matrix_supportedSplunk) }}
         test-mark:
+          - "logging"
+          - "proxy"
+          - "account"
           - "custom"
     steps:
       - uses: actions/checkout@v3

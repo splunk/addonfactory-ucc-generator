@@ -15,6 +15,8 @@ from pytest_splunk_addon_ui_smartx.components.controls.message import Message
 from pytest_splunk_addon_ui_smartx.components.conf_table import ConfigurationTable
 from pytest_splunk_addon_ui_smartx.backend_confs import ListBackendConf
 
+from tests.ui import constants as C
+
 
 class AccountEntity(Entity):
     def __init__(self, browser, container):
@@ -143,9 +145,7 @@ class AccountPage(Page):
         """
 
         self.browser.get(
-            "{}/en-US/app/Splunk_TA_UCCExample/configuration".format(
-                self.splunk_web_url
-            )
+            f"{self.splunk_web_url}/en-US/app/{C.ADDON_NAME}/configuration"
         )
         tab = Tab(self.browser)
         tab.open_tab("account")
@@ -154,6 +154,4 @@ class AccountPage(Page):
         """
         Get rest endpoint for the configuration
         """
-        return "{}/servicesNS/nobody/Splunk_TA_UCCExample/splunk_ta_uccexample_account".format(
-            self.splunk_mgmt_url
-        )
+        return f"{self.splunk_mgmt_url}/servicesNS/nobody/{C.ADDON_NAME}/splunk_ta_uccexample_account"

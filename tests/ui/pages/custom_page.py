@@ -4,6 +4,8 @@ from pytest_splunk_addon_ui_smartx.components.entity import Entity
 from pytest_splunk_addon_ui_smartx.components.controls.textbox import TextBox
 from pytest_splunk_addon_ui_smartx.backend_confs import SingleBackendConf
 
+from tests.ui import constants as C
+
 
 class CustomPage(Entity):
     def __init__(
@@ -14,7 +16,7 @@ class CustomPage(Entity):
         """
         :param ucc_smartx_selenium_helper: fixture contains browser, urls and session key
         """
-        entity_container = Selector(select='div[id="custom_tabTab"]')
+        entity_container = Selector(select='div[id="custom_abcTab"]')
 
         # Components
         if ucc_smartx_selenium_helper:
@@ -63,9 +65,7 @@ class CustomPage(Entity):
         Open the required page. Page(super) class opens the page by default.
         """
         self.browser.get(
-            "{}/en-US/app/Splunk_TA_UCCExample/configuration".format(
-                self.splunk_web_url
-            )
+            f"{self.splunk_web_url}/en-US/app/{C.ADDON_NAME}/configuration"
         )
         tab = Tab(self.browser)
         tab.open_tab("custom_abc")
@@ -74,6 +74,7 @@ class CustomPage(Entity):
         """
         get rest endpoint for the configuration
         """
-        return "{}/servicesNS/nobody/Splunk_TA_UCCExample/configs/conf-splunk_ta_uccexample_settings/custom_abc".format(
-            self.splunk_mgmt_url
+        return (
+            f"{self.splunk_mgmt_url}/servicesNS/nobody/{C.ADDON_NAME}/"
+            f"configs/conf-splunk_ta_uccexample_settings/custom_abc"
         )
