@@ -587,7 +587,8 @@ def generate(
         ta_name, os.path.abspath(os.path.join(source, PARENT_DIR, ".uccignore"))
     )
     _remove_listed_files(ignore_list)
-    logger.info(f"Removed {ignore_list} files")
+    if ignore_list:
+        logger.info(f"Removed {ignore_list} files")
     _recursive_overwrite(source, os.path.join(output_directory, ta_name))
     logger.info("Copied package directory")
 

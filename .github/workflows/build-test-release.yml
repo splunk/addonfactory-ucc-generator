@@ -113,7 +113,7 @@ jobs:
 
   test-ui:
     name: test-ui Splunk ${{ matrix.splunk.version }} -m ${{ matrix.test-mark }}
-    if: github.event.action == 'labeled' || github.event.label.name == 'run-ui-tests'
+    if: contains(github.event.pull_request.labels.*.name, 'run-ui-tests')
     runs-on: ubuntu-latest
     continue-on-error: true
     needs:
@@ -124,8 +124,10 @@ jobs:
       matrix:
         splunk: ${{ fromJson(needs.meta.outputs.matrix_supportedSplunk) }}
         test-mark:
-          - "default"
-          - "logging_page and not default"
+          - "logging"
+          - "proxy"
+          - "account"
+          - "custom"
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
