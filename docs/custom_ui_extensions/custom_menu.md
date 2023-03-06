@@ -1,4 +1,4 @@
-Custom Menu can be created when there is more than one input is present on the input page. 
+Custom Menu can be created when there is more than one input present on the inputs page. 
 
 > This feature is deprecated (will be removed in the next major version) as [`Multilevel Menu`](https://splunk.github.io/addonfactory-ucc-generator/tabs/#multi-level-menu) is now ready to use if more than one input is available.
 
