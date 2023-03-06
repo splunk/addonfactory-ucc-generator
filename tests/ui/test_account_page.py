@@ -54,17 +54,6 @@ def delete_accounts(ucc_smartx_rest_helper):
     account.backend_conf.delete_all_stanzas()
 
 
-@pytest.fixture
-def add_delete_account(ucc_smartx_rest_helper):
-    account = AccountPage(
-        ucc_smartx_rest_helper=ucc_smartx_rest_helper, open_page=False
-    )
-    url = account._get_account_endpoint()
-    kwargs = ACCOUNT_CONFIG
-    yield account.backend_conf.post_stanza(url, kwargs)
-    account.backend_conf.delete_all_stanzas()
-
-
 class TestAccount(UccTester):
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
