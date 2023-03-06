@@ -3,7 +3,6 @@ from pytest_splunk_addon_ui_smartx.base_test import UccTester
 from pytest_splunk_addon_ui_smartx.components.base_component import Selector
 from pytest_splunk_addon_ui_smartx.components.controls.button import Button
 
-from tests.ui.test_account_page import add_account  # noqa: F401
 from tests.ui.pages.alert_action_page import AlertPage
 
 
@@ -80,7 +79,9 @@ class TestAlertActions(UccTester):
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.alert
-    def test_account_functionality(self, ucc_smartx_selenium_helper):
+    def test_account_functionality(
+        self, ucc_smartx_selenium_helper, add_delete_account
+    ):
         alert_page = AlertPage(ucc_smartx_selenium_helper, None)
         alert_page.alert_entity.open()
         alert_page.alert_entity.add_action_dropdown.wait_for_values()
@@ -143,7 +144,9 @@ class TestAlertActions(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.sanity_test
     @pytest.mark.alert
-    def test_alert_action_save(self, ucc_smartx_selenium_helper, clean_alert):
+    def test_alert_action_save(
+        self, ucc_smartx_selenium_helper, clean_alert, add_delete_account
+    ):
         alert_page = AlertPage(ucc_smartx_selenium_helper, None)
         alert_page.alert_entity.open()
         alert_page.alert_entity.add_action_dropdown.wait_for_values()
