@@ -67,7 +67,7 @@
     <div class="controls">
 		<splunk-search-dropdown name="action.test_alert.param.account" id="test_alert_account"                 value-field="title"
                 label-field="title"
-                search="| rest /servicesNS/nobody/TA-SNOW/admin/TA_SNOW_account | dedup title"
+                search="| rest /servicesNS/nobody/Splunk_TA_UCCExample/splunk_ta_uccexample_account | dedup title"
  />
             <span class="help-block">
         Select the account from the dropdown
