@@ -6,17 +6,17 @@ A Custom Cell is used to update the content of a table cell.
 
 | Property          | Description |
 | ----------------- | ----------- |
-| globalConfig      | It is a hierarchical object that contains the globalConfig file's properties and values. |
-| el                | The html element of the custom cell. |
+| globalConfig       | It is a hierarchical object that contains the globalConfig file's properties and values. |
+| el                | The `el` is used to render a custom cell element in a table. |
 | serviceName       | The name of the service/tab specified in the globalConfig file. |
 | row               | The object of the record for which the CustomRowInput constructor is called. |
-| field             | The name of the field as specified in the globalConfig file. |
+| field              | The name of the field as specified in the globalConfig file. |
 
 ### Methods
 
 | Property          | Description |
 | ----------------- | ----------- |
-| Render            | This method should contain the rendering logic for the custom component. This method is called when the create, edit, or clone form is rendered. |
+| render            | `render` is a method which should have logic for the custom cell component, and it will be executed automatically when the create, edit, or clone actions performed. |
 
 ### Usage
 

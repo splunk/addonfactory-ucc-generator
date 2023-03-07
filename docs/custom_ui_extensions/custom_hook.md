@@ -12,7 +12,7 @@ The `type` key needs to be set as external to webpack the custom extensions. UCC
 | ----------------- | ----------- |
 | globalConfig       | It is a hierarchical object that contains the globalConfig file's properties and values. |
 | serviceName       | The name of the service/tab specified in the globalConfig. |
-| state             | `state` is an object that represents the actual state value of the components in the service/tab when the hook's constructor is called. Updating this object will not update the state of the page. Use the `util.setState` method to update the page's state. |
+| state             | `state` is an object that represents the actual state value of the components in the service/tab when the hook's constructor is called. Updating this object will not update the state of the page. Use the `util.setState` method to update the page's state. The `state` object contains the actual state data along with the  `errorMsg` and `warningMsg` properties. |
 | mode              | There are three possible modes: Edit, Clone and Delete. Which are used in service/tab components. |
 | util              | This is a utility object with various functions that can be used to manipulate the page UI. <br>There are 4 methods associated : <ul><li>`clearAllErrorMsg`: ƒ (State)</li><li>`setErrorFieldMsg`: ƒ (field, msg)</li><li>`setErrorMsg`: ƒ (msg)</li><li>`setState`: ƒ setState(callback)</li></ul> |
 | groupName         | The name of the menu group from which the inputs service is called. This parameter should only be used with the multi-level menu feature. |
