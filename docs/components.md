@@ -70,8 +70,7 @@ TBD
 
 Underlying `@splunk/react-ui` component: [`File`](https://splunkui.splunk.com/Packages/react-ui/File).
 
-The current implementation of the `file` component only supports `JSON` files 
-and accepts only 1 file (can be dragged into). 
+Define the file formats your add-on supports under `supportedFileTypes` key.
 
 Usage example below:
 
@@ -97,7 +96,7 @@ Usage example below:
 }
 ```
 
-> Note: `validators` field should be present for the file input exactly as it is in the example above.
+> Note: `validators` field should be present for the file input.
 
 This is how it looks like in the UI:
 
