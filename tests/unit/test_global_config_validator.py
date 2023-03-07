@@ -121,18 +121,9 @@ def test_config_validation_when_valid(filename, is_yaml):
             False,
             pytest.raises(GlobalConfigValidatorException),
             (
-                "`json` should be present in the "
+                "At least some type should be specified in "
                 "'supportedFileTypes' for "
                 "'service_account' field."
-            ),
-        ),
-        (
-            "invalid_config_json_is_missing_in_supported_file_types.json",
-            False,
-            pytest.raises(GlobalConfigValidatorException),
-            (
-                "`json` is only currently supported for "
-                "file input for 'service_account' field."
             ),
         ),
         (

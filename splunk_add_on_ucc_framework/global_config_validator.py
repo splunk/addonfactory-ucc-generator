@@ -140,14 +140,9 @@ class GlobalConfigValidator:
                             supported_file_types = validator.get("supportedFileTypes")
                             if supported_file_types is None:
                                 raise GlobalConfigValidatorException(
-                                    f"`json` should be present in the "
-                                    f"'supportedFileTypes' for "
+                                    f"At least some type should be specified "
+                                    f"in 'supportedFileTypes' for "
                                     f"'{entity['field']}' field."
-                                )
-                            if supported_file_types[0] != "json":
-                                raise GlobalConfigValidatorException(
-                                    f"`json` is only currently supported for "
-                                    f"file input for '{entity['field']}' field."
                                 )
 
     def _validate_string_validator(self, entity_field: str, validator: Dict[str, Any]):
