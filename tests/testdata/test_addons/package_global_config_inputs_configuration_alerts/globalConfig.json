@@ -1096,7 +1096,7 @@
                     "type": "singleSelectSplunkSearch",
                     "label": "Select Account",
                     "field": "account",
-                    "search": "| rest /servicesNS/nobody/TA-SNOW/admin/TA_SNOW_account | dedup title",
+                    "search": "| rest /servicesNS/nobody/Splunk_TA_UCCExample/splunk_ta_uccexample_account | dedup title",
                     "valueField": "title",
                     "labelField": "title",
                     "help": "Select the account from the dropdown",
@@ -1108,7 +1108,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.21.0R5b4bdb57",
+        "version": "5.21.0R8d71ffde",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.3"
     }

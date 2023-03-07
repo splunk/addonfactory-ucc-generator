@@ -104,7 +104,7 @@ def test_generate_alert_action(tmp_path):
                             "ctrl_props": {
                                 "value-field": "title",
                                 "label-field": "title",
-                                "search": "| rest /servicesNS/nobody/TA-SNOW/admin/TA_SNOW_account | dedup title",  # noqa: E501
+                                "search": "| rest /servicesNS/nobody/Splunk_TA_UCCExample/splunk_ta_uccexample_account | dedup title",  # noqa: E501
                             },
                         },
                     ],
