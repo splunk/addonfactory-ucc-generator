@@ -778,9 +778,8 @@
                             "type": "radio",
                             "label": "Example Radio",
                             "field": "input_two_radio",
-                            "defaultValue": "yes",
                             "help": "This is an example radio button for the input two entity",
-                            "required": false,
+                            "required": true,
                             "options": {
                                 "items": [
                                     {
@@ -1110,7 +1109,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.21.0Rf7787483",
+        "version": "5.21.0R1db77a7a",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.3"
     }
