@@ -449,7 +449,8 @@
                             "type": "checkbox",
                             "label": "Example Checkbox",
                             "field": "input_one_checkbox",
-                            "help": "This is an example checkbox for the input one entity"
+                            "help": "This is an example checkbox for the input one entity",
+                            "defaultValue": true
                         },
                         {
                             "type": "radio",
@@ -512,6 +513,7 @@
                             "field": "multipleSelectTest",
                             "label": "Multiple Select Test",
                             "type": "multipleSelect",
+                            "defaultValue": "a|b",
                             "options": {
                                 "delimiter": "|",
                                 "items": [
