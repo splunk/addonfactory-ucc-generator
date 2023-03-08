@@ -323,7 +323,6 @@ class TestAccount(UccTester):
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.account
-    @pytest.mark.xfail(reason="ADDON-61192, Smartx support for Toggle is broken")
     def test_account_required_field_username(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
@@ -345,7 +344,6 @@ class TestAccount(UccTester):
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.account
-    @pytest.mark.xfail(reason="ADDON-61192, Smartx support for Toggle is broken")
     def test_account_required_field_password(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
@@ -379,7 +377,6 @@ class TestAccount(UccTester):
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.account
-    @pytest.mark.xfail(reason="ADDON-61192, Smartx support for Toggle is broken")
     def test_account_required_field_name(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
@@ -500,7 +497,10 @@ class TestAccount(UccTester):
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.account
-    @pytest.mark.xfail(reason="ADDON-61192, Smartx support for Toggle is broken")
+    @pytest.mark.xfail(
+        reason="account.entity.environment.cancel_selected_value() is flaky, "
+        "passing locally, not working in CI, will be investigated later."
+    )
     def test_account_required_field_example_environment(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
@@ -523,7 +523,6 @@ class TestAccount(UccTester):
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.account
-    @pytest.mark.xfail(reason="ADDON-61192, Smartx support for Toggle is broken")
     def test_account_required_field_example_multiple_select(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
@@ -545,7 +544,6 @@ class TestAccount(UccTester):
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.account
-    @pytest.mark.xfail(reason="ADDON-61192, Smartx support for Toggle is broken")
     def test_account_required_field_client_id(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
@@ -566,7 +564,6 @@ class TestAccount(UccTester):
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.account
-    @pytest.mark.xfail(reason="ADDON-61192, Smartx support for Toggle is broken")
     def test_account_required_field_client_secret(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
@@ -757,7 +754,6 @@ class TestAccount(UccTester):
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.account
-    @pytest.mark.xfail(reason="ADDON-61192, Smartx support for Toggle is broken")
     def test_account_default_value_example_radio(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
@@ -769,7 +765,6 @@ class TestAccount(UccTester):
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.account
-    @pytest.mark.xfail(reason="ADDON-61192, Smartx support for Toggle is broken")
     def test_add_account_duplicate_name(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_account
     ):
@@ -862,7 +857,6 @@ class TestAccount(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.account
     @pytest.mark.sanity_test
-    @pytest.mark.xfail(reason="ADDON-61192, Smartx support for Toggle is broken")
     def test_account_edit_frontend_validation(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_account
     ):
@@ -906,7 +900,6 @@ class TestAccount(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.account
     @pytest.mark.sanity_test
-    @pytest.mark.xfail(reason="ADDON-61192, Smartx support for Toggle is broken")
     def test_account_clone_frontend_validation(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_account
     ):
@@ -977,7 +970,6 @@ class TestAccount(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.account
     @pytest.mark.sanity_test
-    @pytest.mark.xfail(reason="ADDON-61192, Smartx support for Toggle is broken")
     def test_account_edit_backend_validation(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_account
     ):
@@ -1009,7 +1001,6 @@ class TestAccount(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.account
     @pytest.mark.sanity_test
-    @pytest.mark.xfail(reason="ADDON-61192, Smartx support for Toggle is broken")
     def test_account_clone_backend_validation(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_account
     ):

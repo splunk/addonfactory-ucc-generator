@@ -617,7 +617,7 @@ docker = ["lovely-pytest-docker (>=0,<1)"]
 
 [[package]]
 name = "pytest-splunk-addon-ui-smartx"
-version = "2.3.1"
+version = "2.3.3b1"
 description = "Library to support testing Splunk Add-on UX"
 category = "dev"
 optional = false
@@ -628,6 +628,7 @@ cssselect = "*"
 lxml = ">=4.8.0,<5.0.0"
 msedge-selenium-tools = "*"
 pytest-html = "*"
+pytest-splunk-addon = ">=5.0.0,<6.0.0"
 selenium = "*"
 urllib3 = ">=1.21.1,<2.0.0"
 webdriver-manager = "*"
@@ -788,11 +789,11 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "tqdm"
-version = "4.64.1"
+version = "4.65.0"
 description = "Fast, Extensible Progress Meter"
 category = "dev"
 optional = false
-python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,>=2.7"
+python-versions = ">=3.7"
 
 [package.dependencies]
 colorama = {version = "*", markers = "platform_system == \"Windows\""}
@@ -888,7 +889,7 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "8ea5b42d590217db5b177b81f6016a74d5992e7b0ffc4ad14f848fe271d07e95"
+content-hash = "5dd1235cf46fd631a63acc6f1b7f733a9784d9b75671aeb681756560a6b0aed2"
 
 [metadata.files]
 addonfactory-splunk-conf-parser-lib = [
@@ -1328,8 +1329,8 @@ pytest-splunk-addon = [
     {file = "pytest_splunk_addon-5.0.0.tar.gz", hash = "sha256:0cc2d43be34e7c1494082ece859771e4c1e7de69cdad89a6a6f7ccb270b97c22"},
 ]
 pytest-splunk-addon-ui-smartx = [
-    {file = "pytest_splunk_addon_ui_smartx-2.3.1-py3-none-any.whl", hash = "sha256:2bc28eda5849e2a4c2b3296d727aba9c1252ae590304a85caa569391d5ed972d"},
-    {file = "pytest_splunk_addon_ui_smartx-2.3.1.tar.gz", hash = "sha256:4c738429555fdfc472521c593b447f8ab7b9d95fbe49630b5f3bd29f00aae1b2"},
+    {file = "pytest_splunk_addon_ui_smartx-2.3.3b1-py3-none-any.whl", hash = "sha256:cbd242a2c7af3a94a145de0ace6fb1c571f11de4dbfd9564c24543fd296a30ed"},
+    {file = "pytest_splunk_addon_ui_smartx-2.3.3b1.tar.gz", hash = "sha256:cd0b4228e3730deb2296f247a828fa29bc6eba589d3cb99c715fa730f66a13d7"},
 ]
 pytest-xdist = [
     {file = "pytest-xdist-3.2.0.tar.gz", hash = "sha256:fa10f95a2564cd91652f2d132725183c3b590d9fdcdec09d3677386ecf4c1ce9"},
@@ -1511,8 +1512,8 @@ tomli = [
     {file = "tomli-2.0.1.tar.gz", hash = "sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f"},
 ]
 tqdm = [
-    {file = "tqdm-4.64.1-py2.py3-none-any.whl", hash = "sha256:6fee160d6ffcd1b1c68c65f14c829c22832bc401726335ce92c52d395944a6a1"},
-    {file = "tqdm-4.64.1.tar.gz", hash = "sha256:5f4f682a004951c1b450bc753c710e9280c5746ce6ffedee253ddbcbf54cf1e4"},
+    {file = "tqdm-4.65.0-py3-none-any.whl", hash = "sha256:c4f53a17fe37e132815abceec022631be8ffe1b9381c2e6e30aa70edc99e9671"},
+    {file = "tqdm-4.65.0.tar.gz", hash = "sha256:1871fb68a86b8fb3b59ca4cdd3dcccbc7e6d613eeed31f4c332531977b89beb5"},
 ]
 typing-extensions = [
     {file = "typing_extensions-4.4.0-py3-none-any.whl", hash = "sha256:16fa4864408f655d35ec496218b85f79b3437c829e93320c7c9215ccfd92489e"},
