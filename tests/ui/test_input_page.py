@@ -130,7 +130,7 @@ class TestInputPage(UccTester):
     ):
         """Verifies headers of input table"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
-        header_list = ["Name", "Account Name", "Interval", "Index", "Status", "Actions"]
+        header_list = ["Name", "Account", "Interval", "Index", "Status", "Actions"]
         self.assert_util(input_page.table.get_headers, header_list)
 
     @pytest.mark.execute_enterprise_cloud_true
@@ -1059,7 +1059,7 @@ class TestInputPage(UccTester):
         value_to_test = {
             "account": "test_input",
             "input_one_checkbox": "1",
-            "input_one_radio": "0",
+            "input_one_radio": "1",
             "interval": "90",
             "limit": "1000",
             "multipleSelectTest": "a|b",
@@ -1095,10 +1095,10 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     @pytest.mark.sanity_test
-    def test_example_input_one_edit_frontend_validation(
+    def test_example_input_one_edit_frontend_backend_validation(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
     ):
-        """Verifies the frontend edit functionality of the example input one entity"""
+        """Verifies the frontend and backend edit functionality of the example input one entity"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         input_page.table.edit_row("dummy_input_one")
         input_page.entity1.example_account.wait_for_values()
@@ -1127,32 +1127,6 @@ class TestInputPage(UccTester):
                 "actions": "Edit | Clone | Delete",
             },
         )
-
-    @pytest.mark.execute_enterprise_cloud_true
-    @pytest.mark.forwarder
-    @pytest.mark.input
-    @pytest.mark.sanity_test
-    def test_example_input_one_edit_backend_validation(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
-    ):
-        """Verifies the backend edit functionality of the example input one entity"""
-        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
-        input_page.table.edit_row("dummy_input_one")
-        input_page.entity1.example_account.wait_for_values()
-        input_page.entity1.example_checkbox.uncheck()
-        input_page.entity1.example_radio.select("No")
-        input_page.entity1.single_select_group_test.select("Four")
-        input_page.entity1.multiple_select_test.deselect("b")
-        input_page.entity1.interval.set_value("3600")
-        input_page.entity1.index.select("main")
-        input_page.entity1.example_account.select("test_input")
-        input_page.entity1.object.set_value("edit_object")
-        input_page.entity1.object_fields.set_value("edit_field")
-        input_page.entity1.order_by.set_value("LastDate")
-        input_page.entity1.limit.set_value("2000")
-        input_page.entity1.query_start_date.set_value("2020-20-20T20:20:20.000z")
-        self.assert_util(input_page.entity1.save, True)
-        input_page.table.wait_for_rows_to_appear(1)
         value_to_test = {
             "account": "test_input",
             "input_one_checkbox": "0",
@@ -1204,10 +1178,10 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     @pytest.mark.sanity_test
-    def test_example_input_one_clone_frontend_validation(
+    def test_example_input_one_clone_frontend_backend_validation(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
     ):
-        """Verifies the frontend clone functionality of the example input one entity"""
+        """Verifies the frontend and backend clone functionality of the example input one entity"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         input_page.table.wait_for_rows_to_appear(1)
         input_page.table.clone_row("dummy_input_one")
@@ -1228,24 +1202,6 @@ class TestInputPage(UccTester):
                 "actions": "Edit | Clone | Delete",
             },
         )
-
-    @pytest.mark.execute_enterprise_cloud_true
-    @pytest.mark.forwarder
-    @pytest.mark.input
-    @pytest.mark.sanity_test
-    def test_example_input_one_clone_backend_validation(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
-    ):
-        """Verifies the backend clone functionality of the example input one entity"""
-        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
-        input_page.table.wait_for_rows_to_appear(1)
-        input_page.table.clone_row("dummy_input_one")
-        input_page.entity1.example_account.wait_for_values()
-        input_page.entity1.name.set_value("dummy_input_one_Clone_Test")
-        input_page.entity1.interval.set_value("180")
-        input_page.entity1.limit.set_value("500")
-        self.assert_util(input_page.entity1.save, True)
-        input_page.table.wait_for_rows_to_appear(2)
         value_to_test = {
             "account": "test_input",
             "input_one_checkbox": "1",
@@ -1855,10 +1811,10 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     @pytest.mark.sanity_test
-    def test_example_input_two_add_frontend_validation(
+    def test_example_input_two_add_frontend_backend_validation(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
-        """Verifies the frontend after adding an Example Input Two"""
+        """Verifies the frontend and backend after adding an Example Input Two"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         input_page.create_new_input.select("Example Input Two")
         input_page.entity2.example_account.wait_for_values()
@@ -1884,29 +1840,6 @@ class TestInputPage(UccTester):
                 "actions": "Edit | Clone | Delete",
             },
         )
-
-    @pytest.mark.execute_enterprise_cloud_true
-    @pytest.mark.forwarder
-    @pytest.mark.input
-    @pytest.mark.sanity_test
-    def test_example_input_two_add_backend_validation(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
-    ):
-        """Verifies the backend after adding an Example Input Two"""
-        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
-        input_page.create_new_input.select("Example Input Two")
-        input_page.entity2.example_account.wait_for_values()
-        input_page.entity2.name.set_value("dummy_input")
-        input_page.entity2.example_checkbox.check()
-        input_page.entity2.example_radio.select("No")
-        input_page.entity2.example_multiple_select.select("Option One")
-        input_page.entity2.example_multiple_select.select("Option Two")
-        input_page.entity2.index.select("main")
-        input_page.entity2.interval.set_value("90")
-        input_page.entity2.example_account.select("test_input")
-        input_page.entity2.query_start_date.set_value("2020-12-11T20:00:32.000z")
-        self.assert_util(input_page.entity2.save, True)
-        input_page.table.wait_for_rows_to_appear(1)
         value_to_test = {
             "account": "test_input",
             "index": "main",
@@ -2089,28 +2022,15 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     @pytest.mark.sanity_test
-    def test_example_input_two_delete_row_frontend_validation(
+    def test_example_input_two_delete_row_frontend_backend_validation(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_two
     ):
-        """Verifies the frontend delete functionlity"""
+        """Verifies the frontend and backend delete functionality"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         input_page.table.input_status_toggle("dummy_input_two", enable=False)
         input_page.table.delete_row("dummy_input_two")
         input_page.table.wait_for_rows_to_appear(0)
         self.assert_util("dummy_input_two", input_page.table.get_table, "not in")
-
-    @pytest.mark.execute_enterprise_cloud_true
-    @pytest.mark.forwarder
-    @pytest.mark.input
-    @pytest.mark.sanity_test
-    def test_example_input_two_delete_row_backend_validation(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_two
-    ):
-        """Verifies the backend delete functionlity"""
-        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
-        input_page.table.input_status_toggle("dummy_input_two", enable=False)
-        input_page.table.delete_row("dummy_input_two")
-        input_page.table.wait_for_rows_to_appear(0)
         self.assert_util(
             "example_input_two://dummy_input_two",
             input_page.backend_conf.get_all_stanzas().keys(),
