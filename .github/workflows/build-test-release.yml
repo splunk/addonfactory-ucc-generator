@@ -129,6 +129,7 @@ jobs:
           - "account"
           - "custom"
           - "alert"
+          - "input"
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
