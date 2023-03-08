@@ -19,7 +19,7 @@ fields = [
         'input_one_checkbox',
         required=False,
         encrypted=False,
-        default=None,
+        default=True,
         validator=None
     ), 
     field.RestField(
@@ -40,7 +40,7 @@ fields = [
         'multipleSelectTest',
         required=False,
         encrypted=False,
-        default=None,
+        default='a|b',
         validator=None
     ), 
     field.RestField(
