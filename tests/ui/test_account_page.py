@@ -727,7 +727,7 @@ class TestAccount(UccTester):
     def test_account_select_value_example_multiple_select(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
-        """Verifies exampl multiple select value"""
+        """Verifies example multiple select value"""
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         account.entity.open()
         account.entity.multiple_select.select("Option One")
@@ -742,7 +742,7 @@ class TestAccount(UccTester):
     def test_account_search_value_example_multiple_select(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
-        """Verifies exampl multiple select seach funtionality"""
+        """Verifies example multiple select search functionality"""
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         account.entity.open()
         self.assert_util(
