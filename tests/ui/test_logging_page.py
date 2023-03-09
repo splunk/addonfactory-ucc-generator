@@ -40,7 +40,6 @@ class TestLoggingPage(UccTester):
         self.assert_util(list(logging.log_level.list_of_values()), expected_list)
 
     @pytest.mark.logging
-    @pytest.mark.xfail
     def test_logging_required_field_log_level(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, reset_configuration
     ):

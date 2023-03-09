@@ -298,6 +298,7 @@
                         {
                             "type": "singleSelect",
                             "label": "Log level",
+                            "required": true,
                             "options": {
                                 "disableSearch": true,
                                 "autoCompleteFields": [
@@ -1109,7 +1110,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.21.0R9e9820c9",
+        "version": "5.22.0R77b75161",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.3"
     }
