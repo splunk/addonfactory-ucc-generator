@@ -46,9 +46,6 @@
                             "label": "Upload File",
                             "help": "Upload service account's certificate",
                             "field": "service_account",
-                            "options": {
-                                "fileSupportMessage": "Here is the support message"
-                            },
                             "encrypted": true,
                             "required": true
                         }

@@ -147,10 +147,9 @@ pages:
         label: Upload file
         options:
           fileSupportMessage: Here is the support message
-        validators:
-        - type: file
           supportedFileTypes:
-          - json
+            - json
+            - pem
       title: Account
     - name: proxy
       entity:

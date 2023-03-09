@@ -216,14 +216,9 @@
                             "help": "Upload service account's certificate",
                             "field": "service_account",
                             "options": {
-                                "fileSupportMessage": "Here is the support message"
+                                "fileSupportMessage": "Here is the support message",
+                                "supportedFileTypes": ["json", "pem"]
                             },
-                            "validators": [
-                                {
-                                    "type": "file",
-                                    "supportedFileTypes": ["json"]
-                                }
-                            ],
                             "encrypted": true,
                             "required": true
                         }

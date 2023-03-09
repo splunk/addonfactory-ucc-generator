@@ -111,18 +111,20 @@ def test_config_validation_when_valid(filename, is_yaml):
             ),
         ),
         (
-            "invalid_config_validators_missing_for_file_input.json",
+            "invalid_config_options_missing_for_file_input.json",
             False,
             pytest.raises(GlobalConfigValidatorException),
-            ("File validator should be present for " "'service_account' field."),
+            (
+                "Options field for the file type should be present for 'service_account' field."
+            ),
         ),
         (
             "invalid_config_supported_file_types_field_is_missing.json",
             False,
             pytest.raises(GlobalConfigValidatorException),
             (
-                "At least some type should be specified in "
-                "'supportedFileTypes' for "
+                "You should define your supported file types in "
+                "the `supportedFileTypes` field for the "
                 "'service_account' field."
             ),
         ),

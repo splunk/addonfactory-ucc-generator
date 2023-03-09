@@ -118,9 +118,8 @@ class GlobalConfigValidator:
         """
         Validates that file-based field has all necessary fields.
         Things should be provided in case of file field:
-            * validators field
-            * at least 1 validator (file validator)
-            * only `json` is now supported in `supportedFileTypes` field
+            * options field
+            * supportedFileTypes field should be present in options
         """
         pages = self._config["pages"]
         configuration = pages["configuration"]
@@ -129,21 +128,19 @@ class GlobalConfigValidator:
             entities = tab["entity"]
             for entity in entities:
                 if entity["type"] == "file":
-                    validators = entity.get("validators")
-                    if validators is None:
+                    options = entity.get("options")
+                    if options is None:
                         raise GlobalConfigValidatorException(
-                            f"File validator should be present for "
+                            f"Options field for the file type should be present "
+                            f"for '{entity['field']}' field."
+                        )
+                    supported_file_types = options.get("supportedFileTypes")
+                    if supported_file_types is None:
+                        raise GlobalConfigValidatorException(
+                            f"You should define your supported file types in "
+                            f"the `supportedFileTypes` field for the "
                             f"'{entity['field']}' field."
                         )
-                    for validator in validators:
-                        if validator.get("type") == "file":
-                            supported_file_types = validator.get("supportedFileTypes")
-                            if supported_file_types is None:
-                                raise GlobalConfigValidatorException(
-                                    f"At least some type should be specified "
-                                    f"in 'supportedFileTypes' for "
-                                    f"'{entity['field']}' field."
-                                )
 
     def _validate_string_validator(self, entity_field: str, validator: Dict[str, Any]):
         """

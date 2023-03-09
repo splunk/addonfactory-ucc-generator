@@ -70,7 +70,7 @@ TBD
 
 Underlying `@splunk/react-ui` component: [`File`](https://splunkui.splunk.com/Packages/react-ui/File).
 
-Define the file formats your add-on supports under `supportedFileTypes` key.
+Define the file formats your add-on supports under `supportedFileTypes` key (it is required).
 
 Usage example below:
 
@@ -81,22 +81,14 @@ Usage example below:
     "help": "Upload service account's certificate",
     "field": "service_account",
     "options": {
-        "fileSupportMessage": "Support message"
+        "fileSupportMessage": "Support message",
+        "supportedFileTypes": ["json", "pem"],
+        "maxFileSize": 100
     },
-    "validators": [
-        {
-            "type": "file",
-            "supportedFileTypes": [
-                "json"
-            ]
-        }
-    ],
     "encrypted": true,
     "required": true
 }
 ```
-
-> Note: `validators` field should be present for the file input.
 
 This is how it looks like in the UI:
 
