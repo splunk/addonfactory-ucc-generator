@@ -51,6 +51,7 @@ importlib-metadata = {version="*", python="<3.8"}
 pytest = "^7.2.1"
 pytest-splunk-addon = "^5.0.0"
 pytest-splunk-addon-ui-smartx = "2.3.3b1"
+pytest-rerunfailures = "^11.1.1"
 
 [tool.poetry.scripts]
 ucc-gen="splunk_add_on_ucc_framework.main:main"

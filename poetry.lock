@@ -589,6 +589,19 @@ python-versions = "*"
 pytest = "*"
 
 [[package]]
+name = "pytest-rerunfailures"
+version = "11.1.1"
+description = "pytest plugin to re-run tests to eliminate flaky failures"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+importlib-metadata = {version = ">=1", markers = "python_version < \"3.8\""}
+packaging = ">=17.1"
+pytest = ">=5.3"
+
+[[package]]
 name = "pytest-splunk-addon"
 version = "5.0.0"
 description = "A Dynamic test tool for Splunk Apps and Add-ons"
@@ -889,7 +902,7 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "5dd1235cf46fd631a63acc6f1b7f733a9784d9b75671aeb681756560a6b0aed2"
+content-hash = "9c29a66f497650e18428e4929c2369022334891ea0f90b3e8df82b2f9927de24"
 
 [metadata.files]
 addonfactory-splunk-conf-parser-lib = [
@@ -1323,6 +1336,10 @@ pytest-ordering = [
     {file = "pytest-ordering-0.6.tar.gz", hash = "sha256:561ad653626bb171da78e682f6d39ac33bb13b3e272d406cd555adb6b006bda6"},
     {file = "pytest_ordering-0.6-py2-none-any.whl", hash = "sha256:27fba3fc265f5d0f8597e7557885662c1bdc1969497cd58aff6ed21c3b617de2"},
     {file = "pytest_ordering-0.6-py3-none-any.whl", hash = "sha256:3f314a178dbeb6777509548727dc69edf22d6d9a2867bf2d310ab85c403380b6"},
+]
+pytest-rerunfailures = [
+    {file = "pytest-rerunfailures-11.1.1.tar.gz", hash = "sha256:acab447edff7c29a76b8410207c48da01406a161653c99a325cf5703d44eb162"},
+    {file = "pytest_rerunfailures-11.1.1-py3-none-any.whl", hash = "sha256:4333983de0914f79d942a6ec29332f2c9cfe2d2d47ba2b634f3617b7f9d94f86"},
 ]
 pytest-splunk-addon = [
     {file = "pytest_splunk_addon-5.0.0-py3-none-any.whl", hash = "sha256:3826ff3461d19e73f96659bc23fbc54c8aab733891a5c1659b14db71a5aca7b0"},
