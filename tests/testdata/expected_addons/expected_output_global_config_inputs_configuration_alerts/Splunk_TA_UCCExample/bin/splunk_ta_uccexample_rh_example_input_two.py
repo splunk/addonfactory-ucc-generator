@@ -57,9 +57,9 @@ fields = [
     ), 
     field.RestField(
         'input_two_radio',
-        required=False,
+        required=True,
         encrypted=False,
-        default='yes',
+        default=None,
         validator=None
     ), 
     field.RestField(

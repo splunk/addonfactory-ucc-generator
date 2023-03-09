@@ -1963,7 +1963,7 @@ class TestInputPage(UccTester):
             "disabled": 0,
         }
         backend_stanza = input_page.backend_conf.get_stanza(
-            "example_input_two://Clone_Test"
+            "example_input_two://dummy_input_two_Clone_Test"
         )
         for each_key, each_value in value_to_test.items():
             self.assert_util(each_value, backend_stanza[each_key])
