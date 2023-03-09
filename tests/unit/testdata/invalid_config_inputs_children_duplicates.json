@@ -104,78 +104,22 @@
                     {
                         "label": "Name",
                         "field": "name"
-                    },
-                    {
-                        "label": "Account Name",
-                        "field": "account"
-                    },
-                    {
-                        "label": "Interval",
-                        "field": "interval"
-                    },
-                    {
-                        "label": "Index",
-                        "field": "index"
-                    },
-                    {
-                        "label": "Status",
-                        "field": "disabled"
                     }
                 ],
                 "moreInfo": [
                     {
                         "label": "Name",
                         "field": "name"
-                    },
-                    {
-                        "label": "Interval",
-                        "field": "interval"
-                    },
-                    {
-                        "label": "Index",
-                        "field": "index"
-                    },
-                    {
-                        "label": "Status",
-                        "field": "disabled",
-                        "mapping": {
-                            "true": "Disabled",
-                            "false": "Enabled"
-                        }
-                    },
-                    {
-                        "label": "Example Account",
-                        "field": "account"
-                    },
-                    {
-                        "label": "Object",
-                        "field": "object"
-                    },
-                    {
-                        "label": "Object Fields",
-                        "field": "object_fields"
-                    },
-                    {
-                        "label": "Order By",
-                        "field": "order_by"
-                    },
-                    {
-                        "label": "Query Start Date",
-                        "field": "start_date"
-                    },
-                    {
-                        "label": "Limit",
-                        "field": "limit"
                     }
                 ]
             }
         }
     },
     "meta": {
-        "apiVersion": "3.2.0",
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
         "version": "1.0.0",
-        "displayName": "Splunk UCC test Add-on"
+        "displayName": "Splunk UCC test Add-on",
+        "schemaVersion": "0.0.3"
     }
 }

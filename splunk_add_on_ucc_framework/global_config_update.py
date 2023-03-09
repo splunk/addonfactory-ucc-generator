@@ -67,10 +67,12 @@ def handle_global_config_update(global_config: global_config_lib.GlobalConfig):
     """Handle changes in globalConfig file."""
     current_schema_version = global_config.schema_version
     version = current_schema_version if current_schema_version else "0.0.0"
+    logger.info(f"Current globalConfig schema version is {current_schema_version}")
 
     if _version_tuple(version) < _version_tuple("0.0.1"):
         _handle_biased_terms_update(global_config)
         global_config.dump(global_config.original_path)
+        logger.info("Updated globalConfig schema to version 0.0.1")
 
     if _version_tuple(version) < _version_tuple("0.0.2"):
         for tab in global_config.tabs:
@@ -130,7 +132,9 @@ def handle_global_config_update(global_config: global_config_lib.GlobalConfig):
                     del service_options["onLoad"]
         global_config.update_schema_version("0.0.2")
         global_config.dump(global_config.original_path)
+        logger.info("Updated globalConfig schema to version 0.0.2")
 
     if _version_tuple(version) < _version_tuple("0.0.3"):
         _handle_dropping_api_version_update(global_config)
         global_config.dump(global_config.original_path)
+        logger.info("Updated globalConfig schema to version 0.0.3")

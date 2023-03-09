@@ -25,9 +25,11 @@ poetry run pytest tests/unit
 
 ### UI tests
 
+If you need to run UI tests for the PR, please add a label "run-ui-tests". 
+
 1. With local version of ucc-gen create UCCExample TA to output directory:
     ```
-    poetry run ucc-gen --source tests/testdata/test_addons/package_global_config_configuration/package
+    poetry run ucc-gen --source tests/testdata/test_addons/package_global_config_inputs_configuration_alerts/package
     ```
 2. Install docker and run containerized Splunk Enterprise using script:
     ```
@@ -37,7 +39,7 @@ poetry run pytest tests/unit
 3. Install any browser and specific to this browser driver such as [chromedriver](https://chromedriver.chromium.org/getting-started/) for Chrome.
 4. Run tests using command:
     ```
-    poetry run pytest tests/ui 
+    poetry run pytest tests/ui
     ```
    Default test parameters are using Splunk connection details and credentials from earlier step and `chromedriver` is used as a default webdriver.  
    To use different browser or Splunk configuration set proper parameters according to the [smartx-ui-test-library](https://addon-factory-smartx-ui-test-library.readthedocs.io/en/latest/how_to_use.html) documentation.

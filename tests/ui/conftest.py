@@ -1,33 +1,15 @@
-#
-# Copyright 2021 Splunk Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
-
 import pytest
 
+from tests.ui.pages.account_page import AccountPage
+from tests.ui.test_account_page import ACCOUNT_CONFIG
 
-@pytest.fixture(scope="session")
-def example_ta():
-    """
-    Fixture for example TA used for testing.
-    """
-    ta_name = "Splunk_TA_UCCExample"
 
-    ta_info = {
-        "name": "Splunk_TA_UCCExample",
-        "proxy_url": f"servicesNS/nobody/{ta_name}/{ta_name}_settings/proxy",
-        "default_log_level": "INFO",
-    }
-
-    return ta_info
+@pytest.fixture
+def add_delete_account(ucc_smartx_rest_helper):
+    account = AccountPage(
+        ucc_smartx_rest_helper=ucc_smartx_rest_helper, open_page=False
+    )
+    url = account._get_account_endpoint()
+    kwargs = ACCOUNT_CONFIG
+    yield account.backend_conf.post_stanza(url, kwargs)
+    account.backend_conf.delete_all_stanzas()

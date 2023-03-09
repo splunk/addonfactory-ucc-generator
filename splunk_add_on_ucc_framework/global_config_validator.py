@@ -118,9 +118,8 @@ class GlobalConfigValidator:
         """
         Validates that file-based field has all necessary fields.
         Things should be provided in case of file field:
-            * validators field
-            * at least 1 validator (file validator)
-            * only `json` is now supported in `supportedFileTypes` field
+            * options field
+            * supportedFileTypes field should be present in options
         """
         pages = self._config["pages"]
         configuration = pages["configuration"]
@@ -129,26 +128,19 @@ class GlobalConfigValidator:
             entities = tab["entity"]
             for entity in entities:
                 if entity["type"] == "file":
-                    validators = entity.get("validators")
-                    if validators is None:
+                    options = entity.get("options")
+                    if options is None:
                         raise GlobalConfigValidatorException(
-                            f"File validator should be present for "
+                            f"Options field for the file type should be present "
+                            f"for '{entity['field']}' field."
+                        )
+                    supported_file_types = options.get("supportedFileTypes")
+                    if supported_file_types is None:
+                        raise GlobalConfigValidatorException(
+                            f"You should define your supported file types in "
+                            f"the `supportedFileTypes` field for the "
                             f"'{entity['field']}' field."
                         )
-                    for validator in validators:
-                        if validator.get("type") == "file":
-                            supported_file_types = validator.get("supportedFileTypes")
-                            if supported_file_types is None:
-                                raise GlobalConfigValidatorException(
-                                    f"`json` should be present in the "
-                                    f"'supportedFileTypes' for "
-                                    f"'{entity['field']}' field."
-                                )
-                            if supported_file_types[0] != "json":
-                                raise GlobalConfigValidatorException(
-                                    f"`json` is only currently supported for "
-                                    f"file input for '{entity['field']}' field."
-                                )
 
     def _validate_string_validator(self, entity_field: str, validator: Dict[str, Any]):
         """
@@ -385,6 +377,60 @@ class GlobalConfigValidator:
         if inputs:
             self._validate_inputs_duplicates(inputs)
 
+    def _validate_alerts(self) -> None:
+        # TODO: test cases should be added here.
+        alerts = self._config.get("alerts", [])
+        for alert in alerts:
+            fields = []
+            alert_entity = alert.get("entity")
+            if alert_entity is None:
+                continue
+            for entity in alert_entity:
+                if entity.get("field") in fields:
+                    raise GlobalConfigValidatorException(
+                        "Field names should be unique across alerts"
+                    )
+                else:
+                    fields.append(entity.get("field"))
+                if entity.get("type") in ("radio", "singleSelect"):
+                    if not entity.get("options"):
+                        raise GlobalConfigValidatorException(
+                            "{} type must have options parameter".format(
+                                entity.get("type")
+                            )
+                        )
+                elif entity.get("options"):
+                    raise GlobalConfigValidatorException(
+                        "{} type must not contain options parameter".format(
+                            entity.get("type")
+                        )
+                    )
+                if entity.get("type") in ("singleSelectSplunkSearch",):
+                    if not all(
+                        [
+                            entity.get("search"),
+                            entity.get("valueField"),
+                            entity.get("labelField"),
+                        ]
+                    ):
+                        raise GlobalConfigValidatorException(
+                            "{} type must have search, valueLabel and valueField parameters".format(
+                                entity.get("type")
+                            )
+                        )
+                elif any(
+                    [
+                        entity.get("search"),
+                        entity.get("valueField"),
+                        entity.get("labelField"),
+                    ]
+                ):
+                    raise GlobalConfigValidatorException(
+                        "{} type must not contain search, valueField or labelField parameter".format(
+                            entity.get("type")
+                        )
+                    )
+
     def validate(self) -> None:
         self._validate_config_against_schema()
         self._validate_configuration_tab_table_has_name_field()
@@ -393,3 +439,4 @@ class GlobalConfigValidator:
         self._validate_validators()
         self._validate_multilevel_menu()
         self._validate_duplicates()
+        self._validate_alerts()

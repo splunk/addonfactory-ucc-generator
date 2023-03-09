@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from splunk_add_on_ucc_framework.modular_alert_builder.build_core import (
+from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
     alert_actions_html_gen,
 )
 from tests.unit.helpers import get_testdata_file
@@ -104,7 +104,7 @@ def test_generate_alert_action(tmp_path):
                             "ctrl_props": {
                                 "value-field": "title",
                                 "label-field": "title",
-                                "search": "| rest /servicesNS/nobody/TA-SNOW/admin/TA_SNOW_account | dedup title",  # noqa: E501
+                                "search": "| rest /servicesNS/nobody/Splunk_TA_UCCExample/splunk_ta_uccexample_account | dedup title",  # noqa: E501
                             },
                         },
                     ],

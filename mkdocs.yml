@@ -24,6 +24,7 @@ theme:
 nav:
   - Home: "index.md"
   - Quickstart: "quickstart.md"
+  - ".conf files": "dot_conf_files.md"
   - Example: "example.md"
   - Components: "components.md"
   - Tabs: "tabs.md"
@@ -42,5 +43,6 @@ nav:
     - Dependent Dropdown: "advanced/dependent_dropdown.md"
     - OAuth Support: "advanced/oAuth_support.md"
     - Custom REST Handler: "advanced/custom_rest_handler.md"
+    - Groups Feature: "advanced/groups_feature.md"
   - Troubleshooting: "troubleshooting.md"
   - Contributing: "contributing.md"

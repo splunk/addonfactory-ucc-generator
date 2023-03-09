@@ -347,7 +347,7 @@
                         },
                         {
                             "field": "testNumber",
-                            "label": "Test number",
+                            "label": "Test Number",
                             "type": "text",
                             "validators": [
                                 {
@@ -361,7 +361,7 @@
                         },
                         {
                             "field": "testRegex",
-                            "label": "Test regex",
+                            "label": "Test Regex",
                             "type": "text",
                             "validators": [
                                 {
@@ -383,7 +383,7 @@
                         },
                         {
                             "field": "testIpv4",
-                            "label": "Test ipv4",
+                            "label": "Test Ipv4",
                             "type": "text",
                             "validators": [
                                 {
@@ -393,7 +393,7 @@
                         },
                         {
                             "field": "testDate",
-                            "label": "Test date",
+                            "label": "Test Date",
                             "type": "text",
                             "validators": [
                                 {
@@ -403,7 +403,7 @@
                         },
                         {
                             "field": "testUrl",
-                            "label": "Test url",
+                            "label": "Test Url",
                             "type": "text",
                             "validators": [
                                 {
@@ -449,7 +449,8 @@
                             "type": "checkbox",
                             "label": "Example Checkbox",
                             "field": "input_one_checkbox",
-                            "help": "This is an example checkbox for the input one entity"
+                            "help": "This is an example checkbox for the input one entity",
+                            "defaultValue": true
                         },
                         {
                             "type": "radio",
@@ -512,6 +513,7 @@
                             "field": "multipleSelectTest",
                             "label": "Multiple Select Test",
                             "type": "multipleSelect",
+                            "defaultValue": "a|b",
                             "options": {
                                 "delimiter": "|",
                                 "items": [
@@ -776,9 +778,8 @@
                             "type": "radio",
                             "label": "Example Radio",
                             "field": "input_two_radio",
-                            "defaultValue": "yes",
                             "help": "This is an example radio button for the input two entity",
-                            "required": false,
+                            "required": true,
                             "options": {
                                 "items": [
                                     {
@@ -940,7 +941,7 @@
                         "field": "name"
                     },
                     {
-                        "label": "Account Name",
+                        "label": "Account",
                         "field": "account"
                     },
                     {
@@ -1096,7 +1097,7 @@
                     "type": "singleSelectSplunkSearch",
                     "label": "Select Account",
                     "field": "account",
-                    "search": "| rest /servicesNS/nobody/TA-SNOW/admin/TA_SNOW_account | dedup title",
+                    "search": "| rest /servicesNS/nobody/Splunk_TA_UCCExample/splunk_ta_uccexample_account | dedup title",
                     "valueField": "title",
                     "labelField": "title",
                     "help": "Select the account from the dropdown",
@@ -1108,7 +1109,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.20.0R9f9c8fed",
+        "version": "5.21.0R9e9820c9",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.3"
     }

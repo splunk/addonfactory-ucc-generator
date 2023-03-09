@@ -56,7 +56,7 @@ class EXAMPLE_INPUT_TWO(smi.Script):
         scheme.add_argument(
             smi.Argument(
                 'input_two_radio',
-                required_on_create=False,
+                required_on_create=True,
             )
         )
         

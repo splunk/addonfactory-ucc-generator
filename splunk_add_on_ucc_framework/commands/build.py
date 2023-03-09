@@ -26,15 +26,20 @@ from openapi3 import OpenAPI
 
 from splunk_add_on_ucc_framework import (
     __version__,
-    app_conf,
     exceptions,
     global_config_update,
     global_config_validator,
-    meta_conf,
     utils,
 )
+from splunk_add_on_ucc_framework import app_conf as app_conf_lib
+from splunk_add_on_ucc_framework import meta_conf as meta_conf_lib
+from splunk_add_on_ucc_framework import server_conf as server_conf_lib
 from splunk_add_on_ucc_framework import app_manifest as app_manifest_lib
 from splunk_add_on_ucc_framework import global_config as global_config_lib
+from splunk_add_on_ucc_framework import normalize
+from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
+    generate_alerts,
+)
 from splunk_add_on_ucc_framework.commands.rest_builder import (
     global_config_builder_schema,
     global_config_post_processor,
@@ -44,7 +49,6 @@ from splunk_add_on_ucc_framework.install_python_libraries import (
     SplunktaucclibNotFound,
     install_python_libraries,
 )
-from splunk_add_on_ucc_framework.start_alert_build import alert_build
 from splunk_add_on_ucc_framework.commands.openapi_generator import (
     ucc_to_oas,
 )
@@ -54,6 +58,7 @@ logger = logging.getLogger("ucc_gen")
 
 PARENT_DIR = ".."
 internal_root_dir = os.path.dirname(os.path.dirname(__file__))
+# nosemgrep: splunk.autoescape-disabled
 j2_env = Environment(
     loader=FileSystemLoader(os.path.join(internal_root_dir, "templates"))
 )
@@ -297,15 +302,16 @@ def _make_modular_alerts(
         global_config: Object representing globalConfig.
         outputdir: Output directory.
     """
-
-    if global_config.content.get("alerts"):
-        alert_build(
-            {"alerts": global_config.content["alerts"]},
+    if global_config.has_alerts():
+        envs = normalize.normalize(
+            {
+                "alerts": global_config.alerts,
+            },
             ta_name,
             global_config.namespace,
-            outputdir,
-            internal_root_dir,
         )
+        logger.info("Generating alerts code")
+        generate_alerts(internal_root_dir, outputdir, envs)
 
 
 def _get_ignore_list(ta_name, path):
@@ -422,24 +428,23 @@ def _get_addon_version(addon_version: Optional[str]) -> str:
 
 
 def generate(
-    source,
-    config_path,
-    addon_version,
-    outputdir=None,
-    python_binary_name="python3",
-    openapi=True,
+    source: str,
+    config_path: Optional[str] = None,
+    addon_version: Optional[str] = None,
+    output_directory: Optional[str] = None,
+    python_binary_name: str = "python3",
 ):
     logger.info(f"ucc-gen version {__version__} is used")
     logger.info(f"Python binary name to use: {python_binary_name}")
-    if outputdir is None:
-        outputdir = os.path.join(os.getcwd(), "output")
+    if output_directory is None:
+        output_directory = os.path.join(os.getcwd(), "output")
     addon_version = _get_addon_version(addon_version)
+    logger.info(f"Add-on will be built with version '{addon_version}'")
     if not os.path.exists(source):
         raise NotADirectoryError(f"{os.path.abspath(source)} not found.")
-    logger.info(f"Cleaning out directory {outputdir}")
-    shutil.rmtree(os.path.join(outputdir), ignore_errors=True)
-    os.makedirs(os.path.join(outputdir))
-    logger.info(f"Cleaned out directory {outputdir}")
+    shutil.rmtree(os.path.join(output_directory), ignore_errors=True)
+    os.makedirs(os.path.join(output_directory))
+    logger.info(f"Cleaned out directory {output_directory}")
     app_manifest_path = os.path.abspath(
         os.path.join(source, app_manifest_lib.APP_MANIFEST_FILE_NAME),
     )
@@ -468,6 +473,7 @@ def generate(
         is_global_config_yaml = True if config_path.endswith(".yaml") else False
 
     if os.path.isfile(config_path):
+        logger.info(f"Using globalConfig file located @ {config_path}")
         global_config = global_config_lib.GlobalConfig()
         global_config.parse(config_path, is_global_config_yaml)
         try:
@@ -481,22 +487,23 @@ def generate(
             sys.exit(1)
         global_config.update_addon_version(addon_version)
         global_config.dump(global_config.original_path)
+        logger.info(
+            f"Updated and saved add-on version in the globalConfig file to {addon_version}"
+        )
         global_config_update.handle_global_config_update(global_config)
         scheme = global_config_builder_schema.GlobalConfigBuilderSchema(
             global_config, j2_env
         )
-        logger.info(f"Building add-on with version {addon_version}")
-        logger.info(f"Package ID is {ta_name}")
-        logger.info("Copy UCC template directory")
         _recursive_overwrite(
-            os.path.join(internal_root_dir, "package"), os.path.join(outputdir, ta_name)
+            os.path.join(internal_root_dir, "package"),
+            os.path.join(output_directory, ta_name),
         )
-        logger.info("Copy globalConfig to output")
+        logger.info("Copied UCC template directory")
         global_config_file = (
             "globalConfig.yaml" if is_global_config_yaml else "globalConfig.json"
         )
         output_global_config_path = os.path.join(
-            outputdir,
+            output_directory,
             ta_name,
             "appserver",
             "static",
@@ -508,8 +515,8 @@ def generate(
             config_path,
             output_global_config_path,
         )
-        ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
-        logger.info(f"Install add-on requirements into {ucc_lib_target} from {source}")
+        logger.info("Copied globalConfig to output")
+        ucc_lib_target = os.path.join(output_directory, ta_name, "lib")
         try:
             install_python_libraries(
                 source, ucc_lib_target, python_binary_name, includes_ui=True
@@ -517,16 +524,19 @@ def generate(
         except SplunktaucclibNotFound as e:
             logger.error(str(e))
             sys.exit(1)
-        _replace_token(ta_name, outputdir)
-        _generate_rest(ta_name, scheme, outputdir)
+        logger.info(
+            f"Installed add-on requirements into {ucc_lib_target} from {source}"
+        )
+        _replace_token(ta_name, output_directory)
+        _generate_rest(ta_name, scheme, output_directory)
         _modify_and_replace_token_for_oauth_templates(
             ta_name,
             global_config,
-            outputdir,
+            output_directory,
         )
         if global_config.has_inputs():
             default_no_input_xml_file = os.path.join(
-                outputdir,
+                output_directory,
                 ta_name,
                 "default",
                 "data",
@@ -535,61 +545,96 @@ def generate(
                 "default_no_input.xml",
             )
             os.remove(default_no_input_xml_file)
-            _add_modular_input(ta_name, global_config, outputdir)
+            _add_modular_input(ta_name, global_config, output_directory)
         else:
-            _handle_no_inputs(ta_name, outputdir)
-        _make_modular_alerts(ta_name, global_config, outputdir)
-    else:
-        logger.info(f"Building add-on with version {addon_version}")
-        logger.warning(
-            "Skipped generating UI components as globalConfig file does not exist."
-        )
-        ucc_lib_target = os.path.join(outputdir, ta_name, "lib")
+            _handle_no_inputs(ta_name, output_directory)
+        _make_modular_alerts(ta_name, global_config, output_directory)
 
-        logger.info(f"Install add-on requirements into {ucc_lib_target} from {source}")
+        conf_file_names = []
+        conf_file_names.extend(list(scheme.settings_conf_file_names))
+        conf_file_names.extend(list(scheme.configs_conf_file_names))
+        conf_file_names.extend(list(scheme.oauth_conf_file_names))
+
+        source_server_conf_path = os.path.join(source, "default", "server.conf")
+        # For now, only create server.conf only if no server.conf is present in
+        # the source package.
+        if not os.path.isfile(source_server_conf_path):
+            server_conf = server_conf_lib.ServerConf()
+            server_conf.create_default(conf_file_names)
+            output_server_conf_path = os.path.join(
+                output_directory,
+                ta_name,
+                "default",
+                server_conf_lib.SERVER_CONF_FILE_NAME,
+            )
+            server_conf.write(output_server_conf_path)
+            logger.info(
+                f"Created default {server_conf_lib.SERVER_CONF_FILE_NAME} file in the output folder"
+            )
+    else:
+        global_config = None
+        conf_file_names = []
+        logger.warning(
+            "Skipped generating UI components as globalConfig file does not exist"
+        )
+        ucc_lib_target = os.path.join(output_directory, ta_name, "lib")
         install_python_libraries(source, ucc_lib_target, python_binary_name)
+        logger.info(
+            f"Installed add-on requirements into {ucc_lib_target} from {source}"
+        )
 
     ignore_list = _get_ignore_list(
         ta_name, os.path.abspath(os.path.join(source, PARENT_DIR, ".uccignore"))
     )
     _remove_listed_files(ignore_list)
-    logger.info("Copy package directory")
-    _recursive_overwrite(source, os.path.join(outputdir, ta_name))
+    if ignore_list:
+        logger.info(f"Removed {ignore_list} files")
+    _recursive_overwrite(source, os.path.join(output_directory, ta_name))
+    logger.info("Copied package directory")
 
     default_meta_conf_path = os.path.join(
-        outputdir, ta_name, "metadata", "default.meta"
+        output_directory, ta_name, "metadata", meta_conf_lib.DEFAULT_META_FILE_NAME
     )
     if not os.path.exists(default_meta_conf_path):
-        os.makedirs(os.path.join(outputdir, ta_name, "metadata"), exist_ok=True)
-        with open(default_meta_conf_path, "w") as default_meta_conf_fd:
-            meta_conf.MetaConf().create_default(default_meta_conf_fd)
+        os.makedirs(os.path.join(output_directory, ta_name, "metadata"), exist_ok=True)
+        meta_conf = meta_conf_lib.MetaConf()
+        meta_conf.create_default()
+        meta_conf.write(default_meta_conf_path)
+        logger.info(
+            f"Created default {meta_conf_lib.DEFAULT_META_FILE_NAME} file in the output folder"
+        )
 
-    with open(os.path.join(outputdir, ta_name, "VERSION"), "w") as version_file:
+    with open(os.path.join(output_directory, ta_name, "VERSION"), "w") as version_file:
         version_file.write(addon_version)
         version_file.write("\n")
         version_file.write(addon_version)
+        logger.info("Updated VERSION file")
 
     app_manifest.update_addon_version(addon_version)
     output_manifest_path = os.path.abspath(
-        os.path.join(outputdir, ta_name, app_manifest_lib.APP_MANIFEST_FILE_NAME)
+        os.path.join(output_directory, ta_name, app_manifest_lib.APP_MANIFEST_FILE_NAME)
     )
     with open(output_manifest_path, "w") as manifest_file:
         manifest_file.write(str(app_manifest))
+        logger.info(
+            f"Updated {app_manifest_lib.APP_MANIFEST_FILE_NAME} file in the output folder"
+        )
 
-    app_config = app_conf.AppConf()
-    path = os.path.join(outputdir, ta_name, "default", "app.conf")
-    app_config.read(path)
-    app_config.update(
-        addon_version, ta_name, app_manifest.get_description(), app_manifest.get_title()
+    app_conf = app_conf_lib.AppConf()
+    output_app_conf_path = os.path.join(
+        output_directory, ta_name, "default", app_conf_lib.APP_CONF_FILE_NAME
     )
-    with open(path, "w") as app_conf_fd:
-        app_config.write(app_conf_fd)
+    app_conf.read(output_app_conf_path)
+    app_conf.update(addon_version, app_manifest, conf_file_names)
+    app_conf.write(output_app_conf_path)
+    logger.info(f"Updated {app_conf_lib.APP_CONF_FILE_NAME} file in the output folder")
 
     license_dir = os.path.abspath(os.path.join(source, PARENT_DIR, "LICENSES"))
-
     if os.path.exists(license_dir):
         logger.info("Copy LICENSES directory")
-        _recursive_overwrite(license_dir, os.path.join(outputdir, ta_name, "LICENSES"))
+        _recursive_overwrite(
+            license_dir, os.path.join(output_directory, ta_name, "LICENSES")
+        )
 
     if os.path.exists(
         os.path.abspath(os.path.join(source, PARENT_DIR, "additional_packaging.py"))
@@ -599,13 +644,13 @@ def generate(
 
         additional_packaging(ta_name)
 
-    if os.path.isfile(config_path) and openapi:
+    if global_config:
         logger.info("Generating OpenAPI file")
         open_api_object = ucc_to_oas.transform(global_config, app_manifest)
         open_api = OpenAPI(open_api_object.json)
 
         output_openapi_folder = os.path.abspath(
-            os.path.join(outputdir, ta_name, "static")
+            os.path.join(output_directory, ta_name, "static")
         )
         output_openapi_path = os.path.join(output_openapi_folder, "openapi.json")
         if not os.path.isdir(output_openapi_folder):

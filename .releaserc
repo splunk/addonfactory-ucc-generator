@@ -76,7 +76,7 @@
         "@semantic-release/git",
         {
           "assets": ["NOTICE", "CHANGELOG.md", "pyproject.toml", "splunk_add_on_ucc_framework/__init__.py"],
-          "message": "chore(release): ${nextRelease.version}\n\n${nextRelease.notes}",
+          "message": "chore(release): ${nextRelease.version}\n\n${nextRelease.notes} [ci skip]",
         },
       ],
       ["@semantic-release/github", { "assets": ["NOTICE", "pyproject.toml"] }],

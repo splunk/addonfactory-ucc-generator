@@ -12,6 +12,16 @@ on:
     branches: [main, develop, "release/**"]
 
 jobs:
+  meta:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix_supportedSplunk: ${{ steps.matrix.outputs.supportedSplunk }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: matrix
+        id: matrix
+        uses: splunk/addonfactory-test-matrix-action@v1
+
   fossa-scan:
     continue-on-error: true
     runs-on: ubuntu-latest
@@ -102,14 +112,24 @@ jobs:
       - run: poetry run pytest tests/unit
 
   test-ui:
-    name: test-ui -m ${{ matrix.test-mark }}
+    name: test-ui Splunk ${{ matrix.splunk.version }} -m ${{ matrix.test-mark }}
+    if: contains(github.event.pull_request.labels.*.name, 'run-ui-tests')
     runs-on: ubuntu-latest
     continue-on-error: true
+    needs:
+      - meta
+      - test-unit
+      - test-smoke
     strategy:
       matrix:
+        splunk: ${{ fromJson(needs.meta.outputs.matrix_supportedSplunk) }}
         test-mark:
-          - "default"
-          - "logging_page and not default"
+          - "logging"
+          - "proxy"
+          - "account"
+          - "custom"
+          - "alert"
+          - "input"
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
@@ -130,10 +150,10 @@ jobs:
           tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
           poetry build
       - name: Create Example TA
-        run: poetry run ucc-gen --source tests/testdata/test_addons/package_global_config_configuration/package
+        run: poetry run ucc-gen --source tests/testdata/test_addons/package_global_config_inputs_configuration_alerts/package
       - name: Run Splunk in docker
         run: |
-          ./run_splunk.sh
+          ./run_splunk.sh ${{ matrix.splunk.version }}
           until curl -Lsk "https://localhost:8088/services/collector/health" &>/dev/null ; do echo -n "Waiting for HEC-" && sleep 5 ; done
         timeout-minutes: 5
       - name: Run Pytest
@@ -168,10 +188,12 @@ jobs:
         run: pip install splunk-packaging-toolkit
       - name: Slim tests/expected_output_global_config_inputs_configuration_alerts/Splunk_TA_UCCExample
         run: mkdir tests/slimmed; slim package tests/testdata/expected_addons/expected_output_global_config_inputs_configuration_alerts/Splunk_TA_UCCExample -o tests/slimmed
-      - uses: splunk/appinspect-cli-action@v1.5
+      - uses: splunk/appinspect-cli-action@v1.6
         with:
           app_path: tests/slimmed
           included_tags: ${{ matrix.tags }}
+          appinspect_manual_checks: tests/testdata/expected_addons/expected_output_global_config_inputs_configuration_alerts/.appinspect.manualcheck.yaml
+          appinspect_expected_failures: tests/testdata/expected_addons/expected_output_global_config_inputs_configuration_alerts/.appinspect.expect.yaml
 
   pre-commit:
     runs-on: ubuntu-latest
@@ -227,8 +249,12 @@ jobs:
         run: cp -f THIRDPARTY NOTICE
       - name: Semantic Release
         id: semantic
-        uses: splunk/semantic-release-action@v1.2
+        uses: splunk/semantic-release-action@v1.3
         with:
+          git_committer_name: ${{ secrets.SA_GH_USER_NAME }}
+          git_committer_email: ${{ secrets.SA_GH_USER_EMAIL }}
+          gpg_private_key: ${{ secrets.SA_GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SA_GPG_PASSPHRASE }}
           extra_plugins: |
             @google/semantic-release-replace-plugin
         env:

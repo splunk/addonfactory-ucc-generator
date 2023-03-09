@@ -1,34 +1,40 @@
-Custom Menu can be created when there is more than one input is present in the input page.
+Custom Menu can be created when there is more than one input present on the inputs page. 
+
+> This feature is deprecated (will be removed in the next major version) as [`Multilevel Menu`](https://splunk.github.io/addonfactory-ucc-generator/tabs/#multi-level-menu) is now ready to use if more than one input is available.
 
 In addition to the multiple inputs, we can use this menu to create a custom component at the top right corner of the Input page.
-
-Here is how you specify a custom menu:
-```
-"menu": {
-  "src": "custom_menu",
-  "type": "external"
-}
-```
-The custom_menu file's relative path to globalConfig file is `appserver/static/js/build/custom/custom_menu.js`
-
-### Usage
-
-Use Custom Menu in the configuration table:
-![image](../images/Custom_Menu_GlobalConfig.png)
 
 ### Properties
 
 | Property          | Description |
 | ----------------- | ----------- |
-| globalConfig      | It is an hierarchical object having the properties and their values same as the globalConfig file. |
-| el                | The html element of the custom row. |
+| globalConfig       | It is a hierarchical object that contains the globalConfig file's properties and values. |
+| el                | The `el` is used to render a custom element (on the top right corner) on the Inputs page. |
 | setValue          | This method is used to set the value of the custom component. <p>setValue: ƒ (newValue)</p> |
 
 ### Methods
 
 | Property          | Description |
 | ----------------- | ----------- |
-| Render            | This method should contain the rendering logic for the custom component. |
+| render            | `render` is a method which should have logic for the custom menu, and it will be executed automatically when inputs page is rendered. |
+
+### Usage
+```
+"inputs": {
+    "title": "Inputs",
+    "description": "Manage your data inputs",
+    "services": [],
+    "table": {
+        "actions": ["edit", "enable", "delete", "clone"],
+        "header": [],
+        "moreInfo": []
+    },
+    "menu": {
+        "src": "custom_menu",
+        "type": "external"
+    }
+}
+```
 
 ### Example
 
@@ -40,7 +46,7 @@ class CustomMenu {
     * @constructor
     * @param {Object} globalConfig - Global configuration.
     * @param {element} el - The element of the custom menu.
-    * @param {function} setValue - set value of the custom field
+    * @param {function} setValue - set value of the custom field.
     */
     constructor(globalConfig, el, setValue) {
         this.globalConfig = globalConfig;
@@ -61,7 +67,10 @@ class CustomMenu {
 export default CustomMenu;
 ```
 
+> Note: The Javascript file for the custom control should be saved in the custom folder at `appserver/static/js/build/custom/`.
+
 ### Output
 
-This is how custom menu looks:
-![image](../images/Custom_Menu_Output.png)
+This is how it looks like in the UI:
+
+![image](../images/custom_ui_extensions/Custom_Menu_Output.png)

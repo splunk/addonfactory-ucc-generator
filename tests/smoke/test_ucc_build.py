@@ -1,8 +1,9 @@
-import difflib
 import tempfile
 from os import path
 
-import splunk_add_on_ucc_framework as ucc
+from tests.smoke import helpers
+
+from splunk_add_on_ucc_framework.commands import build
 
 
 def test_ucc_generate():
@@ -14,7 +15,7 @@ def test_ucc_generate():
         "package_global_config_inputs_configuration_alerts",
         "package",
     )
-    ucc.generate(source=package_folder)
+    build.generate(source=package_folder)
 
 
 def test_ucc_generate_with_add_on_from_example_folder():
@@ -32,7 +33,7 @@ def test_ucc_generate_with_add_on_from_example_folder():
         "example",
         "globalConfig.json",
     )
-    ucc.generate(source=package_folder, config=config_path)
+    build.generate(source=package_folder, config_path=config_path)
 
 
 def test_ucc_generate_with_config_param():
@@ -55,7 +56,7 @@ def test_ucc_generate_with_config_param():
         "package_global_config_inputs_configuration_alerts",
         "globalConfig.json",
     )
-    ucc.generate(source=package_folder, config=config_path)
+    build.generate(source=package_folder, config_path=config_path)
 
 
 def test_ucc_generate_with_inputs_configuration_alerts():
@@ -68,7 +69,7 @@ def test_ucc_generate_with_inputs_configuration_alerts():
             "package_global_config_inputs_configuration_alerts",
             "package",
         )
-        ucc.generate(source=package_folder, outputdir=temp_dir)
+        build.generate(source=package_folder, output_directory=temp_dir)
 
         expected_folder = path.join(
             path.dirname(__file__),
@@ -93,6 +94,7 @@ def test_ucc_generate_with_inputs_configuration_alerts():
             ("default", "tags.conf"),
             ("default", "splunk_ta_uccexample_settings.conf"),
             ("default", "web.conf"),
+            ("default", "server.conf"),
             ("default", "data", "ui", "alerts", "test_alert.html"),
             ("default", "data", "ui", "nav", "default.xml"),
             ("default", "data", "ui", "views", "configuration.xml"),
@@ -119,26 +121,11 @@ def test_ucc_generate_with_inputs_configuration_alerts():
             ("README", "splunk_ta_uccexample_settings.conf.spec"),
             ("metadata", "default.meta"),
         ]
-        diff_results = []
-        for f in files_to_be_equal:
-            expected_file_path = path.join(expected_folder, *f)
-            actual_file_path = path.join(actual_folder, *f)
-            with open(expected_file_path) as expected_file:
-                expected_file_lines = expected_file.readlines()
-            with open(actual_file_path) as actual_file:
-                actual_file_lines = actual_file.readlines()
-            for line in difflib.unified_diff(
-                actual_file_lines,
-                expected_file_lines,
-                fromfile=actual_file_path,
-                tofile=expected_file_path,
-                lineterm="",
-            ):
-                diff_results.append(line)
-        if diff_results:
-            for result in diff_results:
-                print(result)
-            assert False, "Some diffs were found"
+        helpers.compare_file_content(
+            files_to_be_equal,
+            expected_folder,
+            actual_folder,
+        )
         files_to_exist = [
             ("static", "appIcon.png"),
             ("static", "appIcon_2x.png"),
@@ -166,7 +153,9 @@ def test_ucc_generate_with_configuration():
             "package_global_config_configuration",
             "package",
         )
-        ucc.generate(source=package_folder, outputdir=temp_dir, ta_version="1.1.1")
+        build.generate(
+            source=package_folder, output_directory=temp_dir, addon_version="1.1.1"
+        )
 
         expected_folder = path.join(
             path.dirname(__file__),
@@ -187,6 +176,7 @@ def test_ucc_generate_with_configuration():
             ("default", "restmap.conf"),
             ("default", "splunk_ta_uccexample_settings.conf"),
             ("default", "web.conf"),
+            ("default", "server.conf"),
             ("default", "data", "ui", "nav", "default.xml"),
             ("default", "data", "ui", "views", "configuration.xml"),
             ("default", "data", "ui", "views", "splunk_ta_uccexample_redirect.xml"),
@@ -199,26 +189,11 @@ def test_ucc_generate_with_configuration():
             ("metadata", "default.meta"),
             ("static", "openapi.json"),
         ]
-        diff_results = []
-        for f in files_to_be_equal:
-            expected_file_path = path.join(expected_folder, *f)
-            actual_file_path = path.join(actual_folder, *f)
-            with open(expected_file_path) as expected_file:
-                expected_file_lines = expected_file.readlines()
-            with open(actual_file_path) as actual_file:
-                actual_file_lines = actual_file.readlines()
-            for line in difflib.unified_diff(
-                actual_file_lines,
-                expected_file_lines,
-                fromfile=actual_file_path,
-                tofile=expected_file_path,
-                lineterm="",
-            ):
-                diff_results.append(line)
-        if diff_results:
-            for result in diff_results:
-                print(result)
-            assert False, "Some diffs were found"
+        helpers.compare_file_content(
+            files_to_be_equal,
+            expected_folder,
+            actual_folder,
+        )
         files_to_exist = [
             ("static", "appIcon.png"),
             ("static", "appIcon_2x.png"),
@@ -246,7 +221,7 @@ def test_ucc_generate_with_configuration_files_only():
             "package_no_global_config",
             "package",
         )
-        ucc.generate(source=package_folder, outputdir=temp_dir)
+        build.generate(source=package_folder, output_directory=temp_dir)
 
         expected_folder = path.join(
             path.dirname(__file__),
@@ -269,26 +244,11 @@ def test_ucc_generate_with_configuration_files_only():
             ("default", "tags.conf"),
             ("metadata", "default.meta"),
         ]
-        diff_results = []
-        for f in files_to_be_equal:
-            expected_file_path = path.join(expected_folder, *f)
-            actual_file_path = path.join(actual_folder, *f)
-            with open(expected_file_path) as expected_file:
-                expected_file_lines = expected_file.readlines()
-            with open(actual_file_path) as actual_file:
-                actual_file_lines = actual_file.readlines()
-            for line in difflib.unified_diff(
-                actual_file_lines,
-                expected_file_lines,
-                fromfile=actual_file_path,
-                tofile=expected_file_path,
-                lineterm="",
-            ):
-                diff_results.append(line)
-        if diff_results:
-            for result in diff_results:
-                print(result)
-            assert False, "Some diffs were found"
+        helpers.compare_file_content(
+            files_to_be_equal,
+            expected_folder,
+            actual_folder,
+        )
         files_to_not_exist = [
             ("default", "data", "ui", "nav", "default_no_input.xml"),
         ]
@@ -307,7 +267,7 @@ def test_ucc_generate_openapi_with_configuration_files_only():
             "package_no_global_config",
             "package",
         )
-        ucc.generate(source=package_folder, outputdir=temp_dir)
+        build.generate(source=package_folder, output_directory=temp_dir)
 
         expected_file_path = path.join(
             temp_dir, "Splunk_TA_UCCExample", "static", "openapi.json"
