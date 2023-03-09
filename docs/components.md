@@ -71,6 +71,7 @@ TBD
 Underlying `@splunk/react-ui` component: [`File`](https://splunkui.splunk.com/Packages/react-ui/File).
 
 Define the file formats your add-on supports under `supportedFileTypes` key (it is required).
+`maxFileSize` value will be considered in KB.
 
 Usage example below:
 
