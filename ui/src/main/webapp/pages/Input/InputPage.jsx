@@ -127,19 +127,6 @@ function InputPage() {
         setEntity({ ...entity, open: false });
     };
 
-    // Custom logic to close modal if esc pressed
-    useEffect(() => {
-        function handleKeyboardEvent(e) {
-            if (e && e.keyCode === 27) {
-                if (entity) handleModalDialogClose();
-            }
-        }
-        window.addEventListener('keydown', handleKeyboardEvent);
-        return () => {
-            window.removeEventListener('keydown', handleKeyboardEvent);
-        };
-    });
-
     // generate modal style dialog
     const generateModalDialog = () => (
         <EntityModal

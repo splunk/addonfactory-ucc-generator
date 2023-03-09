@@ -34,19 +34,6 @@ function ConfigurationTable({ selectedTab, updateIsPageOpen }) {
         setEntity({ ...entity, open: false });
     };
 
-    // Custom logic to close modal if esc pressed
-    useEffect(() => {
-        function handleKeyboardEvent(e) {
-            if (e && e.keyCode === 27 && entity.open) {
-                handleModalDialogClose();
-            }
-        }
-        window.addEventListener('keydown', handleKeyboardEvent);
-        return () => {
-            window.removeEventListener('keydown', handleKeyboardEvent);
-        };
-    });
-
     // generate modal style dialog
     const generateModalDialog = () => (
         <EntityModal
