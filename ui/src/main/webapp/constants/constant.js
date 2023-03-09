@@ -1,3 +1,3 @@
 export default {
-    FILE_MAX_SIZE: '512000',
+    FILE_MAX_SIZE: '500',
 };

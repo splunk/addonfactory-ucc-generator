@@ -222,10 +222,6 @@
               "type": "string",
               "maxLength": 350
             },
-            "fileSupportMessage": {
-              "type": "string",
-              "maxLength": 350
-            },
             "denyList": {
               "type": "string",
               "maxLength": 350
@@ -328,6 +324,20 @@
             },
             "rowsMax": {
               "type": "number"
+            },
+            "fileSupportMessage": {
+              "type": "string",
+              "maxLength": 350
+            },
+            "supportedFileTypes": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "maxLength": 30
+              }
+            },
+            "maxFileSize": {
+              "type": "number"
             }
           }
         },
@@ -361,9 +371,6 @@
               },
               {
                 "$ref": "#/definitions/DateValidator"
-              },
-              {
-                "$ref": "#/definitions/FileValidator"
               }
             ]
           }
@@ -679,6 +686,20 @@
             },
             "rowsMax": {
               "type": "number"
+            },
+            "fileSupportMessage": {
+              "type": "string",
+              "maxLength": 350
+            },
+            "supportedFileTypes": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "maxLength": 30
+              }
+            },
+            "maxFileSize": {
+              "type": "number"
             }
           }
         },
@@ -712,9 +733,6 @@
               },
               {
                 "$ref": "#/definitions/DateValidator"
-              },
-              {
-                "$ref": "#/definitions/FileValidator"
               }
             ]
           }
@@ -1081,25 +1099,6 @@
         }
       },
       "required": ["type", "range"],
-      "additionalProperties": false
-    },
-    "FileValidator": {
-      "type": "object",
-      "properties": {
-        "errorMsg": {
-          "type": "string",
-          "maxLength": 400
-        },
-        "type": {
-          "const": "file"
-        },
-        "supportedFileTypes": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      },
       "additionalProperties": false
     },
     "OAuthFields": {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Select from '@splunk/react-ui/Select';
+import Button from '@splunk/react-ui/Button';
 import ComboBox from '@splunk/react-ui/ComboBox';
 import Clear from '@splunk/react-icons/Clear';
 import { _ } from '@splunk/ui-utils/i18n';
@@ -9,7 +10,6 @@ import styled from 'styled-components';
 
 import { axiosCallWrapper } from '../util/axiosCallWrapper';
 import { filterResponse } from '../util/util';
-import { StyledButton } from '../pages/EntryPageStyle';
 
 const SelectWrapper = styled(Select)`
     width: 320px !important;
@@ -156,7 +156,7 @@ function SingleInputComponent(props) {
                 {options && options.length > 0 && options}
             </SelectWrapper>
             {effectiveIsClearable ? (
-                <StyledButton
+                <Button
                     data-test="clear"
                     appearance="secondary"
                     icon={<Clear />}

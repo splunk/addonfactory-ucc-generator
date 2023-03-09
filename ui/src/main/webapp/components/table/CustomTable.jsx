@@ -109,6 +109,20 @@ function CustomTable({
         setDeleteModal({ ...deleteModal, open: false });
     };
 
+    // Custom logic to close modal if esc pressed
+    useEffect(() => {
+        function handleKeyboardEvent(e) {
+            if (e && e.keyCode === 27) {
+                if (deleteModal) handleDeleteClose();
+                if (entityModal) handleEntityClose();
+            }
+        }
+        window.addEventListener('keydown', handleKeyboardEvent);
+        return () => {
+            window.removeEventListener('keydown', handleKeyboardEvent);
+        };
+    });
+
     const handleCloneActionClick = useCallback(
         (selectedRow) => {
             if (serviceToStyleMap[selectedRow.serviceName] === STYLE_PAGE) {

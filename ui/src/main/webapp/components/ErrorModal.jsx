@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from '@splunk/react-ui/Modal';
 import Message from '@splunk/react-ui/Message';
 import styled from 'styled-components';
@@ -17,6 +17,19 @@ function ErrorModal(props) {
     const handleRequestClose = () => {
         setOpen(false);
     };
+
+    // Custom logic to close modal if esc pressed
+    useEffect(() => {
+        function handleKeyboardEvent(e) {
+            if (e && e.keyCode === 27) {
+                if (open) handleRequestClose();
+            }
+        }
+        window.addEventListener('keydown', handleKeyboardEvent);
+        return () => {
+            window.removeEventListener('keydown', handleKeyboardEvent);
+        };
+    });
 
     return (
         <ModalWrapper open={open}>

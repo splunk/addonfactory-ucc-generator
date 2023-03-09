@@ -64,14 +64,6 @@ export const parseFunctionRawStr = (rawStr) => {
     return { error, result };
 };
 
-export const parseFileValidator = (validFileTypes) => {
-    const listSupportFileTypes = ['json'];
-    const error = validFileTypes.every((x) => listSupportFileTypes.includes(x))
-        ? null
-        : getFormattedMessage(27, validFileTypes.toString());
-    return { error };
-};
-
 export const checkDupKeyValues = (config, isInput, location) => {
     // Forbid dup name/title in services and tabs
     const servicesLikeArr = _.get(config, isInput ? 'services' : 'tabs');

@@ -5,10 +5,7 @@ import {
     parseRegexRawStr,
     parseStringValidator,
     parseFunctionRawStr,
-    parseFileValidator,
 } from './uccConfigurationValidators';
-import FILE from '../constants/constant';
-import { isJsonString } from './util';
 
 // Validate provided saveValidator function
 export function SaveValidator(validatorFunc, formData) {
@@ -140,40 +137,6 @@ class Validator {
         return false;
     }
 
-    // eslint-disable-next-line class-methods-use-this
-    FileValidator(field, validator, data) {
-        if (data) {
-            const { error } = parseFileValidator(validator.supportedFileTypes);
-            if (error) {
-                return { errorField: field, errorMsg: error };
-            }
-            const { fileName, fileSize, fileContent } = data;
-            const givenFileExtension = fileName.split('.').pop();
-            if (!validator.supportedFileTypes.includes(givenFileExtension)) {
-                return {
-                    errorField: field,
-                    errorMsg:
-                        validator.errorMsg ||
-                        getFormattedMessage(24, [validator.supportedFileTypes]),
-                };
-            }
-            if (fileSize > FILE.FILE_MAX_SIZE) {
-                const fileSizeInKb = `${FILE.FILE_MAX_SIZE / 1024}KB`;
-                return {
-                    errorField: field,
-                    errorMsg: getFormattedMessage(25, [fileSizeInKb]),
-                };
-            }
-            if (!isJsonString(fileContent)) {
-                return {
-                    errorField: field,
-                    errorMsg: getFormattedMessage(26),
-                };
-            }
-        }
-        return false;
-    }
-
     doValidation(data) {
         if (this.isName) {
             const targetValue = data.name;
@@ -222,6 +185,18 @@ class Validator {
                 // eslint-disable-next-line no-continue
                 continue;
             }
+
+            // Error handling for File Component, by checking field value to ##INVALID_FILE## (Emitting from FileInputComponent.jsx)
+            if (
+                this.entities[i].type === 'file' &&
+                data[this.entities[i].field] === '##INVALID_FILE##'
+            ) {
+                return {
+                    errorField: this.entities[i].field,
+                    errorMsg: getFormattedMessage(26),
+                };
+            }
+
             if (this.entities[i].validators) {
                 for (j = 0; j < this.entities[i].validators.length; j += 1) {
                     switch (this.entities[i].validators[j].type) {
@@ -305,16 +280,6 @@ class Validator {
                                 data[this.entities[i].field],
                                 PREDEFINED_VALIDATORS_DICT.ipv4.regex,
                                 PREDEFINED_VALIDATORS_DICT.ipv4.inputValueType
-                            );
-                            if (ret) {
-                                return ret;
-                            }
-                            break;
-                        case 'file':
-                            ret = this.FileValidator(
-                                this.entities[i].field,
-                                this.entities[i].validators[j],
-                                data[this.entities[i].field]
                             );
                             if (ret) {
                                 return ret;

@@ -86,12 +86,3 @@ export function filterResponse(items, labelField, allowList, denyList) {
 
     return newItems;
 }
-
-export function isJsonString(value) {
-    try {
-        JSON.parse(value);
-    } catch (e) {
-        return false;
-    }
-    return true;
-}

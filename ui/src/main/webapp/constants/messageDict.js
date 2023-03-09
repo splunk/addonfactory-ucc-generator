@@ -23,10 +23,11 @@ export default {
     21: 'duplicate {{args[0]}} keys is not allowed',
     22: 'Field {{args[0]}} must be less than 1024 characters',
     23: '"name" field must be provided for {{args[0]}} \'s entity in configuration file',
-    24: 'The file must be in {{args[0]}} format',
-    25: 'The file size should not exceed {{args[0]}}',
-    26: 'Invalid JSON file',
+    24: 'The file must be in one of these formats: {{args[0]}}',
+    25: 'The file size should not exceed {{args[0]}} KB',
+    26: 'The file is invalid',
     27: '{{args[0]}} type is not present in supported File Types',
+    28: 'The file must be in {{args[0]}} format',
 
     // general messages, range [100, 499]
     100: 'Create New Input',
