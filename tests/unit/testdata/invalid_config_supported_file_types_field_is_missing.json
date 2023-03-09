@@ -49,11 +49,6 @@
                             "options": {
                                 "fileSupportMessage": "Here is the support message"
                             },
-                            "validators": [
-                                {
-                                    "type": "file"
-                                }
-                            ],
                             "encrypted": true,
                             "required": true
                         }
