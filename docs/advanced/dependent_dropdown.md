@@ -1,4 +1,4 @@
-This feature allows dynamic loading options for single-select fields when options for that field depend on other fields' values. It loads options via API call to the endpoint mentioned in `endpointUrl` under options when any dependencies field is updated and all required dependencies fields are non-null.
+This feature allows dynamic loading options for `singleSelect` and `multipleSelect` fields when options for that field depend on other fields' values. It loads options via API call to the endpoint mentioned in `endpointUrl` under options when any dependencies field is updated and all required dependencies fields are non-null.
 
 All non-required dependencies fields can be of any type, but all required dependencies fields should only be of single-select type.
 
