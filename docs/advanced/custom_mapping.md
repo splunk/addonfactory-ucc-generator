@@ -1,4 +1,4 @@
-We can use this feature to map field values to more meaningful values for display in a table. The category field, for example, stores values such as 1, 2, and 4. Displaying values as they are might confuse the end user; therefore, to avoid confusion, we can map these values to meaningful values, as shown in the example below.
+We can use this feature to map each field with meaningful value to display in the table. For example, The category field contains 1, 2, and 4 values, but when those values are displayed as it is then the user might get confused as those values do not signify the meaning of their mapping. To avoid this confusion user can map each field with meaningful value as shown in the example below.
 
 ### Usage
 
