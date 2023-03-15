@@ -392,20 +392,19 @@ class GlobalConfigValidator:
                     )
                 else:
                     fields.append(entity.get("field"))
-                if entity.get("type") in ("radio", "singleSelect"):
+                entity_type = entity.get("type")
+                if entity_type in ("radio", "singleSelect"):
                     if not entity.get("options"):
                         raise GlobalConfigValidatorException(
-                            "{} type must have options parameter".format(
-                                entity.get("type")
-                            )
+                            f"{entity_type} type must have options parameter"
                         )
-                elif entity.get("options"):
+                elif (
+                    entity.get("options") and entity_type != "singleSelectSplunkSearch"
+                ):
                     raise GlobalConfigValidatorException(
-                        "{} type must not contain options parameter".format(
-                            entity.get("type")
-                        )
+                        f"{entity_type} type must not contain options parameter"
                     )
-                if entity.get("type") in ("singleSelectSplunkSearch",):
+                if entity_type in ("singleSelectSplunkSearch",):
                     if not all(
                         [
                             entity.get("search"),
@@ -414,9 +413,7 @@ class GlobalConfigValidator:
                         ]
                     ):
                         raise GlobalConfigValidatorException(
-                            "{} type must have search, valueLabel and valueField parameters".format(
-                                entity.get("type")
-                            )
+                            f"{entity_type} type must have search, valueLabel and valueField parameters"
                         )
                 elif any(
                     [
@@ -426,9 +423,7 @@ class GlobalConfigValidator:
                     ]
                 ):
                     raise GlobalConfigValidatorException(
-                        "{} type must not contain search, valueField or labelField parameter".format(
-                            entity.get("type")
-                        )
+                        f"{entity_type} type must not contain search, valueField or labelField parameter"
                     )
 
     def validate(self) -> None:

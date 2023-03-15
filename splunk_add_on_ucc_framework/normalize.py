@@ -46,8 +46,8 @@ def convert_list_to_dict(value_list):
 def transform_params(parameter_list):
     for param in parameter_list:
         if param["format_type"] in ["dropdownlist", "radio"]:
-            a = param.pop("options")
-            param["possible_values"] = convert_list_to_dict(a["items"])
+            options = param.pop("options")
+            param["possible_values"] = convert_list_to_dict(options["items"])
         elif param["format_type"] == "dropdownlist_splunk_search":
             value_field = param.pop("value-field")
             label_field = param.pop("label-field")
@@ -57,6 +57,20 @@ def transform_params(parameter_list):
                 "label-field": label_field,
                 "search": search,
             }
+            options = param.pop("options")
+            if options is not None:
+                earliest_time = None
+                latest_time = None
+                options_items = options.get("items")
+                for item in options_items:
+                    if item.get("label") == "earliest":
+                        earliest_time = item.get("value")
+                    if item.get("label") == "latest":
+                        latest_time = item.get("value")
+                if earliest_time is not None:
+                    param["ctrl_props"]["earliest"] = earliest_time
+                if latest_time is not None:
+                    param["ctrl_props"]["latest"] = latest_time
 
 
 def iterdict(dictionary, result):
