@@ -51,7 +51,7 @@ nav:
   - Advanced:
     - Custom Mapping: "advanced/custom_mapping.md"
     - Dependent Dropdown: "advanced/dependent_dropdown.md"
-    - OAuth Support: "advanced/oAuth_support.md"
+    - OAuth Support: "advanced/oauth_support.md"
     - Custom REST Handler: "advanced/custom_rest_handler.md"
     - Groups Feature: "advanced/groups_feature.md"
     - Save Validator: "advanced/save_validator.md"
