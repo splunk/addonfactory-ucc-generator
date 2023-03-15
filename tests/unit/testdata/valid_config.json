@@ -1047,7 +1047,7 @@
                         "items": [
                             {
                                 "label": "earliest",
-                                "value": ""
+                                "value": "-4@h"
                             },
                             {
                                 "label": "latest",
