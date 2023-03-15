@@ -20,13 +20,23 @@ theme:
   palette:
     primary: "black"
     accent: "orange"
+  features:
+    - content.code.copy
+    - navigation.indexes
+
+extra_css:
+    - css/extra.css
 
 nav:
   - Home: "index.md"
   - Quickstart: "quickstart.md"
   - ".conf files": "dot_conf_files.md"
   - Example: "example.md"
-  - Components: "components.md"
+  - Entity:
+    - "entity/index.md"
+    - Introduction: "entity/index.md"
+    - Components: "entity/components.md"
+    - Validators: "entity/validators.md"
   - Tabs: "tabs.md"
   - Additional packaging: "additional_packaging.md"
   - OpenAPI: "openapi.md"
@@ -41,8 +51,9 @@ nav:
   - Advanced:
     - Custom Mapping: "advanced/custom_mapping.md"
     - Dependent Dropdown: "advanced/dependent_dropdown.md"
-    - OAuth Support: "advanced/oAuth_support.md"
+    - OAuth Support: "advanced/oauth_support.md"
     - Custom REST Handler: "advanced/custom_rest_handler.md"
     - Groups Feature: "advanced/groups_feature.md"
+    - Save Validator: "advanced/save_validator.md"
   - Troubleshooting: "troubleshooting.md"
   - Contributing: "contributing.md"

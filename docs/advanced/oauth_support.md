@@ -1,20 +1,6 @@
-UCC allows you to add Auth support in the configuration page.
+UCC allows you to add Auth support in the configuration page. In UCC, OAuth2.0 of the Authorization Code Flow `grant` type is being used. It only supports the standard parameters specified in [RFCP749](https://www.rfc-editor.org/rfc/rfc6749) for obtaining an authorization code.
 
 Auth can be used inside the entity tag. Use `type: "oauth"` in the entity list and also need to specify the `options` next to the `type: "oauth"`.
-
-### Usage
-
-```
-{
-    "type": "oauth",
-    "options": {
-        "auth_type": [
-            "basic",
-            "oauth"
-        ],
-    }
-}
-```
 
 ### Properties
 
@@ -24,7 +10,7 @@ Auth can be used inside the entity tag. Use `type: "oauth"` in the entity list a
     - `basic` This must be present only if auth_type: ["basic"]
         - This will have list of fields you want to add in basic authentication flow. In the given example, it is username, password and security_token. 
         - **Please note that as of now, If you are selecting basic as auth_type then username and password fields are mandatory.**
-    - `oauth` This will have list of fields you want to add in oauth authentication flow. In the given example, it is `client_id`, `client_secret`, `redirect_url`, and `endpoint`.
+    - `oauth` This will have list of fields you want to add in oauth authentication flow. In the given example, it is `client_id`, `client_secret`, `redirect_url`, `scope` and `endpoint`.
     - These fields are mandatory:
         - `client_id` this is client id for the your app for which you want auth
         - `client_secret` this is client secret for the your app for which you want auth
@@ -45,8 +31,9 @@ Auth can be used inside the entity tag. Use `type: "oauth"` in the entity list a
         - `help` : This can be changed if user wants to change the help text displayed below field.
         - `encrypted` : This should be true if user wants that particular field encrypted else no need to have this parameter.
         - `placeholder`: The placeholder for the field.
+        - `required`: To specify whether the field is required or not. The default value is true.
 
-### Example
+### Usage
 
 ```
 "configuration": {
@@ -116,6 +103,13 @@ Auth can be used inside the entity tag. Use `type: "oauth"` in the entity list a
                                 "help": "Please add this redirect URL in your app."
                             },
                             {
+                                "oauth_field": "scope",
+                                "label": "Scope",
+                                "field": "scope",
+                                "help": "Enter the scope for the authorization code with ',' separating each scope.",
+                                "required": false
+                            },
+                            {
                                 "oauth_field": "endpoint",
                                 "label": "Endpoint",
                                 "field": "endpoint",
@@ -140,8 +134,8 @@ Auth can be used inside the entity tag. Use `type: "oauth"` in the entity list a
 
 This is how the Add Account modal looks after adding the above code to the globalConfig.json file:
 
-This is how Add Account looks when auth_type is basic:
-![image](../images/Basic_Auth_Output.png)
+This is how Add Account looks when auth_type is `basic`:
+![image](../images/advanced/basic_auth_output.png)
 
-This is how Add Account looks when auth_type is oauth:
-![image](../images/OAuth_Output.png)
+This is how Add Account looks when auth_type is `oauth`:
+![image](../images/advanced/oauth_output.png)
