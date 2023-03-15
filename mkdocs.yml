@@ -32,15 +32,20 @@ nav:
   - Quickstart: "quickstart.md"
   - ".conf files": "dot_conf_files.md"
   - Example: "example.md"
+  - Inputs:
+    - "inputs/index.md"
+    - Introduction: "inputs/index.md"
+    - Tabs: "inputs/tabs.md"
+    - Multi-level Menu: "inputs/multilevel_menu.md"
+  - Configuration: "configurations.md"
   - Entity:
     - "entity/index.md"
     - Introduction: "entity/index.md"
     - Components: "entity/components.md"
     - Validators: "entity/validators.md"
-  - Tabs: "tabs.md"
+  - Table: "table.md"
   - Additional packaging: "additional_packaging.md"
   - OpenAPI: "openapi.md"
-  - Modular Input Type column: "modular_input_type_column.md"
   - Custom UI Extensions:
     - Custom Hook: "custom_ui_extensions/custom_hook.md"
     - Custom Control: "custom_ui_extensions/custom_control.md"
