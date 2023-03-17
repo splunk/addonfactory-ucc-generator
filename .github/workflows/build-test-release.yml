@@ -70,6 +70,7 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
+          cache: "poetry"
       - name: Install and build
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
@@ -99,6 +100,7 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
+          cache: "poetry"
       - name: Install and build
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
@@ -135,6 +137,7 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: "3.7"
+          cache: "poetry"
       - name: Install Poetry and Python dependencies
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
@@ -233,6 +236,7 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: "3.7"
+          cache: "poetry"
       - name: Install Poetry
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
