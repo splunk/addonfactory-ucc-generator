@@ -663,6 +663,12 @@ alerts:
     label: Select Account
     field: account
     search: "| rest /servicesNS/nobody/Splunk_TA_UCCExample/splunk_ta_uccexample_account | dedup title"
+    options:
+      items:
+        - label: earliest
+          value: -4@h
+        - label: latest
+          value: now
     valueField: title
     labelField: title
     help: Select the account from the dropdown
