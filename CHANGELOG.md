@@ -1,3 +1,10 @@
+## [5.23.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.23.0...v5.23.1) (2023-03-20)
+
+
+### Bug Fixes
+
+* dropdownlist_splunk_search does not require options ([#706](https://github.com/splunk/addonfactory-ucc-generator/issues/706)) ([ff9e50b](https://github.com/splunk/addonfactory-ucc-generator/commit/ff9e50b36846c7bf7fea6ef30fef0b2251fb6d1a))
+
 # [5.23.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.22.0...v5.23.0) (2023-03-20)
 
 
