@@ -9,7 +9,7 @@ author = Company name
 
 [install]
 build = 12345
-is_configured = true
+is_configured = false
 state = enabled
 
 [package]

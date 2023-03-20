@@ -1,9 +1,38 @@
+import os
 import tempfile
 from os import path
 
 from tests.smoke import helpers
 
+import addonfactory_splunk_conf_parser_lib as conf_parser
+
 from splunk_add_on_ucc_framework.commands import build
+
+
+def _compare_app_conf(expected_folder: str, actual_folder: str):
+    # Comparing default/app.conf, ignoring versions and build.
+    default_app_conf_path = os.path.join("default", "app.conf")
+    expected_default_app_conf_path = os.path.join(
+        expected_folder,
+        default_app_conf_path,
+    )
+    actual_default_app_conf_path = os.path.join(
+        actual_folder,
+        default_app_conf_path,
+    )
+    expected_app_conf = conf_parser.TABConfigParser()
+    expected_app_conf.read(expected_default_app_conf_path)
+    actual_app_conf = conf_parser.TABConfigParser()
+    actual_app_conf.read(actual_default_app_conf_path)
+    expected_app_conf_dict = expected_app_conf.item_dict()
+    actual_app_conf_dict = actual_app_conf.item_dict()
+    del expected_app_conf_dict["install"]["build"]
+    del expected_app_conf_dict["launcher"]["version"]
+    del expected_app_conf_dict["id"]["version"]
+    del actual_app_conf_dict["install"]["build"]
+    del actual_app_conf_dict["launcher"]["version"]
+    del actual_app_conf_dict["id"]["version"]
+    assert expected_app_conf_dict == actual_app_conf_dict
 
 
 def test_ucc_generate():
@@ -84,6 +113,7 @@ def test_ucc_generate_with_inputs_configuration_alerts():
         # app.manifest and appserver/static/js/build/globalConfig.json
         # should be included too, but they may introduce flaky tests as
         # their content depends on the git commit.
+        _compare_app_conf(expected_folder, actual_folder)
         # Expected add-on package folder does not have "lib" in it.
         files_to_be_equal = [
             ("README.txt",),
@@ -170,6 +200,7 @@ def test_ucc_generate_with_configuration():
         # app.manifest and appserver/static/js/build/globalConfig.json
         # should be included too, but they may introduce flaky tests as
         # their content depends on the git commit.
+        _compare_app_conf(expected_folder, actual_folder)
         # Expected add-on package folder does not have "lib" in it.
         files_to_be_equal = [
             ("README.txt",),
@@ -236,6 +267,7 @@ def test_ucc_generate_with_configuration_files_only():
         # app.manifest and appserver/static/js/build/globalConfig.json
         # should be included too, but they may introduce flaky tests as
         # their content depends on the git commit.
+        _compare_app_conf(expected_folder, actual_folder)
         # Expected add-on package folder does not have "lib" in it.
         files_to_be_equal = [
             ("README.txt",),
