@@ -50,6 +50,7 @@ jobs:
         with:
           python-version: "3.7"
           cache: "poetry"
+      - run: poetry install
       - run: poetry run mkdocs build --strict
   
   compliance-copyrights:
