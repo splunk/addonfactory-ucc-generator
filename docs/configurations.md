@@ -55,8 +55,8 @@
 
 This is how table looks in the UI:
 
-![image](../images/configuration/configuration_with_table_output.png)
+![image](images/configuration/configuration_with_table_output.png)
 
 This is how form looks in the UI:
 
-![image](../images/configuration/configuration_without_table_output.png)
+![image](images/configuration/configuration_without_table_output.png)
