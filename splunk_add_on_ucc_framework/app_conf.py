@@ -56,7 +56,7 @@ class AppConf:
         self._app_conf["id"]["version"] = version
         self._app_conf["id"]["name"] = app_manifest.get_addon_name()
         self._app_conf["install"]["build"] = str(int(time.time()))
-        self._app_conf["install"]["is_configured"] = "true"
+        self._app_conf["install"]["is_configured"] = "false"
         self._app_conf["install"]["state"] = "enabled"
         self._app_conf["package"]["id"] = app_manifest.get_addon_name()
         self._app_conf["ui"]["label"] = app_manifest.get_title()

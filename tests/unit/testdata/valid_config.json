@@ -1043,6 +1043,18 @@
                     "valueField": "title",
                     "labelField": "title",
                     "help": "Select the account from the dropdown",
+                    "options": {
+                        "items": [
+                            {
+                                "label": "earliest",
+                                "value": "-4@h"
+                            },
+                            {
+                                "label": "latest",
+                                "value": "now"
+                            }
+                        ]
+                    },
                     "required": true
                 }
             ]

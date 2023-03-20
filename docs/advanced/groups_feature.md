@@ -51,4 +51,4 @@ The groups will be displayed at the bottom of the form.
 ```
 ### Output
 This is how it looks like in the UI:
-![image](../images/Groups_Feature.png)
+![image](../images/advanced/groups_feature.png)

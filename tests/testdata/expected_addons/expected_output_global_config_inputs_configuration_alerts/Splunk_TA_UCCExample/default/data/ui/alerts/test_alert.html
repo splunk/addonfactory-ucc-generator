@@ -58,6 +58,8 @@
 		<splunk-search-dropdown name="action.test_alert.param.account" id="test_alert_account"                 value-field="title"
                 label-field="title"
                 search="| rest /servicesNS/nobody/Splunk_TA_UCCExample/splunk_ta_uccexample_account | dedup title"
+                earliest="-4@h"
+                latest="now"
  />
             <span class="help-block">
         Select the account from the dropdown

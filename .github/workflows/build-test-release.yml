@@ -18,8 +18,7 @@ jobs:
       matrix_supportedSplunk: ${{ steps.matrix.outputs.supportedSplunk }}
     steps:
       - uses: actions/checkout@v3
-      - name: matrix
-        id: matrix
+      - id: matrix
         uses: splunk/addonfactory-test-matrix-action@v1
 
   fossa-scan:
@@ -27,31 +26,38 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: run fossa analyze and create report
-        run: |
+      - run: |
           curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install-latest.sh | bash
           fossa analyze --debug
           fossa report attribution --format text > /tmp/THIRDPARTY
         env:
           FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
-      - name: upload THIRDPARTY file
-        uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v3
         with:
           name: THIRDPARTY
           path: /tmp/THIRDPARTY
-      - name: run fossa test
-        run: |
+      - run: |
           fossa test --debug
         env:
           FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
 
+  docs-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: pipx install poetry==1.1.15
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.7"
+          cache: "poetry"
+      - run: poetry install
+      - run: poetry run mkdocs build --strict
+  
   compliance-copyrights:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Check License Header
-        uses: apache/skywalking-eyes@v0.4.0
+      - uses: actions/checkout@v3
+      - uses: apache/skywalking-eyes@v0.4.0
 
   test-smoke:
     name: test-smoke ${{ matrix.python-version }}
@@ -67,12 +73,12 @@ jobs:
           - "3.11"
     steps:
       - uses: actions/checkout@v3
+      - run: pipx install poetry==1.1.15
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install and build
-        run: |
-          curl -sSL https://install.python-poetry.org | python3 -
+          cache: "poetry"
+      - run: |
           ./get-ucc-ui.sh
           # Puts package and schema subdirs along with NOTICE (THIRDPARTY.npm)
           tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
@@ -96,19 +102,18 @@ jobs:
           - "3.11"
     steps:
       - uses: actions/checkout@v3
+      - run: pipx install poetry==1.1.15
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install and build
-        run: |
-          curl -sSL https://install.python-poetry.org | python3 -
+          cache: "poetry"
+      - run: |
           ./get-ucc-ui.sh
           # Puts package and schema subdirs along with NOTICE (THIRDPARTY.npm)
           tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
           poetry install
           poetry build
-      - name: Ensure all UCC UI files are in the final package
-        run: ./.github/workflows/check_ucc_ui_files.sh
+      - run: ./.github/workflows/check_ucc_ui_files.sh
       - run: poetry run pytest tests/unit
 
   test-ui:
@@ -132,32 +137,27 @@ jobs:
           - "input"
     steps:
       - uses: actions/checkout@v3
+      - run: pipx install poetry==1.1.15
       - uses: actions/setup-python@v4
         with:
           python-version: "3.7"
-      - name: Install Poetry and Python dependencies
-        run: |
-          curl -sSL https://install.python-poetry.org | python3 -
-          poetry install
+          cache: "poetry"
+      - run: poetry install
       - name: Link chromedriver
         # Use installed chromedriver https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2204-Readme.md
         run: |
           export PATH=$PATH:$CHROMEWEBDRIVER
           chromedriver --version
-      - name: Build UCC
-        run: |
+      - run: |
           ./get-ucc-ui.sh
           tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
           poetry build
-      - name: Create Example TA
-        run: poetry run ucc-gen --source tests/testdata/test_addons/package_global_config_inputs_configuration_alerts/package
-      - name: Run Splunk in docker
-        run: |
+      - run: poetry run ucc-gen --source tests/testdata/test_addons/package_global_config_inputs_configuration_alerts/package
+      - run: |
           ./run_splunk.sh ${{ matrix.splunk.version }}
           until curl -Lsk "https://localhost:8088/services/collector/health" &>/dev/null ; do echo -n "Waiting for HEC-" && sleep 5 ; done
         timeout-minutes: 5
-      - name: Run Pytest
-        run: poetry run pytest tests/ui -m "${{ matrix.test-mark }}" --headless --junitxml=test-results/junit.xml
+      - run: poetry run pytest tests/ui -m "${{ matrix.test-mark }}" --headless --junitxml=test-results/junit.xml
       - uses: actions/upload-artifact@v3
         if: success() || failure()
         with:
@@ -180,12 +180,10 @@ jobs:
           - "splunk_appinspect"
     steps:
       - uses: actions/checkout@v3
-      - name: Setup python
-        uses: actions/setup-python@v4
+      - uses: actions/setup-python@v4
         with:
           python-version: "3.7"
-      - name: Install slim
-        run: pip install splunk-packaging-toolkit
+      - run: pip install splunk-packaging-toolkit
       - name: Slim tests/expected_output_global_config_inputs_configuration_alerts/Splunk_TA_UCCExample
         run: mkdir tests/slimmed; slim package tests/testdata/expected_addons/expected_output_global_config_inputs_configuration_alerts/Splunk_TA_UCCExample -o tests/slimmed
       - uses: splunk/appinspect-cli-action@v1.6
@@ -209,20 +207,20 @@ jobs:
     if: github.actor != 'dependabot[bot]'
     steps:
       - uses: actions/checkout@v3
-      - name: Semgrep
-        id: semgrep
+      - id: semgrep
         uses: returntocorp/semgrep-action@v1
         with:
           publishToken: ${{ secrets.SEMGREP_PUBLISH_TOKEN }}
 
   build:
     needs:
+      - docs-build
+      - compliance-copyrights
+      - fossa-scan
       - test-unit
       - test-smoke
       - pre-commit
       - appinspect-for-expected-outputs
-      - compliance-copyrights
-      - fossa-scan
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -230,12 +228,12 @@ jobs:
           # Very important: semantic-release won't trigger a tagged
           # build if this is not set false
           persist-credentials: false
+      - run: pipx install poetry==1.1.15
       - uses: actions/setup-python@v4
         with:
           python-version: "3.7"
-      - name: Install Poetry
-        run: |
-          curl -sSL https://install.python-poetry.org | python3 -
+          cache: "poetry"
+      - run: |
           ./get-ucc-ui.sh
           # Puts package and schema subdirs along with NOTICE (THIRDPARTY.npm)
           tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
@@ -245,10 +243,8 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: THIRDPARTY
-      - name: Update Notices
-        run: cp -f THIRDPARTY NOTICE
-      - name: Semantic Release
-        id: semantic
+      - run: cp -f THIRDPARTY NOTICE
+      - id: semantic
         uses: splunk/semantic-release-action@v1.3
         with:
           git_committer_name: ${{ secrets.SA_GH_USER_NAME }}
@@ -259,8 +255,7 @@ jobs:
             @google/semantic-release-replace-plugin
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
-      - name: Publish to pypi
-        if: ${{ steps.semantic.outputs.new_release_published == 'true' }}
+      - if: ${{ steps.semantic.outputs.new_release_published == 'true' }}
         uses: splunk/pypi-publish-action@v1.0
         with:
           pypi_username: ${{ secrets.PYPI_USERNAME }}

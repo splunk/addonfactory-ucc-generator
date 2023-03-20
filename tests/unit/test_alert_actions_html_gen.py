@@ -105,6 +105,8 @@ def test_generate_alert_action(tmp_path):
                                 "value-field": "title",
                                 "label-field": "title",
                                 "search": "| rest /servicesNS/nobody/Splunk_TA_UCCExample/splunk_ta_uccexample_account | dedup title",  # noqa: E501
+                                "earliest": "-4@h",
+                                "latest": "now",
                             },
                         },
                     ],

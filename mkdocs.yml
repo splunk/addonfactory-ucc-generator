@@ -20,17 +20,32 @@ theme:
   palette:
     primary: "black"
     accent: "orange"
+  features:
+    - content.code.copy
+    - navigation.indexes
+
+extra_css:
+    - css/extra.css
 
 nav:
   - Home: "index.md"
   - Quickstart: "quickstart.md"
   - ".conf files": "dot_conf_files.md"
   - Example: "example.md"
-  - Components: "components.md"
-  - Tabs: "tabs.md"
+  - Inputs:
+    - "inputs/index.md"
+    - Introduction: "inputs/index.md"
+    - Tabs: "inputs/tabs.md"
+    - Multi-level Menu: "inputs/multilevel_menu.md"
+  - Configuration: "configurations.md"
+  - Entity:
+    - "entity/index.md"
+    - Introduction: "entity/index.md"
+    - Components: "entity/components.md"
+    - Validators: "entity/validators.md"
+  - Table: "table.md"
   - Additional packaging: "additional_packaging.md"
   - OpenAPI: "openapi.md"
-  - Modular Input Type column: "modular_input_type_column.md"
   - Custom UI Extensions:
     - Custom Hook: "custom_ui_extensions/custom_hook.md"
     - Custom Control: "custom_ui_extensions/custom_control.md"
@@ -41,8 +56,9 @@ nav:
   - Advanced:
     - Custom Mapping: "advanced/custom_mapping.md"
     - Dependent Dropdown: "advanced/dependent_dropdown.md"
-    - OAuth Support: "advanced/oAuth_support.md"
+    - OAuth Support: "advanced/oauth_support.md"
     - Custom REST Handler: "advanced/custom_rest_handler.md"
     - Groups Feature: "advanced/groups_feature.md"
+    - Save Validator: "advanced/save_validator.md"
   - Troubleshooting: "troubleshooting.md"
   - Contributing: "contributing.md"
