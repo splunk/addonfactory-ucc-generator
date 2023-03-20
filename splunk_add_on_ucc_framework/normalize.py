@@ -57,7 +57,12 @@ def transform_params(parameter_list):
                 "label-field": label_field,
                 "search": search,
             }
-            options = param.pop("options")
+            try:
+                # `options` field is optional for `dropdownlist_splunk_search`
+                # type.
+                options = param.pop("options")
+            except KeyError:
+                options = None
             if options is not None:
                 earliest_time = None
                 latest_time = None
