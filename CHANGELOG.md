@@ -1,3 +1,10 @@
+## [5.23.2](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.23.1...v5.23.2) (2023-03-23)
+
+
+### Bug Fixes
+
+* move mkdocs-material to dev dependency ([#707](https://github.com/splunk/addonfactory-ucc-generator/issues/707)) ([504dbfa](https://github.com/splunk/addonfactory-ucc-generator/commit/504dbfae57393340636473c8196b452a1f539972))
+
 ## [5.23.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.23.0...v5.23.1) (2023-03-20)
 
 
