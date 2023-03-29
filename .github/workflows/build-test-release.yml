@@ -100,6 +100,8 @@ jobs:
           - "3.9"
           - "3.10"
           - "3.11"
+    env:
+      PYTHON: ${{ matrix.python-version }}
     steps:
       - uses: actions/checkout@v3
       - run: pipx install poetry==1.1.15
@@ -114,7 +116,14 @@ jobs:
           poetry install
           poetry build
       - run: ./.github/workflows/check_ucc_ui_files.sh
-      - run: poetry run pytest tests/unit
+      - run: poetry run pytest --cov=splunk_add_on_ucc_framework --cov-report=xml tests/unit
+      - uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          env_vars: PYTHON
+          fail_ci_if_error: true
+          files: ./coverage.xml
+          verbose: true
 
   test-ui:
     name: test-ui Splunk ${{ matrix.splunk.version }} -m ${{ matrix.test-mark }}
