@@ -35,3 +35,5 @@ header:
     - ".*"
     - "example/**"
     - "splunk_add_on_ucc_framework/commands/init_template/**"
+    - "splunk_add_on_ucc_framework/commands/import_from_aob.sh"
+    - "splunk_add_on_ucc_framework/commands/imports.py"
