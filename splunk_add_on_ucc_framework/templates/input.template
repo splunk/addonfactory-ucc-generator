@@ -14,7 +14,7 @@ class {{class_name}}(smi.Script):
         scheme.description = '{{description}}'
         scheme.use_external_validation = True
         scheme.streaming_mode_xml = True
-        scheme.use_single_instance = True
+        scheme.use_single_instance = False
 
         scheme.add_argument(
             smi.Argument(
