@@ -25,6 +25,10 @@ const ControlGroupWrapper = styled(ControlGroup).attrs((props) => ({
             width: 320px;
         }
     }
+
+    span[class*='ControlGroupStyles__StyledAsterisk-'] {
+        color: red;
+    }
 `;
 
 class ControlWrapper extends React.PureComponent {
@@ -108,6 +112,7 @@ class ControlWrapper extends React.PureComponent {
                     tooltip={tooltip}
                     error={this.props.error}
                     dataName={field}
+                    required={required}
                 >
                     <CustomElement>{rowView}</CustomElement>
                 </ControlGroupWrapper>
