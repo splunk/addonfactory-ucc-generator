@@ -143,6 +143,8 @@ Import from AoB (Add-on Builder) (available from `v5.24.0`). It is in the
 produce 100% UCC compatible add-on, but we are going to work on future
 improvements for the script itself.
 
+> Note: `import-from-aob` command does not support Windows as of now.
+
 The import functionality is based on the 
 [ucc_migration_test](https://github.com/tmartin14/ucc_migration_test) bash
 script.
