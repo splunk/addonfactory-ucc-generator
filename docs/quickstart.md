@@ -96,32 +96,27 @@ use updated modular inputs from `package/bin` instead of generating new ones.
 
 ## Commands
 
-As of now, running `ucc-gen` does the same thing as running `ucc-gen build`, 
+### `ucc-gen build`
+
+Builds the add-on. As of now, running `ucc-gen` does the same thing as running `ucc-gen build`, 
 but eventually calling `ucc-gen` without specifying a subcommand will be 
-deprecated. 
+deprecated.
 
-* `build` - build the add-on.
+It takes the following parameters:
 
-    * `--source` - [optional] folder containing the `app.manifest` and app 
-        source.
-    * `--config` - [optional] path to the configuration file, defaults to
-        globalConfig file in the parent directory of source provided.
-    * `--ta-version` - [optional] override current version of TA, default
-        version is version specified in `globalConfig.json` or `globalConfig.yaml`. 
-        Splunkbase compatible version of SEMVER will be used by default.
-    * `--python-binary-name` - [optional] Python binary name to use when
-        installing Python libraries.
+* `--source` - [optional] folder containing the `app.manifest` and app 
+    source.
+* `--config` - [optional] path to the configuration file, defaults to
+    globalConfig file in the parent directory of source provided.
+* `--ta-version` - [optional] override current version of TA, default
+    version is version specified in `globalConfig.json` or `globalConfig.yaml`. 
+    Splunkbase compatible version of SEMVER will be used by default.
+* `--python-binary-name` - [optional] Python binary name to use when
+    installing Python libraries.
 
-* `init` - initialize the add-on (available from `v5.19.0`).
+### `ucc-gen init`
 
-    * `--addon-name` - [required] add-on name. Consult with 
-        [official naming convention guide](https://dev.splunk.com/enterprise/docs/releaseapps/splunkbase/namingguidelines/).
-    * `--addon-display-name` - [required] add-on "official" name.
-    * `--addon-input-name` - [required] name of the generated input. 
-    * `--addon-version` - [optional] version of the generated add-on, `0.0.1` by default.
-    * `--overwrite` - [optional] overwrites already existing folder if used, 
-        by default you can't generate a new add-on to already existing folder.
-
+Initializes the add-on (available from `v5.19.0`).
 `ucc-gen init` command initializes the add-on and bootstraps some code in the 
 modular input which you, as a developer, can extend for your needs.
 
@@ -131,7 +126,37 @@ clustering files in `default/server.conf` file and reload triggers in
 `ucc-gen build` command itself, for now you need to include them manually 
 during the add-on development.
 
-## What `ucc-gen` does
+It takes the following parameters:
+
+* `--addon-name` - [required] add-on name. Consult with 
+    [official naming convention guide](https://dev.splunk.com/enterprise/docs/releaseapps/splunkbase/namingguidelines/).
+* `--addon-display-name` - [required] add-on "official" name.
+* `--addon-input-name` - [required] name of the generated input. 
+* `--addon-version` - [optional] version of the generated add-on, `0.0.1` by default.
+* `--overwrite` - [optional] overwrites already existing folder if used, 
+    by default you can't generate a new add-on to already existing folder.
+
+### `ucc-gen import-from-aob`
+
+Import from AoB (Add-on Builder) (available from `v5.24.0`). It is in the
+**experimental** state as of now, meaning that running this command may not
+produce 100% UCC compatible add-on, but we are going to work on future
+improvements for the script itself.
+
+The import functionality is based on the 
+[ucc_migration_test](https://github.com/tmartin14/ucc_migration_test) bash
+script.
+One of the ways you can use it is to download an AoB-based add-on from
+Splunkbase, unarchive it and use 
+`ucc-gen import-from-aob --addon-name <unarchived-folder-name>`. Or you can
+run the same command against your locally developed add-on, but it should be
+exported from AoB.
+
+It takes the following parameters:
+
+* `--addon-name` - [required] add-on name.
+
+## What `ucc-gen build` does
 
 * Cleans the output folder.
 * Retrieves the package ID of addon.

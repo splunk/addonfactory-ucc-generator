@@ -176,3 +176,21 @@ def test_init_command(mock_init_command, args, expected_parameters):
     main.main(args)
 
     mock_init_command.assert_called_with(**expected_parameters)
+
+
+@pytest.mark.parametrize(
+    "args,expected_parameters",
+    [
+        (
+            ["import-from-aob", "--addon-name", "TestAddonFromAob"],
+            {
+                "addon_name": "TestAddonFromAob",
+            },
+        )
+    ],
+)
+@mock.patch("splunk_add_on_ucc_framework.commands.import_from_aob.import_from_aob")
+def test_import_from_aob_command(mock_import_from_aob, args, expected_parameters):
+    main.main(args)
+
+    mock_import_from_aob.assert_called_with(**expected_parameters)

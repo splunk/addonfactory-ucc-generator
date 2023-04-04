@@ -19,6 +19,7 @@ from typing import Optional, Sequence
 
 from splunk_add_on_ucc_framework.commands import build
 from splunk_add_on_ucc_framework.commands import init
+from splunk_add_on_ucc_framework.commands import import_from_aob
 
 
 # This is a necessary change to have, so we don't release a breaking change.
@@ -118,6 +119,16 @@ def main(argv: Optional[Sequence[str]] = None):
         help="Overwrite already generated add-on folder.",
     )
 
+    import_from_aob_parser = subparsers.add_parser(
+        "import-from-aob", description="[Experimental] Import from AoB."
+    )
+    import_from_aob_parser.add_argument(
+        "--addon-name",
+        type=str,
+        help="Add-on name.",
+        required=True,
+    )
+
     args = parser.parse_args(argv)
     if args.command == "build":
         build.generate(
@@ -133,6 +144,10 @@ def main(argv: Optional[Sequence[str]] = None):
             addon_input_name=args.addon_input_name,
             addon_version=args.addon_version,
             overwrite=args.overwrite,
+        )
+    if args.command == "import-from-aob":
+        import_from_aob.import_from_aob(
+            addon_name=args.addon_name,
         )
 
 
