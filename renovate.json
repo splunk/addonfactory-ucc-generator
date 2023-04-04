@@ -9,7 +9,7 @@
   "rangeStrategy": "pin",
   "dependencyDashboardApproval": true,
   "transitiveRemediation": true,
-  "enabledManagers": ["poetry", "npm", "gradle"],
+  "enabledManagers": ["poetry", "npm", "gradle", "github-actions"],
   "separateMinorPatch": true,
   "labels": ["dependencies"],
   "semanticCommits": "enabled",
