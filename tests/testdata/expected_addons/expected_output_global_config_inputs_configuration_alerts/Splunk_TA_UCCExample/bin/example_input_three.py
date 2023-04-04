@@ -14,7 +14,7 @@ class EXAMPLE_INPUT_THREE(smi.Script):
         scheme.description = 'Example Input Three'
         scheme.use_external_validation = True
         scheme.streaming_mode_xml = True
-        scheme.use_single_instance = True
+        scheme.use_single_instance = False
 
         scheme.add_argument(
             smi.Argument(
