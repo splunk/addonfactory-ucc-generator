@@ -17,6 +17,7 @@ import logging
 import os
 import shutil
 import stat
+import subprocess
 from pathlib import Path
 from typing import Sequence
 
@@ -25,6 +26,26 @@ logger = logging.getLogger("ucc_gen")
 
 class SplunktaucclibNotFound(Exception):
     pass
+
+
+class CouldNotInstallRequirements(Exception):
+    pass
+
+
+def _subprocess_call(command: str, command_desc: str) -> None:
+    try:
+        return_code = subprocess.call(command, shell=True)
+        if return_code < 0:
+            logger.error(
+                f"Child ({command_desc}) was terminated by signal {-return_code}"
+            )
+            raise CouldNotInstallRequirements
+        if return_code > 0:
+            logger.error(f"Command ({command_desc}) returned {return_code} status code")
+            raise CouldNotInstallRequirements
+    except OSError as e:
+        logger.error(f"Execution ({command_desc}) failed due to {e}")
+        raise CouldNotInstallRequirements from e
 
 
 def _check_ucc_library_in_requirements_file(path_to_requirements: str) -> bool:
@@ -103,6 +124,24 @@ def install_libraries(
         )
         os.system(installer + " -m pip install pip --upgrade")
         os.system(install_cmd)
+
+    if not os.path.exists(installation_path):
+        os.makedirs(installation_path)
+    pip_install_command = (
+        f"{installer} "
+        f"-m pip "
+        f"install "
+        f'-r "{requirements_file_path}" '
+        f"--no-compile "
+        f"--prefer-binary "
+        f"--ignore-installed "
+        f"--use-deprecated=legacy-resolver "
+        f'--target "{installation_path}"'
+    )
+    pip_update_command = f"{installer} -m pip install pip --upgrade"
+
+    _subprocess_call(pip_update_command, "pip upgrade")
+    _subprocess_call(pip_install_command, "pip install")
 
 
 def remove_package_from_installed_path(
