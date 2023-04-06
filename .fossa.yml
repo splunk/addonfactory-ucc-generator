@@ -12,6 +12,6 @@ targets:
     - type: setuptools
       path: tests/testdata/expected_addons/expected_addon_after_init/demo_addon_for_splunk/package/lib
     - type: setuptools
-      path: tests/testdata/test_addons/package_global_config_configuration/package/lib/requirements.txt
+      path: tests/testdata/test_addons/package_global_config_configuration/package/lib
     - type: setuptools
-      path: tests/testdata/test_addons/package_global_config_inputs_configuration_alerts/package/lib/requirements.txt
+      path: tests/testdata/test_addons/package_global_config_inputs_configuration_alerts/package/lib
