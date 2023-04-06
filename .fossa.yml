@@ -5,9 +5,13 @@ project:
   id: "addonfactory-ucc-generator"
   team: "TA-Automation"
 
-paths:
+targets:
   exclude:
-    - ./splunk_add_on_ucc_framework/commands/init_template/{{cookiecutter.addon_name}}/package/lib/requirements.txt
-    - ./tests/testdata/expected_addons/expected_addon_after_init/demo_addon_for_splunk/package/lib/requirements.txt
-    - ./tests/testdata/test_addons/package_global_config_configuration/package/lib/requirements.txt
-    - ./tests/testdata/test_addons/package_global_config_inputs_configuration_alerts/package/lib/requirements.txt
+    - type: setuptools
+      path: splunk_add_on_ucc_framework/commands/init_template/{{cookiecutter.addon_name}}/package/lib
+    - type: setuptools
+      path: tests/testdata/expected_addons/expected_addon_after_init/demo_addon_for_splunk/package/lib
+    - type: setuptools
+      path: tests/testdata/test_addons/package_global_config_configuration/package/lib/requirements.txt
+    - type: setuptools
+      path: tests/testdata/test_addons/package_global_config_inputs_configuration_alerts/package/lib/requirements.txt
