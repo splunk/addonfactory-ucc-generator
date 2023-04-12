@@ -46,6 +46,7 @@ nav:
   - Table: "table.md"
   - Additional packaging: "additional_packaging.md"
   - OpenAPI: "openapi.md"
+  - UCC-related libraries: "ucc_related_libraries.md"
   - Custom UI Extensions:
     - Custom Hook: "custom_ui_extensions/custom_hook.md"
     - Custom Control: "custom_ui_extensions/custom_control.md"

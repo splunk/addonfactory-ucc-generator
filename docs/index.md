@@ -1,14 +1,10 @@
 # Overview
 
-`splunk-add-on-ucc-framework` is a framework to generate UI based Splunk
-Add-ons. It includes UI, Rest handler, Modular input, Oauth, Alert
+`splunk-add-on-ucc-framework` is a framework to generate UI-based Splunk
+Add-ons. It includes UI, REST handlers, Modular inputs, OAuth and Alert
 action templates.
 
-> After UCC 5.2 Python 2 specific libraries are not supported anymore.
-> This means if the add-on has package/lib/py2/requirements.txt they
-> will not be installed while running ucc-gen command. Therefore,
-> modular inputs that are supposed to run on Python 2 will not be
-> supported by UCC.
+Only add-ons that use Python 3 are supported.
 
 Available as a GitHub action here:
 <https://github.com/splunk/addonfactory-ucc-generator-action>
@@ -21,18 +17,24 @@ as well.
 UCC stands for Universal Configuration Console. The purpose of having a
 framework for add-on generation is to simplify the process of add-on
 creation for the developers. UCC 5 uses [SplunkUI](https://splunkui.splunk.com/) 
-which is a new UI framework based on React.
+which is a new UI framework based on React. UCC UI repository can be found
+[here](https://github.com/splunk/addonfactory-ucc-base-ui).
+
+UCC-based add-ons are being powered by another Splunk libraries:
+[`solnlib`](https://github.com/splunk/addonfactory-solutions-library-python) and
+[`splunktaucclib`](https://github.com/splunk/addonfactory-ucc-library). More
+information [here](ucc_related_libraries.md).
 
 ## Features
 
 * Generate UI (`appserver` folder)
 * Generate Python REST handlers to support UI CRUD operations (`bin` folder)
-* Generate OpenAPI description document (`static/openapi.json` file)
+* Generate OpenAPI description document (`static/openapi.json` file) (more info [here](openapi.md))
 * Generate `.conf` files (more info [here](dot_conf_files.md))
 * Install Python requirements (`lib` folder)
 * Generate metadata files (`metadata` folder)
-* Possibility to extend UI with custom code
-* Possibility to extend the build process via `additional_packaging.py` file
+* Possibility to extend UI with custom code (more info [here](custom_ui_extensions/custom_hook.md))
+* Possibility to extend the build process via `additional_packaging.py` file (more info [here](additional_packaging.md))
 
 ## Installation
 
