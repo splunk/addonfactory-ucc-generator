@@ -12,6 +12,8 @@ UCC provides basic UI template for creating Addon's UI. It is helpful to control
 
 For full usage instructions, please visit the [documentation](https://splunk.github.io/addonfactory-ucc-generator/).
 
+changes
+
 ## Communication channels
 
 If you are a Splunker use: https://splunk.slack.com/archives/C03T8QCHBTJ
