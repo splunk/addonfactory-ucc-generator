@@ -124,27 +124,13 @@ def __add_schemas_object(
             open_api_object.components.schemas[tab.name] = __get_schema_object(
                 name=tab.name, entities=tab.entity
             )
-        additional_input_entities = [
-            json_to_object.DataClasses(
-                json={
-                    "field": "disabled",
-                    "type": "singleSelect",
-                    "options": {
-                        "autoCompleteFields": [
-                            {"value": "0"},
-                            {"value": "1"},
-                        ]
-                    },
-                }
-            )
-        ]
         if hasattr(global_config.pages, "inputs") and hasattr(
             global_config.pages.inputs, "services"
         ):
             for service in global_config.pages.inputs.services:
                 open_api_object.components.schemas[service.name] = __get_schema_object(
                     name=service.name,
-                    entities=service.entity + additional_input_entities,
+                    entities=service.entity,
                 )
     return open_api_object
 
