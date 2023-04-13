@@ -21,3 +21,4 @@ If you are a part of the community use: https://splunk-usergroups.slack.com/arch
 ## Contributing Guidelines
 
 Go to [Contributing Guidelines](https://splunk.github.io/addonfactory-ucc-generator/contributing/).
+test
