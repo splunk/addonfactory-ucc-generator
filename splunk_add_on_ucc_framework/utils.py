@@ -34,7 +34,10 @@ def dump_yaml_config(config: Dict[Any, Any], file_path: str):
 
 
 def get_version_from_git():
-    version = dunamai.Version.from_git()
+    try:
+        version = dunamai.Version.from_git()
+    except RuntimeError:
+        raise exceptions.IsNotAGitRepo()
     if not version.stage:
         stage = "R"
     else:

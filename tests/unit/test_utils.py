@@ -22,6 +22,14 @@ from splunk_add_on_ucc_framework import exceptions, utils
 
 
 @mock.patch("splunk_add_on_ucc_framework.utils.dunamai.Version", autospec=True)
+def test_get_version_from_git_when_runtime_error_from_dunamai(mock_version_class):
+    mock_version_class.from_git.side_effect = RuntimeError
+
+    with pytest.raises(exceptions.IsNotAGitRepo):
+        utils.get_version_from_git()
+
+
+@mock.patch("splunk_add_on_ucc_framework.utils.dunamai.Version", autospec=True)
 def test_get_version_from_git_when_tags_are_not_semver(mock_version_class):
     mock_version = mock.MagicMock()
     mock_version.serialize.side_effect = ValueError
