@@ -417,6 +417,13 @@ def _get_addon_version(addon_version: Optional[str]) -> str:
     if not addon_version:
         try:
             return utils.get_version_from_git()
+        except exceptions.IsNotAGitRepo:
+            logger.error(
+                "Could not determine a version using Git (maybe not a Git "
+                "repository?). Use `--ta-version` to specify the version you "
+                "want."
+            )
+            exit(1)
         except exceptions.CouldNotVersionFromGitException:
             logger.error(
                 "Could not find the proper version from git tags. "
