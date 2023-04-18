@@ -1,26 +1,11 @@
-#
-# Copyright 2021 Splunk Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
-    alert_actions_py_gen,
+    alert_actions_html_gen,
 )
 from tests.unit.helpers import get_testdata_file
 
 
 def test_generate_alert_action(tmp_path):
-    generated = alert_actions_py_gen.generate_alert_actions_py_files(
+    generated = alert_actions_html_gen.generate_alert_actions_html_files(
         input_setting={
             "product_id": "Splunk_TA_UCCExample",
             "short_name": "splunk_ta_uccexample",
@@ -77,6 +62,13 @@ def test_generate_alert_action(tmp_path):
                             },
                         },
                         {
+                            "label": "Scripted Endpoint",
+                            "required": False,
+                            "format_type": "text",
+                            "name": "scripted_endpoint",
+                            "help_string": "Scripted REST endpoint to create incident at. Format: /api/<API namespace>/<API ID>/<Relative path>. Default: /api/now/incident",  # noqa: E501
+                        },
+                        {
                             "label": "Action:",
                             "required": True,
                             "format_type": "radio",
@@ -98,16 +90,15 @@ def test_generate_alert_action(tmp_path):
                                 "value-field": "title",
                                 "label-field": "title",
                                 "search": "| rest /servicesNS/nobody/Splunk_TA_UCCExample/splunk_ta_uccexample_account | dedup title",  # noqa: E501
+                                "earliest": "-4@h",
+                                "latest": "now",
                             },
                         },
                     ],
                 }
             ],
         },
-        global_settings="",
         package_path=tmp_path,
     )
-    expected_alert_helper = get_testdata_file("alert_action_helper.py.generated")
-    expected_alert = get_testdata_file("alert_action.py.generated")
-    assert expected_alert == generated["test_alert"]["test_alert.py"]
-    assert expected_alert_helper == generated["test_alert"]["test_alert_helper.py"]
+    expected_alert_html = get_testdata_file("alert.html.generated")
+    assert expected_alert_html == generated["test_alert"]
