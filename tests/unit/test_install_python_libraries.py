@@ -1,18 +1,3 @@
-#
-# Copyright 2021 Splunk Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
 import os
 import stat
 from unittest import mock
@@ -20,6 +5,7 @@ from unittest import mock
 import pytest
 
 from splunk_add_on_ucc_framework.install_python_libraries import (
+    CouldNotInstallRequirements,
     SplunktaucclibNotFound,
     _check_ucc_library_in_requirements_file,
     install_libraries,
@@ -79,12 +65,11 @@ def test_check_ucc_library_in_requirements_file(
     )
 
 
-@mock.patch("os.system", autospec=True)
-@mock.patch("os.path.isfile", autospec=True)
-@mock.patch("os.path.isdir", autospec=True)
-def test_install_libraries(mock_os_path_isdir, mock_os_path_isfile, mock_os_system):
-    mock_os_path_isfile.return_value = True
-    mock_os_path_isdir.return_value = True
+@mock.patch("subprocess.call", autospec=True)
+@mock.patch("os.path.exists", autospec=True)
+def test_install_libraries(mock_os_path_exists, mock_subprocess_call):
+    mock_os_path_exists.return_value = True
+    mock_subprocess_call.return_value = 0
 
     install_libraries(
         "package/lib/requirements.txt",
@@ -99,12 +84,51 @@ def test_install_libraries(mock_os_path_isdir, mock_os_path_isfile, mock_os_syst
         '/path/to/output/addon_name/lib"'
     )
     expected_pip_update_command = "python3 -m pip install pip --upgrade"
-    mock_os_system.assert_has_calls(
+    mock_subprocess_call.assert_has_calls(
         [
-            mock.call(expected_pip_update_command),
-            mock.call(expected_install_command),
+            mock.call(expected_pip_update_command, shell=True),
+            mock.call(expected_install_command, shell=True),
         ]
     )
+
+
+@mock.patch("subprocess.call", autospec=True)
+@mock.patch("os.path.exists", autospec=True)
+def test_install_libraries_when_subprocess_raises_os_error(
+    mock_os_path_exists, mock_subprocess_call
+):
+    mock_os_path_exists.return_value = True
+    mock_subprocess_call.side_effect = OSError
+
+    with pytest.raises(CouldNotInstallRequirements):
+        install_libraries(
+            "package/lib/requirements.txt", "/path/to/output/addon_name/lib", "python3"
+        )
+
+
+@pytest.mark.parametrize(
+    "subprocess_status_codes",
+    [
+        (127, 0),
+        (0, 127),
+        (1, 0),
+        (0, 1),
+        (-1, 0),
+        (0, -1),
+    ],
+)
+@mock.patch("subprocess.call", autospec=True)
+@mock.patch("os.path.exists", autospec=True)
+def test_install_libraries_when_subprocess_returns_non_zero_codes(
+    mock_os_path_exists, mock_subprocess_call, subprocess_status_codes
+):
+    mock_os_path_exists.return_value = True
+    mock_subprocess_call.side_effect = subprocess_status_codes
+
+    with pytest.raises(CouldNotInstallRequirements):
+        install_libraries(
+            "package/lib/requirements.txt", "/path/to/output/addon_name/lib", "python3"
+        )
 
 
 def test_install_libraries_when_no_splunktaucclib_is_present_but_has_ui(tmp_path):

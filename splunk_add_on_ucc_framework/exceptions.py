@@ -15,3 +15,7 @@
 #
 class CouldNotVersionFromGitException(Exception):
     pass
+
+
+class IsNotAGitRepo(Exception):
+    pass

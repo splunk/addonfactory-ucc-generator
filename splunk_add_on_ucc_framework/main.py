@@ -16,10 +16,13 @@
 import argparse
 import sys
 from typing import Optional, Sequence
+import logging
 
 from splunk_add_on_ucc_framework.commands import build
 from splunk_add_on_ucc_framework.commands import init
 from splunk_add_on_ucc_framework.commands import import_from_aob
+
+logger = logging.getLogger("ucc_gen")
 
 
 # This is a necessary change to have, so we don't release a breaking change.
@@ -48,6 +51,10 @@ class DefaultSubcommandArgumentParser(argparse.ArgumentParser):
                 if subparser_found:
                     break
             else:
+                logger.warning(
+                    "Please use `ucc-gen build` if you want to build "
+                    "an add-on, using just `ucc-gen` will be deprecated"
+                )
                 arg_strings = [d_sp] + arg_strings
         return super()._parse_known_args(arg_strings, *args, **kwargs)
 
