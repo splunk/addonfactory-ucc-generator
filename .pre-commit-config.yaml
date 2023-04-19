@@ -37,7 +37,7 @@ repos:
         exclude: (^docs/|^splunk_add_on_ucc_framework/commands/imports.py)
         additional_dependencies: ['types-PyYAML']
 -   repo: https://github.com/PyCQA/flake8
-    rev: 6.0.0
+    rev: 4.0.1
     hooks:
     -   id: flake8
         exclude: (^splunk_add_on_ucc_framework/commands/init_template/|^splunk_add_on_ucc_framework/commands/imports.py)
