@@ -21,7 +21,6 @@ from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import (
 
 
 class WebConf:
-
     _template = """
 [expose:{name}]
 pattern = {name}

@@ -39,7 +39,6 @@ class SingleModelEntityBuilder(RestEntityBuilder):
 
 
 class SingleModelEndpointBuilder(RestEndpointBuilder):
-
     _rh_template = """
 from splunktaucclib.rest_handler.endpoint import (
     field,

@@ -26,7 +26,6 @@ __all__ = ["RestBuilder"]
 
 
 class _RestBuilderOutput:
-
     readme = "README"
     default = "default"
     bin = "bin"

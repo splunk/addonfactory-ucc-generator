@@ -22,7 +22,6 @@ from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import (
 
 
 class RestFieldBuilder:
-
     _kv_template = "{name} = {value}"
     _rh_template = """field.RestField(
     {name},
