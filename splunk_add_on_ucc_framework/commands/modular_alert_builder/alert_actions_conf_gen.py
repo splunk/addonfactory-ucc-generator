@@ -53,7 +53,7 @@ class AlertActionsConfBase:
         self._all_settings = input_setting
         self._alert_settings = input_setting[ac.MODULAR_ALERTS]
         self._package_path = package_path
-        # nosemgrep: splunk.autoescape-disabled
+        # nosemgrep: splunk.autoescape-disabled, python.jinja2.security.audit.autoescape-disabled.autoescape-disabled
         self._templates = Environment(
             loader=FileSystemLoader(
                 op.join(op.dirname(op.realpath(__file__)), "arf_template")
