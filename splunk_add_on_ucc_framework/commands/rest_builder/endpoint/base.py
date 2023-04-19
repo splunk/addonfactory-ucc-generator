@@ -26,7 +26,6 @@ from typing import List, Sequence
 
 
 class RestEntityBuilder:
-
     _title_template = "[{}]"
     _rh_template = """
 fields{name_rh} = [
