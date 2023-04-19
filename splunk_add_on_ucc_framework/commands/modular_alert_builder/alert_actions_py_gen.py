@@ -43,7 +43,7 @@ class AlertActionsPyBase:
         self._alert_actions_setting = input_setting[ac.MODULAR_ALERTS]
         self._ta_name = self._all_setting.get(ac.SHORT_NAME)
         self._lib_dir = self.get_python_lib_dir_name(self._ta_name)
-        # nosemgrep: splunk.autoescape-disabled
+        # nosemgrep: splunk.autoescape-disabled, python.jinja2.security.audit.autoescape-disabled.autoescape-disabled
         self._templates = Environment(
             loader=FileSystemLoader(
                 op.join(op.dirname(op.realpath(__file__)), "arf_template")
