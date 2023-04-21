@@ -14,8 +14,9 @@
 # limitations under the License.
 #
 import copy
+from enum import Flag, auto
 from functools import lru_cache
-from typing import List, Dict, Any, Optional, Union
+from typing import List, Tuple, Dict, Any, Optional, Union
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 from splunk_add_on_ucc_framework import app_manifest as app_manifest_lib
 from splunk_add_on_ucc_framework.commands.openapi_generator.oas import (
@@ -25,6 +26,11 @@ from splunk_add_on_ucc_framework.commands.openapi_generator import oas, json_to_
 from splunk_add_on_ucc_framework.commands.openapi_generator.json_to_object import (
     DataClasses,
 )
+
+
+class GloblaConfigPages(Flag):
+    CONFIGURATION = auto()
+    INPUTS = auto()
 
 
 def __create_min_required(
@@ -83,12 +89,23 @@ def __add_security_scheme_object(open_api_object: OpenAPIObject) -> OpenAPIObjec
     return open_api_object
 
 
-def __get_schema_object(*, name: str, entities: list) -> oas.SchemaObject:
+def __create_schema_name(*, name, without: Optional[list] = None) -> str:
+    return f"{name}_without_{'_'.join(without)}" if without else name
+
+
+def __get_schema_object(
+    *, name: str, entities: list, without: Optional[list] = None
+) -> Tuple[str, oas.SchemaObject]:
+    name = __create_schema_name(name=name, without=without)
     schema_object = oas.SchemaObject(
         type="object", xml=oas.XMLObject(name=name), properties={}
     )
     for entity in entities:
-        if "helpLink" == entity.type:
+        if "helpLink" == entity.type or (
+            isinstance(without, list)
+            and hasattr(entity, "field")
+            and entity.field in without
+        ):
             continue
         if schema_object.properties is not None:
             schema_object.properties[entity.field] = {"type": "string"}
@@ -112,7 +129,7 @@ def __get_schema_object(*, name: str, entities: list) -> oas.SchemaObject:
                 )
             if hasattr(entity, "encrypted") and entity.encrypted:
                 schema_object.properties[entity.field]["format"] = "password"
-    return schema_object
+    return (name, schema_object)
 
 
 def __add_schemas_object(
@@ -121,17 +138,50 @@ def __add_schemas_object(
     if open_api_object.components is not None:
         open_api_object.components.schemas = {}
         for tab in global_config.pages.configuration.tabs:
-            open_api_object.components.schemas[tab.name] = __get_schema_object(
+            schema_name, schema_object = __get_schema_object(
                 name=tab.name, entities=tab.entity
             )
+            open_api_object.components.schemas[schema_name] = schema_object
+            schema_name, schema_object = __get_schema_object(
+                name=tab.name, entities=tab.entity, without=["name"]
+            )
+            open_api_object.components.schemas[schema_name] = schema_object
         if hasattr(global_config.pages, "inputs") and hasattr(
             global_config.pages.inputs, "services"
         ):
-            for service in global_config.pages.inputs.services:
-                open_api_object.components.schemas[service.name] = __get_schema_object(
-                    name=service.name,
-                    entities=service.entity,
+            additional_input_entities = [
+                json_to_object.DataClasses(
+                    json={
+                        "field": "disabled",
+                        "type": "singleSelect",
+                        "options": {
+                            "autoCompleteFields": [
+                                {"value": "0"},
+                                {"value": "1"},
+                            ]
+                        },
+                    }
                 )
+            ]
+            for service in global_config.pages.inputs.services:
+                schema_name, schema_object = __get_schema_object(
+                    name=service.name,
+                    entities=service.entity + additional_input_entities,
+                )
+                open_api_object.components.schemas[schema_name] = schema_object
+                schema_name, schema_object = __get_schema_object(
+                    name=service.name,
+                    entities=service.entity + additional_input_entities,
+                    without=["name"],
+                )
+                open_api_object.components.schemas[schema_name] = schema_object
+                schema_name, schema_object = __get_schema_object(
+                    name=service.name,
+                    entities=service.entity + additional_input_entities,
+                    without=["disabled"],
+                )
+                open_api_object.components.schemas[schema_name] = schema_object
+
     return open_api_object
 
 
@@ -186,13 +236,17 @@ def __get_path_get_for_item(*, name: str) -> oas.OperationObject:
     return __get_path_get(name=name, description=description)
 
 
-def __get_path_post(*, name: str, description: str) -> oas.OperationObject:
+def __get_path_post(
+    *, name: str, description: str, request_schema_without: Optional[List[str]] = None
+) -> oas.OperationObject:
     return oas.OperationObject(
         description=description,
         requestBody=oas.RequestBodyObject(
             content={
                 "application/x-www-form-urlencoded": __get_media_type_object_with_schema_ref(
-                    schema_name=name
+                    schema_name=__create_schema_name(
+                        name=name, without=request_schema_without
+                    )
                 )
             }
         ),
@@ -212,14 +266,22 @@ def __get_path_post(*, name: str, description: str) -> oas.OperationObject:
     )
 
 
-def __get_path_post_for_create(*, name: str) -> oas.OperationObject:
-    description = f"Create item in {name}"
-    return __get_path_post(name=name, description=description)
+def __get_path_post_for_create(
+    *, name: str, page: GloblaConfigPages
+) -> oas.OperationObject:
+    return __get_path_post(
+        name=name,
+        description=f"Create item in {name}",
+        request_schema_without=["disabled"]
+        if page == GloblaConfigPages.INPUTS
+        else None,
+    )
 
 
 def __get_path_post_for_update(*, name: str) -> oas.OperationObject:
-    description = f"Update {name} item"
-    return __get_path_post(name=name, description=description)
+    return __get_path_post(
+        name=name, description=f"Update {name} item", request_schema_without=["name"]
+    )
 
 
 def __get_path_delete(*, name: str) -> oas.OperationObject:
@@ -258,11 +320,12 @@ def __assign_ta_paths(
     path: str,
     path_name: str,
     actions: List[str],
+    page: GloblaConfigPages,
 ):
     if open_api_object.paths is not None:
         open_api_object.paths[path] = oas.PathItemObject(
             get=__get_path_get_for_list(name=path_name),
-            post=__get_path_post_for_create(name=path_name),
+            post=__get_path_post_for_create(name=path_name, page=page),
         )
         open_api_object.paths[path].parameters = [
             __get_output_mode(),
@@ -302,6 +365,7 @@ def __add_paths(
             actions=tab.table.actions
             if hasattr(tab, "table") and hasattr(tab.table, "actions")
             else None,
+            page=GloblaConfigPages.CONFIGURATION,
         )
     if hasattr(global_config.pages, "inputs") and hasattr(
         global_config.pages.inputs, "services"
@@ -312,6 +376,7 @@ def __add_paths(
                 path=f"/{global_config.meta.restRoot}_{service.name}",
                 path_name=service.name,
                 actions=global_config.pages.inputs.table.actions,
+                page=GloblaConfigPages.INPUTS,
             )
     return open_api_object
 

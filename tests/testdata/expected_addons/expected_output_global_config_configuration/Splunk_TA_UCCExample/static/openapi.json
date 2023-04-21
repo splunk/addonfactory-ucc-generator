@@ -60,6 +60,39 @@
                     "wrapped": false
                 }
             },
+            "account_without_name": {
+                "type": "object",
+                "properties": {
+                    "custom_endpoint": {
+                        "type": "string",
+                        "enum": [
+                            "login.example.com",
+                            "test.example.com",
+                            "other"
+                        ]
+                    },
+                    "endpoint": {
+                        "type": "string"
+                    },
+                    "account_checkbox": {
+                        "type": "string"
+                    },
+                    "account_radio": {
+                        "type": "string"
+                    },
+                    "account_multiple_select": {
+                        "type": "string"
+                    },
+                    "oauth": {
+                        "type": "string"
+                    }
+                },
+                "xml": {
+                    "name": "account_without_name",
+                    "attribute": false,
+                    "wrapped": false
+                }
+            },
             "proxy": {
                 "type": "object",
                 "properties": {
@@ -97,6 +130,43 @@
                     "wrapped": false
                 }
             },
+            "proxy_without_name": {
+                "type": "object",
+                "properties": {
+                    "proxy_enabled": {
+                        "type": "string"
+                    },
+                    "proxy_type": {
+                        "type": "string",
+                        "enum": [
+                            "http",
+                            "socks4",
+                            "socks5"
+                        ]
+                    },
+                    "proxy_url": {
+                        "type": "string"
+                    },
+                    "proxy_port": {
+                        "type": "string"
+                    },
+                    "proxy_username": {
+                        "type": "string"
+                    },
+                    "proxy_password": {
+                        "type": "string",
+                        "format": "password"
+                    },
+                    "proxy_rdns": {
+                        "type": "string"
+                    }
+                },
+                "xml": {
+                    "name": "proxy_without_name",
+                    "attribute": false,
+                    "wrapped": false
+                }
+            },
             "logging": {
                 "type": "object",
                 "properties": {
@@ -113,6 +183,26 @@
                 },
                 "xml": {
                     "name": "logging",
+                    "attribute": false,
+                    "wrapped": false
+                }
+            },
+            "logging_without_name": {
+                "type": "object",
+                "properties": {
+                    "loglevel": {
+                        "type": "string",
+                        "enum": [
+                            "DEBUG",
+                            "INFO",
+                            "WARNING",
+                            "ERROR",
+                            "CRITICAL"
+                        ]
+                    }
+                },
+                "xml": {
+                    "name": "logging_without_name",
                     "attribute": false,
                     "wrapped": false
                 }
@@ -144,6 +234,37 @@
                 },
                 "xml": {
                     "name": "custom_abc",
+                    "attribute": false,
+                    "wrapped": false
+                }
+            },
+            "custom_abc_without_name": {
+                "type": "object",
+                "properties": {
+                    "testString": {
+                        "type": "string"
+                    },
+                    "testNumber": {
+                        "type": "string"
+                    },
+                    "testRegex": {
+                        "type": "string"
+                    },
+                    "testEmail": {
+                        "type": "string"
+                    },
+                    "testIpv4": {
+                        "type": "string"
+                    },
+                    "testDate": {
+                        "type": "string"
+                    },
+                    "testUrl": {
+                        "type": "string"
+                    }
+                },
+                "xml": {
+                    "name": "custom_abc_without_name",
                     "attribute": false,
                     "wrapped": false
                 }
@@ -282,7 +403,7 @@
                     "content": {
                         "application/x-www-form-urlencoded": {
                             "schema": {
-                                "$ref": "#/components/schemas/account"
+                                "$ref": "#/components/schemas/account_without_name"
                             }
                         }
                     },
