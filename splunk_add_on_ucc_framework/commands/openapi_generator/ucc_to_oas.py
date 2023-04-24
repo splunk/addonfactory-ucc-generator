@@ -97,9 +97,7 @@ def __get_schema_object(
     *, name: str, entities: list, without: Optional[list] = None
 ) -> Tuple[str, oas.SchemaObject]:
     name = __create_schema_name(name=name, without=without)
-    schema_object = oas.SchemaObject(
-        type="object", xml=oas.XMLObject(name=name), properties={}
-    )
+    schema_object = oas.SchemaObject(type="object", properties={})
     for entity in entities:
         if "helpLink" == entity.type or (
             isinstance(without, list)
@@ -188,16 +186,13 @@ def __add_schemas_object(
 #   consider changing to 'cache' once python is upgraded to >=3.9
 @lru_cache(maxsize=None)
 def __get_media_type_object_with_schema_ref(
-    *, schema_name: str, schema_type: Optional[str] = None, is_xml: bool = False
+    *, schema_name: str, schema_type: Optional[str] = None
 ) -> oas.MediaTypeObject:
     ref_dict = {"$ref": f"#/components/schemas/{schema_name}"}
     schema: Union[oas.SchemaObject, Dict] = (
         oas.SchemaObject(
             type=schema_type,
             items=ref_dict,
-            xml=oas.XMLObject(name=f"{schema_name}_list", wrapped=True)
-            if is_xml
-            else None,
         )
         if schema_type
         else ref_dict
@@ -216,9 +211,6 @@ def __get_path_get(
                 content={
                     "application/json": __get_media_type_object_with_schema_ref(
                         schema_name=name, schema_type=schema_type
-                    ),
-                    "application/xml": __get_media_type_object_with_schema_ref(
-                        schema_name=name, schema_type=schema_type, is_xml=True
                     ),
                 },
             )
@@ -257,9 +249,6 @@ def __get_path_post(
                     "application/json": __get_media_type_object_with_schema_ref(
                         schema_name=name
                     ),
-                    "application/xml": __get_media_type_object_with_schema_ref(
-                        schema_name=name, is_xml=True
-                    ),
                 },
             )
         },
@@ -295,9 +284,6 @@ def __get_path_delete(*, name: str) -> oas.OperationObject:
                     "application/json": __get_media_type_object_with_schema_ref(
                         schema_name=name, schema_type="array"
                     ),
-                    "application/xml": __get_media_type_object_with_schema_ref(
-                        schema_name=name, schema_type="array", is_xml=True
-                    ),
                 },
             )
         },
@@ -308,9 +294,9 @@ def __get_output_mode() -> Dict[str, Any]:
     return {
         "name": "output_mode",
         "in": "query",
-        "required": False,
-        "description": "The name of the item to operate on",
-        "schema": {"type": "string", "enum": ["xml", "json"]},
+        "required": True,
+        "description": "Output mode",
+        "schema": {"type": "string", "enum": ["json"], "default": "json"},
     }
 
 

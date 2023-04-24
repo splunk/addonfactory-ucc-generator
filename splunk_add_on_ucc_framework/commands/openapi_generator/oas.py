@@ -44,13 +44,13 @@ class ServerObject(Init):  # https://spec.openapis.org/oas/latest.html#server-ob
     description: Optional[str] = None
 
 
-@dataclass
-class XMLObject(Init):  # https://spec.openapis.org/oas/latest.html#xml-object
-    name: Optional[str] = None
-    namespace: Optional[str] = None
-    prefix: Optional[str] = None
-    attribute: Optional[bool] = False
-    wrapped: Optional[bool] = False
+# @dataclass
+# class XMLObject(Init):  # https://spec.openapis.org/oas/latest.html#xml-object
+#     name: Optional[str] = None
+#     namespace: Optional[str] = None
+#     prefix: Optional[str] = None
+#     attribute: Optional[bool] = False
+#     wrapped: Optional[bool] = False
 
 
 @dataclass
@@ -64,7 +64,7 @@ class SchemaObject(Init):  # https://spec.openapis.org/oas/latest.html#schema-ob
     type: Optional[str] = None
     properties: Optional[dict] = None
     items: Optional[Dict[str, str]] = None
-    xml: Optional[XMLObject] = None
+    # xml: Optional[XMLObject] = None
 
 
 @dataclass
