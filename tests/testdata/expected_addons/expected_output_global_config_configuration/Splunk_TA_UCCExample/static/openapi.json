@@ -53,11 +53,6 @@
                     "oauth": {
                         "type": "string"
                     }
-                },
-                "xml": {
-                    "name": "account",
-                    "attribute": false,
-                    "wrapped": false
                 }
             },
             "account_without_name": {
@@ -86,11 +81,6 @@
                     "oauth": {
                         "type": "string"
                     }
-                },
-                "xml": {
-                    "name": "account_without_name",
-                    "attribute": false,
-                    "wrapped": false
                 }
             },
             "proxy": {
@@ -123,11 +113,6 @@
                     "proxy_rdns": {
                         "type": "string"
                     }
-                },
-                "xml": {
-                    "name": "proxy",
-                    "attribute": false,
-                    "wrapped": false
                 }
             },
             "proxy_without_name": {
@@ -160,11 +145,6 @@
                     "proxy_rdns": {
                         "type": "string"
                     }
-                },
-                "xml": {
-                    "name": "proxy_without_name",
-                    "attribute": false,
-                    "wrapped": false
                 }
             },
             "logging": {
@@ -180,11 +160,6 @@
                             "CRITICAL"
                         ]
                     }
-                },
-                "xml": {
-                    "name": "logging",
-                    "attribute": false,
-                    "wrapped": false
                 }
             },
             "logging_without_name": {
@@ -200,11 +175,6 @@
                             "CRITICAL"
                         ]
                     }
-                },
-                "xml": {
-                    "name": "logging_without_name",
-                    "attribute": false,
-                    "wrapped": false
                 }
             },
             "custom_abc": {
@@ -231,11 +201,6 @@
                     "testUrl": {
                         "type": "string"
                     }
-                },
-                "xml": {
-                    "name": "custom_abc",
-                    "attribute": false,
-                    "wrapped": false
                 }
             },
             "custom_abc_without_name": {
@@ -262,11 +227,6 @@
                     "testUrl": {
                         "type": "string"
                     }
-                },
-                "xml": {
-                    "name": "custom_abc_without_name",
-                    "attribute": false,
-                    "wrapped": false
                 }
             }
         },
@@ -291,19 +251,6 @@
                                         "$ref": "#/components/schemas/account"
                                     }
                                 }
-                            },
-                            "application/xml": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/account"
-                                    },
-                                    "xml": {
-                                        "name": "account_list",
-                                        "attribute": false,
-                                        "wrapped": true
-                                    }
-                                }
                             }
                         }
                     }
@@ -317,11 +264,6 @@
                         "description": "Create item in account",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/account"
-                                }
-                            },
-                            "application/xml": {
                                 "schema": {
                                     "$ref": "#/components/schemas/account"
                                 }
@@ -346,14 +288,14 @@
                 {
                     "name": "output_mode",
                     "in": "query",
-                    "required": false,
-                    "description": "The name of the item to operate on",
+                    "required": true,
+                    "description": "Output mode",
                     "schema": {
                         "type": "string",
                         "enum": [
-                            "xml",
                             "json"
-                        ]
+                        ],
+                        "default": "json"
                     }
                 }
             ]
@@ -365,11 +307,6 @@
                         "description": "Get account item details",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/account"
-                                }
-                            },
-                            "application/xml": {
                                 "schema": {
                                     "$ref": "#/components/schemas/account"
                                 }
@@ -386,11 +323,6 @@
                         "description": "Update account item",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/account"
-                                }
-                            },
-                            "application/xml": {
                                 "schema": {
                                     "$ref": "#/components/schemas/account"
                                 }
@@ -423,19 +355,6 @@
                                         "$ref": "#/components/schemas/account"
                                     }
                                 }
-                            },
-                            "application/xml": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/account"
-                                    },
-                                    "xml": {
-                                        "name": "account_list",
-                                        "attribute": false,
-                                        "wrapped": true
-                                    }
-                                }
                             }
                         }
                     }
@@ -456,14 +375,14 @@
                 {
                     "name": "output_mode",
                     "in": "query",
-                    "required": false,
-                    "description": "The name of the item to operate on",
+                    "required": true,
+                    "description": "Output mode",
                     "schema": {
                         "type": "string",
                         "enum": [
-                            "xml",
                             "json"
-                        ]
+                        ],
+                        "default": "json"
                     }
                 }
             ]
@@ -481,19 +400,6 @@
                                         "$ref": "#/components/schemas/proxy"
                                     }
                                 }
-                            },
-                            "application/xml": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/proxy"
-                                    },
-                                    "xml": {
-                                        "name": "proxy_list",
-                                        "attribute": false,
-                                        "wrapped": true
-                                    }
-                                }
                             }
                         }
                     }
@@ -507,11 +413,6 @@
                         "description": "Create item in proxy",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/proxy"
-                                }
-                            },
-                            "application/xml": {
                                 "schema": {
                                     "$ref": "#/components/schemas/proxy"
                                 }
@@ -536,14 +437,14 @@
                 {
                     "name": "output_mode",
                     "in": "query",
-                    "required": false,
-                    "description": "The name of the item to operate on",
+                    "required": true,
+                    "description": "Output mode",
                     "schema": {
                         "type": "string",
                         "enum": [
-                            "xml",
                             "json"
-                        ]
+                        ],
+                        "default": "json"
                     }
                 }
             ]
@@ -561,19 +462,6 @@
                                         "$ref": "#/components/schemas/logging"
                                     }
                                 }
-                            },
-                            "application/xml": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/logging"
-                                    },
-                                    "xml": {
-                                        "name": "logging_list",
-                                        "attribute": false,
-                                        "wrapped": true
-                                    }
-                                }
                             }
                         }
                     }
@@ -587,11 +475,6 @@
                         "description": "Create item in logging",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/logging"
-                                }
-                            },
-                            "application/xml": {
                                 "schema": {
                                     "$ref": "#/components/schemas/logging"
                                 }
@@ -616,14 +499,14 @@
                 {
                     "name": "output_mode",
                     "in": "query",
-                    "required": false,
-                    "description": "The name of the item to operate on",
+                    "required": true,
+                    "description": "Output mode",
                     "schema": {
                         "type": "string",
                         "enum": [
-                            "xml",
                             "json"
-                        ]
+                        ],
+                        "default": "json"
                     }
                 }
             ]
@@ -641,19 +524,6 @@
                                         "$ref": "#/components/schemas/custom_abc"
                                     }
                                 }
-                            },
-                            "application/xml": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/custom_abc"
-                                    },
-                                    "xml": {
-                                        "name": "custom_abc_list",
-                                        "attribute": false,
-                                        "wrapped": true
-                                    }
-                                }
                             }
                         }
                     }
@@ -667,11 +537,6 @@
                         "description": "Create item in custom_abc",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/custom_abc"
-                                }
-                            },
-                            "application/xml": {
                                 "schema": {
                                     "$ref": "#/components/schemas/custom_abc"
                                 }
@@ -696,14 +561,14 @@
                 {
                     "name": "output_mode",
                     "in": "query",
-                    "required": false,
-                    "description": "The name of the item to operate on",
+                    "required": true,
+                    "description": "Output mode",
                     "schema": {
                         "type": "string",
                         "enum": [
-                            "xml",
                             "json"
-                        ]
+                        ],
+                        "default": "json"
                     }
                 }
             ]
