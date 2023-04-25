@@ -61,6 +61,10 @@ class GlobalConfig:
         return self._content["pages"]["configuration"]["tabs"]
 
     @property
+    def dashboard(self):
+        return self._content["pages"].get("dashboard")
+
+    @property
     def settings(self):
         settings = []
         for tab in self.tabs:
@@ -116,6 +120,9 @@ class GlobalConfig:
 
     def has_inputs(self) -> bool:
         return bool(self.inputs)
+
+    def has_dashboard(self) -> bool:
+        return self.dashboard is not None
 
     def has_alerts(self) -> bool:
         return bool(self.alerts)

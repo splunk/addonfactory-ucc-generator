@@ -37,6 +37,7 @@ from splunk_add_on_ucc_framework import server_conf as server_conf_lib
 from splunk_add_on_ucc_framework import app_manifest as app_manifest_lib
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 from splunk_add_on_ucc_framework import data_ui_generator
+from splunk_add_on_ucc_framework import dashboard
 from splunk_add_on_ucc_framework import normalize
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
     generate_alerts,
@@ -386,6 +387,7 @@ def generate_data_ui(
     output_directory: str,
     addon_name: str,
     include_inputs: bool,
+    include_dashboard: bool,
 ):
     # Create directories in the output folder for add-on's UI nav and views.
     os.makedirs(
@@ -405,6 +407,7 @@ def generate_data_ui(
         default_xml_content = data_ui_generator.generate_nav_default_xml(
             include_inputs=include_inputs,
             include_configuration=True,
+            include_dashboard=include_dashboard,
         )
         default_xml_file.write(default_xml_content)
     with open(
@@ -516,7 +519,12 @@ def generate(
             os.path.join(internal_root_dir, "package"),
             os.path.join(output_directory, ta_name),
         )
-        generate_data_ui(output_directory, ta_name, global_config.has_inputs())
+        generate_data_ui(
+            output_directory,
+            ta_name,
+            global_config.has_inputs(),
+            global_config.has_dashboard(),
+        )
         logger.info("Copied UCC template directory")
         global_config_file = (
             "globalConfig.yaml" if is_global_config_yaml else "globalConfig.json"
@@ -578,6 +586,13 @@ def generate(
             server_conf.write(output_server_conf_path)
             logger.info(
                 f"Created default {server_conf_lib.SERVER_CONF_FILE_NAME} file in the output folder"
+            )
+        if global_config.has_dashboard():
+            logger.info("Including dashboard")
+            dashboard.generate_dashboard(
+                j2_env,
+                output_directory,
+                ta_name,
             )
     else:
         global_config = None
