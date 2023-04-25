@@ -25,4 +25,19 @@
       </single>
     </panel>
   </row>
+  <row>
+    <panel>
+      <title>EPS by sourcetype</title>
+      <chart>
+        <search>
+          <query>index="_internal" source="*{{ addon_name.lower() }}*" action="events_ingested" | table _time, sourcetype_ingested, n_events | timechart avg(n_events) by sourcetype_ingested</query>
+          <earliest>$log_time.earliest$</earliest>
+          <latest>$log_time.latest$</latest>
+        </search>
+        <option name="charting.chart">line</option>
+        <option name="charting.drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+  </row>
 </form>

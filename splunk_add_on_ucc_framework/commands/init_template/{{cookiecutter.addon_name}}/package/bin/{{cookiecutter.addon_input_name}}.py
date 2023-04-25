@@ -11,10 +11,7 @@ ADDON_NAME = "{{cookiecutter.addon_name}}"
 
 
 def logger_for_input(input_name: str) -> logging.Logger:
-    normalized_input = input_name.split("/")[-1]
-    return log.Logs().get_logger(
-        f"{{cookiecutter.addon_name|lower}}_{normalized_input}"
-    )
+    return log.Logs().get_logger(f"{{cookiecutter.addon_name|lower}}_{input_name}")
 
 
 def get_account_api_key(session_key: str, account_name: str):
@@ -28,7 +25,10 @@ def get_account_api_key(session_key: str, account_name: str):
 
 
 def get_data_from_api(logger: logging.Logger, api_key: str):
-    logger.info("Getting data from an external API")
+    log.log_event(
+        logger,
+        {"action": "collection", "description": "getting data from external API"},
+    )
     dummy_data = [
         {
             "line1": "hello",
@@ -73,7 +73,8 @@ class Input(smi.Script):
         #   },
         # }
         for input_name, input_item in inputs.inputs.items():
-            logger = logger_for_input(input_name)
+            normalized_input = input_name.split("/")[-1]
+            logger = logger_for_input(normalized_input)
             try:
                 session_key = self._input_definition.metadata["session_key"]
                 log_level = conf_manager.get_log_level(
@@ -83,23 +84,35 @@ class Input(smi.Script):
                     conf_name=f"{ADDON_NAME}_settings",
                 )
                 logger.setLevel(log_level)
-                logger.info("Start of the modular input")
+                log.modular_input_start(logger, normalized_input)
                 api_key = get_account_api_key(session_key, input_item.get("account"))
                 data = get_data_from_api(logger, api_key)
+                sourcetype = "dummy-data"
                 for line in data:
                     event_writer.write_event(
                         smi.Event(
                             data=json.dumps(line, ensure_ascii=False, default=str),
                             index=input_item.get("index"),
-                            sourcetype="dummy-data",
+                            sourcetype=sourcetype,
                         )
                     )
-                logger.info("End of the modular input")
+                log.events_ingested(
+                    logger,
+                    normalized_input,
+                    sourcetype,
+                    len(data),
+                )
+                log.modular_input_end(logger, normalized_input)
             except Exception as e:
-                logger.error(
-                    f"Exception raised while ingesting data for "
-                    f"{{cookiecutter.addon_input_name}}: {e}. Traceback: "
-                    f"{traceback.format_exc()}"
+                log.log_event(
+                    logger,
+                    {
+                        "action": "exception",
+                        "modular_input_name": normalized_input,
+                        "exception_info": str(e),
+                        "traceback_info": traceback.format_exc(),
+                    },
+                    log_level=logging.ERROR,
                 )
 
 

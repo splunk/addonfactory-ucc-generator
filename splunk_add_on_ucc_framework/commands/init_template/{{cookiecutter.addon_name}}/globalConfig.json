@@ -194,7 +194,8 @@
                     }
                 ]
             }
-        }
+        },
+        "dashboard": {}
     },
     "meta": {
         "name": "{{cookiecutter.addon_name}}",

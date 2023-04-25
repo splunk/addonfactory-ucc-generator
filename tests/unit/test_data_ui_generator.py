@@ -61,7 +61,7 @@ def test_generate_views_redirect_xml():
     result = data_ui_generator.generate_views_redirect_xml("Splunk_TA_UCCExample")
 
     expected_result = """<?xml version="1.0" ?>
-<view isDashboard="False" template="Splunk_TA_UCCExample:/templates/splunk_ta_uccexample_redirect.html" type="html">
+<view isDashboard="False" template="Splunk_TA_UCCExample:templates/splunk_ta_uccexample_redirect.html" type="html">
     <label>Redirect</label>
 </view>
 """

@@ -599,7 +599,6 @@ def generate(
                 "data",
                 "ui",
                 "views",
-                "dashboard.xml",
             )
             dashboard.generate_dashboard(
                 dashboard_content,

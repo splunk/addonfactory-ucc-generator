@@ -1,4 +1,4 @@
 <?xml version="1.0" ?>
 <view isDashboard="False" template="Splunk_TA_UCCExample:/templates/base.html" type="html">
-	<label>Inputs</label>
+    <label>Inputs</label>
 </view>
