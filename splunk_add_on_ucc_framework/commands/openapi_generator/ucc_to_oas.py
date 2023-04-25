@@ -16,7 +16,7 @@
 import copy
 from enum import Flag, auto
 from functools import lru_cache
-from typing import List, Tuple, Dict, Any, Optional, Union
+from typing import List, Tuple, Dict, Any, Optional
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 from splunk_add_on_ucc_framework import app_manifest as app_manifest_lib
 from splunk_add_on_ucc_framework.commands.openapi_generator.oas import (
@@ -154,8 +154,8 @@ def __add_schemas_object(
                         "type": "singleSelect",
                         "options": {
                             "autoCompleteFields": [
-                                {"value": "0"},
-                                {"value": "1"},
+                                {"value": "False"},
+                                {"value": "True"},
                             ]
                         },
                     }
@@ -186,23 +186,33 @@ def __add_schemas_object(
 #   consider changing to 'cache' once python is upgraded to >=3.9
 @lru_cache(maxsize=None)
 def __get_media_type_object_with_schema_ref(
-    *, schema_name: str, schema_type: Optional[str] = None
+    *, schema_name: str, for_responses: bool = False
 ) -> oas.MediaTypeObject:
-    ref_dict = {"$ref": f"#/components/schemas/{schema_name}"}
-    schema: Union[oas.SchemaObject, Dict] = (
-        oas.SchemaObject(
-            type=schema_type,
-            items=ref_dict,
-        )
-        if schema_type
-        else ref_dict
+    if for_responses:
+        schema_name = __create_schema_name(name=schema_name, without=["name"])
+    schema: Optional[Dict[str, Any]] = (
+        {"$ref": f"#/components/schemas/{schema_name}"}
+        if not for_responses
+        else {
+            "type": "object",
+            "properties": {
+                "entry": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {"type": "string"},
+                            "content": {"$ref": f"#/components/schemas/{schema_name}"},
+                        },
+                    },
+                }
+            },
+        }
     )
     return oas.MediaTypeObject(schema=schema)
 
 
-def __get_path_get(
-    *, name: str, description: str, schema_type: Optional[str] = None
-) -> oas.OperationObject:
+def __get_path_get(*, name: str, description: str) -> oas.OperationObject:
     return oas.OperationObject(
         description=description,
         responses={
@@ -210,7 +220,7 @@ def __get_path_get(
                 description=description,
                 content={
                     "application/json": __get_media_type_object_with_schema_ref(
-                        schema_name=name, schema_type=schema_type
+                        schema_name=name, for_responses=True
                     ),
                 },
             )
@@ -220,7 +230,7 @@ def __get_path_get(
 
 def __get_path_get_for_list(*, name: str) -> oas.OperationObject:
     description = f"Get list of items for {name}"
-    return __get_path_get(name=name, description=description, schema_type="array")
+    return __get_path_get(name=name, description=description)
 
 
 def __get_path_get_for_item(*, name: str) -> oas.OperationObject:
@@ -247,7 +257,7 @@ def __get_path_post(
                 description=description,
                 content={
                     "application/json": __get_media_type_object_with_schema_ref(
-                        schema_name=name
+                        schema_name=name, for_responses=True
                     ),
                 },
             )
@@ -282,7 +292,7 @@ def __get_path_delete(*, name: str) -> oas.OperationObject:
                 description=description,
                 content={
                     "application/json": __get_media_type_object_with_schema_ref(
-                        schema_name=name, schema_type="array"
+                        schema_name=name, for_responses=True
                     ),
                 },
             )
