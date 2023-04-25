@@ -7,9 +7,9 @@
 
 The following 3rd-party software packages may be used by or distributed with addonfactory-ucc-base-ui. Any information relevant to third-party vendors listed below are collected using common, reasonable means.
 
-Date generated: 2023-4-4
+Date generated: 2023-4-25
 
-Revision ID: 31f5bb124953469a85bdfefd5937588f161fc17b
+Revision ID: 15b5fcc43cd1b404d98ad4a8e5bccb12d1d76ebd
 
 ================================================================================
 ================================================================================
@@ -55,6 +55,7 @@ Package Title: @babel/code-frame (7.18.6)
 * Declared Licenses *
 MIT
 
+
 MIT License
 
 Copyright (c) 2014-present Sebastian McKenzie and other contributors
@@ -86,6 +87,7 @@ Package Title: @babel/generator (7.20.14)
 
 * Declared Licenses *
 MIT
+
 
 MIT License
 
@@ -119,6 +121,7 @@ Package Title: @babel/helper-annotate-as-pure (7.18.6)
 * Declared Licenses *
 MIT
 
+
 MIT License
 
 Copyright (c) 2014-present Sebastian McKenzie and other contributors
@@ -150,6 +153,7 @@ Package Title: @babel/helper-environment-visitor (7.18.9)
 
 * Declared Licenses *
 MIT
+
 
 MIT License
 
@@ -183,6 +187,7 @@ Package Title: @babel/helper-function-name (7.19.0)
 * Declared Licenses *
 MIT
 
+
 MIT License
 
 Copyright (c) 2014-present Sebastian McKenzie and other contributors
@@ -214,6 +219,7 @@ Package Title: @babel/helper-hoist-variables (7.18.6)
 
 * Declared Licenses *
 MIT
+
 
 MIT License
 
@@ -247,6 +253,7 @@ Package Title: @babel/helper-module-imports (7.18.6)
 * Declared Licenses *
 MIT
 
+
 MIT License
 
 Copyright (c) 2014-present Sebastian McKenzie and other contributors
@@ -278,6 +285,7 @@ Package Title: @babel/helper-split-export-declaration (7.18.6)
 
 * Declared Licenses *
 MIT
+
 
 MIT License
 
@@ -311,6 +319,7 @@ Package Title: @babel/helper-string-parser (7.19.4)
 * Declared Licenses *
 MIT
 
+
 MIT License
 
 Copyright (c) 2014-present Sebastian McKenzie and other contributors
@@ -342,6 +351,7 @@ Package Title: @babel/helper-validator-identifier (7.19.1)
 
 * Declared Licenses *
 MIT
+
 
 MIT License
 
@@ -375,6 +385,7 @@ Package Title: @babel/highlight (7.18.6)
 * Declared Licenses *
 MIT
 
+
 MIT License
 
 Copyright (c) 2014-present Sebastian McKenzie and other contributors
@@ -407,6 +418,7 @@ Package Title: @babel/parser (7.20.13)
 * Declared Licenses *
 MIT
 
+
 Copyright (C) 2012-2014 by various contributors (see AUTHORS)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -435,6 +447,7 @@ Package Title: @babel/runtime (7.20.13)
 
 * Declared Licenses *
 MIT
+
 
 MIT License
 
@@ -468,6 +481,7 @@ Package Title: @babel/template (7.20.7)
 * Declared Licenses *
 MIT
 
+
 MIT License
 
 Copyright (c) 2014-present Sebastian McKenzie and other contributors
@@ -499,6 +513,7 @@ Package Title: @babel/traverse (7.20.13)
 
 * Declared Licenses *
 MIT
+
 
 MIT License
 
@@ -532,6 +547,7 @@ Package Title: @babel/types (7.20.7)
 * Declared Licenses *
 MIT
 
+
 MIT License
 
 Copyright (c) 2014-present Sebastian McKenzie and other contributors
@@ -564,6 +580,7 @@ Package Title: @emotion/is-prop-valid (1.2.0)
 * Declared Licenses *
 MIT
 
+
 MIT License
 
 Copyright (c) Emotion team and other contributors
@@ -594,6 +611,7 @@ Package Title: @emotion/memoize (0.8.0)
 
 * Declared Licenses *
 MIT
+
 
 MIT License
 
@@ -626,6 +644,7 @@ Package Title: @emotion/stylis (0.8.5)
 * Declared Licenses *
 MIT
 
+
 MIT License
 
 Copyright (c) Emotion team and other contributors
@@ -656,6 +675,7 @@ Package Title: @emotion/unitless (0.7.5)
 
 * Declared Licenses *
 MIT
+
 
 MIT License
 
@@ -688,6 +708,7 @@ Package Title: @jridgewell/gen-mapping (0.3.2)
 * Declared Licenses *
 MIT
 
+
 Copyright 2022 Justin Ridgewell <jridgewell@google.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -717,6 +738,7 @@ Package Title: @jridgewell/resolve-uri (3.1.0)
 * Declared Licenses *
 MIT
 
+
 Copyright 2019 Justin Ridgewell <jridgewell@google.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -744,6 +766,7 @@ Package Title: @jridgewell/set-array (1.1.2)
 
 * Declared Licenses *
 MIT
+
 
 Copyright 2022 Justin Ridgewell <jridgewell@google.com>
 
@@ -773,6 +796,7 @@ Package Title: @jridgewell/sourcemap-codec (1.4.14)
 
 * Declared Licenses *
 MIT
+
 
 The MIT License
 
@@ -805,6 +829,7 @@ Package Title: @jridgewell/trace-mapping (0.3.17)
 * Declared Licenses *
 MIT
 
+
 Copyright 2022 Justin Ridgewell <justin@ridgewell.name>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -833,6 +858,7 @@ Package Title: @react-spring/animated (9.2.6)
 
 * Declared Licenses *
 MIT
+
 
 MIT License
 
@@ -865,6 +891,7 @@ Package Title: @react-spring/core (9.2.6)
 * Declared Licenses *
 MIT
 
+
 MIT License
 
 Copyright (c) 2018-present Paul Henschel, react-spring, all contributors
@@ -895,6 +922,7 @@ Package Title: @react-spring/konva (9.2.6)
 
 * Declared Licenses *
 MIT
+
 
 MIT License
 
@@ -927,6 +955,7 @@ Package Title: @react-spring/native (9.2.6)
 * Declared Licenses *
 MIT
 
+
 MIT License
 
 Copyright (c) 2018-present Paul Henschel, react-spring, all contributors
@@ -957,6 +986,7 @@ Package Title: @react-spring/rafz (9.2.6)
 
 * Declared Licenses *
 MIT
+
 
 MIT License
 
@@ -989,6 +1019,7 @@ Package Title: @react-spring/shared (9.2.6)
 * Declared Licenses *
 MIT
 
+
 MIT License
 
 Copyright (c) 2018-present Paul Henschel, react-spring, all contributors
@@ -1019,6 +1050,7 @@ Package Title: @react-spring/three (9.2.6)
 
 * Declared Licenses *
 MIT
+
 
 MIT License
 
@@ -1051,6 +1083,7 @@ Package Title: @react-spring/types (9.2.6)
 * Declared Licenses *
 MIT
 
+
 MIT License
 
 Copyright (c) 2018-present Paul Henschel, react-spring, all contributors
@@ -1081,6 +1114,7 @@ Package Title: @react-spring/web (9.2.6)
 
 * Declared Licenses *
 MIT
+
 
 MIT License
 
@@ -1113,6 +1147,7 @@ Package Title: @react-spring/zdog (9.2.6)
 * Declared Licenses *
 MIT
 
+
 MIT License
 
 Copyright (c) 2018-present Paul Henschel, react-spring, all contributors
@@ -1143,6 +1178,7 @@ Package Title: @remix-run/router (1.3.1)
 
 * Declared Licenses *
 MIT
+
 
 MIT License
 
@@ -1175,6 +1211,7 @@ Package Title: @splunk/react-icons (3.3.1)
 
 * Declared Licenses *
 Apache-2.0
+
 
 
                                  Apache License
@@ -1389,6 +1426,7 @@ Package Title: @splunk/react-page (6.0.3)
 Apache-2.0
 
 
+
                                  Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
@@ -1599,6 +1637,7 @@ Package Title: @splunk/react-toast-notifications (0.11.1)
 
 * Declared Licenses *
 Apache-2.0
+
 
 
                                  Apache License
@@ -1813,6 +1852,7 @@ Package Title: @splunk/react-ui (4.16.2)
 Apache-2.0
 
 
+
                                  Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
@@ -2020,6 +2060,7 @@ Apache-2.0
 * Other Licenses *
 MIT, proprietary-license
 
+* MIT *
 
 Copyright (c) 2014 Call-Em-All
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -2040,6 +2081,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
+* proprietary-license *
 
 This is a catch-all license used when we find many different proprietary licenses.
 
@@ -2050,6 +2092,7 @@ Package Title: @splunk/splunk-utils (2.3.1)
 
 * Declared Licenses *
 Apache-2.0
+
 
 
                                  Apache License
@@ -2264,6 +2307,7 @@ Package Title: @splunk/themes (0.14.0)
 Apache-2.0
 
 
+
                                  Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
@@ -2474,6 +2518,7 @@ Package Title: @splunk/themes (0.13.1)
 
 * Declared Licenses *
 Apache-2.0
+
 
 
                                  Apache License
@@ -2688,6 +2733,7 @@ Package Title: @splunk/themes (0.15.0)
 Apache-2.0
 
 
+
                                  Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
@@ -2900,6 +2946,7 @@ Package Title: @splunk/ui-utils (1.5.2)
 Apache-2.0
 
 
+
                                  Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
@@ -3107,6 +3154,7 @@ Apache-2.0
 * Other Licenses *
 BSD-3-Clause, MIT
 
+* BSD-3-Clause *
 
 Copyright (c) 2007 present, Alexandru Mărășteanu <hello@alexei.ro> . All rights reserved.
 
@@ -3135,6 +3183,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+* MIT *
 
 Copyright (c) 2018 Jed Watson
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -3162,6 +3211,7 @@ Package Title: @types/commonmark (0.27.5)
 
 * Declared Licenses *
 MIT
+
 
     MIT License
 
@@ -3202,6 +3252,7 @@ Package Title: @types/lodash (4.14.191)
 * Declared Licenses *
 MIT
 
+
     MIT License
 
     Copyright (c) Microsoft Corporation.
@@ -3232,6 +3283,7 @@ Package Title: @types/prop-types (15.7.5)
 
 * Declared Licenses *
 MIT
+
 
     MIT License
 
@@ -3264,6 +3316,7 @@ Package Title: @types/react (16.14.35)
 * Declared Licenses *
 MIT
 
+
     MIT License
 
     Copyright (c) Microsoft Corporation.
@@ -3294,6 +3347,7 @@ Package Title: @types/react (18.0.27)
 
 * Declared Licenses *
 MIT
+
 
     MIT License
 
@@ -3326,6 +3380,7 @@ Package Title: @types/react-dom (16.9.17)
 * Declared Licenses *
 MIT
 
+
     MIT License
 
     Copyright (c) Microsoft Corporation.
@@ -3356,6 +3411,7 @@ Package Title: @types/react-resize-detector (3.1.1)
 
 * Declared Licenses *
 MIT
+
 
     MIT License
 
@@ -3388,6 +3444,7 @@ Package Title: @types/scheduler (0.16.2)
 * Declared Licenses *
 MIT
 
+
     MIT License
 
     Copyright (c) Microsoft Corporation.
@@ -3418,6 +3475,7 @@ Package Title: @types/styled-components (5.1.26)
 
 * Declared Licenses *
 MIT
+
 
     MIT License
 
@@ -3450,6 +3508,7 @@ Package Title: @types/tinycolor2 (1.4.3)
 * Declared Licenses *
 MIT
 
+
     MIT License
 
     Copyright (c) Microsoft Corporation.
@@ -3481,6 +3540,7 @@ Package Title: ansi-styles (3.2.1)
 * Declared Licenses *
 MIT
 
+
 Copyright (c)  Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -3507,6 +3567,7 @@ Package Title: asynckit (0.4.0)
 
 * Declared Licenses *
 MIT
+
 
 The MIT License (MIT)
 
@@ -3539,6 +3600,7 @@ Package Title: axios (1.3.0)
 * Declared Licenses *
 MIT
 
+
 # Copyright (c) 2014-present Matt Zabriskie & Collaborators
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -3555,6 +3617,7 @@ Package Title: babel-plugin-styled-components (2.0.7)
 
 * Declared Licenses *
 MIT
+
 
 MIT License
 
@@ -3587,6 +3650,7 @@ Package Title: babel-plugin-syntax-jsx (6.18.0)
 * Declared Licenses *
 MIT
 
+
 Copyright (c) 2023, babel-plugin-syntax-jsx Contributors
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -3613,6 +3677,7 @@ Package Title: camelize (1.0.1)
 
 * Declared Licenses *
 MIT
+
 
 Copyright (c) 2023, camelize Contributors
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -3641,6 +3706,7 @@ Package Title: chalk (2.4.2)
 * Declared Licenses *
 MIT
 
+
 Copyright (c)  Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -3667,6 +3733,7 @@ Package Title: color-blend (2.0.9)
 
 * Declared Licenses *
 MIT
+
 
 Copyright (c) 2016 Florian Reuschel
 
@@ -3697,6 +3764,7 @@ Package Title: color-convert (1.9.3)
 
 * Declared Licenses *
 MIT
+
 
 Copyright (c) 2011-2016 Heather Arthur <fayearthur@gmail.com>
 
@@ -3729,6 +3797,7 @@ Package Title: color-name (1.1.3)
 * Declared Licenses *
 MIT
 
+
 The MIT License (MIT)
 Copyright (c) 2015 Dmitry Ivanov
 
@@ -3745,6 +3814,7 @@ Package Title: combined-stream (1.0.8)
 
 * Declared Licenses *
 MIT
+
 
 Copyright (c) 2011 Debuggable Limited <felix@debuggable.com>
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -3772,6 +3842,7 @@ Package Title: commonmark (0.27.0)
 
 * Declared Licenses *
 Multi-license: BSD-2-Clause OR MIT
+
 
 Copyright (c) 2014, John MacFarlane
 
@@ -3894,6 +3965,7 @@ Released under the Creative Commons CC-BY-SA 4.0 license:
 * Other Licenses *
 MIT, BSD-2-Clause
 
+* MIT *
 
 Copyright (c) 2014, John MacFarlane
 
@@ -4012,6 +4084,7 @@ Released under the Creative Commons CC-BY-SA 4.0 license:
 <http://creativecommons.org/licenses/by-sa/4.0/>.
 
 
+* BSD-2-Clause *
 
 Copyright (c) 2014 John MacFarlane<<beginOptional>>
 All rights reserved.<<endOptional>>
@@ -4046,6 +4119,7 @@ Package Title: commonmark-react-renderer (4.3.5)
 * Declared Licenses *
 MIT
 
+
 The MIT License (MIT)
 
 Copyright (c) 2015 Espen Hovlandsdal
@@ -4077,6 +4151,7 @@ Package Title: css-color-keywords (1.0.0)
 * Declared Licenses *
 ISC
 
+
 ISC License
 
 Copyright (c) 2017, Jakob Krigovsky
@@ -4101,6 +4176,7 @@ Package Title: css-to-react-native (3.1.0)
 
 * Declared Licenses *
 MIT
+
 
 MIT License
 
@@ -4133,6 +4209,7 @@ Package Title: csstype (3.1.1)
 * Declared Licenses *
 MIT
 
+
 Copyright (c) 2017-2018 Fredrik Nicol
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4161,6 +4238,7 @@ Package Title: debug (4.3.4)
 
 * Declared Licenses *
 MIT
+
 
 (The MIT License)
 
@@ -4191,6 +4269,7 @@ Package Title: decimal.js-light (2.5.1)
 
 * Declared Licenses *
 MIT
+
 
 The MIT Expat Licence.
 
@@ -4225,6 +4304,7 @@ Package Title: delayed-stream (1.0.0)
 * Declared Licenses *
 MIT
 
+
 Copyright (c) 2011 Debuggable Limited <felix@debuggable.com>
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -4251,6 +4331,7 @@ Package Title: dequal (1.0.0)
 
 * Declared Licenses *
 MIT
+
 
 Copyright (c)  Luke Edwards <luke.edwards05@gmail.com> (lukeed.com)
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4279,6 +4360,7 @@ Package Title: entities (1.1.2)
 * Declared Licenses *
 BSD-2-Clause
 
+
 Copyright (c) Felix Böhm
 All rights reserved.
 
@@ -4299,6 +4381,7 @@ Package Title: escape-string-regexp (1.0.5)
 
 * Declared Licenses *
 MIT
+
 
 Copyright (c)  Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4326,6 +4409,7 @@ Package Title: follow-redirects (1.15.2)
 
 * Declared Licenses *
 MIT
+
 
 Copyright 2014–present Olivier Lalonde <olalonde@gmail.com>, James Talmage <james@talmage.io>, Ruben Verborgh
 
@@ -4355,6 +4439,7 @@ Package Title: form-data (4.0.0)
 * Declared Licenses *
 MIT
 
+
 Copyright (c) 2012 Felix Geisendörfer (felix@debuggable.com) and contributors
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -4381,6 +4466,7 @@ Package Title: globals (11.12.0)
 
 * Declared Licenses *
 MIT
+
 
 Copyright (c)  Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4409,6 +4495,7 @@ Package Title: has-flag (3.0.0)
 * Declared Licenses *
 MIT
 
+
 Copyright (c)  Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -4435,6 +4522,7 @@ Package Title: hoist-non-react-statics (3.3.2)
 
 * Declared Licenses *
 BSD-3-Clause
+
 
 Software License Agreement (BSD License)
 ========================================
@@ -4475,6 +4563,7 @@ Package Title: immutability-helper (3.1.1)
 * Declared Licenses *
 MIT
 
+
 MIT License
 
 Copyright (c) 2017 Moshe Kolodny
@@ -4505,6 +4594,7 @@ Package Title: invariant (2.2.4)
 
 * Declared Licenses *
 MIT
+
 
 MIT License
 
@@ -4537,6 +4627,7 @@ Package Title: js-tokens (4.0.0)
 * Declared Licenses *
 MIT
 
+
 The MIT License (MIT)
 
 Copyright (c) 2014, 2015, 2016, 2017, 2018 Simon Lydell
@@ -4568,6 +4659,7 @@ Package Title: jsesc (2.5.2)
 * Declared Licenses *
 MIT
 
+
 Copyright Mathias Bynens <https://mathiasbynens.be/>
 
 Permission is hereby granted, free of charge, to any person obtaining
@@ -4597,6 +4689,7 @@ Package Title: jsonschema (1.4.1)
 
 * Declared Licenses *
 MIT
+
 
 jsonschema is licensed under MIT license.
 
@@ -4629,6 +4722,7 @@ Package Title: keycode (2.2.1)
 * Declared Licenses *
 MIT
 
+
 The MIT License (MIT)
 
 Copyright (c) 2014 Tim Oxley
@@ -4659,6 +4753,7 @@ Package Title: license-webpack-plugin (4.0.2)
 
 * Declared Licenses *
 ISC
+
 
 ISC License
 
@@ -4706,6 +4801,7 @@ Package Title: lodash (4.17.21)
 
 * Declared Licenses *
 Multi-license: CC0-1.0 OR MIT
+
 
 Copyright OpenJS Foundation and other contributors <https://openjsf.org/>
 
@@ -4787,6 +4883,7 @@ Package Title: lodash-es (4.17.21)
 
 * Declared Licenses *
 Multi-license: CC0-1.0 OR MIT
+
 
 Copyright OpenJS Foundation and other contributors <https://openjsf.org/>
 
@@ -4899,6 +4996,7 @@ Package Title: lodash.assign (4.2.0)
 * Declared Licenses *
 Multi-license: CC0-1.0 OR MIT
 
+
 Copyright jQuery Foundation and other contributors <https://jquery.org/>
 
 Based on Underscore.js, copyright Jeremy Ashkenas,
@@ -5009,6 +5107,7 @@ Package Title: lodash.isplainobject (4.0.6)
 
 * Declared Licenses *
 Multi-license: CC0-1.0 OR MIT
+
 
 Copyright jQuery Foundation and other contributors <https://jquery.org/>
 
@@ -5121,6 +5220,7 @@ Package Title: loose-envify (1.4.0)
 * Declared Licenses *
 MIT
 
+
 The MIT License (MIT)
 
 Copyright (c) 2015 Andres Suarez <zertosh@gmail.com>
@@ -5152,6 +5252,7 @@ Package Title: lru-cache (6.0.0)
 * Declared Licenses *
 ISC
 
+
 The ISC License
 
 Copyright (c) Isaac Z. Schlueter and Contributors
@@ -5176,6 +5277,7 @@ Package Title: mdurl (1.0.1)
 
 * Declared Licenses *
 MIT
+
 
 Copyright (c) 2015 Vitaly Puzrin, Alex Kocharin.
 
@@ -5232,6 +5334,7 @@ Package Title: mime-db (1.52.0)
 * Declared Licenses *
 MIT
 
+
 (The MIT License)
 
 Copyright (c) 2014 Jonathan Ong <me@jongleberry.com>
@@ -5264,6 +5367,7 @@ Package Title: mime-types (2.1.35)
 
 * Declared Licenses *
 MIT
+
 
 (The MIT License)
 
@@ -5298,6 +5402,7 @@ Package Title: minimist (1.2.7)
 * Declared Licenses *
 MIT
 
+
 This software is released under the MIT license:
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -5325,6 +5430,7 @@ Package Title: moment (2.29.4)
 
 * Declared Licenses *
 MIT
+
 
 Copyright (c) JS Foundation and other contributors
 
@@ -5358,6 +5464,7 @@ Package Title: ms (2.1.2)
 * Declared Licenses *
 MIT
 
+
 Copyright (c) 2016 Zeit, Inc.
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -5385,6 +5492,7 @@ Package Title: object-assign (4.1.1)
 * Declared Licenses *
 MIT
 
+
 Copyright (c)  Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -5411,6 +5519,7 @@ Package Title: pascalcase (0.1.1)
 
 * Declared Licenses *
 MIT
+
 
 The MIT License (MIT)
 
@@ -5443,6 +5552,7 @@ Package Title: picomatch (2.3.1)
 * Declared Licenses *
 MIT
 
+
 The MIT License (MIT)
 
 Copyright (c) 2017-present, Jon Schlinkert.
@@ -5473,6 +5583,7 @@ Package Title: postcss-value-parser (4.2.0)
 
 * Declared Licenses *
 MIT
+
 
 Copyright (c) Bogdan Chadkin <trysound@yandex.ru>
 
@@ -5506,6 +5617,7 @@ Package Title: prop-types (15.8.1)
 * Declared Licenses *
 MIT
 
+
 MIT License
 
 Copyright (c) 2013-present, Facebook, Inc.
@@ -5537,6 +5649,7 @@ Package Title: proxy-from-env (1.1.0)
 * Declared Licenses *
 MIT
 
+
 The MIT License
 
 Copyright (C) 2016-2018 Rob Wu <rob@robwu.nl>
@@ -5566,6 +5679,7 @@ Package Title: react (16.14.0)
 
 * Declared Licenses *
 MIT
+
 
 MIT License
 
@@ -5598,6 +5712,7 @@ Package Title: react-dom (16.14.0)
 * Declared Licenses *
 MIT
 
+
 MIT License
 
 Copyright (c) Facebook, Inc. and its affiliates.
@@ -5629,6 +5744,7 @@ Package Title: react-flip-move (3.0.5)
 * Declared Licenses *
 MIT
 
+
 The MIT License (MIT)
 
 Copyright (c) 2016-present Joshua Comeau
@@ -5647,6 +5763,7 @@ Package Title: react-is (16.13.1)
 
 * Declared Licenses *
 MIT
+
 
 MIT License
 
@@ -5679,6 +5796,7 @@ Package Title: react-resize-detector (3.4.0)
 * Declared Licenses *
 MIT
 
+
 The MIT License (MIT)
 
 Copyright (c) 2016 Denis Rul
@@ -5708,6 +5826,7 @@ Package Title: react-router (6.8.0)
 
 * Declared Licenses *
 MIT
+
 
 MIT License
 
@@ -5741,6 +5860,7 @@ Package Title: react-router-dom (6.8.0)
 * Declared Licenses *
 MIT
 
+
 MIT License
 
 Copyright (c) React Training 2015-2019
@@ -5773,6 +5893,7 @@ Package Title: react-sortable-hoc (1.11.0)
 * Declared Licenses *
 MIT
 
+
 The MIT License (MIT)
 
 Copyright (c) 2016, Claudéric Demers
@@ -5803,6 +5924,7 @@ Package Title: react-spring (9.2.4)
 
 * Declared Licenses *
 MIT
+
 
 MIT License
 
@@ -5835,6 +5957,7 @@ Package Title: regenerator-runtime (0.13.11)
 * Declared Licenses *
 MIT
 
+
 MIT License
 
 Copyright (c) 2014-present, Facebook, Inc.
@@ -5865,6 +5988,7 @@ Package Title: resize-observer-polyfill (1.5.1)
 
 * Declared Licenses *
 MIT
+
 
 The MIT License (MIT)
 
@@ -5897,6 +6021,7 @@ Package Title: scheduler (0.19.1)
 * Declared Licenses *
 MIT
 
+
 MIT License
 
 Copyright (c) Facebook, Inc. and its affiliates.
@@ -5927,6 +6052,7 @@ Package Title: scriptjs (2.5.9)
 
 * Declared Licenses *
 MIT
+
 
 (The MIT License)
 
@@ -5960,6 +6086,7 @@ Package Title: semver (7.3.8)
 * Declared Licenses *
 ISC
 
+
 The ISC License
 
 Copyright (c) Isaac Z. Schlueter and Contributors
@@ -5984,6 +6111,7 @@ Package Title: shallowequal (1.1.0)
 
 * Declared Licenses *
 MIT
+
 
 MIT License
 
@@ -6016,6 +6144,7 @@ Package Title: string.prototype.repeat (0.2.0)
 * Declared Licenses *
 MIT
 
+
 Copyright Mathias Bynens <http://mathiasbynens.be/>
 
 Permission is hereby granted, free of charge, to any person obtaining
@@ -6046,6 +6175,7 @@ Package Title: styled-components (5.3.6)
 * Declared Licenses *
 MIT
 
+
 Copyright (c) 2016 present Glen Maddern and Maximilian Stoiber.
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -6073,6 +6203,7 @@ Package Title: supports-color (5.5.0)
 * Declared Licenses *
 MIT
 
+
 Copyright (c)  Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -6099,6 +6230,7 @@ Package Title: tinycolor2 (1.5.2)
 
 * Declared Licenses *
 MIT
+
 
 Copyright (c), Brian Grinstead, http://briangrinstead.com
 
@@ -6129,6 +6261,7 @@ Package Title: to-fast-properties (2.0.0)
 * Declared Licenses *
 MIT
 
+
 Copyright (c) 2014 Petka Antonov
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -6155,6 +6288,7 @@ Package Title: use-deep-compare (1.1.0)
 
 * Declared Licenses *
 MIT
+
 
 The MIT License (MIT)
 Copyright (c) 2019 Alex Sandiiarov
@@ -6184,6 +6318,7 @@ Package Title: use-typed-event-listener (3.0.0)
 
 * Declared Licenses *
 MIT
+
 
 MIT License
 
@@ -6216,6 +6351,7 @@ Package Title: uuid (9.0.0)
 * Declared Licenses *
 MIT
 
+
 The MIT License (MIT)
 
 Copyright (c) 2010-2020 Robert Kieffer and other contributors
@@ -6234,6 +6370,7 @@ Package Title: webpack-sources (3.2.3)
 
 * Declared Licenses *
 MIT
+
 
 MIT License
 
@@ -6265,6 +6402,8 @@ Package Title: xss-filters (1.2.7)
 
 * Declared Licenses *
 Multi-license: BSD-2-Clause OR BSD-3-Clause OR unknown, BSD-3-Clause
+
+* Multi-license: BSD-2-Clause OR BSD-3-Clause OR unknown *
 
 Copyright (c) 2015, Yahoo! Inc.  All rights reserved.
 
@@ -6303,6 +6442,7 @@ Authors: Adonis Fung <adon@yahoo-inc.com>
          Albert Yu <yukinying@gmail.com>
 
 
+* BSD-3-Clause *
 
 Copyright (c) 2015, Yahoo! Inc.  All rights reserved.
 
@@ -6348,6 +6488,7 @@ Package Title: yallist (4.0.0)
 
 * Declared Licenses *
 ISC
+
 
 The ISC License
 
@@ -8460,4 +8601,4 @@ This is a catch-all license used when we find many different proprietary license
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
-Report Generated by FOSSA on 2023-4-4
+Report Generated by FOSSA on 2023-4-25
