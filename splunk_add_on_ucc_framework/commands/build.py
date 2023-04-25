@@ -589,10 +589,21 @@ def generate(
             )
         if global_config.has_dashboard():
             logger.info("Including dashboard")
-            dashboard.generate_dashboard(
-                j2_env,
+            dashboard_content = j2_env.get_template("dashboard.xml.template").render(
+                addon_name=ta_name,
+            )
+            dashboard_xml_path = os.path.join(
                 output_directory,
                 ta_name,
+                "default",
+                "data",
+                "ui",
+                "views",
+                "dashboard.xml",
+            )
+            dashboard.generate_dashboard(
+                dashboard_content,
+                dashboard_xml_path,
             )
     else:
         global_config = None

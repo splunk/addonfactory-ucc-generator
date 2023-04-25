@@ -1,24 +1,19 @@
+import logging
 import os
 
-import jinja2
+logger = logging.getLogger("ucc_gen")
 
 
-def generate_dashboard(
-    j2_env: jinja2.Environment, output_directory: str, addon_name: str
-):
-    content = j2_env.get_template("dashboard.xml.template").render(
-        addon_name=addon_name
+def generate_dashboard(content: str, dashboard_xml_folder_path: str):
+    dashboard_xml_file_path = os.path.join(
+        dashboard_xml_folder_path,
+        "dashboard.xml",
     )
-    with open(
-        os.path.join(
-            output_directory,
-            addon_name,
-            "default",
-            "data",
-            "ui",
-            "views",
-            "dashboard.xml",
-        ),
-        "w",
-    ) as dashboard_xml_file:
-        dashboard_xml_file.write(content)
+    if os.path.exists(dashboard_xml_file_path):
+        logger.warning(
+            f"dashboard.xml file already exists @ "
+            f"{dashboard_xml_folder_path}, not overwriting the existing dashboard file."
+        )
+    else:
+        with open(dashboard_xml_file_path, "w") as dashboard_xml_file:
+            dashboard_xml_file.write(content)
