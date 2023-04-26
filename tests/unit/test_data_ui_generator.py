@@ -1,6 +1,16 @@
+import sys
+
+import pytest
+
 from splunk_add_on_ucc_framework import data_ui_generator
 
+PYTEST_SKIP_REASON = """Python 3.8 and higher preserves the order of the attrib
+fields when `tostring` function is used.
+https://docs.python.org/3/library/xml.etree.elementtree.html#xml.etree.ElementTree.tostring
+"""
 
+
+@pytest.mark.skipif(sys.version_info > (3, 7), reason=PYTEST_SKIP_REASON)
 def test_generate_nav_default_xml():
     result = data_ui_generator.generate_nav_default_xml(
         include_inputs=True,
@@ -19,6 +29,7 @@ def test_generate_nav_default_xml():
     assert expected_result == result
 
 
+@pytest.mark.skipif(sys.version_info > (3, 7), reason=PYTEST_SKIP_REASON)
 def test_generate_nav_default_xml_only_configuration():
     result = data_ui_generator.generate_nav_default_xml(
         include_inputs=False,
@@ -35,6 +46,7 @@ def test_generate_nav_default_xml_only_configuration():
     assert expected_result == result
 
 
+@pytest.mark.skipif(sys.version_info > (3, 7), reason=PYTEST_SKIP_REASON)
 def test_generate_views_inputs_xml():
     result = data_ui_generator.generate_views_inputs_xml("Splunk_TA_UCCExample")
 
@@ -46,6 +58,7 @@ def test_generate_views_inputs_xml():
     assert expected_result == result
 
 
+@pytest.mark.skipif(sys.version_info > (3, 7), reason=PYTEST_SKIP_REASON)
 def test_generate_views_configuration_xml():
     result = data_ui_generator.generate_views_configuration_xml("Splunk_TA_UCCExample")
 
@@ -57,6 +70,7 @@ def test_generate_views_configuration_xml():
     assert expected_result == result
 
 
+@pytest.mark.skipif(sys.version_info > (3, 7), reason=PYTEST_SKIP_REASON)
 def test_generate_views_redirect_xml():
     result = data_ui_generator.generate_views_redirect_xml("Splunk_TA_UCCExample")
 

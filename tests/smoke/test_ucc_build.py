@@ -1,12 +1,21 @@
 import os
+import sys
 import tempfile
 from os import path
+
+import pytest
 
 from tests.smoke import helpers
 
 import addonfactory_splunk_conf_parser_lib as conf_parser
 
 from splunk_add_on_ucc_framework.commands import build
+
+
+PYTEST_SKIP_REASON = """Python 3.8 and higher preserves the order of the attrib
+fields when `tostring` function is used.
+https://docs.python.org/3/library/xml.etree.elementtree.html#xml.etree.ElementTree.tostring
+"""
 
 
 def _compare_app_conf(expected_folder: str, actual_folder: str):
@@ -88,6 +97,7 @@ def test_ucc_generate_with_config_param():
     build.generate(source=package_folder, config_path=config_path)
 
 
+@pytest.mark.skipif(sys.version_info > (3, 7), reason=PYTEST_SKIP_REASON)
 def test_ucc_generate_with_inputs_configuration_alerts():
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
@@ -173,6 +183,7 @@ def test_ucc_generate_with_inputs_configuration_alerts():
             assert not path.exists(expected_file_path)
 
 
+@pytest.mark.skipif(sys.version_info > (3, 7), reason=PYTEST_SKIP_REASON)
 def test_ucc_generate_with_configuration():
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(

@@ -13,6 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+# The autofix suggestion mentioned in the pipeline does not work actually.
+# It proposed to replace `xml` with `defusedxml` and it does not have such
+# import.
+# nosemgrep: splunk.use-defused-xml
 from xml.etree import ElementTree as ET
 from defusedxml import minidom
 
