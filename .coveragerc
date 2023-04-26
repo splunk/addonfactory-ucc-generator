@@ -1,0 +1,5 @@
+[run]
+plugins = covdefaults
+omit =
+    splunk_add_on_ucc_framework/commands/imports.py
+    splunk_add_on_ucc_framework/commands/modular_alert_builder/arf_template/alert_action_helper.py.template
