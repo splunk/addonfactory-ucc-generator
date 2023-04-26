@@ -156,9 +156,9 @@ class ValidatorBuilder:
             return None
         generated_validators = []
         for config in configs:
-            config_type = config.get("type")
-            if config_type is None:
-                continue
+            # `config` variable should always have `type` field according to
+            # the schema.
+            config_type: str = config.get("type", "")
             validator = self._validation_config_map.get(config_type)
             if validator is None:
                 continue
