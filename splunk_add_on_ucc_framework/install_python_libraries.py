@@ -112,50 +112,34 @@ def install_libraries(
     if not os.path.isfile(requirements_file_path):
         logger.warning(f"Unable to find requirements file: {requirements_file_path}")
     else:
-        if not os.path.isdir(installation_path):
+        if not os.path.exists(installation_path):
             os.makedirs(installation_path)
-        install_cmd = (
-            installer
-            + ' -m pip install -r "'
-            + requirements_file_path
-            + '" --no-compile --prefer-binary --ignore-installed --use-deprecated=legacy-resolver --target "'
-            + installation_path
-            + '"'
+        pip_update_command = f"{installer} -m pip install pip --upgrade"
+        pip_install_command = (
+            f"{installer} "
+            f"-m pip "
+            f"install "
+            f'-r "{requirements_file_path}" '
+            f"--no-compile "
+            f"--prefer-binary "
+            f"--ignore-installed "
+            f"--use-deprecated=legacy-resolver "
+            f'--target "{installation_path}"'
         )
-        os.system(installer + " -m pip install pip --upgrade")
-        os.system(install_cmd)
 
-    if not os.path.exists(installation_path):
-        os.makedirs(installation_path)
-    pip_install_command = (
-        f"{installer} "
-        f"-m pip "
-        f"install "
-        f'-r "{requirements_file_path}" '
-        f"--no-compile "
-        f"--prefer-binary "
-        f"--ignore-installed "
-        f"--use-deprecated=legacy-resolver "
-        f'--target "{installation_path}"'
-    )
-    pip_update_command = f"{installer} -m pip install pip --upgrade"
-
-    _subprocess_call(pip_update_command, "pip upgrade")
-    _subprocess_call(pip_install_command, "pip install")
+        _subprocess_call(pip_update_command, "pip upgrade")
+        _subprocess_call(pip_install_command, "pip install")
 
 
 def remove_package_from_installed_path(
     installation_path: str, package_names: Sequence[str]
 ):
     p = Path(installation_path)
-    try:
-        for package_name in package_names:
-            for o in p.glob(f"{package_name}*"):
-                if o.is_dir():
-                    logger.info(f"  removing directory {o} from {installation_path}")
-                    shutil.rmtree(o)
-    except FileNotFoundError:
-        pass
+    for package_name in package_names:
+        for o in p.glob(f"{package_name}*"):
+            if o.is_dir():
+                logger.info(f"  removing directory {o} from {installation_path}")
+                shutil.rmtree(o)
 
 
 def remove_execute_bit(installation_path: str):

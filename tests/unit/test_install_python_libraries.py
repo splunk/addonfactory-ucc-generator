@@ -67,7 +67,11 @@ def test_check_ucc_library_in_requirements_file(
 
 @mock.patch("subprocess.call", autospec=True)
 @mock.patch("os.path.exists", autospec=True)
-def test_install_libraries(mock_os_path_exists, mock_subprocess_call):
+@mock.patch("os.path.isfile", autospec=True)
+def test_install_libraries(
+    mock_os_path_isfile, mock_os_path_exists, mock_subprocess_call
+):
+    mock_os_path_isfile.return_value = True
     mock_os_path_exists.return_value = True
     mock_subprocess_call.return_value = 0
 
@@ -94,9 +98,11 @@ def test_install_libraries(mock_os_path_exists, mock_subprocess_call):
 
 @mock.patch("subprocess.call", autospec=True)
 @mock.patch("os.path.exists", autospec=True)
+@mock.patch("os.path.isfile", autospec=True)
 def test_install_libraries_when_subprocess_raises_os_error(
-    mock_os_path_exists, mock_subprocess_call
+    mock_os_path_isfile, mock_os_path_exists, mock_subprocess_call
 ):
+    mock_os_path_isfile.return_value = True
     mock_os_path_exists.return_value = True
     mock_subprocess_call.side_effect = OSError
 
@@ -119,9 +125,14 @@ def test_install_libraries_when_subprocess_raises_os_error(
 )
 @mock.patch("subprocess.call", autospec=True)
 @mock.patch("os.path.exists", autospec=True)
+@mock.patch("os.path.isfile", autospec=True)
 def test_install_libraries_when_subprocess_returns_non_zero_codes(
-    mock_os_path_exists, mock_subprocess_call, subprocess_status_codes
+    mock_os_path_isfile,
+    mock_os_path_exists,
+    mock_subprocess_call,
+    subprocess_status_codes,
 ):
+    mock_os_path_isfile.return_value = True
     mock_os_path_exists.return_value = True
     mock_subprocess_call.side_effect = subprocess_status_codes
 
@@ -158,15 +169,18 @@ def test_remove_package_from_installed_path(tmp_path):
     tmp_lib_path_bar.mkdir()
     tmp_lib_path_baz = tmp_lib_path / "baz"
     tmp_lib_path_baz.mkdir()
+    tmp_lib_path_qux = tmp_lib_path / "qux.txt"
+    tmp_lib_path_qux.write_text("some text")
 
     remove_package_from_installed_path(
         str(tmp_lib_path),
-        ["foo", "bar"],
+        ["foo", "bar", "qux"],
     )
 
     assert not tmp_lib_path_foo.exists()
     assert not tmp_lib_path_foo_dist_info.exists()
     assert not tmp_lib_path_bar.exists()
+    assert tmp_lib_path_qux.exists()
     assert tmp_lib_path_baz.exists()
 
 
