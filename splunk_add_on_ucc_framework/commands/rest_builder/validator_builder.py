@@ -31,8 +31,6 @@ class BaseValidator:
         raise NotImplementedError()
 
     def _format_arguments(self, **kwargs: Dict[str, Any]) -> str:
-        if not kwargs:
-            return ""
         args = list(
             map(
                 lambda k_v: f"{k_v[0]}={k_v[1]}, ",
