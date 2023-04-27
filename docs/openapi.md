@@ -56,4 +56,28 @@ Check [swagger](https://swagger.io/) or [other tools](https://github.com/OAI/Ope
 
 ### Troubleshooting
 
+* SSL certificate problem
 Are you sure you added `-k` parameter to curl command?
+
+* Unauthorized
+Make sure you clicked Authorize button, gave username and password and clikced Authorize
+
+## How to generate Python client and use it?
+
+### Prerequisites
+
+* docker running
+* Splunk with your add-on installed
+
+### Instruction
+
+1. Create `tmp` directory and open it (`mkdir tmp ; cd tmp`)
+2. Download the rest.mustache file (`wget https://raw.githubusercontent.com/swagger-api/swagger-codegen/master/modules/swagger-codegen/src/main/resources/python/rest.mustache`) and 
+
+ https://github.com/swagger-api/swagger-codegen/blob/master/modules/swagger-codegen/src/main/resources/python/rest.mustache#L150
+Save openapi.json to the directory
+3. 
+
+### Troubleshooting
+
+* Are you sure you 
