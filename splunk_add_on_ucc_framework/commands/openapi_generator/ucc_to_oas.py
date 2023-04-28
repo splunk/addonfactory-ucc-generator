@@ -135,7 +135,7 @@ def __add_schemas_object(
 ) -> OpenAPIObject:
     if open_api_object.components is not None:
         open_api_object.components.schemas = {}
-        for tab in global_config.pages.configuration.tabs:
+        for tab in global_config.pages.configuration.tabs:  # type: ignore[attr-defined]
             schema_name, schema_object = __get_schema_object(
                 name=tab.name, entities=tab.entity
             )
@@ -144,8 +144,8 @@ def __add_schemas_object(
                 name=tab.name, entities=tab.entity, without=["name"]
             )
             open_api_object.components.schemas[schema_name] = schema_object
-        if hasattr(global_config.pages, "inputs") and hasattr(
-            global_config.pages.inputs, "services"
+        if hasattr(global_config.pages, "inputs") and hasattr(  # type: ignore[attr-defined]
+            global_config.pages.inputs, "services"  # type: ignore[attr-defined]
         ):
             additional_input_entities = [
                 json_to_object.DataClasses(
@@ -161,7 +161,7 @@ def __add_schemas_object(
                     }
                 )
             ]
-            for service in global_config.pages.inputs.services:
+            for service in global_config.pages.inputs.services:  # type: ignore[attr-defined]
                 schema_name, schema_object = __get_schema_object(
                     name=service.name,
                     entities=service.entity + additional_input_entities,
@@ -351,27 +351,27 @@ def __assign_ta_paths(
 def __add_paths(
     open_api_object: OpenAPIObject, global_config: DataClasses
 ) -> OpenAPIObject:
-    for tab in global_config.pages.configuration.tabs:
+    for tab in global_config.pages.configuration.tabs:  # type: ignore[attr-defined]
         open_api_object = __assign_ta_paths(
             open_api_object=open_api_object,
-            path=f"/{global_config.meta.restRoot}_{tab.name}"
+            path=f"/{global_config.meta.restRoot}_{tab.name}"  # type: ignore[attr-defined]
             if hasattr(tab, "table")
-            else f"/{global_config.meta.restRoot}_settings/{tab.name}",
+            else f"/{global_config.meta.restRoot}_settings/{tab.name}",  # type: ignore[attr-defined]
             path_name=tab.name,
             actions=tab.table.actions
             if hasattr(tab, "table") and hasattr(tab.table, "actions")
             else None,
             page=GloblaConfigPages.CONFIGURATION,
         )
-    if hasattr(global_config.pages, "inputs") and hasattr(
-        global_config.pages.inputs, "services"
+    if hasattr(global_config.pages, "inputs") and hasattr(  # type: ignore[attr-defined]
+        global_config.pages.inputs, "services"  # type: ignore[attr-defined]
     ):
-        for service in global_config.pages.inputs.services:
+        for service in global_config.pages.inputs.services:  # type: ignore[attr-defined]
             open_api_object = __assign_ta_paths(
                 open_api_object=open_api_object,
-                path=f"/{global_config.meta.restRoot}_{service.name}",
+                path=f"/{global_config.meta.restRoot}_{service.name}",  # type: ignore[attr-defined]
                 path_name=service.name,
-                actions=global_config.pages.inputs.table.actions,
+                actions=global_config.pages.inputs.table.actions,  # type: ignore[attr-defined]
                 page=GloblaConfigPages.INPUTS,
             )
     return open_api_object

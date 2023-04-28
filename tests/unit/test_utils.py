@@ -1,3 +1,4 @@
+import datetime
 from unittest import mock
 
 import dunamai
@@ -30,6 +31,27 @@ def test_get_version_from_git_when_(mock_version_from_git):
     mock_version_from_git.return_value = version
 
     expected_result = "2.2.1b2e0d120"
+    assert expected_result == utils.get_version_from_git()
+
+
+@mock.patch("splunk_add_on_ucc_framework.utils.dunamai.Version.from_git", autospec=True)
+def test_get_version_from_git_when_stage_is_none(mock_version_from_git):
+    version = dunamai.Version(
+        base="5.25.0",
+        stage=None,
+        distance=11,
+        commit="391ec865",
+        dirty=True,
+        tagged_metadata=None,
+        epoch=None,
+        branch="foo",
+        timestamp=datetime.datetime(
+            2023, 4, 26, 14, 42, 12, tzinfo=datetime.timezone.utc
+        ),
+    )
+    mock_version_from_git.return_value = version
+
+    expected_result = "5.25.0R391ec865"
     assert expected_result == utils.get_version_from_git()
 
 
