@@ -10,11 +10,10 @@ https://docs.python.org/3/library/xml.etree.elementtree.html#xml.etree.ElementTr
 """
 
 
-@pytest.mark.skipif(sys.version_info > (3, 7), reason=PYTEST_SKIP_REASON)
+@pytest.mark.skipif(sys.version_info >= (3, 8, 0), reason=PYTEST_SKIP_REASON)
 def test_generate_nav_default_xml():
     result = data_ui_generator.generate_nav_default_xml(
         include_inputs=True,
-        include_configuration=True,
         include_dashboard=True,
     )
 
@@ -29,11 +28,10 @@ def test_generate_nav_default_xml():
     assert expected_result == result
 
 
-@pytest.mark.skipif(sys.version_info > (3, 7), reason=PYTEST_SKIP_REASON)
+@pytest.mark.skipif(sys.version_info >= (3, 8, 0), reason=PYTEST_SKIP_REASON)
 def test_generate_nav_default_xml_only_configuration():
     result = data_ui_generator.generate_nav_default_xml(
         include_inputs=False,
-        include_configuration=True,
         include_dashboard=False,
     )
 
@@ -46,7 +44,7 @@ def test_generate_nav_default_xml_only_configuration():
     assert expected_result == result
 
 
-@pytest.mark.skipif(sys.version_info > (3, 7), reason=PYTEST_SKIP_REASON)
+@pytest.mark.skipif(sys.version_info >= (3, 8, 0), reason=PYTEST_SKIP_REASON)
 def test_generate_views_inputs_xml():
     result = data_ui_generator.generate_views_inputs_xml("Splunk_TA_UCCExample")
 
@@ -58,7 +56,7 @@ def test_generate_views_inputs_xml():
     assert expected_result == result
 
 
-@pytest.mark.skipif(sys.version_info > (3, 7), reason=PYTEST_SKIP_REASON)
+@pytest.mark.skipif(sys.version_info >= (3, 8, 0), reason=PYTEST_SKIP_REASON)
 def test_generate_views_configuration_xml():
     result = data_ui_generator.generate_views_configuration_xml("Splunk_TA_UCCExample")
 
@@ -70,7 +68,7 @@ def test_generate_views_configuration_xml():
     assert expected_result == result
 
 
-@pytest.mark.skipif(sys.version_info > (3, 7), reason=PYTEST_SKIP_REASON)
+@pytest.mark.skipif(sys.version_info >= (3, 8, 0), reason=PYTEST_SKIP_REASON)
 def test_generate_views_redirect_xml():
     result = data_ui_generator.generate_views_redirect_xml("Splunk_TA_UCCExample")
 
