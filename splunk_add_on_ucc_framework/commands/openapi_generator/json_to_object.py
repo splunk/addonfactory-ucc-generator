@@ -18,18 +18,14 @@ from typing import Any, Dict
 
 class DataClasses:
     def __init__(self, json: Dict) -> None:
-        self._json = json
-        self.__dict__.update(self._iterator(self._json))
+        self.__dict__.update(self._iterator(json))
         #   __dict__ contains references to base object
         #   update, do not override!
 
-    def __getattr__(self, name: str):
-        _name = f"_{name}"
-        if _name in self.__dict__:
-            return self.__dict__[_name]
-        else:
-            raise AttributeError()
-            #   hasattr expects AttributeError exception
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, DataClasses):
+            return NotImplemented
+        return self.__dict__ == other.__dict__
 
     def _iteration_manager(self, element: Any) -> Any:
         if isinstance(element, dict):
