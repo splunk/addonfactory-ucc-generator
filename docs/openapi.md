@@ -57,9 +57,11 @@ Check [swagger](https://swagger.io/) or [other tools](https://github.com/OAI/Ope
 ### Troubleshooting
 
 * SSL certificate problem
+
 Are you sure you added `-k` parameter to curl command?
 
 * Unauthorized
+
 Make sure you clicked Authorize button, gave username and password and clikced Authorize
 
 ## How to generate Python client and use it?
