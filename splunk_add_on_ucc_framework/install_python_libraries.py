@@ -58,50 +58,47 @@ def _check_ucc_library_in_requirements_file(path_to_requirements: str) -> bool:
 
 
 def install_python_libraries(
-    path: str, ucc_lib_target: str, python_binary_name: str, includes_ui: bool = False
+    source_path: str,
+    ucc_lib_target: str,
+    python_binary_name: str,
+    includes_ui: bool = False,
 ):
-    if os.path.isfile(os.path.join(path, "lib", "requirements.txt")):
-        path_to_reqs_file = os.path.join(path, "lib", "requirements.txt")
-    elif os.path.isfile(
-        os.path.join(os.path.abspath(os.path.join(path, os.pardir)), "requirements.txt")
-    ):
-        path_to_reqs_file = os.path.join(
-            os.path.abspath(os.path.join(path, os.pardir)), "requirements.txt"
-        )
-    else:
-        path_to_reqs_file = None
-    if path_to_reqs_file is not None:
-        logger.info(f"Installing requirements from {path_to_reqs_file}")
+    path_to_requirements_file = os.path.join(source_path, "lib", "requirements.txt")
+    if os.path.isfile(path_to_requirements_file):
+        logger.info(f"Installing requirements from {path_to_requirements_file}")
         if includes_ui:
             ucc_library_present = _check_ucc_library_in_requirements_file(
-                path_to_reqs_file
+                path_to_requirements_file
             )
             if not ucc_library_present:
                 raise SplunktaucclibNotFound(
-                    f"splunktaucclib is not found in {path_to_reqs_file}. "
+                    f"splunktaucclib is not found in {path_to_requirements_file}. "
                     f"Please add it there because this add-on has UI."
                 )
+        if not os.path.exists(ucc_lib_target):
+            os.makedirs(ucc_lib_target)
         install_libraries(
-            path_to_reqs_file,
+            path_to_requirements_file,
             ucc_lib_target,
             python_binary_name,
         )
+        packages_to_remove = (
+            "setuptools",
+            "bin",
+            "pip",
+            "distribute",
+            "wheel",
+        )
+        remove_package_from_installed_path(
+            ucc_lib_target,
+            packages_to_remove,
+        )
+
+        remove_execute_bit(ucc_lib_target)
     else:
-        logger.info("Could not find requirements file, nothing to install")
-
-    packages_to_remove = (
-        "setuptools",
-        "bin",
-        "pip",
-        "distribute",
-        "wheel",
-    )
-    remove_package_from_installed_path(
-        ucc_lib_target,
-        packages_to_remove,
-    )
-
-    remove_execute_bit(ucc_lib_target)
+        logger.warning(
+            f"Could not find requirements file @ {path_to_requirements_file}, nothing to install"
+        )
 
 
 def install_libraries(
@@ -109,26 +106,25 @@ def install_libraries(
     installation_path: str,
     installer: str,
 ):
-    if not os.path.isfile(requirements_file_path):
-        logger.warning(f"Unable to find requirements file: {requirements_file_path}")
-    else:
-        if not os.path.exists(installation_path):
-            os.makedirs(installation_path)
-        pip_update_command = f"{installer} -m pip install pip --upgrade"
-        pip_install_command = (
-            f"{installer} "
-            f"-m pip "
-            f"install "
-            f'-r "{requirements_file_path}" '
-            f"--no-compile "
-            f"--prefer-binary "
-            f"--ignore-installed "
-            f"--use-deprecated=legacy-resolver "
-            f'--target "{installation_path}"'
-        )
+    """
+    Upgrades `pip` version to the latest one and installs requirements to the
+    specified path.
+    """
+    pip_update_command = f"{installer} -m pip install pip --upgrade"
+    pip_install_command = (
+        f"{installer} "
+        f"-m pip "
+        f"install "
+        f'-r "{requirements_file_path}" '
+        f"--no-compile "
+        f"--prefer-binary "
+        f"--ignore-installed "
+        f"--use-deprecated=legacy-resolver "
+        f'--target "{installation_path}"'
+    )
 
-        _subprocess_call(pip_update_command, "pip upgrade")
-        _subprocess_call(pip_install_command, "pip install")
+    _subprocess_call(pip_update_command, "pip upgrade")
+    _subprocess_call(pip_install_command, "pip install")
 
 
 def remove_package_from_installed_path(
