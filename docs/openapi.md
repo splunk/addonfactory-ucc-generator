@@ -67,17 +67,50 @@ Make sure you clicked Authorize button, gave username and password and clikced A
 ### Prerequisites
 
 * docker running
+* python installed
 * Splunk with your add-on installed
 
 ### Instruction
 
-1. Create `tmp` directory and open it (`mkdir tmp ; cd tmp`)
-2. Download the rest.mustache file (`wget https://raw.githubusercontent.com/swagger-api/swagger-codegen/master/modules/swagger-codegen/src/main/resources/python/rest.mustache`) and 
+1. Create directory structure and open the `tmp` directory (run in terminal: `mkdir -p tmp/restapi_client ; mkdir -p tmp/generator ; cd tmp`)
+2. Save your openapi.json file to the directory
+3. Download the rest.mustache file (`wget https://raw.githubusercontent.com/swagger-api/swagger-codegen/master/modules/swagger-codegen/src/main/resources/python/rest.mustache`)
+4. Splunk does not expect body for DELETE requests, so we need to revert modifications done for https://github.com/swagger-api/swagger-codegen/issues/9558 (`sed "s/request_body[[:blank:]]=[[:blank:]]\'{}\'/request_body = None/g" rest.mustache > generator/rest.mustache`).
+If you want to understand exactly which line of rest.mustache is affected: https://github.com/swagger-api/swagger-codegen/blob/master/modules/swagger-codegen/src/main/resources/python/rest.mustache#L150
+5. Create client (`docker run --rm -v ${PWD}:/local swaggerapi/swagger-codegen-cli-v3 generate -i /local/openapi.json -l python -o /local/restapi_client -t /local/generator/`); it should appear in `restapi_client` directory
+6. Open `restapi_client` directory and read `README.md` to find out the details of how the client should be installed, imported and used. (`cd restapi_client ; more README.md`)
+7. Install the client (`python setup.py install --user`)
+8. You can use below code as an inspiration for your own script that imports the client and uses for TA configuration
+```
+from __future__ import print_function
+import os
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
 
- https://github.com/swagger-api/swagger-codegen/blob/master/modules/swagger-codegen/src/main/resources/python/rest.mustache#L150
-Save openapi.json to the directory
-3. 
+def get_from_environment_variable(environment_variable: str) -> str:
+    if environment_variable not in os.environ:
+        print(40*'*')
+        print(f"{environment_variable} environment variable not set")
+        print("run below in terminal:")
+        print(f"export {environment_variable}=[your value]")
+        print(40*'*')
+        exit(1)
+    return os.environ[environment_variable]
+
+configuration = swagger_client.Configuration()
+configuration.host = configuration.host.replace('{domain}','localhost')
+configuration.host = configuration.host.replace('{port}','8089')
+
+configuration.verify_ssl = False
+configuration.username = 'admin'
+configuration.password = get_from_environment_variable("MODINPUT_TEST_SPLUNK_PASSWORD")
+
+api_instance = swagger_client.DefaultApi(swagger_client.ApiClient(configuration))
+
+output_mode = 'json'
+```
 
 ### Troubleshooting
 
-* Are you sure you 
+* swaggerapi/swagger-codegen-cli-v3 docker image does not work on AMR platforms (eg. M-based Mac machines)
