@@ -17,8 +17,11 @@ from typing import Any, Dict, Optional, Sequence
 
 from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import (
     indent,
-    quote_regex,
 )
+
+
+def quote_regex(value) -> str:
+    return '"""%s"""' % value
 
 
 class BaseValidator:
