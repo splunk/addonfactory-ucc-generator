@@ -107,6 +107,17 @@ pyyaml = ">=5.3.1"
 requests = ">=2.23.0"
 
 [[package]]
+name = "covdefaults"
+version = "2.3.0"
+description = "A coverage plugin to provide sensible default settings"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+coverage = ">=6.0.2"
+
+[[package]]
 name = "coverage"
 version = "7.2.2"
 description = "Code coverage measurement for Python"
@@ -932,7 +943,7 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "978295a703c9c98ba47e18ba6e5bba27c3904e57522686f5a49267dbc456dd49"
+content-hash = "60f3720a05a5abb1b48d0e0782e4b2e8fe372bde83e7349e1c4cb15e36ee97ff"
 
 [metadata.files]
 addonfactory-splunk-conf-parser-lib = [
@@ -1060,6 +1071,10 @@ colorama = [
 cookiecutter = [
     {file = "cookiecutter-2.1.1-py2.py3-none-any.whl", hash = "sha256:9f3ab027cec4f70916e28f03470bdb41e637a3ad354b4d65c765d93aad160022"},
     {file = "cookiecutter-2.1.1.tar.gz", hash = "sha256:f3982be8d9c53dac1261864013fdec7f83afd2e42ede6f6dd069c5e149c540d5"},
+]
+covdefaults = [
+    {file = "covdefaults-2.3.0-py2.py3-none-any.whl", hash = "sha256:2832961f6ffcfe4b57c338bc3418a3526f495c26fb9c54565409c5532f7c41be"},
+    {file = "covdefaults-2.3.0.tar.gz", hash = "sha256:4e99f679f12d792bc62e5510fa3eb59546ed47bd569e36e4fddc4081c9c3ebf7"},
 ]
 coverage = [
     {file = "coverage-7.2.2-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:c90e73bdecb7b0d1cea65a08cb41e9d672ac6d7995603d6465ed4914b98b9ad7"},
