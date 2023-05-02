@@ -66,9 +66,7 @@ def test_check_ucc_library_in_requirements_file(
 
 
 @mock.patch("subprocess.call", autospec=True)
-@mock.patch("os.path.exists", autospec=True)
-def test_install_libraries(mock_os_path_exists, mock_subprocess_call):
-    mock_os_path_exists.return_value = True
+def test_install_libraries(mock_subprocess_call):
     mock_subprocess_call.return_value = 0
 
     install_libraries(
@@ -93,11 +91,7 @@ def test_install_libraries(mock_os_path_exists, mock_subprocess_call):
 
 
 @mock.patch("subprocess.call", autospec=True)
-@mock.patch("os.path.exists", autospec=True)
-def test_install_libraries_when_subprocess_raises_os_error(
-    mock_os_path_exists, mock_subprocess_call
-):
-    mock_os_path_exists.return_value = True
+def test_install_libraries_when_subprocess_raises_os_error(mock_subprocess_call):
     mock_subprocess_call.side_effect = OSError
 
     with pytest.raises(CouldNotInstallRequirements):
@@ -118,17 +112,71 @@ def test_install_libraries_when_subprocess_raises_os_error(
     ],
 )
 @mock.patch("subprocess.call", autospec=True)
-@mock.patch("os.path.exists", autospec=True)
 def test_install_libraries_when_subprocess_returns_non_zero_codes(
-    mock_os_path_exists, mock_subprocess_call, subprocess_status_codes
+    mock_subprocess_call,
+    subprocess_status_codes,
 ):
-    mock_os_path_exists.return_value = True
     mock_subprocess_call.side_effect = subprocess_status_codes
 
     with pytest.raises(CouldNotInstallRequirements):
         install_libraries(
             "package/lib/requirements.txt", "/path/to/output/addon_name/lib", "python3"
         )
+
+
+@mock.patch("subprocess.call", autospec=True)
+def test_install_python_libraries(mock_subprocess_call, tmp_path):
+    mock_subprocess_call.return_value = 0
+    tmp_ucc_lib_target = tmp_path / "ucc-lib-target"
+    tmp_ucc_lib_target.mkdir()
+    tmp_lib_path = tmp_path / "lib"
+    tmp_lib_path.mkdir()
+    tmp_lib_reqs_file = tmp_lib_path / "requirements.txt"
+    tmp_lib_reqs_file.write_text("splunktaucclib\n")
+
+    install_python_libraries(
+        str(tmp_path),
+        str(tmp_ucc_lib_target),
+        python_binary_name="python3",
+        includes_ui=True,
+    )
+
+
+def test_install_python_libraries_when_no_requirements_file_found(caplog, tmp_path):
+    tmp_ucc_lib_target = tmp_path / "ucc-lib-target"
+
+    install_python_libraries(
+        str(tmp_path),
+        str(tmp_ucc_lib_target),
+        python_binary_name="python3",
+        includes_ui=True,
+    )
+    expected_requirements_file_path = tmp_path / "lib" / "requirements.txt"
+    log_message_expected = (
+        f"Could not find requirements file @ "
+        f"{str(expected_requirements_file_path)}, nothing to install"
+    )
+    assert log_message_expected in caplog.text
+
+
+@mock.patch("subprocess.call", autospec=True)
+def test_install_libraries_when_no_splunktaucclib_is_present_but_no_ui(
+    mock_subprocess_call,
+    tmp_path,
+):
+    mock_subprocess_call.return_value = 0
+    tmp_ucc_lib_target = tmp_path / "ucc-lib-target"
+    tmp_lib_path = tmp_path / "lib"
+    tmp_lib_path.mkdir()
+    tmp_lib_reqs_file = tmp_lib_path / "requirements.txt"
+    tmp_lib_reqs_file.write_text("solnlib\nsplunk-sdk\n")
+
+    install_python_libraries(
+        str(tmp_path),
+        str(tmp_ucc_lib_target),
+        python_binary_name="python3",
+        includes_ui=False,
+    )
 
 
 def test_install_libraries_when_no_splunktaucclib_is_present_but_has_ui(tmp_path):
@@ -158,15 +206,18 @@ def test_remove_package_from_installed_path(tmp_path):
     tmp_lib_path_bar.mkdir()
     tmp_lib_path_baz = tmp_lib_path / "baz"
     tmp_lib_path_baz.mkdir()
+    tmp_lib_path_qux = tmp_lib_path / "qux.txt"
+    tmp_lib_path_qux.write_text("some text")
 
     remove_package_from_installed_path(
         str(tmp_lib_path),
-        ["foo", "bar"],
+        ["foo", "bar", "qux"],
     )
 
     assert not tmp_lib_path_foo.exists()
     assert not tmp_lib_path_foo_dist_info.exists()
     assert not tmp_lib_path_bar.exists()
+    assert tmp_lib_path_qux.exists()
     assert tmp_lib_path_baz.exists()
 
 

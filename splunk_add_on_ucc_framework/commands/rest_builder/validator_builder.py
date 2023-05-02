@@ -17,8 +17,11 @@ from typing import Any, Dict, Optional, Sequence
 
 from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import (
     indent,
-    quote_regex,
 )
+
+
+def quote_regex(value) -> str:
+    return '"""%s"""' % value
 
 
 class BaseValidator:
@@ -31,8 +34,6 @@ class BaseValidator:
         raise NotImplementedError()
 
     def _format_arguments(self, **kwargs: Dict[str, Any]) -> str:
-        if not kwargs:
-            return ""
         args = list(
             map(
                 lambda k_v: f"{k_v[0]}={k_v[1]}, ",
@@ -156,9 +157,9 @@ class ValidatorBuilder:
             return None
         generated_validators = []
         for config in configs:
-            config_type = config.get("type")
-            if config_type is None:
-                continue
+            # `config` variable should always have `type` field according to
+            # the schema.
+            config_type: str = config.get("type", "")
             validator = self._validation_config_map.get(config_type)
             if validator is None:
                 continue

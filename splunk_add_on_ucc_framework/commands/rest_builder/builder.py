@@ -79,14 +79,6 @@ class RestBuilder:
             self._schema.product,
         )
 
-    @property
-    def restmap_admin(self):
-        return self._schema.namespace
-
-    @property
-    def restmap_admin_externals(self):
-        return RestmapConf.admin_externals(self._schema.endpoints)
-
     def build(self):
         for endpoint in self._schema.endpoints:
             # If the endpoint is oauth, which is for getting accesstoken. Conf file entries should not get created.

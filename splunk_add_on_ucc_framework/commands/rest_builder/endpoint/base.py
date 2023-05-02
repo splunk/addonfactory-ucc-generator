@@ -172,18 +172,6 @@ def quote_string(value) -> str:
         return value
 
 
-def quote_regex(value) -> str:
-    """
-    Quote a regex
-    :param value:
-    :return:
-    """
-    if isinstance(value, str):
-        return '"""%s"""' % value
-    else:
-        return value
-
-
 def indent(lines: Sequence[str], spaces: int = 1) -> str:
     """
     Indent code block.

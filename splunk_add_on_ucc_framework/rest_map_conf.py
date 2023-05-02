@@ -38,8 +38,6 @@ handlerpersistentmode = true
 
     @classmethod
     def build(cls, endpoints: Sequence[RestEndpointBuilder], namespace: str) -> str:
-        if not endpoints:
-            return ""
         externals = [
             cls._admin_template.format(
                 namespace=namespace,
@@ -54,7 +52,3 @@ handlerpersistentmode = true
             )
             externals.append(external)
         return "".join(externals)
-
-    @classmethod
-    def admin_externals(cls, endpoints):
-        return [endpoint.name for endpoint in endpoints]
