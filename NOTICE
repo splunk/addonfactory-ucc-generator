@@ -7,9 +7,9 @@
 
 The following 3rd-party software packages may be used by or distributed with addonfactory-ucc-generator. Any information relevant to third-party vendors listed below are collected using common, reasonable means.
 
-Date generated: 2023-4-18
+Date generated: 2023-5-2
 
-Revision ID: 6b3e6496dc78728393737569cc9c1cbd14159e66
+Revision ID: e565a1d77db433c047fdfac61ce205ad44d4a6a6
 
 ================================================================================
 ================================================================================
@@ -55,6 +55,7 @@ Package Title: addonfactory-splunk-conf-parser-lib (0.3.4)
 * Declared Licenses *
 Apache-2.0
 
+
 Copyright 2021 Splunk Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -76,6 +77,7 @@ Package Title: arrow (1.2.3)
 
 * Declared Licenses *
 Apache-2.0
+
 
                                  Apache License
                            Version 2.0, January 2004
@@ -288,6 +290,7 @@ Package Title: attrs (22.2.0)
 * Declared Licenses *
 MIT
 
+
 The MIT License (MIT)
 
 Copyright (c) 2015 Hynek Schlawack and the attrs contributors
@@ -318,6 +321,7 @@ Package Title: binaryornot (0.4.4)
 
 * Declared Licenses *
 BSD-3-Clause
+
 
 Copyright (c) 2013, Audrey Roy
 All rights reserved.
@@ -380,6 +384,7 @@ Package Title: certifi (2022.12.7)
 * Declared Licenses *
 MPL-2.0
 
+
 This package contains a modified version of ca-bundle.crt:
 
 ca-bundle.crt -- Bundle of CA Root Certificates
@@ -410,6 +415,7 @@ Package Title: chardet (5.1.0)
 
 * Declared Licenses *
 LGPL-2.1-only
+
 
                   GNU LESSER GENERAL PUBLIC LICENSE
                        Version 2.1, February 1999
@@ -919,12 +925,19 @@ That's all there is to it!
 * Other Licenses *
 LGPL-2.1-or-later, Multi-license: GPL-2.0-only OR LGPL-2.0-or-later
 
+* LGPL-2.1-or-later *
 
 Copyright (C) 2023, chardet Contributors
 This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation; version 2.1 or any later version.
 This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+* Multi-license: GPL-2.0-only OR LGPL-2.0-or-later *
+
+Copyright (C) 2023, chardet Contributors
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; version 2.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 
 --------------------------------------------------------------------------------
@@ -933,6 +946,7 @@ Package Title: charset-normalizer (3.0.1)
 
 * Declared Licenses *
 MIT
+
 
 MIT License
 
@@ -960,6 +974,7 @@ SOFTWARE.
 * Other Licenses *
 Multi-license: LGPL-2.1-only OR MIT OR MPL-2.0, Multi-license: LGPL-2.1-only OR MPL-2.0
 
+* Multi-license: LGPL-2.1-only OR MIT OR MPL-2.0 *
 
 MIT License
 
@@ -983,6 +998,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
+* Multi-license: LGPL-2.1-only OR MPL-2.0 *
+
+Copyright (C) 2019 [Ahmed TAHRI 
+This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation; version 2.1.
+This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 
 --------------------------------------------------------------------------------
@@ -991,6 +1012,7 @@ Package Title: click (8.1.3)
 
 * Declared Licenses *
 BSD-3-Clause
+
 
 Copyright 2014 Pallets
 
@@ -1065,6 +1087,7 @@ Package Title: colorama (0.4.6)
 * Declared Licenses *
 BSD-3-Clause
 
+
 Copyright (c) 2010 Jonathan Hartley
 All rights reserved.
 
@@ -1101,6 +1124,7 @@ Package Title: cookiecutter (2.1.1)
 
 * Declared Licenses *
 BSD-3-Clause
+
 
 Copyright (c) 2013-2021, Audrey Roy Greenfeld
 All rights reserved.
@@ -1144,6 +1168,7 @@ Package Title: dunamai (1.15.0)
 * Declared Licenses *
 MIT
 
+
 MIT License
 
 Copyright (c) 2019 Matthew T. Kennerly (mtkennerly)
@@ -1174,6 +1199,7 @@ Package Title: idna (3.4)
 
 * Declared Licenses *
 BSD-3-Clause
+
 
 BSD 3-Clause License
 
@@ -1213,6 +1239,7 @@ Package Title: importlib-metadata (6.0.0)
 
 * Declared Licenses *
 Apache-2.0
+
 
 
                                  Apache License
@@ -1451,6 +1478,7 @@ Package Title: importlib-resources (5.10.2)
 Apache-2.0
 
 
+
                                  Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
@@ -1662,6 +1690,7 @@ Package Title: jinja2 (3.1.2)
 * Declared Licenses *
 BSD-3-Clause
 
+
 Copyright 2007 Pallets
 
 Redistribution and use in source and binary forms, with or without
@@ -1735,6 +1764,7 @@ Package Title: jinja2-time (0.2.0)
 * Declared Licenses *
 MIT
 
+
 The MIT License (MIT)
 
 Copyright (c) 2015 Raphael Pierzina
@@ -1766,6 +1796,7 @@ Package Title: jsonschema (4.17.3)
 
 * Declared Licenses *
 MIT
+
 
 Copyright (c) 2013 Julian Berman
 
@@ -1815,6 +1846,7 @@ Package Title: MarkupSafe (2.1.2)
 * Declared Licenses *
 BSD-3-Clause
 
+
 Copyright 2010 Pallets
 
 Redistribution and use in source and binary forms, with or without
@@ -1862,6 +1894,7 @@ Package Title: openapi3 (1.7.0)
 * Declared Licenses *
 BSD-3-Clause
 
+
 Copyright (c) 2019, William Smith
 All rights reserved.
 
@@ -1899,6 +1932,8 @@ Package Title: packaging (23.0)
 * Declared Licenses *
 BSD-3-Clause, Apache-2.0, BSD-2-Clause
 
+* BSD-3-Clause *
+
 Copyright (c) 2023, packaging Contributors . All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -1926,12 +1961,14 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+* Apache-2.0 *
 
 This software is made available under the terms of *either* of the licenses
 found in LICENSE.APACHE or LICENSE.BSD. Contributions to this software is made
 under the terms of *both* these licenses.
 
 
+* BSD-2-Clause *
 
 Copyright (c) Donald Stufft and individual contributors.
 All rights reserved.
@@ -1965,6 +2002,7 @@ Package Title: pkgutil_resolve_name (1.3.10)
 
 * Declared Licenses *
 Multi-license: MIT OR Python-2.0
+
 
 The MIT License (MIT)
 
@@ -2051,6 +2089,7 @@ Package Title: pyrsistent (0.19.3)
 * Declared Licenses *
 MIT
 
+
 Copyright (c) 2022 Tobias Gustafsson
 
 Permission is hereby granted, free of charge, to any person
@@ -2113,6 +2152,7 @@ Package Title: python-dateutil (2.8.2)
 
 * Declared Licenses *
 Multi-license: Apache-2.0 OR BSD-3-Clause
+
 
 Copyright 2017- Paul Ganssle <paul@ganssle.io>
 Copyright 2017- dateutil contributors (see AUTHORS file)
@@ -2177,6 +2217,7 @@ Package Title: python-slugify (8.0.0)
 * Declared Licenses *
 MIT
 
+
 The MIT License
 
 Copyright (c) Val Neekman @ Neekware Inc. http://neekware.com
@@ -2208,6 +2249,7 @@ Package Title: PyYAML (6.0)
 * Declared Licenses *
 MIT
 
+
 Copyright (c) 2017-2021 Ingy döt Net
 Copyright (c) 2006-2016 Kirill Simonov
 
@@ -2237,6 +2279,7 @@ Package Title: requests (2.28.2)
 
 * Declared Licenses *
 Apache-2.0
+
 
 
                                  Apache License
@@ -2447,6 +2490,7 @@ Package Title: six (1.16.0)
 * Declared Licenses *
 MIT
 
+
 Copyright (c) 2010-2020 Benjamin Peterson
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -2474,6 +2518,7 @@ Package Title: text-unidecode (1.3)
 
 * Declared Licenses *
 Multi-license: Artistic-1.0 OR Artistic-1.0-Perl OR GPL-1.0-or-later OR GPL-2.0-or-later
+
 
 text-unidecode is a free software; you can redistribute
 it and/or modify it under the terms of either:
@@ -2760,6 +2805,7 @@ Package Title: typing-extensions (4.4.0)
 * Declared Licenses *
 Python-2.0
 
+
 1. This LICENSE AGREEMENT is between the Python Software Foundation ("PSF"), and the Individual or Organization ("Licensee") accessing and otherwise using this software ("Python") in source or binary form and its associated documentation.
    2. Subject to the terms and conditions of this License Agreement, PSF hereby grants Licensee a nonexclusive, royalty-free, world-wide license to reproduce, analyze, test, perform and/or display publicly, prepare derivative works, distribute, and otherwise use Python alone or in any derivative version, provided, however, that PSF's License Agreement and PSF's notice of copyright, i.e., "Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006 Python Software Foundation; All Rights Reserved" are retained in Python alone or in any derivative version prepared by Licensee.
    3. In the event Licensee prepares a derivative work that is based on or incorporates Python or any part thereof, and wants to make the derivative work available to others as provided herein, then Licensee hereby agrees to include in any such work a brief summary of the changes made to Python.
@@ -2798,6 +2844,7 @@ Package Title: urllib3 (1.26.14)
 * Declared Licenses *
 MIT
 
+
 MIT License
 
 Copyright (c) 2008-2020 Andrey Petrov and contributors (see CONTRIBUTORS.txt)
@@ -2825,6 +2872,7 @@ SOFTWARE.
 * Other Licenses *
 Apache-2.0, Python-2.0
 
+* Apache-2.0 *
 
 Copyright 2015 Google Inc. All rights reserved.
 
@@ -2840,6 +2888,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 See the License for the specific language governing permissions and limitations under the License.
 
+* Python-2.0 *
 
 1. This LICENSE AGREEMENT is between the Python Software Foundation ("PSF"), and the Individual or Organization ("Licensee") accessing and otherwise using this software ("Python") in source or binary form and its associated documentation.
    2. Subject to the terms and conditions of this License Agreement, PSF hereby grants Licensee a nonexclusive, royalty-free, world-wide license to reproduce, analyze, test, perform and/or display publicly, prepare derivative works, distribute, and otherwise use Python alone or in any derivative version, provided, however, that PSF's License Agreement and PSF's notice of copyright, i.e., "Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006 Python Software Foundation; All Rights Reserved" are retained in Python alone or in any derivative version prepared by Licensee.
@@ -2878,6 +2927,7 @@ Package Title: zipp (3.12.1)
 
 * Declared Licenses *
 MIT
+
 
 Copyright Jason R. Coombs
 
@@ -5584,4 +5634,4 @@ WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
-Report Generated by FOSSA on 2023-4-18
+Report Generated by FOSSA on 2023-5-2

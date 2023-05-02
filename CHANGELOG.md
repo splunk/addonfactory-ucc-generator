@@ -1,3 +1,11 @@
+# [5.26.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.25.0...v5.26.0) (2023-05-02)
+
+
+### Features
+
+* create openapi such way that generated client code allows to update configuration and inputs ([#740](https://github.com/splunk/addonfactory-ucc-generator/issues/740)) ([c412a60](https://github.com/splunk/addonfactory-ucc-generator/commit/c412a601deaf3fd5eed79f45724d942328127a64))
+* GET methods and responses allow to get data ([#742](https://github.com/splunk/addonfactory-ucc-generator/issues/742)) ([6fe35cd](https://github.com/splunk/addonfactory-ucc-generator/commit/6fe35cd5d46606ef800e708c58646eb7b04b1e31))
+
 # [5.25.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.24.0...v5.25.0) (2023-04-18)
 
 
