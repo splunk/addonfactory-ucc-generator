@@ -105,7 +105,7 @@ configuration.host = configuration.host.replace('{domain}','localhost')
 configuration.host = configuration.host.replace('{port}','8089')
 
 configuration.verify_ssl = False
-configuration.username = 'admin'
+configuration.username = get_from_environment_variable("SPLUNK_USERNAME")
 configuration.password = get_from_environment_variable("SPLUNK_PASSWORD")
 
 api_instance = swagger_client.DefaultApi(swagger_client.ApiClient(configuration))
