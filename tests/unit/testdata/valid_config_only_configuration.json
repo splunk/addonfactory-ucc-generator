@@ -3,6 +3,102 @@
         "configuration": {
             "tabs": [
                 {
+                    "name": "proxy",
+                    "entity": [
+                        {
+                            "type": "checkbox",
+                            "label": "Enable",
+                            "field": "proxy_enabled"
+                        },
+                        {
+                            "type": "singleSelect",
+                            "label": "Proxy Type",
+                            "options": {
+                                "disableSearch": true,
+                                "autoCompleteFields": [
+                                    {
+                                        "value": "http",
+                                        "label": "http"
+                                    },
+                                    {
+                                        "value": "socks4",
+                                        "label": "socks4"
+                                    },
+                                    {
+                                        "value": "socks5",
+                                        "label": "socks5"
+                                    }
+                                ]
+                            },
+                            "defaultValue": "http",
+                            "field": "proxy_type"
+                        },
+                        {
+                            "type": "text",
+                            "label": "Host",
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Max host length is 4096",
+                                    "minLength": 0,
+                                    "maxLength": 4096
+                                }
+                            ],
+                            "field": "proxy_url"
+                        },
+                        {
+                            "type": "text",
+                            "label": "Port",
+                            "validators": [
+                                {
+                                    "type": "number",
+                                    "range": [
+                                        1,
+                                        65535
+                                    ]
+                                }
+                            ],
+                            "field": "proxy_port"
+                        },
+                        {
+                            "type": "text",
+                            "label": "Username",
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Max length of username is 50",
+                                    "minLength": 0,
+                                    "maxLength": 50
+                                }
+                            ],
+                            "field": "proxy_username"
+                        },
+                        {
+                            "type": "text",
+                            "label": "Password",
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Max length of password is 8192",
+                                    "minLength": 0,
+                                    "maxLength": 8192
+                                }
+                            ],
+                            "encrypted": true,
+                            "field": "proxy_password"
+                        },
+                        {
+                            "type": "checkbox",
+                            "label": "Reverse DNS resolution",
+                            "field": "proxy_rdns"
+                        }
+                    ],
+                    "options": {
+                        "saveValidator": "function(formData) { if(!formData.proxy_enabled || formData.proxy_enabled === '0') {return true; } if(!formData.proxy_url) { return 'Proxy Host can not be empty'; } if(!formData.proxy_port) { return 'Proxy Port can not be empty'; } return true; }"
+                    },
+                    "title": "Proxy"
+                },
+                {
                     "name": "account",
                     "table": {
                         "actions": [
@@ -136,63 +232,6 @@
                             }
                         },
                         {
-                            "type": "oauth",
-                            "field": "oauth",
-                            "label": "Not used",
-                            "options": {
-                                "auth_type": [
-                                    "basic",
-                                    "oauth"
-                                ],
-                                "basic": [
-                                    {
-                                        "oauth_field": "username",
-                                        "label": "Username",
-                                        "help": "Enter the username for this account.",
-                                        "field": "username"
-                                    },
-                                    {
-                                        "oauth_field": "password",
-                                        "label": "Password",
-                                        "encrypted": true,
-                                        "help": "Enter the password for this account.",
-                                        "field": "password"
-                                    },
-                                    {
-                                        "oauth_field": "security_token",
-                                        "label": "Security Token",
-                                        "encrypted": true,
-                                        "help": "Enter the security token.",
-                                        "field": "token"
-                                    }
-                                ],
-                                "oauth": [
-                                    {
-                                        "oauth_field": "client_id",
-                                        "label": "Client Id",
-                                        "field": "client_id",
-                                        "help": "Enter the Client Id for this account."
-                                    },
-                                    {
-                                        "oauth_field": "client_secret",
-                                        "label": "Client Secret",
-                                        "field": "client_secret",
-                                        "encrypted": true,
-                                        "help": "Enter the Client Secret key for this account."
-                                    },
-                                    {
-                                        "oauth_field": "redirect_url",
-                                        "label": "Redirect url",
-                                        "field": "redirect_url",
-                                        "help": "Copy and paste this URL into your app."
-                                    }
-                                ],
-                                "auth_code_endpoint": "/services/oauth2/authorize",
-                                "access_token_endpoint": "/services/oauth2/token",
-                                "oauth_timeout": 30
-                            }
-                        },
-                        {
                             "field": "example_help_link",
                             "label": "",
                             "type": "helpLink",
@@ -229,102 +268,6 @@
                         }
                     ],
                     "title": "Account"
-                },
-                {
-                    "name": "proxy",
-                    "entity": [
-                        {
-                            "type": "checkbox",
-                            "label": "Enable",
-                            "field": "proxy_enabled"
-                        },
-                        {
-                            "type": "singleSelect",
-                            "label": "Proxy Type",
-                            "options": {
-                                "disableSearch": true,
-                                "autoCompleteFields": [
-                                    {
-                                        "value": "http",
-                                        "label": "http"
-                                    },
-                                    {
-                                        "value": "socks4",
-                                        "label": "socks4"
-                                    },
-                                    {
-                                        "value": "socks5",
-                                        "label": "socks5"
-                                    }
-                                ]
-                            },
-                            "defaultValue": "http",
-                            "field": "proxy_type"
-                        },
-                        {
-                            "type": "text",
-                            "label": "Host",
-                            "validators": [
-                                {
-                                    "type": "string",
-                                    "errorMsg": "Max host length is 4096",
-                                    "minLength": 0,
-                                    "maxLength": 4096
-                                }
-                            ],
-                            "field": "proxy_url"
-                        },
-                        {
-                            "type": "text",
-                            "label": "Port",
-                            "validators": [
-                                {
-                                    "type": "number",
-                                    "range": [
-                                        1,
-                                        65535
-                                    ]
-                                }
-                            ],
-                            "field": "proxy_port"
-                        },
-                        {
-                            "type": "text",
-                            "label": "Username",
-                            "validators": [
-                                {
-                                    "type": "string",
-                                    "errorMsg": "Max length of username is 50",
-                                    "minLength": 0,
-                                    "maxLength": 50
-                                }
-                            ],
-                            "field": "proxy_username"
-                        },
-                        {
-                            "type": "text",
-                            "label": "Password",
-                            "validators": [
-                                {
-                                    "type": "string",
-                                    "errorMsg": "Max length of password is 8192",
-                                    "minLength": 0,
-                                    "maxLength": 8192
-                                }
-                            ],
-                            "encrypted": true,
-                            "field": "proxy_password"
-                        },
-                        {
-                            "type": "checkbox",
-                            "label": "Reverse DNS resolution",
-                            "field": "proxy_rdns"
-                        }
-                    ],
-                    "options": {
-                        "saveValidator": "function(formData) { if(!formData.proxy_enabled || formData.proxy_enabled === '0') {return true; } if(!formData.proxy_url) { return 'Proxy Host can not be empty'; } if(!formData.proxy_port) { return 'Proxy Port can not be empty'; } return true; }"
-                    },
-                    "title": "Proxy"
                 },
                 {
                     "name": "logging",
