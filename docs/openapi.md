@@ -68,7 +68,7 @@ Make sure you clicked Authorize button, gave username and password and clicked A
 
 ### Prerequisites
 
-* docker running
+* Docker running
 * python installed
 * Splunk with your add-on installed
 
