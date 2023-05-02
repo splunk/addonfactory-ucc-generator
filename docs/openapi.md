@@ -115,4 +115,4 @@ output_mode = 'json'
 
 ### Troubleshooting
 
-* swaggerapi/swagger-codegen-cli-v3 docker image does not work on AMR platforms (eg. M-based Mac machines)
+* swaggerapi/swagger-codegen-cli-v3 docker image does not work on ARM platforms (eg. M-based Mac machines)
