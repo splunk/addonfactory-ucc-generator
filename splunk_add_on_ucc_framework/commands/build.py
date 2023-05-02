@@ -333,6 +333,25 @@ def _get_addon_version(addon_version: Optional[str]) -> str:
     return addon_version.strip()
 
 
+def _get_app_manifest(source: str) -> app_manifest_lib.AppManifest:
+    app_manifest_path = os.path.abspath(
+        os.path.join(source, app_manifest_lib.APP_MANIFEST_FILE_NAME),
+    )
+    with open(app_manifest_path) as manifest_file:
+        app_manifest_content = manifest_file.read()
+    app_manifest = app_manifest_lib.AppManifest()
+    try:
+        app_manifest.read(app_manifest_content)
+        return app_manifest
+    except app_manifest_lib.AppManifestFormatException:
+        logger.error(
+            f"Manifest file @ {app_manifest_path} has invalid format.\n"
+            f"Please refer to {app_manifest_lib.APP_MANIFEST_WEBSITE}.\n"
+            f'Lines with comments are supported if they start with "#".\n'
+        )
+        sys.exit(1)
+
+
 def generate(
     source: str,
     config_path: Optional[str] = None,
@@ -351,28 +370,16 @@ def generate(
     shutil.rmtree(os.path.join(output_directory), ignore_errors=True)
     os.makedirs(os.path.join(output_directory))
     logger.info(f"Cleaned out directory {output_directory}")
-    app_manifest_path = os.path.abspath(
-        os.path.join(source, app_manifest_lib.APP_MANIFEST_FILE_NAME),
-    )
-    with open(app_manifest_path) as manifest_file:
-        app_manifest_content = manifest_file.read()
-    app_manifest = app_manifest_lib.AppManifest()
-    try:
-        app_manifest.read(app_manifest_content)
-    except app_manifest_lib.AppManifestFormatException:
-        logger.error(
-            f"Manifest file @ {app_manifest_path} has invalid format.\n"
-            f"Please refer to {app_manifest_lib.APP_MANIFEST_WEBSITE}.\n"
-            f'Lines with comments are supported if they start with "#".\n'
-        )
-        sys.exit(1)
+    app_manifest = _get_app_manifest(source)
     ta_name = app_manifest.get_addon_name()
     if not config_path:
         is_global_config_yaml = False
-        config_path = os.path.abspath(os.path.join(source, "..", "globalConfig.json"))
+        config_path = os.path.abspath(
+            os.path.join(source, os.pardir, "globalConfig.json")
+        )
         if not os.path.isfile(config_path):
             config_path = os.path.abspath(
-                os.path.join(source, "..", "globalConfig.yaml")
+                os.path.join(source, os.pardir, "globalConfig.yaml")
             )
             is_global_config_yaml = True
     else:
