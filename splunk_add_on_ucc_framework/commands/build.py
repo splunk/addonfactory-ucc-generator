@@ -36,6 +36,7 @@ from splunk_add_on_ucc_framework import meta_conf as meta_conf_lib
 from splunk_add_on_ucc_framework import server_conf as server_conf_lib
 from splunk_add_on_ucc_framework import app_manifest as app_manifest_lib
 from splunk_add_on_ucc_framework import global_config as global_config_lib
+from splunk_add_on_ucc_framework import data_ui_generator
 from splunk_add_on_ucc_framework import normalize
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
     generate_alerts,
@@ -89,34 +90,6 @@ def _recursive_overwrite(src, dest, ignore_list=None):
         if os.path.exists(dest):
             os.remove(dest)
         shutil.copy(src, dest)
-
-
-def _replace_token(ta_name, outputdir):
-    """
-    Replace token with addon name in inputs.xml, configuration.xml, redirect.xml.
-    Replace token with addon version in redirect.xml.
-
-    Args:
-        ta_name (str): Name of TA.
-        outputdir (str): output directory.
-    """
-
-    # replace token in template
-    logger.info("Replace tokens in views")
-    views = ["inputs.xml", "configuration.xml", "redirect.xml"]
-    for view in views:
-        template_dir = os.path.join(
-            outputdir, ta_name, "default", "data", "ui", "views"
-        )
-        with open(os.path.join(template_dir, view)) as f:
-            s = f.read()
-
-        # Safely write the changed content, if found in the file
-        with open(os.path.join(template_dir, view), "w") as f:
-            s = s.replace("${package.name}", ta_name)
-            if view == "redirect.xml":
-                s = s.replace("${ta.name}", ta_name.lower())
-            f.write(s)
 
 
 def _generate_rest(
@@ -193,9 +166,6 @@ def _modify_and_replace_token_for_oauth_templates(
         global_config: Object representing globalConfig.
         outputdir: output directory.
     """
-    redirect_xml_src = os.path.join(
-        outputdir, ta_name, "default", "data", "ui", "views", "redirect.xml"
-    )
     redirect_js_src = os.path.join(
         outputdir, ta_name, "appserver", "static", "js", "build", "redirect_page.js"
     )
@@ -220,22 +190,26 @@ def _modify_and_replace_token_for_oauth_templates(
             "templates",
             ta_name.lower() + "_redirect.html",
         )
-        redirect_xml_dest = os.path.join(
-            outputdir,
-            ta_name,
-            "default",
-            "data",
-            "ui",
-            "views",
-            ta_name.lower() + "_redirect.xml",
-        )
+        with open(
+            os.path.join(
+                outputdir,
+                ta_name,
+                "default",
+                "data",
+                "ui",
+                "views",
+                f"{ta_name.lower()}_redirect.xml",
+            ),
+            "w",
+        ) as addon_redirect_xml_file:
+            addon_redirect_xml_content = data_ui_generator.generate_views_redirect_xml(
+                ta_name,
+            )
+            addon_redirect_xml_file.write(addon_redirect_xml_content)
         os.rename(redirect_js_src, redirect_js_dest)
         os.rename(redirect_html_src, redirect_html_dest)
-        os.rename(redirect_xml_src, redirect_xml_dest)
-
     # if oauth is not configured remove the extra template
     else:
-        os.remove(redirect_xml_src)
         os.remove(redirect_html_src)
         os.remove(redirect_js_src)
 
@@ -359,41 +333,6 @@ def _remove_listed_files(ignore_list):
             )
 
 
-def _handle_no_inputs(ta_name, outputdir):
-    """
-    Handle for configuration without input page.
-
-    Args:
-        ta_name (str): Name of TA.
-        outputdir (str): output directory.
-    """
-    default_xml_file = os.path.join(
-        outputdir, ta_name, "default", "data", "ui", "nav", "default.xml"
-    )
-    default_no_input_xml_file = os.path.join(
-        outputdir, ta_name, "default", "data", "ui", "nav", "default_no_input.xml"
-    )
-    os.remove(default_xml_file)
-    os.rename(
-        default_no_input_xml_file,
-        default_xml_file,
-    )
-    file_remove_list = [
-        os.path.join(
-            outputdir, ta_name, "default", "data", "ui", "views", "inputs.xml"
-        ),
-        os.path.join(outputdir, ta_name, "appserver", "static", "css", "inputs.css"),
-        os.path.join(
-            outputdir, ta_name, "appserver", "static", "css", "createInput.css"
-        ),
-    ]
-    for fl in file_remove_list:
-        try:
-            os.remove(fl)
-        except OSError:
-            pass
-
-
 def _get_os_path(path):
     """
     Returns a path which will be os compatible.
@@ -411,6 +350,47 @@ def _get_os_path(path):
         path = path.replace("\\", os.sep)
     path = path.replace("/", os.sep)
     return path.strip(os.sep)
+
+
+def generate_data_ui(
+    output_directory: str,
+    addon_name: str,
+    include_inputs: bool,
+):
+    # Create directories in the output folder for add-on's UI nav and views.
+    os.makedirs(
+        os.path.join(output_directory, addon_name, "default", "data", "ui", "nav"),
+        exist_ok=True,
+    )
+    os.makedirs(
+        os.path.join(output_directory, addon_name, "default", "data", "ui", "views"),
+        exist_ok=True,
+    )
+    default_ui_path = os.path.join(
+        output_directory, addon_name, "default", "data", "ui"
+    )
+    with open(
+        os.path.join(default_ui_path, "nav", "default.xml"), "w"
+    ) as default_xml_file:
+        default_xml_content = data_ui_generator.generate_nav_default_xml(
+            include_inputs=include_inputs,
+        )
+        default_xml_file.write(default_xml_content)
+    with open(
+        os.path.join(default_ui_path, "views", "configuration.xml"), "w"
+    ) as configuration_xml_file:
+        configuration_xml_content = data_ui_generator.generate_views_configuration_xml(
+            addon_name,
+        )
+        configuration_xml_file.write(configuration_xml_content)
+    if include_inputs:
+        with open(
+            os.path.join(default_ui_path, "views", "inputs.xml"), "w"
+        ) as input_xml_file:
+            inputs_xml_content = data_ui_generator.generate_views_inputs_xml(
+                addon_name,
+            )
+            input_xml_file.write(inputs_xml_content)
 
 
 def _get_addon_version(addon_version: Optional[str]) -> str:
@@ -505,6 +485,7 @@ def generate(
             os.path.join(internal_root_dir, "package"),
             os.path.join(output_directory, ta_name),
         )
+        generate_data_ui(output_directory, ta_name, global_config.has_inputs())
         logger.info("Copied UCC template directory")
         global_config_file = (
             "globalConfig.yaml" if is_global_config_yaml else "globalConfig.json"
@@ -534,7 +515,6 @@ def generate(
         logger.info(
             f"Installed add-on requirements into {ucc_lib_target} from {source}"
         )
-        _replace_token(ta_name, output_directory)
         _generate_rest(ta_name, scheme, output_directory)
         _modify_and_replace_token_for_oauth_templates(
             ta_name,
@@ -542,19 +522,7 @@ def generate(
             output_directory,
         )
         if global_config.has_inputs():
-            default_no_input_xml_file = os.path.join(
-                output_directory,
-                ta_name,
-                "default",
-                "data",
-                "ui",
-                "nav",
-                "default_no_input.xml",
-            )
-            os.remove(default_no_input_xml_file)
             _add_modular_input(ta_name, global_config, output_directory)
-        else:
-            _handle_no_inputs(ta_name, output_directory)
         _make_modular_alerts(ta_name, global_config, output_directory)
 
         conf_file_names = []
