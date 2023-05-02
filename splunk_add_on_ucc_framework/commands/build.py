@@ -112,49 +112,6 @@ def _generate_rest(
     return builder_obj
 
 
-def _is_oauth_configured(ta_tabs):
-    """
-    Check if oauth is configured in globalConfig file.
-
-    Args:
-        ta_tabs (list): List of tabs mentioned in globalConfig file.
-
-    Returns:
-        bool: True if oauth is configured, False otherwise.
-    """
-
-    for tab in ta_tabs:
-        if tab["name"] == "account":
-            for elements in tab["entity"]:
-                if elements["type"] == "oauth":
-                    return True
-            break
-    return False
-
-
-def _replace_oauth_html_template_token(ta_name, ta_version, outputdir):
-    """
-    Replace tokens with addon name and version in redirect.html.
-
-    Args:
-        ta_name (str): Name of TA.
-        ta_version (str): Version of TA.
-        outputdir (str): output directory.
-    """
-
-    html_template_path = os.path.join(outputdir, ta_name, "appserver", "templates")
-    with open(os.path.join(html_template_path, "redirect.html")) as f:
-        s = f.read()
-
-    # Safely write the changed content, if found in the file
-    with open(os.path.join(html_template_path, "redirect.html"), "w") as f:
-        # replace addon name in html template
-        s = s.replace("${ta.name}", ta_name.lower())
-        # replace addon version in html template
-        s = s.replace("${ta.version}", ta_version)
-        f.write(s)
-
-
 def _modify_and_replace_token_for_oauth_templates(
     ta_name: str, global_config: global_config_lib.GlobalConfig, outputdir: str
 ):
@@ -173,8 +130,15 @@ def _modify_and_replace_token_for_oauth_templates(
         outputdir, ta_name, "appserver", "templates", "redirect.html"
     )
 
-    if _is_oauth_configured(global_config.tabs):
-        _replace_oauth_html_template_token(ta_name, global_config.version, outputdir)
+    if global_config.has_oauth():
+        html_template_path = os.path.join(outputdir, ta_name, "appserver", "templates")
+        with open(os.path.join(html_template_path, "redirect.html")) as f:
+            s = f.read()
+
+        with open(os.path.join(html_template_path, "redirect.html"), "w") as f:
+            s = s.replace("${ta.name}", ta_name.lower())
+            s = s.replace("${ta.version}", global_config.version)
+            f.write(s)
 
         redirect_js_dest = (
             os.path.join(outputdir, ta_name, "appserver", "static", "js", "build", "")
@@ -208,7 +172,6 @@ def _modify_and_replace_token_for_oauth_templates(
             addon_redirect_xml_file.write(addon_redirect_xml_content)
         os.rename(redirect_js_src, redirect_js_dest)
         os.rename(redirect_html_src, redirect_html_dest)
-    # if oauth is not configured remove the extra template
     else:
         os.remove(redirect_html_src)
         os.remove(redirect_js_src)

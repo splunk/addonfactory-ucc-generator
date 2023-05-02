@@ -119,3 +119,11 @@ class GlobalConfig:
 
     def has_alerts(self) -> bool:
         return bool(self.alerts)
+
+    def has_oauth(self) -> bool:
+        for tab in self.tabs:
+            if tab["name"] == "account":
+                for entity in tab["entity"]:
+                    if entity["type"] == "oauth":
+                        return True
+        return False
