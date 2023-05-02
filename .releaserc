@@ -69,13 +69,13 @@
       [
         "@semantic-release/changelog",
         {
-          "changelogFile": "CHANGELOG.md"
+          "changelogFile": "docs/CHANGELOG.md"
         }
       ],
       [
         "@semantic-release/git",
         {
-          "assets": ["NOTICE", "CHANGELOG.md", "pyproject.toml", "splunk_add_on_ucc_framework/__init__.py"],
+          "assets": ["NOTICE", "docs/CHANGELOG.md", "pyproject.toml", "splunk_add_on_ucc_framework/__init__.py"],
           "message": "chore(release): ${nextRelease.version}\n\n${nextRelease.notes} [ci skip]",
         },
       ],
