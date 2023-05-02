@@ -57,39 +57,11 @@ from splunk_add_on_ucc_framework.commands.openapi_generator import (
 
 logger = logging.getLogger("ucc_gen")
 
-PARENT_DIR = ".."
 internal_root_dir = os.path.dirname(os.path.dirname(__file__))
 # nosemgrep: splunk.autoescape-disabled, python.jinja2.security.audit.autoescape-disabled.autoescape-disabled
 j2_env = Environment(
     loader=FileSystemLoader(os.path.join(internal_root_dir, "templates"))
 )
-
-
-def _recursive_overwrite(src, dest, ignore_list=None):
-    """
-    Method to copy from src to dest recursively.
-
-    Args:
-        src (str): Source of copy
-        dest (str): Destination to copy
-        ignore_list (list): List of files/folder to ignore while copying
-    """
-
-    if os.path.isdir(src):
-        if not os.path.isdir(dest):
-            os.makedirs(dest)
-        files = os.listdir(src)
-        for f in files:
-            if not ignore_list or not os.path.join(dest, f) in ignore_list:
-                _recursive_overwrite(
-                    os.path.join(src, f), os.path.join(dest, f), ignore_list
-                )
-            else:
-                logger.info(f"Excluding : {os.path.join(dest, f)}")
-    else:
-        if os.path.exists(dest):
-            os.remove(dest)
-        shutil.copy(src, dest)
 
 
 def _generate_rest(
@@ -251,24 +223,27 @@ def _make_modular_alerts(
         generate_alerts(internal_root_dir, outputdir, envs)
 
 
-def _get_ignore_list(ta_name, path):
+def _get_ignore_list(addon_name: str, ucc_ignore_path: str, output_directory: str):
     """
     Return path of files/folders to be removed.
 
     Args:
-        ta_name (str): Name of TA.
-        path (str): Path of '.uccignore'.
+        addon_name: Add-on name.
+        ucc_ignore_path: Path to '.uccignore'.
+        output_directory: Output directory path.
 
     Returns:
         list: List of paths to be removed from output directory.
     """
-    if not os.path.exists(path):
+    if not os.path.exists(ucc_ignore_path):
         return []
     else:
-        with open(path) as ignore_file:
+        with open(ucc_ignore_path) as ignore_file:
             ignore_list = ignore_file.readlines()
         ignore_list = [
-            (os.path.join("output", ta_name, _get_os_path(path))).strip()
+            (
+                os.path.join(output_directory, addon_name, utils.get_os_path(path))
+            ).strip()
             for path in ignore_list
         ]
         return ignore_list
@@ -294,25 +269,6 @@ def _remove_listed_files(ignore_list):
                     path
                 )
             )
-
-
-def _get_os_path(path):
-    """
-    Returns a path which will be os compatible.
-
-    Args:
-        path (str): Path in string
-
-    Return:
-        string: Path which will be os compatible.
-    """
-
-    if "\\\\" in path:
-        path = path.replace("\\\\", os.sep)
-    else:
-        path = path.replace("\\", os.sep)
-    path = path.replace("/", os.sep)
-    return path.strip(os.sep)
 
 
 def generate_data_ui(
@@ -377,6 +333,25 @@ def _get_addon_version(addon_version: Optional[str]) -> str:
     return addon_version.strip()
 
 
+def _get_app_manifest(source: str) -> app_manifest_lib.AppManifest:
+    app_manifest_path = os.path.abspath(
+        os.path.join(source, app_manifest_lib.APP_MANIFEST_FILE_NAME),
+    )
+    with open(app_manifest_path) as manifest_file:
+        app_manifest_content = manifest_file.read()
+    app_manifest = app_manifest_lib.AppManifest()
+    try:
+        app_manifest.read(app_manifest_content)
+        return app_manifest
+    except app_manifest_lib.AppManifestFormatException:
+        logger.error(
+            f"Manifest file @ {app_manifest_path} has invalid format.\n"
+            f"Please refer to {app_manifest_lib.APP_MANIFEST_WEBSITE}.\n"
+            f'Lines with comments are supported if they start with "#".\n'
+        )
+        sys.exit(1)
+
+
 def generate(
     source: str,
     config_path: Optional[str] = None,
@@ -395,28 +370,16 @@ def generate(
     shutil.rmtree(os.path.join(output_directory), ignore_errors=True)
     os.makedirs(os.path.join(output_directory))
     logger.info(f"Cleaned out directory {output_directory}")
-    app_manifest_path = os.path.abspath(
-        os.path.join(source, app_manifest_lib.APP_MANIFEST_FILE_NAME),
-    )
-    with open(app_manifest_path) as manifest_file:
-        app_manifest_content = manifest_file.read()
-    app_manifest = app_manifest_lib.AppManifest()
-    try:
-        app_manifest.read(app_manifest_content)
-    except app_manifest_lib.AppManifestFormatException:
-        logger.error(
-            f"Manifest file @ {app_manifest_path} has invalid format.\n"
-            f"Please refer to {app_manifest_lib.APP_MANIFEST_WEBSITE}.\n"
-            f'Lines with comments are supported if they start with "#".\n'
-        )
-        sys.exit(1)
+    app_manifest = _get_app_manifest(source)
     ta_name = app_manifest.get_addon_name()
     if not config_path:
         is_global_config_yaml = False
-        config_path = os.path.abspath(os.path.join(source, "..", "globalConfig.json"))
+        config_path = os.path.abspath(
+            os.path.join(source, os.pardir, "globalConfig.json")
+        )
         if not os.path.isfile(config_path):
             config_path = os.path.abspath(
-                os.path.join(source, "..", "globalConfig.yaml")
+                os.path.join(source, os.pardir, "globalConfig.yaml")
             )
             is_global_config_yaml = True
     else:
@@ -444,7 +407,7 @@ def generate(
         scheme = global_config_builder_schema.GlobalConfigBuilderSchema(
             global_config, j2_env
         )
-        _recursive_overwrite(
+        utils.recursive_overwrite(
             os.path.join(internal_root_dir, "package"),
             os.path.join(output_directory, ta_name),
         )
@@ -522,12 +485,14 @@ def generate(
         )
 
     ignore_list = _get_ignore_list(
-        ta_name, os.path.abspath(os.path.join(source, PARENT_DIR, ".uccignore"))
+        ta_name,
+        os.path.abspath(os.path.join(source, os.pardir, ".uccignore")),
+        output_directory,
     )
     _remove_listed_files(ignore_list)
     if ignore_list:
         logger.info(f"Removed {ignore_list} files")
-    _recursive_overwrite(source, os.path.join(output_directory, ta_name))
+    utils.recursive_overwrite(source, os.path.join(output_directory, ta_name))
     logger.info("Copied package directory")
 
     default_meta_conf_path = os.path.join(
@@ -567,17 +532,17 @@ def generate(
     app_conf.write(output_app_conf_path)
     logger.info(f"Updated {app_conf_lib.APP_CONF_FILE_NAME} file in the output folder")
 
-    license_dir = os.path.abspath(os.path.join(source, PARENT_DIR, "LICENSES"))
+    license_dir = os.path.abspath(os.path.join(source, os.pardir, "LICENSES"))
     if os.path.exists(license_dir):
         logger.info("Copy LICENSES directory")
-        _recursive_overwrite(
+        utils.recursive_overwrite(
             license_dir, os.path.join(output_directory, ta_name, "LICENSES")
         )
 
     if os.path.exists(
-        os.path.abspath(os.path.join(source, PARENT_DIR, "additional_packaging.py"))
+        os.path.abspath(os.path.join(source, os.pardir, "additional_packaging.py"))
     ):
-        sys.path.insert(0, os.path.abspath(os.path.join(source, PARENT_DIR)))
+        sys.path.insert(0, os.path.abspath(os.path.join(source, os.pardir)))
         from additional_packaging import additional_packaging
 
         additional_packaging(ta_name)
