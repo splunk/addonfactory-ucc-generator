@@ -45,8 +45,8 @@ def generate_alerts(internal_source_dir: str, output_dir: str, envs):
     output_content = {}
     global_settings = envs["global_settings"]
 
-    _copy_alert_icon_to_output(internal_source_dir, output_dir, envs["short_name"])
-    package_dir = os.path.join(output_dir, envs["short_name"])
+    _copy_alert_icon_to_output(internal_source_dir, output_dir, envs["product_id"])
+    package_dir = os.path.join(output_dir, envs["product_id"])
 
     conf_return = generate_alert_actions_conf(
         input_setting=envs["schema.content"],
