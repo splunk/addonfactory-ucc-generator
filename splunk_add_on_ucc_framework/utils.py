@@ -15,12 +15,34 @@
 #
 import json
 import os
+import shutil
 from typing import Any, Dict
 
 import dunamai
 import yaml
 
 from splunk_add_on_ucc_framework import exceptions
+
+
+def recursive_overwrite(src: str, dest: str):
+    """
+    Method to copy from src to dest recursively.
+
+    Args:
+        src (str): Source of copy
+        dest (str): Destination to copy
+    """
+    # TODO: move to shutil.copytree("src", "dst", dirs_exist_ok=True) when Python 3.8+.
+    if os.path.isdir(src):
+        if not os.path.isdir(dest):
+            os.makedirs(dest)
+        files = os.listdir(src)
+        for f in files:
+            recursive_overwrite(os.path.join(src, f), os.path.join(dest, f))
+    else:
+        if os.path.exists(dest):
+            os.remove(dest)
+        shutil.copy(src, dest)
 
 
 def get_os_path(path: str) -> str:

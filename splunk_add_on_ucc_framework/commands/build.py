@@ -64,33 +64,6 @@ j2_env = Environment(
 )
 
 
-def _recursive_overwrite(src, dest, ignore_list=None):
-    """
-    Method to copy from src to dest recursively.
-
-    Args:
-        src (str): Source of copy
-        dest (str): Destination to copy
-        ignore_list (list): List of files/folder to ignore while copying
-    """
-
-    if os.path.isdir(src):
-        if not os.path.isdir(dest):
-            os.makedirs(dest)
-        files = os.listdir(src)
-        for f in files:
-            if not ignore_list or not os.path.join(dest, f) in ignore_list:
-                _recursive_overwrite(
-                    os.path.join(src, f), os.path.join(dest, f), ignore_list
-                )
-            else:
-                logger.info(f"Excluding : {os.path.join(dest, f)}")
-    else:
-        if os.path.exists(dest):
-            os.remove(dest)
-        shutil.copy(src, dest)
-
-
 def _generate_rest(
     ta_name,
     scheme: global_config_builder_schema.GlobalConfigBuilderSchema,
@@ -427,7 +400,7 @@ def generate(
         scheme = global_config_builder_schema.GlobalConfigBuilderSchema(
             global_config, j2_env
         )
-        _recursive_overwrite(
+        utils.recursive_overwrite(
             os.path.join(internal_root_dir, "package"),
             os.path.join(output_directory, ta_name),
         )
@@ -512,7 +485,7 @@ def generate(
     _remove_listed_files(ignore_list)
     if ignore_list:
         logger.info(f"Removed {ignore_list} files")
-    _recursive_overwrite(source, os.path.join(output_directory, ta_name))
+    utils.recursive_overwrite(source, os.path.join(output_directory, ta_name))
     logger.info("Copied package directory")
 
     default_meta_conf_path = os.path.join(
@@ -555,7 +528,7 @@ def generate(
     license_dir = os.path.abspath(os.path.join(source, os.pardir, "LICENSES"))
     if os.path.exists(license_dir):
         logger.info("Copy LICENSES directory")
-        _recursive_overwrite(
+        utils.recursive_overwrite(
             license_dir, os.path.join(output_directory, ta_name, "LICENSES")
         )
 
