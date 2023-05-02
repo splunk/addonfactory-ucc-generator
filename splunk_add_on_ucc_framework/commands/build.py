@@ -333,36 +333,6 @@ def _remove_listed_files(ignore_list):
             )
 
 
-def _handle_no_inputs(ta_name, outputdir):
-    """
-    Handle for configuration without input page.
-
-    Args:
-        ta_name (str): Name of TA.
-        outputdir (str): output directory.
-    """
-    file_remove_list = [
-        os.path.join(
-            outputdir, ta_name, "default", "data", "ui", "views", "inputs.xml"
-        ),
-        os.path.join(outputdir, ta_name, "appserver", "static", "css", "inputs.css"),
-        os.path.join(
-            outputdir, ta_name, "appserver", "static", "css", "createInput.css"
-        ),
-    ]
-    for fl in file_remove_list:
-        try:
-            # TODO: do we want to make a very-very minor breaking change by
-            #  just removing this function at all?
-            # No Splunk-supported add-ons have those files mentioned above.
-            # logger.warning(
-            #     f"Found unsupported file, please remove it. Removing file @ {fl}."
-            # )
-            os.remove(fl)
-        except OSError:
-            pass
-
-
 def _get_os_path(path):
     """
     Returns a path which will be os compatible.
@@ -553,8 +523,6 @@ def generate(
         )
         if global_config.has_inputs():
             _add_modular_input(ta_name, global_config, output_directory)
-        else:
-            _handle_no_inputs(ta_name, output_directory)
         _make_modular_alerts(ta_name, global_config, output_directory)
 
         conf_file_names = []
