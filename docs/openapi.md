@@ -62,7 +62,7 @@ Are you sure you added `-k` parameter to curl command?
 
 * Unauthorized
 
-Make sure you clicked Authorize button, gave username and password and clikced Authorize
+Make sure you clicked Authorize button, gave username and password and clicked Authorize
 
 ## How to generate Python client and use it?
 
