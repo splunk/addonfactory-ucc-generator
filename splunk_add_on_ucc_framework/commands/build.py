@@ -57,7 +57,6 @@ from splunk_add_on_ucc_framework.commands.openapi_generator import (
 
 logger = logging.getLogger("ucc_gen")
 
-PARENT_DIR = ".."
 internal_root_dir = os.path.dirname(os.path.dirname(__file__))
 # nosemgrep: splunk.autoescape-disabled, python.jinja2.security.audit.autoescape-disabled.autoescape-disabled
 j2_env = Environment(
@@ -507,7 +506,7 @@ def generate(
 
     ignore_list = _get_ignore_list(
         ta_name,
-        os.path.abspath(os.path.join(source, PARENT_DIR, ".uccignore")),
+        os.path.abspath(os.path.join(source, os.pardir, ".uccignore")),
         output_directory,
     )
     _remove_listed_files(ignore_list)
@@ -553,7 +552,7 @@ def generate(
     app_conf.write(output_app_conf_path)
     logger.info(f"Updated {app_conf_lib.APP_CONF_FILE_NAME} file in the output folder")
 
-    license_dir = os.path.abspath(os.path.join(source, PARENT_DIR, "LICENSES"))
+    license_dir = os.path.abspath(os.path.join(source, os.pardir, "LICENSES"))
     if os.path.exists(license_dir):
         logger.info("Copy LICENSES directory")
         _recursive_overwrite(
@@ -561,9 +560,9 @@ def generate(
         )
 
     if os.path.exists(
-        os.path.abspath(os.path.join(source, PARENT_DIR, "additional_packaging.py"))
+        os.path.abspath(os.path.join(source, os.pardir, "additional_packaging.py"))
     ):
-        sys.path.insert(0, os.path.abspath(os.path.join(source, PARENT_DIR)))
+        sys.path.insert(0, os.path.abspath(os.path.join(source, os.pardir)))
         from additional_packaging import additional_packaging
 
         additional_packaging(ta_name)
