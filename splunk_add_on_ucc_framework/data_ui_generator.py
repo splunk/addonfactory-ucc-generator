@@ -13,6 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+# The autofix suggestion mentioned in the pipeline does not work actually.
+# It proposed to replace `xml` with `defusedxml` and it does not have such
+# import.
+# nosemgrep: splunk.use-defused-xml
 from xml.etree import ElementTree as ET
 from defusedxml import minidom
 
@@ -24,15 +28,14 @@ def _pretty_print_xml(string: str) -> str:
     return minidom.parseString(string).toprettyxml(indent="    ")
 
 
-def generate_nav_default_xml(include_inputs: bool, include_configuration: bool) -> str:
+def generate_nav_default_xml(include_inputs: bool) -> str:
     """
     Generates `default/data/ui/nav/default.xml` file.
     """
     nav = ET.Element("nav")
     if include_inputs:
         ET.SubElement(nav, "view", attrib={"name": "inputs"})
-    if include_configuration:
-        ET.SubElement(nav, "view", attrib={"name": "configuration", "default": "true"})
+    ET.SubElement(nav, "view", attrib={"name": "configuration", "default": "true"})
     ET.SubElement(nav, "view", attrib={"name": "search"})
     nav_as_string = ET.tostring(nav, encoding="unicode")
     return _pretty_print_xml(nav_as_string)

@@ -404,7 +404,6 @@ def generate_data_ui(
     ) as default_xml_file:
         default_xml_content = data_ui_generator.generate_nav_default_xml(
             include_inputs=include_inputs,
-            include_configuration=True,
         )
         default_xml_file.write(default_xml_content)
     with open(
