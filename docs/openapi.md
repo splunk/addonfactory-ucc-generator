@@ -69,7 +69,7 @@ Make sure you clicked Authorize button, gave username and password and clicked A
 ### Prerequisites
 
 * Docker running
-* python installed
+* Python installed
 * Splunk with your add-on installed
 
 ### Instruction
