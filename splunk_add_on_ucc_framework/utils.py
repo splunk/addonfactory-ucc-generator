@@ -14,12 +14,32 @@
 # limitations under the License.
 #
 import json
+import os
 from typing import Any, Dict
 
 import dunamai
 import yaml
 
 from splunk_add_on_ucc_framework import exceptions
+
+
+def get_os_path(path: str) -> str:
+    """
+    Returns a path which will be os compatible.
+
+    Args:
+        path (str): Path in string
+
+    Return:
+        string: Path which will be os compatible.
+    """
+
+    if "\\\\" in path:
+        path = path.replace("\\\\", os.sep)
+    else:
+        path = path.replace("\\", os.sep)
+    path = path.replace("/", os.sep)
+    return path.strip(os.sep)
 
 
 def dump_json_config(config: Dict[Any, Any], file_path: str):

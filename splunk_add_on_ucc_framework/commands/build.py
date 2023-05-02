@@ -251,24 +251,27 @@ def _make_modular_alerts(
         generate_alerts(internal_root_dir, outputdir, envs)
 
 
-def _get_ignore_list(ta_name, path):
+def _get_ignore_list(addon_name: str, ucc_ignore_path: str, output_directory: str):
     """
     Return path of files/folders to be removed.
 
     Args:
-        ta_name (str): Name of TA.
-        path (str): Path of '.uccignore'.
+        addon_name: Add-on name.
+        ucc_ignore_path: Path to '.uccignore'.
+        output_directory: Output directory path.
 
     Returns:
         list: List of paths to be removed from output directory.
     """
-    if not os.path.exists(path):
+    if not os.path.exists(ucc_ignore_path):
         return []
     else:
-        with open(path) as ignore_file:
+        with open(ucc_ignore_path) as ignore_file:
             ignore_list = ignore_file.readlines()
         ignore_list = [
-            (os.path.join("output", ta_name, _get_os_path(path))).strip()
+            (
+                os.path.join(output_directory, addon_name, utils.get_os_path(path))
+            ).strip()
             for path in ignore_list
         ]
         return ignore_list
@@ -294,25 +297,6 @@ def _remove_listed_files(ignore_list):
                     path
                 )
             )
-
-
-def _get_os_path(path):
-    """
-    Returns a path which will be os compatible.
-
-    Args:
-        path (str): Path in string
-
-    Return:
-        string: Path which will be os compatible.
-    """
-
-    if "\\\\" in path:
-        path = path.replace("\\\\", os.sep)
-    else:
-        path = path.replace("\\", os.sep)
-    path = path.replace("/", os.sep)
-    return path.strip(os.sep)
 
 
 def generate_data_ui(
@@ -522,7 +506,9 @@ def generate(
         )
 
     ignore_list = _get_ignore_list(
-        ta_name, os.path.abspath(os.path.join(source, PARENT_DIR, ".uccignore"))
+        ta_name,
+        os.path.abspath(os.path.join(source, PARENT_DIR, ".uccignore")),
+        output_directory,
     )
     _remove_listed_files(ignore_list)
     if ignore_list:
