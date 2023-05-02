@@ -33,9 +33,7 @@ logger = logging.getLogger("ucc_gen")
 
 
 class AlertActionsPyBase:
-    def __init__(
-        self, input_setting=None, package_path=None, global_settings=None, **kwargs
-    ):
+    def __init__(self, input_setting=None, package_path=None, global_settings=None):
         self._all_setting = input_setting
         self._package_path = package_path
         self._global_settings = global_settings
@@ -94,10 +92,7 @@ class AlertActionsPyGenerator(AlertActionsPyBase):
         self,
         input_setting=None,
         package_path=None,
-        template_py=None,
-        template_helper_py=None,
         global_settings=None,
-        **kwargs
     ):
         if not input_setting:
             msg = 'required_args="input_setting""'
@@ -105,16 +100,12 @@ class AlertActionsPyGenerator(AlertActionsPyBase):
         super().__init__(
             input_setting=input_setting,
             package_path=package_path,
-            template_py=template_py,
             global_settings=global_settings,
-            **kwargs
         )
 
         self._template = None
-        self._template_py = template_py or AlertActionsPyGenerator.DEFAULT_TEMPLATE_PY
-        self._template_helper_py = (
-            template_helper_py or AlertActionsPyGenerator.DEFAULT_TEMPLATE_HELPER_PY
-        )
+        self._template_py = AlertActionsPyGenerator.DEFAULT_TEMPLATE_PY
+        self._template_helper_py = AlertActionsPyGenerator.DEFAULT_TEMPLATE_HELPER_PY
         logger.info("template_py=%s", self._template_py)
         self._output = {}
 
@@ -207,13 +198,12 @@ class AlertActionsPyGenerator(AlertActionsPyBase):
 
 
 def generate_alert_actions_py_files(
-    input_setting=None, package_path=None, global_settings=None, **kwargs
+    input_setting=None, package_path=None, global_settings=None
 ):
     py_gen = AlertActionsPyGenerator(
         input_setting=input_setting,
         package_path=package_path,
         global_settings=global_settings,
-        **kwargs
     )
     py_gen.handle()
     return py_gen._output

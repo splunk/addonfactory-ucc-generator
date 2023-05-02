@@ -44,7 +44,6 @@ class AlertActionsConfBase:
         self,
         input_setting=None,
         package_path=None,
-        **kwargs,
     ):
         self._alert_conf_name = "alert_actions.conf"
         self._alert_spec_name = "alert_actions.conf.spec"
@@ -99,7 +98,6 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
         self,
         input_setting=None,
         package_path=None,
-        default_settings_file=None,
         **kwargs,
     ):
         if not input_setting:
@@ -109,8 +107,6 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
         super().__init__(
             input_setting=input_setting,
             package_path=package_path,
-            default_settings_file=default_settings_file,
-            **kwargs,
         )
 
         self._html_fields = [

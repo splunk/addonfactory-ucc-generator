@@ -81,9 +81,6 @@ class AlertHtmlGenerator(AlertHtmlBase):
         self,
         input_setting=None,
         package_path=None,
-        html_template=None,
-        html_home=None,
-        html_theme=None,
     ):
         super().__init__(input_setting, package_path)
         if not input_setting:
@@ -91,9 +88,9 @@ class AlertHtmlGenerator(AlertHtmlBase):
             raise aae.AlertActionsInValidArgs(msg)
 
         self._alert_actions_setting = input_setting[ac.MODULAR_ALERTS]
-        self._html_template = html_template or AlertHtmlGenerator.DEFAULT_TEMPLATE_HTML
-        self._html_home = html_home or AlertHtmlGenerator.DEFAULT_HOME_HTML
-        self._temp_obj = AlertActionsTemplateMgr(html_theme=html_theme)
+        self._html_template = AlertHtmlGenerator.DEFAULT_TEMPLATE_HTML
+        self._html_home = AlertHtmlGenerator.DEFAULT_HOME_HTML
+        self._temp_obj = AlertActionsTemplateMgr()
         self._html_theme = self._temp_obj.get_html_lookup_dir()
         logger.info(
             'html_theme="%s" html_template="%s", html_home="%s"',
@@ -133,22 +130,10 @@ class AlertHtmlGenerator(AlertHtmlBase):
         logger.info("Finished generating alert actions html files")
 
 
-def generate_alert_actions_html_files(
-    input_setting=None, package_path=None, html_setting=None
-):
-    html_template = None
-    html_home = None
-    html_theme = None
-    if html_setting:
-        html_template = html_setting.get("html_template")
-        html_home = html_setting.get("html_home")
-        html_theme = html_setting.get("html_theme")
+def generate_alert_actions_html_files(input_setting=None, package_path=None):
     html_gen = AlertHtmlGenerator(
         input_setting=input_setting,
         package_path=package_path,
-        html_template=html_template,
-        html_home=html_home,
-        html_theme=html_theme,
     )
     html_gen.handle()
     return html_gen._output

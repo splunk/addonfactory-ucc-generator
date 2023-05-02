@@ -1,4 +1,6 @@
-from splunk_add_on_ucc_framework.normalize import transform_params
+from splunk_add_on_ucc_framework.commands.modular_alert_builder.normalize import (
+    transform_params,
+)
 
 
 def test_normalize_type_dropdownlist_splunk_search_wo_options():

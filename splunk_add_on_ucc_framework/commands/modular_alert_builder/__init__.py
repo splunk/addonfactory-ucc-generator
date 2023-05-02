@@ -43,35 +43,26 @@ def _copy_alert_icon_to_output(
 
 def generate_alerts(internal_source_dir: str, output_dir: str, envs):
     output_content = {}
-    conf_return = None
-    html_return = None
-    py_return = None
     global_settings = envs["global_settings"]
 
-    _copy_alert_icon_to_output(internal_source_dir, output_dir, envs["product_id"])
-    package_dir = os.path.join(output_dir, envs["product_id"])
+    _copy_alert_icon_to_output(internal_source_dir, output_dir, envs["short_name"])
+    package_dir = os.path.join(output_dir, envs["short_name"])
 
-    build_components = envs["build_components"]
-    if build_components["conf"]:
-        conf_return = generate_alert_actions_conf(
-            input_setting=envs["schema.content"],
-            package_path=package_dir,
-            global_settings=global_settings,
-        )
+    conf_return = generate_alert_actions_conf(
+        input_setting=envs["schema.content"],
+        package_path=package_dir,
+    )
 
-    if build_components["html"]:
-        html_return = generate_alert_actions_html_files(
-            input_setting=envs["schema.content"],
-            package_path=package_dir,
-            html_setting=envs["html_setting"],
-        )
+    html_return = generate_alert_actions_html_files(
+        input_setting=envs["schema.content"],
+        package_path=package_dir,
+    )
 
-    if build_components["py"]:
-        py_return = generate_alert_actions_py_files(
-            input_setting=envs["schema.content"],
-            package_path=package_dir,
-            global_settings=global_settings,
-        )
+    py_return = generate_alert_actions_py_files(
+        input_setting=envs["schema.content"],
+        package_path=package_dir,
+        global_settings=global_settings,
+    )
 
     if conf_return:
         output_content["conf"] = conf_return

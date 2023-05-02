@@ -111,8 +111,6 @@ def form_main_dict(alert, product_id, short_name):
         "product_id": product_id,
         "short_name": short_name,
         "global_settings": "",
-        "html_setting": None,
-        "build_components": {"conf": "True", "py": "True", "html": "True"},
         "schema.content": {
             "product_id": product_id,
             "short_name": short_name,
@@ -125,6 +123,9 @@ def normalize(schema_content, product_id, short_name):
     """
     Process the globalConfig alert schema to generate structure required by add-on alert generator
     """
+    schema_content = {
+        "alerts": schema_content,
+    }
     result = copy.deepcopy(schema_content)
     iterdict(schema_content, result)
     for alert in result["alerts"]:
