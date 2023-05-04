@@ -5,4 +5,4 @@ omit =
     splunk_add_on_ucc_framework/commands/modular_alert_builder/arf_template/alert_action_helper.py.template
 
 [report]
-fail_under = 60
+fail_under = 65
