@@ -63,13 +63,6 @@ def test_generate_alert_action(tmp_path):
                             },
                         },
                         {
-                            "label": "Scripted Endpoint",
-                            "required": False,
-                            "format_type": "text",
-                            "name": "scripted_endpoint",
-                            "help_string": "Scripted REST endpoint to create incident at. Format: /api/<API namespace>/<API ID>/<Relative path>. Default: /api/now/incident",  # noqa: E501
-                        },
-                        {
                             "label": "Action:",
                             "required": True,
                             "format_type": "radio",
