@@ -15,9 +15,7 @@
 #
 import logging
 import os
-import os.path as op
 from os.path import basename as bn
-from shutil import copy
 
 import addonfactory_splunk_conf_parser_lib as conf_parser
 
@@ -108,37 +106,3 @@ def merge_conf_file(src_file, dst_file, merge_mode="stanza_overwrite"):
 
     with open(dst_file, "w") as df:
         parser.write(df)
-
-
-def merge(src, dst, no_deny_list=True):
-    if op.isfile(src):
-        return
-
-    src_files = os.listdir(src)
-    dst_files = os.listdir(dst)
-    merge_mode = "stanza_overwrite"
-
-    for file in src_files:
-        f_path = op.join(src, file)
-        if op.isfile(f_path):
-            if no_deny_list and file in merge_deny_list:
-                continue
-
-            if file.endswith("pyo") or file.endswith("pyc"):
-                continue
-            if file in dst_files and (
-                file.endswith(".conf") or file.endswith(".conf.spec")
-            ):
-                if file in list(merge_mode_config.keys()):
-                    merge_mode = merge_mode_config[file]
-                merge_conf_file(f_path, op.join(dst, file), merge_mode)
-            else:
-                copy(f_path, dst)
-        elif op.isdir(f_path):
-            if file.startswith("."):
-                continue
-            if file not in dst_files:
-                os.makedirs(op.join(dst, file))
-            merge(f_path, op.join(dst, file))
-        else:
-            raise Exception(f"Unsupported file type {f_path}")

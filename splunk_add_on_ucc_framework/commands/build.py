@@ -38,8 +38,7 @@ from splunk_add_on_ucc_framework import app_manifest as app_manifest_lib
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 from splunk_add_on_ucc_framework import data_ui_generator
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
-    normalize,
-    generate_alerts,
+    builder as alert_builder,
 )
 from splunk_add_on_ucc_framework.commands.rest_builder import (
     global_config_builder_schema,
@@ -429,12 +428,9 @@ def generate(
             _add_modular_input(ta_name, global_config, output_directory)
         if global_config.has_alerts():
             logger.info("Generating alerts code")
-            envs = normalize.normalize(
-                global_config.alerts,
-                ta_name,
-                global_config.namespace,
+            alert_builder.generate_alerts(
+                global_config, ta_name, internal_root_dir, output_directory
             )
-            generate_alerts(internal_root_dir, output_directory, envs)
 
         conf_file_names = []
         conf_file_names.extend(list(scheme.settings_conf_file_names))
