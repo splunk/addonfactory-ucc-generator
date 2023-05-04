@@ -9,47 +9,6 @@ def process_event(helper, *args, **kwargs):
     # are updated.
 
     [sample_code_macro:start]
-    {% if global_settings %}
-    {% for type, setting in global_settings.items() %}
-        {% if type == 'log_settings' %}
-
-    # The following example gets and sets the log level
-    helper.set_log_level(helper.log_level)
-        {% elif type == 'proxy_settings' %}
-
-    # The following example sends rest requests to some endpoint
-    # response is a response object in python requests library
-    response = helper.send_http_request("http://www.splunk.com", "GET", parameters=None,
-                                        payload=None, headers=None, cookies=None, verify=True, cert=None, timeout=None, use_proxy=True)
-    # get the response headers
-    r_headers = response.headers
-    # get the response body as text
-    r_text = response.text
-    # get response body as json. If the body text is not a json string, raise a ValueError
-    r_json = response.json()
-    # get response cookies
-    r_cookies = response.cookies
-    # get redirect history
-    historical_responses = response.history
-    # get response status code
-    r_status = response.status_code
-    # check the response status, if the status is not sucessful, raise requests.HTTPError
-    response.raise_for_status()
-
-        {% elif type == 'credential_settings' %}
-
-    # The following example gets account information
-    user_account = helper.get_user_credential("<account_name>")
-        {% elif type == 'customized_settings' and setting %}
-
-    # The following example gets the setup parameters and prints them to the log
-             {% for param in setting %}
-    {{ param.name }} = helper.get_global_setting("{{ param.name }}")
-    helper.log_info("{{ param.name }}={}".format({{ param.name }}))
-             {% endfor %}
-         {% endif %}
-    {% endfor %}
-    {% endif %}
     {% if mod_alert.get("parameters") %}
 
     # The following example gets the alert action parameters and prints them to the log

@@ -110,7 +110,6 @@ def form_main_dict(alert, product_id, short_name):
     return {
         "product_id": product_id,
         "short_name": short_name,
-        "global_settings": "",
         "schema.content": {
             "product_id": product_id,
             "short_name": short_name,

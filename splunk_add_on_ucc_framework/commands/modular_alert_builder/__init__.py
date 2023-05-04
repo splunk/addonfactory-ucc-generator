@@ -31,8 +31,6 @@ logger = logging.getLogger("ucc_gen")
 
 
 def generate_alerts(internal_source_dir: str, output_dir: str, envs):
-    global_settings = envs["global_settings"]
-
     package_dir = os.path.join(output_dir, envs["product_id"])
     shutil.copy(
         os.path.join(internal_source_dir, "static", "alerticon.png"),
@@ -55,6 +53,5 @@ def generate_alerts(internal_source_dir: str, output_dir: str, envs):
     py_gen = alert_actions_py_gen.AlertActionsPyGenerator(
         input_setting=schema_content,
         package_path=package_dir,
-        global_settings=global_settings,
     )
     py_gen.handle()
