@@ -13,8 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-
 import json
 import logging
 import os
@@ -293,11 +291,3 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
                     k,
                     v,
                 )
-
-
-def generate_alert_actions_conf(input_setting=None, package_path=None):
-    obj = AlertActionsConfGeneration(
-        input_setting=input_setting, package_path=package_path
-    )
-    obj.handle()
-    return obj._output

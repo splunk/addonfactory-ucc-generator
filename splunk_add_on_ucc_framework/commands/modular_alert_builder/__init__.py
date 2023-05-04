@@ -17,21 +17,20 @@ import logging
 import os
 import shutil
 
-from splunk_add_on_ucc_framework.commands.modular_alert_builder.alert_actions_conf_gen import (
-    generate_alert_actions_conf,
+from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
+    alert_actions_conf_gen,
 )
-from splunk_add_on_ucc_framework.commands.modular_alert_builder.alert_actions_html_gen import (
-    generate_alert_actions_html_files,
+from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
+    alert_actions_html_gen,
 )
-from splunk_add_on_ucc_framework.commands.modular_alert_builder.alert_actions_py_gen import (
-    generate_alert_actions_py_files,
+from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
+    alert_actions_py_gen,
 )
 
 logger = logging.getLogger("ucc_gen")
 
 
 def generate_alerts(internal_source_dir: str, output_dir: str, envs):
-    output_content = {}
     global_settings = envs["global_settings"]
 
     package_dir = os.path.join(output_dir, envs["product_id"])
@@ -39,28 +38,23 @@ def generate_alerts(internal_source_dir: str, output_dir: str, envs):
         os.path.join(internal_source_dir, "static", "alerticon.png"),
         os.path.join(package_dir, "appserver", "static"),
     )
+    schema_content = envs["schema.content"]
 
-    conf_return = generate_alert_actions_conf(
-        input_setting=envs["schema.content"],
+    conf_gen = alert_actions_conf_gen.AlertActionsConfGeneration(
+        input_setting=schema_content,
         package_path=package_dir,
     )
+    conf_gen.handle()
 
-    html_return = generate_alert_actions_html_files(
-        input_setting=envs["schema.content"],
+    html_gen = alert_actions_html_gen.AlertHtmlGenerator(
+        input_setting=schema_content,
         package_path=package_dir,
     )
+    html_gen.handle()
 
-    py_return = generate_alert_actions_py_files(
-        input_setting=envs["schema.content"],
+    py_gen = alert_actions_py_gen.AlertActionsPyGenerator(
+        input_setting=schema_content,
         package_path=package_dir,
         global_settings=global_settings,
     )
-
-    if conf_return:
-        output_content["conf"] = conf_return
-    if html_return:
-        output_content["html"] = conf_return
-    if py_return:
-        output_content["py"] = py_return
-
-    return output_content
+    py_gen.handle()

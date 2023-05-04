@@ -70,16 +70,6 @@ class AlertActionsPyBase:
             self._package_path, "bin", self._lib_dir, self.get_alert_helper_py_name()
         )
 
-    def get_template_py_files(self):
-        bin_dir = op.join(self._package_path, "bin")
-        return [
-            op.join(bin_dir, self._lib_dir + "_declare.pyc"),
-            op.join(bin_dir, self._lib_dir + "_declare.pyo"),
-            op.join(bin_dir, self._lib_dir, "setup_util_helper.py"),
-            op.join(bin_dir, self._lib_dir, "setup_util_helper.pyc"),
-            op.join(bin_dir, self._lib_dir, "setup_util_helper.pyo"),
-        ]
-
 
 class AlertActionsPyGenerator(AlertActionsPyBase):
     DEFAULT_TEMPLATE_PY = "alert_action.py.template"
@@ -189,15 +179,3 @@ class AlertActionsPyGenerator(AlertActionsPyBase):
                 'operation="Generate py file", alert_action="%s"', alert[ac.SHORT_NAME]
             )
             self.gen_py_file(alert)
-
-
-def generate_alert_actions_py_files(
-    input_setting=None, package_path=None, global_settings=None
-):
-    py_gen = AlertActionsPyGenerator(
-        input_setting=input_setting,
-        package_path=package_path,
-        global_settings=global_settings,
-    )
-    py_gen.handle()
-    return py_gen._output

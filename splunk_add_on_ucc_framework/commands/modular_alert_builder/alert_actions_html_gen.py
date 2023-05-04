@@ -18,6 +18,7 @@ import os
 from os import linesep
 from os import path as op
 from re import search
+from typing import Dict, Any
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -31,11 +32,14 @@ from splunk_add_on_ucc_framework.commands.modular_alert_builder.alert_actions_he
 logger = logging.getLogger("ucc_gen")
 
 
-class AlertHtmlBase:
-    def __init__(self, input_setting=None, package_path=None):
+class AlertHtmlGenerator:
+    def __init__(
+        self,
+        input_setting,
+        package_path,
+    ):
         self._all_setting = input_setting
         self._package_path = package_path
-        self._current_alert = None
         # nosemgrep: splunk.autoescape-disabled, python.jinja2.security.audit.autoescape-disabled.autoescape-disabled
         self._templates = Environment(
             loader=FileSystemLoader(
@@ -52,74 +56,40 @@ class AlertHtmlBase:
             lstrip_blocks=True,
             keep_trailing_newline=True,
         )
+        self._alert_actions_setting = input_setting[ac.MODULAR_ALERTS]
+        self._html_template = self._templates.get_template("mod_alert.html.template")
+        self._html_home = "default.html"
 
-    def get_alert_html_name(self):
-        return self._current_alert[ac.SHORT_NAME] + ".html"
+    def get_alert_html_name(self, alert: Dict[str, Any]) -> str:
+        return alert[ac.SHORT_NAME] + ".html"
 
-    def get_alert_html_path(self):
-        if not self._package_path:
-            return None
-
+    def get_alert_html_path(self, alert: Dict[str, Any]) -> str:
         html_path = op.join(self._package_path, "default", "data", "ui", "alerts")
         if not op.exists(html_path):
             os.makedirs(html_path)
 
-        return op.join(html_path, self.get_alert_html_name())
+        return op.join(html_path, self.get_alert_html_name(alert))
 
-
-class AlertHtmlGenerator(AlertHtmlBase):
-    DEFAULT_TEMPLATE_HTML = "mod_alert.html.template"
-    DEFAULT_HOME_HTML = "default.html"
-
-    def __init__(
-        self,
-        input_setting,
-        package_path=None,
-    ):
-        super().__init__(input_setting, package_path)
-        self._alert_actions_setting = input_setting[ac.MODULAR_ALERTS]
-        self._html_template = AlertHtmlGenerator.DEFAULT_TEMPLATE_HTML
-        self._html_home = AlertHtmlGenerator.DEFAULT_HOME_HTML
-        logger.info(
-            'html_template="%s", html_home="%s"',
-            self._html_template,
-            self._html_home,
-        )
-        self._output = {}
-
-    def handle_one_alert(self, template, one_alert_setting):
-        self._current_alert = one_alert_setting
-        final_form = template.render(
-            mod_alert=self._current_alert, home_page=self._html_home
+    def handle_alert(self, alert: Dict[str, Any]) -> None:
+        rendered = self._html_template.render(
+            mod_alert=alert, home_page=self._html_home
         )
         text = linesep.join(
-            [s for s in final_form.splitlines() if not search(r"^\s*$", s)]
+            [s for s in rendered.splitlines() if not search(r"^\s*$", s)]
         )
 
-        logger.debug(
-            'operation="Write", object_type="File", object="%s"',
-            self.get_alert_html_path(),
-        )
+        logger.info(f"Creating file @ {self.get_alert_html_path(alert)}")
 
         write_file(
-            self.get_alert_html_name(),
-            self.get_alert_html_path(),
+            self.get_alert_html_name(alert),
+            self.get_alert_html_path(alert),
             text,
         )
-        self._output[self._current_alert["short_name"]] = text
 
     def handle(self):
-        template = self._templates.get_template(self._html_template)
-        logger.info("Start to generate alert actions html files")
+        logger.info("Started generating alert actions HTML files")
         for alert in self._alert_actions_setting:
-            self.handle_one_alert(template, alert)
-        logger.info("Finished generating alert actions html files")
-
-
-def generate_alert_actions_html_files(input_setting=None, package_path=None):
-    html_gen = AlertHtmlGenerator(
-        input_setting=input_setting,
-        package_path=package_path,
-    )
-    html_gen.handle()
-    return html_gen._output
+            alert_short_name = alert["short_name"]
+            logger.info(f"Generating HTML file for '{alert_short_name}'")
+            self.handle_alert(alert)
+        logger.info("Finished generating alert actions HTML files")
