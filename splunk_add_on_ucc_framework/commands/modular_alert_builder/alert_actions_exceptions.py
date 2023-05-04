@@ -15,9 +15,5 @@
 #
 
 
-class AlertActionsInValidArgs(Exception):
-    pass
-
-
 class AlertCleaningFormatFailure(Exception):
     pass

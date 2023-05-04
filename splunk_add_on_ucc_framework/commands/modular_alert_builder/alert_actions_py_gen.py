@@ -20,9 +20,6 @@ from os import path as op
 from jinja2 import Environment, FileSystemLoader
 
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
-    alert_actions_exceptions as aae,
-)
-from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
     arf_consts as ac,
 )
 from splunk_add_on_ucc_framework.commands.modular_alert_builder.alert_actions_helper import (
@@ -90,13 +87,10 @@ class AlertActionsPyGenerator(AlertActionsPyBase):
 
     def __init__(
         self,
-        input_setting=None,
+        input_setting,
         package_path=None,
         global_settings=None,
     ):
-        if not input_setting:
-            msg = 'required_args="input_setting""'
-            raise aae.AlertActionsInValidArgs(msg)
         super().__init__(
             input_setting=input_setting,
             package_path=package_path,

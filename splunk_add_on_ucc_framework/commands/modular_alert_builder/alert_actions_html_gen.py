@@ -22,16 +22,10 @@ from re import search
 from jinja2 import Environment, FileSystemLoader
 
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
-    alert_actions_exceptions as aae,
-)
-from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
     arf_consts as ac,
 )
 from splunk_add_on_ucc_framework.commands.modular_alert_builder.alert_actions_helper import (
     write_file,
-)
-from splunk_add_on_ucc_framework.commands.modular_alert_builder.alert_actions_template import (
-    AlertActionsTemplateMgr,
 )
 
 logger = logging.getLogger("ucc_gen")
@@ -79,22 +73,15 @@ class AlertHtmlGenerator(AlertHtmlBase):
 
     def __init__(
         self,
-        input_setting=None,
+        input_setting,
         package_path=None,
     ):
         super().__init__(input_setting, package_path)
-        if not input_setting:
-            msg = 'required_args="input_setting"'
-            raise aae.AlertActionsInValidArgs(msg)
-
         self._alert_actions_setting = input_setting[ac.MODULAR_ALERTS]
         self._html_template = AlertHtmlGenerator.DEFAULT_TEMPLATE_HTML
         self._html_home = AlertHtmlGenerator.DEFAULT_HOME_HTML
-        self._temp_obj = AlertActionsTemplateMgr()
-        self._html_theme = self._temp_obj.get_html_lookup_dir()
         logger.info(
-            'html_theme="%s" html_template="%s", html_home="%s"',
-            self._html_theme,
+            'html_template="%s", html_home="%s"',
             self._html_template,
             self._html_home,
         )
@@ -122,7 +109,6 @@ class AlertHtmlGenerator(AlertHtmlBase):
         self._output[self._current_alert["short_name"]] = text
 
     def handle(self):
-        logger.info("html_theme=%s", self._html_theme)
         template = self._templates.get_template(self._html_template)
         logger.info("Start to generate alert actions html files")
         for alert in self._alert_actions_setting:
