@@ -37,9 +37,8 @@ from splunk_add_on_ucc_framework import server_conf as server_conf_lib
 from splunk_add_on_ucc_framework import app_manifest as app_manifest_lib
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 from splunk_add_on_ucc_framework import data_ui_generator
-from splunk_add_on_ucc_framework import normalize
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
-    generate_alerts,
+    builder as alert_builder,
 )
 from splunk_add_on_ucc_framework.commands.rest_builder import (
     global_config_builder_schema,
@@ -198,29 +197,6 @@ def _add_modular_input(
 
         with open(input_default, "w") as configfile:
             config.write(configfile)
-
-
-def _make_modular_alerts(
-    ta_name: str, global_config: global_config_lib.GlobalConfig, outputdir: str
-):
-    """
-    Generate the alert schema with required structure.
-
-    Args:
-        ta_name: Add-on name.
-        global_config: Object representing globalConfig.
-        outputdir: Output directory.
-    """
-    if global_config.has_alerts():
-        envs = normalize.normalize(
-            {
-                "alerts": global_config.alerts,
-            },
-            ta_name,
-            global_config.namespace,
-        )
-        logger.info("Generating alerts code")
-        generate_alerts(internal_root_dir, outputdir, envs)
 
 
 def _get_ignore_list(addon_name: str, ucc_ignore_path: str, output_directory: str):
@@ -448,8 +424,13 @@ def generate(
             output_directory,
         )
         if global_config.has_inputs():
+            logger.info("Generating inputs code")
             _add_modular_input(ta_name, global_config, output_directory)
-        _make_modular_alerts(ta_name, global_config, output_directory)
+        if global_config.has_alerts():
+            logger.info("Generating alerts code")
+            alert_builder.generate_alerts(
+                global_config, ta_name, internal_root_dir, output_directory
+            )
 
         conf_file_names = []
         conf_file_names.extend(list(scheme.settings_conf_file_names))

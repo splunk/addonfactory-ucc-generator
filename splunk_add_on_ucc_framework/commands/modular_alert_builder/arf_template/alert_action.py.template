@@ -14,19 +14,6 @@ class AlertActionWorker{{ mod_alert.short_name }}(ModularAlertBase):
         super(AlertActionWorker{{ mod_alert.short_name }}, self).__init__(ta_name, alert_name)
 
     def validate_params(self):
-    {% if global_settings %}
-        {% for type, setting in global_settings.items() %}
-            {% if type == 'customized_settings' %}
-                {% for param in setting %}
-                    {% if param.get("required", False) %}
-            if not self.get_global_setting("{{ param.name }}"):
-                self.log_error('{{ param.name }} is a mandatory setup parameter, but its value is None.')
-                return False
-                    {% endif %}
-                {% endfor %}
-            {% endif %}
-        {% endfor %}
-    {% endif %}
 
     {% if mod_alert.get("parameters") %}
         {% for param in mod_alert.parameters %}
@@ -60,5 +47,5 @@ class AlertActionWorker{{ mod_alert.short_name }}(ModularAlertBase):
         return status
 
 if __name__ == "__main__":
-    exitcode = AlertActionWorker{{ mod_alert.short_name }}("{{ input.product_id }}", "{{ mod_alert.short_name }}").run(sys.argv)
+    exitcode = AlertActionWorker{{ mod_alert.short_name }}("{{ addon_name }}", "{{ mod_alert.short_name }}").run(sys.argv)
     sys.exit(exitcode)

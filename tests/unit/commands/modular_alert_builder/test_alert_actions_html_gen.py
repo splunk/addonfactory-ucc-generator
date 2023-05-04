@@ -1,3 +1,5 @@
+import os
+
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
     alert_actions_html_gen,
 )
@@ -5,9 +7,8 @@ from tests.unit.helpers import get_testdata_file
 
 
 def test_generate_alert_action(tmp_path):
-    generated = alert_actions_html_gen.generate_alert_actions_html_files(
+    html_gen = alert_actions_html_gen.AlertHtmlGenerator(
         input_setting={
-            "product_id": "Splunk_TA_UCCExample",
             "short_name": "splunk_ta_uccexample",
             "modular_alerts": [
                 {
@@ -62,13 +63,6 @@ def test_generate_alert_action(tmp_path):
                             },
                         },
                         {
-                            "label": "Scripted Endpoint",
-                            "required": False,
-                            "format_type": "text",
-                            "name": "scripted_endpoint",
-                            "help_string": "Scripted REST endpoint to create incident at. Format: /api/<API namespace>/<API ID>/<Relative path>. Default: /api/now/incident",  # noqa: E501
-                        },
-                        {
                             "label": "Action:",
                             "required": True,
                             "format_type": "radio",
@@ -100,5 +94,11 @@ def test_generate_alert_action(tmp_path):
         },
         package_path=tmp_path,
     )
+    html_gen.handle()
+
     expected_alert_html = get_testdata_file("alert.html.generated")
-    assert expected_alert_html == generated["test_alert"]
+    with open(
+        os.path.join(tmp_path, "default", "data", "ui", "alerts", "test_alert.html")
+    ) as _f:
+        generated_alert_html = _f.read()
+        assert expected_alert_html == generated_alert_html
