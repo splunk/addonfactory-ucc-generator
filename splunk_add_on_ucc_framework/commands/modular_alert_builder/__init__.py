@@ -30,23 +30,15 @@ from splunk_add_on_ucc_framework.commands.modular_alert_builder.alert_actions_py
 logger = logging.getLogger("ucc_gen")
 
 
-def _copy_alert_icon_to_output(
-    internal_root_dir: str,
-    output_directory: str,
-    addon_name: str,
-):
-    shutil.copy(
-        os.path.join(internal_root_dir, "static", "alerticon.png"),
-        os.path.join(output_directory, addon_name, "appserver", "static"),
-    )
-
-
 def generate_alerts(internal_source_dir: str, output_dir: str, envs):
     output_content = {}
     global_settings = envs["global_settings"]
 
-    _copy_alert_icon_to_output(internal_source_dir, output_dir, envs["product_id"])
     package_dir = os.path.join(output_dir, envs["product_id"])
+    shutil.copy(
+        os.path.join(internal_source_dir, "static", "alerticon.png"),
+        os.path.join(package_dir, "appserver", "static"),
+    )
 
     conf_return = generate_alert_actions_conf(
         input_setting=envs["schema.content"],

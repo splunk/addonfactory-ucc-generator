@@ -98,7 +98,6 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
         self,
         input_setting=None,
         package_path=None,
-        **kwargs,
     ):
         if not input_setting:
             msg = 'status="failed", required_args="input_setting"'
@@ -303,9 +302,9 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
                 )
 
 
-def generate_alert_actions_conf(input_setting=None, package_path=None, **kwargs):
+def generate_alert_actions_conf(input_setting=None, package_path=None):
     obj = AlertActionsConfGeneration(
-        input_setting=input_setting, package_path=package_path, **kwargs
+        input_setting=input_setting, package_path=package_path
     )
     obj.handle()
     return obj._output
