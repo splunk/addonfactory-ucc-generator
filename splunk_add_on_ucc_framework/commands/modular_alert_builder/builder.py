@@ -40,10 +40,9 @@ def generate_alerts(
 ):
     envs = normalize.normalize(
         global_config.alerts,
-        addon_name,
         global_config.namespace,
     )
-    package_dir = os.path.join(output_dir, envs["product_id"])
+    package_dir = os.path.join(output_dir, addon_name)
     shutil.copy(
         os.path.join(internal_source_dir, "static", "alerticon.png"),
         os.path.join(package_dir, "appserver", "static"),
@@ -63,6 +62,7 @@ def generate_alerts(
     html_gen.handle()
 
     py_gen = alert_actions_py_gen.AlertActionsPyGenerator(
+        addon_name=addon_name,
         input_setting=schema_content,
         package_path=package_dir,
     )

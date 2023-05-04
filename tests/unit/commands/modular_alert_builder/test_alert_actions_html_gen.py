@@ -9,7 +9,6 @@ from tests.unit.helpers import get_testdata_file
 def test_generate_alert_action(tmp_path):
     html_gen = alert_actions_html_gen.AlertHtmlGenerator(
         input_setting={
-            "product_id": "Splunk_TA_UCCExample",
             "short_name": "splunk_ta_uccexample",
             "modular_alerts": [
                 {

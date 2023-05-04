@@ -30,7 +30,8 @@ logger = logging.getLogger("ucc_gen")
 
 
 class AlertActionsPyBase:
-    def __init__(self, input_setting, package_path):
+    def __init__(self, addon_name: str, input_setting, package_path):
+        self._addon_name = addon_name
         self._all_setting = input_setting
         self._package_path = package_path
         self._current_alert = None
@@ -69,10 +70,12 @@ class AlertActionsPyBase:
 class AlertActionsPyGenerator(AlertActionsPyBase):
     def __init__(
         self,
+        addon_name,
         input_setting,
         package_path,
     ):
         super().__init__(
+            addon_name=addon_name,
             input_setting=input_setting,
             package_path=package_path,
         )
@@ -85,7 +88,7 @@ class AlertActionsPyGenerator(AlertActionsPyBase):
     def gen_main_py_file(self):
         template = self._templates.get_template("alert_action.py.template")
         rendered_content = template.render(
-            input=self._all_setting,
+            addon_name=self._addon_name,
             lib_name=self._lib_dir,
             mod_alert=self._current_alert,
             helper_name=op.splitext(self.get_alert_helper_py_name())[0],

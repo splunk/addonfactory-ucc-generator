@@ -47,5 +47,5 @@ class AlertActionWorker{{ mod_alert.short_name }}(ModularAlertBase):
         return status
 
 if __name__ == "__main__":
-    exitcode = AlertActionWorker{{ mod_alert.short_name }}("{{ input.product_id }}", "{{ mod_alert.short_name }}").run(sys.argv)
+    exitcode = AlertActionWorker{{ mod_alert.short_name }}("{{ addon_name }}", "{{ mod_alert.short_name }}").run(sys.argv)
     sys.exit(exitcode)
