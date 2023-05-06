@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "2.0.0",
+  "schemaVersion": "1.0.0",
   "info": {
     "title": "Splunk Add-on for UCC Example",
     "id": {
@@ -42,13 +42,5 @@
   "tasks": null,
   "inputGroups": null,
   "incompatibleApps": null,
-  "platformRequirements": null,
-  "supportedDeployments": [
-    "_standalone",
-    "_distributed"
-  ],
-  "targetWorkloads": [
-    "_search_heads",
-    "_indexers"
-   ]
+  "platformRequirements": null
 }
