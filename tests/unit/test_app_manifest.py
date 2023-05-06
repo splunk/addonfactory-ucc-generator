@@ -24,38 +24,32 @@ def test_read_with_comments():
         _get_manifest("app.manifest_with_comments")
 
 
-def test_get_addon_name():
-    manifest = _get_manifest("app.manifest")
+def test_get_addon_name(app_manifest_correct):
     expected_addon_name = "Splunk_TA_UCCExample"
-    assert expected_addon_name == manifest.get_addon_name()
+    assert expected_addon_name == app_manifest_correct.get_addon_name()
 
 
-def test_get_title():
-    manifest = _get_manifest("app.manifest")
+def test_get_title(app_manifest_correct):
     expected_title = "Splunk Add-on for UCC Example"
-    assert expected_title == manifest.get_title()
+    assert expected_title == app_manifest_correct.get_title()
 
 
-def test_get_description():
-    manifest = _get_manifest("app.manifest")
+def test_get_description(app_manifest_correct):
     expected_description = "Description of Splunk Add-on for UCC Example"
-    assert expected_description == manifest.get_description()
+    assert expected_description == app_manifest_correct.get_description()
 
 
-def test_get_license_name():
-    manifest = _get_manifest("app.manifest")
+def test_get_license_name(app_manifest_correct):
     expected_license_name = "Apache-2.0"
-    assert expected_license_name == manifest.get_license_name()
+    assert expected_license_name == app_manifest_correct.get_license_name()
 
 
-def test_get_license_uri():
-    manifest = _get_manifest("app.manifest")
+def test_get_license_uri(app_manifest_correct):
     expected_license_name = "https://www.apache.org/licenses/LICENSE-2.0"
-    assert expected_license_name == manifest.get_license_uri()
+    assert expected_license_name == app_manifest_correct.get_license_uri()
 
 
-def test_get_authors():
-    manifest = _get_manifest("app.manifest")
+def test_get_authors(app_manifest_correct):
     expected_authors = [
         {
             "name": "Splunk",
@@ -63,25 +57,91 @@ def test_get_authors():
             "company": None,
         }
     ]
-    assert expected_authors == manifest.get_authors()
+    assert expected_authors == app_manifest_correct.get_authors()
 
 
-def test_update_addon_version():
-    manifest = _get_manifest("app.manifest")
+def test_update_addon_version(app_manifest_correct):
     expected_addon_version = "v1.1.1"
-    manifest.update_addon_version(expected_addon_version)
-    assert expected_addon_version == manifest._manifest["info"]["id"]["version"]
+    app_manifest_correct.update_addon_version(expected_addon_version)
+    assert (
+        expected_addon_version
+        == app_manifest_correct._manifest["info"]["id"]["version"]
+    )
 
 
-def test_str():
-    manifest = _get_manifest("app.manifest")
+def test_str(app_manifest_correct):
     expected_content = get_testdata_file("app.manifest_written")
-    assert expected_content == str(manifest)
+    assert expected_content == str(app_manifest_correct)
 
 
-def test_manifest():
-    manifest = _get_manifest("app.manifest")
+def test_validate_when_correct(app_manifest_correct):
+    app_manifest_correct.validate()
 
+
+def test_validate_when_incorrect_schema_version():
+    manifest = _get_manifest("app.manifest_incorrect_schema_version")
+
+    with pytest.raises(app_manifest.AppManifestFormatException) as exc_info:
+        manifest.validate()
+    (msg,) = exc_info.value.args
+    assert (
+        f"schemaVersion should be '{app_manifest.APP_MANIFEST_SCHEMA_VERSION}'" == msg
+    )
+
+
+def test_validate_when_no_supported_deployments_specified(app_manifest_correct):
+    app_manifest_without_supported_deployments = app_manifest_correct
+    app_manifest_without_supported_deployments._manifest["supportedDeployments"] = None
+
+    with pytest.raises(app_manifest.AppManifestFormatException) as exc_info:
+        app_manifest_without_supported_deployments.validate()
+    (msg,) = exc_info.value.args
+    assert "supportedDeployments should be set" == msg
+
+
+def test_validate_when_supported_deployments_are_incorrect(app_manifest_correct):
+    app_manifest_without_supported_deployments = app_manifest_correct
+    app_manifest_without_supported_deployments._manifest["supportedDeployments"] = [
+        "_standalone",
+        "foo",
+    ]
+
+    with pytest.raises(app_manifest.AppManifestFormatException) as exc_info:
+        app_manifest_without_supported_deployments.validate()
+    (msg,) = exc_info.value.args
+    assert (
+        f"supportedDeployments should only have values from '{app_manifest.APP_MANIFEST_SUPPORTED_DEPLOYMENTS}'"
+        == msg
+    )
+
+
+def test_validate_when_no_target_workloads_specified(app_manifest_correct):
+    app_manifest_without_target_workloads = app_manifest_correct
+    app_manifest_without_target_workloads._manifest["targetWorkloads"] = None
+
+    with pytest.raises(app_manifest.AppManifestFormatException) as exc_info:
+        app_manifest_without_target_workloads.validate()
+    (msg,) = exc_info.value.args
+    assert "targetWorkloads should be set" == msg
+
+
+def test_validate_when_target_workloads_are_incorrect(app_manifest_correct):
+    app_manifest_without_target_workloads = app_manifest_correct
+    app_manifest_without_target_workloads._manifest["targetWorkloads"] = [
+        "_search_heads",
+        "foo",
+    ]
+
+    with pytest.raises(app_manifest.AppManifestFormatException) as exc_info:
+        app_manifest_without_target_workloads.validate()
+    (msg,) = exc_info.value.args
+    assert (
+        f"targetWorkloads should only have values from '{app_manifest.APP_MANIFEST_TARGET_WORKLOADS}'"
+        == msg
+    )
+
+
+def test_manifest(app_manifest_correct):
     expected_manifest = {
         "schemaVersion": "2.0.0",
         "info": {
@@ -112,6 +172,6 @@ def test_manifest():
         "incompatibleApps": None,
         "platformRequirements": None,
         "supportedDeployments": ["_standalone", "_distributed"],
-        "targetWorkloads": None,
+        "targetWorkloads": ["_search_heads", "_indexers"],
     }
-    assert expected_manifest == manifest.manifest
+    assert expected_manifest == app_manifest_correct.manifest

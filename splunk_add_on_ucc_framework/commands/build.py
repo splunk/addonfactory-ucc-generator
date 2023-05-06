@@ -318,12 +318,13 @@ def _get_app_manifest(source: str) -> app_manifest_lib.AppManifest:
     app_manifest = app_manifest_lib.AppManifest()
     try:
         app_manifest.read(app_manifest_content)
+        app_manifest.validate()
         return app_manifest
-    except app_manifest_lib.AppManifestFormatException:
+    except app_manifest_lib.AppManifestFormatException as e:
         logger.error(
             f"Manifest file @ {app_manifest_path} has invalid format.\n"
             f"Please refer to {app_manifest_lib.APP_MANIFEST_WEBSITE}.\n"
-            f"Only JSON format is supported.\n"
+            f"Error message: {e}.\n"
         )
         sys.exit(1)
 

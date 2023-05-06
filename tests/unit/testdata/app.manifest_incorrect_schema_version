@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "2.0.0",
+  "schemaVersion": "1.0.0",
   "info": {
     "title": "Splunk Add-on for UCC Example",
     "id": {
@@ -9,13 +9,13 @@
     },
     "author": [
       {
-        "name": "Splunk Inc.",
-        "email": null,
+        "name": "Splunk",
+        "email": "addonfactory@splunk.com",
         "company": null
       }
     ],
     "releaseDate": null,
-    "description": "Splunk Add-on for UCC Example",
+    "description": "Description of Splunk Add-on for UCC Example",
     "classification": {
       "intendedAudience": null,
       "categories": [],
@@ -23,9 +23,9 @@
     },
     "commonInformationModels": null,
     "license": {
-      "name": null,
+      "name": "Apache-2.0",
       "text": "LICENSES/Apache-2.0.txt",
-      "uri": null
+      "uri": "https://www.apache.org/licenses/LICENSE-2.0"
     },
     "privacyPolicy": {
       "name": null,
@@ -42,12 +42,5 @@
   "tasks": null,
   "inputGroups": null,
   "incompatibleApps": null,
-  "platformRequirements": null,
-  "supportedDeployments": [
-    "_standalone",
-    "_distributed"
-  ],
-  "targetWorkloads": [
-    "_indexers"
-  ]
+  "platformRequirements": null
 }

@@ -1,7 +1,16 @@
 import pytest
 
 from splunk_add_on_ucc_framework import global_config as global_config_lib
+from splunk_add_on_ucc_framework import app_manifest as app_manifest_lib
 import tests.unit.helpers as helpers
+
+
+@pytest.fixture
+def app_manifest_correct() -> app_manifest_lib.AppManifest:
+    content = helpers.get_testdata_file("app.manifest")
+    app_manifest = app_manifest_lib.AppManifest()
+    app_manifest.read(content)
+    return app_manifest
 
 
 @pytest.fixture
