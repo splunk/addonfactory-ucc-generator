@@ -323,7 +323,7 @@ def _get_app_manifest(source: str) -> app_manifest_lib.AppManifest:
         logger.error(
             f"Manifest file @ {app_manifest_path} has invalid format.\n"
             f"Please refer to {app_manifest_lib.APP_MANIFEST_WEBSITE}.\n"
-            f'Lines with comments are supported if they start with "#".\n'
+            f"Only JSON format is supported.\n"
         )
         sys.exit(1)
 

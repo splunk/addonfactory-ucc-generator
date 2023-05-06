@@ -11,12 +11,6 @@ def _get_manifest(file_name: str) -> app_manifest.AppManifest:
     return manifest
 
 
-def test_read():
-    manifest = _get_manifest("app.manifest")
-    assert isinstance(manifest._manifest, dict)
-    assert not manifest._comments
-
-
 def test_read_when_could_not_parse_the_file_but_no_comments():
     with pytest.raises(app_manifest.AppManifestFormatException):
         # The file content is not proper JSON file, it has "," in the end of
@@ -25,18 +19,9 @@ def test_read_when_could_not_parse_the_file_but_no_comments():
 
 
 def test_read_with_comments():
-    manifest = _get_manifest("app.manifest_with_comments")
-    assert isinstance(manifest._manifest, dict)
-    expected_comments = [
-        "# This is a comment.",
-        "# We will keep it after modifying this file.",
-    ]
-    assert expected_comments == manifest._comments
-
-
-def test_read_with_unsupported_comments_throws_exception():
     with pytest.raises(app_manifest.AppManifestFormatException):
-        _get_manifest("app.manifest_with_unsupported_comments")
+        # The app.manifest file has comments, not supported anymore.
+        _get_manifest("app.manifest_with_comments")
 
 
 def test_get_addon_name():
@@ -91,12 +76,6 @@ def test_update_addon_version():
 def test_str():
     manifest = _get_manifest("app.manifest")
     expected_content = get_testdata_file("app.manifest_written")
-    assert expected_content == str(manifest)
-
-
-def test_str_with_comments():
-    manifest = _get_manifest("app.manifest_with_comments")
-    expected_content = get_testdata_file("app.manifest_with_comments_written")
     assert expected_content == str(manifest)
 
 

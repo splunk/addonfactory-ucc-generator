@@ -16,15 +16,9 @@
 
 import json
 from typing import Dict, List
-import warnings
 
 APP_MANIFEST_FILE_NAME = "app.manifest"
 APP_MANIFEST_WEBSITE = "https://dev.splunk.com/enterprise/reference/packagingtoolkit/pkgtoolkitappmanifest/"
-
-DEPRECATION_MESSAGE = f"""
-Comments are not allowed in app.manifest file.
-Please refer to {APP_MANIFEST_WEBSITE}
-"""
 
 
 class AppManifestFormatException(Exception):
@@ -34,7 +28,6 @@ class AppManifestFormatException(Exception):
 class AppManifest:
     def __init__(self):
         self._manifest = None
-        self._comments = []
 
     def get_addon_name(self) -> str:
         return self._manifest["info"]["id"]["name"]
@@ -62,27 +55,10 @@ class AppManifest:
         try:
             self._manifest = json.loads(content)
         except json.JSONDecodeError:
-            # Manifest file has comments.
-            manifest_lines = []
-            for line in content.split("\n"):
-                if line.lstrip().startswith("#"):
-                    self._comments.append(line)
-                else:
-                    manifest_lines.append(line)
-            if self._comments:
-                warnings.warn(DEPRECATION_MESSAGE, FutureWarning)
-            manifest = "".join(manifest_lines)
-            try:
-                self._manifest = json.loads(manifest)
-            except json.JSONDecodeError:
-                raise AppManifestFormatException
+            raise AppManifestFormatException
 
     def update_addon_version(self, version: str) -> None:
         self._manifest["info"]["id"]["version"] = version
 
     def __str__(self) -> str:
-        content = json.dumps(self._manifest, indent=4, sort_keys=True)
-        if self._comments:
-            for comment in self._comments:
-                content += f"\n{comment}"
-        return content
+        return json.dumps(self._manifest, indent=4, sort_keys=True)
