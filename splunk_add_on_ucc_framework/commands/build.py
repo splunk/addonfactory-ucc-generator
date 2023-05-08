@@ -30,6 +30,7 @@ from splunk_add_on_ucc_framework import (
     global_config_validator,
     utils,
 )
+from splunk_add_on_ucc_framework import dashboard
 from splunk_add_on_ucc_framework import app_conf as app_conf_lib
 from splunk_add_on_ucc_framework import meta_conf as meta_conf_lib
 from splunk_add_on_ucc_framework import server_conf as server_conf_lib
@@ -218,6 +219,7 @@ def generate_data_ui(
     output_directory: str,
     addon_name: str,
     include_inputs: bool,
+    include_dashboard: bool,
 ):
     # Create directories in the output folder for add-on's UI nav and views.
     os.makedirs(
@@ -236,6 +238,7 @@ def generate_data_ui(
     ) as default_xml_file:
         default_xml_content = data_ui_generator.generate_nav_default_xml(
             include_inputs=include_inputs,
+            include_dashboard=include_dashboard,
         )
         default_xml_file.write(default_xml_content)
     with open(
@@ -353,7 +356,12 @@ def generate(
             os.path.join(internal_root_dir, "package"),
             os.path.join(output_directory, ta_name),
         )
-        generate_data_ui(output_directory, ta_name, global_config.has_inputs())
+        generate_data_ui(
+            output_directory,
+            ta_name,
+            global_config.has_inputs(),
+            global_config.has_dashboard(),
+        )
         logger.info("Copied UCC template directory")
         global_config_file = (
             "globalConfig.yaml" if is_global_config_yaml else "globalConfig.json"
@@ -419,6 +427,28 @@ def generate(
             server_conf.write(output_server_conf_path)
             logger.info(
                 f"Created default {server_conf_lib.SERVER_CONF_FILE_NAME} file in the output folder"
+            )
+        if global_config.has_dashboard():
+            logger.info("Including dashboard")
+            dashboard_content = (
+                utils.get_j2_env()
+                .get_template("dashboard.xml.template")
+                .render(
+                    addon_name=ta_name,
+                )
+            )
+            dashboard_xml_path = os.path.join(
+                output_directory,
+                ta_name,
+                "default",
+                "data",
+                "ui",
+                "views",
+                "dashboard.xml",
+            )
+            dashboard.generate_dashboard(
+                dashboard_content,
+                dashboard_xml_path,
             )
     else:
         global_config = None

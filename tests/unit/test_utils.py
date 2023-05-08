@@ -13,6 +13,7 @@ def test_get_j2_env():
     list_of_templates = j2_env.list_templates(extensions="template")
 
     expected_list_of_templates = [
+        "dashboard.xml.template",
         "input.template",
         "input_with_helper.template",
         "oauth.template",
