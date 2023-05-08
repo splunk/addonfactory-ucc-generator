@@ -33,6 +33,7 @@ information [here](ucc_related_libraries.md).
 * Generate `.conf` files (more info [here](dot_conf_files.md))
 * Install Python requirements (`lib` folder)
 * Generate metadata files (`metadata` folder)
+* Generate the monitoring dashboard (more info [here](dashboard.md)) 
 * Possibility to extend UI with custom code (more info [here](custom_ui_extensions/custom_hook.md))
 * Possibility to extend the build process via `additional_packaging.py` file (more info [here](additional_packaging.md))
 
