@@ -29,7 +29,7 @@ If you need to run UI tests for the PR, please add a label "run-ui-tests".
 
 1. With local version of ucc-gen create UCCExample TA to output directory:
     ```
-    poetry run ucc-gen --source tests/testdata/test_addons/package_global_config_inputs_configuration_alerts/package
+    poetry run ucc-gen --source tests/testdata/test_addons/package_global_config_everything/package
     ```
 2. Install docker and run containerized Splunk Enterprise using script:
     ```

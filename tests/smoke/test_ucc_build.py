@@ -48,7 +48,7 @@ def test_ucc_generate():
         "..",
         "testdata",
         "test_addons",
-        "package_global_config_inputs_configuration_alerts",
+        "package_global_config_everything",
         "package",
     )
     build.generate(source=package_folder)
@@ -81,7 +81,7 @@ def test_ucc_generate_with_config_param():
         "..",
         "testdata",
         "test_addons",
-        "package_global_config_inputs_configuration_alerts",
+        "package_global_config_everything",
         "package",
     )
     config_path = path.join(
@@ -89,7 +89,7 @@ def test_ucc_generate_with_config_param():
         "..",
         "testdata",
         "test_addons",
-        "package_global_config_inputs_configuration_alerts",
+        "package_global_config_everything",
         "globalConfig.json",
     )
     build.generate(source=package_folder, config_path=config_path)
@@ -103,7 +103,7 @@ def test_ucc_generate_with_inputs_configuration_alerts():
             "..",
             "testdata",
             "test_addons",
-            "package_global_config_inputs_configuration_alerts",
+            "package_global_config_everything",
             "package",
         )
         build.generate(source=package_folder, output_directory=temp_dir)
@@ -113,7 +113,7 @@ def test_ucc_generate_with_inputs_configuration_alerts():
             "..",
             "testdata",
             "expected_addons",
-            "expected_output_global_config_inputs_configuration_alerts",
+            "expected_output_global_config_everything",
             "Splunk_TA_UCCExample",
         )
         actual_folder = path.join(temp_dir, "Splunk_TA_UCCExample")

@@ -161,7 +161,7 @@ jobs:
           ./get-ucc-ui.sh
           tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
           poetry build
-      - run: poetry run ucc-gen --source tests/testdata/test_addons/package_global_config_inputs_configuration_alerts/package
+      - run: poetry run ucc-gen --source tests/testdata/test_addons/package_global_config_everything/package
       - run: |
           ./run_splunk.sh ${{ matrix.splunk.version }}
           until curl -Lsk "https://localhost:8088/services/collector/health" &>/dev/null ; do echo -n "Waiting for HEC-" && sleep 5 ; done
@@ -174,7 +174,7 @@ jobs:
           path: test-results/*
 
   appinspect-for-expected-outputs:
-    name: splunk-appinspect ${{ matrix.tags }} tests/testdata/expected_addons/expected_output_global_config_inputs_configuration_alerts/Splunk_TA_UCCExample
+    name: splunk-appinspect ${{ matrix.tags }} tests/testdata/expected_addons/expected_output_global_config_everything/Splunk_TA_UCCExample
     runs-on: ubuntu-latest
     continue-on-error: true
     strategy:
@@ -193,14 +193,14 @@ jobs:
         with:
           python-version: "3.7"
       - run: pip install splunk-packaging-toolkit
-      - name: Slim tests/expected_output_global_config_inputs_configuration_alerts/Splunk_TA_UCCExample
-        run: mkdir tests/slimmed; slim package tests/testdata/expected_addons/expected_output_global_config_inputs_configuration_alerts/Splunk_TA_UCCExample -o tests/slimmed
+      - name: Slim tests/expected_output_global_config_everything/Splunk_TA_UCCExample
+        run: mkdir tests/slimmed; slim package tests/testdata/expected_addons/expected_output_global_config_everything/Splunk_TA_UCCExample -o tests/slimmed
       - uses: splunk/appinspect-cli-action@v1.7
         with:
           app_path: tests/slimmed
           included_tags: ${{ matrix.tags }}
-          appinspect_manual_checks: tests/testdata/expected_addons/expected_output_global_config_inputs_configuration_alerts/.appinspect.manualcheck.yaml
-          appinspect_expected_failures: tests/testdata/expected_addons/expected_output_global_config_inputs_configuration_alerts/.appinspect.expect.yaml
+          appinspect_manual_checks: tests/testdata/expected_addons/expected_output_global_config_everything/.appinspect.manualcheck.yaml
+          appinspect_expected_failures: tests/testdata/expected_addons/expected_output_global_config_everything/.appinspect.expect.yaml
 
   pre-commit:
     runs-on: ubuntu-latest
