@@ -5,13 +5,14 @@ from splunk_add_on_ucc_framework import dashboard
 
 def test_generate_dashboard_when_dashboard_does_not_exist(tmp_path):
     dashboard_content = "<content>Dashboard</content>"
+    dashboard_xml_file_path = tmp_path / "dashboard.xml"
 
     dashboard.generate_dashboard(
         dashboard_content,
-        str(tmp_path),
+        str(dashboard_xml_file_path),
     )
 
-    with open(os.path.join(str(tmp_path), "dashboard.xml")) as dashboard_xml_file:
+    with open(dashboard_xml_file_path) as dashboard_xml_file:
         assert dashboard_content == dashboard_xml_file.read()
 
 

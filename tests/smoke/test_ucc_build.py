@@ -137,6 +137,7 @@ def test_ucc_generate_with_inputs_configuration_alerts():
             ("default", "data", "ui", "nav", "default.xml"),
             ("default", "data", "ui", "views", "configuration.xml"),
             ("default", "data", "ui", "views", "inputs.xml"),
+            ("default", "data", "ui", "views", "dashboard.xml"),
             ("default", "data", "ui", "views", "splunk_ta_uccexample_redirect.xml"),
             ("bin", "splunk_ta_uccexample", "modalert_test_alert_helper.py"),
             ("bin", "example_input_one.py"),

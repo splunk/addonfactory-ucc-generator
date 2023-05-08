@@ -1,0 +1,28 @@
+<form version="1.1">
+  <label>Monitoring Dashboard</label>
+  <fieldset submitButton="false">
+    <input type="time" token="log_time">
+      <label>Time for logs</label>
+      <default>
+        <earliest>-4h@m</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <title>Add-on version</title>
+      <single>
+        <search>
+          <query>| rest services/apps/local/Splunk_TA_UCCExample | fields version</query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="useThousandSeparators">0</option>
+      </single>
+    </panel>
+  </row>
+</form>
