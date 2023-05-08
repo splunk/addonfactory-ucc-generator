@@ -194,7 +194,8 @@
                     }
                 ]
             }
-        }
+        },
+        "dashboard": {}
     },
     "meta": {
         "name": "demo_addon_for_splunk",
