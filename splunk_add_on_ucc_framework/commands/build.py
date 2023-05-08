@@ -21,7 +21,6 @@ import shutil
 import sys
 from typing import Optional
 
-from jinja2 import Environment, FileSystemLoader
 from openapi3 import OpenAPI
 
 from splunk_add_on_ucc_framework import (
@@ -42,7 +41,6 @@ from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
 )
 from splunk_add_on_ucc_framework.commands.rest_builder import (
     global_config_builder_schema,
-    global_config_post_processor,
 )
 from splunk_add_on_ucc_framework.commands.rest_builder.builder import RestBuilder
 from splunk_add_on_ucc_framework.install_python_libraries import (
@@ -57,30 +55,6 @@ from splunk_add_on_ucc_framework.commands.openapi_generator import (
 logger = logging.getLogger("ucc_gen")
 
 internal_root_dir = os.path.dirname(os.path.dirname(__file__))
-# nosemgrep: splunk.autoescape-disabled, python.jinja2.security.audit.autoescape-disabled.autoescape-disabled
-j2_env = Environment(
-    loader=FileSystemLoader(os.path.join(internal_root_dir, "templates"))
-)
-
-
-def _generate_rest(
-    ta_name,
-    scheme: global_config_builder_schema.GlobalConfigBuilderSchema,
-    outputdir,
-):
-    """
-    Build REST for Add-on.
-
-    Args:
-        ta_name (str): Name of TA.
-        scheme (GlobalConfigBuilderSchema): REST schema.
-        outputdir (str): output directory.
-    """
-    builder_obj = RestBuilder(scheme, os.path.join(outputdir, ta_name))
-    builder_obj.build()
-    post_process = global_config_post_processor.GlobalConfigPostProcessor()
-    post_process(builder_obj, scheme)
-    return builder_obj
 
 
 def _modify_and_replace_token_for_oauth_templates(
@@ -151,35 +125,28 @@ def _modify_and_replace_token_for_oauth_templates(
 def _add_modular_input(
     ta_name: str, global_config: global_config_lib.GlobalConfig, outputdir: str
 ):
-    """
-    Generate Modular input for addon.
-
-    Args:
-        ta_name: Add-on name.
-        global_config: Object representing globalConfig.
-        outputdir: output directory.
-    """
     for service in global_config.inputs:
         input_name = service.get("name")
         class_name = input_name.upper()
         description = service.get("title")
         entity = service.get("entity")
-        field_allow_list = ["name", "index", "sourcetype"]
+        field_allow_list = frozenset(["name", "index", "sourcetype"])
         template = "input.template"
-        # if the service has a template specified, use it.  Otherwise keep the default
         if "template" in service:
             template = service.get("template") + ".template"
 
         # filter fields in allow list
         entity = [x for x in entity if x.get("field") not in field_allow_list]
-        import_declare = "import import_declare_test"
 
-        content = j2_env.get_template(template).render(
-            import_declare=import_declare,
-            input_name=input_name,
-            class_name=class_name,
-            description=description,
-            entity=entity,
+        content = (
+            utils.get_j2_env()
+            .get_template(template)
+            .render(
+                input_name=input_name,
+                class_name=class_name,
+                description=description,
+                entity=entity,
+            )
         )
         input_file_name = os.path.join(outputdir, ta_name, "bin", input_name + ".py")
         with open(input_file_name, "w") as input_file:
@@ -381,9 +348,7 @@ def generate(
             f"Updated and saved add-on version in the globalConfig file to {addon_version}"
         )
         global_config_update.handle_global_config_update(global_config)
-        scheme = global_config_builder_schema.GlobalConfigBuilderSchema(
-            global_config, j2_env
-        )
+        scheme = global_config_builder_schema.GlobalConfigBuilderSchema(global_config)
         utils.recursive_overwrite(
             os.path.join(internal_root_dir, "package"),
             os.path.join(output_directory, ta_name),
@@ -418,7 +383,8 @@ def generate(
         logger.info(
             f"Installed add-on requirements into {ucc_lib_target} from {source}"
         )
-        _generate_rest(ta_name, scheme, output_directory)
+        builder_obj = RestBuilder(scheme, os.path.join(output_directory, ta_name))
+        builder_obj.build()
         _modify_and_replace_token_for_oauth_templates(
             ta_name,
             global_config,

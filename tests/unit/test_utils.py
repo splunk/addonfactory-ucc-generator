@@ -7,6 +7,19 @@ import pytest
 from splunk_add_on_ucc_framework import exceptions, utils
 
 
+def test_get_j2_env():
+    j2_env = utils.get_j2_env()
+
+    list_of_templates = j2_env.list_templates(extensions="template")
+
+    expected_list_of_templates = [
+        "input.template",
+        "input_with_helper.template",
+        "oauth.template",
+    ]
+    assert expected_list_of_templates == list_of_templates
+
+
 @mock.patch("splunk_add_on_ucc_framework.utils.dunamai.Version", autospec=True)
 def test_get_version_from_git_when_runtime_error_from_dunamai(mock_version_class):
     mock_version_class.from_git.side_effect = RuntimeError

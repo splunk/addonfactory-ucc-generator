@@ -15,6 +15,7 @@
 #
 import os
 import os.path as op
+from typing import Dict, List
 
 from splunk_add_on_ucc_framework.commands.rest_builder import (
     global_config_builder_schema,
@@ -25,20 +26,38 @@ from splunk_add_on_ucc_framework.web_conf import WebConf
 __all__ = ["RestBuilder"]
 
 
+_import_declare_content = """
+import os
+import sys
+import re
+from os.path import dirname
+
+ta_name = '{ta_name}'
+pattern = re.compile(r'[\\\\/]etc[\\\\/]apps[\\\\/][^\\\\/]+[\\\\/]bin[\\\\/]?$')
+new_paths = [path for path in sys.path if not pattern.search(path) or ta_name in path]
+new_paths.insert(0, os.path.join(dirname(dirname(__file__)), "lib"))
+new_paths.insert(0, os.path.sep.join([os.path.dirname(__file__), ta_name]))
+sys.path = new_paths
+"""
+
+
+def _generate_import_declare_test(addon_name: str) -> str:
+    return _import_declare_content.format(ta_name=addon_name)
+
+
 class _RestBuilderOutput:
     readme = "README"
     default = "default"
     bin = "bin"
 
-    def __init__(self, path, product):
+    def __init__(self, path: str):
         self._path = path
-        self._product = product
         self._root_path = op.abspath(self._path)
         if not op.isdir(self._root_path):
             os.makedirs(self._root_path)
-        self._content = {}
+        self._content: Dict[str, List[str]] = {}
 
-    def put(self, subpath, file_name, content):
+    def put(self, subpath: str, file_name: str, content: str) -> None:
         path = op.join(self._root_path, subpath)
         if not op.isdir(path):
             os.makedirs(path)
@@ -47,7 +66,7 @@ class _RestBuilderOutput:
             self._content[full_name] = []
         self._content[full_name].append(content)
 
-    def save(self):
+    def save(self) -> None:
         for full_name, contents in list(self._content.items()):
             full_content = "\n\n".join(contents)
             with open(full_name, "w") as f:
@@ -59,25 +78,24 @@ class RestBuilder:
         self,
         schema: global_config_builder_schema.GlobalConfigBuilderSchema,
         output_path: str,
-        *args,
-        **kwargs
     ):
-        """
-
-        :param schema:
-        :param schema: RestSchema
-        :param output_path:
-        :param args:
-        :param kwargs:
-        """
         self._schema = schema
         self._output_path = output_path
-        self._args = args
-        self._kwargs = kwargs
-        self.output = _RestBuilderOutput(
+        self.output = _RestBuilderOutput(self._output_path)
+
+    def add_executable_attribute(self) -> None:
+        def _add_executable_attribute(file_path: str) -> None:
+            if op.isfile(file_path):
+                st = os.stat(file_path)
+                os.chmod(file_path, st.st_mode | 0o111)
+
+        bin_path = os.path.join(
             self._output_path,
-            self._schema.product,
+            self.output.bin,
         )
+        files_under_bin = os.listdir(bin_path)
+        for file_path in files_under_bin:
+            _add_executable_attribute(file_path)
 
     def build(self):
         for endpoint in self._schema.endpoints:
@@ -86,20 +104,20 @@ class RestBuilder:
                 if endpoint._name == "settings":
                     self.output.put(
                         self.output.default,
-                        endpoint.conf_name + ".conf",
+                        f"{endpoint.conf_name}.conf",
                         endpoint.generate_conf_with_default_values(),
                     )
 
                 self.output.put(
                     self.output.readme,
-                    endpoint.conf_name + ".conf.spec",
+                    f"{endpoint.conf_name}.conf.spec",
                     endpoint.generate_spec(),
                 )
 
                 # Add data input of self defined conf to inputs.conf.spec
                 if endpoint._entities[0] and endpoint._entities[0]._conf_name:
                     lines = [
-                        "[" + endpoint._name + "://<name>]",
+                        f"[{endpoint._name}://<name>]",
                         "placeholder = placeholder",
                     ]
                     self.output.put(
@@ -124,5 +142,10 @@ class RestBuilder:
             self.output.default,
             "web.conf",
             WebConf.build(self._schema.endpoints),
+        )
+        self.output.put(
+            self.output.bin,
+            "import_declare_test.py",
+            _generate_import_declare_test(self._schema.product),
         )
         self.output.save()
