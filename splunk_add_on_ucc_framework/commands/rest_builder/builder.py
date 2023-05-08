@@ -25,14 +25,32 @@ from splunk_add_on_ucc_framework.web_conf import WebConf
 __all__ = ["RestBuilder"]
 
 
+_import_declare_content = """
+import os
+import sys
+import re
+from os.path import dirname
+
+ta_name = '{ta_name}'
+pattern = re.compile(r'[\\\\/]etc[\\\\/]apps[\\\\/][^\\\\/]+[\\\\/]bin[\\\\/]?$')
+new_paths = [path for path in sys.path if not pattern.search(path) or ta_name in path]
+new_paths.insert(0, os.path.join(dirname(dirname(__file__)), "lib"))
+new_paths.insert(0, os.path.sep.join([os.path.dirname(__file__), ta_name]))
+sys.path = new_paths
+"""
+
+
+def _generate_import_declare_test(addon_name: str) -> str:
+    return _import_declare_content.format(ta_name=addon_name)
+
+
 class _RestBuilderOutput:
     readme = "README"
     default = "default"
     bin = "bin"
 
-    def __init__(self, path, product):
+    def __init__(self, path):
         self._path = path
-        self._product = product
         self._root_path = op.abspath(self._path)
         if not op.isdir(self._root_path):
             os.makedirs(self._root_path)
@@ -62,10 +80,21 @@ class RestBuilder:
     ):
         self._schema = schema
         self._output_path = output_path
-        self.output = _RestBuilderOutput(
+        self.output = _RestBuilderOutput(self._output_path)
+
+    def add_executable_attribute(self) -> None:
+        def _add_executable_attribute(file_path: str) -> None:
+            if op.isfile(file_path):
+                st = os.stat(file_path)
+                os.chmod(file_path, st.st_mode | 0o111)
+
+        bin_path = os.path.join(
             self._output_path,
-            self._schema.product,
+            self.output.bin,
         )
+        files_under_bin = os.listdir(bin_path)
+        for file_path in files_under_bin:
+            _add_executable_attribute(file_path)
 
     def build(self):
         for endpoint in self._schema.endpoints:
@@ -112,5 +141,10 @@ class RestBuilder:
             self.output.default,
             "web.conf",
             WebConf.build(self._schema.endpoints),
+        )
+        self.output.put(
+            self.output.bin,
+            "import_declare_test.py",
+            _generate_import_declare_test(self._schema.product),
         )
         self.output.save()

@@ -42,7 +42,6 @@ from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
 )
 from splunk_add_on_ucc_framework.commands.rest_builder import (
     global_config_builder_schema,
-    global_config_post_processor,
 )
 from splunk_add_on_ucc_framework.commands.rest_builder.builder import RestBuilder
 from splunk_add_on_ucc_framework.install_python_libraries import (
@@ -61,25 +60,6 @@ internal_root_dir = os.path.dirname(os.path.dirname(__file__))
 j2_env = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.join(internal_root_dir, "templates"))
 )
-
-
-def _generate_rest(
-    ta_name,
-    scheme: global_config_builder_schema.GlobalConfigBuilderSchema,
-    outputdir,
-):
-    """
-    Build REST for Add-on.
-
-    Args:
-        ta_name (str): Name of TA.
-        scheme (GlobalConfigBuilderSchema): REST schema.
-        outputdir (str): output directory.
-    """
-    builder_obj = RestBuilder(scheme, os.path.join(outputdir, ta_name))
-    builder_obj.build()
-    post_process = global_config_post_processor.GlobalConfigPostProcessor()
-    post_process(builder_obj, scheme)
 
 
 def _modify_and_replace_token_for_oauth_templates(
@@ -415,7 +395,8 @@ def generate(
         logger.info(
             f"Installed add-on requirements into {ucc_lib_target} from {source}"
         )
-        _generate_rest(ta_name, scheme, output_directory)
+        builder_obj = RestBuilder(scheme, os.path.join(output_directory, ta_name))
+        builder_obj.build()
         _modify_and_replace_token_for_oauth_templates(
             ta_name,
             global_config,
