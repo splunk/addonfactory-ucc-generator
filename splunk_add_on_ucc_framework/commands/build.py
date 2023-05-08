@@ -21,7 +21,7 @@ import shutil
 import sys
 from typing import Optional
 
-from jinja2 import Environment, FileSystemLoader
+import jinja2
 from openapi3 import OpenAPI
 
 from splunk_add_on_ucc_framework import (
@@ -58,8 +58,8 @@ logger = logging.getLogger("ucc_gen")
 
 internal_root_dir = os.path.dirname(os.path.dirname(__file__))
 # nosemgrep: splunk.autoescape-disabled, python.jinja2.security.audit.autoescape-disabled.autoescape-disabled
-j2_env = Environment(
-    loader=FileSystemLoader(os.path.join(internal_root_dir, "templates"))
+j2_env = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(os.path.join(internal_root_dir, "templates"))
 )
 
 
@@ -80,7 +80,6 @@ def _generate_rest(
     builder_obj.build()
     post_process = global_config_post_processor.GlobalConfigPostProcessor()
     post_process(builder_obj, scheme)
-    return builder_obj
 
 
 def _modify_and_replace_token_for_oauth_templates(
@@ -172,10 +171,8 @@ def _add_modular_input(
 
         # filter fields in allow list
         entity = [x for x in entity if x.get("field") not in field_allow_list]
-        import_declare = "import import_declare_test"
 
         content = j2_env.get_template(template).render(
-            import_declare=import_declare,
             input_name=input_name,
             class_name=class_name,
             description=description,

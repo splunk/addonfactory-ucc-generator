@@ -1,8 +1,7 @@
-
-import import_declare_test
 """
 This module will be used to get oauth token from auth code
 """
+import import_declare_test
 
 import urllib
 try:

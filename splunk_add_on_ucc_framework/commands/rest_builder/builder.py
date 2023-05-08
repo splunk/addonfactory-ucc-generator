@@ -59,21 +59,9 @@ class RestBuilder:
         self,
         schema: global_config_builder_schema.GlobalConfigBuilderSchema,
         output_path: str,
-        *args,
-        **kwargs
     ):
-        """
-
-        :param schema:
-        :param schema: RestSchema
-        :param output_path:
-        :param args:
-        :param kwargs:
-        """
         self._schema = schema
         self._output_path = output_path
-        self._args = args
-        self._kwargs = kwargs
         self.output = _RestBuilderOutput(
             self._output_path,
             self._schema.product,

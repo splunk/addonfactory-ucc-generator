@@ -22,6 +22,8 @@ Global config schema.
 import json
 from typing import Any, Dict, List, Type, Set
 
+import jinja2
+
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 
 from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import (
@@ -58,7 +60,9 @@ def _is_true(val):
 
 
 class GlobalConfigBuilderSchema:
-    def __init__(self, global_config: global_config_lib.GlobalConfig, j2_env):
+    def __init__(
+        self, global_config: global_config_lib.GlobalConfig, j2_env: jinja2.Environment
+    ):
         self.global_config = global_config
         self.j2_env = j2_env
         self._settings_conf_file_names: Set[str] = set()

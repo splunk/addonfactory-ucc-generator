@@ -1,7 +1,8 @@
 """
 This module will be used to get oauth token from auth code
 """
-{{import_declare}}
+import import_declare_test
+
 import urllib
 try:
     from urllib import urlencode

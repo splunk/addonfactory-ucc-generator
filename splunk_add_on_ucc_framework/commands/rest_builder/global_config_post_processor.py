@@ -22,11 +22,6 @@ class GlobalConfigPostProcessor:
     Post process for REST builder.
     """
 
-    output_local = "local"
-    _import_declare_template = """
-import {import_declare_name}
-"""
-
     _import_declare_content = """
 import os
 import sys
@@ -50,32 +45,17 @@ sys.path = new_paths
     def root_path(self):
         return getattr(self.builder.output, "_path")
 
-    def import_declare_py_name(self):
-        if self.import_declare_name:
-            return self.import_declare_name
-        return f"{self.schema.namespace}_import_declare"
-
     def import_declare_py_content(self):
         import_declare_file = op.join(
             self.root_path,
             self.builder.output.bin,
-            self.import_declare_py_name() + ".py",
+            self.import_declare_name + ".py",
         )
         content = self._import_declare_content.format(
             ta_name=self.schema.product,
         )
         with open(import_declare_file, "w") as f:
             f.write(content)
-
-    def import_declare(self, rh_file):
-        with open(rh_file) as f:
-            cont = f.readlines()
-        import_declare = self._import_declare_template.format(
-            import_declare_name=self.import_declare_py_name()
-        )
-        cont.insert(0, import_declare)
-        with open(rh_file, "w") as f:
-            f.write("".join(cont))
 
     def __call__(self, builder, schema):
         """
@@ -87,13 +67,6 @@ sys.path = new_paths
         self.schema = schema
 
         self.import_declare_py_content()
-        for endpoint in schema.endpoints:
-            rh_file = op.join(
-                getattr(builder.output, "_path"),
-                builder.output.bin,
-                endpoint.rh_name + ".py",
-            )
-            self.import_declare(rh_file)
 
         # add executable permission to files under bin folder
         def add_executable_attribute(file_path):
@@ -101,6 +74,6 @@ sys.path = new_paths
                 st = os.stat(file_path)
                 os.chmod(file_path, st.st_mode | 0o111)
 
-        bin_path = op.join(getattr(builder.output, "_path"), builder.output.bin)
+        bin_path = op.join(self.root_path, builder.output.bin)
         items = os.listdir(bin_path)
         list(map(add_executable_attribute, items))
