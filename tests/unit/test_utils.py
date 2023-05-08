@@ -79,11 +79,15 @@ def test_dump_json_config(tmp_path):
 
 def test_dump_yaml_config(tmp_path):
     tmp_file_to_dump = tmp_path / "globalConfig.yaml"
-    config = {"hello": "world", "test": "config_to_dump"}
+    config = {
+        "hello": "world",
+        "test": "config_to_dump",
+        "afoo": "bar",
+    }
 
     utils.dump_yaml_config(config, str(tmp_file_to_dump))
 
-    expected_content = "hello: world\ntest: config_to_dump\n"
+    expected_content = "hello: world\ntest: config_to_dump\nafoo: bar\n"
 
     with open(tmp_file_to_dump) as f:
         content = f.read()
