@@ -19,9 +19,19 @@ import shutil
 from typing import Any, Dict
 
 import dunamai
+import jinja2
 import yaml
 
 from splunk_add_on_ucc_framework import exceptions
+
+
+def get_j2_env() -> jinja2.Environment:
+    # nosemgrep: splunk.autoescape-disabled, python.jinja2.security.audit.autoescape-disabled.autoescape-disabled
+    return jinja2.Environment(
+        loader=jinja2.FileSystemLoader(
+            os.path.join(os.path.dirname(__file__), "templates")
+        )
+    )
 
 
 def recursive_overwrite(src: str, dest: str):

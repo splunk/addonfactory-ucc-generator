@@ -15,6 +15,7 @@
 #
 import os
 import os.path as op
+from typing import Dict, List
 
 from splunk_add_on_ucc_framework.commands.rest_builder import (
     global_config_builder_schema,
@@ -49,14 +50,14 @@ class _RestBuilderOutput:
     default = "default"
     bin = "bin"
 
-    def __init__(self, path):
+    def __init__(self, path: str):
         self._path = path
         self._root_path = op.abspath(self._path)
         if not op.isdir(self._root_path):
             os.makedirs(self._root_path)
-        self._content = {}
+        self._content: Dict[str, List[str]] = {}
 
-    def put(self, subpath, file_name, content):
+    def put(self, subpath: str, file_name: str, content: str) -> None:
         path = op.join(self._root_path, subpath)
         if not op.isdir(path):
             os.makedirs(path)
@@ -65,7 +66,7 @@ class _RestBuilderOutput:
             self._content[full_name] = []
         self._content[full_name].append(content)
 
-    def save(self):
+    def save(self) -> None:
         for full_name, contents in list(self._content.items()):
             full_content = "\n\n".join(contents)
             with open(full_name, "w") as f:
@@ -103,20 +104,20 @@ class RestBuilder:
                 if endpoint._name == "settings":
                     self.output.put(
                         self.output.default,
-                        endpoint.conf_name + ".conf",
+                        f"{endpoint.conf_name}.conf",
                         endpoint.generate_conf_with_default_values(),
                     )
 
                 self.output.put(
                     self.output.readme,
-                    endpoint.conf_name + ".conf.spec",
+                    f"{endpoint.conf_name}.conf.spec",
                     endpoint.generate_spec(),
                 )
 
                 # Add data input of self defined conf to inputs.conf.spec
                 if endpoint._entities[0] and endpoint._entities[0]._conf_name:
                     lines = [
-                        "[" + endpoint._name + "://<name>]",
+                        f"[{endpoint._name}://<name>]",
                         "placeholder = placeholder",
                     ]
                     self.output.put(
