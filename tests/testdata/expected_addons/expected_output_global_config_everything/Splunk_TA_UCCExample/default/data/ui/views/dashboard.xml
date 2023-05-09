@@ -40,4 +40,22 @@
       </chart>
     </panel>
   </row>
+  <row>
+    <panel>
+      <title>Errors in the add-on</title>
+      <event>
+        <search>
+          <query>index=_internal source=*splunk_ta_uccexample* ERROR</query>
+          <earliest>$log_time.earliest$</earliest>
+          <latest>$log_time.latest$</latest>
+        </search>
+        <option name="list.drilldown">none</option>
+        <option name="maxLines">10</option>
+        <option name="raw.drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">0</option>
+        <option name="type">list</option>
+      </event>
+    </panel>
+  </row>
 </form>
