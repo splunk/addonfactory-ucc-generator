@@ -21,6 +21,7 @@ import logging
 from splunk_add_on_ucc_framework.commands import build
 from splunk_add_on_ucc_framework.commands import init
 from splunk_add_on_ucc_framework.commands import import_from_aob
+from splunk_add_on_ucc_framework.commands import package
 
 logger = logging.getLogger("ucc_gen")
 
@@ -63,7 +64,7 @@ def main(argv: Optional[Sequence[str]] = None):
     argv = argv if argv is not None else sys.argv[1:]
     parser = DefaultSubcommandArgumentParser()
     parser.set_default_subparser("build")
-    subparsers = parser.add_subparsers(dest="command", description="Build an add-on")
+    subparsers = parser.add_subparsers(dest="command", description="Build an add-on.")
 
     build_parser = subparsers.add_parser("build")
     build_parser.add_argument(
@@ -99,6 +100,14 @@ def main(argv: Optional[Sequence[str]] = None):
         type=str,
         help="Python binary name to use to install requirements.",
         default="python3",
+    )
+
+    package_parser = subparsers.add_parser("package", description="Package an add-on.")
+    package_parser.add_argument(
+        "--path",
+        required=True,
+        type=str,
+        help="Path to the built add-on.",
     )
 
     init_parser = subparsers.add_parser("init", description="Bootstrap an add-on.")
@@ -152,6 +161,8 @@ def main(argv: Optional[Sequence[str]] = None):
             output_directory=args.output,
             python_binary_name=args.python_binary_name,
         )
+    if args.command == "package":
+        package.package(args.path)
     if args.command == "init":
         init.init(
             addon_name=args.addon_name,

@@ -49,6 +49,9 @@ class AppManifest:
     def get_addon_name(self) -> str:
         return self._manifest["info"]["id"]["name"]
 
+    def get_addon_version(self) -> str:
+        return self._manifest["info"]["id"]["version"]
+
     def get_title(self) -> str:
         return self._manifest["info"]["title"]
 
