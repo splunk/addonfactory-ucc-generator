@@ -105,14 +105,16 @@ deprecated.
 It takes the following parameters:
 
 * `--source` - [optional] folder containing the `app.manifest` and app 
-    source.
+    source. Default: `package`.
 * `--config` - [optional] path to the configuration file, defaults to
     globalConfig file in the parent directory of source provided.
 * `--ta-version` - [optional] override current version of TA, default
     version is version specified in `globalConfig.json` or `globalConfig.yaml`. 
     Splunkbase compatible version of SEMVER will be used by default.
+* `-o` / `--output` - [optional] output folder to store build add-on in.
+    Default: `output`.
 * `--python-binary-name` - [optional] Python binary name to use when
-    installing Python libraries.
+    installing Python libraries. Default: `python3`.
 
 ### `ucc-gen init`
 
