@@ -303,13 +303,13 @@ def generate(
     source: str,
     config_path: Optional[str] = None,
     addon_version: Optional[str] = None,
-    output_directory: Optional[str] = None,
+    output_directory: str = "output",
     python_binary_name: str = "python3",
 ):
     logger.info(f"ucc-gen version {__version__} is used")
     logger.info(f"Python binary name to use: {python_binary_name}")
-    if output_directory is None:
-        output_directory = os.path.join(os.getcwd(), "output")
+    output_directory = os.path.join(os.getcwd(), output_directory)
+    logger.info(f"Output folder is {output_directory}")
     addon_version = _get_addon_version(addon_version)
     logger.info(f"Add-on will be built with version '{addon_version}'")
     if not os.path.exists(source):

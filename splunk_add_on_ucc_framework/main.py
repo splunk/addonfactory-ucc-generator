@@ -88,6 +88,13 @@ def main(argv: Optional[Sequence[str]] = None):
         default=None,
     )
     build_parser.add_argument(
+        "-o",
+        "--output",
+        type=str,
+        help="Output path to store built add-on.",
+        default="output",
+    )
+    build_parser.add_argument(
         "--python-binary-name",
         type=str,
         help="Python binary name to use to install requirements.",
@@ -142,6 +149,7 @@ def main(argv: Optional[Sequence[str]] = None):
             source=args.source,
             config_path=args.config,
             addon_version=args.ta_version,
+            output_directory=args.output,
             python_binary_name=args.python_binary_name,
         )
     if args.command == "init":
