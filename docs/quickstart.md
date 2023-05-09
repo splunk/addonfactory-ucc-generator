@@ -16,8 +16,6 @@ To be able to create an add-on using UCC framework, you need to have at least:
 
 > If both globalConfig.json and globalConfig.yaml files are present, then the globalConfig.json file will take precedence.
 
-An example of creating a basic add-on from scratch can be found [here](example.md).
-
 The JSON schema for the `globalConfig` file can be found
 [here](https://github.com/splunk/addonfactory-ucc-base-ui/blob/main/src/main/webapp/schema/schema.json).
 

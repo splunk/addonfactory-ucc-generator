@@ -31,7 +31,6 @@ nav:
   - Home: "index.md"
   - Quickstart: "quickstart.md"
   - ".conf files": "dot_conf_files.md"
-  - Example: "example.md"
   - Inputs:
     - "inputs/index.md"
     - Introduction: "inputs/index.md"
