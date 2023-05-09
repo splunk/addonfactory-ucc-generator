@@ -29,6 +29,11 @@ def test_get_addon_name(app_manifest_correct):
     assert expected_addon_name == app_manifest_correct.get_addon_name()
 
 
+def test_get_addon_version(app_manifest_correct):
+    expected_addon_version = "7.0.1"
+    assert expected_addon_version == app_manifest_correct.get_addon_version()
+
+
 def test_get_title(app_manifest_correct):
     expected_title = "Splunk Add-on for UCC Example"
     assert expected_title == app_manifest_correct.get_title()
