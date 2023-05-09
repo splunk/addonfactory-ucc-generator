@@ -96,7 +96,7 @@ def test_ucc_generate_with_config_param():
 
 
 @pytest.mark.skipif(sys.version_info >= (3, 8), reason=PYTEST_SKIP_REASON)
-def test_ucc_generate_with_inputs_configuration_alerts():
+def test_ucc_generate_with_everything():
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
             path.dirname(path.realpath(__file__)),
