@@ -48,7 +48,7 @@ def test_ucc_generate():
         "..",
         "testdata",
         "test_addons",
-        "package_global_config_inputs_configuration_alerts",
+        "package_global_config_everything",
         "package",
     )
     build.generate(source=package_folder)
@@ -81,7 +81,7 @@ def test_ucc_generate_with_config_param():
         "..",
         "testdata",
         "test_addons",
-        "package_global_config_inputs_configuration_alerts",
+        "package_global_config_everything",
         "package",
     )
     config_path = path.join(
@@ -89,21 +89,21 @@ def test_ucc_generate_with_config_param():
         "..",
         "testdata",
         "test_addons",
-        "package_global_config_inputs_configuration_alerts",
+        "package_global_config_everything",
         "globalConfig.json",
     )
     build.generate(source=package_folder, config_path=config_path)
 
 
 @pytest.mark.skipif(sys.version_info >= (3, 8), reason=PYTEST_SKIP_REASON)
-def test_ucc_generate_with_inputs_configuration_alerts():
+def test_ucc_generate_with_everything():
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
             path.dirname(path.realpath(__file__)),
             "..",
             "testdata",
             "test_addons",
-            "package_global_config_inputs_configuration_alerts",
+            "package_global_config_everything",
             "package",
         )
         build.generate(source=package_folder, output_directory=temp_dir)
@@ -113,7 +113,7 @@ def test_ucc_generate_with_inputs_configuration_alerts():
             "..",
             "testdata",
             "expected_addons",
-            "expected_output_global_config_inputs_configuration_alerts",
+            "expected_output_global_config_everything",
             "Splunk_TA_UCCExample",
         )
         actual_folder = path.join(temp_dir, "Splunk_TA_UCCExample")
@@ -137,6 +137,7 @@ def test_ucc_generate_with_inputs_configuration_alerts():
             ("default", "data", "ui", "nav", "default.xml"),
             ("default", "data", "ui", "views", "configuration.xml"),
             ("default", "data", "ui", "views", "inputs.xml"),
+            ("default", "data", "ui", "views", "dashboard.xml"),
             ("default", "data", "ui", "views", "splunk_ta_uccexample_redirect.xml"),
             ("bin", "splunk_ta_uccexample", "modalert_test_alert_helper.py"),
             ("bin", "example_input_one.py"),

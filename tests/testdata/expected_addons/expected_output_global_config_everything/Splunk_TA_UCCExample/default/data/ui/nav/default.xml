@@ -2,5 +2,6 @@
 <nav>
     <view name="inputs"/>
     <view default="true" name="configuration"/>
+    <view name="dashboard"/>
     <view name="search"/>
 </nav>

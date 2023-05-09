@@ -38,6 +38,7 @@ nav:
     - Tabs: "inputs/tabs.md"
     - Multi-level Menu: "inputs/multilevel_menu.md"
   - Configuration: "configurations.md"
+  - Dashboard: "dashboard.md"
   - Entity:
     - "entity/index.md"
     - Introduction: "entity/index.md"

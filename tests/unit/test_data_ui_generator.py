@@ -15,12 +15,14 @@ https://docs.python.org/3/library/xml.etree.elementtree.html#xml.etree.ElementTr
 def test_generate_nav_default_xml():
     result = data_ui_generator.generate_nav_default_xml(
         include_inputs=True,
+        include_dashboard=True,
     )
 
     expected_result = """<?xml version="1.0" ?>
 <nav>
     <view name="inputs"/>
     <view default="true" name="configuration"/>
+    <view name="dashboard"/>
     <view name="search"/>
 </nav>
 """
@@ -31,6 +33,7 @@ def test_generate_nav_default_xml():
 def test_generate_nav_default_xml_only_configuration():
     result = data_ui_generator.generate_nav_default_xml(
         include_inputs=False,
+        include_dashboard=False,
     )
 
     expected_result = """<?xml version="1.0" ?>

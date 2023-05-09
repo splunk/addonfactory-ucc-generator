@@ -27,6 +27,7 @@ def test_global_config_parse(filename, is_yaml):
     assert global_config.has_inputs() is True
     assert global_config.has_alerts() is True
     assert global_config.has_oauth() is True
+    assert global_config.has_dashboard() is True
 
 
 @mock.patch("splunk_add_on_ucc_framework.utils.dump_json_config")
@@ -65,6 +66,7 @@ def test_global_config_only_configuration(global_config_only_configuration):
     assert global_config_only_configuration.has_inputs() is False
     assert global_config_only_configuration.has_alerts() is False
     assert global_config_only_configuration.has_oauth() is False
+    assert global_config_only_configuration.has_dashboard() is False
 
 
 def test_global_config_only_logging(global_config_only_logging):

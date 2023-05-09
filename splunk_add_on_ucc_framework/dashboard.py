@@ -1,4 +1,3 @@
-# you may not use this file except in compliance with the License.
 #
 # Copyright 2021 Splunk Inc.
 #
@@ -14,7 +13,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import logging
+import os
 
-[pytest]
-norecursedirs = .git .venv venv build tests/deps node_modules package tests/smoke/output tests/testdata/expected_addons/expected_output_global_config_everything tests/data/output output tests/smoke/Splunk_TA_Dynatrace
-addopts = -v --tb=long
+logger = logging.getLogger("ucc_gen")
+
+
+def generate_dashboard(content: str, dashboard_xml_file_path: str):
+    if os.path.exists(dashboard_xml_file_path):
+        logger.warning(
+            f"dashboard.xml file already exists @ "
+            f"{dashboard_xml_file_path}, not overwriting the existing dashboard file."
+        )
+    else:
+        with open(dashboard_xml_file_path, "w") as dashboard_xml_file:
+            dashboard_xml_file.write(content)
