@@ -299,6 +299,15 @@ def _get_app_manifest(source: str) -> app_manifest_lib.AppManifest:
         sys.exit(1)
 
 
+def _get_build_output_path(output_directory: Optional[str] = None) -> str:
+    if output_directory is None:
+        return os.path.join(os.getcwd(), "output")
+    else:
+        if not os.path.isabs(output_directory):
+            return os.path.join(os.getcwd(), output_directory)
+        return output_directory
+
+
 def generate(
     source: str,
     config_path: Optional[str] = None,
@@ -308,11 +317,7 @@ def generate(
 ):
     logger.info(f"ucc-gen version {__version__} is used")
     logger.info(f"Python binary name to use: {python_binary_name}")
-    if output_directory is None:
-        output_directory = os.path.join(os.getcwd(), "output")
-    else:
-        if not os.path.isabs(output_directory):
-            output_directory = os.path.join(os.getcwd(), output_directory)
+    output_directory = _get_build_output_path(output_directory)
     logger.info(f"Output folder is {output_directory}")
     addon_version = _get_addon_version(addon_version)
     logger.info(f"Add-on will be built with version '{addon_version}'")
