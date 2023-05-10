@@ -112,7 +112,8 @@ It takes the following parameters:
     version is version specified in `globalConfig.json` or `globalConfig.yaml`. 
     Splunkbase compatible version of SEMVER will be used by default.
 * `-o` / `--output` - [optional] output folder to store build add-on in.
-    Default: `output`.
+    By default, it will be saved in the `current directory/output` folder.
+    Accepts absolute paths as well.
 * `--python-binary-name` - [optional] Python binary name to use when
     installing Python libraries. Default: `python3`.
 
