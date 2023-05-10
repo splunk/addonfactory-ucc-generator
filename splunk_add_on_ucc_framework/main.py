@@ -92,7 +92,7 @@ def main(argv: Optional[Sequence[str]] = None):
         "--output",
         type=str,
         help="Output path to store built add-on.",
-        default="output",
+        default=None,
     )
     build_parser.add_argument(
         "--python-binary-name",
