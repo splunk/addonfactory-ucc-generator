@@ -5,6 +5,9 @@
     ":preserveSemverRanges",
     ":disableDependencyDashboard"
   ],
+  "pre-commit": {
+    "enabled": true
+  },
   "enabledManagers": [
     "poetry"
   ]
