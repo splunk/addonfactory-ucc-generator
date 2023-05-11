@@ -4,5 +4,8 @@
     "group:all",
     ":preserveSemverRanges",
     ":disableDependencyDashboard"
+  ],
+  "enabledManagers": [
+    "poetry"
   ]
 }
