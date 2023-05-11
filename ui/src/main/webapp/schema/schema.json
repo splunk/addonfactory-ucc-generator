@@ -463,7 +463,14 @@
     },
     "DashboardPage": {
       "type": "object",
-      "properties": {},
+      "properties": {
+        "panels": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DashboardPanel"
+          }
+        }
+      },
       "additionalProperties": false
     },
     "DateValidator": {
@@ -1319,6 +1326,17 @@
         }
       },
       "required": ["label"],
+      "additionalProperties": false
+    },
+    "DashboardPanel": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "maxLength": 100
+        }
+      },
+      "required": ["name"],
       "additionalProperties": false
     }
   },
