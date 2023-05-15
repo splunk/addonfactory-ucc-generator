@@ -9,7 +9,7 @@ Download UCC UI and unpack it using the following commands:
 tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
 ```
 
-This project uses [`poetry 1.1.15`](https://python-poetry.org/).
+This project uses [`poetry 1.4.2`](https://python-poetry.org/).
 
 To build a new local version of `ucc-gen`:
 
