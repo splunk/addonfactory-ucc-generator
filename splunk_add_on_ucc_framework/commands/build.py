@@ -233,14 +233,18 @@ def generate_data_ui(
     default_ui_path = os.path.join(
         output_directory, addon_name, "default", "data", "ui"
     )
-    with open(
-        os.path.join(default_ui_path, "nav", "default.xml"), "w"
-    ) as default_xml_file:
-        default_xml_content = data_ui_generator.generate_nav_default_xml(
-            include_inputs=include_inputs,
-            include_dashboard=include_dashboard,
+    default_xml_path = os.path.join(default_ui_path, "nav", "default.xml")
+    if os.path.exists(default_xml_path):
+        logger.info(
+            "Skipping generating data/ui/nav/default.xml because file already exists."
         )
-        default_xml_file.write(default_xml_content)
+    else:
+        with open(default_xml_path, "w") as default_xml_file:
+            default_xml_content = data_ui_generator.generate_nav_default_xml(
+                include_inputs=include_inputs,
+                include_dashboard=include_dashboard,
+            )
+            default_xml_file.write(default_xml_content)
     with open(
         os.path.join(default_ui_path, "views", "configuration.xml"), "w"
     ) as configuration_xml_file:
@@ -439,13 +443,6 @@ def generate(
             )
         if global_config.has_dashboard():
             logger.info("Including dashboard")
-            dashboard_content = (
-                utils.get_j2_env()
-                .get_template("dashboard.xml.template")
-                .render(
-                    addon_name=ta_name,
-                )
-            )
             dashboard_xml_path = os.path.join(
                 output_directory,
                 ta_name,
@@ -456,7 +453,8 @@ def generate(
                 "dashboard.xml",
             )
             dashboard.generate_dashboard(
-                dashboard_content,
+                global_config,
+                ta_name,
                 dashboard_xml_path,
             )
     else:
