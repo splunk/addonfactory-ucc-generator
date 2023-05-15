@@ -21,6 +21,7 @@ from typing import Any, Dict
 
 import jsonschema
 
+from splunk_add_on_ucc_framework import dashboard as dashboard_lib
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 
 
@@ -426,6 +427,19 @@ class GlobalConfigValidator:
                         f"{entity_type} type must not contain search, valueField or labelField parameter"
                     )
 
+    def _validate_panels(self):
+        """
+        Validates if the panels defined in the configuration are supported.
+        """
+        dashboard = self._config["pages"].get("dashboard")
+        if dashboard:
+            for panel in dashboard["panels"]:
+                if panel["name"] not in dashboard_lib.SUPPORTED_PANEL_NAMES:
+                    raise GlobalConfigValidatorException(
+                        f"'{panel['name']}' is not a supported panel name. "
+                        f"Supported panel names: {dashboard_lib.SUPPORTED_PANEL_NAMES_READABLE}"
+                    )
+
     def validate(self) -> None:
         self._validate_config_against_schema()
         self._validate_configuration_tab_table_has_name_field()
@@ -435,3 +449,4 @@ class GlobalConfigValidator:
         self._validate_multilevel_menu()
         self._validate_duplicates()
         self._validate_alerts()
+        self._validate_panels()

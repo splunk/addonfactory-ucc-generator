@@ -1005,7 +1005,19 @@
                 ]
             }
         },
-        "dashboard": {}
+        "dashboard": {
+            "panels": [
+                {
+                    "name": "addon_version"
+                },
+                {
+                    "name": "events_ingested_by_sourcetype"
+                },
+                {
+                    "name": "errors_in_the_addon"
+                }
+            ]
+        }
     },
     "alerts": [
         {
@@ -1122,7 +1134,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.26.0R326c0f4a",
+        "version": "5.26.0Reeb03d63",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.3"
     }
