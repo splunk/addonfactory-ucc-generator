@@ -45,11 +45,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: pipx install poetry==1.1.15
       - uses: actions/setup-python@v4
         with:
           python-version: "3.7"
           cache: "poetry"
+      - run: pipx install poetry==1.1.15
       - run: poetry install
       - run: poetry run mkdocs build --strict
   
@@ -73,11 +73,11 @@ jobs:
           - "3.11"
     steps:
       - uses: actions/checkout@v3
-      - run: pipx install poetry==1.1.15
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
           cache: "poetry"
+      - run: pipx install poetry==1.1.15
       - run: |
           ./get-ucc-ui.sh
           # Puts package and schema subdirs along with NOTICE (THIRDPARTY.npm)
@@ -104,11 +104,11 @@ jobs:
       PYTHON: ${{ matrix.python-version }}
     steps:
       - uses: actions/checkout@v3
-      - run: pipx install poetry==1.1.15
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
           cache: "poetry"
+      - run: pipx install poetry==1.1.15
       - run: |
           ./get-ucc-ui.sh
           # Puts package and schema subdirs along with NOTICE (THIRDPARTY.npm)
@@ -146,11 +146,11 @@ jobs:
           - "input"
     steps:
       - uses: actions/checkout@v3
-      - run: pipx install poetry==1.1.15
       - uses: actions/setup-python@v4
         with:
           python-version: "3.7"
           cache: "poetry"
+      - run: pipx install poetry==1.1.15
       - run: poetry install
       - name: Link chromedriver
         # Use installed chromedriver https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2204-Readme.md
@@ -238,11 +238,11 @@ jobs:
           # Very important: semantic-release won't trigger a tagged
           # build if this is not set false
           persist-credentials: false
-      - run: pipx install poetry==1.1.15
       - uses: actions/setup-python@v4
         with:
           python-version: "3.7"
           cache: "poetry"
+      - run: pipx install poetry==1.1.15
       - run: |
           ./get-ucc-ui.sh
           # Puts package and schema subdirs along with NOTICE (THIRDPARTY.npm)
