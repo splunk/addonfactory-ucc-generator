@@ -945,7 +945,7 @@ testing = ["big-o", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "e9194a9cd8a040ebfe3cbc6d8da923c35f72d57092588d3ac70b73be5b2ddc13"
+content-hash = "f321bc1f5a05ab95f0cb082cf3976c035f570a54ea2a5536bbb8e0109b7f7e27"
 
 [metadata.files]
 addonfactory-splunk-conf-parser-lib = [
