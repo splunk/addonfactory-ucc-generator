@@ -1,6 +1,7 @@
 import React from 'react';
 import DL from '@splunk/react-ui/DefinitionList';
 import Table from '@splunk/react-ui/Table';
+import Button from '@splunk/react-ui/Button';
 import styled from 'styled-components';
 import { _ } from '@splunk/ui-utils/i18n';
 
@@ -53,7 +54,14 @@ export function getExpansionRow(colSpan, row, moreInfo) {
                         })}
                     </>
                 ) : (
-                    <DL termWidth={250}>{getExpansionRowData(row, moreInfo)}</DL>
+                    <>
+                        <DL termWidth={250}>{getExpansionRowData(row, moreInfo)}</DL>
+                        <Button
+                            to={`/app/search/search?q=search%20index%3D_internal%20source%3D*${row.name}*`}
+                            openInNewContext
+                            label={_(`Show ${row.name} input events`)}
+                        />
+                    </>
                 )}
             </TableCellWrapper>
         </Table.Row>
