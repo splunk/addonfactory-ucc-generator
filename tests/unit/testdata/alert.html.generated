@@ -33,16 +33,6 @@
     </div>
 </div>
 <div class="control-group">
-    <label class="control-label" for="test_alert_scripted_endpoint">Scripted Endpoint  </label>
-    <div class="controls">
-<input type="text" name="action.test_alert.param.scripted_endpoint"
-		id="test_alert_scripted_endpoint" />
-            <span class="help-block">
-        Scripted REST endpoint to create incident at. Format: /api/<API namespace>/<API ID>/<Relative path>. Default: /api/now/incident
-    </span>
-    </div>
-</div>
-<div class="control-group">
 	<label class="control-label">Action:</label>
 		<div class="controls">
 				<label class="radio" for="test_alert_action_Update">

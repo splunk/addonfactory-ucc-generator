@@ -43,6 +43,10 @@ jsonschema = "^4.4.0"
 PyYAML = "^6.0"
 cookiecutter = "^2.1.1"
 openapi3 = "^1.7.0"
+defusedxml = "^0.7.1"
+charset-normalizer = "3.0.1"
+urllib3 = "<2"
+certifi = "2022.12.7"
 
 [tool.poetry.dev-dependencies]
 mkdocs = "^1.4.2"

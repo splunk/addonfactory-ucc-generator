@@ -14,4 +14,4 @@ targets:
     - type: setuptools
       path: tests/testdata/test_addons/package_global_config_configuration/package/lib
     - type: setuptools
-      path: tests/testdata/test_addons/package_global_config_inputs_configuration_alerts/package/lib
+      path: tests/testdata/test_addons/package_global_config_everything/package/lib

@@ -26,74 +26,54 @@ def test_global_config_parse(filename, is_yaml):
     assert global_config.version == "1.0.0"
     assert global_config.has_inputs() is True
     assert global_config.has_alerts() is True
+    assert global_config.has_oauth() is True
+    assert global_config.has_dashboard() is True
 
 
 @mock.patch("splunk_add_on_ucc_framework.utils.dump_json_config")
-def test_global_config_dump_when_json(mock_utils_dump_json_config, tmp_path):
-    global_config_path = helpers.get_testdata_file_path("valid_config.json")
-    global_config = global_config_lib.GlobalConfig()
-    global_config.parse(global_config_path, False)
-
-    global_config.dump(str(tmp_path))
+def test_global_config_dump_when_json(
+    mock_utils_dump_json_config, global_config_all_json, tmp_path
+):
+    global_config_all_json.dump(str(tmp_path))
 
     mock_utils_dump_json_config.assert_called_once()
 
 
 @mock.patch("splunk_add_on_ucc_framework.utils.dump_yaml_config")
-def test_global_config_dump_when_yaml(mock_utils_dump_yaml_config, tmp_path):
-    global_config_path = helpers.get_testdata_file_path("valid_config.yaml")
-    global_config = global_config_lib.GlobalConfig()
-    global_config.parse(global_config_path, True)
-
-    global_config.dump(str(tmp_path))
+def test_global_config_dump_when_yaml(
+    mock_utils_dump_yaml_config, global_config_all_yaml, tmp_path
+):
+    global_config_all_yaml.dump(str(tmp_path))
 
     mock_utils_dump_yaml_config.assert_called_once()
 
 
-def test_global_config_settings():
-    global_config_path = helpers.get_testdata_file_path(
-        "valid_config_only_configuration.json"
-    )
-    global_config = global_config_lib.GlobalConfig()
-    global_config.parse(global_config_path, False)
-
-    settings = global_config.settings
+def test_global_config_settings(global_config_only_configuration):
+    settings = global_config_only_configuration.settings
     expected_settings_names = ["proxy", "logging", "custom_abc"]
     settings_names = [setting["name"] for setting in settings]
     assert expected_settings_names == settings_names
 
 
-def test_global_config_configs():
-    global_config_path = helpers.get_testdata_file_path(
-        "valid_config_only_configuration.json"
-    )
-    global_config = global_config_lib.GlobalConfig()
-    global_config.parse(global_config_path, False)
-
-    configs = global_config.configs
+def test_global_config_configs(global_config_only_configuration):
+    configs = global_config_only_configuration.configs
     expected_configs_names = ["account"]
     configs_names = [config["name"] for config in configs]
     assert expected_configs_names == configs_names
 
 
-def test_global_config_only_configuration():
-    global_config_path = helpers.get_testdata_file_path(
-        "valid_config_only_configuration.json"
-    )
-    global_config = global_config_lib.GlobalConfig()
-    global_config.parse(global_config_path, False)
-
-    assert global_config.has_inputs() is False
-    assert global_config.has_alerts() is False
+def test_global_config_only_configuration(global_config_only_configuration):
+    assert global_config_only_configuration.has_inputs() is False
+    assert global_config_only_configuration.has_alerts() is False
+    assert global_config_only_configuration.has_oauth() is False
+    assert global_config_only_configuration.has_dashboard() is False
 
 
-def test_global_config_update_addon_version():
-    global_config_path = helpers.get_testdata_file_path(
-        "valid_config_only_configuration.json"
-    )
-    global_config = global_config_lib.GlobalConfig()
-    global_config.parse(global_config_path, False)
+def test_global_config_only_logging(global_config_only_logging):
+    assert global_config_only_logging.has_alerts() is False
 
-    global_config.update_addon_version("1.1.1")
 
-    assert global_config.version == "1.1.1"
+def test_global_config_update_addon_version(global_config_only_configuration):
+    global_config_only_configuration.update_addon_version("1.1.1")
+
+    assert global_config_only_configuration.version == "1.1.1"

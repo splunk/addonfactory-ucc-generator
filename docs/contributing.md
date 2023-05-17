@@ -9,7 +9,7 @@ Download UCC UI and unpack it using the following commands:
 tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
 ```
 
-This project uses [`poetry 1.1.15`](https://python-poetry.org/).
+This project uses [`poetry 1.4.2`](https://python-poetry.org/).
 
 To build a new local version of `ucc-gen`:
 
@@ -29,7 +29,7 @@ If you need to run UI tests for the PR, please add a label "run-ui-tests".
 
 1. With local version of ucc-gen create UCCExample TA to output directory:
     ```
-    poetry run ucc-gen --source tests/testdata/test_addons/package_global_config_inputs_configuration_alerts/package
+    poetry run ucc-gen --source tests/testdata/test_addons/package_global_config_everything/package
     ```
 2. Install docker and run containerized Splunk Enterprise using script:
     ```

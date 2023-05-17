@@ -14,12 +14,64 @@
 # limitations under the License.
 #
 import json
+import os
+import shutil
 from typing import Any, Dict
 
 import dunamai
+import jinja2
 import yaml
 
 from splunk_add_on_ucc_framework import exceptions
+
+
+def get_j2_env() -> jinja2.Environment:
+    # nosemgrep: splunk.autoescape-disabled, python.jinja2.security.audit.autoescape-disabled.autoescape-disabled
+    return jinja2.Environment(
+        loader=jinja2.FileSystemLoader(
+            os.path.join(os.path.dirname(__file__), "templates")
+        )
+    )
+
+
+def recursive_overwrite(src: str, dest: str):
+    """
+    Method to copy from src to dest recursively.
+
+    Args:
+        src (str): Source of copy
+        dest (str): Destination to copy
+    """
+    # TODO: move to shutil.copytree("src", "dst", dirs_exist_ok=True) when Python 3.8+.
+    if os.path.isdir(src):
+        if not os.path.isdir(dest):
+            os.makedirs(dest)
+        files = os.listdir(src)
+        for f in files:
+            recursive_overwrite(os.path.join(src, f), os.path.join(dest, f))
+    else:
+        if os.path.exists(dest):
+            os.remove(dest)
+        shutil.copy(src, dest)
+
+
+def get_os_path(path: str) -> str:
+    """
+    Returns a path which will be os compatible.
+
+    Args:
+        path (str): Path in string
+
+    Return:
+        string: Path which will be os compatible.
+    """
+
+    if "\\\\" in path:
+        path = path.replace("\\\\", os.sep)
+    else:
+        path = path.replace("\\", os.sep)
+    path = path.replace("/", os.sep)
+    return path.strip(os.sep)
 
 
 def dump_json_config(config: Dict[Any, Any], file_path: str):
@@ -30,7 +82,7 @@ def dump_json_config(config: Dict[Any, Any], file_path: str):
 
 def dump_yaml_config(config: Dict[Any, Any], file_path: str):
     with open(file_path, "w") as f:
-        yaml.dump(config, f, indent=4)
+        yaml.dump(config, f, indent=4, sort_keys=False)
 
 
 def get_version_from_git():

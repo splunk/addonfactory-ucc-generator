@@ -15,16 +15,27 @@
 #
 
 import json
-from typing import Dict, List
-import warnings
+from typing import Dict, List, Optional
 
+APP_MANIFEST_SCHEMA_VERSION = "2.0.0"
+APP_MANIFEST_SUPPORTED_DEPLOYMENTS = frozenset(
+    [
+        "*",
+        "_standalone",
+        "_distributed",
+        "_search_head_clustering",
+    ]
+)
+APP_MANIFEST_TARGET_WORKLOADS = frozenset(
+    [
+        "*",
+        "_search_heads",
+        "_indexers",
+        "_forwarders",
+    ]
+)
 APP_MANIFEST_FILE_NAME = "app.manifest"
 APP_MANIFEST_WEBSITE = "https://dev.splunk.com/enterprise/reference/packagingtoolkit/pkgtoolkitappmanifest/"
-
-DEPRECATION_MESSAGE = f"""
-Comments are not allowed in app.manifest file.
-Please refer to {APP_MANIFEST_WEBSITE}
-"""
 
 
 class AppManifestFormatException(Exception):
@@ -34,7 +45,6 @@ class AppManifestFormatException(Exception):
 class AppManifest:
     def __init__(self):
         self._manifest = None
-        self._comments = []
 
     def get_addon_name(self) -> str:
         return self._manifest["info"]["id"]["name"]
@@ -54,6 +64,15 @@ class AppManifest:
     def get_authors(self) -> List[Dict[str, str]]:
         return self._manifest["info"]["author"]
 
+    def _get_schema_version(self) -> Optional[str]:
+        return self._manifest.get("schemaVersion")
+
+    def _get_supported_deployments(self) -> Optional[List[str]]:
+        return self._manifest.get("supportedDeployments")
+
+    def _get_target_workloads(self) -> Optional[List[str]]:
+        return self._manifest.get("targetWorkloads")
+
     @property
     def manifest(self) -> Dict:
         return self._manifest
@@ -62,27 +81,35 @@ class AppManifest:
         try:
             self._manifest = json.loads(content)
         except json.JSONDecodeError:
-            # Manifest file has comments.
-            manifest_lines = []
-            for line in content.split("\n"):
-                if line.lstrip().startswith("#"):
-                    self._comments.append(line)
-                else:
-                    manifest_lines.append(line)
-            if self._comments:
-                warnings.warn(DEPRECATION_MESSAGE, FutureWarning)
-            manifest = "".join(manifest_lines)
-            try:
-                self._manifest = json.loads(manifest)
-            except json.JSONDecodeError:
-                raise AppManifestFormatException
+            raise AppManifestFormatException(
+                "Could not parse app.manifest, not a correct JSON file"
+            )
 
     def update_addon_version(self, version: str) -> None:
         self._manifest["info"]["id"]["version"] = version
 
+    def validate(self):
+        schema_version = self._get_schema_version()
+        if schema_version != APP_MANIFEST_SCHEMA_VERSION:
+            raise AppManifestFormatException(
+                f"schemaVersion should be '{APP_MANIFEST_SCHEMA_VERSION}'"
+            )
+        supported_deployments = self._get_supported_deployments()
+        if not supported_deployments:
+            raise AppManifestFormatException("supportedDeployments should be set")
+        supported_deployments_set = set(supported_deployments)
+        if not supported_deployments_set.issubset(APP_MANIFEST_SUPPORTED_DEPLOYMENTS):
+            raise AppManifestFormatException(
+                f"supportedDeployments should only have values from '{APP_MANIFEST_SUPPORTED_DEPLOYMENTS}'"
+            )
+        target_workloads = self._get_target_workloads()
+        if not target_workloads:
+            raise AppManifestFormatException("targetWorkloads should be set")
+        target_workloads_set = set(target_workloads)
+        if not target_workloads_set.issubset(APP_MANIFEST_TARGET_WORKLOADS):
+            raise AppManifestFormatException(
+                f"targetWorkloads should only have values from '{APP_MANIFEST_TARGET_WORKLOADS}'"
+            )
+
     def __str__(self) -> str:
-        content = json.dumps(self._manifest, indent=4, sort_keys=True)
-        if self._comments:
-            for comment in self._comments:
-                content += f"\n{comment}"
-        return content
+        return json.dumps(self._manifest, indent=4, sort_keys=True)

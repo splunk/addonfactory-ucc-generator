@@ -13,8 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-
 import json
 import logging
 import os
@@ -23,9 +21,6 @@ from os import path as op
 
 from jinja2 import Environment, FileSystemLoader
 
-from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
-    alert_actions_exceptions as aae,
-)
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
     arf_consts as ac,
 )
@@ -39,18 +34,16 @@ from splunk_add_on_ucc_framework.commands.modular_alert_builder.alert_actions_me
 logger = logging.getLogger("ucc_gen")
 
 
-class AlertActionsConfBase:
+class AlertActionsConfGeneration:
     def __init__(
         self,
-        input_setting=None,
-        package_path=None,
-        **kwargs,
+        input_setting,
+        package_path,
     ):
         self._alert_conf_name = "alert_actions.conf"
         self._alert_spec_name = "alert_actions.conf.spec"
         self._eventtypes_conf = "eventtypes.conf"
         self._tags_conf = "tags.conf"
-        self._all_settings = input_setting
         self._alert_settings = input_setting[ac.MODULAR_ALERTS]
         self._package_path = package_path
         # nosemgrep: splunk.autoescape-disabled, python.jinja2.security.audit.autoescape-disabled.autoescape-disabled
@@ -62,85 +55,45 @@ class AlertActionsConfBase:
             lstrip_blocks=True,
             keep_trailing_newline=True,
         )
-
-    def get_local_conf_file_path(self, conf_name=None, create_dir_path=True):
-        if not self._package_path:
-            return None
-
-        if not conf_name:
-            conf_name = self._alert_conf_name
-
-        local_path = op.join(self._package_path, "default")
-        if not op.exists(local_path) and create_dir_path:
-            os.makedirs(local_path)
-
-        return op.join(local_path, conf_name)
-
-    def get_spec_file_path(self, spec_file=None, create_dir_path=True):
-        if not self._package_path:
-            return None
-
-        if not spec_file:
-            spec_file = self._alert_spec_name
-
-        readme_path = op.join(self._package_path, "README")
-        if not op.exists(readme_path) and create_dir_path:
-            os.makedirs(readme_path)
-        return op.join(readme_path, spec_file)
-
-
-class AlertActionsConfGeneration(AlertActionsConfBase):
-    DEFAULT_CONF_TEMPLATE = "alert_actions.conf.template"
-    DEFAULT_SPEC_TEMPLATE = "alert_actions.conf.spec.template"
-    DEFAULT_EVENTTYPES_TEMPLATE = "eventtypes.conf.template"
-    DEFAULT_TAGS_TEMPLATE = "tags.conf.template"
-
-    def __init__(
-        self,
-        input_setting=None,
-        package_path=None,
-        default_settings_file=None,
-        **kwargs,
-    ):
-        if not input_setting:
-            msg = 'status="failed", required_args="input_setting"'
-            raise aae.AlertActionsInValidArgs(msg)
-
-        super().__init__(
-            input_setting=input_setting,
-            package_path=package_path,
-            default_settings_file=default_settings_file,
-            **kwargs,
-        )
-
-        self._html_fields = [
-            ac.PARAMETERS,
-        ]
-        self._remove_fields = [ac.SHORT_NAME] + self._html_fields
+        self._html_fields = [ac.PARAMETERS]
         self._default_conf_settings = {
             "python.version": "python3",
             "is_custom": 1,
             "payload_format": "json",
             "icon_path": "alerticon.png",
         }
-        self._output = {}
+
+    def get_local_conf_file_path(self, conf_name):
+        local_path = op.join(self._package_path, "default")
+        if not op.exists(local_path):
+            os.makedirs(local_path)
+
+        return op.join(local_path, conf_name)
+
+    def get_spec_file_path(self):
+        readme_path = op.join(self._package_path, "README")
+        if not op.exists(readme_path):
+            os.makedirs(readme_path)
+        return op.join(readme_path, self._alert_spec_name)
 
     def generate_conf(self):
         logger.info(
             'status="starting", operation="generate", '
             + 'object="alert_actions.conf", object_type="file"'
         )
-        template = self._templates.get_template(self.DEFAULT_CONF_TEMPLATE)
-        deny_list = [
-            "short_name",
-            "alert_props",
-            "parameters",
-            "uuid",
-            "code",
-            "largeIcon",
-            "smallIcon",
-            "index",
-        ]
+        template = self._templates.get_template("alert_actions.conf.template")
+        deny_list = frozenset(
+            [
+                "short_name",
+                "alert_props",
+                "parameters",
+                "uuid",
+                "code",
+                "largeIcon",
+                "smallIcon",
+                "index",
+            ]
+        )
         alerts = {}
         for alert in self._alert_settings:
             alert_name = alert["short_name"]
@@ -176,8 +129,11 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
                             alerts[alert_name].append(f"param.{param_name} = ")
         final_string = template.render(alerts=alerts)
         text = linesep.join([s.strip() for s in final_string.splitlines()])
-        write_file(self._alert_conf_name, self.get_local_conf_file_path(), text)
-        self._output["alert_actions.conf"] = text
+        write_file(
+            self._alert_conf_name,
+            self.get_local_conf_file_path(self._alert_conf_name),
+            text,
+        )
         logger.info(
             'status="success", operation="generate", '
             + 'object="alert_actions.conf", object_type="file"'
@@ -188,10 +144,10 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
             'status="starting", operation="generate", '
             + 'object="eventtypes.conf", object_type="file"'
         )
-        template = self._templates.get_template(self.DEFAULT_EVENTTYPES_TEMPLATE)
+        template = self._templates.get_template("eventtypes.conf.template")
         final_string = template.render(mod_alerts=self._alert_settings)
         text = linesep.join([s.strip() for s in final_string.splitlines()])
-        file_path = self.get_local_conf_file_path(conf_name=self._eventtypes_conf)
+        file_path = self.get_local_conf_file_path(self._eventtypes_conf)
         write_file(self._eventtypes_conf, file_path, text)
 
         # remove the stanza if not checked
@@ -201,7 +157,6 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
             ):
                 continue
             remove_alert_from_conf_file(alert, file_path)
-        self._output["eventtypes.conf"] = text
         logger.info(
             'status="success", operation="generate", '
             + 'object="eventtypes.conf", object_type="file"'
@@ -212,10 +167,10 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
             'status="starting", operation="generate", '
             + 'object="tags.conf", object_type="file"'
         )
-        template = self._templates.get_template(self.DEFAULT_TAGS_TEMPLATE)
+        template = self._templates.get_template("tags.conf.template")
         final_string = template.render(mod_alerts=self._alert_settings)
         text = linesep.join([s.strip() for s in final_string.splitlines()])
-        file_path = self.get_local_conf_file_path(conf_name=self._tags_conf)
+        file_path = self.get_local_conf_file_path(self._tags_conf)
         write_file(self._tags_conf, file_path, text)
 
         # remove the stanza if not checked
@@ -225,7 +180,6 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
             ):
                 continue
             remove_alert_from_conf_file(alert, file_path)
-        self._output["tags.conf"] = text
         logger.info(
             'status="success", operation="generate", '
             + 'object="tags.conf", object_type="file"'
@@ -236,7 +190,7 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
             'status="starting", operation="generate", '
             + 'object="alert_actions.conf.spec", object_type="file"'
         )
-        template = self._templates.get_template(self.DEFAULT_SPEC_TEMPLATE)
+        template = self._templates.get_template("alert_actions.conf.spec.template")
         _router = {
             "dropdownlist": "list",
             "text": "string",
@@ -277,7 +231,6 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
         final_string = template.render(alerts=alerts)
         text = linesep.join([s.strip() for s in final_string.splitlines()])
         write_file(self._alert_spec_name, self.get_spec_file_path(), text)
-        self._output["alert_actions.conf.spec"] = text
         logger.info(
             'status="success", operation="generate", '
             + 'object="alert_actions.conf.spec", object_type="file"'
@@ -305,11 +258,3 @@ class AlertActionsConfGeneration(AlertActionsConfBase):
                     k,
                     v,
                 )
-
-
-def generate_alert_actions_conf(input_setting=None, package_path=None, **kwargs):
-    obj = AlertActionsConfGeneration(
-        input_setting=input_setting, package_path=package_path, **kwargs
-    )
-    obj.handle()
-    return obj._output

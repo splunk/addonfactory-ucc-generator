@@ -1,5 +1,7 @@
 import os
 import tempfile
+import sys
+import pytest
 from os import path
 
 from tests.smoke import helpers
@@ -7,6 +9,11 @@ from tests.smoke import helpers
 import addonfactory_splunk_conf_parser_lib as conf_parser
 
 from splunk_add_on_ucc_framework.commands import build
+
+PYTEST_SKIP_REASON = """Python 3.8 and higher preserves the order of the attrib
+fields when `tostring` function is used.
+https://docs.python.org/3/library/xml.etree.elementtree.html#xml.etree.ElementTree.tostring
+"""
 
 
 def _compare_app_conf(expected_folder: str, actual_folder: str):
@@ -41,28 +48,10 @@ def test_ucc_generate():
         "..",
         "testdata",
         "test_addons",
-        "package_global_config_inputs_configuration_alerts",
+        "package_global_config_everything",
         "package",
     )
     build.generate(source=package_folder)
-
-
-def test_ucc_generate_with_add_on_from_example_folder():
-    package_folder = path.join(
-        path.dirname(path.realpath(__file__)),
-        "..",
-        "..",
-        "example",
-        "package",
-    )
-    config_path = path.join(
-        path.dirname(path.realpath(__file__)),
-        "..",
-        "..",
-        "example",
-        "globalConfig.json",
-    )
-    build.generate(source=package_folder, config_path=config_path)
 
 
 def test_ucc_generate_with_config_param():
@@ -74,7 +63,7 @@ def test_ucc_generate_with_config_param():
         "..",
         "testdata",
         "test_addons",
-        "package_global_config_inputs_configuration_alerts",
+        "package_global_config_everything",
         "package",
     )
     config_path = path.join(
@@ -82,20 +71,21 @@ def test_ucc_generate_with_config_param():
         "..",
         "testdata",
         "test_addons",
-        "package_global_config_inputs_configuration_alerts",
+        "package_global_config_everything",
         "globalConfig.json",
     )
     build.generate(source=package_folder, config_path=config_path)
 
 
-def test_ucc_generate_with_inputs_configuration_alerts():
+@pytest.mark.skipif(sys.version_info >= (3, 8), reason=PYTEST_SKIP_REASON)
+def test_ucc_generate_with_everything():
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
             path.dirname(path.realpath(__file__)),
             "..",
             "testdata",
             "test_addons",
-            "package_global_config_inputs_configuration_alerts",
+            "package_global_config_everything",
             "package",
         )
         build.generate(source=package_folder, output_directory=temp_dir)
@@ -105,7 +95,7 @@ def test_ucc_generate_with_inputs_configuration_alerts():
             "..",
             "testdata",
             "expected_addons",
-            "expected_output_global_config_inputs_configuration_alerts",
+            "expected_output_global_config_everything",
             "Splunk_TA_UCCExample",
         )
         actual_folder = path.join(temp_dir, "Splunk_TA_UCCExample")
@@ -129,6 +119,7 @@ def test_ucc_generate_with_inputs_configuration_alerts():
             ("default", "data", "ui", "nav", "default.xml"),
             ("default", "data", "ui", "views", "configuration.xml"),
             ("default", "data", "ui", "views", "inputs.xml"),
+            ("default", "data", "ui", "views", "dashboard.xml"),
             ("default", "data", "ui", "views", "splunk_ta_uccexample_redirect.xml"),
             ("bin", "splunk_ta_uccexample", "modalert_test_alert_helper.py"),
             ("bin", "example_input_one.py"),
@@ -165,14 +156,9 @@ def test_ucc_generate_with_inputs_configuration_alerts():
         for f in files_to_exist:
             expected_file_path = path.join(expected_folder, *f)
             assert path.exists(expected_file_path)
-        files_to_not_exist = [
-            ("default", "data", "ui", "nav", "default_no_input.xml"),
-        ]
-        for f in files_to_not_exist:
-            expected_file_path = path.join(expected_folder, *f)
-            assert not path.exists(expected_file_path)
 
 
+@pytest.mark.skipif(sys.version_info >= (3, 8), reason=PYTEST_SKIP_REASON)
 def test_ucc_generate_with_configuration():
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
@@ -234,12 +220,6 @@ def test_ucc_generate_with_configuration():
         for f in files_to_exist:
             expected_file_path = path.join(expected_folder, *f)
             assert path.exists(expected_file_path)
-        files_to_not_exist = [
-            ("default", "data", "ui", "nav", "default_no_input.xml"),
-        ]
-        for f in files_to_not_exist:
-            expected_file_path = path.join(expected_folder, *f)
-            assert not path.exists(expected_file_path)
 
 
 def test_ucc_generate_with_configuration_files_only():
@@ -281,12 +261,6 @@ def test_ucc_generate_with_configuration_files_only():
             expected_folder,
             actual_folder,
         )
-        files_to_not_exist = [
-            ("default", "data", "ui", "nav", "default_no_input.xml"),
-        ]
-        for f in files_to_not_exist:
-            expected_file_path = path.join(expected_folder, *f)
-            assert not path.exists(expected_file_path)
 
 
 def test_ucc_generate_openapi_with_configuration_files_only():

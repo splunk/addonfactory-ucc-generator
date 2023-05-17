@@ -61,6 +61,10 @@ class GlobalConfig:
         return self._content["pages"]["configuration"]["tabs"]
 
     @property
+    def dashboard(self):
+        return self._content["pages"].get("dashboard")
+
+    @property
     def settings(self):
         settings = []
         for tab in self.tabs:
@@ -119,3 +123,14 @@ class GlobalConfig:
 
     def has_alerts(self) -> bool:
         return bool(self.alerts)
+
+    def has_dashboard(self) -> bool:
+        return self.dashboard is not None
+
+    def has_oauth(self) -> bool:
+        for tab in self.tabs:
+            if tab["name"] == "account":
+                for entity in tab["entity"]:
+                    if entity["type"] == "oauth":
+                        return True
+        return False

@@ -1,3 +1,5 @@
+import os.path
+
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
     alert_actions_py_gen,
 )
@@ -5,9 +7,9 @@ from tests.unit.helpers import get_testdata_file
 
 
 def test_generate_alert_action(tmp_path):
-    generated = alert_actions_py_gen.generate_alert_actions_py_files(
+    py_gen = alert_actions_py_gen.AlertActionsPyGenerator(
+        addon_name="Splunk_TA_UCCExample",
         input_setting={
-            "product_id": "Splunk_TA_UCCExample",
             "short_name": "splunk_ta_uccexample",
             "modular_alerts": [
                 {
@@ -89,10 +91,19 @@ def test_generate_alert_action(tmp_path):
                 }
             ],
         },
-        global_settings="",
         package_path=tmp_path,
     )
-    expected_alert_helper = get_testdata_file("alert_action_helper.py.generated")
+    py_gen.handle()
+
     expected_alert = get_testdata_file("alert_action.py.generated")
-    assert expected_alert == generated["test_alert"]["test_alert.py"]
-    assert expected_alert_helper == generated["test_alert"]["test_alert_helper.py"]
+    with open(os.path.join(tmp_path, "bin", "test_alert.py")) as _f:
+        generated_alert = _f.read()
+        assert expected_alert == generated_alert
+    expected_alert_helper = get_testdata_file("alert_action_helper.py.generated")
+    with open(
+        os.path.join(
+            tmp_path, "bin", "splunk_ta_uccexample", "modalert_test_alert_helper.py"
+        )
+    ) as _f:
+        generated_alert_helper = _f.read()
+        assert expected_alert_helper == generated_alert_helper

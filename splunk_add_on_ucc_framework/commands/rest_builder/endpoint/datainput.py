@@ -41,6 +41,8 @@ class DataInputEntityBuilder(RestEntityBuilder):
 
 class DataInputEndpointBuilder(RestEndpointBuilder):
     _rh_template = """
+import import_declare_test
+
 from splunktaucclib.rest_handler.endpoint import (
     field,
     validator,

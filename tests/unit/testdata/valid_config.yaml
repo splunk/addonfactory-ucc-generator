@@ -601,6 +601,11 @@ pages:
         field: start_date
       - label: Limit
         field: limit
+  dashboard:
+    panels:
+    - name: addon_version
+    - name: events_ingested_by_sourcetype
+    - name: errors_in_the_addon
 alerts:
 - name: test_alert
   label: Test Alert

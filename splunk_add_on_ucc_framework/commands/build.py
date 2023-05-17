@@ -21,7 +21,6 @@ import shutil
 import sys
 from typing import Optional
 
-from jinja2 import Environment, FileSystemLoader
 from openapi3 import OpenAPI
 
 from splunk_add_on_ucc_framework import (
@@ -31,18 +30,18 @@ from splunk_add_on_ucc_framework import (
     global_config_validator,
     utils,
 )
+from splunk_add_on_ucc_framework import dashboard
 from splunk_add_on_ucc_framework import app_conf as app_conf_lib
 from splunk_add_on_ucc_framework import meta_conf as meta_conf_lib
 from splunk_add_on_ucc_framework import server_conf as server_conf_lib
 from splunk_add_on_ucc_framework import app_manifest as app_manifest_lib
 from splunk_add_on_ucc_framework import global_config as global_config_lib
-from splunk_add_on_ucc_framework import normalize
+from splunk_add_on_ucc_framework import data_ui_generator
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
-    generate_alerts,
+    builder as alert_builder,
 )
 from splunk_add_on_ucc_framework.commands.rest_builder import (
     global_config_builder_schema,
-    global_config_post_processor,
 )
 from splunk_add_on_ucc_framework.commands.rest_builder.builder import RestBuilder
 from splunk_add_on_ucc_framework.install_python_libraries import (
@@ -56,130 +55,7 @@ from splunk_add_on_ucc_framework.commands.openapi_generator import (
 
 logger = logging.getLogger("ucc_gen")
 
-PARENT_DIR = ".."
 internal_root_dir = os.path.dirname(os.path.dirname(__file__))
-# nosemgrep: splunk.autoescape-disabled, python.jinja2.security.audit.autoescape-disabled.autoescape-disabled
-j2_env = Environment(
-    loader=FileSystemLoader(os.path.join(internal_root_dir, "templates"))
-)
-
-
-def _recursive_overwrite(src, dest, ignore_list=None):
-    """
-    Method to copy from src to dest recursively.
-
-    Args:
-        src (str): Source of copy
-        dest (str): Destination to copy
-        ignore_list (list): List of files/folder to ignore while copying
-    """
-
-    if os.path.isdir(src):
-        if not os.path.isdir(dest):
-            os.makedirs(dest)
-        files = os.listdir(src)
-        for f in files:
-            if not ignore_list or not os.path.join(dest, f) in ignore_list:
-                _recursive_overwrite(
-                    os.path.join(src, f), os.path.join(dest, f), ignore_list
-                )
-            else:
-                logger.info(f"Excluding : {os.path.join(dest, f)}")
-    else:
-        if os.path.exists(dest):
-            os.remove(dest)
-        shutil.copy(src, dest)
-
-
-def _replace_token(ta_name, outputdir):
-    """
-    Replace token with addon name in inputs.xml, configuration.xml, redirect.xml.
-    Replace token with addon version in redirect.xml.
-
-    Args:
-        ta_name (str): Name of TA.
-        outputdir (str): output directory.
-    """
-
-    # replace token in template
-    logger.info("Replace tokens in views")
-    views = ["inputs.xml", "configuration.xml", "redirect.xml"]
-    for view in views:
-        template_dir = os.path.join(
-            outputdir, ta_name, "default", "data", "ui", "views"
-        )
-        with open(os.path.join(template_dir, view)) as f:
-            s = f.read()
-
-        # Safely write the changed content, if found in the file
-        with open(os.path.join(template_dir, view), "w") as f:
-            s = s.replace("${package.name}", ta_name)
-            if view == "redirect.xml":
-                s = s.replace("${ta.name}", ta_name.lower())
-            f.write(s)
-
-
-def _generate_rest(
-    ta_name,
-    scheme: global_config_builder_schema.GlobalConfigBuilderSchema,
-    outputdir,
-):
-    """
-    Build REST for Add-on.
-
-    Args:
-        ta_name (str): Name of TA.
-        scheme (GlobalConfigBuilderSchema): REST schema.
-        outputdir (str): output directory.
-    """
-    builder_obj = RestBuilder(scheme, os.path.join(outputdir, ta_name))
-    builder_obj.build()
-    post_process = global_config_post_processor.GlobalConfigPostProcessor()
-    post_process(builder_obj, scheme)
-    return builder_obj
-
-
-def _is_oauth_configured(ta_tabs):
-    """
-    Check if oauth is configured in globalConfig file.
-
-    Args:
-        ta_tabs (list): List of tabs mentioned in globalConfig file.
-
-    Returns:
-        bool: True if oauth is configured, False otherwise.
-    """
-
-    for tab in ta_tabs:
-        if tab["name"] == "account":
-            for elements in tab["entity"]:
-                if elements["type"] == "oauth":
-                    return True
-            break
-    return False
-
-
-def _replace_oauth_html_template_token(ta_name, ta_version, outputdir):
-    """
-    Replace tokens with addon name and version in redirect.html.
-
-    Args:
-        ta_name (str): Name of TA.
-        ta_version (str): Version of TA.
-        outputdir (str): output directory.
-    """
-
-    html_template_path = os.path.join(outputdir, ta_name, "appserver", "templates")
-    with open(os.path.join(html_template_path, "redirect.html")) as f:
-        s = f.read()
-
-    # Safely write the changed content, if found in the file
-    with open(os.path.join(html_template_path, "redirect.html"), "w") as f:
-        # replace addon name in html template
-        s = s.replace("${ta.name}", ta_name.lower())
-        # replace addon version in html template
-        s = s.replace("${ta.version}", ta_version)
-        f.write(s)
 
 
 def _modify_and_replace_token_for_oauth_templates(
@@ -193,9 +69,6 @@ def _modify_and_replace_token_for_oauth_templates(
         global_config: Object representing globalConfig.
         outputdir: output directory.
     """
-    redirect_xml_src = os.path.join(
-        outputdir, ta_name, "default", "data", "ui", "views", "redirect.xml"
-    )
     redirect_js_src = os.path.join(
         outputdir, ta_name, "appserver", "static", "js", "build", "redirect_page.js"
     )
@@ -203,8 +76,15 @@ def _modify_and_replace_token_for_oauth_templates(
         outputdir, ta_name, "appserver", "templates", "redirect.html"
     )
 
-    if _is_oauth_configured(global_config.tabs):
-        _replace_oauth_html_template_token(ta_name, global_config.version, outputdir)
+    if global_config.has_oauth():
+        html_template_path = os.path.join(outputdir, ta_name, "appserver", "templates")
+        with open(os.path.join(html_template_path, "redirect.html")) as f:
+            s = f.read()
+
+        with open(os.path.join(html_template_path, "redirect.html"), "w") as f:
+            s = s.replace("${ta.name}", ta_name.lower())
+            s = s.replace("${ta.version}", global_config.version)
+            f.write(s)
 
         redirect_js_dest = (
             os.path.join(outputdir, ta_name, "appserver", "static", "js", "build", "")
@@ -220,22 +100,25 @@ def _modify_and_replace_token_for_oauth_templates(
             "templates",
             ta_name.lower() + "_redirect.html",
         )
-        redirect_xml_dest = os.path.join(
-            outputdir,
-            ta_name,
-            "default",
-            "data",
-            "ui",
-            "views",
-            ta_name.lower() + "_redirect.xml",
-        )
+        with open(
+            os.path.join(
+                outputdir,
+                ta_name,
+                "default",
+                "data",
+                "ui",
+                "views",
+                f"{ta_name.lower()}_redirect.xml",
+            ),
+            "w",
+        ) as addon_redirect_xml_file:
+            addon_redirect_xml_content = data_ui_generator.generate_views_redirect_xml(
+                ta_name,
+            )
+            addon_redirect_xml_file.write(addon_redirect_xml_content)
         os.rename(redirect_js_src, redirect_js_dest)
         os.rename(redirect_html_src, redirect_html_dest)
-        os.rename(redirect_xml_src, redirect_xml_dest)
-
-    # if oauth is not configured remove the extra template
     else:
-        os.remove(redirect_xml_src)
         os.remove(redirect_html_src)
         os.remove(redirect_js_src)
 
@@ -243,35 +126,28 @@ def _modify_and_replace_token_for_oauth_templates(
 def _add_modular_input(
     ta_name: str, global_config: global_config_lib.GlobalConfig, outputdir: str
 ):
-    """
-    Generate Modular input for addon.
-
-    Args:
-        ta_name: Add-on name.
-        global_config: Object representing globalConfig.
-        outputdir: output directory.
-    """
     for service in global_config.inputs:
         input_name = service.get("name")
         class_name = input_name.upper()
         description = service.get("title")
         entity = service.get("entity")
-        field_allow_list = ["name", "index", "sourcetype"]
+        field_allow_list = frozenset(["name", "index", "sourcetype"])
         template = "input.template"
-        # if the service has a template specified, use it.  Otherwise keep the default
         if "template" in service:
             template = service.get("template") + ".template"
 
         # filter fields in allow list
         entity = [x for x in entity if x.get("field") not in field_allow_list]
-        import_declare = "import import_declare_test"
 
-        content = j2_env.get_template(template).render(
-            import_declare=import_declare,
-            input_name=input_name,
-            class_name=class_name,
-            description=description,
-            entity=entity,
+        content = (
+            utils.get_j2_env()
+            .get_template(template)
+            .render(
+                input_name=input_name,
+                class_name=class_name,
+                description=description,
+                entity=entity,
+            )
         )
         input_file_name = os.path.join(outputdir, ta_name, "bin", input_name + ".py")
         with open(input_file_name, "w") as input_file:
@@ -291,47 +167,27 @@ def _add_modular_input(
             config.write(configfile)
 
 
-def _make_modular_alerts(
-    ta_name: str, global_config: global_config_lib.GlobalConfig, outputdir: str
-):
-    """
-    Generate the alert schema with required structure.
-
-    Args:
-        ta_name: Add-on name.
-        global_config: Object representing globalConfig.
-        outputdir: Output directory.
-    """
-    if global_config.has_alerts():
-        envs = normalize.normalize(
-            {
-                "alerts": global_config.alerts,
-            },
-            ta_name,
-            global_config.namespace,
-        )
-        logger.info("Generating alerts code")
-        generate_alerts(internal_root_dir, outputdir, envs)
-
-
-def _get_ignore_list(ta_name, path):
+def _get_ignore_list(addon_name: str, ucc_ignore_path: str, output_directory: str):
     """
     Return path of files/folders to be removed.
 
     Args:
-        ta_name (str): Name of TA.
-        path (str): Path of '.uccignore'.
+        addon_name: Add-on name.
+        ucc_ignore_path: Path to '.uccignore'.
+        output_directory: Output directory path.
 
     Returns:
         list: List of paths to be removed from output directory.
     """
-    if not os.path.exists(path):
+    if not os.path.exists(ucc_ignore_path):
         return []
     else:
-        with open(path) as ignore_file:
+        with open(ucc_ignore_path) as ignore_file:
             ignore_list = ignore_file.readlines()
         ignore_list = [
-            (os.path.join("output", ta_name, _get_os_path(path))).strip()
+            (
+                os.path.join(output_directory, addon_name, utils.get_os_path(path))
+            ).strip()
             for path in ignore_list
         ]
         return ignore_list
@@ -359,58 +215,51 @@ def _remove_listed_files(ignore_list):
             )
 
 
-def _handle_no_inputs(ta_name, outputdir):
-    """
-    Handle for configuration without input page.
-
-    Args:
-        ta_name (str): Name of TA.
-        outputdir (str): output directory.
-    """
-    default_xml_file = os.path.join(
-        outputdir, ta_name, "default", "data", "ui", "nav", "default.xml"
+def generate_data_ui(
+    output_directory: str,
+    addon_name: str,
+    include_inputs: bool,
+    include_dashboard: bool,
+):
+    # Create directories in the output folder for add-on's UI nav and views.
+    os.makedirs(
+        os.path.join(output_directory, addon_name, "default", "data", "ui", "nav"),
+        exist_ok=True,
     )
-    default_no_input_xml_file = os.path.join(
-        outputdir, ta_name, "default", "data", "ui", "nav", "default_no_input.xml"
+    os.makedirs(
+        os.path.join(output_directory, addon_name, "default", "data", "ui", "views"),
+        exist_ok=True,
     )
-    os.remove(default_xml_file)
-    os.rename(
-        default_no_input_xml_file,
-        default_xml_file,
+    default_ui_path = os.path.join(
+        output_directory, addon_name, "default", "data", "ui"
     )
-    file_remove_list = [
-        os.path.join(
-            outputdir, ta_name, "default", "data", "ui", "views", "inputs.xml"
-        ),
-        os.path.join(outputdir, ta_name, "appserver", "static", "css", "inputs.css"),
-        os.path.join(
-            outputdir, ta_name, "appserver", "static", "css", "createInput.css"
-        ),
-    ]
-    for fl in file_remove_list:
-        try:
-            os.remove(fl)
-        except OSError:
-            pass
-
-
-def _get_os_path(path):
-    """
-    Returns a path which will be os compatible.
-
-    Args:
-        path (str): Path in string
-
-    Return:
-        string: Path which will be os compatible.
-    """
-
-    if "\\\\" in path:
-        path = path.replace("\\\\", os.sep)
+    default_xml_path = os.path.join(default_ui_path, "nav", "default.xml")
+    if os.path.exists(default_xml_path):
+        logger.info(
+            "Skipping generating data/ui/nav/default.xml because file already exists."
+        )
     else:
-        path = path.replace("\\", os.sep)
-    path = path.replace("/", os.sep)
-    return path.strip(os.sep)
+        with open(default_xml_path, "w") as default_xml_file:
+            default_xml_content = data_ui_generator.generate_nav_default_xml(
+                include_inputs=include_inputs,
+                include_dashboard=include_dashboard,
+            )
+            default_xml_file.write(default_xml_content)
+    with open(
+        os.path.join(default_ui_path, "views", "configuration.xml"), "w"
+    ) as configuration_xml_file:
+        configuration_xml_content = data_ui_generator.generate_views_configuration_xml(
+            addon_name,
+        )
+        configuration_xml_file.write(configuration_xml_content)
+    if include_inputs:
+        with open(
+            os.path.join(default_ui_path, "views", "inputs.xml"), "w"
+        ) as input_xml_file:
+            inputs_xml_content = data_ui_generator.generate_views_inputs_xml(
+                addon_name,
+            )
+            input_xml_file.write(inputs_xml_content)
 
 
 def _get_addon_version(addon_version: Optional[str]) -> str:
@@ -434,6 +283,35 @@ def _get_addon_version(addon_version: Optional[str]) -> str:
     return addon_version.strip()
 
 
+def _get_app_manifest(source: str) -> app_manifest_lib.AppManifest:
+    app_manifest_path = os.path.abspath(
+        os.path.join(source, app_manifest_lib.APP_MANIFEST_FILE_NAME),
+    )
+    with open(app_manifest_path) as manifest_file:
+        app_manifest_content = manifest_file.read()
+    app_manifest = app_manifest_lib.AppManifest()
+    try:
+        app_manifest.read(app_manifest_content)
+        app_manifest.validate()
+        return app_manifest
+    except app_manifest_lib.AppManifestFormatException as e:
+        logger.error(
+            f"Manifest file @ {app_manifest_path} has invalid format.\n"
+            f"Please refer to {app_manifest_lib.APP_MANIFEST_WEBSITE}.\n"
+            f"Error message: {e}.\n"
+        )
+        sys.exit(1)
+
+
+def _get_build_output_path(output_directory: Optional[str] = None) -> str:
+    if output_directory is None:
+        return os.path.join(os.getcwd(), "output")
+    else:
+        if not os.path.isabs(output_directory):
+            return os.path.join(os.getcwd(), output_directory)
+        return output_directory
+
+
 def generate(
     source: str,
     config_path: Optional[str] = None,
@@ -443,8 +321,8 @@ def generate(
 ):
     logger.info(f"ucc-gen version {__version__} is used")
     logger.info(f"Python binary name to use: {python_binary_name}")
-    if output_directory is None:
-        output_directory = os.path.join(os.getcwd(), "output")
+    output_directory = _get_build_output_path(output_directory)
+    logger.info(f"Output folder is {output_directory}")
     addon_version = _get_addon_version(addon_version)
     logger.info(f"Add-on will be built with version '{addon_version}'")
     if not os.path.exists(source):
@@ -452,28 +330,16 @@ def generate(
     shutil.rmtree(os.path.join(output_directory), ignore_errors=True)
     os.makedirs(os.path.join(output_directory))
     logger.info(f"Cleaned out directory {output_directory}")
-    app_manifest_path = os.path.abspath(
-        os.path.join(source, app_manifest_lib.APP_MANIFEST_FILE_NAME),
-    )
-    with open(app_manifest_path) as manifest_file:
-        app_manifest_content = manifest_file.read()
-    app_manifest = app_manifest_lib.AppManifest()
-    try:
-        app_manifest.read(app_manifest_content)
-    except app_manifest_lib.AppManifestFormatException:
-        logger.error(
-            f"Manifest file @ {app_manifest_path} has invalid format.\n"
-            f"Please refer to {app_manifest_lib.APP_MANIFEST_WEBSITE}.\n"
-            f'Lines with comments are supported if they start with "#".\n'
-        )
-        sys.exit(1)
+    app_manifest = _get_app_manifest(source)
     ta_name = app_manifest.get_addon_name()
     if not config_path:
         is_global_config_yaml = False
-        config_path = os.path.abspath(os.path.join(source, "..", "globalConfig.json"))
+        config_path = os.path.abspath(
+            os.path.join(source, os.pardir, "globalConfig.json")
+        )
         if not os.path.isfile(config_path):
             config_path = os.path.abspath(
-                os.path.join(source, "..", "globalConfig.yaml")
+                os.path.join(source, os.pardir, "globalConfig.yaml")
             )
             is_global_config_yaml = True
     else:
@@ -498,12 +364,16 @@ def generate(
             f"Updated and saved add-on version in the globalConfig file to {addon_version}"
         )
         global_config_update.handle_global_config_update(global_config)
-        scheme = global_config_builder_schema.GlobalConfigBuilderSchema(
-            global_config, j2_env
-        )
-        _recursive_overwrite(
+        scheme = global_config_builder_schema.GlobalConfigBuilderSchema(global_config)
+        utils.recursive_overwrite(
             os.path.join(internal_root_dir, "package"),
             os.path.join(output_directory, ta_name),
+        )
+        generate_data_ui(
+            output_directory,
+            ta_name,
+            global_config.has_inputs(),
+            global_config.has_dashboard(),
         )
         logger.info("Copied UCC template directory")
         global_config_file = (
@@ -534,28 +404,21 @@ def generate(
         logger.info(
             f"Installed add-on requirements into {ucc_lib_target} from {source}"
         )
-        _replace_token(ta_name, output_directory)
-        _generate_rest(ta_name, scheme, output_directory)
+        builder_obj = RestBuilder(scheme, os.path.join(output_directory, ta_name))
+        builder_obj.build()
         _modify_and_replace_token_for_oauth_templates(
             ta_name,
             global_config,
             output_directory,
         )
         if global_config.has_inputs():
-            default_no_input_xml_file = os.path.join(
-                output_directory,
-                ta_name,
-                "default",
-                "data",
-                "ui",
-                "nav",
-                "default_no_input.xml",
-            )
-            os.remove(default_no_input_xml_file)
+            logger.info("Generating inputs code")
             _add_modular_input(ta_name, global_config, output_directory)
-        else:
-            _handle_no_inputs(ta_name, output_directory)
-        _make_modular_alerts(ta_name, global_config, output_directory)
+        if global_config.has_alerts():
+            logger.info("Generating alerts code")
+            alert_builder.generate_alerts(
+                global_config, ta_name, internal_root_dir, output_directory
+            )
 
         conf_file_names = []
         conf_file_names.extend(list(scheme.settings_conf_file_names))
@@ -578,6 +441,22 @@ def generate(
             logger.info(
                 f"Created default {server_conf_lib.SERVER_CONF_FILE_NAME} file in the output folder"
             )
+        if global_config.has_dashboard():
+            logger.info("Including dashboard")
+            dashboard_xml_path = os.path.join(
+                output_directory,
+                ta_name,
+                "default",
+                "data",
+                "ui",
+                "views",
+                "dashboard.xml",
+            )
+            dashboard.generate_dashboard(
+                global_config,
+                ta_name,
+                dashboard_xml_path,
+            )
     else:
         global_config = None
         conf_file_names = []
@@ -591,12 +470,14 @@ def generate(
         )
 
     ignore_list = _get_ignore_list(
-        ta_name, os.path.abspath(os.path.join(source, PARENT_DIR, ".uccignore"))
+        ta_name,
+        os.path.abspath(os.path.join(source, os.pardir, ".uccignore")),
+        output_directory,
     )
     _remove_listed_files(ignore_list)
     if ignore_list:
         logger.info(f"Removed {ignore_list} files")
-    _recursive_overwrite(source, os.path.join(output_directory, ta_name))
+    utils.recursive_overwrite(source, os.path.join(output_directory, ta_name))
     logger.info("Copied package directory")
 
     default_meta_conf_path = os.path.join(
@@ -636,17 +517,17 @@ def generate(
     app_conf.write(output_app_conf_path)
     logger.info(f"Updated {app_conf_lib.APP_CONF_FILE_NAME} file in the output folder")
 
-    license_dir = os.path.abspath(os.path.join(source, PARENT_DIR, "LICENSES"))
+    license_dir = os.path.abspath(os.path.join(source, os.pardir, "LICENSES"))
     if os.path.exists(license_dir):
         logger.info("Copy LICENSES directory")
-        _recursive_overwrite(
+        utils.recursive_overwrite(
             license_dir, os.path.join(output_directory, ta_name, "LICENSES")
         )
 
     if os.path.exists(
-        os.path.abspath(os.path.join(source, PARENT_DIR, "additional_packaging.py"))
+        os.path.abspath(os.path.join(source, os.pardir, "additional_packaging.py"))
     ):
-        sys.path.insert(0, os.path.abspath(os.path.join(source, PARENT_DIR)))
+        sys.path.insert(0, os.path.abspath(os.path.join(source, os.pardir)))
         from additional_packaging import additional_packaging
 
         additional_packaging(ta_name)

@@ -47,5 +47,7 @@
     "_standalone",
     "_distributed"
   ],
-  "targetWorkloads": null
+  "targetWorkloads": [
+    "_indexers"
+  ]
 }
