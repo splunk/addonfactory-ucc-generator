@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - id: matrix
-        uses: splunk/addonfactory-test-matrix-action@v1
+        uses: splunk/addonfactory-test-matrix-action@remove-poetry
 
   fossa-scan:
     continue-on-error: true
