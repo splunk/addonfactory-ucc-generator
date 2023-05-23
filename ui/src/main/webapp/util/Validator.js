@@ -1,11 +1,20 @@
+import * as _ from 'lodash';
 import { PREDEFINED_VALIDATORS_DICT } from '../constants/preDefinedRegex';
 import { getFormattedMessage } from './messageUtil';
-import {
-    parseNumberValidator,
-    parseRegexRawStr,
-    parseStringValidator,
-    parseFunctionRawStr,
-} from './uccConfigurationValidators';
+
+const parseFunctionRawStr = (rawStr) => {
+    let err;
+    let result;
+
+    try {
+        // eslint-disable-next-line no-eval
+        result = eval(`(${rawStr})`);
+    } catch (e) {
+        err = getFormattedMessage(11, rawStr);
+    }
+
+    return { err, result };
+};
 
 // Validate provided saveValidator function
 export function SaveValidator(validatorFunc, formData) {
@@ -18,6 +27,28 @@ export function SaveValidator(validatorFunc, formData) {
         return { errorMsg: ret };
     }
 }
+
+const parseNumberValidator = (range) => {
+    const isRangeLegal =
+        range.length === 2 && _.isNumber(range[0]) && _.isNumber(range[1]) && range[0] <= range[1];
+
+    const error = isRangeLegal ? undefined : getFormattedMessage(13, JSON.stringify(range));
+
+    return { error };
+};
+
+const parseRegexRawStr = (rawStr) => {
+    let error;
+    let result;
+
+    try {
+        result = new RegExp(rawStr);
+    } catch (e) {
+        error = getFormattedMessage(12, rawStr);
+    }
+
+    return { error, result };
+};
 
 class Validator {
     constructor(entities) {
@@ -41,10 +72,6 @@ class Validator {
 
     // Validate the string length of field
     StringValidator(field, label, validator, data) {
-        const { error } = parseStringValidator(validator.minLength, validator.maxLength);
-        if (error) {
-            return { errorField: field, errorMsg: error };
-        }
         if (this.checkIsFieldHasInput(data) && data.length > validator.maxLength) {
             return {
                 errorField: field,

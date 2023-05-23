@@ -24,7 +24,6 @@
     "@splunk/themes": "^0.14.0",
     "axios": "^1.2.3",
     "immutability-helper": "^3.1.1",
-    "jsonschema": "^1.4.0",
     "license-webpack-plugin": "^4.0.2",
     "react": "^16.9.38",
     "react-dom": "^16.9.8",

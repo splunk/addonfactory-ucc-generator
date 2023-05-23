@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import * as _ from 'lodash';
 import PropTypes from 'prop-types';
 
-import { validateSchema } from './uccConfigurationValidators';
 import { getFormattedMessage } from './messageUtil';
 import { setMetaInfo, setUnifiedConfig } from './util';
 import { loadGlobalConfig } from './script';
@@ -13,7 +11,6 @@ class ConfigManager extends Component {
         super(props);
         this.state = {
             unifiedConfig: {},
-            validationResult: {},
             appData: {},
             loading: true,
             syntaxError: false,
@@ -42,7 +39,6 @@ class ConfigManager extends Component {
     }
 
     attchPropertie(unifiedConfig) {
-        const validationResult = validateSchema(unifiedConfig);
         const { meta } = unifiedConfig;
         const appData = {
             app: meta.name,
@@ -55,23 +51,12 @@ class ConfigManager extends Component {
         setMetaInfo(appData);
         this.setState({
             appData,
-            validationResult,
             unifiedConfig,
             loading: false,
         });
     }
 
     renderComponents() {
-        if (this.state.validationResult.failed) {
-            return (
-                <ErrorModal
-                    message={getFormattedMessage(110, [
-                        _.unescape(this.state.validationResult.errors[0].stack),
-                    ])}
-                    open
-                />
-            );
-        }
         if (this.state.syntaxError) {
             return (
                 <ErrorModal message={getFormattedMessage(110, [getFormattedMessage(20)])} open />
