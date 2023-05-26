@@ -1,3 +1,10 @@
+## [5.27.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.27.0...v5.27.1) (2023-05-26)
+
+
+### Bug Fixes
+
+* require requests 2.31.0 and urllib3 < 2 ([#783](https://github.com/splunk/addonfactory-ucc-generator/issues/783)) ([7f4e778](https://github.com/splunk/addonfactory-ucc-generator/commit/7f4e778015f49cb46009619b9ffbb0d693f5fe2d))
+
 # [5.27.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.26.0...v5.27.0) (2023-05-17)
 
 
