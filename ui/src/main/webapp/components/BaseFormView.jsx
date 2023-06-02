@@ -491,9 +491,11 @@ class BaseFormView extends PureComponent {
                     parameters = `${parameters}&scope=${this.datadict.scope}`;
                 }
 
-                const host = encodeURI(
+                let host = encodeURI(
                     `https://${this.datadict.endpoint}${this.oauthConf.authCodeEndpoint}${parameters}`
                 );
+                const redirectURI = new URLSearchParams(host).get('redirect_uri');
+                host = host.replace(redirectURI, encodeURIComponent(redirectURI));
 
                 (async () => {
                     this.isCalled = false;
