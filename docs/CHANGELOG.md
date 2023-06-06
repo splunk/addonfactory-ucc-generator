@@ -1,3 +1,10 @@
+## [5.27.3](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.27.2...v5.27.3) (2023-06-06)
+
+
+### Bug Fixes
+
+* change modular input template according to globalConfig file ([#787](https://github.com/splunk/addonfactory-ucc-generator/issues/787)) ([24c8658](https://github.com/splunk/addonfactory-ucc-generator/commit/24c865828b9df8ef98a9310d0c86398a02e93fb5))
+
 ## [5.27.2](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.27.1...v5.27.2) (2023-06-02)
 
 
