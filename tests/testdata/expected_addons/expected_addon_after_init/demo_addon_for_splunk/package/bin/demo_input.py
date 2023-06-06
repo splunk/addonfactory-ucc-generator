@@ -21,7 +21,7 @@ def get_account_api_key(session_key: str, account_name: str):
         realm=f"__REST_CREDENTIAL__#{ADDON_NAME}#configs/conf-demo_addon_for_splunk_account",
     )
     account_conf_file = cfm.get_conf("demo_addon_for_splunk_account")
-    return account_conf_file.get(account_name).get("username")
+    return account_conf_file.get(account_name).get("api_key")
 
 
 def get_data_from_api(logger: logging.Logger, api_key: str):
