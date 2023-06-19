@@ -3,5 +3,11 @@
     "config:base",
     "group:all",
     ":disableDependencyDashboard"
+  ],
+  "packageRules": [
+    {
+      "matchPackageNames": ["urllib3"],
+      "allowedVersions": "<2.0.0"
+    }
   ]
 }
