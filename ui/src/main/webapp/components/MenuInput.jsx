@@ -6,10 +6,18 @@ import Menu from '@splunk/react-ui/Menu';
 import SlidingPanels from '@splunk/react-ui/SlidingPanels';
 import ChevronLeft from '@splunk/react-icons/ChevronLeft';
 import { _ } from '@splunk/ui-utils/i18n';
+import styled from 'styled-components';
+import { variables } from '@splunk/themes';
 import { getFormattedMessage } from '../util/messageUtil';
 import { getUnifiedConfigs } from '../util/util';
 import CustomMenu from './CustomMenu';
 import { StyledButton } from '../pages/EntryPageStyle';
+
+const CustomSubTitle = styled.span`
+    color: ${variables.brandColorD20};
+    font-size: ${variables.fontSizeSmall};
+    font-weight: 500;
+`;
 
 function MenuInput({ handleRequestOpen }) {
     const [activePanelId, setActivePanelId] = useState('main_panel');
@@ -67,6 +75,7 @@ function MenuInput({ handleRequestOpen }) {
                     }}
                 >
                     {service.title}
+                    <CustomSubTitle>&nbsp;{service.subTitle}</CustomSubTitle>
                 </Menu.Item>
             )
         );
@@ -105,13 +114,17 @@ function MenuInput({ handleRequestOpen }) {
                     group.groupServices.forEach((serviceName) => {
                         servicesGroup[group.groupName].push({
                             name: serviceName,
-                            title: services.find((service) => service.name === serviceName).title,
                             hasSubmenu: false,
+                            title: services.find((service) => service.name === serviceName).title,
+                            subTitle: services.find((service) => service.name === serviceName)
+                                .subTitle,
                         });
                     });
                     servicesGroup.main_panel.push({
                         name: group.groupName,
                         title: group.groupTitle,
+                        subTitle: services.find((service) => service.name === group.groupName)
+                            .subTitle,
                         hasSubmenu: true,
                     });
                 } else {
@@ -126,6 +139,7 @@ function MenuInput({ handleRequestOpen }) {
             servicesGroup.main_panel = services.map((service) => ({
                 name: service.name,
                 title: service.title,
+                subTitle: service.subTitle,
                 hasSubmenu: false,
             }));
         }
@@ -143,7 +157,7 @@ function MenuInput({ handleRequestOpen }) {
             <SlidingPanels
                 activePanelId={activePanelId}
                 transition={slidingPanelsTransition}
-                style={{ width: '200px' }}
+                style={{ width: '210px' }}
             >
                 {getInputMenu}
             </SlidingPanels>
@@ -173,8 +187,25 @@ function MenuInput({ handleRequestOpen }) {
         </>
     );
 
+    const getCustomMenuAndGroupsMenu = () => (
+        <>
+            {React.createElement(CustomMenu, {
+                fileName: customMenuField.src,
+                type: customMenuField.type,
+                handleChange: handleChangeCustomMenu,
+            })}
+            {services.length === 1 ? makeInputButton() : makeSingleSelectDropDown()}
+        </>
+    );
+
     if (services && !customMenuField?.src) {
         return services.length === 1 ? makeInputButton() : makeSingleSelectDropDown();
+    }
+
+    // Introducing a condition to enable simultaneous support for custom menu src and Groups Menu.
+    // ADDON-62948
+    if (services && customMenuField?.src && groupsMenu) {
+        return getCustomMenuAndGroupsMenu();
     }
     return makeCustomMenu();
 }

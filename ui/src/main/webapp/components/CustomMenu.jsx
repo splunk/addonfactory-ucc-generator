@@ -14,11 +14,14 @@ class CustomMenu extends Component {
     }
 
     componentDidMount() {
-        const globalConfig = getUnifiedConfigs();
+        const unifiedConfigs = getUnifiedConfigs();
+        const { services, menu: customMenuField, groupsMenu } = unifiedConfigs.pages.inputs;
         this.setState({ loading: true });
         this.loadCustomMenu().then((Control) => {
-            const customControl = new Control(globalConfig, this.el, this.setValue);
-            customControl.render();
+            const customControl = new Control(unifiedConfigs, this.el, this.setValue);
+            if (services && customMenuField && !groupsMenu) {
+                customControl.render();
+            }
             this.setState({ loading: false });
         });
     }

@@ -814,6 +814,10 @@
                     "type": "string",
                     "maxLength": 100
                   },
+                  "subTitle": {
+                    "type": "string",
+                    "maxLength": 50
+                  },
                   "entity": {
                     "type": "array",
                     "items": {
@@ -909,6 +913,10 @@
                   "title": {
                     "type": "string",
                     "maxLength": 100
+                  },
+                  "subTitle": {
+                    "type": "string",
+                    "maxLength": 50
                   },
                   "description": {
                     "type": "string",
