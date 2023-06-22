@@ -1,3 +1,10 @@
+## [5.28.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.28.0...v5.28.1) (2023-06-22)
+
+
+### Bug Fixes
+
+* typo in UCC UI v1.28.0 ([#791](https://github.com/splunk/addonfactory-ucc-generator/issues/791)) ([7bb4530](https://github.com/splunk/addonfactory-ucc-generator/commit/7bb4530e87314599a2e71ef985890d585bd0a825))
+
 # [5.28.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.27.3...v5.28.0) (2023-06-22)
 
 
