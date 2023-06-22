@@ -1,3 +1,10 @@
+# [5.28.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.27.3...v5.28.0) (2023-06-22)
+
+
+### Features
+
+* added support for subTitle field in service ([#790](https://github.com/splunk/addonfactory-ucc-generator/issues/790)) ([378f362](https://github.com/splunk/addonfactory-ucc-generator/commit/378f362109a49e2bb6dc6f01d5b3c4c851a40e19))
+
 ## [5.27.3](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.27.2...v5.27.3) (2023-06-06)
 
 
