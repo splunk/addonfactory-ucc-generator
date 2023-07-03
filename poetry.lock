@@ -1025,18 +1025,17 @@ files = [
 
 [[package]]
 name = "pytest"
-version = "7.2.2"
+version = "7.4.0"
 description = "pytest: simple powerful testing with Python"
 category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "pytest-7.2.2-py3-none-any.whl", hash = "sha256:130328f552dcfac0b1cec75c12e3f005619dc5f874f0a06e8ff7263f0ee6225e"},
-    {file = "pytest-7.2.2.tar.gz", hash = "sha256:c99ab0c73aceb050f68929bc93af19ab6db0558791c6a0715723abe9d0ade9d4"},
+    {file = "pytest-7.4.0-py3-none-any.whl", hash = "sha256:78bf16451a2eb8c7a2ea98e32dc119fd2aa758f1d5d66dbf0a59d69a3969df32"},
+    {file = "pytest-7.4.0.tar.gz", hash = "sha256:b4bf8c45bd59934ed84001ad51e11b4ee40d40a1229d2c79f9c592b0a3f6bd8a"},
 ]
 
 [package.dependencies]
-attrs = ">=19.2.0"
 colorama = {version = "*", markers = "sys_platform == \"win32\""}
 exceptiongroup = {version = ">=1.0.0rc8", markers = "python_version < \"3.11\""}
 importlib-metadata = {version = ">=0.12", markers = "python_version < \"3.8\""}
@@ -1046,7 +1045,7 @@ pluggy = ">=0.12,<2.0"
 tomli = {version = ">=1.0.0", markers = "python_version < \"3.11\""}
 
 [package.extras]
-testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "pygments (>=2.7.2)", "requests", "xmlschema"]
+testing = ["argcomplete", "attrs (>=19.2.0)", "hypothesis (>=3.56)", "mock", "nose", "pygments (>=2.7.2)", "requests", "setuptools", "xmlschema"]
 
 [[package]]
 name = "pytest-cov"
@@ -1134,29 +1133,30 @@ pytest = ">=5.3"
 
 [[package]]
 name = "pytest-splunk-addon"
-version = "5.0.0"
+version = "5.0.1"
 description = "A Dynamic test tool for Splunk Apps and Add-ons"
 category = "dev"
 optional = false
 python-versions = ">=3.7,<4.0"
 files = [
-    {file = "pytest_splunk_addon-5.0.0-py3-none-any.whl", hash = "sha256:3826ff3461d19e73f96659bc23fbc54c8aab733891a5c1659b14db71a5aca7b0"},
-    {file = "pytest_splunk_addon-5.0.0.tar.gz", hash = "sha256:0cc2d43be34e7c1494082ece859771e4c1e7de69cdad89a6a6f7ccb270b97c22"},
+    {file = "pytest_splunk_addon-5.0.1-py3-none-any.whl", hash = "sha256:fdf2190e8f6fac5b5489004557a907bcc24ca878fbe1908b83c07616489daaa7"},
+    {file = "pytest_splunk_addon-5.0.1.tar.gz", hash = "sha256:35b4720d571d221994fb7866937065b400c0f1029aff030b5b40424b3923cb7d"},
 ]
 
 [package.dependencies]
 addonfactory-splunk-conf-parser-lib = ">=0.3.3,<0.4.0"
 defusedxml = ">=0.7.1,<0.8.0"
-Faker = ">=13.12.0,<14.0.0"
+Faker = ">=13.12,<18.0"
 filelock = ">=3.0,<4.0"
 jsonschema = ">=4.2.1,<5.0.0"
 junitparser = ">=2.2.0,<3.0.0"
-pytest = ">5.4.0,<7.3"
+pytest = ">5.4.0,<8"
 pytest-ordering = ">=0.6,<0.7"
 pytest-xdist = ">=2.3.0"
-requests = ">=2,<3"
+requests = ">=2.31.0,<3.0.0"
 splunk-sdk = ">=1.6,<2.0"
 splunksplwrapper = ">=1.0.1,<2.0.0"
+urllib3 = "<2"
 xmlschema = ">=1.11.3,<2.0.0"
 xmltodict = ">=0.13.0,<0.14.0"
 
