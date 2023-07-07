@@ -26,13 +26,6 @@ class EXAMPLE_INPUT_THREE(smi.Script):
             )
         )
         
-        scheme.add_argument(
-            smi.Argument(
-                'interval',
-                required_on_create=True,
-            )
-        )
-        
         return scheme
 
     def validate_input(self, definition):

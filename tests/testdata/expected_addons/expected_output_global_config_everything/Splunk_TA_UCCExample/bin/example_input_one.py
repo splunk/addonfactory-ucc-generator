@@ -56,13 +56,6 @@ class EXAMPLE_INPUT_ONE(smi.Script):
         
         scheme.add_argument(
             smi.Argument(
-                'interval',
-                required_on_create=True,
-            )
-        )
-        
-        scheme.add_argument(
-            smi.Argument(
                 'account',
                 required_on_create=True,
             )
