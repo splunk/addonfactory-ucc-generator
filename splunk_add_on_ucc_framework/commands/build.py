@@ -131,7 +131,7 @@ def _add_modular_input(
         class_name = input_name.upper()
         description = service.get("title")
         entity = service.get("entity")
-        field_allow_list = frozenset(["name", "index", "sourcetype"])
+        field_allow_list = frozenset(["name", "interval", "index", "sourcetype"])
         template = "input.template"
         if "template" in service:
             template = service.get("template") + ".template"

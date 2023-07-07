@@ -115,7 +115,10 @@ jobs:
 
   test-ui:
     name: test-ui Splunk ${{ matrix.splunk.version }} -m ${{ matrix.test-mark }}
-    if: contains(github.event.pull_request.labels.*.name, 'run-ui-tests')
+    if: |
+      github.base_ref == 'main' ||
+      github.ref_name == 'main' ||
+      contains(github.event.pull_request.labels.*.name, 'run-ui-tests')
     runs-on: ubuntu-latest
     continue-on-error: true
     needs:
