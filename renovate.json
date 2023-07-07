@@ -3,8 +3,10 @@
     "config:base",
     "group:all",
     ":semanticCommitTypeAll(chore)",
-    "schedule:earlyMondays",
     ":disableDependencyDashboard"
+  ],
+  "schedule": [
+    "every weekend"
   ],
   "packageRules": [
     {
