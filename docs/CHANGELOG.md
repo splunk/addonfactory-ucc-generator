@@ -1,3 +1,10 @@
+## [5.28.2](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.28.1...v5.28.2) (2023-07-07)
+
+
+### Bug Fixes
+
+* input.template should not render interval field ([#799](https://github.com/splunk/addonfactory-ucc-generator/issues/799)) ([6375de1](https://github.com/splunk/addonfactory-ucc-generator/commit/6375de1537236fa2eb0d8f62bbc2b0fbafd9e198))
+
 ## [5.28.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.28.0...v5.28.1) (2023-06-22)
 
 
