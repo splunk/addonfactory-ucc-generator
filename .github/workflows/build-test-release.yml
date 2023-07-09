@@ -185,7 +185,7 @@ jobs:
       - run: pip install splunk-packaging-toolkit
       - name: Slim tests/expected_output_global_config_everything/Splunk_TA_UCCExample
         run: mkdir tests/slimmed; slim package tests/testdata/expected_addons/expected_output_global_config_everything/Splunk_TA_UCCExample -o tests/slimmed
-      - uses: splunk/appinspect-cli-action@v1.7
+      - uses: splunk/appinspect-cli-action@v1.9
         with:
           app_path: tests/slimmed
           included_tags: ${{ matrix.tags }}
