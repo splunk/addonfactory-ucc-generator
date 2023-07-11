@@ -50,6 +50,7 @@ class TestProxyPage(UccTester):
     def test_proxy_required_field_host(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
+        # Tests proxy.options.saveValidator
         proxy = Proxy(
             C.ADDON_NAME,
             PROXY_URL,
@@ -93,6 +94,7 @@ class TestProxyPage(UccTester):
     def test_proxy_required_field_port(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
+        # Tests proxy.options.saveValidator
         proxy = Proxy(
             C.ADDON_NAME,
             PROXY_URL,
