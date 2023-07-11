@@ -151,7 +151,7 @@ jobs:
           ./get-ucc-ui.sh
           tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
           poetry build
-      - run: poetry run ucc-gen --source tests/testdata/test_addons/package_global_config_everything/package
+      - run: poetry run ucc-gen build --source tests/testdata/test_addons/package_global_config_everything/package
       - run: |
           ./run_splunk.sh ${{ matrix.splunk.version }}
           until curl -Lsk "https://localhost:8088/services/collector/health" &>/dev/null ; do echo -n "Waiting for HEC-" && sleep 5 ; done
