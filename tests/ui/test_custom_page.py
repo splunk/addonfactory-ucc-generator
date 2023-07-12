@@ -24,11 +24,10 @@ class TestCustomPage(UccTester):
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.custom
-    def test_custom_fields_label_entity(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
-    ):
-        """Verifies custom fields label"""
+    def test_custom_misc(self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper):
         custom = CustomPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+
+        # Labels
         self.assert_util(custom.test_string.get_input_label, "Test String")
         self.assert_util(custom.test_number.get_input_label, "Test Number")
         self.assert_util(custom.test_regex.get_input_label, "Test Regex")
@@ -44,7 +43,6 @@ class TestCustomPage(UccTester):
     def test_custom_frontend_backend_validation(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, reset_configuration
     ):
-        """This test case checks the validates frontend save in custom tab"""
         custom = CustomPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         custom.test_string.set_value("test_str")
         custom.test_number.set_value("7")
@@ -74,7 +72,6 @@ class TestCustomPage(UccTester):
     def test_custom_valid_length_test_string_greater(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
-        """This test case checks length of test string field should be greater than 4"""
         custom = CustomPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         custom.test_string.set_value("test")
         self.assert_util(
@@ -89,7 +86,6 @@ class TestCustomPage(UccTester):
     def test_custom_valid_length_test_string_less(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
-        """This test case checks length of test string field should be less than 11"""
         custom = CustomPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         custom.test_string.set_value("test_string")
         self.assert_util(
@@ -104,7 +100,6 @@ class TestCustomPage(UccTester):
     def test_custom_valid_input_test_number(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
-        """This test case checks test number field should be integer"""
         custom = CustomPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         custom.test_string.set_value("test_str")
         custom.test_number.set_value("a")
@@ -120,7 +115,6 @@ class TestCustomPage(UccTester):
     def test_custom_valid_range_test_number(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
-        """This test case checks range of test number field should be between 1 to 10"""
         custom = CustomPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         custom.test_string.set_value("test_str")
         custom.test_number.set_value("50")
@@ -136,7 +130,6 @@ class TestCustomPage(UccTester):
     def test_custom_valid_input_test_regex(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
-        """This test case checks regex of test regex field"""
         custom = CustomPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         custom.test_string.set_value("test_str")
         custom.test_number.set_value("5")
@@ -153,7 +146,6 @@ class TestCustomPage(UccTester):
     def test_custom_valid_input_test_email(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
-        """This test case checks test email field should be email"""
         custom = CustomPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         custom.test_string.set_value("test_str")
         custom.test_number.set_value("5")
@@ -171,7 +163,6 @@ class TestCustomPage(UccTester):
     def test_custom_valid_input_test_ipv4(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
-        """This test case checks test ipv4 field should be valid ipv4"""
         custom = CustomPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         custom.test_string.set_value("test_str")
         custom.test_number.set_value("5")
@@ -190,7 +181,6 @@ class TestCustomPage(UccTester):
     def test_custom_valid_input_test_date(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
-        """This test case checks test date field should be in ISO 8601 format"""
         custom = CustomPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         custom.test_string.set_value("test_str")
         custom.test_number.set_value("5")
@@ -210,7 +200,6 @@ class TestCustomPage(UccTester):
     def test_custom_valid_input_test_url(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
-        """This test case checks test url field should be valid url"""
         custom = CustomPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         custom.test_string.set_value("test_str")
         custom.test_number.set_value("5")
