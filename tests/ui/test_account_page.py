@@ -48,7 +48,7 @@ def add_multiple_account(ucc_smartx_rest_helper):
         account.backend_conf.post_stanza(url, kwargs)
 
 
-@pytest.fixture
+@pytest.fixture(autouse=True)
 def delete_accounts(ucc_smartx_rest_helper):
     yield
     account = AccountPage(
@@ -82,7 +82,6 @@ class TestAccountPage(UccTester):
         ucc_smartx_selenium_helper,
         ucc_smartx_rest_helper,
         add_multiple_account,
-        delete_accounts,
     ):
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         self.assert_util(
@@ -98,7 +97,6 @@ class TestAccountPage(UccTester):
         ucc_smartx_selenium_helper,
         ucc_smartx_rest_helper,
         add_multiple_account,
-        delete_accounts,
     ):
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         account.table.sort_column("Name")
@@ -118,7 +116,6 @@ class TestAccountPage(UccTester):
         ucc_smartx_selenium_helper,
         ucc_smartx_rest_helper,
         add_account,
-        delete_accounts,
     ):
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
 
@@ -148,7 +145,6 @@ class TestAccountPage(UccTester):
         ucc_smartx_selenium_helper,
         ucc_smartx_rest_helper,
         add_multiple_account,
-        delete_accounts,
     ):
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         name_column_page1 = account.table.get_column_values("name")
@@ -591,7 +587,6 @@ class TestAccountPageWhenAdd(UccTester):
         ucc_smartx_selenium_helper,
         ucc_smartx_rest_helper,
         add_account,
-        delete_accounts,
     ):
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         account.entity.open()
@@ -614,7 +609,6 @@ class TestAccountPageWhenAdd(UccTester):
         ucc_smartx_selenium_helper,
         ucc_smartx_rest_helper,
         add_account,
-        delete_accounts,
     ):
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         account.table.wait_for_rows_to_appear(1)
@@ -641,7 +635,6 @@ class TestAccountPageWhenEdit(UccTester):
         ucc_smartx_selenium_helper,
         ucc_smartx_rest_helper,
         add_account,
-        delete_accounts,
     ):
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         account.table.edit_row(ACCOUNT_CONFIG["name"])
@@ -682,7 +675,6 @@ class TestAccountPageWhenEdit(UccTester):
         ucc_smartx_selenium_helper,
         ucc_smartx_rest_helper,
         add_account,
-        delete_accounts,
     ):
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         account.table.edit_row(ACCOUNT_CONFIG["name"])
@@ -702,9 +694,7 @@ class TestAccountPageWhenEdit(UccTester):
         ucc_smartx_selenium_helper,
         ucc_smartx_rest_helper,
         add_account,
-        delete_accounts,
     ):
-        """Verifies close functionality at time of edit"""
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         account.table.edit_row(ACCOUNT_CONFIG["name"])
         self.assert_util(account.entity.close, True)
@@ -717,9 +707,7 @@ class TestAccountPageWhenEdit(UccTester):
         ucc_smartx_selenium_helper,
         ucc_smartx_rest_helper,
         add_account,
-        delete_accounts,
     ):
-        """Verifies cancel functionality at time of edit"""
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         account.table.edit_row(ACCOUNT_CONFIG["name"])
         self.assert_util(account.entity.cancel, True)
@@ -735,7 +723,6 @@ class TestAccountPageWhenClone(UccTester):
         ucc_smartx_selenium_helper,
         ucc_smartx_rest_helper,
         add_account,
-        delete_accounts,
     ):
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         account.table.wait_for_rows_to_appear(1)
@@ -760,9 +747,9 @@ class TestAccountPageWhenClone(UccTester):
             "token": "TestEditToken",
         }
         self.assert_util(
-            account.table.get_table()["TestAccount2"],
+            account.table.get_table()["TestAccountClone"],
             {
-                "name": "TestAccount2",
+                "name": "TestAccountClone",
                 "auth type": "basic",
                 "actions": "Edit | Clone | Delete",
             },
@@ -776,7 +763,6 @@ class TestAccountPageWhenClone(UccTester):
         ucc_smartx_selenium_helper,
         ucc_smartx_rest_helper,
         add_account,
-        delete_accounts,
     ):
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         account.table.clone_row(ACCOUNT_CONFIG["name"])
@@ -795,7 +781,6 @@ class TestAccountPageWhenClone(UccTester):
         ucc_smartx_selenium_helper,
         ucc_smartx_rest_helper,
         add_account,
-        delete_accounts,
     ):
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         account.table.clone_row(ACCOUNT_CONFIG["name"])
@@ -816,7 +801,6 @@ class TestAccountPageWhenClone(UccTester):
         ucc_smartx_selenium_helper,
         ucc_smartx_rest_helper,
         add_account,
-        delete_accounts,
     ):
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         account.table.clone_row(ACCOUNT_CONFIG["name"])
@@ -830,7 +814,6 @@ class TestAccountPageWhenClone(UccTester):
         ucc_smartx_selenium_helper,
         ucc_smartx_rest_helper,
         add_account,
-        delete_accounts,
     ):
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         account.table.clone_row(ACCOUNT_CONFIG["name"])
@@ -847,7 +830,6 @@ class TestAccountPageWhenDelete(UccTester):
         ucc_smartx_selenium_helper,
         ucc_smartx_rest_helper,
         add_account,
-        delete_accounts,
     ):
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         account.table.delete_row(ACCOUNT_CONFIG["name"])
@@ -867,7 +849,6 @@ class TestAccountPageWhenDelete(UccTester):
         ucc_smartx_selenium_helper,
         ucc_smartx_rest_helper,
         add_account,
-        delete_accounts,
     ):
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         self.assert_util(
@@ -886,7 +867,6 @@ class TestAccountPageWhenDelete(UccTester):
         ucc_smartx_selenium_helper,
         ucc_smartx_rest_helper,
         add_account,
-        delete_accounts,
     ):
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         account.table.delete_row(ACCOUNT_CONFIG["name"], prompt_msg=True)
@@ -903,7 +883,6 @@ class TestAccountPageWhenDelete(UccTester):
         ucc_smartx_selenium_helper,
         ucc_smartx_rest_helper,
         add_account,
-        delete_accounts,
     ):
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         self.assert_util(
@@ -920,7 +899,6 @@ class TestAccountPageWhenDelete(UccTester):
         ucc_smartx_selenium_helper,
         ucc_smartx_rest_helper,
         add_account,
-        delete_accounts,
     ):
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         self.assert_util(
@@ -937,7 +915,6 @@ class TestAccountPageWhenDelete(UccTester):
         ucc_smartx_selenium_helper,
         ucc_smartx_rest_helper,
         add_account,
-        delete_accounts,
     ):
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         prompt_message = account.table.delete_row(
