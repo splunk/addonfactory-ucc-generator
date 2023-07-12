@@ -111,7 +111,13 @@ jobs:
           poetry install
           poetry build
       - run: ./.github/workflows/check_ucc_ui_files.sh
-      - run: poetry run pytest --cov=splunk_add_on_ucc_framework --cov-report=xml tests/unit
+      - run: poetry run pytest --junitxml=test-results/junit.xml tests/unit
+      - uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: test-results-unit-${{ matrix.python-version }}
+          path: test-results/*.xml
+          reporter: jest-junit
 
   test-ui:
     name: test-ui Splunk ${{ matrix.splunk.version }} -m ${{ matrix.test-mark }}
