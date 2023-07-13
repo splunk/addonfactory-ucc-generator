@@ -201,7 +201,7 @@ class TestInputPage(UccTester):
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.input
-    def test_inputs_filter_functionality(
+    def test_inputs_filter_functionality_negative(
         self,
         ucc_smartx_selenium_helper,
         ucc_smartx_rest_helper,
@@ -210,8 +210,8 @@ class TestInputPage(UccTester):
     ):
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
 
-        # Negative
         input_page.table.set_filter("hello")
+
         self.assert_util(input_page.table.get_row_count, 0)
         self.assert_util(
             input_page.table.get_count_title,
@@ -219,8 +219,20 @@ class TestInputPage(UccTester):
         )
         input_page.table.clean_filter()
 
-        # Positive
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
+    def test_inputs_filter_functionality_positive(
+        self,
+        ucc_smartx_selenium_helper,
+        ucc_smartx_rest_helper,
+        add_input_one,
+        add_input_two,
+    ):
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+
         input_page.table.set_filter("dummy")
+
         self.assert_util(input_page.table.get_row_count, 2)
         self.assert_util(
             input_page.table.get_count_title,

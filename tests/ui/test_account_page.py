@@ -278,11 +278,11 @@ class TestAccountPageWhenAdd(UccTester):
         self.assert_util(account.entity.account_radio.get_value, "Yes")
         self.assert_util(account.entity.auth_key.get_value, "basic")
         self.assert_util(
-            account.entity.auth_key.list_of_values(),
+            account.entity.auth_key.list_of_values,
             ["Basic Authentication", "OAuth 2.0 Authentication"],
         )
         self.assert_util(
-            account.entity.multiple_select.list_of_values(),
+            account.entity.multiple_select.list_of_values,
             ["Option One", "Option Two"],
         )
         self.assert_util(account.entity.auth_key.get_value, "basic")
