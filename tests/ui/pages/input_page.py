@@ -18,15 +18,7 @@ from tests.ui import constants as C
 
 
 class ExampleInputOne(Entity):
-    """
-    Form to configure a new Input
-    """
-
     def __init__(self, browser, container):
-        """
-        :param browser: The selenium webdriver
-        :param container: The container in which the entity is located in
-        """
         add_btn = Button(
             browser, Selector(select=container.select + '[id="addInputBtn"]')
         )
@@ -34,7 +26,6 @@ class ExampleInputOne(Entity):
 
         super().__init__(browser, entity_container, add_btn=add_btn)
 
-        # Controls
         self.name = TextBox(
             browser, Selector(select=' [data-test="control-group"][data-name="name"]')
         )
@@ -115,15 +106,7 @@ class ExampleInputOne(Entity):
 
 
 class ExampleInputTwo(Entity):
-    """
-    Form to configure a new Input
-    """
-
     def __init__(self, browser, container):
-        """
-        :param browser: The selenium webdriver
-        :param container: The container in which the entity is located in
-        """
         add_btn = Button(
             browser, Selector(select=container.select + ' [id="addInputBtn"]')
         )
@@ -190,10 +173,6 @@ class ExampleInputTwo(Entity):
 
 
 class InputPage(Page):
-    """
-    Page: Input page
-    """
-
     def __init__(
         self,
         ucc_smartx_selenium_helper=None,

@@ -20,15 +20,7 @@ from tests.ui import constants as C
 
 
 class TestAction(ActionEntity):
-    """
-    Form to configure a new Input
-    """
-
     def __init__(self, browser):
-        """
-        :param browser: The selenium webdriver
-        """
-
         super().__init__(browser)
 
         # Controls
@@ -68,9 +60,6 @@ class AlertPage(Page):
             )
 
     def open(self):
-        """
-        Abstract Method. Open the page
-        """
         self.browser.get(
             f"{self.splunk_web_url}/en-US/manager/{C.ADDON_NAME}/saved/searches"
         )

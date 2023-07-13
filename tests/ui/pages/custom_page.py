@@ -13,9 +13,6 @@ class CustomPage(Entity):
         ucc_smartx_selenium_helper=None,
         ucc_smartx_rest_helper=None,
     ):
-        """
-        :param ucc_smartx_selenium_helper: fixture contains browser, urls and session key
-        """
         entity_container = Selector(select='div[id="custom_abcTab"]')
 
         # Components
@@ -61,9 +58,6 @@ class CustomPage(Entity):
             )
 
     def open(self):
-        """
-        Open the required page. Page(super) class opens the page by default.
-        """
         self.browser.get(
             f"{self.splunk_web_url}/en-US/app/{C.ADDON_NAME}/configuration"
         )
@@ -71,9 +65,6 @@ class CustomPage(Entity):
         tab.open_tab("custom_abc")
 
     def _get_custom_url(self):
-        """
-        get rest endpoint for the configuration
-        """
         return (
             f"{self.splunk_mgmt_url}/servicesNS/nobody/{C.ADDON_NAME}/"
             f"configs/conf-splunk_ta_uccexample_settings/custom_abc"

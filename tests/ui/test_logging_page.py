@@ -24,18 +24,15 @@ class TestLoggingPage(UccTester):
             ucc_smartx_selenium_helper=ucc_smartx_selenium_helper,
             ucc_smartx_rest_helper=ucc_smartx_rest_helper,
         )
-        self.assert_util(logging.backend_conf.get_parameter("disabled"), False)
-        self.assert_util(logging.log_level.get_value, DEFAULT_LOG_LEVEL)
 
-    @pytest.mark.logging
-    def test_logging_list_log_levels(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
-    ):
-        logging = Logging(
-            C.ADDON_NAME,
-            ucc_smartx_selenium_helper=ucc_smartx_selenium_helper,
-            ucc_smartx_rest_helper=ucc_smartx_rest_helper,
-        )
+        # Labels
+        self.assert_util(logging.log_level.get_input_label, "Log level")
+
+        # Default values
+        self.assert_util(logging.log_level.get_value, DEFAULT_LOG_LEVEL)
+        self.assert_util(logging.backend_conf.get_parameter("disabled"), False)
+
+        # List of log levels
         expected_list = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
         self.assert_util(list(logging.log_level.list_of_values()), expected_list)
 

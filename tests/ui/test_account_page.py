@@ -68,7 +68,7 @@ class TestAccountPage(UccTester):
         self.assert_util(account.title.wait_to_display, "Configuration")
         self.assert_util(account.description.wait_to_display, "Set up your add-on")
 
-        # Table headers
+        # Headers
         self.assert_util(account.table.get_headers, ["Name", "Auth Type", "Actions"])
 
         # Default number of rows in the table
@@ -151,6 +151,23 @@ class TestAccountPage(UccTester):
         account.table.switch_to_next()
         name_column_page2 = account.table.get_column_values("name")
         self.assert_util(name_column_page1, name_column_page2, "!=")
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.account
+    def test_account_action_values(
+        self,
+        ucc_smartx_selenium_helper,
+        ucc_smartx_rest_helper,
+        add_account,
+    ):
+        account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+
+        expected_actions = ["Edit", "Clone", "Delete"]
+        self.assert_util(
+            list(account.table.get_list_of_actions(ACCOUNT_CONFIG["name"])),
+            expected_actions,
+        )
 
 
 class TestAccountPageWhenAdd(UccTester):
@@ -346,6 +363,7 @@ class TestAccountPageWhenAdd(UccTester):
     ):
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         account.entity.open()
+
         account.entity.environment.select("Value2")
         account.entity.multiple_select.select("Option Two")
         account.entity.username.set_value("TestEditUser")
@@ -386,6 +404,7 @@ class TestAccountPageWhenAdd(UccTester):
     ):
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         account.entity.open()
+
         account.entity.name.set_value(ACCOUNT_CONFIG["name"])
         account.entity.environment.select("Value2")
         account.entity.multiple_select.select("Option Two")
@@ -395,6 +414,88 @@ class TestAccountPageWhenAdd(UccTester):
         self.assert_util(
             account.entity.save,
             "Field Password is required",
+            left_args={"expect_error": True},
+        )
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.account
+    def test_account_add_required_field_example_multiple_select(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
+    ):
+        account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        account.entity.open()
+
+        account.entity.name.set_value(ACCOUNT_CONFIG["name"])
+        account.entity.environment.select("Value2")
+        account.entity.username.set_value("TestEditUser")
+        account.entity.password.set_value("TestEditPassword")
+        account.entity.security_token.set_value("TestEditToken")
+        account.entity.account_radio.select("No")
+        self.assert_util(
+            account.entity.save,
+            "Field Example Multiple Select is required",
+            left_args={"expect_error": True},
+        )
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.account
+    def test_account_add_required_field_security_token(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
+    ):
+        account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        account.entity.open()
+
+        account.entity.name.set_value(ACCOUNT_CONFIG["name"])
+        account.entity.environment.select("Value2")
+        account.entity.account_radio.select("No")
+        account.entity.multiple_select.select("Option Two")
+        account.entity.username.set_value("TestEditUser")
+        account.entity.password.set_value("TestEditPassword")
+        self.assert_util(
+            account.entity.save,
+            "Field Security Token is required",
+            left_args={"expect_error": True},
+        )
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.account
+    def test_account_add_required_field_client_id(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
+    ):
+        account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        account.entity.open()
+
+        account.entity.name.set_value(ACCOUNT_CONFIG["name"])
+        account.entity.environment.select("Value2")
+        account.entity.account_radio.select("No")
+        account.entity.multiple_select.select("Option Two")
+        account.entity.auth_key.select("OAuth 2.0 Authentication")
+        self.assert_util(
+            account.entity.save,
+            "Field Client Id is required",
+            left_args={"expect_error": True},
+        )
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.account
+    def test_account_add_required_field_client_secret(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
+    ):
+        account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        account.entity.open()
+
+        account.entity.auth_key.select("OAuth 2.0 Authentication")
+        account.entity.name.set_value(ACCOUNT_CONFIG["name"])
+        account.entity.multiple_select.select("Option One")
+        account.entity.account_radio.select("No")
+        account.entity.client_id.set_value("TestClientId")
+        self.assert_util(
+            account.entity.save,
+            "Field Client Secret is required",
             left_args={"expect_error": True},
         )
 
@@ -420,64 +521,6 @@ class TestAccountPageWhenAdd(UccTester):
         self.assert_util(
             account.entity.save,
             "Field Example Environment is required",
-            left_args={"expect_error": True},
-        )
-
-    @pytest.mark.execute_enterprise_cloud_true
-    @pytest.mark.forwarder
-    @pytest.mark.account
-    def test_account_add_required_field_example_multiple_select(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
-    ):
-        account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
-        account.entity.open()
-        account.entity.name.set_value(ACCOUNT_CONFIG["name"])
-        account.entity.environment.select("Value2")
-        account.entity.username.set_value("TestEditUser")
-        account.entity.password.set_value("TestEditPassword")
-        account.entity.security_token.set_value("TestEditToken")
-        account.entity.account_radio.select("No")
-        self.assert_util(
-            account.entity.save,
-            "Field Example Multiple Select is required",
-            left_args={"expect_error": True},
-        )
-
-    @pytest.mark.execute_enterprise_cloud_true
-    @pytest.mark.forwarder
-    @pytest.mark.account
-    def test_account_add_required_field_client_id(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
-    ):
-        account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
-        account.entity.open()
-        account.entity.name.set_value(ACCOUNT_CONFIG["name"])
-        account.entity.environment.select("Value2")
-        account.entity.account_radio.select("No")
-        account.entity.multiple_select.select("Option Two")
-        account.entity.auth_key.select("OAuth 2.0 Authentication")
-        self.assert_util(
-            account.entity.save,
-            "Field Client Id is required",
-            left_args={"expect_error": True},
-        )
-
-    @pytest.mark.execute_enterprise_cloud_true
-    @pytest.mark.forwarder
-    @pytest.mark.account
-    def test_account_add_required_field_client_secret(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
-    ):
-        account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
-        account.entity.open()
-        account.entity.auth_key.select("OAuth 2.0 Authentication")
-        account.entity.name.set_value(ACCOUNT_CONFIG["name"])
-        account.entity.multiple_select.select("Option One")
-        account.entity.account_radio.select("No")
-        account.entity.client_id.set_value("TestClientId")
-        self.assert_util(
-            account.entity.save,
-            "Field Client Secret is required",
             left_args={"expect_error": True},
         )
 
@@ -685,6 +728,18 @@ class TestAccountPageWhenEdit(UccTester):
         )
 
         self.assert_util(account.entity.name.is_editable, False)
+        self.assert_util(account.entity.name.get_value, ACCOUNT_CONFIG["name"])
+
+        self.assert_util(account.entity.environment.get_value, "Value1")
+        self.assert_util(account.entity.example_checkbox.is_checked, True)
+        # The UCC framework does not show that the RadioBox has a value "Yes"
+        # after you edit the account created before.
+        # self.assert_util(account.entity.account_radio.get_value, "Yes")
+        self.assert_util(account.entity.multiple_select.get_values, ["Option One"])
+        self.assert_util(account.entity.auth_key.get_value, "basic")
+        self.assert_util(account.entity.username.get_value, "TestUser")
+        self.assert_util(account.entity.password.get_value, "")
+        self.assert_util(account.entity.security_token.get_value, "")
 
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
@@ -776,7 +831,7 @@ class TestAccountPageWhenClone(UccTester):
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.account
-    def test_account_clone_valid_title(
+    def test_account_clone_misc(
         self,
         ucc_smartx_selenium_helper,
         ucc_smartx_rest_helper,
@@ -784,14 +839,25 @@ class TestAccountPageWhenClone(UccTester):
     ):
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         account.table.clone_row(ACCOUNT_CONFIG["name"])
-        self.assert_util(account.entity.name.get_value, "")
-        self.assert_util(account.entity.username.get_value, "TestUser")
-        self.assert_util(account.entity.multiple_select.get_values, ["Option One"])
-        self.assert_util(account.entity.auth_key.get_value, "basic")
+
         self.assert_util(
             account.entity.title.container.get_attribute("textContent").strip(),
             "Clone Account",
         )
+
+        self.assert_util(account.entity.name.is_editable, True)
+        self.assert_util(account.entity.name.get_value, "")
+
+        self.assert_util(account.entity.environment.get_value, "Value1")
+        self.assert_util(account.entity.example_checkbox.is_checked, True)
+        # The UCC framework does not show that the RadioBox has a value "Yes"
+        # after you edit the account created before.
+        # self.assert_util(account.entity.account_radio.get_value, "Yes")
+        self.assert_util(account.entity.multiple_select.get_values, ["Option One"])
+        self.assert_util(account.entity.auth_key.get_value, "basic")
+        self.assert_util(account.entity.username.get_value, "TestUser")
+        self.assert_util(account.entity.password.get_value, "")
+        self.assert_util(account.entity.security_token.get_value, "")
 
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
