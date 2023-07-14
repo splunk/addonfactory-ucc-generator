@@ -7,7 +7,7 @@ on:
 
 jobs:
   call-workflow-agreements:
-    uses: splunk/addonfactory-github-workflows/.github/workflows/reusable-agreements.yaml@v1.3
+    uses: splunk/addonfactory-github-workflows/.github/workflows/reusable-agreements.yaml@v1
     permissions:
       actions: read
       contents: read
