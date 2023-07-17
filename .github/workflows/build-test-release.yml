@@ -219,7 +219,6 @@ jobs:
       - test-unit
       - test-smoke
       - pre-commit
-      - semgrep
       - appinspect-for-expected-outputs
     runs-on: ubuntu-latest
     steps:
