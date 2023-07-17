@@ -110,7 +110,9 @@ def install_libraries(
     Upgrades `pip` version to the latest one and installs requirements to the
     specified path.
     """
-    pip_update_command = f"{installer} -m pip install pip --upgrade"
+
+    pip_version = "23.1.2"
+    pip_update_command = f"{installer} -m pip install pip --upgrade pip=={pip_version}"
     pip_install_command = (
         f"{installer} "
         f"-m pip "
