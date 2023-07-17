@@ -1,3 +1,10 @@
+## [5.28.3](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.28.2...v5.28.3) (2023-07-17)
+
+
+### Bug Fixes
+
+* resolve failing ucc-gen by pinning pip version ([#809](https://github.com/splunk/addonfactory-ucc-generator/issues/809)) ([33676a9](https://github.com/splunk/addonfactory-ucc-generator/commit/33676a90c1748c0cf5a15f03cba23266116b717b)), closes [#808](https://github.com/splunk/addonfactory-ucc-generator/issues/808)
+
 ## [5.28.2](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.28.1...v5.28.2) (2023-07-07)
 
 
