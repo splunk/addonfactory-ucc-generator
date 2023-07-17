@@ -77,7 +77,11 @@ def install_libraries(
             + installation_path
             + '"'
         )
-        os.system(installer + " -m pip install pip --upgrade")
+        pip_version = "23.1.2"
+        pip_update_command = (
+            f"{installer} -m pip install pip --upgrade pip=={pip_version}"
+        )
+        os.system(pip_update_command)
         os.system(install_cmd)
 
 
