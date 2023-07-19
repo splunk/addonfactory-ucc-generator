@@ -1,3 +1,10 @@
+## [5.28.4](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.28.3...v5.28.4) (2023-07-19)
+
+
+### Bug Fixes
+
+* add-on without globalConfig file should not be visible ([#811](https://github.com/splunk/addonfactory-ucc-generator/issues/811)) ([b2017f6](https://github.com/splunk/addonfactory-ucc-generator/commit/b2017f6fe758b86df870396911ddf5b47ee40aa8))
+
 ## [5.28.3](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.28.2...v5.28.3) (2023-07-17)
 
 
