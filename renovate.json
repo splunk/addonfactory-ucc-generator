@@ -6,7 +6,7 @@
     ":disableDependencyDashboard"
   ],
   "schedule": [
-    "every weekend"
+    "every 2 weeks on Monday"
   ],
   "packageRules": [
     {
