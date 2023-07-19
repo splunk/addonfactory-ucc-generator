@@ -1,22 +1,22 @@
 [install]
-build = 1628341075
+build = 12345
 is_configured = false
 state = enabled
 
 [launcher]
-author = Splunk Inc.
+author = Company name
 version = 1.0.0
-description = Splunk Add-on for UCC Example
+description = Description for Splunk_TA_UCCExample
 
 [ui]
 is_visible = false
-label = Splunk Add-on for UCC Example
+label = Title for Splunk_TA_UCCExample
 docs_section_override = AddOns:released
 
 [package]
 id = Splunk_TA_UCCExample
 
 [id]
-name = Splunk_TA_UCCExample
 version = 1.0.0
+name = Splunk_TA_UCCExample
 
