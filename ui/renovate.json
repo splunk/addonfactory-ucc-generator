@@ -2,6 +2,10 @@
   "extends": [
     "config:base",
     "group:all",
+    ":semanticCommitTypeAll(chore)",
     ":disableDependencyDashboard"
+  ],
+  "schedule": [
+    "every weekend"
   ]
 }
