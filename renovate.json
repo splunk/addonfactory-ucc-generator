@@ -5,8 +5,14 @@
     ":semanticCommitTypeAll(chore)",
     ":disableDependencyDashboard"
   ],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "extends": [
+      "schedule:weekends"
+    ]
+  },
   "schedule": [
-    "every 2 weeks on Monday"
+    "every 2 weeks on Sunday"
   ],
   "packageRules": [
     {
