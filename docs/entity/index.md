@@ -21,6 +21,6 @@ title: Entity
 
 | Property      | Type    | Description                                                                                                                               | Default Value |
 | ------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
-| placeholder  | string  | The grey text is shown when the input is empty.<br> <b>The "placeholder" attribute is no longer supported. Instead, we insist using the "help" attribute.</b> | -             |
+| placeholder  | string  | The grey text is shown when the input is empty.<br> <b>The "placeholder" attribute is no longer supported. Instead, we recommend to use "help" attribute.</b> | -             |
 | display       | boolean | Whether show or hide the field.                                                                                                           | true          |
 | disableonEdit | boolean | When the form is in edit mode, the field becomes uneditable.                                                                              | false         |
