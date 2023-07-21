@@ -368,7 +368,7 @@ It supports files that can be opened in text mode or with a text editor. Files w
 
 It only sends file content to the server by reading it using the [readAsArrayBuffer](https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsArrayBuffer) method of the FileReader class and then decoding it into **UTF-8** format using the [decode](https://developer.mozilla.org/en-US/docs/Web/API/TextDecoder/decode) method of the TextDecoder class.
 
-File content can be validated using in-built validators like [string](../validators/#string) and [regex](../validators/#regex), and a custom validator can also be implemented using a [custom hook](../../custom_ui_extensions/custom_hook) and [saveValidator](../advances/../advanced/save_validator).
+File content can be validated using in-built validators like [string](../validators/#string) and [regex](../validators/#regex), and a custom validator can also be implemented using a [custom hook](../../custom_ui_extensions/custom_hook) and [saveValidator](../advanced/save_validator).
 
 This feature allows you to upload a single file.
 
