@@ -1621,14 +1621,14 @@ watchmedo = ["PyYAML (>=3.10)"]
 
 [[package]]
 name = "webdriver-manager"
-version = "3.8.6"
+version = "3.9.0"
 description = "Library provides the way to automatically manage drivers for different browsers"
 category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "webdriver_manager-3.8.6-py2.py3-none-any.whl", hash = "sha256:7d3aa8d67bd6c92a5d25f4abd75eea2c6dd24ea6617bff986f502280903a0e2b"},
-    {file = "webdriver_manager-3.8.6.tar.gz", hash = "sha256:ee788d389b8f45222a8a62f6f39b579360a1f87be46dad6da89918354af3ce73"},
+    {file = "webdriver_manager-3.9.0-py2.py3-none-any.whl", hash = "sha256:3af0a5ce6d6273c70f57d211cf433b9347804dfea3afa3e69e99be22acb9af2d"},
+    {file = "webdriver_manager-3.9.0.tar.gz", hash = "sha256:7592579ab5d13fde3c5ee11a2bad2cf143cddbfac276db042b187ceb5fe48275"},
 ]
 
 [package.dependencies]
