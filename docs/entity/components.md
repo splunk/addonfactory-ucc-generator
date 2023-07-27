@@ -258,6 +258,7 @@ Multiselect allows the user to select multiple options at once.
 | denyList                                          | string  | It filters options that don't match the regex based on the name attribute when received via API call using `endpointUrl` and `referenceName`.                                                             | -             |
 | labelField                                        | string  | TBD                                                                                                                                                                                                      | -             |
 | [dependencies](../advanced/dependent_dropdown.md) | array   | It is used to update options via an API call when the value of any field in the dependencies list is updated.                                                                                             | -             |
+| [autoCompleteFields](#autoCompleteFields)         | array   | It is used to add options in the Single select or Multiple select component.                                                                                                                             | -             |
 
 Example usage below:
 
