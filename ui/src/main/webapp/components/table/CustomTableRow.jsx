@@ -7,8 +7,8 @@ import Table from '@splunk/react-ui/Table';
 import ButtonGroup from '@splunk/react-ui/ButtonGroup';
 import Tooltip from '@splunk/react-ui/Tooltip';
 import Pencil from '@splunk/react-icons/Pencil';
-import Clone from '@splunk/react-icons/Clone';
-import Trash from '@splunk/react-icons/Trash';
+import Clone from '@splunk/react-icons/enterprise/Clone';
+import Trash from '@splunk/react-icons/enterprise/Trash';
 import styled from 'styled-components';
 import { _ } from '@splunk/ui-utils/i18n';
 

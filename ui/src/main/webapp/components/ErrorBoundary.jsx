@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Heading from '@splunk/react-ui/Heading';
 import { _ } from '@splunk/ui-utils/i18n';
 import Card from '@splunk/react-ui/Card';
-import WarningIcon from '@splunk/react-icons/Warning';
+import WarningIcon from '@splunk/react-icons/enterprise/Warning';
 import errorCodes from '../constants/errorCodes';
 
 class ErrorBoundary extends React.Component {

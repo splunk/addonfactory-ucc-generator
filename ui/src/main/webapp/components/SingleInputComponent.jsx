@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Select from '@splunk/react-ui/Select';
 import Button from '@splunk/react-ui/Button';
 import ComboBox from '@splunk/react-ui/ComboBox';
-import Clear from '@splunk/react-icons/Clear';
+import Clear from '@splunk/react-icons/enterprise/Clear';
 import { _ } from '@splunk/ui-utils/i18n';
 import axios from 'axios';
 import styled from 'styled-components';
