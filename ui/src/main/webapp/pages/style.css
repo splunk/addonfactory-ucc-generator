@@ -19,7 +19,8 @@ body {
 }
 
 // Safari browser specific issue - https://stackoverflow.com/questions/21400182/safari-css-font-color-issue?noredirect=1&lq=1
-input[disabled], textarea[disabled],
-select[disabled='disabled']{
-   -webkit-text-fill-color: #c3cbd4;
+input[disabled],
+textarea[disabled],
+select[disabled='disabled'] {
+    -webkit-text-fill-color: #c3cbd4;
 }

@@ -94,7 +94,7 @@ jobs:
           name: THIRDPARTY
 
       - run: yarn
-      - run: yarn run eslint
+      - run: yarn run lint
       - run: yarn run test
       - run: yarn run build
       - run: |
