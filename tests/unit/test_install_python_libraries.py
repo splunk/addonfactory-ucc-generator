@@ -81,7 +81,7 @@ def test_install_libraries(mock_subprocess_call):
         '--use-deprecated=legacy-resolver --target "'
         '/path/to/output/addon_name/lib"'
     )
-    expected_pip_update_command = "python3 -m pip install pip --upgrade pip==23.1.2"
+    expected_pip_update_command = "python3 -m pip install --upgrade pip==23.1.2"
     mock_subprocess_call.assert_has_calls(
         [
             mock.call(expected_pip_update_command, shell=True),
