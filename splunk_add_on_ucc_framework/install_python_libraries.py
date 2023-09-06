@@ -112,7 +112,7 @@ def install_libraries(
     """
 
     pip_version = "23.1.2"
-    pip_update_command = f"{installer} -m pip install pip --upgrade pip=={pip_version}"
+    pip_update_command = f"{installer} -m pip install --upgrade pip=={pip_version}"
     pip_install_command = (
         f"{installer} "
         f"-m pip "
