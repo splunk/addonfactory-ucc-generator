@@ -1,3 +1,10 @@
+## [5.28.5](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.28.4...v5.28.5) (2023-09-06)
+
+
+### Bug Fixes
+
+* update pip upgrade command ([#825](https://github.com/splunk/addonfactory-ucc-generator/issues/825)) ([b439296](https://github.com/splunk/addonfactory-ucc-generator/commit/b439296ee9c85d0fa1d9c64189bc257c736d1a4b)), closes [#821](https://github.com/splunk/addonfactory-ucc-generator/issues/821)
+
 ## [5.28.4](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.28.3...v5.28.4) (2023-07-19)
 
 
