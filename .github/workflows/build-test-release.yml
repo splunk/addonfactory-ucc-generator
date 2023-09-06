@@ -17,7 +17,7 @@ jobs:
     outputs:
       matrix_supportedSplunk: ${{ steps.matrix.outputs.supportedSplunk }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - id: matrix
         uses: splunk/addonfactory-test-matrix-action@v1
 
@@ -25,7 +25,7 @@ jobs:
     continue-on-error: true
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: |
           curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install-latest.sh | bash
           fossa analyze --debug
@@ -44,7 +44,7 @@ jobs:
   docs-build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: "3.7"
@@ -55,8 +55,8 @@ jobs:
   compliance-copyrights:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: apache/skywalking-eyes@v0.4.0
+      - uses: actions/checkout@v4
+      - uses: apache/skywalking-eyes@v0.5.0
 
   test-smoke:
     name: test-smoke ${{ matrix.python-version }}
@@ -71,7 +71,7 @@ jobs:
           - "3.10"
           - "3.11"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
@@ -99,7 +99,7 @@ jobs:
           - "3.10"
           - "3.11"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
@@ -136,7 +136,7 @@ jobs:
           - "alert"
           - "input"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: "3.7"
@@ -178,7 +178,7 @@ jobs:
           - "self-service"
           - "splunk_appinspect"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: "3.7"
@@ -195,7 +195,7 @@ jobs:
   pre-commit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: "3.7"
@@ -205,7 +205,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.actor != 'dependabot[bot]'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - id: semgrep
         uses: returntocorp/semgrep-action@v1
         with:
@@ -222,7 +222,7 @@ jobs:
       - appinspect-for-expected-outputs
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           # Very important: semantic-release won't trigger a tagged
           # build if this is not set false
