@@ -86,3 +86,16 @@ export function filterResponse(items, labelField, allowList, denyList) {
 
     return newItems;
 }
+
+// Convert a comma-separated string of key-value pairs into a dictionary.
+export function populateKeyValueDict(items) {
+    const keyValuePairs = items.split(',').map((item) => item.trim());
+
+    const resultDict = {};
+
+    keyValuePairs.forEach((pair) => {
+        const [key, value] = pair.split('/');
+        resultDict[key] = value;
+    });
+    return resultDict;
+}
