@@ -1,7 +1,7 @@
 # OpenAPI description document
 
 OpenAPI description document is generated with `ucc-gen` command. 
-There has to be defined valid `globalConfi.json` and `app.manifest` to have the document (`static/openapi.json` file) generated.
+There has to be defined valid `globalConfig.json` and `app.manifest` to have the document (`static/openapi.json` file) generated.
 
 ## How to find the document?
 

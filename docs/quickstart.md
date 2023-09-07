@@ -70,6 +70,8 @@ source .venv/bin/activate
 pip install splunk-add-on-ucc-framework splunk-packaging-toolkit
 ```
 
+> Note: `splunk-packaging-toolkit` does not work with Python 3.10+.
+
 * Run `ucc-gen` and package it
 
 > Provide `--ta-version=<version>` parameter if this repository is not version controlled.
