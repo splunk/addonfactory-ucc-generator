@@ -61,7 +61,7 @@ describe('single service', () => {
 
         await userEvent.click(createButton);
 
-        expect(mockHandleRequestOpen).toHaveBeenCalledWith('test-service-name');
+        expect(mockHandleRequestOpen).toHaveBeenCalledWith({ serviceName: 'test-service-name' });
     });
 });
 
@@ -105,7 +105,10 @@ describe('multiple services', () => {
         const { mockHandleRequestOpen } = setup({ services: getTwoServices() });
         await userEvent.click(getCreateDropdown());
         await userEvent.click(screen.getByText('test-service-title2'));
-        expect(mockHandleRequestOpen).toHaveBeenCalledWith('test-service-name2', 'main_panel');
+        expect(mockHandleRequestOpen).toHaveBeenCalledWith({
+            groupName: 'main_panel',
+            serviceName: 'test-service-name2',
+        });
     });
 
     describe('groups', () => {
@@ -190,10 +193,10 @@ describe('multiple services', () => {
             await userEvent.click(screen.getByText('test-group-title1'));
             await userEvent.click(screen.getByText('test-subservice1-title1'));
 
-            expect(mockHandleRequestOpen).toHaveBeenCalledWith(
-                'test-subservice1-name1',
-                'test-group-name1'
-            );
+            expect(mockHandleRequestOpen).toHaveBeenCalledWith({
+                groupName: 'test-group-name1',
+                serviceName: 'test-subservice1-name1',
+            });
         });
     });
 

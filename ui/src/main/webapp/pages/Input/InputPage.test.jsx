@@ -40,6 +40,6 @@ it('should redirect user on menu click', async () => {
 
     // check that InputPage redirects to correct URL according to callback
     expect(mockNavigateFn).toHaveBeenCalledWith({
-        search: `service=${service}&action=${action}`,
+        search: `service=${service}&action=${action}&input=${input}`,
     });
 });

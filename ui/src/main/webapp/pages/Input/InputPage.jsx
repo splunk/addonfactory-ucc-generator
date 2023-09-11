@@ -100,7 +100,7 @@ function InputPage() {
     };
 
     // handle modal/page open request on create/add entity button
-    const handleRequestOpen = (serviceName, groupName) => {
+    const handleRequestOpen = ({ serviceName, groupName, input }) => {
         const service = services.find((x) => x.name === serviceName);
         const serviceTitle = service.title;
         const isInputPageStyle = service.style === STYLE_PAGE;
@@ -118,6 +118,11 @@ function InputPage() {
             // set query and push to navigate
             query.set('service', serviceName);
             query.set('action', MODE_CREATE);
+            if (input) {
+                query.set('input', input);
+            } else {
+                query.delete('input');
+            }
             navigate({ search: query.toString() });
         }
     };

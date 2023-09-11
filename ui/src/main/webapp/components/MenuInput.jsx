@@ -49,8 +49,8 @@ function MenuInput({ handleRequestOpen }) {
     };
 
     const handleChangeCustomMenu = (val) => {
-        const { service } = val;
-        handleRequestOpen(service);
+        const { service, input } = val;
+        handleRequestOpen({ serviceName: service, input });
     };
 
     const getMenuItems = (serviceItems, groupName) =>
@@ -70,7 +70,7 @@ function MenuInput({ handleRequestOpen }) {
                 <Menu.Item
                     key={service.name}
                     onClick={() => {
-                        handleRequestOpen(service.name, groupName);
+                        handleRequestOpen({ serviceName: service.name, groupName });
                         setIsSubMenu(false);
                     }}
                 >
@@ -171,7 +171,7 @@ function MenuInput({ handleRequestOpen }) {
             appearance="primary"
             id="addInputBtn"
             onClick={() => {
-                handleRequestOpen(services[0].name);
+                handleRequestOpen({ serviceName: services[0].name });
             }}
         />
     );
