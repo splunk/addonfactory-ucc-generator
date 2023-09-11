@@ -1,9 +1,8 @@
-/* eslint no-undef: "error" */
 /* eslint-env node */
 module.exports = {
     presets: [
         [
-            '@babel/preset-react',
+            '@splunk/babel-preset',
             {
                 runtime: 'automatic',
             },

@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "esModuleInterop": true,
+    "jsx": "react",
+    "lib": ["es2015", "dom"],
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "types": ["@testing-library/react", "jest"],
+    "rootDir": ".",
+    "baseUrl": "."
+  },
+  "include": ["src/main/webapp"]
+}

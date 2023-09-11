@@ -1,8 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Link from '@splunk/react-ui/Link';
 
-function HelpLinkComponent(props) {
+interface Props {
+    controlOptions: {
+        text: string;
+        link: string;
+    };
+}
+
+function HelpLinkComponent(props: Props) {
     const { text, link } = props.controlOptions;
 
     return (
@@ -11,9 +17,5 @@ function HelpLinkComponent(props) {
         </Link>
     );
 }
-
-HelpLinkComponent.propTypes = {
-    controlOptions: PropTypes.object,
-};
 
 export default HelpLinkComponent;

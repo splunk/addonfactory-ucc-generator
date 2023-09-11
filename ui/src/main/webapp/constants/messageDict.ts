@@ -60,4 +60,4 @@ export default {
     118: 'configuration file not found',
 
     unknown: 'An unknown error occurred',
-};
+} as const;

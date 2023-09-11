@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-env node */
 const path = require('path');
 const { merge } = require('webpack-merge');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { LicenseWebpackPlugin } = require('license-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const baseConfig = require('@splunk/webpack-configs/base.config').default;
 
 const dev = process.env.NODE_ENV !== 'production';
@@ -40,7 +43,8 @@ module.exports = merge(baseConfig, {
                     to: path.join(__dirname, 'dist'),
                 },
             ],
-        })
+        }),
+        new ForkTsCheckerWebpackPlugin(),
     ],
-    devtool: dev ? 'inline-source-map' : false
+    devtool: dev ? 'inline-source-map' : false,
 });

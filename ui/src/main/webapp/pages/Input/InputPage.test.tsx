@@ -3,7 +3,7 @@ import { render, screen, waitForElementToBeRemoved, act } from '@testing-library
 import { BrowserRouter } from 'react-router-dom';
 
 import InputPage from './InputPage';
-import { mockCustomMenu } from '../../tests/helpers';
+import { mockCustomMenu, MockCustomRenderable } from '../../tests/helpers';
 
 const mockNavigateFn = jest.fn();
 jest.mock('react-router-dom', () => ({
@@ -13,7 +13,7 @@ jest.mock('react-router-dom', () => ({
 
 jest.mock('../../util/util');
 
-let mockCustomMenuInstance;
+let mockCustomMenuInstance: MockCustomRenderable;
 
 beforeEach(() => {
     mockCustomMenuInstance = mockCustomMenu().mockCustomMenuInstance;

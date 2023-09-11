@@ -1,4 +1,3 @@
-/* eslint no-undef: "error" */
 /* eslint-env node */
 module.exports = {
     // Mock
@@ -11,6 +10,6 @@ module.exports = {
 
     // Coverage
     collectCoverage: true,
-    collectCoverageFrom: ['src/main/webapp/**/*.{js,jsx}'],
+    collectCoverageFrom: ['src/main/webapp/**/*.{js,jsx,ts,tsx}'],
     coverageDirectory: 'coverage',
 };

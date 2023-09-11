@@ -1,9 +1,15 @@
 /* eslint no-undef: "error" */
 /* eslint-env node */
 module.exports = {
-    parser: '@babel/eslint-parser',
-    extends: ['@splunk/eslint-config/browser', 'prettier', 'plugin:jest/recommended'],
-    plugins: ['prettier', 'jest'],
+    parser: '@typescript-eslint/parser',
+    extends: [
+        '@splunk/eslint-config/browser',
+        'prettier',
+        'plugin:@typescript-eslint/recommended',
+        'plugin:import/typescript', // resolves import TS files from JS code
+        'plugin:jest/recommended',
+    ],
+    plugins: ['@typescript-eslint', 'prettier', 'jest'],
     env: {
         'jest/globals': true,
     },
@@ -15,6 +21,8 @@ module.exports = {
     rules: {
         'prettier/prettier': 2,
         indent: 'off',
-        'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
+        'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
+        'no-console': 'error',
     },
+    root: true,
 };
