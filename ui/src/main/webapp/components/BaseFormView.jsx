@@ -35,6 +35,13 @@ import {
 
 const CHECKBOX_GROUPS = 'checkboxGroups';
 
+function onCustomHookError(params) {
+    // eslint-disable-next-line no-console
+    console.error(
+        `[Custom Hook] Something went wrong while calling ${params.methodName}. Error: ${params.error?.name} ${params.error?.message}`
+    );
+}
+
 class BaseFormView extends PureComponent {
     static contextType = TableContext;
 
@@ -418,9 +425,8 @@ class BaseFormView extends PureComponent {
                 if (typeof this.hook.onCreate === 'function') {
                     try {
                         this.hook.onCreate();
-                    } catch (err) {
-                        // eslint-disable-next-line no-console
-                        console.error(err);
+                    } catch (error) {
+                        onCustomHookError({ methodName: 'onCreate', error });
                     }
                 }
             });
@@ -1227,9 +1233,8 @@ class BaseFormView extends PureComponent {
                     if (typeof this.hook.onRender === 'function') {
                         try {
                             this.hook.onRender();
-                        } catch (err) {
-                            // eslint-disable-next-line no-console
-                            console.error(err);
+                        } catch (error) {
+                            onCustomHookError({ methodName: 'onRender', error });
                         }
                     }
                 });
@@ -1241,9 +1246,8 @@ class BaseFormView extends PureComponent {
                         if (typeof this.hook.onEditLoad === 'function') {
                             try {
                                 this.hook.onEditLoad();
-                            } catch (err) {
-                                // eslint-disable-next-line no-console
-                                console.error(err);
+                            } catch (error) {
+                                onCustomHookError({ methodName: 'onEditLoad', error });
                             }
                         }
                     });
