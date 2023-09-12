@@ -11,6 +11,14 @@ on:
     branches: [main, develop, "release/**"]
 
 jobs:
+  meta:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix_supportedSplunk: ${{ steps.matrix.outputs.supportedSplunk }}
+    steps:
+      - uses: actions/checkout@v3
+      - id: matrix
+        uses: splunk/addonfactory-test-matrix-action@v1
   fossa-scan:
     continue-on-error: true
     runs-on: ubuntu-latest
@@ -115,3 +123,58 @@ jobs:
           passphrase: ${{ secrets.SA_GPG_PASSPHRASE }}
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
+
+  test-ui:
+    name: test-ui Splunk ${{ matrix.splunk.version }} -m ${{ matrix.test-mark }}
+    if: |
+      github.base_ref == 'main' ||
+      github.ref_name == 'main'
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    needs:
+      - meta
+      - build
+    strategy:
+      matrix:
+        splunk: ${{ fromJson(needs.meta.outputs.matrix_supportedSplunk) }}
+        test-mark:
+          - "logging"
+          - "proxy"
+          - "account"
+          - "custom"
+          - "alert"
+          - "input"
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout backend repo addonfactory-ucc-generator
+        with:
+            repository: splunk/addonfactory-ucc-generator
+            path: .
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.7"
+      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.4.2
+      - run: poetry install
+      - name: Link chromedriver
+        # Use installed chromedriver https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2204-Readme.md
+        run: |
+          export PATH=$PATH:$CHROMEWEBDRIVER
+          chromedriver --version
+      - name: Download UI artifact from build job
+        uses: actions/download-artifact@v3
+        with:
+          name: splunk-ucc-ui
+      - run: |
+          tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
+          poetry build
+      - run: poetry run ucc-gen build --source tests/testdata/test_addons/package_global_config_everything/package
+      - run: |
+          ./run_splunk.sh ${{ matrix.splunk.version }}
+          until curl -Lsk "https://localhost:8088/services/collector/health" &>/dev/null ; do echo -n "Waiting for HEC-" && sleep 5 ; done
+        timeout-minutes: 5
+      - run: poetry run pytest tests/ui -m "${{ matrix.test-mark }}" --headless --junitxml=test-results/junit.xml
+      - uses: actions/upload-artifact@v3
+        if: success() || failure()
+        with:
+          name: test-results-ui-${{ matrix.test-mark }}
+          path: test-results/*
