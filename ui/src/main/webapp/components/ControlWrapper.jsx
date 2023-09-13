@@ -1,11 +1,35 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import ControlGroup from '@splunk/react-ui/ControlGroup';
+import styled from 'styled-components';
 
 import MarkdownMessage from './MarkdownMessage';
 import CONTROL_TYPE_MAP from '../constants/ControlTypeMap';
-import { CustomElement, CheckboxElement, ControlGroupWrapper } from './StyledComponent';
 
-const CHECKBOX_GROUPS = 'checkboxGroups';
+const CustomElement = styled.div`
+    margin-left: 30px;
+`;
+
+const ControlGroupWrapper = styled(ControlGroup).attrs((props) => ({
+    'data-name': props.dataName,
+}))`
+    width: 100%;
+    max-width: 100%;
+
+    > * {
+        &:first-child {
+            width: 240px !important;
+        }
+        &:nth-child(3) {
+            margin-left: 270px !important;
+            width: 320px;
+        }
+    }
+
+    span[class*='ControlGroupStyles__StyledAsterisk-'] {
+        color: red;
+    }
+`;
 
 class ControlWrapper extends React.PureComponent {
     static isString = (str) => !!(typeof str === 'string' || str instanceof String);
@@ -54,9 +78,7 @@ class ControlWrapper extends React.PureComponent {
             rowView = this.controlType
                 ? React.createElement(this.controlType, {
                       handleChange,
-                      label: this.props.entity.label,
                       value: this.props.value,
-                      checkboxTextFieldValue: this.props.checkboxTextFieldValue,
                       field,
                       controlOptions: this.props.entity.options,
                       error: this.props.error,
@@ -83,10 +105,7 @@ class ControlWrapper extends React.PureComponent {
         );
 
         return (
-            this.props.display &&
-            (this.props.entity.type === CHECKBOX_GROUPS ? (
-                <CheckboxElement>{rowView}</CheckboxElement>
-            ) : (
+            this.props.display && (
                 <ControlGroupWrapper
                     label={label}
                     help={helpText}
@@ -97,7 +116,7 @@ class ControlWrapper extends React.PureComponent {
                 >
                     <CustomElement>{rowView}</CustomElement>
                 </ControlGroupWrapper>
-            ))
+            )
         );
     }
 }
@@ -106,7 +125,6 @@ ControlWrapper.propTypes = {
     mode: PropTypes.string,
     utilityFuncts: PropTypes.object,
     value: PropTypes.any,
-    checkboxTextFieldValue: PropTypes.any,
     display: PropTypes.bool,
     error: PropTypes.bool,
     entity: PropTypes.object,

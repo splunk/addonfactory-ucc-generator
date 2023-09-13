@@ -158,8 +158,7 @@
             "placeholder",
             "oauth",
             "helpLink",
-            "file",
-            "checkboxGroups"
+            "file"
           ]
         },
         "help": {
@@ -514,62 +513,6 @@
       },
       "additionalProperties": false
     },
-    "Groups": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "options": {
-            "type": "object",
-            "properties": {
-              "isExpandable": {
-                "type": "boolean"
-              },
-              "expand": {
-                "type": "boolean"
-              }
-            }
-          },
-          "label": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "fields": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "pattern": "^\\w+$"
-            }
-          }
-        },
-        "required": ["label", "fields"],
-        "additionalProperties": false
-      }
-    },
-    "CheckboxGroupsMetadata": {
-      "type": "object",
-      "properties": {
-        "label": {
-          "type": "string",
-          "maxLength": 60
-        },
-        "field": {
-          "type": "string",
-          "maxLength": 60
-        },
-        "validators": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/RegexValidator"
-          }
-        },
-        "groups": {
-          "$ref": "#/definitions/Groups"
-        }
-      },
-      "required": ["label", "field"],
-      "additionalProperties": false
-    },
     "InputsEntity": {
       "type": "object",
       "properties": {
@@ -594,8 +537,7 @@
             "placeholder",
             "oauth",
             "helpLink",
-            "file",
-            "checkboxGroups"
+            "file"
           ]
         },
         "help": {
@@ -886,10 +828,36 @@
                     "$ref": "#/definitions/Hooks"
                   },
                   "groups": {
-                    "$ref": "#/definitions/Groups"
-                  },
-                  "CheckboxGroupsMetadata": {
-                    "$ref": "#/definitions/CheckboxGroupsMetadata"
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "options": {
+                          "type": "object",
+                          "properties": {
+                            "isExpandable": {
+                              "type": "boolean"
+                            },
+                            "expand": {
+                              "type": "boolean"
+                            }
+                          }
+                        },
+                        "label": {
+                          "type": "string",
+                          "maxLength": 100
+                        },
+                        "fields": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "pattern": "^\\w+$"
+                          }
+                        }
+                      },
+                      "required": ["label", "fields"],
+                      "additionalProperties": false
+                    }
                   },
                   "style": {
                     "type": "string",
@@ -967,10 +935,36 @@
                     "$ref": "#/definitions/Hooks"
                   },
                   "groups": {
-                    "$ref": "#/definitions/Groups"
-                  },
-                  "CheckboxGroupsMetadata": {
-                    "$ref": "#/definitions/CheckboxGroupsMetadata"
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "options": {
+                          "type": "object",
+                          "properties": {
+                            "isExpandable": {
+                              "type": "boolean"
+                            },
+                            "expand": {
+                              "type": "boolean"
+                            }
+                          }
+                        },
+                        "label": {
+                          "type": "string",
+                          "maxLength": 100
+                        },
+                        "fields": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "pattern": "^\\w+$"
+                          }
+                        }
+                      },
+                      "required": ["label", "fields"],
+                      "additionalProperties": false
+                    }
                   },
                   "style": {
                     "type": "string",

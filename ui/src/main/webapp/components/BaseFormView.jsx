@@ -1,13 +1,15 @@
 import React, { PureComponent } from 'react';
-import Message from '@splunk/react-ui/Message';
-import update from 'immutability-helper';
 import PropTypes from 'prop-types';
+import update from 'immutability-helper';
 import { v4 as uuidv4 } from 'uuid';
-import Link from '@splunk/react-ui/Link';
+
+import CollapsiblePanel from '@splunk/react-ui/CollapsiblePanel';
+import Message from '@splunk/react-ui/Message';
+import styled from 'styled-components';
 
 import ControlWrapper from './ControlWrapper';
 import Validator, { SaveValidator } from '../util/Validator';
-import { getUnifiedConfigs, generateToast, isTrue, populateKeyValueDict } from '../util/util';
+import { getUnifiedConfigs, generateToast } from '../util/util';
 import { MODE_CLONE, MODE_CREATE, MODE_EDIT, MODE_CONFIG } from '../constants/modes';
 import { PAGE_INPUT, PAGE_CONF } from '../constants/pages';
 import { axiosCallWrapper } from '../util/axiosCallWrapper';
@@ -22,18 +24,30 @@ import {
     ERROR_STATE_MISSING_TRY_AGAIN,
 } from '../constants/oAuthErrorMessage';
 import TableContext from '../context/TableContext';
-import {
-    CollapsiblePanelWrapper,
-    CustomGroupLabel,
-    CheckboxLabelContainer,
-    CheckboxGroupPanelWrapper,
-    CustomCheckboxGroupsLabel,
-    CheckboxGroupContainer,
-    CheckboxGroupsToggleButtonWrapper,
-    StyledPadding4,
-} from './StyledComponent';
 
-const CHECKBOX_GROUPS = 'checkboxGroups';
+const CollapsiblePanelWrapper = styled(CollapsiblePanel)`
+    span {
+        button {
+            background-color: #f2f4f5;
+            font-size: 16px;
+            margin: 15px 0;
+
+            &:hover:not([disabled]),
+            &:focus:not([disabled]),
+            &:active:not([disabled]) {
+                background-color: #f2f4f5;
+                box-shadow: none;
+            }
+        }
+    }
+`;
+
+const CustomGroupLabel = styled.div`
+    padding: 6px 10px;
+    background-color: #f2f4f5;
+    margin: 0 0 15px 0;
+    font-size: 16px;
+`;
 
 function onCustomHookError(params) {
     // eslint-disable-next-line no-console
@@ -54,7 +68,6 @@ class BaseFormView extends PureComponent {
         const globalConfig = getUnifiedConfigs();
         this.appName = globalConfig.meta.name;
         this.groupEntities = [];
-        this.checkboxEntities = [];
         this.endpoint =
             props.mode === MODE_EDIT || props.mode === MODE_CONFIG
                 ? `${this.props.serviceName}/${encodeURIComponent(this.props.stanzaName)}`
@@ -81,19 +94,7 @@ class BaseFormView extends PureComponent {
             globalConfig.pages.inputs.services.forEach((service) => {
                 if (service.name === props.serviceName) {
                     this.groups = service.groups;
-                    this.checkboxGroupsMetadata = service.CheckboxGroupsMetadata;
-                    this.checkboxGroups = service.CheckboxGroupsMetadata?.groups;
                     this.entities = service.entity;
-
-                    // Removing entity based validation
-                    // Validation will be done using main validator from CheckboxGroupsMetadata
-                    this.entities.forEach((e) => {
-                        if (e.type === CHECKBOX_GROUPS) {
-                            delete e.validators;
-                            this.checkboxEntities.push(e);
-                        }
-                    });
-
                     this.updateGroupEntities();
                     this.options = service.options;
                     if (service.hook) {
@@ -105,20 +106,6 @@ class BaseFormView extends PureComponent {
                     }
                     if (props.mode === MODE_EDIT || props.mode === MODE_CLONE) {
                         this.currentInput = context.rowData[props.serviceName][props.stanzaName];
-
-                        const checkboxGroupFieldValue =
-                            this.currentInput[this.checkboxGroupsMetadata?.field];
-
-                        // This conversion is performed while reading from the conf file.
-                        // Next time (without refreshing the page), it is expected that the data will already be in dictionary format,
-                        // and this conversion step will not be necessary.
-                        if (
-                            this.checkboxGroupsMetadata?.field &&
-                            typeof checkboxGroupFieldValue === 'string'
-                        ) {
-                            this.currentInput[this.checkboxGroupsMetadata.field] =
-                                populateKeyValueDict(checkboxGroupFieldValue);
-                        }
                     }
                 }
             });
@@ -277,40 +264,19 @@ class BaseFormView extends PureComponent {
                 e.encrypted = typeof e.encrypted !== 'undefined' ? e.encrypted : false;
 
                 if (props.mode === MODE_CREATE) {
-                    if (e.type === CHECKBOX_GROUPS) {
-                        // - Set the checkboxTextFieldValue to the provided defaultValue if defined; otherwise, set to null.
-                        //   This value is used to populate the associated Text field.
-                        // - Determine the value for the Checkbox field's enable/disable state:
-                        //   If the 'enable' option is explicitly defined in the options object, use that value;
-                        //   otherwise, default to enabling the Checkbox field (true).
-                        tempEntity.checkboxTextFieldValue =
-                            typeof e.defaultValue !== 'undefined' ? e.defaultValue : null;
-                        tempEntity.value =
-                            typeof e?.options?.enable !== 'undefined' ? e.options.enable : true;
-                    } else {
-                        tempEntity.value =
-                            typeof e.defaultValue !== 'undefined' ? e.defaultValue : null;
-                    }
+                    tempEntity.value =
+                        typeof e.defaultValue !== 'undefined' ? e.defaultValue : null;
                     tempEntity.display =
                         typeof e?.options?.display !== 'undefined' ? e.options.display : true;
                     tempEntity.error = false;
                     tempEntity.disabled = false;
                     temState[e.field] = tempEntity;
                 } else if (props.mode === MODE_EDIT) {
-                    if (e.type === CHECKBOX_GROUPS) {
-                        const checkboxTextFieldValue =
-                            this.currentInput[this.checkboxGroupsMetadata?.field]?.[e.field];
-                        tempEntity.value = typeof checkboxTextFieldValue !== 'undefined';
-                        tempEntity.checkboxTextFieldValue = tempEntity.value
-                            ? checkboxTextFieldValue
-                            : e.defaultValue;
-                    } else {
-                        tempEntity.value =
-                            typeof this.currentInput[e.field] !== 'undefined'
-                                ? this.currentInput[e.field]
-                                : null;
-                        tempEntity.value = e.encrypted ? '' : tempEntity.value;
-                    }
+                    tempEntity.value =
+                        typeof this.currentInput[e.field] !== 'undefined'
+                            ? this.currentInput[e.field]
+                            : null;
+                    tempEntity.value = e.encrypted ? '' : tempEntity.value;
                     tempEntity.display =
                         typeof e?.options?.display !== 'undefined' ? e.options.display : true;
                     tempEntity.error = false;
@@ -322,17 +288,8 @@ class BaseFormView extends PureComponent {
                     }
                     temState[e.field] = tempEntity;
                 } else if (props.mode === MODE_CLONE) {
-                    if (e.type === CHECKBOX_GROUPS) {
-                        const checkboxTextFieldValue =
-                            this.currentInput[this.checkboxGroupsMetadata?.field]?.[e.field];
-                        tempEntity.value = typeof checkboxTextFieldValue !== 'undefined';
-                        tempEntity.checkboxTextFieldValue = tempEntity.value
-                            ? checkboxTextFieldValue
-                            : e.defaultValue;
-                    } else {
-                        tempEntity.value =
-                            e.field === 'name' || e.encrypted ? '' : this.currentInput[e.field];
-                    }
+                    tempEntity.value =
+                        e.field === 'name' || e.encrypted ? '' : this.currentInput[e.field];
                     tempEntity.display =
                         typeof e?.options?.display !== 'undefined' ? e.options.display : true;
                     tempEntity.error = false;
@@ -448,41 +405,9 @@ class BaseFormView extends PureComponent {
 
         this.datadict = {};
 
-        const updateDataDict = () => {
-            // If checkboxGroupsMetadata is defined, set an empty value in the datadict
-            // using the field name specified in checkboxGroupsMetadata.
-            // This key is used to store the selected values for the checkbox group.
-            if (this.checkboxGroupsMetadata) {
-                this.datadict[this.checkboxGroupsMetadata.field] = '';
-            }
-
-            // Iterate through each field in the state's data object
-            Object.keys(this.state.data).forEach((field) => {
-                const fieldData = this.state.data[field];
-
-                // Check if the field contains 'checkboxTextFieldValue' key, indicating a checkboxGroups component
-                if (fieldData.checkboxTextFieldValue) {
-                    // For selected checkboxGroups components, append the field-value pair to the datadict
-                    if (fieldData.value) {
-                        this.datadict[
-                            this.checkboxGroupsMetadata?.field
-                        ] += `${field}/${fieldData.checkboxTextFieldValue},`;
-                    }
-                } else {
-                    // For non-checkboxGroups components, update datadict with the field's value
-                    this.datadict[field] = fieldData.value;
-                }
-            });
-
-            // If there are checkboxGroups selections in datadict, remove trailing comma
-            if (this.datadict[this.checkboxGroupsMetadata?.field]) {
-                this.datadict[this.checkboxGroupsMetadata.field] = this.datadict[
-                    this.checkboxGroupsMetadata.field
-                ].slice(0, -1);
-            }
-        };
-
-        updateDataDict();
+        Object.keys(this.state.data).forEach((field) => {
+            this.datadict[field] = this.state.data[field].value;
+        });
 
         if (this.hook && typeof this.hook.onSave === 'function') {
             const validationPass = this.hook.onSave(this.datadict);
@@ -491,9 +416,10 @@ class BaseFormView extends PureComponent {
                 return;
             }
         }
-
         const executeValidationSubmit = () => {
-            updateDataDict();
+            Object.keys(this.state.data).forEach((field) => {
+                this.datadict[field] = this.state.data[field].value;
+            });
 
             // validation for unique name
             if ([MODE_CREATE, MODE_CLONE].includes(this.props.mode)) {
@@ -533,33 +459,13 @@ class BaseFormView extends PureComponent {
                 });
             } else {
                 temEntities = this.entities;
-
-                if (this.checkboxGroupsMetadata?.validators) {
-                    const checkboxGroupField = {
-                        type: 'text',
-                        field: this.checkboxGroupsMetadata.field,
-                        label: this.checkboxGroupsMetadata.label,
-                        validators: this.checkboxGroupsMetadata.validators,
-                    };
-                    temEntities.push(checkboxGroupField);
-                }
             }
 
             // Validation of form fields on Submit
             const validator = new Validator(temEntities);
             let error = validator.doValidation(this.datadict);
-
-            // - If the error pertains to a checkboxGroups component, display the error message at the top of the form.
-            // - For other validation errors, display the error message and highlight the corresponding field in the form.
-            // If no validation error occurs, and a saveValidator is specified in the options:
-            // - Apply the saveValidator to validate the entire dataset before saving.
-            // - If an error occurs, display the associated error message.
             if (error) {
-                if (error.errorField === this.checkboxGroupsMetadata?.field) {
-                    this.setErrorMsg(error.errorMsg);
-                } else {
-                    this.setErrorFieldMsg(error.errorField, error.errorMsg);
-                }
+                this.setErrorFieldMsg(error.errorField, error.errorMsg);
             } else if (this.options && this.options.saveValidator) {
                 error = SaveValidator(this.options.saveValidator, this.datadict);
                 if (error) {
@@ -769,7 +675,7 @@ class BaseFormView extends PureComponent {
             });
     };
 
-    handleChange = (field, targetValue, componentType = null) => {
+    handleChange = (field, targetValue) => {
         const changes = {};
         if (field === 'auth_type') {
             Object.keys(this.authMap).forEach((type) => {
@@ -813,14 +719,7 @@ class BaseFormView extends PureComponent {
             });
         }
 
-        // If the component type is a checkboxGroups component, update the 'checkboxTextFieldValue' field
-        // to reflect the user's typed input, ensuring real-time synchronization with the textbox content.
-        // For other component types, update the 'value' field with the new target value.
-        if (componentType === CHECKBOX_GROUPS) {
-            changes[field] = { checkboxTextFieldValue: { $set: targetValue } };
-        } else {
-            changes[field] = { value: { $set: targetValue } };
-        }
+        changes[field] = { value: { $set: targetValue } };
 
         const newFields = update(this.state, { data: changes });
         const tempState = this.clearAllErrorMsg(newFields);
@@ -833,22 +732,6 @@ class BaseFormView extends PureComponent {
                 }
             });
         }
-    };
-
-    handleCheckboxToggleAll = (selectAll) => {
-        const allFields = [];
-        const changes = {};
-
-        this.checkboxEntities.forEach((item) => {
-            allFields.push(item.field);
-        });
-
-        allFields.forEach((field) => {
-            changes[field] = { value: { $set: selectAll } };
-        });
-
-        const newFields = update(this.state, { data: changes });
-        this.setState(newFields);
     };
 
     addCustomValidator = (field, validatorFunc) => {
@@ -1092,138 +975,53 @@ class BaseFormView extends PureComponent {
     // eslint-disable-next-line class-methods-use-this
     timeout = (ms) => new Promise((resolve) => setTimeout(resolve, ms)); // eslint-disable-line no-promise-executor-return
 
-    getCheckedCheckboxCount = (fields) => {
-        let count = 0;
-        const entitiesList = this.entities.filter((e) => fields.includes(e.field));
-        entitiesList.forEach((e) => {
-            const temState = this.state.data[e.field];
-            if (isTrue(temState.value)) {
-                count += 1;
-            }
-        });
-        return count;
-    };
-
-    renderCheckboxGroupElements = (group, collpsibleElement) => {
-        const checkboxGroupTitle = (
-            <CheckboxLabelContainer>
-                <span>{group.label}</span>
-                <span>
-                    {this.getCheckedCheckboxCount(group.fields)} of {group.fields?.length}
-                </span>
-            </CheckboxLabelContainer>
-        );
-
-        return (
-            <CheckboxGroupPanelWrapper
-                key={group.label}
-                title={checkboxGroupTitle}
-                defaultOpen={group.options?.expand}
-            >
-                <StyledPadding4>{collpsibleElement}</StyledPadding4>
-            </CheckboxGroupPanelWrapper>
-        );
-    };
-
-    getControls = (e) => {
-        const temState = this.state.data[e.field];
-        return (
-            <ControlWrapper
-                key={e.field}
-                utilityFuncts={this.utilControlWrapper}
-                checkboxTextFieldValue={temState.checkboxTextFieldValue}
-                value={temState.value}
-                display={temState.display}
-                error={temState.error}
-                entity={e}
-                serviceName={this.props.serviceName}
-                mode={this.props.mode}
-                disabled={temState.disabled}
-                markdownMessage={temState.markdownMessage}
-                dependencyValues={temState.dependencyValues || null}
-            />
-        );
-    };
-
-    renderGroupElements = (isGroupTypeCheckbox) => {
+    renderGroupElements = () => {
         let el = null;
-        const groups = isGroupTypeCheckbox ? this.checkboxGroups : this.groups;
-
-        if (groups && groups.length) {
-            el = groups.map((group) => {
+        if (this.groups && this.groups.length) {
+            el = this.groups.map((group) => {
                 const collpsibleElement =
                     group.fields?.length &&
                     group.fields.map((fieldName) =>
                         this.entities.map((e) => {
                             if (e.field === fieldName) {
-                                return this.getControls(e);
+                                const temState = this.state.data[e.field];
+                                return (
+                                    <ControlWrapper
+                                        key={e.field}
+                                        utilityFuncts={this.utilControlWrapper}
+                                        value={temState.value}
+                                        display={temState.display}
+                                        error={temState.error}
+                                        entity={e}
+                                        serviceName={this.props.serviceName}
+                                        mode={this.props.mode}
+                                        disabled={temState.disabled}
+                                        markdownMessage={temState.markdownMessage}
+                                        dependencyValues={temState.dependencyValues || null}
+                                    />
+                                );
                             }
                             return null;
                         })
                     );
 
-                if (!group.options?.isExpandable) {
-                    return (
-                        <>
-                            <CustomGroupLabel>{group.label}</CustomGroupLabel>
-                            <div>{collpsibleElement}</div>
-                        </>
-                    );
-                }
-
-                if (isGroupTypeCheckbox) {
-                    return (
-                        <React.Fragment key={`${group.label}_checkbox_groups_expandable`}>
-                            {this.renderCheckboxGroupElements(group, collpsibleElement)}
-                        </React.Fragment>
-                    );
-                }
-
-                return (
+                return group.options?.isExpandable ? (
                     <CollapsiblePanelWrapper
-                        key={group.label}
                         title={group.label}
                         defaultOpen={group.options?.expand}
                     >
-                        <StyledPadding4>{collpsibleElement}</StyledPadding4>
+                        <div className="collapsible-element">{collpsibleElement}</div>
                     </CollapsiblePanelWrapper>
+                ) : (
+                    <>
+                        <CustomGroupLabel>{group.label}</CustomGroupLabel>
+                        <div>{collpsibleElement}</div>
+                    </>
                 );
             });
         }
         return el;
     };
-
-    renderNonGroupCheckboxEntities = () => this.checkboxEntities.map((e) => this.getControls(e));
-
-    renderGroups = () => (
-        <>
-            <CheckboxGroupContainer>
-                {this.checkboxGroupsMetadata && (
-                    <CustomCheckboxGroupsLabel>
-                        {this.checkboxGroupsMetadata.label}
-                    </CustomCheckboxGroupsLabel>
-                )}
-                {this.checkboxGroups
-                    ? this.renderGroupElements(true)
-                    : this.renderNonGroupCheckboxEntities()}
-                {this.checkboxGroupsMetadata && (
-                    <CheckboxGroupsToggleButtonWrapper>
-                        <Link to="" onClick={() => this.handleCheckboxToggleAll(true)}>
-                            Select All
-                        </Link>
-                        <Link
-                            style={{ marginLeft: '10px' }}
-                            to=""
-                            onClick={() => this.handleCheckboxToggleAll(0)}
-                        >
-                            Clear All
-                        </Link>
-                    </CheckboxGroupsToggleButtonWrapper>
-                )}
-            </CheckboxGroupContainer>
-            {this.renderGroupElements(false)}
-        </>
-    );
 
     render() {
         // onRender method of Hook
@@ -1262,12 +1060,10 @@ class BaseFormView extends PureComponent {
                     {this.generateErrorMessage()}
                     {this.entities.map((e) => {
                         // Return null if we need to show element in a group
-                        if (e.type === CHECKBOX_GROUPS || this.groupEntities.includes(e.field)) {
+                        if (this.groupEntities.includes(e.field)) {
                             return null;
                         }
                         const temState = this.state.data[e.field];
-
-                        if (!temState) return null;
 
                         if (temState.placeholder) {
                             // eslint-disable-next-line no-param-reassign
@@ -1307,7 +1103,7 @@ class BaseFormView extends PureComponent {
                             />
                         );
                     })}
-                    {this.renderGroups()}
+                    {this.renderGroupElements()}
                 </form>
             </div>
         );
