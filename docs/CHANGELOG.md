@@ -1,3 +1,10 @@
+## [5.28.6](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.28.5...v5.28.6) (2023-09-13)
+
+
+### Bug Fixes
+
+* update UCC UI to v1.29.2 ([#829](https://github.com/splunk/addonfactory-ucc-generator/issues/829)) ([bffdc74](https://github.com/splunk/addonfactory-ucc-generator/commit/bffdc741c09cdeb3e61f6d567eded848cab3afb2))
+
 ## [5.28.5](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.28.4...v5.28.5) (2023-09-06)
 
 
