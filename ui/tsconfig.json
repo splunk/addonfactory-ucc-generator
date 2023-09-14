@@ -7,9 +7,9 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "types": ["@testing-library/react", "jest"],
+    "types": ["@testing-library/react", "jest", "@testing-library/jest-dom"],
     "rootDir": ".",
     "baseUrl": "."
   },
-  "include": ["src/main/webapp"]
+  "include": ["src/main/webapp", "jest.setup.ts"]
 }

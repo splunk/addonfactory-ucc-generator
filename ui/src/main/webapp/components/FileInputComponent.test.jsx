@@ -2,9 +2,8 @@ import React from 'react';
 
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import '@testing-library/jest-dom';
 import { TextDecoder } from 'node:util'; // (ESM style imports)
-import FileInputComponent from '../../components/FileInputComponent';
+import FileInputComponent from './FileInputComponent';
 
 // eslint-disable-next-line no-undef
 global.TextDecoder = TextDecoder;
@@ -40,9 +39,9 @@ test('Check FileInputComponent render properly with the fileSupportMessage optio
 
     const fileInput = screen.getByTestId('file-input');
     await userEvent.upload(fileInput, testfile);
+    expect(await screen.findByTestId('label')).toHaveTextContent('test.json');
 
     // Check that uploaded file is present.
-    expect(screen.getByTestId('label')).toHaveTextContent('test.json');
     // Check that handleChange is called with valid args.
     expect(handleChange).toHaveBeenCalledWith('testFileField', '{"test":"test"}');
 });
@@ -72,7 +71,7 @@ test('Check file remove button works properly.', async () => {
     await userEvent.upload(fileInput, testfile);
 
     // Check that uploaded file is present.
-    expect(screen.getByTestId('label')).toHaveTextContent('test.txt');
+    expect(await screen.findByTestId('label')).toHaveTextContent('test.txt');
     // Check that handleChange is called with valid args.
     expect(handleChange).toHaveBeenCalledWith('testFileField', 'test file content');
 
@@ -111,9 +110,9 @@ test('Check that the proper error message is displayed for an invalid file type 
     await userEvent.upload(fileInput, invalidFile);
 
     // Check that file is present
-    expect(screen.getByTestId('label')).toHaveTextContent('test.txt');
+    expect(await screen.findByTestId('label')).toHaveTextContent('test.txt');
     // Check if proper error msg is display
-    expect(screen.getByTestId('help')).toHaveTextContent('The file must be in json format');
+    expect(await screen.findByTestId('help')).toHaveTextContent('The file must be in json format');
     // Check that handleChange is called with ##INVALID_FILE##
     expect(handleChange).toHaveBeenCalledWith('testFileField', '##INVALID_FILE##');
 });
@@ -143,9 +142,9 @@ test('Check that the proper error message is displayed for an invalid file type 
     await userEvent.upload(fileInput, invalidFile);
 
     // Check that file is present
-    expect(screen.getByTestId('label')).toHaveTextContent('test.json');
+    expect(await screen.findByTestId('label')).toHaveTextContent('test.json');
     // Check if proper error msg is display
-    expect(screen.getByTestId('help')).toHaveTextContent(
+    expect(await screen.findByTestId('help')).toHaveTextContent(
         'The file must be in one of these formats: txt, pem'
     );
     // Check that handleChange is called with ##INVALID_FILE##
@@ -180,9 +179,11 @@ test('Check that the proper error message is displayed for invalid file size.', 
     await userEvent.upload(fileInput, invalidFile);
 
     // Check that file is present
-    expect(screen.getByTestId('label')).toHaveTextContent('test.json');
+    expect(await screen.findByTestId('label')).toHaveTextContent('test.json');
     // Check if proper error msg is displaya
-    expect(screen.getByTestId('help')).toHaveTextContent('The file size should not exceed 10 KB');
+    expect(await screen.findByTestId('help')).toHaveTextContent(
+        'The file size should not exceed 10 KB'
+    );
     // Check that handleChange is called with ##INVALID_FILE##
     expect(handleChange).toHaveBeenCalledWith('testFileField', '##INVALID_FILE##');
 });
