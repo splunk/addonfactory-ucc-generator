@@ -1063,29 +1063,10 @@ class BaseFormView extends PureComponent {
                         if (this.groupEntities.includes(e.field)) {
                             return null;
                         }
+
                         const temState = this.state.data[e.field];
 
-                        if (temState.placeholder) {
-                            // eslint-disable-next-line no-param-reassign
-                            e = {
-                                ...e,
-                                options: { ...e.options, placeholder: temState.placeholder },
-                            };
-                        }
-
-                        // Add 'optional' placeholder for optional field
-                        // Note: for oauth field it is possible required is false but the field is actually required
-                        // based on what type of authentication is selected
-                        if (
-                            !e.required &&
-                            !Object.prototype.hasOwnProperty.call(e, 'oauth_field') &&
-                            !e.options?.placeholder
-                        ) {
-                            e.options = {
-                                ...e.options,
-                                placeholder: 'optional',
-                            };
-                        }
+                        if (!temState) return null;
 
                         return (
                             <ControlWrapper

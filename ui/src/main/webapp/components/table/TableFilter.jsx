@@ -6,14 +6,7 @@ import TableContext from '../../context/TableContext';
 function TableFilter(props) {
     const { searchText } = useContext(TableContext);
 
-    return (
-        <Text
-            appearance="search"
-            placeholder="filter"
-            onChange={props.handleChange}
-            value={searchText}
-        />
-    );
+    return <Text appearance="search" onChange={props.handleChange} value={searchText} />;
 }
 
 TableFilter.propTypes = {

@@ -17,7 +17,6 @@ function TextAreaComponent(props) {
             inline
             canClear
             error={props.error}
-            placeholder={props?.controlOptions?.placeholder}
             className={props.field}
             disabled={props.disabled}
             value={props.value?.toString() || ''}

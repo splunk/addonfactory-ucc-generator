@@ -3,13 +3,17 @@ import PropTypes from 'prop-types';
 import Multiselect from '@splunk/react-ui/Multiselect';
 import styled from 'styled-components';
 import axios from 'axios';
+import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 
 import { axiosCallWrapper } from '../util/axiosCallWrapper';
 import { filterResponse } from '../util/util';
-import { getFormattedMessage } from '../util/messageUtil';
 
 const MultiSelectWrapper = styled(Multiselect)`
     width: 320px !important;
+`;
+
+const WaitSpinnerWrapper = styled(WaitSpinner)`
+    margin-left: 5px;
 `;
 
 function MultiInputComponent(props) {
@@ -29,7 +33,6 @@ function MultiInputComponent(props) {
         items,
         dependencies,
         referenceName,
-        placeholder,
         createSearchChoice,
         labelField,
         delimiter = ',',
@@ -96,23 +99,25 @@ function MultiInputComponent(props) {
     }, [dependencyValues]);
 
     const effectiveDisabled = loading ? true : disabled;
-    const effectivePlaceholder = loading ? getFormattedMessage(115) : placeholder;
+    const loadingIndicator = loading ? <WaitSpinnerWrapper /> : null;
 
     const valueList = value ? value.split(delimiter) : [];
 
     return (
-        <MultiSelectWrapper
-            values={valueList}
-            error={error}
-            name={field}
-            placeholder={effectivePlaceholder}
-            disabled={effectiveDisabled}
-            allowNewValues={createSearchChoice}
-            onChange={handleChange} // eslint-disable-line react/jsx-no-bind
-            inline
-        >
-            {options && options.length > 0 && options}
-        </MultiSelectWrapper>
+        <>
+            <MultiSelectWrapper
+                values={valueList}
+                error={error}
+                name={field}
+                disabled={effectiveDisabled}
+                allowNewValues={createSearchChoice}
+                onChange={handleChange} // eslint-disable-line react/jsx-no-bind
+                inline
+            >
+                {options && options.length > 0 && options}
+            </MultiSelectWrapper>
+            {loadingIndicator}
+        </>
     );
 }
 
@@ -125,7 +130,6 @@ MultiInputComponent.propTypes = {
     dependencyValues: PropTypes.object,
     controlOptions: PropTypes.shape({
         delimiter: PropTypes.string,
-        placeholder: PropTypes.string,
         createSearchChoice: PropTypes.bool,
         referenceName: PropTypes.string,
         dependencies: PropTypes.array,

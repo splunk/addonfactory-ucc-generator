@@ -52,7 +52,6 @@ export default {
     112: 'email address',
     113: 'IPV4 address',
     114: 'date in ISO 8601 format',
-    115: 'Loading',
     // Page title
     116: 'Inputs',
     117: 'Configuration',

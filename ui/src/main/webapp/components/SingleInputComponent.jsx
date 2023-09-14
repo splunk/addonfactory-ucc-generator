@@ -4,15 +4,19 @@ import Select from '@splunk/react-ui/Select';
 import Button from '@splunk/react-ui/Button';
 import ComboBox from '@splunk/react-ui/ComboBox';
 import Clear from '@splunk/react-icons/enterprise/Clear';
-import { _ } from '@splunk/ui-utils/i18n';
 import axios from 'axios';
 import styled from 'styled-components';
+import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 
 import { axiosCallWrapper } from '../util/axiosCallWrapper';
 import { filterResponse } from '../util/util';
 
 const SelectWrapper = styled(Select)`
     width: 320px !important;
+`;
+
+const WaitSpinnerWrapper = styled(WaitSpinner)`
+    margin-left: 5px;
 `;
 
 const StyledDiv = styled.div`
@@ -34,7 +38,6 @@ function SingleInputComponent(props) {
         endpointUrl,
         denyList,
         allowList,
-        placeholder = _('Select a value'),
         dependencies,
         createSearchChoice,
         referenceName,
@@ -120,7 +123,7 @@ function SingleInputComponent(props) {
     }, [dependencyValues]);
 
     const effectiveDisabled = loading ? true : disabled;
-    const effectivePlaceholder = loading ? _('Loading') : placeholder;
+    const loadingIndicator = loading ? <WaitSpinnerWrapper /> : null;
     // hideClearBtn=true only passed for OAuth else its undefined
     // effectiveIsClearable button will be visible only for the required=false and createSearchChoice=false single-select fields.
     const effectiveIsClearable = !(effectiveDisabled || restProps.required || hideClearBtn);
@@ -131,13 +134,13 @@ function SingleInputComponent(props) {
                 value={props.value === null ? '' : props.value}
                 name={field}
                 error={error}
-                placeholder={effectivePlaceholder}
                 disabled={effectiveDisabled}
                 onChange={handleChange} // eslint-disable-line react/jsx-no-bind
                 inline
             >
                 {options && options.length > 0 && options}
             </ComboBox>
+            {loadingIndicator}
         </StyledDiv>
     ) : (
         <>
@@ -147,14 +150,14 @@ function SingleInputComponent(props) {
                 value={props.value}
                 name={field}
                 error={error}
-                placeholder={effectivePlaceholder}
                 disabled={effectiveDisabled}
                 onChange={handleChange} // eslint-disable-line react/jsx-no-bind
                 filter={!disableSearch}
                 inline
             >
                 {options && options.length > 0 && options}
-            </SelectWrapper>
+            </SelectWrapper>{' '}
+            {loadingIndicator}
             {effectiveIsClearable ? (
                 <Button
                     data-test="clear"
@@ -179,7 +182,6 @@ SingleInputComponent.propTypes = {
         endpointUrl: PropTypes.string,
         denyList: PropTypes.string,
         allowList: PropTypes.string,
-        placeholder: PropTypes.string,
         dependencies: PropTypes.array,
         createSearchChoice: PropTypes.bool,
         referenceName: PropTypes.string,

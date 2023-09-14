@@ -17,7 +17,6 @@ class TextComponent extends Component {
             <TextWrapper
                 inline
                 error={this.props.error}
-                placeholder={this.props?.controlOptions?.placeholder}
                 className={this.props.field}
                 disabled={this.props.disabled}
                 value={
@@ -38,7 +37,6 @@ TextComponent.propTypes = {
     handleChange: PropTypes.func.isRequired,
     field: PropTypes.string,
     error: PropTypes.bool,
-    controlOptions: PropTypes.object,
     encrypted: PropTypes.bool,
     disabled: PropTypes.bool,
 };
