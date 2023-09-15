@@ -17,9 +17,6 @@ title: Entity
 | encrypted                                                     | boolean                   | To encrypt that particular field.                                                                                                 | false         |
 | [validators](./validators)                                   | array                     | It is used to validate the values of fields using various validators.                                                             | -             |
 
-> [!WARNING]  
-> [Placeholder](https://splunkui.splunkeng.com/Packages/react-ui/Text?section=develop) property is deprecated and will be removed in the next major version.
-
 ## Common Options
 
 | Property      | Type    | Description                                                                                                                               | Default Value |
