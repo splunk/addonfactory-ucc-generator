@@ -17,11 +17,14 @@ title: Entity
 | encrypted                                                     | boolean                   | To encrypt that particular field.                                                                                                 | false         |
 | [validators](./validators)                                   | array                     | It is used to validate the values of fields using various validators.                                                             | -             |
 
+> [!WARNING]  
+> [Placeholder](https://splunkui.splunkeng.com/Packages/react-ui/Text?section=develop) property is deprecated and will be removed in the next major version. Instead, we recommend to use "help" attribute.
+
 ## Common Options
 
 | Property      | Type    | Description                                                                                                                               | Default Value |
 | ------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
-| placeholder   | string  | The grey text is shown when the input is empty.<br> <b>The "placeholder" attribute is no longer supported. Instead, we recommend to use "help" attribute.</b> | -             |
+| placeholder   | string  | `Deprecated` The grey text is shown when the input is empty.                                                                                           | -             |
 | display       | boolean | Whether show or hide the field.                                                                                                           | true          |
 | disableonEdit | boolean | When the form is in edit mode, the field becomes uneditable.                                                                              | false         |
 | enable        | boolean | The enable property sets whether a field is enabled, or not.                                                                              | true          |
