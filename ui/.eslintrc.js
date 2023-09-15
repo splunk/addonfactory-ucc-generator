@@ -8,6 +8,7 @@ module.exports = {
         'plugin:@typescript-eslint/recommended',
         'plugin:import/typescript', // resolves import TS files from JS code
         'plugin:jest/recommended',
+        'plugin:storybook/recommended',
     ],
     plugins: ['@typescript-eslint', 'prettier', 'jest'],
     env: {
