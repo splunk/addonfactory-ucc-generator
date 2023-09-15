@@ -34,7 +34,7 @@ Auth can be used inside the entity tag. Use `type: "oauth"` in the entity list a
         - `required`: To specify whether the field is required or not. The default value is true.
 
 > [!WARNING]  
-> [Placeholder](https://splunkui.splunkeng.com/Packages/react-ui/Text?section=develop) property is deprecated and will be removed in the next major version. Instead, we recommend to use "help" attribute.
+> [Placeholder](https://splunkui.splunkeng.com/Packages/react-ui/Text?section=develop) attribute is deprecated and will be removed in the next major version. Instead, we recommend to use "help" attribute.
 
 ### Usage
 

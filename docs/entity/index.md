@@ -18,7 +18,7 @@ title: Entity
 | [validators](./validators)                                   | array                     | It is used to validate the values of fields using various validators.                                                             | -             |
 
 > [!WARNING]  
-> [Placeholder](https://splunkui.splunkeng.com/Packages/react-ui/Text?section=develop) property is deprecated and will be removed in the next major version. Instead, we recommend to use "help" attribute.
+> [Placeholder](https://splunkui.splunkeng.com/Packages/react-ui/Text?section=develop) attribute is deprecated and will be removed in the next major version. Instead, we recommend to use "help" attribute.
 
 ## Common Options
 
