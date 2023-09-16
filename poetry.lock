@@ -1647,19 +1647,19 @@ files = [
 
 [[package]]
 name = "splunksplwrapper"
-version = "1.1.1"
+version = "1.1.2"
 description = "Package to interact with Splunk"
 category = "dev"
 optional = false
 python-versions = ">=3.7,<4.0"
 files = [
-    {file = "splunksplwrapper-1.1.1-py3-none-any.whl", hash = "sha256:6dd93a144c77f78d7b756a05659da76ee5e44773378336d44365e4a046e7cd1c"},
-    {file = "splunksplwrapper-1.1.1.tar.gz", hash = "sha256:71d5fc3d37a9105d804d95bd9778023d3f4e7b3d5d2dc71cdcf8019a258395a8"},
+    {file = "splunksplwrapper-1.1.2-py3-none-any.whl", hash = "sha256:9626739dc092824a49ad34336dcf2462ae05bf4a4e97c6d7e8f5589de08f66da"},
+    {file = "splunksplwrapper-1.1.2.tar.gz", hash = "sha256:6d089995008b70f2a0f356b88d3bcc90d23fef07fc55aab14f3eb88f572afc7b"},
 ]
 
 [package.dependencies]
 defusedxml = ">=0.7.1,<0.8.0"
-httplib2 = ">=0.22.0,<0.23.0"
+httplib2 = ">=0.20.0"
 splunk-sdk = ">=1.6.20"
 
 [[package]]
