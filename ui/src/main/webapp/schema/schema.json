@@ -1098,6 +1098,10 @@
         "schemaVersion": {
           "type": "string",
           "pattern": "^(?:\\d{1,3}\\.){2}\\d{1,3}$"
+        },
+        "checkForUpdates": {
+          "type": "boolean",
+          "default": true
         }
       },
       "required": ["displayName", "name", "restRoot", "version"],
