@@ -7,8 +7,6 @@ const { LicenseWebpackPlugin } = require('license-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const baseConfig = require('@splunk/webpack-configs/base.config').default;
 
-const dev = process.env.NODE_ENV !== 'production';
-
 module.exports = merge(baseConfig, {
     entry: {
         entry_page: path.join(__dirname, 'src/main/webapp/pages/entry_page'),
@@ -46,5 +44,5 @@ module.exports = merge(baseConfig, {
         }),
         new ForkTsCheckerWebpackPlugin(),
     ],
-    devtool: dev ? 'inline-source-map' : false,
+    devtool: 'source-map',
 });
