@@ -258,6 +258,7 @@ Multiselect allows the user to select multiple options at once.
 | denyList                                          | string  | It filters options that don't match the regex based on the name attribute when received via API call using `endpointUrl` and `referenceName`.                                                             | -             |
 | labelField                                        | string  | TBD                                                                                                                                                                                                      | -             |
 | [dependencies](../advanced/dependent_dropdown.md) | array   | It is used to update options via an API call when the value of any field in the dependencies list is updated.                                                                                             | -             |
+| [autoCompleteFields](#autoCompleteFields)         | array   | It is used to add options in the Single select or Multiple select component.                                                                                                                             | -             |
 
 Example usage below:
 
@@ -368,7 +369,7 @@ It supports files that can be opened in text mode or with a text editor. Files w
 
 It only sends file content to the server by reading it using the [readAsArrayBuffer](https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsArrayBuffer) method of the FileReader class and then decoding it into **UTF-8** format using the [decode](https://developer.mozilla.org/en-US/docs/Web/API/TextDecoder/decode) method of the TextDecoder class.
 
-File content can be validated using in-built validators like [string](../validators/#string) and [regex](../validators/#regex), and a custom validator can also be implemented using a [custom hook](../../custom_ui_extensions/custom_hook) and [saveValidator](../advances/../advanced/save_validator).
+File content can be validated using in-built validators like [string](../validators/#string) and [regex](../validators/#regex), and a custom validator can also be implemented using a [custom hook](../../custom_ui_extensions/custom_hook) and [saveValidator](../advanced/save_validator).
 
 This feature allows you to upload a single file.
 
