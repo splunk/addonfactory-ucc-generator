@@ -514,7 +514,17 @@ def generate(
     )
     app_conf.read(output_app_conf_path)
     should_be_visible = True if global_config else False
-    app_conf.update(addon_version, app_manifest, conf_file_names, should_be_visible)
+    if global_config and global_config.meta.get("checkForUpdates") is False:
+        check_for_updates = False
+    else:
+        check_for_updates = True
+    app_conf.update(
+        addon_version,
+        app_manifest,
+        conf_file_names,
+        should_be_visible,
+        check_for_updates,
+    )
     app_conf.write(output_app_conf_path)
     logger.info(f"Updated {app_conf_lib.APP_CONF_FILE_NAME} file in the output folder")
 
