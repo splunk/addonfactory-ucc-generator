@@ -1291,14 +1291,14 @@ docker = ["lovely-pytest-docker (>=0,<1)"]
 
 [[package]]
 name = "pytest-splunk-addon-ui-smartx"
-version = "2.3.3b1"
+version = "2.3.4"
 description = "Library to support testing Splunk Add-on UX"
 category = "dev"
 optional = false
 python-versions = ">=3.7,<4.0"
 files = [
-    {file = "pytest_splunk_addon_ui_smartx-2.3.3b1-py3-none-any.whl", hash = "sha256:cbd242a2c7af3a94a145de0ace6fb1c571f11de4dbfd9564c24543fd296a30ed"},
-    {file = "pytest_splunk_addon_ui_smartx-2.3.3b1.tar.gz", hash = "sha256:cd0b4228e3730deb2296f247a828fa29bc6eba589d3cb99c715fa730f66a13d7"},
+    {file = "pytest_splunk_addon_ui_smartx-2.3.4-py3-none-any.whl", hash = "sha256:67df42feb40166ed8cb6057f5e8e387b9ac37188e6aadfe71005696c9153670f"},
+    {file = "pytest_splunk_addon_ui_smartx-2.3.4.tar.gz", hash = "sha256:b3f365c6a7876297e4cd8fcce3840aca0ed145c864212a742cbafce539d23723"},
 ]
 
 [package.dependencies]
@@ -1823,4 +1823,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.7"
-content-hash = "f30ba5b69f3b7ba82d4a6f7f01ec446c221ba893c40dd787f7e37f9f9a55529f"
+content-hash = "8fb72e194efac8d9301a8b23749b554a93770416f81f5803a0127d711dc79332"
