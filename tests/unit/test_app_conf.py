@@ -31,6 +31,7 @@ def test_update():
             "splunk_ta_uccexample_accounts",
         ],
         True,
+        True,
     )
     with tempfile.TemporaryDirectory() as temp_dir:
         output_app_conf_path = os.path.join(temp_dir, app_conf_lib.APP_CONF_FILE_NAME)
@@ -62,6 +63,7 @@ def test_update_when_should_not_be_visible():
         app_manifest_mock,
         [],
         False,
+        True,
     )
     with tempfile.TemporaryDirectory() as temp_dir:
         output_app_conf_path = os.path.join(temp_dir, app_conf_lib.APP_CONF_FILE_NAME)
@@ -93,6 +95,7 @@ def test_update_when_minimal_app_conf():
         app_manifest_mock,
         [],
         True,
+        False,
     )
     with tempfile.TemporaryDirectory() as temp_dir:
         output_app_conf_path = os.path.join(temp_dir, app_conf_lib.APP_CONF_FILE_NAME)
