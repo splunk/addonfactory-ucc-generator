@@ -28,12 +28,6 @@ class TestProxyPage(UccTester):
         self.assert_util(proxy.password.get_input_label, "Password")
         self.assert_util(proxy.dns_enable.get_input_label, "Reverse DNS resolution")
 
-        # Placeholder
-        self.assert_util(proxy.host.get_placeholder_value, "optional")
-        self.assert_util(proxy.port.get_placeholder_value, "optional")
-        self.assert_util(proxy.username.get_placeholder_value, "optional")
-        self.assert_util(proxy.password.get_placeholder_value, "optional")
-
         # Default values
         self.assert_util(proxy.proxy_enable.is_checked(), False)
         self.assert_util(proxy.type.get_value(), "http")

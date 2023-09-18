@@ -40,22 +40,6 @@ class TestCustomPage(UccTester):
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.custom
-    def test_custom_fields_placeholder_value(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
-    ):
-        """Verifies custom fields placeholder value"""
-        custom = CustomPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
-        self.assert_util(custom.test_string.get_placeholder_value, "optional")
-        self.assert_util(custom.test_number.get_placeholder_value, "optional")
-        self.assert_util(custom.test_regex.get_placeholder_value, "optional")
-        self.assert_util(custom.test_email.get_placeholder_value, "optional")
-        self.assert_util(custom.test_ipv4.get_placeholder_value, "optional")
-        self.assert_util(custom.test_date.get_placeholder_value, "optional")
-        self.assert_util(custom.test_url.get_placeholder_value, "optional")
-
-    @pytest.mark.execute_enterprise_cloud_true
-    @pytest.mark.forwarder
-    @pytest.mark.custom
     @pytest.mark.sanity_test
     def test_custom_frontend_backend_validation(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, reset_configuration

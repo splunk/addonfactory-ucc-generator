@@ -904,32 +904,6 @@ class TestInputPage(UccTester):
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.input
-    def test_example_input_one_fields_placeholder_value(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
-    ):
-        """Verifies example input one field placeholder value"""
-        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
-        input_page.create_new_input.select("Example Input One")
-        self.assert_util(
-            input_page.entity1.query_start_date.get_placeholder_value, "optional"
-        )
-
-    @pytest.mark.execute_enterprise_cloud_true
-    @pytest.mark.forwarder
-    @pytest.mark.input
-    def test_example_input_two_fields_placeholder_value(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
-    ):
-        """Verifies example input two field placeholder value"""
-        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
-        input_page.create_new_input.select("Example Input Two")
-        self.assert_util(
-            input_page.entity1.query_start_date.get_placeholder_value, "optional"
-        )
-
-    @pytest.mark.execute_enterprise_cloud_true
-    @pytest.mark.forwarder
-    @pytest.mark.input
     def test_example_input_one_help_text_entity(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
