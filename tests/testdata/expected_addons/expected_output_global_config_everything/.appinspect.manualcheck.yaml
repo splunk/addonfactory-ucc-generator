@@ -32,3 +32,5 @@ check_documented_included_open_source:
   comment: 'Y'
 check_requires_access_to_files_outside_apps_dir:
   comment: 'Y'
+check_for_secret_disclosure:
+  comment: 'Y'
