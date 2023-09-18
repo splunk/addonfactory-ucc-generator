@@ -455,7 +455,8 @@ class GlobalConfigValidator:
                     warnings.warn(
                         f"`placeholder` option found for configuration tab '{tab['name']}' "
                         f"-> entity field '{entity['field']}'. "
-                        f"Please take a look at https://github.com/splunk/addonfactory-ucc-generator/issues/831."
+                        f"Please take a look at https://github.com/splunk/addonfactory-ucc-generator/issues/831.",
+                        DeprecationWarning,
                     )
         inputs = pages.get("inputs")
         if inputs is None:
@@ -467,7 +468,8 @@ class GlobalConfigValidator:
                     warnings.warn(
                         f"`placeholder` option found for input service '{service['name']}' "
                         f"-> entity field '{entity['field']}'. "
-                        f"Please take a look at https://github.com/splunk/addonfactory-ucc-generator/issues/831."
+                        f"Please take a look at https://github.com/splunk/addonfactory-ucc-generator/issues/831.",
+                        DeprecationWarning,
                     )
 
     def validate(self) -> None:
