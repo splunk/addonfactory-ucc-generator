@@ -18,6 +18,7 @@ import json
 import os
 import re
 from typing import Any, Dict
+import warnings
 
 import jsonschema
 
@@ -440,6 +441,37 @@ class GlobalConfigValidator:
                         f"Supported panel names: {dashboard_lib.SUPPORTED_PANEL_NAMES_READABLE}"
                     )
 
+    def _warn_on_placeholder_usage(self):
+        """
+        Warns if placeholder is used.
+        More details here: https://github.com/splunk/addonfactory-ucc-generator/issues/831.
+        """
+        pages = self._config["pages"]
+        configuration = pages["configuration"]
+        tabs = configuration["tabs"]
+        for tab in tabs:
+            for entity in tab["entity"]:
+                if "placeholder" in entity.get("options", {}):
+                    warnings.warn(
+                        f"`placeholder` option found for configuration tab '{tab['name']}' "
+                        f"-> entity field '{entity['field']}'. "
+                        f"Please take a look at https://github.com/splunk/addonfactory-ucc-generator/issues/831.",
+                        DeprecationWarning,
+                    )
+        inputs = pages.get("inputs")
+        if inputs is None:
+            return
+        services = inputs["services"]
+        for service in services:
+            for entity in service["entity"]:
+                if "placeholder" in entity.get("options", {}):
+                    warnings.warn(
+                        f"`placeholder` option found for input service '{service['name']}' "
+                        f"-> entity field '{entity['field']}'. "
+                        f"Please take a look at https://github.com/splunk/addonfactory-ucc-generator/issues/831.",
+                        DeprecationWarning,
+                    )
+
     def validate(self) -> None:
         self._validate_config_against_schema()
         self._validate_configuration_tab_table_has_name_field()
@@ -450,3 +482,4 @@ class GlobalConfigValidator:
         self._validate_duplicates()
         self._validate_alerts()
         self._validate_panels()
+        self._warn_on_placeholder_usage()

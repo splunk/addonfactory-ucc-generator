@@ -30,8 +30,12 @@ Auth can be used inside the entity tag. Use `type: "oauth"` in the entity list a
         - `field`: For now this user must keep it as it is for mandatory fields as mentioned above.
         - `help` : This can be changed if user wants to change the help text displayed below field.
         - `encrypted` : This should be true if user wants that particular field encrypted else no need to have this parameter.
-        - `placeholder`: The placeholder for the field.
         - `required`: To specify whether the field is required or not. The default value is true.
+        - `options`:
+            - `placeholder`: The placeholder for the field.
+
+> [!WARNING]
+> [Placeholder](https://splunkui.splunkeng.com/Packages/react-ui/Text?section=develop) attribute is deprecated and will be removed in one of the following versions. Instead, we recommend using "help" attribute.
 
 ### Usage
 

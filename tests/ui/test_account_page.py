@@ -449,17 +449,6 @@ class TestAccount(UccTester):
         self.assert_util(account.entity.redirect_url.get_input_label, "Redirect url")
 
     @pytest.mark.execute_enterprise_cloud_true
-    @pytest.mark.forwarder
-    @pytest.mark.account
-    def test_account_fields_placeholder_value(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
-    ):
-        """Verifies account field placeholder value"""
-        account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
-        account.entity.open()
-        self.assert_util(account.entity.name.get_placeholder_value, "Required")
-
-    @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.account
     def test_account_help_text_entity(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
