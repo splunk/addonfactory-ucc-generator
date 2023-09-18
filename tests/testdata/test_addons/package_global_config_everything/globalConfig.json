@@ -38,9 +38,6 @@
                                     "pattern": "^[a-zA-Z]\\w*$"
                                 }
                             ],
-                            "options": {
-                                "placeholder": "Required"
-                            },
                             "field": "name",
                             "help": "Enter a unique name for this account.",
                             "required": true
@@ -1134,7 +1131,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.28.3Rec9a414a",
+        "version": "5.28.6Rd4102e53",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.3"
     }
