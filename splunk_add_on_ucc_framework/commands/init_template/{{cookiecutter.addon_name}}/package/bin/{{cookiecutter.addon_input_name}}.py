@@ -18,7 +18,7 @@ def get_account_api_key(session_key: str, account_name: str):
     cfm = conf_manager.ConfManager(
         session_key,
         ADDON_NAME,
-        realm=f"__REST_CREDENTIAL__#{ADDON_NAME}#configs/conf-{{cookiecutter.addon_name}}_account",
+        realm=f"__REST_CREDENTIAL__#{ADDON_NAME}#configs/conf-{{cookiecutter.addon_rest_root}}_account",
     )
     account_conf_file = cfm.get_conf("{{cookiecutter.addon_name}}_account")
     return account_conf_file.get(account_name).get("api_key")

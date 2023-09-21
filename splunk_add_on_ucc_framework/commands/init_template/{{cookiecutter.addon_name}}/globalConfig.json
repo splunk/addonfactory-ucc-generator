@@ -211,7 +211,7 @@
     },
     "meta": {
         "name": "{{cookiecutter.addon_name}}",
-        "restRoot": "{{cookiecutter.addon_name}}",
+        "restRoot": "{{cookiecutter.addon_rest_root}}",
         "version": "{{cookiecutter.addon_version}}",
         "displayName": "{{cookiecutter.addon_display_name}}",
         "schemaVersion": "0.0.3"
