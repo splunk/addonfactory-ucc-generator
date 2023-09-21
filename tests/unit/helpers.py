@@ -9,6 +9,13 @@ Loader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
 yaml_load = functools.partial(yaml.load, Loader=Loader)
 
 
+def get_path_to_source_dir() -> str:
+    return os.path.join(
+        os.getcwd(),
+        "splunk_add_on_ucc_framework",
+    )
+
+
 def get_testdata_file_path(file_name: str) -> str:
     return os.path.join(
         os.path.dirname(os.path.realpath(__file__)), "testdata", file_name
