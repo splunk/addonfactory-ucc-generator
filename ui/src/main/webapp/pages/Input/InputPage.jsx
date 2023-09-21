@@ -12,7 +12,7 @@ import { TableContextProvider } from '../../context/TableContext';
 import { MODE_CREATE, MODE_CLONE, MODE_EDIT } from '../../constants/modes';
 import { PAGE_INPUT } from '../../constants/pages';
 import { STYLE_PAGE } from '../../constants/dialogStyles';
-import MenuInput from '../../components/MenuInput';
+import MenuInput, { ROOT_GROUP_NAME } from '../../components/MenuInput';
 import TableWrapper from '../../components/table/TableWrapper';
 import EntityModal from '../../components/EntityModal';
 import ErrorBoundary from '../../components/ErrorBoundary';
@@ -118,8 +118,10 @@ function InputPage() {
             // set query and push to navigate
             query.set('service', serviceName);
             query.set('action', MODE_CREATE);
-            if (input) {
-                query.set('input', input);
+            const selectedGroup = groupName && groupName !== ROOT_GROUP_NAME ? groupName : null;
+            const inputQueryValue = input || selectedGroup || serviceName;
+            if (inputQueryValue) {
+                query.set('input', inputQueryValue);
             } else {
                 query.delete('input');
             }
@@ -252,7 +254,7 @@ function InputPage() {
                                         page={PAGE_INPUT}
                                         serviceName={service.name}
                                         handleRequestModalOpen={() =>
-                                            handleRequestOpen(service.name)
+                                            handleRequestOpen({ serviceName: service.name })
                                         }
                                         handleOpenPageStyleDialog={handleOpenPageStyleDialog}
                                     />

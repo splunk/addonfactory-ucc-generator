@@ -19,8 +19,10 @@ const CustomSubTitle = styled.span`
     font-weight: 500;
 `;
 
+export const ROOT_GROUP_NAME = 'main_panel';
+
 function MenuInput({ handleRequestOpen }) {
-    const [activePanelId, setActivePanelId] = useState('main_panel');
+    const [activePanelId, setActivePanelId] = useState(ROOT_GROUP_NAME);
     const [slidingPanelsTransition, setSlidingPanelsTransition] = useState('forward');
     const [openDropDown, setOpenDropDown] = useState(false);
     const [isSubMenu, setIsSubMenu] = useState(true);
@@ -85,7 +87,7 @@ function MenuInput({ handleRequestOpen }) {
             <Menu.Item
                 icon={<ChevronLeft />}
                 onClick={() => {
-                    setActivePanelId('main_panel');
+                    setActivePanelId(ROOT_GROUP_NAME);
                     setSlidingPanelsTransition('backward');
                 }}
             >
@@ -99,14 +101,14 @@ function MenuInput({ handleRequestOpen }) {
         Object.keys(servicesGroup).map((groupsName) => (
             <SlidingPanels.Panel key={groupsName} panelId={groupsName}>
                 <Menu>
-                    {groupsName !== 'main_panel' && getBackButton()}
+                    {groupsName !== ROOT_GROUP_NAME && getBackButton()}
                     {getMenuItems(servicesGroup[groupsName], groupsName)}
                 </Menu>
             </SlidingPanels.Panel>
         ));
 
     const getInputMenu = useMemo(() => {
-        const servicesGroup = { main_panel: [] };
+        const servicesGroup = { [ROOT_GROUP_NAME]: [] };
         if (groupsMenu) {
             groupsMenu.forEach((group) => {
                 if (group?.groupServices) {
@@ -120,13 +122,13 @@ function MenuInput({ handleRequestOpen }) {
                                 ?.subTitle,
                         });
                     });
-                    servicesGroup.main_panel.push({
+                    servicesGroup[ROOT_GROUP_NAME].push({
                         name: group.groupName,
                         title: group.groupTitle,
                         hasSubmenu: true,
                     });
                 } else {
-                    servicesGroup.main_panel.push({
+                    servicesGroup[ROOT_GROUP_NAME].push({
                         name: group.groupName,
                         title: group.groupTitle,
                         subTitle: services.find((service) => service.name === group.groupName)
@@ -136,7 +138,7 @@ function MenuInput({ handleRequestOpen }) {
                 }
             });
         } else {
-            servicesGroup.main_panel = services.map((service) => ({
+            servicesGroup[ROOT_GROUP_NAME] = services.map((service) => ({
                 name: service.name,
                 title: service.title,
                 subTitle: service.subTitle,

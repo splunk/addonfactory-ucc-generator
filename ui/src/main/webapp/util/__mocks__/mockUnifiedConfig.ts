@@ -31,6 +31,17 @@ export const mockUnifiedConfig = {
                 },
                 actions: ['edit', 'delete', 'clone'],
             },
+            groupsMenu: [
+                {
+                    groupName: 'aws_billing_menu',
+                    groupTitle: 'Billing',
+                    groupServices: ['aws_billing_cur', 'aws_billing'],
+                },
+                {
+                    groupName: 'aws_cloudwatch',
+                    groupTitle: 'CloudWatch',
+                },
+            ],
             menu: {
                 src: 'CustomMenu',
                 type: 'external',
@@ -39,6 +50,7 @@ export const mockUnifiedConfig = {
                 {
                     name: 'aws_billing_cur',
                     title: 'Billing (Cost and Usage Report)',
+                    subTitle: '(Recommended)',
                     style: 'page',
                     hook: {
                         src: 'Hook',
@@ -86,9 +98,6 @@ export const mockUnifiedConfig = {
                             label: 'Name',
                             type: 'text',
                             required: true,
-                            options: {
-                                placeholder: 'Required',
-                            },
                             validators: [
                                 {
                                     type: 'regex',
@@ -157,9 +166,6 @@ export const mockUnifiedConfig = {
                             label: 'Name',
                             type: 'text',
                             required: true,
-                            options: {
-                                placeholder: 'Required',
-                            },
                             validators: [
                                 {
                                     type: 'regex',
@@ -170,6 +176,55 @@ export const mockUnifiedConfig = {
                             ],
                         },
                     ],
+                },
+                {
+                    name: 'aws_cloudwatch',
+                    title: 'CloudWatch',
+                    style: 'page',
+                    hook: {
+                        src: 'Hook',
+                        type: 'external',
+                    },
+                    restHandlerName: 'aws_cloudwatch_inputs_rh',
+                    groups: [
+                        {
+                            label: 'AWS Input Configuration',
+                            options: {
+                                isExpandable: false,
+                            },
+                            fields: [
+                                'name',
+                                'aws_account',
+                                'aws_iam_role',
+                                'aws_region',
+                                'private_endpoint_enabled',
+                                'sts_private_endpoint_url',
+                                'monitoring_private_endpoint_url',
+                                'elb_private_endpoint_url',
+                                'ec2_private_endpoint_url',
+                                'autoscaling_private_endpoint_url',
+                                'lambda_private_endpoint_url',
+                                's3_private_endpoint_url',
+                                'metric_namespace',
+                            ],
+                        },
+                        {
+                            label: 'Splunk-related Configuration',
+                            options: {
+                                isExpandable: false,
+                            },
+                            fields: ['sourcetype', 'index'],
+                        },
+                        {
+                            label: 'Advanced Settings',
+                            options: {
+                                expand: false,
+                                isExpandable: true,
+                            },
+                            fields: ['period'],
+                        },
+                    ],
+                    entity: [],
                 },
             ],
         },
