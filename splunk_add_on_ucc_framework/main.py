@@ -109,6 +109,13 @@ def main(argv: Optional[Sequence[str]] = None):
         required=True,
     )
     init_parser.add_argument(
+        "--addon-rest-root",
+        type=str,
+        help="Add-on REST root.",
+        required=False,
+        default=None,
+    )
+    init_parser.add_argument(
         "--addon-display-name",
         type=str,
         help="Add-on display name.",
@@ -155,6 +162,7 @@ def main(argv: Optional[Sequence[str]] = None):
     if args.command == "init":
         init.init(
             addon_name=args.addon_name,
+            addon_rest_root=args.addon_rest_root,
             addon_display_name=args.addon_display_name,
             addon_input_name=args.addon_input_name,
             addon_version=args.addon_version,

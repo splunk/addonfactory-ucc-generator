@@ -1,4 +1,3 @@
-import os
 from contextlib import nullcontext as does_not_raise
 
 import pytest
@@ -10,13 +9,6 @@ from splunk_add_on_ucc_framework.global_config_validator import (
     GlobalConfigValidatorException,
 )
 from splunk_add_on_ucc_framework import global_config as global_config_lib
-
-
-def _path_to_source_dir() -> str:
-    return os.path.join(
-        os.getcwd(),
-        "splunk_add_on_ucc_framework",
-    )
 
 
 @pytest.mark.parametrize(
@@ -31,9 +23,24 @@ def test_config_validation_when_valid(filename, is_yaml):
     global_config_path = helpers.get_testdata_file_path(filename)
     global_config = global_config_lib.GlobalConfig()
     global_config.parse(global_config_path, is_yaml)
-    validator = GlobalConfigValidator(_path_to_source_dir(), global_config)
+
+    validator = GlobalConfigValidator(helpers.get_path_to_source_dir(), global_config)
+
     with does_not_raise():
         validator.validate()
+
+
+def test_config_validation_when_deprecated_placeholder_is_used():
+    global_config_path = helpers.get_testdata_file_path(
+        "valid_config_deprecated_placeholder_usage.json"
+    )
+    global_config = global_config_lib.GlobalConfig()
+    global_config.parse(global_config_path, False)
+
+    validator = GlobalConfigValidator(helpers.get_path_to_source_dir(), global_config)
+
+    with pytest.warns(DeprecationWarning):
+        validator._warn_on_placeholder_usage()
 
 
 @pytest.mark.parametrize(
@@ -257,8 +264,10 @@ def test_config_validation_when_error(filename, is_yaml, exception_message):
     global_config_path = helpers.get_testdata_file_path(filename)
     global_config = global_config_lib.GlobalConfig()
     global_config.parse(global_config_path, is_yaml)
-    validator = GlobalConfigValidator(_path_to_source_dir(), global_config)
+
+    validator = GlobalConfigValidator(helpers.get_path_to_source_dir(), global_config)
     with pytest.raises(GlobalConfigValidatorException) as exc_info:
         validator.validate()
+
     (msg,) = exc_info.value.args
     assert msg == exception_message

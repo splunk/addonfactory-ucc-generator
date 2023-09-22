@@ -135,6 +135,7 @@ It takes the following parameters:
 
 * `--addon-name` - [required] add-on name. Consult with 
     [official naming convention guide](https://dev.splunk.com/enterprise/docs/releaseapps/splunkbase/namingguidelines/).
+* `--addon-rest-root` - [optional] add-on REST root, defaults to `--addon-name` if not provided. 
 * `--addon-display-name` - [required] add-on "official" name.
 * `--addon-input-name` - [required] name of the generated input. 
 * `--addon-version` - [optional] version of the generated add-on, `0.0.1` by default.

@@ -35,6 +35,7 @@ class AppConf:
         app_manifest: app_manifest_lib.AppManifest,
         conf_file_names: Sequence[str],
         is_visible: bool,
+        check_for_updates: bool = True,
     ) -> None:
         if "launcher" not in self._app_conf:
             self._app_conf.add_section("launcher")
@@ -60,6 +61,9 @@ class AppConf:
         self._app_conf["install"]["is_configured"] = "false"
         self._app_conf["install"]["state"] = "enabled"
         self._app_conf["package"]["id"] = app_manifest.get_addon_name()
+        self._app_conf["package"]["check_for_updates"] = (
+            "true" if check_for_updates else "false"
+        )
         self._app_conf["ui"]["label"] = app_manifest.get_title()
         self._app_conf["ui"]["is_visible"] = "true" if is_visible else "false"
         for conf_file_name in conf_file_names:
