@@ -1,10 +1,6 @@
-import os
 from unittest import mock
 
-import cookiecutter
 import pytest
-
-import tests.unit.helpers as helpers
 
 from splunk_add_on_ucc_framework.commands import init
 
@@ -44,9 +40,9 @@ def test__is_valid_input_name(input_name, expected):
     assert init._is_valid_input_name(input_name) is expected
 
 
-@mock.patch("cookiecutter.main.cookiecutter")
+@mock.patch("splunk_add_on_ucc_framework.commands.init._generate_addon")
 @pytest.mark.parametrize(
-    "init_kwargs,expected_extra_content",
+    "init_kwargs,expected_args_to_generate_addon",
     [
         (
             {
@@ -55,13 +51,14 @@ def test__is_valid_input_name(input_name, expected):
                 "addon_input_name": "input_name",
                 "addon_version": "0.0.1",
             },
-            {
-                "addon_name": "addon_name",
-                "addon_rest_root": "addon_name",
-                "addon_display_name": "Addon For Demo",
-                "addon_input_name": "input_name",
-                "addon_version": "0.0.1",
-            },
+            (
+                "addon_name",
+                "Addon For Demo",
+                "input_name",
+                "0.0.1",
+                "addon_name",
+                False,
+            ),
         ),
         (
             {
@@ -71,13 +68,14 @@ def test__is_valid_input_name(input_name, expected):
                 "addon_input_name": "input_name",
                 "addon_version": "0.0.1",
             },
-            {
-                "addon_name": "addon_name",
-                "addon_rest_root": "addon_name",
-                "addon_display_name": "Addon For Demo",
-                "addon_input_name": "input_name",
-                "addon_version": "0.0.1",
-            },
+            (
+                "addon_name",
+                "Addon For Demo",
+                "input_name",
+                "0.0.1",
+                "addon_name",
+                False,
+            ),
         ),
         (
             {
@@ -87,28 +85,21 @@ def test__is_valid_input_name(input_name, expected):
                 "addon_input_name": "input_name",
                 "addon_version": "0.0.1",
             },
-            {
-                "addon_name": "addon_name",
-                "addon_rest_root": "addon_rest_root",
-                "addon_display_name": "Addon For Demo",
-                "addon_input_name": "input_name",
-                "addon_version": "0.0.1",
-            },
+            (
+                "addon_name",
+                "Addon For Demo",
+                "input_name",
+                "0.0.1",
+                "addon_rest_root",
+                False,
+            ),
         ),
     ],
 )
-def test_init(mock_cookiecutter_main_cookiecutter, init_kwargs, expected_extra_content):
+def test_init(mock_generate_addon, init_kwargs, expected_args_to_generate_addon):
     init.init(**init_kwargs)
 
-    expected_path_to_template = os.path.join(
-        helpers.get_path_to_source_dir(), "commands", "init_template"
-    )
-    mock_cookiecutter_main_cookiecutter.assert_called_once_with(
-        template=expected_path_to_template,
-        overwrite_if_exists=False,
-        no_input=True,
-        extra_context=expected_extra_content,
-    )
+    mock_generate_addon.assert_called_once_with(*expected_args_to_generate_addon)
 
 
 @pytest.mark.parametrize(
@@ -155,11 +146,9 @@ def test_init_when_incorrect_parameters_then_sys_exit(init_kwargs):
         init.init(**init_kwargs)
 
 
-@mock.patch("cookiecutter.main.cookiecutter")
-def test_init_when_folder_already_exists(mock_cookiecutter_main_cookiecutter, caplog):
-    mock_cookiecutter_main_cookiecutter.side_effect = (
-        cookiecutter.exceptions.OutputDirExistsException
-    )
+@mock.patch("splunk_add_on_ucc_framework.commands.init._generate_addon")
+def test_init_when_folder_already_exists(mock_generate_addon, caplog):
+    mock_generate_addon.side_effect = SystemExit
 
     with pytest.raises(SystemExit):
         init.init(
