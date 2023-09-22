@@ -128,13 +128,17 @@ jobs:
     strategy:
       matrix:
         splunk: ${{ fromJson(needs.meta.outputs.matrix_supportedSplunk) }}
-        test-mark:
-          - "logging"
-          - "proxy"
-          - "account"
-          - "custom"
-          - "alert"
-          - "input"
+        test-group:
+          - "1"
+          - "2"
+          - "3"
+          - "4"
+          - "5"
+          - "6"
+          - "7"
+          - "8"
+          - "9"
+          - "10"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
@@ -156,7 +160,7 @@ jobs:
           ./run_splunk.sh ${{ matrix.splunk.version }}
           until curl -Lsk "https://localhost:8088/services/collector/health" &>/dev/null ; do echo -n "Waiting for HEC-" && sleep 5 ; done
         timeout-minutes: 5
-      - run: poetry run pytest tests/ui -m "${{ matrix.test-mark }}" --headless --junitxml=test-results/junit.xml
+      - run: poetry run pytest tests/ui --test-group-count 10 --test-group ${{ matrix.test-group }} --test-group-random-seed 123456 --headless --junitxml=test-results/junit.xml
       - uses: actions/upload-artifact@v3
         if: success() || failure()
         with:

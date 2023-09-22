@@ -1155,6 +1155,21 @@ packaging = ">=17.1"
 pytest = ">=5.3"
 
 [[package]]
+name = "pytest-split-tests"
+version = "1.1.0"
+description = "A Pytest plugin for running a subset of your tests by splitting them in to equally sized groups. Forked from Mark Adams' original project pytest-test-groups."
+category = "dev"
+optional = false
+python-versions = "*"
+files = [
+    {file = "pytest-split-tests-1.1.0.tar.gz", hash = "sha256:e55bbf127d94ff913a248f32e64f07cd3201e8a82397e8152694e4ffe456e21c"},
+    {file = "pytest_split_tests-1.1.0-py2.py3-none-any.whl", hash = "sha256:21be7d6f95291002790fe24e28faa950059694e7abc430d4993d99a4c773bde4"},
+]
+
+[package.dependencies]
+pytest = ">=2.5"
+
+[[package]]
 name = "pytest-splunk-addon"
 version = "5.1.0"
 description = "A Dynamic test tool for Splunk Apps and Add-ons"
@@ -1604,14 +1619,14 @@ watchmedo = ["PyYAML (>=3.10)"]
 
 [[package]]
 name = "webdriver-manager"
-version = "4.0.0"
+version = "4.0.1"
 description = "Library provides the way to automatically manage drivers for different browsers"
 category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "webdriver_manager-4.0.0-py2.py3-none-any.whl", hash = "sha256:05f58ab599b907b03e0aa8d6b43624b1ca8c12d5d48455c79c531b9052ae2356"},
-    {file = "webdriver_manager-4.0.0.tar.gz", hash = "sha256:2b8d1c2cb590d296ade18bc7bc2589578a868f5587133922d744641f6a757a20"},
+    {file = "webdriver_manager-4.0.1-py2.py3-none-any.whl", hash = "sha256:d7970052295bb9cda2c1a24cf0b872dd2c41ababcc78f7b6b8dc37a41e979a7e"},
+    {file = "webdriver_manager-4.0.1.tar.gz", hash = "sha256:25ec177c6a2ce9c02fb8046f1b2732701a9418d6a977967bb065d840a3175d87"},
 ]
 
 [package.dependencies]
@@ -1670,4 +1685,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.7"
-content-hash = "f188c93d24e354caea43bc51bb889e552db5404381fe1a630fb2cbc61257bce9"
+content-hash = "b11d21f8e079f4519cb8fa6783a9776ee67c20fd78932be841c76a7bd28aa085"
