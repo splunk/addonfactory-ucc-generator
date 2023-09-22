@@ -7,7 +7,7 @@ import import_declare_test
 from solnlib import conf_manager, log
 from splunklib import modularinput as smi
 
-ADDON_NAME = "{{cookiecutter.addon_name}}"
+ADDON_NAME = "{{addon_name}}"
 
 
 def logger_for_input(input_name: str) -> logging.Logger:
@@ -18,9 +18,9 @@ def get_account_api_key(session_key: str, account_name: str):
     cfm = conf_manager.ConfManager(
         session_key,
         ADDON_NAME,
-        realm=f"__REST_CREDENTIAL__#{ADDON_NAME}#configs/conf-{{cookiecutter.addon_rest_root}}_account",
+        realm=f"__REST_CREDENTIAL__#{ADDON_NAME}#configs/conf-{{addon_rest_root}}_account",
     )
-    account_conf_file = cfm.get_conf("{{cookiecutter.addon_name}}_account")
+    account_conf_file = cfm.get_conf("{{addon_name}}_account")
     return account_conf_file.get(account_name).get("api_key")
 
 
@@ -42,8 +42,8 @@ class Input(smi.Script):
         super().__init__()
 
     def get_scheme(self):
-        scheme = smi.Scheme("{{cookiecutter.addon_input_name}}")
-        scheme.description = "{{cookiecutter.addon_input_name}} input"
+        scheme = smi.Scheme("{{addon_input_name}}")
+        scheme.description = "{{addon_input_name}} input"
         scheme.use_external_validation = True
         scheme.streaming_mode_xml = True
         scheme.use_single_instance = False
@@ -60,7 +60,7 @@ class Input(smi.Script):
     def stream_events(self, inputs: smi.InputDefinition, event_writer: smi.EventWriter):
         # inputs.inputs is a Python dictionary object like:
         # {
-        #   "{{cookiecutter.addon_input_name}}://<input_name>": {
+        #   "{{addon_input_name}}://<input_name>": {
         #     "account": "<account_name>",
         #     "disabled": "0",
         #     "host": "$decideOnStartup",
@@ -100,7 +100,7 @@ class Input(smi.Script):
             except Exception as e:
                 logger.error(
                     f"Exception raised while ingesting data for "
-                    f"{{cookiecutter.addon_input_name}}: {e}. Traceback: "
+                    f"{{addon_input_name}}: {e}. Traceback: "
                     f"{traceback.format_exc()}"
                 )
 

@@ -1,11 +1,11 @@
 {
     "schemaVersion": "2.0.0",
     "info": {
-        "title": "{{cookiecutter.addon_display_name}}",
+        "title": "{{addon_display_name}}",
         "id": {
             "group": null,
-            "name": "{{cookiecutter.addon_name}}",
-            "version": "{{cookiecutter.addon_version}}"
+            "name": "{{addon_name}}",
+            "version": "{{addon_version}}"
         },
         "author": [
             {
@@ -15,7 +15,7 @@
             }
         ],
         "releaseDate": null,
-        "description": "{{cookiecutter.addon_display_name}}",
+        "description": "{{addon_display_name}}",
         "classification": {
             "intendedAudience": "IT Professionals",
             "categories": [

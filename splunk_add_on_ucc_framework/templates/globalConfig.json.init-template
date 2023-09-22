@@ -93,7 +93,7 @@
         "inputs": {
             "services": [
                 {
-                    "name": "{{cookiecutter.addon_input_name}}",
+                    "name": "{{addon_input_name}}",
                     "entity": [
                         {
                             "type": "text",
@@ -141,7 +141,7 @@
                             "required": true
                         }
                     ],
-                    "title": "{{cookiecutter.addon_input_name}}"
+                    "title": "{{addon_input_name}}"
                 }
             ],
             "title": "Inputs",
@@ -210,10 +210,10 @@
         }
     },
     "meta": {
-        "name": "{{cookiecutter.addon_name}}",
-        "restRoot": "{{cookiecutter.addon_rest_root}}",
-        "version": "{{cookiecutter.addon_version}}",
-        "displayName": "{{cookiecutter.addon_display_name}}",
+        "name": "{{addon_name}}",
+        "restRoot": "{{addon_rest_root}}",
+        "version": "{{addon_version}}",
+        "displayName": "{{addon_display_name}}",
         "schemaVersion": "0.0.3"
     }
 }
