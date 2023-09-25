@@ -1670,8 +1670,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.7"
-<<<<<<< HEAD
-content-hash = "b11d21f8e079f4519cb8fa6783a9776ee67c20fd78932be841c76a7bd28aa085"
-=======
-content-hash = "8fb72e194efac8d9301a8b23749b554a93770416f81f5803a0127d711dc79332"
->>>>>>> 35fc6ab1 (ci: revert "ci: try with split UI tests")
+content-hash = "f188c93d24e354caea43bc51bb889e552db5404381fe1a630fb2cbc61257bce9"
