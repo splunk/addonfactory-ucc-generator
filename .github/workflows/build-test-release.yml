@@ -48,7 +48,7 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: "3.7"
-      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.4.2
+      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
       - run: poetry install
       - run: poetry run mkdocs build --strict
   
@@ -75,7 +75,7 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.4.2
+      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
       - run: |
           ./get-ucc-ui.sh
           # Puts package and schema subdirs along with NOTICE (THIRDPARTY.npm)
@@ -103,7 +103,7 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.4.2
+      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
       - run: |
           ./get-ucc-ui.sh
           # Puts package and schema subdirs along with NOTICE (THIRDPARTY.npm)
@@ -140,7 +140,7 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: "3.7"
-      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.4.2
+      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
       - run: poetry install
       - name: Link chromedriver
         # Use installed chromedriver https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2204-Readme.md
@@ -229,7 +229,7 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: "3.7"
-      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.4.2
+      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
       - run: |
           ./get-ucc-ui.sh
           # Puts package and schema subdirs along with NOTICE (THIRDPARTY.npm)
