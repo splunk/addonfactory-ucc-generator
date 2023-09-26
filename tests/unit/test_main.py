@@ -236,3 +236,29 @@ def test_import_from_aob_command(mock_import_from_aob, args, expected_parameters
     main.main(args)
 
     mock_import_from_aob.assert_called_with(**expected_parameters)
+
+
+@pytest.mark.parametrize(
+    "args,expected_parameters",
+    [
+        (
+            ["package", "--path", "output/foo"],
+            {
+                "path_to_built_addon": "output/foo",
+                "output_directory": None,
+            },
+        ),
+        (
+            ["package", "--path", "output/foo", "--output", "bar"],
+            {
+                "path_to_built_addon": "output/foo",
+                "output_directory": "bar",
+            },
+        ),
+    ],
+)
+@mock.patch("splunk_add_on_ucc_framework.commands.package.package")
+def test_package_command(mock_package, args, expected_parameters):
+    main.main(args)
+
+    mock_package.assert_called_with(**expected_parameters)

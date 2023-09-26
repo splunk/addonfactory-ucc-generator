@@ -31,7 +31,7 @@ def test_ucc_package():
             addon_name,
         )
         with tempfile.TemporaryDirectory() as temp_dir_for_package:
-            package.package(path_to_built_addon, output=temp_dir_for_package)
+            package.package(path_to_built_addon, output_directory=temp_dir_for_package)
 
             found_files = os.listdir(temp_dir_for_package)
             if "init_addon_for_ucc_package-1.0.0.tar.gz" not in found_files:

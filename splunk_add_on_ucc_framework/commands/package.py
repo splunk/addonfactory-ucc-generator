@@ -32,7 +32,7 @@ def _get_package_output_path(output_directory: Optional[str] = None) -> str:
         return output_directory
 
 
-def package(path_to_built_addon: str, output: Optional[str] = None) -> None:
+def package(path_to_built_addon: str, output_directory: Optional[str] = None) -> None:
     """
     Archives a built add-on to the current directory with a specific add-on name
     and version.
@@ -54,7 +54,7 @@ def package(path_to_built_addon: str, output: Optional[str] = None) -> None:
 
     addon_name = app_manifest.get_addon_name()
     addon_version = app_manifest.get_addon_version()
-    output_directory = _get_package_output_path(output)
+    output_directory = _get_package_output_path(output_directory)
     archive_path = os.path.join(
         output_directory, f"{addon_name}-{addon_version}.tar.gz"
     )
