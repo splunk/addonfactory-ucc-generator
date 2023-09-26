@@ -155,7 +155,9 @@ class GlobalConfigValidator:
                 f"'maxLength' should be greater or equal than 'minLength'."
             )
 
-    def _validate_number_validator(self, entity_field: str, validator: Dict[str, Any]):
+    def _validate_number_validator(
+        self, entity_field: str, validator: Dict[str, Any]
+    ) -> None:
         """
         Validates number validator, both values in range should be numbers and
         first one should be smaller than the second one.
@@ -174,7 +176,9 @@ class GlobalConfigValidator:
                 f"second element should be greater or equal than first element."
             )
 
-    def _validate_regex_validator(self, entity_field: str, validator: Dict[str, Any]):
+    def _validate_regex_validator(
+        self, entity_field: str, validator: Dict[str, Any]
+    ) -> None:
         """
         Validates regex validator, provided regex should at least be compilable.
         """
@@ -186,7 +190,7 @@ class GlobalConfigValidator:
                 f"pattern provided in the 'pattern' field is not compilable."
             )
 
-    def _validate_entity_validators(self, entity: Dict[str, Any]):
+    def _validate_entity_validators(self, entity: Dict[str, Any]) -> None:
         """
         Validates entity validators.
         """
@@ -199,7 +203,7 @@ class GlobalConfigValidator:
             if validator["type"] == "regex":
                 self._validate_regex_validator(entity["field"], validator)
 
-    def _validate_validators(self):
+    def _validate_validators(self) -> None:
         """
         Validates both configuration and services validators, currently string,
         number and regex are supported.
@@ -225,7 +229,7 @@ class GlobalConfigValidator:
     def _find_duplicates_in_list(_list: list) -> bool:
         return len(set(_list)) != len(_list)
 
-    def _validate_children_duplicates(self, children: Dict, entity_label: str):
+    def _validate_children_duplicates(self, children: Dict, entity_label: str) -> None:
         """
         Validates duplicates under children key in autoCompleteFields
         for fields under keys: label, value
@@ -428,7 +432,7 @@ class GlobalConfigValidator:
                         f"{entity_type} type must not contain search, valueField or labelField parameter"
                     )
 
-    def _validate_panels(self):
+    def _validate_panels(self) -> None:
         """
         Validates if the panels defined in the configuration are supported.
         """
@@ -441,7 +445,7 @@ class GlobalConfigValidator:
                         f"Supported panel names: {dashboard_lib.SUPPORTED_PANEL_NAMES_READABLE}"
                     )
 
-    def _warn_on_placeholder_usage(self):
+    def _warn_on_placeholder_usage(self) -> None:
         """
         Warns if placeholder is used.
         More details here: https://github.com/splunk/addonfactory-ucc-generator/issues/831.

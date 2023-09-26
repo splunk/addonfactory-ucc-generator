@@ -347,8 +347,9 @@ def generate(
 
     if os.path.isfile(config_path):
         logger.info(f"Using globalConfig file located @ {config_path}")
-        global_config = global_config_lib.GlobalConfig()
-        global_config.parse(config_path, is_global_config_yaml)
+        global_config = global_config_lib.GlobalConfig(
+            config_path, is_global_config_yaml
+        )
         try:
             validator = global_config_validator.GlobalConfigValidator(
                 internal_root_dir, global_config

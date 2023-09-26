@@ -17,8 +17,7 @@ from splunk_add_on_ucc_framework import global_config as global_config_lib
 )
 def test_handle_biased_terms_update(filename, is_yaml):
     global_config_path = helpers.get_testdata_file_path(filename)
-    global_config = global_config_lib.GlobalConfig()
-    global_config.parse(global_config_path, is_yaml)
+    global_config = global_config_lib.GlobalConfig(global_config_path, is_yaml)
     _handle_biased_terms_update(global_config)
     expected_schema_version = "0.0.1"
     assert expected_schema_version == global_config.schema_version
@@ -49,8 +48,7 @@ def test_handle_biased_terms_update(filename, is_yaml):
 )
 def test_handle_dropping_api_version_update(filename, is_yaml):
     global_config_path = helpers.get_testdata_file_path(filename)
-    global_config = global_config_lib.GlobalConfig()
-    global_config.parse(global_config_path, is_yaml)
+    global_config = global_config_lib.GlobalConfig(global_config_path, is_yaml)
     _handle_dropping_api_version_update(global_config)
     expected_schema_version = "0.0.3"
     assert expected_schema_version == global_config.schema_version
