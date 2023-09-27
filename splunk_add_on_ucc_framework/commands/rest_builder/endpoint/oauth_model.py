@@ -22,7 +22,7 @@ from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import (
 
 
 class OAuthModelEndpointBuilder(RestEndpointBuilder):
-    def __init__(self, name: str, namespace: str, app_name: str):
+    def __init__(self, name: str, namespace: str, app_name: str) -> None:
         super().__init__(name, namespace)
         self._app_name = app_name
 

@@ -38,14 +38,14 @@ logger = logging.getLogger("ucc_gen")
 class DefaultSubcommandArgumentParser(argparse.ArgumentParser):
     __default_subparser = None
 
-    def set_default_subparser(self, name):
+    def set_default_subparser(self, name: str) -> None:
         self.__default_subparser = name
 
-    def _parse_known_args(self, arg_strings, *args, **kwargs):
+    def _parse_known_args(self, arg_strings, *args, **kwargs):  # type: ignore
         in_args = set(arg_strings)
         d_sp = self.__default_subparser
         if d_sp is not None and not {"-h", "--help"}.intersection(in_args):
-            for x in self._subparsers._actions:
+            for x in self._subparsers._actions:  # type: ignore
                 subparser_found = (
                     isinstance(x, argparse._SubParsersAction)
                     and len(arg_strings) > 0
@@ -62,7 +62,7 @@ class DefaultSubcommandArgumentParser(argparse.ArgumentParser):
         return super()._parse_known_args(arg_strings, *args, **kwargs)
 
 
-def main(argv: Optional[Sequence[str]] = None):
+def main(argv: Optional[Sequence[str]] = None) -> int:
     argv = argv if argv is not None else sys.argv[1:]
     parser = DefaultSubcommandArgumentParser(prog="ucc-gen")
     parser.set_default_subparser("build")
@@ -194,6 +194,7 @@ def main(argv: Optional[Sequence[str]] = None):
         import_from_aob.import_from_aob(
             addon_name=args.addon_name,
         )
+    return 0
 
 
 if __name__ == "__main__":

@@ -20,7 +20,7 @@ from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import (
 )
 
 
-def quote_regex(value) -> str:
+def quote_regex(value: Optional[str]) -> str:
     return '"""%s"""' % value
 
 

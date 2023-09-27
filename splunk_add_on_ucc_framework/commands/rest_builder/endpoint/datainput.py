@@ -13,29 +13,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import List
+from typing import List, Optional, Any, TYPE_CHECKING
 
 from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.single_model import (
     RestEndpointBuilder,
     RestEntityBuilder,
 )
 
+if TYPE_CHECKING:
+    from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.field import (
+        RestFieldBuilder,
+    )
+
 
 class DataInputEntityBuilder(RestEntityBuilder):
-    def __init__(self, name, fields, input_type, **kwargs):
+    def __init__(
+        self,
+        name: Optional[str],
+        fields: List["RestFieldBuilder"],
+        input_type: str,
+        **kwargs: Any,
+    ) -> None:
         super().__init__(name, fields, **kwargs)
         self._input_type = input_type
 
     @property
-    def name_spec(self):
+    def name_spec(self) -> str:
         return f"{self._input_type}://<name>"
 
     @property
-    def name_default(self):
-        return self._input_type
-
-    @property
-    def name_rh(self):
+    def name_rh(self) -> str:
         return ""
 
 
@@ -72,12 +79,14 @@ if __name__ == '__main__':
     )
 """
 
-    def __init__(self, name, namespace, input_type, **kwargs):
+    def __init__(
+        self, name: str, namespace: str, input_type: str, **kwargs: Any
+    ) -> None:
         super().__init__(name, namespace, **kwargs)
         self.input_type = input_type
 
     @property
-    def conf_name(self):
+    def conf_name(self) -> str:
         return "inputs"
 
     def actions(self) -> List[str]:
