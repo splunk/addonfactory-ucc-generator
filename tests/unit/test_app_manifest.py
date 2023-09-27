@@ -6,8 +6,7 @@ from tests.unit.helpers import get_testdata_file
 
 def _get_manifest(file_name: str) -> app_manifest.AppManifest:
     content = get_testdata_file(file_name)
-    manifest = app_manifest.AppManifest()
-    manifest.read(content)
+    manifest = app_manifest.AppManifest(content)
     return manifest
 
 

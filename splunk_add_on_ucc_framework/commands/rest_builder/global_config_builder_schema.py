@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 import json
-from typing import Dict, List, Set
+from typing import Dict, List, Set, Any
 
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 
@@ -47,7 +47,7 @@ REST_HANDLER_DEFAULT_MODULE = "splunktaucclib.rest_handler.admin_external"
 REST_HANDLER_DEFAULT_CLASS = "AdminExternalHandler"
 
 
-def _is_true(val):
+def _is_true(val: Any) -> bool:
     return str(val).strip().upper() in ("1", "TRUE", "T", "Y", "YES")
 
 
@@ -69,27 +69,27 @@ class GlobalConfigBuilderSchema:
         return self.global_config.namespace
 
     @property
-    def settings_conf_file_names(self):
+    def settings_conf_file_names(self) -> Set[str]:
         return self._settings_conf_file_names
 
     @property
-    def configs_conf_file_names(self):
+    def configs_conf_file_names(self) -> Set[str]:
         return self._configs_conf_file_names
 
     @property
-    def oauth_conf_file_names(self):
+    def oauth_conf_file_names(self) -> Set[str]:
         return self._oauth_conf_file_names
 
     @property
     def endpoints(self) -> List[RestEndpointBuilder]:
         return list(self._endpoints.values())
 
-    def _parse_builder_schema(self):
+    def _parse_builder_schema(self) -> None:
         self._builder_configs()
         self._builder_settings()
         self._builder_inputs()
 
-    def _builder_configs(self):
+    def _builder_configs(self) -> None:
         for config in self.global_config.configs:
             name = config["name"]
             endpoint = SingleModelEndpointBuilder(
@@ -120,7 +120,7 @@ class GlobalConfigBuilderSchema:
                     self._oauth_conf_file_names.add(oauth_endpoint.conf_name)
             self._configs_conf_file_names.add(endpoint.conf_name)
 
-    def _builder_settings(self):
+    def _builder_settings(self) -> None:
         endpoint = MultipleModelEndpointBuilder(
             name="settings",
             namespace=self.global_config.namespace,
@@ -138,7 +138,7 @@ class GlobalConfigBuilderSchema:
             endpoint.add_entity(entity)
             self._settings_conf_file_names.add(endpoint.conf_name)
 
-    def _builder_inputs(self):
+    def _builder_inputs(self) -> None:
         for input_item in self.global_config.inputs:
             rest_handler_name = input_item.get("restHandlerName")
             rest_handler_module = input_item.get(
@@ -151,25 +151,25 @@ class GlobalConfigBuilderSchema:
             )
             if "conf" in input_item:
                 name = input_item["name"]
-                endpoint = SingleModelEndpointBuilder(
+                single_model_endpoint = SingleModelEndpointBuilder(
                     name=name,
                     namespace=self.global_config.namespace,
                     rest_handler_name=rest_handler_name,
                     rest_handler_module=rest_handler_module,
                     rest_handler_class=rest_handler_class,
                 )
-                self._endpoints[name] = endpoint
+                self._endpoints[name] = single_model_endpoint
                 content = self._get_oauth_enitities(input_item["entity"])
                 fields = self._parse_fields(content)
-                entity = SingleModelEntityBuilder(
+                single_model_entity = SingleModelEntityBuilder(
                     None,
                     fields,
                     conf_name=input_item["conf"],
                 )
-                endpoint.add_entity(entity)
+                single_model_endpoint.add_entity(single_model_entity)
             else:
                 name = input_item["name"]
-                endpoint = DataInputEndpointBuilder(
+                data_input_endpoint = DataInputEndpointBuilder(
                     name=name,
                     namespace=self.global_config.namespace,
                     input_type=input_item["name"],
@@ -177,17 +177,19 @@ class GlobalConfigBuilderSchema:
                     rest_handler_module=rest_handler_module,
                     rest_handler_class=rest_handler_class,
                 )
-                self._endpoints[name] = endpoint
+                self._endpoints[name] = data_input_endpoint
                 content = self._get_oauth_enitities(input_item["entity"])
                 fields = self._parse_fields(content)
-                entity = DataInputEntityBuilder(
+                data_input_entity = DataInputEntityBuilder(
                     None,
                     fields,
                     input_type=input_item["name"],
                 )
-                endpoint.add_entity(entity)
+                data_input_endpoint.add_entity(data_input_entity)
 
-    def _parse_fields(self, fields_content):
+    def _parse_fields(
+        self, fields_content: List[Dict[str, Any]]
+    ) -> List[RestFieldBuilder]:
         return [
             RestFieldBuilder(
                 field["field"],
@@ -207,7 +209,9 @@ class GlobalConfigBuilderSchema:
     :type content: `json`
     """
 
-    def _get_oauth_enitities(self, content):
+    def _get_oauth_enitities(
+        self, content: List[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
         for entity_element in content:
             # Check if we have oauth type
             if entity_element["type"] == "oauth":

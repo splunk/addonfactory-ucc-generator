@@ -8,8 +8,7 @@ import tests.unit.helpers as helpers
 @pytest.fixture
 def app_manifest_correct() -> app_manifest_lib.AppManifest:
     content = helpers.get_testdata_file("app.manifest")
-    app_manifest = app_manifest_lib.AppManifest()
-    app_manifest.read(content)
+    app_manifest = app_manifest_lib.AppManifest(content)
     return app_manifest
 
 

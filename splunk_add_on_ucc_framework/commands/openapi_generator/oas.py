@@ -52,7 +52,7 @@ class SchemaObject(Init):  # https://spec.openapis.org/oas/latest.html#schema-ob
     # above is a theory
     # below is practice
     type: Optional[str] = None
-    properties: Optional[dict] = None
+    properties: Optional[Dict[str, Any]] = None
     items: Optional[Dict[str, str]] = None
 
 
@@ -70,7 +70,7 @@ class EncodingObject(Init):
 class MediaTypeObject(
     Init
 ):  # https://spec.openapis.org/oas/latest.html#media-type-object
-    schema: Optional[Union[SchemaObject, Dict]] = None
+    schema: Optional[Union[SchemaObject, Dict[str, str]]] = None
     example: Optional[Any] = None
     examples: Optional[Dict[str, ExampleObject]] = None
     encoding: Optional[Dict[str, EncodingObject]] = None
@@ -80,7 +80,7 @@ class MediaTypeObject(
 class RequestBodyObject(
     Init
 ):  # https://spec.openapis.org/oas/latest.html#request-body-object
-    content: Dict[str, MediaTypeObject]
+    content: Dict[str, Union[MediaTypeObject, Dict[str, Any]]]
     description: Optional[str] = None
     required: Optional[bool] = False
 
@@ -144,7 +144,7 @@ class OperationObject(
     callbacks: Optional[CallbackObjects] = None
     deprecated: Optional[bool] = False
     # security: List[SecurityRequirementObject] = None
-    security: Optional[List[dict]] = None
+    security: Optional[List[Dict[str, Any]]] = None
 
     servers: Optional[ServerObject] = None
 
@@ -253,4 +253,4 @@ class OpenAPIObject(Init):  # https://spec.openapis.org/oas/latest.html#openapi-
     # despite above follows strict definition,
     # below needs to be used, to be implementable
     paths: Optional[Dict[str, PathItemObject]] = None
-    security: Optional[List[dict]] = None
+    security: Optional[List[Dict[str, Any]]] = None

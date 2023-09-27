@@ -76,7 +76,7 @@ class GlobalConfig:
         return configs
 
     @property
-    def alerts(self) -> List[Any]:
+    def alerts(self) -> List[Dict[str, Any]]:
         return self._content.get("alerts", [])
 
     @property
@@ -107,7 +107,7 @@ class GlobalConfig:
     def schema_version(self) -> Optional[str]:
         return self.meta.get("schemaVersion")
 
-    def update_schema_version(self, new_schema_version) -> None:
+    def update_schema_version(self, new_schema_version: str) -> None:
         self.meta["schemaVersion"] = new_schema_version
 
     def update_addon_version(self, version: str) -> None:

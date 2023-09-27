@@ -41,11 +41,11 @@ class DefaultSubcommandArgumentParser(argparse.ArgumentParser):
     def set_default_subparser(self, name: str) -> None:
         self.__default_subparser = name
 
-    def _parse_known_args(self, arg_strings, *args, **kwargs):
+    def _parse_known_args(self, arg_strings, *args, **kwargs):  # type: ignore
         in_args = set(arg_strings)
         d_sp = self.__default_subparser
         if d_sp is not None and not {"-h", "--help"}.intersection(in_args):
-            for x in self._subparsers._actions:
+            for x in self._subparsers._actions:  # type: ignore
                 subparser_found = (
                     isinstance(x, argparse._SubParsersAction)
                     and len(arg_strings) > 0

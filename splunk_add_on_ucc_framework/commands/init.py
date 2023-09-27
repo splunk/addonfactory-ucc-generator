@@ -34,7 +34,7 @@ ADDON_INPUT_NAME_RE_STR = r"^[0-9a-zA-Z][\w-]*$"
 ADDON_INPUT_NAME_RE = re.compile(ADDON_INPUT_NAME_RE_STR)
 
 
-def _is_valid(pattern: re.Pattern, string: str) -> bool:
+def _is_valid(pattern: re.Pattern[str], string: str) -> bool:
     result = pattern.search(string)
     if result is None:
         return False

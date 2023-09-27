@@ -17,7 +17,7 @@
 import json
 import os
 import re
-from typing import Any, Dict
+from typing import Any, Dict, List
 import warnings
 
 import jsonschema
@@ -144,7 +144,9 @@ class GlobalConfigValidator:
                             f"'{entity['field']}' field."
                         )
 
-    def _validate_string_validator(self, entity_field: str, validator: Dict[str, Any]):
+    def _validate_string_validator(
+        self, entity_field: str, validator: Dict[str, Any]
+    ) -> None:
         """
         Validates string validator. maxLength should be greater or equal
         than minLength.
@@ -226,10 +228,12 @@ class GlobalConfigValidator:
                 self._validate_entity_validators(entity)
 
     @staticmethod
-    def _find_duplicates_in_list(_list: list) -> bool:
+    def _find_duplicates_in_list(_list: List[Any]) -> bool:
         return len(set(_list)) != len(_list)
 
-    def _validate_children_duplicates(self, children: Dict, entity_label: str) -> None:
+    def _validate_children_duplicates(
+        self, children: List[Dict[str, Any]], entity_label: str
+    ) -> None:
         """
         Validates duplicates under children key in autoCompleteFields
         for fields under keys: label, value
@@ -309,7 +313,7 @@ class GlobalConfigValidator:
                         "Duplicates found for multi-level menu groups' names or titles."
                     )
 
-    def _validate_entity_duplicates(self, entity: list) -> None:
+    def _validate_entity_duplicates(self, entity: List[Dict[str, Any]]) -> None:
         """
         Validates duplicates in entity keys
         for fields under keys: field, label
@@ -331,7 +335,7 @@ class GlobalConfigValidator:
                 "Duplicates found for entity field or label"
             )
 
-    def _validate_tabs_duplicates(self, tabs: list) -> None:
+    def _validate_tabs_duplicates(self, tabs: List[Dict[str, Any]]) -> None:
         """
         Validates duplicates in tab keys under configuration
         for fields under keys: name, title

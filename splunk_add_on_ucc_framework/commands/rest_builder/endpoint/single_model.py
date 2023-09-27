@@ -13,28 +13,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import List
+from typing import List, Optional, TYPE_CHECKING, Any
 
 from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import (
     RestEndpointBuilder,
     RestEntityBuilder,
 )
 
+if TYPE_CHECKING:
+    from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.field import (
+        RestFieldBuilder,
+    )
+
 
 class SingleModelEntityBuilder(RestEntityBuilder):
-    def __init__(self, name, fields, **kwargs):
+    def __init__(
+        self, name: Optional[str], fields: List["RestFieldBuilder"], **kwargs: Any
+    ) -> None:
         super().__init__(name, fields, **kwargs)
 
     @property
-    def name_spec(self):
+    def name_spec(self) -> str:
         return "<name>"
 
     @property
-    def name_default(self):
-        return "default"
-
-    @property
-    def name_rh(self):
+    def name_rh(self) -> str:
         return ""
 
 

@@ -127,14 +127,14 @@ def generate_dashboard(
     global_config: global_config_lib.GlobalConfig,
     addon_name: str,
     dashboard_xml_file_path: str,
-):
+) -> None:
     if os.path.exists(dashboard_xml_file_path):
         logger.warning(
             f"dashboard.xml file already exists @ "
             f"{dashboard_xml_file_path}, not overwriting the existing dashboard file."
         )
     else:
-        panels = global_config.dashboard.get("panels")
+        panels = global_config.dashboard.get("panels", [])
         panel_names = [panel["name"] for panel in panels]
         content = generate_dashboard_content(addon_name, panel_names)
         with open(dashboard_xml_file_path, "w") as dashboard_xml_file:
