@@ -38,7 +38,6 @@ def package(path_to_built_addon: str, output_directory: Optional[str] = None) ->
     and version.
     """
     logger.info(f"Packaging app at {path_to_built_addon}")
-    app_manifest = app_manifest_lib.AppManifest()
     app_manifest_path = os.path.join(
         path_to_built_addon, app_manifest_lib.APP_MANIFEST_FILE_NAME
     )
@@ -50,8 +49,8 @@ def package(path_to_built_addon: str, output_directory: Optional[str] = None) ->
         )
         exit(1)
     with open(app_manifest_path) as _f:
-        app_manifest.read(_f.read())
-
+        app_manifest_content = _f.read()
+    app_manifest = app_manifest_lib.AppManifest(app_manifest_content)
     addon_name = app_manifest.get_addon_name()
     addon_version = app_manifest.get_addon_version()
     output_directory = _get_package_output_path(output_directory)

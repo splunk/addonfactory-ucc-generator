@@ -13,11 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from __future__ import annotations
 import logging
 import os
 import sys
 import re
-from typing import Optional
 
 import shutil
 
@@ -60,7 +60,7 @@ def _generate_addon(
     addon_display_name: str,
     addon_input_name: str,
     addon_version: str,
-    addon_rest_root: Optional[str] = None,
+    addon_rest_root: str | None = None,
     overwrite: bool = False,
 ) -> str:
     generated_addon_path = os.path.join(
@@ -151,7 +151,7 @@ def init(
     addon_display_name: str,
     addon_input_name: str,
     addon_version: str,
-    addon_rest_root: Optional[str] = None,
+    addon_rest_root: str | None = None,
     overwrite: bool = False,
 ) -> str:
     if not _is_valid_addon_name(addon_name):
