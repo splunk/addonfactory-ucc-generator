@@ -21,6 +21,7 @@ import logging
 from splunk_add_on_ucc_framework.commands import build
 from splunk_add_on_ucc_framework.commands import init
 from splunk_add_on_ucc_framework.commands import import_from_aob
+from splunk_add_on_ucc_framework.commands import package
 
 logger = logging.getLogger("ucc_gen")
 
@@ -45,9 +46,11 @@ class DefaultSubcommandArgumentParser(argparse.ArgumentParser):
         d_sp = self.__default_subparser
         if d_sp is not None and not {"-h", "--help"}.intersection(in_args):
             for x in self._subparsers._actions:
-                subparser_found = isinstance(
-                    x, argparse._SubParsersAction
-                ) and in_args.intersection(x._name_parser_map.keys())
+                subparser_found = (
+                    isinstance(x, argparse._SubParsersAction)
+                    and len(arg_strings) > 0
+                    and arg_strings[0] in x._name_parser_map.keys()
+                )
                 if subparser_found:
                     break
             else:
@@ -61,92 +64,109 @@ class DefaultSubcommandArgumentParser(argparse.ArgumentParser):
 
 def main(argv: Optional[Sequence[str]] = None):
     argv = argv if argv is not None else sys.argv[1:]
-    parser = DefaultSubcommandArgumentParser()
+    parser = DefaultSubcommandArgumentParser(prog="ucc-gen")
     parser.set_default_subparser("build")
-    subparsers = parser.add_subparsers(dest="command", description="Build an add-on")
+    subparsers = parser.add_subparsers(dest="command")
 
-    build_parser = subparsers.add_parser("build")
+    build_parser = subparsers.add_parser("build", description="Build an add-on")
     build_parser.add_argument(
         "--source",
         type=str,
         nargs="?",
-        help="Folder containing the app.manifest and app source.",
+        help="folder containing the app.manifest and app source",
         default="package",
     )
     build_parser.add_argument(
         "--config",
         type=str,
         nargs="?",
-        help="Path to configuration file, defaults to globalConfig file in parent directory of source provided.",
+        help="path to configuration file, defaults to globalConfig file in parent directory of source provided",
         default=None,
     )
     build_parser.add_argument(
         "--ta-version",
         type=str,
-        help="Version of TA, default version is version specified in the "
-        "package such as app.manifest, app.conf, and globalConfig file.",
+        help="version of add-on, default version is version specified in the "
+        "package such as app.manifest, app.conf, and globalConfig file",
         default=None,
     )
     build_parser.add_argument(
         "-o",
         "--output",
         type=str,
-        help="Output path to store built add-on.",
+        help="output path to store built add-on",
         default=None,
     )
     build_parser.add_argument(
         "--python-binary-name",
         type=str,
-        help="Python binary name to use to install requirements.",
+        help="Python binary name to use to install requirements",
         default="python3",
     )
 
-    init_parser = subparsers.add_parser("init", description="Bootstrap an add-on.")
+    package_parser = subparsers.add_parser("package", description="Package an add-on")
+    package_parser.add_argument(
+        "--path",
+        required=True,
+        type=str,
+        help="path to the built add-on (should include app.manifest file)",
+    )
+    package_parser.add_argument(
+        "-o",
+        "--output",
+        type=str,
+        help="output path to store archived add-on",
+        default=None,
+    )
+
+    init_parser = subparsers.add_parser(
+        "init", description="Initialize an empty add-on"
+    )
     init_parser.add_argument(
         "--addon-name",
         type=str,
-        help="Add-on name.",
+        help="add-on name",
         required=True,
     )
     init_parser.add_argument(
         "--addon-rest-root",
         type=str,
-        help="Add-on REST root.",
+        help="add-on REST root",
         required=False,
         default=None,
     )
     init_parser.add_argument(
         "--addon-display-name",
         type=str,
-        help="Add-on display name.",
+        help="add-on display name",
         required=True,
     )
     init_parser.add_argument(
         "--addon-input-name",
         type=str,
-        help="Add-on input name.",
+        help="add-on input name",
         required=True,
     )
     init_parser.add_argument(
         "--addon-version",
         type=str,
-        help="Add-on version.",
+        help="add-on version",
         default="0.0.1",
     )
     init_parser.add_argument(
         "--overwrite",
         action="store_true",
         default=False,
-        help="Overwrite already generated add-on folder.",
+        help="overwrite already generated add-on folder",
     )
 
     import_from_aob_parser = subparsers.add_parser(
-        "import-from-aob", description="[Experimental] Import from AoB."
+        "import-from-aob", description="[Experimental] Import from AoB"
     )
     import_from_aob_parser.add_argument(
         "--addon-name",
         type=str,
-        help="Add-on name.",
+        help="add-on name",
         required=True,
     )
 
@@ -159,6 +179,8 @@ def main(argv: Optional[Sequence[str]] = None):
             output_directory=args.output,
             python_binary_name=args.python_binary_name,
         )
+    if args.command == "package":
+        package.package(path_to_built_addon=args.path, output_directory=args.output)
     if args.command == "init":
         init.init(
             addon_name=args.addon_name,

@@ -72,19 +72,20 @@ pip install splunk-add-on-ucc-framework splunk-packaging-toolkit
 
 > Note: `splunk-packaging-toolkit` does not work with Python 3.10+.
 
-* Run `ucc-gen` and package it
+> Note: `ucc-gen package` can be used instead of `slim` if UCC `v5.30.0+` is used (more details below). 
+
+* Run `ucc-gen build` and package it
 
 > Provide `--ta-version=<version>` parameter if this repository is not version controlled.
 
 ```bash
-ucc-gen
+ucc-gen build
 slim package output/<add-on-name>
 ```
 
 > Please use `ucc-gen build` instead of `ucc-gen` if you are using UCC `v5.19.0` and higher.
 
-Now you should see an archive created in the same level as your 
-`globalConfig.json` is located.
+Now you should see an archive created in the same level as your `globalConfig.json` is located.
 
 Now you can go to Splunk and install this add-on using the generated archive.
 
@@ -163,6 +164,23 @@ exported from AoB.
 It takes the following parameters:
 
 * `--addon-name` - [required] add-on name.
+
+### `ucc-gen package`
+
+Available from `v5.30.0`. Packages the add-on so it can be installed. 
+It mimics the basics of the `slim package` command. This command can be used for most of the simple cases.
+
+It does not support:
+
+* `.slimignore` file
+* [dependencies section](https://dev.splunk.com/enterprise/docs/releaseapps/packageapps/packagingtoolkit/#Dependencies-section)
+
+It takes the following parameters:
+
+* `--path` - [required] path to the built add-on (should include `app.manifest` file).
+* `-o` / `--output` - [optional] output folder to store packaged add-on in.
+    By default, it will be saved in the `current directory` folder.
+    Accepts absolute paths as well.
 
 ## What `ucc-gen build` does
 
