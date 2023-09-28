@@ -176,7 +176,6 @@ def quote_string(value: Optional[str]) -> Optional[str]:
     :return:
     """
 
-    print("quote_string", value, type(value))
     if isinstance(value, str):
         return "'%s'" % value
     else:
