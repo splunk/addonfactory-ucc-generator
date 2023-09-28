@@ -34,3 +34,4 @@ output
 .gitmodules
 .pytest_cache/**
 site/
+temp_add_on
