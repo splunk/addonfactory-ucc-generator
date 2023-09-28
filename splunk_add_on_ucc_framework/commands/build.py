@@ -19,6 +19,8 @@ import logging
 import os
 import shutil
 import sys
+import colorama as c
+import filecmp
 from typing import Optional
 
 from openapi3 import OpenAPI
@@ -557,3 +559,81 @@ def generate(
             logger.info(f"Creating {output_openapi_folder} folder")
         with open(output_openapi_path, "w") as openapi_file:
             json.dump(open_api.raw_element, openapi_file, indent=4)
+
+def summary_report(
+            source: str,
+            config_path: Optional[str] = None,
+            output_directory: Optional[str] = None,
+):
+
+    def line_print(print_path, mod_type):
+
+        print(color_pallete.get(mod_type, '') + str(print_path).ljust(80), mod_type + c.Style.RESET_ALL)
+
+    def check_for_conflict():
+        conflict_path_file = os.path.join(conflict_path, relative_file_path)
+
+        if os.path.isfile(conflict_path_file):
+            return True
+
+        return False
+    def file_check():
+
+        source_path = os.path.join(source, relative_file_path)
+
+        if os.path.isfile(source_path):
+
+            output_path = os.path.join(output_directory, relative_file_path)
+
+            is_conflict = check_for_conflict()
+
+            if not is_conflict:
+
+                files_are_same = filecmp.cmp(source_path, output_path)
+
+                if not files_are_same:
+                    # output file was modified
+                    line_print(relative_file_path, 'modified')
+                else:
+                    # files are the same
+                    line_print(relative_file_path, 'copied')
+
+            else:
+                line_print(relative_file_path, 'conflict')
+
+        else:
+            # file does not exist in package
+            line_print(relative_file_path, 'created')
+
+    conflict_path = os.path.join(internal_root_dir, 'package')
+
+    c.init()
+    color_pallete = {
+        'copied': c.Fore.GREEN,
+        'conflict': c.Fore.RED,
+        'modified': c.Fore.YELLOW,
+    }
+
+
+    path_len = len(output_directory) + 1
+
+    for path, dir, files in os.walk(output_directory):
+        relative_path= path[path_len:]
+        # skipping lib directory
+        if relative_path[:3] == 'lib':
+            if relative_path == 'lib':
+                line_print('lib', 'libraries downloaded')
+            continue
+
+        files = sorted(files, key=str.casefold)
+
+        for file in files:
+            relative_file_path = os.path.join(relative_path, file)
+            file_check()
+
+
+if __name__ == "__main__":
+    summary_report(
+        source='/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/temp_add_on/test_addon/package',
+        output_directory='/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/temp_add_on/test_addon/output/test_addon'
+    )
