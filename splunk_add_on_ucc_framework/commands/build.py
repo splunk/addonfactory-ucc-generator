@@ -19,7 +19,10 @@ import logging
 import os
 import shutil
 import sys
+
 import colorama as c
+import fnmatch
+
 import filecmp
 from typing import Optional
 
@@ -562,30 +565,64 @@ def generate(
 
 def summary_report(
             source: str,
+            ta_name: str,
             config_path: Optional[str] = None,
             output_directory: Optional[str] = None,
 ):
 
+    c.init()
+    color_pallete = {
+        'copied': c.Fore.GREEN,
+        'conflict': c.Fore.RED,
+        'modified': c.Fore.YELLOW,
+    }
+
+    conflict_path = os.path.join(internal_root_dir, 'package')
+    conflict_static_list =[
+        'import_declare_test.py',
+        f'{ta_name}_rh_*.py',
+        'app.conf',
+        'inputs.conf*',
+        'restmap.conf',
+        'server.conf',
+        f'{ta_name}_*.conf*',
+        'web.conf',
+        'default.xml',
+        'configuration.xml',
+        'dashboard.xml',
+        'inputs.xml'
+    ]
+
     def line_print(print_path, mod_type):
 
         print(color_pallete.get(mod_type, '') + str(print_path).ljust(80), mod_type + c.Style.RESET_ALL)
+        summary[mod_type] += 1
 
-    def check_for_conflict():
+    def check_for_conflict(file, relative_file_path):
         conflict_path_file = os.path.join(conflict_path, relative_file_path)
+
 
         if os.path.isfile(conflict_path_file):
             return True
 
+        for pattern in conflict_static_list:
+            if fnmatch.fnmatch(file, pattern):
+                return True
+
+        if file:
+            pass
+
+
         return False
-    def file_check():
+    def file_check(file, output_directory, relative_file_path, source):
 
         source_path = os.path.join(source, relative_file_path)
 
         if os.path.isfile(source_path):
-
+            # file is present in package
             output_path = os.path.join(output_directory, relative_file_path)
 
-            is_conflict = check_for_conflict()
+            is_conflict = check_for_conflict(file, relative_file_path)
 
             if not is_conflict:
 
@@ -597,7 +634,6 @@ def summary_report(
                 else:
                     # files are the same
                     line_print(relative_file_path, 'copied')
-
             else:
                 line_print(relative_file_path, 'conflict')
 
@@ -605,15 +641,12 @@ def summary_report(
             # file does not exist in package
             line_print(relative_file_path, 'created')
 
-    conflict_path = os.path.join(internal_root_dir, 'package')
-
-    c.init()
-    color_pallete = {
-        'copied': c.Fore.GREEN,
-        'conflict': c.Fore.RED,
-        'modified': c.Fore.YELLOW,
+    summary = {
+        'created': 0,
+        'copied': 0,
+        'modified': 0,
+        'conflict': 0
     }
-
 
     path_len = len(output_directory) + 1
 
@@ -622,18 +655,25 @@ def summary_report(
         # skipping lib directory
         if relative_path[:3] == 'lib':
             if relative_path == 'lib':
-                line_print('lib', 'libraries downloaded')
+                line_print('lib', 'created')
             continue
 
         files = sorted(files, key=str.casefold)
 
         for file in files:
             relative_file_path = os.path.join(relative_path, file)
-            file_check()
+            file_check(file, output_directory, relative_file_path, source)
 
+    print(summary)
 
 if __name__ == "__main__":
+    source = '/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/temp_add_on/test_addon/package'
+    output_directory = '/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/temp_add_on/test_addon/output/test_addon'
+
+    app_manifest = _get_app_manifest(source)
+    ta_name = app_manifest.get_addon_name()
     summary_report(
-        source='/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/temp_add_on/test_addon/package',
-        output_directory='/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/temp_add_on/test_addon/output/test_addon'
+        source=source,
+        output_directory=output_directory,
+        ta_name=ta_name
     )
