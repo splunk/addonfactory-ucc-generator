@@ -13,11 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 
 class DataClasses:
-    def __init__(self, json: Dict) -> None:
+    def __init__(self, json: Dict[str, Any]) -> None:
         self.__dict__.update(self._iterator(json))
         #   __dict__ contains references to base object
         #   update, do not override!
@@ -35,13 +35,13 @@ class DataClasses:
         else:
             return element
 
-    def _list_iterator(self, _list: list) -> list:
+    def _list_iterator(self, _list: List[Any]) -> List[Any]:
         return_list = []
         for i in _list:
             return_list.append(self._iteration_manager(i))
         return return_list
 
-    def _iterator(self, json: Any):
+    def _iterator(self, json: Dict[str, Any]) -> Dict[str, Any]:
         d = json
         for k, v in json.items():
             d[k] = self._iteration_manager(v)

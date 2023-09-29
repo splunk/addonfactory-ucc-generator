@@ -4,10 +4,10 @@ from typing import List, Tuple
 
 
 def compare_file_content(
-    files_to_be_equal: List[Tuple[str]],
+    files_to_be_equal: List[Tuple[str, ...]],
     expected_folder: str,
     actual_folder: str,
-):
+) -> None:
     diff_results = []
     for f in files_to_be_equal:
         expected_file_path = os.path.join(expected_folder, *f)

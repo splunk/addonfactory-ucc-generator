@@ -11,7 +11,7 @@ def test_simple_key_value_pair():
     assert hasattr(dc, "v") is False
     assert dc.k == "v"
     with pytest.raises(AttributeError):
-        dc.v == "k"
+        dc.v == "k"  # type: ignore
 
 
 def test_empty_json():
@@ -36,10 +36,10 @@ def test_list_json():
 def test_getattr_list():
     dc = DataClasses({"k": ["v1", "v2"]})
 
-    assert dc.k == ["v1", "v2"]
+    assert dc.k == ["v1", "v2"]  # type: ignore
 
 
 def test_getattr_dict():
     dc = DataClasses({"k": {"k1": "v1"}})
 
-    assert dc.k == DataClasses({"k1": "v1"})
+    assert dc.k == DataClasses({"k1": "v1"})  # type: ignore

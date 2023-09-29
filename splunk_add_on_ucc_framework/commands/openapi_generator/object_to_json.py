@@ -15,38 +15,38 @@
 #
 import json as json_lib
 import dataclasses
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 
 class EnhancedJSONEncoder(json_lib.JSONEncoder):
-    def default(self, o):
+    def default(self, o: Any) -> Dict[str, Any]:
         if dataclasses.is_dataclass(o):
             return dataclasses.asdict(o)
         return super().default(o)
 
 
 class Init:
-    def _list_iterator(self, _list: list) -> list:
+    def _list_iterator(self, _list: List[Any]) -> Any:
         return_list = []
         for i in _list:
             if i is None:
                 pass
-            elif type(i) is list:
+            elif isinstance(i, list):
                 return_list.append(self._list_iterator(i))
-            elif type(i) is dict:
+            elif isinstance(i, dict):
                 return_list.append(self._iterator(i))
             else:
                 return_list.append(i)
         return return_list
 
-    def _iterator(self, json: Any):
+    def _iterator(self, json: Any) -> Any:
         d = {}
         for k, v in json.items():
             if v is None:
                 pass
-            elif type(v) is list:
+            elif isinstance(v, list):
                 d[k] = self._list_iterator(v)
-            elif type(v) is dict:
+            elif isinstance(v, dict):
                 d[k] = self._iterator(v)
             else:
                 d[k] = v
@@ -55,12 +55,12 @@ class Init:
     def __str__(self) -> str:
         return json_lib.dumps(self, cls=EnhancedJSONEncoder)
 
-    def get_json(self, *, remove_nulls: bool = False) -> Dict:
+    def get_json(self, *, remove_nulls: bool = False) -> Dict[Any, Any]:
         j = json_lib.loads(str(self))
         if remove_nulls:
             j = self._iterator(json=j)
         return j
 
     @property
-    def json(self) -> Dict:
+    def json(self) -> Dict[Any, Any]:
         return self.get_json(remove_nulls=True)

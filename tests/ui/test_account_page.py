@@ -40,9 +40,10 @@ def add_multiple_account(ucc_smartx_rest_helper):
     )
     url = account._get_account_endpoint()
     for i in range(12):
-        kwargs = copy.deepcopy(ACCOUNT_CONFIG)
-        kwargs["name"] = kwargs["name"] + str(i)
-        account.backend_conf.post_stanza(url, kwargs)
+        account_config = copy.copy(ACCOUNT_CONFIG)
+        new_account_config_name = f"{account_config['name']}{i}"
+        account_config["name"] = new_account_config_name
+        account.backend_conf.post_stanza(url, account_config)
 
 
 @pytest.fixture(autouse=True)

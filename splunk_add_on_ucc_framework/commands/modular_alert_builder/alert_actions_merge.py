@@ -16,6 +16,7 @@
 import logging
 import os
 from os.path import basename as bn
+from typing import Any
 
 import addonfactory_splunk_conf_parser_lib as conf_parser
 
@@ -32,7 +33,7 @@ merge_mode_config = {"app.conf": "item_overwrite"}
 logger = logging.getLogger("ucc_gen")
 
 
-def remove_alert_from_conf_file(alert, conf_file):
+def remove_alert_from_conf_file(alert: Any, conf_file: str) -> None:
     if not alert or not conf_file:
         logger.info('alert="%s", conf_file="%s"', alert, conf_file)
         return
@@ -65,7 +66,9 @@ def remove_alert_from_conf_file(alert, conf_file):
         parser.write(cf)
 
 
-def merge_conf_file(src_file, dst_file, merge_mode="stanza_overwrite"):
+def merge_conf_file(
+    src_file: str, dst_file: str, merge_mode: str = "stanza_overwrite"
+) -> None:
     if not os.path.isfile(src_file):
         return
     if not os.path.isfile(dst_file):

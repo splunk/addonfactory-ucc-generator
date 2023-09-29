@@ -23,7 +23,7 @@ APP_CONF_FILE_NAME = "app.conf"
 
 
 class AppConf:
-    def __init__(self):
+    def __init__(self) -> None:
         self._app_conf = conf_parser.TABConfigParser()
 
     def read(self, path: str) -> None:

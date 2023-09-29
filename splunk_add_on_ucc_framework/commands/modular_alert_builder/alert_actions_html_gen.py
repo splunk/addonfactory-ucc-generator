@@ -35,9 +35,9 @@ logger = logging.getLogger("ucc_gen")
 class AlertHtmlGenerator:
     def __init__(
         self,
-        input_setting,
-        package_path,
-    ):
+        input_setting: Dict[str, Any],
+        package_path: str,
+    ) -> None:
         self._all_setting = input_setting
         self._package_path = package_path
         # nosemgrep: splunk.autoescape-disabled, python.jinja2.security.audit.autoescape-disabled.autoescape-disabled
@@ -86,7 +86,7 @@ class AlertHtmlGenerator:
             text,
         )
 
-    def handle(self):
+    def handle(self) -> None:
         logger.info("Started generating alert actions HTML files")
         for alert in self._alert_actions_setting:
             alert_short_name = alert["short_name"]

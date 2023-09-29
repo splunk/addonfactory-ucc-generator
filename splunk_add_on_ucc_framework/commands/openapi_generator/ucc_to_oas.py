@@ -89,12 +89,12 @@ def __add_security_scheme_object(open_api_object: OpenAPIObject) -> OpenAPIObjec
     return open_api_object
 
 
-def __create_schema_name(*, name, without: Optional[list] = None) -> str:
+def __create_schema_name(*, name: str, without: Optional[List[str]] = None) -> str:
     return f"{name}_without_{'_'.join(without)}" if without else name
 
 
 def __get_schema_object(
-    *, name: str, entities: list, without: Optional[list] = None
+    *, name: str, entities: List[Any], without: Optional[List[str]] = None
 ) -> Tuple[str, oas.SchemaObject]:
     name = __create_schema_name(name=name, without=without)
     schema_object = oas.SchemaObject(type="object", properties={})
@@ -317,7 +317,7 @@ def __assign_ta_paths(
     path_name: str,
     actions: List[str],
     page: GloblaConfigPages,
-):
+) -> OpenAPIObject:
     if open_api_object.paths is not None:
         open_api_object.paths[path] = oas.PathItemObject(
             get=__get_path_get_for_list(name=path_name),

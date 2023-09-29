@@ -19,7 +19,7 @@ import logging
 import os
 import shutil
 import sys
-from typing import Optional
+from typing import Optional, List
 import subprocess
 
 from openapi3 import OpenAPI
@@ -61,7 +61,7 @@ internal_root_dir = os.path.dirname(os.path.dirname(__file__))
 
 def _modify_and_replace_token_for_oauth_templates(
     ta_name: str, global_config: global_config_lib.GlobalConfig, outputdir: str
-):
+) -> None:
     """
     Rename templates with respect to addon name if OAuth is configured.
 
@@ -126,7 +126,7 @@ def _modify_and_replace_token_for_oauth_templates(
 
 def _add_modular_input(
     ta_name: str, global_config: global_config_lib.GlobalConfig, outputdir: str
-):
+) -> None:
     for service in global_config.inputs:
         input_name = service.get("name")
         class_name = input_name.upper()
@@ -168,7 +168,9 @@ def _add_modular_input(
             config.write(configfile)
 
 
-def _get_ignore_list(addon_name: str, ucc_ignore_path: str, output_directory: str):
+def _get_ignore_list(
+    addon_name: str, ucc_ignore_path: str, output_directory: str
+) -> List[str]:
     """
     Return path of files/folders to be removed.
 
@@ -194,7 +196,7 @@ def _get_ignore_list(addon_name: str, ucc_ignore_path: str, output_directory: st
         return ignore_list
 
 
-def _remove_listed_files(ignore_list):
+def _remove_listed_files(ignore_list: List[str]) -> None:
     """
     Return path of files/folders to removed in output folder.
 
@@ -221,7 +223,7 @@ def generate_data_ui(
     addon_name: str,
     include_inputs: bool,
     include_dashboard: bool,
-):
+) -> None:
     # Create directories in the output folder for add-on's UI nav and views.
     os.makedirs(
         os.path.join(output_directory, addon_name, "default", "data", "ui", "nav"),
@@ -290,9 +292,8 @@ def _get_app_manifest(source: str) -> app_manifest_lib.AppManifest:
     )
     with open(app_manifest_path) as manifest_file:
         app_manifest_content = manifest_file.read()
-    app_manifest = app_manifest_lib.AppManifest()
     try:
-        app_manifest.read(app_manifest_content)
+        app_manifest = app_manifest_lib.AppManifest(app_manifest_content)
         app_manifest.validate()
         return app_manifest
     except app_manifest_lib.AppManifestFormatException as e:
@@ -329,7 +330,7 @@ def generate(
     addon_version: Optional[str] = None,
     output_directory: Optional[str] = None,
     python_binary_name: str = "python3",
-):
+) -> None:
     logger.info(f"ucc-gen version {__version__} is used")
     logger.info(f"Python binary name to use: {python_binary_name}")
 
@@ -368,8 +369,9 @@ def generate(
 
     if os.path.isfile(config_path):
         logger.info(f"Using globalConfig file located @ {config_path}")
-        global_config = global_config_lib.GlobalConfig()
-        global_config.parse(config_path, is_global_config_yaml)
+        global_config = global_config_lib.GlobalConfig(
+            config_path, is_global_config_yaml
+        )
         try:
             validator = global_config_validator.GlobalConfigValidator(
                 internal_root_dir, global_config
