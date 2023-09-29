@@ -20,6 +20,7 @@ import os
 import shutil
 import sys
 from typing import Optional
+import subprocess
 
 from openapi3 import OpenAPI
 
@@ -321,6 +322,15 @@ def generate(
 ):
     logger.info(f"ucc-gen version {__version__} is used")
     logger.info(f"Python binary name to use: {python_binary_name}")
+
+    try:
+        python_binary_version = subprocess.run([python_binary_name, '--version'], stdout=subprocess.PIPE).stdout.decode('utf-8')
+    except subprocess.CalledProcessError as e:
+        logger.error(f"Failed to identify Python version for library installation. Error: {e}")
+        sys.exit(1)
+
+    logger.info(f"Python Version: {python_binary_version}")
+
     output_directory = _get_build_output_path(output_directory)
     logger.info(f"Output folder is {output_directory}")
     addon_version = _get_addon_version(addon_version)
