@@ -100,6 +100,13 @@ def main(argv: Optional[Sequence[str]] = None):
         help="Python binary name to use to install requirements.",
         default="python3",
     )
+    build_parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        default=False,
+        help="Show summary report",
+    )
 
     init_parser = subparsers.add_parser("init", description="Bootstrap an add-on.")
     init_parser.add_argument(
@@ -158,6 +165,7 @@ def main(argv: Optional[Sequence[str]] = None):
             addon_version=args.ta_version,
             output_directory=args.output,
             python_binary_name=args.python_binary_name,
+            create_summary_report=args.verbose
         )
     if args.command == "init":
         init.init(
