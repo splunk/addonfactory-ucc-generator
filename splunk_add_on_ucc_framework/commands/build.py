@@ -313,15 +313,18 @@ def _get_build_output_path(output_directory: Optional[str] = None) -> str:
             return os.path.join(os.getcwd(), output_directory)
         return output_directory
 
-def _get_python_version_from_executable(python_binary_name: str) -> str:
-        try:
-            python_binary_version = subprocess.run(
-                [python_binary_name, "--version"], stdout=subprocess.PIPE
-            ).stdout.decode("utf-8")
 
-            return python_binary_version.strip()
-        except (subprocess.CalledProcessError, FileNotFoundError) as e:
-            raise exceptions.CouldNotIdentifyPythonVersionException()
+def _get_python_version_from_executable(python_binary_name: str) -> str:
+    try:
+        python_binary_version = subprocess.run(
+            [python_binary_name, "--version"], stdout=subprocess.PIPE
+        ).stdout.decode("utf-8")
+
+        return python_binary_version.strip()
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        raise exceptions.CouldNotIdentifyPythonVersionException(
+            f"Failed to identify python version for binary {python_binary_name}"
+        )
 
 
 def generate(
@@ -337,7 +340,7 @@ def generate(
     try:
         python_binary_version = _get_python_version_from_executable(python_binary_name)
         logger.info(f"Python Version: {python_binary_version}")
-    except:
+    except exceptions.CouldNotIdentifyPythonVersionException as e:
         logger.error(
             f"Failed to identify Python version for library installation. Error: {e}"
         )
