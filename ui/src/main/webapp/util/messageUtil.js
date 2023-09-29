@@ -3,8 +3,9 @@ import { _ } from '@splunk/ui-utils/i18n';
 import messageDict from '../constants/messageDict';
 
 /**
- * @param code {number} a int value.
- * @param msg {Array=} arguments to format the message.
+ * @param {number} code  a int value.
+ * @param {(string|number)[]=} msg arguments to format the message.
+ * @returns {string}
  */
 export const getFormattedMessage = (code, msg /* , ... , args */) => {
     let template = messageDict[code] || messageDict.unknown;

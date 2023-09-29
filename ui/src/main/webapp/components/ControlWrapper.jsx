@@ -86,6 +86,7 @@ class ControlWrapper extends React.PureComponent {
                       encrypted,
                       dependencyValues: this.props.dependencyValues,
                       required,
+                      addCustomValidator,
                   })
                 : `No View Found for ${type} type`;
         }

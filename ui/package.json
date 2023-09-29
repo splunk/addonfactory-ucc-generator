@@ -57,6 +57,7 @@
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^14.4.3",
     "@types/js-yaml": "^4.0.5",
+    "@types/react": "^16.14.35",
     "@typescript-eslint/eslint-plugin": "^6.5.0",
     "@typescript-eslint/parser": "^6.5.0",
     "babel-eslint": "^10.1.0",
@@ -108,7 +109,8 @@
     "css-what": "^5.0.1",
     "glob-parent": "^5.1.2",
     "postcss": "^8.2.10",
-    "semver": "^7.5.2"
+    "semver": "^7.5.2",
+    "@types/react": "^16.14.35"
   },
   "engines": {
     "node": ">=14.21.2"

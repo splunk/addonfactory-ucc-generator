@@ -8,16 +8,18 @@ import RadioComponent from '../components/RadioComponent';
 import PlaceholderComponent from '../components/PlaceholderComponent';
 import CustomControl from '../components/CustomControl';
 import FileInputComponent from '../components/FileInputComponent';
+import CheckboxGroup from '../components/CheckboxGroup/CheckboxGroup';
 
 export default {
-    text: TextComponent,
-    textarea: TextAreaComponent,
-    singleSelect: SingleInputComponent,
+    checkbox: CheckBoxComponent,
+    checkboxGroup: CheckboxGroup,
+    custom: CustomControl,
+    file: FileInputComponent,
     helpLink: HelpLinkComponent,
     multipleSelect: MultiInputComponent,
-    checkbox: CheckBoxComponent,
-    radio: RadioComponent,
-    file: FileInputComponent,
     placeholder: PlaceholderComponent,
-    custom: CustomControl,
-};
+    radio: RadioComponent,
+    singleSelect: SingleInputComponent,
+    text: TextComponent,
+    textarea: TextAreaComponent,
+} as const;

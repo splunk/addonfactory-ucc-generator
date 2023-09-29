@@ -513,7 +513,39 @@
       },
       "additionalProperties": false
     },
-    "InputsEntity": {
+    "Groups": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "options": {
+            "type": "object",
+            "properties": {
+              "isExpandable": {
+                "type": "boolean"
+              },
+              "expand": {
+                "type": "boolean"
+              }
+            }
+          },
+          "label": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^\\w+$"
+            }
+          }
+        },
+        "required": ["label", "fields"],
+        "additionalProperties": false
+      }
+    },
+    "GenericInputsEntity": {
       "type": "object",
       "properties": {
         "field": {
@@ -755,6 +787,160 @@
       "required": ["field", "label", "type"],
       "additionalProperties": false
     },
+    "CheckboxGroupEntity": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "type": "string",
+          "pattern": "(?!^(?:persistentQueueSize|queueSize|start_by_shell|output_mode|output_field|owner|app|sharing)$)(?:^\\w+$)"
+        },
+        "label": {
+          "type": "string",
+          "maxLength": 30
+        },
+        "type": {
+          "const": "checkboxGroup"
+        },
+        "options": {
+          "type": "object",
+          "properties": {
+            "groups": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "label": {
+                    "type": "string",
+                    "maxLength": 30
+                  },
+                  "options": {
+                    "type": "object",
+                    "properties": {
+                      "isExpandable": {
+                        "type": "boolean",
+                        "default": false
+                      },
+                      "expand": {
+                        "type": "boolean",
+                        "default": false
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "fields": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "string"
+                    },
+                    "uniqueItems": true
+                  }
+                },
+                "required": ["label", "fields"],
+                "additionalProperties": false
+              }
+            },
+            "rows": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "field": {
+                    "type": "string"
+                  },
+                  "checkbox": {
+                    "type": "object",
+                    "properties": {
+                      "label": {
+                        "type": "string",
+                        "maxLength": 30
+                      },
+                      "options": {
+                        "type": "object",
+                        "properties": {
+                          "enable": {
+                            "type": "boolean",
+                            "default": false
+                          }
+                        },
+                        "additionalProperties": false
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "text": {
+                    "type": "object",
+                    "properties": {
+                      "defaultValue": {
+                        "oneOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "number"
+                          }
+                        ]
+                      },
+                      "required": {
+                        "type": "boolean",
+                        "default": false
+                      },
+                      "validators": {
+                        "type": "array",
+                        "items": {
+                          "anyOf": [
+                            {
+                              "$ref": "#/definitions/StringValidator"
+                            },
+                            {
+                              "$ref": "#/definitions/NumberValidator"
+                            },
+                            {
+                              "$ref": "#/definitions/RegexValidator"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "required": ["field"],
+                "additionalProperties": false
+              },
+              "minItems": 1
+            }
+          },
+          "required": ["rows"],
+          "additionalProperties": false
+        },
+        "validators": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/RegexValidator"
+              }
+            ]
+          }
+        }
+      },
+      "required": ["field", "label", "type", "options"],
+      "additionalProperties": false
+    },
+    "AnyOfEntity": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "$ref": "#/definitions/CheckboxGroupEntity"
+          },
+          {
+            "$ref": "#/definitions/GenericInputsEntity"
+          }
+        ]
+      }
+    },
     "InputsPage": {
       "oneOf": [
         {
@@ -819,45 +1005,13 @@
                     "maxLength": 50
                   },
                   "entity": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/definitions/InputsEntity"
-                    }
+                    "$ref": "#/definitions/AnyOfEntity"
                   },
                   "options": {
                     "$ref": "#/definitions/Hooks"
                   },
                   "groups": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "options": {
-                          "type": "object",
-                          "properties": {
-                            "isExpandable": {
-                              "type": "boolean"
-                            },
-                            "expand": {
-                              "type": "boolean"
-                            }
-                          }
-                        },
-                        "label": {
-                          "type": "string",
-                          "maxLength": 100
-                        },
-                        "fields": {
-                          "type": "array",
-                          "items": {
-                            "type": "string",
-                            "pattern": "^\\w+$"
-                          }
-                        }
-                      },
-                      "required": ["label", "fields"],
-                      "additionalProperties": false
-                    }
+                    "$ref": "#/definitions/Groups"
                   },
                   "style": {
                     "type": "string",
@@ -926,45 +1080,13 @@
                     "$ref": "#/definitions/InputsTable"
                   },
                   "entity": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/definitions/InputsEntity"
-                    }
+                    "$ref": "#/definitions/AnyOfEntity"
                   },
                   "options": {
                     "$ref": "#/definitions/Hooks"
                   },
                   "groups": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "options": {
-                          "type": "object",
-                          "properties": {
-                            "isExpandable": {
-                              "type": "boolean"
-                            },
-                            "expand": {
-                              "type": "boolean"
-                            }
-                          }
-                        },
-                        "label": {
-                          "type": "string",
-                          "maxLength": 100
-                        },
-                        "fields": {
-                          "type": "array",
-                          "items": {
-                            "type": "string",
-                            "pattern": "^\\w+$"
-                          }
-                        }
-                      },
-                      "required": ["label", "fields"],
-                      "additionalProperties": false
-                    }
+                    "$ref": "#/definitions/Groups"
                   },
                   "style": {
                     "type": "string",
@@ -1082,7 +1204,7 @@
         },
         "name": {
           "type": "string",
-          "pattern": "^[^<>\\:\"\\/\\\\|\\?\\*]+$"
+          "pattern": "^[^<>:\"\\/\\\\|\\?\\*]+$"
         },
         "restRoot": {
           "type": "string",

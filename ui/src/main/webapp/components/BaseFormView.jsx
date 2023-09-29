@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import update from 'immutability-helper';
 import { v4 as uuidv4 } from 'uuid';
 
-import CollapsiblePanel from '@splunk/react-ui/CollapsiblePanel';
 import Message from '@splunk/react-ui/Message';
-import styled from 'styled-components';
 
 import ControlWrapper from './ControlWrapper';
 import Validator, { SaveValidator } from '../util/Validator';
@@ -24,30 +22,7 @@ import {
     ERROR_STATE_MISSING_TRY_AGAIN,
 } from '../constants/oAuthErrorMessage';
 import TableContext from '../context/TableContext';
-
-const CollapsiblePanelWrapper = styled(CollapsiblePanel)`
-    span {
-        button {
-            background-color: #f2f4f5;
-            font-size: 16px;
-            margin: 15px 0;
-
-            &:hover:not([disabled]),
-            &:focus:not([disabled]),
-            &:active:not([disabled]) {
-                background-color: #f2f4f5;
-                box-shadow: none;
-            }
-        }
-    }
-`;
-
-const CustomGroupLabel = styled.div`
-    padding: 6px 10px;
-    background-color: #f2f4f5;
-    margin: 0 0 15px 0;
-    font-size: 16px;
-`;
+import Group from './Group';
 
 function onCustomHookError(params) {
     // eslint-disable-next-line no-console
@@ -979,7 +954,7 @@ class BaseFormView extends PureComponent {
         let el = null;
         if (this.groups && this.groups.length) {
             el = this.groups.map((group) => {
-                const collpsibleElement =
+                const collapsibleElement =
                     group.fields?.length &&
                     group.fields.map((fieldName) =>
                         this.entities.map((e) => {
@@ -1005,18 +980,14 @@ class BaseFormView extends PureComponent {
                         })
                     );
 
-                return group.options?.isExpandable ? (
-                    <CollapsiblePanelWrapper
-                        title={group.label}
+                return (
+                    <Group
+                        isExpandable={group.options?.isExpandable}
                         defaultOpen={group.options?.expand}
+                        title={group.label}
                     >
-                        <div className="collapsible-element">{collpsibleElement}</div>
-                    </CollapsiblePanelWrapper>
-                ) : (
-                    <>
-                        <CustomGroupLabel>{group.label}</CustomGroupLabel>
-                        <div>{collpsibleElement}</div>
-                    </>
+                        {collapsibleElement}
+                    </Group>
                 );
             });
         }
