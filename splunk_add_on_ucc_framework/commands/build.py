@@ -324,9 +324,13 @@ def generate(
     logger.info(f"Python binary name to use: {python_binary_name}")
 
     try:
-        python_binary_version = subprocess.run([python_binary_name, '--version'], stdout=subprocess.PIPE).stdout.decode('utf-8')
+        python_binary_version = subprocess.run(
+            [python_binary_name, "--version"], stdout=subprocess.PIPE
+        ).stdout.decode("utf-8")
     except subprocess.CalledProcessError as e:
-        logger.error(f"Failed to identify Python version for library installation. Error: {e}")
+        logger.error(
+            f"Failed to identify Python version for library installation. Error: {e}"
+        )
         sys.exit(1)
 
     logger.info(f"Python Version: {python_binary_version}")
