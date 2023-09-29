@@ -1,4 +1,4 @@
-# Contributing to UCC UI Lib
+# Contributing to UCC UI Library
 
 ## Overview
 
