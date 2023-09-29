@@ -19,3 +19,6 @@ class CouldNotVersionFromGitException(Exception):
 
 class IsNotAGitRepo(Exception):
     pass
+
+class CouldNotIdentifyPythonVersionException(Exception):
+    pass
