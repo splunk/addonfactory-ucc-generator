@@ -49,37 +49,59 @@
                     "name": "example_input_one",
                     "entity": [
                         {
-                            "field": "singleSelectTest",
-                            "label": "Single Select",
-                            "type": "singleSelect",
+                            "type": "checkboxGroup",
+                            "label": "Test checkboxGroup",
+                            "field": "test_checkbox_group",
                             "options": {
-                                "createSearchChoice": true,
-                                "autoCompleteFields": [
+                                "rows": [
                                     {
-                                        "label": "Group1",
-                                        "children": [
-                                            {
-                                                "value": "duplication",
-                                                "label": "One"
-                                            },
-                                            {
-                                                "value": "duplication",
-                                                "label": "Two"
-                                            }
-                                        ]
+                                        "field": "collectFolderCollaboration",
+                                        "text": {
+                                            "defaultValue": 1200,
+                                            "required": false,
+                                            "validators": [
+                                                {
+                                                    "type": "number",
+                                                    "range": [1, 1200]
+                                                }
+                                            ]
+                                        }
                                     },
                                     {
-                                        "label": "Group2",
-                                        "children": [
-                                            {
-                                                "value": "three",
-                                                "label": "Three"
-                                            },
-                                            {
-                                                "value": "four",
-                                                "label": "Four"
+                                        "field": "collectFileMetadata",
+                                        "checkbox": {
+                                            "label": "Collect file metadata"
+                                        },
+                                        "text": {
+                                            "defaultValue": 1,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "collectTasksAndComments",
+                                        "checkbox": {
+                                            "label": "This is a very very long line",
+                                            "options": {
+                                                "enable": true
                                             }
-                                        ]
+                                        },
+                                        "text": {
+                                            "defaultValue": 1,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "collectFolderCollaboration",
+                                        "checkbox": {
+                                            "label": "Collect folder metadata",
+                                            "options": {
+                                                "enable": true
+                                            }
+                                        },
+                                        "text": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
                                     }
                                 ]
                             }

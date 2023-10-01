@@ -85,6 +85,13 @@ fields = [
         default=None,
         validator=None
     ), 
+    field.RestField(
+        'apis',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ), 
 
     field.RestField(
         'disabled',

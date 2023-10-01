@@ -835,6 +835,161 @@
                                 "text": "Help Link",
                                 "link": "https://docs.splunk.com/Documentation"
                             }
+                        },
+                        {
+                            "field": "apis",
+                            "label": "APIs/Interval (in seconds)",
+                            "type": "checkboxGroup",
+                            "options": {
+                                "groups": [
+                                    {
+                                        "label": "EC2",
+                                        "options": {
+                                            "isExpandable": true
+                                        },
+                                        "fields": [
+                                            "ec2_volumes",
+                                            "ec2_instances",
+                                            "ec2_reserved_instances",
+                                            "ebs_snapshots",
+                                            "rds_instances",
+                                            "rds_reserved_instances",
+                                            "ec2_key_pairs",
+                                            "ec2_security_groups",
+                                            "ec2_images",
+                                            "ec2_addresses"
+                                        ]
+                                    },
+                                    {
+                                        "label": "ELB",
+                                        "options": {
+                                            "isExpandable": true
+                                        },
+                                        "fields": [
+                                            "classic_load_balancers",
+                                            "application_load_balancers"
+                                        ]
+                                    },
+                                    {
+                                        "label": "VPC",
+                                        "options": {
+                                            "isExpandable": true
+                                        },
+                                        "fields": [
+                                            "vpcs",
+                                            "vpc_network_acls",
+                                            "vpc_subnets"
+                                        ]
+                                    }
+                                ],
+                                "rows": [
+                                    {
+                                        "field": "ec2_volumes",
+                                        "text": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "ec2_instances",
+                                        "text": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "ec2_reserved_instances",
+                                        "text": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "ebs_snapshots",
+                                        "text": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "rds_instances",
+                                        "text": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "rds_reserved_instances",
+                                        "text": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "ec2_key_pairs",
+                                        "text": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "ec2_security_groups",
+                                        "text": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "ec2_images",
+                                        "text": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "ec2_addresses",
+                                        "text": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "classic_load_balancers",
+                                        "text": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "application_load_balancers",
+                                        "text": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "vpcs",
+                                        "text": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "vpc_network_acls",
+                                        "text": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "vpc_subnets",
+                                        "text": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    }
+                                ]
+                            }
                         }
                     ],
                     "title": "Example Input Two"
@@ -1131,7 +1286,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.29.0R87e714a5",
+        "version": "5.29.0R411a911a",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.3"
     }
