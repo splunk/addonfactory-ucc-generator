@@ -454,6 +454,15 @@
                                         "start_date": {
                                                 "type": "string"
                                         },
+                                        "api1": {
+                                                "type": "string"
+                                        },
+                                        "api2": {
+                                                "type": "string"
+                                        },
+                                        "api3": {
+                                                "type": "string"
+                                        },
                                         "disabled": {
                                                 "type": "string",
                                                 "enum": [
@@ -488,6 +497,15 @@
                                                 "type": "string"
                                         },
                                         "start_date": {
+                                                "type": "string"
+                                        },
+                                        "api1": {
+                                                "type": "string"
+                                        },
+                                        "api2": {
+                                                "type": "string"
+                                        },
+                                        "api3": {
                                                 "type": "string"
                                         },
                                         "disabled": {
@@ -527,6 +545,15 @@
                                                 "type": "string"
                                         },
                                         "start_date": {
+                                                "type": "string"
+                                        },
+                                        "api1": {
+                                                "type": "string"
+                                        },
+                                        "api2": {
+                                                "type": "string"
+                                        },
+                                        "api3": {
                                                 "type": "string"
                                         }
                                 }

@@ -256,6 +256,27 @@ def test_config_validation_when_deprecated_placeholder_is_used():
                 f"Supported panel names: {dashboard.SUPPORTED_PANEL_NAMES_READABLE}"
             ),
         ),
+        (
+            "invalid_config_checkbox_groups_duplicate_fields_in_options_rows.json",
+            False,
+            (
+                "Entity test_checkbox_group has duplicate field (collectFolderCollaboration) in options.rows"
+            ),
+        ),
+        (
+            "invalid_config_checkbox_groups_undefined_field_used_in_groups.json",
+            False,
+            (
+                "Entity test_checkbox_group uses field (undefined_field_foo) which is not defined in options.rows"
+            ),
+        ),
+        (
+            "invalid_config_checkbox_groups_duplicate_field_in_options_groups.json",
+            False,
+            (
+                "Entity test_checkbox_group has duplicate field (collectTasksAndComments) in options.groups"
+            ),
+        ),
     ],
 )
 def test_config_validation_when_error(filename, is_yaml, exception_message):

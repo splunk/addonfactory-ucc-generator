@@ -480,6 +480,40 @@ class GlobalConfigValidator:
                         DeprecationWarning,
                     )
 
+    def _validate_checkbox_group(self) -> None:
+        pages = self._config["pages"]
+        inputs = pages.get("inputs")
+        if inputs is None:
+            return
+        services = inputs["services"]
+        for service in services:
+            for entity in service["entity"]:
+                if entity["type"] == "checkboxGroup":
+                    row_field_names = []
+                    for row in entity["options"]["rows"]:
+                        if row["field"] in row_field_names:
+                            raise GlobalConfigValidatorException(
+                                f"Entity {entity['field']} has duplicate field ({row['field']}) in options.rows"
+                            )
+                        row_field_names.append(row["field"])
+                    groups = entity["options"].get("groups")
+                    if groups is None:
+                        return
+                    group_used_field_names = []
+                    for group in groups:
+                        for group_field_name in group["fields"]:
+                            if group_field_name not in row_field_names:
+                                raise GlobalConfigValidatorException(
+                                    f"Entity {entity['field']} uses field ({group_field_name}) "
+                                    f"which is not defined in options.rows"
+                                )
+                            if group_field_name in group_used_field_names:
+                                raise GlobalConfigValidatorException(
+                                    f"Entity {entity['field']} has duplicate field ({group_field_name}) "
+                                    f"in options.groups"
+                                )
+                            group_used_field_names.append(group_field_name)
+
     def validate(self) -> None:
         self._validate_config_against_schema()
         self._validate_configuration_tab_table_has_name_field()
@@ -491,3 +525,4 @@ class GlobalConfigValidator:
         self._validate_alerts()
         self._validate_panels()
         self._warn_on_placeholder_usage()
+        self._validate_checkbox_group()
