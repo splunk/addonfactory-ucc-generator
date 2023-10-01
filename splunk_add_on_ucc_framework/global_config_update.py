@@ -14,13 +14,14 @@
 # limitations under the License.
 #
 import logging
+from typing import Any, Dict, Tuple, List
 
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 
 logger = logging.getLogger("ucc_gen")
 
 
-def _version_tuple(version_str):
+def _version_tuple(version: str) -> Tuple[str, ...]:
     """
     convert string into tuple to compare version
 
@@ -30,12 +31,12 @@ def _version_tuple(version_str):
         tuple : version into tupleformat
     """
     filled = []
-    for point in version_str.split("."):
+    for point in version.split("."):
         filled.append(point.zfill(8))
     return tuple(filled)
 
 
-def _handle_biased_terms(conf_entities: dict) -> dict:
+def _handle_biased_terms(conf_entities: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     for entity in conf_entities:
         entity_option = entity.get("options")
         if entity_option and "whiteList" in entity_option:
@@ -47,7 +48,7 @@ def _handle_biased_terms(conf_entities: dict) -> dict:
     return conf_entities
 
 
-def _handle_biased_terms_update(global_config: global_config_lib.GlobalConfig):
+def _handle_biased_terms_update(global_config: global_config_lib.GlobalConfig) -> None:
     for tab in global_config.tabs:
         conf_entities = tab.get("entity")
         tab["entity"] = _handle_biased_terms(conf_entities)
@@ -57,13 +58,15 @@ def _handle_biased_terms_update(global_config: global_config_lib.GlobalConfig):
     global_config.update_schema_version("0.0.1")
 
 
-def _handle_dropping_api_version_update(global_config: global_config_lib.GlobalConfig):
+def _handle_dropping_api_version_update(
+    global_config: global_config_lib.GlobalConfig,
+) -> None:
     if global_config.meta.get("apiVersion"):
         del global_config.meta["apiVersion"]
     global_config.update_schema_version("0.0.3")
 
 
-def handle_global_config_update(global_config: global_config_lib.GlobalConfig):
+def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -> None:
     """Handle changes in globalConfig file."""
     current_schema_version = global_config.schema_version
     version = current_schema_version if current_schema_version else "0.0.0"

@@ -27,7 +27,7 @@ DEFAULT_META_FILE_NAME = "default.meta"
 
 
 class MetaConf:
-    def __init__(self):
+    def __init__(self) -> None:
         self._meta_conf = conf_parser.TABConfigParser()
 
     def create_default(self) -> None:

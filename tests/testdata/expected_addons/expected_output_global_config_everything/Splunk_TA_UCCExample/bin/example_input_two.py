@@ -75,6 +75,13 @@ class EXAMPLE_INPUT_TWO(smi.Script):
             )
         )
         
+        scheme.add_argument(
+            smi.Argument(
+                'apis',
+                required_on_create=False,
+            )
+        )
+        
         return scheme
 
     def validate_input(self, definition):

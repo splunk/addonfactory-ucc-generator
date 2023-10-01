@@ -34,7 +34,7 @@ def get_j2_env() -> jinja2.Environment:
     )
 
 
-def recursive_overwrite(src: str, dest: str):
+def recursive_overwrite(src: str, dest: str) -> None:
     """
     Method to copy from src to dest recursively.
 
@@ -74,18 +74,18 @@ def get_os_path(path: str) -> str:
     return path.strip(os.sep)
 
 
-def dump_json_config(config: Dict[Any, Any], file_path: str):
+def dump_json_config(config: Dict[Any, Any], file_path: str) -> None:
     with open(file_path, "w") as f:
         json.dump(config, f, ensure_ascii=False, indent=4)
         f.write("\n")
 
 
-def dump_yaml_config(config: Dict[Any, Any], file_path: str):
+def dump_yaml_config(config: Dict[Any, Any], file_path: str) -> None:
     with open(file_path, "w") as f:
         yaml.dump(config, f, indent=4, sort_keys=False)
 
 
-def get_version_from_git():
+def get_version_from_git() -> str:
     try:
         version = dunamai.Version.from_git()
     except RuntimeError:

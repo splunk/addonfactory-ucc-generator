@@ -18,6 +18,7 @@ import logging
 import os
 from os import linesep
 from os import path as op
+from typing import Dict, Any
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -37,9 +38,9 @@ logger = logging.getLogger("ucc_gen")
 class AlertActionsConfGeneration:
     def __init__(
         self,
-        input_setting,
-        package_path,
-    ):
+        input_setting: Dict[str, Any],
+        package_path: str,
+    ) -> None:
         self._alert_conf_name = "alert_actions.conf"
         self._alert_spec_name = "alert_actions.conf.spec"
         self._eventtypes_conf = "eventtypes.conf"
@@ -63,20 +64,20 @@ class AlertActionsConfGeneration:
             "icon_path": "alerticon.png",
         }
 
-    def get_local_conf_file_path(self, conf_name):
+    def get_local_conf_file_path(self, conf_name: str) -> str:
         local_path = op.join(self._package_path, "default")
         if not op.exists(local_path):
             os.makedirs(local_path)
 
         return op.join(local_path, conf_name)
 
-    def get_spec_file_path(self):
+    def get_spec_file_path(self) -> str:
         readme_path = op.join(self._package_path, "README")
         if not op.exists(readme_path):
             os.makedirs(readme_path)
         return op.join(readme_path, self._alert_spec_name)
 
-    def generate_conf(self):
+    def generate_conf(self) -> None:
         logger.info(
             'status="starting", operation="generate", '
             + 'object="alert_actions.conf", object_type="file"'
@@ -94,7 +95,7 @@ class AlertActionsConfGeneration:
                 "index",
             ]
         )
-        alerts = {}
+        alerts: Dict[str, Any] = {}
         for alert in self._alert_settings:
             alert_name = alert["short_name"]
             alerts[alert_name] = []
@@ -139,7 +140,7 @@ class AlertActionsConfGeneration:
             + 'object="alert_actions.conf", object_type="file"'
         )
 
-    def generate_eventtypes(self):
+    def generate_eventtypes(self) -> None:
         logger.info(
             'status="starting", operation="generate", '
             + 'object="eventtypes.conf", object_type="file"'
@@ -162,7 +163,7 @@ class AlertActionsConfGeneration:
             + 'object="eventtypes.conf", object_type="file"'
         )
 
-    def generate_tags(self):
+    def generate_tags(self) -> None:
         logger.info(
             'status="starting", operation="generate", '
             + 'object="tags.conf", object_type="file"'
@@ -185,7 +186,7 @@ class AlertActionsConfGeneration:
             + 'object="tags.conf", object_type="file"'
         )
 
-    def generate_spec(self):
+    def generate_spec(self) -> None:
         logger.info(
             'status="starting", operation="generate", '
             + 'object="alert_actions.conf.spec", object_type="file"'
@@ -200,7 +201,7 @@ class AlertActionsConfGeneration:
             "dropdownlist_splunk_search": "list",
             "radio": "list",
         }
-        alerts = {}
+        alerts: Dict[str, Any] = {}
         for alert in self._alert_settings:
             alert_name = alert["short_name"]
             alerts[alert_name] = []
@@ -236,14 +237,14 @@ class AlertActionsConfGeneration:
             + 'object="alert_actions.conf.spec", object_type="file"'
         )
 
-    def handle(self):
+    def handle(self) -> None:
         self.add_default_settings()
         self.generate_conf()
         self.generate_spec()
         self.generate_eventtypes()
         self.generate_tags()
 
-    def add_default_settings(self):
+    def add_default_settings(self) -> None:
         for alert in self._alert_settings:
             if ac.ALERT_PROPS not in list(alert.keys()):
                 alert[ac.ALERT_PROPS] = {}

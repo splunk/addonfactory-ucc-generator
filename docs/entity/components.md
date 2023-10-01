@@ -360,7 +360,6 @@ This is how it looks like in the UI:
 
 ![image](../images/components/help_link_component_example.png)
 
-
 ## `File`
 
 Underlying `@splunk/react-ui` component: [`File`](https://splunkui.splunk.com/Packages/react-ui/File).

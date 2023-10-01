@@ -37,7 +37,7 @@ def generate_alerts(
     addon_name: str,
     internal_source_dir: str,
     output_dir: str,
-):
+) -> None:
     envs = normalize.normalize(
         global_config.alerts,
         global_config.namespace,

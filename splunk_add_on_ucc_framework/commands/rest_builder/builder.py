@@ -50,7 +50,7 @@ class _RestBuilderOutput:
     default = "default"
     bin = "bin"
 
-    def __init__(self, path: str):
+    def __init__(self, path: str) -> None:
         self._path = path
         self._root_path = op.abspath(self._path)
         if not op.isdir(self._root_path):
@@ -78,7 +78,7 @@ class RestBuilder:
         self,
         schema: global_config_builder_schema.GlobalConfigBuilderSchema,
         output_path: str,
-    ):
+    ) -> None:
         self._schema = schema
         self._output_path = output_path
         self.output = _RestBuilderOutput(self._output_path)
@@ -97,7 +97,7 @@ class RestBuilder:
         for file_path in files_under_bin:
             _add_executable_attribute(file_path)
 
-    def build(self):
+    def build(self) -> None:
         for endpoint in self._schema.endpoints:
             # If the endpoint is oauth, which is for getting accesstoken. Conf file entries should not get created.
             if endpoint._name != "oauth":

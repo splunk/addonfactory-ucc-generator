@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import List
+from typing import List, Optional
 
 from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import indent
 from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.single_model import (
@@ -24,15 +24,13 @@ from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.single_model imp
 
 class MultipleModelEntityBuilder(RestEntityBuilder):
     @property
-    def name_spec(self):
+    def name_spec(self) -> Optional[str]:
         return self.name
 
     @property
-    def name_default(self):
-        return self.name
-
-    @property
-    def name_rh(self):
+    def name_rh(self) -> str:
+        if self._name is None:
+            raise ValueError("name should not be None for MultipleModelEntityBuilder")
         return "_" + self._name
 
 

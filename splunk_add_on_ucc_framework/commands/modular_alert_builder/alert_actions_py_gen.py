@@ -16,6 +16,7 @@
 import logging
 import re
 from os import path as op
+from typing import Any, Dict
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -29,15 +30,24 @@ from splunk_add_on_ucc_framework.commands.modular_alert_builder.alert_actions_he
 logger = logging.getLogger("ucc_gen")
 
 
-class AlertActionsPyBase:
-    def __init__(self, addon_name: str, input_setting, package_path):
+class AlertActionsPyGenerator:
+    def __init__(
+        self,
+        addon_name: str,
+        input_setting: Dict[str, Any],
+        package_path: str,
+    ) -> None:
         self._addon_name = addon_name
         self._all_setting = input_setting
         self._package_path = package_path
-        self._current_alert = None
         self._alert_actions_setting = input_setting[ac.MODULAR_ALERTS]
-        self._ta_name = self._all_setting.get(ac.SHORT_NAME)
-        self._lib_dir = self.get_python_lib_dir_name(self._ta_name)
+        ta_name = input_setting.get(ac.SHORT_NAME)
+        if ta_name is None:
+            raise ValueError(
+                f"{ac.SHORT_NAME} key should be present in input_settings passed"
+            )
+        space_replace = re.compile(r"[^\w]+")
+        self._lib_dir = space_replace.sub("_", ta_name.lower())
         # nosemgrep: splunk.autoescape-disabled, python.jinja2.security.audit.autoescape-disabled.autoescape-disabled
         self._templates = Environment(
             loader=FileSystemLoader(
@@ -48,74 +58,55 @@ class AlertActionsPyBase:
             keep_trailing_newline=True,
         )
 
-    def get_python_lib_dir_name(self, app_name):
-        space_replace = re.compile(r"[^\w]+")
-        return space_replace.sub("_", app_name.lower())
+    def _get_alert_py_name(self, alert: Any) -> str:
+        return alert[ac.SHORT_NAME] + ".py"
 
-    def get_alert_py_name(self, helper=""):
-        return self._current_alert[ac.SHORT_NAME] + helper + ".py"
+    def _get_alert_py_path(self, alert: Any) -> str:
+        return op.join(self._package_path, "bin", self._get_alert_py_name(alert))
 
-    def get_alert_py_path(self):
-        return op.join(self._package_path, "bin", self.get_alert_py_name())
+    def _get_alert_helper_py_name(self, alert: Any) -> str:
+        return "modalert_" + alert[ac.SHORT_NAME] + "_helper.py"
 
-    def get_alert_helper_py_name(self):
-        return "modalert_" + self._current_alert[ac.SHORT_NAME] + "_helper.py"
-
-    def get_alert_helper_py_path(self):
+    def _get_alert_helper_py_path(self, alert: Any) -> str:
         return op.join(
-            self._package_path, "bin", self._lib_dir, self.get_alert_helper_py_name()
+            self._package_path,
+            "bin",
+            self._lib_dir,
+            self._get_alert_helper_py_name(alert),
         )
 
-
-class AlertActionsPyGenerator(AlertActionsPyBase):
-    def __init__(
-        self,
-        addon_name,
-        input_setting,
-        package_path,
-    ):
-        super().__init__(
-            addon_name=addon_name,
-            input_setting=input_setting,
-            package_path=package_path,
-        )
-
-    def gen_py_file(self, one_alert_setting):
-        self._current_alert = one_alert_setting
-        self.gen_main_py_file()
-        self.gen_helper_py_file()
-
-    def gen_main_py_file(self):
+    def gen_main_py_file(self, alert: Any) -> None:
         template = self._templates.get_template("alert_action.py.template")
         rendered_content = template.render(
             addon_name=self._addon_name,
             lib_name=self._lib_dir,
-            mod_alert=self._current_alert,
-            helper_name=op.splitext(self.get_alert_helper_py_name())[0],
+            mod_alert=alert,
+            helper_name=op.splitext(self._get_alert_helper_py_name(alert))[0],
         )
-        logger.debug('operation="Writing file", file="%s"', self.get_alert_py_path())
+        logger.debug(f"Writing to file {self._get_alert_py_path(alert)}")
         write_file(
-            self.get_alert_py_name(),
-            self.get_alert_py_path(),
+            self._get_alert_py_name(alert),
+            self._get_alert_py_path(alert),
             rendered_content,
         )
 
-    def gen_helper_py_file(self):
+    def gen_helper_py_file(self, alert: Any) -> None:
         template = self._templates.get_template("alert_action_helper.py.template")
         rendered_content = template.render(
             input=self._all_setting,
-            mod_alert=self._current_alert,
+            mod_alert=alert,
         )
-        logger.debug('operation="Writing file", file="%s"', self.get_alert_py_path())
+        logger.debug(f"Writing to file {self._get_alert_py_path(alert)}")
         write_file(
-            self.get_alert_helper_py_name(),
-            self.get_alert_helper_py_path(),
+            self._get_alert_helper_py_name(alert),
+            self._get_alert_helper_py_path(alert),
             rendered_content,
         )
 
-    def handle(self):
+    def handle(self) -> None:
         for alert in self._alert_actions_setting:
             logger.info(
-                'operation="Generate py file", alert_action="%s"', alert[ac.SHORT_NAME]
+                f"Generating Python file for alert action {alert[ac.SHORT_NAME]}"
             )
-            self.gen_py_file(alert)
+            self.gen_main_py_file(alert)
+            self.gen_helper_py_file(alert)

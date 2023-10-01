@@ -22,7 +22,7 @@ import sys
 logger = logging.getLogger("ucc_gen")
 
 
-def import_from_aob(addon_name: str):
+def import_from_aob(addon_name: str) -> None:
     addon_name_directory = os.path.join(os.getcwd(), addon_name)
     if not os.path.isdir(addon_name_directory):
         logger.error(f"No such directory {addon_name_directory}")

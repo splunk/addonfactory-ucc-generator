@@ -16,7 +16,7 @@ https://docs.python.org/3/library/xml.etree.elementtree.html#xml.etree.ElementTr
 """
 
 
-def _compare_app_conf(expected_folder: str, actual_folder: str):
+def _compare_app_conf(expected_folder: str, actual_folder: str) -> None:
     # Comparing default/app.conf, ignoring versions and build.
     default_app_conf_path = os.path.join("default", "app.conf")
     expected_default_app_conf_path = os.path.join(

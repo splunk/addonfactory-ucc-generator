@@ -46,9 +46,6 @@
         "inputs": {
             "services": [
                 {
-                    "hook": {
-                        "src": "Hook"
-                    },
                     "name": "duplicate",
                     "entity": [
                         {
