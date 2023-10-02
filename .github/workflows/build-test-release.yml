@@ -113,6 +113,25 @@ jobs:
       - run: ./.github/workflows/check_ucc_ui_files.sh
       - run: poetry run pytest --cov=splunk_add_on_ucc_framework --cov-report=xml tests/unit
 
+  build-test-addon:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.7"
+      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+      - run: poetry install
+      - run: |
+          ./get-ucc-ui.sh
+          tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
+          poetry build
+      - run: poetry run ucc-gen build --source tests/testdata/test_addons/package_global_config_everything/package
+      - uses: actions/upload-artifact@v3
+        with:
+          name: output
+          path: output/*
+
   test-ui:
     name: test-ui Splunk ${{ matrix.splunk.version }} -m ${{ matrix.test-mark }}
     if: |
@@ -123,6 +142,7 @@ jobs:
     continue-on-error: true
     needs:
       - meta
+      - build-test-addon
       - test-unit
       - test-smoke
     strategy:
@@ -150,18 +170,26 @@ jobs:
       - run: |
           ./get-ucc-ui.sh
           tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
-          poetry build
-      - run: poetry run ucc-gen build --source tests/testdata/test_addons/package_global_config_everything/package
+      - uses: actions/download-artifact@v3
+        with:
+          name: output
+          path: output/
       - run: |
           ./run_splunk.sh ${{ matrix.splunk.version }}
           until curl -Lsk "https://localhost:8088/services/collector/health" &>/dev/null ; do echo -n "Waiting for HEC-" && sleep 5 ; done
         timeout-minutes: 5
       - run: poetry run pytest tests/ui -m "${{ matrix.test-mark }}" --headless --junitxml=test-results/junit.xml
       - uses: actions/upload-artifact@v3
-        if: success() || failure()
+        if: always()
         with:
-          name: test-results-ui-${{ matrix.test-mark }}
+          name: test-results-ui-${{ matrix.splunk.version }}-${{ matrix.test-mark }}
           path: test-results/*
+      - uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: test-report-ui-${{ matrix.splunk.version }}-${{ matrix.test-mark }}
+          path: "test-results/*.xml"
+          reporter: java-junit
 
   appinspect-for-expected-outputs:
     name: splunk-appinspect ${{ matrix.tags }} tests/testdata/expected_addons/expected_output_global_config_everything/Splunk_TA_UCCExample
