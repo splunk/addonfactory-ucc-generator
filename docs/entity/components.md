@@ -239,6 +239,107 @@ This is how it looks like in the UI:
 
 ![image](../images/components/checkbox_component_example.png)
 
+
+## `CheckboxGroup`
+
+Example usage below:
+
+```json
+{
+  "type": "checkboxGroup",
+  "label": "CheckboxGroupTitle",
+  "field": "api3",
+  "options": {
+    "groups": [
+      {
+        "label": "Group 1",
+        "options": {
+          "isExpandable": true,
+          "expand": true
+        },
+        "fields": ["rowUnderGroup1"]
+      },
+      {
+        "label": "Group 3",
+        "options": {
+          "isExpandable": true,
+          "expand": true
+        },
+        "fields": ["disabledRowUnderGroup3"]
+      }
+    ],
+    "rows": [
+      {
+        "field": "rowUnderGroup1",
+        "checkbox": {
+          "label": "Row under Group 1"
+        },
+        "text": {
+          "defaultValue": 1200,
+          "required": false
+        }
+      },
+      {
+        "field": "rowWithoutGroup",
+        "text": {
+          "defaultValue": 1,
+          "required": true
+        }
+      },
+      {
+        "field": "disabledRowUnderGroup3",
+        "checkbox": {
+          "options": {
+            "enable": false
+          }
+        },
+        "text": {
+          "defaultValue": 1,
+          "required": true
+        }
+      },
+      {
+        "field": "rowWithoutGroup_2",
+        "text": {
+          "defaultValue": 3600,
+          "required": true
+        }
+      },
+      {
+        "field": "field223",
+        "checkbox": {
+          "label": "Required field"
+        },
+        "text": {
+          "required": true
+        }
+      },
+      {
+        "field": "160validation",
+        "checkbox": {
+          "label": "from 1 to 60 validation"
+        },
+        "text": {
+          "validators": [
+            {
+              "type": "number",
+              "range": [1, 60]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+```
+
+This is how it looks like in the UI:
+
+![image](../images/components/checkbox_group_mixed_example.png)
+
+The component maps and unmaps values into a single field in the format `fieldName1/fieldValue2,fieldName2/fieldValue2`, but only for checked rows. For the given example, it emits the following value: `rowUnderGroup1/1200,rowWithoutGroup_2/3600`.
+
+
 ## `Multiple Select`
 
 Underlying `@splunk/react-ui` component: [`Multiselect`](https://splunkui.splunk.com/Packages/react-ui/Multiselect).
