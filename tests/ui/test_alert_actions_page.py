@@ -1,54 +1,7 @@
 import pytest
 from pytest_splunk_addon_ui_smartx.base_test import UccTester
 
-# from pytest_splunk_addon_ui_smartx.components.base_component import Selector
-# from pytest_splunk_addon_ui_smartx.components.controls.button import Button
-
 from tests.ui.pages.alert_action_page import AlertPage
-
-#
-#
-# @pytest.fixture(autouse=True)
-# def setup_alert(ucc_smartx_selenium_helper):
-#     """
-#     Skip the popups in Splunk before executing the tests
-#     """
-#     try:
-#         # Splunk 8.x
-#         if not setup_alert.first_execution:
-#             return
-#         AlertPage(ucc_smartx_selenium_helper, None, open_page=False)
-#         intro_popup = Button(
-#             ucc_smartx_selenium_helper.browser,
-#             Selector(select=".modal-footer .btn-save"),
-#         )
-#         intro_popup.wait_to_be_clickable()
-#         intro_popup.click()
-#         setup_alert.first_execution = False
-#
-#         # Splunk 8.2.x
-#         intro_popup = Button(
-#             ucc_smartx_selenium_helper.browser,
-#             Selector(select='[data-test="label"]'),
-#         )
-#         intro_popup.wait_to_be_clickable()
-#         intro_popup.click()
-#
-#         # Splunk 8.0.x
-#         important_changes_coming = Button(
-#             ucc_smartx_selenium_helper.browser,
-#             Selector(
-#                 select='div[data-test-name="python3-notification-modal"] '
-#                 'button[data-test="button"][data-appearance="secondary"]'
-#             ),
-#         )
-#         important_changes_coming.wait_to_be_clickable()
-#         important_changes_coming.click()
-#     except:  # noqa: E722
-#         pass
-#
-#
-# setup_alert.first_execution = True
 
 
 @pytest.fixture
