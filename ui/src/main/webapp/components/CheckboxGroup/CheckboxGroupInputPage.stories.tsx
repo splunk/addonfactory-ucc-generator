@@ -3,7 +3,8 @@ import React from 'react';
 import { within, userEvent } from '@storybook/testing-library';
 import BaseFormView from '../BaseFormView';
 import { setUnifiedConfig } from '../../util/util';
-import { checkboxGroupConfig, serverHandlers } from './checkboxGroupMocks';
+import { serverHandlers } from './checkboxGroupMocks';
+import checkboxGroupConfig from './checkboxGroupMocks.json';
 import InputPage from '../../pages/Input/InputPage';
 
 const meta = {
