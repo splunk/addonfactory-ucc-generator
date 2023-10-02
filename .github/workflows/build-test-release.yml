@@ -81,7 +81,6 @@ jobs:
           # Puts package and schema subdirs along with NOTICE (THIRDPARTY.npm)
           tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
           poetry install
-          poetry build
       - name: Ensure all UCC UI files are in the final package
         run: ./.github/workflows/check_ucc_ui_files.sh
       - run: poetry run pytest tests/smoke
@@ -109,7 +108,6 @@ jobs:
           # Puts package and schema subdirs along with NOTICE (THIRDPARTY.npm)
           tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
           poetry install
-          poetry build
       - run: ./.github/workflows/check_ucc_ui_files.sh
       - run: poetry run pytest --cov=splunk_add_on_ucc_framework --cov-report=xml tests/unit
 
@@ -125,7 +123,6 @@ jobs:
       - run: |
           ./get-ucc-ui.sh
           tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
-          poetry build
       - run: poetry run ucc-gen build --source tests/testdata/test_addons/package_global_config_everything/package
       - run: poetry run ucc-gen package --path output/Splunk_TA_UCCExample
       - uses: actions/upload-artifact@v3
@@ -172,9 +169,6 @@ jobs:
         run: |
           export PATH=$PATH:$CHROMEWEBDRIVER
           chromedriver --version
-      - run: |
-          ./get-ucc-ui.sh
-          tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
       - uses: actions/download-artifact@v3
         with:
           name: output
@@ -215,12 +209,15 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: "3.7"
-      - run: pip install splunk-packaging-toolkit
-      - name: Slim tests/expected_output_global_config_everything/Splunk_TA_UCCExample
-        run: mkdir tests/slimmed; slim package tests/testdata/expected_addons/expected_output_global_config_everything/Splunk_TA_UCCExample -o tests/slimmed
-      - uses: splunk/appinspect-cli-action@v1.11
+      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+      - name: Package tests/expected_output_global_config_everything/Splunk_TA_UCCExample
+        run: |
+          poetry install
+          mkdir tests/packaged
+          poetry run ucc-gen package tests/testdata/expected_addons/expected_output_global_config_everything/Splunk_TA_UCCExample -o tests/packaged
+      - uses: splunk/appinspect-cli-action@v1.12
         with:
-          app_path: tests/slimmed
+          app_path: tests/packaged
           included_tags: ${{ matrix.tags }}
           appinspect_manual_checks: tests/testdata/expected_addons/expected_output_global_config_everything/.appinspect.manualcheck.yaml
           appinspect_expected_failures: tests/testdata/expected_addons/expected_output_global_config_everything/.appinspect.expect.yaml
