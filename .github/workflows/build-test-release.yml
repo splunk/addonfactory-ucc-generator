@@ -127,10 +127,15 @@ jobs:
           tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
           poetry build
       - run: poetry run ucc-gen build --source tests/testdata/test_addons/package_global_config_everything/package
+      - run: poetry run ucc-gen package --path output/Splunk_TA_UCCExample
       - uses: actions/upload-artifact@v3
         with:
           name: output
           path: output/*
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Splunk_TA_UCCExample.tar.gz
+          path: Splunk_TA_UCCExample*.tar.gz
 
   test-ui:
     name: test-ui Splunk ${{ matrix.splunk.version }} -m ${{ matrix.test-mark }}
