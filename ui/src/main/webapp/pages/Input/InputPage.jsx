@@ -265,6 +265,7 @@ function InputPage() {
                         <TableWrapper
                             page={PAGE_INPUT}
                             handleOpenPageStyleDialog={handleOpenPageStyleDialog}
+                            displayActionBtnAllRows
                         />
                     )}
 

@@ -3,7 +3,7 @@
     "allowJs": true,
     "esModuleInterop": true,
     "jsx": "react",
-    "lib": ["es2015", "dom"],
+    "lib": ["es2022", "dom"],
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,

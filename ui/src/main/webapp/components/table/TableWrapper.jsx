@@ -11,7 +11,13 @@ import TableHeader from './TableHeader';
 import TableContext from '../../context/TableContext';
 import { PAGE_INPUT } from '../../constants/pages';
 
-function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPageStyleDialog }) {
+function TableWrapper({
+    page,
+    serviceName,
+    handleRequestModalOpen,
+    handleOpenPageStyleDialog,
+    displayActionBtnAllRows,
+}) {
     const [sortKey, setSortKey] = useState('name');
     const [sortDir, setSortDir] = useState('asc');
     const [loading, setLoading] = useState(true);
@@ -256,7 +262,10 @@ function TableWrapper({ page, serviceName, handleRequestModalOpen, handleOpenPag
                 services={services}
                 totalElement={totalElement}
                 handleRequestModalOpen={handleRequestModalOpen}
+                changeToggleStatus={changeToggleStatus}
                 isTabs={isTabs}
+                rowData={rowData}
+                displayActionBtnAllRows={displayActionBtnAllRows}
             />
             <CustomTable
                 page={page}
@@ -279,6 +288,7 @@ TableWrapper.propTypes = {
     serviceName: PropTypes.string,
     handleRequestModalOpen: PropTypes.func,
     handleOpenPageStyleDialog: PropTypes.func,
+    displayActionBtnAllRows: PropTypes.bool,
 };
 
 export default memo(TableWrapper);

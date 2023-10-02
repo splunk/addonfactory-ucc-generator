@@ -10,6 +10,7 @@ import TableContext from '../../context/TableContext';
 import { TableSelectBoxWrapper } from './CustomTableStyle';
 import { PAGE_INPUT } from '../../constants/pages';
 import { StyledButton } from '../../pages/EntryPageStyle';
+import { InteractAllStatusButtons } from '../InteractAllStatusButton';
 
 const TableHeaderWrapper = styled.div`
     display: flex;
@@ -24,7 +25,16 @@ const TableFilterWrapper = styled.div`
     width: 100%;
 `;
 
-function TableHeader({ page, isTabs, services, totalElement, handleRequestModalOpen }) {
+function TableHeader({
+    page,
+    isTabs,
+    services,
+    totalElement,
+    handleRequestModalOpen,
+    rowData,
+    changeToggleStatus,
+    displayActionBtnAllRows,
+}) {
     const {
         pageSize,
         currentPage,
@@ -109,6 +119,12 @@ function TableHeader({ page, isTabs, services, totalElement, handleRequestModalO
                     />
                 )}
             </div>
+            <InteractAllStatusButtons
+                displayActionBtnAllRows={displayActionBtnAllRows}
+                totalElement={totalElement}
+                allDataRows={rowData}
+                changeToggleStatus={changeToggleStatus}
+            />
         </TableHeaderWrapper>
     );
 }
@@ -119,6 +135,9 @@ TableHeader.propTypes = {
     totalElement: PropTypes.number,
     isTabs: PropTypes.bool,
     handleRequestModalOpen: PropTypes.func,
+    displayActionBtnAllRows: PropTypes.bool,
+    changeToggleStatus: PropTypes.func,
+    rowData: PropTypes.object,
 };
 
 export default TableHeader;
