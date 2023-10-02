@@ -81,6 +81,7 @@ jobs:
           # Puts package and schema subdirs along with NOTICE (THIRDPARTY.npm)
           tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
           poetry install
+          poetry build
       - name: Ensure all UCC UI files are in the final package
         run: ./.github/workflows/check_ucc_ui_files.sh
       - run: poetry run pytest tests/smoke
@@ -108,6 +109,7 @@ jobs:
           # Puts package and schema subdirs along with NOTICE (THIRDPARTY.npm)
           tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
           poetry install
+          poetry build
       - run: ./.github/workflows/check_ucc_ui_files.sh
       - run: poetry run pytest --cov=splunk_add_on_ucc_framework --cov-report=xml tests/unit
 
@@ -127,11 +129,11 @@ jobs:
       - run: poetry run ucc-gen package --path output/Splunk_TA_UCCExample
       - uses: actions/upload-artifact@v3
         with:
-          name: output
+          name: Splunk_TA_UCCExample-raw-output
           path: output/*
       - uses: actions/upload-artifact@v3
         with:
-          name: Splunk_TA_UCCExample.tar.gz
+          name: Splunk_TA_UCCExample-packaged
           path: Splunk_TA_UCCExample*.tar.gz
 
   test-ui:
@@ -171,7 +173,7 @@ jobs:
           chromedriver --version
       - uses: actions/download-artifact@v3
         with:
-          name: output
+          name: Splunk_TA_UCCExample-raw-output
           path: output/
       - run: |
           ./run_splunk.sh ${{ matrix.splunk.version }}
@@ -214,7 +216,7 @@ jobs:
         run: |
           poetry install
           mkdir tests/packaged
-          poetry run ucc-gen package tests/testdata/expected_addons/expected_output_global_config_everything/Splunk_TA_UCCExample -o tests/packaged
+          poetry run ucc-gen package --path tests/testdata/expected_addons/expected_output_global_config_everything/Splunk_TA_UCCExample -o tests/packaged
       - uses: splunk/appinspect-cli-action@v1.12
         with:
           app_path: tests/packaged
