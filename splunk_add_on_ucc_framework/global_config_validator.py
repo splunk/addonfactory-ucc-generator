@@ -239,7 +239,7 @@ class GlobalConfigValidator:
         labels, values = [], []
         for child in children:
             labels.append(child["label"].lower())
-            values.append(child["value"].lower())
+            values.append(str(child["value"]).lower())
         if self._find_duplicates_in_list(values) or self._find_duplicates_in_list(
             labels
         ):
@@ -262,7 +262,7 @@ class GlobalConfigValidator:
             if children:
                 self._validate_children_duplicates(children, entity_label)
             else:
-                values.append(field.get("value").lower())
+                values.append(str(field.get("value")).lower())
         if self._find_duplicates_in_list(values) or self._find_duplicates_in_list(
             labels
         ):
