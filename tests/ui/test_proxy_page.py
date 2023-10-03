@@ -250,3 +250,24 @@ class TestProxyPage(UccTester):
                 "proxy_username": "test",
             },
         )
+        
+    @pytest.mark.execute_enterprise_cloud_false
+    @pytest.mark.proxy
+    @pytest.mark.forwarder
+    def test_proxy_host_valid_input(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
+    ):
+        """
+        Verification of host throwing error msg when containing special characters
+        """
+        proxy = Proxy(
+            C.ADDON_NAME,
+            PROXY_URL,
+            ucc_smartx_selenium_helper=ucc_smartx_selenium_helper,
+            ucc_smartx_rest_helper=ucc_smartx_rest_helper,
+        )
+        proxy.host.set_value("abc$$")
+        self.assert_util(
+            proxy.save, "Proxy Host should not have special characters", left_args={"expect_error": True}
+        )
+        

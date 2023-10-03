@@ -2165,3 +2165,16 @@ class TestInputPage(UccTester):
         self.assert_util(
             prompt_message, f'Are you sure you want to delete "{input_name}" ?'
         )
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.input
+    @pytest.mark.forwarder
+    def test_example_input_one_placeholder_default_configs(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
+    ):
+        """Verifies placeholder for default configurations"""
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        input_page.create_new_input.select("Example Input One")
+        self.assert_util(
+            input_page.entity1.object.get_placeholder_value, "Required"
+        )
