@@ -31,7 +31,7 @@ function TableHeader({
     services,
     totalElement,
     handleRequestModalOpen,
-    rowData,
+    allFilteredData,
     changeToggleStatus,
     displayActionBtnAllRows,
 }) {
@@ -121,8 +121,7 @@ function TableHeader({
             </div>
             <InteractAllStatusButtons
                 displayActionBtnAllRows={displayActionBtnAllRows}
-                totalElement={totalElement}
-                allDataRows={rowData}
+                dataRows={allFilteredData}
                 changeToggleStatus={changeToggleStatus}
             />
         </TableHeaderWrapper>
@@ -137,7 +136,7 @@ TableHeader.propTypes = {
     handleRequestModalOpen: PropTypes.func,
     displayActionBtnAllRows: PropTypes.bool,
     changeToggleStatus: PropTypes.func,
-    rowData: PropTypes.object,
+    allFilteredData: PropTypes.array,
 };
 
 export default TableHeader;

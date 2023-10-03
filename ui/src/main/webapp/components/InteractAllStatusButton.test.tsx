@@ -1,102 +1,94 @@
 import React from 'react';
 
 import { render, screen } from '@testing-library/react';
-import { AllInputRowsData, InteractAllStatusButtons } from './InteractAllStatusButton';
+import { InputRowData, InteractAllStatusButtons } from './InteractAllStatusButton';
 
 describe('InteractAllStatusButtons', () => {
     const handleToggleStatusChange = jest.fn();
 
-    let allDataRowsMockUp: AllInputRowsData;
-    let totalElements: number;
+    let allDataRowsMockUp: InputRowData[];
 
     beforeEach(() => {
-        allDataRowsMockUp = {
-            demo_input: {
-                aaaaa: {
-                    account: 'Test_Account',
-                    disabled: false,
-                    host: '$decideOnStartup',
-                    host_resolved: 'testHost',
-                    index: 'default',
-                    interval: '300',
-                    name: 'aaaaa',
-                    serviceName: 'demo_input',
-                    serviceTitle: 'demo_input',
-                    __toggleShowSpinner: false,
-                },
-                bbbbb: {
-                    account: 'Test_Account_2',
-                    disabled: false,
-                    host: '$decideOnStartup',
-                    host_resolved: 'testHost',
-                    index: 'default',
-                    interval: '300',
-                    name: 'bbbbb',
-                    serviceName: 'demo_input',
-                    serviceTitle: 'demo_input',
-                    __toggleShowSpinner: false,
-                },
-                brrrrrrr: {
-                    account: 'aaaaa',
-                    disabled: false,
-                    host: '$decideOnStartup',
-                    host_resolved: 'testHost',
-                    index: 'default',
-                    interval: '300',
-                    name: 'brrrrrrr',
-                    serviceName: 'demo_input',
-                    serviceTitle: 'demo_input',
-                    __toggleShowSpinner: false,
-                },
-                cccccc: {
-                    account: 'Test_Account',
-                    disabled: true,
-                    host: '$decideOnStartup',
-                    host_resolved: 'testHost',
-                    index: 'default',
-                    interval: '300',
-                    name: 'cccccc',
-                    serviceName: 'demo_input',
-                    serviceTitle: 'demo_input',
-                    __toggleShowSpinner: false,
-                },
-                dddddd: {
-                    account: 'Test_Account_2',
-                    disabled: true,
-                    host: '$decideOnStartup',
-                    host_resolved: 'testHost',
-                    index: 'default',
-                    interval: '300',
-                    name: 'dddddd',
-                    serviceName: 'demo_input',
-                    serviceTitle: 'demo_input',
-                    __toggleShowSpinner: false,
-                },
-                gggggg: {
-                    account: 'aaaaa',
-                    disabled: true,
-                    host: '$decideOnStartup',
-                    host_resolved: 'testHost',
-                    index: 'default',
-                    interval: '300',
-                    name: 'gggggg',
-                    serviceName: 'demo_input',
-                    serviceTitle: 'demo_input',
-                    __toggleShowSpinner: false,
-                },
+        allDataRowsMockUp = [
+            {
+                account: 'Test_Account',
+                disabled: false,
+                host: '$decideOnStartup',
+                host_resolved: 'testHost',
+                index: 'default',
+                interval: '300',
+                name: 'aaaaa',
+                serviceName: 'demo_input',
+                serviceTitle: 'demo_input',
+                __toggleShowSpinner: false,
             },
-        };
-
-        totalElements = Object.values(allDataRowsMockUp)
-            .map((data) => Object.values(data).map((row) => row))
-            .flat().length;
+            {
+                account: 'Test_Account_2',
+                disabled: false,
+                host: '$decideOnStartup',
+                host_resolved: 'testHost',
+                index: 'default',
+                interval: '300',
+                name: 'bbbbb',
+                serviceName: 'demo_input',
+                serviceTitle: 'demo_input',
+                __toggleShowSpinner: false,
+            },
+            {
+                account: 'aaaaa',
+                disabled: false,
+                host: '$decideOnStartup',
+                host_resolved: 'testHost',
+                index: 'default',
+                interval: '300',
+                name: 'brrrrrrr',
+                serviceName: 'demo_input',
+                serviceTitle: 'demo_input',
+                __toggleShowSpinner: false,
+            },
+            {
+                account: 'Test_Account',
+                disabled: true,
+                host: '$decideOnStartup',
+                host_resolved: 'testHost',
+                index: 'default',
+                interval: '300',
+                name: 'cccccc',
+                serviceName: 'demo_input',
+                serviceTitle: 'demo_input',
+                __toggleShowSpinner: false,
+            },
+            {
+                account: 'Test_Account_2',
+                disabled: true,
+                host: '$decideOnStartup',
+                host_resolved: 'testHost',
+                index: 'default',
+                interval: '300',
+                name: 'dddddd',
+                serviceName: 'demo_input',
+                serviceTitle: 'demo_input',
+                __toggleShowSpinner: false,
+            },
+            {
+                account: 'aaaaa',
+                disabled: true,
+                host: '$decideOnStartup',
+                host_resolved: 'testHost',
+                index: 'default',
+                interval: '300',
+                name: 'gggggg',
+                serviceName: 'demo_input',
+                serviceTitle: 'demo_input',
+                __toggleShowSpinner: false,
+            },
+        ];
 
         render(
             <InteractAllStatusButtons
                 data-testid="actionBtns"
                 displayActionBtnAllRows
-                totalElement={totalElements}
-                allDataRows={allDataRowsMockUp}
+                dataRows={allDataRowsMockUp}
                 changeToggleStatus={handleToggleStatusChange}
             />
         );
@@ -113,10 +105,14 @@ describe('InteractAllStatusButtons', () => {
 
         yesPopUpBtn.click();
 
-        expect(handleToggleStatusChange).toHaveBeenCalledWith(allDataRowsMockUp.demo_input.aaaaa);
-        expect(handleToggleStatusChange).toHaveBeenCalledWith(allDataRowsMockUp.demo_input.bbbbb);
         expect(handleToggleStatusChange).toHaveBeenCalledWith(
-            allDataRowsMockUp.demo_input.brrrrrrr
+            allDataRowsMockUp.find((x) => x.name === 'aaaaa')
+        );
+        expect(handleToggleStatusChange).toHaveBeenCalledWith(
+            allDataRowsMockUp.find((x) => x.name === 'bbbbb')
+        );
+        expect(handleToggleStatusChange).toHaveBeenCalledWith(
+            allDataRowsMockUp.find((x) => x.name === 'brrrrrrr')
         );
         expect(handleToggleStatusChange).toHaveBeenCalledTimes(3);
     });
@@ -132,9 +128,15 @@ describe('InteractAllStatusButtons', () => {
 
         yesPopUpBtn.click();
 
-        expect(handleToggleStatusChange).toHaveBeenCalledWith(allDataRowsMockUp.demo_input.cccccc);
-        expect(handleToggleStatusChange).toHaveBeenCalledWith(allDataRowsMockUp.demo_input.dddddd);
-        expect(handleToggleStatusChange).toHaveBeenCalledWith(allDataRowsMockUp.demo_input.gggggg);
+        expect(handleToggleStatusChange).toHaveBeenCalledWith(
+            allDataRowsMockUp.find((x) => x.name === 'cccccc')
+        );
+        expect(handleToggleStatusChange).toHaveBeenCalledWith(
+            allDataRowsMockUp.find((x) => x.name === 'dddddd')
+        );
+        expect(handleToggleStatusChange).toHaveBeenCalledWith(
+            allDataRowsMockUp.find((x) => x.name === 'gggggg')
+        );
         expect(handleToggleStatusChange).toHaveBeenCalledTimes(3);
     });
 

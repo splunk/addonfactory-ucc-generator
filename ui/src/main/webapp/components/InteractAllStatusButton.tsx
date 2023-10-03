@@ -4,7 +4,7 @@ import Button from '@splunk/react-ui/Button';
 import { variables } from '@splunk/themes';
 import AcceptModal from './AcceptModal';
 
-interface InputRowData {
+export interface InputRowData {
     account: string;
     disabled: boolean;
     host: string;
@@ -17,16 +17,9 @@ interface InputRowData {
     __toggleShowSpinner: boolean;
 }
 
-export interface AllInputRowsData {
-    [serviceName: string]: {
-        [inputName: string]: InputRowData;
-    };
-}
-
 interface DisableAllStatusButtonProps {
     displayActionBtnAllRows: boolean;
-    totalElement: number;
-    allDataRows: AllInputRowsData;
+    dataRows: InputRowData[];
     changeToggleStatus: (row: InputRowData) => void;
 }
 
@@ -39,24 +32,22 @@ export function InteractAllStatusButtons(props: DisableAllStatusButtonProps) {
     const [tryInteract, setTryInteract] = useState(false);
     const [isDisabling, setIsDisabling] = useState(false);
 
-    const handleInteractWithAllRowsStatus = (rowsData: AllInputRowsData) => {
-        Object.values(rowsData).forEach((data) =>
-            Object.values(data).forEach((row) => {
-                if (row.disabled !== isDisabling) {
-                    props.changeToggleStatus(row);
-                }
-            })
-        );
+    const handleInteractWithAllRowsStatus = (rowsData: InputRowData[]) => {
+        rowsData.forEach((row) => {
+            if (row.disabled !== isDisabling) {
+                props.changeToggleStatus(row);
+            }
+        });
     };
 
     const handleAcceptModal = (e: boolean) => {
         setTryInteract(false);
         if (e) {
-            handleInteractWithAllRowsStatus(props.allDataRows);
+            handleInteractWithAllRowsStatus(props.dataRows);
         }
     };
 
-    return props.displayActionBtnAllRows && props.totalElement > 1 ? (
+    return props.displayActionBtnAllRows ? (
         <div>
             <InteractAllActionButton
                 data-testid="enableAllBtn"
@@ -65,7 +56,7 @@ export function InteractAllStatusButtons(props: DisableAllStatusButtonProps) {
                     setIsDisabling(false);
                 }}
                 role="button"
-                disabled={false}
+                disabled={props.dataRows.length < 1}
             >
                 Enable all
             </InteractAllActionButton>
@@ -76,7 +67,7 @@ export function InteractAllStatusButtons(props: DisableAllStatusButtonProps) {
                     setIsDisabling(true);
                 }}
                 role="button"
-                disabled={false}
+                disabled={props.dataRows.length < 1}
             >
                 Disable all
             </InteractAllActionButton>

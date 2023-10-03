@@ -242,7 +242,7 @@ function TableWrapper({
             updatedArr = sortedArr.slice((currentPage - 1) * pageSize, pageSize);
         }
 
-        return [updatedArr, arr.length];
+        return [updatedArr, arr.length, arr];
     };
 
     if (error?.uccErrorCode) {
@@ -253,8 +253,7 @@ function TableWrapper({
         return <WaitSpinnerWrapper size="medium" />;
     }
 
-    const [filteredData, totalElement] = getRowData();
-
+    const [filteredData, totalElement, allFilteredData] = getRowData();
     return (
         <>
             <TableHeader
@@ -264,7 +263,7 @@ function TableWrapper({
                 handleRequestModalOpen={handleRequestModalOpen}
                 changeToggleStatus={changeToggleStatus}
                 isTabs={isTabs}
-                rowData={rowData}
+                allFilteredData={allFilteredData}
                 displayActionBtnAllRows={displayActionBtnAllRows}
             />
             <CustomTable
