@@ -897,7 +897,10 @@ class TestAccount(UccTester):
         account.table.clone_row(ACCOUNT_CONFIG["name"])
         self.assert_util(account.entity.name.get_value, "")
         self.assert_util(account.entity.environment.get_value, "Value1")
-        self.assert_util(account.entity.example_checkbox.is_checked(), ACCOUNT_CONFIG["account_checkbox"])
+        self.assert_util(
+            account.entity.example_checkbox.is_checked(),
+            ACCOUNT_CONFIG["account_checkbox"],
+        )
         self.assert_util(account.entity.multiple_select.get_values, ["Option One"])
         self.assert_util(account.entity.auth_key.get_value, ACCOUNT_CONFIG["auth_type"])
         self.assert_util(account.entity.username.get_value, ACCOUNT_CONFIG["username"])
@@ -1039,7 +1042,7 @@ class TestAccount(UccTester):
             r"data collection for that input.",
             left_args={"name": ACCOUNT_CONFIG["name"], "prompt_msg": True},
         )
-        
+
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.account
     @pytest.mark.forwarder
@@ -1076,8 +1079,11 @@ class TestAccount(UccTester):
         account.table.edit_row(ACCOUNT_CONFIG["name"])
         self.assert_util(account.entity.name.get_value, ACCOUNT_CONFIG["name"])
         self.assert_util(account.entity.environment.get_value, "Value1")
-        self.assert_util(account.entity.example_checkbox.is_checked(), ACCOUNT_CONFIG["account_checkbox"])
-        #self.assert_util(account.entity.account_radio.get_value, "Yes")
+        self.assert_util(
+            account.entity.example_checkbox.is_checked(),
+            ACCOUNT_CONFIG["account_checkbox"],
+        )
+        # self.assert_util(account.entity.account_radio.get_value, "Yes")
         self.assert_util(account.entity.multiple_select.get_values, ["Option One"])
         self.assert_util(account.entity.auth_key.get_value, ACCOUNT_CONFIG["auth_type"])
         self.assert_util(account.entity.username.get_value, ACCOUNT_CONFIG["username"])

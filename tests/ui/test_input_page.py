@@ -2157,6 +2157,4 @@ class TestInputPage(UccTester):
         """Verifies placeholder for default configurations"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         input_page.create_new_input.select("Example Input One")
-        self.assert_util(
-            input_page.entity1.object.get_placeholder_value, "Required"
-        )
+        self.assert_util(input_page.entity1.object.get_placeholder_value, "Required")
