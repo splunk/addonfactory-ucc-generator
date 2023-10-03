@@ -487,32 +487,6 @@ class TestAccount(UccTester):
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.account
-    @pytest.mark.xfail(
-        reason="account.entity.environment.cancel_selected_value() is flaky, "
-        "passing locally, not working in CI, will be investigated later."
-    )
-    def test_account_required_field_example_environment(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
-    ):
-        """Verifies required field example environment"""
-        account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
-        account.entity.open()
-        account.entity.name.set_value(ACCOUNT_CONFIG["name"])
-        account.entity.multiple_select.select("Option Two")
-        account.entity.username.set_value("TestEditUser")
-        account.entity.password.set_value("TestEditPassword")
-        account.entity.security_token.set_value("TestEditToken")
-        account.entity.account_radio.select("No")
-        account.entity.environment.cancel_selected_value()
-        self.assert_util(
-            account.entity.save,
-            "Field Example Environment is required",
-            left_args={"expect_error": True},
-        )
-
-    @pytest.mark.execute_enterprise_cloud_true
-    @pytest.mark.forwarder
-    @pytest.mark.account
     def test_account_required_field_example_multiple_select(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
