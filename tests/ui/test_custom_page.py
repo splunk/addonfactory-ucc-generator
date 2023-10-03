@@ -47,7 +47,7 @@ class TestCustomPage(UccTester):
         """This test case checks the validates frontend save in custom tab"""
         custom = CustomPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         custom.test_string.set_value("test_str")
-        custom.test_number.set_value("7")
+        custom.test_number.set_value("1")
         custom.test_regex.set_value("test_rex")
         custom.test_email.set_value("test@a.b")
         custom.test_ipv4.set_value("1.10.1.100")
@@ -123,12 +123,20 @@ class TestCustomPage(UccTester):
         """This test case checks range of test number field should be between 1 to 10"""
         custom = CustomPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         custom.test_string.set_value("test_str")
-        custom.test_number.set_value("50")
+        custom.test_number.set_value("0")
         self.assert_util(
             custom.save,
             r"Field Test Number should be within the range of [1 and 10]",
             left_args={"expect_error": True},
         )
+        custom.test_number.set_value("11")
+        self.assert_util(
+            custom.save,
+            r"Field Test Number should be within the range of [1 and 10]",
+            left_args={"expect_error": True},
+        )
+        custom.test_number.set_value("10")
+        self.assert_util(custom.save, True)
 
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder

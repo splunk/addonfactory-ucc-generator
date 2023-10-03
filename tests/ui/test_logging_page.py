@@ -69,3 +69,19 @@ class TestLoggingPage(UccTester):
         self.assert_util(logging.log_level.get_value().lower(), selection_log.lower())
         log_level = logging.backend_conf.get_parameter("loglevel")
         self.assert_util(log_level, selection_log)
+        
+    @pytest.mark.logging
+    def test_logging_label_log_level(
+        self,
+        ucc_smartx_selenium_helper,
+        ucc_smartx_rest_helper,
+    ):
+        """
+        Verifies the label of log level
+        """
+        logging = Logging(  # noqa: F811
+            C.ADDON_NAME,
+            ucc_smartx_selenium_helper=ucc_smartx_selenium_helper,
+            ucc_smartx_rest_helper=ucc_smartx_rest_helper,
+        )
+        self.assert_util(logging.log_level.get_input_label, "Log level")
