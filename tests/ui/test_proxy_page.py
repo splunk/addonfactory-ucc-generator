@@ -250,7 +250,7 @@ class TestProxyPage(UccTester):
                 "proxy_username": "test",
             },
         )
-        
+
     @pytest.mark.execute_enterprise_cloud_false
     @pytest.mark.proxy
     @pytest.mark.forwarder
@@ -268,6 +268,7 @@ class TestProxyPage(UccTester):
         )
         proxy.host.set_value("abc$$")
         self.assert_util(
-            proxy.save, "Proxy Host should not have special characters", left_args={"expect_error": True}
+            proxy.save,
+            "Proxy Host should not have special characters",
+            left_args={"expect_error": True},
         )
-        
