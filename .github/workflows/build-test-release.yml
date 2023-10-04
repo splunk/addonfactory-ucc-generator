@@ -123,6 +123,7 @@ jobs:
           name: THIRDPARTY
       - run: cp -f THIRDPARTY NOTICE
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+      - run: poetry install
       - name: Check docs
         run: poetry run mkdocs build --strict
       - name: Build UCC
