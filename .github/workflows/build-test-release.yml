@@ -128,7 +128,7 @@ jobs:
         run: poetry run mkdocs build --strict
       - name: Build UCC
         run: |
-          cp -R built-ui/ splunk_add_on_ucc_framework/
+          cp -R built-ui/package splunk_add_on_ucc_framework/
           poetry build
       - uses: actions/upload-artifact@v3
         with:
@@ -181,7 +181,7 @@ jobs:
           path: built-ui/
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
       - run: |
-          cp -R built-ui/ splunk_add_on_ucc_framework/
+          cp -R built-ui/package splunk_add_on_ucc_framework/
           poetry install
           poetry run pytest tests/smoke
 
@@ -200,7 +200,7 @@ jobs:
           path: built-ui/
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
       - run: |
-          cp -R built-ui/ splunk_add_on_ucc_framework/
+          cp -R built-ui/package splunk_add_on_ucc_framework/
           poetry install
       - run: poetry run ucc-gen build --source tests/testdata/test_addons/package_global_config_everything/package
       - run: poetry run ucc-gen package --path output/Splunk_TA_UCCExample
@@ -256,7 +256,7 @@ jobs:
           path: built-ui/
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
       - run: |
-          cp -R built-ui/ splunk_add_on_ucc_framework/
+          cp -R built-ui/package splunk_add_on_ucc_framework/
           poetry install
       - name: Link chromedriver
         # Use installed chromedriver https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2204-Readme.md
