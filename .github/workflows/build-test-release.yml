@@ -272,7 +272,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: success() || failure()
         with:
-          name: test-results-ui-${{ matrix.test-mark }}
+          name: test-results-ui-${{ matrix.splunk.version }}-${{ matrix.test-mark }}
           path: test-results/*
       - uses: dorny/test-reporter@v1
         if: success() || failure()
@@ -335,6 +335,10 @@ jobs:
         with:
           python-version: "3.7"
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+      - uses: actions/download-artifact@v3
+        with:
+          name: UCC-build
+          path: dist/
       - id: semantic
         uses: splunk/semantic-release-action@v1.3
         with:
