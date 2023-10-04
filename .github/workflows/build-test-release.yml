@@ -90,13 +90,14 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('ui/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-${{ matrix.node-version }}
-      - run: |
+      - name: Build UCC UI
+        run: |
           cd ui/
           yarn
           yarn run lint
           yarn run test
           yarn run build
-          yarn list --prod --depth 0 | python .github/scripts/format_yarn_deps.py --output-file=dist/package/appserver/static/js/dependencies.txt
+          yarn list --prod --depth 0 | python ../.github/scripts/format_yarn_deps.py --output-file=dist/package/appserver/static/js/dependencies.txt
           cd ../
       - uses: actions/upload-artifact@v3
         with:
