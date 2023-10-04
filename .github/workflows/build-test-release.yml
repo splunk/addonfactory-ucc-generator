@@ -41,53 +41,101 @@ jobs:
         env:
           FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
 
-  docs-build:
+  pre-commit:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: "3.7"
-      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
-      - run: poetry install
-      - run: poetry run mkdocs build --strict
-  
+      - uses: pre-commit/action@v3.0.0
+
+  semgrep:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: semgrep
+        uses: returntocorp/semgrep-action@v1
+        with:
+          publishToken: ${{ secrets.SEMGREP_PUBLISH_TOKEN }}
+
   compliance-copyrights:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: apache/skywalking-eyes@v0.5.0
 
-  test-smoke:
-    name: test-smoke ${{ matrix.python-version }}
+  build-ui:
     runs-on: ubuntu-latest
-    continue-on-error: true
     strategy:
       matrix:
-        python-version:
-          - "3.7"
-          - "3.8"
-          - "3.9"
-          - "3.10"
-          - "3.11"
+        node-version:
+          - "18"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: "3.7"
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm install --global yarn
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v3
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('ui/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-${{ matrix.node-version }}
+      - name: Build UCC UI
+        run: |
+          cd ui/
+          yarn
+          yarn run lint
+          yarn run test
+          yarn run build
+          yarn list --prod --depth 0 | python ../.github/scripts/format_yarn_deps.py --output-file=dist/package/appserver/static/js/dependencies.txt
+          cd ../
+      - uses: actions/upload-artifact@v3
+        with:
+          name: UCC-UI-build
+          path: ui/dist/
+
+  build:
+    needs:
+      - fossa-scan
+      - build-ui
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.7"
+      - uses: actions/download-artifact@v3
+        with:
+          name: UCC-UI-build
+          path: built-ui/
+      - uses: actions/download-artifact@v3
+        with:
+          name: THIRDPARTY
+      - run: cp -f THIRDPARTY NOTICE
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
-      - run: |
-          ./get-ucc-ui.sh
-          # Puts package and schema subdirs along with NOTICE (THIRDPARTY.npm)
-          tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
-          poetry install
+      - run: poetry install
+      - name: Check docs
+        run: poetry run mkdocs build --strict
+      - name: Build UCC
+        run: |
+          cp -R built-ui/package splunk_add_on_ucc_framework/
           poetry build
-      - name: Ensure all UCC UI files are in the final package
-        run: ./.github/workflows/check_ucc_ui_files.sh
-      - run: poetry run pytest tests/smoke
+      - uses: actions/upload-artifact@v3
+        with:
+          name: UCC-build
+          path: dist/
 
   test-unit:
-    name: test-unit ${{ matrix.python-version }}
     runs-on: ubuntu-latest
     continue-on-error: true
     strategy:
@@ -105,13 +153,65 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
       - run: |
-          ./get-ucc-ui.sh
-          # Puts package and schema subdirs along with NOTICE (THIRDPARTY.npm)
-          tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
           poetry install
-          poetry build
-      - run: ./.github/workflows/check_ucc_ui_files.sh
-      - run: poetry run pytest --cov=splunk_add_on_ucc_framework --cov-report=xml tests/unit
+          poetry run pytest --cov=splunk_add_on_ucc_framework --cov-report=xml tests/unit
+
+  test-smoke:
+    name: test-smoke ${{ matrix.python-version }}
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    strategy:
+      matrix:
+        python-version:
+          - "3.7"
+          - "3.8"
+          - "3.9"
+          - "3.10"
+          - "3.11"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: actions/download-artifact@v3
+        with:
+          name: UCC-UI-build
+          path: built-ui/
+      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+      - run: |
+          cp -R built-ui/package splunk_add_on_ucc_framework/
+          poetry install
+          poetry run pytest tests/smoke
+
+  build-test-addon:
+    runs-on: ubuntu-latest
+    needs:
+      - build-ui
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.7"
+      - uses: actions/download-artifact@v3
+        with:
+          name: UCC-UI-build
+          path: built-ui/
+      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+      - run: |
+          cp -R built-ui/package splunk_add_on_ucc_framework/
+          poetry install
+      - run: poetry run ucc-gen build --source tests/testdata/test_addons/package_global_config_everything/package
+      - run: poetry run ucc-gen package --path output/Splunk_TA_UCCExample
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Splunk_TA_UCCExample-raw-output
+          path: output/*
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Splunk_TA_UCCExample-packaged
+          path: Splunk_TA_UCCExample*.tar.gz
 
   test-ui:
     name: test-ui Splunk ${{ matrix.splunk.version }} -m ${{ matrix.test-mark }}
@@ -120,9 +220,15 @@ jobs:
       github.ref_name == 'main' ||
       contains(github.event.pull_request.labels.*.name, 'run-ui-tests')
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+      checks: write
     continue-on-error: true
     needs:
       - meta
+      - build-test-addon
+      - build
       - test-unit
       - test-smoke
     strategy:
@@ -140,17 +246,23 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: "3.7"
+      - uses: actions/download-artifact@v3
+        with:
+          name: Splunk_TA_UCCExample-raw-output
+          path: output/
+      - uses: actions/download-artifact@v3
+        with:
+          name: UCC-UI-build
+          path: built-ui/
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
-      - run: poetry install
+      - run: |
+          cp -R built-ui/package splunk_add_on_ucc_framework/
+          poetry install
       - name: Link chromedriver
         # Use installed chromedriver https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2204-Readme.md
         run: |
           export PATH=$PATH:$CHROMEWEBDRIVER
           chromedriver --version
-      - run: |
-          ./get-ucc-ui.sh
-          tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
-          poetry build
       - run: poetry run ucc-gen build --source tests/testdata/test_addons/package_global_config_everything/package
       - run: |
           ./run_splunk.sh ${{ matrix.splunk.version }}
@@ -160,8 +272,14 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: success() || failure()
         with:
-          name: test-results-ui-${{ matrix.test-mark }}
+          name: test-results-ui-${{ matrix.splunk.version }}-${{ matrix.test-mark }}
           path: test-results/*
+      - uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: test-report-ui-${{ matrix.splunk.version }}-${{ matrix.test-mark }}
+          path: "test-results/*.xml"
+          reporter: java-junit
 
   appinspect-for-expected-outputs:
     name: splunk-appinspect ${{ matrix.tags }} tests/testdata/expected_addons/expected_output_global_config_everything/Splunk_TA_UCCExample
@@ -182,43 +300,30 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: "3.7"
-      - run: pip install splunk-packaging-toolkit
-      - name: Slim tests/expected_output_global_config_everything/Splunk_TA_UCCExample
-        run: mkdir tests/slimmed; slim package tests/testdata/expected_addons/expected_output_global_config_everything/Splunk_TA_UCCExample -o tests/slimmed
-      - uses: splunk/appinspect-cli-action@v1.11
+      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+      - name: Package tests/expected_output_global_config_everything/Splunk_TA_UCCExample
+        run: |
+          poetry install
+          mkdir tests/packaged
+          poetry run ucc-gen package --path tests/testdata/expected_addons/expected_output_global_config_everything/Splunk_TA_UCCExample -o tests/packaged
+      - uses: splunk/appinspect-cli-action@v1.12
         with:
-          app_path: tests/slimmed
+          app_path: tests/packaged
           included_tags: ${{ matrix.tags }}
           appinspect_manual_checks: tests/testdata/expected_addons/expected_output_global_config_everything/.appinspect.manualcheck.yaml
           appinspect_expected_failures: tests/testdata/expected_addons/expected_output_global_config_everything/.appinspect.expect.yaml
 
-  pre-commit:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.7"
-      - uses: pre-commit/action@v3.0.0
-
-  semgrep:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - id: semgrep
-        uses: returntocorp/semgrep-action@v1
-        with:
-          publishToken: ${{ secrets.SEMGREP_PUBLISH_TOKEN }}
-
-  build:
+  release:
     needs:
-      - docs-build
+      - build
       - compliance-copyrights
       - fossa-scan
       - test-unit
       - test-smoke
-      - pre-commit
+      - test-ui
       - appinspect-for-expected-outputs
+      - semgrep
+      - pre-commit
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -230,17 +335,10 @@ jobs:
         with:
           python-version: "3.7"
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
-      - run: |
-          ./get-ucc-ui.sh
-          # Puts package and schema subdirs along with NOTICE (THIRDPARTY.npm)
-          tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
-          poetry build
-      - name: Ensure all UCC UI files are in the final package
-        run: ./.github/workflows/check_ucc_ui_files.sh
       - uses: actions/download-artifact@v3
         with:
-          name: THIRDPARTY
-      - run: cp -f THIRDPARTY NOTICE
+          name: UCC-build
+          path: dist/
       - id: semantic
         uses: splunk/semantic-release-action@v1.3
         with:
@@ -257,4 +355,3 @@ jobs:
         with:
           pypi_username: ${{ secrets.PYPI_USERNAME }}
           pypi_token: ${{ secrets.PYPI_TOKEN }}
-  

@@ -1,6 +1,0 @@
-.github/workflows/
-.*\.lock$
-^test/
-^examples/
-^contrib/common
-^deps/

@@ -2,7 +2,6 @@
 /* eslint-env node */
 const path = require('path');
 const { merge } = require('webpack-merge');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { LicenseWebpackPlugin } = require('license-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const baseConfig = require('@splunk/webpack-configs/base.config').default;
@@ -24,25 +23,6 @@ module.exports = merge(baseConfig, {
             },
         ],
     },
-    plugins: [
-        new LicenseWebpackPlugin(),
-        new CopyWebpackPlugin({
-            patterns: [
-                {
-                    from: path.join(__dirname, 'src/main/resources/splunk'),
-                    to: path.join(__dirname, 'dist/package'),
-                },
-                {
-                    from: path.join(__dirname, 'src/main/webapp/schema/schema.json'),
-                    to: path.join(__dirname, 'dist/schema'),
-                },
-                {
-                    from: path.join(__dirname, 'THIRDPARTY'),
-                    to: path.join(__dirname, 'dist'),
-                },
-            ],
-        }),
-        new ForkTsCheckerWebpackPlugin(),
-    ],
+    plugins: [new LicenseWebpackPlugin(), new ForkTsCheckerWebpackPlugin()],
     devtool: 'source-map',
 });

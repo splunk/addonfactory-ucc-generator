@@ -5,8 +5,10 @@
 Download UCC UI and unpack it using the following commands:
 
 ```
-./get-ucc-ui.sh
-tar -zxf splunk-ucc-ui.tgz -C splunk_add_on_ucc_framework/
+cd ui/
+yarn
+yarn run build
+cp -R dist/ ../splunk_add_on_ucc_framework/
 ```
 
 This project uses [`poetry 1.5.1`](https://python-poetry.org/).
@@ -25,7 +27,8 @@ poetry run pytest tests/unit
 
 ### UI tests
 
-If you need to run UI tests for the PR, please add a label "run-ui-tests". 
+If you need to run UI tests for the PR, please add a label "run-ui-tests" (do this before PR is created). 
+UI tests will run automatically for any PR towards `main` branch and on the `main` branch as well. 
 
 1. With local version of ucc-gen create UCCExample TA to output directory:
     ```

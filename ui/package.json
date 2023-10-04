@@ -14,7 +14,6 @@
     "test:watch": "jest --watch",
     "start": "webpack --watch",
     "setup": "yarn && yarn run build",
-    "prepare": "husky install",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
@@ -63,7 +62,6 @@
     "babel-eslint": "^10.1.0",
     "babel-jest": "^29.3.1",
     "babel-loader": "^9.1.2",
-    "copy-webpack-plugin": "^11.0.0",
     "cross-env": "^7.0.3",
     "css-loader": "^6.7.3",
     "eslint": "^8.32.0",
@@ -78,7 +76,6 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-storybook": "^0.6.13",
     "fork-ts-checker-webpack-plugin": "^8.0.0",
-    "husky": "^8.0.3",
     "jest": "^29.3.1",
     "jest-environment-jsdom": "^29.3.1",
     "js-yaml": "^4.1.0",
@@ -95,14 +92,6 @@
     "webpack": "^5.75.0",
     "webpack-cli": "^5.0.1",
     "webpack-merge": "^5.8.0"
-  },
-  "lint-staged": {
-    "*.{jsx,js,tsx,ts}": [
-      "eslint --fix"
-    ],
-    "*.{json, html, css}": [
-      "prettier --write"
-    ]
   },
   "resolutions": {
     "@npmcli/git": "^2.0.8",
