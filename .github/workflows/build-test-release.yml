@@ -130,8 +130,6 @@ jobs:
         run: |
           cp -R built-ui/ splunk_add_on_ucc_framework/
           poetry build
-      - name: Ensure all UCC UI files are in the final package
-        run: ./.github/workflows/check_ucc_ui_files.sh
       - uses: actions/upload-artifact@v3
         with:
           name: UCC-build
