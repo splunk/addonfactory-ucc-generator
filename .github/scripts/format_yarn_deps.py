@@ -2,7 +2,7 @@ import argparse
 import sys
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output-file", type=str, required=True)
     args = parser.parse_args()

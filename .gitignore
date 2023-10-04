@@ -34,3 +34,5 @@ output
 .gitmodules
 .pytest_cache/**
 site/
+**/events.pickle
+assets/

@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2021 Splunk Inc.
+  ~ Copyright 2023 Splunk Inc.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@
             __splunkd_partials__ = ${json_decode(splunkd)};
         </script>
 
-        <% page_path = "/static/app/" + app_name + "/js/build/${ta.name}_redirect_page.${ta.version}.js" %>
+        <% page_path = "/static/app/" + app_name + "/js/build/entry_page.js" %>
 
         <script src="${make_url(page_path)}"></script>
     </body>
