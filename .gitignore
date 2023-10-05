@@ -36,3 +36,8 @@ output
 site/
 **/events.pickle
 assets/
+Splunk_TA_Dynatrace/*
+Splunk_TA_Dynatrace_ucc/*
+demo_addon_for_splunk/
+demo_addon_for_splunk_already_exists/
+init_addon_for_ucc_package/

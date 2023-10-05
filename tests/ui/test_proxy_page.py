@@ -97,7 +97,7 @@ class TestProxyPage(UccTester):
         )
         proxy.proxy_enable.check()
         proxy.type.select("http")
-        proxy.host.set_value("1.1.1.1")
+        proxy.host.set_value("foobar")
         proxy.username.set_value("test")
         proxy.password.set_value("test")
         self.assert_util(
@@ -116,7 +116,7 @@ class TestProxyPage(UccTester):
             ucc_smartx_selenium_helper=ucc_smartx_selenium_helper,
             ucc_smartx_rest_helper=ucc_smartx_rest_helper,
         )
-        proxy.host.set_value("1.1.1.1")
+        proxy.host.set_value("foobar")
         proxy.port.set_value("test")
         self.assert_util(
             proxy.save,
@@ -136,7 +136,7 @@ class TestProxyPage(UccTester):
             ucc_smartx_selenium_helper=ucc_smartx_selenium_helper,
             ucc_smartx_rest_helper=ucc_smartx_rest_helper,
         )
-        proxy.host.set_value("1.1.1.1")
+        proxy.host.set_value("foobar")
         proxy.port.set_value("0")
         self.assert_util(
             proxy.save,
@@ -164,7 +164,7 @@ class TestProxyPage(UccTester):
         self.assert_util(msg, "Password is masked")
         proxy.proxy_enable.check()
         proxy.type.select("http")
-        proxy.host.set_value("abc")
+        proxy.host.set_value("foobar")
         proxy.port.set_value("655")
         proxy.username.set_value("test")
         proxy.password.set_value("test")
@@ -185,7 +185,7 @@ class TestProxyPage(UccTester):
             ucc_smartx_selenium_helper=ucc_smartx_selenium_helper,
             ucc_smartx_rest_helper=ucc_smartx_rest_helper,
         )
-        proxy.host.set_value("1.1.1.1")
+        proxy.host.set_value("foobar")
         proxy.port.set_value("65535")
         proxy.username.set_value("a" * 51)
         self.assert_util(
@@ -206,7 +206,7 @@ class TestProxyPage(UccTester):
             ucc_smartx_selenium_helper=ucc_smartx_selenium_helper,
             ucc_smartx_rest_helper=ucc_smartx_rest_helper,
         )
-        proxy.host.set_value("1.1.1.1")
+        proxy.host.set_value("foobar")
         proxy.port.set_value("65535")
         proxy.username.set_value("aaa")
         proxy.password.set_value("a" * 8193)
@@ -231,7 +231,7 @@ class TestProxyPage(UccTester):
         )
         proxy.proxy_enable.check()
         proxy.type.select("socks4")
-        proxy.host.set_value("1.1.1.1")
+        proxy.host.set_value("foobar")
         proxy.port.set_value("655")
         proxy.username.set_value("test")
         proxy.password.set_value("test")
@@ -245,8 +245,30 @@ class TestProxyPage(UccTester):
                 "proxy_port": "655",
                 "proxy_rdns": "1",
                 "proxy_type": "socks4",
-                "proxy_url": "1.1.1.1",
+                "proxy_url": "foobar",
                 "proxy_password": "test",
                 "proxy_username": "test",
             },
+        )
+
+    @pytest.mark.execute_enterprise_cloud_false
+    @pytest.mark.proxy
+    @pytest.mark.forwarder
+    def test_proxy_host_valid_input(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
+    ):
+        """
+        Verification of host throwing error msg when containing special characters
+        """
+        proxy = Proxy(
+            C.ADDON_NAME,
+            PROXY_URL,
+            ucc_smartx_selenium_helper=ucc_smartx_selenium_helper,
+            ucc_smartx_rest_helper=ucc_smartx_rest_helper,
+        )
+        proxy.host.set_value("abc$$")
+        self.assert_util(
+            proxy.save,
+            "Proxy Host should not have special characters",
+            left_args={"expect_error": True},
         )
