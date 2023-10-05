@@ -1,7 +1,7 @@
 import functools
 import json
 import os
-from typing import Dict
+from typing import Dict, Any
 
 import yaml
 
@@ -28,7 +28,7 @@ def get_testdata_file(file_name: str) -> str:
         return fp.read()
 
 
-def get_testdata(file_name: str) -> Dict:
+def get_testdata(file_name: str) -> Dict[str, Any]:
     config = get_testdata_file(file_name)
     if file_name.endswith(".json"):
         return json.loads(config)

@@ -15,7 +15,7 @@
 #
 import functools
 import json
-from typing import Optional
+from typing import Optional, Any, List, Dict
 
 import yaml
 
@@ -26,12 +26,7 @@ yaml_load = functools.partial(yaml.load, Loader=Loader)
 
 
 class GlobalConfig:
-    def __init__(self):
-        self._content = None
-        self._is_global_config_yaml = None
-        self._original_path = None
-
-    def parse(self, global_config_path: str, is_global_config_yaml: bool) -> None:
+    def __init__(self, global_config_path: str, is_global_config_yaml: bool) -> None:
         with open(global_config_path) as f_config:
             config_raw = f_config.read()
         self._content = (
@@ -40,32 +35,32 @@ class GlobalConfig:
         self._is_global_config_yaml = is_global_config_yaml
         self._original_path = global_config_path
 
-    def dump(self, path: str):
+    def dump(self, path: str) -> None:
         if self._is_global_config_yaml:
             utils.dump_yaml_config(self._content, path)
         else:
             utils.dump_json_config(self._content, path)
 
     @property
-    def content(self):
+    def content(self) -> Any:
         return self._content
 
     @property
-    def inputs(self):
+    def inputs(self) -> List[Any]:
         if "inputs" in self._content["pages"]:
             return self._content["pages"]["inputs"]["services"]
         return []
 
     @property
-    def tabs(self):
+    def tabs(self) -> List[Any]:
         return self._content["pages"]["configuration"]["tabs"]
 
     @property
-    def dashboard(self):
+    def dashboard(self) -> Dict[str, Any]:
         return self._content["pages"].get("dashboard")
 
     @property
-    def settings(self):
+    def settings(self) -> List[Any]:
         settings = []
         for tab in self.tabs:
             if "table" not in tab:
@@ -73,7 +68,7 @@ class GlobalConfig:
         return settings
 
     @property
-    def configs(self):
+    def configs(self) -> List[Any]:
         configs = []
         for tab in self.tabs:
             if "table" in tab:
@@ -81,11 +76,11 @@ class GlobalConfig:
         return configs
 
     @property
-    def alerts(self):
+    def alerts(self) -> List[Dict[str, Any]]:
         return self._content.get("alerts", [])
 
     @property
-    def meta(self):
+    def meta(self) -> Dict[str, str]:
         return self._content["meta"]
 
     @property
@@ -112,7 +107,7 @@ class GlobalConfig:
     def schema_version(self) -> Optional[str]:
         return self.meta.get("schemaVersion")
 
-    def update_schema_version(self, new_schema_version):
+    def update_schema_version(self, new_schema_version: str) -> None:
         self.meta["schemaVersion"] = new_schema_version
 
     def update_addon_version(self, version: str) -> None:

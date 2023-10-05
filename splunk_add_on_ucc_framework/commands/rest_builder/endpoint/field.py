@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
+from typing import Optional, Any
 
 from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import (
     indent,
@@ -31,7 +31,14 @@ class RestFieldBuilder:
     validator={validator}
 )"""
 
-    def __init__(self, name, required, encrypted, default, validator):
+    def __init__(
+        self,
+        name: str,
+        required: bool,
+        encrypted: bool,
+        default: Optional[Any],
+        validator: Optional[str],
+    ):
         self._name = name
         self._required = required
         self._encrypted = encrypted

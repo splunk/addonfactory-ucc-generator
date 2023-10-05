@@ -21,10 +21,10 @@ SERVER_CONF_FILE_NAME = "server.conf"
 
 
 class ServerConf:
-    def __init__(self):
+    def __init__(self) -> None:
         self._server_conf = conf_parser.TABConfigParser()
 
-    def create_default(self, conf_file_names: Sequence[str]):
+    def create_default(self, conf_file_names: Sequence[str]) -> None:
         self._server_conf.add_section("shclustering")
         for conf_file_name in conf_file_names:
             self._server_conf["shclustering"][

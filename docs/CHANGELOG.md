@@ -1,3 +1,10 @@
+# [5.30.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.29.0...v5.30.0) (2023-10-01)
+
+
+### Features
+
+* release v5.30.0 ([#848](https://github.com/splunk/addonfactory-ucc-generator/issues/848)) ([fb93601](https://github.com/splunk/addonfactory-ucc-generator/commit/fb93601573c1083bdb4cdffaea1df8ac00009db8)), closes [#846](https://github.com/splunk/addonfactory-ucc-generator/issues/846) [#847](https://github.com/splunk/addonfactory-ucc-generator/issues/847) [#849](https://github.com/splunk/addonfactory-ucc-generator/issues/849) [#850](https://github.com/splunk/addonfactory-ucc-generator/issues/850)
+
 # [5.29.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.28.6...v5.29.0) (2023-09-22)
 
 

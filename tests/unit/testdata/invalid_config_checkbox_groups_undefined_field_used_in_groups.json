@@ -1,0 +1,164 @@
+{
+    "pages": {
+        "configuration": {
+            "tabs": [
+                {
+                    "name": "logging",
+                    "entity": [
+                        {
+                            "type": "singleSelect",
+                            "label": "Log level",
+                            "options": {
+                                "disableSearch": true,
+                                "autoCompleteFields": [
+                                    {
+                                        "value": "DEBUG",
+                                        "label": "DEBUG"
+                                    },
+                                    {
+                                        "value": "INFO",
+                                        "label": "INFO"
+                                    },
+                                    {
+                                        "value": "WARNING",
+                                        "label": "WARNING"
+                                    },
+                                    {
+                                        "value": "ERROR",
+                                        "label": "ERROR"
+                                    },
+                                    {
+                                        "value": "CRITICAL",
+                                        "label": "CRITICAL"
+                                    }
+                                ]
+                            },
+                            "defaultValue": "INFO",
+                            "field": "loglevel"
+                        }
+                    ],
+                    "title": "Logging"
+                }
+            ],
+            "title": "Configuration",
+            "description": "Set up your add-on"
+        },
+        "inputs": {
+            "services": [
+                {
+                    "name": "example_input_one",
+                    "entity": [
+                        {
+                            "type": "checkboxGroup",
+                            "label": "Test checkboxGroup",
+                            "field": "test_checkbox_group",
+                            "options": {
+                                "groups": [
+                                    {
+                                        "label": "Collect",
+                                        "fields": [
+                                            "collectFolderCollaboration",
+                                            "collectFileMetadata",
+                                            "collectTasksAndComments"
+                                        ]
+                                    },
+                                    {
+                                        "label": "Collect2",
+                                        "options": {
+                                            "isExpandable": true
+                                        },
+                                        "fields": [
+                                            "collectFolderMetadata",
+                                            "undefined_field_foo"
+                                        ]
+                                    }
+                                ],
+                                "rows": [
+                                    {
+                                        "field": "collectFolderCollaboration",
+                                        "text": {
+                                            "defaultValue": 1200,
+                                            "required": false,
+                                            "validators": [
+                                                {
+                                                    "type": "number",
+                                                    "range": [1, 1200]
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "field": "collectFileMetadata",
+                                        "checkbox": {
+                                            "label": "Collect file metadata"
+                                        },
+                                        "text": {
+                                            "defaultValue": 1,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "collectTasksAndComments",
+                                        "checkbox": {
+                                            "label": "This is a very very long line",
+                                            "options": {
+                                                "enable": true
+                                            }
+                                        },
+                                        "text": {
+                                            "defaultValue": 1,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "collectFolderMetadata",
+                                        "checkbox": {
+                                            "label": "Collect folder metadata",
+                                            "options": {
+                                                "enable": true
+                                            }
+                                        },
+                                        "text": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "title": "Example Input One"
+                }
+            ],
+            "title": "Inputs",
+            "description": "Manage your data inputs",
+            "table": {
+                "actions": [
+                    "edit",
+                    "enable",
+                    "delete",
+                    "clone"
+                ],
+                "header": [
+                    {
+                        "label": "Name",
+                        "field": "name"
+                    }
+                ],
+                "moreInfo": [
+                    {
+                        "label": "Name",
+                        "field": "name"
+                    }
+                ]
+            }
+        }
+    },
+    "meta": {
+        "name": "Splunk_TA_UCCExample",
+        "restRoot": "splunk_ta_uccexample",
+        "version": "1.0.0",
+        "displayName": "Splunk UCC test Add-on",
+        "schemaVersion": "0.0.3"
+    }
+}

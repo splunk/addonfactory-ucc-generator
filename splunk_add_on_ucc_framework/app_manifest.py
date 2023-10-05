@@ -15,7 +15,7 @@
 #
 
 import json
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 
 APP_MANIFEST_SCHEMA_VERSION = "2.0.0"
 APP_MANIFEST_SUPPORTED_DEPLOYMENTS = frozenset(
@@ -43,11 +43,19 @@ class AppManifestFormatException(Exception):
 
 
 class AppManifest:
-    def __init__(self):
-        self._manifest = None
+    def __init__(self, content: str) -> None:
+        try:
+            self._manifest = json.loads(content)
+        except json.JSONDecodeError:
+            raise AppManifestFormatException(
+                "Could not parse app.manifest, not a correct JSON file"
+            )
 
     def get_addon_name(self) -> str:
         return self._manifest["info"]["id"]["name"]
+
+    def get_addon_version(self) -> str:
+        return self._manifest["info"]["id"]["version"]
 
     def get_title(self) -> str:
         return self._manifest["info"]["title"]
@@ -74,21 +82,13 @@ class AppManifest:
         return self._manifest.get("targetWorkloads")
 
     @property
-    def manifest(self) -> Dict:
+    def manifest(self) -> Dict[str, Any]:
         return self._manifest
-
-    def read(self, content: str) -> None:
-        try:
-            self._manifest = json.loads(content)
-        except json.JSONDecodeError:
-            raise AppManifestFormatException(
-                "Could not parse app.manifest, not a correct JSON file"
-            )
 
     def update_addon_version(self, version: str) -> None:
         self._manifest["info"]["id"]["version"] = version
 
-    def validate(self):
+    def validate(self) -> None:
         schema_version = self._get_schema_version()
         if schema_version != APP_MANIFEST_SCHEMA_VERSION:
             raise AppManifestFormatException(

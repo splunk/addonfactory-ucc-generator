@@ -91,7 +91,7 @@ def test_generate_alert_action(tmp_path):
                 }
             ],
         },
-        package_path=tmp_path,
+        package_path=str(tmp_path),
     )
     py_gen.handle()
 

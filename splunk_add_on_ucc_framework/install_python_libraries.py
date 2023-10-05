@@ -62,7 +62,7 @@ def install_python_libraries(
     ucc_lib_target: str,
     python_binary_name: str,
     includes_ui: bool = False,
-):
+) -> None:
     path_to_requirements_file = os.path.join(source_path, "lib", "requirements.txt")
     if os.path.isfile(path_to_requirements_file):
         logger.info(f"Installing requirements from {path_to_requirements_file}")
@@ -105,7 +105,7 @@ def install_libraries(
     requirements_file_path: str,
     installation_path: str,
     installer: str,
-):
+) -> None:
     """
     Upgrades `pip` version to the latest one and installs requirements to the
     specified path.
@@ -131,7 +131,7 @@ def install_libraries(
 
 def remove_package_from_installed_path(
     installation_path: str, package_names: Sequence[str]
-):
+) -> None:
     p = Path(installation_path)
     for package_name in package_names:
         for o in p.glob(f"{package_name}*"):
@@ -140,7 +140,7 @@ def remove_package_from_installed_path(
                 shutil.rmtree(o)
 
 
-def remove_execute_bit(installation_path: str):
+def remove_execute_bit(installation_path: str) -> None:
     p = Path(installation_path)
     no_user_exec = ~stat.S_IEXEC
     no_group_exec = ~stat.S_IXGRP

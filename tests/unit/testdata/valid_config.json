@@ -91,7 +91,8 @@
                             "help": "This is an example radio button for the account entity",
                             "required": true,
                             "options": {
-                                "items": [{
+                                "items": [
+                                    {
                                         "value": "yes",
                                         "label": "Yes"
                                     },
@@ -110,7 +111,8 @@
                             "help": "This is an example multipleSelect for account entity",
                             "required": true,
                             "options": {
-                                "items": [{
+                                "items": [
+                                    {
                                         "value": "one",
                                         "label": "Option One"
                                     },
@@ -206,7 +208,7 @@
                                 "rowsMax": 15
                             },
                             "required": true
-                        },             
+                        },
                         {
                             "type": "file",
                             "label": "Upload File",
@@ -214,7 +216,10 @@
                             "field": "service_account",
                             "options": {
                                 "fileSupportMessage": "Here is the support message",
-                                "supportedFileTypes": ["json", "pem"]
+                                "supportedFileTypes": [
+                                    "json",
+                                    "pem"
+                                ]
                             },
                             "encrypted": true,
                             "required": true
@@ -485,7 +490,8 @@
                             "help": "This is an example radio button for the input one entity",
                             "required": false,
                             "options": {
-                                "items": [{
+                                "items": [
+                                    {
                                         "value": "yes",
                                         "label": "Yes"
                                     },
@@ -779,7 +785,8 @@
                             "help": "This is an example multipleSelect for input two entity",
                             "required": true,
                             "options": {
-                                "items": [{
+                                "items": [
+                                    {
                                         "value": "one",
                                         "label": "Option One"
                                     },
@@ -804,7 +811,8 @@
                             "help": "This is an example radio button for the input two entity",
                             "required": false,
                             "options": {
-                                "items": [{
+                                "items": [
+                                    {
                                         "value": "yes",
                                         "label": "Yes"
                                     },
@@ -859,6 +867,263 @@
                             "options": {
                                 "text": "Help Link",
                                 "link": "https://docs.splunk.com/Documentation"
+                            }
+                        },
+                        {
+                            "type": "checkboxGroup",
+                            "label": "Two groups",
+                            "field": "api1",
+                            "options": {
+                                "groups": [
+                                    {
+                                        "label": "Collect",
+                                        "fields": [
+                                            "collectFolderCollaboration",
+                                            "collectFileMetadata",
+                                            "collectTasksAndComments"
+                                        ]
+                                    },
+                                    {
+                                        "label": "Collect2",
+                                        "options": {
+                                            "isExpandable": true
+                                        },
+                                        "fields": ["collectFolderMetadata"]
+                                    }
+                                ],
+                                "rows": [
+                                    {
+                                        "field": "collectFolderCollaboration",
+                                        "text": {
+                                            "defaultValue": 1200,
+                                            "required": false,
+                                            "validators": [
+                                                {
+                                                    "type": "number",
+                                                    "range": [1, 1200]
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "field": "collectFileMetadata",
+                                        "checkbox": {
+                                            "label": "Collect file metadata"
+                                        },
+                                        "text": {
+                                            "defaultValue": 1,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "collectTasksAndComments",
+                                        "checkbox": {
+                                            "label": "This is a very very long line",
+                                            "options": {
+                                                "enable": true
+                                            }
+                                        },
+                                        "text": {
+                                            "defaultValue": 1,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "collectFolderMetadata",
+                                        "checkbox": {
+                                            "label": "Collect folder metadata",
+                                            "options": {
+                                                "enable": true
+                                            }
+                                        },
+                                        "text": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "checkboxGroup",
+                            "label": "No groups",
+                            "field": "api2",
+                            "options": {
+                                "rows": [
+                                    {
+                                        "field": "collectFolderMetadata",
+                                        "checkbox": {
+                                            "label": "Collect folder metadata",
+                                            "options": {
+                                                "enable": true
+                                            }
+                                        },
+                                        "text": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "collectFolderCollaboration",
+                                        "checkbox": {
+                                            "label": "Collect folder collaboration"
+                                        },
+                                        "text": {
+                                            "defaultValue": 1200,
+                                            "required": false,
+                                            "validators": [
+                                                {
+                                                    "type": "number",
+                                                    "range": [1, 1200]
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "field": "collectFileMetadata",
+                                        "checkbox": {
+                                            "label": "Collect file metadata"
+                                        },
+                                        "text": {
+                                            "defaultValue": 1,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "collectTasksAndComments",
+                                        "checkbox": {
+                                            "label": "Collect tasks and comments"
+                                        },
+                                        "text": {
+                                            "defaultValue": 1,
+                                            "required": true
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "checkboxGroup",
+                            "label": "Mixed",
+                            "field": "api3",
+                            "options": {
+                                "groups": [
+                                    {
+                                        "label": "Group 1",
+                                        "options": {
+                                            "isExpandable": true,
+                                            "expand": true
+                                        },
+                                        "fields": ["collectFolderCollaboration"]
+                                    },
+                                    {
+                                        "label": "Group 3",
+                                        "options": {
+                                            "isExpandable": true,
+                                            "expand": true
+                                        },
+                                        "fields": ["collectFolderMetadata"]
+                                    }
+                                ],
+                                "rows": [
+                                    {
+                                        "field": "collectFolderCollaboration",
+                                        "checkbox": {
+                                            "label": "Collect folder collaboration",
+                                            "options": {
+                                                "enable": true
+                                            }
+                                        },
+                                        "text": {
+                                            "defaultValue": 1200,
+                                            "required": false
+                                        }
+                                    },
+                                    {
+                                        "field": "collectFileMetadata",
+                                        "checkbox": {
+                                            "label": "Collect file metadata",
+                                            "options": {
+                                                "enable": true
+                                            }
+                                        },
+                                        "text": {
+                                            "defaultValue": 1,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "collectTasksAndComments",
+                                        "checkbox": {
+                                            "label": "Collect tasks and comments",
+                                            "options": {
+                                                "enable": true
+                                            }
+                                        },
+                                        "text": {
+                                            "defaultValue": 1,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "collectFolderMetadata",
+                                        "checkbox": {
+                                            "label": "Collect folder metadata",
+                                            "options": {
+                                                "enable": true
+                                            }
+                                        },
+                                        "text": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "field223",
+                                        "checkbox": {
+                                            "label": "Required field",
+                                            "options": {
+                                                "enable": true
+                                            }
+                                        },
+                                        "text": {
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "field23",
+                                        "checkbox": {
+                                            "label": "No more 2 characters",
+                                            "options": {
+                                                "enable": true
+                                            }
+                                        },
+                                        "text": {
+                                            "validators": [
+                                                {
+                                                    "type": "string",
+                                                    "minLength": 0,
+                                                    "maxLength": 2
+                                                }
+                                            ],
+                                            "defaultValue": "aa"
+                                        }
+                                    },
+                                    {
+                                        "field": "160validation",
+                                        "checkbox": {
+                                            "label": "from 1 to 60 validation"
+                                        },
+                                        "text": {
+                                            "validators": [
+                                                {
+                                                    "type": "number",
+                                                    "range": [1, 60]
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
                             }
                         }
                     ],

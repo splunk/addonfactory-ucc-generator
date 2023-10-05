@@ -40,23 +40,6 @@ class TestLoggingPage(UccTester):
         self.assert_util(list(logging.log_level.list_of_values()), expected_list)
 
     @pytest.mark.logging
-    @pytest.mark.xfail
-    def test_logging_required_field_log_level(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, reset_configuration
-    ):
-        logging = Logging(
-            C.ADDON_NAME,
-            ucc_smartx_selenium_helper=ucc_smartx_selenium_helper,
-            ucc_smartx_rest_helper=ucc_smartx_rest_helper,
-        )
-        logging.log_level.cancel_selected_value()
-        self.assert_util(
-            logging.save,
-            "Field Log level is required",
-            left_args={"expect_error": True},
-        )
-
-    @pytest.mark.logging
     def test_logging_select_random_log_level(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, reset_configuration
     ):

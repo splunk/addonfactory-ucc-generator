@@ -6,8 +6,7 @@ from tests.unit.helpers import get_testdata_file
 
 def _get_manifest(file_name: str) -> app_manifest.AppManifest:
     content = get_testdata_file(file_name)
-    manifest = app_manifest.AppManifest()
-    manifest.read(content)
+    manifest = app_manifest.AppManifest(content)
     return manifest
 
 
@@ -27,6 +26,11 @@ def test_read_with_comments():
 def test_get_addon_name(app_manifest_correct):
     expected_addon_name = "Splunk_TA_UCCExample"
     assert expected_addon_name == app_manifest_correct.get_addon_name()
+
+
+def test_get_addon_version(app_manifest_correct):
+    expected_addon_version = "7.0.1"
+    assert expected_addon_version == app_manifest_correct.get_addon_version()
 
 
 def test_get_title(app_manifest_correct):

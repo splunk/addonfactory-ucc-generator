@@ -22,7 +22,12 @@ __all__ = [
     "indent",
 ]
 
-from typing import List, Sequence
+from typing import Optional, List, TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.field import (
+        RestFieldBuilder,
+    )
 
 
 class RestEntityBuilder:
@@ -41,40 +46,38 @@ field.RestField(
 )
 """
 
-    def __init__(self, name, fields, **kwargs):
+    def __init__(
+        self, name: Optional[str], fields: List["RestFieldBuilder"], **kwargs: Any
+    ) -> None:
         self._name = name
         self._fields = fields
         self._conf_name = kwargs.get("conf_name")
 
     @property
-    def name(self):
+    def name(self) -> Optional[str]:
         return self._name
 
     @property
-    def name_spec(self):
+    def name_spec(self) -> Optional[str]:
         raise NotImplementedError()
 
     @property
-    def name_default(self):
+    def name_rh(self) -> str:
         raise NotImplementedError()
 
-    @property
-    def name_rh(self):
-        raise NotImplementedError()
-
-    def generate_spec(self):
+    def generate_spec(self) -> str:
         title = self._title_template.format(self.name_spec)
         lines = [field.generate_spec() for field in self._fields]
         lines.insert(0, title)
         return "\n".join(lines)
 
-    def generate_conf_with_default_values(self):
+    def generate_conf_with_default_values(self) -> str:
         title = self._title_template.format(self.name_spec)
         lines = [field.generate_conf_with_default_value() for field in self._fields]
         lines.insert(0, title)
         return "\n".join(lines)
 
-    def generate_rh(self):
+    def generate_rh(self) -> str:
         fields = []
         for field in self._fields:
             field_line = field.generate_rh()
@@ -96,61 +99,67 @@ field.RestField(
 
 
 class RestEndpointBuilder:
-    def __init__(self, name, namespace, **kwargs):
+    def __init__(self, name: Optional[str], namespace: str, **kwargs: str):
         self._name = name
         self._namespace = namespace
-        self._entities = []
-        self._conf_name = (
-            kwargs.get("conf_name")
-            if kwargs.get("conf_name") is not None
-            else self.name.lower()
-        )
-        if kwargs.get("rest_handler_name") is not None:
-            self._rest_handler_name = kwargs.get("rest_handler_name")
+        self._entities: List[RestEntityBuilder] = []
+        conf_name = kwargs.get("conf_name")
+        if conf_name is not None:
+            self._conf_name = conf_name
+        else:
+            if self._name is None:
+                raise ValueError(
+                    "conf_name needs to be provided or name should not be None"
+                )
+            else:
+                self._conf_name = self.name.lower()
+        rest_handler_name = kwargs.get("rest_handler_name")
+        if rest_handler_name is not None:
+            self._rest_handler_name = rest_handler_name
         else:
             self._rest_handler_name = f"{self._namespace}_rh_{self._name}"
         self._rest_handler_module = kwargs.get("rest_handler_module")
         self._rest_handler_class = kwargs.get("rest_handler_class")
 
     @property
-    def name(self):
+    def name(self) -> str:
         return f"{self._namespace}_{self._name}"
 
     @property
-    def namespace(self):
+    def namespace(self) -> str:
         return self._namespace
 
     @property
-    def conf_name(self):
+    def conf_name(self) -> str:
         return self._conf_name
 
     @property
-    def rh_name(self):
+    def rh_name(self) -> str:
         return self._rest_handler_name
 
     @property
-    def rh_module(self):
+    def rh_module(self) -> Optional[str]:
         return self._rest_handler_module
 
     @property
-    def rh_class(self):
+    def rh_class(self) -> Optional[str]:
         return self._rest_handler_class
 
     @property
-    def entities(self):
+    def entities(self) -> List[RestEntityBuilder]:
         return self._entities
 
-    def add_entity(self, entity):
+    def add_entity(self, entity: RestEntityBuilder) -> None:
         self._entities.append(entity)
 
     def actions(self) -> List[str]:
         raise NotImplementedError()
 
-    def generate_spec(self):
+    def generate_spec(self) -> str:
         specs = [entity.generate_spec() for entity in self._entities]
         return "\n\n".join(specs)
 
-    def generate_conf_with_default_values(self):
+    def generate_conf_with_default_values(self) -> str:
         specs = [
             entity.generate_conf_with_default_values() for entity in self._entities
         ]
@@ -160,19 +169,20 @@ class RestEndpointBuilder:
         raise NotImplementedError()
 
 
-def quote_string(value) -> str:
+def quote_string(value: Optional[str]) -> Optional[str]:
     """
     Quote a string
     :param value:
     :return:
     """
+
     if isinstance(value, str):
         return "'%s'" % value
     else:
         return value
 
 
-def indent(lines: Sequence[str], spaces: int = 1) -> str:
+def indent(lines: Optional[str], spaces: int = 1) -> str:
     """
     Indent code block.
 
@@ -184,9 +194,9 @@ def indent(lines: Sequence[str], spaces: int = 1) -> str:
     string_io = StringIO(str(lines))
     indentation = spaces * 4
     prefix = " " * indentation
-    lines = []
+    result_lines = []
     for line in string_io:
         if line != "\n":
             line = prefix + line
-        lines.append(line)
-    return "".join(lines)
+        result_lines.append(line)
+    return "".join(result_lines)

@@ -15,6 +15,7 @@
 #
 
 import copy
+from typing import Any, Dict, List
 
 mapping_keys = {
     "activeResponse": "active_response",
@@ -36,14 +37,14 @@ mapping_values = {
 }
 
 
-def convert_list_to_dict(value_list):
+def convert_list_to_dict(value_list: List[Any]) -> Dict[str, Any]:
     return_list = {}
     for each_dict in value_list:
         return_list[each_dict["label"]] = each_dict["value"]
     return return_list
 
 
-def transform_params(parameter_list):
+def transform_params(parameter_list: List[Any]) -> None:
     for param in parameter_list:
         if param["format_type"] in ["dropdownlist", "radio"]:
             options = param.pop("options")
@@ -78,7 +79,7 @@ def transform_params(parameter_list):
                     param["ctrl_props"]["latest"] = latest_time
 
 
-def iterdict(dictionary, result):
+def iterdict(dictionary: Dict[str, Any], result: Dict[str, Any]) -> None:
     """
     This function replaces key and value with the ones required by add-on alert builder
     """
@@ -103,12 +104,14 @@ def iterdict(dictionary, result):
                 result[mapped_key] = mapping_values[result[mapped_key]]
 
 
-def normalize(schema_content, short_name):
+def normalize(
+    original_schema_content: List[Dict[str, Any]], short_name: str
+) -> Dict[str, Any]:
     """
     Process the globalConfig alert schema to generate structure required by add-on alert generator
     """
     schema_content = {
-        "alerts": schema_content,
+        "alerts": original_schema_content,
     }
     result = copy.deepcopy(schema_content)
     iterdict(schema_content, result)
