@@ -347,7 +347,7 @@ jobs:
           gpg_private_key: ${{ secrets.SA_GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.SA_GPG_PASSPHRASE }}
           extra_plugins: |
-            @google/semantic-release-replace-plugin
+            semantic-release-replace-plugin
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
       - if: ${{ steps.semantic.outputs.new_release_published == 'true' }}
