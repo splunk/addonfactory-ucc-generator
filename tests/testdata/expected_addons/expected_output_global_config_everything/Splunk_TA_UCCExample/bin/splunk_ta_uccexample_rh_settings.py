@@ -34,9 +34,14 @@ fields_proxy = [
         required=False,
         encrypted=False,
         default=None,
-        validator=validator.String(
-            max_len=4096, 
-            min_len=0, 
+        validator=validator.AllOf(
+            validator.String(
+                max_len=4096, 
+                min_len=0, 
+            ), 
+            validator.Pattern(
+                regex=r"""^[a-zA-Z]\w*$""", 
+            )
         )
     ), 
     field.RestField(
