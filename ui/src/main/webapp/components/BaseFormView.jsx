@@ -264,6 +264,15 @@ class BaseFormView extends PureComponent {
                     } else if (typeof e?.options?.disableonEdit !== 'undefined') {
                         tempEntity.disabled = e.options.disableonEdit;
                     }
+                    if (e.type === 'file') {
+                        /* 
+                         adding example name as we want the possibility to remove this file
+                         not forcing value addition as if value is encrypted it is shared as
+                         string ie. ***** and it is considered a valid default value
+                         if value is not encrypted it is pushed correctly along with this name
+                        */
+                        tempEntity.fileNameToDisplay = 'Previous File';
+                    }
                     temState[e.field] = tempEntity;
                 } else if (props.mode === MODE_CLONE) {
                     tempEntity.value =
@@ -272,6 +281,15 @@ class BaseFormView extends PureComponent {
                         typeof e?.options?.display !== 'undefined' ? e.options.display : true;
                     tempEntity.error = false;
                     tempEntity.disabled = false;
+                    if (e.type === 'file') {
+                        /* 
+                         adding example name as we want the possibility to remove this file
+                         not forcing value addition as if value is encrypted it is shared as
+                         string ie. ***** and it is considered a valid default value
+                         if value is not encrypted it is pushed correctly along with this name
+                        */
+                        tempEntity.fileNameToDisplay = 'Previous File';
+                    }
                     temState[e.field] = tempEntity;
                 } else if (props.mode === MODE_CONFIG) {
                     e.defaultValue = typeof e.defaultValue !== 'undefined' ? e.defaultValue : null;
@@ -1060,6 +1078,7 @@ class BaseFormView extends PureComponent {
                                 disabled={temState.disabled}
                                 markdownMessage={temState.markdownMessage}
                                 dependencyValues={temState.dependencyValues || null}
+                                fileNameToDisplay={temState.fileNameToDisplay || null}
                             />
                         );
                     })}
