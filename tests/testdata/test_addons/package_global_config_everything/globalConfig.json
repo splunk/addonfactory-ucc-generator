@@ -233,6 +233,11 @@
                                     "errorMsg": "Max host length is 4096",
                                     "minLength": 0,
                                     "maxLength": 4096
+                                },
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Proxy Host should not have special characters",
+                                    "pattern": "^[a-zA-Z]\\w*$"
                                 }
                             ],
                             "field": "proxy_url"
@@ -1131,7 +1136,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.29.0Rafd1fe38",
+        "version": "5.29.0R1987950d",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.3"
     }

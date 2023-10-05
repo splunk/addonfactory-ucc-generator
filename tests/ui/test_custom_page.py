@@ -58,7 +58,7 @@ class TestCustomPage(UccTester):
             custom.backend_conf.get_stanza,
             {
                 "disabled": False,
-                "testNumber": "7",
+                "testNumber": "1",
                 "testRegex": "test_rex",
                 "testString": "test_str",
                 "testEmail": "test@a.b",
