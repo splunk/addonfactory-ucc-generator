@@ -24,7 +24,7 @@
     [
       "@semantic-release/commit-analyzer",
       [
-        "@google/semantic-release-replace-plugin",
+        "semantic-release-replace-plugin",
         {
           "replacements": [
             {
@@ -79,6 +79,12 @@
           "message": "chore(release): ${nextRelease.version}\n\n${nextRelease.notes}",
         },
       ],
-      ["@semantic-release/github", { "assets": ["NOTICE", "pyproject.toml"] }],
+      [
+        "@semantic-release/github",
+        {
+          "assets": ["NOTICE", "pyproject.toml"],
+          "successComment": false
+        }
+      ],
     ],
 }
