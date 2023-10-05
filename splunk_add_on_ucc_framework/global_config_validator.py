@@ -33,8 +33,6 @@ class GlobalConfigValidatorException(Exception):
 class GlobalConfigValidator:
     """
     GlobalConfigValidator implements different validation for globalConfig file.
-    Simple validation should go to JSON schema in
-    https://github.com/splunk/addonfactory-ucc-base-ui repository.
     Custom validation should be implemented here.
     """
 

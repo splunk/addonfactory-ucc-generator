@@ -218,6 +218,7 @@ jobs:
     if: |
       github.base_ref == 'main' ||
       github.ref_name == 'main' ||
+      github.ref_name == 'develop' ||
       contains(github.event.pull_request.labels.*.name, 'run-ui-tests')
     runs-on: ubuntu-latest
     permissions:
@@ -347,7 +348,7 @@ jobs:
           gpg_private_key: ${{ secrets.SA_GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.SA_GPG_PASSPHRASE }}
           extra_plugins: |
-            @google/semantic-release-replace-plugin
+            semantic-release-replace-plugin
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
       - if: ${{ steps.semantic.outputs.new_release_published == 'true' }}
