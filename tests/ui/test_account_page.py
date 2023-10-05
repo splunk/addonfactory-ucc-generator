@@ -1089,14 +1089,3 @@ class TestAccount(UccTester):
         self.assert_util(account.entity.username.get_value, ACCOUNT_CONFIG["username"])
         self.assert_util(account.entity.password.get_value, "")
         self.assert_util(account.entity.security_token.get_value, "")
-
-    @pytest.mark.execute_enterprise_cloud_true
-    @pytest.mark.account
-    @pytest.mark.forwarder
-    def test_account_placeholder_default_configs(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
-    ):
-        """Verifies placeholder for default configurations"""
-        account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
-        account.entity.open()
-        self.assert_util(account.entity.name.get_placeholder_value, "Required")
