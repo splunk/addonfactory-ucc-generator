@@ -9,7 +9,7 @@ const files = process.argv
 const command = process.argv[2];
 
 // Construct the command
-const commandWithFiles = `yarn ${command} ${files}`;
+const commandWithFiles = `yarn run --binaries-only ${command} ${files}`;
 
 // Execute the command
 exec(commandWithFiles, (error, stdout, stderr) => {

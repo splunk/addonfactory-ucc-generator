@@ -55,7 +55,7 @@ repos:
         files: ^ui/.*\.(js|ts|jsx|tsx)$
     -   id: ui-typecheck
         name: UI typecheck
-        entry: bash -c 'cd ui && exec yarn tsc --noEmit'
+        entry: bash -c 'cd ui && exec yarn run --binaries-only tsc --noEmit'
         language: system
         pass_filenames: false
         files: ^ui/.*\.(js|ts|jsx|tsx)$
