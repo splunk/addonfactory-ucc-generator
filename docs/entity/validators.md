@@ -1,7 +1,7 @@
 ### Common Properties
 
 - `type`<span class="required-asterisk">*</span> - To specify which validator type to use.
-- `errorMsg`<span class="required-asterisk">*</span> - UCC provides [default error messages](https://github.com/splunk/addonfactory-ucc-base-ui/blob/main/src/main/webapp/constants/messageDict.js). Using this attribute, A custom error message can be displayed.
+- `errorMsg`<span class="required-asterisk">*</span> - UCC provides [default error messages](https://github.com/splunk/addonfactory-ucc-generator/blob/main/ui/src/main/webapp/constants/messageDict.ts). Using this attribute, A custom error message can be displayed.
 
 ### String
 
@@ -57,7 +57,7 @@ Example usage below:
 
 No parameters are needed.
 
-It's using a regexp internally this [regex](https://github.com/splunk/addonfactory-ucc-base-ui/blob/main/src/main/webapp/constants/preDefinedRegex.js) for checking whether a field value is a URL or not.
+It's using a regexp internally this [regex](https://github.com/splunk/addonfactory-ucc-generator/blob/main/ui/src/main/webapp/constants/preDefinedRegex.ts) for checking whether a field value is a URL or not.
 
 ### Email
 
@@ -69,11 +69,11 @@ It's using a regexp internally suggested by [WHATWG](https://html.spec.whatwg.or
 
 No parameters are needed.
 
-Internally, it checks the IPV4 address using this [regex](https://github.com/splunk/addonfactory-ucc-base-ui/blob/main/src/main/webapp/constants/preDefinedRegex.js).
+Internally, it checks the IPV4 address using this [regex](https://github.com/splunk/addonfactory-ucc-generator/blob/main/ui/src/main/webapp/constants/preDefinedRegex.ts).
 
 ### Date 
 
 No parameters are needed.
 
-It is validated whether or not the field's value is a date in [ISO 8601](https://www.w3.org/TR/1998/NOTE-datetime-19980827) format.
+It is validated whether the field's value is a date in [ISO 8601](https://www.w3.org/TR/1998/NOTE-datetime-19980827) format.
 It is using the regex from [moment.js](https://github.com/moment/moment/blob/2.17.1/moment.js#L1980).

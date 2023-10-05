@@ -17,8 +17,7 @@ as well.
 UCC stands for Universal Configuration Console. The purpose of having a
 framework for add-on generation is to simplify the process of add-on
 creation for the developers. UCC 5 uses [SplunkUI](https://splunkui.splunk.com/) 
-which is a new UI framework based on React. UCC UI repository can be found
-[here](https://github.com/splunk/addonfactory-ucc-base-ui).
+which is a new UI framework based on React. UCC UI repository can be found in the `ui` folder.
 
 UCC-based add-ons are being powered by another Splunk libraries:
 [`solnlib`](https://github.com/splunk/addonfactory-solutions-library-python) and
