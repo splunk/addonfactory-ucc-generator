@@ -41,3 +41,21 @@ repos:
     hooks:
     -   id: flake8
         exclude: (^splunk_add_on_ucc_framework/commands/init_template/|^splunk_add_on_ucc_framework/commands/imports.py)
+-   repo: local
+    hooks:
+    -   id: ui-prettify
+        name: UI code prettifier
+        entry: bash -c 'cd ui && exec node code-checks.js prettify --write "$@"'
+        language: system
+        files: ^ui/.*\.(js|ts|jsx|tsx|css)$
+    -   id: ui-linting
+        name: UI linting
+        entry: bash -c 'cd ui && exec node code-checks.js eslint --fix "$@"'
+        language: system
+        files: ^ui/.*\.(js|ts|jsx|tsx)$
+    -   id: ui-typecheck
+        name: UI typecheck
+        entry: bash -c 'cd ui && exec yarn tsc --noEmit'
+        language: system
+        pass_filenames: false
+        files: ^ui/.*\.(js|ts|jsx|tsx)$
