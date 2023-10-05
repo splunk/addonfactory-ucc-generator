@@ -218,6 +218,7 @@ jobs:
     if: |
       github.base_ref == 'main' ||
       github.ref_name == 'main' ||
+      github.ref_name == 'develop' ||
       contains(github.event.pull_request.labels.*.name, 'run-ui-tests')
     runs-on: ubuntu-latest
     permissions:
