@@ -13,6 +13,7 @@ jobs:
       run:
         working-directory: ui
     steps:
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ inputs.node-version }}
@@ -21,7 +22,6 @@ jobs:
         with:
           node-version: ${{ inputs.node-version }}
       - name: Code linting
-        working-directory: ./ui
         run: yarn run lint
         shell: bash
       - name: Unit test
