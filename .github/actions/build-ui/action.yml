@@ -15,6 +15,9 @@ runs:
       uses: ./.github/actions/cached-ui-deps
       with:
         node-version: ${{ inputs.node-version }}
+    - name: cd /ui
+      run: cd ui
+      shell: bash
     - name: Code linting
       run: yarn run lint
       shell: bash
