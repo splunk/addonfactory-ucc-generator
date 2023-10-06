@@ -9,7 +9,7 @@ The following 3rd-party software packages may be used by or distributed with add
 
 Date generated: 2023-10-6
 
-Revision ID: 76dd699435c1b14a40ad459fe10c00aaa551594c
+Revision ID: 3600d8be7ad0b838d9e66de4eee984735dc0f90e
 
 ================================================================================
 ================================================================================
@@ -791,7 +791,7 @@ SOFTWARE.
 
 
 --------------------------------------------------------------------------------
-Package Title: @jridgewell/sourcemap-codec (1.4.14)
+Package Title: @jridgewell/sourcemap-codec (1.4.15)
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -823,7 +823,7 @@ THE SOFTWARE.
 
 
 --------------------------------------------------------------------------------
-Package Title: @jridgewell/sourcemap-codec (1.4.15)
+Package Title: @jridgewell/sourcemap-codec (1.4.14)
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
