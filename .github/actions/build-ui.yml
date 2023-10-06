@@ -1,0 +1,31 @@
+name: "Build UI"
+description: "building UI and uploading dist as artefact"
+inputs:
+  node-version:
+    description: "Node version"
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.node-version }}
+    - name: install deps
+      uses: ./.github/actions/cached-ui-deps.yml
+      with:
+        node-version: ${{ inputs.node-version }}
+    - name: Code linting
+      run: yarn run lint
+    - name: Unit test
+      run: yarn run test
+    - name: Build UCC UI
+      run: yarn run build
+    - name: List deps into dependencies.txt
+      run: yarn list --prod --depth 0 | python ../.github/scripts/format_yarn_deps.py --output-file=dist/package/appserver/static/js/dependencies.txt
+    - name: Upload dist with name UCC-UI-build
+      uses: actions/upload-artifact@v3
+      with:
+        name: UCC-UI-build
+        path: ui/dist/

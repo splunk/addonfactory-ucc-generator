@@ -77,7 +77,7 @@ jobs:
           - "18"
     steps:
       - name: Build UCC UI
-        uses: ./.github/workflows/ui.yml
+        uses: ./.github/actions/build-ui.yml
         with:
           node-version: ${{ matrix.node-version }}
 
