@@ -76,37 +76,11 @@ jobs:
         node-version:
           - "18"
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.7"
-      - uses: actions/setup-node@v3
+      - name: Build UCC UI
+        uses: ./.github/workflows/ui.yml
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm install --global yarn
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
-      - uses: actions/cache@v3
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('ui/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-${{ matrix.node-version }}
-      - name: Build UCC UI
-        run: |
-          cd ui/
-          yarn
-          yarn run lint
-          yarn run test
-          yarn run build
-          yarn list --prod --depth 0 | python ../.github/scripts/format_yarn_deps.py --output-file=dist/package/appserver/static/js/dependencies.txt
-          cd ../
-      - uses: actions/upload-artifact@v3
-        with:
-          name: UCC-UI-build
-          path: ui/dist/
+
 
   build:
     needs:

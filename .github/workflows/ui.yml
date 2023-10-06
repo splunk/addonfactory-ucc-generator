@@ -1,0 +1,49 @@
+name: "UI"
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        required: true
+        type: string
+
+jobs:
+  install-yarn:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ inputs.node-version }}
+      - uses: ./.github/actions/cached-ui-deps.yml
+        with:
+          node-version: ${{ inputs.node-version }}
+
+  lint-ui:
+    runs-on: ubuntu-latest
+    needs:
+      - install-yarn
+    steps:
+      - name: Code linting
+        run: yarn run lint
+
+  test-ui:
+    runs-on: ubuntu-latest
+    needs:
+      - install-yarn
+    steps:
+      - name: Unit test
+        run: yarn run test
+
+  build-ui:
+    runs-on: ubuntu-latest
+    needs:
+      - install-yarn
+    steps:
+      - name: Build UCC UI
+        run: |
+          yarn run build
+          yarn list --prod --depth 0 | python ../.github/scripts/format_yarn_deps.py --output-file=dist/package/appserver/static/js/dependencies.txt
+      - uses: actions/upload-artifact@v3
+        with:
+          name: UCC-UI-build
+          path: ui/dist/
