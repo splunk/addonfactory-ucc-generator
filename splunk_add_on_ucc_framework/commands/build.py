@@ -321,12 +321,9 @@ def summary_report(
             ta_name: str,
             config_path: Optional[str] = None,
             output_directory: Optional[str] = None,
+            verbose_report: Optional[str] = None
 ):
 
-
-    print(source)
-    print(ta_name)
-    print(output_directory)
     # initialising colorama to handle ASCI color in windows cmd
     c.init()
     color_pallete = {
@@ -356,8 +353,15 @@ def summary_report(
 
     def line_print(print_path, mod_type):
 
-        print(color_pallete.get(mod_type, '') + str(print_path).ljust(80), mod_type + c.Style.RESET_ALL)
-        summary[mod_type] += 1
+        if verbose_report:
+            print(color_pallete.get(mod_type, '') + str(print_path).ljust(80), mod_type + c.Style.RESET_ALL)
+            summary[mod_type] += 1
+
+    def summary_print(summary):
+
+        logger.info('File creation summary:')
+        for key, value in summary.items():
+            logger.info((key + ': ').ljust(15) + str(value))
 
     def check_for_conflict(file, relative_file_path):
         conflict_path_file = os.path.join(conflict_path, relative_file_path)
@@ -424,6 +428,7 @@ def summary_report(
 
     # TODO add more comprehensive summary
     print(summary)
+    summary_print(summary)
 
     return
 
@@ -434,7 +439,7 @@ def generate(
     addon_version: Optional[str] = None,
     output_directory: Optional[str] = None,
     python_binary_name: str = "python3",
-    create_summary_report: Optional[str] = None
+    verbose_report: Optional[str] = None
 ):
     logger.info(f"ucc-gen version {__version__} is used")
     logger.info(f"Python binary name to use: {python_binary_name}")
@@ -675,11 +680,11 @@ def generate(
         with open(output_openapi_path, "w") as openapi_file:
             json.dump(open_api.raw_element, openapi_file, indent=4)
 
-    if create_summary_report:
-        summary_report(source=source,
-                       ta_name=ta_name,
-                       config_path=config_path,
-                       output_directory=os.path.join(output_directory, ta_name))
+    summary_report(source=source,
+                   ta_name=ta_name,
+                   config_path=config_path,
+                   output_directory=os.path.join(output_directory, ta_name),
+                   verbose_report=verbose_report)
 
 
 
@@ -694,5 +699,6 @@ if __name__ == "__main__":
     summary_report(
         source=source,
         output_directory=output_directory,
-        ta_name=ta_name
+        ta_name=ta_name,
+        verbose_report=True
     )

@@ -165,7 +165,7 @@ def main(argv: Optional[Sequence[str]] = None):
             addon_version=args.ta_version,
             output_directory=args.output,
             python_binary_name=args.python_binary_name,
-            create_summary_report=args.verbose
+            verbose_report=args.verbose
         )
     if args.command == "init":
         init.init(
