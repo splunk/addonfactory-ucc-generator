@@ -1,3 +1,10 @@
+## [5.31.1-beta.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.31.0...v5.31.1-beta.1) (2023-10-06)
+
+
+### Bug Fixes
+
+* include UCC UI into UCC during the release step ([#890](https://github.com/splunk/addonfactory-ucc-generator/issues/890)) ([76dd699](https://github.com/splunk/addonfactory-ucc-generator/commit/76dd699435c1b14a40ad459fe10c00aaa551594c))
+
 # [5.31.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.30.0...v5.31.0) (2023-10-05)
 
 It's a technical release to conclude the migration of UCC UI into this repository and we also happen to release 1 feature.
