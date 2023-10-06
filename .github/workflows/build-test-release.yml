@@ -70,6 +70,7 @@ jobs:
       - uses: apache/skywalking-eyes@v0.5.0
 
   build-ui:
+    name: Build UCC UI
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -77,8 +78,7 @@ jobs:
           - "18"
     steps:
       - uses: actions/checkout@v4
-      - name: Build UCC UI
-        uses: ./.github/actions/build-ui
+      - uses: ./.github/workflows/build-ui.yml
         with:
           node-version: ${{ matrix.node-version }}
 
