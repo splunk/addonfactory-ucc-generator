@@ -342,8 +342,16 @@ jobs:
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
       - uses: actions/download-artifact@v3
         with:
-          name: UCC-build
-          path: dist/
+          name: UCC-UI-build
+          path: built-ui/
+      - uses: actions/download-artifact@v3
+        with:
+          name: THIRDPARTY
+      - run: cp -f THIRDPARTY NOTICE
+      - run: poetry install
+      - name: Copy built UCC UI into UCC generator folder
+        run: |
+          cp -R built-ui/package splunk_add_on_ucc_framework/
       - id: semantic
         uses: splunk/semantic-release-action@v1.3
         with:
