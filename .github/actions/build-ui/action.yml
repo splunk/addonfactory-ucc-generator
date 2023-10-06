@@ -17,12 +17,16 @@ runs:
         node-version: ${{ inputs.node-version }}
     - name: Code linting
       run: yarn run lint
+      shell: bash
     - name: Unit test
       run: yarn run test
+      shell: bash
     - name: Build UCC UI
       run: yarn run build
+      shell: bash
     - name: List deps into dependencies.txt
       run: yarn list --prod --depth 0 | python ../.github/scripts/format_yarn_deps.py --output-file=dist/package/appserver/static/js/dependencies.txt
+      shell: bash
     - name: Upload dist with name UCC-UI-build
       uses: actions/upload-artifact@v3
       with:
