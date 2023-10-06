@@ -76,6 +76,7 @@ jobs:
         node-version:
           - "18"
     steps:
+      - uses: actions/checkout@v4
       - name: Build UCC UI
         uses: ./.github/actions/build-ui
         with:
