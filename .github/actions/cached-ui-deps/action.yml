@@ -24,5 +24,6 @@ runs:
           ${{ runner.os }}-yarn-${{ inputs.node-version }}
 
     - name: Install Dependencies
+      working-directory: ui
       run: yarn install --frozen-lockfile
       shell: bash
