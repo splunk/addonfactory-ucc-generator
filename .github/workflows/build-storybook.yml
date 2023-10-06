@@ -1,13 +1,9 @@
-name: "Build UI"
+name: "Build Storybook"
 on:
   workflow_call:
-    inputs:
-      node-version:
-        required: true
-        type: string
 
 jobs:
-  build-ui:
+  build-storybook:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -22,16 +18,10 @@ jobs:
         uses: ./.github/actions/cached-ui-deps
         with:
           node-version: ${{ inputs.node-version }}
-      - name: Code linting
-        run: yarn run lint
-      - name: Unit test
-        run: yarn run test
       - name: Build UCC UI
-        run: yarn run build
-      - name: List deps into dependencies.txt
-        run: yarn list --prod --depth 0 | python ../.github/scripts/format_yarn_deps.py --output-file=dist/package/appserver/static/js/dependencies.txt
+        run: yarn run build-storybook
       - name: Upload dist with name UCC-UI-build
         uses: actions/upload-artifact@v3
         with:
-          name: UCC-UI-build
-          path: ui/dist/
+          name: UCC-UI-storybook
+          path: ui/storybook-static
