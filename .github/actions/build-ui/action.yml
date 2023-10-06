@@ -13,7 +13,7 @@ runs:
       with:
         node-version: ${{ inputs.node-version }}
     - name: install deps
-      uses: ./.github/actions/cached-ui-deps.yml
+      uses: ./.github/actions/cached-ui-deps
       with:
         node-version: ${{ inputs.node-version }}
     - name: Code linting
