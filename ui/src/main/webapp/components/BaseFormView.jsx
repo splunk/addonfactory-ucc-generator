@@ -982,6 +982,7 @@ class BaseFormView extends PureComponent {
 
                 return (
                     <Group
+                        key={group.label}
                         isExpandable={group.options?.isExpandable}
                         defaultOpen={group.options?.expand}
                         title={group.label}
