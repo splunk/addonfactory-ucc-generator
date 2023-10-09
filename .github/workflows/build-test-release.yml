@@ -364,7 +364,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
       - if: ${{ steps.semantic.outputs.new_release_published == 'true' }}
-        uses: splunk/pypi-publish-action@v1.0
-        with:
-          pypi_username: ${{ secrets.PYPI_USERNAME }}
-          pypi_token: ${{ secrets.PYPI_TOKEN }}
+        run: |
+          poetry build
+          poetry publish -n -u ${{ secrets.PYPI_USERNAME }} -p ${{ secrets.PYPI_TOKEN }}
