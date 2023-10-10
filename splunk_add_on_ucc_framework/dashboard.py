@@ -54,7 +54,7 @@ PANEL_ADDON_VERSION_TEMPLATE = """  <row>
       <title>Add-on version</title>
       <single>
         <search>
-          <query>| rest services/apps/local/{addon_name} | fields version</query>
+          <query>| rest services/apps/local/{addon_name} splunk_server=local | fields version</query>
           <earliest>-15m</earliest>
           <latest>now</latest>
         </search>
