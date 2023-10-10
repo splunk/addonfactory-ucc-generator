@@ -230,7 +230,10 @@ class BaseFormView extends PureComponent {
                         oauthConfData.accessTokenEndpoint = e.options.access_token_endpoint
                             ? e.options.access_token_endpoint
                             : null;
-
+                        oauthConfData.authEndpointAccessTokenType = e.options
+                            .auth_endpoint_token_access_type
+                            ? e.options.auth_endpoint_token_access_type
+                            : null;
                         this.oauthConf = oauthConfData;
                     }
                 }
@@ -470,6 +473,10 @@ class BaseFormView extends PureComponent {
 
                 if (this.datadict.scope) {
                     parameters = `${parameters}&scope=${this.datadict.scope}`;
+                }
+
+                if (this.oauthConf.authEndpointAccessTokenType) {
+                    parameters = `${parameters}&token_access_type=${this.oauthConf.authEndpointAccessTokenType}`;
                 }
 
                 let host = encodeURI(
