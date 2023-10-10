@@ -100,10 +100,7 @@
                                     {
                                         "field": "collectTasksAndComments",
                                         "checkbox": {
-                                            "label": "This is a very very long line",
-                                            "options": {
-                                                "enable": true
-                                            }
+                                            "label": "This is a very very long line"
                                         },
                                         "text": {
                                             "defaultValue": 1,
@@ -113,10 +110,7 @@
                                     {
                                         "field": "collectFolderMetadata",
                                         "checkbox": {
-                                            "label": "Collect folder metadata",
-                                            "options": {
-                                                "enable": true
-                                            }
+                                            "label": "Collect folder metadata"
                                         },
                                         "text": {
                                             "defaultValue": 3600,

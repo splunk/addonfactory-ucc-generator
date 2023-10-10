@@ -81,7 +81,7 @@ class Validator {
      * Validate the required field has value
      * @param {string} field
      * @param {string|number} label
-     * @param {string|number} data
+     * @param {string|number} [data]
      * @returns {Error|false}
      */
     static RequiredValidator(field, label, data) {
@@ -135,7 +135,7 @@ class Validator {
      * @param {string} field
      * @param {string|number} label
      * @param {RegexValidatorOptions} validator
-     * @param {string} data
+     * @param {string} [data]
      * @returns {Error|false}
      */
     static RegexValidator(field, label, validator, data) {
@@ -190,7 +190,7 @@ class Validator {
      * @param {string} field
      * @param {string|number} label
      * @param {NumberValidatorOptions} validator
-     * @param {string} data
+     * @param {string|number} [data]
      * @returns {Error|false}
      */
     // Validate the range of numeric field

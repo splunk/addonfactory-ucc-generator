@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ColumnLayout from '@splunk/react-ui/ColumnLayout';
 import Button from '@splunk/react-ui/Button';
 import { StyledColumnLayout } from './StyledComponent';
 import {
     CheckboxGroupProps,
+    getDefaultValues,
     getFlattenRowsWithGroups,
     getNewCheckboxValues,
     isGroupWithRows,
@@ -13,15 +14,27 @@ import {
 import CheckboxSubGroup from './CheckboxSubGroup';
 import CheckboxRowWrapper from './CheckboxRowWrapper';
 import { useValidation } from './checkboxGroupValidation';
+import { MODE_CREATE } from '../../constants/modes';
 
 function CheckboxGroup(props: CheckboxGroupProps) {
-    const { field, value, handleChange, controlOptions, addCustomValidator } = props;
+    const { field, handleChange, controlOptions, addCustomValidator } = props;
 
     const flattenedRowsWithGroups = getFlattenRowsWithGroups(controlOptions);
+    const value =
+        props.mode === MODE_CREATE
+            ? getDefaultValues(flattenedRowsWithGroups)
+            : parseValue(props.value);
 
-    const [values, setValues] = useState(parseValue(value));
+    // propagate defaults up if the component is not touched
+    useEffect(() => {
+        if (props.mode === MODE_CREATE) {
+            handleChange(field, packValue(value), 'checkboxGroup');
+        }
+    }, []);
+
+    const [values, setValues] = useState(value);
+
     useValidation(addCustomValidator, field, controlOptions);
-
     const handleRowChange = (newValue: { field: string; checkbox: boolean; text?: string }) => {
         const newValues = getNewCheckboxValues(values, newValue);
 
@@ -39,7 +52,7 @@ function CheckboxGroup(props: CheckboxGroupProps) {
             }
             newValues.set(row.field, {
                 checkbox: newCheckboxValue,
-                text: oldValue?.text || row.text.defaultValue?.toString() || '',
+                inputValue: oldValue?.inputValue || row.input?.defaultValue,
             });
         });
         setValues(newValues);

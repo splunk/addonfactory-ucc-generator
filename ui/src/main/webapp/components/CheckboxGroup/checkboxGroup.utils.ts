@@ -1,9 +1,10 @@
 import { NumberValidator, RegexValidator, StringValidator } from '../../types/ValidatorsTypes';
+import { Mode } from '../../constants/modes';
 
 type Field = string;
 type Value = {
     checkbox: boolean;
-    text: string;
+    inputValue?: number;
     error?: string;
 };
 
@@ -21,15 +22,34 @@ export function parseValue(collection?: string): ValueByField {
 
     const splitValues = collection.split(',');
     splitValues.forEach((rawValue) => {
-        const [field, text] = rawValue.split('/');
-        if (!field) {
+        const [field, inputValue] = rawValue.split('/');
+        const parsedInputValue = Number(inputValue);
+        if (!field || isNaN(parsedInputValue)) {
             throw new Error(`Value is not parsable: ${collection}`);
         }
 
         resultMap.set(field, {
             checkbox: true,
-            text: text || '',
+            inputValue: parsedInputValue,
         });
+    });
+
+    return resultMap;
+}
+
+export function getDefaultValues(rows: (GroupWithRows | Row)[]): ValueByField {
+    const resultMap = new Map<Field, Value>();
+
+    rows.forEach((row) => {
+        if (!isGroupWithRows(row)) {
+            const checkboxDefaultValue = row.checkbox?.defaultValue;
+            if (typeof checkboxDefaultValue === 'boolean') {
+                resultMap.set(row.field, {
+                    checkbox: checkboxDefaultValue,
+                    inputValue: row.input?.defaultValue,
+                });
+            }
+        }
     });
 
     return resultMap;
@@ -38,7 +58,7 @@ export function parseValue(collection?: string): ValueByField {
 export function packValue(map: ValueByField) {
     return Array.from(map.entries())
         .filter(([, value]) => value.checkbox)
-        .map(([field, value]) => `${field}/${value.text}`)
+        .map(([field, value]) => `${field}/${value.inputValue}`)
         .join(',');
 }
 
@@ -55,13 +75,10 @@ export interface Row {
     field: string;
     checkbox?: {
         label: string;
-        value?: boolean;
-        options?: {
-            enable?: boolean;
-        };
+        defaultValue?: boolean;
     };
-    text: {
-        defaultValue?: number | string;
+    input?: {
+        defaultValue?: number;
         validators?: (StringValidator | RegexValidator | NumberValidator)[];
         required?: boolean;
     };
@@ -76,6 +93,7 @@ export interface CheckboxGroupProps {
         groups?: Group[];
         rows: Row[];
     };
+    mode: Mode;
     addCustomValidator?: (
         field: string,
         validator: (submittedField: string, submittedValue: string) => void
@@ -118,13 +136,13 @@ export function getNewCheckboxValues(
     newValue: {
         field: string;
         checkbox: boolean;
-        text?: string;
+        inputValue?: number;
     }
 ) {
     const newValues = new Map(values);
     newValues.set(newValue.field, {
         checkbox: newValue.checkbox,
-        text: newValue.text || '',
+        inputValue: newValue.inputValue,
     });
 
     return newValues;

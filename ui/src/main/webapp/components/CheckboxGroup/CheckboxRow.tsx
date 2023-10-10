@@ -17,13 +17,13 @@ interface CheckboxRowProps {
     field: string;
     label: string;
     checkbox: boolean;
-    text?: string;
+    input?: number;
     disabled?: boolean;
-    handleChange: (value: { field: string; checkbox: boolean; text?: string }) => void;
+    handleChange: (value: { field: string; checkbox: boolean; inputValue?: number }) => void;
 }
 
 function CheckboxRow(props: CheckboxRowProps) {
-    const { field, label, checkbox, text, disabled, handleChange } = props;
+    const { field, label, checkbox, input, disabled, handleChange } = props;
 
     const [isTextDisabled, setIsTextDisabled] = useState(!checkbox || disabled);
 
@@ -33,13 +33,13 @@ function CheckboxRow(props: CheckboxRowProps) {
 
     const handleChangeTextBox: TextChangeHandler = (event) => {
         if (event?.target && 'value' in event.target) {
-            handleChange({ field, text: event.target.value, checkbox });
+            handleChange({ field, inputValue: Number(event.target.value), checkbox });
         }
     };
 
     const handleChangeCheckbox = (event: unknown, data: { selected: boolean; value?: unknown }) => {
         const previousValue = data.selected;
-        handleChange({ field, text, checkbox: !previousValue });
+        handleChange({ field, inputValue: input, checkbox: !previousValue });
     };
 
     return (
@@ -61,9 +61,9 @@ function CheckboxRow(props: CheckboxRowProps) {
                     <StyledText
                         inline
                         disabled={isTextDisabled}
-                        value={text || ''}
+                        value={input?.toString()}
                         onChange={handleChangeTextBox}
-                        type="text"
+                        type="number"
                         required
                     />
                 </ColumnLayout.Column>

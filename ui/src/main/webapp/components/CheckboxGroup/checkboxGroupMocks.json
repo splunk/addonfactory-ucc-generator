@@ -64,7 +64,7 @@
                 "rows": [
                   {
                     "field": "collectFolderCollaboration",
-                    "text": {
+                    "input": {
                       "defaultValue": 1200,
                       "required": false,
                       "validators": [
@@ -80,7 +80,7 @@
                     "checkbox": {
                       "label": "Collect file metadata"
                     },
-                    "text": {
+                    "input": {
                       "defaultValue": 1,
                       "required": true
                     }
@@ -88,12 +88,9 @@
                   {
                     "field": "collectTasksAndComments",
                     "checkbox": {
-                      "label": "This is a very very long line",
-                      "options": {
-                        "enable": true
-                      }
+                      "label": "This is a very very long line"
                     },
-                    "text": {
+                    "input": {
                       "defaultValue": 1,
                       "required": true
                     }
@@ -101,12 +98,9 @@
                   {
                     "field": "collectFolderMetadata",
                     "checkbox": {
-                      "label": "Collect folder metadata",
-                      "options": {
-                        "enable": true
-                      }
+                      "label": "Collect folder metadata"
                     },
-                    "text": {
+                    "input": {
                       "defaultValue": 3600,
                       "required": true
                     }
@@ -123,12 +117,9 @@
                   {
                     "field": "collectFolderMetadata",
                     "checkbox": {
-                      "label": "Collect folder metadata",
-                      "options": {
-                        "enable": true
-                      }
+                      "label": "Collect folder metadata"
                     },
-                    "text": {
+                    "input": {
                       "defaultValue": 3600,
                       "required": true
                     }
@@ -138,7 +129,7 @@
                     "checkbox": {
                       "label": "Collect folder collaboration"
                     },
-                    "text": {
+                    "input": {
                       "defaultValue": 1200,
                       "required": false,
                       "validators": [
@@ -154,7 +145,7 @@
                     "checkbox": {
                       "label": "Collect file metadata"
                     },
-                    "text": {
+                    "input": {
                       "defaultValue": 1,
                       "required": true
                     }
@@ -164,7 +155,7 @@
                     "checkbox": {
                       "label": "Collect tasks and comments"
                     },
-                    "text": {
+                    "input": {
                       "defaultValue": 1,
                       "required": true
                     }
@@ -199,12 +190,9 @@
                   {
                     "field": "collectFolderCollaboration",
                     "checkbox": {
-                      "label": "Collect folder collaboration",
-                      "options": {
-                        "enable": true
-                      }
+                      "label": "Collect folder collaboration"
                     },
-                    "text": {
+                    "input": {
                       "defaultValue": 1200,
                       "required": false
                     }
@@ -212,12 +200,9 @@
                   {
                     "field": "collectFileMetadata",
                     "checkbox": {
-                      "label": "Collect file metadata",
-                      "options": {
-                        "enable": true
-                      }
+                      "label": "Collect file metadata"
                     },
-                    "text": {
+                    "input": {
                       "defaultValue": 1,
                       "required": true
                     }
@@ -225,12 +210,9 @@
                   {
                     "field": "collectTasksAndComments",
                     "checkbox": {
-                      "label": "Collect tasks and comments",
-                      "options": {
-                        "enable": true
-                      }
+                      "label": "Collect tasks and comments"
                     },
-                    "text": {
+                    "input": {
                       "defaultValue": 1,
                       "required": true
                     }
@@ -238,12 +220,9 @@
                   {
                     "field": "collectFolderMetadata",
                     "checkbox": {
-                      "label": "Collect folder metadata",
-                      "options": {
-                        "enable": true
-                      }
+                      "label": "Collect folder metadata"
                     },
-                    "text": {
+                    "input": {
                       "defaultValue": 3600,
                       "required": true
                     }
@@ -251,24 +230,18 @@
                   {
                     "field": "field223",
                     "checkbox": {
-                      "label": "Required field",
-                      "options": {
-                        "enable": true
-                      }
+                      "label": "Required field"
                     },
-                    "text": {
+                    "input": {
                       "required": true
                     }
                   },
                   {
                     "field": "field23",
                     "checkbox": {
-                      "label": "No more 2 characters",
-                      "options": {
-                        "enable": true
-                      }
+                      "label": "No more 2 characters"
                     },
-                    "text": {
+                    "input": {
                       "validators": [
                         {
                           "type": "string",
@@ -284,7 +257,7 @@
                     "checkbox": {
                       "label": "from 1 to 60 validation"
                     },
-                    "text": {
+                    "input": {
                       "validators": [
                         {
                           "type": "number",

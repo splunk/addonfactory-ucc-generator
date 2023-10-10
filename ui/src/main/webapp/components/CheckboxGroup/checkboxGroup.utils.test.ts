@@ -17,10 +17,10 @@ describe('parseValue', () => {
         const resultMap = parseValue(collection);
 
         expect(resultMap.size).toBe(3);
-        expect(resultMap.get('collect_collaboration')?.text).toBe('1200');
+        expect(resultMap.get('collect_collaboration')?.inputValue).toBe(1200);
         expect(resultMap.get('collect_collaboration')?.checkbox).toBeTruthy();
-        expect(resultMap.get('collect_file')?.text).toBe('1');
-        expect(resultMap.get('collect_task')?.text).toBe('1');
+        expect(resultMap.get('collect_file')?.inputValue).toBe(1);
+        expect(resultMap.get('collect_task')?.inputValue).toBe(1);
     });
     it('should return an empty Map for undefined collection', () => {
         const resultMap = parseValue();
@@ -35,34 +35,34 @@ describe('parseValue', () => {
 
 describe('packValue', () => {
     it('should return a comma-separated string of field/text pairs where checkbox is true', () => {
-        const testMap = new Map();
-        testMap.set('collect_collaboration', { checkbox: true, text: '1200' });
-        testMap.set('collect_file', { checkbox: true, text: '1' });
-        testMap.set('collect_task', { checkbox: true, text: '1' });
-        testMap.set('field4', { checkbox: false, text: '1' });
+        const testMap: ValueByField = new Map();
+        testMap.set('collect_collaboration', { checkbox: true, inputValue: 1200 });
+        testMap.set('collect_file', { checkbox: true, inputValue: 1 });
+        testMap.set('collect_task', { checkbox: true, inputValue: 1 });
+        testMap.set('field4', { checkbox: false, inputValue: 1 });
 
         const result = packValue(testMap);
         expect(result).toBe('collect_collaboration/1200,collect_file/1,collect_task/1');
     });
 
     it('should return an empty string if no entries have checkbox set to true', () => {
-        const testMap = new Map();
-        testMap.set('field1', { checkbox: false, text: 'text1' });
-        testMap.set('field2', { checkbox: false, text: 'text2' });
+        const testMap: ValueByField = new Map();
+        testMap.set('field1', { checkbox: false, inputValue: 1 });
+        testMap.set('field2', { checkbox: false, inputValue: 1 });
 
         const result = packValue(testMap);
         expect(result).toBe('');
     });
 
     it('should return an empty string if the map is empty', () => {
-        const testMap = new Map();
+        const testMap: ValueByField = new Map();
         const result = packValue(testMap);
         expect(result).toBe('');
     });
 
     it('parsed value should be the same as packed value', () => {
         const packedValue =
-            'collect_collaboration/1200,collect_file/1,collect_task/1,fieldWithoutValue/';
+            'collect_collaboration/1200,collect_file/1,collect_task/1,fieldWithoutValue/0';
         expect(packValue(parseValue(packedValue))).toBe(packedValue);
     });
 });
@@ -95,8 +95,8 @@ describe('getFlattenRowsWithGroups', () => {
                 checkbox: {
                     label: 'Checkbox1',
                 },
-                text: {
-                    defaultValue: 'value1',
+                input: {
+                    defaultValue: 1,
                     required: true,
                 },
             },
@@ -105,8 +105,8 @@ describe('getFlattenRowsWithGroups', () => {
                 checkbox: {
                     label: 'Checkbox2',
                 },
-                text: {
-                    defaultValue: 'value2',
+                input: {
+                    defaultValue: 2,
                     required: false,
                 },
             },
@@ -115,8 +115,8 @@ describe('getFlattenRowsWithGroups', () => {
                 checkbox: {
                     label: 'Checkbox3',
                 },
-                text: {
-                    defaultValue: 'value3',
+                input: {
+                    defaultValue: 3,
                     required: true,
                 },
             },
@@ -125,8 +125,8 @@ describe('getFlattenRowsWithGroups', () => {
                 checkbox: {
                     label: 'Checkbox4',
                 },
-                text: {
-                    defaultValue: 'value4',
+                input: {
+                    defaultValue: 4,
                     required: false,
                 },
             },
@@ -157,20 +157,20 @@ describe('getFlattenRowsWithGroups', () => {
 describe('getNewCheckboxValues function', () => {
     it('should update the checkbox value for an existing field', () => {
         const initialValues: ValueByField = new Map([
-            ['field1', { checkbox: true, text: 'text1' }],
+            ['field1', { checkbox: true, inputValue: 1 }],
         ]);
-        const newValue = { field: 'field1', checkbox: false, text: 'newText1' };
+        const newValue = { field: 'field1', checkbox: false, inputValue: 2 };
 
         const result = getNewCheckboxValues(initialValues, newValue);
-        expect(result.get('field1')).toEqual({ checkbox: false, text: 'newText1' });
+        expect(result.get('field1')).toEqual({ checkbox: false, inputValue: 2 });
     });
 
     it('should add a new field with checkbox and text values', () => {
         const initialValues: ValueByField = new Map();
-        const newValue = { field: 'field2', checkbox: true, text: 'text2' };
+        const newValue = { field: 'field2', checkbox: true, inputValue: 2 };
 
         const result = getNewCheckboxValues(initialValues, newValue);
-        expect(result.get('field2')).toEqual({ checkbox: true, text: 'text2' });
+        expect(result.get('field2')).toEqual({ checkbox: true, inputValue: 2 });
     });
 
     it('should set text to an empty string if not provided', () => {
@@ -178,6 +178,6 @@ describe('getNewCheckboxValues function', () => {
         const newValue = { field: 'field3', checkbox: true };
 
         const result = getNewCheckboxValues(initialValues, newValue);
-        expect(result.get('field3')).toEqual({ checkbox: true, text: '' });
+        expect(result.get('field3')).toEqual({ checkbox: true, inputValue: undefined });
     });
 });

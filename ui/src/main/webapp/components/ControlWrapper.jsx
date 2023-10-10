@@ -88,6 +88,7 @@ class ControlWrapper extends React.PureComponent {
                       required,
                       addCustomValidator,
                       fileNameToDisplay: this.props.fileNameToDisplay,
+                      mode: this.props.mode,
                   })
                 : `No View Found for ${type} type`;
         }
