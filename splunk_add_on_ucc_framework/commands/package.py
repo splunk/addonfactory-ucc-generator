@@ -57,7 +57,7 @@ def package(path_to_built_addon: str, output_directory: Optional[str] = None) ->
     archive_path = os.path.join(
         output_directory, f"{addon_name}-{addon_version}.tar.gz"
     )
-    with tarfile.open(archive_path, mode="w", encoding="utf-8") as archive_file:
+    with tarfile.open(archive_path, mode="w:gz", encoding="utf-8") as archive_file:
         logger.info(path_to_built_addon)
         archive_file.add(path_to_built_addon, arcname=addon_name)
     logger.info(f"Package exported to {archive_path}")
