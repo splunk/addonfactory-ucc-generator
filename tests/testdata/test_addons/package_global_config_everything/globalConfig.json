@@ -422,9 +422,6 @@
         "inputs": {
             "services": [
                 {
-                    "hook": {
-                        "src": "Hook"
-                    },
                     "name": "example_input_one",
                     "entity": [
                         {

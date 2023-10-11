@@ -277,6 +277,13 @@ def test_config_validation_when_deprecated_placeholder_is_used():
                 "Entity test_checkbox_group has duplicate field (collectTasksAndComments) in options.groups"
             ),
         ),
+        (
+            "invalid_config_group_has_duplicate_labels.json",
+            False,
+            (
+                "Service input_with_duplicate_group_labels has duplicate labels in groups"
+            ),
+        ),
     ],
 )
 def test_config_validation_when_error(filename, is_yaml, exception_message):
