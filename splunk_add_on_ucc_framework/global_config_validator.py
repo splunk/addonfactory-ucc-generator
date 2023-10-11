@@ -512,6 +512,25 @@ class GlobalConfigValidator:
                                 )
                             group_used_field_names.append(group_field_name)
 
+    def _validate_group_labels(self) -> None:
+        pages = self._config["pages"]
+        inputs = pages.get("inputs")
+        if inputs is None:
+            return
+        services = inputs["services"]
+        for service in services:
+            groups = service.get("groups")
+            if groups is None:
+                continue
+            service_group_labels = []
+            for group in groups:
+                group_label = group["label"]
+                if group_label in service_group_labels:
+                    raise GlobalConfigValidatorException(
+                        f"Service {service['name']} has duplicate labels in groups"
+                    )
+                service_group_labels.append(group_label)
+
     def validate(self) -> None:
         self._validate_config_against_schema()
         self._validate_configuration_tab_table_has_name_field()
@@ -524,3 +543,4 @@ class GlobalConfigValidator:
         self._validate_panels()
         self._warn_on_placeholder_usage()
         self._validate_checkbox_group()
+        self._validate_group_labels()
