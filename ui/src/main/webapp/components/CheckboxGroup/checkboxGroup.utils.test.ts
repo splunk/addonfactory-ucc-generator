@@ -1,4 +1,5 @@
 import {
+    getDefaultValues,
     getFlattenRowsWithGroups,
     getNewCheckboxValues,
     Group,
@@ -154,7 +155,7 @@ describe('getFlattenRowsWithGroups', () => {
     });
 });
 
-describe('getNewCheckboxValues function', () => {
+describe('getNewCheckboxValues', () => {
     it('should update the checkbox value for an existing field', () => {
         const initialValues: ValueByField = new Map([
             ['field1', { checkbox: true, inputValue: 1 }],
@@ -179,5 +180,54 @@ describe('getNewCheckboxValues function', () => {
 
         const result = getNewCheckboxValues(initialValues, newValue);
         expect(result.get('field3')).toEqual({ checkbox: true, inputValue: undefined });
+    });
+});
+
+describe('getDefaultValues', () => {
+    it('should return an empty map when provided with an empty array', () => {
+        const input: Row[] = [];
+        const expectedOutput = new Map();
+        expect(getDefaultValues(input)).toEqual(expectedOutput);
+    });
+
+    it('should correctly set default values for a single row with checkbox', () => {
+        const input: Row[] = [
+            {
+                field: 'testField',
+                checkbox: { label: 'testField', defaultValue: true },
+                input: { defaultValue: 42 },
+            },
+        ];
+        const expectedOutput: ValueByField = new Map();
+        expectedOutput.set('testField', { checkbox: true, inputValue: 42 });
+        expect(getDefaultValues(input)).toEqual(expectedOutput);
+    });
+
+    it('should ignore rows where isGroupWithRows is true', () => {
+        const input: Row[] = [
+            {
+                field: 'ignoredField',
+                // assuming isGroupWithRows would set some additional properties
+            },
+            {
+                field: 'testField',
+                checkbox: { label: 'testField', defaultValue: true },
+                input: { defaultValue: 42 },
+            },
+        ];
+        const expectedOutput: ValueByField = new Map();
+        expectedOutput.set('testField', { checkbox: true, inputValue: 42 });
+        expect(getDefaultValues(input)).toEqual(expectedOutput);
+    });
+
+    it('should handle rows without default checkbox values', () => {
+        const input: Row[] = [
+            {
+                field: 'testField',
+                input: { defaultValue: 42 },
+            },
+        ];
+        const expectedOutput: ValueByField = new Map();
+        expect(getDefaultValues(input)).toEqual(expectedOutput);
     });
 });

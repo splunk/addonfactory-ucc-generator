@@ -56,12 +56,12 @@ export interface Group {
 export interface Row {
     field: string;
     checkbox?: {
-        label: string;
+        label?: string;
         defaultValue?: boolean;
     };
     input?: {
         defaultValue?: number;
-        validators?: (StringValidator | RegexValidator | NumberValidator)[];
+        validators?: NumberValidator[];
         required?: boolean;
     };
 }
@@ -140,7 +140,7 @@ export function getCheckedCheckboxesCount(group: GroupWithRows, values: ValueByF
     return checkedCheckboxesCount;
 }
 
-export function getDefaultValues(rows: (GroupWithRows | Row)[]): ValueByField {
+export function getDefaultValues(rows: Row[]): ValueByField {
     const resultMap = new Map<Field, Value>();
 
     rows.forEach((row) => {

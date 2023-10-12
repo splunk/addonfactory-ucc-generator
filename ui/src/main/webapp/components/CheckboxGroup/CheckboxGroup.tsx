@@ -22,7 +22,7 @@ function CheckboxGroup(props: CheckboxGroupProps) {
     const flattenedRowsWithGroups = getFlattenRowsWithGroups(controlOptions);
     const value =
         props.mode === MODE_CREATE
-            ? getDefaultValues(flattenedRowsWithGroups)
+            ? getDefaultValues(controlOptions.rows)
             : parseValue(props.value);
 
     // propagate defaults up if the component is not touched
