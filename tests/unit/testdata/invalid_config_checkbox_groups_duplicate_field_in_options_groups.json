@@ -76,7 +76,7 @@
                                 "rows": [
                                     {
                                         "field": "collectFolderCollaboration",
-                                        "text": {
+                                        "input":{
                                             "defaultValue": 1200,
                                             "required": false,
                                             "validators": [
@@ -92,7 +92,7 @@
                                         "checkbox": {
                                             "label": "Collect file metadata"
                                         },
-                                        "text": {
+                                        "input":{
                                             "defaultValue": 1,
                                             "required": true
                                         }
@@ -102,7 +102,7 @@
                                         "checkbox": {
                                             "label": "This is a very very long line"
                                         },
-                                        "text": {
+                                        "input":{
                                             "defaultValue": 1,
                                             "required": true
                                         }
@@ -112,7 +112,7 @@
                                         "checkbox": {
                                             "label": "Collect folder metadata"
                                         },
-                                        "text": {
+                                        "input":{
                                             "defaultValue": 3600,
                                             "required": true
                                         }

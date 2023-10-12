@@ -854,6 +854,9 @@
                       "label": {
                         "type": "string",
                         "maxLength": 30
+                      },
+                      "defaultValue": {
+                        "type": "boolean"
                       }
                     },
                     "additionalProperties": false
