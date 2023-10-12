@@ -1,4 +1,4 @@
-import { NumberValidator, RegexValidator, StringValidator } from '../../types/ValidatorsTypes';
+import { NumberValidator } from '../../types/ValidatorsTypes';
 import { Mode } from '../../constants/modes';
 
 type Field = string;
