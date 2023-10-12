@@ -237,22 +237,6 @@
                     }
                   },
                   {
-                    "field": "field23",
-                    "checkbox": {
-                      "label": "No more 2 characters"
-                    },
-                    "input": {
-                      "validators": [
-                        {
-                          "type": "string",
-                          "minLength": 0,
-                          "maxLength": 2
-                        }
-                      ],
-                      "defaultValue": "aa"
-                    }
-                  },
-                  {
                     "field": "160validation",
                     "checkbox": {
                       "label": "from 1 to 60 validation"

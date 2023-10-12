@@ -858,7 +858,7 @@
                     },
                     "additionalProperties": false
                   },
-                  "text": {
+                  "input": {
                     "type": "object",
                     "properties": {
                       "defaultValue": {
