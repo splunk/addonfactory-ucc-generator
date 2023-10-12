@@ -113,6 +113,13 @@ def test_config_validation_when_deprecated_placeholder_is_used():
             ),
         ),
         (
+            "invalid_config_file_is_encrypted_but_not_required.json",
+            False,
+            (
+                "Field service_account uses type 'file' which is encrypted and not required, this is not supported"
+            ),
+        ),
+        (
             "invalid_config_configuration_string_validator_maxLength_less_than_minLength.json",
             False,
             (
