@@ -30,7 +30,7 @@ function CheckboxGroup(props: CheckboxGroupProps) {
         if (props.mode === MODE_CREATE) {
             handleChange(field, packValue(value), 'checkboxGroup');
         }
-    }, []);
+    }, [field, handleChange, props.mode, value]);
 
     const [values, setValues] = useState(value);
 

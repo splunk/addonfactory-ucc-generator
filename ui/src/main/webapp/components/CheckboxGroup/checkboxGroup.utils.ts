@@ -24,7 +24,7 @@ export function parseValue(collection?: string): ValueByField {
     splitValues.forEach((rawValue) => {
         const [field, inputValue] = rawValue.split('/');
         const parsedInputValue = Number(inputValue);
-        if (!field || isNaN(parsedInputValue)) {
+        if (!field || Number.isNaN(parsedInputValue)) {
             throw new Error(`Value is not parsable: ${collection}`);
         }
 
@@ -32,24 +32,6 @@ export function parseValue(collection?: string): ValueByField {
             checkbox: true,
             inputValue: parsedInputValue,
         });
-    });
-
-    return resultMap;
-}
-
-export function getDefaultValues(rows: (GroupWithRows | Row)[]): ValueByField {
-    const resultMap = new Map<Field, Value>();
-
-    rows.forEach((row) => {
-        if (!isGroupWithRows(row)) {
-            const checkboxDefaultValue = row.checkbox?.defaultValue;
-            if (typeof checkboxDefaultValue === 'boolean') {
-                resultMap.set(row.field, {
-                    checkbox: checkboxDefaultValue,
-                    inputValue: row.input?.defaultValue,
-                });
-            }
-        }
     });
 
     return resultMap;
@@ -156,4 +138,22 @@ export function getCheckedCheckboxesCount(group: GroupWithRows, values: ValueByF
         }
     });
     return checkedCheckboxesCount;
+}
+
+export function getDefaultValues(rows: (GroupWithRows | Row)[]): ValueByField {
+    const resultMap = new Map<Field, Value>();
+
+    rows.forEach((row) => {
+        if (!isGroupWithRows(row)) {
+            const checkboxDefaultValue = row.checkbox?.defaultValue;
+            if (typeof checkboxDefaultValue === 'boolean') {
+                resultMap.set(row.field, {
+                    checkbox: checkboxDefaultValue,
+                    inputValue: row.input?.defaultValue,
+                });
+            }
+        }
+    });
+
+    return resultMap;
 }
