@@ -16,6 +16,7 @@
 __version__ = "5.31.1"
 
 import logging
+import warnings
 
 logger = logging.getLogger("ucc_gen")
 logger.setLevel(logging.INFO)
@@ -24,3 +25,9 @@ stream_handler = logging.StreamHandler()
 stream_handler.setLevel(logging.INFO)
 stream_handler.setFormatter(formatter)
 logger.addHandler(stream_handler)
+
+warnings.filterwarnings("always", category=DeprecationWarning)
+
+logging.captureWarnings(True)
+warnings_logger = logging.getLogger("py.warnings")
+warnings_logger.addHandler(stream_handler)
