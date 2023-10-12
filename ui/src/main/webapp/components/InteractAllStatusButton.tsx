@@ -73,6 +73,7 @@ export function InteractAllStatusButtons(props: DisableAllStatusButtonProps) {
             </InteractAllActionButton>
             {tryInteract && (
                 <AcceptModal
+                    data-testid="interactAllPrompt"
                     message={`Do you want to ${
                         isDisabling ? 'disable' : 'enable'
                     } all? It may take a while.`}
