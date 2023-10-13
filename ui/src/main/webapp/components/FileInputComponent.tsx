@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 import File from '@splunk/react-ui/File';
 import styled from 'styled-components';
 
@@ -68,7 +68,7 @@ function FileInputComponent(props: FileInputComponentProps) {
       then we display error message "file needs to be reuploaded"
       as there is no access to data inside due to encription
      */
-    const [errorMsg, setErrorMsg] = useState<JSX.Element | string>(
+    const [errorMsg, setErrorMsg] = useState<ReactElement | string>(
         fileNameToDisplay && encrypted ? FileConstants.REUPLOAD_MESSAGE : ''
     );
 
@@ -92,7 +92,9 @@ function FileInputComponent(props: FileInputComponentProps) {
                 if (isValid === true) {
                     setErrorMsg('');
                     try {
-                        handleChange(field, textDecoder.decode(fileReader.result as ArrayBuffer));
+                        if (fileReader.result && typeof fileReader.result !== 'string') {
+                            handleChange(field, textDecoder.decode(fileReader.result));
+                        }
                     } catch (err) {
                         // eslint-disable-next-line no-console
                         console.log(err);
