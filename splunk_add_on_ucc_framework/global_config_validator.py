@@ -18,12 +18,14 @@ import json
 import os
 import re
 from typing import Any, Dict, List
-import warnings
+import logging
 
 import jsonschema
 
 from splunk_add_on_ucc_framework import dashboard as dashboard_lib
 from splunk_add_on_ucc_framework import global_config as global_config_lib
+
+logger = logging.getLogger("ucc_gen")
 
 
 class GlobalConfigValidatorException(Exception):
@@ -458,11 +460,10 @@ class GlobalConfigValidator:
         for tab in tabs:
             for entity in tab["entity"]:
                 if "placeholder" in entity.get("options", {}):
-                    warnings.warn(
+                    logger.warn(
                         f"`placeholder` option found for configuration tab '{tab['name']}' "
                         f"-> entity field '{entity['field']}'. "
-                        f"Please take a look at https://github.com/splunk/addonfactory-ucc-generator/issues/831.",
-                        DeprecationWarning,
+                        f"Please take a look at https://github.com/splunk/addonfactory-ucc-generator/issues/831."
                     )
         inputs = pages.get("inputs")
         if inputs is None:
@@ -471,11 +472,10 @@ class GlobalConfigValidator:
         for service in services:
             for entity in service["entity"]:
                 if "placeholder" in entity.get("options", {}):
-                    warnings.warn(
+                    logger.warn(
                         f"`placeholder` option found for input service '{service['name']}' "
                         f"-> entity field '{entity['field']}'. "
-                        f"Please take a look at https://github.com/splunk/addonfactory-ucc-generator/issues/831.",
-                        DeprecationWarning,
+                        f"Please take a look at https://github.com/splunk/addonfactory-ucc-generator/issues/831."
                     )
 
     def _validate_checkbox_group(self) -> None:
