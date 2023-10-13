@@ -1,7 +1,7 @@
-import { rest } from 'msw';
+import { compose, rest } from 'msw';
 
 export const serverHandlers = [
-    rest.get(`/servicesNS/nobody/-/restRoot_example_input_four`, (req, res, ctx) =>
+    rest.get(`/servicesNS/:user/-/:serviceName`, (req, res, ctx) =>
         res(
             ctx.json({
                 entry: [
@@ -12,6 +12,16 @@ export const serverHandlers = [
                     },
                 ],
             })
+        )
+    ),
+    rest.post(`/servicesNS/:user/-/:serviceName`, async (req, res, ctx) =>
+        res(
+            compose(
+                ctx.json({
+                    messages: [{ text: `Submitted body: ${decodeURIComponent(await req.text())}` }],
+                }),
+                ctx.status(500)
+            )
         )
     ),
 ];

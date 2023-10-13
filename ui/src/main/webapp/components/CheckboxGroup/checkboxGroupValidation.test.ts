@@ -10,49 +10,13 @@ describe('validateCheckboxGroup', () => {
             rows: [
                 {
                     field: 'field1',
-                    text: { required: true },
+                    input: { required: true },
                     checkbox: { label: 'Label 1' },
                 },
             ],
         });
 
         expect(mockRequiredValidator).toHaveBeenCalled();
-        expect(result).toBe(false);
-    });
-
-    it('should handle regex validation', () => {
-        const mockRegexValidator = jest.fn().mockReturnValue(false);
-        Validator.RegexValidator = mockRegexValidator;
-
-        const result = validateCheckboxGroup('field1', 'field1/123', {
-            rows: [
-                {
-                    field: 'field1',
-                    text: { validators: [{ type: 'regex', pattern: '' }] },
-                    checkbox: { label: 'Label 1' },
-                },
-            ],
-        });
-
-        expect(mockRegexValidator).toHaveBeenCalled();
-        expect(result).toBe(false);
-    });
-
-    it('should handle string validation', () => {
-        const mockStringValidator = jest.fn().mockReturnValue(false);
-        Validator.StringValidator = mockStringValidator;
-
-        const result = validateCheckboxGroup('field1', 'field1/123', {
-            rows: [
-                {
-                    field: 'field1',
-                    text: { validators: [{ type: 'string', minLength: 0, maxLength: 2 }] },
-                    checkbox: { label: 'Label 1' },
-                },
-            ],
-        });
-
-        expect(mockStringValidator).toHaveBeenCalled();
         expect(result).toBe(false);
     });
 
@@ -64,7 +28,7 @@ describe('validateCheckboxGroup', () => {
             rows: [
                 {
                     field: 'field1',
-                    text: { validators: [{ type: 'number', range: [1, 2] }] },
+                    input: { validators: [{ type: 'number', range: [1, 2] }] },
                     checkbox: { label: 'Label 1' },
                 },
             ],
@@ -81,7 +45,7 @@ describe('validateCheckboxGroup', () => {
                     {
                         field: 'field1',
                         // @ts-expect-error tests
-                        text: { validators: [{ type: 'unsupported' }] },
+                        input: { validators: [{ type: 'unsupported' }] },
                         checkbox: { label: 'Label 1' },
                     },
                 ],
@@ -94,7 +58,7 @@ describe('validateCheckboxGroup', () => {
             rows: [
                 {
                     field: 'field1',
-                    text: {},
+                    input: {},
                     checkbox: { label: 'Label 1' },
                 },
             ],
@@ -110,7 +74,7 @@ describe('validateCheckboxGroup', () => {
             rows: [
                 {
                     field: 'field1',
-                    text: { validators: [{ type: 'number', range: [1, 2] }] },
+                    input: { validators: [{ type: 'number', range: [1, 2] }] },
                     checkbox: { label: 'Label 1' },
                 },
             ],

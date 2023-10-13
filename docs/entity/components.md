@@ -272,16 +272,17 @@ Example usage below:
       {
         "field": "rowUnderGroup1",
         "checkbox": {
-          "label": "Row under Group 1"
+          "label": "Row under Group 1",
+          "defaultValue": true
         },
-        "text": {
+        "input": {
           "defaultValue": 1200,
           "required": false
         }
       },
       {
         "field": "rowWithoutGroup",
-        "text": {
+        "input": {
           "defaultValue": 1,
           "required": true
         }
@@ -293,14 +294,14 @@ Example usage below:
             "enable": false
           }
         },
-        "text": {
+        "input": {
           "defaultValue": 1,
           "required": true
         }
       },
       {
         "field": "rowWithoutGroup_2",
-        "text": {
+        "input": {
           "defaultValue": 3600,
           "required": true
         }
@@ -310,7 +311,7 @@ Example usage below:
         "checkbox": {
           "label": "Required field"
         },
-        "text": {
+        "input": {
           "required": true
         }
       },
@@ -319,7 +320,7 @@ Example usage below:
         "checkbox": {
           "label": "from 1 to 60 validation"
         },
-        "text": {
+        "input": {
           "validators": [
             {
               "type": "number",

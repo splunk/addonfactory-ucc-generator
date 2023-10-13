@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ColumnLayout from '@splunk/react-ui/ColumnLayout';
-import Text from '@splunk/react-ui/Text';
-import { TextChangeHandler } from '@splunk/react-ui/types/src/Text/Text';
+import NumberComponent, { NumberChangeHandler } from '@splunk/react-ui/Number';
 import styled from 'styled-components';
 import Switch from '@splunk/react-ui/Switch';
 import { StyledColumnLayout } from './StyledComponent';
@@ -9,21 +8,18 @@ import { StyledColumnLayout } from './StyledComponent';
 const StyledSwitch = styled(Switch)`
     padding-left: 3px;
 `;
-const StyledText = styled(Text)`
-    padding-right: 3px;
-`;
 
 interface CheckboxRowProps {
     field: string;
     label: string;
     checkbox: boolean;
-    text?: string;
+    input?: number;
     disabled?: boolean;
-    handleChange: (value: { field: string; checkbox: boolean; text?: string }) => void;
+    handleChange: (value: { field: string; checkbox: boolean; inputValue?: number }) => void;
 }
 
 function CheckboxRow(props: CheckboxRowProps) {
-    const { field, label, checkbox, text, disabled, handleChange } = props;
+    const { field, label, checkbox, input, disabled, handleChange } = props;
 
     const [isTextDisabled, setIsTextDisabled] = useState(!checkbox || disabled);
 
@@ -31,21 +27,19 @@ function CheckboxRow(props: CheckboxRowProps) {
         setIsTextDisabled(!checkbox || disabled);
     }, [checkbox, disabled]);
 
-    const handleChangeTextBox: TextChangeHandler = (event) => {
-        if (event?.target && 'value' in event.target) {
-            handleChange({ field, text: event.target.value, checkbox });
-        }
+    const handleChangeInput: NumberChangeHandler = (event: unknown, { value }) => {
+        handleChange({ field, inputValue: value, checkbox });
     };
 
     const handleChangeCheckbox = (event: unknown, data: { selected: boolean; value?: unknown }) => {
         const previousValue = data.selected;
-        handleChange({ field, text, checkbox: !previousValue });
+        handleChange({ field, inputValue: input, checkbox: !previousValue });
     };
 
     return (
         <StyledColumnLayout>
             <ColumnLayout.Row>
-                <ColumnLayout.Column span={5}>
+                <ColumnLayout.Column span={7}>
                     <StyledSwitch
                         key={field}
                         value={field}
@@ -57,14 +51,12 @@ function CheckboxRow(props: CheckboxRowProps) {
                         {label}
                     </StyledSwitch>
                 </ColumnLayout.Column>
-                <ColumnLayout.Column span={2}>
-                    <StyledText
+                <ColumnLayout.Column span={3}>
+                    <NumberComponent
                         inline
                         disabled={isTextDisabled}
-                        value={text || ''}
-                        onChange={handleChangeTextBox}
-                        type="text"
-                        required
+                        defaultValue={input}
+                        onChange={handleChangeInput}
                     />
                 </ColumnLayout.Column>
             </ColumnLayout.Row>
