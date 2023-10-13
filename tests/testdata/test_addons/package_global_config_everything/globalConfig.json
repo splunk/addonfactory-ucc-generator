@@ -670,6 +670,17 @@
                             "required": false
                         },
                         {
+                            "type": "textarea",
+                            "label": "Example Textarea Field",
+                            "field": "example_textarea_field",
+                            "help": "Help message",
+                            "options": {
+                                "rowsMin": 3,
+                                "rowsMax": 15
+                            },
+                            "required": true
+                        },
+                        {
                             "field": "example_help_link",
                             "label": "",
                             "type": "helpLink",
