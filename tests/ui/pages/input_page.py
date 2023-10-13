@@ -16,29 +16,47 @@ from pytest_splunk_addon_ui_smartx.components.controls.toggle import Toggle
 
 from tests.ui import constants as C
 
+
 class InteractAllPrompt(BaseComponent):
     def __init__(self, browser, container):
-        if button == "disable-all":
-            btn_selector = '[data-testid="disableAllBtn"]'
-        elif button == "enable-all":
-            btn_selector = '[data-testid="enableAllBtn"]'
-        else:
-            raise ValueError("Invalid button argument")
-        self.interact_btn = Button(
-            browser, Selector(select=container.select + btn_selector)
-        )
+        self.container = container
         entity_container = Selector(select='[data-test="modal"]')
-        super().__init__(browser, entity_container)
-        self.confirm_btn = Button(browser, Selector(select=container.select + 'button[label="Yes"]'))
 
-    def open(self):
-        """
-        Open the entity by click on interact all button
-            :return: True if done properly
-        """
-        self.interact_btn.click()
-        self.confirm_btn.wait_to_display()
+        super().__init__(browser, entity_container)
+        self.elements["container"] = container
+
+        self.prompt_title = BaseComponent(
+            browser, Selector(select=entity_container.select + ' [data-test="title"]')
+        )
+        self.prompt_message = BaseComponent(
+            browser, Selector(select=entity_container.select + ' [data-test="content"]')
+        )
+        self.confirm_btn = Button(
+            browser, Selector(select=entity_container.select + ' button[label="Yes"]')
+        )
+        self.deny_btn = Button(
+            browser, Selector(select=entity_container.select + ' button[label="No"]')
+        )
+        self.close_btn = Button(
+            browser, Selector(select=entity_container.select + ' [data-test="close"]')
+        )
+
+    def close(self):
+        self.close_btn.wait_to_display()
+        self.close_btn.click()
+        self.confirm_btn.wait_until("container")
         return True
+
+    def deny(self):
+        self.close_btn.wait_to_display()
+        self.deny_btn.click()
+        self.confirm_btn.wait_until("container")
+
+    def confirm(self):
+        self.close_btn.wait_to_display()
+        self.confirm_btn.click()
+        self.confirm_btn.wait_until("container")
+
 
 class ExampleInputOne(Entity):
     """
@@ -226,7 +244,6 @@ class InputPage(Page):
         super().__init__(ucc_smartx_selenium_helper, ucc_smartx_rest_helper, open_page)
 
         input_container = Selector(select=' div[role="main"]')
-        prompt_container = Selector(select='[data-test="modal"]')
         if ucc_smartx_selenium_helper:
             self.title = Message(
                 ucc_smartx_selenium_helper.browser,
@@ -257,17 +274,17 @@ class InputPage(Page):
             self.type_filter = Dropdown(
                 ucc_smartx_selenium_helper.browser, Selector(select=".dropdownInput")
             )
-            self.enable_all_inputs = Button(
-                ucc_smartx_selenium_helper.browser, Selector(select='[data-testid="enableAllBtn"]')
-            )
-            self.disable_all_inputs = Button(
-                ucc_smartx_selenium_helper.browser, Selector(select='[data-testid="disableAllBtn"]')
-            )
-            self.interact_all_entity = InteractAllPrompt(
+            self.interact_all_prompt_entity = InteractAllPrompt(
                 ucc_smartx_selenium_helper.browser, input_container
             )
-            self.interact_all_prompt = BaseComponent(ucc_smartx_selenium_helper.browser, Selector(select='[data-test="modal"]'))
-
+            self.enable_all_inputs_btn = Button(
+                ucc_smartx_selenium_helper.browser,
+                Selector(select='[data-testid="enableAllBtn"]'),
+            )
+            self.disable_all_inputs_btn = Button(
+                ucc_smartx_selenium_helper.browser,
+                Selector(select='[data-testid="disableAllBtn"]'),
+            )
 
         if ucc_smartx_rest_helper:
             self.backend_conf = ListBackendConf(
@@ -275,8 +292,6 @@ class InputPage(Page):
                 ucc_smartx_rest_helper.username,
                 ucc_smartx_rest_helper.password,
             )
-    def enable_all(self):
-        with self.wait
 
     def open(self):
         self.browser.get(f"{self.splunk_web_url}/en-US/app/{C.ADDON_NAME}/inputs")
@@ -284,3 +299,8 @@ class InputPage(Page):
     def _get_input_endpoint(self):
         return f"{self.splunk_mgmt_url}/servicesNS/nobody/{C.ADDON_NAME}/configs/conf-inputs"
 
+    def enable_all_inputs(self):
+        self.enable_all_inputs_btn.click()
+
+    def disable_all_inputs(self):
+        self.disable_all_inputs_btn.click()

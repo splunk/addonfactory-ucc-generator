@@ -1,7 +1,10 @@
+import copy
+
 from pytest_splunk_addon_ui_smartx.base_test import UccTester
 from tests.ui.pages.account_page import AccountPage
 from tests.ui.pages.input_page import InputPage
 import pytest
+import time
 
 
 @pytest.fixture(scope="module", autouse=True)
@@ -2147,3 +2150,213 @@ class TestInputPage(UccTester):
         self.assert_util(
             prompt_message, f'Are you sure you want to delete "{input_name}" ?'
         )
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
+    def test_inputs_enable_all_title_message(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+    ):
+        """Verifies title and message of enable all prompt"""
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        input_page.enable_all_inputs()
+        self.assert_util(
+            input_page.interact_all_prompt_entity.prompt_title.container.get_attribute(
+                "textContent"
+            ).strip(),
+            "Enable all",
+        )
+        self.assert_util(
+            input_page.interact_all_prompt_entity.prompt_message.container.get_attribute(
+                "textContent"
+            ).strip(),
+            "Do you want to enable all? It may take a while.",
+        )
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
+    def test_inputs_disable_all_title_message(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+    ):
+        """Verifies title and message of disable all prompt"""
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        input_page.disable_all_inputs()
+        self.assert_util(
+            input_page.interact_all_prompt_entity.prompt_title.container.get_attribute(
+                "textContent"
+            ).strip(),
+            "Disable all",
+        )
+        self.assert_util(
+            input_page.interact_all_prompt_entity.prompt_message.container.get_attribute(
+                "textContent"
+            ).strip(),
+            "Do you want to disable all? It may take a while.",
+        )
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
+    def test_inputs_enable_all_close(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+    ):
+        """
+        Verifies that closing the 'Enable All' prompt behaves correctly.
+        """
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        input_page.enable_all_inputs()
+        self.assert_util(input_page.interact_all_prompt_entity.close, True)
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
+    def test_inputs_disable_all_close(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+    ):
+        """
+        Verifies that closing the 'Disable All' prompt behaves correctly.
+        """
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        input_page.disable_all_inputs()
+        self.assert_util(input_page.interact_all_prompt_entity.close, True)
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
+    def test_inputs_enable_all_deny(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+    ):
+        """
+        Verifies that when 'Enable All' is followed by 'Deny,' inputs remain disabled.
+        """
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        inputs_enabled_table = input_page.table.get_table()
+        inputs_disabled_table = copy.deepcopy(inputs_enabled_table)
+        for i in inputs_disabled_table:
+            inputs_disabled_table[i]["status"] = "Disabled"
+        input_page.disable_all_inputs()
+        input_page.interact_all_prompt_entity.confirm()
+        input_page.enable_all_inputs()
+        input_page.interact_all_prompt_entity.deny()
+        self.assert_util(input_page.table.get_table(), inputs_disabled_table)
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
+    def test_inputs_disable_all_deny(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+    ):
+        """
+        Verifies that when 'Disable All' is followed by 'Deny,' inputs remain enabled.
+        """
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        inputs_enabled_table = input_page.table.get_table()
+        input_page.disable_all_inputs()
+        input_page.interact_all_prompt_entity.deny()
+        self.assert_util(input_page.table.get_table(), inputs_enabled_table)
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
+    def test_inputs_disable_enable_all(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_multiple_inputs
+    ):
+        """Verifies that all inputs are disabled after clicking 'Disable all'"""
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        inputs_enabled_table = input_page.table.get_table()
+        inputs_disabled_table = copy.deepcopy(inputs_enabled_table)
+        for i in inputs_disabled_table:
+            inputs_disabled_table[i]["status"] = "Disabled"
+        input_page.disable_all_inputs()
+        input_page.interact_all_prompt_entity.confirm()
+        time.sleep(10)
+        self.assert_util(input_page.table.get_table(), inputs_disabled_table)
+        input_page.enable_all_inputs()
+        input_page.interact_all_prompt_entity.confirm()
+        time.sleep(10)
+        self.assert_util(input_page.table.get_table(), inputs_enabled_table)
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
+    def test_inputs_disable_all_enable_all_input_one_input_two(
+        self,
+        ucc_smartx_selenium_helper,
+        ucc_smartx_rest_helper,
+        add_input_one,
+        add_input_two,
+    ):
+        """
+        Verifies that various types of inputs are correctly disabled and enabled
+        when using the 'Disable All' and 'Enable All' buttons.
+        This test covers scenarios with both Input One and Input Two added.
+        """
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        inputs_enabled_table = input_page.table.get_table()
+        inputs_disabled_table = copy.deepcopy(inputs_enabled_table)
+        for i in inputs_disabled_table:
+            inputs_disabled_table[i]["status"] = "Disabled"
+        input_page.disable_all_inputs()
+        input_page.interact_all_prompt_entity.confirm()
+        time.sleep(3)
+        self.assert_util(input_page.table.get_table(), inputs_disabled_table)
+        input_page.enable_all_inputs()
+        input_page.interact_all_prompt_entity.confirm()
+        time.sleep(3)
+        self.assert_util(input_page.table.get_table(), inputs_enabled_table)
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
+    def test_inputs_enable_all_some_already_enabled(
+        self,
+        ucc_smartx_selenium_helper,
+        ucc_smartx_rest_helper,
+        add_input_one,
+        add_input_two,
+    ):
+        """
+        Verifies that all inputs are enabled correctly.
+        This test covers scenario where one input is already enabled.
+        """
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        inputs_enabled_table = input_page.table.get_table()
+        self.assert_util(
+            input_page.table.input_status_toggle,
+            True,
+            left_args={"name": "dummy_input_one", "enable": False},
+        )
+        input_page.enable_all_inputs()
+        input_page.interact_all_prompt_entity.confirm()
+        time.sleep(3)
+        self.assert_util(input_page.table.get_table(), inputs_enabled_table)
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
+    def test_inputs_disable_all_some_already_disabled(
+        self,
+        ucc_smartx_selenium_helper,
+        ucc_smartx_rest_helper,
+        add_input_one,
+        add_input_two,
+    ):
+        """
+        Verifies that all inputs are disabled correctly.
+        This test covers scenario where one input is already disabled.
+        """
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        inputs_enabled_table = input_page.table.get_table()
+        inputs_disabled_table = copy.deepcopy(inputs_enabled_table)
+        for i in inputs_disabled_table:
+            inputs_disabled_table[i]["status"] = "Disabled"
+        self.assert_util(
+            input_page.table.input_status_toggle,
+            True,
+            left_args={"name": "dummy_input_one", "enable": False},
+        )
+        input_page.disable_all_inputs()
+        input_page.interact_all_prompt_entity.confirm()
+        time.sleep(3)
+        self.assert_util(input_page.table.get_table(), inputs_disabled_table)
