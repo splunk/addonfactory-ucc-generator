@@ -29,16 +29,20 @@ def test_config_validation_when_valid(filename, is_yaml):
         validator.validate()
 
 
-def test_config_validation_when_deprecated_placeholder_is_used():
+def test_config_validation_when_deprecated_placeholder_is_used(caplog):
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_deprecated_placeholder_usage.json"
     )
     global_config = global_config_lib.GlobalConfig(global_config_path, False)
 
     validator = GlobalConfigValidator(helpers.get_path_to_source_dir(), global_config)
+    validator.validate()
 
-    with pytest.warns(DeprecationWarning):
-        validator._warn_on_placeholder_usage()
+    expected_warning_message = (
+        "`placeholder` option found for input service 'example_input_one' -> entity field 'name'. "
+        "Please take a look at https://github.com/splunk/addonfactory-ucc-generator/issues/831."
+    )
+    assert expected_warning_message in caplog.text
 
 
 @pytest.mark.parametrize(
@@ -110,6 +114,13 @@ def test_config_validation_when_deprecated_placeholder_is_used():
                 "You should define your supported file types in "
                 "the `supportedFileTypes` field for the "
                 "'service_account' field."
+            ),
+        ),
+        (
+            "invalid_config_file_is_encrypted_but_not_required.json",
+            False,
+            (
+                "Field service_account uses type 'file' which is encrypted and not required, this is not supported"
             ),
         ),
         (
@@ -275,6 +286,13 @@ def test_config_validation_when_deprecated_placeholder_is_used():
             False,
             (
                 "Entity test_checkbox_group has duplicate field (collectTasksAndComments) in options.groups"
+            ),
+        ),
+        (
+            "invalid_config_group_has_duplicate_labels.json",
+            False,
+            (
+                "Service input_with_duplicate_group_labels has duplicate labels in groups"
             ),
         ),
     ],

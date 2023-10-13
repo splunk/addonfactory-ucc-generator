@@ -9,7 +9,7 @@ on:
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
   pull_request:
-    branches: [main, develop, "release/**"]
+    branches: [ main, develop, "release/**" ]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - id: matrix
-        uses: splunk/addonfactory-test-matrix-action@v1
+        uses: splunk/addonfactory-test-matrix-action@v1.10
 
   fossa-scan:
     continue-on-error: true
@@ -70,43 +70,15 @@ jobs:
       - uses: apache/skywalking-eyes@v0.5.0
 
   build-ui:
-    runs-on: ubuntu-latest
+    name: Build UCC UI
     strategy:
       matrix:
         node-version:
           - "18"
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.7"
-      - uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-      - run: npm install --global yarn
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
-      - uses: actions/cache@v3
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('ui/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-${{ matrix.node-version }}
-      - name: Build UCC UI
-        run: |
-          cd ui/
-          yarn
-          yarn run lint
-          yarn run test
-          yarn run build
-          yarn list --prod --depth 0 | python ../.github/scripts/format_yarn_deps.py --output-file=dist/package/appserver/static/js/dependencies.txt
-          cd ../
-      - uses: actions/upload-artifact@v3
-        with:
-          name: UCC-UI-build
-          path: ui/dist/
+    uses: ./.github/workflows/build-ui.yml
+    with:
+      node-version: ${{ matrix.node-version }}
+
 
   build:
     needs:
@@ -364,7 +336,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
       - if: ${{ steps.semantic.outputs.new_release_published == 'true' }}
-        uses: splunk/pypi-publish-action@v1.0
-        with:
-          pypi_username: ${{ secrets.PYPI_USERNAME }}
-          pypi_token: ${{ secrets.PYPI_TOKEN }}
+        run: |
+          poetry build
+          poetry publish -n -u ${{ secrets.PYPI_USERNAME }} -p ${{ secrets.PYPI_TOKEN }}

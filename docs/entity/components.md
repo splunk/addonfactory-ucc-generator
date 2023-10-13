@@ -265,52 +265,35 @@ Example usage below:
           "isExpandable": true,
           "expand": true
         },
-        "fields": ["disabledRowUnderGroup3"]
+        "fields": ["field223", "160validation"]
       }
     ],
     "rows": [
       {
+        "field": "rowWithoutGroup",
+        "input": {
+          "defaultValue": 1,
+          "required": true
+        }
+      },
+      {
         "field": "rowUnderGroup1",
         "checkbox": {
-          "label": "Row under Group 1"
+          "label": "Row under Group 1",
+          "defaultValue": true
         },
-        "text": {
+        "input": {
           "defaultValue": 1200,
           "required": false
         }
       },
       {
-        "field": "rowWithoutGroup",
-        "text": {
-          "defaultValue": 1,
-          "required": true
-        }
-      },
-      {
-        "field": "disabledRowUnderGroup3",
-        "checkbox": {
-          "options": {
-            "enable": false
-          }
-        },
-        "text": {
-          "defaultValue": 1,
-          "required": true
-        }
-      },
-      {
-        "field": "rowWithoutGroup_2",
-        "text": {
-          "defaultValue": 3600,
-          "required": true
-        }
-      },
-      {
         "field": "field223",
         "checkbox": {
-          "label": "Required field"
+          "label": "Required field",
+          "defaultValue": true
         },
-        "text": {
+        "input": {
           "required": true
         }
       },
@@ -319,7 +302,7 @@ Example usage below:
         "checkbox": {
           "label": "from 1 to 60 validation"
         },
-        "text": {
+        "input": {
           "validators": [
             {
               "type": "number",

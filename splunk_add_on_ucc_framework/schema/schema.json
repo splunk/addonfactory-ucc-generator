@@ -855,31 +855,17 @@
                         "type": "string",
                         "maxLength": 30
                       },
-                      "options": {
-                        "type": "object",
-                        "properties": {
-                          "enable": {
-                            "type": "boolean",
-                            "default": false
-                          }
-                        },
-                        "additionalProperties": false
+                      "defaultValue": {
+                        "type": "boolean"
                       }
                     },
                     "additionalProperties": false
                   },
-                  "text": {
+                  "input": {
                     "type": "object",
                     "properties": {
                       "defaultValue": {
-                        "oneOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "number"
-                          }
-                        ]
+                        "type": "number"
                       },
                       "required": {
                         "type": "boolean",
@@ -890,13 +876,7 @@
                         "items": {
                           "anyOf": [
                             {
-                              "$ref": "#/definitions/StringValidator"
-                            },
-                            {
                               "$ref": "#/definitions/NumberValidator"
-                            },
-                            {
-                              "$ref": "#/definitions/RegexValidator"
                             }
                           ]
                         }
