@@ -32,7 +32,11 @@
             "label": "Name"
           }
         ],
-        "actions": ["edit", "delete", "clone"]
+        "actions": [
+          "edit",
+          "delete",
+          "clone"
+        ]
       },
       "services": [
         {
@@ -41,134 +45,7 @@
           "entity": [
             {
               "type": "checkboxGroup",
-              "label": "Two groups",
-              "field": "api1",
-              "options": {
-                "groups": [
-                  {
-                    "label": "Collect",
-                    "fields": [
-                      "collectFolderCollaboration",
-                      "collectFileMetadata",
-                      "collectTasksAndComments"
-                    ]
-                  },
-                  {
-                    "label": "Collect2",
-                    "options": {
-                      "isExpandable": true
-                    },
-                    "fields": ["collectFolderMetadata"]
-                  }
-                ],
-                "rows": [
-                  {
-                    "field": "collectFolderCollaboration",
-                    "checkbox": {
-                      "defaultValue": true
-                    },
-                    "input": {
-                      "defaultValue": 1200,
-                      "required": false,
-                      "validators": [
-                        {
-                          "type": "number",
-                          "range": [1, 1200]
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "field": "collectFileMetadata",
-                    "checkbox": {
-                      "label": "Collect file metadata"
-                    },
-                    "input": {
-                      "defaultValue": 1,
-                      "required": true
-                    }
-                  },
-                  {
-                    "field": "collectTasksAndComments",
-                    "checkbox": {
-                      "label": "This is a very very long line"
-                    },
-                    "input": {
-                      "defaultValue": 1,
-                      "required": true
-                    }
-                  },
-                  {
-                    "field": "collectFolderMetadata",
-                    "checkbox": {
-                      "label": "Collect folder metadata"
-                    },
-                    "input": {
-                      "defaultValue": 3600,
-                      "required": true
-                    }
-                  }
-                ]
-              }
-            },
-            {
-              "type": "checkboxGroup",
-              "label": "No groups",
-              "field": "api2",
-              "options": {
-                "rows": [
-                  {
-                    "field": "collectFolderMetadata",
-                    "checkbox": {
-                      "label": "Collect folder metadata"
-                    },
-                    "input": {
-                      "defaultValue": 3600,
-                      "required": true
-                    }
-                  },
-                  {
-                    "field": "collectFolderCollaboration",
-                    "checkbox": {
-                      "label": "Collect folder collaboration"
-                    },
-                    "input": {
-                      "defaultValue": 1200,
-                      "required": false,
-                      "validators": [
-                        {
-                          "type": "number",
-                          "range": [1, 1200]
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "field": "collectFileMetadata",
-                    "checkbox": {
-                      "label": "Collect file metadata"
-                    },
-                    "input": {
-                      "defaultValue": 1,
-                      "required": true
-                    }
-                  },
-                  {
-                    "field": "collectTasksAndComments",
-                    "checkbox": {
-                      "label": "Collect tasks and comments"
-                    },
-                    "input": {
-                      "defaultValue": 1,
-                      "required": true
-                    }
-                  }
-                ]
-              }
-            },
-            {
-              "type": "checkboxGroup",
-              "label": "Mixed",
+              "label": "CheckboxGroupTitle",
               "field": "api3",
               "options": {
                 "groups": [
@@ -178,7 +55,9 @@
                       "isExpandable": true,
                       "expand": true
                     },
-                    "fields": ["collectFolderCollaboration"]
+                    "fields": [
+                      "rowUnderGroup1"
+                    ]
                   },
                   {
                     "label": "Group 3",
@@ -186,14 +65,25 @@
                       "isExpandable": true,
                       "expand": true
                     },
-                    "fields": ["collectFolderMetadata"]
+                    "fields": [
+                      "field223",
+                      "160validation"
+                    ]
                   }
                 ],
                 "rows": [
                   {
-                    "field": "collectFolderCollaboration",
+                    "field": "rowWithoutGroup",
+                    "input": {
+                      "defaultValue": 1,
+                      "required": true
+                    }
+                  },
+                  {
+                    "field": "rowUnderGroup1",
                     "checkbox": {
-                      "label": "Collect folder collaboration"
+                      "label": "Row under Group 1",
+                      "defaultValue": true
                     },
                     "input": {
                       "defaultValue": 1200,
@@ -201,39 +91,10 @@
                     }
                   },
                   {
-                    "field": "collectFileMetadata",
-                    "checkbox": {
-                      "label": "Collect file metadata"
-                    },
-                    "input": {
-                      "defaultValue": 1,
-                      "required": true
-                    }
-                  },
-                  {
-                    "field": "collectTasksAndComments",
-                    "checkbox": {
-                      "label": "Collect tasks and comments"
-                    },
-                    "input": {
-                      "defaultValue": 1,
-                      "required": true
-                    }
-                  },
-                  {
-                    "field": "collectFolderMetadata",
-                    "checkbox": {
-                      "label": "Collect folder metadata"
-                    },
-                    "input": {
-                      "defaultValue": 3600,
-                      "required": true
-                    }
-                  },
-                  {
                     "field": "field223",
                     "checkbox": {
-                      "label": "Required field"
+                      "label": "Required field",
+                      "defaultValue": true
                     },
                     "input": {
                       "required": true
@@ -248,7 +109,10 @@
                       "validators": [
                         {
                           "type": "number",
-                          "range": [1, 60]
+                          "range": [
+                            1,
+                            60
+                          ]
                         }
                       ]
                     }
