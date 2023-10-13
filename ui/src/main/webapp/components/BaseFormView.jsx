@@ -241,6 +241,16 @@ class BaseFormView extends PureComponent {
                 const tempEntity = {};
                 e.encrypted = typeof e.encrypted !== 'undefined' ? e.encrypted : false;
 
+                if (e.type === 'file' && this.currentInput[e.field]) {
+                    /* 
+                     adding example name to enable possibility of removal file,
+                     not forcing value addition as if value is encrypted it is shared as
+                     string ie. ***** and it is considered a valid default value
+                     if value is not encrypted it is pushed correctly along with this name
+                    */
+                    tempEntity.fileNameToDisplay = 'Previous File';
+                }
+
                 if (props.mode === MODE_CREATE) {
                     tempEntity.value =
                         typeof e.defaultValue !== 'undefined' ? e.defaultValue : null;
@@ -1060,6 +1070,7 @@ class BaseFormView extends PureComponent {
                                 disabled={temState.disabled}
                                 markdownMessage={temState.markdownMessage}
                                 dependencyValues={temState.dependencyValues || null}
+                                fileNameToDisplay={temState.fileNameToDisplay || null}
                             />
                         );
                     })}

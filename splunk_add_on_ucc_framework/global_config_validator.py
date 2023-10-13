@@ -122,6 +122,8 @@ class GlobalConfigValidator:
         Things should be provided in case of file field:
             * options field
             * supportedFileTypes field should be present in options
+        Also if file is encrypted but not required, this is not supported,
+        and we need to throw a validation error.
         """
         pages = self._config["pages"]
         configuration = pages["configuration"]
@@ -130,6 +132,13 @@ class GlobalConfigValidator:
             entities = tab["entity"]
             for entity in entities:
                 if entity["type"] == "file":
+                    is_required = entity.get("required", False)
+                    is_encrypted = entity.get("encrypted", False)
+                    if is_encrypted and not is_required:
+                        raise GlobalConfigValidatorException(
+                            f"Field {entity['field']} uses type 'file' which is encrypted and not required, "
+                            f"this is not supported"
+                        )
                     options = entity.get("options")
                     if options is None:
                         raise GlobalConfigValidatorException(

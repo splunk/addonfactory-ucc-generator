@@ -87,6 +87,7 @@ class ControlWrapper extends React.PureComponent {
                       dependencyValues: this.props.dependencyValues,
                       required,
                       addCustomValidator,
+                      fileNameToDisplay: this.props.fileNameToDisplay,
                   })
                 : `No View Found for ${type} type`;
         }
@@ -133,6 +134,7 @@ ControlWrapper.propTypes = {
     markdownMessage: PropTypes.object,
     serviceName: PropTypes.string,
     dependencyValues: PropTypes.object,
+    fileNameToDisplay: PropTypes.string,
 };
 
 export default ControlWrapper;
