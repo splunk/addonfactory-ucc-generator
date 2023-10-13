@@ -460,7 +460,7 @@ class GlobalConfigValidator:
         for tab in tabs:
             for entity in tab["entity"]:
                 if "placeholder" in entity.get("options", {}):
-                    logger.warn(
+                    logger.warning(
                         f"`placeholder` option found for configuration tab '{tab['name']}' "
                         f"-> entity field '{entity['field']}'. "
                         f"Please take a look at https://github.com/splunk/addonfactory-ucc-generator/issues/831."
@@ -472,7 +472,7 @@ class GlobalConfigValidator:
         for service in services:
             for entity in service["entity"]:
                 if "placeholder" in entity.get("options", {}):
-                    logger.warn(
+                    logger.warning(
                         f"`placeholder` option found for input service '{service['name']}' "
                         f"-> entity field '{entity['field']}'. "
                         f"Please take a look at https://github.com/splunk/addonfactory-ucc-generator/issues/831."
