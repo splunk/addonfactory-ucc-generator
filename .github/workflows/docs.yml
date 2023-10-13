@@ -18,7 +18,7 @@ jobs:
         with:
           node-version: "18"
       - name: install deps
-        uses: ./github/actions/cached-ui-deps
+        uses: ./.github/actions/cached-ui-deps
         with:
           node-version: "18"
       - name: Build Storybook
