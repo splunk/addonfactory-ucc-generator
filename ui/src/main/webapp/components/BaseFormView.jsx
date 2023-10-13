@@ -668,62 +668,66 @@ class BaseFormView extends PureComponent {
     };
 
     handleChange = (field, targetValue) => {
-        const changes = {};
-        if (field === 'auth_type') {
-            Object.keys(this.authMap).forEach((type) => {
-                if (type === targetValue) {
-                    this.authMap[type].forEach((e) => {
-                        changes[e] = { display: { $set: true } };
-                    });
-                } else {
-                    this.authMap[type].forEach((e) => {
-                        changes[e] = { display: { $set: false } };
-                    });
-                }
-            });
-        }
-
-        if (this.dependencyMap.has(field)) {
-            const value = this.dependencyMap.get(field);
-            Object.keys(value).forEach((loadField) => {
-                const data = {};
-                let load = true;
-
-                value[loadField].forEach((dependency) => {
-                    const required = !!this.entities.find((e) => e.field === dependency).required;
-
-                    const currentValue =
-                        dependency === field ? targetValue : this.state.data[dependency].value;
-                    if (required && !currentValue) {
-                        load = false;
-                        data[dependency] = null;
+        this.setState((prevState) => {
+            const changes = {};
+            if (field === 'auth_type') {
+                Object.keys(this.authMap).forEach((type) => {
+                    if (type === targetValue) {
+                        this.authMap[type].forEach((e) => {
+                            changes[e] = { display: { $set: true } };
+                        });
                     } else {
-                        data[dependency] = currentValue;
+                        this.authMap[type].forEach((e) => {
+                            changes[e] = { display: { $set: false } };
+                        });
                     }
                 });
+            }
 
-                if (load) {
-                    changes[loadField] = {
-                        dependencyValues: { $set: data },
-                        value: { $set: null },
-                    };
-                }
-            });
-        }
+            if (this.dependencyMap.has(field)) {
+                const value = this.dependencyMap.get(field);
+                Object.keys(value).forEach((loadField) => {
+                    const data = {};
+                    let load = true;
 
-        changes[field] = { value: { $set: targetValue } };
+                    value[loadField].forEach((dependency) => {
+                        const required = !!this.entities.find((e) => e.field === dependency)
+                            .required;
 
-        const newFields = update(this.state, { data: changes });
-        const tempState = this.clearAllErrorMsg(newFields);
-        this.setState(tempState);
+                        const currentValue =
+                            dependency === field ? targetValue : prevState.data[dependency].value;
+                        if (required && !currentValue) {
+                            load = false;
+                            data[dependency] = null;
+                        } else {
+                            data[dependency] = currentValue;
+                        }
+                    });
 
-        if (this.hookDeferred) {
-            this.hookDeferred.then(() => {
-                if (typeof this.hook.onChange === 'function') {
-                    this.hook.onChange(field, targetValue, tempState);
-                }
-            });
-        }
+                    if (load) {
+                        changes[loadField] = {
+                            dependencyValues: { $set: data },
+                            value: { $set: null },
+                        };
+                    }
+                });
+            }
+
+            changes[field] = { value: { $set: targetValue } };
+
+            const newFields = update(prevState, { data: changes });
+            const tempState = this.clearAllErrorMsg(newFields);
+
+            if (this.hookDeferred) {
+                this.hookDeferred.then(() => {
+                    if (typeof this.hook.onChange === 'function') {
+                        this.hook.onChange(field, targetValue, tempState);
+                    }
+                });
+            }
+
+            return tempState;
+        });
     };
 
     addCustomValidator = (field, validatorFunc) => {
