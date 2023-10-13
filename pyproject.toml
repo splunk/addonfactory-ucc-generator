@@ -22,9 +22,10 @@ license = "Apache-2.0"
 authors = ["Splunk <addonfactory@splunk.com>"]
 include = ["NOTICE"]
 readme = "README.md"
-repository = "https://github.com/splunk/addonfactory-ucc-generator"
 homepage = "https://github.com/splunk/addonfactory-ucc-generator"
-keywords = ["splunk"]
+repository = "https://github.com/splunk/addonfactory-ucc-generator"
+documentation = "https://splunk.github.io/addonfactory-ucc-generator"
+keywords = ["splunk", "ucc"]
 classifiers = [
     "Programming Language :: Python",
     "Development Status :: 5 - Production/Stable",
@@ -33,6 +34,9 @@ classifiers = [
     "Topic :: Software Development :: Code Generators",
     "License :: OSI Approved :: Apache Software License"
 ]
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/splunk/addonfactory-ucc-generator/issues"
 
 [tool.poetry.dependencies]
 python = "^3.7"

@@ -45,6 +45,7 @@ nav:
     - Validators: "entity/validators.md"
   - Table: "table.md"
   - Additional packaging: "additional_packaging.md"
+  - UCC Ignore: "uccignore.md"
   - OpenAPI: "openapi.md"
   - UCC-related libraries: "ucc_related_libraries.md"
   - Custom UI Extensions:

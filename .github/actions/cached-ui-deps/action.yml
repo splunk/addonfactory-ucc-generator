@@ -1,0 +1,29 @@
+name: "Get & Cache Yarn Dependencies"
+description: "Get & Cache Yarn Dependencies"
+inputs:
+  node-version:
+    description: "Node version"
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - run: npm install --global yarn
+      shell: bash
+    - name: Get yarn cache directory path
+      id: yarn-cache-dir-path
+      run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+      shell: bash
+    - name: Cache Dependencies
+      uses: actions/cache@v3
+      id: yarn-cache
+      with:
+        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+        key: ${{ runner.os }}-yarn-${{ hashFiles('ui/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-${{ inputs.node-version }}
+
+    - name: Install Dependencies
+      working-directory: ui
+      run: yarn install --frozen-lockfile
+      shell: bash

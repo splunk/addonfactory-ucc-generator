@@ -422,9 +422,6 @@
         "inputs": {
             "services": [
                 {
-                    "hook": {
-                        "src": "Hook"
-                    },
                     "name": "example_input_one",
                     "entity": [
                         {
@@ -890,105 +887,108 @@
                                 "rows": [
                                     {
                                         "field": "ec2_volumes",
-                                        "text": {
+                                        "checkbox": {
+                                            "defaultValue": true
+                                        },
+                                        "input": {
                                             "defaultValue": 3600,
                                             "required": true
                                         }
                                     },
                                     {
                                         "field": "ec2_instances",
-                                        "text": {
+                                        "input": {
                                             "defaultValue": 3600,
                                             "required": true
                                         }
                                     },
                                     {
                                         "field": "ec2_reserved_instances",
-                                        "text": {
+                                        "input": {
                                             "defaultValue": 3600,
                                             "required": true
                                         }
                                     },
                                     {
                                         "field": "ebs_snapshots",
-                                        "text": {
+                                        "input": {
                                             "defaultValue": 3600,
                                             "required": true
                                         }
                                     },
                                     {
                                         "field": "rds_instances",
-                                        "text": {
+                                        "input": {
                                             "defaultValue": 3600,
                                             "required": true
                                         }
                                     },
                                     {
                                         "field": "rds_reserved_instances",
-                                        "text": {
+                                        "input": {
                                             "defaultValue": 3600,
                                             "required": true
                                         }
                                     },
                                     {
                                         "field": "ec2_key_pairs",
-                                        "text": {
+                                        "input": {
                                             "defaultValue": 3600,
                                             "required": true
                                         }
                                     },
                                     {
                                         "field": "ec2_security_groups",
-                                        "text": {
+                                        "input": {
                                             "defaultValue": 3600,
                                             "required": true
                                         }
                                     },
                                     {
                                         "field": "ec2_images",
-                                        "text": {
+                                        "input": {
                                             "defaultValue": 3600,
                                             "required": true
                                         }
                                     },
                                     {
                                         "field": "ec2_addresses",
-                                        "text": {
+                                        "input": {
                                             "defaultValue": 3600,
                                             "required": true
                                         }
                                     },
                                     {
                                         "field": "classic_load_balancers",
-                                        "text": {
+                                        "input": {
                                             "defaultValue": 3600,
                                             "required": true
                                         }
                                     },
                                     {
                                         "field": "application_load_balancers",
-                                        "text": {
+                                        "input": {
                                             "defaultValue": 3600,
                                             "required": true
                                         }
                                     },
                                     {
                                         "field": "vpcs",
-                                        "text": {
+                                        "input": {
                                             "defaultValue": 3600,
                                             "required": true
                                         }
                                     },
                                     {
                                         "field": "vpc_network_acls",
-                                        "text": {
+                                        "input": {
                                             "defaultValue": 3600,
                                             "required": true
                                         }
                                     },
                                     {
                                         "field": "vpc_subnets",
-                                        "text": {
+                                        "input": {
                                             "defaultValue": 3600,
                                             "required": true
                                         }
@@ -1291,7 +1291,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.30.0R2e44f258",
+        "version": "5.31.1Rdd3a1ca0",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.3"
     }

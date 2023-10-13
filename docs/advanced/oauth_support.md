@@ -23,6 +23,7 @@ Auth can be used inside the entity tag. Use `type: "oauth"` in the entity list a
     - `oauth_popup_height` height in pixels of the popup window that will open for oauth authentication (Optional, defaults to 600)
     - `oauth_timeout` timeout in seconds for oauth authentication (Optional, defaults to 180 seconds)
     - `oauth_state_enabled` to include state for oauth authentication (default value is false)
+    - `auth_endpoint_token_access_type` optional parameter that is mapped into value of token_access_type query param in authorisation url
 
     - Fields allowed in basic and oauth fields as of now:
         - `oauth_field`: This should be kept as it is and without any change.
@@ -125,7 +126,8 @@ Auth can be used inside the entity tag. Use `type: "oauth"` in the entity list a
                         "oauth_popup_height": 600,
                         "oauth_timeout": 180,
                         "auth_code_endpoint": "/services/oauth2/authorize",
-                        "access_token_endpoint": "/services/oauth2/token"
+                        "access_token_endpoint": "/services/oauth2/token",
+                        "auth_endpoint_token_access_type": "offline"
                     }
                 }
             ],

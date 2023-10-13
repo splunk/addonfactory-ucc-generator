@@ -211,7 +211,7 @@ def _remove_listed_files(ignore_list: List[str]) -> None:
             elif os.path.isdir(path):
                 shutil.rmtree(path, ignore_errors=True)
         else:
-            logger.info(
+            logger.warning(
                 "While ignoring the files mentioned in .uccignore {} was not found".format(
                     path
                 )

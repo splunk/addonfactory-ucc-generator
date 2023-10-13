@@ -19,44 +19,26 @@ export function validateCheckboxGroup(
     options.rows.some((row) => {
         const rowSubmittedValue = parsedValue.get(row.field);
         if (rowSubmittedValue) {
-            if (row.text.required) {
+            if (row.input?.required) {
                 errorMessage = Validator.RequiredValidator(
                     field,
                     row.checkbox?.label || row.field,
-                    rowSubmittedValue?.text
+                    rowSubmittedValue.inputValue
                 );
                 // break loop
                 return errorMessage;
             }
 
-            const { validators } = row.text;
-            if (validators?.length) {
-                return validators.some((validator) => {
+            if (row.input?.validators?.length) {
+                return row.input?.validators.some((validator) => {
                     const { type } = validator;
                     switch (type) {
-                        case 'regex':
-                            errorMessage = Validator.RegexValidator(
-                                field,
-                                row.checkbox?.label || row.field,
-                                validator,
-                                rowSubmittedValue?.text
-                            );
-                            return errorMessage;
-                        case 'string':
-                            errorMessage = Validator.StringValidator(
-                                field,
-                                row.checkbox?.label || row.field,
-                                validator,
-                                rowSubmittedValue?.text
-                            );
-                            return errorMessage;
-
                         case 'number':
                             errorMessage = Validator.NumberValidator(
                                 field,
                                 row.checkbox?.label || row.field,
                                 validator,
-                                rowSubmittedValue?.text
+                                rowSubmittedValue.inputValue
                             );
 
                             return errorMessage;

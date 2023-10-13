@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 import File from '@splunk/react-ui/File';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
 
-import FileConstants from '../constants/constant';
+import FileConstants from '../constants/fileInputConstant';
 import { getFormattedMessage } from '../util/messageUtil';
 
 const FileWrapper = styled(File)`
@@ -13,8 +12,26 @@ const FileWrapper = styled(File)`
     }
 `;
 
-function isValidFile(fileType, fileSize, supportedFileTypes, maxFileSize) {
-    if (!supportedFileTypes.includes(fileType)) {
+interface FileInputComponentProps {
+    field: string;
+    controlOptions: {
+        fileSupportMessage?: string;
+        supportedFileTypes: string[];
+        maxFileSize?: number;
+    };
+    disabled: boolean;
+    handleChange: (field: string, data: string) => void;
+    encrypted?: boolean;
+    fileNameToDisplay?: string;
+}
+
+function isValidFile(
+    fileType: string | undefined,
+    fileSize: number,
+    supportedFileTypes: string[],
+    maxFileSize: number
+) {
+    if (!fileType || !supportedFileTypes.includes(fileType)) {
         return (
             <span style={{ color: 'red' }}>
                 {getFormattedMessage(supportedFileTypes.length === 1 ? 28 : 24, [
@@ -29,8 +46,8 @@ function isValidFile(fileType, fileSize, supportedFileTypes, maxFileSize) {
     return true;
 }
 
-function FileInputComponent(props) {
-    const { field, disabled, controlOptions, handleChange } = props;
+function FileInputComponent(props: FileInputComponentProps) {
+    const { field, disabled, controlOptions, handleChange, fileNameToDisplay, encrypted } = props;
     const {
         fileSupportMessage,
         supportedFileTypes,
@@ -40,10 +57,22 @@ function FileInputComponent(props) {
     const fileReader = new FileReader();
     const textDecoder = new TextDecoder(); // default utf-8
 
-    const [fileName, setFileName] = useState('');
-    const [errorMsg, setErrorMsg] = useState('');
+    /*
+     use fileNameToDisplay during editing to get
+     the possibility of removal previously added file
+    */
+    const [fileName, setFileName] = useState<string | null>(fileNameToDisplay || '');
 
-    const handleAddFiles = (files) => {
+    /* 
+      if the file data is encrypted and we display its name
+      then we display error message "file needs to be reuploaded"
+      as there is no access to data inside due to encription
+     */
+    const [errorMsg, setErrorMsg] = useState<ReactElement | string>(
+        fileNameToDisplay && encrypted ? FileConstants.REUPLOAD_MESSAGE : ''
+    );
+
+    const handleAddFiles = (files: File[]) => {
         if (files.length) {
             const file = files[0];
 
@@ -63,14 +92,16 @@ function FileInputComponent(props) {
                 if (isValid === true) {
                     setErrorMsg('');
                     try {
-                        handleChange(field, textDecoder.decode(fileReader.result));
+                        if (fileReader.result && typeof fileReader.result !== 'string') {
+                            handleChange(field, textDecoder.decode(fileReader.result));
+                        }
                     } catch (err) {
                         // eslint-disable-next-line no-console
                         console.log(err);
                     }
                 } else {
                     setErrorMsg(isValid);
-                    handleChange(field, '##INVALID_FILE##');
+                    handleChange(field, FileConstants.INVALID_FILE_MESSAGE);
                 }
                 setFileName(file.name);
             };
@@ -100,12 +131,5 @@ function FileInputComponent(props) {
         </FileWrapper>
     );
 }
-
-FileInputComponent.propTypes = {
-    field: PropTypes.string,
-    controlOptions: PropTypes.object,
-    disabled: PropTypes.bool,
-    handleChange: PropTypes.func,
-};
 
 export default FileInputComponent;

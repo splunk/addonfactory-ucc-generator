@@ -18,12 +18,14 @@ import json
 import os
 import re
 from typing import Any, Dict, List
-import warnings
+import logging
 
 import jsonschema
 
 from splunk_add_on_ucc_framework import dashboard as dashboard_lib
 from splunk_add_on_ucc_framework import global_config as global_config_lib
+
+logger = logging.getLogger("ucc_gen")
 
 
 class GlobalConfigValidatorException(Exception):
@@ -120,6 +122,8 @@ class GlobalConfigValidator:
         Things should be provided in case of file field:
             * options field
             * supportedFileTypes field should be present in options
+        Also if file is encrypted but not required, this is not supported,
+        and we need to throw a validation error.
         """
         pages = self._config["pages"]
         configuration = pages["configuration"]
@@ -128,6 +132,13 @@ class GlobalConfigValidator:
             entities = tab["entity"]
             for entity in entities:
                 if entity["type"] == "file":
+                    is_required = entity.get("required", False)
+                    is_encrypted = entity.get("encrypted", False)
+                    if is_encrypted and not is_required:
+                        raise GlobalConfigValidatorException(
+                            f"Field {entity['field']} uses type 'file' which is encrypted and not required, "
+                            f"this is not supported"
+                        )
                     options = entity.get("options")
                     if options is None:
                         raise GlobalConfigValidatorException(
@@ -458,11 +469,10 @@ class GlobalConfigValidator:
         for tab in tabs:
             for entity in tab["entity"]:
                 if "placeholder" in entity.get("options", {}):
-                    warnings.warn(
+                    logger.warning(
                         f"`placeholder` option found for configuration tab '{tab['name']}' "
                         f"-> entity field '{entity['field']}'. "
-                        f"Please take a look at https://github.com/splunk/addonfactory-ucc-generator/issues/831.",
-                        DeprecationWarning,
+                        f"Please take a look at https://github.com/splunk/addonfactory-ucc-generator/issues/831."
                     )
         inputs = pages.get("inputs")
         if inputs is None:
@@ -471,11 +481,10 @@ class GlobalConfigValidator:
         for service in services:
             for entity in service["entity"]:
                 if "placeholder" in entity.get("options", {}):
-                    warnings.warn(
+                    logger.warning(
                         f"`placeholder` option found for input service '{service['name']}' "
                         f"-> entity field '{entity['field']}'. "
-                        f"Please take a look at https://github.com/splunk/addonfactory-ucc-generator/issues/831.",
-                        DeprecationWarning,
+                        f"Please take a look at https://github.com/splunk/addonfactory-ucc-generator/issues/831."
                     )
 
     def _validate_checkbox_group(self) -> None:
@@ -512,6 +521,25 @@ class GlobalConfigValidator:
                                 )
                             group_used_field_names.append(group_field_name)
 
+    def _validate_group_labels(self) -> None:
+        pages = self._config["pages"]
+        inputs = pages.get("inputs")
+        if inputs is None:
+            return
+        services = inputs["services"]
+        for service in services:
+            groups = service.get("groups")
+            if groups is None:
+                continue
+            service_group_labels = []
+            for group in groups:
+                group_label = group["label"]
+                if group_label in service_group_labels:
+                    raise GlobalConfigValidatorException(
+                        f"Service {service['name']} has duplicate labels in groups"
+                    )
+                service_group_labels.append(group_label)
+
     def validate(self) -> None:
         self._validate_config_against_schema()
         self._validate_configuration_tab_table_has_name_field()
@@ -524,3 +552,4 @@ class GlobalConfigValidator:
         self._validate_panels()
         self._warn_on_placeholder_usage()
         self._validate_checkbox_group()
+        self._validate_group_labels()

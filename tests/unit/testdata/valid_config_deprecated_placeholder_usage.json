@@ -47,8 +47,6 @@
             "services": [
                 {
                     "name": "example_input_one",
-                    "restHandlerName": "custom_rest_handler_file_rh",
-                    "restHandlerClass": "CustomRestHandlerClass",
                     "entity": [
                         {
                             "type": "text",

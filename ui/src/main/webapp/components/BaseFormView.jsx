@@ -230,13 +230,26 @@ class BaseFormView extends PureComponent {
                         oauthConfData.accessTokenEndpoint = e.options.access_token_endpoint
                             ? e.options.access_token_endpoint
                             : null;
-
+                        oauthConfData.authEndpointAccessTokenType = e.options
+                            .auth_endpoint_token_access_type
+                            ? e.options.auth_endpoint_token_access_type
+                            : null;
                         this.oauthConf = oauthConfData;
                     }
                 }
             } else {
                 const tempEntity = {};
                 e.encrypted = typeof e.encrypted !== 'undefined' ? e.encrypted : false;
+
+                if (e.type === 'file' && this.currentInput[e.field]) {
+                    /* 
+                     adding example name to enable possibility of removal file,
+                     not forcing value addition as if value is encrypted it is shared as
+                     string ie. ***** and it is considered a valid default value
+                     if value is not encrypted it is pushed correctly along with this name
+                    */
+                    tempEntity.fileNameToDisplay = 'Previous File';
+                }
 
                 if (props.mode === MODE_CREATE) {
                     tempEntity.value =
@@ -472,6 +485,10 @@ class BaseFormView extends PureComponent {
                     parameters = `${parameters}&scope=${this.datadict.scope}`;
                 }
 
+                if (this.oauthConf.authEndpointAccessTokenType) {
+                    parameters = `${parameters}&token_access_type=${this.oauthConf.authEndpointAccessTokenType}`;
+                }
+
                 let host = encodeURI(
                     `https://${this.datadict.endpoint}${this.oauthConf.authCodeEndpoint}${parameters}`
                 );
@@ -651,62 +668,66 @@ class BaseFormView extends PureComponent {
     };
 
     handleChange = (field, targetValue) => {
-        const changes = {};
-        if (field === 'auth_type') {
-            Object.keys(this.authMap).forEach((type) => {
-                if (type === targetValue) {
-                    this.authMap[type].forEach((e) => {
-                        changes[e] = { display: { $set: true } };
-                    });
-                } else {
-                    this.authMap[type].forEach((e) => {
-                        changes[e] = { display: { $set: false } };
-                    });
-                }
-            });
-        }
-
-        if (this.dependencyMap.has(field)) {
-            const value = this.dependencyMap.get(field);
-            Object.keys(value).forEach((loadField) => {
-                const data = {};
-                let load = true;
-
-                value[loadField].forEach((dependency) => {
-                    const required = !!this.entities.find((e) => e.field === dependency).required;
-
-                    const currentValue =
-                        dependency === field ? targetValue : this.state.data[dependency].value;
-                    if (required && !currentValue) {
-                        load = false;
-                        data[dependency] = null;
+        this.setState((prevState) => {
+            const changes = {};
+            if (field === 'auth_type') {
+                Object.keys(this.authMap).forEach((type) => {
+                    if (type === targetValue) {
+                        this.authMap[type].forEach((e) => {
+                            changes[e] = { display: { $set: true } };
+                        });
                     } else {
-                        data[dependency] = currentValue;
+                        this.authMap[type].forEach((e) => {
+                            changes[e] = { display: { $set: false } };
+                        });
                     }
                 });
+            }
 
-                if (load) {
-                    changes[loadField] = {
-                        dependencyValues: { $set: data },
-                        value: { $set: null },
-                    };
-                }
-            });
-        }
+            if (this.dependencyMap.has(field)) {
+                const value = this.dependencyMap.get(field);
+                Object.keys(value).forEach((loadField) => {
+                    const data = {};
+                    let load = true;
 
-        changes[field] = { value: { $set: targetValue } };
+                    value[loadField].forEach((dependency) => {
+                        const required = !!this.entities.find((e) => e.field === dependency)
+                            .required;
 
-        const newFields = update(this.state, { data: changes });
-        const tempState = this.clearAllErrorMsg(newFields);
-        this.setState(tempState);
+                        const currentValue =
+                            dependency === field ? targetValue : prevState.data[dependency].value;
+                        if (required && !currentValue) {
+                            load = false;
+                            data[dependency] = null;
+                        } else {
+                            data[dependency] = currentValue;
+                        }
+                    });
 
-        if (this.hookDeferred) {
-            this.hookDeferred.then(() => {
-                if (typeof this.hook.onChange === 'function') {
-                    this.hook.onChange(field, targetValue, tempState);
-                }
-            });
-        }
+                    if (load) {
+                        changes[loadField] = {
+                            dependencyValues: { $set: data },
+                            value: { $set: null },
+                        };
+                    }
+                });
+            }
+
+            changes[field] = { value: { $set: targetValue } };
+
+            const newFields = update(prevState, { data: changes });
+            const tempState = this.clearAllErrorMsg(newFields);
+
+            if (this.hookDeferred) {
+                this.hookDeferred.then(() => {
+                    if (typeof this.hook.onChange === 'function') {
+                        this.hook.onChange(field, targetValue, tempState);
+                    }
+                });
+            }
+
+            return tempState;
+        });
     };
 
     addCustomValidator = (field, validatorFunc) => {
@@ -982,6 +1003,7 @@ class BaseFormView extends PureComponent {
 
                 return (
                     <Group
+                        key={group.label}
                         isExpandable={group.options?.isExpandable}
                         defaultOpen={group.options?.expand}
                         title={group.label}
@@ -1052,6 +1074,7 @@ class BaseFormView extends PureComponent {
                                 disabled={temState.disabled}
                                 markdownMessage={temState.markdownMessage}
                                 dependencyValues={temState.dependencyValues || null}
+                                fileNameToDisplay={temState.fileNameToDisplay || null}
                             />
                         );
                     })}

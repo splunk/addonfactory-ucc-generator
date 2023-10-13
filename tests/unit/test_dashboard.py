@@ -28,7 +28,7 @@ def test_generate_dashboard_when_dashboard_does_not_exist(
       <title>Add-on version</title>
       <single>
         <search>
-          <query>| rest services/apps/local/Splunk_TA_UCCExample | fields version</query>
+          <query>| rest services/apps/local/Splunk_TA_UCCExample splunk_server=local | fields version</query>
           <earliest>-15m</earliest>
           <latest>now</latest>
         </search>
