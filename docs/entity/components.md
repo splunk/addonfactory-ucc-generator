@@ -265,10 +265,17 @@ Example usage below:
           "isExpandable": true,
           "expand": true
         },
-        "fields": ["disabledRowUnderGroup3"]
+        "fields": ["field223", "160validation"]
       }
     ],
     "rows": [
+      {
+        "field": "rowWithoutGroup",
+        "input": {
+          "defaultValue": 1,
+          "required": true
+        }
+      },
       {
         "field": "rowUnderGroup1",
         "checkbox": {
@@ -281,35 +288,10 @@ Example usage below:
         }
       },
       {
-        "field": "rowWithoutGroup",
-        "input": {
-          "defaultValue": 1,
-          "required": true
-        }
-      },
-      {
-        "field": "disabledRowUnderGroup3",
-        "checkbox": {
-          "options": {
-            "enable": false
-          }
-        },
-        "input": {
-          "defaultValue": 1,
-          "required": true
-        }
-      },
-      {
-        "field": "rowWithoutGroup_2",
-        "input": {
-          "defaultValue": 3600,
-          "required": true
-        }
-      },
-      {
         "field": "field223",
         "checkbox": {
-          "label": "Required field"
+          "label": "Required field",
+          "defaultValue": true
         },
         "input": {
           "required": true

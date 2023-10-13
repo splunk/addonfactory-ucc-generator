@@ -6,7 +6,7 @@ describe('validateCheckboxGroup', () => {
         const mockRequiredValidator = jest.fn().mockReturnValue(false);
         Validator.RequiredValidator = mockRequiredValidator;
 
-        const result = validateCheckboxGroup('field1', 'field1/123', {
+        const result = validateCheckboxGroup('field1', 'field1/', {
             rows: [
                 {
                     field: 'field1',
