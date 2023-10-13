@@ -2270,11 +2270,11 @@ class TestInputPage(UccTester):
             inputs_disabled_table[i]["status"] = "Disabled"
         input_page.disable_all_inputs()
         input_page.interact_all_prompt_entity.confirm()
-        time.sleep(10)
+        time.sleep(3)
         self.assert_util(input_page.table.get_table(), inputs_disabled_table)
         input_page.enable_all_inputs()
         input_page.interact_all_prompt_entity.confirm()
-        time.sleep(10)
+        time.sleep(3)
         self.assert_util(input_page.table.get_table(), inputs_enabled_table)
 
     @pytest.mark.execute_enterprise_cloud_true
@@ -2299,11 +2299,11 @@ class TestInputPage(UccTester):
             inputs_disabled_table[i]["status"] = "Disabled"
         input_page.disable_all_inputs()
         input_page.interact_all_prompt_entity.confirm()
-        time.sleep(3)
+        time.sleep(1)
         self.assert_util(input_page.table.get_table(), inputs_disabled_table)
         input_page.enable_all_inputs()
         input_page.interact_all_prompt_entity.confirm()
-        time.sleep(3)
+        time.sleep(1)
         self.assert_util(input_page.table.get_table(), inputs_enabled_table)
 
     @pytest.mark.execute_enterprise_cloud_true
@@ -2329,7 +2329,7 @@ class TestInputPage(UccTester):
         )
         input_page.enable_all_inputs()
         input_page.interact_all_prompt_entity.confirm()
-        time.sleep(3)
+        time.sleep(1)
         self.assert_util(input_page.table.get_table(), inputs_enabled_table)
 
     @pytest.mark.execute_enterprise_cloud_true
@@ -2358,5 +2358,5 @@ class TestInputPage(UccTester):
         )
         input_page.disable_all_inputs()
         input_page.interact_all_prompt_entity.confirm()
-        time.sleep(3)
+        time.sleep(1)
         self.assert_util(input_page.table.get_table(), inputs_disabled_table)
