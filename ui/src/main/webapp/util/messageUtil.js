@@ -19,6 +19,7 @@ export const getFormattedMessage = (code, msg /* , ... , args */) => {
 
 export const parseErrorMsg = (err) => {
     let errorMsg = '';
+    console.log(err);
     let regex;
     let matches;
     try {

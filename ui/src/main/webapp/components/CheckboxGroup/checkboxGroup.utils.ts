@@ -40,7 +40,7 @@ export function parseValue(collection?: string): ValueByField {
 export function packValue(map: ValueByField) {
     return Array.from(map.entries())
         .filter(([, value]) => value.checkbox)
-        .map(([field, value]) => `${field}/${value.inputValue}`)
+        .map(([field, { inputValue = '' }]) => `${field}/${inputValue}`)
         .join(',');
 }
 

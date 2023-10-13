@@ -20,17 +20,17 @@ function CheckboxGroup(props: CheckboxGroupProps) {
     const { field, handleChange, controlOptions, addCustomValidator } = props;
 
     const flattenedRowsWithGroups = getFlattenRowsWithGroups(controlOptions);
-    const value =
-        props.mode === MODE_CREATE
-            ? getDefaultValues(controlOptions.rows)
-            : parseValue(props.value);
+    const shouldUseDefaultValue = props.mode === MODE_CREATE && props.value === null;
+    const value = shouldUseDefaultValue
+        ? getDefaultValues(controlOptions.rows)
+        : parseValue(props.value);
 
     // propagate defaults up if the component is not touched
     useEffect(() => {
-        if (props.mode === MODE_CREATE) {
+        if (shouldUseDefaultValue) {
             handleChange(field, packValue(value), 'checkboxGroup');
         }
-    }, [field, handleChange, props.mode, value]);
+    }, [field, handleChange, shouldUseDefaultValue, value]);
 
     const [values, setValues] = useState(value);
 

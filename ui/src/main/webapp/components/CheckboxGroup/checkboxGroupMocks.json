@@ -64,6 +64,9 @@
                 "rows": [
                   {
                     "field": "collectFolderCollaboration",
+                    "checkbox": {
+                      "defaultValue": true
+                    },
                     "input": {
                       "defaultValue": 1200,
                       "required": false,
