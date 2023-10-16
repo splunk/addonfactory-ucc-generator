@@ -355,7 +355,7 @@ def summary_report(
 
         if verbose_report:
             print(color_pallete.get(mod_type, '') + str(print_path).ljust(80), mod_type + c.Style.RESET_ALL)
-            summary[mod_type] += 1
+        summary[mod_type] += 1
 
     def summary_print(summary):
 
