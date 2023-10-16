@@ -7,7 +7,7 @@ import CheckBoxComponent from '../components/CheckBoxComponent';
 import RadioComponent from '../components/RadioComponent';
 import PlaceholderComponent from '../components/PlaceholderComponent';
 import CustomControl from '../components/CustomControl';
-import FileInputComponent from '../components/FileInputComponent';
+import FileInputComponent from '../components/FileInputComponent/FileInputComponent';
 import CheckboxGroup from '../components/CheckboxGroup/CheckboxGroup';
 
 export default {

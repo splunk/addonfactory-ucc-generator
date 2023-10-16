@@ -1,5 +1,4 @@
-import React, { Component, PureComponent } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import Switch from '@splunk/react-ui/Switch';
 import { isFalse } from '../util/util';
 

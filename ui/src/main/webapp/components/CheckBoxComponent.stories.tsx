@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import React, { useState } from 'react';
 import CheckBoxComponent from './CheckBoxComponent';
 
 interface CheckBoxComponentProps {
@@ -8,26 +9,34 @@ interface CheckBoxComponentProps {
     disabled: boolean;
 }
 
-// function ComponentWrapper(props: CheckBoxComponentProps) {
-//     return <CheckBoxComponent />;
-// }
+function ComponentWrapper(props: CheckBoxComponentProps) {
+    const [state, setState] = useState(props.value);
+    return (
+        <CheckBoxComponent
+            {...props}
+            value={state}
+            handleChange={() => {
+                setState(!state);
+                props.handleChange(props.field, !state);
+            }}
+        />
+    );
+}
 
 const meta = {
-    component: CheckBoxComponent,
+    component: ComponentWrapper,
     title: 'Components/CheckBoxComponent',
-} satisfies Meta<typeof CheckBoxComponent>;
+} satisfies Meta<typeof ComponentWrapper>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-let tempValue = false;
-
 export const Base: Story = {
     args: {
-        value: tempValue,
+        value: false,
         handleChange: (field: string, value: boolean) => {
+            // eslint-disable-next-line
             console.log('CheckBoxComponent handleChange', { field, value });
-            tempValue = value;
         },
         field: 'field text',
         disabled: false,

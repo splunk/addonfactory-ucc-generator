@@ -20,6 +20,7 @@ export const Base: Story = {
         },
         disabled: false,
         handleChange: (field: string, data: string) => {
+            // eslint-disable-next-line
             console.log('handleChange fileInptuComponent', { field, data });
         },
     },
@@ -35,6 +36,7 @@ export const WithDefaultName: Story = {
         },
         disabled: false,
         handleChange: (field: string, data: string) => {
+            // eslint-disable-next-line
             console.log('handleChange fileInptuComponent', { field, data });
         },
         fileNameToDisplay: 'Test_file_name.json',
@@ -51,6 +53,7 @@ export const EncryptedWithDefaultName: Story = {
         },
         disabled: false,
         handleChange: (field: string, data: string) => {
+            // eslint-disable-next-line
             console.log('handleChange fileInptuComponent', { field, data });
         },
         fileNameToDisplay: 'Test_file_name.json',

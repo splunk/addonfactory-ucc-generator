@@ -14,6 +14,7 @@ export const Base: Story = {
         title: 'Accept Modal Title',
         open: true,
         handleRequestClose: (accepted: boolean) => {
+            // eslint-disable-next-line
             console.log(' handleRequestClose', { accepted });
         },
         message: 'Some message',
