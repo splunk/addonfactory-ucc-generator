@@ -17,6 +17,47 @@ from pytest_splunk_addon_ui_smartx.components.controls.toggle import Toggle
 from tests.ui import constants as C
 
 
+class InteractAllPrompt(BaseComponent):
+    def __init__(self, browser, container):
+        self.container = container
+        entity_container = Selector(select='[data-test="modal"]')
+
+        super().__init__(browser, entity_container)
+        self.elements["container"] = container
+
+        self.prompt_title = BaseComponent(
+            browser, Selector(select=entity_container.select + ' [data-test="title"]')
+        )
+        self.prompt_message = BaseComponent(
+            browser, Selector(select=entity_container.select + ' [data-test="content"]')
+        )
+        self.confirm_btn = Button(
+            browser, Selector(select=entity_container.select + ' button[label="Yes"]')
+        )
+        self.deny_btn = Button(
+            browser, Selector(select=entity_container.select + ' button[label="No"]')
+        )
+        self.close_btn = Button(
+            browser, Selector(select=entity_container.select + ' [data-test="close"]')
+        )
+
+    def close(self):
+        self.close_btn.wait_to_display()
+        self.close_btn.click()
+        self.confirm_btn.wait_until("container")
+        return True
+
+    def deny(self):
+        self.close_btn.wait_to_display()
+        self.deny_btn.click()
+        self.confirm_btn.wait_until("container")
+
+    def confirm(self):
+        self.close_btn.wait_to_display()
+        self.confirm_btn.click()
+        self.confirm_btn.wait_until("container")
+
+
 class ExampleInputOne(Entity):
     """
     Form to configure a new Input
@@ -233,6 +274,17 @@ class InputPage(Page):
             self.type_filter = Dropdown(
                 ucc_smartx_selenium_helper.browser, Selector(select=".dropdownInput")
             )
+            self.interact_all_prompt_entity = InteractAllPrompt(
+                ucc_smartx_selenium_helper.browser, input_container
+            )
+            self.enable_all_inputs_btn = Button(
+                ucc_smartx_selenium_helper.browser,
+                Selector(select='[data-testid="enableAllBtn"]'),
+            )
+            self.disable_all_inputs_btn = Button(
+                ucc_smartx_selenium_helper.browser,
+                Selector(select='[data-testid="disableAllBtn"]'),
+            )
 
         if ucc_smartx_rest_helper:
             self.backend_conf = ListBackendConf(
@@ -246,3 +298,9 @@ class InputPage(Page):
 
     def _get_input_endpoint(self):
         return f"{self.splunk_mgmt_url}/servicesNS/nobody/{C.ADDON_NAME}/configs/conf-inputs"
+
+    def enable_all_inputs(self):
+        self.enable_all_inputs_btn.click()
+
+    def disable_all_inputs(self):
+        self.disable_all_inputs_btn.click()
