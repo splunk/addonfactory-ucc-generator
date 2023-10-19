@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import ErrorModal from './ErrorModal';
-import React, { useState } from 'react';
 
 const meta = {
     component: ErrorModal,

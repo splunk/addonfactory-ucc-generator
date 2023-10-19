@@ -7,7 +7,6 @@ import EntityModal from './EntityModal';
 import EntityPage from './EntityPage';
 import { MODE_CREATE, MODE_CLONE } from '../constants/modes';
 import { PAGE_CONF } from '../constants/pages';
-import { STYLE_PAGE } from '../constants/dialogStyles';
 
 function ConfigurationTable({ selectedTab, updateIsPageOpen }) {
     const [entity, setEntity] = useState({ open: false });

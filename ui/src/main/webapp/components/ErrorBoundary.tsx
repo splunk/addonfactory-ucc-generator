@@ -1,6 +1,4 @@
 import React, { ReactElement } from 'react';
-import PropTypes from 'prop-types';
-
 import Heading from '@splunk/react-ui/Heading';
 import { _ } from '@splunk/ui-utils/i18n';
 import Card from '@splunk/react-ui/Card';
@@ -13,7 +11,7 @@ interface ErrorBoundaryProps {
 
 interface ErrorBoundaryState {
     errorCode: keyof typeof errorCodes | null;
-    error: null | any;
+    error: null | unknown;
 }
 
 class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
@@ -22,12 +20,12 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
         this.state = { errorCode: null, error: null };
     }
 
-    static getDerivedStateFromError(error: { uccErrorCode: any }) {
+    static getDerivedStateFromError(error: { uccErrorCode: unknown }) {
         // Update state so the next render will show the fallback UI.
-        return { errorCode: error.uccErrorCode, error: error };
+        return { errorCode: error.uccErrorCode, error };
     }
 
-    componentDidCatch(error: any) {
+    componentDidCatch(error: unknown) {
         // Catch errors in any components below and re-render with error message
         this.setState({
             error,
@@ -36,7 +34,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
     }
 
     render() {
-        if (!!this.state.error) {
+        if (this.state.error) {
             // Error path
             return (
                 <div style={{ marginTop: '10%' }}>

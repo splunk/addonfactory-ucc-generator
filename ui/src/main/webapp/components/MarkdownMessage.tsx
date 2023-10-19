@@ -10,7 +10,7 @@ interface MarkdownMessageProps {
     text: string;
     link: string;
     color: string;
-    markdownType: 'text' | 'link' | 'hybrid';
+    markdownType: 'text' | 'link' | 'hybrid' | '';
     token: string;
     linkText: string;
 }

@@ -14,7 +14,7 @@ interface axiosCallWithEndpointUrl {
 }
 
 interface CommonAxiosCall {
-    params: Record<string, string | number>;
+    params?: Record<string, string | number>;
     cancelToken?: CancelToken;
     customHeaders?: Record<string, string>;
     method?: 'get' | 'post' | 'delete';

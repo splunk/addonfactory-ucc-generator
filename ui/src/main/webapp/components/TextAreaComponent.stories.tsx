@@ -1,12 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import TextAreaComponent from './TextAreaComponent';
 import React, { useState } from 'react';
+import TextAreaComponent from './TextAreaComponent';
 
-const meta = {
+const Meta = {
     component: TextAreaComponent,
     title: 'Components/TextAreaComponent',
     render: (props) => {
-        const [value, setValue] = useState(props.value);
+        // due to stories incompatibility, eslint rule is off
+        // React Hook "useState" is called in function "render" that is neither a React function component
+        const [value, setValue] = useState(props.value); // eslint-disable-line react-hooks/rules-of-hooks
         return (
             <TextAreaComponent
                 {...props}
@@ -20,8 +22,8 @@ const meta = {
     },
 } satisfies Meta<typeof TextAreaComponent>;
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default Meta;
+type Story = StoryObj<typeof Meta>;
 
 export const Base: Story = {
     args: {

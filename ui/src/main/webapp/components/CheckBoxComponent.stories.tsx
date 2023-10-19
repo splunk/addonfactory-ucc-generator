@@ -2,11 +2,13 @@ import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState } from 'react';
 import CheckBoxComponent from './CheckBoxComponent';
 
-const meta = {
+const Meta = {
     component: CheckBoxComponent,
     title: 'Components/CheckBoxComponent',
     render: (props) => {
-        const [state, setState] = useState(false);
+        // due to stories incompatibility, eslint rule is off
+        // React Hook "useState" is called in function "render" that is neither a React function component
+        const [state, setState] = useState(false); // eslint-disable-line react-hooks/rules-of-hooks
         return (
             <CheckBoxComponent
                 {...props}
@@ -20,8 +22,8 @@ const meta = {
     },
 } satisfies Meta<typeof CheckBoxComponent>;
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default Meta;
+type Story = StoryObj<typeof Meta>;
 
 export const Base: Story = {
     args: {

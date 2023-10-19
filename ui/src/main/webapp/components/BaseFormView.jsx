@@ -241,7 +241,7 @@ class BaseFormView extends PureComponent {
                 const tempEntity = {};
                 e.encrypted = typeof e.encrypted !== 'undefined' ? e.encrypted : false;
 
-                if (e.type === 'file' && this.currentInput[e.field]) {
+                if (e.type === 'file' && this.currentInput?.[e.field]) {
                     /* 
                      adding example name to enable possibility of removal file,
                      not forcing value addition as if value is encrypted it is shared as

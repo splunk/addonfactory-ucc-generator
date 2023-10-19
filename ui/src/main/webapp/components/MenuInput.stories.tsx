@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
+import React, { useState, useEffect } from 'react';
 import MenuInput from './MenuInput';
 import { setUnifiedConfig } from '../util/util';
 import { UnifiedConfig } from '../types/config';
@@ -9,6 +9,9 @@ interface MenuInputProps {
     config: UnifiedConfig;
 }
 
+/*
+ * using wrapper to enable unified config passed in args/props
+ */
 function MenuInputWrapper(props: MenuInputProps) {
     const [display, setDisplay] = useState(false);
 

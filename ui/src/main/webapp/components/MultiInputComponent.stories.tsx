@@ -1,13 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import React, { useState } from 'react';
 import MultiInputComponent from './MultiInputComponent';
-import { useState } from 'react';
-import React from 'react';
 
 const meta = {
     component: MultiInputComponent,
     title: 'Components/MultiInputComponent',
     render: (props) => {
-        const [state, setState] = useState(props?.value || '');
+        // due to stories incompatibility, eslint rule is off
+        // React Hook "useState" is called in function "render" that is neither a React function component
+        const [state, setState] = useState(props?.value || ''); // eslint-disable-line react-hooks/rules-of-hooks
         return (
             <MultiInputComponent
                 {...props}
@@ -51,7 +52,7 @@ export const AllProps: Story = {
         controlOptions: {
             delimiter: ',',
             createSearchChoice: true,
-            referenceName: "referenceName",
+            referenceName: 'referenceName',
             dependencies: undefined,
             endpointUrl: undefined,
             denyList: 'value1',

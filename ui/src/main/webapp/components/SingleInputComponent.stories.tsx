@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import React, { useState } from 'react';
 import SingleInputComponent from './SingleInputComponent';
-import { useState } from 'react';
-import React from 'react';
 import { setUnifiedConfig } from '../util/util';
 import checkboxGroupConfig from './CheckboxGroup/checkboxGroupMocks.json';
 
@@ -9,7 +8,11 @@ const meta = {
     component: SingleInputComponent,
     title: 'Components/SingleInputComponent',
     render: (props) => {
-        const [value, setValue] = useState(props.value);
+        // due to stories incompatibility, eslint rule is off
+        // React Hook "useState" is called in function "render" that is neither a React function component
+        const [value, setValue] = useState(props.value); // eslint-disable-line react-hooks/rules-of-hooks
+        setUnifiedConfig(checkboxGroupConfig);
+
         return (
             <SingleInputComponent
                 {...props}
@@ -22,8 +25,6 @@ const meta = {
         );
     },
 } satisfies Meta<typeof SingleInputComponent>;
-
-setUnifiedConfig(checkboxGroupConfig);
 
 export default meta;
 type Story = StoryObj<typeof meta>;

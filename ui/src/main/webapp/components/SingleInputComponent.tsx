@@ -1,10 +1,9 @@
 import React, { useState, useEffect, ReactElement } from 'react';
-import PropTypes from 'prop-types';
 import Select from '@splunk/react-ui/Select';
 import Button from '@splunk/react-ui/Button';
 import ComboBox from '@splunk/react-ui/ComboBox';
 import Clear from '@splunk/react-icons/enterprise/Clear';
-import axios, { CancelToken } from 'axios';
+import axios from 'axios';
 import styled from 'styled-components';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 
@@ -85,13 +84,15 @@ function SingleInputComponent(props: SingleInputComponentProps) {
         const data: ReactElement[] = [];
         items.forEach((item) => {
             if (item.value && item.label) {
-                // @ts-ignore
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore JSX element type 'Option' does not have any construct or call signatures.
                 data.push(<Option label={item.label} value={item.value} key={item.value} />);
             }
             if (item.children && item.label) {
                 data.push(<Heading key={item.label}>{item.label}</Heading>);
                 item.children.forEach((child) => {
-                    // @ts-ignore
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore JSX element type 'Option' does not have any construct or call signatures.
                     data.push(<Option label={child.label} value={child.value} key={child.value} />);
                 });
             }

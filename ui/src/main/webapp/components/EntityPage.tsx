@@ -16,9 +16,9 @@ interface EntityPageProps {
     handleRequestClose: () => void;
     serviceName: string;
     mode: string;
+    page: string;
     stanzaName?: string;
     formLabel?: string;
-    page: string;
     groupName?: string;
 }
 
@@ -31,15 +31,6 @@ function EntityPage({
     page,
     groupName,
 }: EntityPageProps) {
-    console.log('EntityPage props', {
-        handleRequestClose,
-        serviceName,
-        mode,
-        stanzaName,
-        formLabel,
-        page,
-        groupName,
-    });
     // Ref is used here to call submit method of form only
     const form = useRef<BaseFormView>(null); // nosemgrep: typescript.react.security.audit.react-no-refs.react-no-refs
     const [isSubmitting, setIsSubmitting] = useState(false);

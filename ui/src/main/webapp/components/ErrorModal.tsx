@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Modal from '@splunk/react-ui/Modal';
 import Message from '@splunk/react-ui/Message';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
 
 import { getFormattedMessage } from '../util/messageUtil';
 import { StyledButton } from '../pages/EntryPageStyle';
@@ -11,9 +10,9 @@ const ModalWrapper = styled(Modal)`
     width: 600px;
 `;
 
-interface ErrorModalProps{
-    message: string,
-    open: boolean,
+interface ErrorModalProps {
+    message: string;
+    open: boolean;
 }
 
 function ErrorModal(props: ErrorModalProps) {

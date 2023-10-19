@@ -10,7 +10,7 @@ import CustomControl from '../components/CustomControl';
 import FileInputComponent from '../components/FileInputComponent/FileInputComponent';
 import CheckboxGroup from '../components/CheckboxGroup/CheckboxGroup';
 
-export default {
+const componentsMap = {
     checkbox: CheckBoxComponent,
     checkboxGroup: CheckboxGroup,
     custom: CustomControl,
@@ -22,4 +22,9 @@ export default {
     singleSelect: SingleInputComponent,
     text: TextComponent,
     textarea: TextAreaComponent,
-} as const;
+};
+
+type Keys = keyof typeof componentsMap;
+export type ComponentTypes = (typeof componentsMap)[Keys];
+
+export default componentsMap as Record<string, ComponentTypes>;
