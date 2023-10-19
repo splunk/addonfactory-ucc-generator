@@ -2,31 +2,23 @@ import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState } from 'react';
 import CheckBoxComponent from './CheckBoxComponent';
 
-interface CheckBoxComponentProps {
-    value: boolean;
-    handleChange: (field: string, value: boolean) => void;
-    field: string;
-    disabled: boolean;
-}
-
-function ComponentWrapper(props: CheckBoxComponentProps) {
-    const [state, setState] = useState(props.value);
-    return (
-        <CheckBoxComponent
-            {...props}
-            value={state}
-            handleChange={() => {
-                setState(!state);
-                props.handleChange(props.field, !state);
-            }}
-        />
-    );
-}
-
 const meta = {
-    component: ComponentWrapper,
+    component: CheckBoxComponent,
     title: 'Components/CheckBoxComponent',
-} satisfies Meta<typeof ComponentWrapper>;
+    render: (props) => {
+        const [state, setState] = useState(false);
+        return (
+            <CheckBoxComponent
+                {...props}
+                value={state}
+                handleChange={() => {
+                    setState(!state);
+                    props.handleChange(props.field, !state);
+                }}
+            />
+        );
+    },
+} satisfies Meta<typeof CheckBoxComponent>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

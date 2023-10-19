@@ -10,52 +10,34 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Base: Story = {
-    args: {
-        field: 'fileInptuComponent',
-        controlOptions: {
-            fileSupportMessage: 'test support message',
-            supportedFileTypes: ['json', 'txt'],
-            maxFileSize: 500,
-        },
-        disabled: false,
-        handleChange: (field: string, data: string) => {
-            // eslint-disable-next-line
-            console.log('handleChange fileInptuComponent', { field, data });
-        },
+const common = {
+    field: 'fileInptuComponent',
+    controlOptions: {
+        fileSupportMessage: 'test support message',
+        supportedFileTypes: ['json', 'txt'],
+        maxFileSize: 500,
     },
+    disabled: false,
+    handleChange: (field: string, data: string) => {
+        // eslint-disable-next-line
+        console.log('handleChange fileInptuComponent', { field, data });
+    },
+};
+
+export const Base: Story = {
+    args: common,
 };
 
 export const WithDefaultName: Story = {
     args: {
-        field: 'fileWithDefaultName',
-        controlOptions: {
-            fileSupportMessage: 'test support message',
-            supportedFileTypes: ['json', 'txt'],
-            maxFileSize: 500,
-        },
-        disabled: false,
-        handleChange: (field: string, data: string) => {
-            // eslint-disable-next-line
-            console.log('handleChange fileInptuComponent', { field, data });
-        },
+        ...common,
         fileNameToDisplay: 'Test_file_name.json',
     },
 };
 
 export const EncryptedWithDefaultName: Story = {
     args: {
-        field: 'encryptedFileWithDefaultName',
-        controlOptions: {
-            fileSupportMessage: 'test support message',
-            supportedFileTypes: ['json', 'txt'],
-            maxFileSize: 500,
-        },
-        disabled: false,
-        handleChange: (field: string, data: string) => {
-            // eslint-disable-next-line
-            console.log('handleChange fileInptuComponent', { field, data });
-        },
+        ...common,
         fileNameToDisplay: 'Test_file_name.json',
         encrypted: true,
     },

@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect, ReactElement } from 'react';
 import Multiselect from '@splunk/react-ui/Multiselect';
 import styled from 'styled-components';
 import axios from 'axios';
@@ -16,7 +15,30 @@ const WaitSpinnerWrapper = styled(WaitSpinner)`
     margin-left: 5px;
 `;
 
-function MultiInputComponent(props) {
+interface MultiInputComponentProps {
+    handleChange: (field: string, data: string) => void;
+    field: string;
+    controlOptions: {
+        delimiter?: string;
+        createSearchChoice?: boolean;
+        referenceName?: string;
+        dependencies?: unknown[];
+        endpointUrl?: string;
+        denyList?: string;
+        allowList?: string;
+        labelField?: string;
+        items?: {
+            label: string;
+            value: string;
+        }[];
+    };
+    disabled?: boolean;
+    value?: string;
+    error?: boolean;
+    dependencyValues?: Record<string, unknown>;
+}
+
+function MultiInputComponent(props: MultiInputComponentProps) {
     const {
         field,
         disabled = false,
@@ -38,18 +60,20 @@ function MultiInputComponent(props) {
         delimiter = ',',
     } = controlOptions;
 
-    function handleChange(e, { values }) {
-        restProps.handleChange(field, values.join(delimiter));
+    function handleChange(e: unknown, { values }: { values: (string | number | boolean)[] }) {
+        if (typeof values[0] === 'string' || values.length === 0) {
+            restProps.handleChange(field, values.join(delimiter));
+        }
     }
 
-    function generateOptions(itemList) {
+    function generateOptions(itemList: { label: string; value: string }[]) {
         return itemList.map((item) => (
             <Multiselect.Option label={item.label} value={item.value} key={item.value} />
         ));
     }
 
     const [loading, setLoading] = useState(false);
-    const [options, setOptions] = useState(null);
+    const [options, setOptions] = useState<ReactElement[]>();
 
     useEffect(() => {
         if (!endpointUrl && items) {
@@ -60,20 +84,25 @@ function MultiInputComponent(props) {
         let current = true;
         const source = axios.CancelToken.source();
 
-        // eslint-disable-next-line no-shadow
-        const options = { cancelToken: source.token, handleError: true, params: { count: -1 } };
+        const apiCallOptions = {
+            cancelToken: source.token,
+            handleError: true,
+            params: { count: -1 },
+            serviceName: '',
+            endpointUrl: '',
+        };
         if (referenceName) {
-            options.serviceName = referenceName;
+            apiCallOptions.serviceName = referenceName;
         } else if (endpointUrl) {
-            options.endpointUrl = endpointUrl;
+            apiCallOptions.endpointUrl = endpointUrl;
         }
 
         if (dependencyValues) {
-            options.params = { ...options.params, ...dependencyValues };
+            apiCallOptions.params = { ...apiCallOptions.params, ...dependencyValues };
         }
         if (!dependencies || dependencyValues) {
             setLoading(true);
-            axiosCallWrapper(options)
+            axiosCallWrapper(apiCallOptions)
                 .then((response) => {
                     if (current) {
                         setOptions(
@@ -120,30 +149,5 @@ function MultiInputComponent(props) {
         </>
     );
 }
-
-MultiInputComponent.propTypes = {
-    disabled: PropTypes.bool,
-    value: PropTypes.string,
-    error: PropTypes.bool,
-    handleChange: PropTypes.func.isRequired,
-    field: PropTypes.string,
-    dependencyValues: PropTypes.object,
-    controlOptions: PropTypes.shape({
-        delimiter: PropTypes.string,
-        createSearchChoice: PropTypes.bool,
-        referenceName: PropTypes.string,
-        dependencies: PropTypes.array,
-        endpointUrl: PropTypes.string,
-        denyList: PropTypes.string,
-        allowList: PropTypes.string,
-        labelField: PropTypes.string,
-        items: PropTypes.arrayOf(
-            PropTypes.shape({
-                label: PropTypes.string.isRequired,
-                value: PropTypes.string.isRequired,
-            })
-        ),
-    }),
-};
 
 export default MultiInputComponent;

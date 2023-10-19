@@ -14,7 +14,7 @@ export const Base: Story = {
         text: 'text',
         link: 'link',
         color: 'color',
-        markdownType: 'markdownType',
+        markdownType: 'text',
         token: 'token',
         linkText: 'linkText',
     },

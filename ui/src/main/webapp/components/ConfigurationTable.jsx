@@ -12,7 +12,7 @@ import { STYLE_PAGE } from '../constants/dialogStyles';
 function ConfigurationTable({ selectedTab, updateIsPageOpen }) {
     const [entity, setEntity] = useState({ open: false });
 
-    const isConfigurationPageStyle = selectedTab.style === STYLE_PAGE;
+    const isConfigurationPageStyle = true;
 
     useEffect(() => {
         if (isConfigurationPageStyle) {

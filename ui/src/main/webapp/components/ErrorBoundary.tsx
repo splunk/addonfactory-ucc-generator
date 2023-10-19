@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import PropTypes from 'prop-types';
 
 import Heading from '@splunk/react-ui/Heading';
@@ -7,18 +7,27 @@ import Card from '@splunk/react-ui/Card';
 import WarningIcon from '@splunk/react-icons/enterprise/Warning';
 import errorCodes from '../constants/errorCodes';
 
-class ErrorBoundary extends React.Component {
-    constructor(props) {
+interface ErrorBoundaryProps {
+    children: ReactElement | ReactElement[];
+}
+
+interface ErrorBoundaryState {
+    errorCode: keyof typeof errorCodes | null;
+    error: null | any;
+}
+
+class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+    constructor(props: ErrorBoundaryProps) {
         super(props);
         this.state = { errorCode: null, error: null };
     }
 
-    static getDerivedStateFromError(error) {
+    static getDerivedStateFromError(error: { uccErrorCode: any }) {
         // Update state so the next render will show the fallback UI.
-        return { errorCode: error.uccErrorCode };
+        return { errorCode: error.uccErrorCode, error: error };
     }
 
-    componentDidCatch(error) {
+    componentDidCatch(error: any) {
         // Catch errors in any components below and re-render with error message
         this.setState({
             error,
@@ -27,7 +36,7 @@ class ErrorBoundary extends React.Component {
     }
 
     render() {
-        if (this.state.error) {
+        if (!!this.state.error) {
             // Error path
             return (
                 <div style={{ marginTop: '10%' }}>
@@ -65,9 +74,5 @@ class ErrorBoundary extends React.Component {
         return this.props.children;
     }
 }
-
-ErrorBoundary.propTypes = {
-    children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
-};
 
 export default ErrorBoundary;

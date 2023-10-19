@@ -1,0 +1,71 @@
+import type { Meta, StoryObj } from '@storybook/react';
+import MultiInputComponent from './MultiInputComponent';
+import { useState } from 'react';
+import React from 'react';
+
+const meta = {
+    component: MultiInputComponent,
+    title: 'Components/MultiInputComponent',
+    render: (props) => {
+        const [state, setState] = useState(props?.value || '');
+        return (
+            <MultiInputComponent
+                {...props}
+                value={state}
+                handleChange={(field: string, data: string) => {
+                    setState(data);
+                    props.handleChange(field, data);
+                }}
+            />
+        );
+    },
+} satisfies Meta<typeof MultiInputComponent>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Base: Story = {
+    args: {
+        handleChange: (field: string, data: string) => {
+            // eslint-disable-next-line
+            console.log('handleChange', { field, data });
+        },
+        field: 'field',
+        controlOptions: {
+            items: [
+                { label: 'label1', value: 'value1' },
+                { label: 'label2', value: 'value2' },
+                { label: 'label3', value: 'value3' },
+            ],
+        },
+    },
+};
+
+export const AllProps: Story = {
+    args: {
+        handleChange: (field: string, data: string) => {
+            // eslint-disable-next-line
+            console.log('handleChange', { field, data });
+        },
+        field: 'field',
+        controlOptions: {
+            delimiter: ',',
+            createSearchChoice: true,
+            referenceName: "referenceName",
+            dependencies: undefined,
+            endpointUrl: undefined,
+            denyList: 'value1',
+            allowList: 'string',
+            labelField: 'labelField',
+            items: [
+                { label: 'label1', value: 'value1' },
+                { label: 'label2', value: 'value2' },
+                { label: 'label3', value: 'value3' },
+            ],
+        },
+        disabled: false,
+        value: undefined,
+        error: false,
+        dependencyValues: {},
+    },
+};

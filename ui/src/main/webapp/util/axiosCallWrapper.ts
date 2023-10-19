@@ -1,7 +1,29 @@
-import axios from 'axios';
+import axios, { CancelToken } from 'axios';
 import { CSRFToken, app } from '@splunk/splunk-utils/config';
 import { createRESTURL } from '@splunk/splunk-utils/url';
 import { generateEndPointUrl, generateToast } from './util';
+
+interface axiosCallWithServiceName {
+    serviceName?: string;
+    endpointUrl: string;
+}
+
+interface axiosCallWithEndpointUrl {
+    serviceName: string;
+    endpointUrl?: string;
+}
+
+interface CommonAxiosCall {
+    params: Record<string, string | number>;
+    cancelToken?: CancelToken;
+    customHeaders?: Record<string, string>;
+    method?: 'get' | 'post' | 'delete';
+    body?: Record<string, unknown>;
+    handleError?: boolean;
+    callbackOnError?: (error: unknown) => void;
+}
+
+type AxiosCallType = (axiosCallWithServiceName | axiosCallWithEndpointUrl) & CommonAxiosCall;
 
 /**
  *
@@ -26,7 +48,7 @@ const axiosCallWrapper = ({
     method = 'get',
     handleError = false,
     callbackOnError = () => {},
-}) => {
+}: AxiosCallType) => {
     const endpoint = serviceName ? generateEndPointUrl(serviceName) : endpointUrl;
     const appData = {
         app,
@@ -45,7 +67,7 @@ const axiosCallWrapper = ({
         newParams = { ...newParams, ...params };
     }
 
-    const options = {
+    const options: Record<string, unknown> = {
         params: newParams,
         method,
         url,
