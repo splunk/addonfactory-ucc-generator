@@ -5,6 +5,7 @@ import MultiInputComponent from './MultiInputComponent';
 const meta = {
     component: MultiInputComponent,
     title: 'Components/MultiInputComponent',
+    argTypes: { handleChange: { action: 'handleChange' } },
     render: (props) => {
         // due to stories incompatibility, eslint rule is off
         // React Hook "useState" is called in function "render" that is neither a React function component
@@ -27,10 +28,6 @@ type Story = StoryObj<typeof meta>;
 
 export const Base: Story = {
     args: {
-        handleChange: (field: string, data: string) => {
-            // eslint-disable-next-line
-            console.log('handleChange', { field, data });
-        },
         field: 'field',
         controlOptions: {
             items: [
@@ -44,10 +41,6 @@ export const Base: Story = {
 
 export const AllProps: Story = {
     args: {
-        handleChange: (field: string, data: string) => {
-            // eslint-disable-next-line
-            console.log('handleChange', { field, data });
-        },
         field: 'field',
         controlOptions: {
             delimiter: ',',

@@ -6,6 +6,7 @@ import { setUnifiedConfig } from '../util/util';
 const meta = {
     component: EntityModal,
     title: 'Components/EntityModal',
+    argTypes: { handleRequestClose: { action: 'handleRequestClose' } },
     render: (props) => {
         // for visibility declared at bottom
         setUnifiedConfig(unifiedConfig); // eslint-disable-line no-use-before-define
@@ -18,7 +19,6 @@ type Story = StoryObj<typeof meta>;
 
 export const Base: Story = {
     args: {
-        handleRequestClose: () => {},
         serviceName: 'account',
         mode: 'create',
         stanzaName: undefined,
@@ -31,7 +31,6 @@ export const Base: Story = {
 
 export const Inputs: Story = {
     args: {
-        handleRequestClose: () => {},
         serviceName: 'demo_input',
         mode: 'create',
         stanzaName: undefined,

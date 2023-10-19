@@ -5,6 +5,7 @@ import BaseFormView from '../BaseFormView';
 const meta = {
     component: FileInputComponent,
     title: 'Components/FileInputComponent',
+    argTypes: { handleChange: { action: 'input file changed' } },
 } satisfies Meta<typeof BaseFormView>;
 
 export default meta;
@@ -18,10 +19,6 @@ const common = {
         maxFileSize: 500,
     },
     disabled: false,
-    handleChange: (field: string, data: string) => {
-        // eslint-disable-next-line
-        console.log('handleChange fileInptuComponent', { field, data });
-    },
 };
 
 export const Base: Story = {

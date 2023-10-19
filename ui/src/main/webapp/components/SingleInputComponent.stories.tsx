@@ -7,6 +7,7 @@ import checkboxGroupConfig from './CheckboxGroup/checkboxGroupMocks.json';
 const meta = {
     component: SingleInputComponent,
     title: 'Components/SingleInputComponent',
+    argTypes: { handleChange: { action: 'handleChange' } },
     render: (props) => {
         // due to stories incompatibility, eslint rule is off
         // React Hook "useState" is called in function "render" that is neither a React function component
@@ -32,10 +33,6 @@ type Story = StoryObj<typeof meta>;
 const common = {
     disabled: false,
     error: false,
-    handleChange: (field: string, objValue: string | number | boolean) => {
-        // eslint-disable-next-line
-        console.log('handleChange', { field, objValue });
-    },
     field: 'field',
     value: '',
     dependencyValues: undefined,

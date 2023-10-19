@@ -4,6 +4,7 @@ import RadioComponent from './RadioComponent';
 const meta = {
     component: RadioComponent,
     title: 'Components/RadioComponent',
+    argTypes: { handleChange: { action: 'handleChange' } },
 } satisfies Meta<typeof RadioComponent>;
 
 export default meta;
@@ -12,10 +13,6 @@ type Story = StoryObj<typeof meta>;
 export const Base: Story = {
     args: {
         value: 'string',
-        handleChange: (field: string, value: string) => {
-            // eslint-disable-next-line
-            console.log({ field, value });
-        },
         field: 'string',
         controlOptions: {
             items: [

@@ -70,12 +70,6 @@ export const Base: Story = {
     },
 };
 
-export const Inputs: Story = {
-    args: {
-        // tab: PropTypes.object.isRequired,
-    },
-};
-
 // this const is used in render method
 // declared here to not obfuscate code
 const unifiedConfig = {
