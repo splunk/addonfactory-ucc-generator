@@ -2,8 +2,8 @@ import React, { ReactElement, useState } from 'react';
 import File from '@splunk/react-ui/File';
 import styled from 'styled-components';
 
-import FileConstants from '../constants/fileInputConstant';
-import { getFormattedMessage } from '../util/messageUtil';
+import FileConstants from '../../constants/fileInputConstant';
+import { getFormattedMessage } from '../../util/messageUtil';
 
 const FileWrapper = styled(File)`
     width: 320px !important;

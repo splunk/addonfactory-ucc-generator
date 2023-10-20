@@ -1,5 +1,4 @@
 import React, { memo, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
 
 import Link from '@splunk/react-ui/Link';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
@@ -7,11 +6,21 @@ import ColumnLayout from '@splunk/react-ui/ColumnLayout';
 import { _ } from '@splunk/ui-utils/i18n';
 import { useSplunkTheme } from '@splunk/themes';
 
-import { MODE_CLONE, MODE_CREATE, MODE_EDIT } from '../constants/modes';
+import { MODE_CLONE, MODE_CREATE, MODE_EDIT, Mode } from '../constants/modes';
 import BaseFormView from './BaseFormView';
 import { SubTitleComponent } from '../pages/Input/InputPageStyle';
 import { PAGE_INPUT } from '../constants/pages';
 import { StyledButton } from '../pages/EntryPageStyle';
+
+interface EntityPageProps {
+    handleRequestClose: () => void;
+    serviceName: string;
+    mode: Mode;
+    page: string;
+    stanzaName?: string;
+    formLabel?: string;
+    groupName?: string;
+}
 
 function EntityPage({
     handleRequestClose,
@@ -21,9 +30,9 @@ function EntityPage({
     formLabel,
     page,
     groupName,
-}) {
+}: EntityPageProps) {
     // Ref is used here to call submit method of form only
-    const form = useRef(); // nosemgrep: typescript.react.security.audit.react-no-refs.react-no-refs
+    const form = useRef<BaseFormView>(null); // nosemgrep: typescript.react.security.audit.react-no-refs.react-no-refs
     const [isSubmitting, setIsSubmitting] = useState(false);
     let buttonText = _('Submit');
 
@@ -43,13 +52,13 @@ function EntityPage({
     };
 
     const handleSubmit = () => {
-        const result = form.current.handleSubmit();
+        const result = form.current?.handleSubmit();
         if (result) {
             handleRequestClose();
         }
     };
 
-    const handleFormSubmit = (set, close) => {
+    const handleFormSubmit = (set: boolean, close: boolean) => {
         setIsSubmitting(set);
         if (close) {
             handleRequestClose();
@@ -106,15 +115,5 @@ function EntityPage({
         </ColumnLayout>
     );
 }
-
-EntityPage.propTypes = {
-    handleRequestClose: PropTypes.func,
-    serviceName: PropTypes.string,
-    mode: PropTypes.string,
-    stanzaName: PropTypes.string,
-    formLabel: PropTypes.string,
-    page: PropTypes.string,
-    groupName: PropTypes.string,
-};
 
 export default memo(EntityPage);

@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect, ReactElement } from 'react';
 import Select from '@splunk/react-ui/Select';
 import Button from '@splunk/react-ui/Button';
 import ComboBox from '@splunk/react-ui/ComboBox';
@@ -25,7 +24,35 @@ const StyledDiv = styled.div`
     }
 `;
 
-function SingleInputComponent(props) {
+interface FormItem {
+    label: string;
+    value: string;
+    children?: { label: string; value: string }[];
+}
+
+interface SingleInputComponentProps {
+    disabled?: boolean;
+    value: string;
+    error?: boolean;
+    handleChange: (field: string, value: string | number | boolean) => void;
+    field: string;
+    dependencyValues?: Record<string, unknown>;
+    controlOptions: {
+        autoCompleteFields?: FormItem[];
+        endpointUrl?: string;
+        denyList?: string;
+        allowList?: string;
+        dependencies?: [];
+        createSearchChoice?: boolean;
+        referenceName?: string;
+        disableSearch?: boolean;
+        labelField?: string;
+        hideClearBtn?: boolean;
+    };
+    required: boolean;
+}
+
+function SingleInputComponent(props: SingleInputComponentProps) {
     const {
         field,
         disabled = false,
@@ -47,21 +74,25 @@ function SingleInputComponent(props) {
         hideClearBtn,
     } = controlOptions;
 
-    function handleChange(e, obj) {
+    function handleChange(e: unknown, obj: { value: string | number | boolean }) {
         restProps.handleChange(field, obj.value);
     }
     const Option = createSearchChoice ? ComboBox.Option : Select.Option;
     const Heading = createSearchChoice ? ComboBox.Heading : Select.Heading;
 
-    function generateOptions(items) {
-        const data = [];
+    function generateOptions(items: FormItem[]) {
+        const data: ReactElement[] = [];
         items.forEach((item) => {
             if (item.value && item.label) {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore JSX element type 'Option' does not have any construct or call signatures.
                 data.push(<Option label={item.label} value={item.value} key={item.value} />);
             }
             if (item.children && item.label) {
                 data.push(<Heading key={item.label}>{item.label}</Heading>);
                 item.children.forEach((child) => {
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore JSX element type 'Option' does not have any construct or call signatures.
                     data.push(<Option label={child.label} value={child.value} key={child.value} />);
                 });
             }
@@ -70,7 +101,7 @@ function SingleInputComponent(props) {
     }
 
     const [loading, setLoading] = useState(false);
-    const [options, setOptions] = useState(null);
+    const [options, setOptions] = useState<ReactElement[]>([]);
 
     useEffect(() => {
         if (!endpointUrl && !referenceName && autoCompleteFields) {
@@ -81,20 +112,25 @@ function SingleInputComponent(props) {
         let current = true;
         const source = axios.CancelToken.source();
 
-        // eslint-disable-next-line no-shadow
-        const options = { cancelToken: source.token, handleError: true, params: { count: -1 } };
+        const backendCallOptions = {
+            serviceName: '',
+            endpointUrl: '',
+            cancelToken: source.token,
+            handleError: true,
+            params: { count: -1 },
+        };
         if (referenceName) {
-            options.serviceName = referenceName;
+            backendCallOptions.serviceName = referenceName;
         } else if (endpointUrl) {
-            options.endpointUrl = endpointUrl;
+            backendCallOptions.endpointUrl = endpointUrl;
         }
 
         if (dependencyValues) {
-            options.params = { ...options.params, ...dependencyValues };
+            backendCallOptions.params = { ...backendCallOptions.params, ...dependencyValues };
         }
         if (!dependencies || dependencyValues) {
             setLoading(true);
-            axiosCallWrapper(options)
+            axiosCallWrapper(backendCallOptions)
                 .then((response) => {
                     if (current) {
                         setOptions(
@@ -109,10 +145,10 @@ function SingleInputComponent(props) {
                     if (current) {
                         setLoading(false);
                     }
-                    setOptions(null);
+                    setOptions([]);
                 });
         } else {
-            setOptions(null);
+            setOptions([]);
         }
         // eslint-disable-next-line consistent-return
         return () => {
@@ -169,27 +205,5 @@ function SingleInputComponent(props) {
         </>
     );
 }
-
-SingleInputComponent.propTypes = {
-    disabled: PropTypes.bool,
-    value: PropTypes.string,
-    error: PropTypes.bool,
-    handleChange: PropTypes.func.isRequired,
-    field: PropTypes.string,
-    dependencyValues: PropTypes.object,
-    controlOptions: PropTypes.shape({
-        autoCompleteFields: PropTypes.array,
-        endpointUrl: PropTypes.string,
-        denyList: PropTypes.string,
-        allowList: PropTypes.string,
-        dependencies: PropTypes.array,
-        createSearchChoice: PropTypes.bool,
-        referenceName: PropTypes.string,
-        disableSearch: PropTypes.bool,
-        labelField: PropTypes.string,
-        hideClearBtn: PropTypes.bool,
-    }),
-    required: PropTypes.bool,
-};
 
 export default SingleInputComponent;

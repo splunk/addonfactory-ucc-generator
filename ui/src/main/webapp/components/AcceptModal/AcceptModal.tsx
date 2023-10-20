@@ -2,7 +2,7 @@ import React from 'react';
 import Modal from '@splunk/react-ui/Modal';
 import Message from '@splunk/react-ui/Message';
 import styled from 'styled-components';
-import { StyledButton } from '../pages/EntryPageStyle';
+import { StyledButton } from '../../pages/EntryPageStyle';
 
 const ModalWrapper = styled(Modal)`
     width: 600px;

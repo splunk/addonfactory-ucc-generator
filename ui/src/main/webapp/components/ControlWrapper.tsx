@@ -1,16 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import ControlGroup from '@splunk/react-ui/ControlGroup';
 import styled from 'styled-components';
 
 import MarkdownMessage from './MarkdownMessage';
-import CONTROL_TYPE_MAP from '../constants/ControlTypeMap';
+import CONTROL_TYPE_MAP, { ComponentTypes } from '../constants/ControlTypeMap';
 
 const CustomElement = styled.div`
     margin-left: 30px;
 `;
 
-const ControlGroupWrapper = styled(ControlGroup).attrs((props) => ({
+const ControlGroupWrapper = styled(ControlGroup).attrs((props: { dataName: string }) => ({
     'data-name': props.dataName,
 }))`
     width: 100%;
@@ -31,13 +30,53 @@ const ControlGroupWrapper = styled(ControlGroup).attrs((props) => ({
     }
 `;
 
-class ControlWrapper extends React.PureComponent {
-    static isString = (str) => !!(typeof str === 'string' || str instanceof String);
+interface ControlWrapperProps {
+    mode: string;
+    utilityFuncts: {
+        handleChange?: () => void;
+        addCustomValidator?: (
+            field: string,
+            validator: (submittedField: string, submittedValue: string) => void
+        ) => void;
+        utilCustomFunctions?: unknown;
+    };
+    value: unknown;
+    display: boolean;
+    error: boolean;
+    entity: {
+        type: unknown;
+        field: string;
+        label: string;
+        options: Record<string, unknown>;
+        tooltip?: string;
+        help?: string;
+        encrypted?: boolean;
+        required?: boolean;
+        defaultValue?: unknown;
+    };
+    disabled: boolean;
+    markdownMessage?: {
+        text: string;
+        link: string;
+        color: string;
+        markdownType: 'link' | 'text' | 'hybrid';
+        token: string;
+        linkText: string;
+    };
+    serviceName: string;
+    dependencyValues: unknown;
+    fileNameToDisplay: string;
+}
 
-    constructor(props) {
+class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
+    static isString = (str: unknown) => !!(typeof str === 'string' || str instanceof String);
+
+    controlType: ComponentTypes | null;
+
+    constructor(props: ControlWrapperProps) {
         super(props);
         this.controlType = ControlWrapper.isString(props.entity.type)
-            ? CONTROL_TYPE_MAP[props.entity.type]
+            ? CONTROL_TYPE_MAP[String(props.entity.type)]
             : null;
     }
 
@@ -114,6 +153,8 @@ class ControlWrapper extends React.PureComponent {
                     help={helpText}
                     tooltip={tooltip}
                     error={this.props.error}
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore property should be data-name, but is mapped in obj ControlGroupWrapper
                     dataName={field}
                     required={required}
                 >
@@ -123,19 +164,5 @@ class ControlWrapper extends React.PureComponent {
         );
     }
 }
-
-ControlWrapper.propTypes = {
-    mode: PropTypes.string,
-    utilityFuncts: PropTypes.object,
-    value: PropTypes.any,
-    display: PropTypes.bool,
-    error: PropTypes.bool,
-    entity: PropTypes.object,
-    disabled: PropTypes.bool,
-    markdownMessage: PropTypes.object,
-    serviceName: PropTypes.string,
-    dependencyValues: PropTypes.object,
-    fileNameToDisplay: PropTypes.string,
-};
 
 export default ControlWrapper;
