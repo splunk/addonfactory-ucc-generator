@@ -17,6 +17,7 @@ class CheckBoxComponent extends React.Component<CheckBoxComponentProps> {
             this.props.handleChange(this.props.field, 1);
         }
     };
+
     render() {
         return (
             <Switch

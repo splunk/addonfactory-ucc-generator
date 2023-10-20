@@ -9,33 +9,31 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const props = {
-    utilityFuncts: {
-        utilCustomFunctions: {},
-    },
-    value: '',
-    display: true,
-    error: false,
-    entity: {
-        type: 'file',
-        label: 'Upload File',
-        help: "Upload service account's certificate",
-        field: 'single_certificate',
-        options: {
-            fileSupportMessage: 'Here is the support message',
-            supportedFileTypes: ['json'],
-        },
-        encrypted: true,
-        required: true,
-        defaultValue: null,
-    },
-    serviceName: 'settings',
-    mode: 'config',
-    disabled: false,
-    dependencyValues: null,
-    fileNameToDisplay: 'Previous File',
-};
-
 export const Base: Story = {
-    args: props,
+    args: {
+        utilityFuncts: {
+            utilCustomFunctions: {},
+        },
+        value: '',
+        display: true,
+        error: false,
+        entity: {
+            type: 'file',
+            label: 'Upload File',
+            help: "Upload service account's certificate",
+            field: 'single_certificate',
+            options: {
+                fileSupportMessage: 'Here is the support message',
+                supportedFileTypes: ['json'],
+            },
+            encrypted: true,
+            required: true,
+            defaultValue: null,
+        },
+        serviceName: 'settings',
+        mode: 'config',
+        disabled: false,
+        dependencyValues: null,
+        fileNameToDisplay: 'Previous File',
+    },
 };
