@@ -23,6 +23,7 @@ import {
 } from '../constants/oAuthErrorMessage';
 import TableContext from '../context/TableContext';
 import Group from './Group';
+import { getEntityAlias } from '../constants/entityAliases';
 
 function onCustomHookError(params) {
     // eslint-disable-next-line no-console
@@ -117,210 +118,213 @@ class BaseFormView extends PureComponent {
         let temState = {};
         const temEntities = [];
 
-        this.entities.forEach((e) => {
-            if (e.type === 'oauth') {
-                this.isOAuth = true;
-                if (props.page === PAGE_CONF && props.serviceName === 'account') {
-                    const authType = e?.options?.auth_type;
-                    this.isoauthState =
-                        typeof e?.options?.oauth_state_enabled !== 'undefined'
-                            ? e?.options?.oauth_state_enabled
-                            : null;
+        this.entities
+            .map((e) => getEntityAlias(e.type) || e)
+            .forEach((e) => {
+                if (e.type === 'oauth') {
+                    this.isOAuth = true;
+                    if (props.page === PAGE_CONF && props.serviceName === 'account') {
+                        const authType = e?.options?.auth_type;
+                        this.isoauthState =
+                            typeof e?.options?.oauth_state_enabled !== 'undefined'
+                                ? e?.options?.oauth_state_enabled
+                                : null;
 
-                    if (authType.length > 1) {
-                        this.isAuthVal = true;
-                        // Defining state for auth_type in case of multiple Authentication
-                        const tempEntity = {};
-                        tempEntity.value =
-                            typeof this.currentInput.auth_type !== 'undefined'
-                                ? this.currentInput.auth_type
-                                : authType[0];
-                        tempEntity.display = true;
-                        tempEntity.error = false;
-                        tempEntity.disabled = false;
-                        temState.auth_type = tempEntity;
+                        if (authType.length > 1) {
+                            this.isAuthVal = true;
+                            // Defining state for auth_type in case of multiple Authentication
+                            const tempEntity = {};
+                            tempEntity.value =
+                                typeof this.currentInput.auth_type !== 'undefined'
+                                    ? this.currentInput.auth_type
+                                    : authType[0];
+                            tempEntity.display = true;
+                            tempEntity.error = false;
+                            tempEntity.disabled = false;
+                            temState.auth_type = tempEntity;
 
-                        // Defining Entity for auth_type in entitylist of globalConfig
-                        const entity = {};
-                        entity.field = 'auth_type';
-                        entity.type = 'singleSelect';
-                        entity.label = 'Auth Type';
-                        const content = {
-                            basic: 'Basic Authentication',
-                            oauth: 'OAuth 2.0 Authentication',
-                        };
-                        entity.options = {};
-                        entity.options.hideClearBtn = true;
-                        entity.options.autoCompleteFields = authType.map((type) => ({
-                            label: content[type],
-                            value: type,
-                        }));
-                        temEntities.push(entity);
-                    } else {
-                        this.isSingleOauth = authType.includes('oauth');
-                    }
-
-                    // Adding State and Entity(in entitylist) for every Fields of "oauth" type
-                    // Iterating over everytype of Authentication under "oauth" type
-                    authType.forEach((type) => {
-                        const authfields = [];
-                        const fields = e?.options[type];
-                        if (fields) {
-                            // For Particaular type iterating over fields
-                            fields.forEach((field) => {
-                                // every field for auth type
-                                const tempEntity = {};
-
-                                if (props.mode === MODE_CREATE) {
-                                    tempEntity.value =
-                                        typeof field?.defaultValue !== 'undefined'
-                                            ? field.defaultValue
-                                            : null;
-                                } else {
-                                    const isEncrypted =
-                                        typeof field?.encrypted !== 'undefined'
-                                            ? field?.encrypted
-                                            : false;
-                                    tempEntity.value = isEncrypted
-                                        ? ''
-                                        : this.currentInput[field.field];
-                                }
-                                tempEntity.display =
-                                    typeof temState.auth_type !== 'undefined'
-                                        ? type === temState.auth_type.value
-                                        : true;
-                                tempEntity.error = false;
-                                tempEntity.disabled = false;
-                                temState[field.field] = tempEntity;
-                                // eslint-disable-next-line no-param-reassign
-                                field.type =
-                                    typeof field?.type !== 'undefined' ? field.type : 'text';
-
-                                // Handled special case for redirect_url
-                                if (field.field === 'redirect_url') {
-                                    tempEntity.value = window.location.href
-                                        .split('?')[0]
-                                        .replace(
-                                            'configuration',
-                                            `${this.appName.toLowerCase()}_redirect`
-                                        );
-                                    tempEntity.disabled = true;
-                                }
-                                temEntities.push(field);
-                                authfields.push(field.field);
-                            });
-                            this.authMap[type] = authfields;
+                            // Defining Entity for auth_type in entitylist of globalConfig
+                            const entity = {};
+                            entity.field = 'auth_type';
+                            entity.type = 'singleSelect';
+                            entity.label = 'Auth Type';
+                            const content = {
+                                basic: 'Basic Authentication',
+                                oauth: 'OAuth 2.0 Authentication',
+                            };
+                            entity.options = {};
+                            entity.options.hideClearBtn = true;
+                            entity.options.autoCompleteFields = authType.map((type) => ({
+                                label: content[type],
+                                value: type,
+                            }));
+                            temEntities.push(entity);
+                        } else {
+                            this.isSingleOauth = authType.includes('oauth');
                         }
-                    });
-                    if (authType.includes('oauth')) {
-                        const oauthConfData = {};
-                        // Storing O-Auth Configuration data to class variable to use later
-                        oauthConfData.popupWidth = e.options.oauth_popup_width
-                            ? e.options.oauth_popup_width
-                            : 600;
-                        oauthConfData.popupHeight = e.options.oauth_popup_height
-                            ? e.options.oauth_popup_height
-                            : 600;
-                        oauthConfData.authTimeout = e.options.oauth_timeout
-                            ? e.options.oauth_timeout
-                            : 180;
-                        oauthConfData.authCodeEndpoint = e.options.auth_code_endpoint
-                            ? e.options.auth_code_endpoint
-                            : null;
-                        oauthConfData.accessTokenEndpoint = e.options.access_token_endpoint
-                            ? e.options.access_token_endpoint
-                            : null;
-                        oauthConfData.authEndpointAccessTokenType = e.options
-                            .auth_endpoint_token_access_type
-                            ? e.options.auth_endpoint_token_access_type
-                            : null;
-                        this.oauthConf = oauthConfData;
-                    }
-                }
-            } else {
-                const tempEntity = {};
-                e.encrypted = typeof e.encrypted !== 'undefined' ? e.encrypted : false;
 
-                if (e.type === 'file' && this.currentInput?.[e.field]) {
-                    /* 
+                        // Adding State and Entity(in entitylist) for every Fields of "oauth" type
+                        // Iterating over everytype of Authentication under "oauth" type
+                        authType.forEach((type) => {
+                            const authfields = [];
+                            const fields = e?.options[type];
+                            if (fields) {
+                                // For Particaular type iterating over fields
+                                fields.forEach((field) => {
+                                    // every field for auth type
+                                    const tempEntity = {};
+
+                                    if (props.mode === MODE_CREATE) {
+                                        tempEntity.value =
+                                            typeof field?.defaultValue !== 'undefined'
+                                                ? field.defaultValue
+                                                : null;
+                                    } else {
+                                        const isEncrypted =
+                                            typeof field?.encrypted !== 'undefined'
+                                                ? field?.encrypted
+                                                : false;
+                                        tempEntity.value = isEncrypted
+                                            ? ''
+                                            : this.currentInput[field.field];
+                                    }
+                                    tempEntity.display =
+                                        typeof temState.auth_type !== 'undefined'
+                                            ? type === temState.auth_type.value
+                                            : true;
+                                    tempEntity.error = false;
+                                    tempEntity.disabled = false;
+                                    temState[field.field] = tempEntity;
+                                    // eslint-disable-next-line no-param-reassign
+                                    field.type =
+                                        typeof field?.type !== 'undefined' ? field.type : 'text';
+
+                                    // Handled special case for redirect_url
+                                    if (field.field === 'redirect_url') {
+                                        tempEntity.value = window.location.href
+                                            .split('?')[0]
+                                            .replace(
+                                                'configuration',
+                                                `${this.appName.toLowerCase()}_redirect`
+                                            );
+                                        tempEntity.disabled = true;
+                                    }
+                                    temEntities.push(field);
+                                    authfields.push(field.field);
+                                });
+                                this.authMap[type] = authfields;
+                            }
+                        });
+                        if (authType.includes('oauth')) {
+                            const oauthConfData = {};
+                            // Storing O-Auth Configuration data to class variable to use later
+                            oauthConfData.popupWidth = e.options.oauth_popup_width
+                                ? e.options.oauth_popup_width
+                                : 600;
+                            oauthConfData.popupHeight = e.options.oauth_popup_height
+                                ? e.options.oauth_popup_height
+                                : 600;
+                            oauthConfData.authTimeout = e.options.oauth_timeout
+                                ? e.options.oauth_timeout
+                                : 180;
+                            oauthConfData.authCodeEndpoint = e.options.auth_code_endpoint
+                                ? e.options.auth_code_endpoint
+                                : null;
+                            oauthConfData.accessTokenEndpoint = e.options.access_token_endpoint
+                                ? e.options.access_token_endpoint
+                                : null;
+                            oauthConfData.authEndpointAccessTokenType = e.options
+                                .auth_endpoint_token_access_type
+                                ? e.options.auth_endpoint_token_access_type
+                                : null;
+                            this.oauthConf = oauthConfData;
+                        }
+                    }
+                } else {
+                    const tempEntity = {};
+                    e.encrypted = typeof e.encrypted !== 'undefined' ? e.encrypted : false;
+
+                    if (e.type === 'file' && this.currentInput?.[e.field]) {
+                        /*
                      adding example name to enable possibility of removal file,
                      not forcing value addition as if value is encrypted it is shared as
                      string ie. ***** and it is considered a valid default value
                      if value is not encrypted it is pushed correctly along with this name
                     */
-                    tempEntity.fileNameToDisplay = 'Previous File';
-                }
-
-                if (props.mode === MODE_CREATE) {
-                    tempEntity.value =
-                        typeof e.defaultValue !== 'undefined' ? e.defaultValue : null;
-                    tempEntity.display =
-                        typeof e?.options?.display !== 'undefined' ? e.options.display : true;
-                    tempEntity.error = false;
-                    tempEntity.disabled = false;
-                    temState[e.field] = tempEntity;
-                } else if (props.mode === MODE_EDIT) {
-                    tempEntity.value =
-                        typeof this.currentInput[e.field] !== 'undefined'
-                            ? this.currentInput[e.field]
-                            : null;
-                    tempEntity.value = e.encrypted ? '' : tempEntity.value;
-                    tempEntity.display =
-                        typeof e?.options?.display !== 'undefined' ? e.options.display : true;
-                    tempEntity.error = false;
-                    tempEntity.disabled = false;
-                    if (e.field === 'name') {
-                        tempEntity.disabled = true;
-                    } else if (typeof e?.options?.disableonEdit !== 'undefined') {
-                        tempEntity.disabled = e.options.disableonEdit;
+                        tempEntity.fileNameToDisplay = 'Previous File';
                     }
-                    temState[e.field] = tempEntity;
-                } else if (props.mode === MODE_CLONE) {
-                    tempEntity.value =
-                        e.field === 'name' || e.encrypted ? '' : this.currentInput[e.field];
-                    tempEntity.display =
-                        typeof e?.options?.display !== 'undefined' ? e.options.display : true;
-                    tempEntity.error = false;
-                    tempEntity.disabled = false;
-                    temState[e.field] = tempEntity;
-                } else if (props.mode === MODE_CONFIG) {
-                    e.defaultValue = typeof e.defaultValue !== 'undefined' ? e.defaultValue : null;
-                    tempEntity.value =
-                        typeof this.currentInput[e.field] !== 'undefined'
-                            ? this.currentInput[e.field]
-                            : e.defaultValue;
-                    tempEntity.value = e.encrypted ? '' : tempEntity.value;
-                    tempEntity.display =
-                        typeof e?.options?.display !== 'undefined' ? e.options.display : true;
-                    tempEntity.error = false;
-                    tempEntity.disabled = false;
-                    if (e.field === 'name') {
-                        tempEntity.disabled = true;
-                    } else if (typeof e?.options?.disableonEdit !== 'undefined') {
-                        tempEntity.disabled = e.options.disableonEdit;
-                    }
-                    temState[e.field] = tempEntity;
-                } else {
-                    throw new Error('Invalid mode :', props.mode);
-                }
 
-                // handle dependent fields
-                const fields = e.options?.dependencies;
-                if (fields) {
-                    fields.forEach((field) => {
-                        const changeFields = this.dependencyMap.get(field);
-                        if (changeFields) {
-                            changeFields[e.field] = fields;
-                        } else {
-                            this.dependencyMap.set(field, {
-                                [e.field]: fields,
-                            });
+                    if (props.mode === MODE_CREATE) {
+                        tempEntity.value =
+                            typeof e.defaultValue !== 'undefined' ? e.defaultValue : null;
+                        tempEntity.display =
+                            typeof e?.options?.display !== 'undefined' ? e.options.display : true;
+                        tempEntity.error = false;
+                        tempEntity.disabled = false;
+                        temState[e.field] = tempEntity;
+                    } else if (props.mode === MODE_EDIT) {
+                        tempEntity.value =
+                            typeof this.currentInput[e.field] !== 'undefined'
+                                ? this.currentInput[e.field]
+                                : null;
+                        tempEntity.value = e.encrypted ? '' : tempEntity.value;
+                        tempEntity.display =
+                            typeof e?.options?.display !== 'undefined' ? e.options.display : true;
+                        tempEntity.error = false;
+                        tempEntity.disabled = false;
+                        if (e.field === 'name') {
+                            tempEntity.disabled = true;
+                        } else if (typeof e?.options?.disableonEdit !== 'undefined') {
+                            tempEntity.disabled = e.options.disableonEdit;
                         }
-                    });
+                        temState[e.field] = tempEntity;
+                    } else if (props.mode === MODE_CLONE) {
+                        tempEntity.value =
+                            e.field === 'name' || e.encrypted ? '' : this.currentInput[e.field];
+                        tempEntity.display =
+                            typeof e?.options?.display !== 'undefined' ? e.options.display : true;
+                        tempEntity.error = false;
+                        tempEntity.disabled = false;
+                        temState[e.field] = tempEntity;
+                    } else if (props.mode === MODE_CONFIG) {
+                        e.defaultValue =
+                            typeof e.defaultValue !== 'undefined' ? e.defaultValue : null;
+                        tempEntity.value =
+                            typeof this.currentInput[e.field] !== 'undefined'
+                                ? this.currentInput[e.field]
+                                : e.defaultValue;
+                        tempEntity.value = e.encrypted ? '' : tempEntity.value;
+                        tempEntity.display =
+                            typeof e?.options?.display !== 'undefined' ? e.options.display : true;
+                        tempEntity.error = false;
+                        tempEntity.disabled = false;
+                        if (e.field === 'name') {
+                            tempEntity.disabled = true;
+                        } else if (typeof e?.options?.disableonEdit !== 'undefined') {
+                            tempEntity.disabled = e.options.disableonEdit;
+                        }
+                        temState[e.field] = tempEntity;
+                    } else {
+                        throw new Error('Invalid mode :', props.mode);
+                    }
+
+                    // handle dependent fields
+                    const fields = e.options?.dependencies;
+                    if (fields) {
+                        fields.forEach((field) => {
+                            const changeFields = this.dependencyMap.get(field);
+                            if (changeFields) {
+                                changeFields[e.field] = fields;
+                            } else {
+                                this.dependencyMap.set(field, {
+                                    [e.field]: fields,
+                                });
+                            }
+                        });
+                    }
+                    temEntities.push(e);
                 }
-                temEntities.push(e);
-            }
-        });
+            });
 
         this.entities = temEntities;
 

@@ -916,10 +916,23 @@
             "$ref": "#/definitions/CheckboxGroupEntity"
           },
           {
+            "$ref": "#/definitions/LoggingEntity"
+          },
+          {
             "$ref": "#/definitions/GenericInputsEntity"
           }
         ]
       }
+    },
+    "LoggingEntity": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "loggingEntity"
+        }
+      },
+      "required": ["type"],
+      "additionalProperties": false
     },
     "InputsPage": {
       "oneOf": [
@@ -1328,7 +1341,14 @@
         "entity": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/ConfigurationEntity"
+            "anyOf": [
+              {
+                "$ref": "#/definitions/LoggingEntity"
+              },
+              {
+                "$ref": "#/definitions/ConfigurationEntity"
+              }
+            ]
           }
         },
         "name": {
