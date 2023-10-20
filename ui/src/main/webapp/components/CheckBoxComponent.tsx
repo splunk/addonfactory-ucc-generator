@@ -3,8 +3,8 @@ import Switch from '@splunk/react-ui/Switch';
 import { isFalse } from '../util/util';
 
 interface CheckBoxComponentProps {
-    value: boolean;
-    handleChange: (field: string, value: boolean) => void;
+    value: 0 | 1 | boolean;
+    handleChange: (field: string, value: 0 | 1) => void;
     field: string;
     disabled: boolean;
 }
@@ -12,12 +12,11 @@ interface CheckBoxComponentProps {
 class CheckBoxComponent extends React.Component<CheckBoxComponentProps> {
     handleChange = () => {
         if (this.props.value && !isFalse(this.props.value)) {
-            this.props.handleChange(this.props.field, false);
+            this.props.handleChange(this.props.field, 0);
         } else {
-            this.props.handleChange(this.props.field, true);
+            this.props.handleChange(this.props.field, 1);
         }
     };
-
     render() {
         return (
             <Switch

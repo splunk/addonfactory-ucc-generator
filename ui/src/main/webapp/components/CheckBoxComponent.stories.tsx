@@ -9,14 +9,14 @@ const meta = {
         // due to stories incompatibility, eslint rule is off
         // React Hook "useState" is called in function "render" that is neither a React function component
         // TODO: introduce a stateless stories component to reflect thaat component logic itself
-        const [state, setState] = useState(false); // eslint-disable-line react-hooks/rules-of-hooks
+        const [state, setState] = useState<0 | 1>(!!props.value ? 1 : 0); // eslint-disable-line react-hooks/rules-of-hooks
         return (
             <CheckBoxComponent
                 {...props}
                 value={state}
                 handleChange={() => {
-                    setState(!state);
-                    props.handleChange(props.field, !state);
+                    setState(state ? 0 : 1);
+                    props.handleChange(props.field, state ? 0 : 1);
                 }}
             />
         );
@@ -28,7 +28,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Base: Story = {
     args: {
-        value: false,
+        value: 0,
         field: 'field text',
         disabled: false,
     },
