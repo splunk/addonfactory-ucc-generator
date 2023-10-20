@@ -8,6 +8,7 @@ const meta = {
     title: 'Components/CustomTab',
     render: (props) => {
         // for visibility declared at bottom
+        // TODO: introduce a stateless stories component to reflect thaat component logic itself
         setUnifiedConfig(unifiedConfig); // eslint-disable-line no-use-before-define
         return <CustomTab {...props} />;
     },

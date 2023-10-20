@@ -11,7 +11,7 @@ import { PAGE_CONF } from '../constants/pages';
 function ConfigurationTable({ selectedTab, updateIsPageOpen }) {
     const [entity, setEntity] = useState({ open: false });
 
-    const isConfigurationPageStyle = true;
+    const isConfigurationPageStyle = selectedTab.style === STYLE_PAGE;
 
     useEffect(() => {
         if (isConfigurationPageStyle) {

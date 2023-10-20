@@ -4,7 +4,6 @@ import AcceptModal from './AcceptModal';
 const meta = {
     component: AcceptModal,
     title: 'Components/AcceptModal',
-    argTypes: { handleRequestClose: { action: 'modal closed callback' } },
 } satisfies Meta<typeof AcceptModal>;
 
 export default meta;

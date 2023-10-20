@@ -16,6 +16,7 @@ function MenuInputWrapper(props: MenuInputProps) {
     const [display, setDisplay] = useState(false);
 
     useEffect(() => {
+        // TODO: introduce a stateless stories component to reflect thaat component logic itself
         setUnifiedConfig(props.config);
         setDisplay(true);
     }, [props.config]);
@@ -28,7 +29,6 @@ function MenuInputWrapper(props: MenuInputProps) {
 }
 
 const meta = {
-    argTypes: { handleRequestOpen: { action: 'handleRequestOpen' } },
     component: MenuInputWrapper,
     title: 'Components/MenuInput',
 } satisfies Meta<typeof MenuInputWrapper>;

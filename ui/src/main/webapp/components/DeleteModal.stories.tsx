@@ -6,9 +6,9 @@ import { setUnifiedConfig } from '../util/util';
 const meta = {
     component: DeleteModal,
     title: 'Components/DeleteModal',
-    argTypes: { handleRequestClose: { action: 'handleRequestClose' } },
     render: (props) => {
         // for visibility declared at bottom
+        // TODO: introduce a stateless stories component to reflect thaat component logic itself
         setUnifiedConfig(unifiedConfig); // eslint-disable-line no-use-before-define
         return <DeleteModal {...props} />;
     },

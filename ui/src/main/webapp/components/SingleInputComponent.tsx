@@ -206,26 +206,4 @@ function SingleInputComponent(props: SingleInputComponentProps) {
     );
 }
 
-// SingleInputComponent.propTypes = {
-//     disabled: PropTypes.bool,
-//     value: PropTypes.string,
-//     error: PropTypes.bool,
-//     handleChange: PropTypes.func.isRequired,
-//     field: PropTypes.string,
-//     dependencyValues: PropTypes.object,
-//     controlOptions: PropTypes.shape({
-//         autoCompleteFields: PropTypes.array,
-//         endpointUrl: PropTypes.string,
-//         denyList: PropTypes.string,
-//         allowList: PropTypes.string,
-//         dependencies: PropTypes.array,
-//         createSearchChoice: PropTypes.bool,
-//         referenceName: PropTypes.string,
-//         disableSearch: PropTypes.bool,
-//         labelField: PropTypes.string,
-//         hideClearBtn: PropTypes.bool,
-//     }),
-//     required: PropTypes.bool,
-// };
-
 export default SingleInputComponent;

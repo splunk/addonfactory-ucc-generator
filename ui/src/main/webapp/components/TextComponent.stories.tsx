@@ -9,6 +9,7 @@ const meta = {
     render: (props) => {
         // due to stories incompatibility, eslint rule is off
         // React Hook "useState" is called in function "render" that is neither a React function component
+        // TODO: introduce a stateless stories component to reflect thaat component logic itself
         const [value, setValue] = useState(props.value); // eslint-disable-line react-hooks/rules-of-hooks
         return (
             <TextComponent

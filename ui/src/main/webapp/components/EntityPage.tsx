@@ -6,7 +6,7 @@ import ColumnLayout from '@splunk/react-ui/ColumnLayout';
 import { _ } from '@splunk/ui-utils/i18n';
 import { useSplunkTheme } from '@splunk/themes';
 
-import { MODE_CLONE, MODE_CREATE, MODE_EDIT } from '../constants/modes';
+import { MODE_CLONE, MODE_CREATE, MODE_EDIT, Mode } from '../constants/modes';
 import BaseFormView from './BaseFormView';
 import { SubTitleComponent } from '../pages/Input/InputPageStyle';
 import { PAGE_INPUT } from '../constants/pages';
@@ -15,7 +15,7 @@ import { StyledButton } from '../pages/EntryPageStyle';
 interface EntityPageProps {
     handleRequestClose: () => void;
     serviceName: string;
-    mode: string;
+    mode: Mode;
     page: string;
     stanzaName?: string;
     formLabel?: string;

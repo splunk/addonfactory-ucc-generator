@@ -4,7 +4,6 @@ import RadioComponent from './RadioComponent';
 const meta = {
     component: RadioComponent,
     title: 'Components/RadioComponent',
-    argTypes: { handleChange: { action: 'handleChange' } },
 } satisfies Meta<typeof RadioComponent>;
 
 export default meta;

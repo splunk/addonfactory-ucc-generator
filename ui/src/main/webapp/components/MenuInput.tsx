@@ -154,12 +154,10 @@ function MenuInput({ handleRequestOpen }: MenuInputProps) {
                                 name: serviceName,
                                 hasSubmenu: false,
                                 title:
-                                    services.find(
-                                        (service: { name: string }) => service.name === serviceName
-                                    )?.title || '', // what should be done when title empty
-                                subTitle: services.find(
-                                    (service: { name: string }) => service.name === serviceName
-                                )?.subTitle,
+                                    services.find((service) => service.name === serviceName)
+                                        ?.title || '', // what should be done when title empty
+                                subTitle: services.find((service) => service.name === serviceName)
+                                    ?.subTitle,
                             });
                         });
                         servicesGroup[ROOT_GROUP_NAME].push({
@@ -171,16 +169,15 @@ function MenuInput({ handleRequestOpen }: MenuInputProps) {
                         servicesGroup[ROOT_GROUP_NAME].push({
                             name: group.groupName,
                             title: group.groupTitle,
-                            subTitle: services.find(
-                                (service: { name: string }) => service.name === group.groupName
-                            )?.subTitle,
+                            subTitle: services.find((service) => service.name === group.groupName)
+                                ?.subTitle,
                             hasSubmenu: false,
                         });
                     }
                 }
             );
         } else {
-            servicesGroup[ROOT_GROUP_NAME] = services.map((service: Group) => ({
+            servicesGroup[ROOT_GROUP_NAME] = services.map((service) => ({
                 name: service.name,
                 title: service.title,
                 subTitle: service.subTitle,
