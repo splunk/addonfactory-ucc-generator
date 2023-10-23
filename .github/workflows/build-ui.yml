@@ -29,7 +29,7 @@ jobs:
       - name: Build UCC UI
         run: yarn run build
       - name: List deps into dependencies.txt
-        run: yarn list --prod --depth 0 | python ../.github/scripts/format_yarn_deps.py --output-file=dist/package/appserver/static/js/dependencies.txt
+        run: yarn list --prod --depth 0 | python ../.github/scripts/format_yarn_deps.py --output-file=dist/dependencies.txt
       - name: Upload dist with name UCC-UI-build
         uses: actions/upload-artifact@v3
         with:
