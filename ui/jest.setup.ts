@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { configure } from '@testing-library/react';
-import { server } from './src/main/webapp/mocks/server';
+import { server } from './src/mocks/server';
 
 /**
  * Configure test attributes
