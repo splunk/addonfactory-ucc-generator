@@ -3,11 +3,11 @@ import { initialize, mswDecorator, mswLoader } from 'msw-storybook-addon';
 import { SplunkThemeProvider } from '@splunk/themes';
 import { Suspense } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { StyledContainer, ThemeProviderSettings } from '../src/main/webapp/pages/EntryPageStyle';
-import { WaitSpinnerWrapper } from '../src/main/webapp/components/table/CustomTableStyle';
+import { StyledContainer, ThemeProviderSettings } from '../src/pages/EntryPageStyle';
+import { WaitSpinnerWrapper } from '../src/components/table/CustomTableStyle';
 
 import React from 'react';
-import { serverHandlers } from '../src/main/webapp/mocks/server-handlers';
+import { serverHandlers } from '../src/mocks/server-handlers';
 import { rest } from 'msw';
 
 // Initialize MSW
