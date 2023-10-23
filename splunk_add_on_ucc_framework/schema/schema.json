@@ -916,7 +916,7 @@
             "$ref": "#/definitions/CheckboxGroupEntity"
           },
           {
-            "$ref": "#/definitions/LoggingEntity"
+            "$ref": "#/definitions/LoggingEntityAlias"
           },
           {
             "$ref": "#/definitions/GenericInputsEntity"
@@ -924,7 +924,7 @@
         ]
       }
     },
-    "LoggingEntity": {
+    "LoggingEntityAlias": {
       "type": "object",
       "properties": {
         "type": {
@@ -1343,7 +1343,7 @@
           "items": {
             "anyOf": [
               {
-                "$ref": "#/definitions/LoggingEntity"
+                "$ref": "#/definitions/LoggingEntityAlias"
               },
               {
                 "$ref": "#/definitions/ConfigurationEntity"
