@@ -1,9 +1,15 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import Switch from '@splunk/react-ui/Switch';
 import { isFalse } from '../util/util';
 
-class CheckBoxComponent extends Component {
+interface CheckBoxComponentProps {
+    value: 0 | 1 | boolean;
+    handleChange: (field: string, value: 0 | 1) => void;
+    field: string;
+    disabled: boolean;
+}
+
+class CheckBoxComponent extends React.Component<CheckBoxComponentProps> {
     handleChange = () => {
         if (this.props.value && !isFalse(this.props.value)) {
             this.props.handleChange(this.props.field, 0);
@@ -25,12 +31,5 @@ class CheckBoxComponent extends Component {
         );
     }
 }
-
-CheckBoxComponent.propTypes = {
-    value: PropTypes.oneOfType([PropTypes.bool, PropTypes.number, PropTypes.string]),
-    handleChange: PropTypes.func.isRequired,
-    field: PropTypes.string,
-    disabled: PropTypes.bool,
-};
 
 export default CheckBoxComponent;

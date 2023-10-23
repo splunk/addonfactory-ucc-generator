@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import Text from '@splunk/react-ui/Text';
 import styled from 'styled-components';
 
@@ -7,8 +6,18 @@ const TextWrapper = styled(Text)`
     width: 320px !important;
 `;
 
-class TextComponent extends Component {
-    handleChange = (e, { value }) => {
+interface TextComponentProps {
+    // Number is expected if provided number in globalConfig.json instead of a string.
+    value: string | number;
+    handleChange: (field: string, value: string | number) => void;
+    field: string;
+    error: boolean;
+    encrypted: boolean;
+    disabled: boolean;
+}
+
+class TextComponent extends Component<TextComponentProps> {
+    handleChange = (e: unknown, { value }: { value: string | number }) => {
         this.props.handleChange(this.props.field, value);
     };
 
@@ -30,15 +39,5 @@ class TextComponent extends Component {
         );
     }
 }
-
-TextComponent.propTypes = {
-    // Number is expected if provided number in globalConfig.json instead of a string.
-    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    handleChange: PropTypes.func.isRequired,
-    field: PropTypes.string,
-    error: PropTypes.bool,
-    encrypted: PropTypes.bool,
-    disabled: PropTypes.bool,
-};
 
 export default TextComponent;

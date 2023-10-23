@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component, ReactElement } from 'react';
 import Modal from '@splunk/react-ui/Modal';
 import styled from 'styled-components';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
@@ -13,8 +12,27 @@ const ModalWrapper = styled(Modal)`
     width: 800px;
 `;
 
-class EntityModal extends Component {
-    constructor(props) {
+interface EntityModalProps {
+    page: string;
+    mode: string;
+    serviceName: string;
+    handleRequestClose: () => void;
+    stanzaName?: string;
+    open?: boolean;
+    formLabel?: string;
+    groupName?: string;
+}
+
+interface EntityModalState {
+    isSubmititng: boolean;
+}
+
+class EntityModal extends Component<EntityModalProps, EntityModalState> {
+    form: React.RefObject<BaseFormView>;
+
+    buttonText: string | ReactElement;
+
+    constructor(props: EntityModalProps) {
         super(props);
         // Ref is used here to call submit method of form only
         this.form = React.createRef(); // nosemgrep: typescript.react.security.audit.react-no-refs.react-no-refs
@@ -36,7 +54,7 @@ class EntityModal extends Component {
     };
 
     handleSubmit = () => {
-        const result = this.form.current.handleSubmit();
+        const result = this.form.current?.handleSubmit();
         if (result) {
             this.handleRequestClose();
         }
@@ -46,7 +64,7 @@ class EntityModal extends Component {
      * @param {boolean} set: whether form is submitting
      * @param {boolean} close : close the Entity modal
      */
-    handleFormSubmit = (set, close) => {
+    handleFormSubmit = (set: boolean, close: boolean) => {
         this.setState({ isSubmititng: set });
         if (close) {
             this.handleRequestClose();
@@ -90,16 +108,5 @@ class EntityModal extends Component {
         );
     }
 }
-
-EntityModal.propTypes = {
-    page: PropTypes.string,
-    open: PropTypes.bool,
-    handleRequestClose: PropTypes.func,
-    serviceName: PropTypes.string,
-    mode: PropTypes.string,
-    stanzaName: PropTypes.string,
-    formLabel: PropTypes.string,
-    groupName: PropTypes.string,
-};
 
 export default EntityModal;

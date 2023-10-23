@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { TextDecoder } from 'node:util'; // (ESM style imports)
 import FileInputComponent from './FileInputComponent';
-import fileContants from '../constants/fileInputConstant';
+import fileContants from '../../constants/fileInputConstant';
 
 // @ts-expect-error TextDecoder missing DataView prop but it is not used in this case
 global.TextDecoder = TextDecoder;

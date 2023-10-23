@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Modal from '@splunk/react-ui/Modal';
 import Message from '@splunk/react-ui/Message';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
 
 import { getFormattedMessage } from '../util/messageUtil';
 import { StyledButton } from '../pages/EntryPageStyle';
@@ -11,7 +10,12 @@ const ModalWrapper = styled(Modal)`
     width: 600px;
 `;
 
-function ErrorModal(props) {
+interface ErrorModalProps {
+    message: string;
+    open: boolean;
+}
+
+function ErrorModal(props: ErrorModalProps) {
     const [open, setOpen] = useState(props.open); // nosemgrep: typescript.react.best-practice.react-props-in-state.react-props-in-state
 
     const handleRequestClose = () => {
@@ -32,8 +36,5 @@ function ErrorModal(props) {
         </ModalWrapper>
     );
 }
-ErrorModal.propTypes = {
-    message: PropTypes.string,
-    open: PropTypes.bool,
-};
+
 export default ErrorModal;

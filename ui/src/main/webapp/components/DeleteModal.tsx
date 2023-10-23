@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import Modal from '@splunk/react-ui/Modal';
 import Message from '@splunk/react-ui/Message';
 import styled from 'styled-components';
@@ -18,10 +17,23 @@ const ModalWrapper = styled(Modal)`
     width: 800px;
 `;
 
-class DeleteModal extends Component {
+interface DeleteModalProps {
+    page: string;
+    handleRequestClose: () => void;
+    serviceName: string;
+    stanzaName: string;
+    open?: boolean;
+}
+
+interface DeleteModalState {
+    isDeleting: boolean;
+    ErrorMsg: string;
+}
+
+class DeleteModal extends Component<DeleteModalProps, DeleteModalState> {
     static contextType = TableContext;
 
-    constructor(props) {
+    constructor(props: DeleteModalProps) {
         super(props);
         this.state = { isDeleting: false, ErrorMsg: '' };
     }
@@ -29,7 +41,8 @@ class DeleteModal extends Component {
     handleRequestClose = () => {
         // set ErrorMsg to empty string on close or cancel
         // so that on again open of modal it does not show the same ErrorMsg
-        this.state.ErrorMsg = '';
+        this.setState((prevState) => ({ ...prevState, ErrorMsg: '' }));
+
         this.props.handleRequestClose();
     };
 
@@ -113,13 +126,5 @@ class DeleteModal extends Component {
         );
     }
 }
-
-DeleteModal.propTypes = {
-    page: PropTypes.string.isRequired,
-    open: PropTypes.bool,
-    handleRequestClose: PropTypes.func,
-    serviceName: PropTypes.string,
-    stanzaName: PropTypes.string,
-};
 
 export default DeleteModal;

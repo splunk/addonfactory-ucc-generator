@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import RadioBar from '@splunk/react-ui/RadioBar';
 import styled from 'styled-components';
 
@@ -11,8 +10,20 @@ const RadioBarOption = styled(RadioBar.Option)`
     margin-left: 0px !important;
 `;
 
-class RadioComponent extends Component {
-    handleChange = (e, { value }) => {
+interface RadioComponentProps {
+    value: string;
+    handleChange: (field: string, value: string) => void;
+    field: string;
+    controlOptions: {
+        items: {
+            value: string;
+            label: string;
+        }[];
+    };
+}
+
+class RadioComponent extends Component<RadioComponentProps> {
+    handleChange = (e: unknown, { value }: { value: string }) => {
         this.props.handleChange(this.props.field, value);
     };
 
@@ -31,12 +42,5 @@ class RadioComponent extends Component {
         );
     }
 }
-
-RadioComponent.propTypes = {
-    value: PropTypes.string,
-    handleChange: PropTypes.func.isRequired,
-    field: PropTypes.string,
-    controlOptions: PropTypes.object,
-};
 
 export default RadioComponent;
