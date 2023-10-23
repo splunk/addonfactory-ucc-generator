@@ -366,8 +366,12 @@ def summary_report(
 
     def line_print(print_path, mod_type):
         if verbose_report:
-            print(
-                color_pallete.get(mod_type, "") + str(print_path).ljust(80),
+            # print(
+            #     color_pallete.get(mod_type, "") + str(print_path).ljust(80),
+            #     mod_type + c.Style.RESET_ALL,
+            # )
+            logger.info(
+                color_pallete.get(mod_type, "") + str(print_path).ljust(80) +
                 mod_type + c.Style.RESET_ALL,
             )
         summary[mod_type] += 1
@@ -433,8 +437,7 @@ def summary_report(
             relative_file_path = os.path.join(relative_path, file)
             file_check(file, output_directory, relative_file_path, source)
 
-    # TODO add more comprehensive summary
-    print(summary)
+    # print(summary)
     summary_print(summary)
 
     return
