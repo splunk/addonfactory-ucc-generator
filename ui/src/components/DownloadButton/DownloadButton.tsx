@@ -2,7 +2,7 @@ import React from 'react';
 import Button from '@splunk/react-ui/Button';
 
 interface DownloadButtonProps {
-    // needs to be same domain
+    // needs to be same domain if not it will jsut open link
     fileUrl: string;
     buttonText: string;
     fileNameAfterDownload: string;
