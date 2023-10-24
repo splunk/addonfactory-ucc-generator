@@ -4,9 +4,10 @@ import DownloadButton from './DownloadButton';
 
 describe('DownloadButton', () => {
     it('Check if download button displays content correctly', async () => {
+        const btnText = 'some btn text';
         const exampleContent = {
             fileUrl: 'http://localhost:6006/index.json',
-            buttonText: 'some btn text',
+            children: btnText,
             fileNameAfterDownload: 'fileName',
         };
 
@@ -15,7 +16,7 @@ describe('DownloadButton', () => {
         const downloadBtn: HTMLAnchorElement = screen.getByTestId('downloadButton');
         expect(downloadBtn).toBeInTheDocument();
 
-        expect(downloadBtn).toHaveTextContent(exampleContent.buttonText);
+        expect(downloadBtn).toHaveTextContent(btnText);
 
         expect(downloadBtn.href).toEqual(exampleContent.fileUrl);
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { createRESTURL } from '@splunk/splunk-utils/url';
 import { app } from '@splunk/splunk-utils/config';
+import Icon from '@splunk/react-icons/ArrowBroadUnderbarDown';
 import DownloadButton from './DownloadButton';
 
 function OpenApiDownloadButton() {
@@ -11,9 +12,13 @@ function OpenApiDownloadButton() {
                     app,
                     owner: 'nobody',
                 })}
-                buttonText="Download openapi.json"
                 fileNameAfterDownload="openapi.json"
-            />
+            >
+                <div style={{ display: 'grid', justifyItems: 'center' }}>
+                    <Icon />
+                    <span style={{ fontSize: '9px' }}>Openapi.json</span>
+                </div>
+            </DownloadButton>
         </div>
     );
 }

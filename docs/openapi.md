@@ -7,6 +7,8 @@ There has to be defined valid `globalConfig.json` and `app.manifest` to have the
 
 Once `ucc-gen` command is executed, OpenAPI description document is located in output `static` subdirectory.
 
+One of ways is to download it via button displayed in top right corner of configuration page.
+
 When add-on is installed to Splunk instance, it is exposed via web and management interface, so is available under following addresses accordingly:
 
 * \[protocol\]://\[domain\]:\[port\]/en-GB/splunkd/__raw/servicesNS/\[user\]/\[appname\]/static/openapi.json
