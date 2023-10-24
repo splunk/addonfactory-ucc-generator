@@ -120,9 +120,9 @@ def _generate_addon(
     os.makedirs(package_bin_path)
 
     py_in_bin_from_template = {
-        'utils.name.init-template' : f"{addon_name}_utils.py",
-        'rh_endpoint.name.init-template' : f"{addon_name}_rh_endpoint.py",
-        'input.name.init-template' : f"{addon_input_name}.py"
+        "utils.name.init-template": f"{addon_name}_utils.py",
+        "rh_endpoint.name.init-template": f"{addon_name}_rh_endpoint.py",
+        "input.name.init-template": f"{addon_input_name}.py",
     }
     for template, py_in_bin in py_in_bin_from_template.items():
         package_bin_input_path = os.path.join(package_bin_path, py_in_bin)
