@@ -14,6 +14,7 @@ As of now, 3 pre-built panels are supported:
 * Add-on version
 * Events ingested by sourcetype
 * Errors in the add-on
+
 > Note: if you change the dashboard page (Edit button) after the add-on is
 > installed, the changes go to `local` folder, and you will see your version
 > of the dashboard even if you update an add-on. 
