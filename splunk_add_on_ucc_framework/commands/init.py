@@ -118,20 +118,28 @@ def _generate_addon(
         _f.write(app_manifest_rendered_content)
     package_bin_path = os.path.join(package_path, "bin")
     os.makedirs(package_bin_path)
-    package_bin_input_path = os.path.join(package_bin_path, f"{addon_input_name}.py")
-    input_rendered_content = (
-        utils.get_j2_env()
-        .get_template("input.name.init-template")
-        .render(
-            addon_name=addon_name,
-            addon_rest_root=addon_rest_root,
-            addon_input_name=addon_input_name,
-            addon_version=addon_version,
-            addon_display_name=addon_display_name,
+
+    py_in_bin_from_template = {
+        'utils.name.init-template' : f"{addon_name}_utils.py",
+        'rh_endpoint.name.init-template' : f"{addon_name}_rh_endpoint.py",
+        'input.name.init-template' : f"{addon_input_name}.py"
+    }
+    for template, py_in_bin in py_in_bin_from_template.items():
+        package_bin_input_path = os.path.join(package_bin_path, py_in_bin)
+        input_rendered_content = (
+            utils.get_j2_env()
+            .get_template(template)
+            .render(
+                addon_name=addon_name,
+                addon_rest_root=addon_rest_root,
+                addon_input_name=addon_input_name,
+                addon_version=addon_version,
+                addon_display_name=addon_display_name,
+            )
         )
-    )
-    with open(package_bin_input_path, "w") as _f:
-        _f.write(input_rendered_content + "\n")
+        with open(package_bin_input_path, "w") as _f:
+            _f.write(input_rendered_content + "\n")
+
     package_lib_path = os.path.join(package_path, "lib")
     os.makedirs(package_lib_path)
     package_lib_requirements_path = os.path.join(package_lib_path, "requirements.txt")

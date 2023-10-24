@@ -3,7 +3,7 @@
         "configuration": {
             "tabs": [
                 {
-                    "name": "account",
+                    "name": "endpoint",
                     "table": {
                         "actions": [
                             "edit",
@@ -24,7 +24,7 @@
                             "validators": [
                                 {
                                     "type": "regex",
-                                    "errorMsg": "Account Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+                                    "errorMsg": "Endpoint Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
                                     "pattern": "^[a-zA-Z]\\w*$"
                                 },
                                 {
@@ -35,19 +35,19 @@
                                 }
                             ],
                             "field": "name",
-                            "help": "A unique name for the account.",
+                            "help": "A unique name for the endpoint.",
                             "required": true
                         },
                         {
                             "type": "text",
-                            "label": "API key",
-                            "field": "api_key",
-                            "help": "API key",
+                            "label": "URI",
+                            "field": "uri",
+                            "help": "URI",
                             "required": true,
-                            "encrypted": true
+                            "encrypted": false
                         }
                     ],
-                    "title": "Accounts"
+                    "title": "Endpoints"
                 },
                 {
                     "name": "logging",
@@ -132,12 +132,31 @@
                         },
                         {
                             "type": "singleSelect",
-                            "label": "Account to use",
+                            "label": "Endpoint to use",
                             "options": {
-                                "referenceName": "account"
+                                "referenceName": "endpoint"
                             },
-                            "help": "Account to use for this input.",
-                            "field": "account",
+                            "help": "Endpoint to use for this input.",
+                            "field": "endpoint",
+                            "required": true
+                        },
+                        {
+                            "type": "text",
+                            "label": "Source type",
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Source type name must begin with a letter and consist exclusively of lowercase alphanumeric characters and colon.",
+                                    "pattern": "^(?!.*:$)[a-z][a-z0-9:]*$"
+                                },
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Length of source type name should be between 1 and 100",
+                                    "minLength": 1,
+                                    "maxLength": 100
+                                }
+                            ],
+                            "field": "sourcetype",
                             "required": true
                         }
                     ],
