@@ -154,7 +154,10 @@ class ExampleInputOne(Entity):
             ),
         )
         self.text_area = TextArea(
-            browser, Selector(select=entity_container.select + ' [data-name="example_textarea_field"]')
+            browser,
+            Selector(
+                select=entity_container.select + ' [data-name="example_textarea_field"]'
+            ),
         )
         self.title = BaseComponent(browser, Selector(select=' [data-test="title"]'))
 

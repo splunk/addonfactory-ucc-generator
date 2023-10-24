@@ -90,7 +90,7 @@ def add_input_one(ucc_smartx_rest_helper):
         "singleSelectTest": "two",
         "start_date": "2020-12-11T20:00:32.000z",
         "disabled": 0,
-        "example_textarea_field": "line1\nline2"
+        "example_textarea_field": "line1\nline2",
     }
     yield input_page.backend_conf.post_stanza(url, kwargs)
 
@@ -889,7 +889,9 @@ class TestInputPage(UccTester):
             input_page.entity1.query_start_date.get_input_label, "Query Start Date"
         )
         self.assert_util(input_page.entity1.limit.get_input_label, "Limit")
-        self.assert_util(input_page.entity1.text_area.get_input_label, "Example Textarea Field")
+        self.assert_util(
+            input_page.entity1.text_area.get_input_label, "Example Textarea Field"
+        )
 
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
@@ -1065,7 +1067,7 @@ class TestInputPage(UccTester):
             "singleSelectTest": "two",
             "start_date": "2020-12-11T20:00:32.000z",
             "disabled": 0,
-            "example_textarea_field": "line1\nline2\nline3\nline4\nline5"
+            "example_textarea_field": "line1\nline2\nline3\nline4\nline5",
         }
         backend_stanza = input_page.backend_conf.get_stanza(
             "example_input_one://dummy_input"
@@ -2407,9 +2409,9 @@ class TestInputPage(UccTester):
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.input
-    def test_inputs_textarea_height(self, ucc_smartx_selenium_helper,
-        ucc_smartx_rest_helper,
-        add_input_one):
+    def test_inputs_textarea_height(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+    ):
         """
         Verifies that textarea height values
         """
@@ -2418,18 +2420,22 @@ class TestInputPage(UccTester):
         min_textarea_height = 71
         max_textarea_height = 311
         long_input = ""
-        self.assert_util(min_textarea_height, input_page.entity1.text_area.get_textarea_height())
+        self.assert_util(
+            min_textarea_height, input_page.entity1.text_area.get_textarea_height()
+        )
         for i in range(1, 50):
             long_input += f"{str(i)}\n"
         input_page.entity1.text_area.append_value(long_input)
-        self.assert_util(max_textarea_height, input_page.entity1.text_area.get_textarea_height())
+        self.assert_util(
+            max_textarea_height, input_page.entity1.text_area.get_textarea_height()
+        )
 
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.input
-    def test_inputs_textarea_big_input(self, ucc_smartx_selenium_helper,
-        ucc_smartx_rest_helper,
-        add_input_one):
+    def test_inputs_textarea_big_input(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+    ):
         """
         Verifies that textarea can handle big inputs
         """
