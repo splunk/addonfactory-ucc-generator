@@ -1053,6 +1053,28 @@ class TestInputPage(UccTester):
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.input
+    def test_example_input_one_edit_uneditable_singleselect_example_account(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+    ):
+        """Verifies the frontend uneditable single select field at time of edit of the example input one entity"""
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        input_page.table.edit_row("dummy_input_one")
+        self.assert_util(input_page.entity1.example_account.is_editable, False)
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
+    def test_example_input_one_edit_editable_singleselect_index(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+    ):
+        """Verifies the frontend editable single select field at time of edit of the example input one entity"""
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        input_page.table.edit_row("dummy_input_one")
+        self.assert_util(input_page.entity1.index.is_editable, True)
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
     @pytest.mark.sanity_test
     def test_example_input_one_edit_frontend_backend_validation(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
