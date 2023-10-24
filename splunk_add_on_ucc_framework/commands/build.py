@@ -333,13 +333,12 @@ def _get_python_version_from_executable(python_binary_name: str) -> str:
 def summary_report(
     source: str,
     ta_name: str,
-    config_path: Optional[str] = None,
-    output_directory: Optional[str] = None,
-    verbose_report: Optional[str] = None,
-):
-    # initialising colorama to handle ASCI color in windows cmd
+    output_directory: str,
+    verbose_report: bool,
+) -> None:
+    # initialising colorama to handle ASCII color in windows cmd
     c.init()
-    color_pallete = {
+    color_palette = {
         "copied": c.Fore.GREEN,
         "conflict": c.Fore.RED,
         "modified": c.Fore.YELLOW,
@@ -348,55 +347,48 @@ def summary_report(
     # conflicting files from ucc-gen package folder
     conflict_path = os.path.join(internal_root_dir, "package")
     # conflict files generated through-out the process
-    conflict_static_list = [
-        "import_declare_test.py",
-        f"{ta_name}_rh_*.py",
-        "app.conf",
-        "inputs.conf*",
-        "restmap.conf",
-        "server.conf",
-        f"{ta_name}_*.conf*",
-        "web.conf",
-        "default.xml",
-        "configuration.xml",
-        "dashboard.xml",
-        "inputs.xml",
-        "openapi.json",
-    ]
+    conflict_static_list = frozenset(
+        [
+            "import_declare_test.py",
+            f"{ta_name}_rh_*.py",
+            "app.conf",
+            "inputs.conf*",
+            "restmap.conf",
+            "server.conf",
+            f"{ta_name}_*.conf*",
+            "web.conf",
+            "default.xml",
+            "configuration.xml",
+            "dashboard.xml",
+            "inputs.xml",
+            "openapi.json",
+        ]
+    )
 
-    def line_print(print_path, mod_type):
+    def line_print(print_path: str, mod_type: str) -> None:
         if verbose_report:
-            # print(
-            #     color_pallete.get(mod_type, "") + str(print_path).ljust(80),
-            #     mod_type + c.Style.RESET_ALL,
-            # )
             logger.info(
-                color_pallete.get(mod_type, "") + str(print_path).ljust(80) +
-                mod_type + c.Style.RESET_ALL,
+                color_palette.get(mod_type, "")
+                + str(print_path).ljust(80)
+                + mod_type
+                + c.Style.RESET_ALL,
             )
         summary[mod_type] += 1
 
-    def summary_print(summary):
-        logger.info("File creation summary:")
-        for key, value in summary.items():
-            logger.info((key + ": ").ljust(15) + str(value))
-
-    def check_for_conflict(file, relative_file_path):
+    def check_for_conflict(file: str, relative_file_path: str) -> bool:
         conflict_path_file = os.path.join(conflict_path, relative_file_path)
-
         if os.path.isfile(conflict_path_file):
             return True
-
         for pattern in conflict_static_list:
             if fnmatch.fnmatch(file, pattern):
                 return True
-
         if file:
             pass
-
         return False
 
-    def file_check(file, output_directory, relative_file_path, source):
+    def file_check(
+        file: str, output_directory: str, relative_file_path: str, source: str
+    ) -> None:
         source_path = os.path.join(source, relative_file_path)
 
         if os.path.isfile(source_path):
@@ -423,6 +415,13 @@ def summary_report(
 
     path_len = len(output_directory) + 1
 
+    if verbose_report:
+        logger.info("Detailed information about created/copied/modified/conflict files")
+        logger.info(
+            "Read more about it here: "
+            "https://splunk.github.io/addonfactory-ucc-generator/quickstart/#verbose-mode"
+        )
+
     for path, dir, files in os.walk(output_directory):
         relative_path = path[path_len:]
         # skipping lib directory
@@ -437,10 +436,13 @@ def summary_report(
             relative_file_path = os.path.join(relative_path, file)
             file_check(file, output_directory, relative_file_path, source)
 
-    # print(summary)
-    summary_print(summary)
-
-    return
+    summary_combined = ", ".join(
+        [
+            f"{file_type}: {amount_of_files}"
+            for file_type, amount_of_files in summary.items()
+        ]
+    )
+    logger.info(f"File creation summary: {summary_combined}")
 
 
 def generate(
@@ -449,7 +451,7 @@ def generate(
     addon_version: Optional[str] = None,
     output_directory: Optional[str] = None,
     python_binary_name: str = "python3",
-    verbose_report: Optional[str] = None,
+    verbose_report: bool = False,
 ) -> None:
     logger.info(f"ucc-gen version {__version__} is used")
     logger.info(f"Python binary name to use: {python_binary_name}")
@@ -702,18 +704,17 @@ def generate(
             json.dump(open_api.raw_element, openapi_file, indent=4)
 
     summary_report(
-        source=source,
-        ta_name=ta_name,
-        config_path=config_path,
-        output_directory=os.path.join(output_directory, ta_name),
-        verbose_report=verbose_report,
+        source,
+        ta_name,
+        os.path.join(output_directory, ta_name),
+        verbose_report,
     )
 
 
 # TODO remove after debugging
 if __name__ == "__main__":
     source = "/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/temp_add_on/test_addon/package"
-    output_directory = "/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/temp_add_on/test_addon/output/test_addon"
+    output_directory = "/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/temp_add_on/test_addon/output/test_addon"  # noqa
 
     app_manifest = _get_app_manifest(source)
     ta_name = app_manifest.get_addon_name()

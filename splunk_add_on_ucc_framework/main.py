@@ -108,7 +108,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         "--verbose",
         action="store_true",
         default=False,
-        help="Show files install result",
+        help="show detailed information about created/copied/modified/conflict files after build is complete",
     )
 
     package_parser = subparsers.add_parser("package", description="Package an add-on")
