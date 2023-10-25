@@ -1085,6 +1085,21 @@
             ],
             "title": "Inputs",
             "description": "Manage your data inputs",
+            "groupsMenu": [
+                {
+                    "groupName": "example_input_one",
+                    "groupTitle": "Example Input One"
+                },
+                {
+                    "groupName": "example_input_two",
+                    "groupTitle": "Example Input Two"
+                },
+                {
+                    "groupName": "group_one",
+                    "groupTitle": "Group One",
+                    "groupServices": ["example_input_three", "example_input_four"]
+                }
+            ],
             "table": {
                 "actions": [
                     "edit",
