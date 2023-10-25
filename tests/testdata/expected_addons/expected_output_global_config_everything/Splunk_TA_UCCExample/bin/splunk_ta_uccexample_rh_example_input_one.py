@@ -139,7 +139,7 @@ fields = [
         default=None,
         validator=None
     ), 
-    
+
     field.RestField(
         'disabled',
         required=False,
