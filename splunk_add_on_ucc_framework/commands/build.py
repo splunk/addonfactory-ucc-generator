@@ -709,18 +709,3 @@ def generate(
         os.path.join(output_directory, ta_name),
         verbose_report,
     )
-
-
-# TODO remove after debugging
-if __name__ == "__main__":
-    source = "/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/temp_add_on/test_addon/package"
-    output_directory = "/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/temp_add_on/test_addon/output/test_addon"  # noqa
-
-    app_manifest = _get_app_manifest(source)
-    ta_name = app_manifest.get_addon_name()
-    summary_report(
-        source=source,
-        output_directory=output_directory,
-        ta_name=ta_name,
-        verbose_report=True,
-    )
