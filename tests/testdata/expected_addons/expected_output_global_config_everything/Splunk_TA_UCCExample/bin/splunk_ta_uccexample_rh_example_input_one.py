@@ -132,6 +132,14 @@ fields = [
         default=None,
         validator=None
     ), 
+    
+    field.RestField(
+        'example_textarea_field',
+        required=True,
+        encrypted=False,
+        default=None,
+        validator=None
+    ), 
 
     field.RestField(
         'disabled',

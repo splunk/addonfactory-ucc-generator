@@ -110,6 +110,13 @@ class EXAMPLE_INPUT_ONE(smi.Script):
             )
         )
         
+        scheme.add_argument(
+            smi.Argument(
+                'example_textarea_field',
+                required_on_create=True,
+            )
+        )
+        
         return scheme
 
     def validate_input(self, definition):

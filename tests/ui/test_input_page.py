@@ -2421,13 +2421,13 @@ class TestInputPage(UccTester):
         max_textarea_height = 311
         long_input = ""
         self.assert_util(
-            min_textarea_height, input_page.entity1.text_area.get_textarea_height()
+            min_textarea_height, input_page.entity1.text_area.get_textarea_height
         )
         for i in range(1, 50):
             long_input += f"{str(i)}\n"
         input_page.entity1.text_area.append_value(long_input)
         self.assert_util(
-            max_textarea_height, input_page.entity1.text_area.get_textarea_height()
+            max_textarea_height, input_page.entity1.text_area.get_textarea_height
         )
 
     @pytest.mark.execute_enterprise_cloud_true
@@ -2449,3 +2449,23 @@ class TestInputPage(UccTester):
         self.assert_util(input_page.entity1.save, True)
         input_page.table.edit_row("dummy_input_one")
         self.assert_util(big_input.strip(), input_page.entity1.text_area.get_value())
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
+    def test_inputs_textarea_scroll(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+    ):
+        """
+        Verifies that textarea height values
+        """
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        input_page.table.edit_row("dummy_input_one")
+        long_input = ""
+        screnshot_before = input_page.entity1.text_area.screenshot()
+        for i in range(1, 50):
+            long_input += f"{str(i)}\n"
+        input_page.entity1.text_area.append_value(long_input)
+        input_page.entity1.text_area.scroll("UP", 40)
+        screenshot_after = input_page.entity1.text_area.screenshot()
+        self.assert_util(screnshot_before, screenshot_after, operator="!=")
