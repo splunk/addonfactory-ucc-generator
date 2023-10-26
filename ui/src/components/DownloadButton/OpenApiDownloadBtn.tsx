@@ -14,10 +14,8 @@ function OpenApiDownloadButton() {
                 })}
                 fileNameAfterDownload="openapi.json"
             >
-                <div style={{ display: 'grid', justifyItems: 'center' }}>
-                    <Icon />
-                    <span style={{ fontSize: '9px' }}>Openapi.json</span>
-                </div>
+                <Icon />
+                <span>OpenAPI.json</span>
             </DownloadButton>
         </div>
     );

@@ -1,24 +1,25 @@
 import React, { ReactElement } from 'react';
 import Button from '@splunk/react-ui/Button';
+import Link from '@splunk/react-ui/Link';
 
 interface DownloadButtonProps {
     // needs to be same domain if not it will just open link
     fileUrl: string;
     fileNameAfterDownload: string;
-    children: ReactElement | string;
+    children: ReactElement | ReactElement[] | string;
 }
 
 function DownloadButton(props: DownloadButtonProps) {
     return (
-        <a
+        <Link
             target="_blank"
-            href={props.fileUrl}
+            to={props.fileUrl}
             rel="noopener noreferrer"
             download={props.fileNameAfterDownload}
             data-test="downloadButton"
         >
             <Button>{props.children}</Button>
-        </a>
+        </Link>
     );
 }
 
