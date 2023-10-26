@@ -282,6 +282,7 @@ def test_ucc_generate_openapi_with_configuration_files_only():
         )
         assert not path.exists(expected_file_path)
 
+
 def test_ucc_build_verbose_mode(caplog):
     """
     Tests results will test both no option and --verbose mode of build command.
@@ -297,7 +298,7 @@ def test_ucc_build_verbose_mode(caplog):
 
         message_to_start = (
             "Detailed information about created/copied/modified/conflict files"
-                            )
+        )
         message_to_end = "File creation summary:"
 
         for record in caplog.records:
@@ -314,8 +315,7 @@ def test_ucc_build_verbose_mode(caplog):
 
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
-        path.dirname(
-            path.realpath(__file__)),
+        path.dirname(path.realpath(__file__)),
             "..",
             "testdata",
             "test_addons",
@@ -324,8 +324,7 @@ def test_ucc_build_verbose_mode(caplog):
         )
 
         expected_logs_path = path.join(
-        path.dirname(
-            path.realpath(__file__)),
+        path.dirname(path.realpath(__file__)),
             "..",
             "testdata",
             "expected_addons",
