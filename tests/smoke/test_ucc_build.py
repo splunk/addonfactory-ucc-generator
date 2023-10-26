@@ -317,14 +317,14 @@ def test_ucc_build_verbose_mode(caplog):
         path_len = len(app_server_lib_path) + 1
         excluded_files = ["redirect_page.js", "redirect.html"]
 
-        for path, dir, files in os.walk(app_server_lib_path):
+        for full_path, dir, files in os.walk(app_server_lib_path):
             if files:
-                relative_path = path[path_len:]
+                relative_path = full_path[path_len:]
                 for file in files:
                     if file not in excluded_files:
                         relative_file_path = os.path.join(relative_path, file)
                         key_to_insert = (
-                                str(relative_file_path).ljust(80) + "created\u001b[0m"
+                            str(relative_file_path).ljust(80) + "created\u001b[0m"
                         )
                         expected_logs[key_to_insert] = "INFO"
 
