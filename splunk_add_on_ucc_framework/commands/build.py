@@ -382,8 +382,6 @@ def summary_report(
         for pattern in conflict_static_list:
             if fnmatch.fnmatch(file, pattern):
                 return True
-        if file:
-            pass
         return False
 
     def file_check(

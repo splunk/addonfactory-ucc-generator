@@ -1,0 +1,198 @@
+[
+  {
+    "levelname": "INFO",
+    "message": "Detailed information about created/copied/modified/conflict files"
+  },
+  {
+    "levelname": "INFO",
+    "message": "Read more about it here: https://splunk.github.io/addonfactory-ucc-generator/quickstart/#verbose-mode"
+  },
+  {
+    "levelname": "INFO",
+    "message": "\u001b[33mapp.manifest                                                                    modified\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "\u001b[32mLICENSE.txt                                                                     copied\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "\u001b[32mREADME.txt                                                                      copied\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "VERSION                                                                         created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "\u001b[31mbin/import_declare_test.py                                                      conflict\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "\u001b[32mbin/my_first_input.py                                                           copied\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "\u001b[31mbin/test_addon_rh_account.py                                                    conflict\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "bin/test_addon_rh_my_first_input.py                                             created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "bin/test_addon_rh_settings.py                                                   created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "default/app.conf                                                                created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "default/inputs.conf                                                             created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "default/restmap.conf                                                            created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "default/server.conf                                                             created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "default/test_addon_settings.conf                                                created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "default/web.conf                                                                created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "default/data/ui/nav/default.xml                                                 created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "default/data/ui/views/configuration.xml                                         created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "default/data/ui/views/dashboard.xml                                             created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "default/data/ui/views/inputs.xml                                                created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "\u001b[31mREADME/inputs.conf.spec                                                         conflict\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "\u001b[31mREADME/test_addon_account.conf.spec                                             conflict\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "\u001b[31mREADME/test_addon_settings.conf.spec                                            conflict\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "\u001b[31mstatic/openapi.json                                                             conflict\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "lib                                                                             created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "appserver/static/js/dependencies.txt                                            created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "appserver/static/js/build/248.js                                                created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "appserver/static/js/build/248.js.LICENSE.txt                                    created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "appserver/static/js/build/248.js.map                                            created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "appserver/static/js/build/248.licenses.txt                                      created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "appserver/static/js/build/422.js                                                created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "appserver/static/js/build/422.js.map                                            created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "appserver/static/js/build/422.licenses.txt                                      created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "appserver/static/js/build/482.js                                                created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "appserver/static/js/build/482.js.map                                            created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "appserver/static/js/build/482.licenses.txt                                      created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "appserver/static/js/build/556.js                                                created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "appserver/static/js/build/556.js.map                                            created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "appserver/static/js/build/895.js                                                created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "appserver/static/js/build/895.js.map                                            created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "appserver/static/js/build/entry_page.js                                         created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "appserver/static/js/build/entry_page.js.LICENSE.txt                             created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "appserver/static/js/build/entry_page.js.map                                     created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "appserver/static/js/build/entry_page.licenses.txt                               created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "appserver/static/js/build/globalConfig.json                                     created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "appserver/templates/base.html                                                   created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "metadata/default.meta                                                           created\u001b[0m"
+  },
+  {
+    "levelname": "INFO",
+    "message": "File creation summary: created: 36, copied: 3, modified: 1, conflict: 6"
+  }
+]

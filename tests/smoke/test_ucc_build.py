@@ -2,6 +2,8 @@ import os
 import tempfile
 import sys
 import pytest
+import logging
+import json
 from os import path
 
 from tests.smoke import helpers
@@ -279,3 +281,68 @@ def test_ucc_generate_openapi_with_configuration_files_only():
             temp_dir, "Splunk_TA_UCCExample", "static", "openapi.json"
         )
         assert not path.exists(expected_file_path)
+
+def test_ucc_build_verbose_mode(caplog):
+    """
+    Tests results will test both no option and --verbose mode of build command.
+    No option provides a short summary of file created in manner: File creation summary: <result>
+    --verbose shows each file specifc case and short summary
+    """
+
+    caplog.set_level(logging.INFO, logger="ucc-gen")
+
+    def extract_summary_logs():
+        return_logs = []
+        copy_logs = False
+
+        message_to_start = 'Detailed information about created/copied/modified/conflict files'
+        message_to_end = 'File creation summary:'
+
+        for record in caplog.records:
+
+            if record.message == message_to_start:
+                copy_logs = True
+
+            if copy_logs:
+                return_logs.append(record)
+
+            if record.message[:22] == message_to_end:
+                copy_logs = False
+
+
+
+        return return_logs
+
+    with tempfile.TemporaryDirectory() as temp_dir:
+        package_folder = path.join(
+        path.dirname(path.realpath(__file__)),
+            "..",
+            "testdata",
+            "test_addons",
+            "package_files_conflict_test",
+            "package",
+        )
+
+        expected_logs_path = path.join(
+        path.dirname(path.realpath(__file__)),
+            "..",
+            "testdata",
+            "expected_addons",
+            "expected_files_conflict_test",
+            "expected_log.json",
+        )
+
+    build.generate(source=package_folder,
+                   output_directory=temp_dir,
+                   verbose_report=True)
+
+    summary_logs = extract_summary_logs()
+
+    with open(expected_logs_path, 'r') as f:
+        expected_logs = json.load(f)
+
+    assert len(summary_logs) == len(expected_logs)
+
+    for i in range(len(summary_logs)):
+        assert summary_logs[i].levelname == expected_logs[i]['levelname']
+        assert summary_logs[i].message == expected_logs[i]['message']
