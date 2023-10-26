@@ -314,28 +314,23 @@ def test_ucc_build_verbose_mode(caplog):
         return return_logs
 
     def append_appserver_content():
-
         path_len = len(app_server_lib_path) + 1
-        excluded_files = [
-            "redirect_page.js",
-            "redirect.html"
-        ]
+        excluded_files = ["redirect_page.js", "redirect.html"]
 
         for path, dir, files in os.walk(app_server_lib_path):
-
             if files:
                 relative_path = path[path_len:]
                 for file in files:
                     if file not in excluded_files:
                         relative_file_path = os.path.join(relative_path, file)
-                        key_to_insert = str(relative_file_path).ljust(80) + "created\u001b[0m"
-                        # "appserver/static/js/build/globalConfig.json                                     created\u001b[0m"
+                        key_to_insert = (
+                                str(relative_file_path).ljust(80) + "created\u001b[0m"
+                        )
                         expected_logs[key_to_insert] = "INFO"
-
 
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
-        path.dirname(path.realpath(__file__)),
+            path.dirname(path.realpath(__file__)),
             "..",
             "testdata",
             "test_addons",
@@ -344,7 +339,7 @@ def test_ucc_build_verbose_mode(caplog):
         )
 
         expected_logs_path = path.join(
-        path.dirname(path.realpath(__file__)),
+            path.dirname(path.realpath(__file__)),
             "..",
             "testdata",
             "expected_addons",
