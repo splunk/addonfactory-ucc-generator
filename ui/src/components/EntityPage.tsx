@@ -6,6 +6,7 @@ import ColumnLayout from '@splunk/react-ui/ColumnLayout';
 import { _ } from '@splunk/ui-utils/i18n';
 import { useSplunkTheme } from '@splunk/themes';
 
+import Heading from '@splunk/react-ui/Heading';
 import { MODE_CLONE, MODE_CREATE, MODE_EDIT, Mode } from '../constants/modes';
 import BaseFormView from './BaseFormView';
 import { SubTitleComponent } from '../pages/Input/InputPageStyle';
@@ -49,6 +50,7 @@ function EntityPage({
         boxShadow: embossShadow,
         padding: '1%',
         backgroundColor: 'white',
+        maxWidth: 'fit-content',
     };
 
     const handleSubmit = () => {
@@ -80,6 +82,7 @@ function EntityPage({
             <ColumnLayout.Row>
                 <ColumnLayout.Column span={2} />
                 <ColumnLayout.Column span={8} style={colStyle}>
+                    <Heading level={3}>{_(formLabel)}</Heading>
                     <BaseFormView // nosemgrep: typescript.react.security.audit.react-no-refs.react-no-refs
                         ref={form}
                         page={page}
