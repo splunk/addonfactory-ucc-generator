@@ -6,22 +6,27 @@ import MarkdownMessage from './MarkdownMessage';
 import CONTROL_TYPE_MAP, { ComponentTypes } from '../constants/ControlTypeMap';
 
 const CustomElement = styled.div`
-    margin-left: 30px;
+    padding: 5px;
 `;
 
+/* 
+    1st child is title, 3rd is help message
+    their width is fixed to not increase size of modal 
+    or page unintentionally due to long text
+ */
 const ControlGroupWrapper = styled(ControlGroup).attrs((props: { dataName: string }) => ({
     'data-name': props.dataName,
 }))`
     width: 100%;
     max-width: 100%;
+    padding: 0 30px;
 
     > * {
         &:first-child {
-            width: 240px !important;
+            max-width: 320px;
         }
         &:nth-child(3) {
-            margin-left: 270px !important;
-            width: 320px;
+            max-width: 320px;
         }
     }
 
@@ -149,6 +154,7 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
         return (
             this.props.display && (
                 <ControlGroupWrapper
+                    labelPosition="top"
                     label={label}
                     help={helpText}
                     tooltip={tooltip}

@@ -82,7 +82,9 @@ function EntityPage({
             <ColumnLayout.Row>
                 <ColumnLayout.Column span={2} />
                 <ColumnLayout.Column span={8} style={colStyle}>
-                    <Heading level={3}>{_(formLabel)}</Heading>
+                    <Heading style={{ paddingLeft: '30px' }} level={3}>
+                        {_(formLabel)}
+                    </Heading>
                     <BaseFormView // nosemgrep: typescript.react.security.audit.react-no-refs.react-no-refs
                         ref={form}
                         page={page}
