@@ -295,11 +295,12 @@ def test_ucc_build_verbose_mode(caplog):
         return_logs = []
         copy_logs = False
 
-        message_to_start = 'Detailed information about created/copied/modified/conflict files'
-        message_to_end = 'File creation summary:'
+        message_to_start = (
+            "Detailed information about created/copied/modified/conflict files"
+                            )
+        message_to_end = "File creation summary:"
 
         for record in caplog.records:
-
             if record.message == message_to_start:
                 copy_logs = True
 
@@ -309,13 +310,12 @@ def test_ucc_build_verbose_mode(caplog):
             if record.message[:22] == message_to_end:
                 copy_logs = False
 
-
-
         return return_logs
 
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
-        path.dirname(path.realpath(__file__)),
+        path.dirname(
+            path.realpath(__file__)),
             "..",
             "testdata",
             "test_addons",
@@ -324,7 +324,8 @@ def test_ucc_build_verbose_mode(caplog):
         )
 
         expected_logs_path = path.join(
-        path.dirname(path.realpath(__file__)),
+        path.dirname(
+            path.realpath(__file__)),
             "..",
             "testdata",
             "expected_addons",
@@ -332,17 +333,18 @@ def test_ucc_build_verbose_mode(caplog):
             "expected_log.json",
         )
 
-    build.generate(source=package_folder,
-                   output_directory=temp_dir,
-                   verbose_report=True)
+    build.generate(
+        source=package_folder, output_directory=temp_dir, verbose_report=True
+    )
 
     summary_logs = extract_summary_logs()
 
-    with open(expected_logs_path, 'r') as f:
+    with open(expected_logs_path) as f:
         expected_logs = json.load(f)
 
     assert len(summary_logs) == len(expected_logs)
 
-    for i in range(len(summary_logs)):
-        assert summary_logs[i].levelname == expected_logs[i]['levelname']
-        assert summary_logs[i].message == expected_logs[i]['message']
+    for log_line in summary_logs:
+        # summary messages must be the same but might come in different order
+        assert log_line.message in expected_logs.keys()
+        assert log_line.levelname == expected_logs[log_line.message]
