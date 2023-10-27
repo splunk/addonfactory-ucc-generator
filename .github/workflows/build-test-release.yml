@@ -227,20 +227,14 @@ jobs:
         with:
           name: Splunk_TA_UCCExample-raw-output
           path: output/
-      - uses: actions/download-artifact@v3
-        with:
-          name: UCC-UI-build
-          path: built-ui
-      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
       - run: |
-          cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/
+          curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
           poetry install
       - name: Link chromedriver
         # Use installed chromedriver https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2204-Readme.md
         run: |
           export PATH=$PATH:$CHROMEWEBDRIVER
           chromedriver --version
-      - run: poetry run ucc-gen build --source tests/testdata/test_addons/package_global_config_everything/package
       - run: |
           ./run_splunk.sh ${{ matrix.splunk.version }}
           until curl -Lsk "https://localhost:8088/services/collector/health" &>/dev/null ; do echo -n "Waiting for HEC-" && sleep 5 ; done
