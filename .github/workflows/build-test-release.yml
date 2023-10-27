@@ -179,6 +179,9 @@ jobs:
           cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/
           poetry install
       - run: poetry run ucc-gen build --source tests/testdata/test_addons/package_global_config_everything/package
+      - run: ./scripts/include-rum.sh output/Splunk_TA_UCCExample/appserver/templates/base.html scripts/rum-script.html "$RUM_ACCESS_TOKEN"
+        env:
+          RUM_ACCESS_TOKEN: ${{ secrets.RUM_ACCESS_TOKEN}}
       - run: poetry run ucc-gen package --path output/Splunk_TA_UCCExample
       - uses: actions/upload-artifact@v3
         with:
