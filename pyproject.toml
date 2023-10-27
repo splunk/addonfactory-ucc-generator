@@ -34,6 +34,9 @@ classifiers = [
     "Topic :: Software Development :: Code Generators",
     "License :: OSI Approved :: Apache Software License"
 ]
+include = [
+    "splunk_add_on_ucc_framework/package/appserver/**/*",
+]
 
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/splunk/addonfactory-ucc-generator/issues"
