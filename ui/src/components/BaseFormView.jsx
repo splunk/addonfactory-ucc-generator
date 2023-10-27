@@ -242,7 +242,7 @@ class BaseFormView extends PureComponent {
                 e.encrypted = typeof e.encrypted !== 'undefined' ? e.encrypted : false;
 
                 if (e.type === 'file' && this.currentInput?.[e.field]) {
-                    /* 
+                    /*
                      adding example name to enable possibility of removal file,
                      not forcing value addition as if value is encrypted it is shared as
                      string ie. ***** and it is considered a valid default value
@@ -1059,7 +1059,9 @@ class BaseFormView extends PureComponent {
 
                         const temState = this.state.data[e.field];
 
-                        if (!temState) return null;
+                        if (!temState) {
+                            return null;
+                        }
 
                         return (
                             <ControlWrapper
