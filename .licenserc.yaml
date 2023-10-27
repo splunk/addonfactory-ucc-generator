@@ -47,5 +47,6 @@ header:
     - "splunk_add_on_ucc_framework/commands/imports.py"
     - "scripts/compare_different_ucc_versions_output.sh"
     - "scripts/include-rum.sh"
+    - "build-ui.sh"
     - "scripts/rum-script.html"
     - "mypy.ini"

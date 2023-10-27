@@ -41,3 +41,8 @@ Splunk_TA_Dynatrace_ucc/*
 demo_addon_for_splunk/
 demo_addon_for_splunk_already_exists/
 init_addon_for_ucc_package/
+
+# UI build
+# ignore everything except redirect_page.js
+splunk_add_on_ucc_framework/package/appserver/static/js/build/
+!splunk_add_on_ucc_framework/package/appserver/static/js/build/redirect_page.js
