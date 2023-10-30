@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$schema": "https://json-schema.org/draft-07/schema",
   "definitions": {
     "AlertEntity": {
       "type": "object",
@@ -138,8 +138,7 @@
       "type": "object",
       "properties": {
         "field": {
-          "type": "string",
-          "pattern": "(?!^(?:output_mode|output_field|owner|app|sharing)$)(?:^\\w+$)"
+          "$ref": "#/definitions/Field"
         },
         "label": {
           "type": "string",
@@ -157,7 +156,6 @@
             "radio",
             "placeholder",
             "oauth",
-            "helpLink",
             "file"
           ]
         },
@@ -549,8 +547,7 @@
       "type": "object",
       "properties": {
         "field": {
-          "type": "string",
-          "pattern": "(?!^(?:persistentQueueSize|queueSize|start_by_shell|output_mode|output_field|owner|app|sharing)$)(?:^\\w+$)"
+          "$ref": "#/definitions/Field"
         },
         "label": {
           "type": "string",
@@ -568,7 +565,6 @@
             "radio",
             "placeholder",
             "oauth",
-            "helpLink",
             "file"
           ]
         },
@@ -724,9 +720,6 @@
               "type": "string",
               "maxLength": 50
             },
-            "link": {
-              "type": "string"
-            },
             "rowsMin": {
               "type": "number"
             },
@@ -791,8 +784,7 @@
       "type": "object",
       "properties": {
         "field": {
-          "type": "string",
-          "pattern": "(?!^(?:persistentQueueSize|queueSize|start_by_shell|output_mode|output_field|owner|app|sharing)$)(?:^\\w+$)"
+          "$ref": "#/definitions/Field"
         },
         "label": {
           "type": "string",
@@ -908,12 +900,50 @@
       "required": ["field", "label", "type", "options"],
       "additionalProperties": false
     },
+    "LinkEntity": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "helpLink"
+        },
+        "field": {
+          "$ref": "#/definitions/Field"
+        },
+        "label": {
+          "type": "string"
+        },
+        "options": {
+          "type": "object",
+          "properties": {
+            "text": {
+              "type": "string"
+            },
+            "link": {
+              "type": "string"
+            }
+          },
+          "required": ["text", "link"],
+          "additionalProperties": false
+        },
+        "help": {
+          "type": "string"
+        },
+        "tooltip": {
+          "type": "string"
+        }
+      },
+      "required": ["field", "label", "type", "options"],
+      "additionalProperties": false
+    },
     "AnyOfEntity": {
       "type": "array",
       "items": {
         "anyOf": [
           {
             "$ref": "#/definitions/CheckboxGroupEntity"
+          },
+          {
+            "$ref": "#/definitions/LinkEntity"
           },
           {
             "$ref": "#/definitions/GenericInputsEntity"
@@ -1328,7 +1358,14 @@
         "entity": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/ConfigurationEntity"
+            "oneOf": [
+              {
+                "$ref": "#/definitions/LinkEntity"
+              },
+              {
+                "$ref": "#/definitions/ConfigurationEntity"
+              }
+            ]
           }
         },
         "name": {
@@ -1455,6 +1492,10 @@
       },
       "required": ["name"],
       "additionalProperties": false
+    },
+    "Field": {
+      "type": "string",
+      "pattern": "(?!^(?:persistentQueueSize|queueSize|start_by_shell|output_mode|output_field|owner|app|sharing)$)(?:^\\w+$)"
     }
   },
   "type": "object",
