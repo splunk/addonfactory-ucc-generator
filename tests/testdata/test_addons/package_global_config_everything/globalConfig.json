@@ -189,6 +189,22 @@
                                 "text": "Help Link",
                                 "link": "https://docs.splunk.com/Documentation"
                             }
+                        },
+                        {
+                            "field": "config1_help_link",
+                            "type": "helpLink",
+                            "options": {
+                                "text": "Add-on configuration documentation",
+                                "link": "https://ta-jira-service-desk-simple-addon.readthedocs.io/en/latest/configuration.html"
+                            }
+                        },
+                        {
+                            "field": "config2_help_link",
+                            "type": "helpLink",
+                            "options": {
+                                "text": "SSL configuration documentation",
+                                "link": "https://ta-jira-service-desk-simple-addon.readthedocs.io/en/latest/configuration.html"
+                            }
                         }
                     ],
                     "title": "Account"
@@ -1302,7 +1318,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.31.1Rdd3a1ca0",
+        "version": "5.32.0R78433fec",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.3"
     }

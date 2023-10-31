@@ -376,8 +376,15 @@
           }
         }
       },
-      "required": ["field", "label", "type"],
-      "additionalProperties": false
+      "anyOf": [
+        {
+          "properties": {
+            "type": { "const": "helpLink" }
+          },
+          "required": ["field", "type"]
+        },
+        { "required": ["field", "label", "type"] }
+      ],      "additionalProperties": false
     },
     "ConfigurationPage": {
       "type": "object",

@@ -331,7 +331,8 @@ class GlobalConfigValidator:
         fields, labels = [], []
         for _entity in entity:
             fields.append(_entity["field"].lower())
-            labels.append(_entity["label"].lower())
+            if "label" in _entity:
+                labels.append(_entity["label"].lower())
             options = _entity.get("options")
             if options and options.get("autoCompleteFields"):
                 self._validate_autoCompleteFields_duplicates(
