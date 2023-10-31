@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json-schema.org/draft-07/schema",
+  "$schema": "http://json-schema.org/draft-07/schema",
   "definitions": {
     "AlertEntity": {
       "type": "object",
@@ -14,7 +14,7 @@
         },
         "type": {
           "type": "string",
-          "enum": ["text", "singleSelect", "checkbox", "radio", "singleSelectSplunkSearch"]
+          "enum": ["singleSelect", "checkbox", "radio", "singleSelectSplunkSearch"]
         },
         "help": {
           "type": "string",
@@ -127,7 +127,14 @@
         "entity": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/AlertEntity"
+            "anyOf": [
+              {
+                "$ref": "#/definitions/TextEntity"
+              },
+              {
+                "$ref": "#/definitions/AlertEntity"
+              }
+            ]
           }
         }
       },
@@ -148,7 +155,6 @@
           "type": "string",
           "enum": [
             "custom",
-            "text",
             "textarea",
             "singleSelect",
             "checkbox",
@@ -557,7 +563,6 @@
           "type": "string",
           "enum": [
             "custom",
-            "text",
             "textarea",
             "singleSelect",
             "checkbox",
@@ -935,12 +940,100 @@
       "required": ["field", "label", "type", "options"],
       "additionalProperties": false
     },
+    "TextEntity": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "text"
+        },
+        "field": {
+          "$ref": "#/definitions/Field"
+        },
+        "label": {
+          "type": "string"
+        },
+        "defaultValue": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
+          ]
+        },
+        "help": {
+          "type": "string"
+        },
+        "tooltip": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "encrypted": {
+          "type": "boolean"
+        },
+        "validators": {
+          "type": "array",
+          "minLength": 1,
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/NumberValidator"
+              },
+              {
+                "$ref": "#/definitions/StringValidator"
+              },
+              {
+                "$ref": "#/definitions/RegexValidator"
+              },
+              {
+                "$ref": "#/definitions/EmailValidator"
+              },
+              {
+                "$ref": "#/definitions/Ipv4Validator"
+              },
+              {
+                "$ref": "#/definitions/UrlValidator"
+              },
+              {
+                "$ref": "#/definitions/DateValidator"
+              }
+            ]
+          }
+        },
+        "options": {
+          "type": "object",
+          "properties": {
+            "display": {
+              "type": "boolean"
+            },
+            "disableonEdit": {
+              "type": "boolean"
+            },
+            "placeholder": {
+              "type": "string"
+            },
+            "enable": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": ["field", "label", "type"],
+      "additionalProperties": false
+    },
     "AnyOfEntity": {
       "type": "array",
       "items": {
         "anyOf": [
           {
             "$ref": "#/definitions/CheckboxGroupEntity"
+          },
+          {
+            "$ref": "#/definitions/TextEntity"
           },
           {
             "$ref": "#/definitions/LinkEntity"
@@ -1359,6 +1452,9 @@
           "type": "array",
           "items": {
             "oneOf": [
+              {
+                "$ref": "#/definitions/TextEntity"
+              },
               {
                 "$ref": "#/definitions/LinkEntity"
               },
