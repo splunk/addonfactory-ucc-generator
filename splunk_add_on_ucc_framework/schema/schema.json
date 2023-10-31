@@ -14,7 +14,7 @@
         },
         "type": {
           "type": "string",
-          "enum": ["singleSelect", "checkbox", "radio", "singleSelectSplunkSearch"]
+          "enum": ["checkbox", "radio", "singleSelectSplunkSearch"]
         },
         "help": {
           "type": "string",
@@ -133,6 +133,9 @@
               },
               {
                 "$ref": "#/definitions/TextareaEntity"
+              },
+              {
+                "$ref": "#/definitions/SingleSelectEntity"
               },
               {
                 "$ref": "#/definitions/AlertEntity"
@@ -324,7 +327,6 @@
           "type": "string",
           "enum": [
             "custom",
-            "singleSelect",
             "checkbox",
             "multipleSelect",
             "radio",
@@ -872,6 +874,118 @@
       "required": ["field", "label", "type"],
       "additionalProperties": false
     },
+    "SingleSelectEntity": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "singleSelect"
+        },
+        "field": {
+          "$ref": "#/definitions/Field"
+        },
+        "label": {
+          "type": "string"
+        },
+        "defaultValue": {
+          "type": "string"
+        },
+        "help": {
+          "type": "string"
+        },
+        "tooltip": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "encrypted": {
+          "type": "boolean"
+        },
+        "validators": {
+          "type": "array",
+          "minLength": 1,
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/StringValidator"
+              },
+              {
+                "$ref": "#/definitions/RegexValidator"
+              },
+              {
+                "$ref": "#/definitions/EmailValidator"
+              },
+              {
+                "$ref": "#/definitions/Ipv4Validator"
+              },
+              {
+                "$ref": "#/definitions/UrlValidator"
+              },
+              {
+                "$ref": "#/definitions/DateValidator"
+              }
+            ]
+          }
+        },
+        "options": {
+          "type": "object",
+          "properties": {
+            "display": {
+              "type": "boolean"
+            },
+            "disableonEdit": {
+              "type": "boolean"
+            },
+            "placeholder": {
+              "type": "string"
+            },
+            "enable": {
+              "type": "boolean"
+            },
+            "disableSearch": {
+              "type": "boolean"
+            },
+            "createSearchChoice": {
+              "type": "boolean"
+            },
+            "referenceName": {
+              "type": "string"
+            },
+            "endpointUrl": {
+              "type": "string"
+            },
+            "allowList": {
+              "type": "string"
+            },
+            "denyList": {
+              "type": "string"
+            },
+            "labelField": {
+              "type": "string"
+            },
+            "autoCompleteFields": {
+              "$ref": "#/definitions/AutoCompleteFields"
+            },
+            "dependencies": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true
+            },
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ValueLabelPair"
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": ["field", "label", "type"],
+      "additionalProperties": false
+    },
     "AnyOfEntity": {
       "type": "array",
       "items": {
@@ -886,6 +1000,9 @@
             "$ref": "#/definitions/TextareaEntity"
           },
           {
+            "$ref": "#/definitions/SingleSelectEntity"
+          },
+          {
             "$ref": "#/definitions/LinkEntity"
           },
           {
@@ -893,6 +1010,34 @@
           }
         ]
       }
+    },
+    "AutoCompleteFields": {
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "children": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/ValueLabelPair"
+                }
+              }
+            },
+            "required": ["label", "children"]
+          }
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValueLabelPair"
+          }
+        }
+      ]
     },
     "InputsPage": {
       "oneOf": [
