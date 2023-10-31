@@ -384,7 +384,8 @@
           "required": ["field", "type"]
         },
         { "required": ["field", "label", "type"] }
-      ],      "additionalProperties": false
+      ],      
+      "additionalProperties": false
     },
     "ConfigurationPage": {
       "type": "object",
