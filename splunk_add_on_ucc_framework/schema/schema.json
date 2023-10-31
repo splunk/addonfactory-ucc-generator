@@ -132,6 +132,9 @@
                 "$ref": "#/definitions/TextEntity"
               },
               {
+                "$ref": "#/definitions/TextareaEntity"
+              },
+              {
                 "$ref": "#/definitions/AlertEntity"
               }
             ]
@@ -788,6 +791,87 @@
       "required": ["field", "label", "type"],
       "additionalProperties": false
     },
+    "TextareaEntity": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "textarea"
+        },
+        "field": {
+          "$ref": "#/definitions/Field"
+        },
+        "label": {
+          "type": "string"
+        },
+        "defaultValue": {
+          "type": "string"
+        },
+        "help": {
+          "type": "string"
+        },
+        "tooltip": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "encrypted": {
+          "type": "boolean"
+        },
+        "validators": {
+          "type": "array",
+          "minLength": 1,
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/StringValidator"
+              },
+              {
+                "$ref": "#/definitions/RegexValidator"
+              },
+              {
+                "$ref": "#/definitions/EmailValidator"
+              },
+              {
+                "$ref": "#/definitions/Ipv4Validator"
+              },
+              {
+                "$ref": "#/definitions/UrlValidator"
+              },
+              {
+                "$ref": "#/definitions/DateValidator"
+              }
+            ]
+          }
+        },
+        "options": {
+          "type": "object",
+          "properties": {
+            "display": {
+              "type": "boolean"
+            },
+            "disableonEdit": {
+              "type": "boolean"
+            },
+            "placeholder": {
+              "type": "string"
+            },
+            "enable": {
+              "type": "boolean"
+            },
+            "rowsMin": {
+              "type": "number"
+            },
+            "rowsMax": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": ["field", "label", "type"],
+      "additionalProperties": false
+    },
     "AnyOfEntity": {
       "type": "array",
       "items": {
@@ -797,6 +881,9 @@
           },
           {
             "$ref": "#/definitions/TextEntity"
+          },
+          {
+            "$ref": "#/definitions/TextareaEntity"
           },
           {
             "$ref": "#/definitions/LinkEntity"
