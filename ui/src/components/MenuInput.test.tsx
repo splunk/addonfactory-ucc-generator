@@ -212,6 +212,7 @@ describe('multiple services', () => {
             // check sub menu is rendered
             expect(screen.queryByText('test-subservice1-title1')).toBeInTheDocument();
             expect(screen.queryByText('test-subservice-subTitle2')).toBeInTheDocument();
+            await new Promise((r) => setTimeout(r, 50)); // wait for animation to end
             expect(screen.queryByText('test-group-title1')).not.toBeInTheDocument();
 
             await userEvent.click(screen.getByRole('menuitem', { name: 'Back' }));
