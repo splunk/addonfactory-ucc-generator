@@ -334,8 +334,7 @@
           "enum": [
             "custom",
             "placeholder",
-            "oauth",
-            "file"
+            "oauth"
           ]
         },
         "help": {
@@ -1212,6 +1211,78 @@
       "required": ["field", "label", "type", "options"],
       "additionalProperties": false
     },
+    "FileEntity": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "file"
+        },
+        "field": {
+          "$ref": "#/definitions/Field"
+        },
+        "label": {
+          "type": "string"
+        },
+        "defaultValue": {
+          "type": "string"
+        },
+        "help": {
+          "type": "string"
+        },
+        "tooltip": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "encrypted": {
+          "type": "boolean"
+        },
+        "validators": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/StringValidator"
+              },
+              {
+                "$ref": "#/definitions/RegexValidator"
+              }
+            ]
+          }
+        },
+        "options": {
+          "type": "object",
+          "properties": {
+            "display": {
+              "type": "boolean"
+            },
+            "disableonEdit": {
+              "type": "boolean"
+            },
+            "enable": {
+              "type": "boolean"
+            },
+            "maxFileSize": {
+              "type": "number"
+            },
+            "fileSupportMessage": {
+              "type": "string"
+            },
+            "supportedFileTypes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": ["field", "label", "type"],
+      "additionalProperties": false
+    },
     "AnyOfEntity": {
       "type": "array",
       "items": {
@@ -1239,6 +1310,9 @@
           },
           {
             "$ref": "#/definitions/LinkEntity"
+          },
+          {
+            "$ref": "#/definitions/FileEntity"
           },
           {
             "$ref": "#/definitions/GenericInputsEntity"
