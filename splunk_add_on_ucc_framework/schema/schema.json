@@ -330,7 +330,6 @@
           "type": "string",
           "enum": [
             "custom",
-            "multipleSelect",
             "radio",
             "placeholder",
             "oauth",
@@ -868,6 +867,122 @@
       "required": ["field", "label", "type"],
       "additionalProperties": false
     },
+    "MultipleSelectEntity": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "multipleSelect"
+        },
+        "field": {
+          "$ref": "#/definitions/Field"
+        },
+        "label": {
+          "type": "string"
+        },
+        "defaultValue": {
+          "type": "string"
+        },
+        "help": {
+          "type": "string"
+        },
+        "tooltip": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "encrypted": {
+          "type": "boolean"
+        },
+        "validators": {
+          "type": "array",
+          "minLength": 1,
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/StringValidator"
+              },
+              {
+                "$ref": "#/definitions/RegexValidator"
+              },
+              {
+                "$ref": "#/definitions/EmailValidator"
+              },
+              {
+                "$ref": "#/definitions/Ipv4Validator"
+              },
+              {
+                "$ref": "#/definitions/UrlValidator"
+              },
+              {
+                "$ref": "#/definitions/DateValidator"
+              }
+            ]
+          }
+        },
+        "options": {
+          "type": "object",
+          "properties": {
+            "display": {
+              "type": "boolean"
+            },
+            "disableonEdit": {
+              "type": "boolean"
+            },
+            "placeholder": {
+              "type": "string"
+            },
+            "enable": {
+              "type": "boolean"
+            },
+            "disableSearch": {
+              "type": "boolean"
+            },
+            "createSearchChoice": {
+              "type": "boolean"
+            },
+            "referenceName": {
+              "type": "string"
+            },
+            "endpointUrl": {
+              "type": "string"
+            },
+            "allowList": {
+              "type": "string"
+            },
+            "denyList": {
+              "type": "string"
+            },
+            "labelField": {
+              "type": "string"
+            },
+            "autoCompleteFields": {
+              "$ref": "#/definitions/AutoCompleteFields"
+            },
+            "dependencies": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true
+            },
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ValueLabelPair"
+              }
+            },
+            "delimiter": {
+              "type": "string",
+              "maxLength": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": ["field", "label", "type"],
+      "additionalProperties": false
+    },
     "CheckboxEntity": {
       "type": "object",
       "properties": {
@@ -1056,6 +1171,9 @@
           },
           {
             "$ref": "#/definitions/SingleSelectEntity"
+          },
+          {
+            "$ref": "#/definitions/MultipleSelectEntity"
           },
           {
             "$ref": "#/definitions/CheckboxEntity"
