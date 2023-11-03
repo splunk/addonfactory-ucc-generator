@@ -14,7 +14,7 @@
         },
         "type": {
           "type": "string",
-          "enum": ["checkbox", "radio", "singleSelectSplunkSearch"]
+          "enum": ["radio", "singleSelectSplunkSearch"]
         },
         "help": {
           "type": "string",
@@ -136,6 +136,9 @@
               },
               {
                 "$ref": "#/definitions/SingleSelectEntity"
+              },
+              {
+                "$ref": "#/definitions/CheckboxEntity"
               },
               {
                 "$ref": "#/definitions/AlertEntity"
@@ -327,7 +330,6 @@
           "type": "string",
           "enum": [
             "custom",
-            "checkbox",
             "multipleSelect",
             "radio",
             "placeholder",
@@ -553,126 +555,6 @@
       "required": ["field", "label", "type"],
       "additionalProperties": false
     },
-    "CheckboxGroupEntity": {
-      "type": "object",
-      "properties": {
-        "field": {
-          "$ref": "#/definitions/Field"
-        },
-        "label": {
-          "type": "string",
-          "maxLength": 30
-        },
-        "type": {
-          "const": "checkboxGroup"
-        },
-        "options": {
-          "type": "object",
-          "properties": {
-            "groups": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "label": {
-                    "type": "string",
-                    "maxLength": 30
-                  },
-                  "options": {
-                    "type": "object",
-                    "properties": {
-                      "isExpandable": {
-                        "type": "boolean",
-                        "default": false
-                      },
-                      "expand": {
-                        "type": "boolean",
-                        "default": false
-                      }
-                    },
-                    "additionalProperties": false
-                  },
-                  "fields": {
-                    "type": "array",
-                    "minItems": 1,
-                    "items": {
-                      "type": "string"
-                    },
-                    "uniqueItems": true
-                  }
-                },
-                "required": ["label", "fields"],
-                "additionalProperties": false
-              }
-            },
-            "rows": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "field": {
-                    "type": "string"
-                  },
-                  "checkbox": {
-                    "type": "object",
-                    "properties": {
-                      "label": {
-                        "type": "string",
-                        "maxLength": 30
-                      },
-                      "defaultValue": {
-                        "type": "boolean"
-                      }
-                    },
-                    "additionalProperties": false
-                  },
-                  "input": {
-                    "type": "object",
-                    "properties": {
-                      "defaultValue": {
-                        "type": "number"
-                      },
-                      "required": {
-                        "type": "boolean",
-                        "default": false
-                      },
-                      "validators": {
-                        "type": "array",
-                        "items": {
-                          "anyOf": [
-                            {
-                              "$ref": "#/definitions/NumberValidator"
-                            }
-                          ]
-                        }
-                      }
-                    },
-                    "additionalProperties": false
-                  }
-                },
-                "required": ["field"],
-                "additionalProperties": false
-              },
-              "minItems": 1
-            }
-          },
-          "required": ["rows"],
-          "additionalProperties": false
-        },
-        "validators": {
-          "type": "array",
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/definitions/RegexValidator"
-              }
-            ]
-          }
-        }
-      },
-      "required": ["field", "label", "type", "options"],
-      "additionalProperties": false
-    },
     "LinkEntity": {
       "type": "object",
       "properties": {
@@ -705,7 +587,7 @@
           "type": "string"
         }
       },
-      "required": ["field", "label", "type", "options"],
+      "required": ["field", "type", "options"],
       "additionalProperties": false
     },
     "TextEntity": {
@@ -986,6 +868,179 @@
       "required": ["field", "label", "type"],
       "additionalProperties": false
     },
+    "CheckboxEntity": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "checkbox"
+        },
+        "field": {
+          "$ref": "#/definitions/Field"
+        },
+        "label": {
+          "type": "string"
+        },
+        "defaultValue": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "number"
+            }
+          ]
+        },
+        "help": {
+          "type": "string"
+        },
+        "tooltip": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "encrypted": {
+          "type": "boolean"
+        },
+        "options": {
+          "type": "object",
+          "properties": {
+            "display": {
+              "type": "boolean"
+            },
+            "disableonEdit": {
+              "type": "boolean"
+            },
+            "enable": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": ["field", "label", "type"],
+      "additionalProperties": false
+    },
+    "CheckboxGroupEntity": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "$ref": "#/definitions/Field"
+        },
+        "label": {
+          "type": "string",
+          "maxLength": 30
+        },
+        "type": {
+          "const": "checkboxGroup"
+        },
+        "options": {
+          "type": "object",
+          "properties": {
+            "groups": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "label": {
+                    "type": "string",
+                    "maxLength": 30
+                  },
+                  "options": {
+                    "type": "object",
+                    "properties": {
+                      "isExpandable": {
+                        "type": "boolean",
+                        "default": false
+                      },
+                      "expand": {
+                        "type": "boolean",
+                        "default": false
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "fields": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "string"
+                    },
+                    "uniqueItems": true
+                  }
+                },
+                "required": ["label", "fields"],
+                "additionalProperties": false
+              }
+            },
+            "rows": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "field": {
+                    "type": "string"
+                  },
+                  "checkbox": {
+                    "type": "object",
+                    "properties": {
+                      "label": {
+                        "type": "string",
+                        "maxLength": 30
+                      },
+                      "defaultValue": {
+                        "type": "boolean"
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "input": {
+                    "type": "object",
+                    "properties": {
+                      "defaultValue": {
+                        "type": "number"
+                      },
+                      "required": {
+                        "type": "boolean",
+                        "default": false
+                      },
+                      "validators": {
+                        "type": "array",
+                        "items": {
+                          "anyOf": [
+                            {
+                              "$ref": "#/definitions/NumberValidator"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "required": ["field"],
+                "additionalProperties": false
+              },
+              "minItems": 1
+            }
+          },
+          "required": ["rows"],
+          "additionalProperties": false
+        },
+        "validators": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/RegexValidator"
+              }
+            ]
+          }
+        }
+      },
+      "required": ["field", "label", "type", "options"],
+      "additionalProperties": false
+    },
     "AnyOfEntity": {
       "type": "array",
       "items": {
@@ -1001,6 +1056,9 @@
           },
           {
             "$ref": "#/definitions/SingleSelectEntity"
+          },
+          {
+            "$ref": "#/definitions/CheckboxEntity"
           },
           {
             "$ref": "#/definitions/LinkEntity"
