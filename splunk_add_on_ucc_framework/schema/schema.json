@@ -14,7 +14,7 @@
         },
         "type": {
           "type": "string",
-          "enum": ["radio", "singleSelectSplunkSearch"]
+          "enum": ["singleSelectSplunkSearch"]
         },
         "help": {
           "type": "string",
@@ -139,6 +139,9 @@
               },
               {
                 "$ref": "#/definitions/CheckboxEntity"
+              },
+              {
+                "$ref": "#/definitions/RadioEntity"
               },
               {
                 "$ref": "#/definitions/AlertEntity"
@@ -330,7 +333,6 @@
           "type": "string",
           "enum": [
             "custom",
-            "radio",
             "placeholder",
             "oauth",
             "file"
@@ -864,7 +866,7 @@
           "additionalProperties": false
         }
       },
-      "required": ["field", "label", "type"],
+      "required": ["field", "label", "type", "options"],
       "additionalProperties": false
     },
     "MultipleSelectEntity": {
@@ -980,7 +982,7 @@
           "additionalProperties": false
         }
       },
-      "required": ["field", "label", "type"],
+      "required": ["field", "label", "type", "options"],
       "additionalProperties": false
     },
     "CheckboxEntity": {
@@ -1156,6 +1158,60 @@
       "required": ["field", "label", "type", "options"],
       "additionalProperties": false
     },
+    "RadioEntity": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "radio"
+        },
+        "field": {
+          "$ref": "#/definitions/Field"
+        },
+        "label": {
+          "type": "string"
+        },
+        "defaultValue": {
+          "type": "string"
+        },
+        "help": {
+          "type": "string"
+        },
+        "tooltip": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "encrypted": {
+          "type": "boolean"
+        },
+        "options": {
+          "type": "object",
+          "properties": {
+            "display": {
+              "type": "boolean"
+            },
+            "disableonEdit": {
+              "type": "boolean"
+            },
+            "enable": {
+              "type": "boolean"
+            },
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ValueLabelPair"
+              }
+            }
+
+          },
+          "required": ["items"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["field", "label", "type", "options"],
+      "additionalProperties": false
+    },
     "AnyOfEntity": {
       "type": "array",
       "items": {
@@ -1177,6 +1233,9 @@
           },
           {
             "$ref": "#/definitions/CheckboxEntity"
+          },
+          {
+            "$ref": "#/definitions/RadioEntity"
           },
           {
             "$ref": "#/definitions/LinkEntity"
