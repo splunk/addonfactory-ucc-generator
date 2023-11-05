@@ -624,7 +624,7 @@
         },
         "validators": {
           "type": "array",
-          "minLength": 1,
+          "minItems": 1,
           "items": {
             "anyOf": [
               {
@@ -702,7 +702,7 @@
         },
         "validators": {
           "type": "array",
-          "minLength": 1,
+          "minItems": 1,
           "items": {
             "anyOf": [
               {
@@ -767,7 +767,14 @@
           "type": "string"
         },
         "defaultValue": {
-          "type": "string"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
+          ]
         },
         "help": {
           "type": "string"
@@ -783,7 +790,7 @@
         },
         "validators": {
           "type": "array",
-          "minLength": 1,
+          "minItems": 1,
           "items": {
             "anyOf": [
               {
@@ -895,7 +902,7 @@
         },
         "validators": {
           "type": "array",
-          "minLength": 1,
+          "minItems": 1,
           "items": {
             "anyOf": [
               {
@@ -1372,6 +1379,7 @@
               "if": {
                 "properties": {
                   "auth_type": {
+                    "type": "array",
                     "contains": {
                       "const": "basic"
                     }
@@ -1386,6 +1394,7 @@
               "if": {
                 "properties": {
                   "auth_type": {
+                    "type": "array",
                     "contains": {
                       "const": "oauth"
                     }
@@ -1399,6 +1408,59 @@
           ],
           "additionalProperties": false,
           "required": ["auth_type"]
+        }
+      },
+      "required": ["field", "label", "type", "options"],
+      "additionalProperties": false
+    },
+    "CustomEntity": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "custom"
+        },
+        "field": {
+          "$ref": "#/definitions/Field"
+        },
+        "label": {
+          "type": "string"
+        },
+        "help": {
+          "type": "string"
+        },
+        "tooltip": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "encrypted": {
+          "type": "boolean"
+        },
+        "defaultValue": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "external"
+            },
+            "src": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
         }
       },
       "required": ["field", "label", "type", "options"],
