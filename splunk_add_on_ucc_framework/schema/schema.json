@@ -613,9 +613,6 @@
             "denyList": {
               "type": "string"
             },
-            "blackList": {
-              "type": "string"
-            },
             "labelField": {
               "type": "string"
             },
