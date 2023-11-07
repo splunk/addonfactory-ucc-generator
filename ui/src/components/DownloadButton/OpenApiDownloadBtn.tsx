@@ -6,7 +6,7 @@ import DownloadButton from './DownloadButton';
 
 function OpenApiDownloadButton() {
     return (
-        <div style={{ float: 'right' }}>
+        <div>
             <DownloadButton
                 fileUrl={createRESTURL('static/openapi.json', {
                     app,

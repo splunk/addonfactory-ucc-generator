@@ -12,7 +12,7 @@ type Story = StoryObj<typeof meta>;
 export const Base: Story = {
     args: {
         // using index.json as it needs to be from the same domain
-        fileUrl: 'http://localhost:6006/index.json',
+        fileUrl: '/index.json',
         children: 'Download',
         fileNameAfterDownload: 'index.json',
     },
