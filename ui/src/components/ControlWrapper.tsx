@@ -6,7 +6,7 @@ import MarkdownMessage from './MarkdownMessage';
 import CONTROL_TYPE_MAP, { ComponentTypes } from '../constants/ControlTypeMap';
 
 const CustomElement = styled.div`
-    padding: 5px;
+    padding-left: 10px;
 `;
 
 /* 
@@ -23,10 +23,11 @@ const ControlGroupWrapper = styled(ControlGroup).attrs((props: { dataName: strin
 
     > * {
         &:first-child {
-            max-width: 320px;
+            width: 240px !important;
         }
         &:nth-child(3) {
-            max-width: 320px;
+            margin-left: 250px !important;
+            width: 320px;
         }
     }
 
@@ -154,7 +155,6 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
         return (
             this.props.display && (
                 <ControlGroupWrapper
-                    labelPosition="top"
                     label={label}
                     help={helpText}
                     tooltip={tooltip}
