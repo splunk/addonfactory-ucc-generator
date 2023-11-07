@@ -11,9 +11,9 @@ interface TextComponentProps {
     value: string | number;
     handleChange: (field: string, value: string | number) => void;
     field: string;
-    error: boolean;
-    encrypted: boolean;
-    disabled: boolean;
+    error?: boolean;
+    encrypted?: boolean;
+    disabled?: boolean;
 }
 
 class TextComponent extends Component<TextComponentProps> {

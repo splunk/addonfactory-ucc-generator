@@ -1,12 +1,12 @@
 import React from 'react';
 import Switch from '@splunk/react-ui/Switch';
-import { isFalse } from '../util/util';
+import { isFalse } from '../../util/util';
 
 interface CheckBoxComponentProps {
     value: 0 | 1 | boolean;
     handleChange: (field: string, value: 0 | 1) => void;
     field: string;
-    disabled: boolean;
+    disabled?: boolean;
 }
 
 class CheckBoxComponent extends React.Component<CheckBoxComponentProps> {

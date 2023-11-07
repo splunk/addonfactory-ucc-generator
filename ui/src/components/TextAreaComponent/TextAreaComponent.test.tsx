@@ -1,0 +1,47 @@
+import { render, screen } from '@testing-library/react';
+import React from 'react';
+import userEvent from '@testing-library/user-event';
+import TextAreaComponent from './TextAreaComponent';
+
+describe('Text Area Component', () => {
+    const handleChange = jest.fn();
+
+    beforeEach(() => {
+        render(<TextAreaComponent value="test" handleChange={handleChange} field="fieldId" />);
+    });
+
+    it('should render text component correctly with value', async () => {
+        const textElement = screen.getByTestId('text');
+        expect(textElement).toBeInTheDocument();
+
+        const textBox = screen.getByTestId('textbox');
+        expect(textBox).toBeInTheDocument();
+
+        expect(textBox).toHaveValue('test');
+    });
+
+    it('should trigger callback correctly', async () => {
+        const textElement = screen.getByTestId('text');
+        expect(textElement).toBeInTheDocument();
+
+        const textBox = screen.getByTestId('textbox');
+        expect(textBox).toBeInTheDocument();
+
+        await userEvent.type(textBox, 'f');
+        expect(handleChange).toHaveBeenCalledWith('fieldId', 'testf');
+
+        await userEvent.type(textBox, 'o');
+        expect(handleChange).toHaveBeenCalledWith('fieldId', 'testo');
+    });
+
+    it('should use callback with empty string', async () => {
+        const textElement = screen.getByTestId('text');
+        expect(textElement).toBeInTheDocument();
+
+        const textBox = screen.getByTestId('textbox');
+        expect(textBox).toBeInTheDocument();
+
+        await userEvent.clear(textBox);
+        expect(handleChange).toHaveBeenCalledWith('fieldId', '');
+    });
+});
