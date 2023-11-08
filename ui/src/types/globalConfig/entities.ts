@@ -18,6 +18,11 @@ const CommonEntityFields = z.object({
     tooltip: z.string().optional(),
 });
 
+const CommonEditableEntityFields = CommonEntityFields.extend({
+    required: z.boolean().default(false),
+    encrypted: z.boolean().default(false),
+});
+
 const CommonEditableEntityOptions = z.object({});
 
 export const LinkEntity = CommonEntityFields.extend({
@@ -28,21 +33,22 @@ export const LinkEntity = CommonEntityFields.extend({
 
 export type LinkEntity = z.infer<typeof LinkEntity>;
 
+const AllValidators = z.array(
+    z.union([
+        NumberValidator,
+        StringValidator,
+        RegexValidator,
+        EmailValidator,
+        Ipv4Validator,
+        UrlValidator,
+        DateValidator,
+    ])
+);
 export const TextEntity = z.object({
     type: z.literal('text'),
     field: z.string(),
     label: z.string(),
-    validators: z.array(
-        z.union([
-            NumberValidator,
-            StringValidator,
-            RegexValidator,
-            EmailValidator,
-            Ipv4Validator,
-            UrlValidator,
-            DateValidator,
-        ])
-    ),
+    validators: AllValidators,
     options: CommonEditableEntityOptions.extend({}),
     help: z.string().optional(),
     tooltip: z.string().optional(),
