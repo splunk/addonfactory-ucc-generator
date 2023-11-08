@@ -20,6 +20,7 @@ export interface UnifiedConfig {
     };
     meta: {
         app?: string;
+        // eslint-disable-next-line camelcase
         custom_rest?: string;
         nullStr?: string;
         stanzaPrefix?: string;

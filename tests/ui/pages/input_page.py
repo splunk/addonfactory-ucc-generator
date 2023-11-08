@@ -13,6 +13,7 @@ from pytest_splunk_addon_ui_smartx.components.controls.message import Message
 from pytest_splunk_addon_ui_smartx.components.input_table import InputTable
 from pytest_splunk_addon_ui_smartx.backend_confs import ListBackendConf
 from pytest_splunk_addon_ui_smartx.components.controls.toggle import Toggle
+from pytest_splunk_addon_ui_smartx.components.controls.textarea import TextArea
 
 from tests.ui import constants as C
 
@@ -150,6 +151,12 @@ class ExampleInputOne(Entity):
             Selector(
                 select=entity_container.select
                 + ' [data-test="control-group"][data-name="example_help_link"]'
+            ),
+        )
+        self.text_area = TextArea(
+            browser,
+            Selector(
+                select=entity_container.select + ' [data-name="example_textarea_field"]'
             ),
         )
         self.title = BaseComponent(browser, Selector(select=' [data-test="title"]'))

@@ -8,6 +8,7 @@ export interface InputRowData {
     account: string;
     disabled: boolean;
     host: string;
+    // eslint-disable-next-line camelcase
     host_resolved: string;
     index: string;
     interval: string;

@@ -18,7 +18,9 @@ const meta = {
             <SingleInputComponent
                 {...props}
                 handleChange={(field, data) => {
-                    if (typeof data === 'string') setValue(data);
+                    if (typeof data === 'string') {
+                        setValue(data);
+                    }
                     props.handleChange(field, data);
                 }}
                 value={value}

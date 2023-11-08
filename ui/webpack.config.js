@@ -26,4 +26,7 @@ module.exports = merge(baseConfig, {
     },
     plugins: [new LicenseWebpackPlugin(), new ForkTsCheckerWebpackPlugin()],
     devtool: 'source-map',
+    resolve: {
+        fallback: { querystring: require.resolve('querystring-es3') },
+    },
 });

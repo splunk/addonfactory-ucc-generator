@@ -58,6 +58,20 @@ fields = [
         validator=None
     ), 
     field.RestField(
+        'config1_help_link',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ), 
+    field.RestField(
+        'config2_help_link',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ), 
+    field.RestField(
         'username',
         required=False,
         encrypted=False,

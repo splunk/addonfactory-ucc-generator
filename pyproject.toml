@@ -20,7 +20,7 @@ version = "5.32.0"
 description = "Splunk Add-on SDK formerly UCC is a build and code generation framework"
 license = "Apache-2.0"
 authors = ["Splunk <addonfactory@splunk.com>"]
-include = ["NOTICE"]
+include = ["NOTICE", "splunk_add_on_ucc_framework/package/appserver/**/*"]
 readme = "README.md"
 homepage = "https://github.com/splunk/addonfactory-ucc-generator"
 repository = "https://github.com/splunk/addonfactory-ucc-generator"
@@ -55,7 +55,7 @@ mkdocs = "^1.4.2"
 importlib-metadata = {version="*", python="<3.8"}
 pytest = "^7.2.1"
 pytest-splunk-addon = "^5.0.0"
-pytest-splunk-addon-ui-smartx = "2.3.4"
+pytest-splunk-addon-ui-smartx = "2.5.1"
 pytest-rerunfailures = "^11.1.1"
 mkdocs-material = "^9.1.3"
 pytest-cov = "^4.0.0"
