@@ -94,26 +94,22 @@ function EntityPage({
                         handleFormSubmit={handleFormSubmit}
                         groupName={groupName}
                     />
-                </ColumnLayout.Column>
-                <ColumnLayout.Column span={2} />
-            </ColumnLayout.Row>
-            <ColumnLayout.Row>
-                <ColumnLayout.Column span={7} />
-                <ColumnLayout.Column span={3} style={{ textAlign: 'right' }}>
-                    <StyledButton
-                        appearance="secondary"
-                        onClick={handleRequestClose}
-                        label={_('Cancel')}
-                        disabled={isSubmitting}
-                        style={{ width: '80px' }}
-                    />
-                    <StyledButton
-                        appearance="primary"
-                        label={isSubmitting ? <WaitSpinner /> : buttonText}
-                        onClick={handleSubmit}
-                        disabled={isSubmitting}
-                        style={{ width: '80px' }}
-                    />
+                    <div style={{ textAlign: 'right' }}>
+                        <StyledButton
+                            appearance="secondary"
+                            onClick={handleRequestClose}
+                            label={_('Cancel')}
+                            disabled={isSubmitting}
+                            style={{ width: '80px' }}
+                        />
+                        <StyledButton
+                            appearance="primary"
+                            label={isSubmitting ? <WaitSpinner /> : buttonText}
+                            onClick={handleSubmit}
+                            disabled={isSubmitting}
+                            style={{ width: '80px' }}
+                        />
+                    </div>
                 </ColumnLayout.Column>
                 <ColumnLayout.Column span={2} />
             </ColumnLayout.Row>
