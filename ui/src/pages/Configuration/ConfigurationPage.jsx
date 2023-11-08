@@ -13,6 +13,7 @@ import ErrorBoundary from '../../components/ErrorBoundary';
 import CustomTab from '../../components/CustomTab';
 import ConfigurationFormView from '../../components/ConfigurationFormView';
 import ConfigurationTable from '../../components/ConfigurationTable';
+import OpenApiDownloadButton from '../../components/DownloadButton/OpenApiDownloadBtn';
 
 const Row = styled(ColumnLayout.Row)`
     padding: 5px 0px;
@@ -100,7 +101,9 @@ function ConfigurationPage() {
                 <ColumnLayout gutter={8}>
                     <Row>
                         <ColumnLayout.Column span={9}>
-                            <TitleComponent>{_(title)}</TitleComponent>
+                            <TitleComponent>
+                                {_(title)} <OpenApiDownloadButton />
+                            </TitleComponent>
                             <SubTitleComponent>{_(description || '')}</SubTitleComponent>
                         </ColumnLayout.Column>
                     </Row>
