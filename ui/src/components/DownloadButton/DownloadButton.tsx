@@ -13,7 +13,6 @@ function DownloadButton(props: DownloadButtonProps) {
         <Button
             target="_blank"
             to={props.fileUrl}
-            rel="noopener noreferrer"
             download={props.fileNameAfterDownload}
             data-test="downloadButton"
         >
