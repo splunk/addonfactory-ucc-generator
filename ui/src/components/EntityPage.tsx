@@ -27,7 +27,6 @@ interface EntityPageProps {
 const ShadowedDiv = styled.div`
     box-shadow: ${variables.embossShadow};
     padding: ${variables.spacing};
-    max-width: fit-content;
 `;
 
 const ButtonRow = styled.div`
@@ -84,7 +83,7 @@ function EntityPage({
             </ColumnLayout.Row>
             <ColumnLayout.Row>
                 <ColumnLayout.Column span={2} />
-                <ColumnLayout.Column span={8}>
+                <ColumnLayout.Column span={8} style={{ maxWidth: 'fit-content' }}>
                     <ShadowedDiv>
                         <Heading style={{ paddingLeft: '30px' }} level={3}>
                             {_(formLabel)}
