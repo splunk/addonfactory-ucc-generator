@@ -101,10 +101,11 @@ function ConfigurationPage() {
                 <ColumnLayout gutter={8}>
                     <Row>
                         <ColumnLayout.Column span={9}>
-                            <TitleComponent>
-                                {_(title)} <OpenApiDownloadButton />
-                            </TitleComponent>
+                            <TitleComponent>{_(title)}</TitleComponent>
                             <SubTitleComponent>{_(description || '')}</SubTitleComponent>
+                        </ColumnLayout.Column>
+                        <ColumnLayout.Column span={1} style={{ textAlignLast: 'right' }}>
+                            <OpenApiDownloadButton />
                         </ColumnLayout.Column>
                     </Row>
                 </ColumnLayout>
