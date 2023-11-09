@@ -334,6 +334,9 @@
         "options": {
           "type": "object",
           "properties": {
+            "display": {
+              "type": "boolean"
+            },
             "text": {
               "type": "string"
             },
