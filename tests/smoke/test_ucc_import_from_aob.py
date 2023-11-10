@@ -14,7 +14,7 @@ def test_ucc_import_from_aob():
     """
     aob_addon_path = os.path.join(
         os.path.dirname(__file__),
-        "dynatrace-add-on-for-splunk_122.tgz",
+        "dynatrace-add-on-for-splunk_214_modified.tgz",
     )
     with tarfile.open(aob_addon_path, "r:gz") as tar:
         tar.extractall()
