@@ -4,7 +4,7 @@ import TextComponent from './TextComponent';
 
 const meta = {
     component: TextComponent,
-    title: 'Components/Temporary',
+    title: 'Components/TextComponent',
     argTypes: { handleChange: { action: 'handleChange' } },
     render: (props) => {
         // due to stories incompatibility, eslint rule is off

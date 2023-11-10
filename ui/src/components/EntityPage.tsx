@@ -4,8 +4,10 @@ import Link from '@splunk/react-ui/Link';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import ColumnLayout from '@splunk/react-ui/ColumnLayout';
 import { _ } from '@splunk/ui-utils/i18n';
-import { useSplunkTheme } from '@splunk/themes';
+import { variables } from '@splunk/themes';
 
+import Heading from '@splunk/react-ui/Heading';
+import styled from 'styled-components';
 import { MODE_CLONE, MODE_CREATE, MODE_EDIT, Mode } from '../constants/modes';
 import BaseFormView from './BaseFormView';
 import { SubTitleComponent } from '../pages/Input/InputPageStyle';
@@ -22,6 +24,15 @@ interface EntityPageProps {
     groupName?: string;
 }
 
+const ShadowedDiv = styled.div`
+    box-shadow: ${variables.embossShadow};
+    padding: ${variables.spacing};
+`;
+
+const ButtonRow = styled.div`
+    margin-top: ${variables.spacingHalf};
+    text-align: right;
+`;
 function EntityPage({
     handleRequestClose,
     serviceName,
@@ -43,13 +54,6 @@ function EntityPage({
     } else if (mode === MODE_EDIT) {
         buttonText = _('Update');
     }
-
-    const { embossShadow } = useSplunkTheme();
-    const colStyle = {
-        boxShadow: embossShadow,
-        padding: '1%',
-        backgroundColor: 'white',
-    };
 
     const handleSubmit = () => {
         const result = form.current?.handleSubmit();
@@ -79,36 +83,37 @@ function EntityPage({
             </ColumnLayout.Row>
             <ColumnLayout.Row>
                 <ColumnLayout.Column span={2} />
-                <ColumnLayout.Column span={8} style={colStyle}>
-                    <BaseFormView // nosemgrep: typescript.react.security.audit.react-no-refs.react-no-refs
-                        ref={form}
-                        page={page}
-                        serviceName={serviceName}
-                        mode={mode}
-                        stanzaName={stanzaName}
-                        handleFormSubmit={handleFormSubmit}
-                        groupName={groupName}
-                    />
-                </ColumnLayout.Column>
-                <ColumnLayout.Column span={2} />
-            </ColumnLayout.Row>
-            <ColumnLayout.Row>
-                <ColumnLayout.Column span={7} />
-                <ColumnLayout.Column span={3} style={{ textAlign: 'right' }}>
-                    <StyledButton
-                        appearance="secondary"
-                        onClick={handleRequestClose}
-                        label={_('Cancel')}
-                        disabled={isSubmitting}
-                        style={{ width: '80px' }}
-                    />
-                    <StyledButton
-                        appearance="primary"
-                        label={isSubmitting ? <WaitSpinner /> : buttonText}
-                        onClick={handleSubmit}
-                        disabled={isSubmitting}
-                        style={{ width: '80px' }}
-                    />
+                <ColumnLayout.Column span={8} style={{ maxWidth: 'fit-content' }}>
+                    <ShadowedDiv>
+                        <Heading style={{ paddingLeft: '30px' }} level={3}>
+                            {_(formLabel)}
+                        </Heading>
+                        <BaseFormView // nosemgrep: typescript.react.security.audit.react-no-refs.react-no-refs
+                            ref={form}
+                            page={page}
+                            serviceName={serviceName}
+                            mode={mode}
+                            stanzaName={stanzaName}
+                            handleFormSubmit={handleFormSubmit}
+                            groupName={groupName}
+                        />
+                    </ShadowedDiv>
+                    <ButtonRow>
+                        <StyledButton
+                            appearance="secondary"
+                            onClick={handleRequestClose}
+                            label={_('Cancel')}
+                            disabled={isSubmitting}
+                            style={{ width: '80px' }}
+                        />
+                        <StyledButton
+                            appearance="primary"
+                            label={isSubmitting ? <WaitSpinner /> : buttonText}
+                            onClick={handleSubmit}
+                            disabled={isSubmitting}
+                            style={{ width: '80px' }}
+                        />
+                    </ButtonRow>
                 </ColumnLayout.Column>
                 <ColumnLayout.Column span={2} />
             </ColumnLayout.Row>
