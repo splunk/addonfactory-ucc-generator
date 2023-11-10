@@ -114,9 +114,92 @@ export const MultipleSelectEntity = CommonEditableEntityFields.extend({
 
 export const CheckboxEntity = CommonEditableEntityFields.extend({
     type: z.literal('checkbox'),
-    validators: AllValidators.optional(),
-    defaultValue: z.union(),
-    options: SelectCommonOptions.extend({
-        delimiter: z.string().length(1),
+    defaultValue: z.union([z.number(), z.boolean()]),
+    options: CommonEditableEntityOptions.omit({ placeholder: true }),
+});
+
+export const CheckboxGroupEntity = CommonEditableEntityFields.extend({
+    type: z.literal('checkboxGroup'),
+    validators: z.tuple([RegexValidator]).optional(),
+    defaultValue: z.union([z.number(), z.boolean()]).optional(),
+    options: CommonEditableEntityOptions.omit({ placeholder: true }).extend({
+        groups: z
+            .array(
+                z.object({
+                    label: z.string(),
+                    fields: z.set(z.string()),
+                    options: z
+                        .object({
+                            isExpandable: z.boolean().optional(),
+                            expand: z.boolean().optional(),
+                        })
+                        .optional(),
+                })
+            )
+            .optional(),
+        rows: z.array(
+            z.object({
+                field: z.string(),
+                checkbox: z
+                    .object({
+                        label: z.string().optional(),
+                        defaultValue: z.boolean().optional(),
+                    })
+                    .optional(),
+                input: z
+                    .object({
+                        defaultValue: z.number().optional(),
+                        validators: z.tuple([NumberValidator]).optional(),
+                        required: z.boolean().optional(),
+                    })
+                    .optional(),
+            })
+        ),
+    }),
+});
+
+export const RadioEntity = CommonEditableEntityFields.extend({
+    type: z.literal('radio'),
+    defaultValue: z.string().optional(),
+    options: CommonEditableEntityOptions.extend({
+        items: z.array(ValueLabelPair),
+    }),
+});
+
+export const FileEntity = CommonEditableEntityFields.extend({
+    type: z.literal('file'),
+    defaultValue: z.string().optional(),
+    validators: z.array(z.union([StringValidator, RegexValidator])).optional(),
+    options: CommonEditableEntityOptions.omit({ placeholder: true }).extend({
+        maxFileSize: z.number().optional(),
+        fileSupportMessage: z.string().optional(),
+        supportedFileTypes: z.set(z.string()),
+    }),
+});
+
+const OAuthFields = z
+    .object({
+        oauth_field: z.string(),
+        label: z.string(),
+        field: z.string(),
+        help: z.string(),
+        encrypted: z.boolean(),
+        required: z.boolean(),
+        options: z.object({
+            placeholder: z.string().optional(),
+        }),
+    })
+    .partial();
+export const OAuthEntity = CommonEditableEntityFields.extend({
+    type: z.literal('oauth'),
+    defaultValue: z.string().optional(),
+    validators: z.array(z.union([StringValidator, RegexValidator])).optional(),
+    options: CommonEditableEntityOptions.omit({ placeholder: true }).extend({
+        auth_type: z.set(z.union([z.literal('basic'), z.literal('oauth')])),
+        basic: z.array(OAuthFields).optional(),
+        oauth: z.array(OAuthFields).optional(),
+        auth_label: z.string(),
+        oauth_popup_width: z.number(),
+        oauth_popup_height: z.number(),
     }),
 });
