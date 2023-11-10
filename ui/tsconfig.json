@@ -11,5 +11,5 @@
     "rootDir": ".",
     "baseUrl": "."
   },
-  "include": ["src/main/webapp", "jest.setup.ts"]
+  "include": ["src/**/*", "jest.setup.ts"]
 }
