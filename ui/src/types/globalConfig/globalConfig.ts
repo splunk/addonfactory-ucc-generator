@@ -3,12 +3,10 @@ import { meta } from './meta';
 import { pages } from './pages';
 import { alerts } from './alerts';
 
-export const globalConfig = z
-    .object({
-        meta,
-        pages,
-        alerts,
-    })
-    .catchall(z.never());
+export const GlobalConfigSchema = z.object({
+    meta,
+    pages,
+    alerts,
+});
 
-export type globalConfig = z.infer<typeof globalConfig>;
+export type GlobalConfig = z.infer<typeof GlobalConfigSchema>;

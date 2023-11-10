@@ -93,7 +93,7 @@ const SelectCommonOptions = CommonEditableEntityOptions.extend({
     denyList: z.string().optional(),
     labelField: z.string().optional(),
     autoCompleteFields: AutoCompleteFields,
-    dependencies: z.set(z.string()).optional(),
+    dependencies: z.array(z.string()).optional(),
     items: ValueLabelPair.array().optional(),
 });
 export const SingleSelectEntity = CommonEditableEntityFields.extend({
@@ -127,7 +127,7 @@ export const CheckboxGroupEntity = CommonEditableEntityFields.extend({
             .array(
                 z.object({
                     label: z.string(),
-                    fields: z.set(z.string()),
+                    fields: z.array(z.string()),
                     options: z
                         .object({
                             isExpandable: z.boolean().optional(),
@@ -173,7 +173,7 @@ export const FileEntity = CommonEditableEntityFields.extend({
     options: CommonEditableEntityOptions.omit({ placeholder: true }).extend({
         maxFileSize: z.number().optional(),
         fileSupportMessage: z.string().optional(),
-        supportedFileTypes: z.set(z.string()),
+        supportedFileTypes: z.array(z.string()),
     }),
 });
 
@@ -195,11 +195,37 @@ export const OAuthEntity = CommonEditableEntityFields.extend({
     defaultValue: z.string().optional(),
     validators: z.array(z.union([StringValidator, RegexValidator])).optional(),
     options: CommonEditableEntityOptions.omit({ placeholder: true }).extend({
-        auth_type: z.set(z.union([z.literal('basic'), z.literal('oauth')])),
+        auth_type: z.array(z.union([z.literal('basic'), z.literal('oauth')])),
         basic: z.array(OAuthFields).optional(),
         oauth: z.array(OAuthFields).optional(),
-        auth_label: z.string(),
-        oauth_popup_width: z.number(),
-        oauth_popup_height: z.number(),
+        auth_label: z.string().optional(),
+        oauth_popup_width: z.number().optional(),
+        oauth_popup_height: z.number().optional(),
+        oauth_timeout: z.number().optional(),
+        auth_code_endpoint: z.string().optional(),
+        access_token_endpoint: z.string().optional(),
+        oauth_state_enabled: z.boolean().optional(),
     }),
 });
+
+export const CustomEntity = CommonEditableEntityFields.extend({
+    type: z.literal('custom'),
+    options: z.object({
+        type: z.literal('external'),
+        scr: z.string(),
+    }),
+});
+
+export const AnyOfEntity = z.discriminatedUnion('type', [
+    LinkEntity,
+    TextEntity,
+    TextAreaEntity,
+    SingleSelectEntity,
+    MultipleSelectEntity,
+    CheckboxEntity,
+    CheckboxGroupEntity,
+    RadioEntity,
+    FileEntity,
+    OAuthEntity,
+    CustomEntity,
+]);

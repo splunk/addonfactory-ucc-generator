@@ -1,10 +1,19 @@
 import { TOAST_TYPES } from '@splunk/react-toast-notifications/ToastConstants';
 import Toaster, { makeCreateToast } from '@splunk/react-toast-notifications/Toaster';
+import { GlobalConfig } from '../types/globalConfig/globalConfig';
 
-let appData = null;
-let unifiedConfigs = null;
+interface AppData {
+    app: string;
+    // eslint-disable-next-line camelcase
+    custom_rest: string;
+    nullStr: 'NULL';
+    stanzaPrefix: string;
+}
 
-export function setMetaInfo(data) {
+let appData: AppData | null = null;
+let unifiedConfigs: GlobalConfig | null = null;
+
+export function setMetaInfo(data: AppData) {
     appData = data;
 }
 
@@ -14,7 +23,7 @@ export function getMetaInfo() {
     };
 }
 
-export function isFalse(value) {
+export function isFalse(value: unknown) {
     return (
         value === null ||
         value === undefined ||
@@ -22,7 +31,7 @@ export function isFalse(value) {
     );
 }
 
-export function isTrue(value) {
+export function isTrue(value: unknown) {
     return (
         value !== null &&
         value !== undefined &&
@@ -30,11 +39,14 @@ export function isTrue(value) {
     );
 }
 
-export function generateEndPointUrl(name) {
+export function generateEndPointUrl(name: string) {
+    if (!unifiedConfigs) {
+        throw new Error('No GlobalConfig set');
+    }
     return `${unifiedConfigs.meta.restRoot}_${name}`;
 }
 
-export function setUnifiedConfig(unifiedConfig) {
+export function setUnifiedConfig(unifiedConfig: GlobalConfig) {
     unifiedConfigs = unifiedConfig;
 }
 
@@ -43,7 +55,11 @@ export function getUnifiedConfigs() {
 }
 
 const createToast = makeCreateToast(Toaster);
-export const generateToast = (message, messageType, action = undefined) => {
+export const generateToast = (
+    message: string,
+    messageType: (typeof TOAST_TYPES)[keyof typeof TOAST_TYPES],
+    action = undefined
+) => {
     let toastType;
     switch (messageType) {
         case 'success':
@@ -68,18 +84,23 @@ export const generateToast = (message, messageType, action = undefined) => {
     });
 };
 
-export function filterByAllowList(fields, allowList) {
+export function filterByAllowList(fields: { value: string; label?: string }[], allowList: string) {
     const allowRegex = new RegExp(allowList);
     return fields.filter((item) => allowRegex.test(item.value));
 }
 
-export function filterByDenyList(fields, denyList) {
+export function filterByDenyList(fields: { value: string; label?: string }[], denyList: string) {
     const denyRegex = new RegExp(denyList);
     return fields.filter((item) => !denyRegex.test(item.value));
 }
 
-export function filterResponse(items, labelField, allowList, denyList) {
-    let newItems = items.map((item) => ({
+export function filterResponse(
+    items: { content?: Record<string, string>; name: string }[],
+    labelField: string,
+    allowList: string,
+    denyList: string
+) {
+    let newItems: { value: string; label?: string }[] = items.map((item) => ({
         label: labelField ? item.content?.[labelField] : item.name,
         value: item.name,
     }));
