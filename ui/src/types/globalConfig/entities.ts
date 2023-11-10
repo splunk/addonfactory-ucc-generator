@@ -9,6 +9,13 @@ import {
     UrlValidator,
 } from './validators';
 
+const ValueLabelPair = z
+    .object({
+        value: z.union([z.number(), z.string(), z.boolean()]),
+        label: z.string(),
+    })
+    .strict(); // strict() ensures no additional properties
+
 const CommonEntityFields = z.object({
     type: z.string(),
     field: z.string(),
@@ -29,17 +36,19 @@ const CommonEditableEntityOptions = z.object({
     enable: z.boolean().default(true),
 });
 
-const AllValidators = z.array(
-    z.union([
-        NumberValidator,
-        StringValidator,
-        RegexValidator,
-        EmailValidator,
-        Ipv4Validator,
-        UrlValidator,
-        DateValidator,
-    ])
-);
+const AllValidators = z
+    .array(
+        z.union([
+            NumberValidator,
+            StringValidator,
+            RegexValidator,
+            EmailValidator,
+            Ipv4Validator,
+            UrlValidator,
+            DateValidator,
+        ])
+    )
+    .nonempty();
 
 export const LinkEntity = CommonEntityFields.extend({
     type: z.literal('helpLink'),
@@ -66,31 +75,48 @@ export const TextAreaEntity = CommonEditableEntityFields.extend({
     }).optional(),
 });
 
-const autoCompleteBaseSchema = z.object({
-    label: z.string(),
+const AutoCompleteFields = z.array(
+    z.union([
+        ValueLabelPair,
+        z.object({
+            label: z.string(),
+            children: z.array(ValueLabelPair),
+        }),
+    ])
+);
+
+const SelectCommonOptions = CommonEditableEntityOptions.extend({
+    createSearchChoice: z.boolean().optional(),
+    referenceName: z.string().optional(),
+    endpointUrl: z.string().optional(),
+    allowList: z.string().optional(),
+    denyList: z.string().optional(),
+    labelField: z.string().optional(),
+    autoCompleteFields: AutoCompleteFields,
+    dependencies: z.set(z.string()).optional(),
+    items: ValueLabelPair.array().optional(),
 });
-
-type AutoCompleteFields = z.infer<typeof autoCompleteBaseSchema> & {};
-
-const AutoCompleteFields = z.union([]);
-const ValueLabelPair = z.object({
-    value: z.string(),
-    label: z.string(),
-});
-
 export const SingleSelectEntity = CommonEditableEntityFields.extend({
     type: z.literal('singleSelect'),
     validators: AllValidators.optional(),
     defaultValue: z.union([z.string(), z.number()]).optional(),
-    options: CommonEditableEntityOptions.extend({
-        createSearchChoice: z.boolean().optional(),
-        referenceName: z.string().optional(),
-        endpointUrl: z.string().optional(),
-        allowList: z.string().optional(),
-        denyList: z.string().optional(),
-        labelField: z.string().optional(),
-        autoCompleteFields: AutoCompleteFields.optional(),
-        dependencies: z.array(z.string()).optional(),
-        items: z.array(ValueLabelPair).optional(),
+    options: SelectCommonOptions,
+});
+
+export const MultipleSelectEntity = CommonEditableEntityFields.extend({
+    type: z.literal('multipleSelect'),
+    validators: AllValidators.optional(),
+    defaultValue: z.string(),
+    options: SelectCommonOptions.extend({
+        delimiter: z.string().length(1),
+    }),
+});
+
+export const CheckboxEntity = CommonEditableEntityFields.extend({
+    type: z.literal('checkbox'),
+    validators: AllValidators.optional(),
+    defaultValue: z.union(),
+    options: SelectCommonOptions.extend({
+        delimiter: z.string().length(1),
     }),
 });
