@@ -25,7 +25,7 @@ module.exports = {
         'no-console': 'error',
         // https://typescript-eslint.io/rules/no-use-before-define/#how-to-use
         'no-use-before-define': 'off',
-        '@typescript-eslint/no-use-before-define': ['error', { variables: false }],
+        '@typescript-eslint/no-use-before-define': ['error'],
     },
     root: true,
 };

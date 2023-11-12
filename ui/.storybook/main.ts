@@ -26,5 +26,8 @@ const config: StorybookConfig = {
             },
         };
     },
+    typescript: {
+        check: true,
+    },
 };
 export default config;

@@ -30,7 +30,7 @@ const HooksSchema = z
     })
     .optional();
 const TabSchema = z.object({
-    entity: AnyOfEntity.optional(),
+    entity: z.array(AnyOfEntity).optional(),
     name: z.string().optional(),
     title: z.string().optional(),
     options: HooksSchema,
@@ -60,7 +60,7 @@ const GroupsSchema = z
         })
     )
     .optional();
-const InputsPageRegular = z.object({
+export const InputsPageRegular = z.object({
     title: z.string(),
     services: z.array(
         z.object({
@@ -68,7 +68,9 @@ const InputsPageRegular = z.object({
             title: z.string(),
             subTitle: z.string().optional(),
             description: z.string().optional(),
-            table: TableSchema,
+            // table should be required, but TS cannot distinguish diff between this and
+            // service from tablefull input
+            table: TableSchema.optional(),
             entity: z.array(AnyOfEntity),
             options: HooksSchema,
             groups: GroupsSchema,
@@ -82,10 +84,15 @@ const InputsPageRegular = z.object({
     ),
 });
 
-const InputsPageTableSchema = z.object({
+export const InputsPageTableSchema = z.object({
     title: z.string(),
     description: z.string().optional(),
-    menu: z.record(z.any()).optional(),
+    menu: z
+        .object({
+            type: z.literal('external'),
+            src: z.string(),
+        })
+        .optional(),
     table: TableSchema,
     groupsMenu: z
         .array(
@@ -120,7 +127,7 @@ export const pages = z.object({
         description: z.string().optional(),
         tabs: z.array(TabSchema).min(1),
     }),
-    inputs: z.union([InputsPageTableSchema, InputsPageRegular]).optional(),
+    inputs: z.union([InputsPageRegular, InputsPageTableSchema]).optional(),
     dashboard: z
         .object({
             panels: z.array(z.object({ name: z.string() })).min(1),

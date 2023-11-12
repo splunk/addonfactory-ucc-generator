@@ -9,12 +9,10 @@ import {
     UrlValidator,
 } from './validators';
 
-const ValueLabelPair = z
-    .object({
-        value: z.union([z.number(), z.string(), z.boolean()]),
-        label: z.string(),
-    })
-    .strict(); // strict() ensures no additional properties
+const ValueLabelPair = z.object({
+    value: z.union([z.number(), z.string(), z.boolean()]),
+    label: z.string(),
+});
 
 const CommonEntityFields = z.object({
     type: z.string(),
@@ -25,15 +23,15 @@ const CommonEntityFields = z.object({
 });
 
 const CommonEditableEntityFields = CommonEntityFields.extend({
-    required: z.boolean().default(false),
-    encrypted: z.boolean().default(false),
+    required: z.boolean().optional().default(false),
+    encrypted: z.boolean().optional().default(false),
 });
 
 const CommonEditableEntityOptions = z.object({
     placeholder: z.string().optional(),
-    display: z.boolean().default(true),
-    disableonEdit: z.boolean().default(false),
-    enable: z.boolean().default(true),
+    display: z.boolean().optional().default(true),
+    disableonEdit: z.boolean().optional().default(false),
+    enable: z.boolean().optional().default(true),
 });
 
 const AllValidators = z
@@ -86,13 +84,14 @@ const AutoCompleteFields = z.array(
 );
 
 const SelectCommonOptions = CommonEditableEntityOptions.extend({
-    createSearchChoice: z.boolean().optional(),
+    disableSearch: z.boolean().optional().default(false),
+    createSearchChoice: z.boolean().optional().default(false),
     referenceName: z.string().optional(),
     endpointUrl: z.string().optional(),
     allowList: z.string().optional(),
     denyList: z.string().optional(),
     labelField: z.string().optional(),
-    autoCompleteFields: AutoCompleteFields,
+    autoCompleteFields: AutoCompleteFields.optional(),
     dependencies: z.array(z.string()).optional(),
     items: ValueLabelPair.array().optional(),
 });
@@ -183,8 +182,8 @@ const OAuthFields = z
         label: z.string(),
         field: z.string(),
         help: z.string(),
-        encrypted: z.boolean(),
-        required: z.boolean(),
+        encrypted: z.boolean().default(false),
+        required: z.boolean().default(false),
         options: z.object({
             placeholder: z.string().optional(),
         }),
