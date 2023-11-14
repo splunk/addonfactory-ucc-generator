@@ -59,7 +59,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - id: semgrep
-        uses: returntocorp/semgrep-action@v1
+        uses: semgrep/semgrep-action@v1
         with:
           publishToken: ${{ secrets.SEMGREP_PUBLISH_TOKEN }}
 
@@ -104,7 +104,7 @@ jobs:
         run: poetry run mkdocs build --strict
       - name: Build UCC
         run: |
-          cp -R built-ui/package splunk_add_on_ucc_framework/
+          cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/
           poetry build
       - uses: actions/upload-artifact@v3
         with:
@@ -157,7 +157,7 @@ jobs:
           path: built-ui/
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
       - run: |
-          cp -R built-ui/package splunk_add_on_ucc_framework/
+          cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/
           poetry install
           poetry run pytest tests/smoke
 
@@ -176,9 +176,12 @@ jobs:
           path: built-ui/
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
       - run: |
-          cp -R built-ui/package splunk_add_on_ucc_framework/
+          cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/
           poetry install
       - run: poetry run ucc-gen build --source tests/testdata/test_addons/package_global_config_everything/package
+      - run: ./scripts/include-rum.sh output/Splunk_TA_UCCExample/appserver/templates/base.html scripts/rum-script.html "$RUM_ACCESS_TOKEN"
+        env:
+          RUM_ACCESS_TOKEN: ${{ secrets.RUM_ACCESS_TOKEN}}
       - run: poetry run ucc-gen package --path output/Splunk_TA_UCCExample
       - uses: actions/upload-artifact@v3
         with:
@@ -227,20 +230,14 @@ jobs:
         with:
           name: Splunk_TA_UCCExample-raw-output
           path: output/
-      - uses: actions/download-artifact@v3
-        with:
-          name: UCC-UI-build
-          path: built-ui/
-      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
       - run: |
-          cp -R built-ui/package splunk_add_on_ucc_framework/
+          curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
           poetry install
       - name: Link chromedriver
         # Use installed chromedriver https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2204-Readme.md
         run: |
           export PATH=$PATH:$CHROMEWEBDRIVER
           chromedriver --version
-      - run: poetry run ucc-gen build --source tests/testdata/test_addons/package_global_config_everything/package
       - run: |
           ./run_splunk.sh ${{ matrix.splunk.version }}
           until curl -Lsk "https://localhost:8088/services/collector/health" &>/dev/null ; do echo -n "Waiting for HEC-" && sleep 5 ; done
@@ -323,7 +320,7 @@ jobs:
       - run: poetry install
       - name: Copy built UCC UI into UCC generator folder
         run: |
-          cp -R built-ui/package splunk_add_on_ucc_framework/
+          cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/
       - id: semantic
         uses: splunk/semantic-release-action@v1.3
         with:

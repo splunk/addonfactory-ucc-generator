@@ -1,0 +1,163 @@
+{
+    "pages": {
+        "configuration": {
+            "tabs": [
+                {
+                    "name": "logging",
+                    "entity": [
+                        {
+                            "type": "singleSelect",
+                            "label": "Log level",
+                            "options": {
+                                "disableSearch": true,
+                                "autoCompleteFields": [
+                                    {
+                                        "value": "DEBUG",
+                                        "label": "DEBUG"
+                                    },
+                                    {
+                                        "value": "INFO",
+                                        "label": "INFO"
+                                    },
+                                    {
+                                        "value": "WARNING",
+                                        "label": "WARNING"
+                                    },
+                                    {
+                                        "value": "ERROR",
+                                        "label": "ERROR"
+                                    },
+                                    {
+                                        "value": "CRITICAL",
+                                        "label": "CRITICAL"
+                                    }
+                                ]
+                            },
+                            "defaultValue": "INFO",
+                            "field": "loglevel"
+                        }
+                    ],
+                    "title": "Logging"
+                }
+            ],
+            "title": "Configuration",
+            "description": "Set up your add-on"
+        },
+        "inputs": {
+            "title": "Inputs",
+            "description": "Create data inputs",
+            "table": {
+                "header": [
+                    {
+                        "field": "name",
+                        "label": "Input Name"
+                    }
+                ],
+                "moreInfo": [
+                    {
+                        "field": "name",
+                        "label": "Name"
+                    }
+                ],
+                "actions": [
+                    "edit",
+                    "delete",
+                    "clone"
+                ]
+            },
+            "services": [
+                {
+                    "name": "input_with_undefined_group_field",
+                    "title": "Input with undefined group field",
+                    "groups": [
+                        {
+                            "label": "Label 1",
+                            "options": {
+                                "isExpandable": false
+                            },
+                            "fields": [
+                                "name"
+                            ]
+                        },
+                        {
+                            "label": "Label 2",
+                            "options": {
+                                "isExpandable": false
+                            },
+                            "fields": [
+                                "sourcetype",
+                                "index",
+                                "undefined_entity_field_name"
+                            ]
+                        },
+                        {
+                            "label": "Label 3",
+                            "options": {
+                                "expand": false,
+                                "isExpandable": true
+                            },
+                            "fields": [
+                                "interval"
+                            ]
+                        }
+                    ],
+                    "entity": [
+                        {
+                            "field": "name",
+                            "label": "Name",
+                            "type": "text",
+                            "required": true,
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "pattern": "^[^%<>/\\^$]+$",
+                                    "errorMsg": "Please enter name without special characters ^%<>/\\^$"
+                                }
+                            ]
+                        },
+                        {
+                            "field": "interval",
+                            "label": "Interval (in seconds)",
+                            "type": "text",
+                            "defaultValue": 3600,
+                            "validators": [
+                                {
+                                    "type": "number",
+                                    "range": [
+                                        0,
+                                        31536000
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "field": "sourcetype",
+                            "label": "Source Type",
+                            "type": "text",
+                            "defaultValue": "default:sourcetype"
+                        },
+                        {
+                            "field": "index",
+                            "label": "Index",
+                            "type": "singleSelect",
+                            "required": true,
+                            "defaultValue": "default",
+                            "options": {
+                                "createSearchChoice": true,
+                                "endpointUrl": "data/indexes",
+                                "denyList": "^_.*$"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "meta": {
+        "name": "Splunk_TA_UCCExample",
+        "restRoot": "splunk_ta_uccexample",
+        "version": "1.0.0",
+        "displayName": "Splunk UCC test Add-on",
+        "schemaVersion": "0.0.3"
+    }
+}

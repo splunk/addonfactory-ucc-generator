@@ -10,6 +10,6 @@ module.exports = {
 
     // Coverage
     collectCoverage: true,
-    collectCoverageFrom: ['src/main/webapp/**/*.{js,jsx,ts,tsx}'],
+    collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}'],
     coverageDirectory: 'coverage',
 };

@@ -295,6 +295,14 @@ def test_config_validation_when_deprecated_placeholder_is_used(caplog):
                 "Service input_with_duplicate_group_labels has duplicate labels in groups"
             ),
         ),
+        (
+            "invalid_config_group_uses_fields_not_defined_in_entity.json",
+            False,
+            (
+                "Service input_with_undefined_group_field uses group field "
+                "undefined_entity_field_name which is not defined in entity"
+            ),
+        ),
     ],
 )
 def test_config_validation_when_error(filename, is_yaml, exception_message):

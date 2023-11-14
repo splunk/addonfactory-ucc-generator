@@ -1,14 +1,8 @@
 import type { Preview } from '@storybook/react';
 import { initialize, mswDecorator, mswLoader } from 'msw-storybook-addon';
-import { SplunkThemeProvider } from '@splunk/themes';
-import { Suspense } from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { StyledContainer, ThemeProviderSettings } from '../src/main/webapp/pages/EntryPageStyle';
-import { WaitSpinnerWrapper } from '../src/main/webapp/components/table/CustomTableStyle';
-
-import React from 'react';
-import { serverHandlers } from '../src/main/webapp/mocks/server-handlers';
+import { serverHandlers } from '../src/mocks/server-handlers';
 import { rest } from 'msw';
+import { withSplunkThemeToolbar } from './withSplunkTheme';
 
 // Initialize MSW
 initialize({
@@ -26,6 +20,9 @@ const preview: Preview = {
     parameters: {
         actions: { argTypesRegex: '^handle.*' },
         loaders: [mswLoader],
+        backgrounds: {
+            disable: true,
+        },
         msw: {
             handlers: [
                 ...serverHandlers,
@@ -39,23 +36,67 @@ const preview: Preview = {
                 ),
             ],
         },
+        controls: {
+            sort: 'requiredFirst',
+        },
     },
-    decorators: [
-        (story) => (
-            <SplunkThemeProvider // nosemgrep: typescript.react.best-practice.react-props-spreading.react-props-spreading
-                {...ThemeProviderSettings}
-            >
-                <StyledContainer>
-                    <Router>
-                        <Suspense fallback={<WaitSpinnerWrapper size="medium" />}>
-                            {story()}
-                        </Suspense>
-                    </Router>
-                </StyledContainer>
-            </SplunkThemeProvider>
-        ),
-        mswDecorator,
-    ],
+    decorators: [withSplunkThemeToolbar, mswDecorator],
+};
+
+export const globalTypes: Preview['globalTypes'] = {
+    family: {
+        name: 'Family',
+        description: 'Family',
+        defaultValue: 'enterprise',
+        toolbar: {
+            icon: 'circlehollow',
+            type: 'return',
+            items: [
+                { value: 'enterprise', icon: 'circlehollow', title: 'Enterprise' },
+                { value: 'prisma', icon: 'circle', title: 'Prisma' },
+            ],
+            showName: true,
+            dynamicTitle: true,
+        },
+    },
+    colorScheme: {
+        name: 'Color Scheme',
+        description: 'Color Scheme',
+        defaultValue: 'light',
+        toolbar: {
+            items: [
+                { value: 'light', left: 'left', icon: 'sun', title: 'Light' },
+                { value: 'dark', icon: 'moon', title: 'Dark' },
+            ],
+            showName: true,
+            dynamicTitle: true,
+        },
+    },
+    density: {
+        name: 'Density',
+        description: 'Density',
+        defaultValue: 'comfortable',
+        toolbar: {
+            items: [
+                { value: 'comfortable', icon: 'grid', title: 'Comfortable' },
+                { value: 'compact', icon: 'component', title: 'Compact' },
+            ],
+            dynamicTitle: true,
+        },
+    },
+    animation: {
+        name: 'Animation',
+        description: 'Animation',
+        defaultValue: true,
+        toolbar: {
+            icon: 'circlehollow',
+            items: [
+                { value: true, title: 'Animation on' },
+                { value: false, title: 'Animation off' },
+            ],
+            dynamicTitle: true,
+        },
+    },
 };
 
 export default preview;

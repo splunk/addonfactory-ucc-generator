@@ -8,12 +8,13 @@ const baseConfig = require('@splunk/webpack-configs/base.config').default;
 
 module.exports = merge(baseConfig, {
     entry: {
-        entry_page: path.join(__dirname, 'src/main/webapp/pages/entry_page'),
+        entry_page: path.join(__dirname, 'src/pages/entry_page'),
     },
     output: {
-        path: path.join(__dirname, 'dist/package/appserver/static/js/build'),
-        filename: '[name].js',
-        chunkFilename: '[name].js',
+        path: path.join(__dirname, 'dist/build'),
+        filename: (pathData) =>
+            pathData.chunk.name === 'entry_page' ? '[name].js' : '[name].[contenthash].js',
+        chunkFilename: '[name].[contenthash].js',
     },
     module: {
         rules: [
@@ -25,4 +26,7 @@ module.exports = merge(baseConfig, {
     },
     plugins: [new LicenseWebpackPlugin(), new ForkTsCheckerWebpackPlugin()],
     devtool: 'source-map',
+    resolve: {
+        fallback: { querystring: require.resolve('querystring-es3') },
+    },
 });

@@ -22,11 +22,7 @@ asking, `format:verify` won't.
 
 Running `yarn run setup` once is required to enable all other tasks. The command might take a few minutes to finish.
 
-## Communication channels
-
-If you are a Splunker use: https://splunk.slack.com/archives/C03T8QCHBTJ
-
-If you are a part of the community use: https://splunk-usergroups.slack.com/archives/C03SG3ZL4S1
+We have published Storybook: https://splunk.github.io/addonfactory-ucc-generator/storybook
 
 ## Code Formatting
 

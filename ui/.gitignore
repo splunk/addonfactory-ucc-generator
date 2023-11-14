@@ -122,3 +122,5 @@ dist
 # output
 dist/**
 .idea
+
+storybook-static

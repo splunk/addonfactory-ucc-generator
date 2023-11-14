@@ -1,19 +1,22 @@
 # Contributing Guidelines
 
+Default development branch is `develop`. Please use it for PR
+
 ## Build and Test
 
-Download UCC UI and unpack it using the following commands:
+Prerequisites:
+- Node.js >= 18 ([NodeJS](https://nodejs.org/en/download) or use [nvm](https://github.com/nvm-sh/nvm))
+- Yarn Classic (`npm install --global yarn`)
+- Poetry 1.5.1. [Installation guide](https://python-poetry.org/docs/#installing-with-the-official-installer)
 
+If you are interested in contributing to UI, `ui` folder has separate README.md.
+
+Building UI in `ui/dist` folder and copying files to static folder of UCC.
 ```
-cd ui/
-yarn
-yarn run build
-cp -R dist/ ../splunk_add_on_ucc_framework/
+./build-ui.sh
 ```
 
-This project uses [`poetry 1.5.1`](https://python-poetry.org/).
-
-To build a new local version of `ucc-gen`:
+Building a new local version of `ucc-gen`:
 
 ```
 poetry build

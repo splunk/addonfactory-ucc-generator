@@ -331,7 +331,8 @@ class GlobalConfigValidator:
         fields, labels = [], []
         for _entity in entity:
             fields.append(_entity["field"].lower())
-            labels.append(_entity["label"].lower())
+            if "label" in _entity:
+                labels.append(_entity["label"].lower())
             options = _entity.get("options")
             if options and options.get("autoCompleteFields"):
                 self._validate_autoCompleteFields_duplicates(
@@ -521,7 +522,7 @@ class GlobalConfigValidator:
                                 )
                             group_used_field_names.append(group_field_name)
 
-    def _validate_group_labels(self) -> None:
+    def _validate_groups(self) -> None:
         pages = self._config["pages"]
         inputs = pages.get("inputs")
         if inputs is None:
@@ -531,6 +532,10 @@ class GlobalConfigValidator:
             groups = service.get("groups")
             if groups is None:
                 continue
+            entities = service["entity"]
+            entity_fields = []
+            for entity in entities:
+                entity_fields.append(entity["field"])
             service_group_labels = []
             for group in groups:
                 group_label = group["label"]
@@ -539,6 +544,13 @@ class GlobalConfigValidator:
                         f"Service {service['name']} has duplicate labels in groups"
                     )
                 service_group_labels.append(group_label)
+            for group in groups:
+                group_fields = group["fields"]
+                for group_field in group_fields:
+                    if group_field not in entity_fields:
+                        raise GlobalConfigValidatorException(
+                            f"Service {service['name']} uses group field {group_field} which is not defined in entity"
+                        )
 
     def validate(self) -> None:
         self._validate_config_against_schema()
@@ -552,4 +564,4 @@ class GlobalConfigValidator:
         self._validate_panels()
         self._warn_on_placeholder_usage()
         self._validate_checkbox_group()
-        self._validate_group_labels()
+        self._validate_groups()

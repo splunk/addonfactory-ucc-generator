@@ -189,6 +189,22 @@
                                 "text": "Help Link",
                                 "link": "https://docs.splunk.com/Documentation"
                             }
+                        },
+                        {
+                            "field": "config1_help_link",
+                            "type": "helpLink",
+                            "options": {
+                                "text": "Add-on configuration documentation",
+                                "link": "https://docs.splunk.com/Documentation"
+                            }
+                        },
+                        {
+                            "field": "config2_help_link",
+                            "type": "helpLink",
+                            "options": {
+                                "text": "SSL configuration documentation",
+                                "link": "https://docs.splunk.com/Documentation"
+                            }
                         }
                     ],
                     "title": "Account"
@@ -668,6 +684,17 @@
                             "field": "limit",
                             "help": "The maximum number of results returned by the query.",
                             "required": false
+                        },
+                        {
+                            "type": "textarea",
+                            "label": "Example Textarea Field",
+                            "field": "example_textarea_field",
+                            "help": "Help message",
+                            "options": {
+                                "rowsMin": 3,
+                                "rowsMax": 15
+                            },
+                            "required": true
                         },
                         {
                             "field": "example_help_link",
@@ -1291,7 +1318,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.31.1Rdd3a1ca0",
+        "version": "5.32.0Rf6551a7f",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.3"
     }
