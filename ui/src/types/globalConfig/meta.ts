@@ -2,7 +2,9 @@ import { z } from 'zod';
 
 export const meta = z.object({
     displayName: z.string(),
-    name: z.string(),
+    // TESTING ONLY DON'T MERGE
+    name: z.number(),
+    // name: z.string(),
     restRoot: z.string(),
     apiVersion: z.string().optional(),
     version: z.string(),
