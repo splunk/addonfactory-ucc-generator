@@ -11,7 +11,7 @@ interface AppData {
 }
 
 let appData: AppData | null = null;
-const unifiedConfigs: GlobalConfig | null = null;
+let unifiedConfigs: GlobalConfig | null = null;
 
 export function setMetaInfo(data: AppData) {
     appData = data;
@@ -48,9 +48,12 @@ export function generateEndPointUrl(name: string) {
 
 export function setUnifiedConfig(unifiedConfig: GlobalConfig) {
     const result = GlobalConfigSchema.safeParse(unifiedConfig);
-    if (!result.success) {
+    if (result.success) {
+        unifiedConfigs = result.data;
+    } else {
         // eslint-disable-next-line no-console
         console.error('Validation errors while parsing globalConfig.json', result.error.format());
+        unifiedConfigs = unifiedConfig;
     }
 }
 
