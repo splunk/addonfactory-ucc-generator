@@ -1,6 +1,6 @@
 import { TOAST_TYPES } from '@splunk/react-toast-notifications/ToastConstants';
 import Toaster, { makeCreateToast } from '@splunk/react-toast-notifications/Toaster';
-import { GlobalConfig } from '../types/globalConfig/globalConfig';
+import { GlobalConfig, GlobalConfigSchema } from '../types/globalConfig/globalConfig';
 
 interface AppData {
     app: string;
@@ -11,7 +11,7 @@ interface AppData {
 }
 
 let appData: AppData | null = null;
-let unifiedConfigs: GlobalConfig | null = null;
+const unifiedConfigs: GlobalConfig | null = null;
 
 export function setMetaInfo(data: AppData) {
     appData = data;
@@ -47,7 +47,11 @@ export function generateEndPointUrl(name: string) {
 }
 
 export function setUnifiedConfig(unifiedConfig: GlobalConfig) {
-    unifiedConfigs = unifiedConfig;
+    const result = GlobalConfigSchema.safeParse(unifiedConfig);
+    if (!result.success) {
+        // eslint-disable-next-line no-console
+        console.error('Validation errors while parsing globalConfig.json', result.error.format());
+    }
 }
 
 export function getUnifiedConfigs() {
