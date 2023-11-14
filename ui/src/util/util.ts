@@ -51,9 +51,8 @@ export function setUnifiedConfig(unifiedConfig: GlobalConfig) {
     if (result.success) {
         unifiedConfigs = result.data;
     } else {
-        // eslint-disable-next-line no-console
-        console.error('Validation errors while parsing globalConfig.json', result.error.format());
         unifiedConfigs = unifiedConfig;
+        window.reportError(new Error('Invalid globalConfig.json', { cause: result.error.issues }));
     }
 }
 
