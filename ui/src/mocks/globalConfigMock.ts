@@ -211,7 +211,7 @@ const globalConfigMock: z.input<typeof GlobalConfigSchema> = {
         },
     },
     meta: {
-        name: 'demo_addon_for_splunk',
+        name: 123, // TODO vtsvetkov
         restRoot: 'demo_addon_for_splunk',
         version: '5.31.1R85f0e18e',
         displayName: 'Demo Add-on for Splunk',

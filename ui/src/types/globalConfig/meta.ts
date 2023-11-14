@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const meta = z.object({
     displayName: z.string(),
     // TESTING ONLY DON'T MERGE
-    name: z.number(),
+    name: z.number(), // TODO vtsvetkov
     // name: z.string(),
     restRoot: z.string(),
     apiVersion: z.string().optional(),

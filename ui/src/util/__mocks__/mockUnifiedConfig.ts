@@ -1,7 +1,14 @@
+import { z } from 'zod';
 import { MOCKED_TA_INPUT } from '../../mocks/server-response';
+import { GlobalConfigSchema } from '../../types/globalConfig/globalConfig';
 
-export const mockUnifiedConfig = {
+export const mockUnifiedConfig: z.input<typeof GlobalConfigSchema> = {
     meta: {
+        name: 123, // TODO vtsvetkov
+        version: '1.2.3',
+        displayName: 'name',
+        schemaVersion: '1.2.3',
+        apiVersion: '1.2.3',
         restRoot: 'restRoot',
     },
     pages: {
@@ -227,6 +234,97 @@ export const mockUnifiedConfig = {
                     entity: [],
                 },
             ],
+        },
+        configuration: {
+            tabs: [
+                {
+                    name: 'account',
+                    table: {
+                        actions: ['edit', 'delete', 'clone'],
+                        header: [
+                            {
+                                label: 'Name',
+                                field: 'name',
+                            },
+                        ],
+                    },
+                    entity: [
+                        {
+                            type: 'text',
+                            label: 'Name',
+                            validators: [
+                                {
+                                    type: 'regex',
+                                    errorMsg:
+                                        'Account Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.',
+                                    pattern: '^[a-zA-Z]\\w*$',
+                                },
+                                {
+                                    type: 'string',
+                                    errorMsg: 'Length of input name should be between 1 and 100',
+                                    minLength: 1,
+                                    maxLength: 100,
+                                },
+                            ],
+                            field: 'name',
+                            help: 'A unique name for the account.',
+                            required: true,
+                        },
+                        {
+                            type: 'file',
+                            label: 'Upload File',
+                            help: "Upload service account's certificate",
+                            field: 'service_account',
+                            options: {
+                                fileSupportMessage: 'Here is the support message',
+                                supportedFileTypes: ['json'],
+                            },
+                            encrypted: true,
+                            required: true,
+                        },
+                    ],
+                    title: 'Accounts',
+                },
+                {
+                    name: 'logging',
+                    entity: [
+                        {
+                            type: 'singleSelect',
+                            label: 'Log level',
+                            options: {
+                                disableSearch: true,
+                                autoCompleteFields: [
+                                    {
+                                        value: 'DEBUG',
+                                        label: 'DEBUG',
+                                    },
+                                    {
+                                        value: 'INFO',
+                                        label: 'INFO',
+                                    },
+                                    {
+                                        value: 'WARN',
+                                        label: 'WARN',
+                                    },
+                                    {
+                                        value: 'ERROR',
+                                        label: 'ERROR',
+                                    },
+                                    {
+                                        value: 'CRITICAL',
+                                        label: 'CRITICAL',
+                                    },
+                                ],
+                            },
+                            defaultValue: 'INFO',
+                            field: 'loglevel',
+                        },
+                    ],
+                    title: 'Logging',
+                },
+            ],
+            title: 'Configuration',
+            description: 'Set up your add-on',
         },
     },
 };
