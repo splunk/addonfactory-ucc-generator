@@ -52,7 +52,8 @@ export function setUnifiedConfig(unifiedConfig: GlobalConfig) {
         unifiedConfigs = result.data;
     } else {
         unifiedConfigs = unifiedConfig;
-        window.reportError(new Error('Invalid globalConfig.json', { cause: result.error.issues }));
+        // eslint-disable-next-line no-console
+        console.error('Invalid globalConfig.json', result.error.issues);
     }
 }
 
