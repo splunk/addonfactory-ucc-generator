@@ -26,7 +26,7 @@ export const alerts = z
                     sourcetype: z.string().optional(),
                 })
                 .optional(),
-            entity: AnyOfEntity,
+            entity: AnyOfEntity.optional(),
         })
     )
     .min(1)

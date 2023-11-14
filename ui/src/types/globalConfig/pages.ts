@@ -31,8 +31,8 @@ const HooksSchema = z
     .optional();
 const TabSchema = z.object({
     entity: z.array(AnyOfEntity).optional(),
-    name: z.string().optional(),
-    title: z.string().optional(),
+    name: z.string(),
+    title: z.string(),
     options: HooksSchema,
     table: TableSchema.extend({
         actions: z.array(z.enum(['edit', 'delete', 'clone'])),

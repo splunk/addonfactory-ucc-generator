@@ -98,7 +98,7 @@ const SelectCommonOptions = CommonEditableEntityOptions.extend({
 export const SingleSelectEntity = CommonEditableEntityFields.extend({
     type: z.literal('singleSelect'),
     validators: AllValidators.optional(),
-    defaultValue: z.union([z.string(), z.number()]).optional(),
+    defaultValue: z.union([z.string(), z.number(), z.boolean()]).optional(),
     options: SelectCommonOptions,
 });
 
@@ -211,7 +211,7 @@ export const CustomEntity = CommonEditableEntityFields.extend({
     type: z.literal('custom'),
     options: z.object({
         type: z.literal('external'),
-        scr: z.string(),
+        src: z.string(),
     }),
 });
 
