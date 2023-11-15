@@ -52,8 +52,9 @@ export function setUnifiedConfig(unifiedConfig: GlobalConfig) {
         unifiedConfigs = result.data;
     } else {
         unifiedConfigs = unifiedConfig;
+        // we want to notify devs and RUM about invalid config
         // eslint-disable-next-line no-console
-        console.error('Invalid globalConfig.json', result.error.issues);
+        console.error('Invalid globalConfig.json', JSON.stringify(result.error.issues));
     }
 }
 
