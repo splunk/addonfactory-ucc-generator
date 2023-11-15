@@ -4,11 +4,10 @@ import { GlobalConfigSchema } from '../../types/globalConfig/globalConfig';
 
 export const mockUnifiedConfig: z.input<typeof GlobalConfigSchema> = {
     meta: {
-        name: 123, // TODO vtsvetkov
-        version: '1.2.3',
-        displayName: 'name',
-        schemaVersion: '1.2.3',
-        apiVersion: '1.2.3',
+        name: 'demo_addon_for_splunk',
+        version: '5.31.1R85f0e18e',
+        displayName: 'Demo Add-on for Splunk',
+        schemaVersion: '0.0.3',
         restRoot: 'restRoot',
     },
     pages: {
