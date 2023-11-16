@@ -1641,6 +1641,9 @@
             "placeholder": {
               "type": "string",
               "maxLength": 250
+            },
+            "disableonEdit": {
+              "type": "boolean"
             }
           },
           "additionalProperties": false

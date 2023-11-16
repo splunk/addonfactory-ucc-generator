@@ -152,6 +152,15 @@
                                         "encrypted": true,
                                         "help": "Enter the security token.",
                                         "field": "token"
+                                    },
+                                    {
+                                        "oauth_field": "some_text",
+                                        "label": "some_text Token",
+                                        "help": "Enter some_text",
+                                        "field": "basic_oauth_text",
+                                        "options": {
+                                            "disableonEdit": true
+                                        }
                                     }
                                 ],
                                 "oauth": [
@@ -173,6 +182,16 @@
                                         "label": "Redirect url",
                                         "field": "redirect_url",
                                         "help": "Copy and paste this URL into your app."
+                                    },
+                                    {
+                                        "oauth_field": "oauth_some_text",
+                                        "label": "oauth some_text Token",
+                                        "help": "Enter some_text",
+                                        "field": "oauth_oauth_text",
+                                        "options": {
+                                            "placeholder": "asd",
+                                            "disableonEdit": true
+                                        }
                                     }
                                 ],
                                 "auth_code_endpoint": "/services/oauth2/authorize",

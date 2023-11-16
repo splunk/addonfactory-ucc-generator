@@ -191,6 +191,11 @@ class BaseFormView extends PureComponent {
                                         : true;
                                 tempEntity.error = false;
                                 tempEntity.disabled = false;
+
+                                if (props.mode === MODE_EDIT) {
+                                    tempEntity.disabled = field?.options?.disableonEdit || false;
+                                }
+
                                 temState[field.field] = tempEntity;
                                 // eslint-disable-next-line no-param-reassign
                                 field.type =
