@@ -105,16 +105,16 @@ export const SingleSelectEntity = CommonEditableEntityFields.extend({
 export const MultipleSelectEntity = CommonEditableEntityFields.extend({
     type: z.literal('multipleSelect'),
     validators: AllValidators.optional(),
-    defaultValue: z.string(),
+    defaultValue: z.string().optional(),
     options: SelectCommonOptions.extend({
-        delimiter: z.string().length(1),
+        delimiter: z.string().length(1).optional(),
     }),
 });
 
 export const CheckboxEntity = CommonEditableEntityFields.extend({
     type: z.literal('checkbox'),
-    defaultValue: z.union([z.number(), z.boolean()]),
-    options: CommonEditableEntityOptions.omit({ placeholder: true }),
+    defaultValue: z.union([z.number(), z.boolean()]).optional(),
+    options: CommonEditableEntityOptions.omit({ placeholder: true }).optional(),
 });
 
 export const CheckboxGroupEntity = CommonEditableEntityFields.extend({
@@ -169,11 +169,13 @@ export const FileEntity = CommonEditableEntityFields.extend({
     type: z.literal('file'),
     defaultValue: z.string().optional(),
     validators: z.array(z.union([StringValidator, RegexValidator])).optional(),
-    options: CommonEditableEntityOptions.omit({ placeholder: true }).extend({
-        maxFileSize: z.number().optional(),
-        fileSupportMessage: z.string().optional(),
-        supportedFileTypes: z.array(z.string()),
-    }),
+    options: CommonEditableEntityOptions.omit({ placeholder: true })
+        .extend({
+            maxFileSize: z.number().optional(),
+            fileSupportMessage: z.string().optional(),
+            supportedFileTypes: z.array(z.string()),
+        })
+        .optional(),
 });
 
 const OAuthFields = z
@@ -213,6 +215,20 @@ export const CustomEntity = CommonEditableEntityFields.extend({
         type: z.literal('external'),
         src: z.string(),
     }),
+});
+
+// somewhat exceptional and used only in alerts
+export const SingleSelectSplunkSearchEntity = CommonEntityFields.extend({
+    type: z.literal('singleSelectSplunkSearch'),
+    defaultValue: z.union([z.string(), z.number(), z.boolean()]).optional(),
+    search: z.string().optional(),
+    valueField: z.string().optional(),
+    labelField: z.string().optional(),
+    options: z
+        .object({
+            items: z.array(ValueLabelPair),
+        })
+        .optional(),
 });
 
 export const AnyOfEntity = z.discriminatedUnion('type', [

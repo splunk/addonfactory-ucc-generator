@@ -1,5 +1,12 @@
 import { z } from 'zod';
-import { AnyOfEntity } from './entities';
+import {
+    CheckboxEntity,
+    RadioEntity,
+    SingleSelectEntity,
+    SingleSelectSplunkSearchEntity,
+    TextAreaEntity,
+    TextEntity,
+} from './entities';
 
 export const alerts = z
     .array(
@@ -26,7 +33,18 @@ export const alerts = z
                     sourcetype: z.string().optional(),
                 })
                 .optional(),
-            entity: AnyOfEntity.optional(),
+            entity: z
+                .array(
+                    z.discriminatedUnion('type', [
+                        TextEntity,
+                        TextAreaEntity,
+                        SingleSelectEntity,
+                        CheckboxEntity,
+                        RadioEntity,
+                        SingleSelectSplunkSearchEntity,
+                    ])
+                )
+                .optional(),
         })
     )
     .min(1)
