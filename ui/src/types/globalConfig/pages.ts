@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { AnyOfEntity } from './entities';
 
-const TableSchema = z.object({
+export const TableSchema = z.object({
     moreInfo: z
         .array(
             z.object({
@@ -60,66 +60,58 @@ const GroupsSchema = z
         })
     )
     .optional();
-export const InputsPageRegular = z.object({
-    title: z.string(),
-    services: z.array(
-        z.object({
-            name: z.string(),
-            title: z.string(),
-            subTitle: z.string().optional(),
-            description: z.string().optional(),
-            // table should be required, but TS cannot distinguish diff between this and
-            // service from tablefull input
-            table: TableSchema.optional(),
-            entity: z.array(AnyOfEntity),
-            options: HooksSchema,
-            groups: GroupsSchema,
-            style: z.enum(['page', 'dialog']).optional(),
-            hook: z.record(z.any()).optional(),
-            conf: z.string().optional(),
-            restHandlerName: z.string().optional(),
-            restHandlerModule: z.string().optional(),
-            restHandlerClass: z.string().optional(),
-        })
-    ),
-});
 
-export const InputsPageTableSchema = z.object({
+export const TableLessServiceSchema = z.object({
+    name: z.string(),
     title: z.string(),
-    description: z.string().optional(),
-    menu: z
-        .object({
-            type: z.literal('external'),
-            src: z.string(),
-        })
-        .optional(),
-    table: TableSchema,
-    groupsMenu: z
-        .array(
-            z.object({
-                groupName: z.string(),
-                groupTitle: z.string(),
-                groupServices: z.array(z.string()).optional(),
-            })
-        )
-        .optional(),
-    services: z.array(
-        z.object({
-            name: z.string(),
-            title: z.string(),
-            subTitle: z.string().optional(),
-            entity: z.array(AnyOfEntity),
-            options: HooksSchema,
-            groups: GroupsSchema,
-            style: z.enum(['page', 'dialog']).optional(),
-            hook: z.record(z.any()).optional(),
-            conf: z.string().optional(),
-            restHandlerName: z.string().optional(),
-            restHandlerModule: z.string().optional(),
-            restHandlerClass: z.string().optional(),
-        })
-    ),
+    subTitle: z.string().optional(),
+    entity: z.array(AnyOfEntity),
+    options: HooksSchema,
+    groups: GroupsSchema,
+    style: z.enum(['page', 'dialog']).optional(),
+    hook: z.record(z.any()).optional(),
+    conf: z.string().optional(),
+    restHandlerName: z.string().optional(),
+    restHandlerModule: z.string().optional(),
+    restHandlerClass: z.string().optional(),
 });
+export const TableFullServiceSchema = TableLessServiceSchema.extend({
+    description: z.string().optional(),
+    table: TableSchema,
+});
+export const InputsPageRegular = z
+    .object({
+        title: z.string(),
+        services: z.array(TableFullServiceSchema),
+    })
+    // The strict method disallows a table field to distinguish between to inputs
+    .strict();
+
+export const InputsPageTableSchema = z
+    .object({
+        title: z.string(),
+        description: z.string().optional(),
+        menu: z
+            .object({
+                type: z.literal('external'),
+                src: z.string(),
+            })
+            .optional(),
+        table: TableSchema,
+        groupsMenu: z
+            .array(
+                z.object({
+                    groupName: z.string(),
+                    groupTitle: z.string(),
+                    groupServices: z.array(z.string()).optional(),
+                })
+            )
+            .optional(),
+        // The strict method disallows a table field to distinguish between
+        // TableLessServiceSchema and TableFullServiceSchema
+        services: z.array(TableLessServiceSchema.strict()),
+    })
+    .strict();
 
 export const pages = z.object({
     configuration: z.object({

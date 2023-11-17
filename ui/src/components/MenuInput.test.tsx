@@ -6,7 +6,12 @@ import { z } from 'zod';
 import MenuInput from './MenuInput';
 import { mockCustomMenu, MockCustomRenderable } from '../tests/helpers';
 import { getUnifiedConfigs } from '../util/util';
-import { InputsPageTableSchema, pages } from '../types/globalConfig/pages';
+import {
+    InputsPageTableSchema,
+    pages,
+    TableFullServiceSchema,
+    TableSchema,
+} from '../types/globalConfig/pages';
 import { getGlobalConfigMock } from '../mocks/globalConfigMock';
 
 jest.mock('../util/util');
@@ -17,6 +22,7 @@ let mockCustomMenuInstance: MockCustomRenderable;
 beforeEach(() => {
     mockCustomMenuInstance = mockCustomMenu().mockCustomMenuInstance;
 });
+
 function setup(inputs: z.infer<typeof pages.shape.inputs>) {
     const mockHandleRequestOpen = jest.fn();
     const globalConfigMock = getGlobalConfigMock();
@@ -40,14 +46,31 @@ function getCreateButton() {
     return screen.getByRole('button', { name: 'Create New Input' });
 }
 
+const table: z.infer<typeof TableSchema> = {
+    header: [
+        {
+            field: 'name',
+            label: 'Input Name',
+        },
+    ],
+    moreInfo: [
+        {
+            field: 'name',
+            label: 'Name',
+        },
+    ],
+    actions: ['edit', 'delete', 'clone'],
+};
+
 describe('single service', () => {
-    function getOneService() {
+    function getOneService(): z.infer<typeof TableFullServiceSchema>[] {
         return [
             {
                 name: 'test-service-name',
                 title: 'test-service-title',
                 subTitle: 'test-service-subTitle',
                 entity: [],
+                table,
             },
         ];
     }
@@ -78,12 +101,14 @@ describe('multiple services', () => {
                 title: 'test-service-title1',
                 subTitle: 'test-service-subTitle1',
                 entity: [],
+                table,
             },
             {
                 name: 'test-service-name2',
                 title: 'test-service-title2',
                 subTitle: 'test-service-subTitle2',
                 entity: [],
+                table,
             },
         ];
     }

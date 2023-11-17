@@ -48,14 +48,19 @@ export function generateEndPointUrl(name: string) {
 
 export function setUnifiedConfig(unifiedConfig: GlobalConfig) {
     const result = GlobalConfigSchema.safeParse(unifiedConfig);
-    if (result.success) {
-        unifiedConfigs = result.data;
-    } else {
-        unifiedConfigs = unifiedConfig;
+    if (!result.success) {
         // we want to notify devs and RUM about invalid config
         // eslint-disable-next-line no-console
         console.error('Invalid globalConfig.json', JSON.stringify(result.error.issues));
     }
+
+    /** assigning non-parsed value directly instead of
+     * unifiedConfigs = result.data;
+     * due to the probability to break something in JSX files.
+     * Zod object schemas strip out unrecognized keys during parsing
+     * See: https://zod.dev/?id=passthrough
+     */
+    unifiedConfigs = unifiedConfig;
 }
 
 export function getUnifiedConfigs() {

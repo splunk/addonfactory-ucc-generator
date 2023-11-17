@@ -1,10 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState, useEffect } from 'react';
+import { z } from 'zod';
 import MenuInput from './MenuInput';
 import { setUnifiedConfig } from '../util/util';
 import { GlobalConfig } from '../types/globalConfig/globalConfig';
 import { getGlobalConfigMock } from '../mocks/globalConfigMock';
 import { invariant } from '../util/invariant';
+import { TableFullServiceSchema, TableSchema } from '../types/globalConfig/pages';
 
 interface MenuInputProps {
     handleRequestOpen: (args: { serviceName: string; input?: string; groupName?: string }) => void;
@@ -38,26 +40,45 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const commonServices = [
+const table: z.infer<typeof TableSchema> = {
+    header: [
+        {
+            field: 'name',
+            label: 'Input Name',
+        },
+    ],
+    moreInfo: [
+        {
+            field: 'name',
+            label: 'Name',
+        },
+    ],
+    actions: ['edit', 'delete', 'clone'],
+};
+const commonServices: z.infer<typeof TableFullServiceSchema>[] = [
     {
         name: 'test-service-name1',
         title: 'test-service-title1',
         entity: [],
+        table,
     },
     {
         name: 'test-subservice1-name1',
         title: 'test-subservice1-title1',
         entity: [],
+        table,
     },
     {
         name: 'test-subservice1-name2',
         title: 'test-subservice1-title2',
         entity: [],
+        table,
     },
     {
         name: 'test-service-name2',
         title: 'test-service-title2',
         entity: [],
+        table,
     },
 ];
 
