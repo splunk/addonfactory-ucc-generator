@@ -83,7 +83,7 @@ function EntityPage({
             </ColumnLayout.Row>
             <ColumnLayout.Row>
                 <ColumnLayout.Column span={2} />
-                <ColumnLayout.Column span={8} style={{ maxWidth: 'fit-content' }}>
+                <ColumnLayout.Column span={8} style={{ maxWidth: '800px' }}>
                     <ShadowedDiv>
                         <Heading style={{ paddingLeft: '30px' }} level={3}>
                             {_(formLabel)}
