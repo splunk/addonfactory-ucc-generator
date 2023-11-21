@@ -4,9 +4,9 @@ import styled from 'styled-components';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import { _ } from '@splunk/ui-utils/i18n';
 
-import { MODE_CLONE, MODE_CREATE, MODE_EDIT } from '../constants/modes';
-import { StyledButton } from '../pages/EntryPageStyle';
-import BaseFormView from './BaseFormView';
+import { MODE_CLONE, MODE_CREATE, MODE_EDIT } from '../../constants/modes';
+import { StyledButton } from '../../pages/EntryPageStyle';
+import BaseFormView from '../BaseFormView';
 
 const ModalWrapper = styled(Modal)`
     width: 800px;
