@@ -221,6 +221,7 @@ jobs:
           - "custom"
           - "alert"
           - "input"
+          - "configuration"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v4

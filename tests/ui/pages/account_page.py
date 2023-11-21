@@ -117,14 +117,6 @@ class AccountPage(Page):
         account_container = Selector(select='div[id="accountTab"]')
 
         if ucc_smartx_selenium_helper:
-            self.title = Message(
-                ucc_smartx_selenium_helper.browser,
-                Selector(select='[data-test="column"] .pageTitle'),
-            )
-            self.description = Message(
-                ucc_smartx_selenium_helper.browser,
-                Selector(select='[data-test="column"] .pageSubtitle'),
-            )
             self.table = ConfigurationTable(
                 ucc_smartx_selenium_helper.browser, account_container
             )
