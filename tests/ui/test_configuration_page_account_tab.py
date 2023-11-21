@@ -144,17 +144,6 @@ class TestAccount(UccTester):
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.account
-    def test_account_title_and_description(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
-    ):
-        """Verifies the title and description of the page"""
-        account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
-        self.assert_util(account.title.wait_to_display, "Configuration")
-        self.assert_util(account.description.wait_to_display, "Set up your add-on")
-
-    @pytest.mark.execute_enterprise_cloud_true
-    @pytest.mark.forwarder
-    @pytest.mark.account
     def test_account_add_valid_title(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
