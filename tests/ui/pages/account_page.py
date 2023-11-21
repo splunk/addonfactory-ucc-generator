@@ -11,7 +11,6 @@ from pytest_splunk_addon_ui_smartx.components.controls.checkbox import Checkbox
 from pytest_splunk_addon_ui_smartx.components.controls.textbox import TextBox
 from pytest_splunk_addon_ui_smartx.components.controls.learn_more import LearnMore
 from pytest_splunk_addon_ui_smartx.components.controls.toggle import Toggle
-from pytest_splunk_addon_ui_smartx.components.controls.message import Message
 from pytest_splunk_addon_ui_smartx.components.conf_table import ConfigurationTable
 from pytest_splunk_addon_ui_smartx.backend_confs import ListBackendConf
 
