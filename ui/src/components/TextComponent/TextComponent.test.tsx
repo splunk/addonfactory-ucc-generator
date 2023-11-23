@@ -20,12 +20,8 @@ describe('Text Component', () => {
         expect(textBox).toHaveValue('test');
     });
 
-    it('should trigger callback correctly', async () => {
-        const textElement = screen.getByTestId('text');
-        expect(textElement).toBeInTheDocument();
-
+    it('should trigger callback correctly after typing', async () => {
         const textBox = screen.getByTestId('textbox');
-        expect(textBox).toBeInTheDocument();
 
         await userEvent.type(textBox, 'f');
         expect(handleChange).toHaveBeenCalledWith('fieldId', 'testf');
@@ -34,12 +30,8 @@ describe('Text Component', () => {
         expect(handleChange).toHaveBeenCalledWith('fieldId', 'testo');
     });
 
-    it('should use callback with empty string', async () => {
-        const textElement = screen.getByTestId('text');
-        expect(textElement).toBeInTheDocument();
-
+    it('should use callback with empty string after clear', async () => {
         const textBox = screen.getByTestId('textbox');
-        expect(textBox).toBeInTheDocument();
 
         await userEvent.clear(textBox);
         expect(handleChange).toHaveBeenCalledWith('fieldId', '');

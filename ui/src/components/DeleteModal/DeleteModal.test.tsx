@@ -4,14 +4,11 @@ import userEvent from '@testing-library/user-event';
 import { AxiosResponse } from 'axios';
 import * as axiosWrapper from '../../util/axiosCallWrapper';
 import DeleteModal from './DeleteModal';
-import { setUnifiedConfig } from '../../util/util';
-import { UnifiedConfig } from './DeleteModal.stories';
 
-jest.mock('immutability-helper', () => {
-    return () => 1;
-});
+jest.mock('immutability-helper');
+jest.mock('../../util/util');
 
-describe('Text Area Component', () => {
+describe('Delete Model Component', () => {
     const handleClose = jest.fn();
 
     const TableContext = createContext({
@@ -20,8 +17,6 @@ describe('Text Area Component', () => {
     });
 
     beforeEach(() => {
-        setUnifiedConfig(UnifiedConfig);
-
         render(
             <TableContext.Provider
                 value={{ rowData: { serviceName: { stanzaName: 1 } }, setRowData: () => {} }}
@@ -37,24 +32,21 @@ describe('Text Area Component', () => {
         );
     });
 
-    afterAll(() => {
-        jest.restoreAllMocks();
-    });
-
     it('should render delete modal correctly', () => {
         const deleteModal = screen.getByTestId('modal');
         expect(deleteModal).toBeInTheDocument();
 
-        const buttons = screen.getAllByTestId('button');
+        const cancelButton = screen.getByRole('button', { name: /cancel/i });
+        expect(cancelButton).toBeInTheDocument();
 
-        expect(buttons[0]).toHaveTextContent('Cancel');
-        expect(buttons[1]).toHaveTextContent('Delete');
+        const deleteButton = screen.getByRole('button', { name: /delete/i });
+        expect(deleteButton).toBeInTheDocument();
     });
 
     it('close model and callback after cancel click', async () => {
-        const buttons = screen.getAllByTestId('button');
-        await userEvent.click(buttons[0]);
-        await new Promise((r) => setTimeout(r, 500)); // wait for animation to end
+        const cancelButton = screen.getByRole('button', { name: /cancel/i });
+
+        await userEvent.click(cancelButton);
         expect(handleClose).toHaveBeenCalled();
     });
 
@@ -63,8 +55,8 @@ describe('Text Area Component', () => {
             return new Promise((r) => r('works correct' as unknown as PromiseLike<AxiosResponse>));
         });
 
-        const buttons = screen.getAllByTestId('button');
-        await userEvent.click(buttons[1]);
+        const deleteButton = screen.getByRole('button', { name: /delete/i });
+        await userEvent.click(deleteButton);
 
         expect(handleClose).toHaveBeenCalled();
     });
