@@ -42,6 +42,19 @@ def test_autocompletefields_support_integer_values():
         validator.validate()
 
 
+def test_autocompletefields_children_support_integer_values():
+    # Regression unit test: https://github.com/splunk/addonfactory-ucc-generator/issues/794
+    global_config_path = helpers.get_testdata_file_path(
+        "invalid_config_configuration_autoCompleteFields_children_integer_values.json"
+    )
+    global_config = global_config_lib.GlobalConfig(global_config_path, False)
+
+    validator = GlobalConfigValidator(helpers.get_path_to_source_dir(), global_config)
+
+    with does_not_raise():
+        validator.validate()
+
+
 def test_config_validation_when_deprecated_placeholder_is_used(caplog):
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_deprecated_placeholder_usage.json"
