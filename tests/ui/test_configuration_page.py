@@ -35,7 +35,7 @@ class TestConfigurationPage(UccTester):
         )
         configuration_page.download_openapi.wait_to_be_clickable()
         self.assert_util(
-            "splunkd/__raw/servicesNS/nobody/Splunk_TA_UCCExample/static/openapi.json",
+            "/app/Splunk_TA_UCCExample/openapi.json",
             download_openapi_href,
             operator="in",
         )

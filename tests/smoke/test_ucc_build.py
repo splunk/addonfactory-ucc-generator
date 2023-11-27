@@ -204,7 +204,7 @@ def test_ucc_generate_with_configuration():
             ("README", "splunk_ta_uccexample_account.conf.spec"),
             ("README", "splunk_ta_uccexample_settings.conf.spec"),
             ("metadata", "default.meta"),
-            ("static", "openapi.json"),
+            ("appserver", "static", "openapi.json"),
         ]
         helpers.compare_file_content(
             files_to_be_equal,
@@ -276,6 +276,6 @@ def test_ucc_generate_openapi_with_configuration_files_only():
         build.generate(source=package_folder, output_directory=temp_dir)
 
         expected_file_path = path.join(
-            temp_dir, "Splunk_TA_UCCExample", "static", "openapi.json"
+            temp_dir, "Splunk_TA_UCCExample", "appserver", "static", "openapi.json"
         )
         assert not path.exists(expected_file_path)

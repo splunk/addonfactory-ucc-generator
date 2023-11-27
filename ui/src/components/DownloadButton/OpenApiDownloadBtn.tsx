@@ -1,17 +1,13 @@
 import React from 'react';
-import { createRESTURL } from '@splunk/splunk-utils/url';
-import { app } from '@splunk/splunk-utils/config';
 import Icon from '@splunk/react-icons/ArrowBroadUnderbarDown';
+import { getBuildDirPath } from '../../util/script';
 import DownloadButton from './DownloadButton';
 
 function OpenApiDownloadButton() {
     return (
         <div>
             <DownloadButton
-                fileUrl={createRESTURL('static/openapi.json', {
-                    app,
-                    owner: 'nobody',
-                })}
+                fileUrl={getBuildDirPath().replace('js/build', 'openapi.json')}
                 fileNameAfterDownload="openapi.json"
             >
                 <Icon />
