@@ -155,8 +155,8 @@
                                     },
                                     {
                                         "oauth_field": "some_text",
-                                        "label": "some_text Token",
-                                        "help": "Enter some_text",
+                                        "label": "Some text for oauth",
+                                        "help": "Enter some text",
                                         "field": "basic_oauth_text",
                                         "options": {
                                             "disableonEdit": true
@@ -185,8 +185,8 @@
                                     },
                                     {
                                         "oauth_field": "oauth_some_text",
-                                        "label": "oauth some_text Token",
-                                        "help": "Enter some_text",
+                                        "label": "Some text for oauth",
+                                        "help": "Enter some text",
                                         "field": "oauth_oauth_text",
                                         "options": {
                                             "disableonEdit": true
