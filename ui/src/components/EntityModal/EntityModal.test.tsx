@@ -18,7 +18,7 @@ describe('EntityModal - Basic oauth', () => {
                 ...EverythingConfig.pages,
                 configuration: {
                     ...EverythingConfig.pages.configuration,
-                    tabs: configBasicOauthDisableonEdit,
+                    tabs: [configBasicOauthDisableonEdit],
                 },
             },
         };
@@ -81,7 +81,7 @@ describe('EntityModal - Oauth oauth', () => {
                 ...EverythingConfig.pages,
                 configuration: {
                     ...EverythingConfig.pages.configuration,
-                    tabs: configOauthOauthDisableonEdit,
+                    tabs: [configOauthOauthDisableonEdit],
                 },
             },
         };
