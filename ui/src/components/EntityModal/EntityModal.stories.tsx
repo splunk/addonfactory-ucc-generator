@@ -8,7 +8,6 @@ const meta = {
     component: EntityModal,
     title: 'Components/EntityModal',
     render: (props) => {
-        // for visibility declared at bottom
         // TODO: introduce a stateless stories component to reflect thaat component logic itself
         setUnifiedConfig(getGlobalConfigMock()); // eslint-disable-line no-use-before-define
 

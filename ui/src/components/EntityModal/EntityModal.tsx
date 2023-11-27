@@ -12,7 +12,7 @@ const ModalWrapper = styled(Modal)`
     width: 800px;
 `;
 
-interface EntityModalProps {
+export interface EntityModalProps {
     page: string;
     mode: string;
     serviceName: string;

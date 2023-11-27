@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import EntityModal from './EntityModal';
+import EntityModal, { EntityModalProps } from './EntityModal';
 import { setUnifiedConfig } from '../../util/util';
 import {
     EverythingConfig,
@@ -12,16 +12,20 @@ describe('EntityModal - Basic oauth', () => {
     const handleRequestClose = jest.fn();
 
     const setUpConfigWithDisabedBasicOauth = () => {
-        const newConfig = EverythingConfig;
-        // incompatibile options types, TODO implement global type for config
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        newConfig.pages.configuration.tabs = [configBasicOauthDisableonEdit as any];
-
+        const newConfig = {
+            ...EverythingConfig,
+            pages: {
+                ...EverythingConfig.pages,
+                configuration: {
+                    ...EverythingConfig.pages.configuration,
+                    tabs: configBasicOauthDisableonEdit,
+                },
+            },
+        };
         setUnifiedConfig(newConfig);
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const renderModalWithProps = (props: any) => {
+    const renderModalWithProps = (props: EntityModalProps) => {
         render(<EntityModal {...props} handleRequestClose={handleRequestClose} />);
     };
 
@@ -38,6 +42,7 @@ describe('EntityModal - Basic oauth', () => {
             page: 'configuration',
             groupName: '',
             open: true,
+            handleRequestClose: () => {},
         };
         renderModalWithProps(props);
         const oauthTextBox = getDisabledBasicField();
@@ -55,6 +60,7 @@ describe('EntityModal - Basic oauth', () => {
             page: 'configuration',
             groupName: '',
             open: true,
+            handleRequestClose: () => {},
         };
 
         renderModalWithProps(props);
@@ -69,16 +75,20 @@ describe('EntityModal - Oauth oauth', () => {
     const handleRequestClose = jest.fn();
 
     const setUpConfigWithDisabedOauth = () => {
-        const newConfig = EverythingConfig;
-        // incompatibile options types, TODO implement global type for config
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        newConfig.pages.configuration.tabs = [configOauthOauthDisableonEdit as any];
-
+        const newConfig = {
+            ...EverythingConfig,
+            pages: {
+                ...EverythingConfig.pages,
+                configuration: {
+                    ...EverythingConfig.pages.configuration,
+                    tabs: configOauthOauthDisableonEdit,
+                },
+            },
+        };
         setUnifiedConfig(newConfig);
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const renderModalWithProps = (props: any) => {
+    const renderModalWithProps = (props: EntityModalProps) => {
         render(<EntityModal {...props} handleRequestClose={handleRequestClose} />);
     };
 
@@ -95,6 +105,7 @@ describe('EntityModal - Oauth oauth', () => {
             page: 'configuration',
             groupName: '',
             open: true,
+            handleRequestClose: () => {},
         };
         renderModalWithProps(props);
         const oauthTextBox = getDisabledOauthField();
@@ -112,6 +123,7 @@ describe('EntityModal - Oauth oauth', () => {
             page: 'configuration',
             groupName: '',
             open: true,
+            handleRequestClose: () => {},
         };
 
         renderModalWithProps(props);
