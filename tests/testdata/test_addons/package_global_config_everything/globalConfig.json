@@ -189,7 +189,6 @@
                                         "help": "Enter some_text",
                                         "field": "oauth_oauth_text",
                                         "options": {
-                                            "placeholder": "asd",
                                             "disableonEdit": true
                                         }
                                     }
