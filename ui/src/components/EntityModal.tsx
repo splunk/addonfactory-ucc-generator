@@ -9,7 +9,7 @@ import { StyledButton } from '../pages/EntryPageStyle';
 import BaseFormView from './BaseFormView';
 
 const ModalWrapper = styled(Modal)`
-    width: fit-content;
+    width: 800px;
 `;
 
 interface EntityModalProps {

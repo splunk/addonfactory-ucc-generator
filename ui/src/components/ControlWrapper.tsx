@@ -5,32 +5,11 @@ import styled from 'styled-components';
 import MarkdownMessage from './MarkdownMessage';
 import CONTROL_TYPE_MAP, { ComponentTypes } from '../constants/ControlTypeMap';
 
-const CustomElement = styled.div`
-    padding-left: 10px;
-`;
+const CustomElement = styled.div``;
 
-/* 
-    1st child is title, 3rd is help message
-    their width is fixed to not increase size of modal 
-    or page unintentionally due to long text
- */
 const ControlGroupWrapper = styled(ControlGroup).attrs((props: { dataName: string }) => ({
     'data-name': props.dataName,
 }))`
-    width: 100%;
-    max-width: 100%;
-    padding: 0 30px;
-
-    > * {
-        &:first-child {
-            width: 240px !important;
-        }
-        &:nth-child(3) {
-            margin-left: 250px !important;
-            width: 320px;
-        }
-    }
-
     span[class*='ControlGroupStyles__StyledAsterisk-'] {
         color: red;
     }
@@ -163,6 +142,7 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
                     // @ts-ignore property should be data-name, but is mapped in obj ControlGroupWrapper
                     dataName={field}
                     required={required}
+                    labelWidth={240}
                 >
                     <CustomElement>{rowView}</CustomElement>
                 </ControlGroupWrapper>
