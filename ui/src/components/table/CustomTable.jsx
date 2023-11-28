@@ -11,7 +11,7 @@ import { getUnifiedConfigs } from '../../util/util';
 import { getExpansionRow } from './TableExpansionRow';
 import { STYLE_MODAL, STYLE_PAGE } from '../../constants/dialogStyles';
 import CustomTableRow from './CustomTableRow';
-import EntityModal from '../EntityModal';
+import EntityModal from '../EntityModal/EntityModal';
 import DeleteModal from '../DeleteModal';
 import TableContext from '../../context/TableContext';
 import { NoRecordsDiv } from './CustomTableStyle';

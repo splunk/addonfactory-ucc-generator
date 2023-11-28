@@ -2,14 +2,14 @@ import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import CustomTab from './CustomTab';
 import { setUnifiedConfig } from '../util/util';
+import { getGlobalConfigMock } from '../mocks/globalConfigMock';
 
 const meta = {
     component: CustomTab,
     title: 'Components/CustomTab',
     render: (props) => {
-        // for visibility declared at bottom
         // TODO: introduce a stateless stories component to reflect thaat component logic itself
-        setUnifiedConfig(unifiedConfig); // eslint-disable-line no-use-before-define
+        setUnifiedConfig(getGlobalConfigMock());
         return <CustomTab {...props} />;
     },
 } satisfies Meta<typeof CustomTab>;
@@ -68,17 +68,5 @@ export const Base: Story = {
             ],
             title: 'CustomTab',
         },
-    },
-};
-
-// this const is used in render method
-// declared here to not obfuscate code
-const unifiedConfig = {
-    meta: {
-        name: 'demo_addon_for_splunk',
-        restRoot: 'demo_addon_for_splunk',
-        version: '5.31.1R85f0e18e',
-        displayName: 'Demo Add-on for Splunk',
-        schemaVersion: '0.0.3',
     },
 };

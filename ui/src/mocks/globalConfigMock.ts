@@ -1,49 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import React from 'react';
-import EntityModal from './EntityModal';
-import { setUnifiedConfig } from '../util/util';
+import { z } from 'zod';
+import { GlobalConfigSchema } from '../types/globalConfig/globalConfig';
 
-const meta = {
-    component: EntityModal,
-    title: 'Components/EntityModal',
-    render: (props) => {
-        // for visibility declared at bottom
-        // TODO: introduce a stateless stories component to reflect thaat component logic itself
-        setUnifiedConfig(unifiedConfig); // eslint-disable-line no-use-before-define
-        return <EntityModal {...props} />;
-    },
-} satisfies Meta<typeof EntityModal>;
-
-export default meta;
-type Story = StoryObj<typeof meta>;
-
-export const Base: Story = {
-    args: {
-        serviceName: 'account',
-        mode: 'create',
-        stanzaName: undefined,
-        formLabel: '',
-        page: 'configuration',
-        groupName: '',
-        open: true,
-    },
-};
-
-export const Inputs: Story = {
-    args: {
-        serviceName: 'demo_input',
-        mode: 'create',
-        stanzaName: undefined,
-        formLabel: '',
-        page: 'inputs',
-        groupName: '',
-        open: true,
-    },
-};
-
-// this const is used in render method
-// declared here to not obfuscate code
-const unifiedConfig = {
+const globalConfigMock: z.input<typeof GlobalConfigSchema> = {
     pages: {
         configuration: {
             tabs: [
@@ -96,25 +54,6 @@ const unifiedConfig = {
                     title: 'Accounts',
                 },
                 {
-                    name: 'single_certificate',
-                    entity: [
-                        {
-                            type: 'file',
-                            label: 'Upload File',
-                            help: "Upload service account's certificate",
-                            field: 'single_certificate',
-                            options: {
-                                fileSupportMessage: 'Here is the support message',
-                                supportedFileTypes: ['json'],
-                            },
-                            encrypted: true,
-                            required: true,
-                            defaultValue: null,
-                        },
-                    ],
-                    title: 'Certificate',
-                },
-                {
                     name: 'logging',
                     entity: [
                         {
@@ -147,7 +86,6 @@ const unifiedConfig = {
                             },
                             defaultValue: 'INFO',
                             field: 'loglevel',
-                            encrypted: false,
                         },
                     ],
                     title: 'Logging',
@@ -181,6 +119,7 @@ const unifiedConfig = {
                             field: 'name',
                             help: 'A unique name for the data input.',
                             required: true,
+                            encrypted: false,
                         },
                         {
                             type: 'text',
@@ -277,5 +216,10 @@ const unifiedConfig = {
         version: '5.31.1R85f0e18e',
         displayName: 'Demo Add-on for Splunk',
         schemaVersion: '0.0.3',
+        checkForUpdates: false,
     },
 };
+
+export function getGlobalConfigMock() {
+    return GlobalConfigSchema.parse(globalConfigMock);
+}

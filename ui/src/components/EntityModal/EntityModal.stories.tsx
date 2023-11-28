@@ -1,18 +1,19 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
-import EntityPage from './EntityPage';
-import { setUnifiedConfig } from '../util/util';
-import { getGlobalConfigMock } from '../mocks/globalConfigMock';
+import EntityModal from './EntityModal';
+import { setUnifiedConfig } from '../../util/util';
+import { getGlobalConfigMock } from '../../mocks/globalConfigMock';
 
 const meta = {
-    component: EntityPage,
-    title: 'Components/EntityPage',
+    component: EntityModal,
+    title: 'Components/EntityModal',
     render: (props) => {
         // TODO: introduce a stateless stories component to reflect thaat component logic itself
-        setUnifiedConfig(getGlobalConfigMock());
-        return <EntityPage {...props} />;
+        setUnifiedConfig(getGlobalConfigMock()); // eslint-disable-line no-use-before-define
+
+        return <EntityModal {...props} />;
     },
-} satisfies Meta<typeof EntityPage>;
+} satisfies Meta<typeof EntityModal>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -25,6 +26,7 @@ export const Base: Story = {
         formLabel: '',
         page: 'configuration',
         groupName: '',
+        open: true,
     },
 };
 
@@ -36,5 +38,6 @@ export const Inputs: Story = {
         formLabel: '',
         page: 'inputs',
         groupName: '',
+        open: true,
     },
 };

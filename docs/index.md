@@ -28,7 +28,7 @@ information [here](ucc_related_libraries.md).
 
 * Generate UI (`appserver` folder)
 * Generate Python REST handlers to support UI CRUD operations (`bin` folder)
-* Generate OpenAPI description document (`static/openapi.json` file) (more info [here](openapi.md))
+* Generate OpenAPI description document (`appserver/static/openapi.json` file) (more info [here](openapi.md))
 * Generate `.conf` files (more info [here](dot_conf_files.md))
 * Install Python requirements (`lib` folder)
 * Generate metadata files (`metadata` folder)

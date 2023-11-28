@@ -11,7 +11,6 @@ from pytest_splunk_addon_ui_smartx.components.controls.checkbox import Checkbox
 from pytest_splunk_addon_ui_smartx.components.controls.textbox import TextBox
 from pytest_splunk_addon_ui_smartx.components.controls.learn_more import LearnMore
 from pytest_splunk_addon_ui_smartx.components.controls.toggle import Toggle
-from pytest_splunk_addon_ui_smartx.components.controls.message import Message
 from pytest_splunk_addon_ui_smartx.components.conf_table import ConfigurationTable
 from pytest_splunk_addon_ui_smartx.backend_confs import ListBackendConf
 
@@ -117,14 +116,6 @@ class AccountPage(Page):
         account_container = Selector(select='div[id="accountTab"]')
 
         if ucc_smartx_selenium_helper:
-            self.title = Message(
-                ucc_smartx_selenium_helper.browser,
-                Selector(select='[data-test="column"] .pageTitle'),
-            )
-            self.description = Message(
-                ucc_smartx_selenium_helper.browser,
-                Selector(select='[data-test="column"] .pageSubtitle'),
-            )
             self.table = ConfigurationTable(
                 ucc_smartx_selenium_helper.browser, account_container
             )
