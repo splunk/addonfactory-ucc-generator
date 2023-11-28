@@ -1,15 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import EntityModal from './EntityModal';
-import { setUnifiedConfig } from '../util/util';
-import { getGlobalConfigMock } from '../mocks/globalConfigMock';
+import { setUnifiedConfig } from '../../util/util';
+import { getGlobalConfigMock } from '../../mocks/globalConfigMock';
 
 const meta = {
     component: EntityModal,
     title: 'Components/EntityModal',
     render: (props) => {
         // TODO: introduce a stateless stories component to reflect thaat component logic itself
-        setUnifiedConfig(getGlobalConfigMock());
+        setUnifiedConfig(getGlobalConfigMock()); // eslint-disable-line no-use-before-define
+
         return <EntityModal {...props} />;
     },
 } satisfies Meta<typeof EntityModal>;

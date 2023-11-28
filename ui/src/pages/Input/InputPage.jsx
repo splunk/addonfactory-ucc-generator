@@ -14,7 +14,7 @@ import { PAGE_INPUT } from '../../constants/pages';
 import { STYLE_PAGE } from '../../constants/dialogStyles';
 import MenuInput, { ROOT_GROUP_NAME } from '../../components/MenuInput';
 import TableWrapper from '../../components/table/TableWrapper';
-import EntityModal from '../../components/EntityModal';
+import EntityModal from '../../components/EntityModal/EntityModal';
 import ErrorBoundary from '../../components/ErrorBoundary';
 import EntityPage from '../../components/EntityPage';
 import useQuery from '../../hooks/useQuery';
