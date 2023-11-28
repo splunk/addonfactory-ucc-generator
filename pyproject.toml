@@ -50,7 +50,7 @@ defusedxml = "^0.7.1"
 requests = "^2.31.0"
 urllib3 = "<2"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 mkdocs = "^1.4.2"
 importlib-metadata = {version="*", python="<3.8"}
 pytest = "^7.2.1"
