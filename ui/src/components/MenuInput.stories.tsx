@@ -1,12 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState, useEffect } from 'react';
+import { z } from 'zod';
 import MenuInput from './MenuInput';
 import { setUnifiedConfig } from '../util/util';
-import { UnifiedConfig } from '../types/config';
+import { GlobalConfig } from '../types/globalConfig/globalConfig';
+import { getGlobalConfigMock } from '../mocks/globalConfigMock';
+import { invariant } from '../util/invariant';
+import { TableFullServiceSchema, TableSchema } from '../types/globalConfig/pages';
 
 interface MenuInputProps {
     handleRequestOpen: (args: { serviceName: string; input?: string; groupName?: string }) => void;
-    config: UnifiedConfig;
+    config: GlobalConfig;
 }
 
 /*
@@ -36,26 +40,45 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const commonServices = [
+const table: z.infer<typeof TableSchema> = {
+    header: [
+        {
+            field: 'name',
+            label: 'Input Name',
+        },
+    ],
+    moreInfo: [
+        {
+            field: 'name',
+            label: 'Name',
+        },
+    ],
+    actions: ['edit', 'delete', 'clone'],
+};
+const commonServices: z.infer<typeof TableFullServiceSchema>[] = [
     {
         name: 'test-service-name1',
         title: 'test-service-title1',
-        subTitle: 'test-service-subTitle1',
+        entity: [],
+        table,
     },
     {
         name: 'test-subservice1-name1',
         title: 'test-subservice1-title1',
-        subTitle: 'test-subservice-subTitle1',
+        entity: [],
+        table,
     },
     {
         name: 'test-subservice1-name2',
         title: 'test-subservice1-title2',
-        subTitle: 'test-subservice-subTitle2',
+        entity: [],
+        table,
     },
     {
         name: 'test-service-name2',
         title: 'test-service-title2',
-        subTitle: 'test-service-subTitle2',
+        entity: [],
+        table,
     },
 ];
 
@@ -71,56 +94,59 @@ const commonGroups = [
         groupServices: ['test-service-name2', 'test-service-name1'],
     },
 ];
+const globalConfigMock = getGlobalConfigMock();
+const { inputs } = globalConfigMock.pages;
+invariant(inputs);
+const { services } = inputs;
+invariant(services);
 
 export const Base: Story = {
     args: {
         config: {
+            ...globalConfigMock,
             pages: {
+                ...globalConfigMock.pages,
                 inputs: {
-                    services: [...commonServices],
+                    title: inputs.title,
+                    services: commonServices,
                 },
             },
-            meta: {},
         },
     },
 };
 
 export const WithSubMenu: Story = {
     args: {
-        handleRequestOpen: (args) => {
-            // eslint-disable-next-line
-            console.log({ args });
-        },
         config: {
+            ...globalConfigMock,
             pages: {
+                ...globalConfigMock.pages,
                 inputs: {
-                    services: [...commonServices],
-                    groupsMenu: [...commonGroups],
+                    ...inputs,
+                    services: commonServices,
+                    groupsMenu: commonGroups,
                 },
             },
-            meta: {},
         },
     },
 };
 
 export const WithSubMenuAndCustomMenu: Story = {
     args: {
-        handleRequestOpen: (args) => {
-            // eslint-disable-next-line
-            console.log({ args });
-        },
         config: {
+            ...globalConfigMock,
             pages: {
+                ...globalConfigMock.pages,
                 inputs: {
-                    services: [...commonServices],
+                    ...inputs,
+                    services: commonServices,
                     menu: {
                         src: 'CustomMenu',
                         type: 'external',
                     },
-                    groupsMenu: [...commonGroups],
+                    groupsMenu: commonGroups,
                 },
             },
-            meta: {},
         },
     },
 };

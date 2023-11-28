@@ -12,6 +12,7 @@ import { getFormattedMessage } from '../util/messageUtil';
 import { getUnifiedConfigs } from '../util/util';
 import CustomMenu from './CustomMenu';
 import { StyledButton } from '../pages/EntryPageStyle';
+import { invariant } from '../util/invariant';
 
 const CustomSubTitle = styled.span`
     color: ${variables.brandColorD20};
@@ -28,17 +29,9 @@ interface Group {
     subTitle?: string;
 }
 
-interface InputPageConfig {
-    services: { name: string; title: string; subTitle: string; hasSubmenu: boolean }[];
-    menu: {
-        src: string;
-        type: string;
-    };
-    groupsMenu: {
-        groupName: string;
-        groupTitle: string;
-        groupServices: string[];
-    }[];
+interface CustomMenuType {
+    src: string;
+    type: string;
 }
 
 interface MenuInputProps {
@@ -53,12 +46,13 @@ function MenuInput({ handleRequestOpen }: MenuInputProps) {
     const [openDropDown, setOpenDropDown] = useState(false);
     const [isSubMenu, setIsSubMenu] = useState(true);
 
-    const unifiedConfigs = getUnifiedConfigs();
-    const {
-        services,
-        menu: customMenuField,
-        groupsMenu,
-    }: InputPageConfig = unifiedConfigs.pages.inputs;
+    const { pages } = getUnifiedConfigs();
+
+    const { inputs } = pages;
+    invariant(inputs);
+    const groupsMenu = 'groupsMenu' in inputs ? inputs.groupsMenu : undefined;
+    const customMenuField = 'menu' in inputs ? inputs.menu : undefined;
+    const { services } = inputs;
 
     const closeReasons = ['clickAway', 'escapeKey', 'offScreen', 'toggleClick'];
     const toggle = (
@@ -145,37 +139,35 @@ function MenuInput({ handleRequestOpen }: MenuInputProps) {
     const getInputMenu = useMemo(() => {
         const servicesGroup: Record<string, Group[]> = { [ROOT_GROUP_NAME]: [] };
         if (groupsMenu) {
-            groupsMenu.forEach(
-                (group: { groupServices: string[]; groupName: string; groupTitle: string }) => {
-                    if (group?.groupServices) {
-                        servicesGroup[group.groupName] = [];
-                        group.groupServices.forEach((serviceName: string) => {
-                            servicesGroup[group.groupName].push({
-                                name: serviceName,
-                                hasSubmenu: false,
-                                title:
-                                    services.find((service) => service.name === serviceName)
-                                        ?.title || '', // what should be done when title empty
-                                subTitle: services.find((service) => service.name === serviceName)
-                                    ?.subTitle,
-                            });
-                        });
-                        servicesGroup[ROOT_GROUP_NAME].push({
-                            name: group.groupName,
-                            title: group.groupTitle,
-                            hasSubmenu: true,
-                        });
-                    } else {
-                        servicesGroup[ROOT_GROUP_NAME].push({
-                            name: group.groupName,
-                            title: group.groupTitle,
-                            subTitle: services.find((service) => service.name === group.groupName)
-                                ?.subTitle,
+            groupsMenu.forEach((group) => {
+                if (group?.groupServices) {
+                    servicesGroup[group.groupName] = [];
+                    group.groupServices.forEach((serviceName: string) => {
+                        servicesGroup[group.groupName].push({
+                            name: serviceName,
                             hasSubmenu: false,
+                            title:
+                                services.find((service) => service.name === serviceName)?.title ||
+                                '', // what should be done when title empty
+                            subTitle: services.find((service) => service.name === serviceName)
+                                ?.subTitle,
                         });
-                    }
+                    });
+                    servicesGroup[ROOT_GROUP_NAME].push({
+                        name: group.groupName,
+                        title: group.groupTitle,
+                        hasSubmenu: true,
+                    });
+                } else {
+                    servicesGroup[ROOT_GROUP_NAME].push({
+                        name: group.groupName,
+                        title: group.groupTitle,
+                        subTitle: services.find((service) => service.name === group.groupName)
+                            ?.subTitle,
+                        hasSubmenu: false,
+                    });
                 }
-            );
+            });
         } else {
             servicesGroup[ROOT_GROUP_NAME] = services.map((service) => ({
                 name: service.name,
@@ -218,21 +210,21 @@ function MenuInput({ handleRequestOpen }: MenuInputProps) {
     );
 
     // Making a custom menu
-    const makeCustomMenu = () => (
+    const makeCustomMenu = (menu: CustomMenuType) => (
         <>
             {React.createElement(CustomMenu, {
-                fileName: customMenuField.src,
-                type: customMenuField.type,
+                fileName: menu.src,
+                type: menu.type,
                 handleChange: handleChangeCustomMenu,
             })}
         </>
     );
 
-    const getCustomMenuAndGroupsMenu = () => (
+    const getCustomMenuAndGroupsMenu = (menu: CustomMenuType) => (
         <>
             {React.createElement(CustomMenu, {
-                fileName: customMenuField.src,
-                type: customMenuField.type,
+                fileName: menu.src,
+                type: menu.type,
                 handleChange: handleChangeCustomMenu,
             })}
             {services.length === 1 ? makeInputButton() : makeSingleSelectDropDown()}
@@ -246,9 +238,10 @@ function MenuInput({ handleRequestOpen }: MenuInputProps) {
     // Introducing a condition to enable simultaneous support for custom menu src and Groups Menu.
     // ADDON-62948
     if (services && customMenuField?.src && groupsMenu) {
-        return getCustomMenuAndGroupsMenu();
+        return getCustomMenuAndGroupsMenu(customMenuField);
     }
-    return makeCustomMenu();
+    invariant(customMenuField);
+    return makeCustomMenu(customMenuField);
 }
 
 MenuInput.propTypes = {
