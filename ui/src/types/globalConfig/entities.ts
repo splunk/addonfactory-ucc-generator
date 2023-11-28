@@ -188,6 +188,7 @@ const OAuthFields = z
         required: z.boolean().default(false),
         options: z.object({
             placeholder: z.string().optional(),
+            disableonEdit: z.boolean().optional(),
         }),
     })
     .partial();

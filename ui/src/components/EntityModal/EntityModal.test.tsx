@@ -2,27 +2,13 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import EntityModal, { EntityModalProps } from './EntityModal';
 import { setUnifiedConfig } from '../../util/util';
-import {
-    EverythingConfig,
-    configBasicOauthDisableonEdit,
-    configOauthOauthDisableonEdit,
-} from './TestConfig';
+import { getConfigBasicOauthDisableonEdit, getConfigOauthOauthDisableonEdit } from './TestConfig';
 
 describe('EntityModal - Basic oauth', () => {
     const handleRequestClose = jest.fn();
 
     const setUpConfigWithDisabedBasicOauth = () => {
-        const newConfig = {
-            ...EverythingConfig,
-            pages: {
-                ...EverythingConfig.pages,
-                configuration: {
-                    ...EverythingConfig.pages.configuration,
-                    tabs: [configBasicOauthDisableonEdit],
-                },
-            },
-        };
-        setUnifiedConfig(newConfig);
+        setUnifiedConfig(getConfigBasicOauthDisableonEdit());
     };
 
     const renderModalWithProps = (props: EntityModalProps) => {
@@ -43,7 +29,7 @@ describe('EntityModal - Basic oauth', () => {
             groupName: '',
             open: true,
             handleRequestClose: () => {},
-        };
+        } satisfies EntityModalProps;
         renderModalWithProps(props);
         const oauthTextBox = getDisabledBasicField();
         expect(oauthTextBox).toBeInTheDocument();
@@ -61,7 +47,7 @@ describe('EntityModal - Basic oauth', () => {
             groupName: '',
             open: true,
             handleRequestClose: () => {},
-        };
+        } satisfies EntityModalProps;
 
         renderModalWithProps(props);
 
@@ -75,16 +61,7 @@ describe('EntityModal - Oauth oauth', () => {
     const handleRequestClose = jest.fn();
 
     const setUpConfigWithDisabedOauth = () => {
-        const newConfig = {
-            ...EverythingConfig,
-            pages: {
-                ...EverythingConfig.pages,
-                configuration: {
-                    ...EverythingConfig.pages.configuration,
-                    tabs: [configOauthOauthDisableonEdit],
-                },
-            },
-        };
+        const newConfig = getConfigOauthOauthDisableonEdit();
         setUnifiedConfig(newConfig);
     };
 
@@ -106,7 +83,7 @@ describe('EntityModal - Oauth oauth', () => {
             groupName: '',
             open: true,
             handleRequestClose: () => {},
-        };
+        } satisfies EntityModalProps;
         renderModalWithProps(props);
         const oauthTextBox = getDisabledOauthField();
         expect(oauthTextBox).toBeInTheDocument();
@@ -124,7 +101,7 @@ describe('EntityModal - Oauth oauth', () => {
             groupName: '',
             open: true,
             handleRequestClose: () => {},
-        };
+        } satisfies EntityModalProps;
 
         renderModalWithProps(props);
 

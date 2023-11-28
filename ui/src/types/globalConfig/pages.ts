@@ -29,7 +29,7 @@ const HooksSchema = z
         saveValidator: z.string().optional(),
     })
     .optional();
-const TabSchema = z.object({
+export const TabSchema = z.object({
     entity: z.array(AnyOfEntity).optional(),
     name: z.string(),
     title: z.string(),
