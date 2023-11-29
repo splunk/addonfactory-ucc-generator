@@ -18,10 +18,17 @@ import os
 import shutil
 import stat
 import subprocess
+import json
+from collections import namedtuple
 from pathlib import Path
 from typing import Sequence
 
 logger = logging.getLogger("ucc_gen")
+
+
+Params = namedtuple(
+    "Params", ["name", "version", "platform", "python_version", "target"]
+)
 
 
 class SplunktaucclibNotFound(Exception):
@@ -82,6 +89,9 @@ def install_python_libraries(
             ucc_lib_target,
             python_binary_name,
         )
+
+        install_os_dependent_libraries(source_path, ucc_lib_target, python_binary_name)
+
         packages_to_remove = (
             "setuptools",
             "bin",
@@ -152,3 +162,65 @@ def remove_execute_bit(installation_path: str) -> None:
             logger.info(f"  fixing {o} execute bit")
             current_permissions = stat.S_IMODE(os.lstat(o).st_mode)
             os.chmod(o, current_permissions & no_exec)
+
+
+def install_os_dependent_libraries(
+    package_path: str, ucc_lib_target: str, installer: str
+) -> None:
+    conf_file_name = "os-dependent_packages.json"
+    config_file = os.path.join(package_path, "lib", conf_file_name)
+
+    if not os.path.isfile(config_file):
+        logger.info(
+            "Config file not found. Installation of os-dependent libraries skipped."
+        )
+        return
+
+    try:
+        with open(config_file) as file:
+            packages = json.load(file)["libraries"]
+    except (KeyError, ValueError) as e:
+        logger.error(
+            f"Invalid json structure. Please verify content of {conf_file_name} file. "
+            f"Error: {repr(e)}"
+        )
+        return
+
+    for it, package in enumerate(packages):
+        params = get_download_params(package)
+        target_path = os.path.join(ucc_lib_target, os.path.normpath(params.target))
+
+        if not os.path.exists(target_path):
+            os.makedirs(target_path)
+
+        pip_download_command = (
+            f"{installer} "
+            f"-m pip "
+            f"install "
+            f"--no-deps "
+            f"--platform {params.platform} "
+            f"--python-version {params.python_version} "
+            f"--target {target_path}"
+            f" --only-binary=:all: "
+            f"{params.name}=={params.version}"
+        )
+
+        logger.info(f"Executing: {pip_download_command}")
+        try:
+            _subprocess_call(pip_download_command, "pip download")
+        except CouldNotInstallRequirements:
+            logger.error(
+                f"Downloading process failed. Please verify parameters in the {conf_file_name} file."
+            )
+
+
+def get_download_params(package: dict[str, str]) -> Params:
+    param = Params(
+        name=package.get("name", ""),
+        version=package.get("version", ""),
+        platform=package.get("platform", ""),
+        python_version=package.get("python-version", ""),
+        target=package.get("target", ""),
+    )
+
+    return param

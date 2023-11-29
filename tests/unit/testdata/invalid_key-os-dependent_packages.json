@@ -1,0 +1,46 @@
+{
+  "invalid_key": [
+    {
+      "name": "cryptography",
+      "version": "41.0.5",
+      "platform": "win_amd64",
+      "python-version": "37",
+      "target": "3rdparty/windows"
+    },
+    {
+      "name": "cryptography",
+      "version": "41.0.5",
+      "platform": "manylinux2014_x86_64",
+      "python-version": "37",
+      "target": "3rdparty/linux"
+    },
+    {
+      "name": "cryptography",
+      "version": "41.0.5",
+      "platform": "macosx_10_12_universal2",
+      "python-version": "37",
+      "target": "3rdparty/darwin"
+    },
+    {
+      "name": "cffi",
+      "version": "1.15.1",
+      "platform": "win_amd64",
+      "python-version": "37",
+      "target": "3rdparty/windows"
+    },
+    {
+      "name": "cffi",
+      "version": "1.15.1",
+      "platform": "manylinux2014_x86_64",
+      "python-version": "37",
+      "target": "3rdparty/linux"
+    },
+    {
+      "name": "cffi",
+      "version": "1.15.1",
+      "platform": "macosx_10_9_x86_64",
+      "python-version": "37",
+      "target": "3rdparty/darwin"
+    }
+  ]
+}

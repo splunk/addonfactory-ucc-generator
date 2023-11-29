@@ -3,12 +3,14 @@ import stat
 from unittest import mock
 
 import pytest
+import tests.unit.helpers as helpers
 
 from splunk_add_on_ucc_framework.install_python_libraries import (
     CouldNotInstallRequirements,
     SplunktaucclibNotFound,
     _check_ucc_library_in_requirements_file,
     install_libraries,
+    install_os_dependent_libraries,
     install_python_libraries,
     remove_execute_bit,
     remove_package_from_installed_path,
@@ -240,3 +242,67 @@ def test_remove_execute_bit(tmp_path):
 
     assert os.access(tmp_lib_path_foo_file, os.X_OK) is False
     assert os.access(tmp_lib_path_bar_file, os.X_OK) is False
+
+
+def test_install_os_dependent_libraries_invalid(caplog, tmp_path):
+    file_name = "os-dependent_packages.json"
+    config_path = helpers.get_testdata_file("invalid_key-os-dependent_packages.json")
+    tmp_ucc_lib_target = tmp_path / "ucc-lib-target"
+    tmp_lib_path = tmp_path / "lib"
+    tmp_lib_path.mkdir()
+    tmp_lib_reqs_file = tmp_lib_path / file_name
+    tmp_lib_reqs_file.write_text(config_path)
+
+    install_os_dependent_libraries(
+        str(tmp_path),
+        str(tmp_ucc_lib_target),
+        installer="python3",
+    )
+
+    log_message_expected = (
+        f"Invalid json structure. Please verify content of {file_name} file. "
+        f"Error: KeyError('libraries')"
+    )
+    assert log_message_expected in caplog.text
+
+
+@mock.patch("subprocess.call", autospec=True)
+def test_install_os_dependent_libraries_valid(mock_subprocess_call, caplog, tmp_path):
+    mock_subprocess_call.return_value = 0
+    file_name = "os-dependent_packages.json"
+    tmp_ucc_lib_target = tmp_path / "ucc-lib-target"
+    tmp_lib_path = tmp_path / "lib"
+    tmp_lib_path.mkdir()
+    tmp_lib_reqs_file = tmp_lib_path / file_name
+    tmp_lib_reqs_file.write_text(
+        """
+            {
+                "libraries": [
+                    {
+                        "name": "cryptography",
+                        "version": "41.0.5",
+                        "platform": "win_amd64",
+                        "python-version": "37",
+                        "target": "3rdparty/windows"
+                    }
+                ]
+            }
+        """
+    )
+
+    install_os_dependent_libraries(
+        str(tmp_path),
+        str(tmp_ucc_lib_target),
+        installer="python3",
+    )
+
+    log_message_expected = (
+        f"python3 -m pip install "
+        f"--no-deps "
+        f"--platform win_amd64 "
+        f"--python-version 37 "
+        f"--target {tmp_ucc_lib_target}/3rdparty/windows "
+        f"--only-binary=:all: cryptography==41.0.5"
+    )
+    assert log_message_expected in caplog.text
+    assert os.path.isdir(f"{tmp_ucc_lib_target}/3rdparty/windows") is True
