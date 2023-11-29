@@ -216,12 +216,6 @@
                                 "supportedFileTypes": ["pem", "txt"],
                                 "maxFileSize": 100
                             },
-                            "validators": [
-                                {
-                                    "type": "regex",
-                                    "pattern": "(-----BEGIN CERTIFICATE-----(\n|\r|\r\n)([0-9a-zA-Z\+\/=]{64}(\n|\r|\r\n))*([0-9a-zA-Z\+\/=]{1,63}(\n|\r|\r\n))?-----END CERTIFICATE-----)"
-                                }
-                            ],
                             "encrypted": true,
                             "required": true
                         }
