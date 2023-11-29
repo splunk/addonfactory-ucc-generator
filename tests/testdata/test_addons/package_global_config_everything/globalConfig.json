@@ -205,6 +205,25 @@
                                 "text": "SSL configuration documentation",
                                 "link": "https://docs.splunk.com/Documentation"
                             }
+                        },
+                        {
+                            "type": "file",
+                            "label": "SA certificate",
+                            "help": "Upload service account's certificate",
+                            "field": "service_account",
+                            "options": {
+                                "fileSupportMessage": "Support message",
+                                "supportedFileTypes": ["pem", "txt"],
+                                "maxFileSize": 100
+                            },
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "pattern": "(-----BEGIN CERTIFICATE-----(\n|\r|\r\n)([0-9a-zA-Z\+\/=]{64}(\n|\r|\r\n))*([0-9a-zA-Z\+\/=]{1,63}(\n|\r|\r\n))?-----END CERTIFICATE-----)"
+                                }
+                            ],
+                            "encrypted": true,
+                            "required": true
                         }
                     ],
                     "title": "Account"
