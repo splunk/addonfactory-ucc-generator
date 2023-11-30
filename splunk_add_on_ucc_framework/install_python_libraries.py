@@ -21,7 +21,7 @@ import subprocess
 import json
 from collections import namedtuple
 from pathlib import Path
-from typing import Sequence
+from typing import Sequence, Dict
 
 logger = logging.getLogger("ucc_gen")
 
@@ -214,7 +214,7 @@ def install_os_dependent_libraries(
             )
 
 
-def get_download_params(package: dict[str, str]) -> Params:
+def get_download_params(package: Dict[str, str]) -> Params:
     param = Params(
         name=package.get("name", ""),
         version=package.get("version", ""),
