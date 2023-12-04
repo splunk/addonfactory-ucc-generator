@@ -36,7 +36,7 @@ Auth can be used inside the entity tag. Use `type: "oauth"` in the entity list a
         - `options`:
             - `placeholder`: The placeholder for the field.
             - `disableonEdit`: When the form is in edit mode, the field becomes uneditable. Default value: false
-            - `enable`: The enable property sets whether a field is enabled, or not. Default value: true
+            - `enable`: The enable property sets whether a field is enabled or not. Default value: true
 
 
 > [!WARNING]
