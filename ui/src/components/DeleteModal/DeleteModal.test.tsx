@@ -1,12 +1,12 @@
 import { render, screen } from '@testing-library/react';
 import React, { createContext } from 'react';
 import userEvent from '@testing-library/user-event';
-import { AxiosResponse } from 'axios';
-import * as axiosWrapper from '../../util/axiosCallWrapper';
+import axios from 'axios';
 import DeleteModal from './DeleteModal';
 
 jest.mock('immutability-helper');
 jest.mock('../../util/util');
+jest.mock('axios');
 
 describe('Delete Model Component', () => {
     const handleClose = jest.fn();
@@ -51,9 +51,13 @@ describe('Delete Model Component', () => {
     });
 
     it('correct delete request', async () => {
-        jest.spyOn(axiosWrapper, 'axiosCallWrapper').mockImplementation(() => {
-            return new Promise((r) => r('works correct' as unknown as PromiseLike<AxiosResponse>));
-        });
+        (axios as unknown as jest.Mock).mockResolvedValue(
+            new Promise((r) =>
+                r({
+                    data: {},
+                })
+            )
+        );
 
         const deleteButton = screen.getByRole('button', { name: /delete/i });
         await userEvent.click(deleteButton);
