@@ -6,12 +6,19 @@ import { setUnifiedConfig } from '../../util/util';
 import {
     getConfigAccerssTokenMock,
     getConfigBasicOauthDisableonEdit,
+    getConfigEnableFalseForOauth,
+    getConfigFullyEnabledField,
     getConfigOauthOauthDisableonEdit,
 } from './TestConfig';
 import { ERROR_AUTH_PROCESS_TERMINATED_TRY_AGAIN } from '../../constants/oAuthErrorMessage';
 
-describe('EntityModal - Basic oauth', () => {
+describe('Oauth field disabled on edit - diableonEdit property', () => {
     const handleRequestClose = jest.fn();
+
+    const setUpConfigWithDisabedOauth = () => {
+        const newConfig = getConfigOauthOauthDisableonEdit();
+        setUnifiedConfig(newConfig);
+    };
 
     const setUpConfigWithDisabedBasicOauth = () => {
         setUnifiedConfig(getConfigBasicOauthDisableonEdit());
@@ -21,62 +28,11 @@ describe('EntityModal - Basic oauth', () => {
         render(<EntityModal {...props} handleRequestClose={handleRequestClose} />);
     };
 
-    const getDisabledBasicField = () =>
-        document.getElementsByClassName('basic_oauth_text_jest_test')[1];
-
-    it('if oauth field not disabled with create after disableonEdit true', async () => {
-        setUpConfigWithDisabedBasicOauth();
-        const props = {
-            serviceName: 'account',
-            mode: 'create',
-            stanzaName: undefined,
-            formLabel: 'formLabel',
-            page: 'configuration',
-            groupName: '',
-            open: true,
-            handleRequestClose: () => {},
-        } satisfies EntityModalProps;
-        renderModalWithProps(props);
-        const oauthTextBox = getDisabledBasicField();
-        expect(oauthTextBox).toBeInTheDocument();
-        expect(oauthTextBox?.getAttribute('disabled')).toBeNull();
-    });
-
-    it('test if oauth field disabled on edit after disableonEdit true', async () => {
-        setUpConfigWithDisabedBasicOauth();
-        const props = {
-            serviceName: 'account',
-            mode: 'edit',
-            stanzaName: undefined,
-            formLabel: 'formLabel',
-            page: 'configuration',
-            groupName: '',
-            open: true,
-            handleRequestClose: () => {},
-        } satisfies EntityModalProps;
-
-        renderModalWithProps(props);
-
-        const oauthTextBox = getDisabledBasicField();
-        expect(oauthTextBox).toBeInTheDocument();
-        expect(oauthTextBox?.getAttribute('disabled')).toBe('');
-    });
-});
-
-describe('EntityModal - Oauth oauth', () => {
-    const handleRequestClose = jest.fn();
-
-    const setUpConfigWithDisabedOauth = () => {
-        const newConfig = getConfigOauthOauthDisableonEdit();
-        setUnifiedConfig(newConfig);
-    };
-
-    const renderModalWithProps = (props: EntityModalProps) => {
-        render(<EntityModal {...props} handleRequestClose={handleRequestClose} />);
-    };
-
     const getDisabledOauthField = () =>
         document.getElementsByClassName('oauth_oauth_text_jest_test')[1];
+
+    const getDisabledBasicField = () =>
+        document.getElementsByClassName('basic_oauth_text_jest_test')[1];
 
     it('Oauth Oauth - test if oauth field not disabled on create after disableonEdit', async () => {
         setUpConfigWithDisabedOauth();
@@ -114,6 +70,124 @@ describe('EntityModal - Oauth oauth', () => {
         const oauthTextBox = getDisabledOauthField();
         expect(oauthTextBox).toBeInTheDocument();
         expect(oauthTextBox?.getAttribute('disabled')).toBe('');
+    });
+
+    it('test if oauth field disabled on edit after disableonEdit true', async () => {
+        setUpConfigWithDisabedBasicOauth();
+        const props = {
+            serviceName: 'account',
+            mode: 'edit',
+            stanzaName: undefined,
+            formLabel: 'formLabel',
+            page: 'configuration',
+            groupName: '',
+            open: true,
+            handleRequestClose: () => {},
+        } satisfies EntityModalProps;
+
+        renderModalWithProps(props);
+
+        const oauthTextBox = getDisabledBasicField();
+        expect(oauthTextBox).toBeInTheDocument();
+        expect(oauthTextBox?.getAttribute('disabled')).toBe('');
+    });
+
+    it('if oauth field not disabled with create after disableonEdit true', async () => {
+        setUpConfigWithDisabedBasicOauth();
+        const props = {
+            serviceName: 'account',
+            mode: 'create',
+            stanzaName: undefined,
+            formLabel: 'formLabel',
+            page: 'configuration',
+            groupName: '',
+            open: true,
+            handleRequestClose: () => {},
+        } satisfies EntityModalProps;
+        renderModalWithProps(props);
+        const oauthTextBox = getDisabledBasicField();
+        expect(oauthTextBox).toBeInTheDocument();
+        expect(oauthTextBox?.getAttribute('disabled')).toBeNull();
+    });
+});
+
+describe('Options - Enable field property', () => {
+    const handleRequestClose = jest.fn();
+
+    const setUpConfigWithDisabledComplitelyOauthField = () => {
+        const newConfig = getConfigEnableFalseForOauth();
+        setUnifiedConfig(newConfig);
+    };
+
+    const setUpConfigWithFullyEnabledField = () => {
+        const newConfig = getConfigFullyEnabledField();
+        setUnifiedConfig(newConfig);
+    };
+
+    const setUpConfigWithDisabledComplitelyOauthBasicField = () => {
+        const newConfig = getConfigEnableFalseForOauth();
+        setUnifiedConfig(newConfig);
+    };
+
+    const renderModalWithProps = (props: EntityModalProps) => {
+        render(<EntityModal {...props} handleRequestClose={handleRequestClose} />);
+    };
+
+    const getDisabledOauthField = () =>
+        document.getElementsByClassName('oauth_oauth_text_jest_test')[1];
+
+    it('Oauth Oauth - Enable field equal false, so field disabled', async () => {
+        setUpConfigWithDisabledComplitelyOauthField();
+        const props = {
+            serviceName: 'account',
+            mode: 'create',
+            stanzaName: undefined,
+            formLabel: 'formLabel',
+            page: 'configuration',
+            groupName: '',
+            open: true,
+            handleRequestClose: () => {},
+        } satisfies EntityModalProps;
+        renderModalWithProps(props);
+        const oauthTextBox = getDisabledOauthField();
+        expect(oauthTextBox).toBeInTheDocument();
+        expect(oauthTextBox?.getAttribute('disabled')).toBe('');
+    });
+
+    it('Oauth Basic - Enable field equal false, so field disabled', async () => {
+        setUpConfigWithDisabledComplitelyOauthBasicField();
+        const props = {
+            serviceName: 'account',
+            mode: 'create',
+            stanzaName: undefined,
+            formLabel: 'formLabel',
+            page: 'configuration',
+            groupName: '',
+            open: true,
+            handleRequestClose: () => {},
+        } satisfies EntityModalProps;
+        renderModalWithProps(props);
+        const oauthTextBox = getDisabledOauthField();
+        expect(oauthTextBox).toBeInTheDocument();
+        expect(oauthTextBox?.getAttribute('disabled')).toBe('');
+    });
+
+    it('Oauth Basic - Fully enabled field, enabled: true, disableonEdit: false', async () => {
+        setUpConfigWithFullyEnabledField();
+        const props = {
+            serviceName: 'account',
+            mode: 'create',
+            stanzaName: undefined,
+            formLabel: 'formLabel',
+            page: 'configuration',
+            groupName: '',
+            open: true,
+            handleRequestClose: () => {},
+        } satisfies EntityModalProps;
+        renderModalWithProps(props);
+        const oauthTextBox = getDisabledOauthField();
+        expect(oauthTextBox).toBeInTheDocument();
+        expect(oauthTextBox?.getAttribute('disabled')).toBeNull();
     });
 });
 

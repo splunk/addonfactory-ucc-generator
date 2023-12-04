@@ -192,10 +192,16 @@ class BaseFormView extends PureComponent {
                                         ? type === temState.auth_type.value
                                         : true;
                                 tempEntity.error = false;
-                                tempEntity.disabled = false;
+
+                                tempEntity.disabled =
+                                    typeof field?.options?.enable !== 'undefined' &&
+                                    !field.options.enable;
 
                                 if (props.mode === MODE_EDIT) {
-                                    tempEntity.disabled = field?.options?.disableonEdit || false;
+                                    tempEntity.disabled =
+                                        typeof field?.options?.disableonEdit !== 'undefined'
+                                            ? field?.options?.disableonEdit
+                                            : tempEntity.disabled;
                                 }
 
                                 temState[field.field] = tempEntity;
@@ -264,7 +270,8 @@ class BaseFormView extends PureComponent {
                     tempEntity.display =
                         typeof e?.options?.display !== 'undefined' ? e.options.display : true;
                     tempEntity.error = false;
-                    tempEntity.disabled = false;
+                    tempEntity.disabled =
+                        typeof e?.options?.enable !== 'undefined' && !e.options.enable;
                     temState[e.field] = tempEntity;
                 } else if (props.mode === MODE_EDIT) {
                     tempEntity.value =
@@ -275,7 +282,8 @@ class BaseFormView extends PureComponent {
                     tempEntity.display =
                         typeof e?.options?.display !== 'undefined' ? e.options.display : true;
                     tempEntity.error = false;
-                    tempEntity.disabled = false;
+                    tempEntity.disabled =
+                        typeof e?.options?.enable !== 'undefined' && !e.options.enable;
                     if (e.field === 'name') {
                         tempEntity.disabled = true;
                     } else if (typeof e?.options?.disableonEdit !== 'undefined') {
@@ -288,7 +296,8 @@ class BaseFormView extends PureComponent {
                     tempEntity.display =
                         typeof e?.options?.display !== 'undefined' ? e.options.display : true;
                     tempEntity.error = false;
-                    tempEntity.disabled = false;
+                    tempEntity.disabled =
+                        typeof e?.options?.enable !== 'undefined' && !e.options.enable;
                     temState[e.field] = tempEntity;
                 } else if (props.mode === MODE_CONFIG) {
                     e.defaultValue = typeof e.defaultValue !== 'undefined' ? e.defaultValue : null;
@@ -300,7 +309,8 @@ class BaseFormView extends PureComponent {
                     tempEntity.display =
                         typeof e?.options?.display !== 'undefined' ? e.options.display : true;
                     tempEntity.error = false;
-                    tempEntity.disabled = false;
+                    tempEntity.disabled =
+                        typeof e?.options?.enable !== 'undefined' && !e.options.enable;
                     if (e.field === 'name') {
                         tempEntity.disabled = true;
                     } else if (typeof e?.options?.disableonEdit !== 'undefined') {

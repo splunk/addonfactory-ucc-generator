@@ -30,28 +30,8 @@ const entityBasicOauthDisableonEdit = [
         required: true,
         encrypted: false,
         options: {
-            auth_type: ['basic', 'oauth'],
+            auth_type: ['basic'],
             basic: [
-                {
-                    oauth_field: 'username_jest_test',
-                    label: 'Username_jest_test',
-                    help: 'Enter the username for this account.',
-                    field: 'username_jest_test',
-                },
-                {
-                    oauth_field: 'password_jest_test',
-                    label: 'Password',
-                    encrypted: true,
-                    help: 'Enter the password for this account.',
-                    field: 'password_jest_test',
-                },
-                {
-                    oauth_field: 'security_token_jest_test',
-                    label: 'Security Token',
-                    encrypted: true,
-                    help: 'Enter the security token.',
-                    field: 'token_jest_test',
-                },
                 {
                     oauth_field: 'some_text_jest_test',
                     label: 'some_text Token',
@@ -59,6 +39,7 @@ const entityBasicOauthDisableonEdit = [
                     field: 'basic_oauth_text_jest_test',
                     options: {
                         disableonEdit: true,
+                        enable: true,
                     },
                 },
             ],
@@ -84,31 +65,13 @@ const entityOauthOauthDisableonEdit = [
             auth_type: ['oauth'],
             oauth: [
                 {
-                    oauth_field: 'client_id_jest_test',
-                    label: 'Client Id',
-                    field: 'client_id_jest_test',
-                    help: 'Enter the Client Id for this account.',
-                },
-                {
-                    oauth_field: 'client_secret_jest_test',
-                    label: 'Client Secret',
-                    field: 'client_secret_jest_test',
-                    encrypted: true,
-                    help: 'Enter the Client Secret key for this account.',
-                },
-                {
-                    oauth_field: 'redirect_url_jest_test',
-                    label: 'Redirect url',
-                    field: 'redirect_url_jest_test',
-                    help: 'Copy and paste this URL into your app.',
-                },
-                {
                     oauth_field: 'oauth_some_text_jest_test',
                     label: 'oauth some_text Token',
                     help: 'Enter some_text',
                     field: 'oauth_oauth_text_jest_test',
                     options: {
                         disableonEdit: true,
+                        enable: true,
                     },
                 },
             ],
@@ -206,6 +169,212 @@ export const getConfigAccerssTokenMock = () => {
             configuration: {
                 ...globalConfig.pages.configuration,
                 tabs: [{ entity: accessTokenMock, ...defaultTableProps }],
+            },
+        },
+    };
+    return newConfig satisfies z.infer<typeof GlobalConfigSchema>;
+};
+
+const entityEnableFalseForOauthField = [
+    {
+        type: 'oauth',
+        field: 'oauth_jest_test',
+        label: 'Not used',
+        required: true,
+        encrypted: false,
+        options: {
+            auth_type: ['oauth'],
+            oauth: [
+                {
+                    oauth_field: 'oauth_some_text_jest_test',
+                    label: 'oauth some_text Token',
+                    help: 'Enter some_text',
+                    field: 'oauth_oauth_text_jest_test',
+                    options: {
+                        disableonEdit: false,
+                        enable: false,
+                    },
+                },
+            ],
+            auth_code_endpoint: '/services/oauth2/authorize',
+            access_token_endpoint: '/services/oauth2/token',
+            oauth_timeout: 30,
+            oauth_state_enabled: false,
+            display: true,
+            disableonEdit: false,
+            enable: true,
+        },
+    } satisfies z.infer<typeof OAuthEntity>,
+];
+
+export const getConfigEnableFalseForOauth = () => {
+    const globalConfig = getGlobalConfigMock();
+    const newConfig = {
+        ...globalConfig,
+        pages: {
+            ...globalConfig.pages,
+            configuration: {
+                ...globalConfig.pages.configuration,
+                tabs: [{ entity: entityEnableFalseForOauthField, ...defaultTableProps }],
+            },
+        },
+    };
+    return newConfig satisfies z.infer<typeof GlobalConfigSchema>;
+};
+
+export const getConfigEnableFalseForOauthBasic = () => {
+    const globalConfig = getGlobalConfigMock();
+    const newConfig = {
+        ...globalConfig,
+        pages: {
+            ...globalConfig.pages,
+            configuration: {
+                ...globalConfig.pages.configuration,
+                tabs: [{ entity: entityEnableFalseForOauthField, ...defaultTableProps }],
+            },
+        },
+    };
+    return newConfig satisfies z.infer<typeof GlobalConfigSchema>;
+};
+
+const entityEnableFalseForBasicOauthField = [
+    {
+        type: 'oauth',
+        field: 'oauth_jest_test',
+        label: 'Not used',
+        required: true,
+        encrypted: false,
+        options: {
+            auth_type: ['basic'],
+            basic: [
+                {
+                    oauth_field: 'some_text_jest_test',
+                    label: 'some_text Token',
+                    help: 'Enter some_text',
+                    field: 'basic_oauth_text_jest_test',
+                    options: {
+                        disableonEdit: true,
+                        enable: false,
+                    },
+                },
+            ],
+            auth_code_endpoint: '/services/oauth2/authorize',
+            access_token_endpoint: '/services/oauth2/token',
+            oauth_timeout: 30,
+            oauth_state_enabled: false,
+            display: true,
+            disableonEdit: false,
+            enable: true,
+        },
+    } satisfies z.infer<typeof OAuthEntity>,
+];
+
+export const getConfigEnableTrueForOauthBasic = () => {
+    const globalConfig = getGlobalConfigMock();
+    const newConfig = {
+        ...globalConfig,
+        pages: {
+            ...globalConfig.pages,
+            configuration: {
+                ...globalConfig.pages.configuration,
+                tabs: [{ entity: entityEnableFalseForBasicOauthField, ...defaultTableProps }],
+            },
+        },
+    };
+    return newConfig satisfies z.infer<typeof GlobalConfigSchema>;
+};
+
+const entityBasicOauthFullyEnabledField = [
+    {
+        type: 'oauth',
+        field: 'oauth_jest_test',
+        label: 'Not used',
+        required: true,
+        encrypted: false,
+        options: {
+            auth_type: ['oauth'],
+            oauth: [
+                {
+                    oauth_field: 'some_text_jest_test',
+                    label: 'some_text Token',
+                    help: 'Enter some_text',
+                    field: 'oauth_oauth_text_jest_test',
+                    options: {
+                        disableonEdit: false,
+                        enable: true,
+                    },
+                },
+            ],
+            auth_code_endpoint: '/services/oauth2/authorize',
+            access_token_endpoint: '/services/oauth2/token',
+            oauth_timeout: 30,
+            oauth_state_enabled: false,
+            display: true,
+            disableonEdit: false,
+            enable: true,
+        },
+    } satisfies z.infer<typeof OAuthEntity>,
+];
+
+export const getConfigFullyEnabledField = () => {
+    const globalConfig = getGlobalConfigMock();
+    const newConfig = {
+        ...globalConfig,
+        pages: {
+            ...globalConfig.pages,
+            configuration: {
+                ...globalConfig.pages.configuration,
+                tabs: [{ entity: entityBasicOauthFullyEnabledField, ...defaultTableProps }],
+            },
+        },
+    };
+    return newConfig satisfies z.infer<typeof GlobalConfigSchema>;
+};
+
+export const DEFAULT_VALUE = 'some default value';
+
+const entityBasicOauthDefaultValue = [
+    {
+        type: 'oauth',
+        field: 'oauth_jest_test',
+        label: 'Not used',
+        required: true,
+        encrypted: false,
+        options: {
+            auth_type: ['oauth'],
+            oauth: [
+                {
+                    oauth_field: 'some_text_jest_test',
+                    label: 'some_text Token',
+                    help: 'Enter some_text',
+                    field: 'oauth_oauth_text_jest_test',
+                    defaultValue: DEFAULT_VALUE,
+                    options: {
+                        disableonEdit: false,
+                        enable: true,
+                    },
+                },
+            ],
+            auth_code_endpoint: '/services/oauth2/authorize',
+            access_token_endpoint: '/services/oauth2/token',
+            oauth_timeout: 30,
+            oauth_state_enabled: false,
+            display: true,
+            disableonEdit: false,
+            enable: true,
+        },
+    } satisfies z.infer<typeof OAuthEntity>,
+];
+
+export const getConfigWithOauthDefaultValue = () => {
+    const globalConfig = getGlobalConfigMock();
+    const newConfig = {
+        ...globalConfig,
+        pages: {
+            ...globalConfig.pages,
+            configuration: {
+                ...globalConfig.pages.configuration,
+                tabs: [{ entity: entityBasicOauthDefaultValue, ...defaultTableProps }],
             },
         },
     };
