@@ -10,6 +10,7 @@ const CustomElement = styled.div``;
 const ControlGroupWrapper = styled(ControlGroup).attrs((props: { dataName: string }) => ({
     'data-name': props.dataName,
 }))`
+    max-width: 750px;
     span[class*='ControlGroupStyles__StyledAsterisk-'] {
         color: red;
     }
