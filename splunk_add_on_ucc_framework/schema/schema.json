@@ -1868,6 +1868,32 @@
     "Field": {
       "type": "string",
       "pattern": "(?!^(?:persistentQueueSize|queueSize|start_by_shell|output_mode|output_field|owner|app|sharing)$)(?:^\\w+$)"
+    },
+    "Os-dependentLibraries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "dependencies": {
+            "type": "boolean"
+          },
+          "platform": {
+            "type": "string"
+          },
+          "python-version": {
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      }
     }
   },
   "type": "object",
@@ -1884,6 +1910,9 @@
         "$ref": "#/definitions/Alerts"
       },
       "minItems": 1
+    },
+    "os-dependentLibraries": {
+      "$ref": "#/definitions/Os-dependentLibraries"
     }
   },
   "required": ["meta", "pages"],

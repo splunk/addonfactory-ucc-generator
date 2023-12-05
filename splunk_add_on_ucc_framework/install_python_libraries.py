@@ -18,16 +18,17 @@ import os
 import shutil
 import stat
 import subprocess
-import json
+import sys
 from collections import namedtuple
 from pathlib import Path
-from typing import Sequence, Dict
+from typing import Sequence, Any, List, Dict
 
 logger = logging.getLogger("ucc_gen")
 
 
 Params = namedtuple(
-    "Params", ["name", "version", "platform", "python_version", "target"]
+    "Params",
+    ["name", "version", "dependencies", "platform", "python_version", "target"],
 )
 
 
@@ -69,6 +70,7 @@ def install_python_libraries(
     ucc_lib_target: str,
     python_binary_name: str,
     includes_ui: bool = False,
+    os_libraries: List[Dict[str, Any]] = [],
 ) -> None:
     path_to_requirements_file = os.path.join(source_path, "lib", "requirements.txt")
     if os.path.isfile(path_to_requirements_file):
@@ -90,7 +92,10 @@ def install_python_libraries(
             python_binary_name,
         )
 
-        install_os_dependent_libraries(source_path, ucc_lib_target, python_binary_name)
+        if os_libraries:
+            install_os_dependent_libraries(
+                ucc_lib_target, python_binary_name, os_libraries
+            )
 
         packages_to_remove = (
             "setuptools",
@@ -165,28 +170,9 @@ def remove_execute_bit(installation_path: str) -> None:
 
 
 def install_os_dependent_libraries(
-    package_path: str, ucc_lib_target: str, installer: str
+    ucc_lib_target: str, installer: str, os_libraries: List[Dict[str, Any]]
 ) -> None:
-    conf_file_name = "os-dependent_packages.json"
-    config_file = os.path.join(package_path, "lib", conf_file_name)
-
-    if not os.path.isfile(config_file):
-        logger.info(
-            "Config file not found. Installation of os-dependent libraries skipped."
-        )
-        return
-
-    try:
-        with open(config_file) as file:
-            packages = json.load(file)["libraries"]
-    except (KeyError, ValueError) as e:
-        logger.error(
-            f"Invalid json structure. Please verify content of {conf_file_name} file. "
-            f"Error: {repr(e)}"
-        )
-        return
-
-    for it, package in enumerate(packages):
+    for package in os_libraries:
         params = get_download_params(package)
         target_path = os.path.join(ucc_lib_target, os.path.normpath(params.target))
 
@@ -197,7 +183,7 @@ def install_os_dependent_libraries(
             f"{installer} "
             f"-m pip "
             f"install "
-            f"--no-deps "
+            f"{params.dependencies} "
             f"--platform {params.platform} "
             f"--python-version {params.python_version} "
             f"--target {target_path}"
@@ -210,14 +196,16 @@ def install_os_dependent_libraries(
             _subprocess_call(pip_download_command, "pip download")
         except CouldNotInstallRequirements:
             logger.error(
-                f"Downloading process failed. Please verify parameters in the {conf_file_name} file."
+                "Downloading process failed. Please verify parameters in the globalConfig.json file."
             )
+            sys.exit("Package building process interrupted.")
 
 
-def get_download_params(package: Dict[str, str]) -> Params:
+def get_download_params(package: dict[str, str]) -> Params:
     param = Params(
         name=package.get("name", ""),
         version=package.get("version", ""),
+        dependencies="" if package.get("dependencies", "") else "--no-deps",
         platform=package.get("platform", ""),
         python_version=package.get("python-version", ""),
         target=package.get("target", ""),
