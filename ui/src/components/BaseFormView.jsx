@@ -193,7 +193,7 @@ class BaseFormView extends PureComponent {
                                         : true;
                                 tempEntity.error = false;
 
-                                tempEntity.disabled = field.options.enable === false;
+                                tempEntity.disabled = field?.options?.enable === false;
 
                                 if (props.mode === MODE_EDIT) {
                                     // .disableonEdit = false do not overwrite .disabled = true
