@@ -201,7 +201,7 @@ def install_os_dependent_libraries(
             sys.exit("Package building process interrupted.")
 
 
-def get_download_params(package: dict[str, str]) -> Params:
+def get_download_params(package: Dict[str, str]) -> Params:
     param = Params(
         name=package.get("name", ""),
         version=package.get("version", ""),
