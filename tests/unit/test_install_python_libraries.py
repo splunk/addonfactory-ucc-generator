@@ -10,7 +10,6 @@ from splunk_add_on_ucc_framework.install_python_libraries import (
     SplunktaucclibNotFound,
     _check_ucc_library_in_requirements_file,
     install_libraries,
-    install_os_dependent_libraries,
     install_python_libraries,
     remove_execute_bit,
     remove_package_from_installed_path,
@@ -247,8 +246,15 @@ def test_remove_execute_bit(tmp_path):
 
 
 @mock.patch("subprocess.call", autospec=True)
-def test_install_os_dependent_libraries_invalid(mock_subprocess_call, caplog, tmp_path):
+@mock.patch(
+    "splunk_add_on_ucc_framework.install_python_libraries.install_libraries",
+    autospec=True,
+)
+def test_install_os_dependent_libraries_invalid(
+    mock_subprocess_call, install_libraries, caplog, tmp_path
+):
     mock_subprocess_call.return_value = 1
+    install_libraries.return_value = True
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_with_invalid_os_libraries.json"
     )
@@ -257,11 +263,14 @@ def test_install_os_dependent_libraries_invalid(mock_subprocess_call, caplog, tm
     tmp_ucc_lib_target = tmp_path / "ucc-lib-target"
     tmp_lib_path = tmp_path / "lib"
     tmp_lib_path.mkdir()
+    tmp_lib_reqs_file = tmp_lib_path / "requirements.txt"
+    tmp_lib_reqs_file.write_text("splunktaucclib\n")
 
     with pytest.raises(SystemExit):
-        install_os_dependent_libraries(
+        install_python_libraries(
+            str(tmp_path),
             str(tmp_ucc_lib_target),
-            installer="python3",
+            python_binary_name="python3",
             os_libraries=global_config.os_libraries,
         )
 

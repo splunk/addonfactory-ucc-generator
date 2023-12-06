@@ -108,8 +108,8 @@ class GlobalConfig:
         return self.meta.get("schemaVersion")
 
     @property
-    def os_libraries(self) -> List[Dict[str, Any]]:
-        return self._content.get("os-dependentLibraries", [])
+    def os_libraries(self) -> Optional[List[Dict[str, Any]]]:
+        return self._content["meta"].get("os-dependentLibraries")
 
     def update_schema_version(self, new_schema_version: str) -> None:
         self.meta["schemaVersion"] = new_schema_version
