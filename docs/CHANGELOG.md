@@ -1,3 +1,10 @@
+## [5.34.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.34.0...v5.34.1) (2023-12-06)
+
+
+### Bug Fixes
+
+* add control group wrapper max width to 750px ([#966](https://github.com/splunk/addonfactory-ucc-generator/issues/966)) ([0213c45](https://github.com/splunk/addonfactory-ucc-generator/commit/0213c457154cfbe56014ed358c13afa23e184049))
+
 # [5.34.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.33.0...v5.34.0) (2023-11-28)
 
 
