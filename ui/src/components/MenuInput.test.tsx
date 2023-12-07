@@ -2,14 +2,20 @@ import { render, screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import userEvent from '@testing-library/user-event';
 import { AnimationToggleProvider } from '@splunk/react-ui/AnimationToggle';
+import { z } from 'zod';
 import MenuInput from './MenuInput';
 import { mockCustomMenu, MockCustomRenderable } from '../tests/helpers';
 import { getUnifiedConfigs } from '../util/util';
-import { UnifiedConfig } from '../types/config';
+import {
+    InputsPageTableSchema,
+    pages,
+    TableFullServiceSchema,
+    TableSchema,
+} from '../types/globalConfig/pages';
+import { getGlobalConfigMock } from '../mocks/globalConfigMock';
 
 jest.mock('../util/util');
 
-// for further TS support
 const getUnifiedConfigsMock = getUnifiedConfigs as jest.Mock;
 let mockCustomMenuInstance: MockCustomRenderable;
 
@@ -17,13 +23,16 @@ beforeEach(() => {
     mockCustomMenuInstance = mockCustomMenu().mockCustomMenuInstance;
 });
 
-function setup(inputs: UnifiedConfig['pages']['inputs']) {
+function setup(inputs: z.infer<typeof pages.shape.inputs>) {
     const mockHandleRequestOpen = jest.fn();
+    const globalConfigMock = getGlobalConfigMock();
+
     getUnifiedConfigsMock.mockImplementation(() => ({
+        ...globalConfigMock,
         pages: {
+            ...globalConfigMock.pages,
             inputs,
         },
-        meta: {},
     }));
     render(
         <AnimationToggleProvider enabled={false}>
@@ -37,19 +46,37 @@ function getCreateButton() {
     return screen.getByRole('button', { name: 'Create New Input' });
 }
 
+const table: z.infer<typeof TableSchema> = {
+    header: [
+        {
+            field: 'name',
+            label: 'Input Name',
+        },
+    ],
+    moreInfo: [
+        {
+            field: 'name',
+            label: 'Name',
+        },
+    ],
+    actions: ['edit', 'delete', 'clone'],
+};
+
 describe('single service', () => {
-    function getOneService() {
+    function getOneService(): z.infer<typeof TableFullServiceSchema>[] {
         return [
             {
                 name: 'test-service-name',
                 title: 'test-service-title',
                 subTitle: 'test-service-subTitle',
+                entity: [],
+                table,
             },
         ];
     }
 
     it('should render button Create New Input', async () => {
-        setup({ services: getOneService() });
+        setup({ title: '', services: getOneService() });
         const createButton = getCreateButton();
 
         expect(createButton).toBeInTheDocument();
@@ -57,7 +84,7 @@ describe('single service', () => {
     });
 
     it('should call callback with service name on user click', async () => {
-        const { mockHandleRequestOpen } = setup({ services: getOneService() });
+        const { mockHandleRequestOpen } = setup({ title: '', services: getOneService() });
         const createButton = getCreateButton();
 
         await userEvent.click(createButton);
@@ -73,11 +100,15 @@ describe('multiple services', () => {
                 name: 'test-service-name1',
                 title: 'test-service-title1',
                 subTitle: 'test-service-subTitle1',
+                entity: [],
+                table,
             },
             {
                 name: 'test-service-name2',
                 title: 'test-service-title2',
                 subTitle: 'test-service-subTitle2',
+                entity: [],
+                table,
             },
         ];
     }
@@ -87,14 +118,14 @@ describe('multiple services', () => {
     }
 
     it('should render dropdown Create New Input', async () => {
-        setup({ services: getTwoServices() });
+        setup({ title: '', services: getTwoServices() });
         const createDropdown = getCreateDropdown();
         expect(createDropdown).toBeInTheDocument();
         expect(createDropdown).toHaveAttribute('data-test', 'dropdown');
     });
 
     it('should render service menu items on opening dropdown', async () => {
-        setup({ services: getTwoServices() });
+        setup({ title: '', services: getTwoServices() });
         await userEvent.click(getCreateDropdown());
         expect(screen.getByTestId('menu')).toBeInTheDocument();
         expect(screen.getAllByTestId('item')).toHaveLength(2);
@@ -103,7 +134,7 @@ describe('multiple services', () => {
     });
 
     it('should call callback with service name and default group name (main_panel) on menu item click', async () => {
-        const { mockHandleRequestOpen } = setup({ services: getTwoServices() });
+        const { mockHandleRequestOpen } = setup({ title: '', services: getTwoServices() });
         await userEvent.click(getCreateDropdown());
         await userEvent.click(screen.getByText('test-service-title2'));
         expect(mockHandleRequestOpen).toHaveBeenCalledWith({
@@ -113,29 +144,32 @@ describe('multiple services', () => {
     });
 
     describe('groups', () => {
-        function getGroupedServices() {
+        function getGroupedServices(): z.infer<typeof InputsPageTableSchema> {
             return {
                 services: [
                     {
                         name: 'test-service-name1',
                         title: 'test-service-title1',
                         subTitle: 'test-service-subTitle1',
-                        hasSubmenu: true,
+                        entity: [],
                     },
                     {
                         name: 'test-subservice1-name1',
                         title: 'test-subservice1-title1',
                         subTitle: 'test-subservice-subTitle1',
+                        entity: [],
                     },
                     {
                         name: 'test-subservice1-name2',
                         title: 'test-subservice1-title2',
                         subTitle: 'test-subservice-subTitle2',
+                        entity: [],
                     },
                     {
                         name: 'test-service-name2',
                         title: 'test-service-title2',
                         subTitle: 'test-service-subTitle2',
+                        entity: [],
                     },
                 ],
                 groupsMenu: [
@@ -145,6 +179,17 @@ describe('multiple services', () => {
                         groupServices: ['test-subservice1-name1', 'test-subservice1-name2'],
                     },
                 ],
+                title: '',
+                table: {
+                    actions: [],
+                    header: [
+                        {
+                            field: '',
+                            label: '',
+                        },
+                    ],
+                    customRow: {},
+                },
             };
         }
 
@@ -209,22 +254,25 @@ describe('multiple services', () => {
                         name: 'test-service-name1',
                         title: 'test-service-title1',
                         subTitle: 'test-service-subTitle1',
-                        hasSubmenu: true,
+                        entity: [],
                     },
                     {
                         name: 'test-subservice1-name1',
                         title: 'test-subservice1-title1',
                         subTitle: 'test-subservice-subTitle1',
+                        entity: [],
                     },
                     {
                         name: 'test-subservice1-name2',
                         title: 'test-subservice1-title2',
                         subTitle: 'test-subservice-subTitle2',
+                        entity: [],
                     },
                     {
                         name: 'test-service-name2',
                         title: 'test-service-title2',
                         subTitle: 'test-service-subTitle2',
+                        entity: [],
                     },
                 ],
                 menu: {
@@ -238,6 +286,17 @@ describe('multiple services', () => {
                         groupServices: ['test-subservice1-name1', 'test-subservice1-name2'],
                     },
                 ],
+                title: '',
+                table: {
+                    actions: [],
+                    header: [
+                        {
+                            field: '',
+                            label: '',
+                        },
+                    ],
+                    customRow: {},
+                },
             });
             // the loading indicator from CustomMenu component
             const loadingEl = screen.getByText('Loading...');
@@ -257,11 +316,23 @@ describe('multiple services', () => {
                     {
                         name: 'test-service-name1',
                         title: 'test-service-title1',
+                        entity: [],
                     },
                 ],
                 menu: {
                     src: 'CustomMenu',
                     type: 'external',
+                },
+                title: '',
+                table: {
+                    actions: [],
+                    header: [
+                        {
+                            field: '',
+                            label: '',
+                        },
+                    ],
+                    customRow: {},
                 },
             });
 

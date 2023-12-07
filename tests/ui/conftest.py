@@ -1,7 +1,7 @@
 import pytest
 
 from tests.ui.pages.account_page import AccountPage
-from tests.ui.test_account_page import ACCOUNT_CONFIG
+from tests.ui.test_configuration_page_account_tab import ACCOUNT_CONFIG
 
 
 @pytest.fixture

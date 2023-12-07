@@ -7,6 +7,8 @@ export const TitleComponent = styled.div.attrs({
     &.pageTitle {
         font-size: ${variables.fontSizeXXLarge};
         margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
     }
 `;
 

@@ -694,7 +694,7 @@ def generate(
         open_api = OpenAPI(open_api_object.json)
 
         output_openapi_folder = os.path.abspath(
-            os.path.join(output_directory, ta_name, "static")
+            os.path.join(output_directory, ta_name, "appserver", "static")
         )
         output_openapi_path = os.path.join(output_openapi_folder, "openapi.json")
         if not os.path.isdir(output_openapi_folder):

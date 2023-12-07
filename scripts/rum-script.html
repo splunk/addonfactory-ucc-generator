@@ -1,0 +1,17 @@
+<script src="https://cdn.signalfx.com/o11y-gdi-rum/v0.16.5/splunk-otel-web.js" integrity="sha384-zd5QhD1H5BOwLjGzeHqnEpZRkpWp1TwNbJyEedzArs+6Tq/JejIutyQ3rTndqygI" crossorigin="anonymous"></script>
+<script>
+  SplunkRum.init({
+    realm: "us1",
+    rumAccessToken: "RUM_ACCESS_TOKEN",
+    applicationName: "UCC",
+    deploymentEnvironment: "CI"
+  });
+</script>
+<script src="https://cdn.signalfx.com/o11y-gdi-rum/v0.16.5/splunk-otel-web-session-recorder.js" integrity="sha384-k6kMobPGxYompyccnaa88srGuLjk6Yb4d7yEt98LhR5zaP0zxjl3ELA5C4LRxvJX" crossorigin="anonymous"></script>
+<script>
+  SplunkSessionRecorder.init({
+    app: "UCC",
+    realm: "us1",
+    rumAccessToken: "RUM_ACCESS_TOKEN"
+  });
+</script>

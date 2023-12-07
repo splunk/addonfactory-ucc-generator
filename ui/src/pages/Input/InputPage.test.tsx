@@ -38,6 +38,7 @@ it('custom menu should redirect user on menu click', async () => {
             input,
         })
     );
+    await screen.findByTestId('wait-spinner');
 
     // check that InputPage redirects to correct URL according to callback
     expect(mockNavigateFn).toHaveBeenCalledWith({

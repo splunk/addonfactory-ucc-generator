@@ -80,7 +80,8 @@ class BaseFormView extends PureComponent {
                         );
                     }
                     if (props.mode === MODE_EDIT || props.mode === MODE_CLONE) {
-                        this.currentInput = context.rowData[props.serviceName][props.stanzaName];
+                        this.currentInput =
+                            context?.rowData?.[props.serviceName]?.[props.stanzaName];
                     }
                 }
             });
@@ -100,12 +101,13 @@ class BaseFormView extends PureComponent {
                         );
                     }
                     if (tab.table && (props.mode === MODE_EDIT || props.mode === MODE_CLONE)) {
-                        this.currentInput = context.rowData[props.serviceName][props.stanzaName];
+                        this.currentInput =
+                            context?.rowData?.[props.serviceName]?.[props.stanzaName];
                     } else if (props.mode === MODE_CONFIG) {
                         this.currentInput = props.currentServiceState;
                         this.mode_config_title = tab.title;
                     } else {
-                        this.currentInput = context.rowData[props.serviceName];
+                        this.currentInput = context?.rowData?.[props.serviceName];
                     }
                 }
             });
@@ -132,8 +134,8 @@ class BaseFormView extends PureComponent {
                         // Defining state for auth_type in case of multiple Authentication
                         const tempEntity = {};
                         tempEntity.value =
-                            typeof this.currentInput.auth_type !== 'undefined'
-                                ? this.currentInput.auth_type
+                            typeof this.currentInput?.auth_type !== 'undefined'
+                                ? this.currentInput?.auth_type
                                 : authType[0];
                         tempEntity.display = true;
                         tempEntity.error = false;
@@ -183,7 +185,7 @@ class BaseFormView extends PureComponent {
                                             : false;
                                     tempEntity.value = isEncrypted
                                         ? ''
-                                        : this.currentInput[field.field];
+                                        : this.currentInput?.[field.field];
                                 }
                                 tempEntity.display =
                                     typeof temState.auth_type !== 'undefined'
@@ -191,6 +193,11 @@ class BaseFormView extends PureComponent {
                                         : true;
                                 tempEntity.error = false;
                                 tempEntity.disabled = false;
+
+                                if (props.mode === MODE_EDIT) {
+                                    tempEntity.disabled = field?.options?.disableonEdit || false;
+                                }
+
                                 temState[field.field] = tempEntity;
                                 // eslint-disable-next-line no-param-reassign
                                 field.type =
@@ -242,7 +249,7 @@ class BaseFormView extends PureComponent {
                 e.encrypted = typeof e.encrypted !== 'undefined' ? e.encrypted : false;
 
                 if (e.type === 'file' && this.currentInput?.[e.field]) {
-                    /* 
+                    /*
                      adding example name to enable possibility of removal file,
                      not forcing value addition as if value is encrypted it is shared as
                      string ie. ***** and it is considered a valid default value
@@ -261,8 +268,8 @@ class BaseFormView extends PureComponent {
                     temState[e.field] = tempEntity;
                 } else if (props.mode === MODE_EDIT) {
                     tempEntity.value =
-                        typeof this.currentInput[e.field] !== 'undefined'
-                            ? this.currentInput[e.field]
+                        typeof this.currentInput?.[e.field] !== 'undefined'
+                            ? this.currentInput?.[e.field]
                             : null;
                     tempEntity.value = e.encrypted ? '' : tempEntity.value;
                     tempEntity.display =
@@ -277,7 +284,7 @@ class BaseFormView extends PureComponent {
                     temState[e.field] = tempEntity;
                 } else if (props.mode === MODE_CLONE) {
                     tempEntity.value =
-                        e.field === 'name' || e.encrypted ? '' : this.currentInput[e.field];
+                        e.field === 'name' || e.encrypted ? '' : this.currentInput?.[e.field];
                     tempEntity.display =
                         typeof e?.options?.display !== 'undefined' ? e.options.display : true;
                     tempEntity.error = false;
@@ -286,8 +293,8 @@ class BaseFormView extends PureComponent {
                 } else if (props.mode === MODE_CONFIG) {
                     e.defaultValue = typeof e.defaultValue !== 'undefined' ? e.defaultValue : null;
                     tempEntity.value =
-                        typeof this.currentInput[e.field] !== 'undefined'
-                            ? this.currentInput[e.field]
+                        typeof this.currentInput?.[e.field] !== 'undefined'
+                            ? this.currentInput?.[e.field]
                             : e.defaultValue;
                     tempEntity.value = e.encrypted ? '' : tempEntity.value;
                     tempEntity.display =
@@ -412,7 +419,7 @@ class BaseFormView extends PureComponent {
             // validation for unique name
             if ([MODE_CREATE, MODE_CLONE].includes(this.props.mode)) {
                 const isExistingName = Boolean(
-                    Object.values(this.context.rowData).find((val) =>
+                    Object.values(this.context?.rowData).find((val) =>
                         Object.keys(val).find((name) => name === this.datadict.name)
                     )
                 );
@@ -637,7 +644,7 @@ class BaseFormView extends PureComponent {
                     };
 
                     this.context.setRowData(
-                        update(this.context.rowData, {
+                        update(this.context?.rowData, {
                             [this.props.serviceName]: { $merge: tmpObj },
                         })
                     );
@@ -1059,7 +1066,9 @@ class BaseFormView extends PureComponent {
 
                         const temState = this.state.data[e.field];
 
-                        if (!temState) return null;
+                        if (!temState) {
+                            return null;
+                        }
 
                         return (
                             <ControlWrapper

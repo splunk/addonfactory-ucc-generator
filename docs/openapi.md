@@ -1,11 +1,13 @@
 # OpenAPI description document
 
-OpenAPI description document is generated with `ucc-gen` command. 
-There has to be defined valid `globalConfig.json` and `app.manifest` to have the document (`static/openapi.json` file) generated.
+OpenAPI's description document is generated with `ucc-gen` command. 
+There has to be defined valid `globalConfig.json` and `app.manifest` to have the document (`appserver/static/openapi.json` file) generated.
 
 ## How to find the document?
 
-Once `ucc-gen` command is executed, OpenAPI description document is located in output `static` subdirectory.
+Once `ucc-gen` command is executed, OpenAPI description document is located in output `appserver/static` subdirectory.
+
+One of ways is to download it via button displayed in top right corner of configuration page.
 
 When add-on is installed to Splunk instance, it is exposed via web and management interface, so is available under following addresses accordingly:
 

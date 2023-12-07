@@ -126,6 +126,13 @@ fields = [
         )
     ), 
     field.RestField(
+        'example_textarea_field',
+        required=True,
+        encrypted=False,
+        default=None,
+        validator=None
+    ), 
+    field.RestField(
         'example_help_link',
         required=False,
         encrypted=False,

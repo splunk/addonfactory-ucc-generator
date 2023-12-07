@@ -5,28 +5,21 @@ import styled from 'styled-components';
 import MarkdownMessage from './MarkdownMessage';
 import CONTROL_TYPE_MAP, { ComponentTypes } from '../constants/ControlTypeMap';
 
-const CustomElement = styled.div`
-    margin-left: 30px;
-`;
+const CustomElement = styled.div``;
 
 const ControlGroupWrapper = styled(ControlGroup).attrs((props: { dataName: string }) => ({
     'data-name': props.dataName,
 }))`
-    width: 100%;
     max-width: 100%;
-
-    > * {
-        &:first-child {
-            width: 240px !important;
-        }
-        &:nth-child(3) {
-            margin-left: 270px !important;
-            width: 320px;
-        }
-    }
 
     span[class*='ControlGroupStyles__StyledAsterisk-'] {
         color: red;
+    }
+
+    > * {
+        &:nth-child(3) {
+            width: 320px;
+        }
     }
 `;
 
@@ -157,6 +150,7 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
                     // @ts-ignore property should be data-name, but is mapped in obj ControlGroupWrapper
                     dataName={field}
                     required={required}
+                    labelWidth={240}
                 >
                     <CustomElement>{rowView}</CustomElement>
                 </ControlGroupWrapper>

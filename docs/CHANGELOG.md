@@ -1,3 +1,37 @@
+## [5.34.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.34.0...v5.34.1) (2023-12-06)
+
+
+### Bug Fixes
+
+* add control group wrapper max width to 750px ([#966](https://github.com/splunk/addonfactory-ucc-generator/issues/966)) ([0213c45](https://github.com/splunk/addonfactory-ucc-generator/commit/0213c457154cfbe56014ed358c13afa23e184049))
+
+# [5.34.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.33.0...v5.34.0) (2023-11-28)
+
+
+### Bug Fixes
+
+* change location of openapi.json generated file ([#958](https://github.com/splunk/addonfactory-ucc-generator/issues/958)) ([e0d38b7](https://github.com/splunk/addonfactory-ucc-generator/commit/e0d38b792596ebd60c407909a589692c425eecd6))
+* globalConfig validator respects numbers in values in autoCompleteFields ([#957](https://github.com/splunk/addonfactory-ucc-generator/issues/957)) ([1716494](https://github.com/splunk/addonfactory-ucc-generator/commit/17164942afdc7002f3b83107a067687cb873e8f2))
+* revert to static width of modal ([#955](https://github.com/splunk/addonfactory-ucc-generator/issues/955)) ([aec869f](https://github.com/splunk/addonfactory-ucc-generator/commit/aec869f391709496092397cc9164c5a34070975e))
+* update urllib3 ([#922](https://github.com/splunk/addonfactory-ucc-generator/issues/922)) ([11ff4c6](https://github.com/splunk/addonfactory-ucc-generator/commit/11ff4c6113930b684985ba1ba6f217e96d59b9d2))
+
+
+### Features
+
+* add optional label for helpLink component ([#939](https://github.com/splunk/addonfactory-ucc-generator/issues/939)) ([e3a9b40](https://github.com/splunk/addonfactory-ucc-generator/commit/e3a9b400b95b2b5e4d8594f12d9c425dd3c1f5d2))
+* add support for disableonEdit in oauth ([#953](https://github.com/splunk/addonfactory-ucc-generator/issues/953)) ([d948128](https://github.com/splunk/addonfactory-ucc-generator/commit/d948128a8039ecdb994214def58c499befe39e82))
+* additional validations for the groups feature ([#926](https://github.com/splunk/addonfactory-ucc-generator/issues/926)) ([29c1251](https://github.com/splunk/addonfactory-ucc-generator/commit/29c1251400b80d72e4349f1281df5d8d8ffb5f5d))
+* ADDON-64844 better spacing in modal ([#935](https://github.com/splunk/addonfactory-ucc-generator/issues/935)) ([b385759](https://github.com/splunk/addonfactory-ucc-generator/commit/b385759c4e90d534b23025bd2f4353cb566db257))
+* ADDON-65107 implement download button for openapi ([#932](https://github.com/splunk/addonfactory-ucc-generator/issues/932)) ([f71d7ec](https://github.com/splunk/addonfactory-ucc-generator/commit/f71d7ec20ada1a3d3a7d0a07bb24d81e7e4e088a))
+* **schema.json:** make entity schemas more specific ([#938](https://github.com/splunk/addonfactory-ucc-generator/issues/938)) ([24c667b](https://github.com/splunk/addonfactory-ucc-generator/commit/24c667bb01eb7f62bcd0dd799522ce32e178feb9))
+
+# [5.33.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.32.0...v5.33.0) (2023-11-14)
+
+
+### Features
+
+* release v5.33.0 ([#942](https://github.com/splunk/addonfactory-ucc-generator/issues/942)) ([c5968d2](https://github.com/splunk/addonfactory-ucc-generator/commit/c5968d2828c4c1662ad01427c68e98497722753a)), closes [#906](https://github.com/splunk/addonfactory-ucc-generator/issues/906) [#922](https://github.com/splunk/addonfactory-ucc-generator/issues/922) [#916](https://github.com/splunk/addonfactory-ucc-generator/issues/916) [#888](https://github.com/splunk/addonfactory-ucc-generator/issues/888)
+
 # [5.32.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.31.1...v5.32.0) (2023-10-13)
 
 

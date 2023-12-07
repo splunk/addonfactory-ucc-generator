@@ -58,6 +58,20 @@ fields = [
         validator=None
     ), 
     field.RestField(
+        'config1_help_link',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ), 
+    field.RestField(
+        'config2_help_link',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ), 
+    field.RestField(
         'username',
         required=False,
         encrypted=False,
@@ -79,6 +93,13 @@ fields = [
         validator=None
     ), 
     field.RestField(
+        'basic_oauth_text',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ), 
+    field.RestField(
         'client_id',
         required=False,
         encrypted=False,
@@ -94,6 +115,13 @@ fields = [
     ), 
     field.RestField(
         'redirect_url',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ), 
+    field.RestField(
+        'oauth_oauth_text',
         required=False,
         encrypted=False,
         default=None,
