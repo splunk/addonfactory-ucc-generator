@@ -23,16 +23,16 @@ const CommonEntityFields = z.object({
 });
 
 const CommonEditableEntityFields = CommonEntityFields.extend({
-    required: z.boolean().optional().default(false),
-    encrypted: z.boolean().optional().default(false),
+    required: z.boolean().default(false).optional(),
+    encrypted: z.boolean().default(false).optional(),
 });
 
 const CommonEditableEntityOptions = z.object({
     placeholder: z.string().optional(),
-    display: z.boolean().optional().default(true),
-    disableonEdit: z.boolean().optional().default(false),
-    enable: z.boolean().optional().default(true),
-    requiredWhenVisible: z.boolean().optional().default(false),
+    display: z.boolean().default(true).optional(),
+    disableonEdit: z.boolean().default(false).optional(),
+    enable: z.boolean().default(true).optional(),
+    requiredWhenVisible: z.boolean().default(false).optional(),
 });
 
 const AllValidators = z
@@ -53,6 +53,7 @@ export const LinkEntity = CommonEntityFields.extend({
     type: z.literal('helpLink'),
     label: z.string().optional(),
     options: z.object({ text: z.string(), link: z.string() }),
+    required: z.literal(false).default(false).optional(),
 });
 
 export type LinkEntity = z.infer<typeof LinkEntity>;
@@ -60,7 +61,7 @@ export type LinkEntity = z.infer<typeof LinkEntity>;
 export const TextEntity = CommonEditableEntityFields.extend({
     type: z.literal('text'),
     validators: AllValidators.optional(),
-    defaultValue: z.union([z.string(), z.number()]).optional(),
+    defaultValue: z.union([z.string(), z.number(), z.boolean()]).optional(),
     options: CommonEditableEntityOptions.optional(),
 });
 
@@ -85,8 +86,8 @@ const AutoCompleteFields = z.array(
 );
 
 const SelectCommonOptions = CommonEditableEntityOptions.extend({
-    disableSearch: z.boolean().optional().default(false),
-    createSearchChoice: z.boolean().optional().default(false),
+    disableSearch: z.boolean().default(false).optional(),
+    createSearchChoice: z.boolean().default(false).optional(),
     referenceName: z.string().optional(),
     endpointUrl: z.string().optional(),
     allowList: z.string().optional(),
@@ -179,22 +180,25 @@ export const FileEntity = CommonEditableEntityFields.extend({
         .optional(),
 });
 
-const OAuthFields = z
-    .object({
-        oauth_field: z.string(),
-        label: z.string(),
-        field: z.string(),
-        help: z.string(),
-        encrypted: z.boolean().default(false),
-        required: z.boolean().default(false),
-        defaultValue: z.union([z.string(), z.number(), z.boolean()]).optional(),
-        options: z.object({
+export const OAuthFields = z.object({
+    oauth_field: z.string(),
+    label: z.string(),
+    field: z.string(),
+    type: z.literal('text').default('text').optional(),
+    help: z.string(),
+    encrypted: z.boolean().default(false).optional(),
+    required: z.boolean().default(false).optional(),
+    defaultValue: z.union([z.string(), z.number(), z.boolean()]).optional(),
+    options: z
+        .object({
             placeholder: z.string().optional(),
             disableonEdit: z.boolean().optional(),
-            enable: z.boolean().optional().default(true),
-        }),
-    })
-    .partial();
+            enable: z.boolean().default(true).optional(),
+            display: z.literal(true).default(true).optional(),
+        })
+        .optional(),
+});
+
 export const OAuthEntity = CommonEditableEntityFields.extend({
     type: z.literal('oauth'),
     defaultValue: z.string().optional(),
