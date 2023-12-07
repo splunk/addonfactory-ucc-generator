@@ -212,7 +212,7 @@
     "meta": {
         "name": "test_addon",
         "restRoot": "test_addon",
-        "version": "5.32.0Rebfd4f12",
+        "version": "5.34.1Racdcfb2e",
         "displayName": "This is my add-on",
         "schemaVersion": "0.0.3"
     }

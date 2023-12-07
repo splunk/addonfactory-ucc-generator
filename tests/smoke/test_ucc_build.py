@@ -287,7 +287,7 @@ def test_ucc_build_verbose_mode(caplog):
     """
     Tests results will test both no option and --verbose mode of build command.
     No option provides a short summary of file created in manner: File creation summary: <result>
-    --verbose shows each file specifc case and short summary
+    --verbose shows each file specific case and short summary
     """
 
     caplog.set_level(logging.INFO, logger="ucc-gen")
@@ -348,7 +348,9 @@ def test_ucc_build_verbose_mode(caplog):
         )
 
     build.generate(
-        source=package_folder, output_directory=temp_dir, verbose_report=True
+        source=package_folder,
+        output_directory=temp_dir,
+        verbose_file_summary_report=True,
     )
 
     app_server_lib_path = os.path.join(build.internal_root_dir, "package")

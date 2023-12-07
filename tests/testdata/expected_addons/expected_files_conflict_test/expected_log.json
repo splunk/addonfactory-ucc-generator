@@ -23,9 +23,9 @@
   "\u001b[31mREADME/inputs.conf.spec                                                         conflict\u001b[0m": "INFO",
   "\u001b[31mREADME/test_addon_account.conf.spec                                             conflict\u001b[0m": "INFO",
   "\u001b[31mREADME/test_addon_settings.conf.spec                                            conflict\u001b[0m": "INFO",
-  "\u001b[31mstatic/openapi.json                                                             conflict\u001b[0m": "INFO",
   "lib                                                                             created\u001b[0m": "INFO",
   "appserver/static/js/build/globalConfig.json                                     created\u001b[0m": "INFO",
+  "appserver/static/openapi.json                                                   created\u001b[0m": "INFO",
   "metadata/default.meta                                                           created\u001b[0m": "INFO",
-  "File creation summary: created: 36, copied: 3, modified: 1, conflict: 6": "INFO"
+  "File creation summary: created: 52, copied: 3, modified: 1, conflict: 5": "INFO"
 }

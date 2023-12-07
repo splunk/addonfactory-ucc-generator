@@ -119,8 +119,8 @@ It takes the following parameters:
 * `--python-binary-name` - [optional] Python binary name to use when
     installing Python libraries. Default: `python3`.
 * `-v` / `--verbose` - [optional] show detailed information about
-    created/copied/modified/conflict files after build is complete. 
-    Default: `False`.
+    created/copied/modified/conflict files after build is complete.
+    This option is in experimental mode. Default: `False`.
 
 #### Verbose mode
 
