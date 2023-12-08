@@ -314,8 +314,7 @@ def test_ucc_build_verbose_mode(caplog):
         return return_logs
 
     def generate_expected_log():
-
-        def append_appserver_content():
+        def append_appserver_content(raw_expected_logs):
             path_len = len(app_server_lib_path) + 1
             excluded_files = ["redirect_page.js", "redirect.html"]
 
@@ -326,39 +325,35 @@ def test_ucc_build_verbose_mode(caplog):
                         if file not in excluded_files:
                             relative_file_path = os.path.join(relative_path, file)
                             key_to_insert = (
-                                    str(relative_file_path).ljust(80) + "created\u001b[0m"
+                                str(relative_file_path).ljust(80) + "created\u001b[0m"
                             )
-                            expected_logs[key_to_insert] = "INFO"
+                            raw_expected_logs[key_to_insert] = "INFO"
 
-        def summarize_types():
-            summary_counter = {
-                'created': 0,
-                'copied': 0,
-                'modified': 0,
-                'conflict': 0
-            }
+        def summarize_types(raw_expected_logs):
+            summary_counter = {"created": 0, "copied": 0, "modified": 0, "conflict": 0}
 
-            for log in expected_logs:
-                end = log.find('\u001b[0m')
+            for log in raw_expected_logs:
+                end = log.find("\u001b[0m")
                 if end > 1:
-                    type = log[end-10:end].strip()
-                    summary_counter[type] += 1
+                    string_end = end - 10
+                    operation_type = log[string_end:end].strip()
+                    summary_counter[operation_type] += 1
 
-            summary_message = (f'File creation summary: created: {summary_counter.get("created")}, '
-                               f'copied: {summary_counter.get("copied")}, '
-                               f'modified: {summary_counter.get("modified")}, '
-                               f'conflict: {summary_counter.get("conflict")}')
-            expected_logs[summary_message] = 'INFO'
+            summary_message = (
+                f'File creation summary: created: {summary_counter.get("created")}, '
+                f'copied: {summary_counter.get("copied")}, '
+                f'modified: {summary_counter.get("modified")}, '
+                f'conflict: {summary_counter.get("conflict")}'
+            )
+            raw_expected_logs[summary_message] = "INFO"
 
         with open(expected_logs_path) as f:
-            expected_logs = json.load(f)
+            raw_expected_logs = json.load(f)
 
-        append_appserver_content()
-        summarize_types()
+        append_appserver_content(raw_expected_logs)
+        summarize_types(raw_expected_logs)
 
-
-        return expected_logs
-
+        return raw_expected_logs
 
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
