@@ -26,6 +26,5 @@
   "lib                                                                             created\u001b[0m": "INFO",
   "appserver/static/js/build/globalConfig.json                                     created\u001b[0m": "INFO",
   "appserver/static/openapi.json                                                   created\u001b[0m": "INFO",
-  "metadata/default.meta                                                           created\u001b[0m": "INFO",
-  "File creation summary: created: 37, copied: 3, modified: 1, conflict: 5": "INFO"
+  "metadata/default.meta                                                           created\u001b[0m": "INFO"
 }

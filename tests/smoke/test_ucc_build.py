@@ -313,20 +313,52 @@ def test_ucc_build_verbose_mode(caplog):
 
         return return_logs
 
-    def append_appserver_content():
-        path_len = len(app_server_lib_path) + 1
-        excluded_files = ["redirect_page.js", "redirect.html"]
+    def generate_expected_log():
 
-        for full_path, dir, files in os.walk(app_server_lib_path):
-            if files:
-                relative_path = full_path[path_len:]
-                for file in files:
-                    if file not in excluded_files:
-                        relative_file_path = os.path.join(relative_path, file)
-                        key_to_insert = (
-                            str(relative_file_path).ljust(80) + "created\u001b[0m"
-                        )
-                        expected_logs[key_to_insert] = "INFO"
+        def append_appserver_content():
+            path_len = len(app_server_lib_path) + 1
+            excluded_files = ["redirect_page.js", "redirect.html"]
+
+            for full_path, dir, files in os.walk(app_server_lib_path):
+                if files:
+                    relative_path = full_path[path_len:]
+                    for file in files:
+                        if file not in excluded_files:
+                            relative_file_path = os.path.join(relative_path, file)
+                            key_to_insert = (
+                                    str(relative_file_path).ljust(80) + "created\u001b[0m"
+                            )
+                            expected_logs[key_to_insert] = "INFO"
+
+        def summarize_types():
+            summary_counter = {
+                'created': 0,
+                'copied': 0,
+                'modified': 0,
+                'conflict': 0
+            }
+
+            for log in expected_logs:
+                end = log.find('\u001b[0m')
+                if end > 1:
+                    type = log[end-10:end].strip()
+                    summary_counter[type] += 1
+
+            summary_message = (f'File creation summary: created: {summary_counter.get("created")}, '
+                               f'copied: {summary_counter.get("copied")}, '
+                               f'modified: {summary_counter.get("modified")}, '
+                               f'conflict: {summary_counter.get("conflict")}')
+            expected_logs[summary_message] = 'INFO'
+
+        with open(expected_logs_path) as f:
+            expected_logs = json.load(f)
+
+        append_appserver_content()
+        summarize_types()
+
+
+        return expected_logs
+
 
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
@@ -357,10 +389,7 @@ def test_ucc_build_verbose_mode(caplog):
 
     summary_logs = extract_summary_logs()
 
-    with open(expected_logs_path) as f:
-        expected_logs = json.load(f)
-
-    append_appserver_content()
+    expected_logs = generate_expected_log()
 
     assert len(summary_logs) == len(expected_logs)
 
