@@ -1603,14 +1603,27 @@
               "platform": {
                 "type": "string"
               },
-              "python-version": {
+              "python_version": {
                 "type": "string"
               },
               "target": {
                 "type": "string"
+              },
+              "os": {
+                "anyOf": [
+                {
+                  "const": "linux"
+                },
+                {
+                  "const": "windows"
+                },
+                {
+                  "const": "darwin"
+                }
+              ]
               }
             },
-            "required": ["name", "version", "platform", "python-version", "target"]
+            "required": ["name", "version", "platform", "python_version", "target", "os"]
           }
         }
       },

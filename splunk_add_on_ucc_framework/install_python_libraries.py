@@ -20,7 +20,8 @@ import stat
 import subprocess
 import sys
 from pathlib import Path
-from typing import Sequence, Any, List, Dict, Optional
+from typing import Sequence, List, Optional
+from splunk_add_on_ucc_framework.global_config import OSDependentLibraryConfig
 
 logger = logging.getLogger("ucc_gen")
 
@@ -63,7 +64,7 @@ def install_python_libraries(
     ucc_lib_target: str,
     python_binary_name: str,
     includes_ui: bool = False,
-    os_libraries: Optional[List[Dict[str, Any]]] = None,
+    os_libraries: Optional[List[OSDependentLibraryConfig]] = None,
 ) -> None:
     path_to_requirements_file = os.path.join(source_path, "lib", "requirements.txt")
     if os.path.isfile(path_to_requirements_file):
@@ -163,13 +164,10 @@ def remove_execute_bit(installation_path: str) -> None:
 
 
 def install_os_dependent_libraries(
-    ucc_lib_target: str, installer: str, os_libraries: List[Dict[str, Any]]
+    ucc_lib_target: str, installer: str, os_libraries: List[OSDependentLibraryConfig]
 ) -> None:
     for package in os_libraries:
-        params = get_download_params(package)
-        target_path = os.path.join(
-            ucc_lib_target, os.path.normpath(params.get("target", ""))
-        )
+        target_path = os.path.join(ucc_lib_target, os.path.normpath(package.target))
 
         if not os.path.exists(target_path):
             os.makedirs(target_path)
@@ -178,12 +176,12 @@ def install_os_dependent_libraries(
             f"{installer} "
             f"-m pip "
             f"install "
-            f"{params.get('dependencies')} "
-            f"--platform {params.get('platform')} "
-            f"--python-version {params.get('python_version')} "
+            f"{package.deps_flag} "
+            f"--platform {package.platform} "
+            f"--python-version {package.python_version} "
             f"--target {target_path}"
             f" --only-binary=:all: "
-            f"{params.get('name')}=={params.get('version')}"
+            f"{package.name}=={package.version}"
         )
 
         logger.info(f"Executing: {pip_download_command}")
@@ -194,16 +192,3 @@ def install_os_dependent_libraries(
                 "Downloading process failed. Please verify parameters in the globalConfig.json file."
             )
             sys.exit("Package building process interrupted.")
-
-
-def get_download_params(package: Dict[str, str]) -> Dict[str, str]:
-    params = {
-        "name": package.get("name", ""),
-        "version": package.get("version", ""),
-        "dependencies": "" if package.get("dependencies", "") else "--no-deps",
-        "platform": package.get("platform", ""),
-        "python_version": package.get("python-version", ""),
-        "target": package.get("target", ""),
-    }
-
-    return params

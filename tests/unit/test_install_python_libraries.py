@@ -313,7 +313,18 @@ def test_install_os_dependent_libraries_valid(mock_subprocess_call, caplog, tmp_
         f"--only-binary=:all: cryptography==41.0.5"
     )
 
+    log_message_expected_3 = (
+        f"python3 -m pip install "
+        f"--no-deps "
+        f"--platform macosx_10_12_universal2 "
+        f"--python-version 37 "
+        f"--target {tmp_ucc_lib_target}/3rdparty/darwin "
+        f"--only-binary=:all: cryptography==41.0.5"
+    )
+
     assert log_message_expected_1 in caplog.text
     assert log_message_expected_2 in caplog.text
+    assert log_message_expected_3 in caplog.text
     assert os.path.isdir(f"{tmp_ucc_lib_target}/3rdparty/windows") is True
     assert os.path.isdir(f"{tmp_ucc_lib_target}/3rdparty/linux") is True
+    assert os.path.isdir(f"{tmp_ucc_lib_target}/3rdparty/darwin") is True

@@ -55,7 +55,8 @@
                 "name": "wrong_lib_name",
                 "version": "1.2.3",
                 "platform": "win_xp",
-                "python-version": "45",
+                "python_version": "45",
+                "os": "windows",
                 "target": "3rdparty/windows"
             }
         ]

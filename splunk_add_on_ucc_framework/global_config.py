@@ -16,6 +16,7 @@
 import functools
 import json
 from typing import Optional, Any, List, Dict
+from dataclasses import dataclass, field, fields
 
 import yaml
 
@@ -23,6 +24,33 @@ from splunk_add_on_ucc_framework import utils
 
 Loader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
 yaml_load = functools.partial(yaml.load, Loader=Loader)
+
+
+@dataclass(frozen=True)
+class OSDependentLibraryConfig:
+    name: str
+    version: str
+    platform: str
+    python_version: str
+    target: str
+    os: str
+    deps_flag: str
+    dependencies: bool = field(default=False)
+
+    @classmethod
+    def from_dict(cls, **kwargs: Any) -> "OSDependentLibraryConfig":
+        result = {
+            dc_field.name: kwargs[dc_field.name]
+            for dc_field in fields(cls)
+            if dc_field.name in kwargs
+            and (
+                isinstance(kwargs[dc_field.name], dc_field.type)
+                or kwargs[dc_field.name] is None
+            )
+        }
+        deps_flag = "" if result.get("dependencies") else "--no-deps"
+        result.update({"deps_flag": deps_flag})
+        return cls(**result)
 
 
 class GlobalConfig:
@@ -108,8 +136,13 @@ class GlobalConfig:
         return self.meta.get("schemaVersion")
 
     @property
-    def os_libraries(self) -> Optional[List[Dict[str, Any]]]:
-        return self._content["meta"].get("os-dependentLibraries")
+    def os_libraries(self) -> Optional[List[OSDependentLibraryConfig]]:
+        if self._content["meta"].get("os-dependentLibraries"):
+            return [
+                OSDependentLibraryConfig.from_dict(**lib)
+                for lib in self._content["meta"].get("os-dependentLibraries")
+            ]
+        return None
 
     def update_schema_version(self, new_schema_version: str) -> None:
         self.meta["schemaVersion"] = new_schema_version

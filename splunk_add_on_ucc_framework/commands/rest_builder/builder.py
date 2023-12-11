@@ -15,13 +15,14 @@
 #
 import os
 import os.path as op
-from typing import Dict, List
+from typing import Dict, List, Set
 
 from splunk_add_on_ucc_framework.commands.rest_builder import (
     global_config_builder_schema,
 )
 from splunk_add_on_ucc_framework.rest_map_conf import RestmapConf
 from splunk_add_on_ucc_framework.web_conf import WebConf
+from splunk_add_on_ucc_framework.global_config import OSDependentLibraryConfig
 
 __all__ = ["RestBuilder"]
 
@@ -40,9 +41,51 @@ new_paths.insert(0, os.path.sep.join([os.path.dirname(__file__), ta_name]))
 sys.path = new_paths
 """
 
+_import_declare_os_lib_content = """
+bindir = os.path.dirname(os.path.realpath(os.path.dirname(__file__)))
+libdir = os.path.join(bindir, "lib")
+platform = sys.platform
+"""
 
-def _generate_import_declare_test(addon_name: str) -> str:
-    return _import_declare_content.format(ta_name=addon_name)
+
+def _generate_import_declare_test(
+    schema: global_config_builder_schema.GlobalConfigBuilderSchema,
+) -> str:
+    base_content = _import_declare_content.format(ta_name=schema.product)
+    libraries = schema.global_config.os_libraries
+    if not libraries:
+        return base_content
+
+    paths = get_paths_to_add(libraries)
+    os_lib_part = _import_declare_os_lib_content
+    for lib_os, targets in paths.items():
+        if lib_os == "windows":
+            os_lib_part += 'if platform.startswith("win"):\n'
+            for target in targets:
+                os_lib_part += get_insert_to_syspath_str(target)
+        elif lib_os == "darwin":
+            os_lib_part += 'if platform.startswith("darwin"):\n'
+            for target in targets:
+                os_lib_part += get_insert_to_syspath_str(target)
+        else:
+            os_lib_part += 'if platform.startswith("linux"):\n'
+            for target in targets:
+                os_lib_part += get_insert_to_syspath_str(target)
+
+    return base_content + os_lib_part
+
+
+def get_paths_to_add(libraries: List[OSDependentLibraryConfig]) -> Dict[str, Set[str]]:
+    result: Dict[str, Set[str]] = {}
+    for library in libraries:
+        lib_os = library.os
+        target = os.path.normpath(library.target)
+        result.setdefault(lib_os, set()).add(target)
+    return result
+
+
+def get_insert_to_syspath_str(target: str) -> str:
+    return f'\tsys.path.insert(0, os.path.join(libdir, "{target}"))\n'
 
 
 class _RestBuilderOutput:
@@ -146,6 +189,6 @@ class RestBuilder:
         self.output.put(
             self.output.bin,
             "import_declare_test.py",
-            _generate_import_declare_test(self._schema.product),
+            _generate_import_declare_test(self._schema),
         )
         self.output.save()

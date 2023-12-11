@@ -55,14 +55,24 @@
         "name": "cryptography",
         "version": "41.0.5",
         "platform": "win_amd64",
-        "python-version": "37",
+        "python_version": "37",
+        "os": "windows",
         "target": "3rdparty/windows"
+      },
+      {
+        "name": "cryptography",
+        "version": "41.0.5",
+        "platform": "macosx_10_12_universal2",
+        "python_version": "37",
+        "os": "darwin",
+        "target": "3rdparty/darwin"
       },
       {
         "name": "cffi",
         "version": "1.5.1",
         "platform": "win_amd64",
-        "python-version": "37",
+        "python_version": "37",
+        "os": "windows",
         "target": "3rdparty/windows"
       },
       {
@@ -70,7 +80,8 @@
         "version": "41.0.5",
         "dependencies": true,
         "platform": "manylinux2014_x86_64",
-        "python-version": "37",
+        "python_version": "37",
+        "os": "linux",
         "target": "3rdparty/linux"
       }
     ]
