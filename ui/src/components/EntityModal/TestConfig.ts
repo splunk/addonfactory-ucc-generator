@@ -153,4 +153,61 @@ export const getConfigOauthOauthDisableonEdit = () => {
     return newConfig satisfies z.infer<typeof GlobalConfigSchema>;
 };
 
-getGlobalConfigMock();
+const accessTokenMock = [
+    {
+        field: 'oauth',
+        label: 'Not used',
+        type: 'oauth',
+        required: true,
+        encrypted: false,
+        options: {
+            auth_type: ['oauth'],
+            oauth: [
+                {
+                    oauth_field: 'client_id',
+                    label: 'App Id',
+                    field: 'client_id',
+                    help: 'Enter Client Id.',
+                },
+                {
+                    oauth_field: 'client_secret',
+                    label: 'App Secret',
+                    field: 'client_secret',
+                    encrypted: true,
+                    help: 'Enter Client Secret.',
+                },
+                {
+                    oauth_field: 'redirect_url',
+                    label: 'Redirect url',
+                    field: 'redirect_url',
+                    help: 'Please add this redirect URL in your app.',
+                },
+            ],
+            auth_label: 'Auth Type',
+            oauth_popup_width: 600,
+            oauth_popup_height: 600,
+            oauth_timeout: 180,
+            auth_code_endpoint: '/oauth2/authorize',
+            access_token_endpoint: '/oauth2/token',
+            auth_endpoint_token_access_type: 'offline',
+            display: true,
+            disableonEdit: false,
+            enable: true,
+        },
+    } satisfies z.infer<typeof OAuthEntity>,
+];
+
+export const getConfigAccerssTokenMock = () => {
+    const globalConfig = getGlobalConfigMock();
+    const newConfig = {
+        ...globalConfig,
+        pages: {
+            ...globalConfig.pages,
+            configuration: {
+                ...globalConfig.pages.configuration,
+                tabs: [{ entity: accessTokenMock, ...defaultTableProps }],
+            },
+        },
+    };
+    return newConfig satisfies z.infer<typeof GlobalConfigSchema>;
+};

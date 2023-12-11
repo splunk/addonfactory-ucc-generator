@@ -1139,6 +1139,10 @@
               "type": "string",
               "maxLength": 350
             },
+            "auth_endpoint_token_access_type": {
+              "type": "string",
+              "maxLength": 350
+            },
             "oauth_state_enabled": {
               "type": "boolean"
             }
