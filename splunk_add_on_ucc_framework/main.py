@@ -103,6 +103,16 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         help="Python binary name to use to install requirements",
         default="python3",
     )
+    build_parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        default=False,
+        help=(
+            "[experimental] show detailed information about "
+            "created/copied/modified/conflict files after build is complete"
+        ),
+    )
 
     package_parser = subparsers.add_parser("package", description="Package an add-on")
     package_parser.add_argument(
@@ -178,6 +188,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             addon_version=args.ta_version,
             output_directory=args.output,
             python_binary_name=args.python_binary_name,
+            verbose_file_summary_report=args.verbose,
         )
     if args.command == "package":
         package.package(path_to_built_addon=args.path, output_directory=args.output)

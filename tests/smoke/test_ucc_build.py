@@ -2,6 +2,8 @@ import os
 import tempfile
 import sys
 import pytest
+import logging
+import json
 from os import path
 
 from tests.smoke import helpers
@@ -279,3 +281,114 @@ def test_ucc_generate_openapi_with_configuration_files_only():
             temp_dir, "Splunk_TA_UCCExample", "appserver", "static", "openapi.json"
         )
         assert not path.exists(expected_file_path)
+
+
+def test_ucc_build_verbose_mode(caplog):
+    """
+    Tests results will test both no option and --verbose mode of build command.
+    No option provides a short summary of file created in manner: File creation summary: <result>
+    --verbose shows each file specific case and short summary
+    """
+
+    caplog.set_level(logging.INFO, logger="ucc-gen")
+
+    def extract_summary_logs():
+        return_logs = []
+        copy_logs = False
+
+        message_to_start = (
+            "Detailed information about created/copied/modified/conflict files"
+        )
+        message_to_end = "File creation summary:"
+
+        for record in caplog.records:
+            if record.message == message_to_start:
+                copy_logs = True
+
+            if copy_logs:
+                return_logs.append(record)
+
+            if record.message[:22] == message_to_end:
+                copy_logs = False
+
+        return return_logs
+
+    def generate_expected_log():
+        def append_appserver_content(raw_expected_logs):
+            path_len = len(app_server_lib_path) + 1
+            excluded_files = ["redirect_page.js", "redirect.html"]
+
+            for full_path, dir, files in os.walk(app_server_lib_path):
+                if files:
+                    relative_path = full_path[path_len:]
+                    for file in files:
+                        if file not in excluded_files:
+                            relative_file_path = os.path.join(relative_path, file)
+                            key_to_insert = (
+                                str(relative_file_path).ljust(80) + "created\u001b[0m"
+                            )
+                            raw_expected_logs[key_to_insert] = "INFO"
+
+        def summarize_types(raw_expected_logs):
+            summary_counter = {"created": 0, "copied": 0, "modified": 0, "conflict": 0}
+
+            for log in raw_expected_logs:
+                end = log.find("\u001b[0m")
+                if end > 1:
+                    string_end = end - 10
+                    operation_type = log[string_end:end].strip()
+                    summary_counter[operation_type] += 1
+
+            summary_message = (
+                f'File creation summary: created: {summary_counter.get("created")}, '
+                f'copied: {summary_counter.get("copied")}, '
+                f'modified: {summary_counter.get("modified")}, '
+                f'conflict: {summary_counter.get("conflict")}'
+            )
+            raw_expected_logs[summary_message] = "INFO"
+
+        with open(expected_logs_path) as f:
+            raw_expected_logs = json.load(f)
+
+        append_appserver_content(raw_expected_logs)
+        summarize_types(raw_expected_logs)
+
+        return raw_expected_logs
+
+    with tempfile.TemporaryDirectory() as temp_dir:
+        package_folder = path.join(
+            path.dirname(path.realpath(__file__)),
+            "..",
+            "testdata",
+            "test_addons",
+            "package_files_conflict_test",
+            "package",
+        )
+
+        expected_logs_path = path.join(
+            path.dirname(path.realpath(__file__)),
+            "..",
+            "testdata",
+            "expected_addons",
+            "expected_files_conflict_test",
+            "expected_log.json",
+        )
+
+    build.generate(
+        source=package_folder,
+        output_directory=temp_dir,
+        verbose_file_summary_report=True,
+    )
+
+    app_server_lib_path = os.path.join(build.internal_root_dir, "package")
+
+    summary_logs = extract_summary_logs()
+
+    expected_logs = generate_expected_log()
+
+    assert len(summary_logs) == len(expected_logs)
+
+    for log_line in summary_logs:
+        # summary messages must be the same but might come in different order
+        assert log_line.message in expected_logs.keys()
+        assert log_line.levelname == expected_logs[log_line.message]
