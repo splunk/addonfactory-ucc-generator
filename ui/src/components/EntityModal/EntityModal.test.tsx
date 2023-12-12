@@ -36,7 +36,7 @@ describe('Oauth field disabled on edit - diableonEdit property', () => {
     const getDisabledBasicField = () =>
         document.getElementsByClassName('basic_oauth_text_jest_test')[1];
 
-    it('Oauth Oauth - test if oauth field not disabled on create after disableonEdit', async () => {
+    it('Oauth Oauth - disableonEdit = true, oauth field not disabled on create', async () => {
         setUpConfigWithDisabedOauth();
         const props = {
             serviceName: 'account',
@@ -54,7 +54,7 @@ describe('Oauth field disabled on edit - diableonEdit property', () => {
         expect(oauthTextBox).not.toHaveAttribute('disabled');
     });
 
-    it('Oauth Oauth - test if oauth field disabled on edit after disableonEdit', async () => {
+    it('Oauth Oauth - disableonEdit = true, oauth field disabled on edit', async () => {
         setUpConfigWithDisabedOauth();
         const props = {
             serviceName: 'account',
@@ -71,7 +71,7 @@ describe('Oauth field disabled on edit - diableonEdit property', () => {
 
         const oauthTextBox = getDisabledOauthField();
         expect(oauthTextBox).toBeInTheDocument();
-        expect(oauthTextBox).not.toHaveAttribute('disabled');
+        expect(oauthTextBox).toHaveAttribute('disabled');
     });
 
     it('Oauth Basic - Enable field equal false, so field disabled', async () => {
