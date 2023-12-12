@@ -64,6 +64,7 @@ class BaseFormView extends PureComponent {
             addCustomValidator: this.addCustomValidator,
             utilCustomFunctions: this.util,
         };
+        this.customWarningMessage = '';
 
         if (props.page === PAGE_INPUT) {
             globalConfig.pages.inputs.services.forEach((service) => {
@@ -83,6 +84,7 @@ class BaseFormView extends PureComponent {
                         this.currentInput =
                             context?.rowData?.[props.serviceName]?.[props.stanzaName];
                     }
+                    this.customWarningMessage = service?.warning?.[props.mode] || '';
                 }
             });
         } else {
@@ -93,6 +95,7 @@ class BaseFormView extends PureComponent {
                 if (flag) {
                     this.entities = tab.entity;
                     this.options = tab.options;
+                    this.customWarningMessage = tab?.warning?.[props.mode] || '';
                     if (tab.hook) {
                         this.hookDeferred = this.loadHook(
                             tab.hook.src,
@@ -372,7 +375,7 @@ class BaseFormView extends PureComponent {
         this.state = {
             data: temState,
             errorMsg: '',
-            warningMsg: '',
+            warningMsg: this.customWarningMessage,
         };
 
         // Hook on create method call
@@ -782,7 +785,7 @@ class BaseFormView extends PureComponent {
     clearAllErrorMsg = (State) => {
         const newFields = State ? { ...State } : { ...this.state };
         newFields.errorMsg = '';
-        newFields.warningMsg = '';
+        newFields.warningMsg = this.customWarningMessage || '';
         const newData = State ? { ...State.data } : { ...this.state.data };
         const temData = {};
         Object.keys(newData).forEach((key) => {

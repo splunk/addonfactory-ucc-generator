@@ -4,6 +4,11 @@
             "tabs": [
                 {
                     "name": "account",
+                    "warning": {
+                        "create": "Some warning for account text create",
+                        "edit": "Some warning for account text edit",
+                        "clone": "Some warning for account text clone"
+                    },
                     "table": {
                         "actions": [
                             "edit",
@@ -231,6 +236,9 @@
                 },
                 {
                     "name": "proxy",
+                    "warning": {
+                        "config": "Some warning for proxy text config"
+                    },
                     "entity": [
                         {
                             "type": "checkbox",
@@ -332,6 +340,9 @@
                 },
                 {
                     "name": "logging",
+                    "warning": {
+                        "config": "Some logging for proxy text config"
+                    },
                     "entity": [
                         {
                             "type": "singleSelect",
@@ -459,6 +470,11 @@
             "services": [
                 {
                     "name": "example_input_one",
+                    "warning": {
+                        "create": "Some warning for input text create",
+                        "edit": "Some warning for input text edit",
+                        "clone": "Some warning for input text clone"
+                    },
                     "entity": [
                         {
                             "type": "text",
@@ -1338,7 +1354,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.34.1Racdcfb2e",
+        "version": "5.34.1R3fad1a25",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.3"
     }
