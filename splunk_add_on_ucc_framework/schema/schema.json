@@ -1589,6 +1589,46 @@
         "checkForUpdates": {
           "type": "boolean",
           "default": true
+        },
+        "os-dependentLibraries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "version": {
+                "type": "string"
+              },
+              "dependencies": {
+                "type": "boolean"
+              },
+              "platform": {
+                "type": "string"
+              },
+              "python_version": {
+                "type": "string"
+              },
+              "target": {
+                "type": "string"
+              },
+              "os": {
+                "anyOf": [
+                {
+                  "const": "linux"
+                },
+                {
+                  "const": "windows"
+                },
+                {
+                  "const": "darwin"
+                }
+              ]
+              }
+            },
+            "required": ["name", "version", "platform", "python_version", "target", "os"]
+          }
         }
       },
       "required": ["displayName", "name", "restRoot", "version"],

@@ -18,8 +18,10 @@ import os
 import shutil
 import stat
 import subprocess
+import sys
 from pathlib import Path
-from typing import Sequence
+from typing import Sequence, List, Optional
+from splunk_add_on_ucc_framework.global_config import OSDependentLibraryConfig
 
 logger = logging.getLogger("ucc_gen")
 
@@ -62,6 +64,7 @@ def install_python_libraries(
     ucc_lib_target: str,
     python_binary_name: str,
     includes_ui: bool = False,
+    os_libraries: Optional[List[OSDependentLibraryConfig]] = None,
 ) -> None:
     path_to_requirements_file = os.path.join(source_path, "lib", "requirements.txt")
     if os.path.isfile(path_to_requirements_file):
@@ -82,6 +85,12 @@ def install_python_libraries(
             ucc_lib_target,
             python_binary_name,
         )
+
+        if os_libraries:
+            install_os_dependent_libraries(
+                ucc_lib_target, python_binary_name, os_libraries
+            )
+
         packages_to_remove = (
             "setuptools",
             "bin",
@@ -152,3 +161,34 @@ def remove_execute_bit(installation_path: str) -> None:
             logger.info(f"  fixing {o} execute bit")
             current_permissions = stat.S_IMODE(os.lstat(o).st_mode)
             os.chmod(o, current_permissions & no_exec)
+
+
+def install_os_dependent_libraries(
+    ucc_lib_target: str, installer: str, os_libraries: List[OSDependentLibraryConfig]
+) -> None:
+    for package in os_libraries:
+        target_path = os.path.join(ucc_lib_target, os.path.normpath(package.target))
+
+        if not os.path.exists(target_path):
+            os.makedirs(target_path)
+
+        pip_download_command = (
+            f"{installer} "
+            f"-m pip "
+            f"install "
+            f"{package.deps_flag} "
+            f"--platform {package.platform} "
+            f"--python-version {package.python_version} "
+            f"--target {target_path}"
+            f" --only-binary=:all: "
+            f"{package.name}=={package.version}"
+        )
+
+        logger.info(f"Executing: {pip_download_command}")
+        try:
+            _subprocess_call(pip_download_command, "pip download")
+        except CouldNotInstallRequirements:
+            logger.error(
+                "Downloading process failed. Please verify parameters in the globalConfig.json file."
+            )
+            sys.exit("Package building process interrupted.")

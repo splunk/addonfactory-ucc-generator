@@ -539,7 +539,11 @@ def generate(
         ucc_lib_target = os.path.join(output_directory, ta_name, "lib")
         try:
             install_python_libraries(
-                source, ucc_lib_target, python_binary_name, includes_ui=True
+                source,
+                ucc_lib_target,
+                python_binary_name,
+                includes_ui=True,
+                os_libraries=global_config.os_libraries,
             )
         except SplunktaucclibNotFound as e:
             logger.error(str(e))

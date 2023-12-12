@@ -62,6 +62,7 @@ nav:
     - Custom REST Handler: "advanced/custom_rest_handler.md"
     - Groups Feature: "advanced/groups_feature.md"
     - Save Validator: "advanced/save_validator.md"
+    - OS-dependent libraries: "advanced/os-dependent_libraries.md"
   - Troubleshooting: "troubleshooting.md"
   - Contributing: "contributing.md"
   - Changelog: "CHANGELOG.md"

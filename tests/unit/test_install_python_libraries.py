@@ -3,6 +3,7 @@ import stat
 from unittest import mock
 
 import pytest
+import tests.unit.helpers as helpers
 
 from splunk_add_on_ucc_framework.install_python_libraries import (
     CouldNotInstallRequirements,
@@ -13,6 +14,8 @@ from splunk_add_on_ucc_framework.install_python_libraries import (
     remove_execute_bit,
     remove_package_from_installed_path,
 )
+
+from splunk_add_on_ucc_framework import global_config as gc
 
 
 @pytest.mark.parametrize(
@@ -240,3 +243,88 @@ def test_remove_execute_bit(tmp_path):
 
     assert os.access(tmp_lib_path_foo_file, os.X_OK) is False
     assert os.access(tmp_lib_path_bar_file, os.X_OK) is False
+
+
+@mock.patch("subprocess.call", autospec=True)
+@mock.patch(
+    "splunk_add_on_ucc_framework.install_python_libraries.install_libraries",
+    autospec=True,
+)
+def test_install_os_dependent_libraries_invalid(
+    mock_subprocess_call, install_libraries, caplog, tmp_path
+):
+    mock_subprocess_call.return_value = 1
+    install_libraries.return_value = True
+    global_config_path = helpers.get_testdata_file_path(
+        "valid_config_with_invalid_os_libraries.json"
+    )
+    global_config = gc.GlobalConfig(global_config_path, False)
+
+    tmp_ucc_lib_target = tmp_path / "ucc-lib-target"
+    tmp_lib_path = tmp_path / "lib"
+    tmp_lib_path.mkdir()
+    tmp_lib_reqs_file = tmp_lib_path / "requirements.txt"
+    tmp_lib_reqs_file.write_text("splunktaucclib\n")
+
+    with pytest.raises(SystemExit):
+        install_python_libraries(
+            str(tmp_path),
+            str(tmp_ucc_lib_target),
+            python_binary_name="python3",
+            os_libraries=global_config.os_libraries,
+        )
+
+
+@mock.patch("subprocess.call", autospec=True)
+def test_install_os_dependent_libraries_valid(mock_subprocess_call, caplog, tmp_path):
+    global_config_path = helpers.get_testdata_file_path(
+        "valid_config_with_os_libraries.json"
+    )
+    global_config = gc.GlobalConfig(global_config_path, False)
+
+    mock_subprocess_call.return_value = 0
+    tmp_ucc_lib_target = tmp_path / "ucc-lib-target"
+    tmp_lib_path = tmp_path / "lib"
+    tmp_lib_path.mkdir()
+    tmp_lib_reqs_file = tmp_lib_path / "requirements.txt"
+    tmp_lib_reqs_file.write_text("splunktaucclib\n")
+
+    install_python_libraries(
+        str(tmp_path),
+        str(tmp_ucc_lib_target),
+        python_binary_name="python3",
+        os_libraries=global_config.os_libraries,
+    )
+
+    log_message_expected_1 = (
+        f"python3 -m pip install "
+        f"--no-deps "
+        f"--platform win_amd64 "
+        f"--python-version 37 "
+        f"--target {tmp_ucc_lib_target}/3rdparty/windows "
+        f"--only-binary=:all: cryptography==41.0.5"
+    )
+
+    log_message_expected_2 = (
+        f"python3 -m pip install  "
+        f"--platform manylinux2014_x86_64 "
+        f"--python-version 37 "
+        f"--target {tmp_ucc_lib_target}/3rdparty/linux "
+        f"--only-binary=:all: cryptography==41.0.5"
+    )
+
+    log_message_expected_3 = (
+        f"python3 -m pip install "
+        f"--no-deps "
+        f"--platform macosx_10_12_universal2 "
+        f"--python-version 37 "
+        f"--target {tmp_ucc_lib_target}/3rdparty/darwin "
+        f"--only-binary=:all: cryptography==41.0.5"
+    )
+
+    assert log_message_expected_1 in caplog.text
+    assert log_message_expected_2 in caplog.text
+    assert log_message_expected_3 in caplog.text
+    assert os.path.isdir(f"{tmp_ucc_lib_target}/3rdparty/windows") is True
+    assert os.path.isdir(f"{tmp_ucc_lib_target}/3rdparty/linux") is True
+    assert os.path.isdir(f"{tmp_ucc_lib_target}/3rdparty/darwin") is True
