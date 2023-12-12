@@ -207,6 +207,7 @@ export const OAuthEntity = CommonEditableEntityFields.extend({
         auth_code_endpoint: z.string().optional(),
         access_token_endpoint: z.string().optional(),
         oauth_state_enabled: z.boolean().optional(),
+        auth_endpoint_token_access_type: z.string().optional(),
     }),
 });
 
