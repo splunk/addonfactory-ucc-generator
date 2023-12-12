@@ -160,7 +160,7 @@ const accessTokenMock = [
     } satisfies z.infer<typeof OAuthEntity>,
 ];
 
-export const getConfigAccerssTokenMock = () => {
+export const getConfigAccessTokenMock = () => {
     const globalConfig = getGlobalConfigMock();
     const newConfig = {
         ...globalConfig,
@@ -216,6 +216,47 @@ export const getConfigEnableFalseForOauth = () => {
             configuration: {
                 ...globalConfig.pages.configuration,
                 tabs: [{ entity: entityEnableFalseForOauthField, ...defaultTableProps }],
+            },
+        },
+    };
+    return newConfig satisfies z.infer<typeof GlobalConfigSchema>;
+};
+
+export const WARNING_MESSAGES = {
+    create: 'Some warning text create',
+    edit: 'Some warning text edit',
+    clone: 'Some warning text clone',
+    config: 'Some warning text config',
+};
+
+export const getConfigWarningMessage = () => {
+    const globalConfig = getGlobalConfigMock();
+    const newConfig = {
+        ...globalConfig,
+        pages: {
+            ...globalConfig.pages,
+            configuration: {
+                ...globalConfig.pages.configuration,
+                tabs: [
+                    { entity: accessTokenMock, ...defaultTableProps, warning: WARNING_MESSAGES },
+                ],
+            },
+        },
+    };
+    return newConfig satisfies z.infer<typeof GlobalConfigSchema>;
+};
+
+export const getConfigWarningMessageForInputServices = () => {
+    const globalConfig = getGlobalConfigMock();
+    const newConfig = {
+        ...globalConfig,
+        pages: {
+            ...globalConfig.pages,
+            input: {
+                ...globalConfig.pages.configuration,
+                services: [
+                    { entity: accessTokenMock, ...defaultTableProps, warning: WARNING_MESSAGES },
+                ],
             },
         },
     };
