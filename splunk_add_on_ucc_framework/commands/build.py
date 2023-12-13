@@ -21,6 +21,9 @@ import shutil
 import sys
 from typing import Optional, List
 import subprocess
+import colorama as c
+import fnmatch
+import filecmp
 
 from openapi3 import OpenAPI
 
@@ -327,12 +330,126 @@ def _get_python_version_from_executable(python_binary_name: str) -> str:
         )
 
 
+def summary_report(
+    source: str,
+    ta_name: str,
+    output_directory: str,
+    verbose_file_summary_report: bool,
+) -> None:
+    # initialising colorama to handle ASCII color in windows cmd
+    c.init()
+    color_palette = {
+        "copied": c.Fore.GREEN,
+        "conflict": c.Fore.RED,
+        "modified": c.Fore.YELLOW,
+    }
+
+    # conflicting files from ucc-gen package folder
+    conflict_path = os.path.join(internal_root_dir, "package")
+    # conflict files generated through-out the process
+    conflict_static_list = frozenset(
+        [
+            "import_declare_test.py",
+            f"{ta_name}_rh_*.py",
+            "app.conf",
+            "inputs.conf*",
+            "restmap.conf",
+            "server.conf",
+            f"{ta_name}_*.conf*",
+            "web.conf",
+            "default.xml",
+            "configuration.xml",
+            "dashboard.xml",
+            "inputs.xml",
+            "openapi.json",
+        ]
+    )
+
+    def line_print(print_path: str, mod_type: str) -> None:
+        if verbose_file_summary_report:
+            logger.info(
+                color_palette.get(mod_type, "")
+                + str(print_path).ljust(80)
+                + mod_type
+                + c.Style.RESET_ALL,
+            )
+        summary[mod_type] += 1
+
+    def check_for_conflict(file: str, relative_file_path: str) -> bool:
+        conflict_path_file = os.path.join(conflict_path, relative_file_path)
+        if os.path.isfile(conflict_path_file):
+            return True
+        for pattern in conflict_static_list:
+            if fnmatch.fnmatch(file, pattern):
+                return True
+        return False
+
+    def file_check(
+        file: str, output_directory: str, relative_file_path: str, source: str
+    ) -> None:
+        source_path = os.path.join(source, relative_file_path)
+
+        if os.path.isfile(source_path):
+            # file is present in package
+            output_path = os.path.join(output_directory, relative_file_path)
+
+            is_conflict = check_for_conflict(file, relative_file_path)
+
+            if not is_conflict:
+                files_are_same = filecmp.cmp(source_path, output_path)
+                if not files_are_same:
+                    # output file was modified
+                    line_print(relative_file_path, "modified")
+                else:
+                    # files are the same
+                    line_print(relative_file_path, "copied")
+            else:
+                line_print(relative_file_path, "conflict")
+        else:
+            # file does not exist in package
+            line_print(relative_file_path, "created")
+
+    summary = {"created": 0, "copied": 0, "modified": 0, "conflict": 0}
+
+    path_len = len(output_directory) + 1
+
+    if verbose_file_summary_report:
+        logger.info("Detailed information about created/copied/modified/conflict files")
+        logger.info(
+            "Read more about it here: "
+            "https://splunk.github.io/addonfactory-ucc-generator/quickstart/#verbose-mode"
+        )
+
+    for path, dir, files in os.walk(output_directory):
+        relative_path = path[path_len:]
+        # skipping lib directory
+        if relative_path[:3] == "lib":
+            if relative_path == "lib":
+                line_print("lib", "created")
+            continue
+
+        files = sorted(files, key=str.casefold)
+
+        for file in files:
+            relative_file_path = os.path.join(relative_path, file)
+            file_check(file, output_directory, relative_file_path, source)
+
+    summary_combined = ", ".join(
+        [
+            f"{file_type}: {amount_of_files}"
+            for file_type, amount_of_files in summary.items()
+        ]
+    )
+    logger.info(f"File creation summary: {summary_combined}")
+
+
 def generate(
     source: str,
     config_path: Optional[str] = None,
     addon_version: Optional[str] = None,
     output_directory: Optional[str] = None,
     python_binary_name: str = "python3",
+    verbose_file_summary_report: bool = False,
 ) -> None:
     logger.info(f"ucc-gen version {__version__} is used")
     logger.info(f"Python binary name to use: {python_binary_name}")
@@ -422,7 +539,11 @@ def generate(
         ucc_lib_target = os.path.join(output_directory, ta_name, "lib")
         try:
             install_python_libraries(
-                source, ucc_lib_target, python_binary_name, includes_ui=True
+                source,
+                ucc_lib_target,
+                python_binary_name,
+                includes_ui=True,
+                os_libraries=global_config.os_libraries,
             )
         except SplunktaucclibNotFound as e:
             logger.error(str(e))
@@ -583,3 +704,10 @@ def generate(
             logger.info(f"Creating {output_openapi_folder} folder")
         with open(output_openapi_path, "w") as openapi_file:
             json.dump(open_api.raw_element, openapi_file, indent=4)
+
+    summary_report(
+        source,
+        ta_name,
+        os.path.join(output_directory, ta_name),
+        verbose_file_summary_report,
+    )

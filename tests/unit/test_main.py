@@ -16,6 +16,7 @@ from splunk_add_on_ucc_framework import main
                 "addon_version": None,
                 "output_directory": None,
                 "python_binary_name": "python3",
+                "verbose_file_summary_report": False,
             },
         ),
         (
@@ -26,6 +27,7 @@ from splunk_add_on_ucc_framework import main
                 "addon_version": None,
                 "output_directory": None,
                 "python_binary_name": "python3",
+                "verbose_file_summary_report": False,
             },
         ),
         (
@@ -36,6 +38,7 @@ from splunk_add_on_ucc_framework import main
                 "addon_version": None,
                 "output_directory": None,
                 "python_binary_name": "python3",
+                "verbose_file_summary_report": False,
             },
         ),
         (
@@ -46,16 +49,18 @@ from splunk_add_on_ucc_framework import main
                 "addon_version": None,
                 "output_directory": None,
                 "python_binary_name": "python3",
+                "verbose_file_summary_report": False,
             },
         ),
         (
-            ["--source", "package", "--ta-version", "2.1.0"],
+            ["-v", "--source", "package", "--ta-version", "2.1.0"],
             {
                 "source": "package",
                 "config_path": None,
                 "addon_version": "2.1.0",
                 "output_directory": None,
                 "python_binary_name": "python3",
+                "verbose_file_summary_report": True,
             },
         ),
         (
@@ -73,6 +78,7 @@ from splunk_add_on_ucc_framework import main
                 "addon_version": "2.2.0",
                 "output_directory": None,
                 "python_binary_name": "python.exe",
+                "verbose_file_summary_report": False,
             },
         ),
         (
@@ -92,6 +98,7 @@ from splunk_add_on_ucc_framework import main
                 "addon_version": "2.2.0",
                 "output_directory": None,
                 "python_binary_name": "python.exe",
+                "verbose_file_summary_report": False,
             },
         ),
         (
@@ -113,6 +120,7 @@ from splunk_add_on_ucc_framework import main
                 "addon_version": "2.2.0",
                 "output_directory": "new_output",
                 "python_binary_name": "python.exe",
+                "verbose_file_summary_report": False,
             },
         ),
         (
@@ -135,11 +143,13 @@ from splunk_add_on_ucc_framework import main
                 "addon_version": "2.2.0",
                 "output_directory": "new_output",
                 "python_binary_name": "python.exe",
+                "verbose_file_summary_report": False,
             },
         ),
         (
             [
                 "build",
+                "-v",
                 "--source",
                 "package",
                 "--config",
@@ -157,6 +167,7 @@ from splunk_add_on_ucc_framework import main
                 "addon_version": "2.2.0",
                 "output_directory": "new_output",
                 "python_binary_name": "python.exe",
+                "verbose_file_summary_report": True,
             },
         ),
     ],

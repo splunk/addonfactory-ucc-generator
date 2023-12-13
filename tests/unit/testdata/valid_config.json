@@ -1309,6 +1309,33 @@
         "restRoot": "splunk_ta_uccexample",
         "version": "1.0.0",
         "displayName": "Splunk UCC test Add-on",
-        "schemaVersion": "0.0.3"
+        "schemaVersion": "0.0.3",
+        "os-dependentLibraries": [
+            {
+              "name": "cryptography",
+              "version": "41.0.5",
+              "platform": "win_amd64",
+              "python_version": "37",
+              "os": "windows",
+              "target": "3rdparty/windows"
+            },
+            {
+              "name": "cryptography",
+              "version": "41.0.5",
+              "platform": "macosx_10_12_universal2",
+              "python_version": "37",
+              "os": "darwin",
+              "target": "3rdparty/darwin"
+            },
+            {
+              "name": "cryptography",
+              "version": "41.0.5",
+              "dependencies": true,
+              "platform": "manylinux2014_x86_64",
+              "python_version": "37",
+              "os": "linux",
+              "target": "3rdparty/linux"
+            }
+        ]
     }
 }
