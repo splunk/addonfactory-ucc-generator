@@ -7,9 +7,9 @@
 
 The following 3rd-party software packages may be used by or distributed with addonfactory-ucc-generator. Any information relevant to third-party vendors listed below are collected using common, reasonable means.
 
-Date generated: 2023-12-13
+Date generated: 2023-12-14
 
-Revision ID: 175e9e83922509c49d7a6eda411a5e8d68885be8
+Revision ID: f17d47d7cf576f5da76c4cc03a21f7d5fe44592a
 
 ================================================================================
 ================================================================================
@@ -50,6 +50,8 @@ No licenses found
 
 --------------------------------------------------------------------------------
 Package Title: @babel/code-frame (7.22.13)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -83,6 +85,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @babel/generator (7.23.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -116,6 +120,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @babel/helper-annotate-as-pure (7.22.5)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -149,6 +155,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @babel/helper-environment-visitor (7.22.20)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -182,6 +190,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @babel/helper-function-name (7.23.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -215,6 +225,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @babel/helper-hoist-variables (7.22.5)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -248,6 +260,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @babel/helper-module-imports (7.22.15)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -281,6 +295,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @babel/helper-plugin-utils (7.22.5)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -314,6 +330,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @babel/helper-split-export-declaration (7.22.6)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -347,6 +365,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @babel/helper-string-parser (7.22.5)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -380,6 +400,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @babel/helper-validator-identifier (7.22.20)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -413,6 +435,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @babel/highlight (7.22.20)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -446,6 +470,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @babel/parser (7.23.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -476,6 +502,8 @@ THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @babel/plugin-syntax-jsx (7.22.5)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -509,6 +537,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @babel/runtime (7.23.2)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -542,6 +572,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @babel/template (7.22.15)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -575,6 +607,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @babel/traverse (7.23.2)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -608,6 +642,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @babel/types (7.23.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -641,6 +677,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @dnd-kit/accessibility (3.0.1)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -673,6 +711,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @dnd-kit/core (6.0.8)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -705,6 +745,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @dnd-kit/sortable (7.0.2)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -737,6 +779,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @dnd-kit/utilities (3.2.1)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -769,6 +813,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @emotion/is-prop-valid (1.2.1)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -801,6 +847,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @emotion/memoize (0.8.1)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -833,6 +881,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @emotion/stylis (0.8.5)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -865,6 +915,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @emotion/unitless (0.7.5)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -897,6 +949,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @jridgewell/gen-mapping (0.3.3)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -927,6 +981,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @jridgewell/resolve-uri (3.1.1)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -956,6 +1012,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @jridgewell/set-array (1.1.2)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -986,6 +1044,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @jridgewell/sourcemap-codec (1.4.15)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -1018,6 +1078,8 @@ THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @jridgewell/trace-mapping (0.3.20)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -1048,6 +1110,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @react-spring/animated (9.2.6)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -1080,6 +1144,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @react-spring/core (9.2.6)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -1112,6 +1178,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @react-spring/konva (9.2.6)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -1144,6 +1212,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @react-spring/native (9.2.6)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -1176,6 +1246,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @react-spring/rafz (9.2.6)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -1208,6 +1280,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @react-spring/shared (9.2.6)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -1240,6 +1314,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @react-spring/three (9.2.6)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -1272,6 +1348,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @react-spring/types (9.2.6)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -1304,6 +1382,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @react-spring/web (9.2.6)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -1336,6 +1416,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @react-spring/zdog (9.2.6)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -1368,6 +1450,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @remix-run/router (1.11.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -1402,6 +1486,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @splunk/react-icons (4.1.0)
+
+Package Depth: Direct
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -1615,6 +1701,8 @@ Apache-2.0
 
 --------------------------------------------------------------------------------
 Package Title: @splunk/react-icons (4.0.2)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -1828,6 +1916,8 @@ Apache-2.0
 
 --------------------------------------------------------------------------------
 Package Title: @splunk/react-page (6.3.3)
+
+Package Depth: Direct
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -2041,6 +2131,8 @@ Apache-2.0
 
 --------------------------------------------------------------------------------
 Package Title: @splunk/react-toast-notifications (0.11.2)
+
+Package Depth: Direct
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -2254,6 +2346,8 @@ Apache-2.0
 
 --------------------------------------------------------------------------------
 Package Title: @splunk/react-ui (4.22.0)
+
+Package Depth: Direct
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -2491,6 +2585,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @splunk/react-ui (4.21.1)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -2728,6 +2824,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @splunk/splunk-utils (2.3.4)
+
+Package Depth: Direct
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -2941,6 +3039,8 @@ Apache-2.0
 
 --------------------------------------------------------------------------------
 Package Title: @splunk/themes (0.16.3)
+
+Package Depth: Direct
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -3154,6 +3254,8 @@ Apache-2.0
 
 --------------------------------------------------------------------------------
 Package Title: @splunk/ui-utils (1.6.0)
+
+Package Depth: Direct
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -3421,6 +3523,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: @types/commonmark (0.27.8)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -3453,6 +3557,8 @@ MIT
 
 --------------------------------------------------------------------------------
 Package Title: @types/hoist-non-react-statics (3.3.4)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -3485,6 +3591,8 @@ MIT
 
 --------------------------------------------------------------------------------
 Package Title: @types/lodash (4.14.200)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -3517,6 +3625,8 @@ MIT
 
 --------------------------------------------------------------------------------
 Package Title: @types/prop-types (15.7.9)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -3549,6 +3659,8 @@ MIT
 
 --------------------------------------------------------------------------------
 Package Title: @types/react (16.14.50)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -3581,6 +3693,8 @@ MIT
 
 --------------------------------------------------------------------------------
 Package Title: @types/react-dom (16.9.21)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -3613,6 +3727,8 @@ MIT
 
 --------------------------------------------------------------------------------
 Package Title: @types/react-resize-detector (3.1.1)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -3645,6 +3761,8 @@ MIT
 
 --------------------------------------------------------------------------------
 Package Title: @types/scheduler (0.16.5)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -3677,6 +3795,8 @@ MIT
 
 --------------------------------------------------------------------------------
 Package Title: @types/styled-components (5.1.29)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -3709,6 +3829,8 @@ MIT
 
 --------------------------------------------------------------------------------
 Package Title: @types/tinycolor2 (1.4.5)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -3741,6 +3863,8 @@ MIT
 
 --------------------------------------------------------------------------------
 Package Title: addonfactory-splunk-conf-parser-lib (0.3.4)
+
+Package Depth: Direct
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -3764,6 +3888,8 @@ See the License for the specific language governing permissions and limitations 
 
 --------------------------------------------------------------------------------
 Package Title: ansi-styles (3.2.1)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -3792,6 +3918,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: asynckit (0.4.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -3824,6 +3952,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: attrs (23.1.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -3856,6 +3986,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: axios (1.6.1)
+
+Package Depth: Direct
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -3874,6 +4006,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 --------------------------------------------------------------------------------
 Package Title: babel-plugin-styled-components (2.1.4)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -3906,6 +4040,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: camelize (1.0.1)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -3935,6 +4071,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: certifi (2023.7.22)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -3967,6 +4105,8 @@ one at http://mozilla.org/MPL/2.0/.
 
 --------------------------------------------------------------------------------
 Package Title: chalk (2.4.2)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -3995,6 +4135,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: charset-normalizer (3.3.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -4026,6 +4168,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: color-blend (2.0.9)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -4057,6 +4201,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: color-convert (1.9.3)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -4089,6 +4235,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: color-name (1.1.3)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -4106,7 +4254,49 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 
 --------------------------------------------------------------------------------
+Package Title: colorama (0.4.6)
+
+Package Depth: Direct
+--------------------------------------------------------------------------------
+
+* Declared Licenses *
+BSD-3-Clause
+
+
+Copyright (c) 2010 Jonathan Hartley
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of the copyright holders, nor those of its contributors
+  may be used to endorse or promote products derived from this software without
+  specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+
+--------------------------------------------------------------------------------
 Package Title: combined-stream (1.0.8)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -4135,6 +4325,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: commonmark (0.30.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -4235,6 +4427,8 @@ Released under the Creative Commons CC-BY-SA 4.0 license:
 
 --------------------------------------------------------------------------------
 Package Title: commonmark-react-renderer (4.3.5)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -4267,6 +4461,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: css-color-keywords (1.0.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -4293,6 +4489,8 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: css-to-react-native (3.2.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -4325,6 +4523,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: csstype (3.1.2)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -4355,6 +4555,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: debug (4.3.4)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -4386,6 +4588,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: decimal.js-light (2.5.1)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -4420,6 +4624,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: defusedxml (0.7.1)
+
+Package Depth: Direct
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -4480,6 +4686,8 @@ Agreement.
 
 --------------------------------------------------------------------------------
 Package Title: delayed-stream (1.0.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -4508,6 +4716,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: dequal (1.0.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -4536,6 +4746,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: dunamai (1.18.1)
+
+Package Depth: Direct
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -4568,6 +4780,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: entities (2.0.3)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -4590,6 +4804,8 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 --------------------------------------------------------------------------------
 Package Title: escape-string-regexp (1.0.5)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -4618,6 +4834,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: follow-redirects (1.15.3)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -4647,6 +4865,8 @@ IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: form-data (4.0.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -4675,6 +4895,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: globals (11.12.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -4703,6 +4925,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: has-flag (3.0.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -4731,6 +4955,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: hoist-non-react-statics (3.3.2)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -4771,6 +4997,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 --------------------------------------------------------------------------------
 Package Title: idna (3.4)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -4811,6 +5039,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 --------------------------------------------------------------------------------
 Package Title: immutability-helper (3.1.1)
+
+Package Depth: Direct
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -4843,6 +5073,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: importlib-metadata (6.7.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -5056,6 +5288,8 @@ Apache-2.0
 
 --------------------------------------------------------------------------------
 Package Title: importlib-resources (5.12.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -5269,6 +5503,8 @@ Apache-2.0
 
 --------------------------------------------------------------------------------
 Package Title: jinja2 (3.1.2)
+
+Package Depth: Direct
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -5308,6 +5544,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 --------------------------------------------------------------------------------
 Package Title: js-tokens (4.0.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -5340,6 +5578,8 @@ THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: jsesc (2.5.2)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -5371,6 +5611,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: jsonschema (4.17.3)
+
+Package Depth: Direct
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -5420,6 +5662,8 @@ See the License for the specific language governing permissions and limitations 
 
 --------------------------------------------------------------------------------
 Package Title: keycode (2.2.1)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -5452,6 +5696,8 @@ THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: license-webpack-plugin (4.0.2)
+
+Package Depth: Direct
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -5478,6 +5724,8 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: lodash (4.17.21)
+
+Package Depth: Direct
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -5558,6 +5806,8 @@ terms above.
 
 --------------------------------------------------------------------------------
 Package Title: lodash-es (4.17.21)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -5638,6 +5888,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: lodash.assign (4.2.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -5750,6 +6002,8 @@ terms above.
 
 --------------------------------------------------------------------------------
 Package Title: lodash.isplainobject (4.0.6)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -5830,6 +6084,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: loose-envify (1.4.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -5862,6 +6118,8 @@ THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: lru-cache (6.0.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -5888,6 +6146,8 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: MarkupSafe (2.1.3)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -5927,6 +6187,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 --------------------------------------------------------------------------------
 Package Title: mdurl (1.0.1)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -5983,6 +6245,8 @@ IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: mime-db (1.52.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -6017,6 +6281,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: mime-types (2.1.35)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -6051,6 +6317,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: minimist (1.2.8)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -6080,6 +6348,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: moment (2.29.4)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -6113,6 +6383,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: ms (2.1.2)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -6141,6 +6413,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: object-assign (4.1.1)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -6169,6 +6443,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: openapi3 (1.8.2)
+
+Package Depth: Direct
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -6207,6 +6483,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 --------------------------------------------------------------------------------
 Package Title: packaging (23.2)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -6278,6 +6556,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 --------------------------------------------------------------------------------
 Package Title: pascalcase (0.1.1)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -6310,6 +6590,8 @@ THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: picomatch (2.3.1)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -6342,6 +6624,8 @@ THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: pkgutil_resolve_name (1.3.10)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -6459,6 +6743,8 @@ Agreement.
 
 --------------------------------------------------------------------------------
 Package Title: postcss-value-parser (4.2.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -6492,6 +6778,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: prop-types (15.8.1)
+
+Package Depth: Direct
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -6524,6 +6812,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: proxy-from-env (1.1.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -6555,6 +6845,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: pyrsistent (0.19.3)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -6619,6 +6911,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 --------------------------------------------------------------------------------
 Package Title: PyYAML (6.0.1)
+
+Package Depth: Direct
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -6650,6 +6944,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: react (16.14.0)
+
+Package Depth: Direct
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -6682,6 +6978,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: react-dom (16.14.0)
+
+Package Depth: Direct
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -6714,6 +7012,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: react-flip-move (3.0.5)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -6734,6 +7034,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 --------------------------------------------------------------------------------
 Package Title: react-is (16.13.1)
+
+Package Depth: Direct
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -6766,6 +7068,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: react-resize-detector (3.4.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -6797,6 +7101,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: react-router (6.18.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -6831,6 +7137,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: react-router-dom (6.18.0)
+
+Package Depth: Direct
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -6865,6 +7173,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: react-spring (9.2.4)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -6897,6 +7207,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: regenerator-runtime (0.14.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -6929,6 +7241,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: requests (2.31.0)
+
+Package Depth: Direct
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -7115,6 +7429,8 @@ Apache-2.0
 
 --------------------------------------------------------------------------------
 Package Title: resize-observer-polyfill (1.5.1)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -7147,6 +7463,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: scheduler (0.19.1)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -7179,6 +7497,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: scriptjs (2.5.9)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -7212,6 +7532,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: semver (7.5.4)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -7238,6 +7560,8 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: shallowequal (1.1.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -7270,6 +7594,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: string.prototype.repeat (0.2.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -7301,6 +7627,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: styled-components (5.3.11)
+
+Package Depth: Direct
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -7329,6 +7657,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: supports-color (5.5.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -7357,6 +7687,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: tinycolor2 (1.6.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -7387,6 +7719,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: to-fast-properties (2.0.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -7415,6 +7749,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: tslib (2.6.2)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -7437,6 +7773,8 @@ PERFORMANCE OF THIS SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: typing-extensions (4.7.1)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -7758,6 +8096,8 @@ PERFORMANCE OF THIS SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: urllib3 (1.26.18)
+
+Package Depth: Direct
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -7809,6 +8149,8 @@ See the License for the specific language governing permissions and limitations 
 
 --------------------------------------------------------------------------------
 Package Title: use-deep-compare (1.1.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -7839,6 +8181,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: use-typed-event-listener (3.0.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -7871,6 +8215,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: uuid (9.0.1)
+
+Package Depth: Direct
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -7891,6 +8237,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 --------------------------------------------------------------------------------
 Package Title: webpack-sources (3.2.3)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -7923,6 +8271,8 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: xss-filters (1.2.7)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -8009,6 +8359,8 @@ Authors: Adonis Fung <adon@yahoo-inc.com>
 
 --------------------------------------------------------------------------------
 Package Title: yallist (4.0.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -8035,6 +8387,8 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: zipp (3.15.0)
+
+Package Depth: Transitive
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -8065,6 +8419,8 @@ IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package Title: zod (3.22.4)
+
+Package Depth: Direct
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -9121,6 +9477,37 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+
+
+* BSD-3-Clause *
+
+Copyright (c) 2010 Jonathan Hartley
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of the copyright holders, nor those of its contributors
+  may be used to endorse or promote products derived from this software without
+  specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 * MIT *
@@ -11111,4 +11498,4 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
-Report Generated by FOSSA on 2023-12-13
+Report Generated by FOSSA on 2023-12-14

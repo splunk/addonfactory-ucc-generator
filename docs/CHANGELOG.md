@@ -1,3 +1,11 @@
+## [5.35.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.35.0...v5.35.1) (2023-12-14)
+
+
+### Bug Fixes
+
+* add missing colorama dependency ([#973](https://github.com/splunk/addonfactory-ucc-generator/issues/973)) ([f17d47d](https://github.com/splunk/addonfactory-ucc-generator/commit/f17d47d7cf576f5da76c4cc03a21f7d5fe44592a))
+* add missing colorama import ([fbb71bd](https://github.com/splunk/addonfactory-ucc-generator/commit/fbb71bd59598e1c4b1fb70600730c4151f158846))
+
 # [5.35.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.34.1...v5.35.0) (2023-12-13)
 
 
