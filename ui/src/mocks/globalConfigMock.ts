@@ -137,6 +137,16 @@ const globalConfigMock: z.input<typeof GlobalConfigSchema> = {
                             required: true,
                         },
                         {
+                            type: 'text',
+                            label: 'Disabled Input',
+                            defaultValue: 'Disabled Input',
+                            field: 'disabled_input_field',
+                            help: 'This field should always be disabled',
+                            options: {
+                                enable: false,
+                            },
+                        },
+                        {
                             type: 'singleSelect',
                             label: 'Account to use',
                             options: {
