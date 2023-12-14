@@ -177,7 +177,7 @@ jobs:
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
       - run: |
           cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/
-          poetry install
+          poetry install --only main
       - run: poetry run ucc-gen build --source tests/testdata/test_addons/package_global_config_everything/package
       - run: ./scripts/include-rum.sh output/Splunk_TA_UCCExample/appserver/templates/base.html scripts/rum-script.html "$RUM_ACCESS_TOKEN"
         env:
@@ -233,7 +233,7 @@ jobs:
           path: output/
       - run: |
           curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
-          poetry install
+          poetry install --only dev
       - name: Link chromedriver
         # Use installed chromedriver https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2204-Readme.md
         run: |

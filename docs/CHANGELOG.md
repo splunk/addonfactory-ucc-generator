@@ -1,3 +1,24 @@
+## [5.35.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.35.0...v5.35.1) (2023-12-14)
+
+
+### Bug Fixes
+
+* add missing colorama dependency ([#973](https://github.com/splunk/addonfactory-ucc-generator/issues/973)) ([f17d47d](https://github.com/splunk/addonfactory-ucc-generator/commit/f17d47d7cf576f5da76c4cc03a21f7d5fe44592a))
+* add missing colorama import ([fbb71bd](https://github.com/splunk/addonfactory-ucc-generator/commit/fbb71bd59598e1c4b1fb70600730c4151f158846))
+
+# [5.35.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.34.1...v5.35.0) (2023-12-13)
+
+
+### Bug Fixes
+
+* add tests and auth_access_token to schema ([#969](https://github.com/splunk/addonfactory-ucc-generator/issues/969)) ([6e1e743](https://github.com/splunk/addonfactory-ucc-generator/commit/6e1e743e29b5e7dcd0a47b9b4e23930838cd9923))
+
+
+### Features
+
+* add support for downloading os-dependent libraries ([#963](https://github.com/splunk/addonfactory-ucc-generator/issues/963)) ([6cfb5a3](https://github.com/splunk/addonfactory-ucc-generator/commit/6cfb5a3700d85cce014e8dd2fbec59755ac64e13))
+* build commands produces detailed output of what happened ([#927](https://github.com/splunk/addonfactory-ucc-generator/issues/927)) ([3fad1a2](https://github.com/splunk/addonfactory-ucc-generator/commit/3fad1a25f9dd437e563f7bfaef7a7946e4fb75a0))
+
 ## [5.34.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.34.0...v5.34.1) (2023-12-06)
 
 

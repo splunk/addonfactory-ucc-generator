@@ -124,7 +124,7 @@ It takes the following parameters:
 
 #### Verbose mode
 
-Available from `v5.33.0`.
+Available from `v5.35.0`.
 
 Running `ucc-gen build -v` or `ucc-gen build --verbose` prints additional information about
 what was exactly created / copied / modified / conflict after the build is complete. It does
