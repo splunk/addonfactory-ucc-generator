@@ -285,69 +285,30 @@ describe('EntityModal - custom warning', () => {
         render(<EntityModal {...props} handleRequestClose={handleRequestClose} />);
     };
 
-    it('display correctly custom warning for create mode - configuration tab', () => {
-        setUpConfigWithWarningMessageForConfiguration();
-        renderModal('create', 'configuration');
+    it.each`
+        mode        | page
+        ${'create'} | ${'configuration'}
+        ${'edit'}   | ${'configuration'}
+        ${'clone'}  | ${'configuration'}
+        ${'config'} | ${'configuration'}
+        ${'create'} | ${'input'}
+        ${'edit'}   | ${'input'}
+        ${'clone'}  | ${'input'}
+        ${'config'} | ${'input'}
+    `(
+        'display custom warning for $mode mode - $page tab',
+        ({ mode, page }: { mode: keyof typeof WARNING_MESSAGES; page: string }) => {
+            if (page === 'configuration') {
+                setUpConfigWithWarningMessageForConfiguration();
+            } else {
+                setUpConfigWithWarningMessageForInputServices();
+            }
+            renderModal(mode, page);
 
-        const warningMessage = screen.getByText(WARNING_MESSAGES.create);
-        expect(warningMessage).toBeInTheDocument();
-    });
-
-    it('display correctly custom warning for edit mode - configuration tab', () => {
-        setUpConfigWithWarningMessageForConfiguration();
-        renderModal('edit', 'configuration');
-
-        const warningMessage = screen.getByText(WARNING_MESSAGES.edit);
-        expect(warningMessage).toBeInTheDocument();
-    });
-
-    it('display correctly custom warning for config mode - configuration tab', () => {
-        setUpConfigWithWarningMessageForConfiguration();
-        renderModal('config', 'configuration');
-
-        const warningMessage = screen.getByText(WARNING_MESSAGES.config);
-        expect(warningMessage).toBeInTheDocument();
-    });
-
-    it('display correctly custom warning for clone mode - configuration tab', () => {
-        setUpConfigWithWarningMessageForConfiguration();
-        renderModal('clone', 'configuration');
-
-        const warningMessage = screen.getByText(WARNING_MESSAGES.clone);
-        expect(warningMessage).toBeInTheDocument();
-    });
-
-    it('display correctly custom warning for create mode - input services', () => {
-        setUpConfigWithWarningMessageForInputServices();
-        renderModal('create', 'input');
-
-        const warningMessage = screen.getByText(WARNING_MESSAGES.create);
-        expect(warningMessage).toBeInTheDocument();
-    });
-
-    it('display correctly custom warning for edit mode - input services', () => {
-        setUpConfigWithWarningMessageForInputServices();
-        renderModal('edit', 'input');
-
-        const warningMessage = screen.getByText(WARNING_MESSAGES.edit);
-        expect(warningMessage).toBeInTheDocument();
-    });
-
-    it('display correctly custom warning for config mode - input services', () => {
-        setUpConfigWithWarningMessageForInputServices();
-        renderModal('config', 'input');
-
-        const warningMessage = screen.getByText(WARNING_MESSAGES.config);
-        expect(warningMessage).toBeInTheDocument();
-    });
-
-    it('display correctly custom warning for clone mode - input services', () => {
-        setUpConfigWithWarningMessageForInputServices();
-        renderModal('clone', 'input');
-
-        const warningMessage = screen.getByText(WARNING_MESSAGES.clone);
-        expect(warningMessage).toBeInTheDocument();
-    });
+            const warningMessage = screen.getByText(WARNING_MESSAGES[mode]);
+            expect(warningMessage).toBeInTheDocument();
+        }
+    );
 });
 
 describe('Default value', () => {
