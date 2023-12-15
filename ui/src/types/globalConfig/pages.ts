@@ -29,6 +29,16 @@ const HooksSchema = z
         saveValidator: z.string().optional(),
     })
     .optional();
+
+const WarningSchema = z
+    .object({
+        create: z.string().optional(),
+        edit: z.string().optional(),
+        config: z.string().optional(),
+        clone: z.string().optional(),
+    })
+    .optional();
+
 export const TabSchema = z.object({
     entity: z.array(AnyOfEntity).optional(),
     name: z.string(),
@@ -44,6 +54,7 @@ export const TabSchema = z.object({
     restHandlerModule: z.string().optional(),
     restHandlerClass: z.string().optional(),
     customTab: z.record(z.any()).optional(),
+    warning: WarningSchema,
 });
 
 const GroupsSchema = z
@@ -74,6 +85,7 @@ export const TableLessServiceSchema = z.object({
     restHandlerName: z.string().optional(),
     restHandlerModule: z.string().optional(),
     restHandlerClass: z.string().optional(),
+    warning: WarningSchema,
 });
 export const TableFullServiceSchema = TableLessServiceSchema.extend({
     description: z.string().optional(),

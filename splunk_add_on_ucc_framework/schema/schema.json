@@ -122,7 +122,13 @@
               "maxLength": 50
             }
           },
-          "required": ["task", "supportsAdhoc", "subject", "category", "technology"]
+          "required": [
+            "task",
+            "supportsAdhoc",
+            "subject",
+            "category",
+            "technology"
+          ]
         },
         "entity": {
           "type": "array",
@@ -1400,6 +1406,9 @@
                   "restHandlerClass": {
                     "type": "string",
                     "maxLength": 100
+                  },
+                  "warning": {
+                    "$ref": "#/definitions/WarningMessage"
                   }
                 },
                 "not": {
@@ -1824,6 +1833,9 @@
         },
         "customTab": {
           "type": "object"
+        },
+        "warning": {
+          "$ref": "#/definitions/WarningMessage"
         }
       },
       "anyOf": [
@@ -1908,6 +1920,27 @@
       },
       "required": ["name"],
       "additionalProperties": false
+    },
+    "WarningMessage": {
+      "type": "object",
+      "properties": {
+        "create": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "edit": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "clone": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "config": {
+          "type": "string",
+          "maxLength": 500
+        }
+      }
     },
     "Field": {
       "type": "string",

@@ -5,12 +5,14 @@ import EntityModal, { EntityModalProps } from './EntityModal';
 import { setUnifiedConfig } from '../../util/util';
 import {
     DEFAULT_VALUE,
-    getConfigAccerssTokenMock,
+    WARNING_MESSAGES,
+    getConfigAccessTokenMock,
     getConfigBasicOauthDisableonEdit,
     getConfigEnableFalseForOauth,
     getConfigFullyEnabledField,
     getConfigOauthOauthDisableonEdit,
     getConfigWithOauthDefaultValue,
+    getConfigWarningMessage,
 } from './TestConfig';
 import { ERROR_AUTH_PROCESS_TERMINATED_TRY_AGAIN } from '../../constants/oAuthErrorMessage';
 
@@ -197,7 +199,7 @@ describe('EntityModal - auth_endpoint_token_access_type', () => {
     const handleRequestClose = jest.fn();
 
     const setUpConfigWithDisabedOauth = () => {
-        const newConfig = getConfigAccerssTokenMock();
+        const newConfig = getConfigAccessTokenMock();
         setUnifiedConfig(newConfig);
     };
 
@@ -254,6 +256,59 @@ describe('EntityModal - auth_endpoint_token_access_type', () => {
         const errorMessage = screen.getByText(ERROR_AUTH_PROCESS_TERMINATED_TRY_AGAIN);
         expect(errorMessage).toBeInTheDocument();
     });
+});
+
+describe('EntityModal - custom warning', () => {
+    const handleRequestClose = jest.fn();
+
+    const setUpConfigWithWarningMessageForConfiguration = () => {
+        const newConfig = getConfigWarningMessage();
+        setUnifiedConfig(newConfig);
+    };
+
+    const setUpConfigWithWarningMessageForInputServices = () => {
+        const newConfig = getConfigWarningMessage();
+        setUnifiedConfig(newConfig);
+    };
+
+    const renderModal = (inputMode: string, page: string) => {
+        const props = {
+            serviceName: 'account',
+            mode: inputMode,
+            stanzaName: undefined,
+            formLabel: 'formLabel',
+            page,
+            groupName: '',
+            open: true,
+            handleRequestClose: () => {},
+        } satisfies EntityModalProps;
+        render(<EntityModal {...props} handleRequestClose={handleRequestClose} />);
+    };
+
+    it.each`
+        mode        | page
+        ${'create'} | ${'configuration'}
+        ${'edit'}   | ${'configuration'}
+        ${'clone'}  | ${'configuration'}
+        ${'config'} | ${'configuration'}
+        ${'create'} | ${'input'}
+        ${'edit'}   | ${'input'}
+        ${'clone'}  | ${'input'}
+        ${'config'} | ${'input'}
+    `(
+        'display custom warning for $mode mode - $page tab',
+        ({ mode, page }: { mode: keyof typeof WARNING_MESSAGES; page: string }) => {
+            if (page === 'configuration') {
+                setUpConfigWithWarningMessageForConfiguration();
+            } else {
+                setUpConfigWithWarningMessageForInputServices();
+            }
+            renderModal(mode, page);
+
+            const warningMessage = screen.getByText(WARNING_MESSAGES[mode]);
+            expect(warningMessage).toBeInTheDocument();
+        }
+    );
 });
 
 describe('Default value', () => {
