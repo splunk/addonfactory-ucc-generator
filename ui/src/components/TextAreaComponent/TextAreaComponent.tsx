@@ -10,9 +10,9 @@ interface TextAreadComponentProps {
     value: string | number;
     handleChange: (field: string, value: string) => void;
     field: string;
-    error: boolean;
-    controlOptions: { rowsMax?: number; rowsMin?: number };
-    disabled: boolean;
+    error?: boolean;
+    controlOptions?: { rowsMax?: number; rowsMin?: number };
+    disabled?: boolean;
 }
 
 function TextAreaComponent(props: TextAreadComponentProps) {
