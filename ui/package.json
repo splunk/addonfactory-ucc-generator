@@ -106,8 +106,8 @@
     "string-width": "^4.2.2"
   },
   "engines": {
-    "node": ">=18",
-    "yarn": "^1"
+    "node": ">=20.10.0",
+    "yarn": "^1.22.21"
   },
   "msw": {
     "workerDirectory": "src/public"
