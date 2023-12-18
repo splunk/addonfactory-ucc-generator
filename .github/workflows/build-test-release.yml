@@ -74,7 +74,7 @@ jobs:
     strategy:
       matrix:
         node-version:
-          - "18"
+          - "20"
     uses: ./.github/workflows/build-ui.yml
     with:
       node-version: ${{ matrix.node-version }}

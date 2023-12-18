@@ -5,7 +5,7 @@ Default development branch is `develop`. Please use it for PR
 ## Build and Test
 
 Prerequisites:
-- Node.js >= 18 ([NodeJS](https://nodejs.org/en/download) or use [nvm](https://github.com/nvm-sh/nvm))
+- Node.js LTS version ([NodeJS](https://nodejs.org/en/download) or use [nvm](https://github.com/nvm-sh/nvm))
 - Yarn Classic (`npm install --global yarn`)
 - Poetry 1.5.1. [Installation guide](https://python-poetry.org/docs/#installing-with-the-official-installer)
 

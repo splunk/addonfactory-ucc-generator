@@ -16,11 +16,11 @@ jobs:
           python-version: 3.7
       - uses: actions/setup-node@v3
         with:
-          node-version: "18"
+          node-version: "20"
       - name: install deps
         uses: ./.github/actions/cached-ui-deps
         with:
-          node-version: "18"
+          node-version: "20"
       - name: Build Storybook
         run: |
           cd ui
