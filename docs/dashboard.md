@@ -97,3 +97,47 @@ index=_internal source=*<addon_name>* ERROR
 ```
 
 > Note: <addon_name> is being replaced by the actual value during the build time.
+
+<br>
+# Custom dashboards
+
+UCC also offers support for your own dashboard templates. To do this, create a folder called **dashboards** at the base addon directory level. 
+All templates should be placed in this folder along with the **default.xml** file in which we indicate the added dashboards.
+
+```
+...
+├── dashboards
+│   ├── default.xml
+│   ├── my_custom_dashboard_1.xml
+│   └── my_custom_dashboard_2.xml
+├── package
+...
+```
+
+default.xml:
+
+```xml
+<nav>
+    <view name="inputs" />
+    <view name="configuration" default="true" />
+    <view name="search" />
+    <view name="my_custom_dashboard_1" />
+    <view name="my_custom_dashboard_2" />
+</nav>
+
+```
+
+If we also want to use the dashboard described in section [Dashboard]() along with our custom ones, our default.xml 
+file should be extended with the line `<view name="dashboard" />`:
+
+```xml
+<nav>
+    <view name="inputs" />
+    <view name="configuration" default="true" />
+    <view name="search" />
+    <view name="dashboard" />
+    <view name="my_custom_dashboard_1" />
+    <view name="my_custom_dashboard_2" />
+</nav>
+
+```

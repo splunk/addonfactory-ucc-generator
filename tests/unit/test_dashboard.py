@@ -1,4 +1,21 @@
+import os.path
+
 from splunk_add_on_ucc_framework import dashboard
+from splunk_add_on_ucc_framework.commands.build import (
+    generate_data_ui,
+    copy_custom_dashboards,
+)
+
+custom_xml = [
+    "\n",
+    "<nav>\n",
+    '<view name="inputs" />\n',
+    '<view name="configuration" default="true" />\n',
+    '<view name="dashboard" />\n',
+    '<view name="search" />\n',
+    '<view name="my_custom_dashboard_1" />\n',
+    "</nav>\n",
+]
 
 
 def test_generate_dashboard_when_dashboard_does_not_exist(
@@ -97,3 +114,29 @@ def test_generate_dashboard_when_dashboard_already_exists(
         f"the existing dashboard file."
     )
     assert expected_log_warning_message in caplog.text
+
+
+def test_generate_custom_dashboards(global_config_all_json, tmp_path, caplog):
+    tmp_src = os.path.join(tmp_path, "test_ta", "dashboards")
+    os.makedirs(tmp_src)
+    with open(os.path.join(tmp_src, "default.xml"), "w") as file:
+        file.write("".join(custom_xml))
+
+    with open(os.path.join(tmp_src, "my_custom_dashboard_1.xml"), "w") as file:
+        file.write("<view><label>Custom dashboard</label></view>")
+
+    tmp_out = tmp_path / "output"
+    generate_data_ui(str(tmp_out), "test_addon", True, True)
+    copy_custom_dashboards(str(tmp_src), str(os.path.join(tmp_out, "test_addon")))
+
+    with open(
+        os.path.join(
+            tmp_out, "test_addon", "default", "data", "ui", "nav", "default.xml"
+        )
+    ) as file:
+        content = file.readlines()
+
+    assert content == custom_xml
+    assert "my_custom_dashboard_1.xml" in os.listdir(
+        os.path.join(tmp_out, "test_addon", "default", "data", "ui", "views")
+    )
