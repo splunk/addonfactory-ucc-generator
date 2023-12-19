@@ -99,45 +99,68 @@ index=_internal source=*<addon_name>* ERROR
 > Note: <addon_name> is being replaced by the actual value during the build time.
 
 <br>
-# Custom dashboards
+# Custom components
 
-UCC also offers support for your own dashboard templates. To do this, create a folder called **dashboards** at the base addon directory level. 
-All templates should be placed in this folder along with the **default.xml** file in which we indicate the added dashboards.
+UCC also supports adding your own components to the dashboard. To do this, create a **dashboard_components.txt** file in the addon's base directory. 
+This file should only contain specific <row></row> tags which you would like to add to your dashboard.
 
 ```
 ...
-├── dashboards
-│   ├── default.xml
-│   ├── my_custom_dashboard_1.xml
-│   └── my_custom_dashboard_2.xml
+├── dashboard_components.txt
 ├── package
 ...
 ```
 
-default.xml:
-
-```xml
-<nav>
-    <view name="inputs" />
-    <view name="configuration" default="true" />
-    <view name="search" />
-    <view name="my_custom_dashboard_1" />
-    <view name="my_custom_dashboard_2" />
-</nav>
-
+sample **dashboard_components.txt** structure:
+```
+<row>
+    <panel>
+        <title>MY PANEL IN ROW 1</title>
+        <chart>
+        ...
+        </chart>
+    </panel>
+</row>
+<row>
+<panel>
+    <title>MY PANEL IN ROW 2</title>
+    <chart>
+        <search>
+            <query>
+            ...
+            </query>
+        </search>
+        <option name="charting.axisTitleX.text">...</option>
+    </chart>
+</panel>
+<panel>
+    <title>MY SECOND PANEL IN ROW 2</title>
+</panel>
+</row>
 ```
 
-If we also want to use the dashboard described in section [Dashboard]() along with our custom ones, our default.xml 
-file should be extended with the line `<view name="dashboard" />`:
+Next you have to add **custom** panel to your dashboard page in globalConfig.json. 
+The order of panels in the globalConfig corresponds to the order of rows on the dashboard.
 
-```xml
-<nav>
-    <view name="inputs" />
-    <view name="configuration" default="true" />
-    <view name="search" />
-    <view name="dashboard" />
-    <view name="my_custom_dashboard_1" />
-    <view name="my_custom_dashboard_2" />
-</nav>
-
+```json
+{
+...
+        "dashboard": {
+            "panels": [
+                {
+                    "name": "addon_version"
+                },
+                {
+                    "name": "events_ingested_by_sourcetype"
+                },
+                {
+                    "name": "errors_in_the_addon"
+                },
+                {
+                    "name": "custom"
+                }
+            ]
+        }
+...
+}
 ```

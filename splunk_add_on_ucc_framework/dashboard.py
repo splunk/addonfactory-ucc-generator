@@ -15,6 +15,7 @@
 #
 import logging
 import os
+import sys
 from typing import Sequence
 
 from splunk_add_on_ucc_framework import global_config as global_config_lib
@@ -24,12 +25,14 @@ logger = logging.getLogger("ucc_gen")
 PANEL_ADDON_VERSION = "addon_version"
 PANEL_EVENTS_INGESTED_BY_SOURCETYPE = "events_ingested_by_sourcetype"
 PANEL_ERRORS_IN_THE_ADDON = "errors_in_the_addon"
+PANEL_CUSTOM = "custom"
 
 SUPPORTED_PANEL_NAMES = frozenset(
     [
         PANEL_ADDON_VERSION,
         PANEL_EVENTS_INGESTED_BY_SOURCETYPE,
         PANEL_ERRORS_IN_THE_ADDON,
+        PANEL_CUSTOM,
     ]
 )
 SUPPORTED_PANEL_NAMES_READABLE = ", ".join(SUPPORTED_PANEL_NAMES)
@@ -47,7 +50,6 @@ DASHBOARD_START = """<form version="1.1">
   </fieldset>
 """
 DASHBOARD_END = """</form>"""
-
 
 PANEL_ADDON_VERSION_TEMPLATE = """  <row>
     <panel>
@@ -103,7 +105,9 @@ PANEL_ERRORS_IN_THE_ADDON_TEMPLATE = """  <row>
 """
 
 
-def generate_dashboard_content(addon_name: str, panel_names: Sequence[str]) -> str:
+def generate_dashboard_content(
+    addon_name: str, panel_names: Sequence[str], custom_components: str
+) -> str:
     content = DASHBOARD_START
     for panel_name in panel_names:
         logger.info(f"Including {panel_name} into the dashboard page")
@@ -117,6 +121,8 @@ def generate_dashboard_content(addon_name: str, panel_names: Sequence[str]) -> s
             content += PANEL_ERRORS_IN_THE_ADDON_TEMPLATE.format(
                 addon_name=addon_name.lower()
             )
+        elif panel_name == PANEL_CUSTOM:
+            content += custom_components
         else:
             raise AssertionError("Should not be the case!")
     content += DASHBOARD_END
@@ -136,6 +142,26 @@ def generate_dashboard(
     else:
         panels = global_config.dashboard.get("panels", [])
         panel_names = [panel["name"] for panel in panels]
-        content = generate_dashboard_content(addon_name, panel_names)
+        custom_components = ""
+        if PANEL_CUSTOM in panel_names:
+            try:
+                dashboard_components_path = os.path.abspath(
+                    os.path.join(
+                        global_config.original_path,
+                        os.pardir,
+                        "dashboard_components.txt",
+                    )
+                )
+                with open(dashboard_components_path) as file:
+                    custom_components = "".join(file.readlines())
+            except FileNotFoundError:
+                sys.exit(
+                    "custom dashboard page set but dashboard_components.txt file not found"
+                )
+            if not custom_components:
+                sys.exit(
+                    "custom dashboard page set but dashboard_components.txt file is empty"
+                )
+        content = generate_dashboard_content(addon_name, panel_names, custom_components)
         with open(dashboard_xml_file_path, "w") as dashboard_xml_file:
             dashboard_xml_file.write(content)

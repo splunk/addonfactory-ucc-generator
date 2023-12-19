@@ -1,35 +1,12 @@
 import os.path
+from unittest import mock
+import pytest
 
 from splunk_add_on_ucc_framework import dashboard
-from splunk_add_on_ucc_framework.commands.build import (
-    generate_data_ui,
-    copy_custom_dashboards,
-)
+import tests.unit.helpers as helpers
+from splunk_add_on_ucc_framework import global_config as gc
 
-custom_xml = [
-    "\n",
-    "<nav>\n",
-    '<view name="inputs" />\n',
-    '<view name="configuration" default="true" />\n',
-    '<view name="dashboard" />\n',
-    '<view name="search" />\n',
-    '<view name="my_custom_dashboard_1" />\n',
-    "</nav>\n",
-]
-
-
-def test_generate_dashboard_when_dashboard_does_not_exist(
-    global_config_all_json, tmp_path
-):
-    dashboard_xml_file_path = tmp_path / "dashboard.xml"
-
-    dashboard.generate_dashboard(
-        global_config_all_json,
-        "Splunk_TA_UCCExample",
-        str(dashboard_xml_file_path),
-    )
-
-    expected_dashboard_content = """<form version="1.1">
+default_dashboard_content_start = """<form version="1.1">
   <label>Monitoring Dashboard</label>
   <fieldset submitButton="false">
     <input type="time" token="log_time">
@@ -89,9 +66,49 @@ def test_generate_dashboard_when_dashboard_does_not_exist(
       </event>
     </panel>
   </row>
-</form>"""
+"""
+
+default_dashboard_content_end = "</form>"
+
+custom_dashboard_components = """<row>
+    <panel>
+        <title>CUSTOM ROW 1</title>
+    </panel>
+</row>
+<row>
+<panel>
+    <title>CUSTOM ROW 2</title>
+    <chart>
+        <search>
+            <query>index=_internal sourcetype="test*" "is processing SQS messages:" sqs_msg_action
+            </query>
+            <earliest>-14d@d</earliest>
+            <latest>now</latest>
+            <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.axisTitleX.text">Time</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+    </chart>
+</panel>
+</row>
+"""
+
+
+def test_generate_dashboard_when_dashboard_does_not_exist(
+    global_config_all_json, tmp_path
+):
+    dashboard_xml_file_path = tmp_path / "dashboard.xml"
+
+    dashboard.generate_dashboard(
+        global_config_all_json,
+        "Splunk_TA_UCCExample",
+        str(dashboard_xml_file_path),
+    )
+
+    expected_content = default_dashboard_content_start + default_dashboard_content_end
+
     with open(dashboard_xml_file_path) as dashboard_xml_file:
-        assert expected_dashboard_content == dashboard_xml_file.read()
+        assert expected_content == dashboard_xml_file.read()
 
 
 def test_generate_dashboard_when_dashboard_already_exists(
@@ -116,27 +133,82 @@ def test_generate_dashboard_when_dashboard_already_exists(
     assert expected_log_warning_message in caplog.text
 
 
-def test_generate_custom_dashboards(global_config_all_json, tmp_path, caplog):
-    tmp_src = os.path.join(tmp_path, "test_ta", "dashboards")
-    os.makedirs(tmp_src)
-    with open(os.path.join(tmp_src, "default.xml"), "w") as file:
-        file.write("".join(custom_xml))
-
-    with open(os.path.join(tmp_src, "my_custom_dashboard_1.xml"), "w") as file:
-        file.write("<view><label>Custom dashboard</label></view>")
-
-    tmp_out = tmp_path / "output"
-    generate_data_ui(str(tmp_out), "test_addon", True, True)
-    copy_custom_dashboards(str(tmp_src), str(os.path.join(tmp_out, "test_addon")))
-
-    with open(
-        os.path.join(
-            tmp_out, "test_addon", "default", "data", "ui", "nav", "default.xml"
-        )
-    ) as file:
-        content = file.readlines()
-
-    assert content == custom_xml
-    assert "my_custom_dashboard_1.xml" in os.listdir(
-        os.path.join(tmp_out, "test_addon", "default", "data", "ui", "views")
+def test_generate_dashboard_with_custom_components(tmp_path):
+    global_config_path = helpers.get_testdata_file_path(
+        "valid_config_with_custom_dashboard.json"
     )
+    global_config = gc.GlobalConfig(global_config_path, False)
+    tmp_ta_path = tmp_path / "test_ta"
+    os.makedirs(tmp_ta_path)
+    custom_dash_path = os.path.join(tmp_ta_path, "dashboard_components.txt")
+    with open(custom_dash_path, "w") as file:
+        file.write(custom_dashboard_components)
+
+    with mock.patch("os.path.abspath") as path_abs:
+        path_abs.return_value = custom_dash_path
+        dashboard_path = tmp_path / "dashboard.xml"
+        dashboard.generate_dashboard(
+            global_config,
+            "Splunk_TA_UCCExample",
+            str(dashboard_path),
+        )
+
+    expected_content = (
+        default_dashboard_content_start
+        + custom_dashboard_components
+        + default_dashboard_content_end
+    )
+
+    with open(dashboard_path) as dashboard_xml_file:
+        assert expected_content == dashboard_xml_file.read()
+
+
+def test_generate_dashboard_with_custom_components_no_file(tmp_path):
+    global_config_path = helpers.get_testdata_file_path(
+        "valid_config_with_custom_dashboard.json"
+    )
+    global_config = gc.GlobalConfig(global_config_path, False)
+
+    expected_msg = (
+        "custom dashboard page set but dashboard_components.txt file not found"
+    )
+    with pytest.raises(SystemExit) as sys_exit:
+        dashboard_path = tmp_path / "dashboard.xml"
+        dashboard.generate_dashboard(
+            global_config,
+            "Splunk_TA_UCCExample",
+            str(dashboard_path),
+        )
+    assert expected_msg in sys_exit.value.args
+
+
+def test_generate_dashboard_with_custom_components_empty_file(tmp_path):
+    global_config_path = helpers.get_testdata_file_path(
+        "valid_config_with_custom_dashboard.json"
+    )
+    global_config = gc.GlobalConfig(global_config_path, False)
+    tmp_ta_path = tmp_path / "test_ta"
+    os.makedirs(tmp_ta_path)
+    custom_dash_path = os.path.join(tmp_ta_path, "dashboard_components.txt")
+    with open(custom_dash_path, "w") as file:
+        file.write("")
+
+    expected_msg = (
+        "custom dashboard page set but dashboard_components.txt file is empty"
+    )
+    with pytest.raises(SystemExit) as sys_exit:
+        with mock.patch("os.path.abspath") as path_abs:
+            path_abs.return_value = custom_dash_path
+            dashboard_path = tmp_path / "dashboard.xml"
+            dashboard.generate_dashboard(
+                global_config,
+                "Splunk_TA_UCCExample",
+                str(dashboard_path),
+            )
+        dashboard_path = tmp_path / "dashboard.xml"
+        dashboard.generate_dashboard(
+            global_config,
+            "Splunk_TA_UCCExample",
+            str(dashboard_path),
+        )
+    assert expected_msg in sys_exit.value.args

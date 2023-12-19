@@ -443,29 +443,6 @@ def summary_report(
     logger.info(f"File creation summary: {summary_combined}")
 
 
-def copy_custom_dashboards(src: str, output: str) -> None:
-    head, _ = os.path.split(src.rstrip("/"))
-    dashboards_path = os.path.join(head, "dashboards")
-    try:
-        dashboards = os.listdir(dashboards_path)
-    except FileNotFoundError:
-        logger.info("Custom dashboards directory not found")
-        return
-    default_ui_path = os.path.join(output, "default", "data", "ui")
-    nav = os.path.join(default_ui_path, "nav")
-    views = os.path.join(default_ui_path, "views")
-    for board in dashboards:
-        if board == "default.xml":
-            utils.recursive_overwrite(
-                os.path.join(dashboards_path, board), os.path.join(nav, board)
-            )
-        else:
-            utils.recursive_overwrite(
-                os.path.join(dashboards_path, board), os.path.join(views, board)
-            )
-    logger.info("Custom dashboards copied")
-
-
 def generate(
     source: str,
     config_path: Optional[str] = None,
@@ -622,12 +599,7 @@ def generate(
                 "views",
                 "dashboard.xml",
             )
-            dashboard.generate_dashboard(
-                global_config,
-                ta_name,
-                dashboard_xml_path,
-            )
-        copy_custom_dashboards(source, os.path.join(output_directory, ta_name))
+            dashboard.generate_dashboard(global_config, ta_name, dashboard_xml_path)
 
     else:
         global_config = None
