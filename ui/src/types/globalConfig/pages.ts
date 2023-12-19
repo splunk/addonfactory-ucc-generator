@@ -99,10 +99,26 @@ export const InputsPageRegular = z
     // The strict method disallows a table field to distinguish between to inputs
     .strict();
 
+export const SubDescriptionSchema = z
+    .object({
+        text: z.string(),
+        links: z
+            .array(
+                z.object({
+                    slug: z.string(),
+                    link: z.string(),
+                    linkText: z.string(),
+                })
+            )
+            .optional(),
+    })
+    .optional();
+
 export const InputsPageTableSchema = z
     .object({
         title: z.string(),
         description: z.string().optional(),
+        subDescription: SubDescriptionSchema,
         menu: z
             .object({
                 type: z.literal('external'),
@@ -129,6 +145,7 @@ export const pages = z.object({
     configuration: z.object({
         title: z.string(),
         description: z.string().optional(),
+        subDescription: SubDescriptionSchema,
         tabs: z.array(TabSchema).min(1),
     }),
     inputs: z.union([InputsPageRegular, InputsPageTableSchema]).optional(),

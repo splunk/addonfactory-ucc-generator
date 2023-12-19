@@ -17,6 +17,7 @@ import TableWrapper from '../../components/table/TableWrapper';
 import EntityModal from '../../components/EntityModal/EntityModal';
 import ErrorBoundary from '../../components/ErrorBoundary';
 import EntityPage from '../../components/EntityPage';
+import SubDescription from '../../components/SubDescription/SubDescription';
 import useQuery from '../../hooks/useQuery';
 
 const Row = styled(ColumnLayout.Row)`
@@ -38,7 +39,7 @@ const Row = styled(ColumnLayout.Row)`
 function InputPage() {
     const [entity, setEntity] = useState({ open: false });
     const unifiedConfigs = getUnifiedConfigs();
-    const { services, title, table, description } = unifiedConfigs.pages.inputs;
+    const { services, title, table, description, subDescription } = unifiedConfigs.pages.inputs;
 
     // check if the tabs feature is enabled or not.
     const isTabs = !table;
@@ -220,6 +221,7 @@ function InputPage() {
                                 <SubTitleComponent className={isTabs && 'page_subtitle'}>
                                     {isTabs ? _(selectedTab.description) : _(description || '')}
                                 </SubTitleComponent>
+                                <SubDescription {...subDescription} />
                             </ColumnLayout.Column>
                             <ColumnLayout.Column
                                 className={isTabs ? 'title_menu_column' : 'dropdown'}
