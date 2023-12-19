@@ -31,7 +31,7 @@ poetry run pytest tests/unit
 ### UI tests
 
 If you need to run UI tests for the PR, please add a label "run-ui-tests" (do this before PR is created). 
-UI tests will run automatically for any PR towards `main` branch and on the `main` branch as well. 
+UI tests will run automatically for any PR towards `main` / `develop` branches and on the `main` / `develop` branch as well. 
 
 1. With local version of ucc-gen create UCCExample TA to output directory:
     ```
