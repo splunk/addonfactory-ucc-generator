@@ -715,3 +715,10 @@ def generate(
         os.path.join(output_directory, ta_name),
         verbose_file_summary_report,
     )
+
+#TODO remove below
+if __name__ == "__main__":
+
+    path_package = '/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/tests/testdata/test_addons/package_global_config_everything/package'
+
+    generate(source=path_package)
