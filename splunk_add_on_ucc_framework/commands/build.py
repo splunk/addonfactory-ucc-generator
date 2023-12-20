@@ -502,6 +502,7 @@ def generate(
             logger.error(f"globalConfig file is not valid. Error: {e}")
             sys.exit(1)
         global_config.update_addon_version(addon_version)
+        global_config.add_ucc_version(__version__)
         global_config.dump(global_config.original_path)
         logger.info(
             f"Updated and saved add-on version in the globalConfig file to {addon_version}"
@@ -714,3 +715,10 @@ def generate(
         os.path.join(output_directory, ta_name),
         verbose_file_summary_report,
     )
+
+#TODO remove below
+if __name__ == "__main__":
+
+    path_package = '/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/tests/testdata/test_addons/package_global_config_everything/package'
+
+    generate(source=path_package)
