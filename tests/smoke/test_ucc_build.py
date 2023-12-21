@@ -79,7 +79,6 @@ def test_ucc_generate_with_config_param():
             "globalConfig.json",
         )
 
-
         app_manifest_path = path.join(
             path.dirname(path.realpath(__file__)),
             "output",
