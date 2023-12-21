@@ -2007,7 +2007,8 @@
               "link": {
                 "type": "string"
               }
-            }
+            },
+            "required": ["slug", "linkText", "link"]
           },
           "required": ["text"]
         }

@@ -3,12 +3,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { z } from 'zod';
 import { variables } from '@splunk/themes';
+import Link from '@splunk/react-ui/Link';
 import { SubDescriptionSchema } from '../../types/globalConfig/pages';
 
-export const SubTitleComponent = styled.div.attrs({
-    className: 'pageSubDescription',
-})`
-    &.pageSubDescription {
+export const SubTitleComponent = styled.p`
+    & {
         font-size: ${variables.fontSize};
         margin-bottom: 10px;
     }
@@ -25,14 +24,14 @@ const mapTextToElements = (props: SubDescriptionProps) => {
 
             if (linkToReplace) {
                 return (
-                    <a // using index as key for elements as they dont have unique values but are unique itself
+                    <Link // using index as key for elements as they dont have unique values but are unique itself
                         key={`subDesc${linkToReplace.slug}${i}`}
-                        href={linkToReplace.link}
+                        to={linkToReplace.link}
                         target="_blank"
                         rel="noreferrer"
                     >
                         {linkToReplace.linkText}
-                    </a>
+                    </Link>
                 );
             }
             return text.split('</br>').map((elem, ind) => (
