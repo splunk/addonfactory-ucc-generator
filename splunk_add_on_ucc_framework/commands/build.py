@@ -644,6 +644,7 @@ def generate(
         logger.info("Updated VERSION file")
 
     app_manifest.update_addon_version(addon_version)
+    app_manifest.add_ucc_version(__version__)
     output_manifest_path = os.path.abspath(
         os.path.join(output_directory, ta_name, app_manifest_lib.APP_MANIFEST_FILE_NAME)
     )
@@ -715,10 +716,3 @@ def generate(
         os.path.join(output_directory, ta_name),
         verbose_file_summary_report,
     )
-
-
-# TODO remove below
-if __name__ == "__main__":
-    path_package = "/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/tests/testdata/test_addons/package_global_config_everything/package"
-
-    generate(source=path_package)

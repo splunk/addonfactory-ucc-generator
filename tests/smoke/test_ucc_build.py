@@ -60,8 +60,38 @@ def test_ucc_generate():
 def test_ucc_generate_with_config_param():
     """
     Checks whether the package is build when the `config` flag is provided in the CLI.
-    Check if globalConfig contains current ucc version
+    Check if globalConfig and app.manifest contains current ucc version
     """
+
+    def get_file_content(path):
+        with open(path) as f:
+            return json.load(f)
+
+    def check_ucc_versions():
+        global_config_path = path.join(
+            path.dirname(path.realpath(__file__)),
+            "output",
+            "Splunk_TA_UCCExample",
+            "appserver",
+            "static",
+            "js",
+            "build",
+            "globalConfig.json",
+        )
+        build.generate(source=package_folder, config_path=config_path)
+
+        app_manifest_path = path.join(
+            path.dirname(path.realpath(__file__)),
+            "output",
+            "Splunk_TA_UCCExample",
+            "app.manifest",
+        )
+
+        global_config = get_file_content(global_config_path)
+        app_manifest = get_file_content(app_manifest_path)
+
+        assert global_config["meta"]["uccVersion"] == __version__
+        assert app_manifest["info"]["ucc_framework"]["version"] == __version__
 
     package_folder = path.join(
         path.dirname(path.realpath(__file__)),
@@ -79,22 +109,8 @@ def test_ucc_generate_with_config_param():
         "package_global_config_everything",
         "globalConfig.json",
     )
-    global_config_path = path.join(
-        path.dirname(path.realpath(__file__)),
-        "output",
-        "Splunk_TA_UCCExample",
-        "appserver",
-        "static",
-        "js",
-        "build",
-        "globalConfig.json",
-    )
-    build.generate(source=package_folder, config_path=config_path)
 
-    with open(global_config_path) as f:
-        global_config = json.load(f)
-
-    assert global_config["meta"]["uccVersion"] == __version__
+    check_ucc_versions()
 
 
 @pytest.mark.skipif(sys.version_info >= (3, 8), reason=PYTEST_SKIP_REASON)
