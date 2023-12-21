@@ -15,7 +15,7 @@ it('Sub Description component - without links', async () => {
 
 it('Sub Description component - links', async () => {
     const props = {
-        text: `Ingesting data from to Splunk Cloud?</br>Read our [[blogPost]] to learn more about Data Manager and it's availability on your Splunk Cloud instance.`,
+        text: `Ingesting data from to Splunk Cloud?\nRead our [[blogPost]] to learn more about Data Manager and it's availability on your Splunk Cloud instance.`,
         links: [
             {
                 slug: 'blogPost',
@@ -26,11 +26,13 @@ it('Sub Description component - links', async () => {
     };
     render(<SubDescription {...props} />);
 
-    const firstParagraph = await screen.findByText('Ingesting data from to Splunk Cloud?');
+    const firstParagraph = await screen.findByText((text) =>
+        text.startsWith('Ingesting data from to Splunk Cloud?')
+    );
     expect(firstParagraph).toBeInTheDocument();
     const wholeSubDescription = firstParagraph.parentNode;
     expect(wholeSubDescription?.textContent).toEqual(
-        props.text.replaceAll('</br>', '').replaceAll('[[blogPost]]', 'blog post')
+        props.text.replaceAll('[[blogPost]]', 'blog post')
     );
 
     const linkInsideDescription = wholeSubDescription?.querySelector('a');

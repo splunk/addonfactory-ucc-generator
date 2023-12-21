@@ -10,6 +10,7 @@ export const SubTitleComponent = styled.p`
     & {
         font-size: ${variables.fontSize};
         margin-bottom: 10px;
+        white-space: pre-line;
     }
 `;
 
@@ -19,28 +20,17 @@ const mapTextToElements = (props: SubDescriptionProps) => {
     const splitedtextBySlugs: string[] | undefined = props?.text.split(/\]\]|\[\[/);
 
     return splitedtextBySlugs
-        ?.map((text, i) => {
+        ?.map((text) => {
             const linkToReplace = props?.links?.find((link) => link.slug === text);
 
             if (linkToReplace) {
                 return (
-                    <Link // using index as key for elements as they dont have unique values but are unique itself
-                        key={`subDesc${linkToReplace.slug}${i}`}
-                        to={linkToReplace.link}
-                        target="_blank"
-                        rel="noreferrer"
-                    >
+                    <Link to={linkToReplace.link} target="_blank" rel="noreferrer">
                         {linkToReplace.linkText}
                     </Link>
                 );
             }
-            return text.split('</br>').map((elem, ind) => (
-                // using index as key for elements as they dont have unique values but are unique itself
-                <span key={`subDesc${i}${ind}`}>
-                    {ind > 0 && ind < text.length - 1 && <br />}
-                    {elem}
-                </span>
-            ));
+            return text;
         })
         .flat();
 };

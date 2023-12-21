@@ -4,7 +4,7 @@ This feature allows us to pass broarder description on Input and Configuration p
 
 | Property                                      | Type   | Description                                                          |
 | --------------------------------------------- | ------ | -------------------------------------------------------------------- |
-| text<span class="required-asterisk">\*</span> | string | Text used for that description, you can put </br> to add a breakline |
+| text<span class="required-asterisk">\*</span> | string | Text used for that description, you can put \n to add a breakline |
 | links                                         | object | To enable including links inside description                         |
 
 ### Links
@@ -23,7 +23,7 @@ This feature allows us to pass broarder description on Input and Configuration p
   "title": "Example Input One",
   "entity": [],
   "subDescription": {
-    "text": "Ingesting data from to Splunk Cloud?</br>Read our [[blogPost]] to learn more about Data Manager and it's availability on your Splunk Cloud instance.",
+    "text": "Ingesting data from to Splunk Cloud?\nRead our [[blogPost]] to learn more about Data Manager and it's availability on your Splunk Cloud instance.",
     "links": [
       {
         "slug": "blogPost",
