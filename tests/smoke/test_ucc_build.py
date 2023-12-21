@@ -78,7 +78,7 @@ def test_ucc_generate_with_config_param():
             "build",
             "globalConfig.json",
         )
-        build.generate(source=package_folder, config_path=config_path)
+
 
         app_manifest_path = path.join(
             path.dirname(path.realpath(__file__)),
@@ -109,6 +109,8 @@ def test_ucc_generate_with_config_param():
         "package_global_config_everything",
         "globalConfig.json",
     )
+
+    build.generate(source=package_folder, config_path=config_path)
 
     check_ucc_versions()
 
