@@ -7,7 +7,7 @@ import messageDict from '../constants/messageDict';
  * @param {(string|number|boolean)[]=} msg arguments to format the message.
  * @returns {string}
  */
-export const getFormattedMessage = (code, msg /* , ... , args */) => {
+export const getFormattedMessage = (code: number, msg?: (string | number)[] /* , ... , args */) => {
     let template = messageDict[code] || messageDict.unknown;
     template = _(template);
     return __.template(template, {
@@ -17,7 +17,7 @@ export const getFormattedMessage = (code, msg /* , ... , args */) => {
     });
 };
 
-export const parseErrorMsg = (err) => {
+export const parseErrorMsg = (err: { response: { data: { messages: { text: string }[] } } }) => {
     let errorMsg = '';
     let regex;
     let matches;
@@ -31,8 +31,7 @@ export const parseErrorMsg = (err) => {
                 const innerMsgJSON = JSON.parse(matches[1]);
                 errorMsg = String(innerMsgJSON.messages[0].text);
             } catch (error) {
-                // eslint-disable-next-line prefer-destructuring
-                errorMsg = matches[1];
+                [, errorMsg] = matches;
             }
         } else {
             errorMsg = msg;

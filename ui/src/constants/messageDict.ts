@@ -1,4 +1,4 @@
-export default {
+const MESSAGE_DICT: Record<number | 'unknown', string> = {
     /* validation messages, range [0, 99] */
     0: 'Field {{args[0]}} is required',
     1: 'Field {{args[0]}} must be a string',
@@ -59,4 +59,6 @@ export default {
     118: 'configuration file not found',
 
     unknown: 'An unknown error occurred',
-} as const;
+};
+
+export default MESSAGE_DICT;
