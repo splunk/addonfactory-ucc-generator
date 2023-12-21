@@ -87,16 +87,14 @@ def test_ucc_generate_with_config_param():
         "static",
         "js",
         "build",
-        "globalConfig.json"
+        "globalConfig.json",
     )
     build.generate(source=package_folder, config_path=config_path)
 
-    with open(global_config_path, 'r') as f:
+    with open(global_config_path) as f:
         global_config = json.load(f)
 
-    assert global_config['meta']['uccVersion'] == __version__
-
-
+    assert global_config["meta"]["uccVersion"] == __version__
 
 
 @pytest.mark.skipif(sys.version_info >= (3, 8), reason=PYTEST_SKIP_REASON)
