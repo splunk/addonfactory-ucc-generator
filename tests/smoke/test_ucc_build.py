@@ -70,6 +70,8 @@ def test_ucc_generate_with_config_param():
     def check_ucc_versions():
         global_config_path = path.join(
             path.dirname(path.realpath(__file__)),
+            "..",
+            "..",
             "output",
             "Splunk_TA_UCCExample",
             "appserver",
@@ -81,6 +83,8 @@ def test_ucc_generate_with_config_param():
 
         app_manifest_path = path.join(
             path.dirname(path.realpath(__file__)),
+            "..",
+            "..",
             "output",
             "Splunk_TA_UCCExample",
             "app.manifest",
