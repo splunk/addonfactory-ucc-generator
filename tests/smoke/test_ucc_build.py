@@ -11,6 +11,7 @@ from tests.smoke import helpers
 import addonfactory_splunk_conf_parser_lib as conf_parser
 
 from splunk_add_on_ucc_framework.commands import build
+from splunk_add_on_ucc_framework import __version__
 
 PYTEST_SKIP_REASON = """Python 3.8 and higher preserves the order of the attrib
 fields when `tostring` function is used.
@@ -59,7 +60,9 @@ def test_ucc_generate():
 def test_ucc_generate_with_config_param():
     """
     Checks whether the package is build when the `config` flag is provided in the CLI.
+    Check if globalConfig contains current ucc version
     """
+
     package_folder = path.join(
         path.dirname(path.realpath(__file__)),
         "..",
@@ -76,7 +79,24 @@ def test_ucc_generate_with_config_param():
         "package_global_config_everything",
         "globalConfig.json",
     )
+    global_config_path = path.join(
+        path.dirname(path.realpath(__file__)),
+        "output",
+        "Splunk_TA_UCCExample",
+        "appserver",
+        "static",
+        "js",
+        "build",
+        "globalConfig.json"
+    )
     build.generate(source=package_folder, config_path=config_path)
+
+    with open(global_config_path, 'r') as f:
+        global_config = json.load(f)
+
+    assert global_config['meta']['uccVersion'] == __version__
+
+
 
 
 @pytest.mark.skipif(sys.version_info >= (3, 8), reason=PYTEST_SKIP_REASON)
