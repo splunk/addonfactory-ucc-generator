@@ -25,7 +25,7 @@ const mapTextToElements = (props: SubDescriptionProps) => {
 
             if (linkToReplace) {
                 return (
-                    <a // using index as elements for not have unique values but are unique itself
+                    <a // using index as key for elements as they dont have unique values but are unique itself
                         key={`subDesc${linkToReplace.slug}${i}`}
                         href={linkToReplace.link}
                         target="_blank"
@@ -36,7 +36,7 @@ const mapTextToElements = (props: SubDescriptionProps) => {
                 );
             }
             return text.split('</br>').map((elem, ind) => (
-                // using index as elements for not have unique values but are unique itself
+                // using index as key for elements as they dont have unique values but are unique itself
                 <span key={`subDesc${i}${ind}`}>
                     {ind > 0 && ind < text.length - 1 && <br />}
                     {elem}
