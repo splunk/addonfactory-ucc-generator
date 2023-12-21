@@ -16,6 +16,7 @@
 import logging
 import os
 import sys
+from defusedxml import ElementTree
 from typing import Sequence
 
 from splunk_add_on_ucc_framework import global_config as global_config_lib
@@ -144,24 +145,35 @@ def generate_dashboard(
         panel_names = [panel["name"] for panel in panels]
         custom_components = ""
         if PANEL_CUSTOM in panel_names:
+            dashboard_components_path = os.path.abspath(
+                os.path.join(
+                    global_config.original_path,
+                    os.pardir,
+                    "dashboard_components.xml",
+                )
+            )
             try:
-                dashboard_components_path = os.path.abspath(
-                    os.path.join(
-                        global_config.original_path,
-                        os.pardir,
-                        "dashboard_components.txt",
-                    )
-                )
-                with open(dashboard_components_path) as file:
-                    custom_components = "".join(file.readlines())
+                custom_xml = ElementTree.parse(dashboard_components_path)
             except FileNotFoundError:
-                sys.exit(
-                    "custom dashboard page set but dashboard_components.txt file not found"
+                logger.error(
+                    f"Custom dashboard page set in globalConfig.json but "
+                    f"file {dashboard_components_path} not found"
                 )
-            if not custom_components:
-                sys.exit(
-                    "custom dashboard page set but dashboard_components.txt file is empty"
-                )
+                sys.exit(1)
+            except ElementTree.ParseError:
+                logger.error(f"{dashboard_components_path} it's not a valid xml file")
+                sys.exit(1)
+            else:
+                for row in custom_xml.findall("row"):
+                    custom_components += ElementTree.tostring(row).decode()
+                if not custom_components:
+                    logger.error(
+                        f"Custom dashboard page set in globalConfig.json but custom content not found. "
+                        f"Please verify if file {dashboard_components_path} has a proper structure "
+                        f"(see https://splunk.github.io/addonfactory-ucc-generator/dashboard/)"
+                    )
+                    sys.exit(1)
+
         content = generate_dashboard_content(addon_name, panel_names, custom_components)
         with open(dashboard_xml_file_path, "w") as dashboard_xml_file:
             dashboard_xml_file.write(content)

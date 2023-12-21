@@ -101,42 +101,53 @@ index=_internal source=*<addon_name>* ERROR
 <br>
 # Custom components
 
-UCC also supports adding your own components to the dashboard. To do this, create a **dashboard_components.txt** file in the addon's base directory. 
-This file should only contain specific <row></row> tags which you would like to add to your dashboard.
-
-```
-...
-├── dashboard_components.txt
-├── package
-...
+UCC also supports adding your own components to the dashboard. 
+To do this, create a **dashboard_components.xml** file in the add-on's root directory (at the same level as globalConfig.json). 
+The content you want to add to your dashboard should be placed between **row** tags. Please note that everything except **row** tags will be skipped.
 ```
 
-sample **dashboard_components.txt** structure:
+<TA>
+ ├── package
+ ...
+ ├── dashboard_components.xml
+ ├── globalConfig.json
+ ...
 ```
-<row>
-    <panel>
-        <title>MY PANEL IN ROW 1</title>
-        <chart>
-        ...
-        </chart>
-    </panel>
-</row>
-<row>
-<panel>
-    <title>MY PANEL IN ROW 2</title>
-    <chart>
-        <search>
-            <query>
-            ...
-            </query>
-        </search>
-        <option name="charting.axisTitleX.text">...</option>
-    </chart>
-</panel>
-<panel>
-    <title>MY SECOND PANEL IN ROW 2</title>
-</panel>
-</row>
+
+sample **dashboard_components.xml** structure:
+```xml
+<custom-dashboard>
+    <row>
+        <panel>
+            <title>MY PANEL IN ROW 1</title>
+            <chart>
+                <search>
+                    <query>index=_internal sourcetype="st1*"
+                    </query>
+                </search>
+            </chart>
+        </panel>
+        <panel>
+            <title>MY SECOND PANEL IN ROW 1</title>
+            <chart>
+                <search>
+                    <query>index=_internal</query>
+                </search>
+            </chart>
+        </panel>
+    </row>
+    <row>
+        <panel>
+            <title>MY PANEL IN ROW 2</title>
+            <chart>
+                <search>
+                    <query>index=_internal</query>
+                    <earliest>-14d@d</earliest>
+                </search>
+            </chart>
+        </panel>
+    </row>
+</custom-dashboard>
 ```
 
 Next you have to add **custom** panel to your dashboard page in globalConfig.json. 
