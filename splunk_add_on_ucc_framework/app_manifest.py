@@ -88,6 +88,9 @@ class AppManifest:
     def update_addon_version(self, version: str) -> None:
         self._manifest["info"]["id"]["version"] = version
 
+    def add_ucc_version(self, version: str) -> None:
+        self._manifest["info"]["ucc_framework"] = {"version": version}
+
     def validate(self) -> None:
         schema_version = self._get_schema_version()
         if schema_version != APP_MANIFEST_SCHEMA_VERSION:
