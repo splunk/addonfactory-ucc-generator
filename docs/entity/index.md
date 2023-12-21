@@ -22,10 +22,10 @@ title: Entity
 
 ## Common Options
 
-| Property            | Type    | Description                                                             | Default Value |
-| ------------------- | ------- | ----------------------------------------------------------------------- | ------------- |
-| placeholder         | string  | `Deprecated` The grey text is shown when the input is empty.            | -             |
-| display             | boolean | Whether show or hide the field.                                         | true          |
-| disableonEdit       | boolean | When the form is in edit mode, the field becomes uneditable.            | false         |
-| enable              | boolean | The enable property sets whether a field is enabled, or not.            | true          |
-| requiredWhenVisible | boolean | Make field required when it appears in form. \*used only for visibility | false         |
+| Property            | Type    | Description                                                                       | Default Value |
+| ------------------- | ------- | --------------------------------------------------------------------------------- | ------------- |
+| placeholder         | string  | `Deprecated` The grey text is shown when the input is empty.                      | -             |
+| display             | boolean | Whether show or hide the field.                                                   | true          |
+| disableonEdit       | boolean | When the form is in edit mode, the field becomes uneditable.                      | false         |
+| enable              | boolean | The enable property sets whether a field is enabled, or not.                      | true          |
+| requiredWhenVisible | boolean | Make field required from UI perspecive when it appears \*used only for visibility | false         |
