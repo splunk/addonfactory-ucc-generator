@@ -32,7 +32,7 @@ it('Sub Description component - links', async () => {
     expect(firstParagraph).toBeInTheDocument();
     const wholeSubDescription = firstParagraph.parentNode;
     expect(wholeSubDescription?.textContent).toEqual(
-        props.text.replaceAll('[[blogPost]]', 'blog post')
+        props.text.replaceAll('[[blogPost]]', 'blog post(Opens new window)')
     );
 
     const linkInsideDescription = wholeSubDescription?.querySelector('a');

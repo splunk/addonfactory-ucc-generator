@@ -1,4 +1,3 @@
-/* eslint-disable react/no-array-index-key */
 import React from 'react';
 import styled from 'styled-components';
 import { z } from 'zod';
@@ -25,7 +24,11 @@ const mapTextToElements = (props: SubDescriptionProps) => {
 
             if (linkToReplace) {
                 return (
-                    <Link to={linkToReplace.link} openInNewContext>
+                    <Link
+                        to={linkToReplace.link}
+                        openInNewContext
+                        key={`subDescription${linkToReplace.slug}`}
+                    >
                         {linkToReplace.linkText}
                     </Link>
                 );
