@@ -129,7 +129,7 @@ class GlobalConfig:
 
     @property
     def ucc_version(self) -> str:
-        return self.meta["uccVersion"]
+        return self.meta["_uccVersion"]
 
     @property
     def original_path(self) -> str:
@@ -155,7 +155,7 @@ class GlobalConfig:
         self._content.setdefault("meta", {})["version"] = version
 
     def add_ucc_version(self, version: str) -> None:
-        self.content.setdefault("meta", {})["uccVersion"] = version
+        self.content.setdefault("meta", {})["_uccVersion"] = version
 
     def has_inputs(self) -> bool:
         return bool(self.inputs)
