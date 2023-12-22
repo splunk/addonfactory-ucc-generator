@@ -83,7 +83,7 @@ def test_ucc_generate_with_config_param():
 
         global_config = get_file_content(global_config_path)
 
-        assert global_config["meta"]["uccVersion"] == __version__
+        assert global_config["meta"]["_uccVersion"] == __version__
 
     package_folder = path.join(
         path.dirname(path.realpath(__file__)),
