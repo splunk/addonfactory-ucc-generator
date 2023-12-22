@@ -4,6 +4,7 @@ import { _ } from '@splunk/ui-utils/i18n';
 import Card from '@splunk/react-ui/Card';
 import WarningIcon from '@splunk/react-icons/enterprise/Warning';
 import errorCodes from '../../constants/errorCodes';
+import { parseErrorMsg } from '../../util/messageUtil';
 
 interface ErrorBoundaryProps {
     children: ReactElement | ReactElement[];
@@ -11,7 +12,16 @@ interface ErrorBoundaryProps {
 
 interface ErrorBoundaryState {
     errorCode: keyof typeof errorCodes | null;
-    error: null | unknown;
+    error?:
+        | {
+              response?: {
+                  data?: {
+                      messages?: { text: string }[];
+                  };
+              };
+          }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        | any; // error do not have a specific type
 }
 
 class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
@@ -35,6 +45,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
 
     render() {
         if (this.state.error) {
+            const additionalErrorMessage = parseErrorMsg(this.state?.error);
             // Error path
             return (
                 <div style={{ marginTop: '10%' }}>
@@ -58,6 +69,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
                                 </>
                             ) : null}
                             <details style={{ whiteSpace: 'pre-wrap' }}>
+                                {additionalErrorMessage && <p>{additionalErrorMessage}</p>}
                                 {this.state.error?.toString()}
                             </details>
                         </Card.Body>

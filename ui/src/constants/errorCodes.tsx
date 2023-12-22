@@ -4,8 +4,15 @@ import Link from '@splunk/react-ui/Link';
 export default {
     ERR0001: (
         <>
-            This is normal on Splunk search heads as they do not require an Input page. Check your
-            installation or return to the <Link to="configuration">configuration page</Link>.
+            Input page failed to load, the server reported internal error, which may indicate:
+            <ul>
+                <li>You do not have access to this page</li>
+                <li>There is a backend misconfiguration</li>
+                <li>Missing configuration file</li>
+            </ul>
+            Those are only potential issues, for more information look into Details. <br />
+            Check your installation or return to the{' '}
+            <Link to="configuration">configuration page</Link>.
         </>
     ),
     ERR0002:

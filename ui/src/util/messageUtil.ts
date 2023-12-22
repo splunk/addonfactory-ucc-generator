@@ -17,27 +17,49 @@ export const getFormattedMessage = (code: number, msg?: (string | number)[] /* ,
     });
 };
 
-export const parseErrorMsg = (err: { response: { data: { messages: { text: string }[] } } }) => {
-    let errorMsg = '';
-    let regex;
-    let matches;
+const tryParseByteString = (text: string) => {
     try {
-        const msg = err.response.data.messages[0].text;
-        regex =
+        if (text.startsWith(`b'`) || text.startsWith(`b"`)) {
+            // bytestring starts from b and Quotation mark (b') and ends with Quotation mark(')
+            const parsedString = JSON.parse(text.slice(2, -1));
+            return String(parsedString.messages[0].text);
+        }
+        return text;
+    } catch {
+        return text;
+    }
+};
+
+export const tryTrimErrorMessage = (msg: string) => {
+    try {
+        const regex =
             /.+"REST Error \[[\d]+\]:\s+.+\s+--\s+([\s\S]*)"\.\s*See splunkd\.log(\/python.log)? for more details\./;
-        matches = regex.exec(msg);
+        const matches = regex.exec(msg);
         if (matches && matches[1]) {
             try {
                 const innerMsgJSON = JSON.parse(matches[1]);
-                errorMsg = String(innerMsgJSON.messages[0].text);
+                return String(innerMsgJSON.messages[0].text);
             } catch (error) {
-                [, errorMsg] = matches;
+                return tryParseByteString(matches[1]);
             }
-        } else {
-            errorMsg = msg;
         }
     } catch (e) {
-        errorMsg = _('Error in processing the request');
+        return msg;
     }
-    return errorMsg;
+
+    return msg;
+};
+
+export const parseErrorMsg = (err?: {
+    response?: { data?: { messages?: { text?: string }[] } };
+}) => {
+    try {
+        const msg = err?.response?.data?.messages?.[0]?.text;
+        if (!msg) {
+            return messageDict.unknown;
+        }
+        return tryTrimErrorMessage(msg);
+    } catch (e) {
+        return _('Error in processing the request');
+    }
 };
