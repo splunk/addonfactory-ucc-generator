@@ -644,7 +644,6 @@ def generate(
         logger.info("Updated VERSION file")
 
     app_manifest.update_addon_version(addon_version)
-    app_manifest.add_ucc_version(__version__)
     output_manifest_path = os.path.abspath(
         os.path.join(output_directory, ta_name, app_manifest_lib.APP_MANIFEST_FILE_NAME)
     )
