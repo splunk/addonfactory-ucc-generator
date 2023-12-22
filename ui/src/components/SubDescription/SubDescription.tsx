@@ -25,7 +25,7 @@ const mapTextToElements = (props: SubDescriptionProps) => {
 
             if (linkToReplace) {
                 return (
-                    <Link to={linkToReplace.link} target="_blank" rel="noreferrer">
+                    <Link to={linkToReplace.link} openInNewContext >
                         {linkToReplace.linkText}
                     </Link>
                 );
