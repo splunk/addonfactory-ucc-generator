@@ -463,6 +463,14 @@ class BaseFormView extends PureComponent {
                 temEntities = this.entities;
             }
 
+            // require elements for UI when they are visible
+            temEntities = temEntities.map((entity) => {
+                if (entity?.options?.requiredWhenVisible && this.state.data[entity.field].display) {
+                    return { required: true, ...entity };
+                }
+                return entity;
+            });
+
             // Validation of form fields on Submit
             const validator = new Validator(temEntities);
             let error = validator.doValidation(this.datadict);

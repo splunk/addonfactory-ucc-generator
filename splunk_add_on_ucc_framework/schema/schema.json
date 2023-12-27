@@ -440,6 +440,9 @@
             },
             "enable": {
               "type": "boolean"
+            },
+            "requiredWhenVisible": {
+              "type": "boolean"
             }
           },
           "additionalProperties": false
@@ -514,6 +517,9 @@
               "type": "string"
             },
             "enable": {
+              "type": "boolean"
+            },
+            "requiredWhenVisible": {
               "type": "boolean"
             },
             "rowsMin": {
@@ -602,6 +608,9 @@
               "type": "string"
             },
             "enable": {
+              "type": "boolean"
+            },
+            "requiredWhenVisible": {
               "type": "boolean"
             },
             "disableSearch": {
@@ -716,6 +725,9 @@
             "enable": {
               "type": "boolean"
             },
+            "requiredWhenVisible": {
+              "type": "boolean"
+            },
             "disableSearch": {
               "type": "boolean"
             },
@@ -808,6 +820,9 @@
               "type": "boolean"
             },
             "enable": {
+              "type": "boolean"
+            },
+            "requiredWhenVisible": {
               "type": "boolean"
             }
           },
@@ -976,6 +991,9 @@
             "enable": {
               "type": "boolean"
             },
+            "requiredWhenVisible": {
+              "type": "boolean"
+            },
             "items": {
               "type": "array",
               "items": {
@@ -1043,6 +1061,9 @@
             "enable": {
               "type": "boolean"
             },
+            "requiredWhenVisible": {
+              "type": "boolean"
+            },
             "maxFileSize": {
               "type": "number"
             },
@@ -1094,6 +1115,9 @@
               "type": "boolean"
             },
             "disableonEdit": {
+              "type": "boolean"
+            },
+            "requiredWhenVisible": {
               "type": "boolean"
             },
             "enable": {

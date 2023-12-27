@@ -32,6 +32,7 @@ const CommonEditableEntityOptions = z.object({
     display: z.boolean().optional().default(true),
     disableonEdit: z.boolean().optional().default(false),
     enable: z.boolean().optional().default(true),
+    requiredWhenVisible: z.boolean().optional().default(false),
 });
 
 const AllValidators = z
@@ -198,7 +199,10 @@ export const OAuthEntity = CommonEditableEntityFields.extend({
     type: z.literal('oauth'),
     defaultValue: z.string().optional(),
     validators: z.array(z.union([StringValidator, RegexValidator])).optional(),
-    options: CommonEditableEntityOptions.omit({ placeholder: true }).extend({
+    options: CommonEditableEntityOptions.omit({
+        placeholder: true,
+        requiredWhenVisible: true,
+    }).extend({
         auth_type: z.array(z.union([z.literal('basic'), z.literal('oauth')])),
         basic: z.array(OAuthFields).optional(),
         oauth: z.array(OAuthFields).optional(),
