@@ -85,7 +85,6 @@
     "msw-storybook-addon": "^1.10.0",
     "prettier": "^2.8.8",
     "querystring-es3": "^0.2.1",
-    "semantic-release": "^19.0.5",
     "storybook": "^7.5.3",
     "style-loader": "^3.3.3",
     "stylelint": "^14.16.1",
