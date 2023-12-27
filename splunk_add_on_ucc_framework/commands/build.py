@@ -686,9 +686,15 @@ def generate(
         os.path.abspath(os.path.join(source, os.pardir, "additional_packaging.py"))
     ):
         sys.path.insert(0, os.path.abspath(os.path.join(source, os.pardir)))
-        from additional_packaging import additional_packaging
+        try:
+            from additional_packaging import additional_packaging
 
-        additional_packaging(ta_name)
+            additional_packaging(ta_name)
+        except ImportError as e:
+            logger.exception(
+                "additional_packaging.py is present but not importable.", e
+            )
+            raise e
 
     if global_config:
         logger.info("Generating OpenAPI file")
