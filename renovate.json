@@ -55,7 +55,7 @@
       "matchManagers": [
         "npm"
       ],
-      "matchPackagePrefixes": [
+      "matchPackageNames": [
         "msw-storybook-addon"
       ],
       "matchCurrentValue": "!/next/"
