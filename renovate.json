@@ -36,6 +36,7 @@
         "react",
         "react-dom",
         "react-is",
+        "string-width",
         "strip-ansi",
         "styled-components",
         "stylelint",
