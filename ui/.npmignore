@@ -35,7 +35,7 @@
 /splunktional-temp
 /test-reports/
 /karma.conf.js
-/jest.config.js
+/ui/jest.config.ts
 /webpack.test.config.js
 /*hooks.js
 /test-app

@@ -36,6 +36,7 @@
         "react-dom",
         "react-is",
         "strip-ansi",
+        "undici",
         "styled-components",
         "stylelint"
       ],
