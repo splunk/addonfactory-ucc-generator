@@ -28,16 +28,21 @@
         "@testing-library/react",
         "@types/react",
         "babel-eslint",
+        "babel-loader",
+        "css-what",
         "eslint",
         "eslint-config-airbnb",
         "eslint-config-prettier",
         "eslint-plugin-prettier",
+        "glob-parent",
         "react",
         "react-dom",
         "react-is",
+        "string-width",
         "strip-ansi",
         "styled-components",
-        "stylelint"
+        "stylelint",
+        "undici"
       ],
       "matchUpdateTypes": [
         "major",

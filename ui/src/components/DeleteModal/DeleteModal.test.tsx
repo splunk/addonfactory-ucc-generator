@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import React, { createContext } from 'react';
 import userEvent from '@testing-library/user-event';
-import { rest } from 'msw';
+import { http, HttpResponse } from 'msw';
 import DeleteModal from './DeleteModal';
 import { server } from '../../mocks/server';
 
@@ -51,8 +51,9 @@ it('close model and callback after cancel click', async () => {
 
 it('correct delete request', async () => {
     server.use(
-        rest.delete('/servicesNS/nobody/-/mockGeneratedEndPointUrl', (req, res, ctx) =>
-            res(ctx.status(201))
+        http.delete(
+            '/servicesNS/nobody/-/mockGeneratedEndPointUrl',
+            () => new HttpResponse(undefined, { status: 201 })
         )
     );
     const deleteButton = screen.getByRole('button', { name: /delete/i });

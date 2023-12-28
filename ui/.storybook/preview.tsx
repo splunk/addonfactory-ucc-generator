@@ -1,17 +1,17 @@
 import type { Preview } from '@storybook/react';
-import { initialize, mswDecorator, mswLoader } from 'msw-storybook-addon';
+import { initialize, mswLoader } from 'msw-storybook-addon';
 import { serverHandlers } from '../src/mocks/server-handlers';
-import { rest } from 'msw';
+import { http, HttpResponse } from 'msw';
 import { withSplunkThemeToolbar } from './withSplunkTheme';
 
 // Initialize MSW
 initialize({
     onUnhandledRequest(req) {
-        const { href } = req.url;
+        const url = req.url;
         const skipList = ['bundle.js', 'hot-update.js', 'http://localhost:6006/index.json'];
-        const shouldRequestBeBypassed = skipList.some((passItem) => href.includes(passItem));
+        const shouldRequestBeBypassed = skipList.some((passItem) => url.includes(passItem));
         if (!shouldRequestBeBypassed) {
-            console.warn('Found an unhandled %s request to %s', req.method, href);
+            console.warn('Found an unhandled %s request to %s', req.method, url);
         }
     },
 });
@@ -26,13 +26,11 @@ const preview: Preview = {
         msw: {
             handlers: [
                 ...serverHandlers,
-                rest.get(`globalConfig.json`, (req, res, ctx) =>
-                    res(
-                        ctx.json({
-                            pages: {},
-                            meta: {},
-                        })
-                    )
+                http.get(`globalConfig.json`, () =>
+                    HttpResponse.json({
+                        pages: {},
+                        meta: {},
+                    })
                 ),
             ],
         },
@@ -40,7 +38,7 @@ const preview: Preview = {
             sort: 'requiredFirst',
         },
     },
-    decorators: [withSplunkThemeToolbar, mswDecorator],
+    decorators: [withSplunkThemeToolbar],
 };
 
 export const globalTypes: Preview['globalTypes'] = {
