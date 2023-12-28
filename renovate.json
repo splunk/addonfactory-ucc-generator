@@ -23,7 +23,7 @@
       "matchManagers": [
         "npm"
       ],
-      "matchPackagePrefixes": [
+      "matchPackageNames": [
         "@npmcli/git",
         "@testing-library/react",
         "@types/react",
@@ -38,6 +38,7 @@
         "react",
         "react-dom",
         "react-is",
+        "prettier",
         "string-width",
         "strip-ansi",
         "styled-components",
@@ -49,6 +50,15 @@
         "replacement"
       ],
       "enabled": false
+    },
+    {
+      "matchManagers": [
+        "npm"
+      ],
+      "matchPackageNames": [
+        "msw-storybook-addon"
+      ],
+      "matchCurrentValue": "!/next/"
     },
     {
       "matchManagers": [
