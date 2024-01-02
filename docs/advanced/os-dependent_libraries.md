@@ -12,6 +12,29 @@ To do this, you need to expand the **meta** section in global config with the **
 | target<span class="required-asterisk">*</span>         | string  | Path where the selected library will be unpacked.                                                                                                                                                                                                                        | -             |
 | os<span class="required-asterisk">*</span>             | string  | The name of the operating system for which the library is intended. Using this parameter, an appropriate insert into sys.path will be created. It takes 3 values **windows**, **linux** and **darwin**.                                                                  | -             |
 
+### About wheels files
+
+Generally, the wheel name convention is <br>**{distribution}-{version}(-{build tag})?-{python tag}-{abi tag}-{platform tag}.whl**.<br>
+For example for this particular library: <br>**grpcio-1.54.2-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl**<br> 
+your pip parameters are:
+<ul>
+<li>name = grpcio</li>
+<li>version = 1.54.2</li>
+<li>platform = manylinux_2_17_x86_64 or manylinux2014_x86_64</li>
+<li>python_version = 37</li>
+<li>target = your/path/to/target</li>
+<li>os = linux</li>
+</ul>
+
+and your pip command should look like this:<br>
+`pip install --no-deps --platform manylinux_2_17_x86_64 --python-version 37 --target your/path/to/target --only-binary=:all: grpcio==1.54.2`
+
+A dot in the platform part indicates that a given distribution supports several platforms.
+In this case "**.**" in **manylinux_2_17_x86_64.manylinux2014_x86_64** means this distribution supports both **manylinux_2_17_x86_64** and **manylinux2014_x86_64**.
+
+
+for more informations, we recommend watching [.whl](https://www.youtube.com/watch?v=4L0Jb3Ku81s) and [manylinux platform](https://www.youtube.com/watch?v=80j-MRtHMek)
+
 ### Usage
 
 ```
