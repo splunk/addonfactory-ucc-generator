@@ -106,18 +106,6 @@ PANEL_ERRORS_IN_THE_ADDON_TEMPLATE = """  <row>
 """
 
 
-class InvalidRootTag(Exception):
-    pass
-
-
-class InvalidCustomXmlStructure(Exception):
-    pass
-
-
-class MissingRowTagsInCustomXml(Exception):
-    pass
-
-
 def generate_dashboard_content(
     addon_name: str, panel_names: Sequence[str], custom_components: str
 ) -> str:
