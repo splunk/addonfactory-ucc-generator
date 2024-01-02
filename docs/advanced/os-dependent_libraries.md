@@ -17,14 +17,13 @@ To do this, you need to expand the **meta** section in global config with the **
 Generally, the wheel name convention is <br>**{distribution}-{version}(-{build tag})?-{python tag}-{abi tag}-{platform tag}.whl**.<br>
 For example for this particular library: <br>**grpcio-1.54.2-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl**<br> 
 your pip parameters are:
-<ul>
-<li>name = grpcio</li>
-<li>version = 1.54.2</li>
-<li>platform = manylinux_2_17_x86_64 or manylinux2014_x86_64</li>
-<li>python_version = 37</li>
-<li>target = your/path/to/target</li>
-<li>os = linux</li>
-</ul>
+
+* name = **grpcio**
+* version = **1.54.2**
+* platform = **manylinux_2_17_x86_64** or **manylinux2014_x86_64**
+* python_version = **37**
+* target = **your/path/to/target**
+* os = **linux**
 
 and your pip command should look like this:<br>
 `pip install --no-deps --platform manylinux_2_17_x86_64 --python-version 37 --target your/path/to/target --only-binary=:all: grpcio==1.54.2`
