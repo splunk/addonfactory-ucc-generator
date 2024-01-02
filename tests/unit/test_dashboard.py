@@ -1,4 +1,5 @@
 import os.path
+import shutil
 from unittest import mock
 import pytest
 
@@ -133,7 +134,8 @@ def test_generate_dashboard_when_dashboard_already_exists(
     assert expected_log_warning_message in caplog.text
 
 
-def test_generate_dashboard_with_custom_components(tmp_path):
+@pytest.fixture
+def setup(tmp_path):
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_with_custom_dashboard.json"
     )
@@ -141,6 +143,13 @@ def test_generate_dashboard_with_custom_components(tmp_path):
     tmp_ta_path = tmp_path / "test_ta"
     os.makedirs(tmp_ta_path)
     custom_dash_path = os.path.join(tmp_ta_path, "dashboard_components.xml")
+    dashboard_path = tmp_path / "dashboard.xml"
+    yield global_config, custom_dash_path, dashboard_path
+    shutil.rmtree(tmp_ta_path)
+
+
+def test_generate_dashboard_with_custom_components(setup, tmp_path):
+    global_config, custom_dash_path, dashboard_path = setup
     with open(custom_dash_path, "w") as file:
         file.write(
             "<custom-dashboard>" + custom_dashboard_components + "</custom-dashboard>"
@@ -148,7 +157,6 @@ def test_generate_dashboard_with_custom_components(tmp_path):
 
     with mock.patch("os.path.abspath") as path_abs:
         path_abs.return_value = custom_dash_path
-        dashboard_path = tmp_path / "dashboard.xml"
         dashboard.generate_dashboard(
             global_config,
             "Splunk_TA_UCCExample",
@@ -165,11 +173,8 @@ def test_generate_dashboard_with_custom_components(tmp_path):
         assert expected_content == dashboard_xml_file.read()
 
 
-def test_generate_dashboard_with_custom_components_no_file(tmp_path, caplog):
-    global_config_path = helpers.get_testdata_file_path(
-        "valid_config_with_custom_dashboard.json"
-    )
-    global_config = gc.GlobalConfig(global_config_path, False)
+def test_generate_dashboard_with_custom_components_no_file(setup, tmp_path, caplog):
+    global_config, custom_dash_path, dashboard_path = setup
     custom_dashboard_path = os.path.abspath(
         os.path.join(
             global_config.original_path,
@@ -179,7 +184,6 @@ def test_generate_dashboard_with_custom_components_no_file(tmp_path, caplog):
     )
     expected_msg = f"Custom dashboard page set in globalConfig.json but file {custom_dashboard_path} not found"
     with pytest.raises(SystemExit):
-        dashboard_path = tmp_path / "dashboard.xml"
         dashboard.generate_dashboard(
             global_config,
             "Splunk_TA_UCCExample",
@@ -188,19 +192,14 @@ def test_generate_dashboard_with_custom_components_no_file(tmp_path, caplog):
     assert expected_msg in caplog.text
 
 
-def test_generate_dashboard_with_custom_components_invalid_xml_file(tmp_path, caplog):
-    global_config_path = helpers.get_testdata_file_path(
-        "valid_config_with_custom_dashboard.json"
-    )
-    global_config = gc.GlobalConfig(global_config_path, False)
-    tmp_ta_path = tmp_path / "test_ta"
-    os.makedirs(tmp_ta_path)
-    custom_dash_path = os.path.join(tmp_ta_path, "dashboard_components.xml")
+def test_generate_dashboard_with_custom_components_invalid_xml_file(
+    setup, tmp_path, caplog
+):
+    global_config, custom_dash_path, dashboard_path = setup
     with open(custom_dash_path, "w") as file:
         file.write("")
 
     expected_msg = f"{custom_dash_path} it's not a valid xml file"
-    dashboard_path = tmp_path / "dashboard.xml"
     with pytest.raises(SystemExit):
         with mock.patch("os.path.abspath") as path_abs:
             path_abs.return_value = custom_dash_path
@@ -211,6 +210,9 @@ def test_generate_dashboard_with_custom_components_invalid_xml_file(tmp_path, ca
             )
     assert expected_msg in caplog.text
 
+
+def test_generate_dashboard_with_custom_components_no_content(setup, tmp_path, caplog):
+    global_config, custom_dash_path, dashboard_path = setup
     with open(custom_dash_path, "w") as file:
         file.write("<custom-dashboard></custom-dashboard>")
 
@@ -227,5 +229,51 @@ def test_generate_dashboard_with_custom_components_invalid_xml_file(tmp_path, ca
         f"Custom dashboard page set in globalConfig.json but custom content not found. "
         f"Please verify if file {custom_dash_path} has a proper structure "
         f"(see https://splunk.github.io/addonfactory-ucc-generator/dashboard/)"
+    )
+    assert expected_msg in caplog.text
+
+
+def test_generate_dashboard_with_custom_components_invalid_root_tag(
+    setup, tmp_path, caplog
+):
+    global_config, custom_dash_path, dashboard_path = setup
+    with open(custom_dash_path, "w") as file:
+        file.write("<custom-dashboard1></custom-dashboard1>")
+
+    with pytest.raises(SystemExit):
+        with mock.patch("os.path.abspath") as path_abs:
+            path_abs.return_value = custom_dash_path
+            dashboard.generate_dashboard(
+                global_config,
+                "Splunk_TA_UCCExample",
+                str(dashboard_path),
+            )
+
+    expected_msg = (
+        f"File {custom_dash_path} has invalid root tag 'custom-dashboard1'."
+        f"Valid root tag is 'custom-dashboard'"
+    )
+    assert expected_msg in caplog.text
+
+
+def test_generate_dashboard_with_custom_components_invalid_child_tag(
+    setup, tmp_path, caplog
+):
+    global_config, custom_dash_path, dashboard_path = setup
+    with open(custom_dash_path, "w") as file:
+        file.write("<custom-dashboard><row></row><row123></row123></custom-dashboard>")
+
+    with pytest.raises(SystemExit):
+        with mock.patch("os.path.abspath") as path_abs:
+            path_abs.return_value = custom_dash_path
+            dashboard.generate_dashboard(
+                global_config,
+                "Splunk_TA_UCCExample",
+                str(dashboard_path),
+            )
+
+    expected_msg = (
+        f"In file {custom_dash_path}, there should only be tags 'row' under the root tag. "
+        f"Child tag no.2 has invalid name 'row123'."
     )
     assert expected_msg in caplog.text

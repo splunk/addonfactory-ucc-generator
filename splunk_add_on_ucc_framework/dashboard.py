@@ -106,6 +106,18 @@ PANEL_ERRORS_IN_THE_ADDON_TEMPLATE = """  <row>
 """
 
 
+class InvalidRootTag(Exception):
+    pass
+
+
+class InvalidCustomXmlStructure(Exception):
+    pass
+
+
+class MissingRowTagsInCustomXml(Exception):
+    pass
+
+
 def generate_dashboard_content(
     addon_name: str, panel_names: Sequence[str], custom_components: str
 ) -> str:
@@ -152,28 +164,54 @@ def generate_dashboard(
                     "dashboard_components.xml",
                 )
             )
-            try:
-                custom_xml = ElementTree.parse(dashboard_components_path)
-            except FileNotFoundError:
-                logger.error(
-                    f"Custom dashboard page set in globalConfig.json but "
-                    f"file {dashboard_components_path} not found"
-                )
-                sys.exit(1)
-            except ElementTree.ParseError:
-                logger.error(f"{dashboard_components_path} it's not a valid xml file")
-                sys.exit(1)
-            else:
-                for row in custom_xml.findall("row"):
-                    custom_components += ElementTree.tostring(row).decode()
-                if not custom_components:
-                    logger.error(
-                        f"Custom dashboard page set in globalConfig.json but custom content not found. "
-                        f"Please verify if file {dashboard_components_path} has a proper structure "
-                        f"(see https://splunk.github.io/addonfactory-ucc-generator/dashboard/)"
-                    )
-                    sys.exit(1)
+            custom_components = get_custom_xml_content(dashboard_components_path)
 
         content = generate_dashboard_content(addon_name, panel_names, custom_components)
         with open(dashboard_xml_file_path, "w") as dashboard_xml_file:
             dashboard_xml_file.write(content)
+
+
+def get_custom_xml_content(xml_path: str) -> str:
+    custom_xml = load_custom_xml(xml_path)
+    root = custom_xml.getroot()
+    if root.tag != "custom-dashboard":
+        logger.error(
+            f"File {xml_path} has invalid root tag '{root.tag}'."
+            f"Valid root tag is 'custom-dashboard'"
+        )
+        sys.exit(1)
+
+    custom_components = ""
+    for it, child in enumerate(root, 1):
+        if child.tag == "row":
+            custom_components += ElementTree.tostring(child).decode()
+        else:
+            logger.error(
+                f"In file {xml_path}, there should only be tags 'row' under the root tag. "
+                f"Child tag no.{it} has invalid name '{child.tag}'."
+            )
+            sys.exit(1)
+
+    if not custom_components:
+        logger.error(
+            f"Custom dashboard page set in globalConfig.json but custom content not found. "
+            f"Please verify if file {xml_path} has a proper structure "
+            f"(see https://splunk.github.io/addonfactory-ucc-generator/dashboard/)"
+        )
+        sys.exit(1)
+    return custom_components
+
+
+def load_custom_xml(xml_path: str) -> ElementTree:
+    try:
+        custom_xml = ElementTree.parse(xml_path)
+    except FileNotFoundError:
+        logger.error(
+            f"Custom dashboard page set in globalConfig.json but "
+            f"file {xml_path} not found"
+        )
+        sys.exit(1)
+    except ElementTree.ParseError:
+        logger.error(f"{xml_path} it's not a valid xml file")
+        sys.exit(1)
+    return custom_xml
