@@ -12,7 +12,7 @@ interface ErrorBoundaryProps {
 
 interface ErrorBoundaryState {
     errorCode: keyof typeof errorCodes | null;
-    error?:
+    error:
         | {
               response?: {
                   data?: {
@@ -20,8 +20,8 @@ interface ErrorBoundaryState {
                   };
               };
           }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        | any; // error do not have a specific type
+        | null
+        | unknown;
 }
 
 class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
