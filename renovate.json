@@ -58,7 +58,7 @@
       "matchPackageNames": [
         "msw-storybook-addon"
       ],
-      "allowedVersions": "!/next/"
+      "allowedVersions": "!/next|canary/"
     },
     {
       "matchManagers": [
