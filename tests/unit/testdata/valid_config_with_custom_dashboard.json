@@ -1,0 +1,70 @@
+{
+    "pages": {
+        "configuration": {
+            "tabs": [
+                {
+                    "name": "logging",
+                    "entity": [
+                        {
+                            "type": "singleSelect",
+                            "label": "Log level",
+                            "options": {
+                                "disableSearch": true,
+                                "autoCompleteFields": [
+                                    {
+                                        "value": "DEBUG",
+                                        "label": "DEBUG"
+                                    },
+                                    {
+                                        "value": "INFO",
+                                        "label": "INFO"
+                                    },
+                                    {
+                                        "value": "WARNING",
+                                        "label": "WARNING"
+                                    },
+                                    {
+                                        "value": "ERROR",
+                                        "label": "ERROR"
+                                    },
+                                    {
+                                        "value": "CRITICAL",
+                                        "label": "CRITICAL"
+                                    }
+                                ]
+                            },
+                            "defaultValue": "INFO",
+                            "field": "loglevel"
+                        }
+                    ],
+                    "title": "Logging"
+                }
+            ],
+            "title": "Configuration",
+            "description": "Set up your add-on"
+        },
+        "dashboard": {
+            "panels": [
+                {
+                    "name": "addon_version"
+                },
+                {
+                    "name": "events_ingested_by_sourcetype"
+                },
+                {
+                    "name": "errors_in_the_addon"
+                },
+                {
+                    "name": "custom"
+                }
+            ]
+        }
+    },
+    "meta": {
+        "name": "Splunk_TA_UCCExample",
+        "restRoot": "splunk_ta_uccexample",
+        "version": "1.0.0",
+        "displayName": "Splunk UCC test Add-on",
+        "schemaVersion": "0.0.3"
+    }
+}

@@ -599,11 +599,8 @@ def generate(
                 "views",
                 "dashboard.xml",
             )
-            dashboard.generate_dashboard(
-                global_config,
-                ta_name,
-                dashboard_xml_path,
-            )
+            dashboard.generate_dashboard(global_config, ta_name, dashboard_xml_path)
+
     else:
         global_config = None
         conf_file_names = []
