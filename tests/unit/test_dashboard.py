@@ -250,7 +250,7 @@ def test_generate_dashboard_with_custom_components_invalid_root_tag(
             )
 
     expected_msg = (
-        f"File {custom_dash_path} has invalid root tag 'custom-dashboard1'."
+        f"File {custom_dash_path} has invalid root tag 'custom-dashboard1'. "
         f"Valid root tag is 'custom-dashboard'"
     )
     assert expected_msg in caplog.text
