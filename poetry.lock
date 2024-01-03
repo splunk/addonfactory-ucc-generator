@@ -2,13 +2,13 @@
 
 [[package]]
 name = "addonfactory-splunk-conf-parser-lib"
-version = "0.3.4"
+version = "0.4.0"
 description = "Splunk .conf files parser"
 optional = false
 python-versions = ">=3.7,<4.0"
 files = [
-    {file = "addonfactory_splunk_conf_parser_lib-0.3.4-py3-none-any.whl", hash = "sha256:f2eb25bd03d4fd464b8b0304a87d5dc1e2935c42a6c262c6461b9b73b8e30217"},
-    {file = "addonfactory_splunk_conf_parser_lib-0.3.4.tar.gz", hash = "sha256:e550105c8c85a6f553688e5b1f4f55ae7ca758a1a428cbce1e0b9b73b9f4e35d"},
+    {file = "addonfactory_splunk_conf_parser_lib-0.4.0-py3-none-any.whl", hash = "sha256:9567b6c8cb87668c1120517fb6001f9cf3c04d07c923f57385b0bb025df42c24"},
+    {file = "addonfactory_splunk_conf_parser_lib-0.4.0.tar.gz", hash = "sha256:e892cd26dc9708512f864a397ed101579cceefe2c408ea5be2dc5032d2edf05d"},
 ]
 
 [[package]]
@@ -295,13 +295,13 @@ files = [
 
 [[package]]
 name = "dunamai"
-version = "1.18.1"
+version = "1.19.0"
 description = "Dynamic version generation"
 optional = false
 python-versions = ">=3.5,<4.0"
 files = [
-    {file = "dunamai-1.18.1-py3-none-any.whl", hash = "sha256:ee7b042f7a687fa04fc383258eb93bd819c7bd8aec62e0974f3c69747e5958f2"},
-    {file = "dunamai-1.18.1.tar.gz", hash = "sha256:5e9a91e43d16bb56fa8fcddcf92fa31b2e1126e060c3dcc8d094d9b508061f9d"},
+    {file = "dunamai-1.19.0-py3-none-any.whl", hash = "sha256:1ed948676bbf0812bfaafe315a134634f8d6eb67138513c75aa66e747404b9c6"},
+    {file = "dunamai-1.19.0.tar.gz", hash = "sha256:6ad99ae34f7cd290550a2ef1305d2e0292e6e6b5b1b830dfc07ceb7fd35fec09"},
 ]
 
 [package.dependencies]
@@ -1013,13 +1013,13 @@ files = [
 
 [[package]]
 name = "pytest"
-version = "7.4.3"
+version = "7.4.4"
 description = "pytest: simple powerful testing with Python"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "pytest-7.4.3-py3-none-any.whl", hash = "sha256:0d009c083ea859a71b76adf7c1d502e4bc170b80a8ef002da5806527b9591fac"},
-    {file = "pytest-7.4.3.tar.gz", hash = "sha256:d989d136982de4e3b29dabcc838ad581c64e8ed52c11fbe86ddebd9da0818cd5"},
+    {file = "pytest-7.4.4-py3-none-any.whl", hash = "sha256:b090cdf5ed60bf4c45261be03239c2c1c22df034fbffe691abe93cd80cea01d8"},
+    {file = "pytest-7.4.4.tar.gz", hash = "sha256:2cf0005922c6ace4a3e2ec8b4080eb0d9753fdc93107415332f50ce9e7994280"},
 ]
 
 [package.dependencies]
@@ -1051,6 +1051,21 @@ pytest = ">=4.6"
 
 [package.extras]
 testing = ["fields", "hunter", "process-tests", "pytest-xdist", "six", "virtualenv"]
+
+[[package]]
+name = "pytest-forked"
+version = "1.6.0"
+description = "run tests in isolated forked subprocesses"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "pytest-forked-1.6.0.tar.gz", hash = "sha256:4dafd46a9a600f65d822b8f605133ecf5b3e1941ebb3588e943b4e3eb71a5a3f"},
+    {file = "pytest_forked-1.6.0-py3-none-any.whl", hash = "sha256:810958f66a91afb1a1e2ae83089d8dc1cd2437ac96b12963042fbb9fb4d16af0"},
+]
+
+[package.dependencies]
+py = "*"
+pytest = ">=3.10"
 
 [[package]]
 name = "pytest-html"
@@ -1118,13 +1133,13 @@ pytest = ">=5.3"
 
 [[package]]
 name = "pytest-splunk-addon"
-version = "5.2.3"
+version = "5.2.4"
 description = "A Dynamic test tool for Splunk Apps and Add-ons"
 optional = false
 python-versions = ">=3.7,<4.0"
 files = [
-    {file = "pytest_splunk_addon-5.2.3-py3-none-any.whl", hash = "sha256:35da1c069b39a31bb611f8668f64b617638948f1b05ac88fc59e25bd96c3f53c"},
-    {file = "pytest_splunk_addon-5.2.3.tar.gz", hash = "sha256:320601b7d6916c2791d8c6bcafa27d8045e8f6175cd065e98f8f33d8b3f876a2"},
+    {file = "pytest_splunk_addon-5.2.4-py3-none-any.whl", hash = "sha256:13eff67eadbeac6b0c1b54bf25b48aa56db3a8df99d1ed770b4f08a5372a69cc"},
+    {file = "pytest_splunk_addon-5.2.4.tar.gz", hash = "sha256:ea30587c15279fc70166e23bb57e236e960281c9d5114763e5d9036a49e3ade7"},
 ]
 
 [package.dependencies]
@@ -1136,7 +1151,7 @@ jsonschema = ">=4,<5"
 junitparser = ">=2.2.0,<3.0.0"
 pytest = ">5.4.0,<8"
 pytest-ordering = ">=0.6,<0.7"
-pytest-xdist = ">=2.3.0"
+pytest-xdist = ">=2.3.0,<3.0.0"
 requests = ">=2.31.0,<3.0.0"
 splunk-sdk = ">=1.6"
 splunksplwrapper = ">=1.1.1,<2.0.0"
@@ -1170,18 +1185,19 @@ webdriver-manager = "*"
 
 [[package]]
 name = "pytest-xdist"
-version = "3.3.1"
-description = "pytest xdist plugin for distributed testing, most importantly across multiple CPUs"
+version = "2.5.0"
+description = "pytest xdist plugin for distributed testing and loop-on-failing modes"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.6"
 files = [
-    {file = "pytest-xdist-3.3.1.tar.gz", hash = "sha256:d5ee0520eb1b7bcca50a60a518ab7a7707992812c578198f8b44fdfac78e8c93"},
-    {file = "pytest_xdist-3.3.1-py3-none-any.whl", hash = "sha256:ff9daa7793569e6a68544850fd3927cd257cc03a7ef76c95e86915355e82b5f2"},
+    {file = "pytest-xdist-2.5.0.tar.gz", hash = "sha256:4580deca3ff04ddb2ac53eba39d76cb5dd5edeac050cb6fbc768b0dd712b4edf"},
+    {file = "pytest_xdist-2.5.0-py3-none-any.whl", hash = "sha256:6fe5c74fec98906deb8f2d2b616b5c782022744978e7bd4695d39c8f42d0ce65"},
 ]
 
 [package.dependencies]
 execnet = ">=1.1"
 pytest = ">=6.2.0"
+pytest-forked = "*"
 
 [package.extras]
 psutil = ["psutil (>=3.0)"]
