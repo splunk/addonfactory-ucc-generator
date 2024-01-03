@@ -164,7 +164,7 @@ def get_custom_xml_content(xml_path: str) -> str:
     root = custom_xml.getroot()
     if root.tag != "custom-dashboard":
         logger.error(
-            f"File {xml_path} has invalid root tag '{root.tag}'."
+            f"File {xml_path} has invalid root tag '{root.tag}'. "
             f"Valid root tag is 'custom-dashboard'"
         )
         sys.exit(1)
