@@ -6,16 +6,17 @@ import { setUnifiedConfig } from '../../util/util';
 import { serverHandlers } from './checkboxGroupMocks';
 import checkboxGroupConfig from './checkboxGroupMocks.json';
 import InputPage from '../../pages/Input/InputPage';
+import { GlobalConfig } from '../../types/globalConfig/globalConfig';
 
 const meta = {
     component: InputPage,
     title: 'InputPage/CheckboxGroup',
     render: (args) => {
-        setUnifiedConfig(args.globalConfig);
+        setUnifiedConfig(args?.globalConfig);
         return <InputPage />;
     },
     args: {
-        globalConfig: checkboxGroupConfig,
+        globalConfig: checkboxGroupConfig as GlobalConfig,
     },
     parameters: {
         msw: {
@@ -28,9 +29,9 @@ const meta = {
         const newInputBtn = canvas.getByRole('button', { name: 'Create New Input' });
         await userEvent.click(newInputBtn);
     },
-} satisfies Meta<typeof BaseFormView>;
+} satisfies Meta;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof BaseFormView>;
 
 export const InputPageView: Story = {};

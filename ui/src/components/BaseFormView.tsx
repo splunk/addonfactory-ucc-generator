@@ -53,7 +53,9 @@ function onCustomHookError(params: { methodName: string; error?: CustomHookError
 }
 
 class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
-    declare context: React.ContextType<typeof TableContext>;
+    static contextType = TableContext;
+
+    context!: React.ContextType<typeof TableContext>;
 
     flag: boolean;
 
@@ -170,6 +172,9 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                         this.currentInput =
                             this.context?.rowData?.[props.serviceName]?.[props.stanzaName];
                     }
+                    if (props.mode !== 'delete') {
+                        this.customWarningMessage = service?.warning?.[props.mode] || '';
+                    }
                 }
             });
         } else {
@@ -180,6 +185,9 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                 if (flag) {
                     this.entities = tab.entity;
                     this.options = tab.options;
+                    if (props.mode !== 'delete') {
+                        this.customWarningMessage = tab?.warning?.[props.mode] || '';
+                    }
                     if (tab.hook) {
                         this.hookDeferred = this.loadHook(
                             tab.hook.src,
@@ -193,7 +201,9 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                                 this.context?.rowData?.[props.serviceName]?.[props.stanzaName];
                         }
                     } else if (props.mode === MODE_CONFIG) {
-                        this.currentInput = props.currentServiceState;
+                        if (props.currentServiceState) {
+                            this.currentInput = props.currentServiceState;
+                        }
                         this.mode_config_title = tab.title;
                     } else if (this.context) {
                         // TODO: validate if that case ever appear
@@ -480,7 +490,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         this.state = {
             data: temState,
             errorMsg: '',
-            warningMsg: '',
+            warningMsg: this.customWarningMessage,
         };
 
         // Hook on create method call
@@ -925,7 +935,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
     clearAllErrorMsg = (State: BaseFormState) => {
         const newFields = State ? { ...State } : { ...this.state };
         newFields.errorMsg = '';
-        newFields.warningMsg = '';
+        newFields.warningMsg = this.customWarningMessage || '';
         const newData: BaseFormStateData = State ? { ...State.data } : { ...this.state.data };
         const temData: BaseFormStateData = {};
         Object.keys(newData).forEach((key) => {

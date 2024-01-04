@@ -1,18 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
-import BaseFormView from 'src/components/BaseFormView';
 import { http, HttpResponse } from 'msw';
 import { userEvent, within } from '@storybook/testing-library';
 import { setUnifiedConfig } from '../../../util/util';
 import globalConfig from './globalConfig.json';
 import InputPage from '../InputPage';
 import { mockServerResponse } from '../../../mocks/server-response';
+import { GlobalConfig } from '../../../types/globalConfig/globalConfig';
 
 const meta = {
     component: InputPage,
     title: 'InputPage/Base',
     render: (args) => {
-        setUnifiedConfig(args.globalConfig);
+        setUnifiedConfig(args.globalConfig as GlobalConfig);
         return <InputPage />;
     },
     args: {
@@ -25,7 +25,7 @@ const meta = {
             ],
         },
     },
-} satisfies Meta<typeof BaseFormView>;
+} satisfies Meta;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

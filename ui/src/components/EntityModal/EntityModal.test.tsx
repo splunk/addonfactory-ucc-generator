@@ -15,6 +15,7 @@ import {
     getConfigWarningMessage,
 } from './TestConfig';
 import { ERROR_AUTH_PROCESS_TERMINATED_TRY_AGAIN } from '../../constants/oAuthErrorMessage';
+import { Mode } from '../../constants/modes';
 
 describe('Oauth field disabled on edit - diableonEdit property', () => {
     const handleRequestClose = jest.fn();
@@ -271,7 +272,7 @@ describe('EntityModal - custom warning', () => {
         setUnifiedConfig(newConfig);
     };
 
-    const renderModal = (inputMode: string, page: string) => {
+    const renderModal = (inputMode: Mode, page: string) => {
         const props = {
             serviceName: 'account',
             mode: inputMode,

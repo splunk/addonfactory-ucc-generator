@@ -29,7 +29,7 @@ export interface BaseFormStateData {
 }
 
 export interface BaseFormProps {
-    currentServiceState: Record<string, AcceptableFormValueOrNull>;
+    currentServiceState?: Record<string, AcceptableFormValueOrNull>;
     serviceName: string;
     mode: Mode;
     page: string;
