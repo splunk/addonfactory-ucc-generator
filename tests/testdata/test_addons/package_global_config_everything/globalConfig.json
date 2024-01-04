@@ -48,26 +48,6 @@
                             "required": true
                         },
                         {
-                            "field": "input_mode",
-                            "label": "Input Mode",
-                            "type": "radio",
-                            "defaultValue": "continuously_monitor",
-                            "required": true,
-                            "options": {
-                                "items": [
-                                    {
-                                        "label": "Continuously Monitor",
-                                        "value": "continuously_monitor"
-                                    },
-                                    {
-                                        "label": "Index Once",
-                                        "value": "index_once"
-                                    }
-                                ],
-                                "disableonEdit": true
-                            }
-                        },
-                        {
                             "type": "singleSelect",
                             "label": "Example Environment",
                             "options": {
