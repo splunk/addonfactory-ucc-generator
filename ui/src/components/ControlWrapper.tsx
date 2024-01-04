@@ -112,7 +112,7 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
                     error={this.props.error}
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore property should be data-name, but is mapped in obj ControlGroupWrapper
-                    dataName={field}
+                    dataName={this?.props?.entity.field}
                     labelWidth={240}
                     {...this?.props?.entity}
                 >
