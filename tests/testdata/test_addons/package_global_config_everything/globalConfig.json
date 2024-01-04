@@ -48,6 +48,26 @@
                             "required": true
                         },
                         {
+                            "field": "input_mode",
+                            "label": "Input Mode",
+                            "type": "radio",
+                            "defaultValue": "continuously_monitor",
+                            "required": true,
+                            "options": {
+                                "items": [
+                                    {
+                                        "label": "Continuously Monitor",
+                                        "value": "continuously_monitor"
+                                    },
+                                    {
+                                        "label": "Index Once",
+                                        "value": "index_once"
+                                    }
+                                ],
+                                "disableonEdit": true
+                            }
+                        },
+                        {
                             "type": "singleSelect",
                             "label": "Example Environment",
                             "options": {
@@ -1375,7 +1395,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.35.1Ree62a73b",
+        "version": "5.35.1R7fe3d58d",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.3"
     }
