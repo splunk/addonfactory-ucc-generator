@@ -12,7 +12,18 @@ type Story = StoryObj<typeof meta>;
 export const Base: Story = {
     args: {
         utilityFuncts: {
-            utilCustomFunctions: {},
+            utilCustomFunctions: {
+                setState: () => {},
+                setErrorFieldMsg: () => {},
+                clearAllErrorMsg: () => {},
+                setErrorMsg: () => {},
+            },
+            handleChange(): void {
+                throw new Error('Function not implemented.');
+            },
+            addCustomValidator(): void {
+                throw new Error('Function not implemented.');
+            },
         },
         value: '',
         display: true,
@@ -28,7 +39,6 @@ export const Base: Story = {
             },
             encrypted: true,
             required: true,
-            defaultValue: null,
         },
         serviceName: 'settings',
         mode: 'config',
