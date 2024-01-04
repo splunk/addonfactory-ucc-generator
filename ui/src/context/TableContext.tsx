@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { AcceptableFormValueOrNull } from '../types/components/shareableTypes';
 
 type RowDataType = Record<string, Record<string, Record<string, AcceptableFormValueOrNull>>>; // serviceName > specificRowName > dataForRow
-// | Record<string, Record<string, AcceptableFormValueOrNull>>; // serviceName > dataForRow - used for config mode
 
 export type TableContextProviderType = {
     rowData: RowDataType;
@@ -31,8 +30,6 @@ export function TableContextProvider({
     const [pageSize, setPageSize] = useState<number>(10);
     const [currentPage, setCurrentPage] = useState<number>(0);
 
-    // eslint-disable-next-line no-console
-    console.log('rowData,', rowData);
     return (
         <TableContext.Provider
             value={{
