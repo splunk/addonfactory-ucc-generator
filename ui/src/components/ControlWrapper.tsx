@@ -67,7 +67,6 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
             rowView = this.controlType
                 ? React.createElement(this.controlType, {
                       data,
-                      //   field,
                       handleChange,
                       addCustomValidator,
                       utilCustomFunctions,
@@ -80,13 +79,10 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
                 ? React.createElement(this.controlType, {
                       handleChange,
                       value: this.props.value,
-                      //   field,
                       controlOptions: this.props.entity?.options,
                       error: this.props.error,
                       disabled: this.props.disabled,
-                      //   encrypted,
                       dependencyValues: this.props.dependencyValues,
-                      //   required,
                       addCustomValidator,
                       fileNameToDisplay: this.props.fileNameToDisplay,
                       mode: this.props.mode,
