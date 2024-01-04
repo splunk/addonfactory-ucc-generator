@@ -170,6 +170,9 @@
           "type": "string",
           "maxLength": 200
         },
+        "subDescription": {
+          "$ref": "#/definitions/SubDescription"
+        },
         "tabs": {
           "type": "array",
           "items": {
@@ -1000,7 +1003,6 @@
                 "$ref": "#/definitions/ValueLabelPair"
               }
             }
-
           },
           "required": ["items"],
           "additionalProperties": false
@@ -1305,7 +1307,8 @@
           },
           {
             "$ref": "#/definitions/CustomEntity"
-          }]
+          }
+        ]
       }
     },
     "AutoCompleteFields": {
@@ -1348,6 +1351,9 @@
             "description": {
               "type": "string",
               "maxLength": 200
+            },
+            "subDescription": {
+              "$ref": "#/definitions/SubDescription"
             },
             "menu": {
               "type": "object"
@@ -1648,19 +1654,26 @@
               },
               "os": {
                 "anyOf": [
-                {
-                  "const": "linux"
-                },
-                {
-                  "const": "windows"
-                },
-                {
-                  "const": "darwin"
-                }
-              ]
+                  {
+                    "const": "linux"
+                  },
+                  {
+                    "const": "windows"
+                  },
+                  {
+                    "const": "darwin"
+                  }
+                ]
               }
             },
-            "required": ["name", "version", "platform", "python_version", "target", "os"]
+            "required": [
+              "name",
+              "version",
+              "platform",
+              "python_version",
+              "target",
+              "os"
+            ]
           }
         }
       },
@@ -1969,6 +1982,37 @@
     "Field": {
       "type": "string",
       "pattern": "(?!^(?:persistentQueueSize|queueSize|start_by_shell|output_mode|output_field|owner|app|sharing)$)(?:^\\w+$)"
+    },
+    "SubDescription": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "maxLength": 1500
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "slug": {
+                "type": "string",
+                "maxLength": 50,
+                "pattern": "^\\w+$"
+              },
+              "linkText": {
+                "type": "string",
+                "maxLength": 500
+              },
+              "link": {
+                "type": "string"
+              }
+            },
+            "required": ["slug", "linkText", "link"]
+          },
+          "required": ["text"]
+        }
+      }
     }
   },
   "type": "object",

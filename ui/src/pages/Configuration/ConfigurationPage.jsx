@@ -14,6 +14,7 @@ import CustomTab from '../../components/CustomTab';
 import ConfigurationFormView from '../../components/ConfigurationFormView';
 import ConfigurationTable from '../../components/ConfigurationTable';
 import OpenApiDownloadButton from '../../components/DownloadButton/OpenApiDownloadBtn';
+import SubDescription from '../../components/SubDescription/SubDescription';
 
 const Row = styled(ColumnLayout.Row)`
     padding: 5px 0px;
@@ -30,7 +31,7 @@ const Row = styled(ColumnLayout.Row)`
 
 function ConfigurationPage() {
     const unifiedConfigs = getUnifiedConfigs();
-    const { title, description, tabs } = unifiedConfigs.pages.configuration;
+    const { title, description, subDescription, tabs } = unifiedConfigs.pages.configuration;
     const permittedTabNames = tabs.map((tab) => tab.name);
 
     const [activeTabId, setActiveTabId] = useState(tabs[0].name);
@@ -103,6 +104,7 @@ function ConfigurationPage() {
                         <ColumnLayout.Column span={9}>
                             <TitleComponent>{_(title)}</TitleComponent>
                             <SubTitleComponent>{_(description || '')}</SubTitleComponent>
+                            <SubDescription {...subDescription} />
                         </ColumnLayout.Column>
                         <ColumnLayout.Column span={1} style={{ textAlignLast: 'right' }}>
                             <OpenApiDownloadButton />

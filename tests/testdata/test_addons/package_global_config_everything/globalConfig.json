@@ -465,7 +465,17 @@
                 }
             ],
             "title": "Configuration",
-            "description": "Set up your add-on"
+            "description": "Set up your add-on",
+            "subDescription": {
+                "text": "Configuration page - Ingesting data from to Splunk Cloud? Have you tried the new Splunk Data Manager yet?\nData Manager makes AWS data ingestion simpler, more automated and centrally managed for you, while co-existing with AWS and/or Kinesis TAs.\nRead our [[blogPost]] to learn more about Data Manager and it's availability on your Splunk Cloud instance.",
+                "links": [
+                    {
+                        "slug": "blogPost",
+                        "link": "https://splk.it/31oy2b2",
+                        "linkText": "blog post"
+                    }
+                ]
+            }
         },
         "inputs": {
             "services": [
@@ -1149,6 +1159,16 @@
             ],
             "title": "Inputs",
             "description": "Manage your data inputs",
+            "subDescription": {
+                "text": "Input page - Ingesting data from to Splunk Cloud? Have you tried the new Splunk Data Manager yet?\nData Manager makes AWS data ingestion simpler, more automated and centrally managed for you, while co-existing with AWS and/or Kinesis TAs.\nRead our [[blogPost]] to learn more about Data Manager and it's availability on your Splunk Cloud instance.",
+                "links": [
+                    {
+                        "slug": "blogPost",
+                        "link": "https://splk.it/31oy2b2",
+                        "linkText": "blog post"
+                    }
+                ]
+            },
             "table": {
                 "actions": [
                     "edit",
@@ -1355,7 +1375,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.35.1R9330d2a9",
+        "version": "5.35.1Ree62a73b",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.3"
     }

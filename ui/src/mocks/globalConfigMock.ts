@@ -93,6 +93,16 @@ const globalConfigMock: z.input<typeof GlobalConfigSchema> = {
             ],
             title: 'Configuration',
             description: 'Set up your add-on',
+            subDescription: {
+                text: "Configuration page - Ingesting data from to Splunk Cloud?</br>Read our [[blogPost]] to learn more about Data Manager and it's availability on your Splunk Cloud instance.",
+                links: [
+                    {
+                        slug: 'blogPost',
+                        link: 'https://splk.it/31oy2b2',
+                        linkText: 'blog post',
+                    },
+                ],
+            },
         },
         inputs: {
             services: [
@@ -162,6 +172,16 @@ const globalConfigMock: z.input<typeof GlobalConfigSchema> = {
             ],
             title: 'Inputs',
             description: 'Manage your data inputs',
+            subDescription: {
+                text: "Inputs page - Ingesting data from to Splunk Cloud?</br>Read our [[blogPost]] to learn more about Data Manager and it's availability on your Splunk Cloud instance.",
+                links: [
+                    {
+                        slug: 'blogPost',
+                        link: 'https://splk.it/31oy2b2',
+                        linkText: 'blog post',
+                    },
+                ],
+            },
             table: {
                 actions: ['edit', 'enable', 'delete', 'clone'],
                 header: [
