@@ -48,26 +48,6 @@
                             "required": true
                         },
                         {
-                            "field": "input_mode",
-                            "label": "Input Mode",
-                            "type": "radio",
-                            "defaultValue": "continuously_monitor",
-                            "required": true,
-                            "options": {
-                                "items": [
-                                    {
-                                        "label": "Continuously Monitor",
-                                        "value": "continuously_monitor"
-                                    },
-                                    {
-                                        "label": "Index Once",
-                                        "value": "index_once"
-                                    }
-                                ],
-                                "disableonEdit": true
-                            }
-                        },
-                        {
                             "type": "singleSelect",
                             "label": "Example Environment",
                             "options": {
@@ -86,11 +66,7 @@
                                         "label": "Other"
                                     }
                                 ],
-                                "display": true,
-                                "dependencies": [
-                                    "name",
-                                    " endpoint"
-                                ]
+                                "display": true
                             },
                             "help": "",
                             "field": "custom_endpoint",
@@ -150,9 +126,6 @@
                                         "value": "two",
                                         "label": "Option Two"
                                     }
-                                ],
-                                "dependencies": [
-                                    "account-radio"
                                 ]
                             }
                         },
@@ -405,15 +378,6 @@
                         }
                     ],
                     "title": "Logging"
-                },
-                {
-                    "name": "customisedTab",
-                    "title": "Custom Tab",
-                    "customTab": {
-                        "src": "custom_tab",
-                        "type": "external"
-                    },
-                    "entity": []
                 },
                 {
                     "name": "custom_abc",
