@@ -17,8 +17,7 @@ import { useValidation } from './checkboxGroupValidation';
 import { MODE_CREATE } from '../../constants/modes';
 
 function CheckboxGroup(props: CheckboxGroupProps) {
-    const { field, handleChange, controlOptions, addCustomValidator } = props;
-
+    const { field, handleChange, controlOptions, addCustomValidator, disabled } = props;
     const flattenedRowsWithGroups = getFlattenRowsWithGroups(controlOptions);
     const shouldUseDefaultValue = props.mode === MODE_CREATE && props.value === null;
     const value = shouldUseDefaultValue
@@ -71,6 +70,7 @@ function CheckboxGroup(props: CheckboxGroupProps) {
                                     group={row}
                                     values={values}
                                     handleRowChange={handleRowChange}
+                                    disabled={disabled}
                                 />
                             </ColumnLayout.Row>
                         );
@@ -81,6 +81,7 @@ function CheckboxGroup(props: CheckboxGroupProps) {
                                 row={row}
                                 values={values}
                                 handleRowChange={handleRowChange}
+                                disabled={disabled}
                             />
                         </ColumnLayout.Row>
                     );

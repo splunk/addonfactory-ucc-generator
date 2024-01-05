@@ -936,6 +936,9 @@
                 "additionalProperties": false
               },
               "minItems": 1
+            },
+            "disableonEdit": {
+              "type": "boolean"
             }
           },
           "required": ["rows"],
