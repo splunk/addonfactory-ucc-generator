@@ -4,7 +4,7 @@ import TextAreaComponent from '../components/TextAreaComponent/TextAreaComponent
 import SingleInputComponent from '../components/SingleInputComponent';
 import MultiInputComponent from '../components/MultiInputComponent';
 import CheckBoxComponent from '../components/CheckBoxComponent/CheckBoxComponent';
-import RadioComponent from '../components/RadioComponent';
+import RadioComponent from '../components/RadioComponent/RadioComponent';
 import PlaceholderComponent from '../components/PlaceholderComponent';
 import CustomControl from '../components/CustomControl';
 import FileInputComponent from '../components/FileInputComponent/FileInputComponent';
