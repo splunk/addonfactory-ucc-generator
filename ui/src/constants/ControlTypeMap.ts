@@ -2,7 +2,7 @@ import HelpLinkComponent from '../components/HelpLinkComponent';
 import TextComponent from '../components/TextComponent/TextComponent';
 import TextAreaComponent from '../components/TextAreaComponent/TextAreaComponent';
 import SingleInputComponent from '../components/SingleInputComponent';
-import MultiInputComponent from '../components/MultiInputComponent';
+import MultiInputComponent from '../components/MultiInputComponent/MultiInputComponent';
 import CheckBoxComponent from '../components/CheckBoxComponent/CheckBoxComponent';
 import RadioComponent from '../components/RadioComponent/RadioComponent';
 import PlaceholderComponent from '../components/PlaceholderComponent';

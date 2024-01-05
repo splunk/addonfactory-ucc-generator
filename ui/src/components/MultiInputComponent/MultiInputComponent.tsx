@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import axios from 'axios';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 
-import { axiosCallWrapper } from '../util/axiosCallWrapper';
-import { filterResponse } from '../util/util';
+import { axiosCallWrapper } from '../../util/axiosCallWrapper';
+import { filterResponse } from '../../util/util';
 
 const MultiSelectWrapper = styled(Multiselect)`
     width: 320px !important;
@@ -15,7 +15,7 @@ const WaitSpinnerWrapper = styled(WaitSpinner)`
     margin-left: 5px;
 `;
 
-interface MultiInputComponentProps {
+export interface MultiInputComponentProps {
     handleChange: (field: string, data: string) => void;
     field: string;
     controlOptions: {

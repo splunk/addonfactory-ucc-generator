@@ -49,7 +49,7 @@ const renderFeature = (additionalProps?: AdditionalRadioProps) => {
     render(<RadioComponent {...props} />);
 };
 
-it('renders correctly', async () => {
+it('renders correctly', () => {
     renderFeature();
     defaultRadioProps.controlOptions.items.forEach((option) => {
         const optionWithCorrectText = screen.getByText(option.label);
@@ -58,7 +58,7 @@ it('renders correctly', async () => {
     });
 });
 
-it('renders disabled', async () => {
+it('renders disabled', () => {
     renderFeature({ disabled: true });
     defaultRadioProps.controlOptions.items.forEach((option) => {
         const optionWithCorrectText = screen.getByText(option.label);
