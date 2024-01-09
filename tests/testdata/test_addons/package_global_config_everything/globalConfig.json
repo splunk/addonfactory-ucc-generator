@@ -1338,8 +1338,18 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.34.1Racdcfb2e",
+        "version": "5.35.1R0c5e6802",
         "displayName": "Splunk UCC test Add-on",
-        "schemaVersion": "0.0.3"
+        "schemaVersion": "0.0.3",
+        "os-dependentLibraries": [
+            {
+                "name": "cffi",
+                "version": "1.15.1",
+                "os": "linux",
+                "target": "3rdparty/linux",
+                "python_version": "37",
+                "platform": "manylinux2014_x86_64"
+            }
+        ]
     }
 }
