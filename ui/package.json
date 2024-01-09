@@ -25,7 +25,7 @@
     "@splunk/splunk-utils": "^2.3.4",
     "@splunk/themes": "^0.16.4",
     "@splunk/ui-utils": "^1.6.0",
-    "axios": "^1.6.3",
+    "axios": "^1.6.5",
     "immutability-helper": "^3.1.1",
     "license-webpack-plugin": "^4.0.2",
     "lodash": "^4.17.21",
