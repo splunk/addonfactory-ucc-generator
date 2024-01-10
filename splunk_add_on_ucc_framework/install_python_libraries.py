@@ -233,6 +233,7 @@ Possible solutions, either:
 
         pip_download_command = (
             f"{os_lib.deps_flag} "
+            f"--no-compile "
             f"--platform {os_lib.platform} "
             f"--python-version {os_lib.python_version} "
             f"--target {target_path}"
