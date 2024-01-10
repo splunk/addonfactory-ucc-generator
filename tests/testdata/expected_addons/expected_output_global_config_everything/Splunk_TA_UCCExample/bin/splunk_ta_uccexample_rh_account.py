@@ -22,6 +22,13 @@ fields = [
         default='login.example.com',
         validator=None
     ), 
+        field.RestField(
+        'endpoint',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ),
     field.RestField(
         'account_checkbox',
         required=False,

@@ -74,6 +74,16 @@
                             "required": true
                         },
                         {
+                            "type": "text",
+                            "label": "Endpoint URL",
+                            "help": "Enter the endpoint URL.",
+                            "field": "endpoint",
+                            "options": {
+                                "display": false,
+                                "requiredWhenVisible": true
+                            }
+                        },
+                        {
                             "type": "checkbox",
                             "label": "Example Checkbox",
                             "field": "account_checkbox",
