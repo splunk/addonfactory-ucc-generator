@@ -308,6 +308,7 @@ def test_install_libraries_valid_os_libraries(
     log_message_expected_1 = (
         f"python3 -m pip install "
         f"--no-deps "
+        f"--no-compile "
         f"--platform win_amd64 "
         f"--python-version 37 "
         f"--target {tmp_ucc_lib_target}/3rdparty/windows "
@@ -316,6 +317,7 @@ def test_install_libraries_valid_os_libraries(
 
     log_message_expected_2 = (
         f"python3 -m pip install  "
+        f"--no-compile "
         f"--platform manylinux2014_x86_64 "
         f"--python-version 37 "
         f"--target {tmp_ucc_lib_target}/3rdparty/linux "
@@ -325,6 +327,7 @@ def test_install_libraries_valid_os_libraries(
     log_message_expected_3 = (
         f"python3 -m pip install "
         f"--no-deps "
+        f"--no-compile "
         f"--platform macosx_10_12_universal2 "
         f"--python-version 37 "
         f"--target {tmp_ucc_lib_target}/3rdparty/darwin "
