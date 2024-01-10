@@ -1,6 +1,6 @@
 [<name>]
 custom_endpoint = 
-endpoint =
+endpoint = 
 account_checkbox = 
 account_radio = 
 account_multiple_select = 

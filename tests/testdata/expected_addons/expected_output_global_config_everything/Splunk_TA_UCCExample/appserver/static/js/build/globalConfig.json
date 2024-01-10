@@ -189,7 +189,7 @@
                                         "label": "Authorize endpoint",
                                         "field": "endpoint_authorize",
                                         "help": "Put here endpoint used for authorization ie. login.salesforce.com"
-                                    },
+                                    }
                                 ],
                                 "auth_code_endpoint": "/services/oauth2/authorize",
                                 "access_token_endpoint": "/services/oauth2/token",
