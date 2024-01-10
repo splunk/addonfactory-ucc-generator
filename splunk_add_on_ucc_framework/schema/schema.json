@@ -1728,6 +1728,9 @@
         "required": {
           "type": "boolean"
         },
+        "defaultValue": {
+          "type": "string"
+        },
         "options": {
           "type": "object",
           "properties": {
@@ -1736,6 +1739,9 @@
               "maxLength": 250
             },
             "disableonEdit": {
+              "type": "boolean"
+            },
+            "enable": {
               "type": "boolean"
             }
           },
