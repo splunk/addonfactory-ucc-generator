@@ -23,13 +23,6 @@ fields = [
         validator=None
     ), 
     field.RestField(
-        'endpoint',
-        required=False,
-        encrypted=False,
-        default=None,
-        validator=None
-    ), 
-    field.RestField(
         'account_checkbox',
         required=False,
         encrypted=False,
@@ -115,6 +108,20 @@ fields = [
     ), 
     field.RestField(
         'redirect_url',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ), 
+    field.RestField(
+        'endpoint_token',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ), 
+    field.RestField(
+        'endpoint_authorize',
         required=False,
         encrypted=False,
         default=None,
