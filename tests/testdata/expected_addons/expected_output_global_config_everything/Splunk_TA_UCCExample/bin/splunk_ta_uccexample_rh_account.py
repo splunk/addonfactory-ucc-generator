@@ -68,7 +68,7 @@ fields = [
         'username',
         required=False,
         encrypted=False,
-        default=None,
+        default='Username',
         validator=None
     ), 
     field.RestField(

@@ -1,6 +1,5 @@
 [<name>]
 custom_endpoint = 
-endpoint = 
 account_checkbox = 
 account_radio = 
 account_multiple_select = 
@@ -14,6 +13,8 @@ basic_oauth_text =
 client_id = 
 client_secret = 
 redirect_url = 
+endpoint_token = 
+endpoint_authorize = 
 oauth_oauth_text = 
 access_token = 
 refresh_token = 
