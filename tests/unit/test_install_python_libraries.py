@@ -400,7 +400,7 @@ OS dependent library cryptography = 41.0.5 SHOULD be defined in requirements.txt
 When the os dependent library is installed without its dependencies it has to be listed in requirements.txt.
 Possible solutions, either:
 1. os-dependentLibraries.name[cryptography].dependencies = True
-2. Add cryptography=41.0.5 in requirements.txt
+2. Add cryptography==41.0.5 in requirements.txt
 """
 
     assert version_mismatch_log in caplog.messages

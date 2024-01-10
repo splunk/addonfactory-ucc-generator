@@ -222,7 +222,7 @@ OS dependent library {os_lib.name} = {os_lib.version} SHOULD be defined in requi
 When the os dependent library is installed without its dependencies it has to be listed in requirements.txt.
 Possible solutions, either:
 1. os-dependentLibraries.name[{os_lib.name}].dependencies = True
-2. Add {os_lib.name}={os_lib.version} in requirements.txt
+2. Add {os_lib.name}=={os_lib.version} in requirements.txt
 """
             )
             raise CouldNotInstallRequirements
