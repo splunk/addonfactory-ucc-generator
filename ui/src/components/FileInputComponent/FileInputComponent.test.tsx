@@ -2,12 +2,8 @@ import React from 'react';
 
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { TextDecoder } from 'node:util'; // (ESM style imports)
 import FileInputComponent from './FileInputComponent';
 import fileContants from '../../constants/fileInputConstant';
-
-// @ts-expect-error TextDecoder missing DataView prop but it is not used in this case
-global.TextDecoder = TextDecoder;
 
 test('Check FileInputComponent render properly with the fileSupportMessage option.', async () => {
     const field = 'testFileField';
@@ -319,4 +315,34 @@ test('Default error message disappears when reuploading encrypted file', async (
 
     const nullHelpElement = await screen.queryByTestId('help');
     expect(nullHelpElement).toBeNull();
+});
+
+it('File input disabled - rendered correctly with disabled attr', () => {
+    // throws error Could not parse CSS styleshee, which only obscures tests
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+
+    const field = 'testFileField';
+    const disabled = true;
+    const controlOptions = {
+        supportedFileTypes: ['json'],
+        maxFileSize: 10,
+    };
+    const handleChange = jest.fn();
+    const testFileName = 'testFileName.json';
+
+    render(
+        <FileInputComponent
+            field={field}
+            disabled={disabled}
+            controlOptions={controlOptions}
+            handleChange={handleChange}
+            fileNameToDisplay={testFileName}
+            encrypted={false}
+        />
+    );
+
+    const fileComponent = screen.getByTestId('file-input');
+    expect(fileComponent).toBeInTheDocument();
+    expect(fileComponent).toHaveAttribute('disabled');
+    consoleSpy.mockRestore();
 });

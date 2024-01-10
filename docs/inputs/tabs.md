@@ -25,6 +25,12 @@ If `title` and `description` are provided in the global config file then it woul
                     ],
                     "header": [],
                     "moreInfo": []
+                },
+                "warning": {
+                    "create": "Warning text for create mode",
+                    "edit": "Warning text for edit mode",
+                    "clone": "Warning text for clone mode",
+                    "config": "Warning text for config mode",
                 }
             },
             {

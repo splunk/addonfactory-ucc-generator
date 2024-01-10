@@ -5,13 +5,13 @@ import styled from 'styled-components';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import update from 'immutability-helper';
 import { _ } from '@splunk/ui-utils/i18n';
-import { generateToast } from '../util/util';
-import { StyledButton } from '../pages/EntryPageStyle';
+import { generateToast } from '../../util/util';
+import { StyledButton } from '../../pages/EntryPageStyle';
 
-import { axiosCallWrapper } from '../util/axiosCallWrapper';
-import TableContext from '../context/TableContext';
-import { parseErrorMsg, getFormattedMessage } from '../util/messageUtil';
-import { PAGE_INPUT } from '../constants/pages';
+import { axiosCallWrapper } from '../../util/axiosCallWrapper';
+import TableContext from '../../context/TableContext';
+import { parseErrorMsg, getFormattedMessage } from '../../util/messageUtil';
+import { PAGE_INPUT } from '../../constants/pages';
 
 const ModalWrapper = styled(Modal)`
     width: 800px;

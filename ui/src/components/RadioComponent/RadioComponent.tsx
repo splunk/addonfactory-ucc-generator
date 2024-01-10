@@ -20,6 +20,7 @@ interface RadioComponentProps {
             label: string;
         }[];
     };
+    disabled: boolean;
 }
 
 class RadioComponent extends Component<RadioComponentProps> {
@@ -36,7 +37,12 @@ class RadioComponent extends Component<RadioComponentProps> {
                 key={this.props.field}
             >
                 {this.props.controlOptions.items.map((item) => (
-                    <RadioBarOption key={item.value} value={item.value} label={item.label} />
+                    <RadioBarOption
+                        key={item.value}
+                        value={item.value}
+                        label={item.label}
+                        disabled={this.props.disabled}
+                    />
                 ))}
             </RadioBarWrapper>
         );

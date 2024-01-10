@@ -18,6 +18,53 @@
     {
       "matchPackageNames": ["urllib3"],
       "allowedVersions": "<2.0.0"
+    },
+    {
+      "matchManagers": [
+        "npm"
+      ],
+      "matchPackageNames": [
+        "@npmcli/git",
+        "@testing-library/react",
+        "@types/react",
+        "babel-eslint",
+        "babel-loader",
+        "css-what",
+        "eslint",
+        "eslint-config-airbnb",
+        "eslint-config-prettier",
+        "eslint-plugin-prettier",
+        "glob-parent",
+        "react",
+        "react-dom",
+        "react-is",
+        "prettier",
+        "string-width",
+        "strip-ansi",
+        "styled-components",
+        "stylelint",
+        "undici"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "replacement"
+      ],
+      "enabled": false
+    },
+    {
+      "matchManagers": [
+        "npm"
+      ],
+      "matchPackageNames": [
+        "msw-storybook-addon"
+      ],
+      "allowedVersions": "!/next|canary/"
+    },
+    {
+      "matchManagers": [
+        "npm"
+      ],
+      "rangeStrategy": "bump"
     }
   ]
 }

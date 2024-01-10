@@ -1,5 +1,5 @@
 #
-# Copyright 2023 Splunk Inc.
+# Copyright 2024 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
 #
 import logging
 import os
+import sys
+from defusedxml import ElementTree
 from typing import Sequence
 
 from splunk_add_on_ucc_framework import global_config as global_config_lib
@@ -24,12 +26,14 @@ logger = logging.getLogger("ucc_gen")
 PANEL_ADDON_VERSION = "addon_version"
 PANEL_EVENTS_INGESTED_BY_SOURCETYPE = "events_ingested_by_sourcetype"
 PANEL_ERRORS_IN_THE_ADDON = "errors_in_the_addon"
+PANEL_CUSTOM = "custom"
 
 SUPPORTED_PANEL_NAMES = frozenset(
     [
         PANEL_ADDON_VERSION,
         PANEL_EVENTS_INGESTED_BY_SOURCETYPE,
         PANEL_ERRORS_IN_THE_ADDON,
+        PANEL_CUSTOM,
     ]
 )
 SUPPORTED_PANEL_NAMES_READABLE = ", ".join(SUPPORTED_PANEL_NAMES)
@@ -47,7 +51,6 @@ DASHBOARD_START = """<form version="1.1">
   </fieldset>
 """
 DASHBOARD_END = """</form>"""
-
 
 PANEL_ADDON_VERSION_TEMPLATE = """  <row>
     <panel>
@@ -103,7 +106,9 @@ PANEL_ERRORS_IN_THE_ADDON_TEMPLATE = """  <row>
 """
 
 
-def generate_dashboard_content(addon_name: str, panel_names: Sequence[str]) -> str:
+def generate_dashboard_content(
+    addon_name: str, panel_names: Sequence[str], custom_components: str
+) -> str:
     content = DASHBOARD_START
     for panel_name in panel_names:
         logger.info(f"Including {panel_name} into the dashboard page")
@@ -117,6 +122,8 @@ def generate_dashboard_content(addon_name: str, panel_names: Sequence[str]) -> s
             content += PANEL_ERRORS_IN_THE_ADDON_TEMPLATE.format(
                 addon_name=addon_name.lower()
             )
+        elif panel_name == PANEL_CUSTOM:
+            content += custom_components
         else:
             raise AssertionError("Should not be the case!")
     content += DASHBOARD_END
@@ -136,6 +143,63 @@ def generate_dashboard(
     else:
         panels = global_config.dashboard.get("panels", [])
         panel_names = [panel["name"] for panel in panels]
-        content = generate_dashboard_content(addon_name, panel_names)
+        custom_components = ""
+        if PANEL_CUSTOM in panel_names:
+            dashboard_components_path = os.path.abspath(
+                os.path.join(
+                    global_config.original_path,
+                    os.pardir,
+                    "dashboard_components.xml",
+                )
+            )
+            custom_components = get_custom_xml_content(dashboard_components_path)
+
+        content = generate_dashboard_content(addon_name, panel_names, custom_components)
         with open(dashboard_xml_file_path, "w") as dashboard_xml_file:
             dashboard_xml_file.write(content)
+
+
+def get_custom_xml_content(xml_path: str) -> str:
+    custom_xml = load_custom_xml(xml_path)
+    root = custom_xml.getroot()
+    if root.tag != "custom-dashboard":
+        logger.error(
+            f"File {xml_path} has invalid root tag '{root.tag}'. "
+            f"Valid root tag is 'custom-dashboard'"
+        )
+        sys.exit(1)
+
+    custom_components = ""
+    for it, child in enumerate(root, 1):
+        if child.tag == "row":
+            custom_components += ElementTree.tostring(child).decode()
+        else:
+            logger.error(
+                f"In file {xml_path}, there should only be tags 'row' under the root tag. "
+                f"Child tag no.{it} has invalid name '{child.tag}'."
+            )
+            sys.exit(1)
+
+    if not custom_components:
+        logger.error(
+            f"Custom dashboard page set in globalConfig.json but custom content not found. "
+            f"Please verify if file {xml_path} has a proper structure "
+            f"(see https://splunk.github.io/addonfactory-ucc-generator/dashboard/)"
+        )
+        sys.exit(1)
+    return custom_components
+
+
+def load_custom_xml(xml_path: str) -> ElementTree:
+    try:
+        custom_xml = ElementTree.parse(xml_path)
+    except FileNotFoundError:
+        logger.error(
+            f"Custom dashboard page set in globalConfig.json but "
+            f"file {xml_path} not found"
+        )
+        sys.exit(1)
+    except ElementTree.ParseError:
+        logger.error(f"{xml_path} it's not a valid xml file")
+        sys.exit(1)
+    return custom_xml

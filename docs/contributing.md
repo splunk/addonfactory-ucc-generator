@@ -1,11 +1,23 @@
 # Contributing Guidelines
 
-Default development branch is `develop`. Please use it for PR
+## Development flow
+
+* Default development branch is `develop`. Please use it when creating PRs with your features, fixes, documentation updates etc. PRs to `develop` branch should be merged using squash option in GitHub.
+* When the release time comes (should be handled by UCC team) - create a PR from `develop` to `main`
+    * make sure that CI is passing and wait for the review from the team
+    * PR should be merged using merge commit option in GitHub
+    * release will be made automatically (both GitHub and PyPI) and bot will push a commit to `main` with all necessary changes (i.e. [like this](https://github.com/splunk/addonfactory-ucc-generator/commit/0c5e6802e1e52c37bf7131baf1b8264e5db30545))
+    * after release is done - you need to backport bot's changes to the `develop` branch (i.e. [#974](https://github.com/splunk/addonfactory-ucc-generator/pull/974))
+* If release did not go well and a quick bug fix needs to be released (should be handled by UCC team)
+    * create a PR to `main` branch with a fix (with tests reproducing and then fixing the issue)
+    * make sure that CI is passing and wait for the review from the team
+    * PR should be merged using merge commit option in GitHub
+    * bug fix PR needs to be backported back to `develop` branch
 
 ## Build and Test
 
 Prerequisites:
-- Node.js >= 18 ([NodeJS](https://nodejs.org/en/download) or use [nvm](https://github.com/nvm-sh/nvm))
+- Node.js LTS version ([NodeJS](https://nodejs.org/en/download) or use [nvm](https://github.com/nvm-sh/nvm))
 - Yarn Classic (`npm install --global yarn`)
 - Poetry 1.5.1. [Installation guide](https://python-poetry.org/docs/#installing-with-the-official-installer)
 
@@ -31,7 +43,7 @@ poetry run pytest tests/unit
 ### UI tests
 
 If you need to run UI tests for the PR, please add a label "run-ui-tests" (do this before PR is created). 
-UI tests will run automatically for any PR towards `main` branch and on the `main` branch as well. 
+UI tests will run automatically for any PR towards `main` / `develop` branches and on the `main` / `develop` branch as well. 
 
 1. With local version of ucc-gen create UCCExample TA to output directory:
     ```

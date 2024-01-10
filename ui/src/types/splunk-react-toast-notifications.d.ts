@@ -2,7 +2,7 @@ type ToastType = 'info' | 'warning' | 'success' | 'error';
 declare module '@splunk/react-toast-notifications/Toaster' {
     import type { ReactElement } from 'react';
 
-    const makeCreateToast: (toaster: CreateToastProps) => CreateToast;
+    function makeCreateToast(toaster: CreateToastProps): CreateToast;
 
     type CreateToastProps = {
         type: ToastType;

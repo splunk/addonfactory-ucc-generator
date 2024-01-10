@@ -14,9 +14,10 @@ interface CheckboxSubGroupProps {
     group: GroupWithRows;
     values: ValueByField;
     handleRowChange: (newValue: { field: string; checkbox: boolean; text?: string }) => void;
+    disabled?: boolean;
 }
 
-function CheckboxSubGroup({ group, values, handleRowChange }: CheckboxSubGroupProps) {
+function CheckboxSubGroup({ group, values, handleRowChange, disabled }: CheckboxSubGroupProps) {
     const checkedCheckboxesCount = getCheckedCheckboxesCount(group, values);
     return (
         <Group
@@ -28,6 +29,7 @@ function CheckboxSubGroup({ group, values, handleRowChange }: CheckboxSubGroupPr
             <StyledCheckboxRowWrapper>
                 {group.rows.map((rowInsideGroup) => (
                     <CheckboxRowWrapper
+                        disabled={disabled}
                         row={rowInsideGroup}
                         values={values}
                         handleRowChange={handleRowChange}

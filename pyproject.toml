@@ -1,5 +1,5 @@
 #
-# Copyright 2023 Splunk Inc.
+# Copyright 2024 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.7"
 jinja2 = ">=2,<4"
-addonfactory-splunk-conf-parser-lib = "^0.3.3"
+addonfactory-splunk-conf-parser-lib = "*"
 dunamai = "^1.9.0"
 jsonschema = "^4.4.0"
 PyYAML = "^6.0"

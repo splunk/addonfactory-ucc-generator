@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - id: matrix
-        uses: splunk/addonfactory-test-matrix-action@v1.10
+        uses: splunk/addonfactory-test-matrix-action@v1.13
 
   fossa-scan:
     continue-on-error: true
@@ -36,7 +36,7 @@ jobs:
           fossa report attribution --format text > /tmp/THIRDPARTY
         env:
           FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: THIRDPARTY
           path: /tmp/THIRDPARTY
@@ -49,7 +49,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.7"
       - uses: pre-commit/action@v3.0.0
@@ -74,7 +74,7 @@ jobs:
     strategy:
       matrix:
         node-version:
-          - "18"
+          - "20"
     uses: ./.github/workflows/build-ui.yml
     with:
       node-version: ${{ matrix.node-version }}
@@ -87,14 +87,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.7"
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: UCC-UI-build
           path: built-ui/
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: THIRDPARTY
       - run: cp -f THIRDPARTY NOTICE
@@ -106,7 +106,7 @@ jobs:
         run: |
           cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/
           poetry build
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: UCC-build
           path: dist/
@@ -124,7 +124,7 @@ jobs:
           - "3.11"
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
@@ -148,10 +148,10 @@ jobs:
           - "3.11"
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: UCC-UI-build
           path: built-ui/
@@ -167,10 +167,10 @@ jobs:
       - build-ui
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.7"
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: UCC-UI-build
           path: built-ui/
@@ -183,11 +183,11 @@ jobs:
         env:
           RUM_ACCESS_TOKEN: ${{ secrets.RUM_ACCESS_TOKEN}}
       - run: poetry run ucc-gen package --path output/Splunk_TA_UCCExample
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: Splunk_TA_UCCExample-raw-output
           path: output/*
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: Splunk_TA_UCCExample-packaged
           path: Splunk_TA_UCCExample*.tar.gz
@@ -197,6 +197,7 @@ jobs:
     if: |
       github.base_ref == 'main' ||
       github.ref_name == 'main' ||
+      github.base_ref == 'develop' ||
       github.ref_name == 'develop' ||
       contains(github.event.pull_request.labels.*.name, 'run-ui-tests')
     runs-on: ubuntu-latest
@@ -224,10 +225,10 @@ jobs:
           - "configuration"
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.7"
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: Splunk_TA_UCCExample-raw-output
           path: output/
@@ -244,7 +245,7 @@ jobs:
           until curl -Lsk "https://localhost:8088/services/collector/health" &>/dev/null ; do echo -n "Waiting for HEC-" && sleep 5 ; done
         timeout-minutes: 5
       - run: poetry run pytest tests/ui -m "${{ matrix.test-mark }}" --headless --junitxml=test-results/junit.xml
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: success() || failure()
         with:
           name: test-results-ui-${{ matrix.splunk.version }}-${{ matrix.test-mark }}
@@ -272,7 +273,7 @@ jobs:
           - "splunk_appinspect"
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.7"
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
@@ -281,7 +282,7 @@ jobs:
           poetry install
           mkdir tests/packaged
           poetry run ucc-gen package --path tests/testdata/expected_addons/expected_output_global_config_everything/Splunk_TA_UCCExample -o tests/packaged
-      - uses: splunk/appinspect-cli-action@v1.12
+      - uses: splunk/appinspect-cli-action@v2.0
         with:
           app_path: tests/packaged
           included_tags: ${{ matrix.tags }}
@@ -306,15 +307,15 @@ jobs:
           # Very important: semantic-release won't trigger a tagged
           # build if this is not set false
           persist-credentials: false
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.7"
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: UCC-UI-build
           path: built-ui/
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: THIRDPARTY
       - run: cp -f THIRDPARTY NOTICE

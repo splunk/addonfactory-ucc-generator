@@ -1,11 +1,10 @@
 // src/mocks/serverHandlers.js
-import { rest } from 'msw';
+import { http, HttpResponse } from 'msw';
 import { MOCKED_TA_INPUT, mockServerResponse } from './server-response';
 
+const ok = new HttpResponse(null, { status: 200 });
 export const serverHandlers = [
-    rest.get(`/servicesNS/nobody/-/${MOCKED_TA_INPUT}`, (req, res, ctx) => res(ctx.status(200))),
-    rest.get('/servicesNS/nobody/-/:endpointUrl', (req, res, ctx) =>
-        res(ctx.json(mockServerResponse))
-    ),
-    rest.get('/servicesNS/nobody/-/data/indexes', (req, res, ctx) => res(ctx.status(200))),
+    http.get(`/servicesNS/nobody/-/${MOCKED_TA_INPUT}`, () => ok),
+    http.get(`/servicesNS/nobody/-/:endpointUrl`, () => HttpResponse.json(mockServerResponse)),
+    http.get('/servicesNS/nobody/-/data/indexes', () => ok),
 ];

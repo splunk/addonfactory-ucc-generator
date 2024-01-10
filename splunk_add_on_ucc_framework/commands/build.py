@@ -1,5 +1,5 @@
 #
-# Copyright 2023 Splunk Inc.
+# Copyright 2024 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -599,11 +599,8 @@ def generate(
                 "views",
                 "dashboard.xml",
             )
-            dashboard.generate_dashboard(
-                global_config,
-                ta_name,
-                dashboard_xml_path,
-            )
+            dashboard.generate_dashboard(global_config, ta_name, dashboard_xml_path)
+
     else:
         global_config = None
         conf_file_names = []
@@ -686,9 +683,15 @@ def generate(
         os.path.abspath(os.path.join(source, os.pardir, "additional_packaging.py"))
     ):
         sys.path.insert(0, os.path.abspath(os.path.join(source, os.pardir)))
-        from additional_packaging import additional_packaging
+        try:
+            from additional_packaging import additional_packaging
 
-        additional_packaging(ta_name)
+            additional_packaging(ta_name)
+        except ImportError as e:
+            logger.exception(
+                "additional_packaging.py is present but not importable.", e
+            )
+            raise e
 
     if global_config:
         logger.info("Generating OpenAPI file")

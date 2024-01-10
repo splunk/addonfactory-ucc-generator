@@ -2,15 +2,38 @@ This feature allows us to download and unpack libraries with appropriate binarie
 To do this, you need to expand the **meta** section in global config with the **os-dependentLibraries** field. This field takes the following attributes:
 
 
-| Property                                               | Type    | Description                                                                                                                                                                                                                                                              | default value |
-|--------------------------------------------------------|---------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
-| name<span class="required-asterisk">*</span>           | string  | Name of the library we want to download.                                                                                                                                                                                                                                 | -             |
-| version<span class="required-asterisk">*</span>        | string  | Specific version of given library.                                                                                                                                                                                                                                       | -             |
-| dependencies                                           | boolean | Optional parameter which determines whether the "--no-deps" flag will be used. When the value is set to true, the flag "--no-deps" is missing and specified library will be downloaded along with all dependencies. In this case dependency versions are handled by pip. | false         |
-| platform<span class="required-asterisk">*</span>       | string  | The platform for which we want to download the specified library. The value depends on the available wheels for a given library e.g. for this wheel **cryptography-41.0.5-cp37-abi3-manylinux_2_28_x86_64.whl** platform is **manylinux_2_28_x86_64**.                   | -             |
-| python_version<span class="required-asterisk">*</span> | string  | Python version compatible with the library.                                                                                                                                                                                                                              | -             |
-| target<span class="required-asterisk">*</span>         | string  | Path where the selected library will be unpacked.                                                                                                                                                                                                                        | -             |
-| os<span class="required-asterisk">*</span>             | string  | The name of the operating system for which the library is intended. Using this parameter, an appropriate insert into sys.path will be created. It takes 3 values **windows**, **linux** and **darwin**.                                                                  | -             |
+| Property                                               | Type    | Description                                                                                                                                                                                                                                                                                                                        | default value |
+|--------------------------------------------------------|---------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
+| name<span class="required-asterisk">*</span>           | string  | Name of the library we want to download.                                                                                                                                                                                                                                                                                           | -             |
+| version<span class="required-asterisk">*</span>        | string  | Specific version of given library.                                                                                                                                                                                                                                                                                                 | -             |
+| dependencies                                           | boolean | (Optional) Parameter which determines whether the `--no-deps` flag will be used when installing package from `pip`. When the value is set to `true` the library will be installed along with all its dependencies. When the value is set to `false` *(default)* `{name}={version}` must be present in packages `requirements.txt`. | false         |
+| platform<span class="required-asterisk">*</span>       | string  | The platform for which we want to download the specified library. The value depends on the available wheels for a given library e.g. for this wheel **cryptography-41.0.5-cp37-abi3-manylinux_2_28_x86_64.whl** platform is **manylinux_2_28_x86_64**.                                                                             | -             |
+| python_version<span class="required-asterisk">*</span> | string  | Python version compatible with the library.                                                                                                                                                                                                                                                                                        | -             |
+| target<span class="required-asterisk">*</span>         | string  | Path where the selected library will be unpacked.                                                                                                                                                                                                                                                                                  | -             |
+| os<span class="required-asterisk">*</span>             | string  | The name of the operating system for which the library is intended. Using this parameter, an appropriate insert into sys.path will be created. It takes 3 values **windows**, **linux** and **darwin**.                                                                                                                            | -             |
+
+### About wheels files
+
+Generally, the wheel name convention is <br>**{distribution}-{version}(-{build tag})?-{python tag}-{abi tag}-{platform tag}.whl**.<br>
+For example for this particular library: <br>**grpcio-1.54.2-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl**<br> 
+your pip parameters are:
+
+* name = **grpcio**
+* version = **1.54.2**
+* platform = **manylinux_2_17_x86_64** or **manylinux2014_x86_64**
+* python_version = **37**
+* target = **your/path/to/target**
+* os = **linux**
+
+and your pip command should look like this:<br>
+`pip install --no-deps --platform manylinux_2_17_x86_64 --python-version 37 --target your/path/to/target --only-binary=:all: grpcio==1.54.2`
+
+A dot in the platform part indicates that a given distribution supports several platforms.
+In this case "**.**" in **manylinux_2_17_x86_64.manylinux2014_x86_64** means this distribution supports both **manylinux_2_17_x86_64** and **manylinux2014_x86_64**.
+
+
+for more informations, we recommend watching [.whl](https://www.youtube.com/watch?v=4L0Jb3Ku81s) and [manylinux platform](https://www.youtube.com/watch?v=80j-MRtHMek)
+
 
 ### Usage
 

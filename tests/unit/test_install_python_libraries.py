@@ -12,7 +12,7 @@ from splunk_add_on_ucc_framework.install_python_libraries import (
     install_libraries,
     install_python_libraries,
     remove_execute_bit,
-    remove_package_from_installed_path,
+    remove_packages,
 )
 
 from splunk_add_on_ucc_framework import global_config as gc
@@ -87,8 +87,8 @@ def test_install_libraries(mock_subprocess_call):
     expected_pip_update_command = "python3 -m pip install --upgrade pip==23.1.2"
     mock_subprocess_call.assert_has_calls(
         [
-            mock.call(expected_pip_update_command, shell=True),
-            mock.call(expected_install_command, shell=True),
+            mock.call(expected_pip_update_command, shell=True, env=None),
+            mock.call(expected_install_command, shell=True, env=None),
         ]
     )
 
@@ -212,7 +212,7 @@ def test_remove_package_from_installed_path(tmp_path):
     tmp_lib_path_qux = tmp_lib_path / "qux.txt"
     tmp_lib_path_qux.write_text("some text")
 
-    remove_package_from_installed_path(
+    remove_packages(
         str(tmp_lib_path),
         ["foo", "bar", "qux"],
     )
@@ -250,7 +250,7 @@ def test_remove_execute_bit(tmp_path):
     "splunk_add_on_ucc_framework.install_python_libraries.install_libraries",
     autospec=True,
 )
-def test_install_os_dependent_libraries_invalid(
+def test_install_python_libraries_invalid_os_libraries(
     mock_subprocess_call, install_libraries, caplog, tmp_path
 ):
     mock_subprocess_call.return_value = 1
@@ -266,7 +266,7 @@ def test_install_os_dependent_libraries_invalid(
     tmp_lib_reqs_file = tmp_lib_path / "requirements.txt"
     tmp_lib_reqs_file.write_text("splunktaucclib\n")
 
-    with pytest.raises(SystemExit):
+    with pytest.raises(CouldNotInstallRequirements):
         install_python_libraries(
             str(tmp_path),
             str(tmp_ucc_lib_target),
@@ -276,7 +276,16 @@ def test_install_os_dependent_libraries_invalid(
 
 
 @mock.patch("subprocess.call", autospec=True)
-def test_install_os_dependent_libraries_valid(mock_subprocess_call, caplog, tmp_path):
+@mock.patch(
+    "splunk_add_on_ucc_framework.install_python_libraries.remove_packages",
+    autospec=True,
+)
+def test_install_libraries_valid_os_libraries(
+    mock_remove_packages,
+    mock_subprocess_call,
+    caplog,
+    tmp_path,
+):
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_with_os_libraries.json"
     )
@@ -299,6 +308,7 @@ def test_install_os_dependent_libraries_valid(mock_subprocess_call, caplog, tmp_
     log_message_expected_1 = (
         f"python3 -m pip install "
         f"--no-deps "
+        f"--no-compile "
         f"--platform win_amd64 "
         f"--python-version 37 "
         f"--target {tmp_ucc_lib_target}/3rdparty/windows "
@@ -307,6 +317,7 @@ def test_install_os_dependent_libraries_valid(mock_subprocess_call, caplog, tmp_
 
     log_message_expected_2 = (
         f"python3 -m pip install  "
+        f"--no-compile "
         f"--platform manylinux2014_x86_64 "
         f"--python-version 37 "
         f"--target {tmp_ucc_lib_target}/3rdparty/linux "
@@ -316,6 +327,7 @@ def test_install_os_dependent_libraries_valid(mock_subprocess_call, caplog, tmp_
     log_message_expected_3 = (
         f"python3 -m pip install "
         f"--no-deps "
+        f"--no-compile "
         f"--platform macosx_10_12_universal2 "
         f"--python-version 37 "
         f"--target {tmp_ucc_lib_target}/3rdparty/darwin "
@@ -328,3 +340,72 @@ def test_install_os_dependent_libraries_valid(mock_subprocess_call, caplog, tmp_
     assert os.path.isdir(f"{tmp_ucc_lib_target}/3rdparty/windows") is True
     assert os.path.isdir(f"{tmp_ucc_lib_target}/3rdparty/linux") is True
     assert os.path.isdir(f"{tmp_ucc_lib_target}/3rdparty/darwin") is True
+
+    mock_remove_packages.assert_called_once_with(
+        installation_path=str(tmp_ucc_lib_target),
+        package_names={
+            "setuptools",
+            "bin",
+            "pip",
+            "distribute",
+            "wheel",
+            "cryptography",
+            "cffi",
+        },
+    )
+
+
+@mock.patch("subprocess.call", autospec=True)
+@mock.patch(
+    "splunk_add_on_ucc_framework.install_python_libraries.remove_packages",
+    autospec=True,
+)
+def test_install_libraries_version_mismatch(
+    mock_remove_packages,
+    mock_subprocess_call,
+    caplog,
+    tmp_path,
+):
+    global_config_path = helpers.get_testdata_file_path(
+        "valid_config_with_os_libraries.json"
+    )
+    global_config = gc.GlobalConfig(global_config_path, False)
+
+    tmp_ucc_lib_target = tmp_path / "ucc-lib-target"
+    ucc_lib_target = str(tmp_ucc_lib_target)
+    tmp_lib_path = tmp_path / "lib"
+    tmp_lib_path.mkdir()
+    tmp_lib_reqs_file = tmp_lib_path / "requirements.txt"
+    tmp_lib_reqs_file.write_text("splunktaucclib\n")
+
+    version_mismatch_shell_cmd = (
+        'python3 -m pip show --version cryptography | grep "Version: 41.0.5"'
+    )
+    mock_subprocess_call.side_effect = (
+        lambda command, shell=True, env=None: 1
+        if command == version_mismatch_shell_cmd and ucc_lib_target == env["PYTHONPATH"]
+        else 0
+    )
+
+    with pytest.raises(CouldNotInstallRequirements):
+        install_python_libraries(
+            source_path=str(tmp_path),
+            ucc_lib_target=ucc_lib_target,
+            python_binary_name="python3",
+            os_libraries=global_config.os_libraries,
+        )
+
+    version_mismatch_log = (
+        f"Command ({version_mismatch_shell_cmd}) returned 1 status code"
+    )
+    error_description = """
+OS dependent library cryptography = 41.0.5 SHOULD be defined in requirements.txt.
+When the os dependent library is installed without its dependencies it has to be listed in requirements.txt.
+Possible solutions, either:
+1. os-dependentLibraries.name[cryptography].dependencies = True
+2. Add cryptography==41.0.5 in requirements.txt
+"""
+
+    assert version_mismatch_log in caplog.messages
+    assert error_description in caplog.messages
+    mock_remove_packages.assert_not_called()

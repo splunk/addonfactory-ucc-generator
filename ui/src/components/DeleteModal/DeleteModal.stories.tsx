@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import DeleteModal from './DeleteModal';
-import { setUnifiedConfig } from '../util/util';
-import { getGlobalConfigMock } from '../mocks/globalConfigMock';
+import { getGlobalConfigMock } from '../../mocks/globalConfigMock';
+import { setUnifiedConfig } from '../../util/util';
 
 const meta = {
     component: DeleteModal,

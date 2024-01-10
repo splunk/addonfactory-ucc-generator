@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import BaseFormView from 'src/components/BaseFormView';
-import { rest } from 'msw';
+import { http, HttpResponse } from 'msw';
 import { userEvent, within } from '@storybook/testing-library';
 import { setUnifiedConfig } from '../../../util/util';
 import globalConfig from './globalConfig.json';
@@ -21,9 +21,7 @@ const meta = {
     parameters: {
         msw: {
             handlers: [
-                rest.get('/servicesNS/nobody/-/:name', (req, res, ctx) =>
-                    res(ctx.json(mockServerResponse))
-                ),
+                http.get('/servicesNS/nobody/-/:name', () => HttpResponse.json(mockServerResponse)),
             ],
         },
     },

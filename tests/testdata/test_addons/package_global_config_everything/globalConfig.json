@@ -4,6 +4,11 @@
             "tabs": [
                 {
                     "name": "account",
+                    "warning": {
+                        "create": "Some warning for account text create",
+                        "edit": "Some warning for account text edit",
+                        "clone": "Some warning for account text clone"
+                    },
                     "table": {
                         "actions": [
                             "edit",
@@ -74,7 +79,8 @@
                             "help": "Enter the endpoint URL.",
                             "field": "endpoint",
                             "options": {
-                                "display": false
+                                "display": false,
+                                "requiredWhenVisible": true
                             }
                         },
                         {
@@ -231,6 +237,9 @@
                 },
                 {
                     "name": "proxy",
+                    "warning": {
+                        "config": "Some warning for proxy text config"
+                    },
                     "entity": [
                         {
                             "type": "checkbox",
@@ -332,6 +341,9 @@
                 },
                 {
                     "name": "logging",
+                    "warning": {
+                        "config": "Some logging for proxy text config"
+                    },
                     "entity": [
                         {
                             "type": "singleSelect",
@@ -453,12 +465,27 @@
                 }
             ],
             "title": "Configuration",
-            "description": "Set up your add-on"
+            "description": "Set up your add-on",
+            "subDescription": {
+                "text": "Configuration page - Ingesting data from to Splunk Cloud? Have you tried the new Splunk Data Manager yet?\nData Manager makes AWS data ingestion simpler, more automated and centrally managed for you, while co-existing with AWS and/or Kinesis TAs.\nRead our [[blogPost]] to learn more about Data Manager and it's availability on your Splunk Cloud instance.",
+                "links": [
+                    {
+                        "slug": "blogPost",
+                        "link": "https://splk.it/31oy2b2",
+                        "linkText": "blog post"
+                    }
+                ]
+            }
         },
         "inputs": {
             "services": [
                 {
                     "name": "example_input_one",
+                    "warning": {
+                        "create": "Some warning for input text create",
+                        "edit": "Some warning for input text edit",
+                        "clone": "Some warning for input text clone"
+                    },
                     "entity": [
                         {
                             "type": "text",
@@ -1132,6 +1159,16 @@
             ],
             "title": "Inputs",
             "description": "Manage your data inputs",
+            "subDescription": {
+                "text": "Input page - Ingesting data from to Splunk Cloud? Have you tried the new Splunk Data Manager yet?\nData Manager makes AWS data ingestion simpler, more automated and centrally managed for you, while co-existing with AWS and/or Kinesis TAs.\nRead our [[blogPost]] to learn more about Data Manager and it's availability on your Splunk Cloud instance.",
+                "links": [
+                    {
+                        "slug": "blogPost",
+                        "link": "https://splk.it/31oy2b2",
+                        "linkText": "blog post"
+                    }
+                ]
+            },
             "table": {
                 "actions": [
                     "edit",
@@ -1338,7 +1375,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.34.1Racdcfb2e",
+        "version": "5.35.1R7fe3d58d",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.3"
     }
