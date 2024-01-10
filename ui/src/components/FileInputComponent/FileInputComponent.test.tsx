@@ -316,3 +316,33 @@ test('Default error message disappears when reuploading encrypted file', async (
     const nullHelpElement = await screen.queryByTestId('help');
     expect(nullHelpElement).toBeNull();
 });
+
+it('File input disabled - rendered correctly with disabled attr', () => {
+    // throws error Could not parse CSS styleshee, which only obscures tests
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+
+    const field = 'testFileField';
+    const disabled = true;
+    const controlOptions = {
+        supportedFileTypes: ['json'],
+        maxFileSize: 10,
+    };
+    const handleChange = jest.fn();
+    const testFileName = 'testFileName.json';
+
+    render(
+        <FileInputComponent
+            field={field}
+            disabled={disabled}
+            controlOptions={controlOptions}
+            handleChange={handleChange}
+            fileNameToDisplay={testFileName}
+            encrypted={false}
+        />
+    );
+
+    const fileComponent = screen.getByTestId('file-input');
+    expect(fileComponent).toBeInTheDocument();
+    expect(fileComponent).toHaveAttribute('disabled');
+    consoleSpy.mockRestore();
+});

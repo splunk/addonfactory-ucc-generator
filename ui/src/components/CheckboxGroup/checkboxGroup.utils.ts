@@ -81,6 +81,7 @@ export interface CheckboxGroupProps {
         validator: (submittedField: string, submittedValue: string) => void
     ) => void;
     handleChange: (field: string, value: string, componentType?: 'checkboxGroup') => void;
+    disabled?: boolean;
 }
 
 export function isGroupWithRows(item: GroupWithRows | Row): item is GroupWithRows {

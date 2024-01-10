@@ -29,5 +29,6 @@ export const Base: Story = {
                 },
             ],
         },
+        disabled: false,
     },
 };
