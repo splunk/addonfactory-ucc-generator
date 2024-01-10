@@ -1342,15 +1342,22 @@
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.3",
         "os-dependentLibraries": [
-            {
-                "name": "cryptography",
-                "version": "41.0.5",
-                "dependencies": true,
-                "platform": "manylinux2014_x86_64",
-                "python_version": "37",
-                "os": "linux",
-                "target": "3rdparty/linux_with_deps"
-            }
+          {
+            "name": "cffi",
+            "version": "1.15.1",
+            "os": "linux",
+            "target": "3rdparty/linux",
+            "python_version": "37",
+            "platform": "manylinux2014_x86_64"
+          },
+          {
+            "name": "pynacl",
+            "version": "1.5.0",
+            "os": "linux",
+            "target": "3rdparty/linux",
+            "python_version": "37",
+            "platform": "manylinux2014_x86_64"
+          }
         ]
     }
 }
