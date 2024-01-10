@@ -74,16 +74,6 @@
                             "required": true
                         },
                         {
-                            "type": "text",
-                            "label": "Endpoint URL",
-                            "help": "Enter the endpoint URL.",
-                            "field": "endpoint",
-                            "options": {
-                                "display": false,
-                                "requiredWhenVisible": true
-                            }
-                        },
-                        {
                             "type": "checkbox",
                             "label": "Example Checkbox",
                             "field": "account_checkbox",
@@ -143,7 +133,8 @@
                                         "oauth_field": "username",
                                         "label": "Username",
                                         "help": "Enter the username for this account.",
-                                        "field": "username"
+                                        "field": "username",
+                                        "defaultValue": "Username"
                                     },
                                     {
                                         "oauth_field": "password",
@@ -191,13 +182,26 @@
                                         "help": "Copy and paste this URL into your app."
                                     },
                                     {
+                                        "oauth_field": "endpoint_token",
+                                        "label": "Token endpoint",
+                                        "field": "endpoint_token",
+                                        "help": "Put here endpoint used for token acqusition ie. login.salesforce.com"
+                                    },
+                                    {
+                                        "oauth_field": "endpoint_authorize",
+                                        "label": "Authorize endpoint",
+                                        "field": "endpoint_authorize",
+                                        "help": "Put here endpoint used for authorization ie. login.salesforce.com"
+                                    },
+                                    {
                                         "oauth_field": "oauth_some_text",
                                         "label": "Disabled on edit for oauth",
                                         "help": "Enter text for field disabled on edit",
                                         "field": "oauth_oauth_text",
                                         "required": false,
                                         "options": {
-                                            "disableonEdit": true
+                                            "disableonEdit": true,
+                                            "enable": false
                                         }
                                     }
                                 ],
@@ -1375,7 +1379,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.35.1R7fe3d58d",
+        "version": "5.35.1R537d4508",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.3"
     }
