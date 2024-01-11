@@ -75,7 +75,7 @@ fields = [
         'username',
         required=False,
         encrypted=False,
-        default='Username',
+        default=None,
         validator=None
     ), 
     field.RestField(

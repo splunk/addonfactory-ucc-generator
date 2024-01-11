@@ -140,8 +140,7 @@
                                         "oauth_field": "username",
                                         "label": "Username",
                                         "help": "Enter the username for this account.",
-                                        "field": "username",
-                                        "defaultValue": "Username"
+                                        "field": "username"
                                     },
                                     {
                                         "oauth_field": "password",
