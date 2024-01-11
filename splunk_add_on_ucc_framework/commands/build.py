@@ -194,7 +194,7 @@ def _get_ignore_list(
             (
                 os.path.join(output_directory, addon_name, utils.get_os_path(path))
             ).strip()
-            for path in ignore_list
+            for path in ignore_list if path.strip()
         ]
         return ignore_list
 
