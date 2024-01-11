@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 import configparser
+import glob
 import json
 import logging
 import os
@@ -198,28 +199,29 @@ def _get_ignore_list(
         ]
         return ignore_list
 
-
 def _remove_listed_files(ignore_list: List[str]) -> None:
     """
     Return path of files/folders to removed in output folder.
 
     Args:
-        ignore_list (list): List of files/folder to removed in output directory.
-
+        ignore_list (list): List of files/folder patterns to be removed in output directory.
     """
-    for path in ignore_list:
-        if os.path.exists(path):
-            if os.path.isfile(path):
-                os.remove(path)
-            elif os.path.isdir(path):
-                shutil.rmtree(path, ignore_errors=True)
-        else:
-            logger.warning(
-                "While ignoring the files mentioned in .uccignore {} was not found".format(
-                    path
+    removed_list = []
+    for pattern in ignore_list:
+        for path in glob.glob(pattern, recursive=True):
+            if os.path.exists(path):
+                if os.path.isfile(path):
+                    os.remove(path)
+                elif os.path.isdir(path):
+                    shutil.rmtree(path, ignore_errors=True)
+                removed_list.append(path)
+            else:
+                logger.warning(
+                    "While ignoring the files mentioned in .uccignore {} was not found".format(
+                        path
+                    )
                 )
-            )
-
+    return removed_list
 
 def generate_data_ui(
     output_directory: str,
@@ -629,9 +631,9 @@ def generate(
         os.path.abspath(os.path.join(source, os.pardir, ".uccignore")),
         output_directory,
     )
-    _remove_listed_files(ignore_list)
-    if ignore_list:
-        logger.info(f"Removed {ignore_list} files")
+    removed_list = _remove_listed_files(ignore_list)
+    if removed_list and removed_list != []:
+        logger.info(f"Removed {removed_list} files")
     utils.recursive_overwrite(source, os.path.join(output_directory, ta_name))
     logger.info("Copied package directory")
 
