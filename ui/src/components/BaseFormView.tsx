@@ -663,7 +663,9 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                 }
 
                 let host = encodeURI(
-                    `https://${this.datadict.endpoint}${this.oauthConf?.authCodeEndpoint}${parameters}`
+                    `https://${this.datadict.endpoint || this.datadict.endpoint_authorize}${
+                        this.oauthConf?.authCodeEndpoint
+                    }${parameters}`
                 );
                 const redirectURI = new URLSearchParams(host).get('redirect_uri');
                 if (redirectURI) {
@@ -1053,7 +1055,9 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         const code = decodeURIComponent(message.code);
         const data: Record<string, AcceptableFormValueOrNullish> = {
             method: 'POST',
-            url: `https://${this.datadict.endpoint}${this.oauthConf?.accessTokenEndpoint}`,
+            url: `https://${this.datadict.endpoint || this.datadict.endpoint_token}${
+                this.oauthConf?.accessTokenEndpoint
+            }`,
             grant_type: 'authorization_code',
             client_id: this.datadict.client_id,
             client_secret: this.datadict.client_secret,
