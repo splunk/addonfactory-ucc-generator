@@ -367,16 +367,10 @@ def __add_paths(
         global_config.pages.inputs, "services"  # type: ignore[attr-defined]
     ):
         for service in global_config.pages.inputs.services:  # type: ignore[attr-defined]
-            if hasattr(service, "table") and hasattr(service.table, "actions"):
+            if hasattr(service, "table"):
                 actions = service.table.actions
-            elif hasattr(global_config.pages.inputs, "table") and hasattr(
-                global_config.pages.inputs.table, "actions"
-            ):
-                actions = global_config.pages.inputs.table.actions
             else:
-                raise ValueError(
-                    f"Can't find table.actions for service name={service.name}"
-                )
+                actions = global_config.pages.inputs.table.actions  # type: ignore[attr-defined]
             open_api_object = __assign_ta_paths(
                 open_api_object=open_api_object,
                 path=f"/{global_config.meta.restRoot}_{service.name}",  # type: ignore[attr-defined]
