@@ -1,4 +1,6 @@
-`Configuration` tab can have multiple subtabs, for example, a tab for account configuration (Use to configure the account by adding account credentials), proxy configuration and logging level configuration.
+The `Configuration` tab can have multiple subtabs, for example, a tab for
+account configuration (to configure the account by adding account credentials),
+proxy configuration and logging level configuration.
 
 ### Configuration Properties
 
@@ -6,7 +8,7 @@
 | ----------------------------------------------------------------- | ------ | ------------------------------------------------------- |
 | title<span class="required-asterisk">\*</span>                    | string | -                                                       |
 | description                                                       | string | To provide a brief summary of an configuration page.    |
-| subDescription(../advanced/sub_description)                        | object | To provide broader description of an configuration page |
+| subDescription(../advanced/sub_description)                       | object | To provide broader description of an configuration page |
 | [tabs](#tabs-properties)<span class="required-asterisk">\*</span> | array  | To specify a list of tab.                               |
 
 ### Tabs properties
@@ -29,24 +31,24 @@
 
 ### Usage
 
-```
+```json
 "configuration": {
     "title": "Configuration",
     "description": "Set up your add-on",
     "tabs": [
         {
             "name": "account",
-            "title": "Account"
+            "title": "Account",
             "table": {},
             "entity": []
         },
         {
             "name": "proxy",
-            "title": "Proxy"
+            "title": "Proxy",
             "entity": [],
             "options": {
                 "saveValidator": ""
-            },
+            }
         }
     ]
 }
