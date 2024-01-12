@@ -1,3 +1,30 @@
+## [5.36.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.36.0...v5.36.1) (2024-01-12)
+
+
+### Bug Fixes
+
+* update jinja2 to v3.1.3 to fix CVE ([#1017](https://github.com/splunk/addonfactory-ucc-generator/issues/1017)) ([25b652f](https://github.com/splunk/addonfactory-ucc-generator/commit/25b652f003b8e58e42e0db67fed31f353bc3e805))
+
+# [5.36.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.35.1...v5.36.0) (2024-01-10)
+
+
+### Bug Fixes
+
+* enable for entities and add it for oauth ([#964](https://github.com/splunk/addonfactory-ucc-generator/issues/964)) ([21bb7f8](https://github.com/splunk/addonfactory-ucc-generator/commit/21bb7f8321656fb485164704db99731b03ccc769))
+* no-compile missing from os-dependentLibraries packages ([#999](https://github.com/splunk/addonfactory-ucc-generator/issues/999)) ([537d450](https://github.com/splunk/addonfactory-ucc-generator/commit/537d4508ec5469bc67148cb7a29b3febe7e8ce98))
+* pass disabled props for radio bar component ([#997](https://github.com/splunk/addonfactory-ucc-generator/issues/997)) ([a4eb6f9](https://github.com/splunk/addonfactory-ucc-generator/commit/a4eb6f947088a3e88be8c0d61e97aad4140b9bde))
+* typo in the error message ([#1004](https://github.com/splunk/addonfactory-ucc-generator/issues/1004)) ([312c8be](https://github.com/splunk/addonfactory-ucc-generator/commit/312c8be565f49724a92ac6d8c938ba4ecd978bfc))
+* update axios along with follow redirect ([#1003](https://github.com/splunk/addonfactory-ucc-generator/issues/1003)) ([7bc5a35](https://github.com/splunk/addonfactory-ucc-generator/commit/7bc5a35e93aea05aa5546c28ebd188fff5265f86))
+
+
+### Features
+
+* add support for custom dashboards ([#979](https://github.com/splunk/addonfactory-ucc-generator/issues/979)) ([7fe3d58](https://github.com/splunk/addonfactory-ucc-generator/commit/7fe3d58d522599311fceb5f050ba3d7dcabb6ecb))
+* ADDON-67093 add custom warning message for forms ([#970](https://github.com/splunk/addonfactory-ucc-generator/issues/970)) ([64daa77](https://github.com/splunk/addonfactory-ucc-generator/commit/64daa7789824b19ef4e5bc980598bc96556ec298))
+* buildtime version check for os-dependentLibraries ([#981](https://github.com/splunk/addonfactory-ucc-generator/issues/981)) ([cbe923d](https://github.com/splunk/addonfactory-ucc-generator/commit/cbe923d42fd1e198541c6ec4069a6f93b30807f4))
+* custom sub description for pages - ADDON-67014 ([#982](https://github.com/splunk/addonfactory-ucc-generator/issues/982)) ([b3a32c5](https://github.com/splunk/addonfactory-ucc-generator/commit/b3a32c54e38ec85558c5ff3c53bea1290906ae16))
+* require variable only when displayed ADDON-67013 ([#985](https://github.com/splunk/addonfactory-ucc-generator/issues/985)) ([6873164](https://github.com/splunk/addonfactory-ucc-generator/commit/6873164997dd5fdf91ded00d12f503740dd31546))
+
 ## [5.35.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.35.0...v5.35.1) (2023-12-14)
 
 
