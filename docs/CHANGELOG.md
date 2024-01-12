@@ -1,3 +1,10 @@
+## [5.36.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.36.0...v5.36.1) (2024-01-12)
+
+
+### Bug Fixes
+
+* update jinja2 to v3.1.3 to fix CVE ([#1017](https://github.com/splunk/addonfactory-ucc-generator/issues/1017)) ([25b652f](https://github.com/splunk/addonfactory-ucc-generator/commit/25b652f003b8e58e42e0db67fed31f353bc3e805))
+
 # [5.36.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.35.1...v5.36.0) (2024-01-10)
 
 
