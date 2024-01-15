@@ -20,6 +20,7 @@
       "allowedVersions": "<2.0.0"
     },
     {
+      "description": "Ignore packages that needs for SUI",
       "matchManagers": [
         "npm"
       ],
@@ -52,19 +53,28 @@
       "enabled": false
     },
     {
+      "description": "Ignore msw-storybook-addon since they bumps incorrectly while canary version is using",
       "matchManagers": [
         "npm"
       ],
       "matchPackageNames": [
         "msw-storybook-addon"
       ],
-      "allowedVersions": "!/next|canary/"
+      "dependencyDashboardApproval": true
     },
     {
+      "description": "Update package.json versions together with yarn.lock",
       "matchManagers": [
         "npm"
       ],
       "rangeStrategy": "bump"
+    },
+    {
+      "description": "Ignore NodeJS",
+      "matchPackageNames": ["node"],
+      "matchManagers": ["npm"],
+      "matchDepTypes": [ "engines" ],
+      "dependencyDashboardApproval": true
     }
   ]
 }
