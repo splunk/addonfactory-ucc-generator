@@ -160,6 +160,18 @@ def test_ucc_generate_with_everything():
             assert path.exists(expected_file_path)
 
 
+def test_ucc_generate_with_multiple_inputs_tabs():
+    package_folder = path.join(
+        path.dirname(path.realpath(__file__)),
+        "..",
+        "testdata",
+        "test_addons",
+        "package_global_config_multi_input",
+        "package",
+    )
+    build.generate(source=package_folder)
+
+
 @pytest.mark.skipif(sys.version_info >= (3, 8), reason=PYTEST_SKIP_REASON)
 def test_ucc_generate_with_configuration():
     with tempfile.TemporaryDirectory() as temp_dir:
