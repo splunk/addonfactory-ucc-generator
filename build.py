@@ -1,4 +1,4 @@
-""" build script that ensures that yarn is run before install"""
+""" build script that ensures that yarn is run before poetry finishes building the package """
 
 import subprocess
 import shutil
