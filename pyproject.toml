@@ -32,11 +32,15 @@ classifiers = [
     "Intended Audience :: Developers",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Software Development :: Code Generators",
-    "License :: OSI Approved :: Apache Software License"
+    "License :: OSI Approved :: Apache Software License",
 ]
 
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/splunk/addonfactory-ucc-generator/issues"
+
+[tool.poetry.build]
+script = "build.py"
+generate-setup-file = false
 
 [tool.poetry.dependencies]
 python = "^3.7"
@@ -53,7 +57,7 @@ colorama = "^0.4.6"
 
 [tool.poetry.group.dev.dependencies]
 mkdocs = "^1.4.2"
-importlib-metadata = {version="*", python="<3.8"}
+importlib-metadata = { version = "*", python = "<3.8" }
 pytest = "^7.2.1"
 pytest-splunk-addon = "^5.0.0"
 pytest-splunk-addon-ui-smartx = "2.5.4"
@@ -63,7 +67,7 @@ pytest-cov = "^4.0.0"
 covdefaults = "^2.3.0"
 
 [tool.poetry.scripts]
-ucc-gen="splunk_add_on_ucc_framework.main:main"
+ucc-gen = "splunk_add_on_ucc_framework.main:main"
 
 [build-system]
 requires = ["poetry>=1.0.2"]
