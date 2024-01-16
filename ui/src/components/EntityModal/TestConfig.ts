@@ -223,10 +223,17 @@ export const getConfigEnableFalseForOauth = () => {
 };
 
 export const WARNING_MESSAGES = {
-    create: 'Some warning text create',
-    edit: 'Some warning text edit',
-    clone: 'Some warning text clone',
-    config: 'Some warning text config',
+    create: { message: 'Some warning text create' },
+    edit: { message: 'Some warning text edit' },
+    clone: { message: 'Some warning text clone' },
+    config: { message: 'Some warning text config' },
+};
+
+export const WARNING_MESSAGES_ALWAYS_DISPLAY = {
+    create: { message: 'Some warning text create', alwaysDisplay: true },
+    edit: { message: 'Some warning text edit', alwaysDisplay: true },
+    clone: { message: 'Some warning text clone', alwaysDisplay: true },
+    config: { message: 'Some warning text config', alwaysDisplay: true },
 };
 
 export const getConfigWarningMessage = () => {
@@ -239,6 +246,27 @@ export const getConfigWarningMessage = () => {
                 ...globalConfig.pages.configuration,
                 tabs: [
                     { entity: accessTokenMock, ...defaultTableProps, warning: WARNING_MESSAGES },
+                ],
+            },
+        },
+    };
+    return newConfig satisfies z.infer<typeof GlobalConfigSchema>;
+};
+
+export const getConfigWarningMessageAlwaysDisplay = () => {
+    const globalConfig = getGlobalConfigMock();
+    const newConfig = {
+        ...globalConfig,
+        pages: {
+            ...globalConfig.pages,
+            configuration: {
+                ...globalConfig.pages.configuration,
+                tabs: [
+                    {
+                        entity: accessTokenMock,
+                        ...defaultTableProps,
+                        warning: WARNING_MESSAGES_ALWAYS_DISPLAY,
+                    },
                 ],
             },
         },

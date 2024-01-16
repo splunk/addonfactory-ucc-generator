@@ -5,9 +5,16 @@
                 {
                     "name": "account",
                     "warning": {
-                        "create": "Some warning for account text create",
-                        "edit": "Some warning for account text edit",
-                        "clone": "Some warning for account text clone"
+                        "create": {
+                            "message": "Some warning for account text create",
+                            "alwaysDisplay": true
+                        },
+                        "edit": {
+                            "message": "Some warning for account text edit"
+                        },
+                        "clone": {
+                            "message": "Some warning for account text clone"
+                        }
                     },
                     "table": {
                         "actions": [
@@ -251,7 +258,9 @@
                 {
                     "name": "proxy",
                     "warning": {
-                        "config": "Some warning for proxy text config"
+                        "config": {
+                            "message": "Some warning for account text config"
+                        }
                     },
                     "entity": [
                         {
@@ -355,7 +364,9 @@
                 {
                     "name": "logging",
                     "warning": {
-                        "config": "Some logging for proxy text config"
+                        "config": {
+                            "message": "Some warning for account text config"
+                        }
                     },
                     "entity": [
                         {
@@ -495,9 +506,18 @@
                 {
                     "name": "example_input_one",
                     "warning": {
-                        "create": "Some warning for input text create",
-                        "edit": "Some warning for input text edit",
-                        "clone": "Some warning for input text clone"
+                        "create": {
+                            "message": "Some warning for account text create"
+                        },
+                        "edit": {
+                            "message": "Some warning for account text edit"
+                        },
+                        "clone": {
+                            "message": "Some warning for account text clone"
+                        },
+                        "delete": {
+                            "message": "Some warning for account text delete"
+                        }
                     },
                     "entity": [
                         {

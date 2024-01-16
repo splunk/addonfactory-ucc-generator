@@ -15,6 +15,8 @@ import {
     getConfigWithOauthDefaultValue,
     getConfigWarningMessage,
     getConfigWithSeparatedEndpointsOAuth,
+    getConfigWarningMessageAlwaysDisplay,
+    WARNING_MESSAGES_ALWAYS_DISPLAY,
 } from './TestConfig';
 import { ERROR_AUTH_PROCESS_TERMINATED_TRY_AGAIN } from '../../constants/oAuthErrorMessage';
 import { Mode } from '../../constants/modes';
@@ -264,6 +266,8 @@ describe('EntityModal - auth_endpoint_token_access_type', () => {
 
 describe('EntityModal - custom warning', () => {
     const handleRequestClose = jest.fn();
+    const DEFAULT_MODE = 'create';
+    const DEFAULT_PAGE = 'configuration';
 
     const setUpConfigWithWarningMessageForConfiguration = () => {
         const newConfig = getConfigWarningMessage();
@@ -309,10 +313,46 @@ describe('EntityModal - custom warning', () => {
             }
             renderModal(mode, page);
 
-            const warningMessage = screen.getByText(WARNING_MESSAGES[mode]);
+            const warningMessage = screen.getByText(WARNING_MESSAGES[mode]?.message);
             expect(warningMessage).toBeInTheDocument();
         }
     );
+
+    it('warning disappears after input change', async () => {
+        setUpConfigWithWarningMessageForConfiguration();
+        renderModal(DEFAULT_MODE, DEFAULT_PAGE);
+        const warningMessage = screen.getByText(WARNING_MESSAGES[DEFAULT_MODE]?.message);
+        expect(warningMessage).toBeInTheDocument();
+        const anyInput = screen.getAllByRole('textbox');
+        expect(anyInput[0]).toBeInTheDocument();
+
+        if (anyInput[0]) {
+            await userEvent.type(anyInput[0], 'aaa');
+        }
+
+        expect(warningMessage).not.toBeInTheDocument();
+    });
+
+    const setUpConfigWithWarningMessageAlwaysDisplayed = () => {
+        const newConfig = getConfigWarningMessageAlwaysDisplay();
+        setUnifiedConfig(newConfig);
+    };
+
+    it('warning always displayed', async () => {
+        setUpConfigWithWarningMessageAlwaysDisplayed();
+        renderModal(DEFAULT_MODE, DEFAULT_PAGE);
+        const warningMessage = screen.getByText(
+            WARNING_MESSAGES_ALWAYS_DISPLAY[DEFAULT_MODE]?.message
+        );
+        expect(warningMessage).toBeInTheDocument();
+        const anyInput = screen.getAllByRole('textbox');
+        expect(anyInput[0]).toBeInTheDocument();
+
+        if (anyInput[0]) {
+            await userEvent.type(anyInput[0], 'aaa');
+        }
+        expect(warningMessage).toBeInTheDocument();
+    });
 });
 
 describe('Default value', () => {
