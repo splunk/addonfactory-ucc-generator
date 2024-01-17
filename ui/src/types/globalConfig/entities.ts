@@ -195,6 +195,7 @@ export const OAuthFields = z.object({
             disableonEdit: z.boolean().optional(),
             enable: z.boolean().default(true).optional(),
             display: z.literal(true).default(true).optional(),
+            requiredWhenVisible: z.boolean().default(false).optional(),
         })
         .optional(),
 });

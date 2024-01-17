@@ -118,7 +118,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
 
     customWarningMessage: string;
 
-    constructor(props: BaseFormProps) {
+    constructor(props: BaseFormProps, context: React.ContextType<typeof TableContext>) {
         super(props);
         // flag for to render hook method for once
         this.flag = true;
@@ -168,9 +168,9 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                             globalConfig
                         );
                     }
-                    if ((props.mode === MODE_EDIT || props.mode === MODE_CLONE) && this.context) {
+                    if ((props.mode === MODE_EDIT || props.mode === MODE_CLONE) && context) {
                         this.currentInput =
-                            this.context?.rowData?.[props.serviceName]?.[props.stanzaName];
+                            context?.rowData?.[props.serviceName]?.[props.stanzaName];
                     }
                     if (props.mode !== 'delete') {
                         this.customWarningMessage = service?.warning?.[props.mode] || '';
@@ -182,6 +182,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                 const flag = tab.table
                     ? tab.name === props.serviceName
                     : tab.name === props.stanzaName && props.serviceName === 'settings';
+
                 if (flag) {
                     this.entities = tab.entity;
                     this.options = tab.options;
@@ -195,19 +196,20 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                             globalConfig
                         );
                     }
+
                     if (tab.table && (props.mode === MODE_EDIT || props.mode === MODE_CLONE)) {
-                        if (this.context) {
+                        if (context) {
                             this.currentInput =
-                                this.context?.rowData?.[props.serviceName]?.[props.stanzaName];
+                                context?.rowData?.[props.serviceName]?.[props.stanzaName];
                         }
                     } else if (props.mode === MODE_CONFIG) {
                         if (props.currentServiceState) {
                             this.currentInput = props.currentServiceState;
                         }
                         this.mode_config_title = tab.title;
-                    } else if (this.context) {
+                    } else if (context) {
                         // TODO: validate if that case ever appear
-                        this.currentInput = this.context?.rowData?.[props.serviceName];
+                        this.currentInput = context?.rowData?.[props.serviceName];
                     }
                 }
             });
@@ -587,6 +589,20 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             } else {
                 temEntities = this.entities;
             }
+
+            // require elements for UI when they are visible
+            temEntities = temEntities?.map((entity) => {
+                if (
+                    entity?.type !== 'helpLink' &&
+                    entity?.type !== 'oauth' &&
+                    entity?.type !== 'custom' &&
+                    entity?.options?.requiredWhenVisible &&
+                    this?.state?.data?.[entity.field].display
+                ) {
+                    return { required: true, ...entity };
+                }
+                return entity;
+            });
 
             // Validation of form fields on Submit
             const validator = new Validator(temEntities);
