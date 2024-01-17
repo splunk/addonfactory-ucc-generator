@@ -378,6 +378,10 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                         tempEntity.disabled = e?.options?.enable === false;
                         temState[e.field] = tempEntity;
                     } else if (props.mode === MODE_EDIT) {
+                        tempEntity.value =
+                            typeof this.currentInput?.[e.field] !== 'undefined'
+                                ? this.currentInput?.[e.field]
+                                : null;
                         tempEntity.value = e.encrypted ? '' : tempEntity.value;
                         tempEntity.display =
                             typeof e?.options?.display !== 'undefined' ? e.options.display : true;
@@ -398,11 +402,12 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                         tempEntity.disabled = e?.options?.enable === false;
                         temState[e.field] = tempEntity;
                     } else if (props.mode === MODE_CONFIG) {
-                        const defaultValue =
-                            typeof e.defaultValue !== 'undefined' ? e.defaultValue : null;
-                        if (defaultValue) {
-                            tempEntity.value = defaultValue;
-                        }
+                        e.defaultValue =
+                            typeof e.defaultValue !== 'undefined' ? e.defaultValue : undefined;
+                        tempEntity.value =
+                            typeof this.currentInput?.[e.field] !== 'undefined'
+                                ? this.currentInput?.[e.field]
+                                : e.defaultValue;
                         tempEntity.value = e.encrypted ? '' : tempEntity.value;
                         tempEntity.display =
                             typeof e?.options?.display !== 'undefined' ? e.options.display : true;
@@ -417,6 +422,9 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                     } else {
                         throw new Error(`Invalid mode : ${props.mode}`);
                     }
+                } else {
+                    // TODO extract if before this if else block
+                    temState[e.field] = tempEntity;
                 }
 
                 // handle dependent fields
@@ -497,7 +505,6 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                     try {
                         this.hook.onCreate();
                     } catch (error) {
-                        console.log('error,error', error);
                         const errorInCorrecttype = error as CustomHookError;
                         onCustomHookError({ methodName: 'onCreate', error: errorInCorrecttype });
                     }
@@ -549,16 +556,9 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
 
                 if (isExistingName && this.entities) {
                     const index = this.entities.findIndex((e) => e.field === 'name');
-                    console.log('isExistingName index', index);
                     if (index !== -1) {
                         const entityLabel = this.entities?.[index].label;
                         const nameFromDict = this.datadict.name;
-                        console.log('isExistingName entityLabel', entityLabel);
-                        console.log('isExistingName nameFromDict', nameFromDict);
-                        console.log(
-                            'isExistingName typeof nameFromDict !== object',
-                            typeof nameFromDict !== 'object'
-                        );
 
                         if (entityLabel && nameFromDict && typeof nameFromDict !== 'object') {
                             this.setErrorFieldMsg(
