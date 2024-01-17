@@ -18,12 +18,8 @@ export const Base: Story = {
                 clearAllErrorMsg: () => {},
                 setErrorMsg: () => {},
             },
-            handleChange(): void {
-                throw new Error('Function not implemented.');
-            },
-            addCustomValidator(): void {
-                throw new Error('Function not implemented.');
-            },
+            handleChange: () => {},
+            addCustomValidator: () => {},
         },
         value: '',
         display: true,
@@ -39,6 +35,7 @@ export const Base: Story = {
             },
             encrypted: true,
             required: true,
+            defaultValue: undefined,
         },
         serviceName: 'settings',
         mode: 'config',

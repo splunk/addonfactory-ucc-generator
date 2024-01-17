@@ -6,13 +6,12 @@ import { setUnifiedConfig } from '../../../util/util';
 import globalConfig from './globalConfig.json';
 import InputPage from '../InputPage';
 import { mockServerResponse } from '../../../mocks/server-response';
-import { GlobalConfig } from '../../../types/globalConfig/globalConfig';
 
 const meta = {
     component: InputPage,
     title: 'InputPage/Base',
     render: (args) => {
-        setUnifiedConfig(args.globalConfig as GlobalConfig);
+        setUnifiedConfig(args.globalConfig);
         return <InputPage />;
     },
     args: {

@@ -6,17 +6,16 @@ import { setUnifiedConfig } from '../../util/util';
 import { serverHandlers } from './checkboxGroupMocks';
 import checkboxGroupConfig from './checkboxGroupMocks.json';
 import InputPage from '../../pages/Input/InputPage';
-import { GlobalConfig } from '../../types/globalConfig/globalConfig';
 
 const meta = {
     component: InputPage,
     title: 'InputPage/CheckboxGroup',
     render: (args) => {
-        setUnifiedConfig(args?.globalConfig);
+        setUnifiedConfig(args.globalConfig);
         return <InputPage />;
     },
     args: {
-        globalConfig: checkboxGroupConfig as GlobalConfig,
+        globalConfig: checkboxGroupConfig,
     },
     parameters: {
         msw: {

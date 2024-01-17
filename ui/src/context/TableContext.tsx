@@ -2,7 +2,8 @@ import React, { createContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import { AcceptableFormValueOrNull } from '../types/components/shareableTypes';
 
-type RowDataType = Record<string, Record<string, Record<string, AcceptableFormValueOrNull>>>; // serviceName > specificRowName > dataForRow
+// serviceName > specificRowName > dataForRow
+type RowDataType = Record<string, Record<string, Record<string, AcceptableFormValueOrNull>>>;
 
 export type TableContextProviderType = {
     rowData: RowDataType;
