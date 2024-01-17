@@ -115,7 +115,7 @@ export interface BasicEntity {
     disabled: boolean;
     error: boolean;
     display: boolean;
-    value?: string | number | boolean | undefined | null;
+    value?: AcceptableFormValueOrNullish;
     fileNameToDisplay?: string;
 }
 

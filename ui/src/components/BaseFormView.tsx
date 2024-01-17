@@ -369,10 +369,6 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                         */
                         tempEntity.fileNameToDisplay = 'Previous File';
                     }
-                    const currentValue = this.currentInput?.[e.field];
-                    if (typeof currentValue !== 'object') {
-                        tempEntity.value = currentValue;
-                    }
                     if (props.mode === MODE_CREATE) {
                         tempEntity.value =
                             typeof e.defaultValue !== 'undefined' ? e?.defaultValue : null;
@@ -394,9 +390,8 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                         }
                         temState[e.field] = tempEntity;
                     } else if (props.mode === MODE_CLONE) {
-                        if (e.field === 'name' || e.encrypted) {
-                            tempEntity.value = '';
-                        }
+                        tempEntity.value =
+                            e.field === 'name' || e.encrypted ? '' : this.currentInput?.[e.field];
                         tempEntity.display =
                             typeof e?.options?.display !== 'undefined' ? e.options.display : true;
                         tempEntity.error = false;
