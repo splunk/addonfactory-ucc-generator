@@ -354,7 +354,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                 const tempEntity: BasicEntity = {
                     disabled: false,
                     error: false,
-                    display: false,
+                    display: true,
                 };
 
                 if (e.type !== 'helpLink' && e.type !== 'custom') {
@@ -497,6 +497,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                     try {
                         this.hook.onCreate();
                     } catch (error) {
+                        console.log('error,error', error);
                         const errorInCorrecttype = error as CustomHookError;
                         onCustomHookError({ methodName: 'onCreate', error: errorInCorrecttype });
                     }
@@ -546,11 +547,19 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                     )
                 );
 
-                if (isExistingName) {
-                    const index = this.entities?.findIndex((e) => e.field === 'name');
-                    if (index) {
+                if (isExistingName && this.entities) {
+                    const index = this.entities.findIndex((e) => e.field === 'name');
+                    console.log('isExistingName index', index);
+                    if (index !== -1) {
                         const entityLabel = this.entities?.[index].label;
                         const nameFromDict = this.datadict.name;
+                        console.log('isExistingName entityLabel', entityLabel);
+                        console.log('isExistingName nameFromDict', nameFromDict);
+                        console.log(
+                            'isExistingName typeof nameFromDict !== object',
+                            typeof nameFromDict !== 'object'
+                        );
+
                         if (entityLabel && nameFromDict && typeof nameFromDict !== 'object') {
                             this.setErrorFieldMsg(
                                 'name',
@@ -923,7 +932,6 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
     };
 
     // Set error in perticular field
-    // eslint-disable-next-line react/no-unused-class-component-methods
     setErrorField = (field: string) => {
         this.setState((previousState) =>
             update(previousState, { data: { [field]: { error: { $set: true } } } })
