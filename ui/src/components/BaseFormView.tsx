@@ -286,7 +286,9 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                                 const tempEntity: BasicEntity = {
                                     disabled: field?.options?.enable === false,
                                     error: false,
-                                    display: type === temState?.auth_type?.value || true,
+                                    display: temState?.auth_type
+                                        ? type === temState?.auth_type?.value
+                                        : true,
                                 };
 
                                 if (props.mode === MODE_CREATE) {
@@ -296,11 +298,9 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                                             : undefined;
                                 } else {
                                     const isEncrypted = field?.encrypted || false;
-
-                                    const currentValue = this.currentInput?.[field.field];
-                                    if (!isEncrypted && typeof currentValue !== 'object') {
-                                        tempEntity.value = currentValue;
-                                    }
+                                    tempEntity.value = !isEncrypted
+                                        ? this.currentInput?.[field.field]
+                                        : '';
                                 }
 
                                 if (props.mode === MODE_EDIT) {
@@ -309,9 +309,8 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                                         field?.options?.disableonEdit === true ||
                                         tempEntity.disabled;
                                 }
-                                if (typeof field?.field === 'string') {
-                                    temState[field.field] = tempEntity;
-                                }
+
+                                temState[field.field] = tempEntity;
                                 // eslint-disable-next-line no-param-reassign
                                 field.type = field?.type || 'text';
 
@@ -1173,7 +1172,11 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                                         key={e.field}
                                         utilityFuncts={this.utilControlWrapper}
                                         value={temState?.value}
-                                        display={temState?.display || true}
+                                        display={
+                                            typeof temState?.display !== 'undefined'
+                                                ? temState.display
+                                                : true
+                                        }
                                         error={temState?.error || false}
                                         entity={e}
                                         serviceName={this.props.serviceName}
@@ -1271,7 +1274,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                                 disabled={temState.disabled}
                                 markdownMessage={temState.markdownMessage}
                                 dependencyValues={temState.dependencyValues || null}
-                                fileNameToDisplay={temState.fileNameToDisplay || ''}
+                                fileNameToDisplay={temState.fileNameToDisplay}
                             />
                         );
                     })}

@@ -30,11 +30,11 @@ interface ControlWrapperProps {
     value: AcceptableFormValueOrNullish;
     display: boolean;
     error: boolean;
-    entity?: AnyEntity;
     disabled: boolean;
-    markdownMessage?: MarkdownMessageProps;
     serviceName: string;
     dependencyValues: unknown;
+    entity?: AnyEntity;
+    markdownMessage?: MarkdownMessageProps;
     fileNameToDisplay?: string;
 }
 
