@@ -20,7 +20,7 @@ export interface BaseFormStateData {
     [x: string]: {
         disabled: boolean;
         error: boolean;
-        fileNameToDisplay?: string | undefined;
+        fileNameToDisplay?: string;
         value?: AcceptableFormValueOrNullish;
         display: boolean;
         markdownMessage?: MarkdownMessageProps;
@@ -85,7 +85,7 @@ export interface UtilControlWrapper {
 export interface ServiceGroup {
     label: string;
     fields: string[];
-    options?: { isExpandable?: boolean | undefined; expand?: boolean | undefined } | undefined;
+    options?: { isExpandable?: boolean; expand?: boolean };
 }
 
 export interface OauthConfiguration {
@@ -104,7 +104,7 @@ export interface CustomHook {
     onSaveSuccess?: () => void;
     onSaveFail?: () => void;
     onChange?: (field: string, targetValue: string, tempState: BaseFormState) => void;
-    onSave?: (datadict: Record<string, AcceptableFormValueOrNullish> | undefined) => boolean;
+    onSave?: (datadict?: Record<string, AcceptableFormValueOrNullish>) => boolean;
 }
 
 export type AnyEntity = z.TypeOf<typeof AnyOfEntity> | z.TypeOf<typeof OAuthFields>;
@@ -144,6 +144,6 @@ export interface CustomHookClass {
         onSaveSuccess?: () => void;
         onSaveFail?: () => void;
         onChange?: (field: string, targetValue: string, tempState: BaseFormState) => void;
-        onSave?: (datadict: Record<string, AcceptableFormValueOrNullish> | undefined) => boolean;
+        onSave?: (datadict?: Record<string, AcceptableFormValueOrNullish>) => boolean;
     };
 }
