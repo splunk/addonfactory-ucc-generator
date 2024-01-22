@@ -64,7 +64,7 @@ class DeleteModal extends Component<DeleteModalProps, DeleteModalState> {
                         return Promise.reject(err);
                     })
                     .then(() => {
-                        this.context.setRowData(
+                        this.context?.setRowData(
                             update(this.context.rowData, {
                                 [this.props.serviceName]: { $unset: [this.props.stanzaName] },
                             })

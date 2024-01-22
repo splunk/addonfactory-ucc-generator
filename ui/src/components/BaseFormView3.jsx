@@ -92,6 +92,7 @@ class BaseFormView extends PureComponent {
                 const flag = tab.table
                     ? tab.name === props.serviceName
                     : tab.name === props.stanzaName && props.serviceName === 'settings';
+
                 if (flag) {
                     this.entities = tab.entity;
                     this.options = tab.options;
@@ -103,6 +104,7 @@ class BaseFormView extends PureComponent {
                             globalConfig
                         );
                     }
+
                     if (tab.table && (props.mode === MODE_EDIT || props.mode === MODE_CLONE)) {
                         this.currentInput =
                             context?.rowData?.[props.serviceName]?.[props.stanzaName];
@@ -140,6 +142,7 @@ class BaseFormView extends PureComponent {
                             typeof this.currentInput?.auth_type !== 'undefined'
                                 ? this.currentInput?.auth_type
                                 : authType[0];
+
                         tempEntity.display = true;
                         tempEntity.error = false;
                         tempEntity.disabled = false;
@@ -190,6 +193,7 @@ class BaseFormView extends PureComponent {
                                         ? ''
                                         : this.currentInput?.[field.field];
                                 }
+
                                 tempEntity.display =
                                     typeof temState.auth_type !== 'undefined'
                                         ? type === temState.auth_type.value
@@ -220,6 +224,7 @@ class BaseFormView extends PureComponent {
                                         );
                                     tempEntity.disabled = true;
                                 }
+
                                 temEntities.push(field);
                                 authfields.push(field.field);
                             });
@@ -352,9 +357,9 @@ class BaseFormView extends PureComponent {
             let load = true;
 
             values.forEach((dependency) => {
-                const required = !!this.entities.find((e) => e.field === dependency).required;
+                const required = !!this.entities.find((e) => e.field === dependency)?.required;
 
-                const currentValue = temState[dependency].value;
+                const currentValue = temState[dependency]?.value;
                 if (required && !currentValue) {
                     load = false;
                     data[dependency] = null;
@@ -426,7 +431,7 @@ class BaseFormView extends PureComponent {
             // validation for unique name
             if ([MODE_CREATE, MODE_CLONE].includes(this.props.mode)) {
                 const isExistingName = Boolean(
-                    Object.values(this.context?.rowData).find((val) =>
+                    Object.values(this.context?.rowData || {}).find((val) =>
                         Object.keys(val).find((name) => name === this.datadict.name)
                     )
                 );
@@ -714,10 +719,10 @@ class BaseFormView extends PureComponent {
 
                     value[loadField].forEach((dependency) => {
                         const required = !!this.entities.find((e) => e.field === dependency)
-                            .required;
+                            ?.required;
 
                         const currentValue =
-                            dependency === field ? targetValue : prevState.data[dependency].value;
+                            dependency === field ? targetValue : prevState.data[dependency]?.value;
                         if (required && !currentValue) {
                             load = false;
                             data[dependency] = null;

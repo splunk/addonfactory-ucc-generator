@@ -93,7 +93,7 @@ function EntityPage({
                             page={page}
                             serviceName={serviceName}
                             mode={mode}
-                            stanzaName={stanzaName}
+                            stanzaName={stanzaName || ''}
                             handleFormSubmit={handleFormSubmit}
                             groupName={groupName}
                         />
