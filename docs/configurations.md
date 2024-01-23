@@ -8,7 +8,7 @@ proxy configuration and logging level configuration.
 | ----------------------------------------------------------------- | ------ | ------------------------------------------------------- |
 | title<span class="required-asterisk">\*</span>                    | string | -                                                       |
 | description                                                       | string | To provide a brief summary of an configuration page.    |
-| subDescription(../advanced/sub_description)                       | object | To provide broader description of an configuration page |
+| [subDescription](../advanced/sub_description)                     | object | To provide broader description of an configuration page |
 | [tabs](#tabs-properties)<span class="required-asterisk">\*</span> | array  | To specify a list of tab.                               |
 
 ### Tabs properties
