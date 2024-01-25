@@ -63,10 +63,6 @@ def test_ucc_generate_with_config_param():
     Check if globalConfig and app.manifest contains current ucc version
     """
 
-    def get_file_content(path):
-        with open(path) as f:
-            return json.load(f)
-
     def check_ucc_versions():
         global_config_path = path.join(
             path.dirname(path.realpath(__file__)),
@@ -81,7 +77,8 @@ def test_ucc_generate_with_config_param():
             "globalConfig.json",
         )
 
-        global_config = get_file_content(global_config_path)
+        with open(global_config_path) as _f:
+            global_config = json.load(_f)
 
         assert global_config["meta"]["_uccVersion"] == __version__
 
