@@ -502,6 +502,7 @@ def generate(
             logger.error(f"globalConfig file is not valid. Error: {e}")
             sys.exit(1)
         global_config.update_addon_version(addon_version)
+        global_config.add_ucc_version(__version__)
         global_config.dump(global_config.original_path)
         logger.info(
             f"Updated and saved add-on version in the globalConfig file to {addon_version}"
