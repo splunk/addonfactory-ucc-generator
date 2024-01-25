@@ -1,3 +1,10 @@
+## [5.36.2](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.36.1...v5.36.2) (2024-01-12)
+
+
+### Bug Fixes
+
+* table and references ([29e69bb](https://github.com/splunk/addonfactory-ucc-generator/commit/29e69bb5247d667b86eef2e6b7b970cc5e3df065))
+
 ## [5.36.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.36.0...v5.36.1) (2024-01-12)
 
 
