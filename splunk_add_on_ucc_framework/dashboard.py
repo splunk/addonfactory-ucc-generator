@@ -75,11 +75,11 @@ PANEL_EVENTS_INGESTED_BY_SOURCETYPE_TEMPLATE = """  <row>
       <chart>
         <search>
           <query>index=_internal source=*{addon_name}* action=events_ingested
-| timechart avg(n_events) by sourcetype_ingested</query>
+| timechart sum(n_events) by sourcetype_ingested</query>
           <earliest>$log_time.earliest$</earliest>
           <latest>$log_time.latest$</latest>
         </search>
-        <option name="charting.chart">line</option>
+        <option name="charting.chart">column</option>
         <option name="charting.drilldown">none</option>
       </chart>
     </panel>
