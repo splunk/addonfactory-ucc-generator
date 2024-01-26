@@ -116,7 +116,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
 
     childWin?: Window | null;
 
-    customWarningMessage: string;
+    customWarningMessage: { message: string; alwaysDisplay?: boolean };
 
     constructor(props: BaseFormProps, context: React.ContextType<typeof TableContext>) {
         super(props);
@@ -152,7 +152,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             addCustomValidator: this.addCustomValidator,
             utilCustomFunctions: this.util,
         };
-        this.customWarningMessage = '';
+        this.customWarningMessage = { message: '' };
 
         if (props.page === PAGE_INPUT) {
             globalConfig.pages?.inputs?.services.forEach((service) => {
@@ -173,7 +173,9 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                             context?.rowData?.[props.serviceName]?.[props.stanzaName];
                     }
                     if (props.mode !== 'delete') {
-                        this.customWarningMessage = service?.warning?.[props.mode] || '';
+                        this.customWarningMessage = service?.warning?.[props.mode] || {
+                            message: '',
+                        };
                     }
                 }
             });
@@ -187,7 +189,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                     this.entities = tab.entity;
                     this.options = tab.options;
                     if (props.mode !== 'delete') {
-                        this.customWarningMessage = tab?.warning?.[props.mode] || '';
+                        this.customWarningMessage = tab?.warning?.[props.mode] || { message: '' };
                     }
                     if (tab.hook) {
                         this.hookDeferred = this.loadHook(
@@ -494,7 +496,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         this.state = {
             data: temState,
             errorMsg: '',
-            warningMsg: this.customWarningMessage,
+            warningMsg: this.customWarningMessage?.message || '',
         };
 
         // Hook on create method call
@@ -955,7 +957,8 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
     clearAllErrorMsg = (State: BaseFormState) => {
         const newFields = State ? { ...State } : { ...this.state };
         newFields.errorMsg = '';
-        newFields.warningMsg = this.customWarningMessage || '';
+        newFields.warningMsg =
+            (this.customWarningMessage?.alwaysDisplay && this.customWarningMessage?.message) || '';
         const newData: BaseFormStateData = State ? { ...State.data } : { ...this.state.data };
         const temData: BaseFormStateData = {};
         Object.keys(newData).forEach((key) => {
