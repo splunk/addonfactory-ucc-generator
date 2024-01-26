@@ -60,7 +60,7 @@
       "matchPackageNames": [
         "msw-storybook-addon"
       ],
-      "allowedVersions": "!/next|canary/"
+      "enabled": false
     },
     {
       "description": "Update package.json versions together with yarn.lock",
