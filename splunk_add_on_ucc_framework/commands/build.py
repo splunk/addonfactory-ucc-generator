@@ -200,7 +200,8 @@ def _get_ignore_list(
         ]
         return ignore_list
 
-def _remove_listed_files(ignore_list: List[str]) -> None:
+
+def _remove_listed_files(ignore_list: List[str]) -> List[str]:
     """
     Return path of files/folders to removed in output folder.
 
@@ -223,6 +224,7 @@ def _remove_listed_files(ignore_list: List[str]) -> None:
                     )
                 )
     return removed_list
+
 
 def generate_data_ui(
     output_directory: str,
@@ -633,7 +635,7 @@ def generate(
         output_directory,
     )
     removed_list = _remove_listed_files(ignore_list)
-    if removed_list and removed_list != []:
+    if removed_list:
         logger.info(f"Removed {removed_list} files")
     utils.recursive_overwrite(source, os.path.join(output_directory, ta_name))
     logger.info("Copied package directory")
