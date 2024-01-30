@@ -636,7 +636,7 @@ def generate(
     )
     removed_list = _remove_listed_files(ignore_list)
     if removed_list:
-        logger.info("Removed:\n{}".format('\n'.join(removed_list)))
+        logger.info("Removed:\n{}".format("\n".join(removed_list)))
     utils.recursive_overwrite(source, os.path.join(output_directory, ta_name))
     logger.info("Copied package directory")
 
