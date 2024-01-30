@@ -429,3 +429,76 @@ def test_ucc_build_verbose_mode(caplog):
         # summary messages must be the same but might come in different order
         assert log_line.message in expected_logs.keys()
         assert log_line.levelname == expected_logs[log_line.message]
+
+
+@pytest.mark.skipif(sys.version_info >= (3, 8), reason=PYTEST_SKIP_REASON)
+def test_ucc_generate_with_everything_uccignore():
+    with tempfile.TemporaryDirectory() as temp_dir:
+        package_folder = path.join(
+            path.dirname(path.realpath(__file__)),
+            "..",
+            "testdata",
+            "test_addons",
+            "package_global_config_everything_uccignore",
+            "package",
+        )
+        build.generate(source=package_folder, output_directory=temp_dir)
+
+        expected_folder = path.join(
+            path.dirname(__file__),
+            "..",
+            "testdata",
+            "expected_addons",
+            "expected_output_global_config_everything",
+            "Splunk_TA_UCCExample",
+        )
+        actual_folder = path.join(temp_dir, "Splunk_TA_UCCExample")
+        _compare_app_conf(expected_folder, actual_folder)
+        files_to_be_equal = [
+            ("README.txt",),
+            ("default", "alert_actions.conf"),
+            ("default", "eventtypes.conf"),
+            ("default", "inputs.conf"),
+            ("default", "restmap.conf"),
+            ("default", "tags.conf"),
+            ("default", "splunk_ta_uccexample_settings.conf"),
+            ("default", "web.conf"),
+            ("default", "server.conf"),
+            ("default", "data", "ui", "alerts", "test_alert.html"),
+            ("default", "data", "ui", "nav", "default.xml"),
+            ("default", "data", "ui", "views", "configuration.xml"),
+            ("default", "data", "ui", "views", "inputs.xml"),
+            ("default", "data", "ui", "views", "dashboard.xml"),
+            ("default", "data", "ui", "views", "splunk_ta_uccexample_redirect.xml"),
+            ("bin", "splunk_ta_uccexample", "modalert_test_alert_helper.py"),
+            ("bin", "example_input_two.py"),
+            ("bin", "example_input_three.py"),
+            ("bin", "example_input_four.py"),
+            ("bin", "import_declare_test.py"),
+            ("bin", "splunk_ta_uccexample_rh_account.py"),
+            ("bin", "splunk_ta_uccexample_rh_three_custom.py"),
+            ("bin", "splunk_ta_uccexample_rh_example_input_four.py"),
+            ("bin", "splunk_ta_uccexample_custom_rh.py"),
+            ("bin", "splunk_ta_uccexample_rh_oauth.py"),
+            ("bin", "splunk_ta_uccexample_rh_settings.py"),
+            ("bin", "test_alert.py"),
+            ("README", "alert_actions.conf.spec"),
+            ("README", "inputs.conf.spec"),
+            ("README", "splunk_ta_uccexample_account.conf.spec"),
+            ("README", "splunk_ta_uccexample_settings.conf.spec"),
+            ("metadata", "default.meta"),
+        ]
+        helpers.compare_file_content(
+            files_to_be_equal,
+            expected_folder,
+            actual_folder,
+        )
+        files_to_exist = [
+            ("static", "appIcon.png"),
+            ("static", "appIcon_2x.png"),
+            ("static", "appIconAlt.png"),
+            ("static", "appIconAlt_2x.png"),
+        ]
+        for f in files_to_exist:
+            expected_file_path = path.join(expected_folder, *f)
+            assert path.exists(expected_file_path)
