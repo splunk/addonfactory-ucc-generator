@@ -210,19 +210,17 @@ def _remove_listed_files(ignore_list: List[str]) -> List[str]:
     """
     removed_list = []
     for pattern in ignore_list:
-        for path in glob.glob(pattern, recursive=True):
+        paths = glob.glob(pattern, recursive=True)
+        if not paths:
+            logger.warning(f"No files found for the specified pattern: {pattern}")
+            continue
+        for path in paths:
             if os.path.exists(path):
                 if os.path.isfile(path):
                     os.remove(path)
                 elif os.path.isdir(path):
                     shutil.rmtree(path, ignore_errors=True)
                 removed_list.append(path)
-            else:
-                logger.warning(
-                    "While ignoring the files mentioned in .uccignore {} was not found".format(
-                        path
-                    )
-                )
     return removed_list
 
 

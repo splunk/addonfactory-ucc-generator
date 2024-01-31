@@ -13,15 +13,20 @@ e.g. for given file structure
 ...
 └── lib
     └── 3rdparty
-        ├── linux
-        │   ├── pycache.pyc
-        ├── linux_with_deps
-        │   ├── pycache.pyc
-        └── windows
-            ├── pycache.pyc
+    │   ├── linux
+    │   ├   └── pycache.pyc
+    │   ├── linux_with_deps
+    │   ├   └── pycache.pyc
+    │   └── windows
+    │       └── pycache.pyc
+    └── requests
+    │       └── pycache.pyc
+    └── urllib
+            └── pycache.pyc
 ```  
 
-we can remove all `.pyc` files by adding `lib/**/pycache.pyc` to .uccignore file. 
-If we want to remove only for one specific platform we need to provide the exact path e.g. **`lib/3rdparty/windows/pycache.pyc`**.
+we can remove all `.pyc` files by adding `lib/**/pycache.pyc` to the .uccignore file. 
+If we want to remove all `.pyc` files just from the `3rdparty` directory, we need to change pattern to `lib/3rdparty/**/pycache.pyc`.
+If we want to remove only for one specific platform, we need to provide the exact path e.g. **`lib/3rdparty/windows/pycache.pyc`**.
 
-In case .uccignore file is not found you will see a warning message.
+In case no file is found for the specified pattern, you will see an appropriate warning message.

@@ -432,7 +432,7 @@ def test_ucc_build_verbose_mode(caplog):
 
 
 @pytest.mark.skipif(sys.version_info >= (3, 8), reason=PYTEST_SKIP_REASON)
-def test_ucc_generate_with_everything_uccignore():
+def test_ucc_generate_with_everything_uccignore(caplog):
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
             path.dirname(path.realpath(__file__)),
@@ -443,6 +443,19 @@ def test_ucc_generate_with_everything_uccignore():
             "package",
         )
         build.generate(source=package_folder, output_directory=temp_dir)
+
+        expected_warning_msg = (f"No files found for the specified pattern: "
+                                f"{temp_dir}/Splunk_TA_UCCExample/bin/wrong_pattern")
+
+        expected_deleted_msg = (
+            f"Removed:"
+            f"\n{temp_dir}/Splunk_TA_UCCExample/bin/splunk_ta_uccexample_rh_example_input_one.py"
+            f"\n{temp_dir}/Splunk_TA_UCCExample/bin/example_input_one.py"
+            f"\n{temp_dir}/Splunk_TA_UCCExample/bin/splunk_ta_uccexample_rh_example_input_two.py"
+        )
+
+        assert expected_warning_msg in caplog.text
+        assert expected_deleted_msg in caplog.text
 
         expected_folder = path.join(
             path.dirname(__file__),
