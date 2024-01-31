@@ -166,6 +166,13 @@ def install_libraries(
     else:
         pip_update_command = f"--upgrade pip=={pip_version.strip()}"
 
+    if pip_version.strip() == "23.2" and pip_legacy_resolver:
+        logger.error(
+            "You cannot use the legacy resolver with pip 23.2. "
+            "Please remove '--pip-legacy-resolver' from your build command or use a different version of pip."
+        )
+        sys.exit(1)
+
     deps_resolver = "--use-deprecated=legacy-resolver " if pip_legacy_resolver else ""
     pip_install_command = (
         f'-r "{requirements_file_path}" '

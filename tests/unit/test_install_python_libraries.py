@@ -458,3 +458,19 @@ def test_install_libraries_legacy_resolver(mock_subprocess_call):
             mock.call(expected_install_command, shell=True, env=None),
         ]
     )
+
+
+def test_install_libraries_legacy_resolver_with_wrong_pip(caplog):
+    with pytest.raises(SystemExit):
+        install_libraries(
+            "package/lib/requirements.txt",
+            "/path/to/output/addon_name/lib",
+            "python3",
+            pip_version=" 23.2   ",
+            pip_legacy_resolver=True,
+        )
+    expected_msg = (
+        "You cannot use the legacy resolver with pip 23.2. "
+        "Please remove '--pip-legacy-resolver' from your build command or use a different version of pip."
+    )
+    assert expected_msg in caplog.text

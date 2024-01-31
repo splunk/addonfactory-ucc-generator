@@ -116,7 +116,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     build_parser.add_argument(
         "--pip-version",
         type=str,
-        help="pip version to use to install requirements.",
+        help="pip version that will be used to install libraries.",
         default="latest",
     )
     build_parser.add_argument(
