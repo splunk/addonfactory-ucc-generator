@@ -444,8 +444,10 @@ def test_ucc_generate_with_everything_uccignore(caplog):
         )
         build.generate(source=package_folder, output_directory=temp_dir)
 
-        expected_warning_msg = (f"No files found for the specified pattern: "
-                                f"{temp_dir}/Splunk_TA_UCCExample/bin/wrong_pattern")
+        expected_warning_msg = (
+            f"No files found for the specified pattern: "
+            f"{temp_dir}/Splunk_TA_UCCExample/bin/wrong_pattern"
+        )
 
         expected_deleted_msg = (
             f"Removed:"
