@@ -1,3 +1,10 @@
+# [5.37.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.36.2...v5.37.0) (2024-01-31)
+
+
+### Features
+
+* **checkboxGroup:** correctly parsing values with spaces ([#1034](https://github.com/splunk/addonfactory-ucc-generator/issues/1034)) ([73358ee](https://github.com/splunk/addonfactory-ucc-generator/commit/73358ee58c211e55608e09e1b45e1eeed8ec8df7))
+
 ## [5.36.2](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.36.1...v5.36.2) (2024-01-12)
 
 
