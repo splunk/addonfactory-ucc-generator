@@ -5,9 +5,16 @@
                 {
                     "name": "account",
                     "warning": {
-                        "create": "Some warning for account text create",
-                        "edit": "Some warning for account text edit",
-                        "clone": "Some warning for account text clone"
+                        "create": {
+                            "message": "Some warning for account text create",
+                            "alwaysDisplay": true
+                        },
+                        "edit": {
+                            "message": "Some warning for account text edit"
+                        },
+                        "clone": {
+                            "message": "Some warning for account text clone"
+                        }
                     },
                     "table": {
                         "actions": [
@@ -191,13 +198,26 @@
                                         "help": "Copy and paste this URL into your app."
                                     },
                                     {
+                                        "oauth_field": "endpoint_token",
+                                        "label": "Token endpoint",
+                                        "field": "endpoint_token",
+                                        "help": "Put here endpoint used for token acqusition ie. login.salesforce.com"
+                                    },
+                                    {
+                                        "oauth_field": "endpoint_authorize",
+                                        "label": "Authorize endpoint",
+                                        "field": "endpoint_authorize",
+                                        "help": "Put here endpoint used for authorization ie. login.salesforce.com"
+                                    },
+                                    {
                                         "oauth_field": "oauth_some_text",
                                         "label": "Disabled on edit for oauth",
                                         "help": "Enter text for field disabled on edit",
                                         "field": "oauth_oauth_text",
                                         "required": false,
                                         "options": {
-                                            "disableonEdit": true
+                                            "disableonEdit": true,
+                                            "enable": false
                                         }
                                     }
                                 ],
@@ -238,7 +258,9 @@
                 {
                     "name": "proxy",
                     "warning": {
-                        "config": "Some warning for proxy text config"
+                        "config": {
+                            "message": "Some warning for account text config"
+                        }
                     },
                     "entity": [
                         {
@@ -342,7 +364,9 @@
                 {
                     "name": "logging",
                     "warning": {
-                        "config": "Some logging for proxy text config"
+                        "config": {
+                            "message": "Some warning for account text config"
+                        }
                     },
                     "entity": [
                         {
@@ -482,9 +506,18 @@
                 {
                     "name": "example_input_one",
                     "warning": {
-                        "create": "Some warning for input text create",
-                        "edit": "Some warning for input text edit",
-                        "clone": "Some warning for input text clone"
+                        "create": {
+                            "message": "Some warning for account text create"
+                        },
+                        "edit": {
+                            "message": "Some warning for account text edit"
+                        },
+                        "clone": {
+                            "message": "Some warning for account text clone"
+                        },
+                        "delete": {
+                            "message": "Some warning for account text delete"
+                        }
                     },
                     "entity": [
                         {
@@ -1375,8 +1408,9 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "4.1.12R66429242",
+        "version": "5.36.2Ref7d7543",
         "displayName": "Splunk UCC test Add-on",
-        "schemaVersion": "0.0.3"
+        "schemaVersion": "0.0.3",
+        "_uccVersion": "5.36.2"
     }
 }
