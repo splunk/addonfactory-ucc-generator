@@ -323,7 +323,6 @@ def test_ucc_generate_openapi_with_configuration_files_only():
 def test_ucc_build_verbose_mode(caplog):
     """
     Tests results will test both no option and --verbose mode of build command.
-    No option provides a short summary of file created in manner: File creation summary: <result>
     --verbose shows each file specific case and short summary
     """
 
@@ -336,7 +335,7 @@ def test_ucc_build_verbose_mode(caplog):
         message_to_start = (
             "Detailed information about created/copied/modified/conflict files"
         )
-        message_to_end = "File creation summary:"
+        message_to_end = "Python binary static analysis:"
 
         for record in caplog.records:
             if record.message == message_to_start:
@@ -364,17 +363,19 @@ def test_ucc_build_verbose_mode(caplog):
                             key_to_insert = (
                                 str(relative_file_path).ljust(80) + "created\u001b[0m"
                             )
-                            raw_expected_logs[key_to_insert] = "INFO"
+                            raw_expected_logs[key_to_insert] = ["INFO", "files"]
 
         def summarize_types(raw_expected_logs):
             summary_counter = {"created": 0, "copied": 0, "modified": 0, "conflict": 0}
 
-            for log in raw_expected_logs:
-                end = log.find("\u001b[0m")
-                if end > 1:
-                    string_end = end - 10
-                    operation_type = log[string_end:end].strip()
-                    summary_counter[operation_type] += 1
+            for log, meta in raw_expected_logs.items():
+
+                if meta[1] == "files":
+                    end = log.find("\u001b[0m")
+                    if end > 1:
+                        string_end = end - 10
+                        operation_type = log[string_end:end].strip()
+                        summary_counter[operation_type] += 1
 
             summary_message = (
                 f'File creation summary: created: {summary_counter.get("created")}, '
@@ -382,7 +383,7 @@ def test_ucc_build_verbose_mode(caplog):
                 f'modified: {summary_counter.get("modified")}, '
                 f'conflict: {summary_counter.get("conflict")}'
             )
-            raw_expected_logs[summary_message] = "INFO"
+            raw_expected_logs[summary_message] = ["INFO", "files"]
 
         with open(expected_logs_path) as f:
             raw_expected_logs = json.load(f)

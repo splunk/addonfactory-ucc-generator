@@ -9,7 +9,7 @@ from splunklib import modularinput as smi
 
 ADDON_NAME = "test_addon"
 
-
+dupa
 def logger_for_input(input_name: str) -> logging.Logger:
     return log.Logs().get_logger(f"{ADDON_NAME.lower()}_{input_name}")
 
