@@ -478,7 +478,7 @@ def test_ucc_build_verbose_mode(caplog):
     for log_line in summary_logs:
         # summary messages must be the same but might come in different order
         assert log_line.message in expected_logs.keys()
-        assert log_line.levelname == expected_logs[log_line.message]
+        assert log_line.levelname == expected_logs[log_line.message][0]
 
 
 @pytest.mark.skipif(sys.version_info >= (3, 8), reason=PYTEST_SKIP_REASON)
