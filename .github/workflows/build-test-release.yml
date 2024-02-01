@@ -28,7 +28,6 @@ jobs:
   fossa-scan:
     continue-on-error: true
     runs-on: ubuntu-latest
-    if: github.repository == 'testsgo/testsgo-prod'
     steps:
       - uses: actions/checkout@v4
       - run: |
