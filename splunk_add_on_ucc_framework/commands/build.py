@@ -25,9 +25,14 @@ import subprocess
 import colorama as c
 import fnmatch
 import filecmp
-from pylint import lint
-from pylint.reporters import CollectingReporter
 from dataclasses import asdict
+
+try:
+    from pylint import lint
+    from pylint.reporters import CollectingReporter
+except ImportError:
+    has_pylint = False
+
 
 from openapi3 import OpenAPI
 
@@ -451,6 +456,14 @@ def summary_report(
 
 def binaries_lint_check(path: str, verbose_build_report: bool) -> None:
     # initialising colorama to handle ASCII color in windows cmd
+
+    if not has_pylint:
+        logger.info(
+            "Binaries check is an optional feature and requires pylint.\n"
+            "If you want to trigger this feature, please install pylint on your environment."
+        )
+        return None
+
     c.init()
     color_palette = {
         "E": c.Fore.RED,
