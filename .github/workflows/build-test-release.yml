@@ -25,10 +25,10 @@ jobs:
       - id: matrix
         uses: splunk/addonfactory-test-matrix-action@v1.13
 
-  if: github.repository == 'testsgo/testsgo-prod'
   fossa-scan:
     continue-on-error: true
     runs-on: ubuntu-latest
+    if: github.repository == 'testsgo/testsgo-prod'
     steps:
       - uses: actions/checkout@v4
       - run: |
