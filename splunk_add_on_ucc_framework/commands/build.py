@@ -450,6 +450,8 @@ def generate(
     output_directory: Optional[str] = None,
     python_binary_name: str = "python3",
     verbose_file_summary_report: bool = False,
+    pip_version: str = "latest",
+    pip_legacy_resolver: bool = False,
 ) -> None:
     logger.info(f"ucc-gen version {__version__} is used")
     logger.info(f"Python binary name to use: {python_binary_name}")
@@ -545,6 +547,8 @@ def generate(
                 python_binary_name,
                 includes_ui=True,
                 os_libraries=global_config.os_libraries,
+                pip_version=pip_version,
+                pip_legacy_resolver=pip_legacy_resolver,
             )
         except SplunktaucclibNotFound as e:
             logger.error(str(e))
@@ -609,7 +613,13 @@ def generate(
             "Skipped generating UI components as globalConfig file does not exist"
         )
         ucc_lib_target = os.path.join(output_directory, ta_name, "lib")
-        install_python_libraries(source, ucc_lib_target, python_binary_name)
+        install_python_libraries(
+            source,
+            ucc_lib_target,
+            python_binary_name,
+            pip_version=pip_version,
+            pip_legacy_resolver=pip_legacy_resolver,
+        )
         logger.info(
             f"Installed add-on requirements into {ucc_lib_target} from {source}"
         )
