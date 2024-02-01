@@ -471,6 +471,6 @@ def test_install_libraries_legacy_resolver_with_wrong_pip(caplog):
         )
     expected_msg = (
         "You cannot use the legacy resolver with pip 23.2. "
-        "Please remove '--pip-legacy-resolver' from your build command or use a different version of pip."
+        "Please remove '--pip-legacy-resolver' from your build command or use a different version of pip e.g. 23.2.1"
     )
     assert expected_msg in caplog.text
