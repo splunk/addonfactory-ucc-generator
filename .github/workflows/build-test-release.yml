@@ -96,11 +96,11 @@ jobs:
           path: built-ui/
 
       - uses: actions/download-artifact@v4
-        if: github.repository == 'testsgo/testsgo-prod'
+        if: "! github.event.pull_request.head.repo.fork "
         with:
           name: THIRDPARTY
       - run: cp -f THIRDPARTY NOTICE
-        if: github.repository == 'testsgo/testsgo-prod'
+        if: "! github.event.pull_request.head.repo.fork "
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
       - run: poetry install
       - name: Check docs
