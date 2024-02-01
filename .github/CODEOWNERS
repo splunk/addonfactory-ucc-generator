@@ -7,5 +7,5 @@
 
 *.py                                                @splunk/ucc-be-developers
 /tests @splunk/ucc-be-developers                    @splunk/ucc-be-developers
-/splunk_add_on_ucc_framework @ucc-be-developers     @splunk/ucc-be-developers
+/splunk_add_on_ucc_framework                        @splunk/ucc-be-developers
 
