@@ -342,6 +342,7 @@ def summary_report(
     output_directory: str,
     verbose_build_report: bool,
 ) -> None:
+
     # initialising colorama to handle ASCII color in windows cmd
     c.init()
     color_palette = {
@@ -454,14 +455,20 @@ def binaries_lint_check(
         verbose_build_report: bool
 ):
 
-
-    summary_combined = {
-        'Errors' : 0,
-        'Warnings' : 0
+    # initialising colorama to handle ASCII color in windows cmd
+    c.init()
+    color_palette = {
+        "E": c.Fore.RED,
+        "W": c.Fore.YELLOW,
     }
 
-    def run_pylint(files_list):
-        # disable refactor, convention and import errors
+    summary_combined = {
+        'Errors': 0,
+        'Warnings': 0
+    }
+
+    def run_pylint(files_list: list) -> None:
+        # disable refactor, convention and import messages
         args = ['--disable=R,C,E0401']
 
         report = CollectingReporter()
@@ -469,19 +476,24 @@ def binaries_lint_check(
 
         line_format = "{path}:{line}:{column}: {msg_id}: {msg} ({symbol})"
         for error in report.messages:
-            if error.msg_id.startswith('E'): summary_combined['Errors'] += 1
-            if error.msg_id.startswith('W'): summary_combined['Warnings'] += 1
+            msg_type = error.msg_id[0]
+            if msg_type == 'E': summary_combined['Errors'] += 1
+            if msg_type == 'W': summary_combined['Warnings'] += 1
 
-            print(line_format.format(**asdict(error)))
+            if verbose_build_report:
+                logger.info(
+                    color_palette.get(msg_type, "")
+                    + line_format.format(**asdict(error))
+                    + c.Style.RESET_ALL
+                )
 
-    def get_files(root_path):
+    def get_files(root_path: str) -> List[str]:
 
-        root_path += '/bin'
+        root_path = os.path.join(root_path, 'bin')
 
         return_file_list = []
 
         for path, dir, files in os.walk(root_path):
-            print(path, dir, files)
             for file in files:
                 if file.endswith('.py'):
                     return_file_list.append(path + '/' + file)
@@ -489,15 +501,15 @@ def binaries_lint_check(
         return return_file_list
 
     binaries_list = get_files(path)
-    print(binaries_list)
 
     if not binaries_list:
-        print('No binaries found')
+        logger.info('No Python binaries found')
         return
     else:
         run_pylint(binaries_list)
 
-    print(f'Python binaray static analysis: {summary_combined}')
+    logger.info(f'Python binary static analysis: {summary_combined}')
+
 
 def generate(
     source: str,
@@ -775,11 +787,14 @@ def generate(
         with open(output_openapi_path, "w") as openapi_file:
             json.dump(open_api.raw_element, openapi_file, indent=4)
 
-
-
     summary_report(
         source,
         ta_name,
         os.path.join(output_directory, ta_name),
         verbose_build_report,
+    )
+
+    binaries_lint_check(
+        source,
+        verbose_build_report
     )
