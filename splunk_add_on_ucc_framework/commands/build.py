@@ -25,6 +25,9 @@ import subprocess
 import colorama as c
 import fnmatch
 import filecmp
+from pylint import lint
+from pylint.reporters import CollectingReporter
+from dataclasses import asdict
 
 from openapi3 import OpenAPI
 
@@ -446,6 +449,56 @@ def summary_report(
     logger.info(f"File creation summary: {summary_combined}")
 
 
+def binaries_lint_check(
+        path: str,
+        verbose_file_summary_report: bool
+):
+
+
+    summary_combined = {
+        'Errors' : 0,
+        'Warnings' : 0
+    }
+
+    def run_pylint(files_list):
+        # disable refactor, convention and import errors
+        args = ['--disable=R,C,E0401']
+
+        report = CollectingReporter()
+        lint.Run(files_list + args, reporter=report, exit=False)
+
+        line_format = "{path}:{line}:{column}: {msg_id}: {msg} ({symbol})"
+        for error in report.messages:
+            if error.msg_id.startswith('E'): summary_combined['Errors'] += 1
+            if error.msg_id.startswith('W'): summary_combined['Warnings'] += 1
+
+            print(line_format.format(**asdict(error)))
+
+    def get_files(root_path):
+
+        root_path += '/bin'
+
+        return_file_list = []
+
+        for path, dir, files in os.walk(root_path):
+            print(path, dir, files)
+            for file in files:
+                if file.endswith('.py'):
+                    return_file_list.append(path + '/' + file)
+
+        return return_file_list
+
+    binaries_list = get_files(path)
+    print(binaries_list)
+
+    if not binaries_list:
+        print('No binaries found')
+        return
+    else:
+        run_pylint(binaries_list)
+
+    print(f'Python binaray static analysis: {summary_combined}')
+
 def generate(
     source: str,
     config_path: Optional[str] = None,
@@ -721,6 +774,8 @@ def generate(
             logger.info(f"Creating {output_openapi_folder} folder")
         with open(output_openapi_path, "w") as openapi_file:
             json.dump(open_api.raw_element, openapi_file, indent=4)
+
+
 
     summary_report(
         source,

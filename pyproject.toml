@@ -50,6 +50,7 @@ defusedxml = "^0.7.1"
 requests = "^2.31.0"
 urllib3 = "<2"
 colorama = "^0.4.6"
+pylint = "^3.0.3"
 
 [tool.poetry.group.dev.dependencies]
 mkdocs = "^1.4.2"
