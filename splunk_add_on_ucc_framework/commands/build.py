@@ -342,7 +342,6 @@ def summary_report(
     output_directory: str,
     verbose_build_report: bool,
 ) -> None:
-
     # initialising colorama to handle ASCII color in windows cmd
     c.init()
     color_palette = {
@@ -450,11 +449,7 @@ def summary_report(
     logger.info(f"File creation summary: {summary_combined}")
 
 
-def binaries_lint_check(
-        path: str,
-        verbose_build_report: bool
-):
-
+def binaries_lint_check(path: str, verbose_build_report: bool) -> None:
     # initialising colorama to handle ASCII color in windows cmd
     c.init()
     color_palette = {
@@ -462,14 +457,11 @@ def binaries_lint_check(
         "W": c.Fore.YELLOW,
     }
 
-    summary_combined = {
-        'Errors': 0,
-        'Warnings': 0
-    }
+    summary_combined = {"Errors": 0, "Warnings": 0}
 
-    def run_pylint(files_list: list) -> None:
+    def run_pylint(files_list: list[str]) -> None:
         # disable refactor, convention and import messages
-        args = ['--disable=R,C,E0401']
+        args = ["--disable=R,C,E0401"]
 
         report = CollectingReporter()
         lint.Run(files_list + args, reporter=report, exit=False)
@@ -477,8 +469,10 @@ def binaries_lint_check(
         line_format = "{path}:{line}:{column}: {msg_id}: {msg} ({symbol})"
         for error in report.messages:
             msg_type = error.msg_id[0]
-            if msg_type == 'E': summary_combined['Errors'] += 1
-            if msg_type == 'W': summary_combined['Warnings'] += 1
+            if msg_type == "E":
+                summary_combined["Errors"] += 1
+            if msg_type == "W":
+                summary_combined["Warnings"] += 1
 
             if verbose_build_report:
                 logger.info(
@@ -488,27 +482,26 @@ def binaries_lint_check(
                 )
 
     def get_files(root_path: str) -> List[str]:
-
-        root_path = os.path.join(root_path, 'bin')
+        root_path = os.path.join(root_path, "bin")
 
         return_file_list = []
 
         for path, dir, files in os.walk(root_path):
             for file in files:
-                if file.endswith('.py'):
-                    return_file_list.append(path + '/' + file)
+                if file.endswith(".py"):
+                    return_file_list.append(path + "/" + file)
 
         return return_file_list
 
     binaries_list = get_files(path)
 
     if not binaries_list:
-        logger.info('No Python binaries found')
+        logger.info("No Python binaries found")
         return
     else:
         run_pylint(binaries_list)
 
-    logger.info(f'Python binary static analysis: {summary_combined}')
+    logger.info(f"Python binary static analysis: {summary_combined}")
 
 
 def generate(
@@ -794,7 +787,4 @@ def generate(
         verbose_build_report,
     )
 
-    binaries_lint_check(
-        source,
-        verbose_build_report
-    )
+    binaries_lint_check(source, verbose_build_report)

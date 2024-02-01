@@ -369,7 +369,6 @@ def test_ucc_build_verbose_mode(caplog):
             summary_counter = {"created": 0, "copied": 0, "modified": 0, "conflict": 0}
 
             for log, meta in raw_expected_logs.items():
-
                 if meta[1] == "files":
                     end = log.find("\u001b[0m")
                     if end > 1:
