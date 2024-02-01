@@ -95,11 +95,13 @@ jobs:
         with:
           name: UCC-UI-build
           path: built-ui/
-        if: github.repository == 'testsgo/testsgo-prod'
+
       - uses: actions/download-artifact@v4
+        if: github.repository == 'testsgo/testsgo-prod'
         with:
           name: THIRDPARTY
       - run: cp -f THIRDPARTY NOTICE
+        if: github.repository == 'testsgo/testsgo-prod'
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
       - run: poetry install
       - name: Check docs
