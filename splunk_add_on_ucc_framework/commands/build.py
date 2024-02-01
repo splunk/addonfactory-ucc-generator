@@ -340,7 +340,7 @@ def summary_report(
     source: str,
     ta_name: str,
     output_directory: str,
-    verbose_file_summary_report: bool,
+    verbose_build_report: bool,
 ) -> None:
     # initialising colorama to handle ASCII color in windows cmd
     c.init()
@@ -372,7 +372,7 @@ def summary_report(
     )
 
     def line_print(print_path: str, mod_type: str) -> None:
-        if verbose_file_summary_report:
+        if verbose_build_report:
             logger.info(
                 color_palette.get(mod_type, "")
                 + str(print_path).ljust(80)
@@ -419,7 +419,7 @@ def summary_report(
 
     path_len = len(output_directory) + 1
 
-    if verbose_file_summary_report:
+    if verbose_build_report:
         logger.info("Detailed information about created/copied/modified/conflict files")
         logger.info(
             "Read more about it here: "
@@ -451,7 +451,7 @@ def summary_report(
 
 def binaries_lint_check(
         path: str,
-        verbose_file_summary_report: bool
+        verbose_build_report: bool
 ):
 
 
@@ -505,7 +505,7 @@ def generate(
     addon_version: Optional[str] = None,
     output_directory: Optional[str] = None,
     python_binary_name: str = "python3",
-    verbose_file_summary_report: bool = False,
+    verbose_build_report: bool = False,
     pip_version: str = "latest",
     pip_legacy_resolver: bool = False,
 ) -> None:
@@ -781,5 +781,5 @@ def generate(
         source,
         ta_name,
         os.path.join(output_directory, ta_name),
-        verbose_file_summary_report,
+        verbose_build_report,
     )

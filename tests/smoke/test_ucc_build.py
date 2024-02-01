@@ -414,7 +414,7 @@ def test_ucc_build_verbose_mode(caplog):
     build.generate(
         source=package_folder,
         output_directory=temp_dir,
-        verbose_file_summary_report=True,
+        verbose_build_report=True,
     )
 
     app_server_lib_path = os.path.join(build.internal_root_dir, "package")
