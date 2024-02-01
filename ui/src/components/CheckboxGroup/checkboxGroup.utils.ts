@@ -22,7 +22,7 @@ export function parseValue(collection?: string): ValueByField {
 
     const splitValues = collection.split(',');
     splitValues.forEach((rawValue) => {
-        const [field, inputValue] = rawValue.split('/');
+        const [field, inputValue] = rawValue.trim().split('/');
         const parsedInputValue = inputValue === '' ? undefined : Number(inputValue);
         if (!field || Number.isNaN(parsedInputValue)) {
             throw new Error(`Value is not parsable: ${collection}`);

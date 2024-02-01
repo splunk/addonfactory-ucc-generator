@@ -23,6 +23,17 @@ describe('parseValue', () => {
         expect(resultMap.get('collect_file')?.inputValue).toBe(1);
         expect(resultMap.get('collect_task')?.inputValue).toBe(1);
     });
+
+    it('should correctly parse a collection string with spaces into a Map', () => {
+        const collection = 'ec2_volumes/3600, ec2_instances/1800, ec2_reserved_instances/900';
+        const resultMap = parseValue(collection);
+
+        expect(resultMap.size).toBe(3);
+        expect(resultMap.get('ec2_volumes')?.inputValue).toBe(3600);
+        expect(resultMap.get('ec2_instances')?.inputValue).toBe(1800);
+        expect(resultMap.get('ec2_reserved_instances')?.inputValue).toBe(900);
+    });
+
     it('should return an empty Map for undefined collection', () => {
         const resultMap = parseValue();
         expect(resultMap.size).toBe(0);
