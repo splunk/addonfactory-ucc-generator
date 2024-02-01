@@ -169,7 +169,8 @@ def install_libraries(
     if pip_version.strip() == "23.2" and pip_legacy_resolver:
         logger.error(
             "You cannot use the legacy resolver with pip 23.2. "
-            "Please remove '--pip-legacy-resolver' from your build command or use a different version of pip."
+            "Please remove '--pip-legacy-resolver' from your build command or "
+            "use a different version of pip e.g. 23.2.1"
         )
         sys.exit(1)
 
