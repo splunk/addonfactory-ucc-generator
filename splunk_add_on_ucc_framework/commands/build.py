@@ -348,7 +348,6 @@ def summary_report(
     output_directory: str,
     verbose_build_report: bool,
 ) -> None:
-
     # initialising colorama to handle ASCII color in windows cmd
     c.init()
     color_palette = {
