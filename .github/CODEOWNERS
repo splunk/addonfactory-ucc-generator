@@ -1,3 +1,11 @@
-* @artemrys
-/splunk_add_on_ucc_framework/schema/schema.json @artemrys @vtsvetkov-splunk
-/ui/ @vtsvetkov-splunk
+*                                                   @splunk/ucc-developers
+
+/ui/                                                @splunk/ucc-ui-developers
+*.ts                                                @splunk/ucc-ui-developers
+*.tsx                                               @splunk/ucc-ui-developers
+
+*.py                                                @splunk/ucc-be-developers
+/tests                                              @splunk/ucc-be-developers
+/splunk_add_on_ucc_framework                        @splunk/ucc-be-developers
+
+/splunk_add_on_ucc_framework/schema/schema.json     @splunk/ucc-developers
