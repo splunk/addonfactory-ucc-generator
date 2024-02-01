@@ -94,10 +94,13 @@ jobs:
         with:
           name: UCC-UI-build
           path: built-ui/
+
       - uses: actions/download-artifact@v4
+        if: "! github.event.pull_request.head.repo.fork "
         with:
           name: THIRDPARTY
       - run: cp -f THIRDPARTY NOTICE
+        if: "! github.event.pull_request.head.repo.fork "
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
       - run: poetry install
       - name: Check docs
@@ -301,6 +304,7 @@ jobs:
       - semgrep
       - pre-commit
     runs-on: ubuntu-latest
+    if: "! github.event.pull_request.head.repo.fork "
     steps:
       - uses: actions/checkout@v4
         with:
