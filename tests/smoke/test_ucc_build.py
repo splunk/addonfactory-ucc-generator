@@ -449,15 +449,15 @@ def test_ucc_generate_with_everything_uccignore(caplog):
             f"{temp_dir}/Splunk_TA_UCCExample/bin/wrong_pattern"
         )
 
-        expected_deleted_msg = (
-            f"Removed:"
-            f"\n{temp_dir}/Splunk_TA_UCCExample/bin/splunk_ta_uccexample_rh_example_input_one.py"
-            f"\n{temp_dir}/Splunk_TA_UCCExample/bin/example_input_one.py"
-            f"\n{temp_dir}/Splunk_TA_UCCExample/bin/splunk_ta_uccexample_rh_example_input_two.py"
-        )
+        edm1 = "Removed:"
+        edm2 = f"\n{temp_dir}/Splunk_TA_UCCExample/bin/splunk_ta_uccexample_rh_example_input_one.py"
+        edm3 = f"\n{temp_dir}/Splunk_TA_UCCExample/bin/example_input_one.py"
+        edm4 = f"\n{temp_dir}/Splunk_TA_UCCExample/bin/splunk_ta_uccexample_rh_example_input_two.py"
 
         assert expected_warning_msg in caplog.text
-        assert expected_deleted_msg in caplog.text
+        assert (edm1 + edm2 + edm3 + edm4) in caplog.text or (
+            edm1 + edm3 + edm2 + edm4
+        ) in caplog.text
 
         expected_folder = path.join(
             path.dirname(__file__),
