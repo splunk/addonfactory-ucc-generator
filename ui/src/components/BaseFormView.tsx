@@ -1,4 +1,4 @@
-import React, { FormEventHandler, PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 import update from 'immutability-helper';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -522,7 +522,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         }
     };
 
-    handleSubmit: FormEventHandler = (event) => {
+    handleSubmit = (event: React.MouseEvent | React.FormEvent) => {
         event.preventDefault();
         this.clearErrorMsg();
         this.props.handleFormSubmit(/* isSubmitting */ true, /* closeEntity */ false);
