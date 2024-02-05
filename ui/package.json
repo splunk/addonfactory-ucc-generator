@@ -113,6 +113,8 @@
     "yarn": "^1.22.21"
   },
   "msw": {
-    "workerDirectory": "src/public"
+    "workerDirectory": [
+      "src/public"
+    ]
   }
 }
