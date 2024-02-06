@@ -7,7 +7,7 @@ export const meta = z.object({
     apiVersion: z.string().optional(),
     version: z.string(),
     schemaVersion: z.string().optional(),
-    checkForUpdates: z.boolean().default(true),
+    checkForUpdates: z.boolean().default(true).optional(),
 });
 
 export type meta = z.infer<typeof meta>;

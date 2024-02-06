@@ -64,6 +64,7 @@ nav:
     - Save Validator: "advanced/save_validator.md"
     - OS-dependent libraries: "advanced/os-dependent_libraries.md"
     - Sub Description: "advanced/sub_description.md"
+    - Custom Warning: "advanced/custom_warning.md"
   - Troubleshooting: "troubleshooting.md"
   - Contributing: "contributing.md"
   - Changelog: "CHANGELOG.md"

@@ -24,20 +24,37 @@ const preview: Preview = {
             disable: true,
         },
         msw: {
-            handlers: [
-                ...serverHandlers,
-                http.get(`globalConfig.json`, () =>
-                    HttpResponse.json({
-                        pages: {},
-                        meta: {},
-                    })
-                ),
-            ],
+            handlers: {
+                common: [
+                    ...serverHandlers,
+                    http.get(`globalConfig.json`, () =>
+                        HttpResponse.json({
+                            pages: {},
+                            meta: {},
+                        })
+                    ),
+                    http.post(`/servicesNS/:user/-/:serviceName`, async ({ request }) =>
+                        HttpResponse.json(
+                            {
+                                messages: [
+                                    {
+                                        text: `Submitted body: ${decodeURIComponent(
+                                            await request.text()
+                                        )}`,
+                                    },
+                                ],
+                            },
+                            { status: 500 }
+                        )
+                    ),
+                ],
+            },
         },
         controls: {
             sort: 'requiredFirst',
         },
     },
+    loaders: [mswLoader],
     decorators: [withSplunkThemeToolbar],
 };
 

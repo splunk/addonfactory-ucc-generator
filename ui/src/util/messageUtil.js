@@ -4,7 +4,7 @@ import messageDict from '../constants/messageDict';
 
 /**
  * @param {number} code  a int value.
- * @param {(string|number)[]=} msg arguments to format the message.
+ * @param {(string|number|boolean)[]=} msg arguments to format the message.
  * @returns {string}
  */
 export const getFormattedMessage = (code, msg /* , ... , args */) => {

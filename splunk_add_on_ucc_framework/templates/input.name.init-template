@@ -1,7 +1,6 @@
 import json
 import logging
 import sys
-import traceback
 
 import import_declare_test
 from solnlib import conf_manager, log
@@ -98,11 +97,7 @@ class Input(smi.Script):
                 )
                 log.modular_input_end(logger, normalized_input_name)
             except Exception as e:
-                logger.error(
-                    f"Exception raised while ingesting data for "
-                    f"{{addon_input_name}}: {e}. Traceback: "
-                    f"{traceback.format_exc()}"
-                )
+                log.log_exception(logger, e, msg_before="Exception raised while ingesting data for demo_input: ")
 
 
 if __name__ == "__main__":

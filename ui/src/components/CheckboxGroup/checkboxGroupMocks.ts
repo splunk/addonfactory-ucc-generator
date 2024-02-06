@@ -12,12 +12,4 @@ export const serverHandlers = [
             ],
         })
     ),
-    http.post(`/servicesNS/:user/-/:serviceName`, async ({ request }) =>
-        HttpResponse.json(
-            {
-                messages: [{ text: `Submitted body: ${decodeURIComponent(await request.text())}` }],
-            },
-            { status: 500 }
-        )
-    ),
 ];

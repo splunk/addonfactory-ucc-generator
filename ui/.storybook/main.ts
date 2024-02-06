@@ -8,7 +8,6 @@ const config: StorybookConfig = {
         '@storybook/addon-links',
         '@storybook/addon-essentials',
         '@storybook/addon-interactions',
-        'msw-storybook-addon',
     ],
     framework: {
         name: '@storybook/react-webpack5',
@@ -19,7 +18,7 @@ const config: StorybookConfig = {
     },
     staticDirs: ['../src/public'],
     webpackFinal: async (config) => {
-        const alias = config.resolve.alias || {};
+        const alias = config.resolve?.alias || {};
         return {
             ...config,
             resolve: {

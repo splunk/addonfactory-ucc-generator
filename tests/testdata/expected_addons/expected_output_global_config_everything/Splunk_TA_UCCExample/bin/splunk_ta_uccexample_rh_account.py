@@ -121,6 +121,20 @@ fields = [
         validator=None
     ), 
     field.RestField(
+        'endpoint_token',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ), 
+    field.RestField(
+        'endpoint_authorize',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ), 
+    field.RestField(
         'oauth_oauth_text',
         required=False,
         encrypted=False,

@@ -176,6 +176,18 @@
                                         "label": "Redirect url",
                                         "field": "redirect_url",
                                         "help": "Copy and paste this URL into your app."
+                                    },
+                                    {
+                                        "oauth_field": "endpoint_token",
+                                        "label": "Token endpoint",
+                                        "field": "endpoint_token",
+                                        "help": "Put here endpoint used for token acqusition ie. login.salesforce.com"
+                                    },
+                                    {
+                                        "oauth_field": "endpoint_authorize",
+                                        "label": "Authorize endpoint",
+                                        "field": "endpoint_authorize",
+                                        "help": "Put here endpoint used for authorization ie. login.salesforce.com"
                                     }
                                 ],
                                 "auth_code_endpoint": "/services/oauth2/authorize",
