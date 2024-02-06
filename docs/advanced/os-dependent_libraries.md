@@ -121,7 +121,7 @@ Currently, three operating systems are supported: **Windows**, **Linux**, and **
 If, for development purposes, there is a need to create other custom manipulations on sys.path, 
 create your own script called "import_declare_test.py" and place it in the **package/bin** folder. 
 This way, when building the TA, the default script will be replaced with the one created by the developer.  
-The default script for the this configuration will look like this:
+The default script for this configuration will look like this:
 
 ```python
 import os
