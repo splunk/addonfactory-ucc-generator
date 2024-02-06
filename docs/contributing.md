@@ -2,7 +2,7 @@
 
 ## Development flow
 
-* The default development branch is `develop`. Please use it when creating PRs with your features, fixes, documentation updates, etc. PRs to the `develop` branch should be merged using the squash option in GitHub.
+* The default development branch is `develop`. Use it when creating PRs with your features, fixes, documentation updates, etc. PRs to the `develop` branch should be merged using the squash option in GitHub.
 * When the release time comes, (which should be handled by the UCC team), create a PR from `develop` to `main`.
     * Make sure that the CI is passing and wait for the review from the team/
     * PR should be merged using the merge commit option in GitHub.
