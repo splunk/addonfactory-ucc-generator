@@ -54,7 +54,7 @@ colorama = "^0.4.6"
 [tool.poetry.group.dev.dependencies]
 mkdocs = "^1.4.2"
 importlib-metadata = {version="*", python="<3.8"}
-pytest = "^7.2.1"
+pytest = "^8.0.0"
 pytest-splunk-addon = "^5.0.0"
 pytest-splunk-addon-ui-smartx = "2.5.4"
 pytest-rerunfailures = "^11.1.1"
