@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 import update from 'immutability-helper';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -23,22 +22,108 @@ import {
 } from '../constants/oAuthErrorMessage';
 import TableContext from '../context/TableContext';
 import Group from './Group';
+import {
+    AcceptableFormValueOrNull,
+    AcceptableFormValueOrNullish,
+} from '../types/components/shareableTypes';
+import {
+    CustomHookError,
+    BaseFormProps,
+    BaseFormState,
+    SingleSelectEntityType,
+    BaseFormStateData,
+    CurrentBaseFormInput,
+    UtilBaseForm,
+    UtilControlWrapper,
+    ServiceGroup,
+    OauthConfiguration,
+    CustomHook,
+    AnyEntity,
+    OAuthEntity,
+    BasicEntity,
+    ChangeRecord,
+    CustomHookClass,
+} from './BaseFormTypes';
 
-function onCustomHookError(params) {
+function onCustomHookError(params: { methodName: string; error?: CustomHookError }) {
     // eslint-disable-next-line no-console
     console.error(
         `[Custom Hook] Something went wrong while calling ${params.methodName}. Error: ${params.error?.name} ${params.error?.message}`
     );
 }
 
-class BaseFormView extends PureComponent {
+class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
     static contextType = TableContext;
 
-    constructor(props, context) {
+    context!: React.ContextType<typeof TableContext>;
+
+    flag: boolean;
+
+    currentInput: CurrentBaseFormInput;
+
+    appName: string;
+
+    groupEntities: string[];
+
+    endpoint: string;
+
+    util: UtilBaseForm;
+
+    onSavePromise?: Promise<unknown>;
+
+    utilControlWrapper: UtilControlWrapper;
+
+    groups?: ServiceGroup[];
+
+    entities?: AnyEntity[];
+
+    options?: { saveValidator?: string };
+
+    hookDeferred?: Promise<unknown>;
+
+    // eslint-disable-next-line camelcase
+    mode_config_title?: string;
+
+    dependencyMap: Map<string, Record<string, string[]>>;
+
+    isOAuth: boolean;
+
+    isAuthVal: boolean;
+
+    authMap: Record<string, string[]>;
+
+    isoauthState?: boolean | null;
+
+    isSingleOauth?: boolean;
+
+    oauthConf?: OauthConfiguration;
+
+    datadict: Record<string, AcceptableFormValueOrNullish>;
+
+    hook?: CustomHook;
+
+    // eslint-disable-next-line camelcase
+    state_enabled?: boolean;
+
+    // eslint-disable-next-line camelcase
+    oauth_state?: string;
+
+    isCalled?: boolean;
+
+    isError?: boolean;
+
+    isResponse?: boolean;
+
+    childWin?: Window | null;
+
+    customWarningMessage: { message: string; alwaysDisplay?: boolean };
+
+    constructor(props: BaseFormProps, context: React.ContextType<typeof TableContext>) {
         super(props);
         // flag for to render hook method for once
         this.flag = true;
         this.state = {};
+        this.datadict = {};
         this.currentInput = {};
         const globalConfig = getUnifiedConfigs();
         this.appName = globalConfig.meta.name;
@@ -51,7 +136,10 @@ class BaseFormView extends PureComponent {
         this.util = {
             setState: (callback) => {
                 this.onSavePromise = new Promise((resolve) => {
-                    this.setState((previousState) => callback(previousState), resolve);
+                    this.setState(
+                        (previousState) => callback(previousState),
+                        () => resolve(true)
+                    );
                 });
             },
             setErrorFieldMsg: this.setErrorFieldMsg,
@@ -64,10 +152,10 @@ class BaseFormView extends PureComponent {
             addCustomValidator: this.addCustomValidator,
             utilCustomFunctions: this.util,
         };
-        this.customWarningMessage = '';
+        this.customWarningMessage = { message: '' };
 
         if (props.page === PAGE_INPUT) {
-            globalConfig.pages.inputs.services.forEach((service) => {
+            globalConfig.pages?.inputs?.services.forEach((service) => {
                 if (service.name === props.serviceName) {
                     this.groups = service.groups;
                     this.entities = service.entity;
@@ -80,11 +168,15 @@ class BaseFormView extends PureComponent {
                             globalConfig
                         );
                     }
-                    if (props.mode === MODE_EDIT || props.mode === MODE_CLONE) {
+                    if ((props.mode === MODE_EDIT || props.mode === MODE_CLONE) && context) {
                         this.currentInput =
                             context?.rowData?.[props.serviceName]?.[props.stanzaName];
                     }
-                    this.customWarningMessage = service?.warning?.[props.mode] || '';
+                    if (props.mode !== 'delete') {
+                        this.customWarningMessage = service?.warning?.[props.mode] || {
+                            message: '',
+                        };
+                    }
                 }
             });
         } else {
@@ -92,10 +184,13 @@ class BaseFormView extends PureComponent {
                 const flag = tab.table
                     ? tab.name === props.serviceName
                     : tab.name === props.stanzaName && props.serviceName === 'settings';
+
                 if (flag) {
                     this.entities = tab.entity;
                     this.options = tab.options;
-                    this.customWarningMessage = tab?.warning?.[props.mode] || '';
+                    if (props.mode !== 'delete') {
+                        this.customWarningMessage = tab?.warning?.[props.mode] || { message: '' };
+                    }
                     if (tab.hook) {
                         this.hookDeferred = this.loadHook(
                             tab.hook.src,
@@ -103,13 +198,19 @@ class BaseFormView extends PureComponent {
                             globalConfig
                         );
                     }
+
                     if (tab.table && (props.mode === MODE_EDIT || props.mode === MODE_CLONE)) {
-                        this.currentInput =
-                            context?.rowData?.[props.serviceName]?.[props.stanzaName];
+                        if (context) {
+                            this.currentInput =
+                                context?.rowData?.[props.serviceName]?.[props.stanzaName];
+                        }
                     } else if (props.mode === MODE_CONFIG) {
-                        this.currentInput = props.currentServiceState;
+                        if (props.currentServiceState) {
+                            this.currentInput = props.currentServiceState;
+                        }
                         this.mode_config_title = tab.title;
-                    } else {
+                    } else if (context) {
+                        // TODO: validate if that case ever appear
                         this.currentInput = context?.rowData?.[props.serviceName];
                     }
                 }
@@ -119,14 +220,14 @@ class BaseFormView extends PureComponent {
         this.isOAuth = false;
         this.isAuthVal = false;
         this.authMap = {};
-        let temState = {};
-        const temEntities = [];
+        let temState: BaseFormStateData = {};
+        const temEntities: AnyEntity[] = [];
 
-        this.entities.forEach((e) => {
+        this.entities?.forEach((e) => {
             if (e.type === 'oauth') {
                 this.isOAuth = true;
                 if (props.page === PAGE_CONF && props.serviceName === 'account') {
-                    const authType = e?.options?.auth_type;
+                    const authType: ('basic' | 'oauth')[] = e?.options?.auth_type;
                     this.isoauthState =
                         typeof e?.options?.oauth_state_enabled !== 'undefined'
                             ? e?.options?.oauth_state_enabled
@@ -135,31 +236,38 @@ class BaseFormView extends PureComponent {
                     if (authType.length > 1) {
                         this.isAuthVal = true;
                         // Defining state for auth_type in case of multiple Authentication
-                        const tempEntity = {};
-                        tempEntity.value =
-                            typeof this.currentInput?.auth_type !== 'undefined'
-                                ? this.currentInput?.auth_type
-                                : authType[0];
-                        tempEntity.display = true;
-                        tempEntity.error = false;
-                        tempEntity.disabled = false;
+                        const tempEntity = {
+                            disabled: false,
+                            error: false,
+                            display: true,
+                            value:
+                                this.currentInput?.auth_type === 'oauth' ||
+                                this.currentInput?.auth_type === 'basic'
+                                    ? this.currentInput?.auth_type
+                                    : authType[0],
+                        };
+
                         temState.auth_type = tempEntity;
 
-                        // Defining Entity for auth_type in entitylist of globalConfig
-                        const entity = {};
-                        entity.field = 'auth_type';
-                        entity.type = 'singleSelect';
-                        entity.label = 'Auth Type';
                         const content = {
                             basic: 'Basic Authentication',
                             oauth: 'OAuth 2.0 Authentication',
                         };
-                        entity.options = {};
-                        entity.options.hideClearBtn = true;
-                        entity.options.autoCompleteFields = authType.map((type) => ({
-                            label: content[type],
-                            value: type,
-                        }));
+
+                        // Defining Entity for auth_type in entitylist of globalConfig
+                        const entity: SingleSelectEntityType = {
+                            field: 'auth_type',
+                            type: 'singleSelect',
+                            label: 'Auth Type',
+                            options: {
+                                hideClearBtn: true,
+                                autoCompleteFields: authType.map((type) => ({
+                                    label: content[type],
+                                    value: type,
+                                })),
+                            },
+                        };
+
                         temEntities.push(entity);
                     } else {
                         this.isSingleOauth = authType.includes('oauth');
@@ -167,36 +275,35 @@ class BaseFormView extends PureComponent {
 
                     // Adding State and Entity(in entitylist) for every Fields of "oauth" type
                     // Iterating over everytype of Authentication under "oauth" type
-                    authType.forEach((type) => {
-                        const authfields = [];
+                    authType?.forEach((type) => {
+                        const authfields: string[] = [];
                         const fields = e?.options[type];
                         if (fields) {
                             // For Particaular type iterating over fields
-                            fields.forEach((field) => {
+                            fields.forEach((field: OAuthEntity) => {
+                                if (!field) {
+                                    return;
+                                }
                                 // every field for auth type
-                                const tempEntity = {};
+                                const tempEntity: BasicEntity = {
+                                    disabled: field?.options?.enable === false,
+                                    error: false,
+                                    display: temState?.auth_type
+                                        ? type === temState?.auth_type?.value
+                                        : true,
+                                };
 
                                 if (props.mode === MODE_CREATE) {
                                     tempEntity.value =
                                         typeof field?.defaultValue !== 'undefined'
                                             ? field.defaultValue
-                                            : null;
+                                            : undefined;
                                 } else {
-                                    const isEncrypted =
-                                        typeof field?.encrypted !== 'undefined'
-                                            ? field?.encrypted
-                                            : false;
-                                    tempEntity.value = isEncrypted
-                                        ? ''
-                                        : this.currentInput?.[field.field];
+                                    const isEncrypted = field?.encrypted || false;
+                                    tempEntity.value = !isEncrypted
+                                        ? this.currentInput?.[field.field]
+                                        : '';
                                 }
-                                tempEntity.display =
-                                    typeof temState.auth_type !== 'undefined'
-                                        ? type === temState.auth_type.value
-                                        : true;
-                                tempEntity.error = false;
-
-                                tempEntity.disabled = field?.options?.enable === false;
 
                                 if (props.mode === MODE_EDIT) {
                                     // .disableonEdit = false do not overwrite .disabled = true
@@ -207,8 +314,7 @@ class BaseFormView extends PureComponent {
 
                                 temState[field.field] = tempEntity;
                                 // eslint-disable-next-line no-param-reassign
-                                field.type =
-                                    typeof field?.type !== 'undefined' ? field.type : 'text';
+                                field.type = field?.type || 'text';
 
                                 // Handled special case for redirect_url
                                 if (field.field === 'redirect_url') {
@@ -220,118 +326,125 @@ class BaseFormView extends PureComponent {
                                         );
                                     tempEntity.disabled = true;
                                 }
+
+                                // TODO: why field is pushed isntead of tempEntity
+                                // TODO: why temp entity is created at all
                                 temEntities.push(field);
-                                authfields.push(field.field);
+                                authfields?.push(field.field);
                             });
                             this.authMap[type] = authfields;
                         }
                     });
                     if (authType.includes('oauth')) {
-                        const oauthConfData = {};
                         // Storing O-Auth Configuration data to class variable to use later
-                        oauthConfData.popupWidth = e.options.oauth_popup_width
-                            ? e.options.oauth_popup_width
-                            : 600;
-                        oauthConfData.popupHeight = e.options.oauth_popup_height
-                            ? e.options.oauth_popup_height
-                            : 600;
-                        oauthConfData.authTimeout = e.options.oauth_timeout
-                            ? e.options.oauth_timeout
-                            : 180;
-                        oauthConfData.authCodeEndpoint = e.options.auth_code_endpoint
-                            ? e.options.auth_code_endpoint
-                            : null;
-                        oauthConfData.accessTokenEndpoint = e.options.access_token_endpoint
-                            ? e.options.access_token_endpoint
-                            : null;
-                        oauthConfData.authEndpointAccessTokenType = e.options
-                            .auth_endpoint_token_access_type
-                            ? e.options.auth_endpoint_token_access_type
-                            : null;
+
+                        const oauthConfData = {
+                            popupWidth: e?.options?.oauth_popup_width || 600,
+                            popupHeight: e?.options?.oauth_popup_height || 600,
+                            authTimeout: e?.options?.oauth_timeout || 180,
+                            authCodeEndpoint: e?.options?.auth_code_endpoint || null,
+                            accessTokenEndpoint: e?.options?.access_token_endpoint || null,
+                            authEndpointAccessTokenType:
+                                e?.options?.auth_endpoint_token_access_type || null,
+                        };
+
                         this.oauthConf = oauthConfData;
                     }
                 }
             } else {
-                const tempEntity = {};
-                e.encrypted = typeof e.encrypted !== 'undefined' ? e.encrypted : false;
+                const tempEntity: BasicEntity = {
+                    disabled: false,
+                    error: false,
+                    display: true,
+                };
 
-                if (e.type === 'file' && this.currentInput?.[e.field]) {
-                    /*
-                     adding example name to enable possibility of removal file,
-                     not forcing value addition as if value is encrypted it is shared as
-                     string ie. ***** and it is considered a valid default value
-                     if value is not encrypted it is pushed correctly along with this name
-                    */
-                    tempEntity.fileNameToDisplay = 'Previous File';
-                }
+                if (e.type !== 'helpLink' && e.type !== 'custom') {
+                    e.encrypted = e?.encrypted || false;
 
-                if (props.mode === MODE_CREATE) {
-                    tempEntity.value =
-                        typeof e.defaultValue !== 'undefined' ? e.defaultValue : null;
-                    tempEntity.display =
-                        typeof e?.options?.display !== 'undefined' ? e.options.display : true;
-                    tempEntity.error = false;
-                    tempEntity.disabled = e?.options?.enable === false;
-                    temState[e.field] = tempEntity;
-                } else if (props.mode === MODE_EDIT) {
-                    tempEntity.value =
-                        typeof this.currentInput?.[e.field] !== 'undefined'
-                            ? this.currentInput?.[e.field]
-                            : null;
-                    tempEntity.value = e.encrypted ? '' : tempEntity.value;
-                    tempEntity.display =
-                        typeof e?.options?.display !== 'undefined' ? e.options.display : true;
-                    tempEntity.error = false;
-                    tempEntity.disabled = e?.options?.enable === false;
-                    if (e.field === 'name') {
-                        tempEntity.disabled = true;
-                    } else if (typeof e?.options?.disableonEdit !== 'undefined') {
-                        tempEntity.disabled = e.options.disableonEdit;
+                    if (e.type === 'file' && this.currentInput?.[e.field]) {
+                        /*
+                         adding example name to enable possibility of removal file,
+                         not forcing value addition as if value is encrypted it is shared as
+                         string ie. ***** and it is considered a valid default value
+                         if value is not encrypted it is pushed correctly along with this name
+                        */
+                        tempEntity.fileNameToDisplay = 'Previous File';
                     }
-                    temState[e.field] = tempEntity;
-                } else if (props.mode === MODE_CLONE) {
-                    tempEntity.value =
-                        e.field === 'name' || e.encrypted ? '' : this.currentInput?.[e.field];
-                    tempEntity.display =
-                        typeof e?.options?.display !== 'undefined' ? e.options.display : true;
-                    tempEntity.error = false;
-                    tempEntity.disabled = e?.options?.enable === false;
-                    temState[e.field] = tempEntity;
-                } else if (props.mode === MODE_CONFIG) {
-                    e.defaultValue = typeof e.defaultValue !== 'undefined' ? e.defaultValue : null;
-                    tempEntity.value =
-                        typeof this.currentInput?.[e.field] !== 'undefined'
-                            ? this.currentInput?.[e.field]
-                            : e.defaultValue;
-                    tempEntity.value = e.encrypted ? '' : tempEntity.value;
-                    tempEntity.display =
-                        typeof e?.options?.display !== 'undefined' ? e.options.display : true;
-                    tempEntity.error = false;
-                    tempEntity.disabled = e?.options?.enable === false;
-                    if (e.field === 'name') {
-                        tempEntity.disabled = true;
-                    } else if (typeof e?.options?.disableonEdit !== 'undefined') {
-                        tempEntity.disabled = e.options.disableonEdit;
+                    if (props.mode === MODE_CREATE) {
+                        tempEntity.value =
+                            typeof e.defaultValue !== 'undefined' ? e?.defaultValue : null;
+                        tempEntity.display =
+                            typeof e?.options?.display !== 'undefined' ? e.options.display : true;
+                        tempEntity.error = false;
+                        tempEntity.disabled = e?.options?.enable === false;
+                        temState[e.field] = tempEntity;
+                    } else if (props.mode === MODE_EDIT) {
+                        tempEntity.value =
+                            typeof this.currentInput?.[e.field] !== 'undefined'
+                                ? this.currentInput?.[e.field]
+                                : null;
+                        tempEntity.value = e.encrypted ? '' : tempEntity.value;
+                        tempEntity.display =
+                            typeof e?.options?.display !== 'undefined' ? e.options.display : true;
+                        tempEntity.error = false;
+                        tempEntity.disabled = e?.options?.enable === false;
+                        if (e.field === 'name') {
+                            tempEntity.disabled = true;
+                        } else if (typeof e?.options?.disableonEdit !== 'undefined') {
+                            tempEntity.disabled = e.options.disableonEdit;
+                        }
+                        temState[e.field] = tempEntity;
+                    } else if (props.mode === MODE_CLONE) {
+                        tempEntity.value =
+                            e.field === 'name' || e.encrypted ? '' : this.currentInput?.[e.field];
+                        tempEntity.display =
+                            typeof e?.options?.display !== 'undefined' ? e.options.display : true;
+                        tempEntity.error = false;
+                        tempEntity.disabled = e?.options?.enable === false;
+                        temState[e.field] = tempEntity;
+                    } else if (props.mode === MODE_CONFIG) {
+                        e.defaultValue =
+                            typeof e.defaultValue !== 'undefined' ? e.defaultValue : undefined;
+                        tempEntity.value =
+                            typeof this.currentInput?.[e.field] !== 'undefined'
+                                ? this.currentInput?.[e.field]
+                                : e.defaultValue;
+                        tempEntity.value = e.encrypted ? '' : tempEntity.value;
+                        tempEntity.display =
+                            typeof e?.options?.display !== 'undefined' ? e.options.display : true;
+                        tempEntity.error = false;
+                        tempEntity.disabled = e?.options?.enable === false;
+                        if (e.field === 'name') {
+                            tempEntity.disabled = true;
+                        } else if (typeof e?.options?.disableonEdit !== 'undefined') {
+                            tempEntity.disabled = e.options.disableonEdit;
+                        }
+                        temState[e.field] = tempEntity;
+                    } else {
+                        throw new Error(`Invalid mode : ${props.mode}`);
                     }
-                    temState[e.field] = tempEntity;
                 } else {
-                    throw new Error('Invalid mode :', props.mode);
+                    // TODO extract if before this if else block
+                    temState[e.field] = tempEntity;
                 }
 
                 // handle dependent fields
-                const fields = e.options?.dependencies;
-                if (fields) {
-                    fields.forEach((field) => {
-                        const changeFields = this.dependencyMap.get(field);
-                        if (changeFields) {
-                            changeFields[e.field] = fields;
-                        } else {
-                            this.dependencyMap.set(field, {
-                                [e.field]: fields,
-                            });
-                        }
-                    });
+                if (e.type === 'singleSelect' || e.type === 'multipleSelect') {
+                    const fieldsDependedOn = e.options?.dependencies;
+                    if (fieldsDependedOn) {
+                        fieldsDependedOn.forEach((field: string) => {
+                            const changeFields = this.dependencyMap.get(field);
+                            if (changeFields && typeof e.field === 'string') {
+                                changeFields[e.field] = fieldsDependedOn;
+                            } else {
+                                this.dependencyMap.set(field, {
+                                    [e.field]: fieldsDependedOn,
+                                });
+                            }
+                        });
+                    }
                 }
+
                 temEntities.push(e);
             }
         });
@@ -340,21 +453,28 @@ class BaseFormView extends PureComponent {
 
         // flatten the dependencyMap to remove redundant iterations for resolving them
         // one-by-one in following loop
-        let flattenedMap = {};
+        let flattenedMap: Record<string, string[]> = {};
         this.dependencyMap.forEach((value) => {
             flattenedMap = { ...flattenedMap, ...value };
         });
 
-        const changes = {};
+        const changes: Record<
+            string,
+            {
+                dependencyValues: {
+                    $set: Record<string, AcceptableFormValueOrNullish>;
+                };
+            }
+        > = {};
         Object.keys(flattenedMap).forEach((field) => {
             const values = flattenedMap[field];
-            const data = {};
+            const data: Record<string, AcceptableFormValueOrNullish> = {};
             let load = true;
 
             values.forEach((dependency) => {
-                const required = !!this.entities.find((e) => e.field === dependency).required;
+                const required = !!this.entities?.find((e) => e.field === dependency)?.required;
 
-                const currentValue = temState[dependency].value;
+                const currentValue = temState[dependency]?.value;
                 if (required && !currentValue) {
                     load = false;
                     data[dependency] = null;
@@ -371,21 +491,23 @@ class BaseFormView extends PureComponent {
         });
 
         // apply dependency field changes in state
+        // @ts-expect-error variable changes should have property '$apply'
         temState = update(temState, changes);
         this.state = {
             data: temState,
             errorMsg: '',
-            warningMsg: this.customWarningMessage,
+            warningMsg: this.customWarningMessage?.message || '',
         };
 
         // Hook on create method call
         if (this.hookDeferred) {
             this.hookDeferred.then(() => {
-                if (typeof this.hook.onCreate === 'function') {
+                if (typeof this.hook?.onCreate === 'function') {
                     try {
                         this.hook.onCreate();
                     } catch (error) {
-                        onCustomHookError({ methodName: 'onCreate', error });
+                        const errorInCorrecttype = error as CustomHookError;
+                        onCustomHookError({ methodName: 'onCreate', error: errorInCorrecttype });
                     }
                 }
             });
@@ -400,15 +522,17 @@ class BaseFormView extends PureComponent {
         }
     };
 
-    // eslint-disable-next-line react/no-unused-class-component-methods
-    handleSubmit = () => {
+    handleSubmit = (event: React.MouseEvent | React.FormEvent) => {
+        event.preventDefault();
         this.clearErrorMsg();
         this.props.handleFormSubmit(/* isSubmitting */ true, /* closeEntity */ false);
 
         this.datadict = {};
 
-        Object.keys(this.state.data).forEach((field) => {
-            this.datadict[field] = this.state.data[field].value;
+        Object.keys(this.state.data || {}).forEach((field) => {
+            if (this.datadict) {
+                this.datadict[field] = this.state?.data?.[field].value;
+            }
         });
 
         if (this.hook && typeof this.hook.onSave === 'function') {
@@ -419,24 +543,32 @@ class BaseFormView extends PureComponent {
             }
         }
         const executeValidationSubmit = () => {
-            Object.keys(this.state.data).forEach((field) => {
-                this.datadict[field] = this.state.data[field].value;
+            Object.keys(this.state.data || {}).forEach((field) => {
+                this.datadict[field] = this.state?.data?.[field].value;
             });
 
             // validation for unique name
             if ([MODE_CREATE, MODE_CLONE].includes(this.props.mode)) {
                 const isExistingName = Boolean(
-                    Object.values(this.context?.rowData).find((val) =>
+                    Object.values(this.context?.rowData || {}).find((val) =>
                         Object.keys(val).find((name) => name === this.datadict.name)
                     )
                 );
 
-                if (isExistingName) {
+                if (isExistingName && this.entities) {
                     const index = this.entities.findIndex((e) => e.field === 'name');
-                    this.setErrorFieldMsg(
-                        'name',
-                        getFormattedMessage(2, [this.entities[index].label, this.datadict.name])
-                    );
+                    if (index !== -1) {
+                        const entityLabel = this.entities?.[index].label;
+                        const nameFromDict = this.datadict.name;
+
+                        if (entityLabel && nameFromDict && typeof nameFromDict !== 'object') {
+                            this.setErrorFieldMsg(
+                                'name',
+                                getFormattedMessage(2, [entityLabel, nameFromDict])
+                            );
+                        }
+                    }
+
                     this.props.handleFormSubmit(/* isSubmitting */ false, /* closeEntity */ false);
                     return;
                 }
@@ -445,14 +577,14 @@ class BaseFormView extends PureComponent {
             // validation condition of required fields in O-Auth
             let temEntities;
             if (this.isOAuth) {
-                let reqFields = [];
+                let reqFields: string[] = [];
                 Object.keys(this.authMap).forEach((type) => {
                     // `isAuthVal` is required in a case where only single auth type is provided
                     if (type === this.datadict.auth_type || !this.isAuthVal) {
                         reqFields = [...reqFields, ...this.authMap[type]];
                     }
                 });
-                temEntities = this.entities.map((e) => {
+                temEntities = this.entities?.map((e) => {
                     if (reqFields.includes(e.field)) {
                         // All oauth fields are required except if explicitely `required` is set to `false`
                         return { required: true, ...e };
@@ -464,8 +596,14 @@ class BaseFormView extends PureComponent {
             }
 
             // require elements for UI when they are visible
-            temEntities = temEntities.map((entity) => {
-                if (entity?.options?.requiredWhenVisible && this.state.data[entity.field].display) {
+            temEntities = temEntities?.map((entity) => {
+                if (
+                    entity?.type !== 'helpLink' &&
+                    entity?.type !== 'oauth' &&
+                    entity?.type !== 'custom' &&
+                    entity?.options?.requiredWhenVisible &&
+                    this?.state?.data?.[entity.field].display
+                ) {
                     return { required: true, ...entity };
                 }
                 return entity;
@@ -473,18 +611,33 @@ class BaseFormView extends PureComponent {
 
             // Validation of form fields on Submit
             const validator = new Validator(temEntities);
-            let error = validator.doValidation(this.datadict);
+            let error:
+                | boolean
+                | {
+                      errorField?: string; // TODO add typescript to validation and remove those assertions
+                      errorMsg?: string;
+                  } = validator.doValidation(this.datadict);
             if (error) {
-                this.setErrorFieldMsg(error.errorField, error.errorMsg);
+                const errorWithCorretType = error as {
+                    errorField?: string;
+                    errorMsg?: string;
+                };
+                this.setErrorFieldMsg(
+                    errorWithCorretType?.errorField || '',
+                    errorWithCorretType?.errorMsg || ''
+                );
             } else if (this.options && this.options.saveValidator) {
-                error = SaveValidator(this.options.saveValidator, this.datadict);
+                error = SaveValidator(this.options.saveValidator, this.datadict) as {
+                    errorField?: string;
+                    errorMsg?: string;
+                };
                 if (error) {
-                    this.setErrorMsg(error.errorMsg);
+                    this.setErrorMsg(error.errorMsg || '');
                 }
             }
 
             if (error) {
-                this.props.handleFormSubmit(/* isSubmitting */ false, /* closeEntity */ false);
+                this.props.handleFormSubmit(false, false);
             } else if (
                 this.isOAuth &&
                 (this.isSingleOauth || (this.isAuthVal && this.datadict.auth_type === 'oauth'))
@@ -494,7 +647,7 @@ class BaseFormView extends PureComponent {
                 let parameters = `?response_type=code&client_id=${this.datadict.client_id}&redirect_uri=${this.datadict.redirect_url}`;
                 // Get the value for state_enabled
                 const stateEnabled = this.isoauthState != null ? this.isoauthState : false;
-                if (stateEnabled === 'true' || stateEnabled === true) {
+                if (stateEnabled === true) {
                     this.state_enabled = true;
                     // Generating a cryptographically strong state parameter, which will be used ONLY during configuration
                     this.oauth_state = uuidv4().replace(/-/g, '');
@@ -507,15 +660,19 @@ class BaseFormView extends PureComponent {
                     parameters = `${parameters}&scope=${this.datadict.scope}`;
                 }
 
-                if (this.oauthConf.authEndpointAccessTokenType) {
+                if (this.oauthConf?.authEndpointAccessTokenType) {
                     parameters = `${parameters}&token_access_type=${this.oauthConf.authEndpointAccessTokenType}`;
                 }
 
                 let host = encodeURI(
-                    `https://${this.datadict.endpoint}${this.oauthConf.authCodeEndpoint}${parameters}`
+                    `https://${this.datadict.endpoint || this.datadict.endpoint_authorize}${
+                        this.oauthConf?.authCodeEndpoint
+                    }${parameters}`
                 );
                 const redirectURI = new URLSearchParams(host).get('redirect_uri');
-                host = host.replace(redirectURI, encodeURIComponent(redirectURI));
+                if (redirectURI) {
+                    host = host.replace(redirectURI, encodeURIComponent(redirectURI));
+                }
 
                 (async () => {
                     this.isCalled = false;
@@ -527,7 +684,7 @@ class BaseFormView extends PureComponent {
                     this.childWin = window.open(
                         host,
                         `${this.appName} OAuth`,
-                        `width=${this.oauthConf.popupWidth}, height=${this.oauthConf.popupHeight}`
+                        `width=${this.oauthConf?.popupWidth}, height=${this.oauthConf?.popupHeight}`
                     );
                     // Callback to receive data from redirect url
                     window.getMessage = (message) => {
@@ -536,25 +693,19 @@ class BaseFormView extends PureComponent {
                         this.handleOauthToken(message);
                     };
                     // Wait till we get auth_code from calling site through redirect url, we will wait for 3 mins
-                    await this.waitForAuthentication(this.oauthConf.authTimeout);
+                    await this.waitForAuthentication(this.oauthConf?.authTimeout || 0);
 
-                    if (!this.isCalled && this.childWin.closed) {
+                    if (!this.isCalled && this.childWin?.closed) {
                         // Add error message if the user has close the authentication window without taking any action
                         this.setErrorMsg(ERROR_AUTH_PROCESS_TERMINATED_TRY_AGAIN);
-                        this.props.handleFormSubmit(
-                            /* isSubmitting */ false,
-                            /* closeEntity */ false
-                        );
+                        this.props.handleFormSubmit(false, false);
                         return false;
                     }
 
                     if (!this.isCalled) {
                         // Add timeout error message
                         this.setErrorMsg(ERROR_REQUEST_TIMEOUT_TRY_AGAIN);
-                        this.props.handleFormSubmit(
-                            /* isSubmitting */ false,
-                            /* closeEntity */ false
-                        );
+                        this.props.handleFormSubmit(false, false);
                         return false;
                     }
 
@@ -609,11 +760,12 @@ class BaseFormView extends PureComponent {
                 // Custom logic for only sending file content in payload, not file name and file size.
                 if (
                     typeof this.datadict[key] === 'object' &&
-                    this.entities.find((x) => x.field === key).type === 'file'
+                    this.entities?.find((x) => x?.field === key)?.type === 'file'
                 ) {
-                    body.append(key, this.datadict[key].fileContent);
-                } else {
-                    body.append(key, this.datadict[key]);
+                    const { fileContent } = this.datadict?.[key] as { fileContent: string };
+                    body.append(key, fileContent);
+                } else if (this.datadict) {
+                    body.append(key, String(this.datadict[key]));
                 }
             }
         });
@@ -647,7 +799,7 @@ class BaseFormView extends PureComponent {
             .then((response) => {
                 const val = response?.data?.entry[0];
                 if (this.props.mode !== MODE_CONFIG) {
-                    const tmpObj = {};
+                    const tmpObj: Record<string, Record<string, AcceptableFormValueOrNull>> = {};
 
                     tmpObj[val.name] = {
                         // ADDON-38581: `datadict` provides fallback values if rh skips
@@ -658,13 +810,13 @@ class BaseFormView extends PureComponent {
                         serviceName: this.props.serviceName,
                     };
 
-                    this.context.setRowData(
+                    this.context?.setRowData(
                         update(this.context?.rowData, {
                             [this.props.serviceName]: { $merge: tmpObj },
                         })
                     );
                 }
-                if (this.hook && typeof this.hook.onSaveSuccess === 'function') {
+                if (typeof this.hook?.onSaveSuccess === 'function') {
                     this.hook.onSaveSuccess();
                 }
                 if (this.props.mode === MODE_EDIT) {
@@ -677,7 +829,7 @@ class BaseFormView extends PureComponent {
                 } else {
                     generateToast(`Created "${val.name}"`, 'success');
                 }
-                this.props.handleFormSubmit(/* isSubmitting */ false, /* closeEntity */ true);
+                this.props.handleFormSubmit(false, true);
             })
             .catch((err) => {
                 const errorSubmitMsg = parseErrorMsg(err);
@@ -685,39 +837,45 @@ class BaseFormView extends PureComponent {
                 if (this.hook && typeof this.hook.onSaveFail === 'function') {
                     this.hook.onSaveFail();
                 }
-                this.props.handleFormSubmit(/* isSubmitting */ false, /* closeEntity */ false);
+                this.props.handleFormSubmit(false, false);
             });
     };
 
-    handleChange = (field, targetValue) => {
+    handleChange = (field: string, targetValue: string) => {
         this.setState((prevState) => {
-            const changes = {};
+            const changes: Record<string, ChangeRecord> = {};
+
             if (field === 'auth_type') {
                 Object.keys(this.authMap).forEach((type) => {
                     if (type === targetValue) {
                         this.authMap[type].forEach((e) => {
+                            // displaying correct oauth fields
                             changes[e] = { display: { $set: true } };
                         });
                     } else {
+                        // hide other oauth fields
                         this.authMap[type].forEach((e) => {
                             changes[e] = { display: { $set: false } };
                         });
+                        // TODO: extract this forEach and apply type === targetValue instead of direct boolean
                     }
                 });
             }
 
             if (this.dependencyMap.has(field)) {
                 const value = this.dependencyMap.get(field);
-                Object.keys(value).forEach((loadField) => {
-                    const data = {};
+                Object.keys(value || {}).forEach((loadField) => {
+                    const data: Record<string, AcceptableFormValueOrNullish> = {};
                     let load = true;
 
-                    value[loadField].forEach((dependency) => {
-                        const required = !!this.entities.find((e) => e.field === dependency)
-                            .required;
+                    value?.[loadField].forEach((dependency) => {
+                        const required = !!this.entities?.find((e) => e.field === dependency)
+                            ?.required;
 
                         const currentValue =
-                            dependency === field ? targetValue : prevState.data[dependency].value;
+                            dependency === field
+                                ? targetValue
+                                : prevState?.data?.[dependency]?.value;
                         if (required && !currentValue) {
                             load = false;
                             data[dependency] = null;
@@ -737,12 +895,13 @@ class BaseFormView extends PureComponent {
 
             changes[field] = { value: { $set: targetValue } };
 
+            // @ts-expect-error variable changes should have property '$apply'
             const newFields = update(prevState, { data: changes });
             const tempState = this.clearAllErrorMsg(newFields);
 
             if (this.hookDeferred) {
                 this.hookDeferred.then(() => {
-                    if (typeof this.hook.onChange === 'function') {
+                    if (typeof this.hook?.onChange === 'function' && tempState) {
                         this.hook.onChange(field, targetValue, tempState);
                     }
                 });
@@ -752,26 +911,31 @@ class BaseFormView extends PureComponent {
         });
     };
 
-    addCustomValidator = (field, validatorFunc) => {
-        const index = this.entities.findIndex((x) => x.field === field);
+    addCustomValidator = (
+        field: string,
+        validatorFunc: (submittedField: string, submittedValue: string) => void
+    ) => {
+        const index = this.entities?.findIndex((x) => x.field === field);
         const validator = [{ type: 'custom', validatorFunc }];
-        this.entities[index].validators = validator;
+        if (index && this.entities?.[index]) {
+            // here the validators already exist for entities so new type is created here
+            // @ts-expect-error todo create a generalized type to also consider it
+            this.entities[index].validators = validator;
+        }
     };
 
     // Set error message to display and set error in perticular field
-    setErrorFieldMsg = (field, msg) => {
+    setErrorFieldMsg = (field: string, msg: string) => {
         this.setState((previousState) => {
             const newFields = update(previousState, {
                 data: { [field]: { error: { $set: true } } },
             });
-            newFields.errorMsg = msg;
-            return newFields;
+            return { ...newFields, errorMsg: msg };
         });
     };
 
     // Set error in perticular field
-    // eslint-disable-next-line react/no-unused-class-component-methods
-    setErrorField = (field) => {
+    setErrorField = (field: string) => {
         this.setState((previousState) =>
             update(previousState, { data: { [field]: { error: { $set: true } } } })
         );
@@ -785,17 +949,18 @@ class BaseFormView extends PureComponent {
     };
 
     // Set error message
-    setErrorMsg = (msg) => {
+    setErrorMsg = (msg: string) => {
         this.setState((previousState) => ({ ...previousState, errorMsg: msg }));
     };
 
     // Clear error/warning message and errors from fields
-    clearAllErrorMsg = (State) => {
+    clearAllErrorMsg = (State: BaseFormState) => {
         const newFields = State ? { ...State } : { ...this.state };
         newFields.errorMsg = '';
-        newFields.warningMsg = this.customWarningMessage || '';
-        const newData = State ? { ...State.data } : { ...this.state.data };
-        const temData = {};
+        newFields.warningMsg =
+            (this.customWarningMessage?.alwaysDisplay && this.customWarningMessage?.message) || '';
+        const newData: BaseFormStateData = State ? { ...State.data } : { ...this.state.data };
+        const temData: BaseFormStateData = {};
         Object.keys(newData).forEach((key) => {
             if (newData[key].error) {
                 temData[key] = { ...newData[key], error: false };
@@ -831,7 +996,7 @@ class BaseFormView extends PureComponent {
     };
 
     // generatesubmitMessage
-    loadHook = (module, type, globalConfig) => {
+    loadHook = (module: string, type: string, globalConfig: unknown) => {
         const myPromise = new Promise((resolve) => {
             if (type === 'external') {
                 import(/* webpackIgnore: true */ `${getBuildDirPath()}/custom/${module}.js`).then(
@@ -849,9 +1014,10 @@ class BaseFormView extends PureComponent {
                     }
                 );
             } else {
+                // @ts-expect-error should be exported to other js module and imported here
                 __non_webpack_require__(
                     [`app/${this.appName}/js/build/custom/${module}`],
-                    (Hook) => {
+                    (Hook: CustomHookClass) => {
                         this.hook = new Hook(
                             globalConfig,
                             this.props.serviceName,
@@ -872,7 +1038,7 @@ class BaseFormView extends PureComponent {
      * using rest call once oauth code received from child window
      */
     // eslint-disable-next-line consistent-return
-    handleOauthToken = (message) => {
+    handleOauthToken = (message: { code: string; error: unknown; state: unknown }) => {
         // Check message for error. If error show error message.
         if (!message || (message && message.error) || message.code === undefined) {
             this.setErrorMsg(ERROR_OCCURRED_TRY_AGAIN);
@@ -890,9 +1056,11 @@ class BaseFormView extends PureComponent {
         }
 
         const code = decodeURIComponent(message.code);
-        const data = {
+        const data: Record<string, AcceptableFormValueOrNullish> = {
             method: 'POST',
-            url: `https://${this.datadict.endpoint}${this.oauthConf.accessTokenEndpoint}`,
+            url: `https://${this.datadict.endpoint || this.datadict.endpoint_token}${
+                this.oauthConf?.accessTokenEndpoint
+            }`,
             grant_type: 'authorization_code',
             client_id: this.datadict.client_id,
             client_secret: this.datadict.client_secret,
@@ -906,7 +1074,10 @@ class BaseFormView extends PureComponent {
 
         const body = new URLSearchParams();
         Object.keys(data).forEach((key) => {
-            body.append(key, data[key]);
+            const value = data[key];
+            if (value) {
+                body.append(key, String(value));
+            }
         });
 
         const OAuthEndpoint = `${this.appName}_oauth/oauth`;
@@ -923,7 +1094,7 @@ class BaseFormView extends PureComponent {
                     const accessToken = response.data.entry[0].content.access_token;
                     const instanceUrl = response.data.entry[0].content.instance_url;
                     const refreshToken = response.data.entry[0].content.refresh_token;
-
+                    // TODO refactor those variables
                     this.datadict.instance_url = instanceUrl;
                     this.datadict.refresh_token = refreshToken;
                     this.datadict.access_token = accessToken;
@@ -945,7 +1116,7 @@ class BaseFormView extends PureComponent {
 
     // Function to wait for authentication call back in child window.
     // eslint-disable-next-line consistent-return
-    waitForAuthentication = async (count) => {
+    waitForAuthentication = async (count: number) => {
         // eslint-disable-next-line no-param-reassign
         count -= 1;
         // Check if callback function called if called then exit from wait
@@ -953,7 +1124,7 @@ class BaseFormView extends PureComponent {
             return true;
         }
         // If callback function is not called and count is not reached to 180 then return error for timeout
-        if (count === 0 || this.childWin.closed) {
+        if (count === 0 || this.childWin?.closed) {
             this.isError = true;
             return false;
         }
@@ -964,7 +1135,7 @@ class BaseFormView extends PureComponent {
     // Function to wait for backend call get response from backend
 
     // eslint-disable-next-line consistent-return
-    waitForBackendResponse = async (count) => {
+    waitForBackendResponse = async (count: number) => {
         // eslint-disable-next-line no-param-reassign
         count += 1;
         // Check if callback function called if called then exit from wait
@@ -982,7 +1153,7 @@ class BaseFormView extends PureComponent {
     /*
      * This function first add sleep for 1 secs and the call the function passed in argument
      */
-    sleep = async (fn, ...args) => {
+    sleep = async (fn: (...someArgs: number[]) => unknown, ...args: number[]) => {
         await this.timeout(1000);
         return fn(...args);
     };
@@ -991,7 +1162,7 @@ class BaseFormView extends PureComponent {
      * This function will resolve the promise once the provided timeout occurs
      */
     // eslint-disable-next-line class-methods-use-this
-    timeout = (ms) => new Promise((resolve) => setTimeout(resolve, ms)); // eslint-disable-line no-promise-executor-return
+    timeout = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms)); // eslint-disable-line no-promise-executor-return
 
     renderGroupElements = () => {
         let el = null;
@@ -1000,22 +1171,26 @@ class BaseFormView extends PureComponent {
                 const collapsibleElement =
                     group.fields?.length &&
                     group.fields.map((fieldName) =>
-                        this.entities.map((e) => {
+                        this.entities?.map((e) => {
                             if (e.field === fieldName) {
-                                const temState = this.state.data[e.field];
+                                const temState = this.state?.data?.[e.field];
                                 return (
                                     <ControlWrapper
                                         key={e.field}
                                         utilityFuncts={this.utilControlWrapper}
-                                        value={temState.value}
-                                        display={temState.display}
-                                        error={temState.error}
+                                        value={temState?.value}
+                                        display={
+                                            typeof temState?.display !== 'undefined'
+                                                ? temState.display
+                                                : true
+                                        }
+                                        error={temState?.error || false}
                                         entity={e}
                                         serviceName={this.props.serviceName}
                                         mode={this.props.mode}
-                                        disabled={temState.disabled}
-                                        markdownMessage={temState.markdownMessage}
-                                        dependencyValues={temState.dependencyValues || null}
+                                        disabled={temState?.disabled || false}
+                                        markdownMessage={temState?.markdownMessage}
+                                        dependencyValues={temState?.dependencyValues || null}
                                     />
                                 );
                             }
@@ -1043,11 +1218,15 @@ class BaseFormView extends PureComponent {
         if (this.flag) {
             if (this.hookDeferred) {
                 this.hookDeferred.then(() => {
-                    if (typeof this.hook.onRender === 'function') {
+                    if (typeof this.hook?.onRender === 'function') {
                         try {
                             this.hook.onRender();
                         } catch (error) {
-                            onCustomHookError({ methodName: 'onRender', error });
+                            const errorInCorrecttype = error as CustomHookError;
+                            onCustomHookError({
+                                methodName: 'onRender',
+                                error: errorInCorrecttype,
+                            });
                         }
                     }
                 });
@@ -1056,11 +1235,15 @@ class BaseFormView extends PureComponent {
             if (this.props.mode === MODE_EDIT) {
                 if (this.hookDeferred) {
                     this.hookDeferred.then(() => {
-                        if (typeof this.hook.onEditLoad === 'function') {
+                        if (typeof this.hook?.onEditLoad === 'function') {
                             try {
                                 this.hook.onEditLoad();
                             } catch (error) {
-                                onCustomHookError({ methodName: 'onEditLoad', error });
+                                const errorInCorrecttype = error as CustomHookError;
+                                onCustomHookError({
+                                    methodName: 'onEditLoad',
+                                    error: errorInCorrecttype,
+                                });
                             }
                         }
                     });
@@ -1070,16 +1253,19 @@ class BaseFormView extends PureComponent {
         }
         return (
             <div>
-                <form style={this.props.mode === MODE_CONFIG ? { marginTop: '25px' } : {}}>
+                <form
+                    onSubmit={this.handleSubmit}
+                    style={this.props.mode === MODE_CONFIG ? { marginTop: '25px' } : {}}
+                >
                     {this.generateWarningMessage()}
                     {this.generateErrorMessage()}
-                    {this.entities.map((e) => {
+                    {this.entities?.map((e) => {
                         // Return null if we need to show element in a group
                         if (this.groupEntities.includes(e.field)) {
                             return null;
                         }
 
-                        const temState = this.state.data[e.field];
+                        const temState = this.state?.data?.[e.field];
 
                         if (!temState) {
                             return null;
@@ -1098,7 +1284,7 @@ class BaseFormView extends PureComponent {
                                 disabled={temState.disabled}
                                 markdownMessage={temState.markdownMessage}
                                 dependencyValues={temState.dependencyValues || null}
-                                fileNameToDisplay={temState.fileNameToDisplay || null}
+                                fileNameToDisplay={temState.fileNameToDisplay}
                             />
                         );
                     })}
@@ -1108,15 +1294,5 @@ class BaseFormView extends PureComponent {
         );
     }
 }
-
-BaseFormView.propTypes = {
-    page: PropTypes.string,
-    serviceName: PropTypes.string,
-    stanzaName: PropTypes.string,
-    currentServiceState: PropTypes.object,
-    mode: PropTypes.string,
-    handleFormSubmit: PropTypes.func,
-    groupName: PropTypes.string,
-};
 
 export default BaseFormView;

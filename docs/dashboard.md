@@ -78,7 +78,7 @@ Executes the following search:
 
 ```
 index=_internal source=*<addon_name>* action=events_ingested
-| timechart avg(n_events) by sourcetype_ingested
+| timechart sum(n_events) by sourcetype_ingested
 ```
 
 > Note: <addon_name> is being replaced by the actual value during the build time.
