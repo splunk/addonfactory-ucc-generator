@@ -1,8 +1,8 @@
-This feature allows us to separate inputs based on their service name. So, when multiple inputs services are provided in the global config file and if developers wish to display each input service in a separate tab (and table) they can make use of the tabs feature.
+This feature allows you to separate inputs based on their service name. Use the tabs feature when multiple inputs services are provided in the global configuration file, and you want to display each input service in a separate tab (and table). 
 
 The `table` property must be present in the services to use the tabs feature.
 
-If `title` and `description` are provided in the global config file then it would change when changing the tab.
+If `title` and `description` are provided in the global configuration file, then it would change when changing the tab.
 
 ### Usage
 
@@ -62,7 +62,7 @@ If `title` and `description` are provided in the global config file then it woul
 >
 > When using the Tabs feature, if the `table`  or `description` property is provided in the `inputs`, the error ```instance.pages.inputs is not one of [subschema 0], [subschema 1]``` will be displayed.
 >
-> [Custom Menu](../../custom_ui_extensions/custom_menu/) is not supported with tabs feature.
+> [Custom Menu](../../custom_ui_extensions/custom_menu/) is not supported with the tabs feature.
 
 ### Output
 
