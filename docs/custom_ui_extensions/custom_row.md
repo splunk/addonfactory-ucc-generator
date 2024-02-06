@@ -4,16 +4,16 @@ When a row is expanded on the Inputs table, Custom Row is utilized to incorporat
 
 | Property          | Description |
 | ----------------- | ----------- |
-| globalConfig       | It is a hierarchical object that contains the globalConfig file's properties and values. |
-| el                | The `el` is used to render a customized element on the Inputs table when a row is expanded. |
-| serviceName       | The name of the service/tab specified in the globalConfig file. |
-| row               | The object of the record for which the CustomRowInput constructor is called. |
+| globalConfig       | is a hierarchical object that contains the globalConfig file's properties and values. |
+| el                | is the`el` used to render a customized element on the Inputs table when a row is expanded. |
+| serviceName       | is the name of the service/tab specified in the globalConfig file. |
+| row               | it the object of the record for which the CustomRowInput constructor is called. |
 
 ### Methods
 
 | Property          | Description |
 | ----------------- | ----------- |
-| render            | `render` is a method which should have logic for the custom row component, and it will be executed automatically when the create, edit, or clone actions performed. |
+| render            | is a method which should have logic for the custom row component, and it will be executed automatically when the create, edit, or clone actions are performed. |
 
 ### Usage
 
@@ -67,6 +67,6 @@ export default CustomInputRow;
 
 ### Output
 
-This is how it looks like in the UI:
+This is how it looks in the UI:
 
 ![image](../images/custom_ui_extensions/Custom_Row_Output.png)
