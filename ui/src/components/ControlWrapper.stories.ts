@@ -12,14 +12,7 @@ type Story = StoryObj<typeof meta>;
 export const Base: Story = {
     args: {
         utilityFuncts: {
-            utilCustomFunctions: {
-                setState: () => {},
-                setErrorFieldMsg: () => {},
-                clearAllErrorMsg: () => {},
-                setErrorMsg: () => {},
-            },
-            handleChange: () => {},
-            addCustomValidator: () => {},
+            utilCustomFunctions: {},
         },
         value: '',
         display: true,
@@ -35,7 +28,7 @@ export const Base: Story = {
             },
             encrypted: true,
             required: true,
-            defaultValue: undefined,
+            defaultValue: null,
         },
         serviceName: 'settings',
         mode: 'config',

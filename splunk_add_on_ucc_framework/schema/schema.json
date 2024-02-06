@@ -1628,9 +1628,6 @@
           "type": "string",
           "pattern": "^(?:\\d{1,3}\\.){2}\\d{1,3}$"
         },
-        "_uccVersion": {
-          "type": "string"
-        },
         "checkForUpdates": {
           "type": "boolean",
           "default": true
@@ -1731,9 +1728,6 @@
         "required": {
           "type": "boolean"
         },
-        "defaultValue": {
-          "type": "string"
-        },
         "options": {
           "type": "object",
           "properties": {
@@ -1742,9 +1736,6 @@
               "maxLength": 250
             },
             "disableonEdit": {
-              "type": "boolean"
-            },
-            "enable": {
               "type": "boolean"
             }
           },
@@ -1974,32 +1965,22 @@
       "type": "object",
       "properties": {
         "create": {
-          "$ref": "#/definitions/WarningMessageObject"
-        },
-        "edit": {
-          "$ref": "#/definitions/WarningMessageObject"
-        },
-        "clone": {
-          "$ref": "#/definitions/WarningMessageObject"
-        },
-        "config": {
-          "$ref": "#/definitions/WarningMessageObject"
-        }
-      }
-    },
-    "WarningMessageObject": {
-      "type": "object",
-      "properties": {
-        "message": {
           "type": "string",
           "maxLength": 500
         },
-        "alwaysDisplay": {
-          "type": "boolean",
-          "default": false
+        "edit": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "clone": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "config": {
+          "type": "string",
+          "maxLength": 500
         }
-      },
-      "required": ["message"]
+      }
     },
     "Field": {
       "type": "string",

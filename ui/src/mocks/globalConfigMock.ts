@@ -160,7 +160,6 @@ const globalConfigMock: z.input<typeof GlobalConfigSchema> = {
                             type: 'singleSelect',
                             label: 'Account to use',
                             options: {
-                                createSearchChoice: true,
                                 referenceName: 'account',
                             },
                             help: 'Account to use for this input.',

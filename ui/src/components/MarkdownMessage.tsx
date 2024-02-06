@@ -6,7 +6,7 @@ const MarkdownWrapper = styled.span`
     color: ${(props) => props.color};
 `;
 
-export interface MarkdownMessageProps {
+interface MarkdownMessageProps {
     text: string;
     link: string;
     color: string;

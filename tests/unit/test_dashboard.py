@@ -40,11 +40,11 @@ default_dashboard_content_start = """<form version="1.1">
       <chart>
         <search>
           <query>index=_internal source=*splunk_ta_uccexample* action=events_ingested
-| timechart sum(n_events) by sourcetype_ingested</query>
+| timechart avg(n_events) by sourcetype_ingested</query>
           <earliest>$log_time.earliest$</earliest>
           <latest>$log_time.latest$</latest>
         </search>
-        <option name="charting.chart">column</option>
+        <option name="charting.chart">line</option>
         <option name="charting.drilldown">none</option>
       </chart>
     </panel>

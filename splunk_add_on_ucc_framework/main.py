@@ -113,19 +113,6 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             "created/copied/modified/conflict files after build is complete"
         ),
     )
-    build_parser.add_argument(
-        "--pip-version",
-        type=str,
-        help="pip version that will be used to install libraries.",
-        default="latest",
-    )
-    build_parser.add_argument(
-        "--pip-legacy-resolver",
-        action="store_true",
-        default=False,
-        help="Use old pip dependency resolver by adding flag '--use-deprecated=legacy-resolver' "
-        "to pip install command.",
-    )
 
     package_parser = subparsers.add_parser("package", description="Package an add-on")
     package_parser.add_argument(
@@ -202,8 +189,6 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             output_directory=args.output,
             python_binary_name=args.python_binary_name,
             verbose_file_summary_report=args.verbose,
-            pip_version=args.pip_version,
-            pip_legacy_resolver=args.pip_legacy_resolver,
         )
     if args.command == "package":
         package.package(path_to_built_addon=args.path, output_directory=args.output)

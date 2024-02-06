@@ -26,8 +26,6 @@ jobs:
         run: yarn run lint
       - name: Unit test
         run: yarn run test
-      - name: Validate storybook build
-        run: yarn run build-storybook
       - name: Build UCC UI
         run: yarn run build
       - name: List deps into dependencies.txt

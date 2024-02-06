@@ -1,7 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { AxiosResponse } from 'axios';
 import EntityModal, { EntityModalProps } from './EntityModal';
 import { setUnifiedConfig } from '../../util/util';
 import {
@@ -14,13 +13,8 @@ import {
     getConfigOauthOauthDisableonEdit,
     getConfigWithOauthDefaultValue,
     getConfigWarningMessage,
-    getConfigWithSeparatedEndpointsOAuth,
-    getConfigWarningMessageAlwaysDisplay,
-    WARNING_MESSAGES_ALWAYS_DISPLAY,
 } from './TestConfig';
 import { ERROR_AUTH_PROCESS_TERMINATED_TRY_AGAIN } from '../../constants/oAuthErrorMessage';
-import { Mode } from '../../constants/modes';
-import * as axiosWrapper from '../../util/axiosCallWrapper';
 
 describe('Oauth field disabled on edit - diableonEdit property', () => {
     const handleRequestClose = jest.fn();
@@ -228,10 +222,10 @@ describe('EntityModal - auth_endpoint_token_access_type', () => {
 
         renderModalWithProps(props);
 
-        const cliendIdField = document.querySelector('.client_id input');
+        const cliendIdField = document.querySelector('.client_id')?.querySelector('input');
         expect(cliendIdField).toBeInTheDocument();
 
-        const secretField = document.querySelector('.client_secret input');
+        const secretField = document.querySelector('.client_secret')?.querySelector('input');
         expect(secretField).toBeInTheDocument();
 
         const redirectField = document.querySelector('.redirect_url');
@@ -266,8 +260,6 @@ describe('EntityModal - auth_endpoint_token_access_type', () => {
 
 describe('EntityModal - custom warning', () => {
     const handleRequestClose = jest.fn();
-    const DEFAULT_MODE = 'create';
-    const DEFAULT_PAGE = 'configuration';
 
     const setUpConfigWithWarningMessageForConfiguration = () => {
         const newConfig = getConfigWarningMessage();
@@ -279,7 +271,7 @@ describe('EntityModal - custom warning', () => {
         setUnifiedConfig(newConfig);
     };
 
-    const renderModal = (inputMode: Mode, page: string) => {
+    const renderModal = (inputMode: string, page: string) => {
         const props = {
             serviceName: 'account',
             mode: inputMode,
@@ -313,46 +305,10 @@ describe('EntityModal - custom warning', () => {
             }
             renderModal(mode, page);
 
-            const warningMessage = screen.getByText(WARNING_MESSAGES[mode]?.message);
+            const warningMessage = screen.getByText(WARNING_MESSAGES[mode]);
             expect(warningMessage).toBeInTheDocument();
         }
     );
-
-    it('warning disappears after input change', async () => {
-        setUpConfigWithWarningMessageForConfiguration();
-        renderModal(DEFAULT_MODE, DEFAULT_PAGE);
-        const warningMessage = screen.getByText(WARNING_MESSAGES[DEFAULT_MODE]?.message);
-        expect(warningMessage).toBeInTheDocument();
-        const anyInput = screen.getAllByRole('textbox');
-        expect(anyInput[0]).toBeInTheDocument();
-
-        if (anyInput[0]) {
-            await userEvent.type(anyInput[0], 'aaa');
-        }
-
-        expect(warningMessage).not.toBeInTheDocument();
-    });
-
-    const setUpConfigWithWarningMessageAlwaysDisplayed = () => {
-        const newConfig = getConfigWarningMessageAlwaysDisplay();
-        setUnifiedConfig(newConfig);
-    };
-
-    it('warning always displayed', async () => {
-        setUpConfigWithWarningMessageAlwaysDisplayed();
-        renderModal(DEFAULT_MODE, DEFAULT_PAGE);
-        const warningMessage = screen.getByText(
-            WARNING_MESSAGES_ALWAYS_DISPLAY[DEFAULT_MODE]?.message
-        );
-        expect(warningMessage).toBeInTheDocument();
-        const anyInput = screen.getAllByRole('textbox');
-        expect(anyInput[0]).toBeInTheDocument();
-
-        if (anyInput[0]) {
-            await userEvent.type(anyInput[0], 'aaa');
-        }
-        expect(warningMessage).toBeInTheDocument();
-    });
 });
 
 describe('Default value', () => {
@@ -382,108 +338,5 @@ describe('Default value', () => {
         const component = screen.getByRole('textbox');
         expect(component).toBeInTheDocument();
         expect(component).toHaveValue(DEFAULT_VALUE);
-    });
-});
-
-describe('Oauth - separated endpoint authorization', () => {
-    const handleRequestClose = jest.fn();
-    const setUpConfigWithSeparatedEndpoints = () => {
-        const newConfig = getConfigWithSeparatedEndpointsOAuth();
-        setUnifiedConfig(newConfig);
-    };
-
-    const renderModalWithProps = (props: EntityModalProps) => {
-        render(<EntityModal {...props} handleRequestClose={handleRequestClose} />);
-    };
-
-    const getFilledOauthFields = async () => {
-        const endpointAuth = document.querySelector('.endpoint_authorize input');
-        const endpointToken = document.querySelector('.endpoint_token input');
-
-        if (endpointAuth) {
-            await userEvent.type(endpointAuth, 'authendpoint');
-        }
-        if (endpointToken) {
-            await userEvent.type(endpointToken, 'tokenendpoint');
-        }
-        return [endpointAuth, endpointToken];
-    };
-
-    const spyOnWindowOpen = async (addButton: HTMLElement) => {
-        const windowOpenSpy = jest.spyOn(window, 'open') as jest.Mock;
-
-        // mock opening verification window
-        windowOpenSpy.mockImplementation((url) => {
-            expect(url).toEqual(
-                'https://authendpoint/services/oauth2/authorize?response_type=code&client_id=Client%20Id&redirect_uri=http%3A%2F%2Flocalhost%2F'
-            );
-
-            return { closed: true };
-        });
-
-        await userEvent.click(addButton);
-        windowOpenSpy.mockRestore();
-    };
-
-    const props = {
-        serviceName: 'account',
-        mode: 'create',
-        stanzaName: undefined,
-        formLabel: 'formLabel',
-        page: 'configuration',
-        groupName: '',
-        open: true,
-        handleRequestClose: () => {},
-    } satisfies EntityModalProps;
-
-    it('render modal with separated oauth fields', async () => {
-        setUpConfigWithSeparatedEndpoints();
-        renderModalWithProps(props);
-
-        const [endpointAuth, endpointToken] = await getFilledOauthFields();
-
-        expect(endpointAuth).toBeInTheDocument();
-        expect(endpointAuth).toHaveValue('authendpoint');
-        expect(endpointToken).toBeInTheDocument();
-        expect(endpointToken).toHaveValue('tokenendpoint');
-    });
-
-    it('check if correct authorization endpoint called', async () => {
-        setUpConfigWithSeparatedEndpoints();
-        renderModalWithProps(props);
-
-        await getFilledOauthFields();
-
-        const addButton = screen.getByRole('button', { name: /add/i });
-        expect(addButton).toBeInTheDocument();
-
-        await spyOnWindowOpen(addButton);
-    });
-
-    it('check if correct auth token endpoint created', async () => {
-        setUpConfigWithSeparatedEndpoints();
-        renderModalWithProps(props);
-        const backendTokenFunction = jest.fn();
-
-        await getFilledOauthFields();
-        const addButton = screen.getByRole('button', { name: /add/i });
-        expect(addButton).toBeInTheDocument();
-
-        await spyOnWindowOpen(addButton);
-
-        // token is aquired on backend side so only thing we can check is if there is correct url created
-        jest.spyOn(axiosWrapper, 'axiosCallWrapper').mockImplementation((params) => {
-            backendTokenFunction((params?.body as unknown as URLSearchParams)?.get('url'));
-            return new Promise((r) => r({} as unknown as PromiseLike<AxiosResponse>));
-        });
-
-        // triggering manually external oauth window behaviour after success authorization
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (window as any).getMessage({ code: 200, msg: 'testing message for oauth' });
-
-        // only purpose is to check if backend function receinved correct token url
-        expect(backendTokenFunction).toHaveBeenCalledWith(
-            'https://tokenendpoint/services/oauth2/token'
-        );
     });
 });

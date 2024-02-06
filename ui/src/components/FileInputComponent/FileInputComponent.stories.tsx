@@ -1,10 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import FileInputComponent from './FileInputComponent';
+import BaseFormView from '../BaseFormView';
 
 const meta = {
     component: FileInputComponent,
     title: 'Components/FileInputComponent',
-} satisfies Meta<typeof FileInputComponent>;
+} satisfies Meta<typeof BaseFormView>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

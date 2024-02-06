@@ -81,9 +81,10 @@ def test_install_libraries(mock_subprocess_call):
     expected_install_command = (
         'python3 -m pip install -r "package/lib/requirements.txt"'
         " --no-compile --prefer-binary --ignore-installed "
-        '--target "/path/to/output/addon_name/lib"'
+        '--use-deprecated=legacy-resolver --target "'
+        '/path/to/output/addon_name/lib"'
     )
-    expected_pip_update_command = "python3 -m pip install --upgrade pip"
+    expected_pip_update_command = "python3 -m pip install --upgrade pip==23.1.2"
     mock_subprocess_call.assert_has_calls(
         [
             mock.call(expected_pip_update_command, shell=True, env=None),
@@ -408,69 +409,3 @@ Possible solutions, either:
     assert version_mismatch_log in caplog.messages
     assert error_description in caplog.messages
     mock_remove_packages.assert_not_called()
-
-
-@mock.patch("subprocess.call", autospec=True)
-def test_install_libraries_custom_pip(mock_subprocess_call):
-    mock_subprocess_call.return_value = 0
-
-    install_libraries(
-        "package/lib/requirements.txt",
-        "/path/to/output/addon_name/lib",
-        "python3",
-        pip_version="21.666.666",
-    )
-
-    expected_install_command = (
-        'python3 -m pip install -r "package/lib/requirements.txt"'
-        " --no-compile --prefer-binary --ignore-installed "
-        '--target "/path/to/output/addon_name/lib"'
-    )
-    expected_pip_update_command = "python3 -m pip install --upgrade pip==21.666.666"
-    mock_subprocess_call.assert_has_calls(
-        [
-            mock.call(expected_pip_update_command, shell=True, env=None),
-            mock.call(expected_install_command, shell=True, env=None),
-        ]
-    )
-
-
-@mock.patch("subprocess.call", autospec=True)
-def test_install_libraries_legacy_resolver(mock_subprocess_call):
-    mock_subprocess_call.return_value = 0
-
-    install_libraries(
-        "package/lib/requirements.txt",
-        "/path/to/output/addon_name/lib",
-        "python3",
-        pip_legacy_resolver=True,
-    )
-
-    expected_install_command = (
-        'python3 -m pip install -r "package/lib/requirements.txt"'
-        " --no-compile --prefer-binary --ignore-installed "
-        '--use-deprecated=legacy-resolver --target "/path/to/output/addon_name/lib"'
-    )
-    expected_pip_update_command = "python3 -m pip install --upgrade pip"
-    mock_subprocess_call.assert_has_calls(
-        [
-            mock.call(expected_pip_update_command, shell=True, env=None),
-            mock.call(expected_install_command, shell=True, env=None),
-        ]
-    )
-
-
-def test_install_libraries_legacy_resolver_with_wrong_pip(caplog):
-    with pytest.raises(SystemExit):
-        install_libraries(
-            "package/lib/requirements.txt",
-            "/path/to/output/addon_name/lib",
-            "python3",
-            pip_version=" 23.2   ",
-            pip_legacy_resolver=True,
-        )
-    expected_msg = (
-        "You cannot use the legacy resolver with pip 23.2. "
-        "Please remove '--pip-legacy-resolver' from your build command or use a different version of pip e.g. 23.2.1"
-    )
-    assert expected_msg in caplog.text

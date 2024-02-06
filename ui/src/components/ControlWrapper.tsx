@@ -1,10 +1,9 @@
 import React from 'react';
 import ControlGroup from '@splunk/react-ui/ControlGroup';
 import styled from 'styled-components';
-import MarkdownMessage, { MarkdownMessageProps } from './MarkdownMessage';
+
+import MarkdownMessage from './MarkdownMessage';
 import CONTROL_TYPE_MAP, { ComponentTypes } from '../constants/ControlTypeMap';
-import { AnyEntity, UtilControlWrapper } from './BaseFormTypes';
-import { AcceptableFormValueOrNullish } from '../types/components/shareableTypes';
 
 const CustomElement = styled.div``;
 
@@ -26,16 +25,40 @@ const ControlGroupWrapper = styled(ControlGroup).attrs((props: { dataName: strin
 
 interface ControlWrapperProps {
     mode: string;
-    utilityFuncts: UtilControlWrapper;
-    value: AcceptableFormValueOrNullish;
+    utilityFuncts: {
+        handleChange?: () => void;
+        addCustomValidator?: (
+            field: string,
+            validator: (submittedField: string, submittedValue: string) => void
+        ) => void;
+        utilCustomFunctions?: unknown;
+    };
+    value: unknown;
     display: boolean;
     error: boolean;
+    entity: {
+        type: unknown;
+        field: string;
+        label: string;
+        options: Record<string, unknown>;
+        tooltip?: string;
+        help?: string;
+        encrypted?: boolean;
+        required?: boolean;
+        defaultValue?: unknown;
+    };
     disabled: boolean;
+    markdownMessage?: {
+        text: string;
+        link: string;
+        color: string;
+        markdownType: 'link' | 'text' | 'hybrid';
+        token: string;
+        linkText: string;
+    };
     serviceName: string;
     dependencyValues: unknown;
-    entity?: AnyEntity;
-    markdownMessage?: MarkdownMessageProps;
-    fileNameToDisplay?: string;
+    fileNameToDisplay: string;
 }
 
 class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
@@ -45,19 +68,28 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
 
     constructor(props: ControlWrapperProps) {
         super(props);
-        this.controlType = ControlWrapper.isString(props.entity?.type)
-            ? CONTROL_TYPE_MAP[String(props.entity?.type)]
+        this.controlType = ControlWrapper.isString(props.entity.type)
+            ? CONTROL_TYPE_MAP[String(props.entity.type)]
             : null;
     }
 
     render() {
+        const {
+            field,
+            type,
+            label,
+            tooltip,
+            help,
+            encrypted = false,
+            required,
+        } = this.props.entity;
         const { handleChange, addCustomValidator, utilCustomFunctions } = this.props.utilityFuncts;
         // We have to put empty object because markDownMessage prop can be undefined
         // because we are not explicitly setting it but expecting it from custom hooks only.
         const { text, link, color, markdownType, token, linkText } =
             this.props.markdownMessage || {};
         let rowView;
-        if (this.props?.entity?.type === 'custom') {
+        if (this.props.entity.type === 'custom') {
             const data = {
                 value: this.props.value,
                 mode: this.props.mode,
@@ -67,28 +99,30 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
             rowView = this.controlType
                 ? React.createElement(this.controlType, {
                       data,
+                      field,
                       handleChange,
                       addCustomValidator,
                       utilCustomFunctions,
                       controlOptions: this.props.entity.options,
-                      ...this?.props?.entity,
                   })
-                : `No View Found for ${this?.props?.entity?.type} type`;
+                : `No View Found for ${type} type`;
         } else {
             rowView = this.controlType
                 ? React.createElement(this.controlType, {
                       handleChange,
                       value: this.props.value,
-                      controlOptions: this.props.entity?.options,
+                      field,
+                      controlOptions: this.props.entity.options,
                       error: this.props.error,
                       disabled: this.props.disabled,
+                      encrypted,
                       dependencyValues: this.props.dependencyValues,
+                      required,
                       addCustomValidator,
                       fileNameToDisplay: this.props.fileNameToDisplay,
                       mode: this.props.mode,
-                      ...this?.props?.entity,
                   })
-                : `No View Found for ${this?.props?.entity?.type} type`;
+                : `No View Found for ${type} type`;
         }
 
         const helpText = (
@@ -101,20 +135,22 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
                     token={token || ''}
                     linkText={linkText || ''}
                 />
-                {this?.props?.entity?.help || ''}
+                {help}
             </>
         );
 
         return (
             this.props.display && (
                 <ControlGroupWrapper
+                    label={label}
                     help={helpText}
+                    tooltip={tooltip}
                     error={this.props.error}
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore property should be data-name, but is mapped in obj ControlGroupWrapper
-                    dataName={this?.props?.entity.field}
+                    dataName={field}
+                    required={required}
                     labelWidth={240}
-                    {...this?.props?.entity}
                 >
                     <CustomElement>{rowView}</CustomElement>
                 </ControlGroupWrapper>

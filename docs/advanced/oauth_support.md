@@ -16,9 +16,6 @@ Auth can be used inside the entity tag. Use `type: "oauth"` in the entity list a
         - `client_secret` this is client secret for the your app for which you want auth
         - `redirect_url` this will show redirect url which needs to be put in app's redirect url.
         - `endpoint` this will be endpoint for which we want to build oauth support. For example for salesforce that will be either "login.salesforce.com" or "test.salesforce.com" or any other custom endpoint.
-          - there is also a possibility to specify separate endpoints for authorize and token, to do that instead single 'endpoint' field use two separate ones:
-            - `endpoint_authorize` - to specify the endpoint used for authorization ie. login.salesforce.com
-            - `endpoint_token` - to specify the endpoint used for token acqusition ie. api.login.salesforce.com
     - `auth_code_endpoint` this must be present and its value should be endpoint value for getting the auth_code using the app. If the url to get auth_code is https://login.salesforce.com/services/oauth2/authorize then this will have value /services/oauth2/authorize
     - `access_token_endpoint` this must be present and its value should be endpoint value for getting access_token using the auth_code received. If the url to get access token is https://login.salesforce.com/services/oauth2/token then this will have value /services/oauth2/token
     - `auth_label` this allow user to have custom label for Auth Type dropdown
