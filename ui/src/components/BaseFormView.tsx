@@ -522,8 +522,8 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         }
     };
 
-    // eslint-disable-next-line react/no-unused-class-component-methods
-    handleSubmit = () => {
+    handleSubmit = (event: React.MouseEvent | React.FormEvent) => {
+        event.preventDefault();
         this.clearErrorMsg();
         this.props.handleFormSubmit(/* isSubmitting */ true, /* closeEntity */ false);
 
@@ -1253,7 +1253,10 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         }
         return (
             <div>
-                <form style={this.props.mode === MODE_CONFIG ? { marginTop: '25px' } : {}}>
+                <form
+                    onSubmit={this.handleSubmit}
+                    style={this.props.mode === MODE_CONFIG ? { marginTop: '25px' } : {}}
+                >
                     {this.generateWarningMessage()}
                     {this.generateErrorMessage()}
                     {this.entities?.map((e) => {

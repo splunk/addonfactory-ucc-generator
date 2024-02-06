@@ -8,6 +8,7 @@ import { variables } from '@splunk/themes';
 
 import Heading from '@splunk/react-ui/Heading';
 import styled from 'styled-components';
+import { ButtonClickHandler } from '@splunk/react-ui/Button';
 import { MODE_CLONE, MODE_CREATE, MODE_EDIT, Mode } from '../constants/modes';
 import BaseFormView from './BaseFormView';
 import { SubTitleComponent } from '../pages/Input/InputPageStyle';
@@ -55,8 +56,8 @@ function EntityPage({
         buttonText = _('Update');
     }
 
-    const handleSubmit = () => {
-        const result = form.current?.handleSubmit();
+    const handleSubmit: ButtonClickHandler = (e) => {
+        const result = form.current?.handleSubmit(e);
         if (result) {
             handleRequestClose();
         }
@@ -107,6 +108,7 @@ function EntityPage({
                             style={{ width: '80px' }}
                         />
                         <StyledButton
+                            type="Submit"
                             appearance="primary"
                             label={isSubmitting ? <WaitSpinner /> : buttonText}
                             onClick={handleSubmit}
