@@ -13,6 +13,11 @@ const meta = {
 
         return <EntityModal {...props} />;
     },
+    parameters: {
+        a11y: {
+            element: '[data-test="modal"]',
+        },
+    },
 } satisfies Meta<typeof EntityModal>;
 
 export default meta;

@@ -47,6 +47,7 @@
     "@splunk/babel-preset": "^4.0.0",
     "@splunk/eslint-config": "^4.0.0",
     "@splunk/webpack-configs": "^7.0.2",
+    "@storybook/addon-a11y": "^7.6.12",
     "@storybook/addon-essentials": "^7.6.10",
     "@storybook/addon-interactions": "^7.6.10",
     "@storybook/addon-links": "^7.6.10",
