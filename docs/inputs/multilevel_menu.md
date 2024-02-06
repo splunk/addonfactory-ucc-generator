@@ -51,7 +51,7 @@ Using the [Custom Hook](../../custom_ui_extensions/custom_hook), `groupName` can
 }
 ```
 
-> If `groupServices` is provided under a group, then all services listed in the array will be displayed in the subMenu. If it is not provided, then that group will be considered as a service.
+> If `groupServices` is provided under a group, then all services listed in the array will be displayed in the sub-menu. If it is not provided, then that group will be considered as a service.
 
 ### Output
 
