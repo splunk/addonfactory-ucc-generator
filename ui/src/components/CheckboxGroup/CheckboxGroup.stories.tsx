@@ -1,11 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import BaseFormView from '../BaseFormView';
 import CheckboxGroup from './CheckboxGroup';
 import { MODE_CREATE, MODE_EDIT } from '../../constants/modes';
 
 const meta = {
     component: CheckboxGroup,
     title: 'Components/CheckboxGroup',
-} satisfies Meta<typeof CheckboxGroup>;
+} satisfies Meta<typeof BaseFormView>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

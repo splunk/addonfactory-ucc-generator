@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
+import BaseFormView from 'src/components/BaseFormView';
 import { http, HttpResponse } from 'msw';
 import { userEvent, within } from '@storybook/testing-library';
 import { setUnifiedConfig } from '../../../util/util';
@@ -24,7 +25,7 @@ const meta = {
             ],
         },
     },
-} satisfies Meta;
+} satisfies Meta<typeof BaseFormView>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

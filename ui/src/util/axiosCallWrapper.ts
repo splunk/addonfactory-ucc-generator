@@ -18,7 +18,7 @@ interface CommonAxiosCall {
     cancelToken?: CancelToken;
     customHeaders?: Record<string, string>;
     method?: 'get' | 'post' | 'delete';
-    body?: URLSearchParams;
+    body?: Record<string, unknown>;
     handleError?: boolean;
     callbackOnError?: (error: unknown) => void;
 }

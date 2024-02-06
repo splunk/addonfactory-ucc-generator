@@ -4,8 +4,7 @@ import styled from 'styled-components';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import { _ } from '@splunk/ui-utils/i18n';
 
-import { ButtonClickHandler } from '@splunk/react-ui/Button';
-import { Mode, MODE_CLONE, MODE_CREATE, MODE_EDIT } from '../../constants/modes';
+import { MODE_CLONE, MODE_CREATE, MODE_EDIT } from '../../constants/modes';
 import { StyledButton } from '../../pages/EntryPageStyle';
 import BaseFormView from '../BaseFormView';
 
@@ -15,7 +14,7 @@ const ModalWrapper = styled(Modal)`
 
 export interface EntityModalProps {
     page: string;
-    mode: Mode;
+    mode: string;
     serviceName: string;
     handleRequestClose: () => void;
     stanzaName?: string;
@@ -54,8 +53,8 @@ class EntityModal extends Component<EntityModalProps, EntityModalState> {
         this.props.handleRequestClose();
     };
 
-    handleSubmit: ButtonClickHandler = (e) => {
-        const result = this.form.current?.handleSubmit(e);
+    handleSubmit = () => {
+        const result = this.form.current?.handleSubmit();
         if (result) {
             this.handleRequestClose();
         }
@@ -85,7 +84,7 @@ class EntityModal extends Component<EntityModalProps, EntityModalState> {
                         page={this.props.page}
                         serviceName={this.props.serviceName}
                         mode={this.props.mode}
-                        stanzaName={this.props.stanzaName || 'unknownStanza'}
+                        stanzaName={this.props.stanzaName}
                         handleFormSubmit={this.handleFormSubmit}
                         groupName={this.props.groupName}
                     />

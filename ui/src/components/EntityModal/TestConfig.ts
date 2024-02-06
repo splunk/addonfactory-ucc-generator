@@ -223,17 +223,10 @@ export const getConfigEnableFalseForOauth = () => {
 };
 
 export const WARNING_MESSAGES = {
-    create: { message: 'Some warning text create' },
-    edit: { message: 'Some warning text edit' },
-    clone: { message: 'Some warning text clone' },
-    config: { message: 'Some warning text config' },
-};
-
-export const WARNING_MESSAGES_ALWAYS_DISPLAY = {
-    create: { message: 'Some warning text create', alwaysDisplay: true },
-    edit: { message: 'Some warning text edit', alwaysDisplay: true },
-    clone: { message: 'Some warning text clone', alwaysDisplay: true },
-    config: { message: 'Some warning text config', alwaysDisplay: true },
+    create: 'Some warning text create',
+    edit: 'Some warning text edit',
+    clone: 'Some warning text clone',
+    config: 'Some warning text config',
 };
 
 export const getConfigWarningMessage = () => {
@@ -246,27 +239,6 @@ export const getConfigWarningMessage = () => {
                 ...globalConfig.pages.configuration,
                 tabs: [
                     { entity: accessTokenMock, ...defaultTableProps, warning: WARNING_MESSAGES },
-                ],
-            },
-        },
-    };
-    return newConfig satisfies z.infer<typeof GlobalConfigSchema>;
-};
-
-export const getConfigWarningMessageAlwaysDisplay = () => {
-    const globalConfig = getGlobalConfigMock();
-    const newConfig = {
-        ...globalConfig,
-        pages: {
-            ...globalConfig.pages,
-            configuration: {
-                ...globalConfig.pages.configuration,
-                tabs: [
-                    {
-                        entity: accessTokenMock,
-                        ...defaultTableProps,
-                        warning: WARNING_MESSAGES_ALWAYS_DISPLAY,
-                    },
                 ],
             },
         },
@@ -444,77 +416,6 @@ export const getConfigWithOauthDefaultValue = () => {
             configuration: {
                 ...globalConfig.pages.configuration,
                 tabs: [{ entity: entityBasicOauthDefaultValue, ...defaultTableProps }],
-            },
-        },
-    };
-    return newConfig satisfies z.infer<typeof GlobalConfigSchema>;
-};
-
-const entityOauthOauthSeparatedEndpoints = [
-    {
-        type: 'oauth',
-        field: 'oauth_jest_test',
-        label: 'Not used',
-        required: true,
-        encrypted: false,
-        options: {
-            auth_type: ['oauth'],
-            oauth: [
-                {
-                    oauth_field: 'client_id',
-                    label: 'Client Id',
-                    field: 'client_id',
-                    help: 'Enter the Client Id for this account.',
-                    defaultValue: 'Client Id',
-                },
-                {
-                    oauth_field: 'client_secret',
-                    label: 'Client Secret',
-                    field: 'client_secret',
-                    encrypted: true,
-                    help: 'Enter the Client Secret key for this account.',
-                    defaultValue: 'Client Secret',
-                },
-                {
-                    oauth_field: 'redirect_url',
-                    label: 'Redirect url',
-                    field: 'redirect_url',
-                    help: 'Copy and paste this URL into your app.',
-                    defaultValue: 'Redirect url',
-                },
-                {
-                    oauth_field: 'endpoint_token',
-                    label: 'Token endpoint',
-                    field: 'endpoint_token',
-                    help: 'Put here endpoint used for token acqusition ie. login.salesforce.com',
-                },
-                {
-                    oauth_field: 'endpoint_authorize',
-                    label: 'Authorize endpoint',
-                    field: 'endpoint_authorize',
-                    help: 'Put here endpoint used for authorization ie. login.salesforce.com',
-                },
-            ],
-            auth_code_endpoint: '/services/oauth2/authorize',
-            access_token_endpoint: '/services/oauth2/token',
-            oauth_timeout: 3000,
-            oauth_state_enabled: false,
-            display: true,
-            disableonEdit: false,
-            enable: true,
-        },
-    } satisfies z.infer<typeof OAuthEntity>,
-];
-
-export const getConfigWithSeparatedEndpointsOAuth = () => {
-    const globalConfig = getGlobalConfigMock();
-    const newConfig = {
-        ...globalConfig,
-        pages: {
-            ...globalConfig.pages,
-            configuration: {
-                ...globalConfig.pages.configuration,
-                tabs: [{ entity: entityOauthOauthSeparatedEndpoints, ...defaultTableProps }],
             },
         },
     };

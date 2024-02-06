@@ -28,9 +28,9 @@ const meta = {
         const newInputBtn = canvas.getByRole('button', { name: 'Create New Input' });
         await userEvent.click(newInputBtn);
     },
-} satisfies Meta;
+} satisfies Meta<typeof BaseFormView>;
 
 export default meta;
-type Story = StoryObj<typeof BaseFormView>;
+type Story = StoryObj<typeof meta>;
 
 export const InputPageView: Story = {};

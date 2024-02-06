@@ -97,8 +97,6 @@ def install_python_libraries(
     python_binary_name: str,
     includes_ui: bool = False,
     os_libraries: Optional[List[OSDependentLibraryConfig]] = None,
-    pip_version: str = "latest",
-    pip_legacy_resolver: bool = False,
 ) -> None:
     path_to_requirements_file = os.path.join(source_path, "lib", "requirements.txt")
     if os.path.isfile(path_to_requirements_file):
@@ -109,8 +107,6 @@ def install_python_libraries(
             requirements_file_path=path_to_requirements_file,
             installation_path=ucc_lib_target,
             installer=python_binary_name,
-            pip_version=pip_version,
-            pip_legacy_resolver=pip_legacy_resolver,
         )
         if includes_ui and not _pip_is_lib_installed(
             installer=python_binary_name,
@@ -153,40 +149,26 @@ def install_libraries(
     requirements_file_path: str,
     installation_path: str,
     installer: str,
-    pip_version: str = "latest",
-    pip_legacy_resolver: bool = False,
 ) -> None:
     """
     Upgrades `pip` version to the latest one and installs requirements to the
     specified path.
     """
 
-    if pip_version == "latest":
-        pip_update_command = "--upgrade pip"
-    else:
-        pip_update_command = f"--upgrade pip=={pip_version.strip()}"
-
-    if pip_version.strip() == "23.2" and pip_legacy_resolver:
-        logger.error(
-            "You cannot use the legacy resolver with pip 23.2. "
-            "Please remove '--pip-legacy-resolver' from your build command or "
-            "use a different version of pip e.g. 23.2.1"
-        )
-        sys.exit(1)
-
-    deps_resolver = "--use-deprecated=legacy-resolver " if pip_legacy_resolver else ""
+    pip_version = "23.1.2"
+    pip_update_command = f"--upgrade pip=={pip_version}"
     pip_install_command = (
         f'-r "{requirements_file_path}" '
         f"--no-compile "
         f"--prefer-binary "
         f"--ignore-installed "
-        f"{deps_resolver}"
+        f"--use-deprecated=legacy-resolver "
         f'--target "{installation_path}"'
     )
+
     _pip_install(
         installer=installer, command=pip_update_command, command_desc="pip upgrade"
     )
-
     _pip_install(
         installer=installer, command=pip_install_command, command_desc="pip install"
     )

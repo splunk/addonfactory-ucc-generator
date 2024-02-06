@@ -14,7 +14,6 @@
 # limitations under the License.
 #
 import configparser
-import glob
 import json
 import logging
 import os
@@ -196,32 +195,30 @@ def _get_ignore_list(
                 os.path.join(output_directory, addon_name, utils.get_os_path(path))
             ).strip()
             for path in ignore_list
-            if path.strip()
         ]
         return ignore_list
 
 
-def _remove_listed_files(ignore_list: List[str]) -> List[str]:
+def _remove_listed_files(ignore_list: List[str]) -> None:
     """
     Return path of files/folders to removed in output folder.
 
     Args:
-        ignore_list (list): List of files/folder patterns to be removed in output directory.
+        ignore_list (list): List of files/folder to removed in output directory.
+
     """
-    removed_list = []
-    for pattern in ignore_list:
-        paths = glob.glob(pattern, recursive=True)
-        if not paths:
-            logger.warning(f"No files found for the specified pattern: {pattern}")
-            continue
-        for path in paths:
-            if os.path.exists(path):
-                if os.path.isfile(path):
-                    os.remove(path)
-                elif os.path.isdir(path):
-                    shutil.rmtree(path, ignore_errors=True)
-                removed_list.append(path)
-    return removed_list
+    for path in ignore_list:
+        if os.path.exists(path):
+            if os.path.isfile(path):
+                os.remove(path)
+            elif os.path.isdir(path):
+                shutil.rmtree(path, ignore_errors=True)
+        else:
+            logger.warning(
+                "While ignoring the files mentioned in .uccignore {} was not found".format(
+                    path
+                )
+            )
 
 
 def generate_data_ui(
@@ -453,8 +450,6 @@ def generate(
     output_directory: Optional[str] = None,
     python_binary_name: str = "python3",
     verbose_file_summary_report: bool = False,
-    pip_version: str = "latest",
-    pip_legacy_resolver: bool = False,
 ) -> None:
     logger.info(f"ucc-gen version {__version__} is used")
     logger.info(f"Python binary name to use: {python_binary_name}")
@@ -507,7 +502,6 @@ def generate(
             logger.error(f"globalConfig file is not valid. Error: {e}")
             sys.exit(1)
         global_config.update_addon_version(addon_version)
-        global_config.add_ucc_version(__version__)
         global_config.dump(global_config.original_path)
         logger.info(
             f"Updated and saved add-on version in the globalConfig file to {addon_version}"
@@ -550,8 +544,6 @@ def generate(
                 python_binary_name,
                 includes_ui=True,
                 os_libraries=global_config.os_libraries,
-                pip_version=pip_version,
-                pip_legacy_resolver=pip_legacy_resolver,
             )
         except SplunktaucclibNotFound as e:
             logger.error(str(e))
@@ -616,13 +608,7 @@ def generate(
             "Skipped generating UI components as globalConfig file does not exist"
         )
         ucc_lib_target = os.path.join(output_directory, ta_name, "lib")
-        install_python_libraries(
-            source,
-            ucc_lib_target,
-            python_binary_name,
-            pip_version=pip_version,
-            pip_legacy_resolver=pip_legacy_resolver,
-        )
+        install_python_libraries(source, ucc_lib_target, python_binary_name)
         logger.info(
             f"Installed add-on requirements into {ucc_lib_target} from {source}"
         )
@@ -632,9 +618,9 @@ def generate(
         os.path.abspath(os.path.join(source, os.pardir, ".uccignore")),
         output_directory,
     )
-    removed_list = _remove_listed_files(ignore_list)
-    if removed_list:
-        logger.info("Removed:\n{}".format("\n".join(removed_list)))
+    _remove_listed_files(ignore_list)
+    if ignore_list:
+        logger.info(f"Removed {ignore_list} files")
     utils.recursive_overwrite(source, os.path.join(output_directory, ta_name))
     logger.info("Copied package directory")
 

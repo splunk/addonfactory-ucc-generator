@@ -30,17 +30,12 @@ const HooksSchema = z
     })
     .optional();
 
-const WarningMessageSchema = z.object({
-    message: z.string(),
-    alwaysDisplay: z.boolean().default(false).optional(),
-});
-
 const WarningSchema = z
     .object({
-        create: WarningMessageSchema.optional(),
-        edit: WarningMessageSchema.optional(),
-        config: WarningMessageSchema.optional(),
-        clone: WarningMessageSchema.optional(),
+        create: z.string().optional(),
+        edit: z.string().optional(),
+        config: z.string().optional(),
+        clone: z.string().optional(),
     })
     .optional();
 

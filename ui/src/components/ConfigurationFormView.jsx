@@ -37,11 +37,8 @@ function ConfigurationFormView({ serviceName }) {
         });
     }, [serviceName]);
 
-    /**
-     * @param event {React.MouseEvent<HTMLButtonElement>}
-     */
-    const handleSubmit = (event) => {
-        form.current.handleSubmit(event);
+    const handleSubmit = () => {
+        form.current.handleSubmit();
     };
 
     const handleFormSubmit = (set) => {
