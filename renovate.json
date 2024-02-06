@@ -16,6 +16,11 @@
   ],
   "packageRules": [
     {
+      "description": "Separate npm and poetry dependencies",
+      "matchPackagePatterns": ["*"],
+      "groupName": "{{manager}}"
+    },
+    {
       "matchPackageNames": ["urllib3"],
       "allowedVersions": "<2.0.0"
     },
