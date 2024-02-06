@@ -4,12 +4,12 @@
 
 * The default development branch is `develop`. Use it when creating PRs with your features, fixes, documentation updates, etc. PRs to the `develop` branch should be merged using the squash option in GitHub.
 * When the release time comes, (which should be handled by the UCC team), create a PR from `develop` to `main`.
-    * Make sure that the CI is passing and wait for the review from the team/
+    * Make sure that the CI is passing and wait for the review from the team.
     * PR should be merged using the merge commit option in GitHub.
-    * The release will be made automatically (for both GitHub and PyPI) and the bot will push a commit to `main` with all necessary changes (i.e. [like this](https://github.com/splunk/addonfactory-ucc-generator/commit/0c5e6802e1e52c37bf7131baf1b8264e5db30545)).
-    * after the release is done, you will need to backport the bot's changes to the `develop` branch (i.e. [#974](https://github.com/splunk/addonfactory-ucc-generator/pull/974)).
+    * The release will be made automatically (for both GitHub and PyPI) and the bot will push a commit to `main` with all the necessary changes (i.e. [like this](https://github.com/splunk/addonfactory-ucc-generator/commit/0c5e6802e1e52c37bf7131baf1b8264e5db30545)).
+    * After the release is done, you will need to backport the bot's changes to the `develop` branch (i.e. [#974](https://github.com/splunk/addonfactory-ucc-generator/pull/974)).
 * If the release did not go well and a quick bug fix needs to be released, (which should be handled by UCC team):
-    * Create a PR to `main` branch with a fix, with tests reproducing and then fixing the issue.
+    * Create a PR to the `main` branch with a fix, with tests reproducing and then fixing the issue.
     * Make sure that CI is passing and wait for the review from the team.
     * The PR should be merged using the merge commit option in GitHub.
     * The bug fix PR needs to be backported back to the `develop` branch.
@@ -28,7 +28,7 @@ Build the UI in the `ui/dist` folder and copy the files to the static folder of 
 ./build-ui.sh
 ```
 
-Building a new local version of `ucc-gen`:
+Build a new local version of `ucc-gen`:
 
 ```
 poetry build
@@ -42,7 +42,7 @@ poetry run pytest tests/unit
 
 ### UI tests
 
-If you need to run UI tests for the PR, please add a label "run-ui-tests" before the PR is created. 
+If you need to run UI tests for the PR, add a "run-ui-tests" label before the PR is created. 
 UI tests will run automatically for any PR towards the `main` / `develop` branches, and on the `main` / `develop` branch as well. 
 
 1. With local version of ucc-gen, create a UCCExample add-on for the output directory:
