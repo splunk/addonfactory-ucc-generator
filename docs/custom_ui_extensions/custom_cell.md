@@ -7,7 +7,7 @@ A Custom Cell is used to update the content of a table cell.
 | Property          | Description |
 | ----------------- | ----------- |
 | globalConfig       | is a hierarchical object that contains the globalConfig file's properties and values. |
-| el                | is the `el` used to render a custom cell element in a table. |
+| el                | is used to render a custom cell element in a table. |
 | serviceName       | is the name of the service/tab specified in the globalConfig file. |
 | row               | is the object of the record for which the CustomRowInput constructor is called. |
 | field              | is the name of the field as specified in the globalConfig file. |
