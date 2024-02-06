@@ -1,0 +1,58 @@
+[
+  {
+    "path": "/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/demo_addon_for_splunk_already_exists/package/bin/demo_input.py",
+    "line": 26,
+    "column": 0,
+    "msg_id": "W0104",
+    "msg": "Statement seems to have no effect",
+    "symbol": "pointless-statement"
+  },
+  {
+    "path": "/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/demo_addon_for_splunk_already_exists/package/bin/demo_input.py",
+    "line": 26,
+    "column": 0,
+    "msg_id": "E0602",
+    "msg": "Undefined variable 'dupa'",
+    "symbol": "undefined-variable"
+  },
+  {
+    "path": "/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/demo_addon_for_splunk_already_exists/package/bin/demo_input.py",
+    "line": 27,
+    "column": 46,
+    "msg_id": "W0613",
+    "msg": "Unused argument 'api_key'",
+    "symbol": "unused-argument"
+  },
+  {
+    "path": "/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/demo_addon_for_splunk_already_exists/package/bin/demo_input.py",
+    "line": 41,
+    "column": 4,
+    "msg_id": "W0246",
+    "msg": "Useless parent or super() delegation in method '__init__'",
+    "symbol": "useless-parent-delegation"
+  },
+  {
+    "path": "/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/demo_addon_for_splunk_already_exists/package/bin/demo_input.py",
+    "line": 60,
+    "column": 4,
+    "msg_id": "W0237",
+    "msg": "Parameter 'ew' has been renamed to 'event_writer' in overriding 'Input.stream_events' method",
+    "symbol": "arguments-renamed"
+  },
+  {
+    "path": "/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/demo_addon_for_splunk_already_exists/package/bin/demo_input.py",
+    "line": 100,
+    "column": 19,
+    "msg_id": "W0718",
+    "msg": "Catching too general exception Exception",
+    "symbol": "broad-exception-caught"
+  },
+  {
+    "path": "/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/demo_addon_for_splunk_already_exists/package/bin/demo_input.py",
+    "line": 6,
+    "column": 0,
+    "msg_id": "W0611",
+    "msg": "Unused import import_declare_test",
+    "symbol": "unused-import"
+  }
+]
