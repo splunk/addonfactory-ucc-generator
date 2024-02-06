@@ -11,6 +11,7 @@ const RadioBarOption = styled(RadioBar.Option)`
 `;
 
 interface RadioComponentProps {
+    id?: string;
     value: string;
     handleChange: (field: string, value: string) => void;
     field: string;
@@ -31,6 +32,7 @@ class RadioComponent extends Component<RadioComponentProps> {
     render() {
         return (
             <RadioBarWrapper
+                id={this.props.id}
                 inline
                 onChange={this.handleChange}
                 value={this.props.value}
