@@ -27,14 +27,14 @@
   "appserver/static/js/build/globalConfig.json                                     created\u001b[0m": ["INFO", "files"],
   "appserver/static/openapi.json                                                   created\u001b[0m": ["INFO", "files"],
   "metadata/default.meta                                                           created\u001b[0m": ["INFO", "files"],
-  "\u001B[33m/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/tests/testdata/test_addons/package_files_conflict_test/package/bin/test_addon_rh_account.py:2:0: W0611: Unused import import_declare_test (unused-import)\u001B[0m": ["INFO", "bin"],
-  "\u001B[33m/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/tests/testdata/test_addons/package_files_conflict_test/package/bin/test_addon_rh_account.py:4:0: W0611: Unused validator imported from splunktaucclib.rest_handler.endpoint (unused-import)\u001B[0m": ["INFO", "bin"],
-  "\u001B[33m/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/tests/testdata/test_addons/package_files_conflict_test/package/bin/my_first_input.py:12:0: W0104: Statement seems to have no effect (pointless-statement)\u001B[0m": ["INFO", "bin"],
-  "\u001B[31m/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/tests/testdata/test_addons/package_files_conflict_test/package/bin/my_first_input.py:12:0: E0602: Undefined variable 'dupa' (undefined-variable)\u001B[0m": ["INFO", "bin"],
-  "\u001B[33m/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/tests/testdata/test_addons/package_files_conflict_test/package/bin/my_first_input.py:27:46: W0613: Unused argument 'api_key' (unused-argument)\u001B[0m": ["INFO", "bin"],
-  "\u001B[33m/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/tests/testdata/test_addons/package_files_conflict_test/package/bin/my_first_input.py:41:4: W0246: Useless parent or super() delegation in method '__init__' (useless-parent-delegation)\u001B[0m": ["INFO", "bin"],
-  "\u001B[33m/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/tests/testdata/test_addons/package_files_conflict_test/package/bin/my_first_input.py:60:4: W0237: Parameter 'ew' has been renamed to 'event_writer' in overriding 'Input.stream_events' method (arguments-renamed)\u001B[0m": ["INFO", "bin"],
-  "\u001B[33m/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/tests/testdata/test_addons/package_files_conflict_test/package/bin/my_first_input.py:100:19: W0718: Catching too general exception Exception (broad-exception-caught)\u001B[0m": ["INFO", "bin"],
-  "\u001B[33m/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/tests/testdata/test_addons/package_files_conflict_test/package/bin/my_first_input.py:6:0: W0611: Unused import import_declare_test (unused-import)\u001B[0m": ["INFO", "bin"],
-  "Python binary static analysis: {'Errors': 1, 'Warnings': 8}": ["INFO", ""]
+  "\u001B[33m/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/demo_addon_for_splunk_already_exists/package/bin/demo_input.py:26:0: W0104: Statement seems to have no effect (pointless-statement)\u001B[0m": ["INFO", "bin"],
+  "\u001B[31m/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/demo_addon_for_splunk_already_exists/package/bin/demo_input.py:26:0: E0602: Undefined variable 'dupa' (undefined-variable)\u001B[0m": ["INFO", "bin"],
+  "\u001B[33m/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/demo_addon_for_splunk_already_exists/package/bin/demo_input.py:27:46: W0613: Unused argument 'api_key' (unused-argument)\u001B[0m": ["INFO", "bin"],
+  "\u001B[33m/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/demo_addon_for_splunk_already_exists/package/bin/demo_input.py:41:4: W0246: Useless parent or super() delegation in method '__init__' (useless-parent-delegation)\u001B[0m": ["INFO", "bin"],
+  "\u001B[33m/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/demo_addon_for_splunk_already_exists/package/bin/demo_input.py:60:4: W0237: Parameter 'ew' has been renamed to 'event_writer' in overriding 'Input.stream_events' method (arguments-renamed)\u001B[0m": ["INFO", "bin"],
+  "\u001B[33m/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/demo_addon_for_splunk_already_exists/package/bin/demo_input.py:100:19: W0718: Catching too general exception Exception (broad-exception-caught)\u001B[0m": ["INFO", "bin"],
+  "\u001B[33m/Users/mmacalik/Documents/Ucc-Gen_webinar/repos/addonfactory-ucc-generator/demo_addon_for_splunk_already_exists/package/bin/demo_input.py:6:0: W0611: Unused import import_declare_test (unused-import)\u001B[0m": ["INFO", "bin"],
+  "Python binary static analysis: {'Errors': 1, 'Warnings': 6}": ["INFO", ""]
 }
+
+

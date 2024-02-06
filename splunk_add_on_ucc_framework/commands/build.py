@@ -28,6 +28,7 @@ import filecmp
 from dataclasses import asdict
 
 try:
+    has_pylint = True
     from pylint import lint
     from pylint.reporters import CollectingReporter
 except ImportError:

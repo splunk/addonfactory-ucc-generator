@@ -5,6 +5,7 @@ import pytest
 import logging
 import json
 from os import path
+from dataclasses import dataclass
 
 from tests.smoke import helpers
 
@@ -320,6 +321,51 @@ def test_ucc_generate_openapi_with_configuration_files_only():
         assert not path.exists(expected_file_path)
 
 
+# mock pylint classes for smoke test without pylint lib installed
+class lint:
+    def __init__(self):
+        pass
+
+    def Run(self, *args, **kwargs):
+        pass
+
+
+class CollectingReporter:
+    def __init__(self):
+        message_file = path.join(
+            path.dirname(path.realpath(__file__)),
+            "..",
+            "testdata",
+            "test_addons",
+            "package_files_conflict_test",
+            "reporter_input.json",
+        )
+        self.messages = []
+        with open(message_file) as f:
+            messages_list = json.load(f)
+
+        for message in messages_list:
+            temp_object = self.message_obj(message)
+            self.messages.append(temp_object)
+
+    @dataclass
+    class message_obj:
+        path: str
+        line: int
+        column: int
+        msg_id: str
+        msg: str
+        symbol: str
+
+        def __init__(self, message_dict):
+            self.path = message_dict["path"]
+            self.line = message_dict["line"]
+            self.column = message_dict["column"]
+            self.msg_id = message_dict["msg_id"]
+            self.msg = message_dict["msg"]
+            self.symbol = message_dict["symbol"]
+
+
 def test_ucc_build_verbose_mode(caplog):
     """
     Tests results will test both no option and --verbose mode of build command.
@@ -410,6 +456,10 @@ def test_ucc_build_verbose_mode(caplog):
             "expected_files_conflict_test",
             "expected_log.json",
         )
+
+    build.has_pylint = True
+    build.CollectingReporter = CollectingReporter
+    build.lint = lint
 
     build.generate(
         source=package_folder,
