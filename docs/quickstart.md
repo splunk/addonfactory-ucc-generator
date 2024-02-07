@@ -127,6 +127,16 @@ It takes the following parameters:
 Instead of using this flag, the correct solution would be to fix the packages your project depends on to work properly with the new resolver.
 Additionally, please note that this flag is not compatible with pip version `23.2`, use `23.2.1` instead. 
 
+
+#### [Optional] Python Static file analysis - linter
+
+UCC uses [pylint](https://pypi.org/project/pylint/) to check all python files located in /bin directory, although the library itself is not provided. 
+To trigger this mode during build run you need to install pylint on your environment. The result of linter run will be printed at the end in form of
+short summary of warnings and errors found (PEP, refactor and import errors are ignored).
+
+When running in Verbose mode it will print more detailed information about found issues in affected files.
+
+
 #### Verbose mode
 
 Available from `v5.35.0`.
