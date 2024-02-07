@@ -6,8 +6,6 @@ import CONTROL_TYPE_MAP, { ComponentTypes } from '../constants/ControlTypeMap';
 import { AnyEntity, UtilControlWrapper } from './BaseFormTypes';
 import { AcceptableFormValueOrNullish } from '../types/components/shareableTypes';
 
-const CustomElement = styled.div``;
-
 const ControlGroupWrapper = styled(ControlGroup).attrs((props: { dataName: string }) => ({
     'data-name': props.dataName,
 }))`
@@ -110,13 +108,12 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
                 <ControlGroupWrapper
                     help={helpText}
                     error={this.props.error}
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore property should be data-name, but is mapped in obj ControlGroupWrapper
+                    // @ts-expect-error property should be data-name, but is mapped in obj ControlGroupWrapper
                     dataName={this?.props?.entity.field}
                     labelWidth={240}
                     {...this?.props?.entity}
                 >
-                    <CustomElement>{rowView}</CustomElement>
+                    {rowView}
                 </ControlGroupWrapper>
             )
         );
