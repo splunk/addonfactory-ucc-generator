@@ -6,6 +6,8 @@ import CONTROL_TYPE_MAP, { ComponentTypes } from '../../constants/ControlTypeMap
 import { AnyEntity, UtilControlWrapper } from '../BaseFormTypes';
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
 
+const CustomElement = styled.div``;
+
 const ControlGroupWrapper = styled(ControlGroup).attrs((props: { dataName: string }) => ({
     'data-name': props.dataName,
 }))`
@@ -113,7 +115,7 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
                     labelWidth={240}
                     {...this?.props?.entity}
                 >
-                    {rowView}
+                    <CustomElement>{rowView}</CustomElement>
                 </ControlGroupWrapper>
             )
         );
