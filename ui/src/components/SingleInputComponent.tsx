@@ -31,6 +31,7 @@ interface FormItem {
 }
 
 interface SingleInputComponentProps {
+    id?: string;
     disabled?: boolean;
     value: string;
     error?: boolean;
@@ -181,6 +182,7 @@ function SingleInputComponent(props: SingleInputComponentProps) {
     ) : (
         <>
             <SelectWrapper
+                inputId={props.id}
                 className="dropdownBox"
                 data-test-loading={loading}
                 value={props.value}

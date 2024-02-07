@@ -16,6 +16,7 @@ const WaitSpinnerWrapper = styled(WaitSpinner)`
 `;
 
 export interface MultiInputComponentProps {
+    id?: string;
     handleChange: (field: string, data: string) => void;
     field: string;
     controlOptions: {
@@ -40,6 +41,7 @@ export interface MultiInputComponentProps {
 
 function MultiInputComponent(props: MultiInputComponentProps) {
     const {
+        id,
         field,
         disabled = false,
         error = false,
@@ -135,6 +137,7 @@ function MultiInputComponent(props: MultiInputComponentProps) {
     return (
         <>
             <MultiSelectWrapper
+                inputId={id}
                 values={valueList}
                 error={error}
                 name={field}
