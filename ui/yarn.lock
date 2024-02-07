@@ -2363,6 +2363,14 @@
     webpack-livereload-plugin "^3.0.2"
     webpack-merge "^5.9.0"
 
+"@storybook/addon-a11y@^7.6.12":
+  version "7.6.12"
+  resolved "https://registry.npmjs.org/@storybook/addon-a11y/-/addon-a11y-7.6.12.tgz#8bdf95dbd54b4a5151e19383a760cd2a2f209764"
+  integrity sha512-Y4vGTI7VslAt/PSpZZsFieceOkXHLagTsz9Zba4s1cw7Dd8KFB1+NcjkMmo6BhGq7K17JQljosXSbGhOoqrMVg==
+  dependencies:
+    "@storybook/addon-highlight" "7.6.12"
+    axe-core "^4.2.0"
+
 "@storybook/addon-actions@7.6.10":
   version "7.6.10"
   resolved "https://registry.npmjs.org/@storybook/addon-actions/-/addon-actions-7.6.10.tgz#5b43534e158797114db032f4ad8505a81809ed00"
@@ -2442,6 +2450,13 @@
   version "7.6.10"
   resolved "https://registry.npmjs.org/@storybook/addon-highlight/-/addon-highlight-7.6.10.tgz#19cad3d67655e9b9eef3d2f6760789fc29ba0790"
   integrity sha512-dIuS5QmoT1R+gFOcf6CoBa6D9UR5/wHCfPqPRH8dNNcCLtIGSHWQ4v964mS5OCq1Huj7CghmR15lOUk7SaYwUA==
+  dependencies:
+    "@storybook/global" "^5.0.0"
+
+"@storybook/addon-highlight@7.6.12":
+  version "7.6.12"
+  resolved "https://registry.npmjs.org/@storybook/addon-highlight/-/addon-highlight-7.6.12.tgz#7fc702ae29221b32b8c6ae1dd76071e99aae8042"
+  integrity sha512-rWNEyBhwncXEDd9z7l67BLBIPqn0SRI/CJpZvCSF5KLWrVaoSEDF8INavmbikd1JBMcajJ28Ur6NsGj+eJjJiw==
   dependencies:
     "@storybook/global" "^5.0.0"
 
@@ -4305,6 +4320,11 @@ axe-core@=4.7.0:
   version "4.7.0"
   resolved "https://registry.npmjs.org/axe-core/-/axe-core-4.7.0.tgz#34ba5a48a8b564f67e103f0aa5768d76e15bbbbf"
   integrity sha512-M0JtH+hlOL5pLQwHOLNYZaXuhqmvS8oExsqB1SBYgA4Dk7u/xx+YdGHXaK5pyUfed5mYXdlYiphWq3G8cRi5JQ==
+
+axe-core@^4.2.0:
+  version "4.8.3"
+  resolved "https://registry.npmjs.org/axe-core/-/axe-core-4.8.3.tgz#205df863dd9917d5979e9435dab4d47692759051"
+  integrity sha512-d5ZQHPSPkF9Tw+yfyDcRoUOc4g/8UloJJe5J8m4L5+c7AtDdjDLRxew/knnI4CxvtdxEUVgWz4x3OIQUIFiMfw==
 
 axios@^1.6.7:
   version "1.6.7"
@@ -11360,6 +11380,7 @@ wordwrap@^1.0.0:
   integrity sha512-gvVzJFlPycKc5dZN4yPkP8w7Dc37BtP1yczEneOb4uq34pXZcvrtRTmWV8W+Ume+XCxKgbjM+nevkyFPMybd4Q==
 
 "wrap-ansi-cjs@npm:wrap-ansi@^7.0.0", wrap-ansi@^7.0.0:
+  name wrap-ansi-cjs
   version "7.0.0"
   resolved "https://registry.npmjs.org/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
   integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
