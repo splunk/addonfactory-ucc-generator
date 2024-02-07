@@ -12,11 +12,11 @@ import { TableContextProvider } from '../../context/TableContext';
 import { MODE_CREATE, MODE_CLONE, MODE_EDIT } from '../../constants/modes';
 import { PAGE_INPUT } from '../../constants/pages';
 import { STYLE_PAGE } from '../../constants/dialogStyles';
-import MenuInput, { ROOT_GROUP_NAME } from '../../components/MenuInput';
+import MenuInput, { ROOT_GROUP_NAME } from '../../components/MenuInput/MenuInput';
 import TableWrapper from '../../components/table/TableWrapper';
 import EntityModal from '../../components/EntityModal/EntityModal';
-import ErrorBoundary from '../../components/ErrorBoundary';
-import EntityPage from '../../components/EntityPage';
+import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
+import EntityPage from '../../components/EntityPage/EntityPage';
 import SubDescription from '../../components/SubDescription/SubDescription';
 import useQuery from '../../hooks/useQuery';
 

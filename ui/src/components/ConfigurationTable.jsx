@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { TableContextProvider } from '../context/TableContext';
 import TableWrapper from './table/TableWrapper';
 import EntityModal from './EntityModal/EntityModal';
-import EntityPage from './EntityPage';
+import EntityPage from './EntityPage/EntityPage';
 import { MODE_CREATE, MODE_CLONE } from '../constants/modes';
 import { PAGE_CONF } from '../constants/pages';
 import { STYLE_PAGE } from '../constants/dialogStyles';

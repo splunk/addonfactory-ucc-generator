@@ -9,7 +9,7 @@ import { mockServerResponse } from '../../../mocks/server-response';
 
 const meta = {
     component: InputPage,
-    title: 'InputPage/Base',
+    title: 'InputPage',
     render: (args) => {
         setUnifiedConfig(args.globalConfig);
         return <InputPage />;
