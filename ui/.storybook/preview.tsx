@@ -6,6 +6,9 @@ import { withSplunkThemeToolbar } from './withSplunkTheme';
 
 // Initialize MSW
 initialize({
+    serviceWorker: {
+        url: './mockServiceWorker.js',
+    },
     onUnhandledRequest(req) {
         const url = req.url;
         const skipList = ['bundle.js', 'hot-update.js', 'http://localhost:6006/index.json'];
