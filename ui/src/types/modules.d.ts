@@ -4,3 +4,11 @@ declare module '@splunk/splunk-utils/url';
 
 declare module '@splunk/ui-utils/i18n';
 declare module 'uuid';
+
+declare global {
+    namespace jest {
+        interface Matchers<R> {
+            toMatchImageSnapshot(): R;
+        }
+    }
+}

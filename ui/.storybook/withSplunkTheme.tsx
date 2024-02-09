@@ -28,7 +28,11 @@ export const withSplunkThemeToolbar = <TRenderer extends Renderer>(
     { globals }: StoryContext<TRenderer>
 ) => {
     // vars from globalTypes of preview.tsx
-    const { colorScheme, density, family, animation } = globals;
+    const { colorScheme, density, family } = globals;
+    const isTestRunner = !!window?.navigator?.userAgent?.match(/StorybookTestRunner/) ;
+
+    const animation = isTestRunner ? false : globals.animation;
+
     return (
         <AnimationToggleProvider enabled={animation}>
             <SplunkThemeProvider family={family} density={density} colorScheme={colorScheme}>

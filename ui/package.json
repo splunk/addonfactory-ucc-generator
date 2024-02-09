@@ -15,7 +15,8 @@
     "start": "webpack --watch",
     "setup": "yarn && yarn run build",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "test-storybook": "test-storybook"
   },
   "dependencies": {
     "@splunk/react-icons": "^4.2.0",
@@ -52,8 +53,10 @@
     "@storybook/addon-interactions": "^7.6.10",
     "@storybook/addon-links": "^7.6.10",
     "@storybook/blocks": "^7.6.10",
+    "@storybook/jest": "^0.2.3",
     "@storybook/react": "^7.6.10",
     "@storybook/react-webpack5": "^7.6.10",
+    "@storybook/test-runner": "^0.16.0",
     "@storybook/testing-library": "^0.2.2",
     "@testing-library/jest-dom": "^6.3.0",
     "@testing-library/react": "^12.1.5",
@@ -83,6 +86,7 @@
     "fork-ts-checker-webpack-plugin": "^9.0.2",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
+    "jest-image-snapshot": "^6.4.0",
     "js-yaml": "^4.1.0",
     "msw": "^2.1.5",
     "msw-storybook-addon": "2.0.0--canary.122.06f0c92.0",
