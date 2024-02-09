@@ -51,6 +51,9 @@ const config: TestRunnerConfig = {
             customSnapshotIdentifier,
             storeReceivedOnFailure: true,
             customReceivedDir,
+            comparisonMethod: 'ssim',
+            failureThreshold: 0.01,
+            failureThresholdType: 'percent'
         });
     }
 };
