@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Group from '../Group';
+import Group from '../Group/Group';
 import { getCheckedCheckboxesCount, GroupWithRows, ValueByField } from './checkboxGroup.utils';
 import CheckboxRowWrapper from './CheckboxRowWrapper';
 

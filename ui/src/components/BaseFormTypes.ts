@@ -5,7 +5,7 @@ import {
     AcceptableFormValueOrNullish,
 } from '../types/components/shareableTypes';
 import { AnyOfEntity, OAuthFields } from '../types/globalConfig/entities';
-import { MarkdownMessageProps } from './MarkdownMessage';
+import { MarkdownMessageProps } from './MarkdownMessage/MarkdownMessage';
 
 export type CurrentBaseFormInput =
     | Record<string, AcceptableFormValueOrNull>

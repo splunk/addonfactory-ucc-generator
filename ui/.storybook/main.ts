@@ -3,7 +3,16 @@ import * as custom from '../webpack.config.js';
 import * as path from 'path';
 
 const config: StorybookConfig = {
-    stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+    stories: [
+        {
+            titlePrefix: 'Components',
+            directory: '../src/components',
+        },
+        {
+            titlePrefix: 'Pages',
+            directory: '../src/pages',
+        },
+    ],
     addons: [
         '@storybook/addon-links',
         '@storybook/addon-essentials',

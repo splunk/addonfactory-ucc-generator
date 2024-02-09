@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import Message from '@splunk/react-ui/Message';
 
-import ControlWrapper from './ControlWrapper';
+import ControlWrapper from './ControlWrapper/ControlWrapper';
 import Validator, { SaveValidator } from '../util/Validator';
 import { getUnifiedConfigs, generateToast } from '../util/util';
 import { MODE_CLONE, MODE_CREATE, MODE_EDIT, MODE_CONFIG } from '../constants/modes';
@@ -21,7 +21,7 @@ import {
     ERROR_STATE_MISSING_TRY_AGAIN,
 } from '../constants/oAuthErrorMessage';
 import TableContext from '../context/TableContext';
-import Group from './Group';
+import Group from './Group/Group';
 import {
     AcceptableFormValueOrNull,
     AcceptableFormValueOrNullish,
