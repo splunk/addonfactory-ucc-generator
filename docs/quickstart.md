@@ -9,7 +9,7 @@ To be able to create an add-on using the UCC framework, you need to have at leas
 
 * a `globalConfig` file (in `JSON` or `YAML` format, `JSON` is mostly used).
 * a `package` folder.
-* `app.manifest` in the `package` folder ([documentation here].(https://dev.splunk.com/enterprise/reference/packagingtoolkit/pkgtoolkitappmanifest/)).
+* `app.manifest` in the `package` folder ([documentation here](https://dev.splunk.com/enterprise/reference/packagingtoolkit/pkgtoolkitappmanifest/)).
 
 The `app.manifest` file now is being validated. See [Splunk Packaging Toolkit app.manifest schema definition](https://dev.splunk.com/enterprise/reference/packagingtoolkit/pkgtoolkitappmanifest/#JSON-schema-200) for more details.
 
