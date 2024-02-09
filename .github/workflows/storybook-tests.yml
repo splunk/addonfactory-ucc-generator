@@ -38,4 +38,4 @@ jobs:
         if: ${{ failure() }}
         with:
           name: storybook-tests-report
-          path: test-reports/
+          path: ui/test-reports/
