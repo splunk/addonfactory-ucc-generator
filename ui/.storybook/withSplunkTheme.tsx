@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, {createGlobalStyle} from 'styled-components';
 import variables from '@splunk/themes/variables';
 import { PartialStoryFn as StoryFunction, Renderer, StoryContext } from '@storybook/types';
 import { AnimationToggleProvider } from '@splunk/react-ui/AnimationToggle';
@@ -7,6 +7,11 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import React, { Suspense } from 'react';
 import { StyledContainer } from '../src/pages/EntryPageStyle';
 import { WaitSpinnerWrapper } from '../src/components/table/CustomTableStyle';
+import fontDefinitions from "./fontDefinitions";
+
+const GlobalStyles = createGlobalStyle`
+    ${fontDefinitions}
+`;
 
 // https://storybook.js.org/blog/how-to-add-a-theme-switcher-to-storybook/
 // syncing storybook preview background with selected theme
@@ -40,6 +45,7 @@ export const withSplunkThemeToolbar = <TRenderer extends Renderer>(
                     <StyledContainer>
                         <Router>
                             <Suspense fallback={<WaitSpinnerWrapper size="medium" />}>
+                                <GlobalStyles />
                                 {StoryFn()}
                             </Suspense>
                         </Router>
