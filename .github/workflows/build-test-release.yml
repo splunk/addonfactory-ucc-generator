@@ -79,6 +79,10 @@ jobs:
     with:
       node-version: ${{ matrix.node-version }}
 
+  storybook-tests:
+    name: Visual tests for Storybook
+    uses: ./.github/workflows/storybook-tests.yml
+
 
   build:
     needs:
