@@ -43,7 +43,12 @@ import {
     BasicEntity,
     ChangeRecord,
     CustomHookClass,
+    EntitiesWithModifications,
 } from './BaseFormTypes';
+import {
+    getAllFieldsWithModifications,
+    getModifiedState,
+} from './FormModifications/FormModifications';
 
 function onCustomHookError(params: { methodName: string; error?: CustomHookError }) {
     // eslint-disable-next-line no-console
@@ -118,11 +123,13 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
 
     customWarningMessage: { message: string; alwaysDisplay?: boolean };
 
+    fieldsWithModifications: EntitiesWithModifications[];
+
     constructor(props: BaseFormProps, context: React.ContextType<typeof TableContext>) {
         super(props);
         // flag for to render hook method for once
         this.flag = true;
-        this.state = {};
+        this.state = { data: {} };
         this.datadict = {};
         this.currentInput = {};
         const globalConfig = getUnifiedConfigs();
@@ -222,7 +229,6 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         this.authMap = {};
         let temState: BaseFormStateData = {};
         const temEntities: AnyEntity[] = [];
-
         this.entities?.forEach((e) => {
             if (e.type === 'oauth') {
                 this.isOAuth = true;
@@ -493,6 +499,16 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         // apply dependency field changes in state
         // @ts-expect-error variable changes should have property '$apply'
         temState = update(temState, changes);
+
+        this.fieldsWithModifications = getAllFieldsWithModifications(this.entities);
+        const stateWithModifications = getModifiedState(
+            { data: temState },
+            this.props.mode,
+            this.fieldsWithModifications
+        );
+        if (stateWithModifications.shouldUpdateState) {
+            temState = { ...stateWithModifications.newState.data };
+        }
         this.state = {
             data: temState,
             errorMsg: '',
@@ -519,6 +535,25 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             this.groups.forEach((group) => {
                 group.fields.forEach((fieldName) => this.groupEntities.push(fieldName));
             });
+        }
+    };
+
+    componentDidUpdate = (_prevProps: BaseFormProps, prevState: BaseFormState) => {
+        const changedEntity = Object.entries(prevState?.data || {}).find(
+            ([key, value]) => value.value !== this.state.data?.[key].value
+        )?.[0];
+
+        const stateWithModifications = getModifiedState(
+            this.state,
+            this.props.mode,
+            this.fieldsWithModifications.filter((entity) => entity.field === changedEntity)
+        );
+
+        if (stateWithModifications.shouldUpdateState) {
+            this.setState({
+                ...stateWithModifications.newState,
+            });
+            this.forceUpdate();
         }
     };
 
@@ -1287,6 +1322,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                                 markdownMessage={temState.markdownMessage}
                                 dependencyValues={temState.dependencyValues || null}
                                 fileNameToDisplay={temState.fileNameToDisplay}
+                                modifiedEntitiesData={temState.modifiedEntitiesData}
                             />
                         );
                     })}

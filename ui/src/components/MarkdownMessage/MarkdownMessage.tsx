@@ -6,14 +6,36 @@ const MarkdownWrapper = styled.span`
     color: ${(props) => props.color};
 `;
 
-export interface MarkdownMessageProps {
+interface MarkdownMessageText {
+    markdownType: 'text';
     text: string;
-    link: string;
-    color: string;
-    markdownType: 'text' | 'link' | 'hybrid' | '';
+    color?: string;
+}
+
+interface MarkdownMessageHybrid {
+    markdownType: 'hybrid';
+    text: string;
     token: string;
     linkText: string;
+    link: string;
 }
+
+interface MarkdownMessageLink {
+    markdownType: 'link';
+    text: string;
+    link: string;
+}
+
+interface MarkdownPlainMessage {
+    markdownType: undefined;
+    text: string;
+}
+
+export type MarkdownMessageProps =
+    | MarkdownMessageText
+    | MarkdownMessageHybrid
+    | MarkdownMessageLink
+    | MarkdownPlainMessage;
 
 function MarkdownMessage(props: MarkdownMessageProps) {
     // flatMap adds the link to the part of text that has been split from text
@@ -47,7 +69,6 @@ function MarkdownMessage(props: MarkdownMessageProps) {
 
         return markdownText;
     }
-
     return <div data-test="msg-markdown">{getMarkdownText()}</div>;
 }
 
