@@ -82,7 +82,8 @@ jobs:
   storybook-tests:
     name: Visual tests for Storybook
     uses: ./.github/workflows/storybook-tests.yml
-
+    with:
+      node-version: "20"
 
   build:
     needs:

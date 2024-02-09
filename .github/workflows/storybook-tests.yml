@@ -8,6 +8,10 @@ on:
 
 jobs:
   test:
+    defaults:
+      run:
+        working-directory: ui
+        shell: bash
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -15,10 +19,11 @@ jobs:
           lfs: true
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
-      - run: cd ui
-      - name: Install dependencies
-        run: yarn
+          node-version: ${{ inputs.node-version }}
+      - name: install deps
+        uses: ./.github/actions/cached-ui-deps
+        with:
+          node-version: ${{ inputs.node-version }}
       - name: Install Playwright
         run: npx playwright install --with-deps
       - name: Build Storybook
