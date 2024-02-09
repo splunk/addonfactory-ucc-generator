@@ -460,7 +460,7 @@ def binaries_lint_check(path: str, verbose_build_report: bool) -> None:
 
     if not has_pylint:
         logger.info(
-            "Binaries check is an optional feature and requires pylint.\n"
+            "Python static code analysis is an optional feature and requires pylint.\n"
             "If you want to trigger this feature, please install pylint on your environment."
         )
         return None
@@ -510,12 +510,12 @@ def binaries_lint_check(path: str, verbose_build_report: bool) -> None:
     binaries_list = get_files(path)
 
     if not binaries_list:
-        logger.info("No Python binaries found")
+        logger.info("No Python files found")
         return
     else:
         run_pylint(binaries_list)
 
-    logger.info(f"Python binary static analysis: {summary_combined}")
+    logger.info(f"Python code static analysis: {summary_combined}")
 
 
 def generate(
