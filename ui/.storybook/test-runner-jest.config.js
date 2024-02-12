@@ -17,6 +17,7 @@ module.exports = {
         'jest-playwright': {
             ...testRunnerConfig.testEnvironmentOptions['jest-playwright'],
             launchOptions: {
+                channel: 'chrome',
                 args: [
                     '--font-render-hinting=none',
                     '--disable-skia-runtime-opts',
