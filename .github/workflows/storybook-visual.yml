@@ -1,4 +1,4 @@
-name: 'Storybook Tests'
+name: 'Storybook Visual'
 on:
   workflow_call:
     inputs:
@@ -7,7 +7,7 @@ on:
         type: string
 
 jobs:
-  test:
+  update-screenshots:
     defaults:
       run:
         working-directory: ui

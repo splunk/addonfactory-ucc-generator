@@ -15,6 +15,7 @@ After this step, the following tasks will be available:
 * `yarn run build` – Create a production bundle
 * `yarn run start` – build bundle and watch changes
 * `yarn run storybook` - start storybook and open http://localhost:6006
+* `yarn run test-storybook` - generate screenshots for every story. It should be run on CI only
 * `yarn run eslint` – Run linters
 * `yarn run eslint:fix` – Fixed the linters and run prettier
 * `yarn run format` – Run prettier to auto-format `*.js`, `*.jsx` and `*.css` files. This command will overwrite files without 

@@ -5,6 +5,12 @@ import { MODE_CREATE, MODE_EDIT } from '../../../constants/modes';
 const meta = {
     component: CheckboxGroup,
     title: 'CheckboxGroup/Component',
+    parameters: {
+        snapshots: {
+            width: 400,
+            height: 300,
+        },
+    },
 } satisfies Meta<typeof CheckboxGroup>;
 
 export default meta;

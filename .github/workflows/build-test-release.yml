@@ -79,12 +79,12 @@ jobs:
     with:
       node-version: ${{ matrix.node-version }}
 
-  storybook-tests:
+  storybook-screenshots:
+    name: Update storybook screenshots
     permissions:
       contents: write
     secrets: inherit
-    name: Visual tests for Storybook
-    uses: ./.github/workflows/storybook-tests.yml
+    uses: ./.github/workflows/storybook-visual.yml
     with:
       node-version: "20"
 

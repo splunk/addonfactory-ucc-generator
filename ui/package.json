@@ -16,8 +16,7 @@
     "setup": "yarn && yarn run build",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "test-storybook": "test-storybook",
-    "test-storybook:update-snapshots": "test-storybook -u"
+    "test-storybook": "test-storybook"
   },
   "dependencies": {
     "@splunk/react-icons": "^4.2.0",

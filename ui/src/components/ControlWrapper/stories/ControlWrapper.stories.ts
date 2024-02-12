@@ -4,6 +4,11 @@ import ControlWrapper from '../ControlWrapper';
 const meta = {
     component: ControlWrapper,
     title: 'ControlWrapper',
+    parameters: {
+        snapshots: {
+            height: 300,
+        },
+    },
 } satisfies Meta<typeof ControlWrapper>;
 
 export default meta;

@@ -2,7 +2,6 @@ import { getStoryContext, TestRunnerConfig } from '@storybook/test-runner';
 import { toMatchImageSnapshot } from 'jest-image-snapshot';
 
 const config: TestRunnerConfig = {
-    logLevel: 'verbose',
     setup() {
         expect.extend({ toMatchImageSnapshot });
     },
