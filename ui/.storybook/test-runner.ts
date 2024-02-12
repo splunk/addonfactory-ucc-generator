@@ -50,11 +50,6 @@ const config: TestRunnerConfig = {
             customSnapshotIdentifier,
             storeReceivedOnFailure: true,
             customReceivedDir,
-            customDiffConfig: {
-                threshold: 0.3,
-            },
-            failureThreshold: 0.01,
-            failureThresholdType: 'percent',
         });
     },
 };
