@@ -13,7 +13,7 @@ export const Base: Story = {
     args: {
         title: 'Accept Modal Title',
         open: true,
-        message: 'Some message',
+        message: 'Some message.',
         declineBtnLabel: 'Decline message',
         acceptBtnLabel: 'Accept message',
     },
