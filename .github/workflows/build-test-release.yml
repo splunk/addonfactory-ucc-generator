@@ -80,6 +80,8 @@ jobs:
       node-version: ${{ matrix.node-version }}
 
   storybook-tests:
+    permissions:
+      contents: write
     name: Visual tests for Storybook
     uses: ./.github/workflows/storybook-tests.yml
     with:
