@@ -1,12 +1,11 @@
-import { TestRunnerConfig, getStoryContext } from '@storybook/test-runner';
+import { getStoryContext, TestRunnerConfig } from '@storybook/test-runner';
 import { toMatchImageSnapshot } from 'jest-image-snapshot';
-
 
 const config: TestRunnerConfig = {
     setup() {
         expect.extend({ toMatchImageSnapshot });
     },
-    async preVisit(page, context ) {
+    async preVisit(page, context) {
         const storyContext = await getStoryContext(page, context);
         const parameters = storyContext.parameters;
 
@@ -20,12 +19,12 @@ const config: TestRunnerConfig = {
 
         const skipSnapshot = storyContext.tags.includes('skip-snapshots');
         if (skipSnapshot) {
-            return
+            return;
         }
 
         const parameters = storyContext.parameters;
         const storyFilePath = parameters.fileName as string;
-        const [_,srcFile] = storyFilePath.split('/src/');
+        const [_, srcFile] = storyFilePath.split('/src/');
         const srcStoryDir = srcFile.slice(0, srcFile.lastIndexOf('/'));
 
         const customSnapshotsDir = `${process.cwd()}/src/${srcStoryDir}/__images__/`;
@@ -41,26 +40,7 @@ const config: TestRunnerConfig = {
         // can't use waitForPageReady because networkidle never fires due to HMR for locally running Storybook
         await page.waitForLoadState('domcontentloaded');
         await page.waitForLoadState('load');
-        await new Promise((res) => setTimeout(res, 1000))
-        const fonts = await page.evaluate(() => {
-            return document.fonts.ready.then(r => {
-                // @ts-ignore
-                return `${[...r.values()].map(s => s.status + ': ' + s.family)}`;
-            });
-        });
-        console.log(fonts)
-
-
-        // await page.evaluate(async () => {
-        //     return document.fonts.ready.then((fontFaceSet) => {
-        //         const fontFaces = [...fontFaceSet];
-        //         console.log(fontFaces);
-        //         // some fonts may still be unloaded if they aren't used on the site
-        //         console.log(fontFaces.map((f) => f.status));
-        //
-        //         return fontFaceSet;
-        //     })
-        // });
+        await page.evaluate(() => document.fonts.ready);
 
         const image = await page.screenshot({ animations: 'disabled' });
         expect(image).toMatchImageSnapshot({
@@ -71,8 +51,8 @@ const config: TestRunnerConfig = {
             customReceivedDir,
             comparisonMethod: 'ssim',
             failureThreshold: 0.01,
-            failureThresholdType: 'percent'
+            failureThresholdType: 'percent',
         });
-    }
+    },
 };
 export default config;
