@@ -22,10 +22,6 @@ const meta = {
         msw: {
             handlers: serverHandlers,
         },
-        snapshots: {
-            width: 400,
-            height: 400,
-        },
     },
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);
