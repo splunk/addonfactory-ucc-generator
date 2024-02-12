@@ -35,12 +35,6 @@ function MenuInputWrapper(props: MenuInputProps) {
 const meta = {
     component: MenuInputWrapper,
     title: 'MenuInput',
-    parameters: {
-        snapshots: {
-            height: 200,
-            width: 200,
-        },
-    },
 } satisfies Meta<typeof MenuInputWrapper>;
 
 export default meta;
