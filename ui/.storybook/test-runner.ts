@@ -50,6 +50,9 @@ const config: TestRunnerConfig = {
             storeReceivedOnFailure: true,
             customReceivedDir,
             comparisonMethod: 'ssim',
+            customDiffConfig: {
+                ssim: 'fast',
+            },
             failureThreshold: 0.01,
             failureThresholdType: 'percent',
         });
