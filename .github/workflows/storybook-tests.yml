@@ -37,12 +37,19 @@ jobs:
           npx concurrently --kill-others --success first -n "SB,TEST" \
             "npx http-server storybook-static --port 6006 --silent" \
             "npx wait-on tcp:6006 && yarn test-storybook -u"
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          git_committer_name: ${{ secrets.SA_GH_USER_NAME }}
+          git_committer_email: ${{ secrets.SA_GH_USER_EMAIL }}
+          gpg_private_key: ${{ secrets.SA_GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SA_GPG_PASSPHRASE }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
       - name: Push updated screenshots
         run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
           git add \*.png
-          git commit -m "update screenshots [skip ci]"
+          git commit -S -m "update screenshots [skip ci]"
           git push
       - uses: actions/upload-artifact@v4
         name: 'Upload test report'

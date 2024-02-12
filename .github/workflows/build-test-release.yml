@@ -82,6 +82,7 @@ jobs:
   storybook-tests:
     permissions:
       contents: write
+    secrets: inherit
     name: Visual tests for Storybook
     uses: ./.github/workflows/storybook-tests.yml
     with:
