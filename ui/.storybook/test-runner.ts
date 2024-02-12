@@ -38,11 +38,29 @@ const config: TestRunnerConfig = {
         const customDiffDir = `${process.cwd()}/test-reports/visual/image_snapshot_diff/`;
         const customReceivedDir = `${process.cwd()}/test-reports/visual/image_snapshot_received/`;
 
-        // can't use waitForPageReady because networkidle never fires, no idea why
+        // can't use waitForPageReady because networkidle never fires due to HMR for locally running Storybook
         await page.waitForLoadState('domcontentloaded');
         await page.waitForLoadState('load');
-        await page.evaluate(() => document.fonts.ready);
+        await new Promise((res) => setTimeout(res, 1000))
+        const fonts = await page.evaluate(() => {
+            return document.fonts.ready.then(r => {
+                // @ts-ignore
+                return `${[...r.values()].map(s => s.status + ': ' + s.family)}`;
+            });
+        });
+        console.log(fonts)
 
+
+        // await page.evaluate(async () => {
+        //     return document.fonts.ready.then((fontFaceSet) => {
+        //         const fontFaces = [...fontFaceSet];
+        //         console.log(fontFaces);
+        //         // some fonts may still be unloaded if they aren't used on the site
+        //         console.log(fontFaces.map((f) => f.status));
+        //
+        //         return fontFaceSet;
+        //     })
+        // });
 
         const image = await page.screenshot({ animations: 'disabled' });
         expect(image).toMatchImageSnapshot({
