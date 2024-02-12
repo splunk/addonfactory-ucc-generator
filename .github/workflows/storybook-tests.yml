@@ -5,9 +5,6 @@ on:
       node-version:
         required: true
         type: string
-      token:
-        required: true
-        type: string
 
 jobs:
   test:
@@ -16,13 +13,13 @@ jobs:
         working-directory: ui
         shell: bash
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.ref }}
-          token: ${{ inputs.token }}
-
           lfs: true
       - uses: actions/setup-node@v4
         with:
