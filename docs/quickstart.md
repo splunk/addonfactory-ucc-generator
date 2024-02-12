@@ -220,6 +220,6 @@ It accepts the following parameters:
         they exist from `output/<package_ID>/lib`
     * It removes the execute bit from every file under `output/<package_ID>/lib`.
 * replaces tokens in views.
-* copies the add=on's `package/*` to the `output/<package_ID>/*` directory.
+* copies the add-on's `package/*` to the `output/<package_ID>/*` directory.
 * If an add-on requires some additional configurations in packaging,
     then `ucc-gen` runs the code in the `additional_packaging.py` file as well.
