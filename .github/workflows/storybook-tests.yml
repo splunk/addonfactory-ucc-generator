@@ -49,8 +49,7 @@ jobs:
       - name: Push updated screenshots
         run: |
           git add \*.png
-          git commit -S -m "update screenshots [skip ci]"
-          git push
+          git diff --staged --exit-code || (git commit -S -m "update screenshots" && git push)
       - uses: actions/upload-artifact@v4
         name: 'Upload test report'
         if: ${{ failure() }}
