@@ -1,4 +1,4 @@
-import styled, {createGlobalStyle} from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import variables from '@splunk/themes/variables';
 import { PartialStoryFn as StoryFunction, Renderer, StoryContext } from '@storybook/types';
 import { AnimationToggleProvider } from '@splunk/react-ui/AnimationToggle';
@@ -7,7 +7,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import React, { Suspense } from 'react';
 import { StyledContainer } from '../src/pages/EntryPageStyle';
 import { WaitSpinnerWrapper } from '../src/components/table/CustomTableStyle';
-import fontDefinitions from "./fontDefinitions";
+import fontDefinitions from './fontDefinitions';
 
 const GlobalStyles = createGlobalStyle`
     ${fontDefinitions}
@@ -34,18 +34,18 @@ export const withSplunkThemeToolbar = <TRenderer extends Renderer>(
 ) => {
     // vars from globalTypes of preview.tsx
     const { colorScheme, density, family } = globals;
-    const isTestRunner = !!window?.navigator?.userAgent?.match(/StorybookTestRunner/) ;
+    const isTestRunner = !!window?.navigator?.userAgent?.match(/StorybookTestRunner/);
 
     const animation = isTestRunner ? false : globals.animation;
 
     return (
         <AnimationToggleProvider enabled={animation}>
+            <GlobalStyles />
             <SplunkThemeProvider family={family} density={density} colorScheme={colorScheme}>
                 <BackgroundBlock>
                     <StyledContainer>
                         <Router>
                             <Suspense fallback={<WaitSpinnerWrapper size="medium" />}>
-                                <GlobalStyles />
                                 {StoryFn()}
                             </Suspense>
                         </Router>

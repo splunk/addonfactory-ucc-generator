@@ -19,8 +19,6 @@ module.exports = {
             launchOptions: {
                 ...testRunnerConfig.testEnvironmentOptions['jest-playwright'].launchOptions,
                 args: [
-                    ...testRunnerConfig.testEnvironmentOptions['jest-playwright'].launchOptions
-                        .args,
                     '--font-render-hinting=none',
                     '--force-color-profile=srgb',
                     '--disable-skia-runtime-opts',
