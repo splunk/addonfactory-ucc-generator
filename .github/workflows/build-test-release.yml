@@ -84,6 +84,7 @@ jobs:
     uses: ./.github/workflows/storybook-tests.yml
     with:
       node-version: "20"
+      token: ${{ secrets.GH_TOKEN_ADMIN }}
 
   build:
     needs:

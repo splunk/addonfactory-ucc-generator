@@ -5,6 +5,9 @@ on:
       node-version:
         required: true
         type: string
+      token:
+        required: true
+        type: string
 
 jobs:
   test:
@@ -18,7 +21,7 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.ref }}
-          token: ${{ secrets.GH_TOKEN_ADMIN }}
+          token: ${{ inputs.token }}
 
           lfs: true
       - uses: actions/setup-node@v4
