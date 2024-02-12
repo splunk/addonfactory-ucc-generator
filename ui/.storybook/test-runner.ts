@@ -2,6 +2,7 @@ import { getStoryContext, TestRunnerConfig } from '@storybook/test-runner';
 import { toMatchImageSnapshot } from 'jest-image-snapshot';
 
 const config: TestRunnerConfig = {
+    logLevel: 'verbose',
     setup() {
         expect.extend({ toMatchImageSnapshot });
     },
@@ -49,10 +50,6 @@ const config: TestRunnerConfig = {
             customSnapshotIdentifier,
             storeReceivedOnFailure: true,
             customReceivedDir,
-            comparisonMethod: 'ssim',
-            customDiffConfig: {
-                ssim: 'fast',
-            },
             failureThreshold: 0.01,
             failureThresholdType: 'percent',
         });
