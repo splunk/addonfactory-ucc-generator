@@ -18,6 +18,7 @@ module.exports = {
             ...testRunnerConfig.testEnvironmentOptions['jest-playwright'],
             launchOptions: {
                 ...testRunnerConfig.testEnvironmentOptions['jest-playwright'].launchOptions,
+                channel: 'chrome',
                 args: [
                     '--font-render-hinting=none',
                     '--force-color-profile=srgb',
