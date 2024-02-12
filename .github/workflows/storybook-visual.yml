@@ -36,7 +36,7 @@ jobs:
         run: |
           npx concurrently --kill-others --success first -n "SB,TEST" \
             "npx http-server storybook-static --port 6006 --silent" \
-            "npx wait-on tcp:6006 && yarn test-storybook -u"
+            "npx wait-on tcp:6006 && yarn test-storybook"
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v6
         with:
