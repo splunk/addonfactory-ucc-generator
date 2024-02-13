@@ -33,8 +33,8 @@ UCC UI Lib uses [prettier](https://github.com/prettier/prettier) for consistent 
 
 The repository contains screenshots of every Storybook story, stored using [Git Large File Storage](https://git-lfs.com/). Install for your system and run `git lfs install` after installation.
 
-A [CI job from storybook-visual.yml](../.github/workflows/storybook-visual.yml) runs Storybook, takes screenshots, and compares them with the stored version. If there's a significant difference (`failureThreshold`) the job pushes an updated screenshots.
+A [CI job from storybook-visual.yml](../.github/workflows/storybook-visual.yml) executes Storybook, captures screenshots, and compares them with the stored versions. If there's a significant difference (`failureThreshold`), the job updates the screenshots. While `yarn run test-storybook:update-snapshots` can be run locally, relying on the CI process for updates is recommended.
 
-The app appears differently on MacOS and Linux in terms of text rendering. To mitigate this:
-- Firefox is used for taking screenshots, as seen in the `test-storybook` command in [package.json](./package.json).
-- Tuned thresholds are defined in [test-runner.ts](.storybook/test-runner.ts). Increase this threshold if a story contains a lot of text.
+The application's appearance differs between MacOS and Linux, particularly in text rendering. To address this:
+- Firefox is used for screenshots, as specified in the `test-storybook` command in [package.json](./package.json).
+- Adjusted thresholds are set in [test-runner.ts](.storybook/test-runner.ts). If a story is heavily text-based, you may need to increase this threshold.
