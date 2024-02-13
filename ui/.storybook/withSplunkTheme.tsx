@@ -12,8 +12,8 @@ import fontDefinitions from './fontDefinitions';
 const TestStylesForConsistentScreenshots = createGlobalStyle`
     ${fontDefinitions}
 
-    body {
-        text-rendering: optimizeLegibility;
+    * {
+        text-rendering: geometricPrecision;
         -webkit-font-smoothing: subpixel-antialiased;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
