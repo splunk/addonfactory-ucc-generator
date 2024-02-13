@@ -379,4 +379,4 @@ jobs:
       - run: |
           sudo chmod -R 777 ./restapi_client_${{ matrix.splunk.version }}
           python3 -m pip install ./restapi_client_${{ matrix.splunk.version }}
-      - run: tests/testdata/expected_addons/expected_output_global_config_everything/client-test.py
+      - run: python3 tests/testdata/expected_addons/expected_output_global_config_everything/client-test.py
