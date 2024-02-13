@@ -344,9 +344,17 @@ jobs:
           poetry publish -n -u ${{ secrets.PYPI_USERNAME }} -p ${{ secrets.PYPI_TOKEN }}
 
   build-test-addon-openapi-client:
+    name: build-test-addon-openapi-client Splunk ${{ matrix.splunk }}
     runs-on: ubuntu-latest
     needs:
-      - build-ui
+      - meta
+      - build-test-addon
+      - build
+      - test-unit
+      - test-smoke
+    strategy:
+      matrix:
+        splunk: ${{ fromJson(needs.meta.outputs.matrix_supportedSplunk) }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -356,6 +364,10 @@ jobs:
         with:
           name: UCC-UI-build
           path: built-ui/
+      - run: |
+          ./run_splunk.sh ${{ matrix.splunk.version }}
+          until curl -Lsk "https://localhost:8088/services/collector/health" &>/dev/null ; do echo -n "Waiting for HEC-" && sleep 5 ; done
+        timeout-minutes: 5
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
       - run: |
           cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/
@@ -364,5 +376,5 @@ jobs:
       - run: |
           cp output/Splunk_TA_UCCExample/appserver/static/openapi.json ./
           docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli generate -i /local/openapi.json -g python -o /local/restapi_client
-      - run: python restapi_client/setup.py install --user
+      - run: python -m pip install ./restapi_client
       - run: python tests/testdata/expected_addons/expected_output_global_config_everything/client-test.py
