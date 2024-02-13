@@ -30,3 +30,11 @@ We have published Storybook: https://splunk.github.io/addonfactory-ucc-generator
 
 UCC UI Lib uses [prettier](https://github.com/prettier/prettier) to ensure consistent code formatting. It is recommended
  to [add a prettier plugin to your editor/ide](https://github.com/prettier/prettier#editor-integration).
+
+## Screenshots testing
+
+The repo contains screenshots of every story of storybook. It is stored in [Git Large File Storage](https://git-lfs.com/), so you need to install it (run `git lfs install` after installation).
+
+The app looks differently for MacOS and Linux and there are few things helped to mitigate:
+- Firefox browser is used for taking screenshots. See [package.json](./package.json) `test-storybook` command
+- Tuned thresholds are defined in [test-runner.ts](.storybook/test-runner.ts). If story contains a lot of text, this threshold may need to be increased.

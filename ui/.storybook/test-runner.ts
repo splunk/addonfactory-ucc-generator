@@ -42,7 +42,7 @@ const config: TestRunnerConfig = {
         await page.waitForLoadState('load');
         await page.evaluate(() => document.fonts.ready);
 
-        const image = await page.screenshot({ animations: 'disabled' });
+        const image = await page.screenshot({ animations: 'disabled', scale: 'css' });
         expect(image).toMatchImageSnapshot({
             customSnapshotsDir,
             customDiffDir,
@@ -52,6 +52,8 @@ const config: TestRunnerConfig = {
             customDiffConfig: {
                 threshold: 0.3, // decides if a certain pixel is different or not
             },
+            failureThreshold: 0.002, // for the whole image based on amount of different pixels
+            failureThresholdType: 'percent',
         });
     },
 };
