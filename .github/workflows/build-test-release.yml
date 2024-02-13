@@ -378,5 +378,7 @@ jobs:
           docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli generate -i /local/oa_${{ matrix.splunk.version }}.json -g python -o /local/restapi_client_${{ matrix.splunk.version }}
       - run: |
           python3 -m venv venv
-          ./venv/bin/python3 -m pip install -U ./restapi_client_${{ matrix.splunk.version }}
+          cd ./restapi_client_${{ matrix.splunk.version }}
+          ../venv/bin/python3 -m pip install
+          cd ..
       - run: ./venv/bin/python3 tests/testdata/expected_addons/expected_output_global_config_everything/client-test.py
