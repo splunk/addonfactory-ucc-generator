@@ -9,17 +9,13 @@ Once `ucc-gen` command is executed, OpenAPI description document is located in o
 
 One of ways is to download it via button displayed in top right corner of configuration page.
 
+![image](./images/openapi/download_openapi_button.png)
+
 When add-on is installed to Splunk instance, it is exposed via web and management interface, so is available under following addresses accordingly:
 
-* \[protocol\]://\[domain\]:\[port\]/en-GB/splunkd/__raw/servicesNS/\[user\]/\[appname\]/static/openapi.json
+* \[protocol\]://\[domain\]:\[port\]/en-GB/static/app/\[appname\]/openapi.json
 
-(eg. http://localhost:8000/en-GB/splunkd/__raw/servicesNS/admin/Splunk_TA_cisco_meraki/static/openapi.json)
-
-* https://\[domain\]:\[port\]/servicesNS/\[user\]/\[appname\]/static/openapi.json
-
-(eg. https://localhost:8089/servicesNS/admin/Splunk_TA_cisco_meraki/static/openapi.json)
-
-All security rules are applied so user has to be authenticated and authorised to be able to have access to the document.
+(eg. http://localhost:8000/en-GB/static/app/Splunk_TA_cisco_meraki/openapi.json)
 
 See the following resources for more information on working with the Splunk REST API (eg. how to authenticate):
 
@@ -47,8 +43,14 @@ Check [swagger](https://swagger.io/) or [other tools](https://github.com/OAI/Ope
 
 ### Instruction
 
-1. Run in terminal: `docker run -p 8081:8080 swaggerapi/swagger-editor`
-2. Open SwaggerEditor in web browser (http://localhost:8081/) and load the OpenAPI description document (File > Import file)
+1. Open https://editor.swagger.io/
+   * Alternatively, you can run your own instance of Swagger Editor
+     by running the following command in terminal:
+     
+     `docker run -p 8081:8080 swaggerapi/swagger-editor`
+     
+     Then go to: http://localhost:8081/
+2. Load the OpenAPI description document (File > Import file)
 3. Check domain and port values for your Splunk instance and Authorize
 4. Select method-path pair (eg. GET - /splunk_ta_snow_settings/logging ) and "Try it out"
 5. Define parameters and "Execute"
@@ -76,45 +78,31 @@ Make sure you clicked Authorize button, gave username and password and clicked A
 
 ### Instruction
 
-1. Create directory structure and open the `tmp` directory (run in terminal: `mkdir -p tmp/restapi_client ; mkdir -p tmp/generator ; cd tmp`)
-2. Save your openapi.json file to the directory
-3. Download the rest.mustache file (`wget https://raw.githubusercontent.com/swagger-api/swagger-codegen/master/modules/swagger-codegen/src/main/resources/python/rest.mustache`)
-4. Splunk does not expect body for DELETE requests, so we need to revert modifications done for https://github.com/swagger-api/swagger-codegen/issues/9558 (`sed "s/request_body[[:blank:]]=[[:blank:]]\'{}\'/request_body = None/g" rest.mustache > generator/rest.mustache`).
-If you want to understand exactly which line of rest.mustache is affected: https://github.com/swagger-api/swagger-codegen/blob/master/modules/swagger-codegen/src/main/resources/python/rest.mustache#L150
-5. Create client (`docker run --rm -v ${PWD}:/local swaggerapi/swagger-codegen-cli-v3 generate -i /local/openapi.json -l python -o /local/restapi_client -t /local/generator/`); it should appear in `restapi_client` directory
-6. Open `restapi_client` directory and read `README.md` to find out the details of how the client should be installed, imported and used. (`cd restapi_client ; more README.md`)
-7. Install the client (`python setup.py install --user`)
-8. You can use below code as an inspiration for your own script that imports the client and uses for TA configuration
-```
-from __future__ import print_function
-import os
-import swagger_client
-from swagger_client.rest import ApiException
-from pprint import pprint
+1. Go to the directory where you downloaded `openapi.json` file
+2. Run the following command: `docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli generate -i /local/openapi.json -g python -o /local/restapi_client`
+   * make sure `openapi.json` is in the current directory
+   * you can generate clients for other languages as well - run
 
-def get_from_environment_variable(environment_variable: str) -> str:
-    if environment_variable not in os.environ:
-        print(40*'*')
-        print(f"{environment_variable} environment variable not set")
-        print("run below in terminal:")
-        print(f"export {environment_variable}=[your value]")
-        print(40*'*')
-        exit(1)
-    return os.environ[environment_variable]
+     `docker run --rm openapitools/openapi-generator-cli generate list`
 
-configuration = swagger_client.Configuration()
-configuration.host = configuration.host.replace('{domain}','localhost')
-configuration.host = configuration.host.replace('{port}','8089')
-
-configuration.verify_ssl = False
-configuration.username = get_from_environment_variable("SPLUNK_USERNAME")
-configuration.password = get_from_environment_variable("SPLUNK_PASSWORD")
-
-api_instance = swagger_client.DefaultApi(swagger_client.ApiClient(configuration))
-
-output_mode = 'json'
-```
+     to see the list of supported languages
+3. The client should appear in `restapi_client`. Open that directory (`cd restapi_client`)
+4. Install the client (`python setup.py install --user`)
+5. See `README.md` for an example of usage
 
 ### Troubleshooting
 
-* swaggerapi/swagger-codegen-cli-v3 docker image does not work on ARM platforms (eg. M-based Mac machines)
+In case of an SSL error (e.g. when connecting to localhost), you can disable verification:
+
+```python
+configuration = openapi_client.Configuration(
+    host = "https://localhost:8089/servicesNS/-/addon-name",
+    username = "user",
+    password = "pass",
+)
+
+configuration.verify_ssl = False
+```
+
+This option should only be used when connecting to a non-prod Splunk instance.
+
