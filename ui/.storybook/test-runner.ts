@@ -52,8 +52,6 @@ const config: TestRunnerConfig = {
             customDiffConfig: {
                 threshold: 0.15, // decides if a certain pixel is different or not
             },
-            failureThreshold: 0.01, // for the whole image based on amount of different pixels
-            failureThresholdType: 'percent',
         });
     },
 };
