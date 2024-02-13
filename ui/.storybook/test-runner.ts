@@ -49,10 +49,10 @@ const config: TestRunnerConfig = {
             customSnapshotIdentifier,
             storeReceivedOnFailure: true,
             customReceivedDir,
-            comparisonMethod: 'ssim',
-            customDiffConfig: {
-                ssim: 'fast',
-            },
+            // comparisonMethod: 'ssim',
+            // customDiffConfig: {
+            //     ssim: 'fast',
+            // },
             // failureThreshold: 0.01,
             // failureThresholdType: 'percent',
         });
