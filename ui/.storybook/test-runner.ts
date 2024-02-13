@@ -53,8 +53,8 @@ const config: TestRunnerConfig = {
             customDiffConfig: {
                 ssim: 'fast',
             },
-            failureThreshold: 0.01,
-            failureThresholdType: 'percent',
+            // failureThreshold: 0.01,
+            // failureThresholdType: 'percent',
         });
     },
 };

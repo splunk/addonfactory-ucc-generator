@@ -9,8 +9,15 @@ import { StyledContainer } from '../src/pages/EntryPageStyle';
 import { WaitSpinnerWrapper } from '../src/components/table/CustomTableStyle';
 import fontDefinitions from './fontDefinitions';
 
-const GlobalStyles = createGlobalStyle`
+const TestStylesForConsistentScreenshots = createGlobalStyle`
     ${fontDefinitions}
+
+    body {
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: subpixel-antialiased;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
 `;
 
 // https://storybook.js.org/blog/how-to-add-a-theme-switcher-to-storybook/
@@ -40,7 +47,7 @@ export const withSplunkThemeToolbar = <TRenderer extends Renderer>(
 
     return (
         <AnimationToggleProvider enabled={animation}>
-            <GlobalStyles />
+            <TestStylesForConsistentScreenshots />
             <SplunkThemeProvider family={family} density={density} colorScheme={colorScheme}>
                 <BackgroundBlock>
                     <StyledContainer>
