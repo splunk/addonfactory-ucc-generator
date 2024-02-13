@@ -377,8 +377,6 @@ jobs:
           cp out_${{ matrix.splunk.version }}/Splunk_TA_UCCExample/appserver/static/openapi.json ./oa_${{ matrix.splunk.version }}.json
           docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli generate -i /local/oa_${{ matrix.splunk.version }}.json -g python -o /local/restapi_client_${{ matrix.splunk.version }}
       - run: |
-          python3 -m venv venv
-          cd ./restapi_client_${{ matrix.splunk.version }}
-          ../venv/bin/python3 -m pip install
-          cd ..
+          sudo chmod -R 777 ./restapi_client_${{ matrix.splunk.version }}
+          python3 -m pip install ./restapi_client_${{ matrix.splunk.version }}
       - run: ./venv/bin/python3 tests/testdata/expected_addons/expected_output_global_config_everything/client-test.py
