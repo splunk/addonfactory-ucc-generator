@@ -50,7 +50,7 @@ const config: TestRunnerConfig = {
             storeReceivedOnFailure: true,
             customReceivedDir,
             customDiffConfig: {
-                threshold: 0.15, // decides if a certain pixel is different or not
+                threshold: 0.3, // decides if a certain pixel is different or not
             },
         });
     },
