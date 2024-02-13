@@ -50,14 +50,10 @@ const config: TestRunnerConfig = {
             storeReceivedOnFailure: true,
             customReceivedDir,
             customDiffConfig: {
-                threshold: 0.2,
+                threshold: 0.15, // decides if a certain pixel is different or not
             },
-            // comparisonMethod: 'ssim',
-            // customDiffConfig: {
-            //     ssim: 'fast',
-            // },
-            // failureThreshold: 0.01,
-            // failureThresholdType: 'percent',
+            failureThreshold: 0.01, // for the whole image based on amount of different pixels
+            failureThresholdType: 'percent',
         });
     },
 };
