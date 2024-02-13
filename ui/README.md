@@ -2,7 +2,7 @@
 
 ## Overview
 
-The project contains UI framework that renders UI components dynamically based on provided `globalConfig.json`.
+This project includes a UI framework that dynamically renders UI components based on the provided `globalConfig.json`.
 
 ## Getting Started
 
@@ -10,31 +10,31 @@ The project contains UI framework that renders UI components dynamically based o
 2. Install yarn (>= 1.2) if you haven't already: `npm install --global yarn`.
 3. Run the setup task: `yarn run setup`.
 
-After this step, the following tasks will be available:
+After completing these steps, the following tasks will be available:
 
-* `yarn build` – Create a production bundle
-* `yarn start` – build bundle and watch changes
-* `yarn run storybook` - start storybook and open http://localhost:6006
-* `yarn run test-storybook` - check if screenshots match for every story
-* `yarn run test-storybook:update-snapshots` - update screenshots. It has to be run for every visual change
-* `yarn run eslint` – Run linters
-* `yarn run eslint:fix` – Fixed the linters and run prettier
-* `yarn run format` – Run prettier to auto-format `*.js`, `*.jsx` and `*.css` files. This command will overwrite files without 
-asking, `format:verify` won't.
+* `yarn build` – Creates a production bundle.
+* `yarn start` – Builds bundle and watches for changes.
+* `yarn run storybook` - Starts Storybook and opens http://localhost:6006.
+* `yarn run test-storybook` - Checks if screenshots match for every story.
+* `yarn run test-storybook:update-snapshots` - Updates screenshots. Must be run after every visual change.
+* `yarn run eslint` – Runs linters.
+* `yarn run eslint:fix` – Fixes linter issues and runs prettier.
+* `yarn run format` – Runs prettier to auto-format `*.js`, `*.jsx`, and `*.css` files. This command overwrites files without confirmation. Use `format:verify` for a non-destructive check.
 
-Running `yarn run setup` once is required to enable all other tasks. The command might take a few minutes to finish.
+Running `yarn run setup` is required to enable all other tasks. This command might take a few minutes to complete.
 
-We have published Storybook: https://splunk.github.io/addonfactory-ucc-generator/storybook
+We have published Storybook at: https://splunk.github.io/addonfactory-ucc-generator/storybook
 
 ## Code Formatting
 
-UCC UI Lib uses [prettier](https://github.com/prettier/prettier) to ensure consistent code formatting. It is recommended
- to [add a prettier plugin to your editor/ide](https://github.com/prettier/prettier#editor-integration).
+UCC UI Lib uses [prettier](https://github.com/prettier/prettier) for consistent code formatting. It's recommended to [add a prettier plugin to your editor/IDE](https://github.com/prettier/prettier#editor-integration).
 
-## Screenshots testing
+## Screenshot Testing
 
-The repo contains screenshots of every story of storybook. It is stored in [Git Large File Storage](https://git-lfs.com/), so you need to install it (run `git lfs install` after installation).
+The repository contains screenshots of every Storybook story, stored using [Git Large File Storage](https://git-lfs.com/). Install for your system and run `git lfs install` after installation.
 
-The app looks differently for MacOS and Linux and there are few things helped to mitigate:
-- Firefox browser is used for taking screenshots. See [package.json](./package.json) `test-storybook` command
-- Tuned thresholds are defined in [test-runner.ts](.storybook/test-runner.ts). If story contains a lot of text, this threshold may need to be increased.
+A [CI job from storybook-visual.yml](../.github/workflows/storybook-visual.yml) runs Storybook, takes screenshots, and compares them with the stored version. The job fails if there's a significant difference (`failureThreshold`) between them. In such cases, run `yarn run test-storybook:update-snapshots`.
+
+The app appears differently on MacOS and Linux in terms of text rendering. To mitigate this:
+- Firefox is used for taking screenshots, as seen in the `test-storybook` command in [package.json](./package.json).
+- Tuned thresholds are defined in [test-runner.ts](.storybook/test-runner.ts). Increase this threshold if a story contains a lot of text.
