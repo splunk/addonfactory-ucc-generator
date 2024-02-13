@@ -364,10 +364,6 @@ jobs:
         with:
           name: UCC-UI-build
           path: built-ui/
-      - run: |
-          ./run_splunk.sh ${{ matrix.splunk.version }}
-          until curl -Lsk "https://localhost:8088/services/collector/health" &>/dev/null ; do echo -n "Waiting for HEC-" && sleep 5 ; done
-        timeout-minutes: 5
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
       - run: |
           cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/
@@ -379,4 +375,9 @@ jobs:
       - run: |
           sudo chmod -R 777 ./restapi_client_${{ matrix.splunk.version }}
           python3 -m pip install ./restapi_client_${{ matrix.splunk.version }}
+      - run: mv out_${{ matrix.splunk.version }} output
+      - run: |
+          ./run_splunk.sh ${{ matrix.splunk.version }}
+          until curl -Lsk "https://localhost:8088/services/collector/health" &>/dev/null ; do echo -n "Waiting for HEC-" && sleep 5 ; done
+        timeout-minutes: 5
       - run: python3 tests/testdata/expected_addons/expected_output_global_config_everything/client-test.py
