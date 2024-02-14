@@ -27,6 +27,3 @@ RUN yarn install --frozen-lockfile && \
 # Copy everything except 'src' (specified in .dockerignore)
 COPY . .
 
-# Use a non-root user
-RUN useradd -m myuser
-USER myuser
