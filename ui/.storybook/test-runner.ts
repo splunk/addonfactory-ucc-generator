@@ -49,11 +49,6 @@ const config: TestRunnerConfig = {
             customSnapshotIdentifier,
             storeReceivedOnFailure: true,
             customReceivedDir,
-            customDiffConfig: {
-                threshold: 0.3, // decides if a certain pixel is different or not
-            },
-            failureThreshold: 0.002, // for the whole image based on amount of different pixels
-            failureThresholdType: 'percent',
         });
     },
 };
