@@ -29,12 +29,38 @@ We have published Storybook at: https://splunk.github.io/addonfactory-ucc-genera
 
 UCC UI Lib uses [prettier](https://github.com/prettier/prettier) for consistent code formatting. It's recommended to [add a prettier plugin to your editor/IDE](https://github.com/prettier/prettier#editor-integration).
 
-## Screenshot Testing
+## Screenshot Testing Guide
+This section outlines how to work with screenshot testing in our project, utilizing [Git Large File Storage (Git LFS)](https://git-lfs.com/) and a continuous integration (CI) setup to ensure visual consistency across our Storybook stories.
 
-The repository contains screenshots of every Storybook story, stored using [Git Large File Storage](https://git-lfs.com/). Install for your system and run `git lfs install` after installation.
+### Prerequisites
+- Git LFS: Our screenshots are stored with Git LFS. Ensure it's installed on your system by following [the installation guide](https://github.com/git-lfs/git-lfs#installing). After installing Git LFS, set it up with the following command:
+```bash
+git lfs install
+```
 
-A [CI job from storybook-visual.yml](../.github/workflows/storybook-visual.yml) executes Storybook, captures screenshots, and compares them with the stored versions. If there's a significant difference (`failureThreshold`), the job updates the screenshots. While `yarn run test-storybook:update-snapshots` can be run locally, relying on the CI process for updates is recommended.
+### Automated Screenshot Testing
+Our CI pipeline includes a job defined in [storybook-visual.yml](../.github/workflows/storybook-visual.yml). This job automates the following process:
+- Build and serve Storybook.
+- Captures screenshots of all stories.
+- Compares these screenshots against those stored in the repository.
+- If discrepancies are found, the job updates the screenshots and pushes the updates to the current branch.
 
-The application's appearance differs between MacOS and Linux, particularly in text rendering. To address this:
-- Firefox is used for screenshots, as specified in the `test-storybook` command in [package.json](./package.json).
-- Adjusted thresholds are set in [test-runner.ts](.storybook/test-runner.ts). If a story is heavily text-based, you may need to increase this threshold.
+### Updating Screenshots Locally
+Due to differences in application appearance between MacOS and Linux (especially in text rendering), we recommend using Docker to update screenshots for consistency. Here's how you can update screenshots locally:
+
+1. Start Storybook:
+
+Run Storybook locally using Yarn:
+
+```bash
+yarn run storybook
+```
+
+2. Capture and Update Screenshots:
+
+Once Storybook is running, use Docker Compose to update the screenshots:
+
+```bash
+docker compose up
+```
+This approach ensures that screenshots are consistent and reflective of how the application is intended to look across different environments.
