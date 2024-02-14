@@ -16,8 +16,8 @@
     "setup": "yarn && yarn run build",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "test-storybook": "test-storybook --browsers firefox",
-    "test-storybook:update-snapshots": "test-storybook --browsers firefox -u"
+    "test-storybook": "test-storybook",
+    "test-storybook:update-snapshots": "yarn run test-storybook -u"
   },
   "dependencies": {
     "@splunk/react-icons": "^4.2.0",
