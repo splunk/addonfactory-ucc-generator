@@ -33,9 +33,15 @@ UCC UI Lib uses [prettier](https://github.com/prettier/prettier) for consistent 
 This section outlines how to work with screenshot testing in our project, utilizing [Git Large File Storage (Git LFS)](https://git-lfs.com/) and a continuous integration (CI) setup to ensure visual consistency across our Storybook stories.
 
 ### Prerequisites
-- Git LFS: Our screenshots are stored with Git LFS. Ensure it's installed on your system by following [the installation guide](https://github.com/git-lfs/git-lfs#installing). After installing Git LFS, set it up with the following command:
+- Git LFS: Our screenshots are stored with Git LFS. Ensure it's installed on your system by following [the installation guide](https://github.com/git-lfs/git-lfs#installing). For MacOS it is:
+```bash
+brew install git-lfs
+```
+
+After installing Git LFS, set it up with the following command:
 ```bash
 git lfs install
+git lfs pull
 ```
 
 ### Automated Screenshot Testing
@@ -61,6 +67,6 @@ yarn run storybook
 Once Storybook is running, use Docker Compose to update the screenshots:
 
 ```bash
-docker compose up
+docker compose up --build
 ```
 This approach ensures that screenshots are consistent and reflective of how the application is intended to look across different environments.
