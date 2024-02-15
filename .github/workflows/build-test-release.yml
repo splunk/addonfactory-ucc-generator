@@ -9,7 +9,7 @@ on:
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
   pull_request:
-    branches: [ main, develop, "release/**" ]
+    branches: [main, develop, "release/**"]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
@@ -299,6 +299,33 @@ jobs:
           included_tags: ${{ matrix.tags }}
           appinspect_manual_checks: tests/testdata/expected_addons/expected_output_global_config_everything/.appinspect.manualcheck.yaml
           appinspect_expected_failures: tests/testdata/expected_addons/expected_output_global_config_everything/.appinspect.expect.yaml
+
+  all-checks:
+    if: ${{ !cancelled() }}
+    needs:
+      - test-ui
+      - build-test-addon-openapi-client
+      - storybook-screenshots
+    runs-on: ubuntu-latest
+    env:
+      NEEDS: ${{ toJson(needs) }}
+    steps:
+      - name: check if tests have passed or skipped
+        id: check
+        shell: bash
+        run: |
+          RUN_PUBLISH=$(echo "$NEEDS" | jq ".[] |  select(  ( .result != \"skipped\" ) and .result != \"success\" ) | length == 0")
+          if [[ "$RUN_PUBLISH" != *'false'* ]]
+          then
+              echo "all-checks=true" >> "$GITHUB_OUTPUT"
+          else
+              echo "all-checks=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: exit without publish
+        if: ${{ steps.check.outputs.all-checks == 'false' || ( github.event.action == 'labeled' && github.event.label.name == 'preserve_infra' ) }}
+        run: |
+          echo "Some check failed or Workflow has triggered on preserve_infra label."
+          exit 1
 
   release:
     needs:
