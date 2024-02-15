@@ -88,9 +88,16 @@ PANEL_EVENTS_INGESTED_BY_SOURCETYPE_TEMPLATE = """  <row>
 PANEL_ERRORS_IN_THE_ADDON_TEMPLATE = """  <row>
     <panel>
       <title>Errors in the add-on</title>
+        <input type="radio" token="sourcetype_token">
+            <label>Select a source type</label>
+            <default>add-on</default>
+            <choice value="index = _internal source=*{addon_name}* ERROR">add-on</choice>
+            <choice value="index = _internal source=/opt/splunk/var/log/splunk/splunkd.log \
+log_level=ERROR component=ModularInputs (scheme IN ({input_names}))">splunkd</choice>
+        </input>
       <event>
         <search>
-          <query>index=_internal source=*{addon_name}* ERROR</query>
+          <query>$sourcetype_token$</query>
           <earliest>$log_time.earliest$</earliest>
           <latest>$log_time.latest$</latest>
         </search>
@@ -107,7 +114,10 @@ PANEL_ERRORS_IN_THE_ADDON_TEMPLATE = """  <row>
 
 
 def generate_dashboard_content(
-    addon_name: str, panel_names: Sequence[str], custom_components: str
+    addon_name: str,
+    panel_names: Sequence[str],
+    input_names: list[str],
+    custom_components: str,
 ) -> str:
     content = DASHBOARD_START
     for panel_name in panel_names:
@@ -120,7 +130,8 @@ def generate_dashboard_content(
             )
         elif panel_name == PANEL_ERRORS_IN_THE_ADDON:
             content += PANEL_ERRORS_IN_THE_ADDON_TEMPLATE.format(
-                addon_name=addon_name.lower()
+                addon_name=addon_name.lower(),
+                input_names=",".join([name + "*" for name in input_names]),
             )
         elif panel_name == PANEL_CUSTOM:
             content += custom_components
@@ -154,7 +165,11 @@ def generate_dashboard(
             )
             custom_components = get_custom_xml_content(dashboard_components_path)
 
-        content = generate_dashboard_content(addon_name, panel_names, custom_components)
+        input_names = [el.get("name") for el in global_config.inputs]
+
+        content = generate_dashboard_content(
+            addon_name, panel_names, input_names, custom_components
+        )
         with open(dashboard_xml_file_path, "w") as dashboard_xml_file:
             dashboard_xml_file.write(content)
 

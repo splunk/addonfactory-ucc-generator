@@ -52,9 +52,16 @@ default_dashboard_content_start = """<form version="1.1">
   <row>
     <panel>
       <title>Errors in the add-on</title>
+        <input type="radio" token="sourcetype_token">
+            <label>Select a source type</label>
+            <default>add-on</default>
+            <choice value="index = _internal source=*{}* ERROR">add-on</choice>
+            <choice value="index = _internal source=/opt/splunk/var/log/splunk/splunkd.log \
+            log_level=ERROR component=ModularInputs (scheme IN ({}))">splunkd</choice>
+        </input>
       <event>
         <search>
-          <query>index=_internal source=*splunk_ta_uccexample* ERROR</query>
+          <query>$sourcetype_token$</query>
           <earliest>$log_time.earliest$</earliest>
           <latest>$log_time.latest$</latest>
         </search>
@@ -106,7 +113,12 @@ def test_generate_dashboard_when_dashboard_does_not_exist(
         str(dashboard_xml_file_path),
     )
 
-    expected_content = default_dashboard_content_start + default_dashboard_content_end
+    expected_content = (
+        default_dashboard_content_start.format(
+            "splunk_ta_uccexample", "example_input_one*,example_input_two*"
+        )
+        + default_dashboard_content_end
+    )
 
     with open(dashboard_xml_file_path) as dashboard_xml_file:
         assert expected_content == dashboard_xml_file.read()
@@ -164,7 +176,9 @@ def test_generate_dashboard_with_custom_components(setup, tmp_path):
         )
 
     expected_content = (
-        default_dashboard_content_start
+        default_dashboard_content_start.format(
+            "splunk_ta_uccexample", "example_input_one*"
+        )
         + custom_dashboard_components
         + default_dashboard_content_end
     )
