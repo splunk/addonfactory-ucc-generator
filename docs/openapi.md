@@ -87,7 +87,7 @@ Make sure you clicked Authorize button, gave username and password and clicked A
 
      to see the list of supported languages
 3. The client should appear in `restapi_client`. Open that directory (`cd restapi_client`)
-4. Install the client (`python setup.py install --user`)
+4. Install the client (`pip install .`)
 5. See `README.md` for an example of usage
 
 ### Troubleshooting
