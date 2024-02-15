@@ -4,6 +4,11 @@ import FileInputComponent from '../FileInputComponent';
 const meta = {
     component: FileInputComponent,
     title: 'FileInputComponent',
+    parameters: {
+        snapshots: {
+            height: 300,
+        },
+    },
 } satisfies Meta<typeof FileInputComponent>;
 
 export default meta;

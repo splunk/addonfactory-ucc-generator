@@ -4,6 +4,12 @@ import MarkdownMessage from '../MarkdownMessage';
 const meta = {
     component: MarkdownMessage,
     title: 'MarkdownMessage',
+    parameters: {
+        snapshots: {
+            height: 200,
+            width: 200,
+        },
+    },
 } satisfies Meta<typeof MarkdownMessage>;
 
 export default meta;

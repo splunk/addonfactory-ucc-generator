@@ -23,6 +23,10 @@ const meta = {
                 http.get('/servicesNS/nobody/-/:name', () => HttpResponse.json(mockServerResponse)),
             ],
         },
+        snapshots: {
+            width: 1200,
+            height: 1200,
+        },
     },
 } satisfies Meta;
 

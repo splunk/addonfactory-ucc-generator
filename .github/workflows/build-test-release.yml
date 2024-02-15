@@ -79,6 +79,14 @@ jobs:
     with:
       node-version: ${{ matrix.node-version }}
 
+  storybook-screenshots:
+    name: Update storybook screenshots
+    permissions:
+      contents: write
+    secrets: inherit
+    uses: ./.github/workflows/storybook-visual.yml
+    with:
+      node-version: "20"
 
   build:
     needs:
