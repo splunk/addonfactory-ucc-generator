@@ -17,7 +17,7 @@ import logging
 import os
 import sys
 from defusedxml import ElementTree
-from typing import Sequence
+from typing import Sequence, List
 
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 
@@ -116,7 +116,7 @@ log_level=ERROR component=ModularInputs (scheme IN ({input_names}))">splunkd</ch
 def generate_dashboard_content(
     addon_name: str,
     panel_names: Sequence[str],
-    input_names: list[str],
+    input_names: List[str],
     custom_components: str,
 ) -> str:
     content = DASHBOARD_START
