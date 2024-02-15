@@ -57,7 +57,7 @@ default_dashboard_content_start = """<form version="1.1">
             <default>add-on</default>
             <choice value="index = _internal source=*{}* ERROR">add-on</choice>
             <choice value="index = _internal source=/opt/splunk/var/log/splunk/splunkd.log \
-            log_level=ERROR component=ModularInputs (scheme IN ({}))">splunkd</choice>
+log_level=ERROR component=ModularInputs (scheme IN ({}))">splunkd</choice>
         </input>
       <event>
         <search>
