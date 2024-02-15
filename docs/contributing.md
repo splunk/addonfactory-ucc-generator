@@ -2,12 +2,17 @@
 
 ## Development flow
 
+The commands below uses [GitHub CLI tool](https://cli.github.com/). It can be installed via HomeBrew
+```bash
+brew install gh
+gh auth login
+```
+
 * The default development branch is `develop`. Use this branch for creating pull requests (PRs) for your features, fixes, documentation updates, etc. PRs to the `develop` branch should be merged using the squash option on GitHub.
 * When it's time for a release (handled by the UCC team), create a PR from `develop` to `main` using the following commands:
 ```bash
 gh pr create --title "chore: merge develop into main" --body "" --head develop --base main
 # set autocommit to avoid accidentally merging with squash
-# instead of main you can specify PR number from the result of previous command
 gh pr merge develop --auto --merge
 ```
 
@@ -19,7 +24,6 @@ gh pr merge develop --auto --merge
 ```bash
 gh pr create --title "chore: merge main into develop" --body "" --head main --base develop
 # set autocommit to avoid accidentally merging with squash
-# instead of main you can specify PR number from the result of previous command
 gh pr merge main --auto --merge
 ```
 
