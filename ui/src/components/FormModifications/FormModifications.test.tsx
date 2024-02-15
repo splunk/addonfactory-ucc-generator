@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { setUnifiedConfig } from '../../util/util';
 import {
@@ -11,7 +11,7 @@ import {
     secondStandardTextField,
 } from './TestConfig';
 import EntityModal, { EntityModalProps } from '../EntityModal/EntityModal';
-import { EntitiesWithModifications } from '../BaseFormTypes';
+import { EntitiesAllowingModifications } from '../BaseFormTypes';
 
 const handleRequestClose = jest.fn();
 const setUpConfigWithDefaultValue = () => {
@@ -35,28 +35,28 @@ const props = {
 } satisfies EntityModalProps;
 
 const findMods = (
-    modificationFiled: EntitiesWithModifications,
+    modificationFiled: EntitiesAllowingModifications,
     value: string | boolean | number,
     fieldId: string
-) => {
-    if (modificationFiled?.modifyFieldsOnValue) {
-        return modificationFiled?.modifyFieldsOnValue
-            .find((mod) => mod.fieldValue === value)
-            ?.fieldsToModify.find((field: { fieldId: string }) => field.fieldId === fieldId);
-    }
-    return null;
-};
+) =>
+    modificationFiled.modifyFieldsOnValue
+        ?.find((mod) => mod.fieldValue === value)
+        ?.fieldsToModify.find((field: { fieldId: string }) => field.fieldId === fieldId);
 
-const getHTMLTextComponentsForField = (field: string) => {
-    const componentParentElement = document.querySelector(`[data-name="${field}"]`);
-    const componentInput = componentParentElement?.querySelector('input');
+const getAndVerifyHTMLTextComponentsForField = (field: string) => {
+    const componentParentElement = document.querySelector<HTMLElement>(`[data-name="${field}"]`)!;
+    expect(componentParentElement).toBeInTheDocument();
+    const componentInput = within(componentParentElement).getByRole('textbox');
+    expect(componentInput).toBeInTheDocument();
 
     return [componentParentElement, componentInput];
 };
 
-const getHTMLChecboxComponentsForField = (field: string) => {
-    const componentParentElement = document.querySelector(`[data-name="${field}"]`);
-    const componentInput = componentParentElement?.querySelector('[role="checkbox"]');
+const getAndVerifyHTMLCheckboxComponentsForField = (field: string) => {
+    const componentParentElement = document.querySelector<HTMLElement>(`[data-name="${field}"]`)!;
+    expect(componentParentElement).toBeInTheDocument();
+    const componentInput = within(componentParentElement).getByRole('checkbox');
+    expect(componentInput).toBeInTheDocument();
 
     return [componentParentElement, componentInput];
 };
@@ -65,22 +65,11 @@ it('render fields with modifications correctly', async () => {
     setUpConfigWithDefaultValue();
     renderModalWithProps(props);
 
-    const verifyCorretDisplayForTextField = (field: string) => {
-        const [componentParentElement, componentInput] = getHTMLTextComponentsForField(field);
-        expect(componentParentElement).toBeInTheDocument();
-        expect(componentInput).toBeInTheDocument();
-    };
-
-    const verifyCorretDisplayForcheckboxField = (field: string) => {
-        const [componentParentElement, componentInput] = getHTMLChecboxComponentsForField(field);
-        expect(componentParentElement).toBeInTheDocument();
-        expect(componentInput).toBeInTheDocument();
-    };
-    verifyCorretDisplayForTextField(firstStandardTextField.field);
-    verifyCorretDisplayForTextField(secondStandardTextField.field);
-    verifyCorretDisplayForTextField(firstModificationField.field);
-    verifyCorretDisplayForTextField(secondModificationField.field);
-    verifyCorretDisplayForcheckboxField(thirdModificationField.field);
+    getAndVerifyHTMLTextComponentsForField(firstStandardTextField.field);
+    getAndVerifyHTMLTextComponentsForField(secondStandardTextField.field);
+    getAndVerifyHTMLTextComponentsForField(firstModificationField.field);
+    getAndVerifyHTMLTextComponentsForField(secondModificationField.field);
+    getAndVerifyHTMLCheckboxComponentsForField(thirdModificationField.field);
 });
 
 it('verify modification after text components change', async () => {
@@ -89,16 +78,16 @@ it('verify modification after text components change', async () => {
     const firstValueToInput = 'a';
     const secondValueToInput = 'aa';
 
-    const [componentParentElement, componentInput] = getHTMLTextComponentsForField(
+    const [componentParentElement, componentInput] = getAndVerifyHTMLTextComponentsForField(
         firstStandardTextField.field
     );
-    const [component2ParentElement, component2Input] = getHTMLTextComponentsForField(
+    const [component2ParentElement, component2Input] = getAndVerifyHTMLTextComponentsForField(
         secondStandardTextField.field
     );
 
-    const componentMakingModsTextBox1 = document.querySelector(
-        `.${firstModificationField.field} input`
-    );
+    const componentMakingModsTextBox1 = getAndVerifyHTMLTextComponentsForField(
+        firstModificationField.field
+    )[1];
 
     const mods1Field1 = findMods(
         firstModificationField,
@@ -122,18 +111,16 @@ it('verify modification after text components change', async () => {
         secondStandardTextField.field
     );
 
-    if (componentMakingModsTextBox1) {
-        await userEvent.type(componentMakingModsTextBox1, firstValueToInput);
-    }
+    await userEvent.type(componentMakingModsTextBox1, firstValueToInput);
 
     const verifyAllProps = (
-        parentElement: Element | null | undefined,
-        input: Element | null | undefined,
-        mods?: { value?: string | number | boolean; help?: string; label?: string } | null
+        parentElement: Element,
+        input: Element,
+        mods?: { value?: string | number | boolean; help?: string; label?: string }
     ) => {
-        expect(input?.getAttribute('value')).toEqual(mods?.value);
-        expect(parentElement?.textContent?.includes(mods?.help || 'fail')).toEqual(true);
-        expect(parentElement?.textContent?.includes(mods?.label || 'fail')).toEqual(true);
+        expect(input.getAttribute('value')).toEqual(mods?.value);
+        expect(parentElement.textContent?.includes(mods?.help || 'fail')).toEqual(true);
+        expect(parentElement.textContent?.includes(mods?.label || 'fail')).toEqual(true);
     };
 
     expect(componentInput).toHaveAttribute('disabled');
@@ -142,9 +129,7 @@ it('verify modification after text components change', async () => {
     expect(component2Input).toHaveAttribute('disabled');
     verifyAllProps(component2ParentElement, component2Input, mods1Field2);
 
-    if (componentMakingModsTextBox1) {
-        await userEvent.type(componentMakingModsTextBox1, secondValueToInput);
-    }
+    await userEvent.type(componentMakingModsTextBox1, secondValueToInput);
 
     expect(componentInput).not.toHaveAttribute('disabled');
     verifyAllProps(componentParentElement, componentInput, mods2Field1);
@@ -160,12 +145,16 @@ it('verify markdown modifications', async () => {
     const firstValueToInput = 'a';
     const secondValueToInput = 'aa';
 
-    const [componentParentElement] = getHTMLTextComponentsForField(firstStandardTextField.field);
-    const [component2ParentElement] = getHTMLTextComponentsForField(secondStandardTextField.field);
-
-    const componentMakingModsTextBox1 = document.querySelector(
-        `.${secondModificationField.field} input`
+    const [componentParentElement] = getAndVerifyHTMLTextComponentsForField(
+        firstStandardTextField.field
     );
+    const [component2ParentElement] = getAndVerifyHTMLTextComponentsForField(
+        secondStandardTextField.field
+    );
+
+    const componentMakingModsTextBox1 = getAndVerifyHTMLTextComponentsForField(
+        secondModificationField.field
+    )[1];
 
     const firstElementOuterHTMLBeforeMods = componentParentElement?.outerHTML;
 
@@ -186,24 +175,16 @@ it('verify markdown modifications', async () => {
         secondStandardTextField.field
     );
 
-    if (componentMakingModsTextBox1) {
-        await userEvent.type(componentMakingModsTextBox1, firstValueToInput);
-    }
+    await userEvent.type(componentMakingModsTextBox1, firstValueToInput);
 
     const firstElementOuterHTMLAfterMods = componentParentElement?.outerHTML;
 
     // only id specified as modification so no changes should occure
     expect(firstElementOuterHTMLBeforeMods).toEqual(firstElementOuterHTMLAfterMods);
 
-    expect(
-        mods1Field2?.markdownMessage?.markdownType === 'hybrid' &&
-            component2ParentElement?.textContent?.includes(
-                mods1Field2?.markdownMessage.text.replace(
-                    mods1Field2?.markdownMessage?.token,
-                    mods1Field2?.markdownMessage?.linkText
-                )
-            )
-    ).toEqual(true);
+    expect(component2ParentElement.textContent).toMatchInlineSnapshot(
+        `"Standard text label second fieldmarkdown message to open conf page and explain sthStandard Text help second field"`
+    );
 
     const anchorElementField2 = component2ParentElement?.querySelector('a');
     expect(anchorElementField2?.getAttribute('href')).toEqual(

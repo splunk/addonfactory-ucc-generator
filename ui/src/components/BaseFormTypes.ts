@@ -143,7 +143,7 @@ export interface CustomHook {
 
 export type AnyEntity = z.TypeOf<typeof AnyOfEntity> | z.TypeOf<typeof OAuthFields>;
 
-export type EntitiesWithModifications =
+export type EntitiesAllowingModifications =
     | z.TypeOf<typeof TextEntity>
     | z.TypeOf<typeof TextAreaEntity>
     | z.TypeOf<typeof SingleSelectEntity>

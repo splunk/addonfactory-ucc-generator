@@ -14,13 +14,13 @@ const ValueLabelPair = z.object({
     label: z.string(),
 });
 
-const MarkdownMessageText = z.object({
+export const MarkdownMessageText = z.object({
     markdownType: z.literal('text'),
     text: z.string(),
     color: z.string().optional(),
 });
 
-const MarkdownMessageHybrid = z.object({
+export const MarkdownMessageHybrid = z.object({
     markdownType: z.literal('hybrid'),
     text: z.string(),
     token: z.string(),
@@ -28,13 +28,13 @@ const MarkdownMessageHybrid = z.object({
     link: z.string(),
 });
 
-const MarkdownMessageLink = z.object({
+export const MarkdownMessageLink = z.object({
     markdownType: z.literal('link'),
     text: z.string(),
     link: z.string(),
 });
 
-const MarkdownMessagePlaintext = z.object({
+export const MarkdownMessagePlaintext = z.object({
     markdownType: z.undefined().optional(),
     text: z.string(),
 });
@@ -60,6 +60,13 @@ const CommonEditableEntityOptions = z.object({
     requiredWhenVisible: z.boolean().default(false).optional(),
 });
 
+export const MarkdownMessageType = z.union([
+    MarkdownMessageText,
+    MarkdownMessageHybrid,
+    MarkdownMessageLink,
+    MarkdownMessagePlaintext,
+]);
+
 const FieldToModify = z.object({
     fieldValue: z.union([z.number(), z.string(), z.boolean()]),
     mode: z.enum(['create', 'edit', 'config', 'clone']).optional(),
@@ -73,14 +80,7 @@ const FieldToModify = z.object({
             required: z.boolean().optional(),
             help: z.string().optional(),
             label: z.string().optional(),
-            markdownMessage: z
-                .union([
-                    MarkdownMessageText,
-                    MarkdownMessageHybrid,
-                    MarkdownMessageLink,
-                    MarkdownMessagePlaintext,
-                ])
-                .optional(),
+            markdownMessage: MarkdownMessageType.optional(),
         })
     ),
 });

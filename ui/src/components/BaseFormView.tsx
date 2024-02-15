@@ -43,7 +43,7 @@ import {
     BasicEntity,
     ChangeRecord,
     CustomHookClass,
-    EntitiesWithModifications,
+    EntitiesAllowingModifications,
 } from './BaseFormTypes';
 import {
     getAllFieldsWithModifications,
@@ -123,7 +123,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
 
     customWarningMessage: { message: string; alwaysDisplay?: boolean };
 
-    fieldsWithModifications: EntitiesWithModifications[];
+    fieldsWithModifications: EntitiesAllowingModifications[];
 
     constructor(props: BaseFormProps, context: React.ContextType<typeof TableContext>) {
         super(props);
