@@ -2,7 +2,7 @@
 
 ## Development flow
 
-The commands below uses [GitHub CLI tool](https://cli.github.com/). It can be installed via HomeBrew
+The instructions below utilize the [GitHub CLI tool](https://cli.github.com/), which you can install via HomeBrew:
 ```bash
 brew install gh
 gh auth login
@@ -12,18 +12,18 @@ gh auth login
 * When it's time for a release (handled by the UCC team), create a PR from `develop` to `main` using the following commands:
 ```bash
 gh pr create --title "chore: merge develop into main" --body "" --head develop --base main
-# set autocommit to avoid accidentally merging with squash
+# set automerge with merge commit to avoid accidentally squashing PR
 gh pr merge develop --auto --merge
 ```
 
 * Ensure CI passes and await team review.
-* PR should be merged using merge commit option in GitHub (already included in the command)
+* PR should be merged using **merge commit** option in GitHub (already included in the command)
 * Releases are made automatically (both on GitHub and PyPI), and a bot will push a commit to `main` with all necessary changes  (i.e. [like this](https://github.com/splunk/addonfactory-ucc-generator/commit/0c5e6802e1e52c37bf7131baf1b8264e5db30545))
 * After the release, backport the bot's changes to the `develop` branch (i.e. [#974](https://github.com/splunk/addonfactory-ucc-generator/pull/974)):
 
 ```bash
 gh pr create --title "chore: merge main into develop" --body "" --head main --base develop
-# set autocommit to avoid accidentally merging with squash
+# set automerge with merge commit to avoid accidentally squashing PR
 gh pr merge main --auto --merge
 ```
 
