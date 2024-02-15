@@ -1,3 +1,21 @@
+# [5.38.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.37.0...v5.38.0) (2024-02-06)
+
+
+### Bug Fixes
+
+* **EntityModal:** prevent Enter from submitting the form in Modal window ([#1047](https://github.com/splunk/addonfactory-ucc-generator/issues/1047)) ([b7f179a](https://github.com/splunk/addonfactory-ucc-generator/commit/b7f179ab20e3bae831f1e7ed5b499ceff59ce6bd)), closes [#875](https://github.com/splunk/addonfactory-ucc-generator/issues/875)
+* OpenAPI schema generator fixes for when multiple inputs are defined ([#1016](https://github.com/splunk/addonfactory-ucc-generator/issues/1016)) ([332db43](https://github.com/splunk/addonfactory-ucc-generator/commit/332db4361556b865418b16c6fbd8ce4912ba5084))
+
+
+### Features
+
+* add UCC version to globalConfig ([#984](https://github.com/splunk/addonfactory-ucc-generator/issues/984)) ([e1229b4](https://github.com/splunk/addonfactory-ucc-generator/commit/e1229b40e48ee485b3d301139834b869054643c0))
+* ADDON-67533 implement support for oauth autorize and token urls ([#1009](https://github.com/splunk/addonfactory-ucc-generator/issues/1009)) ([aada373](https://github.com/splunk/addonfactory-ucc-generator/commit/aada37364ed44e63732ac2b23807ce5b4bf084a3))
+* allow wildcards in .uccignore file ([#1012](https://github.com/splunk/addonfactory-ucc-generator/issues/1012)) ([04b847f](https://github.com/splunk/addonfactory-ucc-generator/commit/04b847f39cccdd5937faf309fe8a81699d9b8919)), closes [#1011](https://github.com/splunk/addonfactory-ucc-generator/issues/1011)
+* change avg() to sum() in PANEL_EVENTS_INGESTED_BY_SOURCETYPE_TEMPLATE panel ([#1028](https://github.com/splunk/addonfactory-ucc-generator/issues/1028)) ([c738634](https://github.com/splunk/addonfactory-ucc-generator/commit/c73863499b9b546593000bc30fdf78f8e927b6d1))
+* customizing version of pip in build, add legacy resolver as optional ([#1035](https://github.com/splunk/addonfactory-ucc-generator/issues/1035)) ([751990c](https://github.com/splunk/addonfactory-ucc-generator/commit/751990c65793f88edde305039bd61018d43a481b))
+* default warning hidden after any input ([#1024](https://github.com/splunk/addonfactory-ucc-generator/issues/1024)) ([d0d69ee](https://github.com/splunk/addonfactory-ucc-generator/commit/d0d69ee3d0c71e7e5b64850b67219244b265c031))
+
 # [5.37.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.36.2...v5.37.0) (2024-01-31)
 
 
