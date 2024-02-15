@@ -43,9 +43,15 @@
   <row>
     <panel>
       <title>Errors in the add-on</title>
+        <input type="radio" token="sourcetype_token">
+            <label>Select a source type</label>
+            <default>add-on</default>
+            <choice value="index = _internal source=*splunk_ta_uccexample* ERROR">add-on</choice>
+            <choice value="index = _internal source=/opt/splunk/var/log/splunk/splunkd.log log_level=ERROR component=ModularInputs (scheme IN (example_input_one*,example_input_two*,example_input_three*,example_input_four*))">splunkd</choice>
+        </input>
       <event>
         <search>
-          <query>index=_internal source=*splunk_ta_uccexample* ERROR</query>
+          <query>$sourcetype_token$</query>
           <earliest>$log_time.earliest$</earliest>
           <latest>$log_time.latest$</latest>
         </search>
