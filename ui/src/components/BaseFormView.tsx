@@ -564,7 +564,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                         if (entityLabel && nameFromDict && typeof nameFromDict !== 'object') {
                             this.setErrorFieldMsg(
                                 'name',
-                                getFormattedMessage(2, [entityLabel, nameFromDict])
+                                getFormattedMessage(2, [entityLabel, String(nameFromDict)])
                             );
                         }
                     }
