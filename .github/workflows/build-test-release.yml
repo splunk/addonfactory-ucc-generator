@@ -9,7 +9,7 @@ on:
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
   pull_request:
-    branches: [main, develop, "release/**"]
+    branches: [main, develop]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
@@ -321,10 +321,10 @@ jobs:
           else
               echo "all-checks=false" >> "$GITHUB_OUTPUT"
           fi
-      - name: exit without publish
-        if: ${{ steps.check.outputs.all-checks == 'false' || ( github.event.action == 'labeled' && github.event.label.name == 'preserve_infra' ) }}
+      - name: Fail job is something failed
+        if: ${{ steps.check.outputs.all-checks == 'false' }}
         run: |
-          echo "Some check failed or Workflow has triggered on preserve_infra label."
+          echo "Some check failed"
           exit 1
 
   release:
