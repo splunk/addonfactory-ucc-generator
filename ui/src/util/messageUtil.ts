@@ -3,11 +3,10 @@ import { _ } from '@splunk/ui-utils/i18n';
 import messageDict from '../constants/messageDict';
 
 /**
- * @param {number} code  a int value.
- * @param {(string|number|boolean)[]=} msg arguments to format the message.
- * @returns {string}
+ * @param code  a int value.
+ * @param msg arguments to format the message.
  */
-export const getFormattedMessage = (code: number, msg?: (string | number)[] /* , ... , args */) => {
+export const getFormattedMessage = (code: number, msg?: (string | number | boolean)[]): string => {
     let template = messageDict[code] || messageDict.unknown;
     template = _(template);
     return __.template(template, {
