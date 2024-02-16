@@ -11,7 +11,12 @@ initialize({
     },
     onUnhandledRequest(req) {
         const url = req.url;
-        const skipList = ['bundle.js', 'hot-update.js', 'http://localhost:6006/index.json'];
+        const skipList = [
+            'bundle.js',
+            'hot-update.js',
+            'http://localhost:6006/index.json',
+            '.woff',
+        ];
         const shouldRequestBeBypassed = skipList.some((passItem) => url.includes(passItem));
         if (!shouldRequestBeBypassed) {
             console.warn('Found an unhandled %s request to %s', req.method, url);

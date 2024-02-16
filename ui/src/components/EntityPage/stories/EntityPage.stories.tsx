@@ -12,6 +12,11 @@ const meta = {
         setUnifiedConfig(getGlobalConfigMock());
         return <EntityPage {...props} />;
     },
+    parameters: {
+        snapshots: {
+            width: 1000,
+        },
+    },
 } satisfies Meta<typeof EntityPage>;
 
 export default meta;
