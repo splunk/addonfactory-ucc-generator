@@ -39,16 +39,18 @@ const findMods = (
     modificationFiled: EntitiesAllowingModifications,
     value: string | boolean | number,
     fieldId: string
-) =>
-    modificationFiled.modifyFieldsOnValue
+) => {
+    const modification = modificationFiled.modifyFieldsOnValue
         ?.find((mod) => mod.fieldValue === value)
         ?.fieldsToModify.find((field: { fieldId: string }) => field.fieldId === fieldId);
+    invariant(modification);
+    return modification;
+};
 
 const getAndVerifyHTMLTextComponentsForField = (field: string) => {
     const componentParentElement = document.querySelector<HTMLElement>(`[data-name="${field}"]`)!;
     expect(componentParentElement).toBeInTheDocument();
     const componentInput = within(componentParentElement).getByRole('textbox');
-    expect(componentInput).toBeInTheDocument();
 
     return [componentParentElement, componentInput];
 };
@@ -57,7 +59,6 @@ const getAndVerifyHTMLCheckboxComponentsForField = (field: string) => {
     const componentParentElement = document.querySelector<HTMLElement>(`[data-name="${field}"]`)!;
     expect(componentParentElement).toBeInTheDocument();
     const componentInput = within(componentParentElement).getByRole('checkbox');
-    expect(componentInput).toBeInTheDocument();
 
     return [componentParentElement, componentInput];
 };
@@ -117,29 +118,27 @@ it('verify modification after text components change', async () => {
     const verifyAllProps = (
         parentElement: Element,
         input: Element,
-        mods?: { value?: string | number | boolean; help?: string; label?: string }
+        mods: { value?: string | number | boolean; help?: string; label?: string }
     ) => {
-        expect(input).toHaveAttribute('value', mods?.value);
-
-        invariant(typeof mods?.help === 'string');
-        expect(parentElement.textContent?.includes(mods.help)).toEqual(true);
-
-        invariant(typeof mods?.label === 'string');
-        expect(parentElement.textContent?.includes(mods.label)).toEqual(true);
+        expect(input).toHaveAttribute('value', mods.value);
+        invariant(typeof mods.help === 'string');
+        expect(parentElement).toHaveTextContent(mods.help);
+        invariant(typeof mods.label === 'string');
+        expect(parentElement).toHaveTextContent(mods.label);
     };
 
-    expect(componentInput).toHaveAttribute('disabled');
+    expect(componentInput).toBeDisabled();
     verifyAllProps(componentParentElement, componentInput, mods1Field1);
 
-    expect(component2Input).toHaveAttribute('disabled');
+    expect(component2Input).toBeDisabled();
     verifyAllProps(component2ParentElement, component2Input, mods1Field2);
 
     await userEvent.type(componentMakingModsTextBox1, secondValueToInput);
 
-    expect(componentInput).not.toHaveAttribute('disabled');
+    expect(componentInput).toBeEnabled();
     verifyAllProps(componentParentElement, componentInput, mods2Field1);
 
-    expect(component2Input).not.toHaveAttribute('disabled');
+    expect(component2Input).toBeEnabled();
     verifyAllProps(component2ParentElement, component2Input, mods2Field2);
 });
 
@@ -161,7 +160,7 @@ it('verify markdown modifications', async () => {
         secondModificationField.field
     )[1];
 
-    const firstElementOuterHTMLBeforeMods = componentParentElement?.outerHTML;
+    const firstElementOuterHTMLBeforeMods = componentParentElement.outerHTML;
 
     const mods1Field2 = findMods(
         secondModificationField,
@@ -182,7 +181,7 @@ it('verify markdown modifications', async () => {
 
     await userEvent.type(componentMakingModsTextBox1, firstValueToInput);
 
-    const firstElementOuterHTMLAfterMods = componentParentElement?.outerHTML;
+    const firstElementOuterHTMLAfterMods = componentParentElement.outerHTML;
 
     // only id specified as modification so no changes should occure
     expect(firstElementOuterHTMLBeforeMods).toEqual(firstElementOuterHTMLAfterMods);
@@ -191,23 +190,19 @@ it('verify markdown modifications', async () => {
         `"Standard text label second fieldmarkdown message to open conf page and explain sthStandard Text help second field"`
     );
 
-    const anchorElementField2 = component2ParentElement?.querySelector('a');
-    expect(anchorElementField2?.getAttribute('href')).toEqual(
-        mods1Field2?.markdownMessage?.markdownType === 'hybrid' &&
-            mods1Field2?.markdownMessage?.link
-    );
-
-    expect(anchorElementField2?.textContent).toMatchInlineSnapshot(`"conf page"`);
+    invariant(mods1Field2.markdownMessage?.markdownType === 'hybrid');
+    const a = within(component2ParentElement).getByRole('link', { name: 'conf page' });
+    expect(a).toHaveAttribute('href', mods1Field2.markdownMessage.link);
 
     await userEvent.type(componentMakingModsTextBox1, secondValueToInput);
-    invariant(typeof mods2Field1?.markdownMessage?.text === 'string');
+    invariant(typeof mods2Field1.markdownMessage?.text === 'string');
     expect(componentParentElement).toHaveTextContent(mods2Field1.markdownMessage.text);
 
-    invariant(typeof mods2Field2?.markdownMessage?.text === 'string');
+    invariant(typeof mods2Field2.markdownMessage?.text === 'string');
     expect(component2ParentElement).toHaveTextContent(mods2Field2.markdownMessage.text);
 
-    const anchorElementField1 = componentParentElement?.querySelector('a');
+    const anchorElementField1 = componentParentElement.querySelector('a');
     expect(anchorElementField1?.getAttribute('href')).toEqual(
-        mods2Field1?.markdownMessage?.markdownType === 'link' && mods2Field1?.markdownMessage?.link
+        mods2Field1.markdownMessage.markdownType === 'link' && mods2Field1.markdownMessage.link
     );
 });
