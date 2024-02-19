@@ -522,7 +522,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         }
     };
 
-    handleSubmit = (event: React.MouseEvent | React.FormEvent) => {
+    handleSubmit = async (event: React.MouseEvent | React.FormEvent) => {
         event.preventDefault();
         this.clearErrorMsg();
         this.props.handleFormSubmit(/* isSubmitting */ true, /* closeEntity */ false);
@@ -536,7 +536,8 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         });
 
         if (this.hook && typeof this.hook.onSave === 'function') {
-            const validationPass = this.hook.onSave(this.datadict);
+            const validationPass = await this.hook.onSave(this.datadict);
+
             if (!validationPass) {
                 this.props.handleFormSubmit(/* isSubmitting */ false, /* closeEntity */ false);
                 return;
@@ -1251,6 +1252,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             }
             this.flag = false;
         }
+
         return (
             <div>
                 <form
