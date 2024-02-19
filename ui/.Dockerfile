@@ -21,8 +21,9 @@ WORKDIR /usr/src/app
 
 # Install dependencies
 COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile && \
-    yarn playwright install --with-deps
+RUN npm install --global --force yarn &&  \
+    yarn install --frozen-lockfile && \
+    yarn playwright install --with-deps chromium
 
 # Copy everything except 'src' (specified in .dockerignore)
 COPY . .

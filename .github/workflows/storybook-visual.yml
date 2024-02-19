@@ -1,4 +1,4 @@
-name: 'Storybook Visual'
+name: "Storybook Visual"
 on:
   workflow_call:
     inputs:
@@ -13,6 +13,8 @@ jobs:
         working-directory: ui
         shell: bash
     runs-on: ubuntu-latest
+    env:
+      isPR: ${{ github.event.pull_request.base.ref == 'develop' || github.event.pull_request.base.ref == 'main' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -29,12 +31,13 @@ jobs:
         run: yarn playwright install
       - name: Build Storybook
         run: yarn build-storybook --quiet
-      - name: Serve Storybook and run tests
+      - name: Serve Storybook and update screenshots
         run: |
           npx concurrently --kill-others --success first -n "SB,TEST" \
             "npx http-server storybook-static --port 6006 --silent" \
-            "npx wait-on tcp:6006 && yarn test-storybook -u"
+            "npx wait-on tcp:6006 && yarn test-storybook ${{ env.isPR && '-u' || ''}}"
       - name: Import GPG key
+        if: ${{ env.isPR }}
         uses: crazy-max/ghaction-import-gpg@v6
         with:
           git_committer_name: ${{ secrets.SA_GH_USER_NAME }}
@@ -44,11 +47,12 @@ jobs:
           git_user_signingkey: true
           git_commit_gpgsign: true
       - name: Push updated screenshots
+        if: ${{ env.isPR }}
         run: |
           git add \*.png
           git diff --staged --exit-code || (git commit -S -m "update screenshots" && git push)
       - uses: actions/upload-artifact@v4
-        name: 'Upload test report'
+        name: "Upload test report"
         if: ${{ failure() }}
         with:
           name: storybook-tests-report
