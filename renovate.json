@@ -32,6 +32,8 @@
         "@npmcli/git",
         "@testing-library/react",
         "@types/react",
+        "@typescript-eslint/eslint-plugin",
+        "@typescript-eslint/parser",
         "babel-eslint",
         "babel-loader",
         "css-what",
