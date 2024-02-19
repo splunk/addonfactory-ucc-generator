@@ -44,7 +44,7 @@ const StyledHeading = styled(Heading)`
 
 const StyledWarningIcon = styled(WarningIcon)`
     font-size: 120px;
-    color: ${variables.warningColor};
+    color: ${variables.alertColor};
 `;
 
 const StyledTypography = styled.details`

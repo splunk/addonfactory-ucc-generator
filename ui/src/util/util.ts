@@ -1,7 +1,6 @@
 import { TOAST_TYPES } from '@splunk/react-toast-notifications/ToastConstants';
 import Toaster, { makeCreateToast } from '@splunk/react-toast-notifications/Toaster';
 import { GlobalConfig, GlobalConfigSchema } from '../types/globalConfig/globalConfig';
-import { tryTrimErrorMessage } from './messageUtil';
 
 interface AppData {
     app: string;
@@ -72,14 +71,12 @@ export function getUnifiedConfigs() {
 }
 
 const createToast = makeCreateToast(Toaster);
-
 export const generateToast = (
     message: string,
     messageType: (typeof TOAST_TYPES)[keyof typeof TOAST_TYPES],
     action = undefined
 ) => {
     let toastType;
-
     switch (messageType) {
         case 'success':
             toastType = TOAST_TYPES.SUCCESS;
@@ -93,10 +90,9 @@ export const generateToast = (
         default:
             toastType = TOAST_TYPES.INFO;
     }
-
     createToast({
         type: toastType,
-        message: tryTrimErrorMessage(message),
+        message,
         autoDismiss: true,
         dismissOnActionClick: true,
         showAction: Boolean(action),
