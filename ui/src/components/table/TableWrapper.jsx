@@ -10,6 +10,7 @@ import CustomTable from './CustomTable';
 import TableHeader from './TableHeader';
 import TableContext from '../../context/TableContext';
 import { PAGE_INPUT } from '../../constants/pages';
+import { parseErrorMsg } from '../../util/messageUtil';
 
 function TableWrapper({
     page,
@@ -76,29 +77,13 @@ function TableWrapper({
         });
         axios
             .all(requests)
-            // eslint-disable-next-line no-shadow
-            .catch((error) => {
-                let message = '';
-                let errorCode = '';
-                if (error.response) {
-                    // The request was made and the server responded with a status code
-                    message = `Error received from server: ${error.response.data.messages[0].text}`;
-                    errorCode = page === PAGE_INPUT ? 'ERR0001' : 'ERR0002';
-                } else if (error.request) {
-                    // The request was made but no response was received
-                    message = `No response received while making request to ${page} services`;
-                    errorCode = 'ERR0003';
-                } else {
-                    // Something happened in setting up the request that triggered an Error
-                    message = `Error making request to ${page} services`;
-                    errorCode = 'ERR0004';
-                }
-                // eslint-disable-next-line no-param-reassign
-                error.uccErrorCode = errorCode;
-                generateToast(message);
+            .catch((caughtError) => {
+                const message = parseErrorMsg(caughtError);
+
+                generateToast(message, 'error');
                 setLoading(false);
-                setError(error);
-                return Promise.reject(error);
+                setError(caughtError);
+                return Promise.reject(caughtError);
             })
             .then((response) => {
                 modifyAPIResponse(response.map((res) => res.data.entry));
@@ -245,7 +230,7 @@ function TableWrapper({
         return [updatedArr, arr.length, arr];
     };
 
-    if (error?.uccErrorCode) {
+    if (error) {
         throw error;
     }
 

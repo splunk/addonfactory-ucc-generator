@@ -3,7 +3,7 @@ import React from 'react';
 import ErrorBoundary from '../ErrorBoundary';
 
 const ErrorGenerator = () => {
-    throw new Error('some error message');
+    throw new Error('Some internal error message. It should not be shown to the user');
 };
 
 const meta = {

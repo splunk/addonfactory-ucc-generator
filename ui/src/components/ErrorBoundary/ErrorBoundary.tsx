@@ -1,28 +1,66 @@
 import React, { ReactElement } from 'react';
 import Heading from '@splunk/react-ui/Heading';
-import { _ } from '@splunk/ui-utils/i18n';
+import { gettext } from '@splunk/ui-utils/i18n';
 import Card from '@splunk/react-ui/Card';
 import WarningIcon from '@splunk/react-icons/enterprise/Warning';
-import errorCodes from '../../constants/errorCodes';
+import styled from 'styled-components';
+import { variables } from '@splunk/themes';
+import { parseErrorMsg } from '../../util/messageUtil';
 
 interface ErrorBoundaryProps {
     children: ReactElement | ReactElement[];
 }
 
 interface ErrorBoundaryState {
-    errorCode: keyof typeof errorCodes | null;
-    error: null | unknown;
+    error:
+        | {
+              response?: {
+                  data?: {
+                      messages?: { text: string }[];
+                  };
+              };
+          }
+        | null
+        | unknown;
 }
+
+const StyledContainer = styled.div`
+    display: flex;
+    justify-content: center; // Ensures horizontal centering of children
+    align-items: center; // Ensures vertical centering
+    width: 100%; // Takes up full width of its parent
+`;
+
+const StyledCard = styled(Card)`
+    display: flex;
+    flex: 0;
+    box-shadow: ${variables.overlayShadow};
+    min-width: 30rem;
+`;
+
+const StyledHeading = styled(Heading)`
+    text-align: center;
+`;
+
+const StyledWarningIcon = styled(WarningIcon)`
+    font-size: 120px;
+    color: ${variables.alertColor};
+`;
+
+const StyledTypography = styled.details`
+    white-space: pre-wrap;
+    word-break: break-word;
+`;
 
 class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
     constructor(props: ErrorBoundaryProps) {
         super(props);
-        this.state = { errorCode: null, error: null };
+        this.state = { error: null };
     }
 
-    static getDerivedStateFromError(error: { uccErrorCode: unknown }) {
+    static getDerivedStateFromError(error: unknown) {
         // Update state so the next render will show the fallback UI.
-        return { errorCode: error.uccErrorCode, error };
+        return { error };
     }
 
     componentDidCatch(error: unknown) {
@@ -30,42 +68,32 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
         this.setState({
             error,
         });
-        // You can also log error messages to an error reporting service here
+        // eslint-disable-next-line no-console
+        console.error(error);
     }
 
     render() {
         if (this.state.error) {
+            const parsedErrorMessage = parseErrorMsg(this.state?.error);
             // Error path
             return (
-                <div style={{ marginTop: '10%' }}>
-                    <Card style={{ boxShadow: '10px 10px 5px #aaaaaa' }}>
+                <StyledContainer>
+                    <StyledCard>
                         <Card.Header>
-                            <Heading style={{ textAlign: 'center' }} level={2}>
-                                <WarningIcon style={{ fontSize: '120px', color: '#ff9900' }} />
-                                <br />
-                                <br />
-                                {this.state.errorCode === 'ERR0001'
-                                    ? _('Failed to load Inputs Page')
-                                    : _('Something went wrong!')}
-                            </Heading>
+                            <StyledHeading level={2}>
+                                <StyledWarningIcon />
+                                <StyledTypography as="p">
+                                    {gettext('Something went wrong!')}
+                                </StyledTypography>
+                            </StyledHeading>
                         </Card.Header>
                         <Card.Body>
-                            {this.state.errorCode ? (
-                                <>
-                                    {_(errorCodes[this.state.errorCode])}
-                                    <br />
-                                    <br />
-                                </>
-                            ) : null}
-                            <details style={{ whiteSpace: 'pre-wrap' }}>
-                                {this.state.error?.toString()}
-                            </details>
+                            {parsedErrorMessage && (
+                                <StyledTypography as="p">{parsedErrorMessage}</StyledTypography>
+                            )}
                         </Card.Body>
-                        <Card.Footer showBorder={false}>
-                            {this.state.errorCode ? this.state.errorCode : null}
-                        </Card.Footer>
-                    </Card>
-                </div>
+                    </StyledCard>
+                </StyledContainer>
             );
         }
         // Normally, just render children
