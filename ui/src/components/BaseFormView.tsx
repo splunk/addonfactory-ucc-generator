@@ -538,25 +538,6 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         }
     };
 
-    componentDidUpdate = (_prevProps: BaseFormProps, prevState: BaseFormState) => {
-        const changedEntity = Object.entries(prevState?.data || {}).find(
-            ([key, value]) => value.value !== this.state.data?.[key].value
-        )?.[0];
-
-        const stateWithModifications = getModifiedState(
-            this.state,
-            this.props.mode,
-            this.fieldsWithModifications.filter((entity) => entity.field === changedEntity)
-        );
-
-        if (stateWithModifications.shouldUpdateState) {
-            this.setState({
-                ...stateWithModifications.newState,
-            });
-            this.forceUpdate();
-        }
-    };
-
     handleSubmit = async (event: React.MouseEvent | React.FormEvent) => {
         event.preventDefault();
         this.clearErrorMsg();
@@ -935,15 +916,21 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             const newFields = update(prevState, { data: changes });
             const tempState = this.clearAllErrorMsg(newFields);
 
+            const { newState } = getModifiedState(
+                tempState,
+                this.props.mode,
+                this.fieldsWithModifications.filter((entity) => entity.field === field)
+            );
+
             if (this.hookDeferred) {
                 this.hookDeferred.then(() => {
-                    if (typeof this.hook?.onChange === 'function' && tempState) {
-                        this.hook.onChange(field, targetValue, tempState);
+                    if (typeof this.hook?.onChange === 'function') {
+                        this.hook.onChange(field, targetValue, newState);
                     }
                 });
             }
 
-            return tempState;
+            return newState;
         });
     };
 
@@ -1005,7 +992,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             }
         });
         newFields.data = temData;
-        return State ? newFields : null;
+        return newFields;
     };
 
     // Display error message
