@@ -12,6 +12,7 @@ import {
 } from './TestConfig';
 import EntityModal, { EntityModalProps } from '../EntityModal/EntityModal';
 import { EntitiesAllowingModifications } from '../BaseFormTypes';
+import { invariant } from '../../util/invariant';
 
 const handleRequestClose = jest.fn();
 const setUpConfigWithDefaultValue = () => {
@@ -118,9 +119,13 @@ it('verify modification after text components change', async () => {
         input: Element,
         mods?: { value?: string | number | boolean; help?: string; label?: string }
     ) => {
-        expect(input.getAttribute('value')).toEqual(mods?.value);
-        expect(parentElement.textContent?.includes(mods?.help || 'fail')).toEqual(true);
-        expect(parentElement.textContent?.includes(mods?.label || 'fail')).toEqual(true);
+        expect(input).toHaveAttribute('value', mods?.value);
+
+        invariant(typeof mods?.help === 'string');
+        expect(parentElement.textContent?.includes(mods.help)).toEqual(true);
+
+        invariant(typeof mods?.label === 'string');
+        expect(parentElement.textContent?.includes(mods.label)).toEqual(true);
     };
 
     expect(componentInput).toHaveAttribute('disabled');
@@ -192,25 +197,14 @@ it('verify markdown modifications', async () => {
             mods1Field2?.markdownMessage?.link
     );
 
-    expect(
-        anchorElementField2?.textContent?.includes(
-            (mods1Field2?.markdownMessage?.markdownType === 'hybrid' &&
-                mods1Field2?.markdownMessage?.linkText) ||
-                'fail'
-        )
-    ).toEqual(true);
+    expect(anchorElementField2?.textContent).toMatchInlineSnapshot(`"conf page"`);
 
-    if (componentMakingModsTextBox1) {
-        await userEvent.type(componentMakingModsTextBox1, secondValueToInput);
-    }
+    await userEvent.type(componentMakingModsTextBox1, secondValueToInput);
+    invariant(typeof mods2Field1?.markdownMessage?.text === 'string');
+    expect(componentParentElement).toHaveTextContent(mods2Field1.markdownMessage.text);
 
-    expect(
-        componentParentElement?.textContent?.includes(mods2Field1?.markdownMessage?.text || 'fail')
-    ).toEqual(true);
-
-    expect(
-        component2ParentElement?.textContent?.includes(mods2Field2?.markdownMessage?.text || 'fail')
-    ).toEqual(true);
+    invariant(typeof mods2Field2?.markdownMessage?.text === 'string');
+    expect(component2ParentElement).toHaveTextContent(mods2Field2.markdownMessage.text);
 
     const anchorElementField1 = componentParentElement?.querySelector('a');
     expect(anchorElementField1?.getAttribute('href')).toEqual(
