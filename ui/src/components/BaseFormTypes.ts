@@ -4,8 +4,18 @@ import {
     AcceptableFormValueOrNull,
     AcceptableFormValueOrNullish,
 } from '../types/components/shareableTypes';
-import { AnyOfEntity, OAuthFields } from '../types/globalConfig/entities';
 import { MarkdownMessageProps } from './MarkdownMessage/MarkdownMessage';
+import {
+    AnyOfEntity,
+    CheckboxEntity,
+    FileEntity,
+    MultipleSelectEntity,
+    OAuthFields,
+    RadioEntity,
+    SingleSelectEntity,
+    TextAreaEntity,
+    TextEntity,
+} from '../types/globalConfig/entities';
 
 export type CurrentBaseFormInput =
     | Record<string, AcceptableFormValueOrNull>
@@ -16,6 +26,24 @@ export interface CustomHookError {
     message: string;
 }
 
+type SingleFieldToModify = {
+    fieldId: string;
+    display?: boolean;
+    value?: string | number | boolean;
+    disabled?: boolean;
+    help?: string;
+    label?: string;
+    markdownMessage?: MarkdownMessageProps;
+};
+
+export type ModificationCriteria = {
+    fieldValue: string | number | boolean;
+    mode?: 'create' | 'edit' | 'config' | 'clone';
+    fieldsToModify: Array<SingleFieldToModify>;
+};
+
+export type ModifyFieldsOnValue = Array<ModificationCriteria>;
+
 export interface BaseFormStateData {
     [x: string]: {
         disabled: boolean;
@@ -25,6 +53,10 @@ export interface BaseFormStateData {
         display: boolean;
         markdownMessage?: MarkdownMessageProps;
         dependencyValues?: string;
+        modifiedEntitiesData?: {
+            help?: string;
+            label?: string;
+        };
     };
 }
 
@@ -43,9 +75,10 @@ export interface BaseFormState {
     mode?: Mode;
     page?: string;
     stanzaName?: string;
-    data?: BaseFormStateData;
+    data: BaseFormStateData;
     errorMsg?: string;
     warningMsg?: string;
+    stateModified?: boolean;
 }
 
 export interface SingleSelectEntityType {
@@ -59,6 +92,7 @@ export interface SingleSelectEntityType {
             value: 'oauth' | 'basic';
         }[];
     };
+    modifyFieldsOnValue?: ModifyFieldsOnValue;
 }
 
 export interface UtilBaseForm {
@@ -108,6 +142,16 @@ export interface CustomHook {
 }
 
 export type AnyEntity = z.TypeOf<typeof AnyOfEntity> | z.TypeOf<typeof OAuthFields>;
+
+export type EntitiesAllowingModifications =
+    | z.TypeOf<typeof TextEntity>
+    | z.TypeOf<typeof TextAreaEntity>
+    | z.TypeOf<typeof SingleSelectEntity>
+    | z.TypeOf<typeof MultipleSelectEntity>
+    | z.TypeOf<typeof CheckboxEntity>
+    | z.TypeOf<typeof RadioEntity>
+    | z.TypeOf<typeof FileEntity>
+    | z.TypeOf<typeof OAuthFields>;
 
 export type OAuthEntity = z.TypeOf<typeof OAuthFields>;
 

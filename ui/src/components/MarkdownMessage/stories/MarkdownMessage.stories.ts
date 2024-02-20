@@ -17,11 +17,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Base: Story = {
     args: {
-        text: 'text',
-        link: 'link',
-        color: 'color',
         markdownType: 'text',
-        token: 'token',
-        linkText: 'linkText',
+        text: 'text',
+        color: 'color',
     },
 };

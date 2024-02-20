@@ -1,19 +1,14 @@
 import React, { ReactElement } from 'react';
 import styled from 'styled-components';
 import Link from '@splunk/react-ui/Link';
+import { z } from 'zod';
+import { MarkdownMessageType } from '../../types/globalConfig/entities';
 
 const MarkdownWrapper = styled.span`
     color: ${(props) => props.color};
 `;
 
-export interface MarkdownMessageProps {
-    text: string;
-    link: string;
-    color: string;
-    markdownType: 'text' | 'link' | 'hybrid' | '';
-    token: string;
-    linkText: string;
-}
+export type MarkdownMessageProps = z.infer<typeof MarkdownMessageType>;
 
 function MarkdownMessage(props: MarkdownMessageProps) {
     // flatMap adds the link to the part of text that has been split from text
@@ -47,7 +42,6 @@ function MarkdownMessage(props: MarkdownMessageProps) {
 
         return markdownText;
     }
-
     return <div data-test="msg-markdown">{getMarkdownText()}</div>;
 }
 

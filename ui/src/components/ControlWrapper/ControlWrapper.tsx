@@ -1,7 +1,7 @@
 import React from 'react';
 import ControlGroup from '@splunk/react-ui/ControlGroup';
 import styled from 'styled-components';
-import MarkdownMessage, { MarkdownMessageProps } from '../MarkdownMessage/MarkdownMessage';
+import MarkdownMessage from '../MarkdownMessage/MarkdownMessage';
 import CONTROL_TYPE_MAP, { ComponentTypes } from '../../constants/ControlTypeMap';
 import { AnyEntity, UtilControlWrapper } from '../BaseFormTypes';
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
@@ -34,8 +34,19 @@ interface ControlWrapperProps {
     serviceName: string;
     dependencyValues: unknown;
     entity?: AnyEntity;
-    markdownMessage?: MarkdownMessageProps;
+    markdownMessage?: {
+        text: string;
+        link?: string;
+        color?: string;
+        markdownType?: 'text' | 'link' | 'hybrid';
+        token?: string;
+        linkText?: string;
+    };
     fileNameToDisplay?: string;
+    modifiedEntitiesData?: {
+        help?: string;
+        label?: string;
+    };
 }
 
 class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
@@ -72,6 +83,7 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
                       utilCustomFunctions,
                       controlOptions: this.props.entity.options,
                       ...this?.props?.entity,
+                      ...this.props?.modifiedEntitiesData,
                   })
                 : `No View Found for ${this?.props?.entity?.type} type`;
         } else {
@@ -87,6 +99,7 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
                       fileNameToDisplay: this.props.fileNameToDisplay,
                       mode: this.props.mode,
                       ...this?.props?.entity,
+                      ...this.props?.modifiedEntitiesData,
                   })
                 : `No View Found for ${this?.props?.entity?.type} type`;
         }
@@ -97,23 +110,24 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
                     text={text || ''}
                     link={link || ''}
                     color={color || ''}
-                    markdownType={markdownType || ''}
+                    markdownType={markdownType}
                     token={token || ''}
                     linkText={linkText || ''}
                 />
-                {this?.props?.entity?.help || ''}
+                {this.props?.modifiedEntitiesData?.help || this?.props?.entity?.help || ''}
             </>
         );
 
         return (
             this.props.display && (
                 <ControlGroupWrapper
+                    {...this?.props?.entity}
+                    {...this.props?.modifiedEntitiesData}
                     help={helpText}
                     error={this.props.error}
                     // @ts-expect-error property should be data-name, but is mapped in obj ControlGroupWrapper
                     dataName={this?.props?.entity.field}
                     labelWidth={240}
-                    {...this?.props?.entity}
                 >
                     <CustomElement>{rowView}</CustomElement>
                 </ControlGroupWrapper>
