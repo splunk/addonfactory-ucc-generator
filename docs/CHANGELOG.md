@@ -1,3 +1,20 @@
+# [5.39.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.38.0...v5.39.0) (2024-02-20)
+
+
+### Bug Fixes
+
+* **a11y:** associate labels with inputs ([#1055](https://github.com/splunk/addonfactory-ucc-generator/issues/1055)) ([a880c45](https://github.com/splunk/addonfactory-ucc-generator/commit/a880c45938d3ed7ccfe9300ffc6d910ef2fb7989))
+* Add page for proxy configuration ([#1057](https://github.com/splunk/addonfactory-ucc-generator/issues/1057)) ([a76c0c2](https://github.com/splunk/addonfactory-ucc-generator/commit/a76c0c248c7c4f01d60bc4733f7ff2a85b82a691))
+* return back div wrapper that shifts layout ([#1061](https://github.com/splunk/addonfactory-ucc-generator/issues/1061)) ([c6a42c6](https://github.com/splunk/addonfactory-ucc-generator/commit/c6a42c6233ea81918d5da067316654526bd1ca7c)), closes [#1055](https://github.com/splunk/addonfactory-ucc-generator/issues/1055)
+
+
+### Features
+
+* add async on save to entity page ([#1080](https://github.com/splunk/addonfactory-ucc-generator/issues/1080)) ([abe8f96](https://github.com/splunk/addonfactory-ucc-generator/commit/abe8f96256dcc496bc1a84852d44bb89ef9e9401))
+* add possibility to use async onSave method ([#1079](https://github.com/splunk/addonfactory-ucc-generator/issues/1079)) ([7dd6640](https://github.com/splunk/addonfactory-ucc-generator/commit/7dd66408d77c5295aabd643cebd428a52aa257ad))
+* ADDON-57381 hide implementation details from user-facing error messages ([#987](https://github.com/splunk/addonfactory-ucc-generator/issues/987)) ([5467ed9](https://github.com/splunk/addonfactory-ucc-generator/commit/5467ed9935fd83f17e14775eed7f2a7978c550cf))
+* modify fields on value ([#1066](https://github.com/splunk/addonfactory-ucc-generator/issues/1066)) ([1cd25b5](https://github.com/splunk/addonfactory-ucc-generator/commit/1cd25b54c0ed42f374bb3c2f570d397aaef8d4a2))
+
 # [5.38.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.37.0...v5.38.0) (2024-02-06)
 
 
