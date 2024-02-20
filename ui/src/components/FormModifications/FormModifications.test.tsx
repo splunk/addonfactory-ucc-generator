@@ -201,8 +201,7 @@ it('verify markdown modifications', async () => {
     invariant(typeof mods2Field2.markdownMessage?.text === 'string');
     expect(component2ParentElement).toHaveTextContent(mods2Field2.markdownMessage.text);
 
-    const anchorElementField1 = componentParentElement.querySelector('a');
-    expect(anchorElementField1?.getAttribute('href')).toEqual(
-        mods2Field1.markdownMessage.markdownType === 'link' && mods2Field1.markdownMessage.link
-    );
+    invariant(mods2Field1.markdownMessage.markdownType === 'link');
+    const anchorElementField1 = within(componentParentElement).getByRole('link');
+    expect(anchorElementField1).toHaveAttribute('href', mods1Field2.markdownMessage.link);
 });
