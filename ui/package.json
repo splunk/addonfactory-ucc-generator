@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@splunk/react-icons": "^4.2.0",
-    "@splunk/react-page": "^6.3.3",
+    "@splunk/react-page": "^7.0.0",
     "@splunk/react-toast-notifications": "^0.11.3",
     "@splunk/react-ui": "^4.25.0",
     "@splunk/splunk-utils": "^3.0.0",

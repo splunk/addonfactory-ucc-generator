@@ -2341,14 +2341,14 @@
     lodash "^4.17.14"
     prop-types "^15.6.2"
 
-"@splunk/react-page@^6.3.3":
-  version "6.3.3"
-  resolved "https://registry.npmjs.org/@splunk/react-page/-/react-page-6.3.3.tgz#915b9f56f5cefd2951d42d41e0cca83fbee2c562"
-  integrity sha512-sQUVkgg6wTSxtLTFxjdS2xrm/zBQdS8srsWKbyKBqbqohooGxycYn/zp0UZssZ42stZyVQ8dlkxa3BEmoZefdg==
+"@splunk/react-page@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.npmjs.org/@splunk/react-page/-/react-page-7.0.0.tgz#4993d4148bf142810b256a5a8a1d815712d40c81"
+  integrity sha512-yqaNxUby7TbEEF3QyPbEONZ1BdwoL/jixR6OJJJ1O/kPKfzfDDogfq+d0tNgigYPAFA3Cz5xR5SLsLZVXK8sMQ==
   dependencies:
-    "@splunk/react-ui" "^4.22.0"
-    "@splunk/splunk-utils" "^2.3.4"
-    "@splunk/themes" "^0.16.3"
+    "@splunk/react-ui" "^4.25.0"
+    "@splunk/splunk-utils" "^3.0.0"
+    "@splunk/themes" "^0.16.4"
     "@splunk/ui-utils" "^1.6.0"
     prop-types "^15.6.2"
     scriptjs "^2.5.8"
@@ -2366,7 +2366,7 @@
     prop-types "^15.6.2"
     react-flip-move "^3.0.1"
 
-"@splunk/react-ui@^4.22.0", "@splunk/react-ui@^4.23.0":
+"@splunk/react-ui@^4.23.0":
   version "4.24.0"
   resolved "https://registry.npmjs.org/@splunk/react-ui/-/react-ui-4.24.0.tgz#1250eda179f30c51d22c289d41a07ff0e2fd7c3e"
   integrity sha512-qrPKWe8H4w6hl3dIPPeIDgvWqwAk9DjhkVbKw3ffInrLk32bbA816y5WfQZdi0rBhZLOKNl1j4Om875qO33mpQ==
@@ -2417,16 +2417,6 @@
     tinycolor2 "^1.4.1"
     use-typed-event-listener "^3.0.0"
 
-"@splunk/splunk-utils@^2.3.4":
-  version "2.3.4"
-  resolved "https://registry.npmjs.org/@splunk/splunk-utils/-/splunk-utils-2.3.4.tgz#0c86aba8c0c18ce341f04d2d7b38584cfa52befc"
-  integrity sha512-Bdty5Xd5HmIWKm87Ym6HiD1pzMJ5dd86+ISseoP9tyRXgXr1hXYStZO5+kEqDNbeqQG3LPynDzsvf0tb/0gsTw==
-  dependencies:
-    "@splunk/ui-utils" "^1.6.0"
-    lodash "^4.17.14"
-    scriptjs "^2.5.8"
-    semver "^7.3.8"
-
 "@splunk/splunk-utils@^3.0.0":
   version "3.0.0"
   resolved "https://registry.npmjs.org/@splunk/splunk-utils/-/splunk-utils-3.0.0.tgz#8e0a13b689c6161f19fc4a5e0cb2392b6485c7d2"
@@ -2436,7 +2426,7 @@
     lodash "^4.17.14"
     scriptjs "^2.5.8"
 
-"@splunk/themes@^0.16.3", "@splunk/themes@^0.16.4":
+"@splunk/themes@^0.16.4":
   version "0.16.4"
   resolved "https://registry.npmjs.org/@splunk/themes/-/themes-0.16.4.tgz#883ad2ebb2527e8a62d5ed97036906553b44144b"
   integrity sha512-S2QFI09ss2t8Q3tE0JBwszD1N+SmY55C72koymrI4l1sr9QYNtvGT6Nauka0AjYsLUx1QESwyIproor/muwjxA==
@@ -10879,7 +10869,7 @@ scriptjs@^2.5.8:
   resolved "https://registry.npmjs.org/scriptjs/-/scriptjs-2.5.9.tgz#343915cd2ec2ed9bfdde2b9875cd28f59394b35f"
   integrity sha512-qGVDoreyYiP1pkQnbnFAUIS5AjenNwwQBdl7zeos9etl+hYKWahjRTfzAZZYBv5xNHx7vNKCmaLDQZ6Fr2AEXg==
 
-"semver@2 || 3 || 4 || 5", semver@^5.6.0, semver@^6.0.0, semver@^6.3.0, semver@^6.3.1, semver@^7.1.1, semver@^7.2.1, semver@^7.3.4, semver@^7.3.5, semver@^7.3.7, semver@^7.3.8, semver@^7.5.3, semver@^7.5.4, semver@^7.6.0:
+"semver@2 || 3 || 4 || 5", semver@^5.6.0, semver@^6.0.0, semver@^6.3.0, semver@^6.3.1, semver@^7.1.1, semver@^7.2.1, semver@^7.3.4, semver@^7.3.5, semver@^7.3.7, semver@^7.5.3, semver@^7.5.4, semver@^7.6.0:
   version "7.6.0"
   resolved "https://registry.npmjs.org/semver/-/semver-7.6.0.tgz#1a46a4db4bffcccd97b743b5005c8325f23d4e2d"
   integrity sha512-EnwXhrlwXMk9gKu5/flx5sv/an57AkRplG3hTK68W7FRDN+k+OWBj65M7719OkA82XLBxrcX0KSHj+X5COhOVg==
