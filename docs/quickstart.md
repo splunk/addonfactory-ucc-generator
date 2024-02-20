@@ -124,6 +124,16 @@ It takes the following parameters:
   to pip install command. The default is`False`. NOTE: This flag is deprecated and will be removed from pip in the future.
 Instead of using this flag, the correct solution would be to fix the packages your project depends on to work properly with the new resolver. Additionally, this flag is not compatible with pip version `23.2`. Use `23.2.1` instead. 
 
+
+#### [Optional] Python Static file analysis - linter
+
+UCC uses [pylint](https://pypi.org/project/pylint/) to check all python files located in /bin directory, although the library itself is not provided. 
+To trigger this mode during build run you need to install pylint on your environment. The result of linter run will be printed at the end in form of
+short summary of warnings and errors found (PEP, refactor and import errors are ignored).
+
+When running in Verbose mode it will print more detailed information about found issues in affected files.
+
+
 #### Verbose mode
 
 Verbose mode is available for `v5.35.0` and up.

@@ -111,6 +111,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         help=(
             "[experimental] show detailed information about "
             "created/copied/modified/conflict files after build is complete"
+            "python binaries static analysis Error and Warning results"
         ),
     )
     build_parser.add_argument(
@@ -201,7 +202,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             addon_version=args.ta_version,
             output_directory=args.output,
             python_binary_name=args.python_binary_name,
-            verbose_file_summary_report=args.verbose,
+            verbose_build_report=args.verbose,
             pip_version=args.pip_version,
             pip_legacy_resolver=args.pip_legacy_resolver,
         )

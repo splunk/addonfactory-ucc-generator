@@ -25,6 +25,15 @@ import subprocess
 import colorama as c
 import fnmatch
 import filecmp
+from dataclasses import asdict
+
+try:
+    has_pylint = True
+    from pylint import lint
+    from pylint.reporters import CollectingReporter
+except ImportError:
+    has_pylint = False
+
 
 from openapi3 import OpenAPI
 
@@ -337,7 +346,7 @@ def summary_report(
     source: str,
     ta_name: str,
     output_directory: str,
-    verbose_file_summary_report: bool,
+    verbose_build_report: bool,
 ) -> None:
     # initialising colorama to handle ASCII color in windows cmd
     c.init()
@@ -369,7 +378,7 @@ def summary_report(
     )
 
     def line_print(print_path: str, mod_type: str) -> None:
-        if verbose_file_summary_report:
+        if verbose_build_report:
             logger.info(
                 color_palette.get(mod_type, "")
                 + str(print_path).ljust(80)
@@ -416,7 +425,7 @@ def summary_report(
 
     path_len = len(output_directory) + 1
 
-    if verbose_file_summary_report:
+    if verbose_build_report:
         logger.info("Detailed information about created/copied/modified/conflict files")
         logger.info(
             "Read more about it here: "
@@ -446,13 +455,76 @@ def summary_report(
     logger.info(f"File creation summary: {summary_combined}")
 
 
+def binaries_lint_check(path: str, verbose_build_report: bool) -> None:
+    # initialising colorama to handle ASCII color in windows cmd
+
+    if not has_pylint:
+        logger.info(
+            "Python static code analysis is an optional feature and requires pylint.\n"
+            "If you want to trigger this feature, please install pylint on your environment."
+        )
+        return None
+
+    c.init()
+    color_palette = {
+        "E": c.Fore.RED,
+        "W": c.Fore.YELLOW,
+    }
+
+    summary_combined = {"Errors": 0, "Warnings": 0}
+
+    def run_pylint(files_list: list[str]) -> None:
+        # disable refactor, convention and import messages
+        args = ["--disable=R,C,E0401"]
+
+        report = CollectingReporter()
+        lint.Run(files_list + args, reporter=report, exit=False)
+
+        line_format = "{path}:{line}:{column}: {msg_id}: {msg} ({symbol})"
+        for error in report.messages:
+            msg_type = error.msg_id[0]
+            if msg_type == "E":
+                summary_combined["Errors"] += 1
+            if msg_type == "W":
+                summary_combined["Warnings"] += 1
+
+            if verbose_build_report:
+                logger.info(
+                    color_palette.get(msg_type, "")
+                    + line_format.format(**asdict(error))
+                    + c.Style.RESET_ALL
+                )
+
+    def get_files(root_path: str) -> List[str]:
+        root_path = os.path.join(root_path, "bin")
+
+        return_file_list = []
+
+        for path, dir, files in os.walk(root_path):
+            for file in files:
+                if file.endswith(".py"):
+                    return_file_list.append(path + "/" + file)
+
+        return return_file_list
+
+    binaries_list = get_files(path)
+
+    if not binaries_list:
+        logger.info("No Python files found")
+        return
+    else:
+        run_pylint(binaries_list)
+
+    logger.info(f"Python code static analysis: {summary_combined}")
+
+
 def generate(
     source: str,
     config_path: Optional[str] = None,
     addon_version: Optional[str] = None,
     output_directory: Optional[str] = None,
     python_binary_name: str = "python3",
-    verbose_file_summary_report: bool = False,
+    verbose_build_report: bool = False,
     pip_version: str = "latest",
     pip_legacy_resolver: bool = False,
 ) -> None:
@@ -726,5 +798,7 @@ def generate(
         source,
         ta_name,
         os.path.join(output_directory, ta_name),
-        verbose_file_summary_report,
+        verbose_build_report,
     )
+
+    binaries_lint_check(source, verbose_build_report)
