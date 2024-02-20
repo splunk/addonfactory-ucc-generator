@@ -56,8 +56,8 @@ function EntityPage({
         buttonText = _('Update');
     }
 
-    const handleSubmit: ButtonClickHandler = (e) => {
-        const result = form.current?.handleSubmit(e);
+    const handleSubmit: ButtonClickHandler = async (e) => {
+        const result = await form.current?.handleSubmit(e);
         if (result) {
             handleRequestClose();
         }
