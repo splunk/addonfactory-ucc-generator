@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import Message from '@splunk/react-ui/Message';
 
-import ControlWrapper from './ControlWrapper';
+import ControlWrapper from './ControlWrapper/ControlWrapper';
 import Validator, { SaveValidator } from '../util/Validator';
 import { getUnifiedConfigs, generateToast } from '../util/util';
 import { MODE_CLONE, MODE_CREATE, MODE_EDIT, MODE_CONFIG } from '../constants/modes';
@@ -21,7 +21,7 @@ import {
     ERROR_STATE_MISSING_TRY_AGAIN,
 } from '../constants/oAuthErrorMessage';
 import TableContext from '../context/TableContext';
-import Group from './Group';
+import Group from './Group/Group';
 import {
     AcceptableFormValueOrNull,
     AcceptableFormValueOrNullish,
@@ -43,7 +43,12 @@ import {
     BasicEntity,
     ChangeRecord,
     CustomHookClass,
+    EntitiesAllowingModifications,
 } from './BaseFormTypes';
+import {
+    getAllFieldsWithModifications,
+    getModifiedState,
+} from './FormModifications/FormModifications';
 
 function onCustomHookError(params: { methodName: string; error?: CustomHookError }) {
     // eslint-disable-next-line no-console
@@ -118,11 +123,13 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
 
     customWarningMessage: { message: string; alwaysDisplay?: boolean };
 
+    fieldsWithModifications: EntitiesAllowingModifications[];
+
     constructor(props: BaseFormProps, context: React.ContextType<typeof TableContext>) {
         super(props);
         // flag for to render hook method for once
         this.flag = true;
-        this.state = {};
+        this.state = { data: {} };
         this.datadict = {};
         this.currentInput = {};
         const globalConfig = getUnifiedConfigs();
@@ -222,7 +229,6 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         this.authMap = {};
         let temState: BaseFormStateData = {};
         const temEntities: AnyEntity[] = [];
-
         this.entities?.forEach((e) => {
             if (e.type === 'oauth') {
                 this.isOAuth = true;
@@ -493,6 +499,16 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         // apply dependency field changes in state
         // @ts-expect-error variable changes should have property '$apply'
         temState = update(temState, changes);
+
+        this.fieldsWithModifications = getAllFieldsWithModifications(this.entities);
+        const stateWithModifications = getModifiedState(
+            { data: temState },
+            this.props.mode,
+            this.fieldsWithModifications
+        );
+        if (stateWithModifications.shouldUpdateState) {
+            temState = { ...stateWithModifications.newState.data };
+        }
         this.state = {
             data: temState,
             errorMsg: '',
@@ -522,7 +538,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         }
     };
 
-    handleSubmit = (event: React.MouseEvent | React.FormEvent) => {
+    handleSubmit = async (event: React.MouseEvent | React.FormEvent) => {
         event.preventDefault();
         this.clearErrorMsg();
         this.props.handleFormSubmit(/* isSubmitting */ true, /* closeEntity */ false);
@@ -536,7 +552,8 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         });
 
         if (this.hook && typeof this.hook.onSave === 'function') {
-            const validationPass = this.hook.onSave(this.datadict);
+            const validationPass = await this.hook.onSave(this.datadict);
+
             if (!validationPass) {
                 this.props.handleFormSubmit(/* isSubmitting */ false, /* closeEntity */ false);
                 return;
@@ -564,7 +581,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                         if (entityLabel && nameFromDict && typeof nameFromDict !== 'object') {
                             this.setErrorFieldMsg(
                                 'name',
-                                getFormattedMessage(2, [entityLabel, nameFromDict])
+                                getFormattedMessage(2, [entityLabel, String(nameFromDict)])
                             );
                         }
                     }
@@ -899,15 +916,21 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             const newFields = update(prevState, { data: changes });
             const tempState = this.clearAllErrorMsg(newFields);
 
+            const { newState } = getModifiedState(
+                tempState,
+                this.props.mode,
+                this.fieldsWithModifications.filter((entity) => entity.field === field)
+            );
+
             if (this.hookDeferred) {
                 this.hookDeferred.then(() => {
-                    if (typeof this.hook?.onChange === 'function' && tempState) {
-                        this.hook.onChange(field, targetValue, tempState);
+                    if (typeof this.hook?.onChange === 'function') {
+                        this.hook.onChange(field, targetValue, newState);
                     }
                 });
             }
 
-            return tempState;
+            return newState;
         });
     };
 
@@ -969,7 +992,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             }
         });
         newFields.data = temData;
-        return State ? newFields : null;
+        return newFields;
     };
 
     // Display error message
@@ -1251,6 +1274,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             }
             this.flag = false;
         }
+
         return (
             <div>
                 <form
@@ -1285,6 +1309,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                                 markdownMessage={temState.markdownMessage}
                                 dependencyValues={temState.dependencyValues || null}
                                 fileNameToDisplay={temState.fileNameToDisplay}
+                                modifiedEntitiesData={temState.modifiedEntitiesData}
                             />
                         );
                     })}

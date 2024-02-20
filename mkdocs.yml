@@ -36,13 +36,17 @@ nav:
     - Introduction: "inputs/index.md"
     - Tabs: "inputs/tabs.md"
     - Multi-level Menu: "inputs/multilevel_menu.md"
-  - Configuration: "configurations.md"
+  - Configuration:
+      - "configurations/index.md"
+      - Proxy: "configurations/proxy.md"
   - Dashboard: "dashboard.md"
   - Entity:
     - "entity/index.md"
     - Introduction: "entity/index.md"
     - Components: "entity/components.md"
     - Validators: "entity/validators.md"
+    - Modify Fields On Change: "entity/modifyFieldsOnValue.md"
+
   - Table: "table.md"
   - Additional packaging: "additional_packaging.md"
   - UCC Ignore: "uccignore.md"

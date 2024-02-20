@@ -9,7 +9,7 @@ import { mockServerResponse } from '../../../mocks/server-response';
 
 const meta = {
     component: InputPage,
-    title: 'InputPage/Base',
+    title: 'InputPage',
     render: (args) => {
         setUnifiedConfig(args.globalConfig);
         return <InputPage />;
@@ -22,6 +22,10 @@ const meta = {
             handlers: [
                 http.get('/servicesNS/nobody/-/:name', () => HttpResponse.json(mockServerResponse)),
             ],
+        },
+        snapshots: {
+            width: 1200,
+            height: 1200,
         },
     },
 } satisfies Meta;

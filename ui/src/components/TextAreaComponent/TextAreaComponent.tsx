@@ -6,7 +6,8 @@ const TextWrapper = styled(TextArea)`
     width: 320px !important;
 `;
 
-interface TextAreadComponentProps {
+interface TextAreaComponentProps {
+    id?: string;
     value: string | number;
     handleChange: (field: string, value: string) => void;
     field: string;
@@ -15,13 +16,14 @@ interface TextAreadComponentProps {
     disabled?: boolean;
 }
 
-function TextAreaComponent(props: TextAreadComponentProps) {
+function TextAreaComponent(props: TextAreaComponentProps) {
     const handleChange = (e: unknown, { value }: { value: string }) => {
         props.handleChange(props.field, value);
     };
 
     return (
         <TextWrapper
+            inputId={props.id}
             inline
             canClear
             error={props.error}

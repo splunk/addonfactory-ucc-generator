@@ -54,8 +54,8 @@ class EntityModal extends Component<EntityModalProps, EntityModalState> {
         this.props.handleRequestClose();
     };
 
-    handleSubmit: ButtonClickHandler = (e) => {
-        const result = this.form.current?.handleSubmit(e);
+    handleSubmit: ButtonClickHandler = async (e) => {
+        const result = await this.form.current?.handleSubmit(e);
         if (result) {
             this.handleRequestClose();
         }

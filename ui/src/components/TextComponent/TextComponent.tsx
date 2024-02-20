@@ -14,6 +14,7 @@ interface TextComponentProps {
     error?: boolean;
     encrypted?: boolean;
     disabled?: boolean;
+    id?: string;
 }
 
 class TextComponent extends Component<TextComponentProps> {
@@ -24,6 +25,7 @@ class TextComponent extends Component<TextComponentProps> {
     render() {
         return (
             <TextWrapper
+                inputId={this.props.id}
                 inline
                 error={this.props.error}
                 className={this.props.field}

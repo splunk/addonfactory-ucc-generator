@@ -28,8 +28,6 @@ function ConfigurationFormView({ serviceName }) {
             serviceName: `settings/${serviceName}`,
             handleError: true,
             callbackOnError: (err) => {
-                // eslint-disable-next-line no-param-reassign
-                err.uccErrorCode = 'ERR0005';
                 setError(err);
             },
         }).then((response) => {
@@ -48,7 +46,7 @@ function ConfigurationFormView({ serviceName }) {
         setIsSubmitting(set);
     };
 
-    if (error?.uccErrorCode) {
+    if (error) {
         throw error;
     }
 
