@@ -129,46 +129,6 @@ class TestInputPage(UccTester):
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.input
-    def test_inputs_textarea_big_input(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
-    ):
-        """
-        Verifies that textarea can handle big inputs
-        """
-        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
-        input_page.table.edit_row("dummy_input_one")
-        big_input = ""
-        for i in range(1, 1000):
-            big_input += f"{str(i)}\n"
-        input_page.entity1.text_area.set_value(big_input)
-        self.assert_util(big_input, input_page.entity1.text_area.get_value())
-        self.assert_util(input_page.entity1.save, True)
-        input_page.table.edit_row("dummy_input_one")
-        self.assert_util(big_input.strip(), input_page.entity1.text_area.get_value())
-
-    @pytest.mark.execute_enterprise_cloud_true
-    @pytest.mark.forwarder
-    @pytest.mark.input
-    def test_inputs_textarea_scroll(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
-    ):
-        """
-        Verifies that textarea height values
-        """
-        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
-        input_page.table.edit_row("dummy_input_one")
-        long_input = ""
-        screnshot_before = input_page.entity1.text_area.screenshot()
-        for i in range(1, 50):
-            long_input += f"{str(i)}\n"
-        input_page.entity1.text_area.append_value(long_input)
-        input_page.entity1.text_area.scroll("UP", 40)
-        screenshot_after = input_page.entity1.text_area.screenshot()
-        self.assert_util(screnshot_before, screenshot_after, operator="!=")
-
-    @pytest.mark.execute_enterprise_cloud_true
-    @pytest.mark.forwarder
-    @pytest.mark.input
     def test_inputs_displayed_columns(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
@@ -1492,6 +1452,31 @@ class TestInputPage(UccTester):
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.input
+    def test_example_input_two_required_field_name(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
+    ):
+        """Verifies required field name in Example Input Two"""
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        input_page.create_new_input.select("Example Input Two")
+        input_page.entity2.example_account.wait_for_values()
+        input_page.entity2.example_checkbox.check()
+        input_page.entity2.example_radio.select("No")
+        input_page.entity2.example_multiple_select.select("Option One")
+        input_page.entity2.index.select("main")
+        input_page.entity2.interval.set_value("90")
+        input_page.entity2.example_account.select("test_input")
+        input_page.entity2.query_start_date.set_value("2020-12-11T20:00:32.000z")
+        self.assert_util(
+            input_page.entity2.save,
+            r"Field Name is required",
+            left_args={"expect_error": True},
+        )
+        input_page.entity2.name.set_value("test_name_two")
+        self.assert_util(input_page.entity2.is_error_closed, True)
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
     def test_example_input_two_valid_length_name(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
@@ -2448,24 +2433,39 @@ class TestInputPage(UccTester):
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.input
-    def test_example_input_two_required_field_name(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
+    def test_inputs_textarea_big_input(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
     ):
-        """Verifies required field name in Example Input Two"""
+        """
+        Verifies that textarea can handle big inputs
+        """
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
-        input_page.create_new_input.select("Example Input Two")
-        input_page.entity2.example_account.wait_for_values()
-        input_page.entity2.example_checkbox.check()
-        input_page.entity2.example_radio.select("No")
-        input_page.entity2.example_multiple_select.select("Option One")
-        input_page.entity2.index.select("main")
-        input_page.entity2.interval.set_value("90")
-        input_page.entity2.example_account.select("test_input")
-        input_page.entity2.query_start_date.set_value("2020-12-11T20:00:32.000z")
-        self.assert_util(
-            input_page.entity2.save,
-            r"Field Name is required",
-            left_args={"expect_error": True},
-        )
-        input_page.entity2.name.set_value("test_name_two")
-        self.assert_util(input_page.entity2.is_error_closed, True)
+        input_page.table.edit_row("dummy_input_one")
+        big_input = ""
+        for i in range(1, 1000):
+            big_input += f"{str(i)}\n"
+        input_page.entity1.text_area.set_value(big_input)
+        self.assert_util(big_input, input_page.entity1.text_area.get_value())
+        self.assert_util(input_page.entity1.save, True)
+        input_page.table.edit_row("dummy_input_one")
+        self.assert_util(big_input.strip(), input_page.entity1.text_area.get_value())
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
+    def test_inputs_textarea_scroll(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+    ):
+        """
+        Verifies that textarea height values
+        """
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        input_page.table.edit_row("dummy_input_one")
+        long_input = ""
+        screnshot_before = input_page.entity1.text_area.screenshot()
+        for i in range(1, 50):
+            long_input += f"{str(i)}\n"
+        input_page.entity1.text_area.append_value(long_input)
+        input_page.entity1.text_area.scroll("UP", 40)
+        screenshot_after = input_page.entity1.text_area.screenshot()
+        self.assert_util(screnshot_before, screenshot_after, operator="!=")
