@@ -246,6 +246,8 @@ jobs:
       - run: |
           curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
           poetry install --only dev
+      - name: Collect Workflow Telemetry
+        uses: catchpoint/workflow-telemetry-action@v2
       - name: Link chromedriver
         # Use installed chromedriver https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2204-Readme.md
         run: |
