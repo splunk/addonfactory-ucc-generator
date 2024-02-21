@@ -267,6 +267,10 @@ jobs:
           name: test-report-ui-${{ matrix.splunk.version }}-${{ matrix.test-mark }}
           path: "test-results/*.xml"
           reporter: java-junit
+      - uses: actions/upload-artifact@v4
+        with:
+          name: splunksplwrapper.log
+          path: splunksplwrapper.log
 
   appinspect-for-expected-outputs:
     name: splunk-appinspect ${{ matrix.tags }} tests/testdata/expected_addons/expected_output_global_config_everything/Splunk_TA_UCCExample
