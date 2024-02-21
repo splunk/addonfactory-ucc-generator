@@ -216,7 +216,6 @@ jobs:
       id-token: write
       contents: read
       checks: write
-    continue-on-error: true
     needs:
       - meta
       - build-test-addon
@@ -224,6 +223,7 @@ jobs:
       - test-unit
       - test-smoke
     strategy:
+      fail-fast: false
       matrix:
         splunk: ${{ fromJson(needs.meta.outputs.matrix_supportedSplunk) }}
         test-mark:
