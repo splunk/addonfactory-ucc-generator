@@ -9,7 +9,7 @@ on:
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
   pull_request:
-    branches: [main, develop]
+    branches: [main, develop, "release/**"]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
@@ -31,7 +31,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: |
-          curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install-latest.sh | bash
+          curl -H "Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install-latest.sh | bash
           fossa analyze --debug
           fossa report attribution --format text > /tmp/THIRDPARTY
         env:
@@ -210,6 +210,8 @@ jobs:
       github.ref_name == 'main' ||
       github.base_ref == 'develop' ||
       github.ref_name == 'develop' ||
+      startsWith(github.ref_name, 'release') ||
+      startsWith(github.base_ref, 'release') ||
       contains(github.event.pull_request.labels.*.name, 'run-ui-tests')
     runs-on: ubuntu-latest
     permissions:
