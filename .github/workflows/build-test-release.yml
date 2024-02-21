@@ -269,7 +269,7 @@ jobs:
           reporter: java-junit
       - uses: actions/upload-artifact@v4
         with:
-          name: splunksplwrapper.log
+          name: ${{ matrix.splunk.version }}${{ matrix.test-mark }}splunksplwrapper.log
           path: splunksplwrapper.log
 
   appinspect-for-expected-outputs:
