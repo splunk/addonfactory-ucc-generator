@@ -129,7 +129,72 @@ class TestInputPage(UccTester):
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.input
+    def test_example_input_one_required_field_textarea2(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
+    ):
+        """Verifies required field textarea in example input one"""
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        input_page.create_new_input.select("Example Input One")
+        input_page.entity1.example_account.wait_for_values()
+        input_page.entity1.name.set_value("dummy_input")
+        input_page.entity1.example_radio.select("Yes")
+        input_page.entity1.single_select_group_test.select("Two")
+        input_page.entity1.interval.set_value("90")
+        input_page.entity1.example_account.select("test_input")
+        input_page.entity1.object.set_value("test_object")
+        input_page.entity1.object_fields.set_value("test_field")
+        input_page.entity1.query_start_date.set_value("2020-12-11T20:00:32.000z")
+        input_page.entity1.text_area.set_value("")
+        self.assert_util(
+            input_page.entity1.save,
+            r"Field Example Textarea Field is required",
+            left_args={"expect_error": True},
+        )
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
     def test_inputs_textarea_big_input(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+    ):
+        """
+        Verifies that textarea can handle big inputs
+        """
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        input_page.table.edit_row("dummy_input_one")
+        big_input = ""
+        for i in range(1, 1000):
+            big_input += f"{str(i)}\n"
+        input_page.entity1.text_area.set_value(big_input)
+        self.assert_util(big_input, input_page.entity1.text_area.get_value())
+        self.assert_util(input_page.entity1.save, True)
+        input_page.table.edit_row("dummy_input_one")
+        self.assert_util(big_input.strip(), input_page.entity1.text_area.get_value())
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
+    def test_inputs_textarea_big_input2(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+    ):
+        """
+        Verifies that textarea can handle big inputs
+        """
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        input_page.table.edit_row("dummy_input_one")
+        big_input = ""
+        for i in range(1, 1000):
+            big_input += f"{str(i)}\n"
+        input_page.entity1.text_area.set_value(big_input)
+        self.assert_util(big_input, input_page.entity1.text_area.get_value())
+        self.assert_util(input_page.entity1.save, True)
+        input_page.table.edit_row("dummy_input_one")
+        self.assert_util(big_input.strip(), input_page.entity1.text_area.get_value())
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
+    def test_inputs_textarea_big_input3(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
     ):
         """
