@@ -129,6 +129,26 @@ class TestInputPage(UccTester):
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.input
+    def test_inputs_textarea_big_input2(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+    ):
+        """
+        Verifies that textarea can handle big inputs
+        """
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        input_page.table.edit_row("dummy_input_one")
+        big_input = ""
+        for i in range(1, 3000):
+            big_input += f"{str(i)}\n"
+        input_page.entity1.text_area.set_value(big_input)
+        self.assert_util(big_input, input_page.entity1.text_area.get_value())
+        self.assert_util(input_page.entity1.save, True)
+        input_page.table.edit_row("dummy_input_one")
+        self.assert_util(big_input.strip(), input_page.entity1.text_area.get_value())
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
     def test_inputs_displayed_columns(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
@@ -2442,7 +2462,7 @@ class TestInputPage(UccTester):
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         input_page.table.edit_row("dummy_input_one")
         big_input = ""
-        for i in range(1, 100):
+        for i in range(1, 3000):
             big_input += f"{str(i)}\n"
         input_page.entity1.text_area.set_value(big_input)
         self.assert_util(big_input, input_page.entity1.text_area.get_value())
