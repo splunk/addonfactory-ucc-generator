@@ -132,7 +132,6 @@ class TestInputPage(UccTester):
     def test_inputs_displayed_columns(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
-        time.sleep(1440)
         """Verifies headers of input table"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         header_list = ["Name", "Account", "Interval", "Index", "Status", "Actions"]
