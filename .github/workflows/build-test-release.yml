@@ -9,7 +9,7 @@ on:
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
   pull_request:
-    branches: [ main, develop, "release/**" ]
+    branches: [main, develop]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
@@ -216,7 +216,6 @@ jobs:
       id-token: write
       contents: read
       checks: write
-    continue-on-error: true
     needs:
       - meta
       - build-test-addon
@@ -224,6 +223,7 @@ jobs:
       - test-unit
       - test-smoke
     strategy:
+      fail-fast: false
       matrix:
         splunk: ${{ fromJson(needs.meta.outputs.matrix_supportedSplunk) }}
         test-mark:
@@ -300,6 +300,33 @@ jobs:
           appinspect_manual_checks: tests/testdata/expected_addons/expected_output_global_config_everything/.appinspect.manualcheck.yaml
           appinspect_expected_failures: tests/testdata/expected_addons/expected_output_global_config_everything/.appinspect.expect.yaml
 
+  all-checks:
+    if: ${{ !cancelled() }}
+    needs:
+      - test-ui
+      - build-test-addon-openapi-client
+      - storybook-screenshots
+    runs-on: ubuntu-latest
+    env:
+      NEEDS: ${{ toJson(needs) }}
+    steps:
+      - name: check if tests have passed or skipped
+        id: check
+        shell: bash
+        run: |
+          ALL_JOBS_PASSED=$(echo "$NEEDS" | jq "all(.[]; .result == \"success\" or .result == \"skipped\")")
+          if [[ "$ALL_JOBS_PASSED" == "true" ]]
+          then
+              echo "all-checks=true" >> "$GITHUB_OUTPUT"
+          else
+              echo "all-checks=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Fail job if something failed
+        if: ${{ steps.check.outputs.all-checks == 'false' }}
+        run: |
+          echo "Some check failed"
+          exit 1
+
   release:
     needs:
       - build
@@ -311,6 +338,7 @@ jobs:
       - appinspect-for-expected-outputs
       - semgrep
       - pre-commit
+      - all-checks
     runs-on: ubuntu-latest
     if: "! github.event.pull_request.head.repo.fork "
     steps:
