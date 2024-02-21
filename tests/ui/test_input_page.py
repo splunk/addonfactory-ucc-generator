@@ -2439,7 +2439,7 @@ class TestInputPage(UccTester):
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         input_page.table.edit_row("dummy_input_one")
         big_input = ""
-        for i in range(1, 3000):
+        for i in range(1, 10000):
             big_input += f"{str(i)}\n"
         input_page.entity1.text_area.set_value(big_input)
         self.assert_util(big_input, input_page.entity1.text_area.get_value())
