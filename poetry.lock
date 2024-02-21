@@ -1155,13 +1155,13 @@ docker = ["lovely-pytest-docker (>=0,<1)"]
 
 [[package]]
 name = "pytest-splunk-addon-ui-smartx"
-version = "2.5.4"
+version = "3.0.0"
 description = "Library to support testing Splunk Add-on UX"
 optional = false
 python-versions = ">=3.7,<4.0"
 files = [
-    {file = "pytest_splunk_addon_ui_smartx-2.5.4-py3-none-any.whl", hash = "sha256:d87ff10bbb3e15fbf2eb0b7745763e31c96fe1fe39286f1393190f12aa4fed71"},
-    {file = "pytest_splunk_addon_ui_smartx-2.5.4.tar.gz", hash = "sha256:b3f51758b0865e3f6716d05eeed0b7bb99870a00b9bf0de3bb8188eecafde141"},
+    {file = "pytest_splunk_addon_ui_smartx-3.0.0-py3-none-any.whl", hash = "sha256:f641b8b7d239ca2943092b87af12fb54923d178f347e018e4656899a7c044f14"},
+    {file = "pytest_splunk_addon_ui_smartx-3.0.0.tar.gz", hash = "sha256:93d0d7e14f616d8208a4eff344c42b37bc10c373469874a165b4626c96e0f625"},
 ]
 
 [package.dependencies]
@@ -1258,7 +1258,6 @@ files = [
     {file = "PyYAML-6.0.1-cp311-cp311-win_amd64.whl", hash = "sha256:bf07ee2fef7014951eeb99f56f39c9bb4af143d8aa3c21b1677805985307da34"},
     {file = "PyYAML-6.0.1-cp312-cp312-macosx_10_9_x86_64.whl", hash = "sha256:855fb52b0dc35af121542a76b9a84f8d1cd886ea97c84703eaa6d88e37a2ad28"},
     {file = "PyYAML-6.0.1-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:40df9b996c2b73138957fe23a16a4f0ba614f4c0efce1e9406a184b6d07fa3a9"},
-    {file = "PyYAML-6.0.1-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:a08c6f0fe150303c1c6b71ebcd7213c2858041a7e01975da3a99aed1e7a378ef"},
     {file = "PyYAML-6.0.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:6c22bec3fbe2524cde73d7ada88f6566758a8f7227bfbf93a408a9d86bcc12a0"},
     {file = "PyYAML-6.0.1-cp312-cp312-musllinux_1_1_x86_64.whl", hash = "sha256:8d4e9c88387b0f5c7d5f281e55304de64cf7f9c0021a3525bd3b1c542da3b0e4"},
     {file = "PyYAML-6.0.1-cp312-cp312-win32.whl", hash = "sha256:d483d2cdf104e7c9fa60c544d92981f12ad66a457afae824d146093b8c294c54"},
@@ -1617,4 +1616,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.7"
-content-hash = "22db268d292a3c61ca1b44cc22dcc7e406710fdeaa0dd4348efa6e2c4f07af7a"
+content-hash = "3e0ce569112088cf9227577849c16694fdc6eb36de39f0f786c6d02bef5fa93f"
