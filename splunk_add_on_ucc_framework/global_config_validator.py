@@ -560,6 +560,93 @@ class GlobalConfigValidator:
                             f"Service {service['name']} uses group field {group_field} which is not defined in entity"
                         )
 
+    def _is_circular(self, mods, visited, all_entity_fields, current_field):
+        visited[current_field] = 'visited'
+        current_field_mods = next((mod for mod in mods if mod["fieldId"] == current_field), None)
+        if current_field_mods is None:
+            # no more dependent modification fields
+            visited[current_field] = 'dead_end'
+            return visited
+        else:
+            for influenced_field in current_field_mods["influenced_fields"]:
+                if influenced_field not in all_entity_fields:
+                    raise GlobalConfigValidatorException(
+                        """Modification in field '{0}' for not existing field '{1}'""".format(current_field, influenced_field)
+                    )
+                if influenced_field == current_field:
+                    raise GlobalConfigValidatorException(
+                        """Field '{0}' tries to modify itself""".format(current_field)
+                    )
+                if visited[influenced_field] == 'visited':
+                    raise GlobalConfigValidatorException(
+                        """Circular modifications for field '{0}' included in modifications in field '{1}'""".format(influenced_field, current_field)
+                    )
+                else:
+                    visited = self._is_circular(mods, visited, all_entity_fields,influenced_field)
+        # all of dependent modifications fields are dead_end
+        visited[current_field] = 'dead_end'
+        return visited
+
+    def _check_if_cilcular(self, all_entity_fields, fields_with_mods, modification_dict):
+        visited = {}
+
+        for field in all_entity_fields:
+            visited[field] = 'not_visited'
+
+        for start_field in fields_with_mods: 
+            #DFS algorithm for all fields with modifications
+            visited = self._is_circular(modification_dict, visited, all_entity_fields,start_field)
+
+    def _get_mods_data_for_single_entity(self,all_fields,fields_with_mods,all_modifications,entity): 
+        all_fields.append(entity["field"])
+        if "modifyFieldsOnValue" in entity:
+            influenced_fields = set()
+            fields_with_mods.append(entity["field"])
+            for mods in entity["modifyFieldsOnValue"]:
+                for mod in mods["fieldsToModify"]:
+                    influenced_fields.add(mod['fieldId'])
+            all_modifications.append({"fieldId":entity["field"], "influenced_fields":influenced_fields})
+        return [all_fields, fields_with_mods, all_modifications]
+
+    def _get_all_modifiction_data(self, all_fields, fields_with_mods, all_modifications, entityCollector):
+        entities = entityCollector["entity"]
+        for entity in entities: 
+            if entity['type'] == "oauth":
+                for type in entity['options']['auth_type']:
+                    for oauthEntity in entity['options'][type]:
+                        [all_fields, fields_with_mods, all_modifications] = self._get_mods_data_for_single_entity(all_fields, fields_with_mods, all_modifications, oauthEntity)
+            else:
+                [all_fields, fields_with_mods, all_modifications] = self._get_mods_data_for_single_entity(all_fields, fields_with_mods, all_modifications, entity)
+
+        return [fields_with_mods, all_modifications, all_fields]
+
+    def _validate_field_modifications(self) -> None:
+        pages = self._config["pages"]
+        configuration = pages["configuration"]
+        tabs = configuration["tabs"]
+
+        # lists initialised here as fields need to be unique across configuration page
+        fields_with_mods_config = []
+        all_modifications_config = []
+        all_fields_config = []
+
+        for tab in tabs:
+            [fields_with_mods_config, all_modifications_config, all_fields_config] = self._get_all_modifiction_data(all_fields_config,fields_with_mods_config,all_modifications_config,tab)
+
+        self._check_if_cilcular(all_fields_config, fields_with_mods_config, all_modifications_config)
+
+        inputs = pages['inputs']
+        services = inputs["services"]
+
+        # lists initialised here as fields need to be unique across inputs page
+        fields_with_mods_inputs = []
+        all_modifications_inputs = []
+        all_fields_inputs = []
+        for service in services:
+            [fields_with_mods_inputs, all_modifications_inputs, all_fields_inputs] = self._get_all_modifiction_data(all_fields_config,fields_with_mods_config,all_modifications_config,service)
+
+        self._check_if_cilcular(all_fields_inputs, fields_with_mods_inputs, all_modifications_inputs)
+
     def validate(self) -> None:
         self._validate_config_against_schema()
         self._validate_configuration_tab_table_has_name_field()
@@ -573,3 +660,4 @@ class GlobalConfigValidator:
         self._warn_on_placeholder_usage()
         self._validate_checkbox_group()
         self._validate_groups()
+        self._validate_field_modifications()
