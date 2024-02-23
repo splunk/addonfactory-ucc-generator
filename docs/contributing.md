@@ -111,7 +111,7 @@ If you're seeing some unexpected behavior with `ucc-gen`, create an [issue](http
 We love to see pull requests!
 
 We are using [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/).
-The two most important "types", "fix" and "feat", would result in the new version of the `ucc-gen` once merged.
+The two most important types: "fix" and "feat", would result in the new version of the `ucc-gen` once merged.
 
 To do the changes you think are needed, run the previous steps (build / test / linting / documentation).
 After you create a PR, all the needed reviewers will be added automatically by GitHub.
