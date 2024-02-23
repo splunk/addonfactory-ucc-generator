@@ -4,11 +4,11 @@ import userEvent from '@testing-library/user-event';
 import { setUnifiedConfig } from '../../util/util';
 import {
     firstModificationField,
+    firstStandardTextField,
     getConfigWithModifications,
     secondModificationField,
-    firstStandardTextField,
-    thirdModificationField,
     secondStandardTextField,
+    thirdModificationField,
 } from './TestConfig';
 import EntityModal, { EntityModalProps } from '../EntityModal/EntityModal';
 import { EntitiesAllowingModifications } from '../BaseFormTypes';
@@ -47,7 +47,7 @@ const findMods = (
     return modification;
 };
 
-const getAndVerifyHTMLTextComponentsForField = (field: string) => {
+const getTextElementForField = (field: string) => {
     const componentParentElement = document.querySelector<HTMLElement>(`[data-name="${field}"]`)!;
     expect(componentParentElement).toBeInTheDocument();
     const componentInput = within(componentParentElement).getByRole('textbox');
@@ -55,7 +55,7 @@ const getAndVerifyHTMLTextComponentsForField = (field: string) => {
     return [componentParentElement, componentInput];
 };
 
-const getAndVerifyHTMLCheckboxComponentsForField = (field: string) => {
+const getCheckBoxElementForField = (field: string) => {
     const componentParentElement = document.querySelector<HTMLElement>(`[data-name="${field}"]`)!;
     expect(componentParentElement).toBeInTheDocument();
     const componentInput = within(componentParentElement).getByRole('checkbox');
@@ -63,33 +63,33 @@ const getAndVerifyHTMLCheckboxComponentsForField = (field: string) => {
     return [componentParentElement, componentInput];
 };
 
-it('render fields with modifications correctly', async () => {
+beforeEach(() => {
     setUpConfigWithDefaultValue();
     renderModalWithProps(props);
+});
 
-    getAndVerifyHTMLTextComponentsForField(firstStandardTextField.field);
-    getAndVerifyHTMLTextComponentsForField(secondStandardTextField.field);
-    getAndVerifyHTMLTextComponentsForField(firstModificationField.field);
-    getAndVerifyHTMLTextComponentsForField(secondModificationField.field);
-    getAndVerifyHTMLCheckboxComponentsForField(thirdModificationField.field);
+it('render fields with modifications correctly', async () => {
+    expect(() => {
+        getTextElementForField(firstStandardTextField.field);
+        getTextElementForField(secondStandardTextField.field);
+        getTextElementForField(firstModificationField.field);
+        getTextElementForField(secondModificationField.field);
+        getCheckBoxElementForField(thirdModificationField.field);
+    }).not.toThrow();
 });
 
 it('verify modification after text components change', async () => {
-    setUpConfigWithDefaultValue();
-    renderModalWithProps(props);
     const firstValueToInput = 'a';
     const secondValueToInput = 'aa';
 
-    const [componentParentElement, componentInput] = getAndVerifyHTMLTextComponentsForField(
+    const [componentParentElement, componentInput] = getTextElementForField(
         firstStandardTextField.field
     );
-    const [component2ParentElement, component2Input] = getAndVerifyHTMLTextComponentsForField(
+    const [component2ParentElement, component2Input] = getTextElementForField(
         secondStandardTextField.field
     );
 
-    const componentMakingModsTextBox1 = getAndVerifyHTMLTextComponentsForField(
-        firstModificationField.field
-    )[1];
+    const componentMakingModsTextBox1 = getTextElementForField(firstModificationField.field)[1];
 
     const mods1Field1 = findMods(
         firstModificationField,
@@ -143,22 +143,13 @@ it('verify modification after text components change', async () => {
 });
 
 it('verify markdown modifications', async () => {
-    setUpConfigWithDefaultValue();
-    renderModalWithProps(props);
-
     const firstValueToInput = 'a';
     const secondValueToInput = 'aa';
 
-    const [componentParentElement] = getAndVerifyHTMLTextComponentsForField(
-        firstStandardTextField.field
-    );
-    const [component2ParentElement] = getAndVerifyHTMLTextComponentsForField(
-        secondStandardTextField.field
-    );
+    const [componentParentElement] = getTextElementForField(firstStandardTextField.field);
+    const [component2ParentElement] = getTextElementForField(secondStandardTextField.field);
 
-    const componentMakingModsTextBox1 = getAndVerifyHTMLTextComponentsForField(
-        secondModificationField.field
-    )[1];
+    const componentMakingModsTextBox1 = getTextElementForField(secondModificationField.field)[1];
 
     const firstElementOuterHTMLBeforeMods = componentParentElement.outerHTML;
 
