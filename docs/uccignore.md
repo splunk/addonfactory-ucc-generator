@@ -1,9 +1,9 @@
 # `.uccignore` file
 
-This feature can be used to remove files from the output **after** UCC template files were copied and **before** the source of the 
+This feature can be used to remove files from the output **after** the UCC template files were copied and **before** the source of the 
 add-on recursively overrides the output folder.
 
-It is expected to be placed in the same folder as `globalConfig` file to have effect.
+Place it in the same folder as the `globalConfig` file to have the effect.
 
 Uccignore supports wildcard expressions, thanks to which we can find all files matching a specific pattern.
 

@@ -8,15 +8,15 @@ In addition to the multiple inputs, we can use this menu to create a custom comp
 
 | Property          | Description |
 | ----------------- | ----------- |
-| globalConfig       | It is a hierarchical object that contains the globalConfig file's properties and values. |
-| el                | The `el` is used to render a custom element (on the top right corner) on the Inputs page. |
-| setValue          | This method is used to set the value of the custom component. <p>setValue: ƒ (newValue)</p> |
+| globalConfig       | is a hierarchical object that contains the globalConfig file's properties and values. |
+| el                | is used to render a custom element (on the top right corner) on the Inputs page. |
+| setValue          | is used to set the value of the custom component. <p>setValue: ƒ (newValue)</p> |
 
 ### Methods
 
 | Property          | Description |
 | ----------------- | ----------- |
-| render            | `render` is a method which should have logic for the custom menu, and it will be executed automatically when inputs page is rendered. |
+| render            | is a method which should have logic for the custom menu, and it will be executed automatically when the inputs page is rendered. |
 
 ### Usage
 ```
@@ -71,6 +71,6 @@ export default CustomMenu;
 
 ### Output
 
-This is how it looks like in the UI:
+This is how it looks in the UI:
 
 ![image](../images/custom_ui_extensions/Custom_Menu_Output.png)
