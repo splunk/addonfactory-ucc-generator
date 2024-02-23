@@ -14,7 +14,7 @@ The Custom Control feature allows you to display any customised input component 
 
 | Property          | Description |
 | ----------------- | ----------- |
-| render            | `render` is a method which should have logic for the custom component, and it will be executed automatically when the create, edit, or clone actions are performed. |
+| render            | is a method which should have logic for the custom component, and it will be executed automatically when the create, edit, or clone actions are performed. |
 | validation        | This method should contain the validation logic for the value of the custom component. |
 
 ### Usage
