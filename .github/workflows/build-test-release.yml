@@ -9,7 +9,10 @@ on:
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
   pull_request:
-    branches: [main, develop]
+    branches:
+      - "main"
+      - "develop"
+      - "release/**"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
@@ -210,6 +213,8 @@ jobs:
       github.ref_name == 'main' ||
       github.base_ref == 'develop' ||
       github.ref_name == 'develop' ||
+      startsWith(github.ref_name, 'release') ||
+      startsWith(github.base_ref, 'release') ||
       contains(github.event.pull_request.labels.*.name, 'run-ui-tests')
     runs-on: ubuntu-latest
     permissions:
