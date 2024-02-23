@@ -1,4 +1,4 @@
-This is a common feature that is used to display the account and input stanzas on the [Inputs](inputs/index.md) and [Configuration](configurations.md) pages, respectively.
+This is a common feature that is used to display the account and input stanzas on the [Inputs](inputs/index.md) and [Configuration](configurations/index.md) pages, respectively.
 
 Tables include many built-in features such as sorting, filtering, and pagination.
 

@@ -9,7 +9,10 @@ on:
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
   pull_request:
-    branches: [ main, develop, "release/**" ]
+    branches:
+      - "main"
+      - "develop"
+      - "release/**"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
@@ -52,7 +55,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.7"
-      - uses: pre-commit/action@v3.0.0
+      - uses: pre-commit/action@v3.0.1
 
   semgrep:
     runs-on: ubuntu-latest
@@ -79,6 +82,14 @@ jobs:
     with:
       node-version: ${{ matrix.node-version }}
 
+  storybook-screenshots:
+    name: Update storybook screenshots
+    permissions:
+      contents: write
+    secrets: inherit
+    uses: ./.github/workflows/storybook-visual.yml
+    with:
+      node-version: "20"
 
   build:
     needs:
@@ -202,13 +213,14 @@ jobs:
       github.ref_name == 'main' ||
       github.base_ref == 'develop' ||
       github.ref_name == 'develop' ||
+      startsWith(github.ref_name, 'release') ||
+      startsWith(github.base_ref, 'release') ||
       contains(github.event.pull_request.labels.*.name, 'run-ui-tests')
     runs-on: ubuntu-latest
     permissions:
       id-token: write
       contents: read
       checks: write
-    continue-on-error: true
     needs:
       - meta
       - build-test-addon
@@ -216,6 +228,7 @@ jobs:
       - test-unit
       - test-smoke
     strategy:
+      fail-fast: false
       matrix:
         splunk: ${{ fromJson(needs.meta.outputs.matrix_supportedSplunk) }}
         test-mark:
@@ -292,6 +305,33 @@ jobs:
           appinspect_manual_checks: tests/testdata/expected_addons/expected_output_global_config_everything/.appinspect.manualcheck.yaml
           appinspect_expected_failures: tests/testdata/expected_addons/expected_output_global_config_everything/.appinspect.expect.yaml
 
+  all-checks:
+    if: ${{ !cancelled() }}
+    needs:
+      - test-ui
+      - build-test-addon-openapi-client
+      - storybook-screenshots
+    runs-on: ubuntu-latest
+    env:
+      NEEDS: ${{ toJson(needs) }}
+    steps:
+      - name: check if tests have passed or skipped
+        id: check
+        shell: bash
+        run: |
+          ALL_JOBS_PASSED=$(echo "$NEEDS" | jq "all(.[]; .result == \"success\" or .result == \"skipped\")")
+          if [[ "$ALL_JOBS_PASSED" == "true" ]]
+          then
+              echo "all-checks=true" >> "$GITHUB_OUTPUT"
+          else
+              echo "all-checks=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Fail job if something failed
+        if: ${{ steps.check.outputs.all-checks == 'false' }}
+        run: |
+          echo "Some check failed"
+          exit 1
+
   release:
     needs:
       - build
@@ -303,6 +343,7 @@ jobs:
       - appinspect-for-expected-outputs
       - semgrep
       - pre-commit
+      - all-checks
     runs-on: ubuntu-latest
     if: "! github.event.pull_request.head.repo.fork "
     steps:
@@ -342,3 +383,42 @@ jobs:
         run: |
           poetry build
           poetry publish -n -u ${{ secrets.PYPI_USERNAME }} -p ${{ secrets.PYPI_TOKEN }}
+
+  build-test-addon-openapi-client:
+    name: build-test-addon-openapi-client Splunk ${{ matrix.splunk.version }}
+    runs-on: ubuntu-latest
+    needs:
+      - meta
+      - build-test-addon
+      - build
+      - test-unit
+      - test-smoke
+    strategy:
+      matrix:
+        splunk: ${{ fromJson(needs.meta.outputs.matrix_supportedSplunk) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/download-artifact@v4
+        with:
+          name: UCC-UI-build
+          path: built-ui/
+      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+      - run: |
+          cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/
+          poetry install --only main
+      - run: poetry run ucc-gen build --source tests/testdata/test_addons/package_global_config_everything/package -o out_${{ matrix.splunk.version }}
+      - run: |
+          cp out_${{ matrix.splunk.version }}/Splunk_TA_UCCExample/appserver/static/openapi.json ./oa_${{ matrix.splunk.version }}.json
+          docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli generate -i /local/oa_${{ matrix.splunk.version }}.json -g python -o /local/restapi_client_${{ matrix.splunk.version }}
+      - run: |
+          sudo chmod -R 777 ./restapi_client_${{ matrix.splunk.version }}
+          python3 -m pip install ./restapi_client_${{ matrix.splunk.version }}
+      - run: mv out_${{ matrix.splunk.version }} output
+      - run: |
+          ./run_splunk.sh ${{ matrix.splunk.version }}
+          until curl -Lsk "https://localhost:8088/services/collector/health" &>/dev/null ; do echo -n "Waiting for HEC-" && sleep 5 ; done
+        timeout-minutes: 5
+      - run: python3 tests/testdata/expected_addons/expected_output_global_config_everything/client-test.py

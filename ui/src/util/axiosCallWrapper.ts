@@ -2,6 +2,7 @@ import axios, { CancelToken } from 'axios';
 import { CSRFToken, app } from '@splunk/splunk-utils/config';
 import { createRESTURL } from '@splunk/splunk-utils/url';
 import { generateEndPointUrl, generateToast } from './util';
+import { parseErrorMsg } from './messageUtil';
 
 interface axiosCallWithServiceName {
     serviceName?: string;
@@ -82,20 +83,11 @@ const axiosCallWrapper = ({
 
     return handleError
         ? axios(options).catch((error) => {
-              let message = '';
               if (axios.isCancel(error)) {
                   return Promise.reject(error);
               }
-              if (error.response) {
-                  // The request was made and the server responded with a status code
-                  message = `Error response received from server: ${error.response.data.messages[0].text}`;
-              } else if (error.request) {
-                  // The request was made but no response was received
-                  message = `No response received while making request to ${endpoint}`;
-              } else {
-                  // Something happened in setting up the request that triggered an Error
-                  message = `Error making ${method} request to ${endpoint}`;
-              }
+              const message = parseErrorMsg(error);
+
               generateToast(message, 'error');
               callbackOnError(error);
               return Promise.reject(error);

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { getFormattedMessage } from './messageUtil';
 import { setMetaInfo, setUnifiedConfig } from './util';
 import { loadGlobalConfig } from './script';
-import ErrorModal from '../components/ErrorModal';
+import ErrorModal from '../components/ErrorModal/ErrorModal';
 
 class ConfigManager extends Component {
     constructor(props) {

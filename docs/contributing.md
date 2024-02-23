@@ -2,17 +2,36 @@
 
 ## Development flow
 
-* The default development branch is `develop`. Use it when creating PRs with your features, fixes, documentation updates, etc. PRs to the `develop` branch should be merged using the squash option in GitHub.
-* When the release time comes, (which should be handled by the UCC team), create a PR from `develop` to `main`.
-    * Make sure that the CI is passing and wait for the review from the team.
-    * PR should be merged using the merge commit option in GitHub.
-    * The release will be made automatically (for both GitHub and PyPI) and the bot will push a commit to `main` with all the necessary changes (i.e. [like this](https://github.com/splunk/addonfactory-ucc-generator/commit/0c5e6802e1e52c37bf7131baf1b8264e5db30545)).
-    * After the release is done, you will need to backport the bot's changes to the `develop` branch (i.e. [#974](https://github.com/splunk/addonfactory-ucc-generator/pull/974)).
-* If the release did not go well and a quick bug fix needs to be released, (which should be handled by UCC team):
-    * Create a PR to the `main` branch with a fix, with tests reproducing and then fixing the issue.
-    * Make sure that CI is passing and wait for the review from the team.
-    * The PR should be merged using the merge commit option in GitHub.
-    * The bug fix PR needs to be backported back to the `develop` branch.
+The instructions below utilize the [GitHub CLI tool](https://cli.github.com/), which you can install via HomeBrew:
+```bash
+brew install gh
+gh auth login
+```
+
+* The default development branch is `develop`. Use this branch for creating pull requests (PRs) for your features, fixes, documentation updates, etc. PRs to the `develop` branch should be merged using the squash option on GitHub.
+* When it's time for a release (handled by the UCC team), create a PR from `develop` to `main` using the following commands:
+```bash
+gh pr create --title "chore: merge develop into main" --body "" --head develop --base main
+# set automerge with merge commit to avoid accidentally squashing PR
+gh pr merge develop --auto --merge
+```
+
+* Ensure CI passes and await team review.
+* PR should be merged using **merge commit** option in GitHub (already included in the command)
+* Releases are made automatically (both on GitHub and PyPI), and a bot will push a commit to `main` with all necessary changes  (i.e. [like this](https://github.com/splunk/addonfactory-ucc-generator/commit/0c5e6802e1e52c37bf7131baf1b8264e5db30545))
+* After the release, backport the bot's changes to the `develop` branch (i.e. [#974](https://github.com/splunk/addonfactory-ucc-generator/pull/974)):
+
+```bash
+gh pr create --title "chore: merge main into develop" --body "" --head main --base develop
+# set automerge with merge commit to avoid accidentally squashing PR
+gh pr merge main --auto --merge
+```
+
+* If a release encounters issues requiring a quick bug fix (handled by the UCC team):
+  * Create a PR to the main branch with the fix, including tests that reproduce and then fix the issue.
+  * Ensure CI passes and await team review.
+  * Merge the PR using the merge commit option on GitHub.
+  * Backport the bug fix PR to the develop branch.
 
 ## Build and Test
 

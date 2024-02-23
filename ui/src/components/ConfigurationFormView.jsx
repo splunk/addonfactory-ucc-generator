@@ -28,8 +28,6 @@ function ConfigurationFormView({ serviceName }) {
             serviceName: `settings/${serviceName}`,
             handleError: true,
             callbackOnError: (err) => {
-                // eslint-disable-next-line no-param-reassign
-                err.uccErrorCode = 'ERR0005';
                 setError(err);
             },
         }).then((response) => {
@@ -37,15 +35,18 @@ function ConfigurationFormView({ serviceName }) {
         });
     }, [serviceName]);
 
-    const handleSubmit = () => {
-        form.current.handleSubmit();
+    /**
+     * @param event {React.MouseEvent<HTMLButtonElement>}
+     */
+    const handleSubmit = (event) => {
+        form.current.handleSubmit(event);
     };
 
     const handleFormSubmit = (set) => {
         setIsSubmitting(set);
     };
 
-    if (error?.uccErrorCode) {
+    if (error) {
         throw error;
     }
 

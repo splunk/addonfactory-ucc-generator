@@ -1,3 +1,38 @@
+# [5.39.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.38.0...v5.39.0) (2024-02-20)
+
+
+### Bug Fixes
+
+* **a11y:** associate labels with inputs ([#1055](https://github.com/splunk/addonfactory-ucc-generator/issues/1055)) ([a880c45](https://github.com/splunk/addonfactory-ucc-generator/commit/a880c45938d3ed7ccfe9300ffc6d910ef2fb7989))
+* Add page for proxy configuration ([#1057](https://github.com/splunk/addonfactory-ucc-generator/issues/1057)) ([a76c0c2](https://github.com/splunk/addonfactory-ucc-generator/commit/a76c0c248c7c4f01d60bc4733f7ff2a85b82a691))
+* return back div wrapper that shifts layout ([#1061](https://github.com/splunk/addonfactory-ucc-generator/issues/1061)) ([c6a42c6](https://github.com/splunk/addonfactory-ucc-generator/commit/c6a42c6233ea81918d5da067316654526bd1ca7c)), closes [#1055](https://github.com/splunk/addonfactory-ucc-generator/issues/1055)
+
+
+### Features
+
+* add async on save to entity page ([#1080](https://github.com/splunk/addonfactory-ucc-generator/issues/1080)) ([abe8f96](https://github.com/splunk/addonfactory-ucc-generator/commit/abe8f96256dcc496bc1a84852d44bb89ef9e9401))
+* add possibility to use async onSave method ([#1079](https://github.com/splunk/addonfactory-ucc-generator/issues/1079)) ([7dd6640](https://github.com/splunk/addonfactory-ucc-generator/commit/7dd66408d77c5295aabd643cebd428a52aa257ad))
+* ADDON-57381 hide implementation details from user-facing error messages ([#987](https://github.com/splunk/addonfactory-ucc-generator/issues/987)) ([5467ed9](https://github.com/splunk/addonfactory-ucc-generator/commit/5467ed9935fd83f17e14775eed7f2a7978c550cf))
+* modify fields on value ([#1066](https://github.com/splunk/addonfactory-ucc-generator/issues/1066)) ([1cd25b5](https://github.com/splunk/addonfactory-ucc-generator/commit/1cd25b54c0ed42f374bb3c2f570d397aaef8d4a2))
+
+# [5.38.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.37.0...v5.38.0) (2024-02-06)
+
+
+### Bug Fixes
+
+* **EntityModal:** prevent Enter from submitting the form in Modal window ([#1047](https://github.com/splunk/addonfactory-ucc-generator/issues/1047)) ([b7f179a](https://github.com/splunk/addonfactory-ucc-generator/commit/b7f179ab20e3bae831f1e7ed5b499ceff59ce6bd)), closes [#875](https://github.com/splunk/addonfactory-ucc-generator/issues/875)
+* OpenAPI schema generator fixes for when multiple inputs are defined ([#1016](https://github.com/splunk/addonfactory-ucc-generator/issues/1016)) ([332db43](https://github.com/splunk/addonfactory-ucc-generator/commit/332db4361556b865418b16c6fbd8ce4912ba5084))
+
+
+### Features
+
+* add UCC version to globalConfig ([#984](https://github.com/splunk/addonfactory-ucc-generator/issues/984)) ([e1229b4](https://github.com/splunk/addonfactory-ucc-generator/commit/e1229b40e48ee485b3d301139834b869054643c0))
+* ADDON-67533 implement support for oauth autorize and token urls ([#1009](https://github.com/splunk/addonfactory-ucc-generator/issues/1009)) ([aada373](https://github.com/splunk/addonfactory-ucc-generator/commit/aada37364ed44e63732ac2b23807ce5b4bf084a3))
+* allow wildcards in .uccignore file ([#1012](https://github.com/splunk/addonfactory-ucc-generator/issues/1012)) ([04b847f](https://github.com/splunk/addonfactory-ucc-generator/commit/04b847f39cccdd5937faf309fe8a81699d9b8919)), closes [#1011](https://github.com/splunk/addonfactory-ucc-generator/issues/1011)
+* change avg() to sum() in PANEL_EVENTS_INGESTED_BY_SOURCETYPE_TEMPLATE panel ([#1028](https://github.com/splunk/addonfactory-ucc-generator/issues/1028)) ([c738634](https://github.com/splunk/addonfactory-ucc-generator/commit/c73863499b9b546593000bc30fdf78f8e927b6d1))
+* customizing version of pip in build, add legacy resolver as optional ([#1035](https://github.com/splunk/addonfactory-ucc-generator/issues/1035)) ([751990c](https://github.com/splunk/addonfactory-ucc-generator/commit/751990c65793f88edde305039bd61018d43a481b))
+* default warning hidden after any input ([#1024](https://github.com/splunk/addonfactory-ucc-generator/issues/1024)) ([d0d69ee](https://github.com/splunk/addonfactory-ucc-generator/commit/d0d69ee3d0c71e7e5b64850b67219244b265c031))
+
 # [5.37.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.36.2...v5.37.0) (2024-01-31)
 
 

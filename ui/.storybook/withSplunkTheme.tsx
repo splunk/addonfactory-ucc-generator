@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import variables from '@splunk/themes/variables';
 import { PartialStoryFn as StoryFunction, Renderer, StoryContext } from '@storybook/types';
 import { AnimationToggleProvider } from '@splunk/react-ui/AnimationToggle';
@@ -7,6 +7,18 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import React, { Suspense } from 'react';
 import { StyledContainer } from '../src/pages/EntryPageStyle';
 import { WaitSpinnerWrapper } from '../src/components/table/CustomTableStyle';
+import fontDefinitions from './fontDefinitions';
+
+const TestStylesForConsistentScreenshots = createGlobalStyle`
+    ${fontDefinitions}
+
+    * {
+        text-rendering: geometricPrecision;
+        -webkit-font-smoothing: subpixel-antialiased;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+`;
 
 // https://storybook.js.org/blog/how-to-add-a-theme-switcher-to-storybook/
 // syncing storybook preview background with selected theme
@@ -28,9 +40,14 @@ export const withSplunkThemeToolbar = <TRenderer extends Renderer>(
     { globals }: StoryContext<TRenderer>
 ) => {
     // vars from globalTypes of preview.tsx
-    const { colorScheme, density, family, animation } = globals;
+    const { colorScheme, density, family } = globals;
+    const isTestRunner = !!window?.navigator?.userAgent?.match(/StorybookTestRunner/);
+
+    const animation = isTestRunner ? false : globals.animation;
+
     return (
         <AnimationToggleProvider enabled={animation}>
+            <TestStylesForConsistentScreenshots />
             <SplunkThemeProvider family={family} density={density} colorScheme={colorScheme}>
                 <BackgroundBlock>
                     <StyledContainer>

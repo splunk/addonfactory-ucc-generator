@@ -4,7 +4,8 @@ import styled from 'styled-components';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import { _ } from '@splunk/ui-utils/i18n';
 
-import { MODE_CLONE, MODE_CREATE, MODE_EDIT, Mode } from '../../constants/modes';
+import { ButtonClickHandler } from '@splunk/react-ui/Button';
+import { Mode, MODE_CLONE, MODE_CREATE, MODE_EDIT } from '../../constants/modes';
 import { StyledButton } from '../../pages/EntryPageStyle';
 import BaseFormView from '../BaseFormView';
 
@@ -53,8 +54,8 @@ class EntityModal extends Component<EntityModalProps, EntityModalState> {
         this.props.handleRequestClose();
     };
 
-    handleSubmit = () => {
-        const result = this.form.current?.handleSubmit();
+    handleSubmit: ButtonClickHandler = async (e) => {
+        const result = await this.form.current?.handleSubmit(e);
         if (result) {
             this.handleRequestClose();
         }

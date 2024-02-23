@@ -1,7 +1,6 @@
 {
   "extends": [
     "config:base",
-    "group:all",
     ":semanticCommitTypeAll(chore)",
     ":disableDependencyDashboard"
   ],
@@ -16,6 +15,11 @@
   ],
   "packageRules": [
     {
+      "description": "Separate npm and poetry dependencies",
+      "matchPackagePatterns": ["*"],
+      "groupName": "{{manager}}"
+    },
+    {
       "matchPackageNames": ["urllib3"],
       "allowedVersions": "<2.0.0"
     },
@@ -28,6 +32,8 @@
         "@npmcli/git",
         "@testing-library/react",
         "@types/react",
+        "@typescript-eslint/eslint-plugin",
+        "@typescript-eslint/parser",
         "babel-eslint",
         "babel-loader",
         "css-what",

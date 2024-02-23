@@ -3,11 +3,21 @@ import * as custom from '../webpack.config.js';
 import * as path from 'path';
 
 const config: StorybookConfig = {
-    stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+    stories: [
+        {
+            titlePrefix: 'Components',
+            directory: '../src/components',
+        },
+        {
+            titlePrefix: 'Pages',
+            directory: '../src/pages',
+        },
+    ],
     addons: [
         '@storybook/addon-links',
         '@storybook/addon-essentials',
         '@storybook/addon-interactions',
+        '@storybook/addon-a11y',
     ],
     framework: {
         name: '@storybook/react-webpack5',
@@ -16,7 +26,7 @@ const config: StorybookConfig = {
     docs: {
         autodocs: 'tag',
     },
-    staticDirs: ['../src/public'],
+    staticDirs: ['../src/public', './assets'],
     webpackFinal: async (config) => {
         const alias = config.resolve?.alias || {};
         return {
