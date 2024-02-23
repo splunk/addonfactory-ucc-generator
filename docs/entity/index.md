@@ -29,4 +29,4 @@ title: Entity
 | display             | boolean | It chooses whether or not to display the field.                                                   | true          |
 | disableonEdit       | boolean | When the form is in edit mode, the field becomes unable to be edited.                    | false         |
 | enable              | boolean | The enable property sets whether a field is enabled or not.                      | true          |
-| requiredWhenVisible | boolean | It displays the required field on the UI when it appears. It is used only for visibility. | false         |
+| requiredWhenVisible | boolean | It makes the field required on the UI when it appears. It is used only for visibility. | false         |
