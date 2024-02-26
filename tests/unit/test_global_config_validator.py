@@ -341,3 +341,45 @@ def test_config_validation_when_error(filename, is_yaml, exception_message):
 
     (msg,) = exc_info.value.args
     assert msg == exception_message
+
+
+def test_config_validation_modifications_on_change():
+    global_config_path = helpers.get_testdata_file_path(
+        "valid_config_with_modification_on_value_change.json"
+    )
+    global_config = global_config_lib.GlobalConfig(global_config_path, False)
+
+    validator = GlobalConfigValidator(helpers.get_path_to_source_dir(), global_config)
+
+    with does_not_raise():
+        validator.validate()
+
+
+@pytest.mark.parametrize(
+    "filename,raise_message",
+    [
+        (
+            "invalid_config_with_modification_for_field_itself.json",
+            "Field 'text1' tries to modify itself",
+        ),
+        (
+            "invalid_config_with_modification_for_unexisiting_fields.json",
+            "Modification in field 'text1' for not existing field 'text2'",
+        ),
+        (
+            "invalid_config_with_modification_circular_modifications.json",
+            "Circular modifications for field 'text1' in field 'text7'",
+        ),
+    ],
+)
+def test_invalid_config_modifications_correct_raises(filename, raise_message):
+    global_config_path = helpers.get_testdata_file_path(filename)
+    global_config = global_config_lib.GlobalConfig(global_config_path, False)
+
+    validator = GlobalConfigValidator(helpers.get_path_to_source_dir(), global_config)
+
+    with pytest.raises(GlobalConfigValidatorException) as exc_info:
+        validator.validate()
+
+    (msg,) = exc_info.value.args
+    assert msg == raise_message

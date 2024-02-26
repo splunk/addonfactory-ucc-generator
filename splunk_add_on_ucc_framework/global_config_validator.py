@@ -19,6 +19,8 @@ import os
 import re
 from typing import Any, Dict, List
 import logging
+import itertools
+
 
 import jsonschema
 
@@ -609,10 +611,7 @@ class GlobalConfigValidator:
         fields_with_mods: List[Any],
         modifications: List[Any],
     ) -> None:
-        visited = {}
-
-        for field in all_entity_fields:
-            visited[field] = "not_visited"
+        visited = {field: "not_visited" for field in all_entity_fields}
 
         for start_field in fields_with_mods:
             # DFS algorithm for all fields with modifications
@@ -620,9 +619,8 @@ class GlobalConfigValidator:
                 modifications, visited, all_entity_fields, start_field
             )
 
+    @staticmethod
     def _get_mods_data_for_single_entity(
-        self,
-        all_fields: List[Any],
         fields_with_mods: List[Any],
         all_modifications: List[Any],
         entity: Dict[str, Any],
@@ -630,7 +628,6 @@ class GlobalConfigValidator:
         """
         Add modification entity data to lists and returns them
         """
-        all_fields.append(entity["field"])
         if "modifyFieldsOnValue" in entity:
             influenced_fields = set()
             fields_with_mods.append(entity["field"])
@@ -640,35 +637,43 @@ class GlobalConfigValidator:
             all_modifications.append(
                 {"fieldId": entity["field"], "influenced_fields": influenced_fields}
             )
-        return [all_fields, fields_with_mods, all_modifications]
+        return [fields_with_mods, all_modifications]
 
-    def _get_all_modifiction_data(
-        self,
-        all_fields: List[Any],
-        fields_with_mods: List[Any],
-        all_modifications: List[Any],
-        entityCollector: Dict[str, Any],
+    @staticmethod
+    def _get_all_entities(
+        collections: List[Dict[str, Any]],
     ) -> List[Any]:
-        entities = entityCollector["entity"]
-        for entity in entities:
+        all_fields = []
+
+        tab_entities: List[Any] = [
+            el.get("entity") for el in collections if el.get("entity")
+        ]
+        all_entities = list(itertools.chain.from_iterable(tab_entities))
+
+        for entity in all_entities:
             if entity["type"] == "oauth":
                 for oauthType in entity["options"]["auth_type"]:
                     for oauthEntity in entity["options"][oauthType]:
-                        [
-                            all_fields,
-                            fields_with_mods,
-                            all_modifications,
-                        ] = self._get_mods_data_for_single_entity(
-                            all_fields, fields_with_mods, all_modifications, oauthEntity
-                        )
+                        all_fields.append(oauthEntity)
             else:
-                [
-                    all_fields,
-                    fields_with_mods,
-                    all_modifications,
-                ] = self._get_mods_data_for_single_entity(
-                    all_fields, fields_with_mods, all_modifications, entity
-                )
+                all_fields.append(entity)
+
+        return all_fields
+
+    def _get_all_modifiction_data(
+        self,
+        collections: List[Dict[str, Any]],
+    ) -> List[Any]:
+        fields_with_mods: List[Any] = []
+        all_modifications: List[Any] = []
+        all_fields: List[str] = []
+
+        entities = self._get_all_entities(collections)
+        for entity in entities:
+            self._get_mods_data_for_single_entity(
+                fields_with_mods, all_modifications, entity
+            )
+            all_fields.append(entity["field"])
 
         return [fields_with_mods, all_modifications, all_fields]
 
@@ -685,22 +690,11 @@ class GlobalConfigValidator:
             configuration = pages["configuration"]
             tabs = configuration["tabs"]
 
-            # lists initialised here as fields need to be unique across configuration page
-            fields_with_mods_config: List[Any] = []
-            all_modifications_config: List[Any] = []
-            all_fields_config: List[str] = []
-
-            for tab in tabs:
-                [
-                    fields_with_mods_config,
-                    all_modifications_config,
-                    all_fields_config,
-                ] = self._get_all_modifiction_data(
-                    all_fields_config,
-                    fields_with_mods_config,
-                    all_modifications_config,
-                    tab,
-                )
+            (
+                fields_with_mods_config,
+                all_modifications_config,
+                all_fields_config,
+            ) = self._get_all_modifiction_data(tabs)
 
             self._check_if_cilcular(
                 all_fields_config, fields_with_mods_config, all_modifications_config
@@ -710,21 +704,11 @@ class GlobalConfigValidator:
             inputs = pages["inputs"]
             services = inputs["services"]
 
-            # lists initialised here as fields need to be unique across inputs page
-            fields_with_mods_inputs = []
-            all_modifications_inputs = []
-            all_fields_inputs = []
-            for service in services:
-                [
-                    fields_with_mods_inputs,
-                    all_modifications_inputs,
-                    all_fields_inputs,
-                ] = self._get_all_modifiction_data(
-                    all_fields_config,
-                    fields_with_mods_config,
-                    all_modifications_config,
-                    service,
-                )
+            (
+                fields_with_mods_inputs,
+                all_modifications_inputs,
+                all_fields_inputs,
+            ) = self._get_all_modifiction_data(services)
 
             self._check_if_cilcular(
                 all_fields_inputs, fields_with_mods_inputs, all_modifications_inputs
