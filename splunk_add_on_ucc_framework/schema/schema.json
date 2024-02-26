@@ -446,12 +446,12 @@
             },
             "requiredWhenVisible": {
               "type": "boolean"
-            },
-            "modifyFieldsOnValue": {
-              "$ref": "#/definitions/modifyFieldsOnValue"
             }
           },
           "additionalProperties": false
+        },
+        "modifyFieldsOnValue": {
+          "$ref": "#/definitions/modifyFieldsOnValue"
         }
       },
       "required": ["field", "label", "type"],
@@ -533,12 +533,12 @@
             },
             "rowsMax": {
               "type": "number"
-            },
-            "modifyFieldsOnValue": {
-              "$ref": "#/definitions/modifyFieldsOnValue"
             }
           },
           "additionalProperties": false
+        },
+        "modifyFieldsOnValue": {
+          "$ref": "#/definitions/modifyFieldsOnValue"
         }
       },
       "required": ["field", "label", "type"],
@@ -658,12 +658,12 @@
               "items": {
                 "$ref": "#/definitions/ValueLabelPair"
               }
-            },
-            "modifyFieldsOnValue": {
-              "$ref": "#/definitions/modifyFieldsOnValue"
             }
           },
           "additionalProperties": false
+        },
+        "modifyFieldsOnValue": {
+          "$ref": "#/definitions/modifyFieldsOnValue"
         }
       },
       "required": ["field", "label", "type", "options"],
@@ -780,12 +780,12 @@
             "delimiter": {
               "type": "string",
               "maxLength": 1
-            },
-            "modifyFieldsOnValue": {
-              "$ref": "#/definitions/modifyFieldsOnValue"
             }
           },
           "additionalProperties": false
+        },
+        "modifyFieldsOnValue": {
+          "$ref": "#/definitions/modifyFieldsOnValue"
         }
       },
       "required": ["field", "label", "type", "options"],
@@ -1020,13 +1020,13 @@
               "items": {
                 "$ref": "#/definitions/ValueLabelPair"
               }
-            },
-            "modifyFieldsOnValue": {
-              "$ref": "#/definitions/modifyFieldsOnValue"
             }
           },
           "required": ["items"],
           "additionalProperties": false
+        },
+        "modifyFieldsOnValue": {
+          "$ref": "#/definitions/modifyFieldsOnValue"
         }
       },
       "required": ["field", "label", "type", "options"],
@@ -1099,12 +1099,12 @@
                 "type": "string"
               },
               "uniqueItems": true
-            },
-            "modifyFieldsOnValue": {
-              "$ref": "#/definitions/modifyFieldsOnValue"
             }
           },
           "additionalProperties": false
+        },
+        "modifyFieldsOnValue": {
+          "$ref": "#/definitions/modifyFieldsOnValue"
         }
       },
       "required": ["field", "label", "type"],

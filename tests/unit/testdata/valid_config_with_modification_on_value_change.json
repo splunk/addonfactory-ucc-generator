@@ -1,0 +1,203 @@
+{
+    "pages": {
+        "configuration": {
+            "tabs": [
+                {
+                    "name": "account",
+                    "table": {
+                        "actions": [
+                            "edit",
+                            "delete",
+                            "clone"
+                        ],
+                        "header": [
+                            {
+                                "label": "Name",
+                                "field": "name"
+                            },
+                            {
+                                "label": "Auth Type",
+                                "field": "auth_type"
+                            }
+                        ]
+                    },
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Length of ID should be between 1 and 50",
+                                    "minLength": 1,
+                                    "maxLength": 50
+                                },
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+                                    "pattern": "^[a-zA-Z]\\w*$"
+                                }
+                            ],
+                            "field": "name",
+                            "help": "Enter a unique name for this account.",
+                            "required": true
+                        },
+                        {
+                            "type": "text",
+                            "label": "text1 MODIFICATION TEST",
+                            "help": "text1",
+                            "field": "text1",
+                            "modifyFieldsOnValue": [
+                                {
+                                    "fieldValue": 1,
+                                    "fieldsToModify": [
+                                        {
+                                            "fieldId": "text2",
+                                            "disabled": false
+                                        }
+                                    ]
+                                },
+                                {
+                                    "fieldValue": 0,
+                                    "fieldsToModify": [
+                                        {
+                                            "fieldId": "text3",
+                                            "disabled": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "text",
+                            "label": "text2 MODIFICATION TEST",
+                            "help": "text1",
+                            "field": "text2",
+                            "modifyFieldsOnValue": [
+                                {
+                                    "fieldValue": 1,
+                                    "fieldsToModify": [
+                                        {
+                                            "fieldId": "text3",
+                                            "disabled": false
+                                        }
+                                    ]
+                                },
+                                {
+                                    "fieldValue": 0,
+                                    "fieldsToModify": [
+                                        {
+                                            "fieldId": "text4",
+                                            "disabled": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "text",
+                            "label": "text3 MODIFICATION TEST",
+                            "help": "text1",
+                            "field": "text3"
+                        },
+                        {
+                            "type": "text",
+                            "label": "text4 MODIFICATION TEST",
+                            "help": "text1",
+                            "field": "text4",
+                            "modifyFieldsOnValue": [
+                                {
+                                    "fieldValue": 1,
+                                    "fieldsToModify": [
+                                        {
+                                            "fieldId": "text5",
+                                            "disabled": false
+                                        }
+                                    ]
+                                },
+                                {
+                                    "fieldValue": 0,
+                                    "fieldsToModify": [
+                                        {
+                                            "fieldId": "text5",
+                                            "disabled": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "text",
+                            "label": "text5 MODIFICATION TEST",
+                            "help": "text1",
+                            "field": "text5",
+                            "modifyFieldsOnValue": [
+                                {
+                                    "fieldValue": 1,
+                                    "fieldsToModify": [
+                                        {
+                                            "fieldId": "text6",
+                                            "disabled": false
+                                        }
+                                    ]
+                                },
+                                {
+                                    "fieldValue": 0,
+                                    "fieldsToModify": [
+                                        {
+                                            "fieldId": "text6",
+                                            "disabled": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "text",
+                            "label": "text6 MODIFICATION TEST",
+                            "help": "text1",
+                            "field": "text6",
+                            "modifyFieldsOnValue": [
+                                {
+                                    "fieldValue": 1,
+                                    "fieldsToModify": [
+                                        {
+                                            "fieldId": "text7",
+                                            "disabled": false
+                                        }
+                                    ]
+                                },
+                                {
+                                    "fieldValue": 0,
+                                    "fieldsToModify": [
+                                        {
+                                            "fieldId": "text7",
+                                            "disabled": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "text",
+                            "label": "text7 MODIFICATION TEST",
+                            "help": "text1",
+                            "field": "text7"
+                        }
+                    ],
+                    "title": "Account"
+                }            
+            ],
+            "title": "Configuration",
+            "description": "Set up your add-on"
+        }
+    },
+    "meta": {
+        "name": "Splunk_TA_UCCExample",
+        "restRoot": "splunk_ta_uccexample",
+        "version": "5.39.0Ra9e840a6",
+        "displayName": "Splunk UCC test Add-on",
+        "schemaVersion": "0.0.3",
+        "_uccVersion": "5.39.0"
+    }
+}
