@@ -1,21 +1,21 @@
-This feature allows us to download and unpack libraries with appropriate binaries for the indicated operating system during the build process.
-To do this, you need to expand the **meta** section in global config with the **os-dependentLibraries** field. This field takes the following attributes:
+This feature allows you to download and unpack libraries with appropriate binaries for the indicated operating system during the build process.
+To do this, you need to expand the **meta** section in the global configuration with the **os-dependentLibraries** field. This field takes the following attributes:
 
 
 | Property                                               | Type    | Description                                                                                                                                                                                                                                                                                                                        | default value |
 |--------------------------------------------------------|---------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
-| name<span class="required-asterisk">*</span>           | string  | Name of the library we want to download.                                                                                                                                                                                                                                                                                           | -             |
-| version<span class="required-asterisk">*</span>        | string  | Specific version of given library.                                                                                                                                                                                                                                                                                                 | -             |
-| dependencies                                           | boolean | (Optional) Parameter which determines whether the `--no-deps` flag will be used when installing package from `pip`. When the value is set to `true` the library will be installed along with all its dependencies. When the value is set to `false` *(default)* `{name}={version}` must be present in packages `requirements.txt`. | false         |
-| platform<span class="required-asterisk">*</span>       | string  | The platform for which we want to download the specified library. The value depends on the available wheels for a given library e.g. for this wheel **cryptography-41.0.5-cp37-abi3-manylinux_2_28_x86_64.whl** platform is **manylinux_2_28_x86_64**.                                                                             | -             |
-| python_version<span class="required-asterisk">*</span> | string  | Python version compatible with the library.                                                                                                                                                                                                                                                                                        | -             |
-| target<span class="required-asterisk">*</span>         | string  | Path where the selected library will be unpacked.                                                                                                                                                                                                                                                                                  | -             |
-| os<span class="required-asterisk">*</span>             | string  | The name of the operating system for which the library is intended. Using this parameter, an appropriate insert into sys.path will be created. It takes 3 values **windows**, **linux** and **darwin**.                                                                                                                            | -             |
+| name<span class="required-asterisk">*</span>           | string  | is the name of the library we want to download.                                                                                                                                                                                                                                                                                           | -             |
+| version<span class="required-asterisk">*</span>        | string  | is the specific version of the given library.                                                                                                                                                                                                                                                                                                 | -             |
+| dependencies                                           | boolean | (Optional) is the parameter which determines whether the `--no-deps` flag will be used when installing the package from `pip`. When the value is set to `true`, the library will be installed along with all its dependencies. When the value is set to `false` *(default)* `{name}={version}`, it must be present in packages `requirements.txt`. | false         |
+| platform<span class="required-asterisk">*</span>       | string  | is the platform for downloading the specified library. The value depends on the available wheels for a given library, for example, for this wheel, **cryptography-41.0.5-cp37-abi3-manylinux_2_28_x86_64.whl**, the platform is **manylinux_2_28_x86_64**.                                                                             | -             |
+| python_version<span class="required-asterisk">*</span> | string  | is the python version compatible with the library.                                                                                                                                                                                                                                                                                        | -             |
+| target<span class="required-asterisk">*</span>         | string  | is the Path where the selected library will be unpacked.                                                                                                                                                                                                                                                                                  | -             |
+| os<span class="required-asterisk">*</span>             | string  | is the name of the operating system which the library is intended for. Using this parameter, an appropriate insert into sys.path will be created. It takes 3 values **windows**, **linux**, and **darwin**.                                                                                                                            | -             |
 
 ### About wheels files
 
 Generally, the wheel name convention is <br>**{distribution}-{version}(-{build tag})?-{python tag}-{abi tag}-{platform tag}.whl**.<br>
-For example for this particular library: <br>**grpcio-1.54.2-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl**<br> 
+For example, for this particular library, <br>**grpcio-1.54.2-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl**<br>,
 your pip parameters are:
 
 * name = **grpcio**
@@ -29,10 +29,10 @@ and your pip command should look like this:<br>
 `pip install --no-deps --platform manylinux_2_17_x86_64 --python-version 37 --target your/path/to/target --only-binary=:all: grpcio==1.54.2`
 
 A dot in the platform part indicates that a given distribution supports several platforms.
-In this case "**.**" in **manylinux_2_17_x86_64.manylinux2014_x86_64** means this distribution supports both **manylinux_2_17_x86_64** and **manylinux2014_x86_64**.
+In this case, "**.**" in **manylinux_2_17_x86_64.manylinux2014_x86_64** means this distribution supports both **manylinux_2_17_x86_64** and **manylinux2014_x86_64**.
 
 
-for more informations, we recommend watching [.whl](https://www.youtube.com/watch?v=4L0Jb3Ku81s) and [manylinux platform](https://www.youtube.com/watch?v=80j-MRtHMek)
+For more informations, see [.whl](https://www.youtube.com/watch?v=4L0Jb3Ku81s) and [manylinux platform](https://www.youtube.com/watch?v=80j-MRtHMek).
 
 
 ### Usage
@@ -117,11 +117,11 @@ output
   
 During the build process, a python script "import_declare_test.py" will be created in **output/ta_name/bin** to manipulate system paths. 
 In each input using the specified libraries, this script must be imported. 
-Currently, three operating systems are supported: **Windows**, **Linux** and **Darwin**. 
+Currently, three operating systems are supported: **Windows**, **Linux**, and **Darwin**. 
 If, for development purposes, there is a need to create other custom manipulations on sys.path, 
 create your own script called "import_declare_test.py" and place it in the **package/bin** folder. 
 This way, when building the TA, the default script will be replaced with the one created by the developer.  
-The default script for the above configuration will look like this:
+The default script for this configuration will look like this:
 
 ```python
 import os

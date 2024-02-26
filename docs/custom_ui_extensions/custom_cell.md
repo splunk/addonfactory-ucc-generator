@@ -6,17 +6,17 @@ A Custom Cell is used to update the content of a table cell.
 
 | Property          | Description |
 | ----------------- | ----------- |
-| globalConfig       | It is a hierarchical object that contains the globalConfig file's properties and values. |
-| el                | The `el` is used to render a custom cell element in a table. |
-| serviceName       | The name of the service/tab specified in the globalConfig file. |
-| row               | The object of the record for which the CustomRowInput constructor is called. |
-| field              | The name of the field as specified in the globalConfig file. |
+| globalConfig       | is a hierarchical object that contains the globalConfig file's properties and values. |
+| el                | is used to render a custom cell element in a table. |
+| serviceName       | is the name of the service/tab specified in the globalConfig file. |
+| row               | is the object of the record for which the CustomRowInput constructor is called. |
+| field              | is the name of the field as specified in the globalConfig file. |
 
 ### Methods
 
 | Property          | Description |
 | ----------------- | ----------- |
-| render            | `render` is a method which should have logic for the custom cell component, and it will be executed automatically when the create, edit, or clone actions performed. |
+| render            | is a method which should have logic for the custom cell component, and it will be executed automatically when the create, edit, or clone actions performed. |
 
 ### Usage
 
@@ -86,6 +86,6 @@ export default CustomInputCell;
 
 ### Output
 
-This is how it looks like in the UI:
+This is how it looks in the UI:
 
 ![image](../images/custom_ui_extensions/Custom_Cell_Output.png)
