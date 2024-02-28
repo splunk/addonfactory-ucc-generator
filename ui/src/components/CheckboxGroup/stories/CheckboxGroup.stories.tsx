@@ -51,6 +51,35 @@ export const Base: Story = {
         },
     },
 };
+export const Multiline: Story = {
+    args: {
+        mode: MODE_EDIT,
+        field: 'api',
+        value: 'neigh/1,like/1',
+        controlOptions: {
+            rows: [
+                {
+                    field: 'like',
+                    checkbox: {
+                        label: 'I like ponies',
+                    },
+                },
+                {
+                    field: 'unicorn',
+                    checkbox: {
+                        label: 'Enable unicorn mode (Warning: May attract nearby ponies)',
+                    },
+                },
+                {
+                    field: 'neigh',
+                    checkbox: {
+                        label: "I agree to occasionally neigh like a pony when nobody's watching",
+                    },
+                },
+            ],
+        },
+    },
+};
 export const WithSingleGroup: Story = {
     args: {
         ...Base.args,
@@ -155,14 +184,14 @@ export const MixedWithGroups: Story = {
 export const CreateMode: Story = {
     args: {
         ...Base.args,
-        value: 'field1/1,field2/1', // should be disregarded
+        value: undefined,
         mode: MODE_CREATE,
         controlOptions: {
             rows: [
                 {
                     field: 'field1',
                     checkbox: {
-                        label: 'Default true',
+                        label: 'Default true with value = 1200',
                         defaultValue: true,
                     },
                     input: {
@@ -173,7 +202,7 @@ export const CreateMode: Story = {
                 {
                     field: 'field2',
                     checkbox: {
-                        label: 'Default false',
+                        label: 'Default false with value = 2',
                         defaultValue: false,
                     },
                     input: {

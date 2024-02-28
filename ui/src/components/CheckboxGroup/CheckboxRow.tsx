@@ -1,12 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import ColumnLayout from '@splunk/react-ui/ColumnLayout';
+import React, { useEffect, useState } from 'react';
 import NumberComponent, { NumberChangeHandler } from '@splunk/react-ui/Number';
 import styled from 'styled-components';
 import Switch from '@splunk/react-ui/Switch';
-import { StyledColumnLayout } from './StyledComponent';
+import { FixedCheckboxRowWidth } from './StyledComponent';
 
 const StyledSwitch = styled(Switch)`
-    padding-left: 3px;
+    padding: 0 3px;
+    flex: min-content;
+    align-items: baseline;
+`;
+const StyledNumber = styled.div`
+    width: 80px;
+`;
+const StyledRow = styled.div`
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    ${FixedCheckboxRowWidth}
 `;
 
 interface CheckboxRowProps {
@@ -36,31 +46,34 @@ function CheckboxRow(props: CheckboxRowProps) {
         handleChange({ field, inputValue: input, checkbox: !previousValue });
     };
 
+    const numberA11yLabel = `${label} value`;
+    const checkboxA11yLabel = `${label} checkbox`;
     return (
-        <StyledColumnLayout>
-            <ColumnLayout.Row>
-                <ColumnLayout.Column span={7}>
-                    <StyledSwitch
-                        key={field}
-                        value={field}
-                        selected={checkbox}
-                        onClick={handleChangeCheckbox}
-                        appearance="checkbox"
-                        disabled={disabled}
-                    >
-                        {label}
-                    </StyledSwitch>
-                </ColumnLayout.Column>
-                <ColumnLayout.Column span={3}>
-                    <NumberComponent
-                        inline
-                        disabled={isTextDisabled}
-                        defaultValue={input}
-                        onChange={handleChangeInput}
-                    />
-                </ColumnLayout.Column>
-            </ColumnLayout.Row>
-        </StyledColumnLayout>
+        <StyledRow>
+            <StyledSwitch
+                aria-label={checkboxA11yLabel}
+                data-test-field={field}
+                selected={checkbox}
+                onClick={handleChangeCheckbox}
+                appearance="checkbox"
+                disabled={disabled}
+            >
+                {label}
+            </StyledSwitch>
+
+            <StyledNumber>
+                <NumberComponent
+                    aria-label={numberA11yLabel}
+                    data-test-field={field}
+                    title={numberA11yLabel}
+                    inline
+                    disabled={isTextDisabled}
+                    defaultValue={input}
+                    onChange={handleChangeInput}
+                />
+            </StyledNumber>
+        </StyledRow>
     );
 }
+
 export default CheckboxRow;
