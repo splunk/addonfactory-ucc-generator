@@ -8,7 +8,7 @@ proxy configuration, and logging level configuration.
 |-------------------------------------------------------------------| ------ | ------------------------------------------------------- |
 | title<span class="required-asterisk">\*</span>                    | string | -                                                       |
 | description                                                       | string | To provide a brief summary of an configuration page.    |
-| [subDescription](../advanced/sub_description)                     | object | To provide broader description of an configuration page |
+| [subDescription](../advanced/sub_description.md)                     | object | To provide broader description of an configuration page |
 | [tabs](#tabs-properties)<span class="required-asterisk">\*</span> | array  | To specify a list of tab.                               |
 
 ### Tabs properties
@@ -17,17 +17,17 @@ proxy configuration, and logging level configuration.
 |--------------------------------------------------------------| ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | name<span class="required-asterisk">\*</span>                | string | To define the particular tab name.                                                                                                                                                                 |
 | title<span class="required-asterisk">\*</span>               | string | To show the title of the tab.                                                                                                                                                                      |
-| [entity](../entity)<span class="required-asterisk">\*</span> | array  | A list of fields and their properties.                                                                                                                                                             |
-| [table](../table)                                            | object | To display accounts stanza in table                                                                                                                                                                |
+| [entity](../entity/index.md)<span class="required-asterisk">\*</span> | array  | A list of fields and their properties.                                                                                                                                                             |
+| [table](../table.md)                                            | object | To display accounts stanza in table                                                                                                                                                                |
 | style                                                        | string | By specifying this property in the global config file, the forms can either be opened as a new page or in a dialog. <br>Supported values are "page" or "dialog". <br> Default value is **dialog**. |
-| options                                                      | object | This property allows you to enable the [saveValidator](../advanced/save_validator) feature.                                                                                                        |
-| hook                                                         | object | It is used to add custom behaviour to forms. Visit the [Custom Hook](../custom_ui_extensions/custom_hook) page to learn more.                                                                      |
+| options                                                      | object | This property allows you to enable the [saveValidator](../advanced/save_validator.md) feature.                                                                                                        |
+| hook                                                         | object | It is used to add custom behaviour to forms. Visit the [Custom Hook](../custom_ui_extensions/custom_hook.md) page to learn more.                                                                      |
 | [warning](../advanced/custom_warning.md)                     | object | It is used to add custom warning message for each of modes ('create', 'edit', 'config', 'clone'), message is displayed on form                                                                     |
 | conf                                                         | string | TBD                                                                                                                                                                                                |
 | restHandlerName                                              | string | TBD                                                                                                                                                                                                |
 | restHandlerModule                                            | string | TBD                                                                                                                                                                                                |
 | restHandlerClass                                             | string | TBD                                                                                                                                                                                                |
-| customTab                                                    | Object | This property allows you to enable the [custom tab](../custom_ui_extensions/custom_tab) feature.                                                                                                   |
+| customTab                                                    | Object | This property allows you to enable the [custom tab](../custom_ui_extensions/custom_tab.md) feature.                                                                                                   |
 
 ### Usage
 

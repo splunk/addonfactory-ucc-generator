@@ -1,6 +1,6 @@
 Custom Menu can be created when there is more than one input present on the inputs page. 
 
-> This feature is deprecated (will be removed in the next major version) as [`Multilevel Menu`](../inputs/multilevel_menu) is now ready to use if more than one input is available.
+> This feature is deprecated (will be removed in the next major version) as [`Multilevel Menu`](../inputs/multilevel_menu.md) is now ready to use if more than one input is available.
 
 In addition to the multiple inputs, we can use this menu to create a custom component at the top right corner of the Input page.
 
