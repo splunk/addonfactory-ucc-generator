@@ -53,6 +53,7 @@ nav:
   - OpenAPI: "openapi.md"
   - UCC-related libraries: "ucc_related_libraries.md"
   - Custom UI Extensions:
+    - Overview: "custom_ui_extensions/overview.md"
     - Custom Hook: "custom_ui_extensions/custom_hook.md"
     - Custom Control: "custom_ui_extensions/custom_control.md"
     - Custom Row: "custom_ui_extensions/custom_row.md"

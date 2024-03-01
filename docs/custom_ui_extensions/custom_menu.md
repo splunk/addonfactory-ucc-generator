@@ -1,44 +1,46 @@
 Custom Menu can be created when there is more than one input present on the inputs page. 
 
-> This feature is deprecated (will be removed in the next major version) as [`Multilevel Menu`](../inputs/multilevel_menu) is now ready to use if more than one input is available.
+> This feature is deprecated (will be removed in the next major version) as [`Multilevel Menu`](../inputs/multilevel_menu.md) is now ready to use if more than one input is available.
 
-In addition to the multiple inputs, we can use this menu to create a custom component at the top right corner of the Input page.
+In addition to the multiple inputs, we can use this menu to create a custom component in the top right corner of the Input page.
 
 ### Properties
 
-| Property          | Description |
-| ----------------- | ----------- |
-| globalConfig       | is a hierarchical object that contains the globalConfig file's properties and values. |
-| el                | is used to render a custom element (on the top right corner) on the Inputs page. |
-| setValue          | is used to set the value of the custom component. <p>setValue: ƒ (newValue)</p> |
+| Property     | Description                                                                           |
+|--------------|---------------------------------------------------------------------------------------|
+| globalConfig | is a hierarchical object that contains the globalConfig file's properties and values. |
+| el           | is used to render a custom element (on the top right corner) on the Inputs page.      |
+| setValue     | is used to set the value of the custom component. `<p>setValue: ƒ (newValue)</p>`     |
 
 ### Methods
 
-| Property          | Description |
-| ----------------- | ----------- |
-| render            | is a method which should have logic for the custom menu, and it will be executed automatically when the inputs page is rendered. |
+| Property | Description                                                                                                                      |
+|----------|----------------------------------------------------------------------------------------------------------------------------------|
+| render   | is a method which should have logic for the custom menu, and it will be executed automatically when the inputs page is rendered. |
 
 ### Usage
-```
-"inputs": {
+```json
+{
+  "inputs": {
     "title": "Inputs",
     "description": "Manage your data inputs",
     "services": [],
     "table": {
-        "actions": ["edit", "enable", "delete", "clone"],
-        "header": [],
-        "moreInfo": []
+      "actions": ["edit", "enable", "delete", "clone"],
+      "header": [],
+      "moreInfo": []
     },
     "menu": {
-        "src": "custom_menu",
-        "type": "external"
+      "src": "custom_menu",
+      "type": "external"
     }
+  }
 }
 ```
 
 ### Example
 
-```
+```js
 class CustomMenu {
 
     /**
