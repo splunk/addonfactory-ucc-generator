@@ -38,6 +38,7 @@ nav:
     - Multi-level Menu: "inputs/multilevel_menu.md"
   - Configuration:
       - "configurations/index.md"
+      - Introduction: "configurations/index.md"
       - Proxy: "configurations/proxy.md"
   - Dashboard: "dashboard.md"
   - Entity:
