@@ -2,24 +2,24 @@ The Custom Control feature allows you to display any customised input component 
 
 ### Properties
 
-| Property          | Description |
-| ----------------- | ----------- |
-| globalConfig       | It is a hierarchical object that contains the globalConfig file's properties and values. |
-| el                | The `el` is used to render a custom input element in a form. |
-| data              | The `data` object holds details regarding the execution mode (create, edit, clone), the value of a field, and the service name where this custom component is being rendered. |
-| setValue          | This method is used to set the value of the custom component. <p>setValue: ƒ (newValue)</p> |
-| util              | This is a utility object with various functions that can be used to manipulate the UI. <br>There are 4 associated methods: <ul><li>`clearAllErrorMsg`: ƒ (State)</li><li>`setErrorFieldMsg`: ƒ (field, msg)</li><li>`setErrorMsg`: ƒ (msg)</li><li>`setState`: ƒ setState(callback)</li></ul> |
+| Property     | Description                                                                                                                                                                                                                                                                                   |
+|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| globalConfig | It is a hierarchical object that contains the globalConfig file's properties and values.                                                                                                                                                                                                      |
+| el           | The `el` is used to render a custom input element in a form.                                                                                                                                                                                                                                  |
+| data         | The `data` object holds details regarding the execution mode (create, edit, clone), the value of a field, and the service name where this custom component is being rendered.                                                                                                                 |
+| setValue     | This method is used to set the value of the custom component. <p>setValue: ƒ (newValue)</p>                                                                                                                                                                                                   |
+| util         | This is a utility object with various functions that can be used to manipulate the UI. <br>There are 4 associated methods: <ul><li>`clearAllErrorMsg`: ƒ (State)</li><li>`setErrorFieldMsg`: ƒ (field, msg)</li><li>`setErrorMsg`: ƒ (msg)</li><li>`setState`: ƒ setState(callback)</li></ul> |
 
 ### Methods
 
-| Property          | Description |
-| ----------------- | ----------- |
-| render            | is a method which should have logic for the custom component, and it will be executed automatically when the create, edit, or clone actions are performed. |
-| validation        | This method should contain the validation logic for the value of the custom component. |
+| Property   | Description                                                                                                                                                |
+|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| render     | is a method which should have logic for the custom component, and it will be executed automatically when the create, edit, or clone actions are performed. |
+| validation | This method should contain the validation logic for the value of the custom component.                                                                     |
 
 ### Usage
 
-```
+```json
 {
     "name": "account",
     "table": {},
@@ -51,7 +51,7 @@ The Custom Control feature allows you to display any customised input component 
 
 ### Example
 
-```
+```js
 class CustomControl {
     /**
      *
