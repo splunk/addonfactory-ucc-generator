@@ -1,3 +1,10 @@
+## [5.39.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.39.0...v5.39.1) (2024-03-05)
+
+
+### Bug Fixes
+
+* modifyFieldsOnValue schema and tests ([#1087](https://github.com/splunk/addonfactory-ucc-generator/issues/1087)) ([4629aa1](https://github.com/splunk/addonfactory-ucc-generator/commit/4629aa1dc5ef4bfae78390809ed2b1a1ca4d8b60))
+
 # [5.39.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.38.0...v5.39.0) (2024-02-20)
 
 
