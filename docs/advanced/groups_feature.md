@@ -1,13 +1,13 @@
-Using this functionality, the Inputs page form can be divided into distinct sections, each comprising relevant fields. If the `isExpandable` property is set to true in the global config file, the group will be of the [collapsible panel](https://splunkui.splunk.com/Packages/react-ui/CollapsiblePanel) type. 
+Using this functionality, the Inputs page form can be divided into distinct sections, each comprising relevant fields. If the `isExpandable` property is set to true in the global configuration file, the group will be in the [collapsible panel](https://splunkui.splunk.com/Packages/react-ui/CollapsiblePanel) type. 
 
 The groups will be displayed at the bottom of the form.
 
 ### Properties
-- `label` to display the title of a specific group.
-- `fields` to specify the list of fields in a group. All fields must be present in the **entity**.
+- `label` displays the title of a specific group.
+- `fields` specifies the list of fields in a group. All fields must be present in the **entity**.
 - `options`:
     - `isExpandable` can be used to hide/show fields of the group. The default value is **false**.
-    - `expand` to show all fields of the group while opening the form. The default value is **false**.
+    - `expand` can be used to show all fields of the group while opening the form. The default value is **false**.
     
 ### Usage
 ```
@@ -50,5 +50,5 @@ The groups will be displayed at the bottom of the form.
 },
 ```
 ### Output
-This is how it looks like in the UI:
+This is how it looks in the UI:
 ![image](../images/advanced/groups_feature.png)

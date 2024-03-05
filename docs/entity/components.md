@@ -1,12 +1,12 @@
 # Components supported by UCC
 
-Components are used by UCC to render the Inputs and Configuration pages. Here is the list of the supported components. 
+Components are used by UCC to render the Inputs and Configuration pages. See the following list of the supported components. 
 
 ## `Text`
 
-Underlying `@splunk/react-ui` component: [`Text`](https://splunkui.splunk.com/Packages/react-ui/Text).
+See the underlying `@splunk/react-ui` component: [`Text`](https://splunkui.splunk.com/Packages/react-ui/Text).
 
-Example usage below:
+See the following example usage:
 
 ```json
 {
@@ -34,16 +34,16 @@ Example usage below:
 }
 ```
 
-This is how it looks like in the UI:
+This is how it looks in the UI:
 
 ![image](../images/components/text_component_example.png)
 
 
 ## `Text Area`
 
-Underlying `@splunk/react-ui` component: [`TextArea`](https://splunkui.splunk.com/Packages/react-ui/TextArea).
+See the underlying `@splunk/react-ui` component: [`TextArea`](https://splunkui.splunk.com/Packages/react-ui/TextArea).
 
-`textarea` component is very similar to `text` component, but allows to have a multi-line input for text.
+The `textarea` component is very similar to the `text` component, but allows you to have a multi-line input for text.
 
 <h3> Options </h3>
 
@@ -52,7 +52,7 @@ Underlying `@splunk/react-ui` component: [`TextArea`](https://splunkui.splunk.co
 | rowsMax  | number | Maximum number of rows to display. | 12            |
 | rowsMin  | number | Minimum number of rows to display. | 8             |
 
-Example usage below:
+See the following example:
 
 ```json
 {
@@ -68,7 +68,7 @@ Example usage below:
 }
 ```
 
-This is how it looks like in the UI:
+This is how it looks in the UI:
 
 ![image](../images/components/textarea_component_example.png)
 
@@ -77,9 +77,9 @@ This is how it looks like in the UI:
 
 A `singleSelect` is a feature that combines a drop-down box, and/or editable text field, giving the user multiple ways to input or select the desired information.
 
-Underlying `@splunk/react-ui` components: [`Select`](https://splunkui.splunk.com/Packages/react-ui/Select) or [`Combo Box`](https://splunkui.splunk.com/Packages/react-ui/ComboBox) depending on the `createSearchChoice` option. 
+See the underlying `@splunk/react-ui` components: [`Select`](https://splunkui.splunk.com/Packages/react-ui/Select) or [`Combo Box`](https://splunkui.splunk.com/Packages/react-ui/ComboBox) depending on the `createSearchChoice` option. 
 
-When the `createSearchChoice` option is set to true, the Singleselect component becomes a text input with autocomplete.
+When the `createSearchChoice` option is set to true, the Singleselect component becomes a text input with auto-complete.
 
 A clear button is visible to the right of the dropdown when this field is marked as required.
 
@@ -87,17 +87,17 @@ A clear button is visible to the right of the dropdown when this field is marked
 
 | Property                                          | Type    | Description                                                                                                                                                                 | Default Value |
 | ------------------------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
-| disableSearch                                     | boolean | Determines whether to show the filter box. When false, the children are automatically filtered based on the label.                                                          | false         |
-| createSearchChoice                                | boolean | Allow the user to add arbitrary values.                                                                                                                                     | false         |
+| disableSearch                                     | boolean | It determines whether to show the filter box. When false, the children are automatically filtered based on the label.                                                          | false         |
+| createSearchChoice                                | boolean | It allows the user to add arbitrary values.                                                                                                                                     | false         |
 | referenceName                                     | string  | Dropdown options will be generated via an API call to the service's restHandler.                                                                                            | -             |
 | endpointUrl                                       | string  | Dropdown options will be generated via an API call to that endpoint.                                                                                                        | -             |
-| allowList                                         | string  | It only accepts options that match the regex based on the name attribute when received via API call using `endpointUrl` and `referenceName`. It is applied before denyList. | -             |
-| denyList                                          | string  | It filters options that don't match the regex based on the name attribute when received via API call using `endpointUrl` and `referenceName`.                               | -             |
+| allowList                                         | string  | It only accepts options that match the regex based on the name attribute when received via an API call using `endpointUrl` and `referenceName`. It is applied before denyList. | -             |
+| denyList                                          | string  | It filters options that don't match the regex based on the name attribute when received via an API call using `endpointUrl` and `referenceName`.                               | -             |
 | labelField                                        | string  | TBD                                                                                                                                                                         | -             |
-| [dependencies](../advanced/dependent_dropdown.md) | array   | It is used to update options via an API call when the value of any field in the dependencies list is updated.                                                               | -             |
+| [dependencies](../advanced/dependent_dropdown.md) | array   | It is used to update the options via an API call when the value of any field in the dependencies list is updated.                                                               | -             |
 
 
-<h3> Example usage below: </h3>
+<h3> See the following example usage: </h3>
 
 <h4> Using referenceName option </h4>
 
@@ -114,7 +114,7 @@ A clear button is visible to the right of the dropdown when this field is marked
 }
 ```
 
-This is how it looks like in the UI:
+This is how it looks in the UI:
 
 ![image](../images/components/selectselect_component_example_reference.png)
 
@@ -142,7 +142,7 @@ This is how it looks like in the UI:
 }
 ```
 
-This is how it looks like in the UI:
+This is how it looks in the UI:
 
 ![image](../images/components/selectselect_component_example_autocomplete.png)
 
@@ -171,7 +171,7 @@ This is how it looks like in the UI:
 }
 ```
 
-This is how it looks like in the UI:
+This is how it looks in the UI:
 
 ![image](../images/components/selectselect_component_example_createSearchChoice.png)
 
@@ -216,16 +216,16 @@ This is how it looks like in the UI:
 }
 ```
 
-This is how it looks like in the UI:
+This is how it looks in the UI:
 
 ![image](../images/components/selectselect_component_example_autocomplete_group.png)
 
 
 ## `Checkbox`
 
-Underlying `@splunk/react-ui` component: [`Switch`](https://splunkui.splunk.com/Packages/react-ui/Switch).
+See the underlying `@splunk/react-ui` component: [`Switch`](https://splunkui.splunk.com/Packages/react-ui/Switch).
 
-Example usage below:
+See the following example usage:
 
 ```json
 {
@@ -235,14 +235,14 @@ Example usage below:
 }
 ```
 
-This is how it looks like in the UI:
+This is how it looks in the UI:
 
 ![image](../images/components/checkbox_component_example.png)
 
 
 ## `CheckboxGroup`
 
-Example usage below:
+See the following example usage:
 
 ```json
 {
@@ -316,7 +316,7 @@ Example usage below:
 }
 ```
 
-This is how it looks like in the UI:
+This is how it looks in the UI:
 
 ![image](../images/components/checkbox_group_mixed_example.png)
 
@@ -325,7 +325,7 @@ The component maps and unmaps values into a single field in the format `fieldNam
 
 ## `Multiple Select`
 
-Underlying `@splunk/react-ui` component: [`Multiselect`](https://splunkui.splunk.com/Packages/react-ui/Multiselect).
+See the underlying `@splunk/react-ui` component: [`Multiselect`](https://splunkui.splunk.com/Packages/react-ui/Multiselect).
 
 Multiselect allows the user to select multiple options at once.
 
@@ -333,9 +333,9 @@ Multiselect allows the user to select multiple options at once.
 
 | Property                                          | Type    | Description                                                                                                                                                                                              | Default Value |
 | ------------------------------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
-| items                                             | array   | The arrayof options with label and value.                                                                                                                                                                | -             |
+| items                                             | array   | An array of options with a label and a value.                                                                                                                                                                | -             |
 | delimiter                                         | string  | It delimits each value of the field with a predefined character. <br>For example, In the data option_a\|option_b, a vertical bar (the pipe character) delimits the two data items option_a and option_b.   | comma(`,`)    |
-| createSearchChoice                                | boolean | Allow the user to add arbitrary values.                                                                                                                                                                  | false         |
+| createSearchChoice                                | boolean | It allows the user to add arbitrary values.                                                                                                                                                                  | false         |
 | referenceName                                     | string  | Dropdown options will be generated via an API call to the service's restHandler.                                                                                                                         | -             |
 | endpointUrl                                       | string  | Dropdown options will be generated via an API call to that endpoint.                                                                                                                                     | -             |
 | allowList                                         | string  | It only accepts options that match the regex based on the name attribute when received via API call using `endpointUrl` and `referenceName`. It is applied before denyList.                              | -             |
@@ -344,7 +344,7 @@ Multiselect allows the user to select multiple options at once.
 | [dependencies](../advanced/dependent_dropdown.md) | array   | It is used to update options via an API call when the value of any field in the dependencies list is updated.                                                                                             | -             |
 | [autoCompleteFields](#autoCompleteFields)         | array   | It is used to add options in the Single select or Multiple select component.                                                                                                                             | -             |
 
-Example usage below:
+See the following example usage:
 
 ```json
 {
@@ -367,14 +367,14 @@ Example usage below:
 }
 ```
 
-This is how it looks like in the UI:
+This is how it looks in the UI:
 
 ![image](../images/components/multiselect_component_example.png)
 
 
 ## `Radio Bar`
 
-Underlying `@splunk/react-ui` component: [`RadioBar`](https://splunkui.splunk.com/Packages/react-ui/RadioBar).
+See the underlying `@splunk/react-ui` component: [`RadioBar`](https://splunkui.splunk.com/Packages/react-ui/RadioBar).
 
 RadioBar is a component that provides the ability to select one option out of a group. It can be used when we need to select a field value from a few options.
 
@@ -382,9 +382,9 @@ RadioBar is a component that provides the ability to select one option out of a 
 
 | Property                                      | Type  | Description                                | Default Value |
 | --------------------------------------------- | ----- | ------------------------------------------ | ------------- |
-| items<span class="required-asterisk">*</span> | array | The array of options with label and value. | -             |
+| items<span class="required-asterisk">*</span> | array | This property is an array of options with a label and a value. | -             |
 
-Example usage below:
+See the following example usage:
 
 ```json
 {
@@ -409,13 +409,13 @@ Example usage below:
 }
 ```
 
-This is how it looks like in the UI:
+This is how it looks in the UI:
 
 ![image](../images/components/radio_component_example.png)
 
 ## `Help Link`
 
-Underlying `@splunk/react-ui` component: [`Link`](https://splunkui.splunk.com/Packages/react-ui/Link).
+See the underlying `@splunk/react-ui` component: [`Link`](https://splunkui.splunk.com/Packages/react-ui/Link).
 
 It will open the link in a new tab.
 
@@ -423,10 +423,10 @@ It will open the link in a new tab.
 
 | Property                                     | Type   | Description                             | Default Value |
 | -------------------------------------------- | ------ | --------------------------------------- | ------------- |
-| text<span class="required-asterisk">*</span> | string | A message to be display in form.        | -             |
-| link<span class="required-asterisk">*</span> | string | Link where the user will be redirected. | -             |
+| text<span class="required-asterisk">*</span> | string | It is a message to be displayed.        | -             |
+| link<span class="required-asterisk">*</span> | string | It is a link where the user will be redirected. | -             |
 
-Example usage below:
+See the following example usage:
 
 ```json
 {
@@ -440,19 +440,19 @@ Example usage below:
 }
 ```
 
-This is how it looks like in the UI:
+This is how it looks in the UI:
 
 ![image](../images/components/help_link_component_example.png)
 
 ## `File`
 
-Underlying `@splunk/react-ui` component: [`File`](https://splunkui.splunk.com/Packages/react-ui/File).
+See the underlying `@splunk/react-ui` component: [`File`](https://splunkui.splunk.com/Packages/react-ui/File).
 
-It supports files that can be opened in text mode or with a text editor. Files with extensions such as txt, json, xml, yaml, pem, key, crt, etc.
+It supports files that can be opened in text mode or with a text editor, which are files with extensions such as txt, json, xml, yaml, pem, key, crt, etc.
 
-It only sends file content to the server by reading it using the [readAsArrayBuffer](https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsArrayBuffer) method of the FileReader class and then decoding it into **UTF-8** format using the [decode](https://developer.mozilla.org/en-US/docs/Web/API/TextDecoder/decode) method of the TextDecoder class.
+It only sends file content to the server by reading it using the [readAsArrayBuffer](https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsArrayBuffer) method of the FileReader class, and then decoding it into **UTF-8** format, using the [decode](https://developer.mozilla.org/en-US/docs/Web/API/TextDecoder/decode) method of the TextDecoder class.
 
-File content can be validated using in-built validators like [string](../validators/#string) and [regex](../validators/#regex), and a custom validator can also be implemented using a [custom hook](../../custom_ui_extensions/custom_hook) and [saveValidator](../advanced/save_validator).
+The file content can be validated using in-built validators such as [string](validators.md#string) and [regex](validators.md#regex), and a custom validator can also be implemented using a [custom hook](../custom_ui_extensions/custom_hook.md) and [saveValidator](../advanced/save_validator.md).
 
 This feature allows you to upload a single file.
 
@@ -460,12 +460,11 @@ This feature allows you to upload a single file.
 
 | Property                                                   | Type   | Description                                                | Default Value |
 | ---------------------------------------------------------- | ------ | ---------------------------------------------------------- | ------------- |
-| fileSupportMessage                                          | string | To display message inside file component.                   | -             |
-| supportedFileTypes<span class="required-asterisk">*</span> | array  | A list of the file types that the user can upload.          | -             |
-| maxFileSize                                                | number | To set the maximum file size in KB that a user can upload.  | 500KB         |
+| fileSupportMessage                                          | string | It displays a message inside a file component.                   | -             |
+| supportedFileTypes<span class="required-asterisk">*</span> | array  | It is a list of the file types that the user can upload.          | -             |
+| maxFileSize                                                | number | It sets the maximum file size in KB that a user can upload.  | 500KB         |
 
-Example usage below:
-
+See the following example usage:
 ```json
 {
     "type": "file",
@@ -488,7 +487,7 @@ Example usage below:
 }
 ```
 
-This is how it looks like in the UI:
+This is how it looks in the UI:
 
 ![image](../images/components/file_component_example.png)
 

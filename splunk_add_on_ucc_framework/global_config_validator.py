@@ -19,6 +19,8 @@ import os
 import re
 from typing import Any, Dict, List
 import logging
+import itertools
+
 
 import jsonschema
 
@@ -560,6 +562,158 @@ class GlobalConfigValidator:
                             f"Service {service['name']} uses group field {group_field} which is not defined in entity"
                         )
 
+    def _is_circular(
+        self,
+        mods: List[Any],
+        visited: Dict[str, str],
+        all_entity_fields: List[Any],
+        current_field: str,
+    ) -> Dict[str, str]:
+        """
+        Checks if there is circular modification based on visited list and DFS algorithm
+        """
+        DEAD_END = "dead_end"
+        VISITING = "visited"
+        visited[current_field] = VISITING
+
+        current_field_mods = next(
+            (mod for mod in mods if mod["fieldId"] == current_field), None
+        )
+        if current_field_mods is None:
+            # no more dependent modification fields
+            visited[current_field] = DEAD_END
+            return visited
+        else:
+            for influenced_field in current_field_mods["influenced_fields"]:
+                if influenced_field not in all_entity_fields:
+                    raise GlobalConfigValidatorException(
+                        f"""Modification in field '{current_field}' for not existing field '{influenced_field}'"""
+                    )
+                if influenced_field == current_field:
+                    raise GlobalConfigValidatorException(
+                        f"""Field '{current_field}' tries to modify itself"""
+                    )
+                if visited[influenced_field] == VISITING:
+                    raise GlobalConfigValidatorException(
+                        f"""Circular modifications for field '{influenced_field}' in field '{current_field}'"""
+                    )
+                else:
+                    visited = self._is_circular(
+                        mods, visited, all_entity_fields, influenced_field
+                    )
+        # all of dependent modifications fields are dead_end
+        visited[current_field] = DEAD_END
+        return visited
+
+    def _check_if_cilcular(
+        self,
+        all_entity_fields: List[Any],
+        fields_with_mods: List[Any],
+        modifications: List[Any],
+    ) -> None:
+        visited = {field: "not_visited" for field in all_entity_fields}
+
+        for start_field in fields_with_mods:
+            # DFS algorithm for all fields with modifications
+            visited = self._is_circular(
+                modifications, visited, all_entity_fields, start_field
+            )
+
+    @staticmethod
+    def _get_mods_data_for_single_entity(
+        fields_with_mods: List[Any],
+        all_modifications: List[Any],
+        entity: Dict[str, Any],
+    ) -> List[Any]:
+        """
+        Add modification entity data to lists and returns them
+        """
+        if "modifyFieldsOnValue" in entity:
+            influenced_fields = set()
+            fields_with_mods.append(entity["field"])
+            for mods in entity["modifyFieldsOnValue"]:
+                for mod in mods["fieldsToModify"]:
+                    influenced_fields.add(mod["fieldId"])
+            all_modifications.append(
+                {"fieldId": entity["field"], "influenced_fields": influenced_fields}
+            )
+        return [fields_with_mods, all_modifications]
+
+    @staticmethod
+    def _get_all_entities(
+        collections: List[Dict[str, Any]],
+    ) -> List[Any]:
+        all_fields = []
+
+        tab_entities: List[Any] = [
+            el.get("entity") for el in collections if el.get("entity")
+        ]
+        all_entities = list(itertools.chain.from_iterable(tab_entities))
+
+        for entity in all_entities:
+            if entity["type"] == "oauth":
+                for oauthType in entity["options"]["auth_type"]:
+                    for oauthEntity in entity["options"][oauthType]:
+                        all_fields.append(oauthEntity)
+            else:
+                all_fields.append(entity)
+
+        return all_fields
+
+    def _get_all_modifiction_data(
+        self,
+        collections: List[Dict[str, Any]],
+    ) -> List[Any]:
+        fields_with_mods: List[Any] = []
+        all_modifications: List[Any] = []
+        all_fields: List[str] = []
+
+        entities = self._get_all_entities(collections)
+        for entity in entities:
+            self._get_mods_data_for_single_entity(
+                fields_with_mods, all_modifications, entity
+            )
+            all_fields.append(entity["field"])
+
+        return [fields_with_mods, all_modifications, all_fields]
+
+    def _validate_field_modifications(self) -> None:
+        """
+        Validates:
+        Circular dependencies
+        If fields try modify itself
+        If fields try modify unexisting field
+        """
+        pages = self._config["pages"]
+
+        if "configuration" in pages:
+            configuration = pages["configuration"]
+            tabs = configuration["tabs"]
+
+            (
+                fields_with_mods_config,
+                all_modifications_config,
+                all_fields_config,
+            ) = self._get_all_modifiction_data(tabs)
+
+            self._check_if_cilcular(
+                all_fields_config, fields_with_mods_config, all_modifications_config
+            )
+
+        if "inputs" in pages:
+            inputs = pages["inputs"]
+            services = inputs["services"]
+
+            (
+                fields_with_mods_inputs,
+                all_modifications_inputs,
+                all_fields_inputs,
+            ) = self._get_all_modifiction_data(services)
+
+            self._check_if_cilcular(
+                all_fields_inputs, fields_with_mods_inputs, all_modifications_inputs
+            )
+
     def validate(self) -> None:
         self._validate_config_against_schema()
         self._validate_configuration_tab_table_has_name_field()
@@ -573,3 +727,4 @@ class GlobalConfigValidator:
         self._warn_on_placeholder_usage()
         self._validate_checkbox_group()
         self._validate_groups()
+        self._validate_field_modifications()

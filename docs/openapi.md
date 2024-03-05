@@ -1,13 +1,13 @@
 # OpenAPI description document
 
-OpenAPI's description document is generated with `ucc-gen` command. 
-There has to be defined valid `globalConfig.json` and `app.manifest` to have the document (`appserver/static/openapi.json` file) generated.
+OpenAPI's description document is generated using the `ucc-gen` command. 
+There has to be defined, valid `globalConfig.json` and `app.manifest` to have the document (`appserver/static/openapi.json` file) generated.
 
 ## How to find the document?
 
-Once `ucc-gen` command is executed, OpenAPI description document is located in output `appserver/static` subdirectory.
+Once t`ucc-gen` command is executed, OpenAPI description document is located in the `appserver/static` output subdirectory.
 
-One of ways is to download it via button displayed in top right corner of configuration page.
+One way to download it is through the button displayed on the top right corner of the configuration page.
 
 ![image](./images/openapi/download_openapi_button.png)
 
@@ -17,20 +17,20 @@ When add-on is installed to Splunk instance, it is exposed via web and managemen
 
 (eg. http://localhost:8000/en-GB/static/app/Splunk_TA_cisco_meraki/openapi.json)
 
-See the following resources for more information on working with the Splunk REST API (eg. how to authenticate):
+See the following resources for more information on working with the Splunk REST API (for example, how to authenticate):
 
 * [REST API User Manual](http://docs.splunk.com/Documentation/Splunk/9.0.3/RESTUM/RESTusing)
 * [REST API Tutorials](http://docs.splunk.com/Documentation/Splunk/9.0.3/RESTTUT/RESTconfigurations)
 
-## Where it can be used?
+## Where can it be used?
 
-OpenAPI Description document can be used to create:
+The OpenAPI Description document can be used to create:
 
-* interactive documentation that generates simple curl requests to all documented endpoints (check [this section](#how-to-get-curl-commands-and-use-them) for relevant instruction)
+* interactive documentation that generates simple curl requests to all documented endpoints (check [this section](#how-to-get-curl-commands-and-use-them) for the relevant instructions).
 * automation that uses the simple requests to create more complex solutions such as:
     * orchestration
     * mass load or migration
-    * automated tests
+    * automated tests.
 
 Check [swagger](https://swagger.io/) or [other tools](https://github.com/OAI/OpenAPI-Specification/blob/main/IMPLEMENTATIONS.md) for more possibilities.
 
@@ -41,7 +41,7 @@ Check [swagger](https://swagger.io/) or [other tools](https://github.com/OAI/Ope
 * docker running
 * Splunk with your add-on installed
 
-### Instruction
+### Instructions
 
 1. Open https://editor.swagger.io/
    * Alternatively, you can run your own instance of Swagger Editor
@@ -56,19 +56,19 @@ Check [swagger](https://swagger.io/) or [other tools](https://github.com/OAI/Ope
 5. Define parameters and "Execute"
 6. Copy curl value, paste to your terminal, ADD `-k` PARAMETER, and run
 
-> Note: Check [Swagger Editor documentation](https://swagger.io/tools/swagger-editor/) in case of any question related to the tool
+> See [Swagger Editor documentation](https://swagger.io/tools/swagger-editor/) for questions related to the tool.
 
 ### Troubleshooting
 
 * SSL certificate problem
 
-Are you sure you added `-k` parameter to curl command?
+Make sure you added `-k` parameter to the curl command.
 
 * Unauthorized
 
-Make sure you clicked Authorize button, gave username and password and clicked Authorize
+Make sure you clicked the Authorize button, gave the username and password, and then clicked Authorize.
 
-## How to generate Python client and use it?
+## How do you generate Python client and then use it?
 
 ### Prerequisites
 
@@ -105,4 +105,3 @@ configuration.verify_ssl = False
 ```
 
 This option should only be used when connecting to a non-prod Splunk instance.
-

@@ -1,60 +1,62 @@
 Custom Hook is a JavaScript function that allows us to reuse some code throughout the app. It is used to validate form/dialog inputs.
 
-Hook is nothing more than Javascript event handling on the events `onCreate`, `onChange`, `onRender`, `onSave`, `onSaveSuccess`, `onSaveFail` and `onEditLoad`.
+Hook is nothing more than a Javascript event handling on the events `onCreate`, `onChange`, `onRender`, `onSave`, `onSaveSuccess`, `onSaveFail`, and `onEditLoad`.
 
-Hooks can be used inside the services and tabs placed next to the entity tag. 
+Hooks can be used inside the services and tabs that are placed next to the entity tag. 
 
-The `type` key needs to be set as external to webpack the custom extensions. UCC  expects scripts marked as external to follow the ESM syntax for exporting and importing modules. Any other value or not specifying type will default to old requireJS (AMD) import syntax. Aditionally, the custom javascript file and the imported modules will not get webpack-ed.
+The `type` key needs to be set as external to webpack the custom extensions. UCC  expects scripts marked as external to follow the ESM syntax for exporting and importing modules. Any other value, or not specifying type, will default to the old requireJS (AMD) import syntax. Aditionally, the custom javascript file and the imported modules will not get webpack-ed.
 
 ### Properties
 
-| Property          | Description |
-| ----------------- | ----------- |
-| globalConfig       | It is a hierarchical object that contains the globalConfig file's properties and values. |
-| serviceName       | The name of the service/tab specified in the globalConfig. |
-| state             | `state` is an object that represents the actual state value of the components in the service/tab when the hook's constructor is called. Updating this object will not update the state of the page. Use the `util.setState` method to update the page's state. The `state` object contains the actual state data along with the  `errorMsg` and `warningMsg` properties. |
-| mode              | There are three possible modes: Edit, Clone and Delete. Which are used in service/tab components. |
-| util              | This is a utility object with various functions that can be used to manipulate the page UI. <br>There are 4 methods associated : <ul><li>`clearAllErrorMsg`: ƒ (State)</li><li>`setErrorFieldMsg`: ƒ (field, msg)</li><li>`setErrorMsg`: ƒ (msg)</li><li>`setState`: ƒ setState(callback)</li></ul> |
-| groupName         | The name of the menu group from which the inputs service is called. This parameter should only be used with the multi-level menu feature. |
+| Property     | Description                                                                                                                                                                                                                                                                                                                                                              |
+|--------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| globalConfig | It is a hierarchical object that contains the globalConfig file's properties and values.                                                                                                                                                                                                                                                                                 |
+| serviceName  | It is the name of the service/tab specified in the globalConfig.                                                                                                                                                                                                                                                                                                         |
+| state        | `state` is an object that represents the actual state value of the components in the service/tab when the hook's constructor is called. Updating this object will not update the state of the page. Use the `util.setState` method to update the page's state. The `state` object contains the actual state data along with the  `errorMsg` and `warningMsg` properties. |
+| mode         | There are three possible modes: Edit, Clone, and Delete. These are used in service/tab components.                                                                                                                                                                                                                                                                       |
+| util         | This is a utility object with various functions that can be used to manipulate the page UI. <br>There are 4 associated methods: <ul><li>`clearAllErrorMsg`: ƒ (State)</li><li>`setErrorFieldMsg`: ƒ (field, msg)</li><li>`setErrorMsg`: ƒ (msg)</li><li>`setState`: ƒ setState(callback)</li></ul>                                                                       |
+| groupName    | The name of the menu group from which the inputs service is called. This parameter should only be used with the multi-level menu feature.                                                                                                                                                                                                                                |
 
 ### Methods
 
-We can use these methods to overirde existing methods according to the functionality desired:
+We can use these methods to overirde existing methods according to the desired functionality:
 
-| Property          | Description |
-| ----------------- | ----------- |
-| onCreate          | This method is called when we click on the "Add/Create" button for creating a new record on the page. |
-| debounce          | This method is used to create another special method which does not get executed on every call. This functionality can be useful when listening for an event. <p>For Example, we only want to show help text/error when the user has stopped typing for 500ms in a text-box and not on every key press.  In this scenario, the debounce method will induce a time wait every time a key is pressed and the method will only execute when there is no other call to it within that time wait.</p> |
-| onChange          | This method is called when the value of any field is changed. |
-| onRender          | This method is called once whenever the user clicks on a "Add", "Edit" or "Clone" button. |
-| onSave            | This method is called when the user clicks the "Save" button after creating, editing or cloning a record. |
-| onSaveSuccess     | This method is called when a record has been successfully saved. |
-| onSaveFail        | This method is called when a record fails to save due to any error. |
-| onEditLoad        | This method is called when the user clicks on a "Edit" button for an existing record. |
+| Property      | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| onCreate      | is called when we click on the "Add/Create" button to create a new record on the page.                                                                                                                                                                                                                                                                                                                                                                                                         |
+| debounce      | is used to create another special method which does not get executed on every call. This functionality can be useful when listening for an event. <p>For Example, if you might want to show the help text/error when the user has stopped typing for 500ms in a text-box, instead of every key press.  In this scenario, the debounce method will induce a time wait every time a key is pressed and the method will only execute when there is no other call to it within that wait time.</p> |
+| onChange      | is called when the value of any field is changed.                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| onRender      | is called once whenever the user clicks on an "Add", "Edit", or "Clone" button.                                                                                                                                                                                                                                                                                                                                                                                                                |
+| onSave        | is called when the user clicks the "Save" button after creating, editing, or cloning a record.                                                                                                                                                                                                                                                                                                                                                                                                 |
+| onSaveSuccess | is called when a record has been successfully saved.                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| onSaveFail    | is called when a record fails to save due to any error.                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| onEditLoad    | is called when the user clicks on an "Edit" button for an existing record.                                                                                                                                                                                                                                                                                                                                                                                                                     |
 
 ### Usage
 
-```
-"inputs": {
+```json
+{
+  "inputs": {
     "title": "Inputs",
     "description": "Manage your data inputs",
     "services": [
-        {
-            "name": "example_input_one",
-            "title": "Example Input One",
-            "hook": {
-                "src": "input_hook",
-                "type": "external"
-            },
-            "entity": []
-        }
+      {
+        "name": "example_input_one",
+        "title": "Example Input One",
+        "hook": {
+          "src": "input_hook",
+          "type": "external"
+        },
+        "entity": []
+      }
     ]
+  }
 }
 ```
 
 ### Example
 
-```
+```js
 import _ from "underscore"; // example of a ESM import
 
 class Hook {

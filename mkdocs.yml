@@ -38,6 +38,7 @@ nav:
     - Multi-level Menu: "inputs/multilevel_menu.md"
   - Configuration:
       - "configurations/index.md"
+      - Introduction: "configurations/index.md"
       - Proxy: "configurations/proxy.md"
   - Dashboard: "dashboard.md"
   - Entity:
@@ -53,6 +54,7 @@ nav:
   - OpenAPI: "openapi.md"
   - UCC-related libraries: "ucc_related_libraries.md"
   - Custom UI Extensions:
+    - Overview: "custom_ui_extensions/overview.md"
     - Custom Hook: "custom_ui_extensions/custom_hook.md"
     - Custom Control: "custom_ui_extensions/custom_control.md"
     - Custom Row: "custom_ui_extensions/custom_row.md"

@@ -19,7 +19,8 @@ import { MODE_CREATE } from '../../constants/modes';
 function CheckboxGroup(props: CheckboxGroupProps) {
     const { field, handleChange, controlOptions, addCustomValidator, disabled } = props;
     const flattenedRowsWithGroups = getFlattenRowsWithGroups(controlOptions);
-    const shouldUseDefaultValue = props.mode === MODE_CREATE && props.value === null;
+    const shouldUseDefaultValue =
+        props.mode === MODE_CREATE && (props.value === null || props.value === undefined);
     const value = shouldUseDefaultValue
         ? getDefaultValues(controlOptions.rows)
         : parseValue(props.value);

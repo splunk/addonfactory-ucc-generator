@@ -1,8 +1,9 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import ColumnLayout from '@splunk/react-ui/ColumnLayout';
 
-const StyledColumnLayout = styled(ColumnLayout)`
+export const FixedCheckboxRowWidth = css`
     width: 320px;
 `;
-
-export { StyledColumnLayout };
+export const StyledColumnLayout = styled(ColumnLayout)`
+    ${FixedCheckboxRowWidth}
+`;
