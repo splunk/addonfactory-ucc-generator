@@ -4,19 +4,19 @@ title: Entity
 
 ## Entity Properties
 
-| Property                                                      | Type                      | Description                                                                                                                      | Default Value |
-|---------------------------------------------------------------|---------------------------|----------------------------------------------------------------------------------------------------------------------------------|---------------|
-| field<span class="required-asterisk">\*</span>                | string                    | To define a particular entity field.                                                                                             | -             |
-| label<span class="required-asterisk">\*</span>                | string                    | It represents a caption for a field in a user interface.                                                                         | -             |
-| [type](./components)<span class="required-asterisk">\*</span> | string                    | To specify the type of entity to be rendered in inputs or configuration form.                                                    | -             |
-| help                                                          | string                    | Help text gives context about a fields input, such as how the input will be used. It is displayed directly below an input field. | -             |
-| tooltip                                                       | string                    | Displays a tooltip beside the label.                                                                                             | -             |
-| defaultValue                                                  | string, number or boolean | The initial input value.                                                                                                         | -             |
-| [options](#common-options)                                    | object                    | To specify an additional attribute for a particular type of entity, such as `items` for a radio bar.                             | -             |
-| required                                                      | boolean                   | To specify whether the field is required or not.                                                                                 | false         |
-| encrypted                                                     | boolean                   | To encrypt that particular field.                                                                                                | false         |
-| [validators](./validators)                                    | array                     | It is used to validate the values of fields using various validators.                                                            | -             |
-| [modifyFieldsOnValue](./modifyFieldsOnValue)                  | array                     | It is used to speficy values and parameters that will influence visually other entities.                                         | -             |
+| Property                                                         | Type                      | Description                                                                                                                      | Default Value |
+|------------------------------------------------------------------|---------------------------|----------------------------------------------------------------------------------------------------------------------------------|---------------|
+| field<span class="required-asterisk">\*</span>                   | string                    | To define a particular entity field.                                                                                             | -             |
+| label<span class="required-asterisk">\*</span>                   | string                    | It represents a caption for a field in a user interface.                                                                         | -             |
+| [type](./components.md)<span class="required-asterisk">\*</span> | string                    | To specify the type of entity to be rendered in inputs or configuration form.                                                    | -             |
+| help                                                             | string                    | Help text gives context about a fields input, such as how the input will be used. It is displayed directly below an input field. | -             |
+| tooltip                                                          | string                    | Displays a tooltip beside the label.                                                                                             | -             |
+| defaultValue                                                     | string, number or boolean | The initial input value.                                                                                                         | -             |
+| [options](#common-options)                                       | object                    | To specify an additional attribute for a particular type of entity, such as `items` for a radio bar.                             | -             |
+| required                                                         | boolean                   | To specify whether the field is required or not.                                                                                 | false         |
+| encrypted                                                        | boolean                   | To encrypt that particular field.                                                                                                | false         |
+| [validators](./validators.md)                                    | array                     | It is used to validate the values of fields using various validators.                                                            | -             |
+| [modifyFieldsOnValue](./modifyFieldsOnValue.md)                  | array                     | It is used to speficy values and parameters that will influence visually other entities.                                         | -             |
 
 > [!WARNING]  
 > The [Placeholder](https://splunkui.splunk.com/Packages/react-ui/Text?section=develop) attribute is deprecated and will be removed in the next major version.

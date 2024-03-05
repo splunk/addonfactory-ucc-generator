@@ -62,7 +62,7 @@ If `title` and `description` are provided in the global configuration file, then
 >
 > When using the Tabs feature, if the `table`  or `description` property is provided in the `inputs`, the error ```instance.pages.inputs is not one of [subschema 0], [subschema 1]``` will be displayed.
 >
-> [Custom Menu](../../custom_ui_extensions/custom_menu/) is not supported with the tabs feature.
+> [Custom Menu](../custom_ui_extensions/custom_menu.md) is not supported with the tabs feature.
 
 ### Output
 

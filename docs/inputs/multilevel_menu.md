@@ -1,6 +1,6 @@
 This feature allows us to organize the input services into different categories. As a result, each group/category will have a separate sub-menu that can include numerous types of input services. Inputs services can also belong to multiple groups/categories.
 
-Using the [Custom Hook](../../custom_ui_extensions/custom_hook), `groupName` can be saved in any form field for a specific inputs service stanza.
+Using the [Custom Hook](../custom_ui_extensions/custom_hook.md), `groupName` can be saved in any form field for a specific inputs service stanza.
 
 > `Tabs` and `Multi-level menu` feature cannot be used together.
 
