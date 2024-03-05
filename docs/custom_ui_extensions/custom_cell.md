@@ -4,26 +4,26 @@ A Custom Cell is used to update the content of a table cell.
 
 ### Properties
 
-| Property          | Description |
-| ----------------- | ----------- |
-| globalConfig       | is a hierarchical object that contains the globalConfig file's properties and values. |
-| el                | is used to render a custom cell element in a table. |
-| serviceName       | is the name of the service/tab specified in the globalConfig file. |
-| row               | is the object of the record for which the CustomRowInput constructor is called. |
-| field              | is the name of the field as specified in the globalConfig file. |
+| Property     | Description                                                                           |
+|--------------|---------------------------------------------------------------------------------------|
+| globalConfig | is a hierarchical object that contains the globalConfig file's properties and values. |
+| el           | is used to render a custom cell element in a table.                                   |
+| serviceName  | is the name of the service/tab specified in the globalConfig file.                    |
+| row          | is the object of the record for which the CustomRowInput constructor is called.       |
+| field        | is the name of the field as specified in the globalConfig file.                       |
 
 ### Methods
 
-| Property          | Description |
-| ----------------- | ----------- |
-| render            | is a method which should have logic for the custom cell component, and it will be executed automatically when the create, edit, or clone actions performed. |
+| Property | Description                                                                                                                                                 |
+|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| render   | is a method which should have logic for the custom cell component, and it will be executed automatically when the create, edit, or clone actions performed. |
 
 ### Usage
 
-```
+```json
 {
     "name": "account",
-    "title": "Account"
+    "title": "Account",
     "entity": [],
     "table": {
         "actions": ["edit", "delete", "clone"],
@@ -47,7 +47,7 @@ A Custom Cell is used to update the content of a table cell.
 
 ### Example
 
-```
+```js
 class CustomInputCell {
     /**
      * Custom Row Cell
@@ -70,7 +70,7 @@ class CustomInputCell {
         // Check for missing configuration in account
         if (this.row.account_multiple_select === "one") {
             html = "Option One";
-        } else if(this.row.account_multiple_select === "two"){
+        } else if (this.row.account_multiple_select === "two"){
             html = "Option Two";
         } else {
             html = "Option is not available"
