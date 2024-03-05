@@ -4,12 +4,13 @@ title: Inputs
 
 The input page stores configuration information for data collection. Multiple inputs can be created on the Inputs page.
 
-Developers are required to add services in the global config file to create a new Input. If multiple services are provided, a dropdown field will appear on the Inputs page. In contrast, a button will be displayed for a single service.
+Developers are required to add services in the global config file to create a new Input. If multiple services are
+provided, a dropdown field will appear on the Inputs page. In contrast, a button will be displayed for a single service.
 
 ### Properties
 
 | Property                                                                  | Type   | Description                                                                                            |
-| ------------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------ |
+|---------------------------------------------------------------------------|--------|--------------------------------------------------------------------------------------------------------|
 | title<span class="required-asterisk">\*</span>                            | string | -                                                                                                      |
 | description                                                               | string | It provides a brief summary of an inputs page.                                                         |
 | [subDescription](../advanced/sub_description.md)                          | object | It provides broader description of an inputs page.                                                     |
@@ -21,7 +22,7 @@ Developers are required to add services in the global config file to create a ne
 ### Services Properties
 
 | Property                                                              | Type   | Description                                                                                                                                                                                                   |
-| --------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|-----------------------------------------------------------------------|--------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | name<span class="required-asterisk">\*</span>                         | string | It defines the particular service name.                                                                                                                                                                       |
 | title<span class="required-asterisk">\*</span>                        | string | It shows the title of the service.                                                                                                                                                                            |
 | subTitle                                                              | string | It shows the subtitle (or additional information) of the service.                                                                                                                                             |

@@ -5,7 +5,7 @@ title: Entity
 ## Entity Properties
 
 | Property                                                         | Type                      | Description                                                                                                                      | Default Value |
-| ---------------------------------------------------------------- | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+|------------------------------------------------------------------|---------------------------|----------------------------------------------------------------------------------------------------------------------------------|---------------|
 | field<span class="required-asterisk">\*</span>                   | string                    | To define a particular entity field.                                                                                             | -             |
 | label<span class="required-asterisk">\*</span>                   | string                    | It represents a caption for a field in a user interface.                                                                         | -             |
 | [type](./components.md)<span class="required-asterisk">\*</span> | string                    | To specify the type of entity to be rendered in inputs or configuration form.                                                    | -             |
@@ -25,7 +25,7 @@ title: Entity
 ## Common Options
 
 | Property            | Type    | Description                                                                            | Default Value |
-| ------------------- | ------- | -------------------------------------------------------------------------------------- | ------------- |
+|---------------------|---------|----------------------------------------------------------------------------------------|---------------|
 | placeholder         | string  | (`Deprecated`) The grey text is shown when the input is empty.                         | -             |
 | display             | boolean | It chooses whether or not to display the field.                                        | true          |
 | disableonEdit       | boolean | When the form is in edit mode, the field becomes unable to be edited.                  | false         |
