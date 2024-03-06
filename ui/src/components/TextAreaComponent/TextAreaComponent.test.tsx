@@ -10,17 +10,13 @@ beforeEach(() => {
 });
 
 it('should render text component correctly with value', async () => {
-    const textElement = screen.getByTestId('text');
-    expect(textElement).toBeInTheDocument();
-
-    const textBox = screen.getByTestId('textbox');
-    expect(textBox).toBeInTheDocument();
+    const textBox = screen.getByRole('textbox');
 
     expect(textBox).toHaveValue('test');
 });
 
 it('should trigger callback correctly after typing', async () => {
-    const textBox = screen.getByTestId('textbox');
+    const textBox = screen.getByRole('textbox');
 
     await userEvent.type(textBox, 'f');
     expect(handleChange).toHaveBeenCalledWith('fieldId', 'testf');
@@ -30,7 +26,7 @@ it('should trigger callback correctly after typing', async () => {
 });
 
 it('should use callback with empty string after clear', async () => {
-    const textBox = screen.getByTestId('textbox');
+    const textBox = screen.getByRole('textbox');
 
     await userEvent.clear(textBox);
     expect(handleChange).toHaveBeenCalledWith('fieldId', '');
