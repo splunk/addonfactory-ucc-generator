@@ -324,9 +324,19 @@ class TestInputPage(UccTester):
             left_args={"name": "dummy_input_one", "enable": False},
         )
         self.assert_util(
+            input_page.table.get_cell_value,
+            "Disabled",
+            left_args={"name": "dummy_input_one", "column": "Status"},
+        )
+        self.assert_util(
             input_page.table.input_status_toggle,
             True,
             left_args={"name": "dummy_input_one", "enable": True},
+        )
+        self.assert_util(
+            input_page.table.get_cell_value,
+            "Enabled",
+            left_args={"name": "dummy_input_one", "column": "Status"},
         )
 
     @pytest.mark.execute_enterprise_cloud_true
@@ -1147,6 +1157,7 @@ class TestInputPage(UccTester):
             "example_input_one://dummy_input_one"
         )
         for each_key, each_value in value_to_test.items():
+            self.assert_util(each_key, backend_stanza, operator="in")
             self.assert_util(each_value, backend_stanza[each_key])
 
     @pytest.mark.execute_enterprise_cloud_true
@@ -1225,13 +1236,14 @@ class TestInputPage(UccTester):
             "example_input_one://dummy_input_one_Clone_Test"
         )
         for each_key, each_value in value_to_test.items():
+            self.assert_util(each_key, backend_stanza, operator="in")
             self.assert_util(each_value, backend_stanza[each_key])
 
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.input
     @pytest.mark.sanity_test
-    def test_example_input_one_delete_row_frontend_validation(
+    def test_example_input_one_delete_row_frontend_backend_validation(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
     ):
         """Verifies the frontend delete functionality"""
@@ -1279,6 +1291,21 @@ class TestInputPage(UccTester):
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         input_page.table.clone_row("dummy_input_one")
         self.assert_util(input_page.entity1.close, True)
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
+    def test_example_input_one_clone_save_entity(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+    ):
+        """Verifies required field name in example input one at time of clone"""
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        input_page.table.clone_row("dummy_input_one")
+        self.assert_util(
+            input_page.entity1.save,
+            "Field Name is required",
+            left_args={"expect_error": True},
+        )
 
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
@@ -1501,6 +1528,23 @@ class TestInputPage(UccTester):
         """Verifies whether adding special characters, name field displays validation error"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         input_page.create_new_input.select("Example Input Two")
+        input_page.entity2.example_account.wait_for_values()
+        input_page.entity2.name.set_value("$$test_name_two")
+        self.assert_util(
+            input_page.entity2.save,
+            r"Input Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+            left_args={"expect_error": True},
+        )
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
+    def test_example_input_two_clone_valid_input_name(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
+    ):
+        """Verifies whether adding special characters, name field displays validation error while cloning a row"""
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        input_page.table.clone_row("dummy_input_two")
         input_page.entity2.example_account.wait_for_values()
         input_page.entity2.name.set_value("$$test_name_two")
         self.assert_util(
@@ -1845,6 +1889,7 @@ class TestInputPage(UccTester):
             "example_input_two://dummy_input"
         )
         for each_key, each_value in value_to_test.items():
+            self.assert_util(each_key, backend_stanza, operator="in")
             self.assert_util(each_value, backend_stanza[each_key])
 
     @pytest.mark.execute_enterprise_cloud_true
@@ -1903,6 +1948,7 @@ class TestInputPage(UccTester):
             "example_input_two://dummy_input_two"
         )
         for each_key, each_value in value_to_test.items():
+            self.assert_util(each_key, backend_stanza, operator="in")
             self.assert_util(each_value, backend_stanza[each_key])
 
     @pytest.mark.execute_enterprise_cloud_true
@@ -1970,6 +2016,7 @@ class TestInputPage(UccTester):
             "example_input_two://dummy_input_two_Clone_Test"
         )
         for each_key, each_value in value_to_test.items():
+            self.assert_util(each_key, backend_stanza, operator="in")
             self.assert_util(each_value, backend_stanza[each_key])
 
     @pytest.mark.execute_enterprise_cloud_true
