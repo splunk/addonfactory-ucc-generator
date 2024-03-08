@@ -1,7 +1,5 @@
 import os
 import tempfile
-import sys
-import pytest
 import logging
 import json
 from os import path
@@ -12,11 +10,6 @@ import addonfactory_splunk_conf_parser_lib as conf_parser
 
 from splunk_add_on_ucc_framework.commands import build
 from splunk_add_on_ucc_framework import __version__
-
-PYTEST_SKIP_REASON = """Python 3.8 and higher preserves the order of the attrib
-fields when `tostring` function is used.
-https://docs.python.org/3/library/xml.etree.elementtree.html#xml.etree.ElementTree.tostring
-"""
 
 
 def _compare_app_conf(expected_folder: str, actual_folder: str) -> None:
@@ -104,7 +97,6 @@ def test_ucc_generate_with_config_param():
     check_ucc_versions()
 
 
-@pytest.mark.skipif(sys.version_info >= (3, 8), reason=PYTEST_SKIP_REASON)
 def test_ucc_generate_with_everything():
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
@@ -197,7 +189,6 @@ def test_ucc_generate_with_multiple_inputs_tabs():
     build.generate(source=package_folder)
 
 
-@pytest.mark.skipif(sys.version_info >= (3, 8), reason=PYTEST_SKIP_REASON)
 def test_ucc_generate_with_configuration():
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
@@ -431,7 +422,6 @@ def test_ucc_build_verbose_mode(caplog):
         assert log_line.levelname == expected_logs[log_line.message]
 
 
-@pytest.mark.skipif(sys.version_info >= (3, 8), reason=PYTEST_SKIP_REASON)
 def test_ucc_generate_with_everything_uccignore(caplog):
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
