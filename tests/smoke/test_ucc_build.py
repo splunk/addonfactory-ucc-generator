@@ -1,7 +1,5 @@
 import os
 import tempfile
-import sys
-import pytest
 import logging
 import json
 from os import path
