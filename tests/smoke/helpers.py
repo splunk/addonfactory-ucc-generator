@@ -43,11 +43,11 @@ def _compare_content(actual_file_path: str, expected_file_path: str) -> List[str
     with open(actual_file_path) as actual_file:
         actual_file_lines = actual_file.readlines()
     for line in difflib.unified_diff(
-            actual_file_lines,
-            expected_file_lines,
-            fromfile=actual_file_path,
-            tofile=expected_file_path,
-            lineterm="",
+        actual_file_lines,
+        expected_file_lines,
+        fromfile=actual_file_path,
+        tofile=expected_file_path,
+        lineterm="",
     ):
         diff_results.append(line)
 
