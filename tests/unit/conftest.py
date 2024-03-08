@@ -1,3 +1,5 @@
+import json
+
 import pytest
 
 from splunk_add_on_ucc_framework import global_config as global_config_lib
@@ -10,6 +12,12 @@ def app_manifest_correct() -> app_manifest_lib.AppManifest:
     content = helpers.get_testdata_file("app.manifest")
     app_manifest = app_manifest_lib.AppManifest(content)
     return app_manifest
+
+
+@pytest.fixture
+def global_config_all_json_content():
+    with open(helpers.get_testdata_file_path("valid_config.json")) as fp:
+        return json.load(fp)
 
 
 @pytest.fixture

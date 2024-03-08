@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
     "AlertEntity": {
       "type": "object",
@@ -176,7 +176,14 @@
         "tabs": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/TabContent"
+            "anyOf": [
+              {
+                "$ref": "#/definitions/TabContent"
+              },
+              {
+                "$ref": "#/definitions/components/Logging"
+              }
+            ]
           },
           "minItems": 1
         }
@@ -2208,6 +2215,46 @@
           "$ref": "#/definitions/markdownMessagePlainText"
         }
       ]
+    },
+    "components": {
+      "Logging": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "loggingComponent"
+          },
+          "name": {
+            "type": "string",
+            "pattern": "^[\\/\\w]+$",
+            "maxLength": 250
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 50
+          },
+          "label": {
+            "type": "string"
+          },
+          "field": {
+            "$ref": "#/definitions/Field",
+            "default": "loglevel"
+          },
+          "levels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "defaultLevel": {
+            "type": "string"
+          }
+        },
+        "required":  [
+          "type"
+        ],
+        "additionalProperties": false
+      }
     }
   },
   "type": "object",
