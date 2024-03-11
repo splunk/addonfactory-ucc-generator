@@ -36,14 +36,14 @@ def config(global_config_all_json_content):
 
 
 def test_logging_component_short(schema_validate, config):
-    schema_validate(config.with_tab({"type": "loggingComponent"}))
+    schema_validate(config.with_tab({"type": "loggingTab"}))
 
 
 def test_logging_component_long(schema_validate, config):
     schema_validate(
         config.with_tab(
             {
-                "type": "loggingComponent",
+                "type": "loggingTab",
                 "name": "logging",
                 "title": "Logging",
                 "label": "Log level",

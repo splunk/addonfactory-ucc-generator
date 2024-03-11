@@ -181,7 +181,7 @@
                 "$ref": "#/definitions/TabContent"
               },
               {
-                "$ref": "#/definitions/components/Logging"
+                "$ref": "#/definitions/tabs/Logging"
               }
             ]
           },
@@ -2216,13 +2216,13 @@
         }
       ]
     },
-    "components": {
+    "tabs": {
       "Logging": {
         "type": "object",
         "properties": {
           "type": {
             "type": "string",
-            "const": "loggingComponent"
+            "const": "loggingTab"
           },
           "name": {
             "type": "string",
