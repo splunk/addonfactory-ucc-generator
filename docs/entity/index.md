@@ -24,6 +24,8 @@ title: Entity
 
 ## Common Options
 
+This section describes common options that can be used within the `options` object in entity properties.
+
 | Property            | Type    | Description                                                                            | Default Value |
 |---------------------|---------|----------------------------------------------------------------------------------------|---------------|
 | placeholder         | string  | (`Deprecated`) The grey text is shown when the input is empty.                         | -             |
