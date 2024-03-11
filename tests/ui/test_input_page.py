@@ -1540,7 +1540,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_example_input_two_clone_valid_input_name(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_two
     ):
         """Verifies whether adding special characters, name field displays validation error while cloning a row"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
