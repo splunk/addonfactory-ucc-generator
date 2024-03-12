@@ -14,6 +14,7 @@ markdown_extensions:
   - fenced_code
   - sane_lists
   - codehilite
+  - pymdownx.superfences
 
 theme:
   name: "material"
