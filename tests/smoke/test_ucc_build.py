@@ -556,3 +556,15 @@ def test_ucc_generate_with_everything_uccignore(caplog):
         for f in files_to_exist:
             expected_file_path = path.join(expected_folder, *f)
             assert path.exists(expected_file_path)
+
+
+def test_ucc_generate_only_one_tab():
+    package_folder = path.join(
+        path.dirname(path.realpath(__file__)),
+        "..",
+        "testdata",
+        "test_addons",
+        "package_global_config_only_one_tab",
+        "package",
+    )
+    build.generate(source=package_folder)
