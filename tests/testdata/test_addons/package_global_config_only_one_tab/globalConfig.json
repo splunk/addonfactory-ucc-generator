@@ -1,0 +1,44 @@
+{
+    "pages": {
+        "configuration": {
+            "tabs": [
+                {
+                    "name": "tab1",
+                    "title": "TAB1",
+                    "table": {
+                        "header": [
+                            {
+                                "field": "name",
+                                "label": "Connection Name"
+                            }
+                        ],
+                        "actions": [
+                            "edit",
+                            "delete",
+                            "clone"
+                        ]
+                    },
+                    "entity": [
+                        {
+                            "field": "name",
+                            "label": "Connection Name",
+                            "type": "text",
+                            "help": "Enter a unique name for this connection.",
+                            "required": true
+                        }
+                    ]
+                }
+            ],
+            "title": "Configuration",
+            "description": "Set up your add-on"
+        }
+    },
+    "meta": {
+        "name": "Splunk_TA_UCCExample",
+        "restRoot": "splunk_ta_uccexample",
+        "version": "5.39.1R729f661b",
+        "displayName": "Splunk UCC test Add-on",
+        "schemaVersion": "0.0.3",
+        "_uccVersion": "5.39.1"
+    }
+}
