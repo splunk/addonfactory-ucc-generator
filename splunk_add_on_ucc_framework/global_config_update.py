@@ -51,6 +51,10 @@ def _handle_biased_terms(conf_entities: List[Dict[str, Any]]) -> List[Dict[str, 
 def _handle_biased_terms_update(global_config: global_config_lib.GlobalConfig) -> None:
     for tab in global_config.tabs:
         conf_entities = tab.get("entity")
+
+        if conf_entities is None:
+            continue
+
         tab["entity"] = _handle_biased_terms(conf_entities)
     for service in global_config.inputs:
         conf_entities = service.get("entity")
@@ -79,8 +83,12 @@ def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -
 
     if _version_tuple(version) < _version_tuple("0.0.2"):
         for tab in global_config.tabs:
-            if tab["name"] == "account":
+            if tab.name == "account":
                 conf_entities = tab.get("entity")
+
+                if conf_entities is None:
+                    continue
+
                 oauth_state_enabled_entity = {}
                 for entity in conf_entities:
                     if entity.get("field") == "oauth_state_enabled":
