@@ -1,6 +1,5 @@
 import json
 import os.path
-import tempfile
 
 import pytest
 from unittest import mock
@@ -83,7 +82,7 @@ def test_global_config_update_addon_version(global_config_only_configuration):
 
 
 @pytest.mark.parametrize("migration", [True, False])
-def test_global_config_logging_component(migration):
+def test_global_config_logging_component(migration, tmp_path):
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_only_logging.json"
     )
@@ -98,19 +97,18 @@ def test_global_config_logging_component(migration):
 
     global_config = global_config_lib.GlobalConfig(global_config_path, False)
 
-    with tempfile.TemporaryDirectory() as temp_dir:
-        render_true = os.path.join(temp_dir, "render_true.json")
-        render_false = os.path.join(temp_dir, "render_false.json")
+    render_true = os.path.join(tmp_path, "render_true.json")
+    render_false = os.path.join(tmp_path, "render_false.json")
 
-        global_config.dump(render_true, rendered=True)
-        with open(render_true) as fp:
-            render_true_dict = json.load(fp)
+    global_config.dump(render_true, rendered=True)
+    with open(render_true) as fp:
+        render_true_dict = json.load(fp)
 
-        assert render_true_dict["pages"]["configuration"]["tabs"] == long_tabs
+    assert render_true_dict["pages"]["configuration"]["tabs"] == long_tabs
 
-        global_config.dump(render_false, rendered=False)
-        with open(render_false) as fp:
-            render_false_dict = json.load(fp)
+    global_config.dump(render_false, rendered=False)
+    with open(render_false) as fp:
+        render_false_dict = json.load(fp)
 
-        tabs = render_false_dict["pages"]["configuration"]["tabs"]
-        assert tabs == short_tabs
+    tabs = render_false_dict["pages"]["configuration"]["tabs"]
+    assert tabs == short_tabs
