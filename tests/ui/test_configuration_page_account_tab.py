@@ -384,6 +384,8 @@ class TestAccount(UccTester):
             "Field Name is required",
             left_args={"expect_error": True},
         )
+        account.entity.name.set_value("abc")
+        self.assert_util(account.entity.is_error_closed, True)
 
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
@@ -559,6 +561,12 @@ class TestAccount(UccTester):
         account.entity.username.set_value(ACCOUNT_CONFIG["username"])
         account.entity.password.set_value(ACCOUNT_CONFIG["password"])
         account.entity.name.set_value("123TestAccount")
+        self.assert_util(
+            account.entity.save,
+            "Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+            left_args={"expect_error": True},
+        )
+        account.entity.name.set_value("TestAccount&")
         self.assert_util(
             account.entity.save,
             "Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",

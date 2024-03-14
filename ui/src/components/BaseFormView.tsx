@@ -430,6 +430,10 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                         throw new Error(`Invalid mode : ${props.mode}`);
                     }
                 } else {
+                    if (e.type === 'custom') {
+                        // value for custom control element is passed to custom js later on
+                        tempEntity.value = this.currentInput?.[e.field];
+                    }
                     // TODO extract if before this if else block
                     temState[e.field] = tempEntity;
                 }
