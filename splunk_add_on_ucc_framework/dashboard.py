@@ -17,9 +17,10 @@ import logging
 import os
 import sys
 from defusedxml import ElementTree
-from typing import Sequence
+from typing import Sequence, List
 
 from splunk_add_on_ucc_framework import global_config as global_config_lib
+from splunk_add_on_ucc_framework import utils
 
 logger = logging.getLogger("ucc_gen")
 
@@ -105,28 +106,52 @@ PANEL_ERRORS_IN_THE_ADDON_TEMPLATE = """  <row>
   </row>
 """
 
+data_ingestion = ('index=_internal source="/opt/splunk/var/log/splunk/license_usage.log" type=Usage '
+                  '(s IN ({input_names})) | timechart span=1d sum(b) as Usage | '
+                  'eval Usage=round(Usage/1024/1024/1024,3)')
+errors_chart = 'index=_internal source=*{addon_name}* ERROR | timechart span=1d count as Errors'
+events_count = ('index=_internal source=*{addon_name}* action=events_ingested | '
+                'timechart sum(n_events) as "Events count"')
+table_query = ('index=_internal source="/opt/splunk/var/log/splunk/license_usage.log" type=Usage '
+               '(s IN ({input_names})) | chart count sparkline(count, 1h) as trend by s | table s count trend')
+table1_query = ('index=_internal source=*license_usage.log type=Usage (s IN ({input_names})) | '
+                'stats sparkline(sum(b)) count(b), sum(b) as Bytes by st |eval MB=round(Bytes/1024/1024,3)| '
+                'eval events=sum(b) | table st, MB, count(b), sparkline(sum(b)) | '
+                'rename st as "Source type", MB as "Data volume", count(b) as "Number of events", '
+                'sparkline(sum(b)) as "Data volume trend line"')
+table2_query = ('index=_internal source=*license_usage.log type=Usage (s IN ({input_names})) | '
+                'stats sparkline(sum(b)) count(b), sum(b) as Bytes by s |eval MB=round(Bytes/1024/1024,3)| '
+                'eval events=sum(b) | table s, MB, count(b), sparkline(sum(b)) | '
+                'rename s as Source, MB as "Data volume", count(b) as "Number of events", '
+                'sparkline(sum(b)) as "Data volume trend line"')
+
+
+q2 = "index=_internal source=*{addon_name}* action=events_ingested | timechart sum(n_events) by sourcetype_ingested"
+q3 = "index=_internal source=*{addon_name}* ERROR"
+
 
 def generate_dashboard_content(
-    addon_name: str, panel_names: Sequence[str], custom_components: str
+    addon_name: str,
+    input_names: List[str],
+    custom_components: str,
 ) -> str:
-    content = DASHBOARD_START
-    for panel_name in panel_names:
-        logger.info(f"Including {panel_name} into the dashboard page")
-        if panel_name == PANEL_ADDON_VERSION:
-            content += PANEL_ADDON_VERSION_TEMPLATE.format(addon_name=addon_name)
-        elif panel_name == PANEL_EVENTS_INGESTED_BY_SOURCETYPE:
-            content += PANEL_EVENTS_INGESTED_BY_SOURCETYPE_TEMPLATE.format(
-                addon_name=addon_name.lower()
-            )
-        elif panel_name == PANEL_ERRORS_IN_THE_ADDON:
-            content += PANEL_ERRORS_IN_THE_ADDON_TEMPLATE.format(
-                addon_name=addon_name.lower()
-            )
-        elif panel_name == PANEL_CUSTOM:
-            content += custom_components
-        else:
-            raise AssertionError("Should not be the case!")
-    content += DASHBOARD_END
+
+    input_names_str = ",".join([name + "*" for name in input_names])
+    content = (
+        utils.get_j2_env()
+        .get_template("monitoring_dashboard_template.xml")
+        .render(
+            addon_name=addon_name,
+            data_ingestion=data_ingestion.format(input_names=input_names_str),
+            errors_chart=errors_chart.format(addon_name=addon_name.lower()),
+            events_count=events_count.format(addon_name=addon_name.lower()),
+            table1=table1_query.format(input_names=input_names_str),
+            table2=table2_query.format(input_names=input_names_str),
+            q2=q2.format(addon_name=addon_name.lower()),
+            q3=q3.format(addon_name=addon_name.lower()),
+        )
+    )
+
     return content
 
 
@@ -154,7 +179,9 @@ def generate_dashboard(
             )
             custom_components = get_custom_xml_content(dashboard_components_path)
 
-        content = generate_dashboard_content(addon_name, panel_names, custom_components)
+        input_names = [el.get("name") for el in global_config.inputs]
+
+        content = generate_dashboard_content(addon_name, input_names, custom_components)
         with open(dashboard_xml_file_path, "w") as dashboard_xml_file:
             dashboard_xml_file.write(content)
 
