@@ -3,6 +3,7 @@ import tempfile
 import logging
 import json
 from os import path
+from pathlib import Path
 
 from tests.smoke import helpers
 
@@ -36,6 +37,52 @@ def _compare_app_conf(expected_folder: str, actual_folder: str) -> None:
     del actual_app_conf_dict["launcher"]["version"]
     del actual_app_conf_dict["id"]["version"]
     assert expected_app_conf_dict == actual_app_conf_dict
+
+
+def _compare_logging_tabs(package_dir: str, output_dir: str) -> None:
+    with open(Path(package_dir) / os.pardir / "globalConfig.json") as fp:
+        global_config = json.load(fp)
+
+    with open(
+        Path(output_dir) / "appserver" / "static" / "js" / "build" / "globalConfig.json"
+    ) as fp:
+        static_config = json.load(fp)
+
+    tab_exists = False
+    num = 0
+
+    for num, tab in enumerate(global_config["pages"]["configuration"]["tabs"]):
+        if tab.get("type", "") == "loggingTab":
+            tab_exists = True
+            break
+
+    assert tab_exists
+
+    static_tab = static_config["pages"]["configuration"]["tabs"][num]
+
+    assert "type" not in static_tab
+    assert static_tab == {
+        "entity": [
+            {
+                "defaultValue": "INFO",
+                "field": "loglevel",
+                "label": "Log level",
+                "options": {
+                    "autoCompleteFields": [
+                        {"label": "DEBUG", "value": "DEBUG"},
+                        {"label": "INFO", "value": "INFO"},
+                        {"label": "WARNING", "value": "WARNING"},
+                        {"label": "ERROR", "value": "ERROR"},
+                        {"label": "CRITICAL", "value": "CRITICAL"},
+                    ],
+                    "disableSearch": True,
+                },
+                "type": "singleSelect",
+            }
+        ],
+        "name": "logging",
+        "title": "Logging",
+    }
 
 
 def test_ucc_generate():
@@ -175,6 +222,8 @@ def test_ucc_generate_with_everything():
         for f in files_to_exist:
             expected_file_path = path.join(expected_folder, *f)
             assert path.exists(expected_file_path)
+
+        _compare_logging_tabs(package_folder, actual_folder)
 
 
 def test_ucc_generate_with_multiple_inputs_tabs():

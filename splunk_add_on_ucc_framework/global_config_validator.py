@@ -26,6 +26,7 @@ import jsonschema
 
 from splunk_add_on_ucc_framework import dashboard as dashboard_lib
 from splunk_add_on_ucc_framework import global_config as global_config_lib
+from splunk_add_on_ucc_framework.tabs import resolve_tab, Tab
 
 logger = logging.getLogger("ucc_gen")
 
@@ -43,6 +44,12 @@ class GlobalConfigValidator:
     def __init__(self, source_dir: str, global_config: global_config_lib.GlobalConfig):
         self._source_dir = source_dir
         self._config = global_config.content
+
+    @property
+    def config_tabs(self) -> List[Tab]:
+        return [
+            resolve_tab(tab) for tab in self._config["pages"]["configuration"]["tabs"]
+        ]
 
     def _validate_config_against_schema(self) -> None:
         """
@@ -63,12 +70,9 @@ class GlobalConfigValidator:
         Validates that if a configuration tab should be rendered as a table,
         then it needs to have an entity which has field "name".
         """
-        pages = self._config["pages"]
-        configuration = pages["configuration"]
-        tabs = configuration["tabs"]
-        for tab in tabs:
+        for tab in self.config_tabs:
             if "table" in tab:
-                entities = tab["entity"]
+                entities = tab.entity
                 has_name_field = False
                 for entity in entities:
                     if entity["field"] == "name":
@@ -127,11 +131,8 @@ class GlobalConfigValidator:
         Also if file is encrypted but not required, this is not supported,
         and we need to throw a validation error.
         """
-        pages = self._config["pages"]
-        configuration = pages["configuration"]
-        tabs = configuration["tabs"]
-        for tab in tabs:
-            entities = tab["entity"]
+        for tab in self.config_tabs:
+            entities = tab.entity
             for entity in entities:
                 if entity["type"] == "file":
                     is_required = entity.get("required", False)
@@ -222,10 +223,8 @@ class GlobalConfigValidator:
         number and regex are supported.
         """
         pages = self._config["pages"]
-        configuration = pages["configuration"]
-        tabs = configuration["tabs"]
-        for tab in tabs:
-            entities = tab["entity"]
+        for tab in self.config_tabs:
+            entities = tab.entity
             for entity in entities:
                 self._validate_entity_validators(entity)
 
@@ -355,23 +354,28 @@ class GlobalConfigValidator:
                 "Duplicates found for entity field or label"
             )
 
-    def _validate_tabs_duplicates(self, tabs: List[Dict[str, Any]]) -> None:
+    def _validate_tabs_duplicates(self, tabs: List[Tab]) -> None:
         """
         Validates duplicates in tab keys under configuration
         for fields under keys: name, title
         Calls for entity validator, as at least one entity is required in schema
         """
-        names, titles = [], []
+        names, titles, types = [], [], []
         for tab in tabs:
-            names.append(tab["name"].lower())
-            titles.append(tab["title"].lower())
+            names.append(tab.name.lower())
+            titles.append(tab.title.lower())
 
-            self._validate_entity_duplicates(tab["entity"])
-        if self._find_duplicates_in_list(names) or self._find_duplicates_in_list(
-            titles
+            if tab.tab_type is not None:
+                types.append(tab.tab_type.lower())
+
+            self._validate_entity_duplicates(tab.entity)
+        if (
+            self._find_duplicates_in_list(names)
+            or self._find_duplicates_in_list(titles)
+            or self._find_duplicates_in_list(types)
         ):
             raise GlobalConfigValidatorException(
-                "Duplicates found for tabs names or titles"
+                "Duplicates found for tabs names, titles or types"
             )
 
     def _validate_inputs_duplicates(self, inputs: Dict[str, Any]) -> None:
@@ -401,7 +405,7 @@ class GlobalConfigValidator:
         """
         pages = self._config["pages"]
 
-        self._validate_tabs_duplicates(pages["configuration"]["tabs"])
+        self._validate_tabs_duplicates(self.config_tabs)
 
         inputs = pages.get("inputs")
         if inputs:
@@ -475,10 +479,8 @@ class GlobalConfigValidator:
         More details here: https://github.com/splunk/addonfactory-ucc-generator/issues/831.
         """
         pages = self._config["pages"]
-        configuration = pages["configuration"]
-        tabs = configuration["tabs"]
-        for tab in tabs:
-            for entity in tab["entity"]:
+        for tab in self.config_tabs:
+            for entity in tab.entity:
                 if "placeholder" in entity.get("options", {}):
                     logger.warning(
                         f"`placeholder` option found for configuration tab '{tab['name']}' "

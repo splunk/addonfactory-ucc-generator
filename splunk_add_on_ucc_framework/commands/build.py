@@ -537,10 +537,7 @@ def generate(
             "build",
             global_config_file,
         )
-        shutil.copyfile(
-            config_path,
-            output_global_config_path,
-        )
+        global_config.dump(output_global_config_path, rendered=True)
         logger.info("Copied globalConfig to output")
         ucc_lib_target = os.path.join(output_directory, ta_name, "lib")
         try:
