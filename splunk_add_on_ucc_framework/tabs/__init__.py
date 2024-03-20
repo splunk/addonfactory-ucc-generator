@@ -24,11 +24,29 @@ TAB_TYPES = [
 ]
 
 
-def resolve_tab(definition: Dict[Any, Any]) -> Tab:
+def resolve_tab(tab_definition: Dict[Any, Any]) -> Tab:
+    """
+    Convert the tab dictionary into a tab object. It tries to initialize every type from TAB_TYPES. If there are
+    no matches, it initializes Tab class.
+
+    Args:
+        tab_definition: Tab definition. It can be a dictionary in the classic form, e.g.:
+            {
+                "name": "...",
+                "title": "...",
+                "entity": [...]
+            }
+
+            or a special component, e.g.:
+            { "type": "loggingTab" }
+
+    Returns: Tab instance or its subclass
+
+    """
     for tab_type in TAB_TYPES:
-        tab_obj = tab_type.from_definition(definition)
+        tab_obj = tab_type.from_definition(tab_definition)
 
         if tab_obj is not None:
             return tab_obj
 
-    return Tab(definition)
+    return Tab(tab_definition)
