@@ -17,7 +17,7 @@ The value is saved in `loglevel` config parameter.
 
 ### Usage
 
-It is places just like every other configuration tab.
+It is placed just like every other configuration tab.
 
 ```json
 {
