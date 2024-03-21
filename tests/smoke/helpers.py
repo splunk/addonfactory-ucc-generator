@@ -2,6 +2,8 @@ import difflib
 import os
 from typing import List, Tuple
 
+import xmldiff.main
+
 
 def compare_file_content(
     files_to_be_equal: List[Tuple[str, ...]],
@@ -12,19 +14,41 @@ def compare_file_content(
     for f in files_to_be_equal:
         expected_file_path = os.path.join(expected_folder, *f)
         actual_file_path = os.path.join(actual_folder, *f)
-        with open(expected_file_path) as expected_file:
-            expected_file_lines = expected_file.readlines()
-        with open(actual_file_path) as actual_file:
-            actual_file_lines = actual_file.readlines()
-        for line in difflib.unified_diff(
-            actual_file_lines,
-            expected_file_lines,
-            fromfile=actual_file_path,
-            tofile=expected_file_path,
-            lineterm="",
-        ):
-            diff_results.append(line)
+
+        if f[-1].endswith(".xml"):
+            diff_results.extend(_compare_xml(actual_file_path, expected_file_path))
+            continue
+
+        diff_results.extend(_compare_content(actual_file_path, expected_file_path))
     if diff_results:
         for result in diff_results:
             print(result)
         assert False, "Some diffs were found"
+
+
+def _compare_xml(actual_file_path: str, expected_file_path: str) -> List[str]:
+    diff = xmldiff.main.diff_files(expected_file_path, actual_file_path)
+
+    if diff:
+        return [str(item) for item in diff]
+
+    return []
+
+
+def _compare_content(actual_file_path: str, expected_file_path: str) -> List[str]:
+    diff_results = []
+
+    with open(expected_file_path) as expected_file:
+        expected_file_lines = expected_file.readlines()
+    with open(actual_file_path) as actual_file:
+        actual_file_lines = actual_file.readlines()
+    for line in difflib.unified_diff(
+        actual_file_lines,
+        expected_file_lines,
+        fromfile=actual_file_path,
+        tofile=expected_file_path,
+        lineterm="",
+    ):
+        diff_results.append(line)
+
+    return diff_results

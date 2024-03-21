@@ -14,6 +14,7 @@ markdown_extensions:
   - fenced_code
   - sane_lists
   - codehilite
+  - pymdownx.superfences
 
 theme:
   name: "material"
@@ -39,6 +40,7 @@ nav:
   - Configuration:
       - "configurations/index.md"
       - Introduction: "configurations/index.md"
+      - Logging: "configurations/logging.md"
       - Proxy: "configurations/proxy.md"
   - Dashboard: "dashboard.md"
   - Entity:

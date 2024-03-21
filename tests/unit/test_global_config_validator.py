@@ -241,7 +241,12 @@ def test_config_validation_when_deprecated_placeholder_is_used(caplog):
         (
             "invalid_config_configuration_tabs_duplicates.json",
             False,
-            "Duplicates found for tabs names or titles",
+            "Duplicates found for tabs names, titles or types",
+        ),
+        (
+            "invalid_config_configuration_tabs_type_duplicates.json",
+            False,
+            "Duplicates found for tabs names, titles or types",
         ),
         (
             "invalid_config_inputs_services_duplicates.json",

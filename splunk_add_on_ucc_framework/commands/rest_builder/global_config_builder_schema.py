@@ -121,6 +121,9 @@ class GlobalConfigBuilderSchema:
             self._configs_conf_file_names.add(endpoint.conf_name)
 
     def _builder_settings(self) -> None:
+        if not self.global_config.settings:
+            return
+
         endpoint = MultipleModelEndpointBuilder(
             name="settings",
             namespace=self.global_config.namespace,

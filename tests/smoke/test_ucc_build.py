@@ -1,10 +1,9 @@
 import os
 import tempfile
-import sys
-import pytest
 import logging
 import json
 from os import path
+from pathlib import Path
 
 from tests.smoke import helpers
 
@@ -12,11 +11,6 @@ import addonfactory_splunk_conf_parser_lib as conf_parser
 
 from splunk_add_on_ucc_framework.commands import build
 from splunk_add_on_ucc_framework import __version__
-
-PYTEST_SKIP_REASON = """Python 3.8 and higher preserves the order of the attrib
-fields when `tostring` function is used.
-https://docs.python.org/3/library/xml.etree.elementtree.html#xml.etree.ElementTree.tostring
-"""
 
 
 def _compare_app_conf(expected_folder: str, actual_folder: str) -> None:
@@ -43,6 +37,52 @@ def _compare_app_conf(expected_folder: str, actual_folder: str) -> None:
     del actual_app_conf_dict["launcher"]["version"]
     del actual_app_conf_dict["id"]["version"]
     assert expected_app_conf_dict == actual_app_conf_dict
+
+
+def _compare_logging_tabs(package_dir: str, output_dir: str) -> None:
+    with open(Path(package_dir) / os.pardir / "globalConfig.json") as fp:
+        global_config = json.load(fp)
+
+    with open(
+        Path(output_dir) / "appserver" / "static" / "js" / "build" / "globalConfig.json"
+    ) as fp:
+        static_config = json.load(fp)
+
+    tab_exists = False
+    num = 0
+
+    for num, tab in enumerate(global_config["pages"]["configuration"]["tabs"]):
+        if tab.get("type", "") == "loggingTab":
+            tab_exists = True
+            break
+
+    assert tab_exists
+
+    static_tab = static_config["pages"]["configuration"]["tabs"][num]
+
+    assert "type" not in static_tab
+    assert static_tab == {
+        "entity": [
+            {
+                "defaultValue": "INFO",
+                "field": "loglevel",
+                "label": "Log level",
+                "options": {
+                    "autoCompleteFields": [
+                        {"label": "DEBUG", "value": "DEBUG"},
+                        {"label": "INFO", "value": "INFO"},
+                        {"label": "WARNING", "value": "WARNING"},
+                        {"label": "ERROR", "value": "ERROR"},
+                        {"label": "CRITICAL", "value": "CRITICAL"},
+                    ],
+                    "disableSearch": True,
+                },
+                "type": "singleSelect",
+            }
+        ],
+        "name": "logging",
+        "title": "Logging",
+    }
 
 
 def test_ucc_generate():
@@ -104,7 +144,6 @@ def test_ucc_generate_with_config_param():
     check_ucc_versions()
 
 
-@pytest.mark.skipif(sys.version_info >= (3, 8), reason=PYTEST_SKIP_REASON)
 def test_ucc_generate_with_everything():
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
@@ -184,6 +223,8 @@ def test_ucc_generate_with_everything():
             expected_file_path = path.join(expected_folder, *f)
             assert path.exists(expected_file_path)
 
+        _compare_logging_tabs(package_folder, actual_folder)
+
 
 def test_ucc_generate_with_multiple_inputs_tabs():
     package_folder = path.join(
@@ -197,7 +238,6 @@ def test_ucc_generate_with_multiple_inputs_tabs():
     build.generate(source=package_folder)
 
 
-@pytest.mark.skipif(sys.version_info >= (3, 8), reason=PYTEST_SKIP_REASON)
 def test_ucc_generate_with_configuration():
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
@@ -431,7 +471,6 @@ def test_ucc_build_verbose_mode(caplog):
         assert log_line.levelname == expected_logs[log_line.message]
 
 
-@pytest.mark.skipif(sys.version_info >= (3, 8), reason=PYTEST_SKIP_REASON)
 def test_ucc_generate_with_everything_uccignore(caplog):
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
@@ -517,3 +556,15 @@ def test_ucc_generate_with_everything_uccignore(caplog):
         for f in files_to_exist:
             expected_file_path = path.join(expected_folder, *f)
             assert path.exists(expected_file_path)
+
+
+def test_ucc_generate_only_one_tab():
+    package_folder = path.join(
+        path.dirname(path.realpath(__file__)),
+        "..",
+        "testdata",
+        "test_addons",
+        "package_global_config_only_one_tab",
+        "package",
+    )
+    build.generate(source=package_folder)

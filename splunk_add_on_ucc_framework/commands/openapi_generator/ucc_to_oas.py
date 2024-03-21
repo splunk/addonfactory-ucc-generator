@@ -385,7 +385,7 @@ def transform(
     global_config: global_config_lib.GlobalConfig,
     app_manifest: app_manifest_lib.AppManifest,
 ) -> OpenAPIObject:
-    content_copy = copy.deepcopy(global_config.content)
+    content_copy = copy.deepcopy(global_config.content_rendered)
     global_config_dot_notation = json_to_object.DataClasses(json=content_copy)
 
     open_api_object = __create_min_required(global_config)

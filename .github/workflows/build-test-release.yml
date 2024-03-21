@@ -298,7 +298,7 @@ jobs:
           poetry install
           mkdir tests/packaged
           poetry run ucc-gen package --path tests/testdata/expected_addons/expected_output_global_config_everything/Splunk_TA_UCCExample -o tests/packaged
-      - uses: splunk/appinspect-cli-action@v2.2
+      - uses: splunk/appinspect-cli-action@v2.4
         with:
           app_path: tests/packaged
           included_tags: ${{ matrix.tags }}
