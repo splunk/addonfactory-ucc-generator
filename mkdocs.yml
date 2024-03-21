@@ -40,6 +40,7 @@ nav:
   - Configuration:
       - "configurations/index.md"
       - Introduction: "configurations/index.md"
+      - Logging: "configurations/logging.md"
       - Proxy: "configurations/proxy.md"
   - Dashboard: "dashboard.md"
   - Entity:
