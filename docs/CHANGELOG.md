@@ -1,3 +1,17 @@
+# [5.40.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.39.1...v5.40.0) (2024-03-21)
+
+
+### Bug Fixes
+
+* allow using only one Configuration tab ([#1106](https://github.com/splunk/addonfactory-ucc-generator/issues/1106)) ([f6a7fbd](https://github.com/splunk/addonfactory-ucc-generator/commit/f6a7fbd065d2025292e0d81b809ae031b186b19b))
+* custom value passed to component ([#1104](https://github.com/splunk/addonfactory-ucc-generator/issues/1104)) ([729f661](https://github.com/splunk/addonfactory-ucc-generator/commit/729f661b986bf71babbf914b5a9f762d6038c171))
+
+
+### Features
+
+* logging component ([#1107](https://github.com/splunk/addonfactory-ucc-generator/issues/1107)) ([7a825cb](https://github.com/splunk/addonfactory-ucc-generator/commit/7a825cbddfdade1a182a4fdb0a4e63359dc9b8f8))
+* schema changes for LoggingTab ([#1099](https://github.com/splunk/addonfactory-ucc-generator/issues/1099)) ([afea13c](https://github.com/splunk/addonfactory-ucc-generator/commit/afea13cb0fa9f9d97997082e1eea7202ed60734e))
+
 ## [5.39.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.39.0...v5.39.1) (2024-03-05)
 
 
