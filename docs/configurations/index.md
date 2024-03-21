@@ -29,6 +29,15 @@ proxy configuration, and logging level configuration.
 | restHandlerClass                                                      | string | TBD                                                                                                                                                                                                |
 | customTab                                                             | Object | This property allows you to enable the [custom tab](../custom_ui_extensions/custom_tab.md) feature.                                                                                                |
 
+### Tab components
+
+Instead of specifying a tab from scratch with above fields, you can add a predefined
+tab.
+
+Currently available tab components:
+
+- [Logging tab](./logging.md)
+
 ### Usage
 
 ```json
@@ -49,6 +58,9 @@ proxy configuration, and logging level configuration.
             "options": {
                 "saveValidator": ""
             }
+        },
+        {
+            "type": "loggingTab"
         }
     ]
 }
