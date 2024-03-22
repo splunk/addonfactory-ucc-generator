@@ -8877,10 +8877,10 @@ msw-storybook-addon@2.0.0--canary.122.06f0c92.0:
   dependencies:
     is-node-process "^1.0.1"
 
-msw@^2.2.8:
-  version "2.2.8"
-  resolved "https://registry.npmjs.org/msw/-/msw-2.2.8.tgz#3cf3637d33b9bc411fd2006b9e8dd0b96e0a7ced"
-  integrity sha512-K2LvWq2Lgfo6lEvn4eXj9uOCXuXZdZdHtNzyx+UBZY+iaQ5fdBaev3TLmUyLOUY4N8p0pYf3Iy7RA8sDnQ1M1Q==
+msw@^2.2.10:
+  version "2.2.10"
+  resolved "https://registry.npmjs.org/msw/-/msw-2.2.10.tgz#3db96670495e722e493b7855a0c722f016ed207b"
+  integrity sha512-OQhHBocUsI8j+czCTRouGCGYE8pk6hq8HQ0HFg9mYQg7KCzqVpUSbMikmRbRXGoid28FFvYqjbxB3/UWw50VZQ==
   dependencies:
     "@bundled-es-modules/cookie" "^2.0.0"
     "@bundled-es-modules/statuses" "^1.0.1"

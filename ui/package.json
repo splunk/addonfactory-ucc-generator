@@ -89,7 +89,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "jest-image-snapshot": "^6.4.0",
     "js-yaml": "^4.1.0",
-    "msw": "^2.2.8",
+    "msw": "^2.2.10",
     "msw-storybook-addon": "2.0.0--canary.122.06f0c92.0",
     "prettier": "^2.8.8",
     "querystring-es3": "^0.2.1",
