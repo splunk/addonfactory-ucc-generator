@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState } from 'react';
+import { fn } from '@storybook/test';
 import MultiInputComponent from '../MultiInputComponent';
 
 const meta = {
@@ -28,6 +29,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Base: Story = {
     args: {
+        handleChange: fn(),
         field: 'field',
         controlOptions: {
             items: [
@@ -41,6 +43,7 @@ export const Base: Story = {
 
 export const AllProps: Story = {
     args: {
+        handleChange: fn(),
         field: 'field',
         controlOptions: {
             delimiter: ',',

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState } from 'react';
+import { fn } from '@storybook/test';
 import CheckBoxComponent from '../CheckBoxComponent';
 
 const meta = {
@@ -28,6 +29,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Base: Story = {
     args: {
+        handleChange: fn(),
         value: 0,
         field: 'field text',
         disabled: false,

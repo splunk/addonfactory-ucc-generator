@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { GlobalConfigSchema } from '../types/globalConfig/globalConfig';
 
-const globalConfigMock: z.input<typeof GlobalConfigSchema> = {
+const globalConfigMock = {
     pages: {
         configuration: {
             tabs: [
@@ -249,7 +249,7 @@ const globalConfigMock: z.input<typeof GlobalConfigSchema> = {
         schemaVersion: '0.0.3',
         checkForUpdates: false,
     },
-};
+} satisfies z.input<typeof GlobalConfigSchema>;
 
 export function getGlobalConfigMock() {
     return GlobalConfigSchema.parse(globalConfigMock);

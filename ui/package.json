@@ -27,6 +27,7 @@
     "@splunk/splunk-utils": "^3.0.0",
     "@splunk/themes": "^0.16.4",
     "@splunk/ui-utils": "^1.6.0",
+    "@storybook/test": "^8.0.4",
     "axios": "^1.6.8",
     "immutability-helper": "^3.1.1",
     "license-webpack-plugin": "^4.0.2",
@@ -53,12 +54,11 @@
     "@storybook/addon-essentials": "^8.0.4",
     "@storybook/addon-interactions": "^8.0.4",
     "@storybook/addon-links": "^8.0.4",
+    "@storybook/addon-webpack5-compiler-babel": "^3.0.3",
     "@storybook/blocks": "^8.0.4",
-    "@storybook/jest": "^0.2.3",
     "@storybook/react": "^8.0.4",
     "@storybook/react-webpack5": "^8.0.4",
     "@storybook/test-runner": "^0.17.0",
-    "@storybook/testing-library": "^0.2.2",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^12.1.5",
     "@testing-library/user-event": "^14.5.2",
@@ -116,7 +116,7 @@
   },
   "engines": {
     "node": ">=20.10.0",
-    "yarn": "^1.22.22"
+    "yarn": "^1.22.21"
   },
   "msw": {
     "workerDirectory": [

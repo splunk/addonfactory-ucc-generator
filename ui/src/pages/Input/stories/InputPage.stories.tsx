@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { http, HttpResponse } from 'msw';
-import { userEvent, within } from '@storybook/testing-library';
+import { userEvent, within } from '@storybook/test';
 import { setUnifiedConfig } from '../../../util/util';
 import globalConfig from './globalConfig.json';
 import InputPage from '../InputPage';
