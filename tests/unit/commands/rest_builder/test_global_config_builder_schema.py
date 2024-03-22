@@ -19,10 +19,20 @@ def test_global_config_builder_schema(global_config_all_json):
         "splunk_ta_uccexample_oauth"
     }
 
+
 def test_global_config_builder_schema_custom_rh_config(global_config_all_json):
     global_config_builder_schema = GlobalConfigBuilderSchema(global_config_all_json)
 
     # asserting the account config details from valid_config.json
-    assert global_config_builder_schema._endpoints.get("account")._rest_handler_name == "splunk_ta_uccexample_rh_account"
-    assert global_config_builder_schema._endpoints.get("account")._rest_handler_module == "splunk_ta_uccexample_validate_account_rh" 
-    assert global_config_builder_schema._endpoints.get("account")._rest_handler_class == "CustomAccountValidator"
+    assert (
+        global_config_builder_schema._endpoints.get("account")._rest_handler_name
+        == "splunk_ta_uccexample_rh_account"
+    )
+    assert (
+        global_config_builder_schema._endpoints.get("account")._rest_handler_module
+        == "splunk_ta_uccexample_validate_account_rh"
+    )
+    assert (
+        global_config_builder_schema._endpoints.get("account")._rest_handler_class
+        == "CustomAccountValidator"
+    )
