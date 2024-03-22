@@ -173,6 +173,14 @@
         "subDescription": {
           "$ref": "#/definitions/SubDescription"
         },
+        "restHandlerModule": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "restHandlerClass": {
+          "type": "string",
+          "maxLength": 100
+        },
         "tabs": {
           "type": "array",
           "items": {

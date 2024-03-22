@@ -96,8 +96,8 @@ class GlobalConfigBuilderSchema:
                 name=name,
                 namespace=self.global_config.namespace,
                 rest_handler_name=config.get("restHandlerName"),
-                rest_handler_module=REST_HANDLER_DEFAULT_MODULE,
-                rest_handler_class=REST_HANDLER_DEFAULT_CLASS,
+                rest_handler_module=config.get("restHandlerModule", REST_HANDLER_DEFAULT_MODULE),
+                rest_handler_class=config.get("restHandlerClass", REST_HANDLER_DEFAULT_CLASS),
             )
             self._endpoints[name] = endpoint
             content = self._get_oauth_enitities(config["entity"])

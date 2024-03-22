@@ -15,6 +15,7 @@ pip-wheel-metadata/UNKNOWN.dist-info/METADATA
 .vscode/settings.json
 .DS_Store
 .venv
+node_modules/
 output
 # The following files should never be checked into git but can not be in the
 # ignore file due to poetry issues
