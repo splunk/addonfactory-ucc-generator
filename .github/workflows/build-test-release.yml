@@ -315,11 +315,11 @@ jobs:
     env:
       NEEDS: ${{ toJson(needs) }}
     steps:
-      - name: check if tests have passed or skipped
+      - name: check if tests have passed
         id: check
         shell: bash
         run: |
-          ALL_JOBS_PASSED=$(echo "$NEEDS" | jq "all(.[]; .result == \"success\" or .result == \"skipped\")")
+          ALL_JOBS_PASSED=$(echo "$NEEDS" | jq "all(.[]; .result == \"success\")")
           if [[ "$ALL_JOBS_PASSED" == "true" ]]
           then
               echo "all-checks=true" >> "$GITHUB_OUTPUT"
