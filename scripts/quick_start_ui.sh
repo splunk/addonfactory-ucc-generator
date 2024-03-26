@@ -41,7 +41,7 @@ if [[ $(uname -m) == 'arm64' ]]; then
 fi
 
 docker run \
-  -v "output/$APP_NAME:/opt/splunk/etc/apps/$APP_NAME" \
+  -v "$REPO_ROOT_DIR/output/$APP_NAME:/opt/splunk/etc/apps/$APP_NAME" \
   -p 8000:8000 \
   -p 8088:8088 \
   -p 8089:8089 \
