@@ -1,6 +1,9 @@
 from splunk_add_on_ucc_framework.commands.rest_builder.global_config_builder_schema import (
     GlobalConfigBuilderSchema,
 )
+from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import (
+    RestEndpointBuilder,
+)
 
 
 def test_global_config_builder_schema(global_config_all_json):
@@ -25,14 +28,20 @@ def test_global_config_builder_schema_custom_rh_config(global_config_all_json):
 
     # asserting the account config details from valid_config.json
     assert (
-        global_config_builder_schema._endpoints.get("account")._rest_handler_name
+        global_config_builder_schema._endpoints.get(
+            "account", RestEndpointBuilder("", "")
+        ).rh_name
         == "splunk_ta_uccexample_rh_account"
     )
     assert (
-        global_config_builder_schema._endpoints.get("account")._rest_handler_module
+        global_config_builder_schema._endpoints.get(
+            "account", RestEndpointBuilder("", "")
+        ).rh_module
         == "splunk_ta_uccexample_validate_account_rh"
     )
     assert (
-        global_config_builder_schema._endpoints.get("account")._rest_handler_class
+        global_config_builder_schema._endpoints.get(
+            "account", RestEndpointBuilder("", "")
+        ).rh_class
         == "CustomAccountValidator"
     )
