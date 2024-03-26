@@ -26,12 +26,12 @@ SPLUNK_PASSWORD='Chang3d!'
 # Remove running docker container
 docker rm -f $CONTAINER_NAME &>/dev/null
 
-cd $SCRIPT_DIR
+cd $REPO_ROOT_DIR
 
 # Remove built package
 rm -rf output
 poetry install
-poetry run ucc-gen build --source $REPO_ROOT_DIR/tests/testdata/test_addons/package_global_config_everything/package
+poetry run ucc-gen build --source tests/testdata/test_addons/package_global_config_everything/package
 
 chmod -R 777 output/
 
@@ -41,7 +41,7 @@ if [[ $(uname -m) == 'arm64' ]]; then
 fi
 
 docker run \
-  -v "$REPO_ROOT_DIR/output/$APP_NAME:/opt/splunk/etc/apps/$APP_NAME" \
+  -v "output/$APP_NAME:/opt/splunk/etc/apps/$APP_NAME" \
   -p 8000:8000 \
   -p 8088:8088 \
   -p 8089:8089 \
