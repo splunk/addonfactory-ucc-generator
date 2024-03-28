@@ -4,6 +4,7 @@ import sys
 import json
 
 from splunklib import modularinput as smi
+import {{class_name|lower}}_helper
 
 class {{class_name}}(smi.Script):
 
@@ -36,18 +37,10 @@ class {{class_name}}(smi.Script):
         return scheme
 
     def validate_input(self, definition):
-        return
+        {{class_name|lower}}_helper.validate_input(self, definition)
 
     def stream_events(self, inputs, ew):
-        input_items = [{'count': len(inputs.inputs)}]
-        for input_name, input_item in inputs.inputs.items():
-            input_item['name'] = input_name
-            input_items.append(input_item)
-        event = smi.Event(
-            data=json.dumps(input_items),
-            sourcetype='{{input_name}}',
-        )
-        ew.write_event(event)
+        {{class_name|lower}}_helper.stream_events(self, inputs, ew)
 
 
 if __name__ == '__main__':
