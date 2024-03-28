@@ -257,7 +257,7 @@ jobs:
           export PATH=$PATH:$CHROMEWEBDRIVER
           chromedriver --version
       - run: |
-          ./run_splunk.sh ${{ matrix.splunk.version }}
+          ./scripts/run_splunk.sh ${{ matrix.splunk.version }}
           until curl -Lsk "https://localhost:8088/services/collector/health" &>/dev/null ; do echo -n "Waiting for HEC-" && sleep 5 ; done
         timeout-minutes: 5
       - run: poetry run pytest tests/ui -m "${{ matrix.test-mark }}" --headless --junitxml=test-results/junit.xml
@@ -315,11 +315,11 @@ jobs:
     env:
       NEEDS: ${{ toJson(needs) }}
     steps:
-      - name: check if tests have passed or skipped
+      - name: check if tests have passed
         id: check
         shell: bash
         run: |
-          ALL_JOBS_PASSED=$(echo "$NEEDS" | jq "all(.[]; .result == \"success\" or .result == \"skipped\")")
+          ALL_JOBS_PASSED=$(echo "$NEEDS" | jq "all(.[]; .result == \"success\")")
           if [[ "$ALL_JOBS_PASSED" == "true" ]]
           then
               echo "all-checks=true" >> "$GITHUB_OUTPUT"
@@ -418,7 +418,7 @@ jobs:
           python3 -m pip install ./restapi_client_${{ matrix.splunk.version }}
       - run: mv out_${{ matrix.splunk.version }} output
       - run: |
-          ./run_splunk.sh ${{ matrix.splunk.version }}
+          ./scripts/run_splunk.sh ${{ matrix.splunk.version }}
           until curl -Lsk "https://localhost:8088/services/collector/health" &>/dev/null ; do echo -n "Waiting for HEC-" && sleep 5 ; done
         timeout-minutes: 5
       - run: python3 tests/testdata/expected_addons/expected_output_global_config_everything/client-test.py

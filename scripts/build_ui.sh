@@ -1,4 +1,5 @@
-#
+#!/bin/bash
+
 # Copyright 2024 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,17 +13,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-docker run \
-  -v "$PWD/output/Splunk_TA_UCCExample:/opt/splunk/etc/apps/Splunk_TA_UCCExample" \
-  -p 8000:8000 \
-  -p 8088:8088 \
-  -p 8089:8089 \
-  -p 9997:9997 \
-  -e "SPLUNK_START_ARGS=--accept-license" \
-  -e "SPLUNK_PASSWORD=Chang3d!" \
-  -e "SPLUNK_HEC_TOKEN=4a8a737d-5452-426c-a6f7-106dca4e813f" \
-  -e "SPLUNK_DISABLE_POPUPS=true" \
-  -d \
-  --rm \
-  --name splunk splunk/splunk:${1:-latest}
+
+SCRIPT_DIR=$(cd $(dirname ${BASH_SOURCE[0]}) && pwd)
+REPO_ROOT_DIR=$(cd "$SCRIPT_DIR/.." && pwd)
+
+cd $REPO_ROOT_DIR/ui
+yarn run setup
+cd $REPO_ROOT_DIR
+
+cp -n -R ui/dist/build/ splunk_add_on_ucc_framework/package/appserver/static/js/build/
