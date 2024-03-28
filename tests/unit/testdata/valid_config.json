@@ -21,6 +21,8 @@
                             }
                         ]
                     },
+                    "restHandlerModule": "splunk_ta_uccexample_validate_account_rh",
+                    "restHandlerClass": "CustomAccountValidator",
                     "entity": [
                         {
                             "type": "text",
