@@ -1,12 +1,22 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState } from 'react';
+import { fn } from '@storybook/test';
+import { http, HttpResponse } from 'msw';
 import SingleInputComponent from '../SingleInputComponent';
 import { setUnifiedConfig } from '../../../util/util';
 import { getGlobalConfigMock } from '../../../mocks/globalConfigMock';
+import { mockServerResponse } from '../../../mocks/server-response';
 
 const meta = {
     component: SingleInputComponent,
     title: 'SingleInputComponent',
+    parameters: {
+        msw: {
+            handlers: [
+                http.get('/servicesNS/nobody/-/*', () => HttpResponse.json(mockServerResponse)),
+            ],
+        },
+    },
     render: (props) => {
         // due to stories incompatibility, eslint rule is off
         // React Hook "useState" is called in function "render" that is neither a React function component
@@ -33,6 +43,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const common = {
+    handleChange: fn(),
     disabled: false,
     error: false,
     field: 'field',

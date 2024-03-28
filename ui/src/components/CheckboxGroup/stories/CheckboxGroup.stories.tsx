@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { fn } from '@storybook/test';
 import CheckboxGroup from '../CheckboxGroup';
 import { MODE_CREATE, MODE_EDIT } from '../../../constants/modes';
 
@@ -12,6 +13,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Base: Story = {
     args: {
+        handleChange: fn(),
         mode: MODE_EDIT,
         field: 'api',
         value: 'collect_collaboration/1200,collect_file/1,collect_task/1',
@@ -53,6 +55,7 @@ export const Base: Story = {
 };
 export const Multiline: Story = {
     args: {
+        handleChange: fn(),
         mode: MODE_EDIT,
         field: 'api',
         value: 'neigh/1,like/1',
