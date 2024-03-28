@@ -4,6 +4,8 @@
 
 This project includes a UI framework that dynamically renders UI components based on the provided `globalConfig.json`.
 
+For a quickstart, please check [quick_start_ui.sh](../scripts/quick_start_ui.sh)
+
 ## Getting Started
 
 1. Clone the repo.
