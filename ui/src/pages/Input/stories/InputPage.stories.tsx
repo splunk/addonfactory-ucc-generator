@@ -11,7 +11,7 @@ const meta = {
     component: InputPage,
     title: 'InputPage',
     render: (args) => {
-        setUnifiedConfig(args.globalConfig);
+        setUnifiedConfig(JSON.parse(JSON.stringify(args.globalConfig)));
         return <InputPage />;
     },
     args: {
@@ -21,6 +21,9 @@ const meta = {
         msw: {
             handlers: [
                 http.get('/servicesNS/nobody/-/:name', () => HttpResponse.json(mockServerResponse)),
+                http.post('/servicesNS/nobody/-/:name', () =>
+                    HttpResponse.json(mockServerResponse)
+                ),
             ],
         },
         snapshots: {
@@ -38,6 +41,11 @@ export const InputPageView: Story = {
         const body = within(canvasElement.ownerDocument.body);
         const canvas = within(canvasElement);
 
+        const closeBtn = canvas.queryByRole('button', { name: /(Close)|(Cancel)/ });
+        if (closeBtn) {
+            await userEvent.click(closeBtn);
+        }
+
         await userEvent.click(canvas.getByRole('button', { name: 'Create New Input' }));
 
         await userEvent.click(await body.findByText('demo_input'));
@@ -47,7 +55,10 @@ export const InputTabView: Story = {
     play: async ({ canvasElement }) => {
         const body = within(canvasElement.ownerDocument.body);
         const canvas = within(canvasElement);
-
+        const closeBtn = canvas.queryByRole('button', { name: /(Close)|(Cancel)/ });
+        if (closeBtn) {
+            await userEvent.click(closeBtn);
+        }
         await userEvent.click(canvas.getByRole('button', { name: 'Create New Input' }));
 
         await userEvent.click(await body.findByText('Demo input page'));

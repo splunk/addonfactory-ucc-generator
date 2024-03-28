@@ -12,4 +12,15 @@ export const serverHandlers = [
             ],
         })
     ),
+    http.post(`/servicesNS/:user/-/:serviceName`, () =>
+        HttpResponse.json({
+            entry: [
+                {
+                    name: 'name',
+                    content: 'content',
+                    id: 0,
+                },
+            ],
+        })
+    ),
 ];
