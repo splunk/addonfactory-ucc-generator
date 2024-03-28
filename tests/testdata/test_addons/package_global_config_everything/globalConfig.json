@@ -443,7 +443,9 @@
                             }
                         }
                     ],
-                    "title": "Account"
+                    "title": "Account",
+                    "restHandlerModule": "splunk_ta_uccexample_validate_account_rh",
+                    "restHandlerClass": "CustomAccountValidator"
                 },
                 {
                     "name": "proxy",
