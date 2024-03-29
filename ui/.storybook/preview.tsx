@@ -26,7 +26,6 @@ initialize({
 
 const preview: Preview = {
     parameters: {
-        actions: { argTypesRegex: '^handle.*' },
         loaders: [mswLoader],
         backgrounds: {
             disable: true,
