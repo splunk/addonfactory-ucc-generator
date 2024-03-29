@@ -1,0 +1,33 @@
+{
+ "visualizations": {
+  "viz_IFgt0Y8M": {
+   "type": "splunk.line",
+   "options": {
+    "xAxisVisibility": "hide",
+    "backgroundColor": "transparent",
+    "seriesColors": [
+     "#A870EF",
+     "#A9F5E7",
+     "#45D4BA"
+    ],
+    "yAxisTitleText": "Visitors"
+   },
+   "title": "Unique Visitors (by hour)",
+   "dataSources": {
+    "primary": "search1"
+   }
+  }
+ },
+"dataSources": {
+    "search1": {
+        "type": "ds.search",
+        "options": {
+            "query": "index=_internal source=\"/opt/splunk/var/log/splunk/license_usage.log\" type=Usage (s IN (demo*)) | timechart span=1d sum(b) as Usage | eval Usage=round(Usage/1024/1024/1024,3)"
+        }
+    }
+},
+ "defaults": {},
+ "inputs": {},
+ "description": "",
+ "title": "Custom Components Dashboard"
+}

@@ -269,6 +269,10 @@ def generate_data_ui(
                 addon_name,
             )
             input_xml_file.write(inputs_xml_content)
+    if include_dashboard:
+        with open(os.path.join(default_ui_path, "views", "dashboard.xml"), "w") as dashboard_xml_file:
+            dashboard_xml_content = data_ui_generator.generate_views_dashboard_xml(addon_name)
+            dashboard_xml_file.write(dashboard_xml_content)
 
 
 def _get_addon_version(addon_version: Optional[str]) -> str:
@@ -604,7 +608,16 @@ def generate(
                 "views",
                 "dashboard.xml",
             )
-            dashboard.generate_dashboard(global_config, ta_name, dashboard_xml_path)
+            dashboard_definition_json_path = os.path.join(
+                output_directory,
+                ta_name,
+                "appserver",
+                "static",
+                "js",
+                "build",
+                "custom",
+            )
+            dashboard.generate_dashboard(global_config, ta_name, dashboard_definition_json_path)
 
     else:
         global_config = None
