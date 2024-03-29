@@ -1,22 +1,43 @@
 <form script="{{addon_name}}:tabs.js" stylesheet="{{addon_name}}:tabs.css" version="1.1">
     <label>Monitoring Dashboard</label>
-    <fieldset submitButton="false">
-        <input id="myOverviewInput" type="time" token="log_time">
-            <label>Overview</label>
-            <default>
-                <earliest>-7d</earliest>
-                <latest>now</latest>
-            </default>
-        </input>
-    </fieldset>
+    <description>Monitoring the health and ingestion of this TA. More description.</description>
+    <row>
+        <panel id="overview_info_panel">
+            <html>Overview</html>
+            <search>
+                <query>
+                    | makeresults
+                    | addinfo
+                    | eval StartDate = strftime(info_min_time, "%b %e,%Y %I:%M%p"), EndDate = strftime(info_max_time,
+                    "%b %e,%Y %I:%M%p")
+                </query>
+                <earliest>$overview_time.earliest$</earliest>
+                <latest>$overview_time.latest$</latest>
+                <done>
+                    <set token="overview_start">$result.StartDate$</set>
+                    <set token="overview_end">$result.EndDate$</set>
+                </done>
+            </search>
+            <html>$overview_start$ - $overview_end$</html>
+        </panel>
+        <panel id="overview_input_panel">
+            <input id="overview_input" type="time" token="overview_time">
+                <label>Time:</label>
+                <default>
+                    <earliest>-7d</earliest>
+                    <latest>now</latest>
+                </default>
+            </input>
+        </panel>
+    </row>
     <row>
         <panel>
             <title>Data ingestion</title>
             <chart>
                 <search>
                     <query>{{ data_ingestion }}</query>
-                    <earliest>$log_time.earliest$</earliest>
-                    <latest>$log_time.latest$</latest>
+                    <earliest>$overview_time.earliest$</earliest>
+                    <latest>$overview_time.latest$</latest>
                 </search>
                 <option name="charting.chart">column</option>
                 <option name="charting.axisTitleY.text">Volume[GB]</option>
@@ -28,26 +49,27 @@
             <chart>
                 <search>
                     <query>{{ errors_chart }}</query>
-                    <earliest>$log_time.earliest$</earliest>
-                    <latest>$log_time.latest$</latest>
+                    <earliest>$overview_time.earliest$</earliest>
+                    <latest>$overview_time.latest$</latest>
                 </search>
                 <option name="charting.chart">line</option>
                 <option name="charting.drilldown">none</option>
             </chart>
         </panel>
     </row>
-    <row id="tabs">
-        <panel>
+    <row id="tabs_row">
+        <panel id="tabs_panel">
             <html>
                 <ul id="tabs" class="nav nav-tabs">
                     <li class="active">
                         <a href="#" class="toggle-tab" data-toggle="tab"
-                           data-elements="input2,tab_data_ingestion,tab_data_ingestion_table,row_table">Data
+                           data-elements="data_ingestion_input_row,tab_data_ingestion,tab_data_ingestion_table,table_row">
+                            Data
                             ingestion
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="toggle-tab" data-toggle="tab" data-elements="tab_errors">
+                        <a href="#" class="toggle-tab" data-toggle="tab" data-elements="error_tab_row,error_tab_row,error_tab_info_row">
                             Errors
                         </a>
                     </li>
@@ -55,10 +77,29 @@
             </html>
         </panel>
     </row>
-    <row id="input2">
-        <panel>
-            <input id="myOverviewInput2" type="time" token="log_time2">
-                <label>Data ingestion</label>
+    <row id="data_ingestion_input_row">
+        <panel id="data_ingestion_input_label_panel">
+            <html>Data ingestion</html>
+            <html>Monitor the total data ingestion to stack</html>
+            <search>
+                <query>
+                    | makeresults
+                    | addinfo
+                    | eval StartDate = strftime(info_min_time, "%b %e,%Y %I:%M%p"), EndDate = strftime(info_max_time,
+                    "%b %e,%Y %I:%M%p")
+                </query>
+                <earliest>$data_ingestion_time.earliest$</earliest>
+                <latest>$data_ingestion_time.latest$</latest>
+                <done>
+                    <set token="data_ingestion_start">$result.StartDate$</set>
+                    <set token="data_ingestion_end">$result.EndDate$</set>
+                </done>
+            </search>
+            <html>$data_ingestion_start$ - $data_ingestion_end$</html>
+        </panel>
+        <panel id="data_ingestion_input_panel">
+            <input id="data_ingestion_input" type="time" token="data_ingestion_time">
+                <label>Time:</label>
                 <default>
                     <earliest>-7d</earliest>
                     <latest>now</latest>
@@ -72,8 +113,8 @@
             <chart>
                 <search>
                     <query>{{ data_ingestion }}</query>
-                    <earliest>$log_time2.earliest$</earliest>
-                    <latest>$log_time2.latest$</latest>
+                    <earliest>$data_ingestion_time.earliest$</earliest>
+                    <latest>$data_ingestion_time.latest$</latest>
                 </search>
                 <option name="charting.chart">line</option>
                 <option name="charting.axisTitleY.text">Volume[GB]</option>
@@ -85,21 +126,23 @@
             <chart>
                 <search>
                     <query>{{ events_count }}</query>
-                    <earliest>$log_time2.earliest$</earliest>
-                    <latest>$log_time2.latest$</latest>
+                    <earliest>$data_ingestion_time.earliest$</earliest>
+                    <latest>$data_ingestion_time.latest$</latest>
                 </search>
                 <option name="charting.chart">line</option>
                 <option name="charting.drilldown">none</option>
             </chart>
         </panel>
     </row>
-    <row id="row_table">
-        <panel>
-            <input id="myOverviewInput3" type="dropdown" token="droptablevalue">
+    <row id="table_row">
+        <panel id="table_input_panel">
+            <input id="table_input" type="dropdown" token="droptablevalue">
                 <label>View by</label>
-            <default>Source type</default>
-            <choice value='{{ table1 }}'>Source type</choice>
-            <choice value='{{ table2 }}'>Source</choice>
+                <default>Source type</default>
+                <choice value='{{ table_sourcetype }}'>Source type</choice>
+                <choice value='{{ table_source }}'>Source</choice>
+                <choice value='{{ table_host }}'>Host</choice>
+                <choice value='{{ table_index }}'>Index</choice>
             </input>
         </panel>
     </row>
@@ -108,31 +151,50 @@
             <table>
                 <search>
                     <query>$droptablevalue$</query>
-                    <earliest>-24h@h</earliest>
-                    <latest>now</latest>
+                    <earliest>$data_ingestion_time.earliest$</earliest>
+                    <latest>$data_ingestion_time.latest$</latest>
                 </search>
-                <option name="count">3</option>
-                <format type="sparkline" field="trend">
-                    <option name="type">bar</option>
-                    <option name="height">40</option>
-                    <option name="type">line</option>
-                    <option name="colorMap">
-                        <option name="2000:">#5379AF</option>
-                        <option name=":1999">#9ac23c</option>
-                    </option>
-                    <option name="barWidth">5px</option>
-                </format>
             </table>
         </panel>
     </row>
-    <row id="tab_errors">
-        <panel>
+    <row id="error_tab_info_row">
+        <panel id="error_tab_info_panel">
+            <html>Errors</html>
+            <html>Monitor the total errors of this TA</html>
+            <search>
+                <query>
+                    | makeresults
+                    | addinfo
+                    | eval StartDate = strftime(info_min_time, "%b %e,%Y %I:%M%p"), EndDate = strftime(info_max_time,
+                    "%b %e,%Y %I:%M%p")
+                </query>
+                <earliest>$errors_time.earliest$</earliest>
+                <latest>$errors_time.latest$</latest>
+                <done>
+                    <set token="errors_start">$result.StartDate$</set>
+                    <set token="errors_end">$result.EndDate$</set>
+                </done>
+            </search>
+            <html>$errors_start$ - $errors_end$</html>
+        </panel>
+        <panel id="errors_input_panel">
+            <input id="errors_input" type="time" token="errors_time">
+                <label>Time:</label>
+                <default>
+                    <earliest>-7d</earliest>
+                    <latest>now</latest>
+                </default>
+            </input>
+        </panel>
+    </row>
+    <row id="error_tab_row">
+        <panel id="error_tab_panel">
             <title>Errors in the add-on</title>
             <event>
                 <search>
-                    <query>{{ q3 }}</query>
-                    <earliest>$log_time2.earliest$</earliest>
-                    <latest>$log_time2.latest$</latest>
+                    <query>{{ errors_list }}</query>
+                    <earliest>$errors_time.earliest$</earliest>
+                    <latest>$errors_time.latest$</latest>
                 </search>
                 <option name="list.drilldown">none</option>
                 <option name="maxLines">10</option>

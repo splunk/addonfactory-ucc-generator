@@ -79,6 +79,24 @@ def generate_views_configuration_xml(addon_name: str) -> str:
     return _pretty_print_xml(view_as_string)
 
 
+def generate_views_dashboard_xml(addon_name: str) -> str:
+    """
+    Generates `default/data/ui/views/dashboard.xml` file.
+    """
+    view = ET.Element(
+        "view",
+        attrib={
+            "template": f"{addon_name}:/templates/base.html",
+            "type": "html",
+            "isDashboard": "False",
+        },
+    )
+    label = ET.SubElement(view, "label")
+    label.text = "Monitoring Dashboard"
+    view_as_string = ET.tostring(view, encoding="unicode")
+    return _pretty_print_xml(view_as_string)
+
+
 def generate_views_redirect_xml(addon_name: str) -> str:
     """
     Generates `default/data/ui/views/redirect.xml` file.
