@@ -2021,7 +2021,7 @@
     prop-types "^15.6.2"
     react-flip-move "^3.0.1"
 
-"@splunk/react-ui@^4.23.0", "@splunk/react-ui@^4.25.0", "@splunk/react-ui@^4.27.0":
+"@splunk/react-ui@^4.23.0", "@splunk/react-ui@^4.25.0", "@splunk/react-ui@^4.28.2":
   version "4.28.2"
   resolved "https://registry.npmjs.org/@splunk/react-ui/-/react-ui-4.28.2.tgz#91ab62a5c07d967c592df0bf6e2b1c7604c22b72"
   integrity sha512-krYWurzg/Y9G4J8pfmPusUaCIVHFldq8jS85OdsW91hHCML8ZqlK8/PyJy9loDPrxNyz48MX1pd6JqS5PVWxFA==
@@ -3357,7 +3357,7 @@
   dependencies:
     "@types/node" "*"
 
-"@types/node@*", "@types/node@^20.11.26", "@types/node@^20.11.30":
+"@types/node@*", "@types/node@^20.11.26":
   version "20.11.30"
   resolved "https://registry.npmjs.org/@types/node/-/node-20.11.30.tgz#9c33467fc23167a347e73834f788f4b9f399d66f"
   integrity sha512-dHM6ZxwlmuZaRmUPfv1p+KrdD1Dci04FbdEm/9wEMouFqxYoFl5aMkt0VMAUtYRQDyYvD41WJLukhq/ha3YuTw==
@@ -3368,6 +3368,13 @@
   version "18.19.26"
   resolved "https://registry.npmjs.org/@types/node/-/node-18.19.26.tgz#18991279d0a0e53675285e8cf4a0823766349729"
   integrity sha512-+wiMJsIwLOYCvUqSdKTrfkS8mpTp+MPINe6+Np4TAGFWWRWiBQ5kSq9nZGCSPkzx9mvT+uEukzpX4MOSCydcvw==
+  dependencies:
+    undici-types "~5.26.4"
+
+"@types/node@^20.12.2":
+  version "20.12.2"
+  resolved "https://registry.npmjs.org/@types/node/-/node-20.12.2.tgz#9facdd11102f38b21b4ebedd9d7999663343d72e"
+  integrity sha512-zQ0NYO87hyN6Xrclcqp7f8ZbXNbRfoGWNcMvHTPQp9UUrwI0mI7XBz+cu7/W6/VClYo2g63B0cjull/srU7LgQ==
   dependencies:
     undici-types "~5.26.4"
 
@@ -3408,7 +3415,7 @@
   dependencies:
     "@types/react" "^17"
 
-"@types/react@*", "@types/react@^16.14.59", "@types/react@^16.14.60", "@types/react@^16.8.0 || ^17.0.0 || ^18.0.0", "@types/react@^16.9.38", "@types/react@^17":
+"@types/react@*", "@types/react@^16.14.60", "@types/react@^16.8.0 || ^17.0.0 || ^18.0.0", "@types/react@^16.9.38", "@types/react@^17":
   version "16.14.60"
   resolved "https://registry.npmjs.org/@types/react/-/react-16.14.60.tgz#f7ab62a329b82826f12d02bc8031d4ef4b5e0d81"
   integrity sha512-wIFmnczGsTcgwCBeIYOuy2mdXEiKZ5znU/jNOnMZPQyCcIxauMGWlX0TNG4lZ7NxRKj7YUIZRneJQSSdB2jKgg==
@@ -9583,7 +9590,7 @@ postcss-value-parser@^4.0.2, postcss-value-parser@^4.1.0, postcss-value-parser@^
   resolved "https://registry.npmjs.org/postcss-value-parser/-/postcss-value-parser-4.2.0.tgz#723c09920836ba6d3e5af019f92bc0971c02e514"
   integrity sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==
 
-postcss@^8.4.19, postcss@^8.4.33, postcss@^8.4.36:
+postcss@^8.4.19, postcss@^8.4.33, postcss@^8.4.38:
   version "8.4.38"
   resolved "https://registry.npmjs.org/postcss/-/postcss-8.4.38.tgz#b387d533baf2054288e337066d81c6bee9db9e0e"
   integrity sha512-Wglpdk03BSfXkHoQa3b/oulrotAkwrlLDRSOb9D0bN86FdRyE9lppSp33aHNPgBa0JKCoB+drFLZkQoRRYae5A==
