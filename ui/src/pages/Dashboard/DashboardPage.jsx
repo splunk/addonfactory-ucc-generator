@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { DashboardCore } from '@splunk/dashboard-core';
-import { DashboardContextProvider } from '@splunk/dashboard-context';
-import EnterpriseViewOnlyPreset from '@splunk/dashboard-presets/EnterpriseViewOnlyPreset';
 import TabLayout from '@splunk/react-ui/TabLayout';
 import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
+import { OverviewDashboard } from './Overview';
+import { DataIngestionDashboard } from './DataIngestion';
+import { ErrorDashboard } from './Error';
+import { CustomDashboard } from './Custom';
+import './dashboardStyle.css';
 
 function getBuildDirPath() {
     const scripts = document.getElementsByTagName('script');
@@ -36,16 +38,17 @@ function DashboardPage() {
         prisma: { colorScheme: 'dark', family: 'prisma' },
     };
 
-    const [dashboardDefinition, setDashboardDefinition] = useState(null);
-    const [dashboardDefinition2, setDashboardDefinition2] = useState(null);
-    const [dashboardDefinition3, setDashboardDefinition3] = useState(null);
-    const [dashboardDefinition4, setDashboardDefinition4] = useState(null);
+    const [overviewDef, setOverviewDef] = useState(null);
+    const [dataIngestionDef, setDataIngestionDef] = useState(null);
+    const [errorDef, setErrorDef] = useState(null);
+    const [customDef, setCustomDef] = useState(null);
 
     useEffect(() => {
-        loadJson('overview_definition.json', setDashboardDefinition);
-        loadJson('data_ingestion_tab_definition.json', setDashboardDefinition2);
-        loadJson('errors_tab_definition.json', setDashboardDefinition3);
-        loadJson('custom.json', setDashboardDefinition4);
+        loadJson('overview_definition.json', setOverviewDef);
+        loadJson('data_ingestion_tab_definition.json', setDataIngestionDef);
+        loadJson('errors_tab_definition.json', setErrorDef);
+        loadJson('custom.json', setCustomDef);
+
         document.body.classList.add('grey_background');
         return () => {
             document.body.classList.remove('grey_background');
@@ -55,51 +58,31 @@ function DashboardPage() {
     return (
         <ErrorBoundary>
             <div>
-                {dashboardDefinition ? (
-                    <DashboardContextProvider
-                        preset={EnterpriseViewOnlyPreset}
-                        initialDefinition={dashboardDefinition}
-                    >
-                        <DashboardCore width="100%" height="auto" />
-                    </DashboardContextProvider>
-                ) : null}
-                {dashboardDefinition2 || dashboardDefinition4 ? (
+                <OverviewDashboard dashboardDefinition={overviewDef} />
+                {dataIngestionDef && customDef ? (
                     <TabLayout
                         autoActivate
-                        defaultActivePanelId={
-                            dashboardDefinition2 ? 'dataIngestionTabPanel' : 'customTabPanel'
-                        }
+                        defaultActivePanelId={'dataIngestionTabPanel'}
+                        onChange={(event, data) => {
+                            console.log({ event, data });
+                        }}
                     >
-                        {dashboardDefinition2 ? (
+                        {dataIngestionDef && (
                             <TabLayout.Panel label="Data ingestion" panelId="dataIngestionTabPanel">
-                                <DashboardContextProvider
-                                    preset={EnterpriseViewOnlyPreset}
-                                    initialDefinition={dashboardDefinition2}
-                                >
-                                    <DashboardCore width="100%" height="auto" />
-                                </DashboardContextProvider>
+                                <DataIngestionDashboard dashboardDefinition={dataIngestionDef} />
                             </TabLayout.Panel>
-                        ) : null}
-                        {dashboardDefinition3 ? (
+                        )}
+
+                        {errorDef && (
                             <TabLayout.Panel label="Errors" panelId="errorsTabPanel">
-                                <DashboardContextProvider
-                                    preset={EnterpriseViewOnlyPreset}
-                                    initialDefinition={dashboardDefinition3}
-                                >
-                                    <DashboardCore width="100%" height="auto" />
-                                </DashboardContextProvider>
+                                <ErrorDashboard dashboardDefinition={errorDef} />
                             </TabLayout.Panel>
-                        ) : null}
-                        {dashboardDefinition4 ? (
+                        )}
+                        {customDef && (
                             <TabLayout.Panel label="Custom" panelId="customTabPanel">
-                                <DashboardContextProvider
-                                    preset={EnterpriseViewOnlyPreset}
-                                    initialDefinition={dashboardDefinition4}
-                                >
-                                    <DashboardCore width="100%" height="auto" />
-                                </DashboardContextProvider>
+                                <CustomDashboard dashboardDefinition={customDef} />
                             </TabLayout.Panel>
-                        ) : null}
+                        )}
                     </TabLayout>
                 ) : null}
             </div>
