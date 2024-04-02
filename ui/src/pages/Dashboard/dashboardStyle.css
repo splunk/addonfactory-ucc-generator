@@ -1,0 +1,117 @@
+
+[data-input-id="overview_input"] {
+    grid-column: 6 / 6;
+    align-content: flex-end;
+    grid-row: 3;
+    place-self: end;
+    [data-test="input-container"] {
+        display: inline-flex;
+    }
+    [data-test="input-title-remove-container"]{
+        margin: 5px;
+    }
+    [data-test="input-title"]{
+        font-size: 14px;
+    }
+}
+
+#overview_main_label_viz{
+    grid-column: 1 / 4;
+    grid-row: 3;
+    height: fit-content;
+}
+
+#main_page_label_viz{
+    grid-column: 1 / span 4;
+    grid-row: 1;
+    height: fit-content;
+}
+
+#main_page_description_viz{
+    grid-column: 1 / span 4;
+    grid-row: 2;
+}
+
+#overview_timerange_label_start_viz {
+    grid-column: 1 / 3;
+    grid-row: 4;
+    inline-size: fit-content;
+}
+
+#overview_timerange_label_end_viz{
+    grid-column: 3 / 3;
+    grid-row: 4;
+    inline-size: fit-content;
+}
+
+/* data ingestion */
+
+[data-input-id="data_ingestion_input"] {
+    grid-column: 7 / 8;
+    align-content: flex-end;
+    grid-row: 2;
+    place-self: end;
+    [data-test="input-container"] {
+        display: inline-flex;
+    }
+    [data-test="input-title-remove-container"]{
+        margin: 5px;
+    }
+    [data-test="input-title"]{
+        font-size: 14px;
+    }
+}
+
+#data_ingestion_label_viz{
+    grid-column: 1 / span 4;
+    grid-row: 1;
+    height: fit-content;
+}
+
+#data_ingestion_description_viz{
+    grid-column: 1 / span 4;
+    grid-row: 2;
+    height: fit-content;
+}
+
+#data_ingestion_timerange_label_start_viz {
+    grid-column: 1 / 3;
+    grid-row: 4;
+    inline-size: fit-content;
+}
+
+#data_ingestion_timerange_label_end_viz{
+    grid-column: 3 / 3;
+    grid-row: 4;
+    inline-size: fit-content;
+}
+
+#data_ingestion_table_viz{
+    grid-column: 1 / 8;
+    height: 200px;
+    grid-row: 6;
+    margin-top: 100px;
+}
+
+#data_ingestion_data_volume_viz{
+    grid-row: 5 / 6;
+}
+
+#data_ingestion_events_count_viz{
+    grid-row: 5 / 6;
+}
+
+#data_ingestion_search{
+    grid-row: 6;
+    min-width: 150px;
+    grid-column: 1;
+    margin-top: 32px;
+}
+
+[data-input-id="data_ingestion_table_input"]{
+    grid-row: 6;
+    grid-column: 3;
+    [data-test="input-title"]{
+        font-size: 14px;
+    }
+}
