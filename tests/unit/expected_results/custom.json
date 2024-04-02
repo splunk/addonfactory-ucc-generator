@@ -1,0 +1,35 @@
+{
+  "visualizations": {
+    "custom_dashboard_main_label": {
+      "type": "splunk.markdown",
+      "options": {
+        "markdown": "# My custom dashboard",
+        "fontSize": "extraLarge"
+      }
+    }
+  },
+  "dataSources": {
+    "custom_addon_version_ds": {
+      "type": "ds.search",
+      "options": {
+        "query": "| rest services/apps/local/demo_addon_for_splunk splunk_server=local | fields version"
+      }
+    }
+  },
+  "inputs": {},
+  "layout": {
+    "type": "grid",
+    "globalInputs": [],
+    "structure": [
+      {
+        "item": "custom_dashboard_main_label",
+        "position": {
+          "x": 20,
+          "y": 500,
+          "w": 300,
+          "h": 50
+        }
+      }
+    ]
+  }
+}
