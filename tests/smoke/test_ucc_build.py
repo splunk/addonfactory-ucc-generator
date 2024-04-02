@@ -201,6 +201,7 @@ def test_ucc_generate_with_everything():
             ("bin", "splunk_ta_uccexample_custom_rh.py"),
             ("bin", "splunk_ta_uccexample_rh_oauth.py"),
             ("bin", "splunk_ta_uccexample_rh_settings.py"),
+            ("bin", "splunk_ta_uccexample_validate_account_rh.py"),
             ("bin", "test_alert.py"),
             ("README", "alert_actions.conf.spec"),
             ("README", "inputs.conf.spec"),

@@ -253,7 +253,9 @@
                             }
                         }
                     ],
-                    "title": "Account"
+                    "title": "Account",
+                    "restHandlerModule": "splunk_ta_uccexample_validate_account_rh",
+                    "restHandlerClass": "CustomAccountValidator"
                 },
                 {
                     "name": "proxy",
@@ -1408,9 +1410,9 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.36.2Ref7d7543",
+        "version": "5.40.0R84ad898f",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.3",
-        "_uccVersion": "5.36.2"
+        "_uccVersion": "5.40.0"
     }
 }
