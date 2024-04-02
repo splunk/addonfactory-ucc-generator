@@ -270,8 +270,12 @@ def generate_data_ui(
             )
             input_xml_file.write(inputs_xml_content)
     if include_dashboard:
-        with open(os.path.join(default_ui_path, "views", "dashboard.xml"), "w") as dashboard_xml_file:
-            dashboard_xml_content = data_ui_generator.generate_views_dashboard_xml(addon_name)
+        with open(
+            os.path.join(default_ui_path, "views", "dashboard.xml"), "w"
+        ) as dashboard_xml_file:
+            dashboard_xml_content = data_ui_generator.generate_views_dashboard_xml(
+                addon_name
+            )
             dashboard_xml_file.write(dashboard_xml_content)
 
 
@@ -599,15 +603,6 @@ def generate(
             )
         if global_config.has_dashboard():
             logger.info("Including dashboard")
-            dashboard_xml_path = os.path.join(
-                output_directory,
-                ta_name,
-                "default",
-                "data",
-                "ui",
-                "views",
-                "dashboard.xml",
-            )
             dashboard_definition_json_path = os.path.join(
                 output_directory,
                 ta_name,
@@ -617,7 +612,9 @@ def generate(
                 "build",
                 "custom",
             )
-            dashboard.generate_dashboard(global_config, ta_name, dashboard_definition_json_path)
+            dashboard.generate_dashboard(
+                global_config, ta_name, dashboard_definition_json_path
+            )
 
     else:
         global_config = None
