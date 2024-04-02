@@ -54,7 +54,7 @@
           "#029ceb"
         ],
         "yAxisTitleText": "Volume[GB]",
-        "overlayFields": "Events count",
+        "overlayFields": "Number of events",
         "y2AxisTitleText": "Number of events",
         "y2AxisLineVisibility": "show",
         "showOverlayY2Axis": true
@@ -103,17 +103,7 @@
     "overview_data_volume_ds": {
       "type": "ds.search",
       "options": {
-        "query": "index=_internal source=/opt/splunk/var/log/splunk/license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | timechart span=1d sum(b) as Usage | eval Usage=round(Usage/1024/1024/1024,3) | append [search index=_internal source=*splunk_ta_uccexample* action=events_ingested | timechart sum(n_events) as \"Events count\" ] ",
-        "queryParameters": {
-          "earliest": "$overview_time.earliest$",
-          "latest": "$overview_time.latest$"
-        }
-      }
-    },
-    "overview_events_count_ds": {
-      "type": "ds.search",
-      "options": {
-        "query": "index=_internal source=*splunk_ta_uccexample* action=events_ingested | timechart sum(n_events) as \"Events count\"",
+        "query": "index=_internal source=*/var/log/splunk/license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | timechart span=1d sum(b) as Usage | eval Usage=round(Usage/1024/1024/1024,3) | rename Usage as \"Data volume\" | append [search index=_internal source=*splunk_ta_uccexample* action=events_ingested | timechart sum(n_events) as \"Number of events\" ] ",
         "queryParameters": {
           "earliest": "$overview_time.earliest$",
           "latest": "$overview_time.latest$"
