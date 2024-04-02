@@ -54,7 +54,7 @@
           "#029ceb"
         ],
         "yAxisTitleText": "Volume[GB]",
-        "overlayFields": "Number of events",
+        "overlayFields": "Events count",
         "y2AxisTitleText": "Number of events",
         "y2AxisLineVisibility": "show",
         "showOverlayY2Axis": true
@@ -103,7 +103,17 @@
     "overview_data_volume_ds": {
       "type": "ds.search",
       "options": {
-        "query": "{{data_ingestion_and_events}}",
+        "query": "index=_internal source=/opt/splunk/var/log/splunk/license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | timechart span=1d sum(b) as Usage | eval Usage=round(Usage/1024/1024/1024,3) | append [search index=_internal source=*splunk_ta_uccexample* action=events_ingested | timechart sum(n_events) as \"Events count\" ] ",
+        "queryParameters": {
+          "earliest": "$overview_time.earliest$",
+          "latest": "$overview_time.latest$"
+        }
+      }
+    },
+    "overview_events_count_ds": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=_internal source=*splunk_ta_uccexample* action=events_ingested | timechart sum(n_events) as \"Events count\"",
         "queryParameters": {
           "earliest": "$overview_time.earliest$",
           "latest": "$overview_time.latest$"
@@ -113,7 +123,7 @@
     "overview_errors_count_ds": {
       "type": "ds.search",
       "options": {
-        "query": "{{errors_count}}",
+        "query": "index=_internal source=*splunk_ta_uccexample* ERROR | timechart span=1d count as Errors",
         "queryParameters": {
           "earliest": "$overview_time.earliest$",
           "latest": "$overview_time.latest$"

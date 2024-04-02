@@ -44,17 +44,15 @@ default_definition_json_filename = {
 
 data_ingestion = ('index=_internal source=/opt/splunk/var/log/splunk/license_usage.log type=Usage '
                   '(s IN ({input_names})) | timechart span=1d sum(b) as Usage | '
-                  'eval Usage=round(Usage/1024/1024/1024,3)')
+                  'eval Usage=round(Usage/1024/1024/1024,3) | rename Usage as \\"Data volume\\" ')
 data_ingestion_and_events = ('index=_internal source=/opt/splunk/var/log/splunk/license_usage.log type=Usage '
                              '(s IN ({input_names})) | timechart span=1d sum(b) as Usage '
-                             '| eval Usage=round(Usage/1024/1024/1024,3) '
+                             '| eval Usage=round(Usage/1024/1024/1024,3) | rename Usage as \\"Data volume\\"'
                              '| append [search index=_internal source=*{addon_name}* action=events_ingested '
-                             '| timechart sum(n_events) as \\"Events count\\" ] ')
+                             '| timechart sum(n_events) as \\"Number of events\\" ] ')
 errors_count = 'index=_internal source=*{addon_name}* ERROR | timechart span=1d count as Errors'
 events_count = ('index=_internal source=*{addon_name}* action=events_ingested | '
-                'timechart sum(n_events) as \\"Events count\\"')
-table_query = ('index=_internal source="/opt/splunk/var/log/splunk/license_usage.log" type=Usage '
-               '(s IN ({input_names})) | chart count sparkline(count, 1h) as trend by s | table s count trend')
+                'timechart sum(n_events) as \\"Number of events\\"')
 
 table_sourcetype_query = ('index=_internal source=/opt/splunk/var/log/splunk/license_usage.log type=Usage '
                           '(s IN ({input_names})) '
@@ -110,21 +108,6 @@ def generate_dashboard_content(
         definition_json_name: str
 ) -> str:
     input_names_str = ",".join([name + "*" for name in input_names])
-    # content = (
-    #     utils.get_j2_env()
-    #     .get_template("monitoring_dashboard_template.xml")
-    #     .render(
-    #         addon_name=addon_name,
-    #         data_ingestion=data_ingestion.format(input_names=input_names_str),
-    #         errors_count=errors_count.format(addon_name=addon_name.lower()),
-    #         events_count=events_count.format(addon_name=addon_name.lower()),
-    #         table_sourcetype=table_sourcetype_query.format(input_names=input_names_str),
-    #         table_source=table_source_query.format(input_names=input_names_str),
-    #         table_host=table_host_query.format(input_names=input_names_str),
-    #         table_index=table_index_query.format(input_names=input_names_str),
-    #         errors_list=errors_list_query.format(addon_name=addon_name.lower()),
-    #     )
-    # )
     content = None
 
     if definition_json_name == default_definition_json_filename["overview"]:
@@ -201,28 +184,29 @@ def generate_dashboard(
 
 
 def get_custom_json_content(custom_dashboard_path: str) -> str:
-    with open(custom_dashboard_path, "r") as dashboard_file:
-        custom_dashbaord = json.load(dashboard_file)
+    custom_dashbaord = load_custom_json(custom_dashboard_path)
 
     if not custom_dashbaord:
         logger.error(
             f"Custom dashboard page set in globalConfig.json but custom content not found. "
+            f"Please verify if file {custom_dashboard_path} has a proper structure "
             f"(see https://splunk.github.io/addonfactory-ucc-generator/dashboard/)"
         )
         sys.exit(1)
     return custom_dashbaord
 
 
-def load_custom_xml(xml_path: str) -> ElementTree:
+def load_custom_json(json_path: str) -> json:
     try:
-        custom_xml = ElementTree.parse(xml_path)
+        with open(json_path, "r") as dashboard_file:
+            custom_dashbaord = json.load(dashboard_file)
     except FileNotFoundError:
-        logger.error(
-            f"Custom dashboard page set in globalConfig.json but "
-            f"file {xml_path} not found"
-        )
+            logger.error(
+                f"Custom dashboard page set in globalConfig.json but "
+                f"file {json_path} not found"
+            )
+            sys.exit(1)
+    except json.decoder.JSONDecodeError:
+        logger.error(f"{json_path} it's not a valid json file")
         sys.exit(1)
-    except ElementTree.ParseError:
-        logger.error(f"{xml_path} it's not a valid xml file")
-        sys.exit(1)
-    return custom_xml
+    return custom_dashbaord
