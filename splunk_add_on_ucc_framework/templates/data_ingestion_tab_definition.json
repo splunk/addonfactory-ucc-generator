@@ -58,7 +58,7 @@
         "seriesColors": [
           "#A870EF"
         ],
-        "yAxisTitleText": "Events count"
+        "yAxisTitleText": "Number of events"
       },
       "title": "Events count",
       "dataSources": {
@@ -76,7 +76,8 @@
           "headerBackgroundColor": "> backgroundColor | setColorChannel(tableHeaderBackgroundColorConfig)",
           "rowColors": "> rowBackgroundColors | maxContrast(tableRowColorMaxContrast)",
           "headerColor": "> headerBackgroundColor | maxContrast(tableRowColorMaxContrast)"
-        }
+        },
+        "count": 10
       }
     }
   },
@@ -165,12 +166,16 @@
           {
             "label": "Account",
             "value": "{{ table_account }}"
+          },
+          {
+            "label": "Input",
+            "value": "{{ table_input }}"
           }
         ],
         "defaultValue": "{{ table_sourcetype }}",
         "token": "table_view_by"
       },
-      "title": "Dropdown Input"
+      "title": "View by"
     }
   },
   "layout": {
@@ -240,7 +245,7 @@
           "x": 20,
           "y": 710,
           "w": 1220,
-          "h": 200
+          "h": 300
         }
       }
     ]
