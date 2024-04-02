@@ -60,7 +60,7 @@
         ],
         "yAxisTitleText": "Number of events"
       },
-      "title": "Events count",
+      "title": "Number of events",
       "dataSources": {
         "primary": "data_ingestion_events_count_ds"
       }

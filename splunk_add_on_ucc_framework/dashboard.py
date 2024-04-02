@@ -43,14 +43,14 @@ default_definition_json_filename = {
 }
 
 data_ingestion = (
-    "index=_internal source=/opt/splunk/var/log/splunk/license_usage.log type=Usage "
+    "index=_internal source=*/var/log/splunk/license_usage.log type=Usage "
     "(s IN ({input_names})) | timechart span=1d sum(b) as Usage | "
-    'eval Usage=round(Usage/1024/1024/1024,3) | rename Usage as \\"Data volume\\" '
+    'eval Usage=round(Usage/1024/1024/1024,3) | rename Usage as \\"Data volume\\"'
 )
 data_ingestion_and_events = (
-    "index=_internal source=/opt/splunk/var/log/splunk/license_usage.log type=Usage "
+    "index=_internal source=*/var/log/splunk/license_usage.log type=Usage "
     "(s IN ({input_names})) | timechart span=1d sum(b) as Usage "
-    '| eval Usage=round(Usage/1024/1024/1024,3) | rename Usage as \\"Data volume\\"'
+    '| eval Usage=round(Usage/1024/1024/1024,3) | rename Usage as \\"Data volume\\" '
     "| append [search index=_internal source=*{addon_name}* action=events_ingested "
     '| timechart sum(n_events) as \\"Number of events\\" ] '
 )
@@ -63,7 +63,7 @@ events_count = (
 )
 
 table_sourcetype_query = (
-    "index=_internal source=/opt/splunk/var/log/splunk/license_usage.log type=Usage "
+    "index=_internal source=*/var/log/splunk/license_usage.log type=Usage "
     "(s IN ({input_names})) "
     "| stats sparkline(sum(b)), sum(b) as Bytes by st "
     "| join type=left st [search index = _internal source=*{addon_name}* action=events_ingested "
@@ -75,7 +75,7 @@ table_sourcetype_query = (
     'sum(n_events) as \\"Number of events\\", sparkline(sum(b)) as \\"Data volume trend line\\"'
 )
 table_source_query = (
-    "index=_internal source=/opt/splunk/var/log/splunk/license_usage.log type=Usage "
+    "index=_internal source=*/var/log/splunk/license_usage.log type=Usage "
     "(s IN ({input_names})) "
     "| stats sparkline(sum(b)), sum(b) as Bytes by s "
     "| join type=left s [search index = _internal source=*{addon_name}* action=events_ingested "
@@ -87,7 +87,7 @@ table_source_query = (
     'sum(n_events) as \\"Number of events\\", sparkline(sum(b)) as \\"Data volume trend line\\"'
 )
 table_host_query = (
-    "index=_internal source=/opt/splunk/var/log/splunk/license_usage.log type=Usage "
+    "index=_internal source=*/var/log/splunk/license_usage.log type=Usage "
     "(s IN ({input_names})) "
     "| stats sparkline(sum(b)), sum(b) as Bytes by h "
     "| join type=left h [search index = _internal source=*{addon_name}* action=events_ingested "
@@ -98,7 +98,7 @@ table_host_query = (
     'sum(n_events) as \\"Number of events\\", sparkline(sum(b)) as \\"Data volume trend line\\"'
 )
 table_index_query = (
-    "index=_internal source=/opt/splunk/var/log/splunk/license_usage.log type=Usage "
+    "index=_internal source=*/var/log/splunk/license_usage.log type=Usage "
     "(s IN ({input_names})) "
     "| stats sparkline(sum(b)), sum(b) as Bytes by idx "
     "| join type=left idx [search index = _internal source=*{addon_name}* action=events_ingested "
