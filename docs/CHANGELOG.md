@@ -1,3 +1,15 @@
+# [5.41.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.40.0...v5.41.0) (2024-04-02)
+
+
+### Bug Fixes
+
+* **storybook:** fix errors related to uncaught network requests ([#1117](https://github.com/splunk/addonfactory-ucc-generator/issues/1117)) ([ee79967](https://github.com/splunk/addonfactory-ucc-generator/commit/ee79967de414219fc1d5f557f212dfe3670b1b3a))
+
+
+### Features
+
+* **code:** add custom validators for account configuration ([#1115](https://github.com/splunk/addonfactory-ucc-generator/issues/1115)) ([7e77067](https://github.com/splunk/addonfactory-ucc-generator/commit/7e770679aa9b44c9b2283f220de8ed577406754a)), closes [#520](https://github.com/splunk/addonfactory-ucc-generator/issues/520)
+
 # [5.40.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.39.1...v5.40.0) (2024-03-21)
 
 
