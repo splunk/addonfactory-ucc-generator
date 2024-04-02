@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
+import { fn } from '@storybook/test';
 import EntityPage from '../EntityPage';
 import { setUnifiedConfig } from '../../../util/util';
 import { getGlobalConfigMock } from '../../../mocks/globalConfigMock';
@@ -24,6 +25,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Base: Story = {
     args: {
+        handleRequestClose: fn(),
         serviceName: 'account',
         mode: 'create',
         stanzaName: undefined,
@@ -35,6 +37,7 @@ export const Base: Story = {
 
 export const Inputs: Story = {
     args: {
+        handleRequestClose: fn(),
         serviceName: 'demo_input',
         mode: 'create',
         stanzaName: undefined,

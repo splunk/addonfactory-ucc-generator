@@ -1,12 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState, useEffect } from 'react';
 import { z } from 'zod';
+import { fn } from '@storybook/test';
 import MenuInput from '../MenuInput';
 import { setUnifiedConfig } from '../../../util/util';
-import { GlobalConfig } from '../../../types/globalConfig/globalConfig';
+import { GlobalConfig, GlobalConfigSchema } from '../../../types/globalConfig/globalConfig';
 import { getGlobalConfigMock } from '../../../mocks/globalConfigMock';
 import { invariant } from '../../../util/invariant';
-import { TableFullServiceSchema, TableSchema } from '../../../types/globalConfig/pages';
+import {
+    InputsPageTableSchema,
+    TableFullServiceSchema,
+    TableSchema,
+} from '../../../types/globalConfig/pages';
 
 interface MenuInputProps {
     handleRequestOpen: (args: { serviceName: string; input?: string; groupName?: string }) => void;
@@ -40,7 +45,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const table: z.infer<typeof TableSchema> = {
+const table = {
     header: [
         {
             field: 'name',
@@ -54,8 +59,9 @@ const table: z.infer<typeof TableSchema> = {
         },
     ],
     actions: ['edit', 'delete', 'clone'],
-};
-const commonServices: z.infer<typeof TableFullServiceSchema>[] = [
+} satisfies z.infer<typeof TableSchema>;
+
+const commonServices = [
     {
         name: 'test-service-name1',
         title: 'test-service-title1',
@@ -80,7 +86,7 @@ const commonServices: z.infer<typeof TableFullServiceSchema>[] = [
         entity: [],
         table,
     },
-];
+] satisfies z.infer<typeof TableFullServiceSchema>[];
 
 const commonGroups = [
     {
@@ -93,7 +99,8 @@ const commonGroups = [
         groupTitle: 'test-group-title2',
         groupServices: ['test-service-name2', 'test-service-name1'],
     },
-];
+] satisfies z.infer<typeof InputsPageTableSchema>['groupsMenu'];
+
 const globalConfigMock = getGlobalConfigMock();
 const { inputs } = globalConfigMock.pages;
 invariant(inputs);
@@ -102,6 +109,7 @@ invariant(services);
 
 export const Base: Story = {
     args: {
+        handleRequestOpen: fn(),
         config: {
             ...globalConfigMock,
             pages: {
@@ -117,36 +125,52 @@ export const Base: Story = {
 
 export const WithSubMenu: Story = {
     args: {
+        handleRequestOpen: fn(),
         config: {
             ...globalConfigMock,
             pages: {
                 ...globalConfigMock.pages,
                 inputs: {
-                    ...inputs,
-                    services: commonServices,
+                    services: [
+                        {
+                            name: 'test-service-name1',
+                            title: 'test-service-title1',
+                            subTitle: 'test-service-subTitle1',
+                            entity: [],
+                        },
+                        {
+                            name: 'test-subservice1-name1',
+                            title: 'test-subservice1-title1',
+                            subTitle: 'test-subservice-subTitle1',
+                            entity: [],
+                        },
+                        {
+                            name: 'test-subservice1-name2',
+                            title: 'test-subservice1-title2',
+                            subTitle: 'test-subservice-subTitle2',
+                            entity: [],
+                        },
+                        {
+                            name: 'test-service-name2',
+                            title: 'test-service-title2',
+                            subTitle: 'test-service-subTitle2',
+                            entity: [],
+                        },
+                    ],
                     groupsMenu: commonGroups,
-                },
-            },
-        },
-    },
-};
-
-export const WithSubMenuAndCustomMenu: Story = {
-    args: {
-        config: {
-            ...globalConfigMock,
-            pages: {
-                ...globalConfigMock.pages,
-                inputs: {
-                    ...inputs,
-                    services: commonServices,
-                    menu: {
-                        src: 'CustomMenu',
-                        type: 'external',
+                    title: '',
+                    table: {
+                        actions: [],
+                        header: [
+                            {
+                                field: '',
+                                label: '',
+                            },
+                        ],
+                        customRow: {},
                     },
-                    groupsMenu: commonGroups,
                 },
             },
-        },
+        } satisfies z.input<typeof GlobalConfigSchema>,
     },
 };

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { fn } from '@storybook/test';
 import AcceptModal from '../AcceptModal';
 
 const meta = {
@@ -11,6 +12,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Base: Story = {
     args: {
+        handleRequestClose: fn(),
         title: 'Accept Modal Title',
         open: true,
         message: 'Some message',

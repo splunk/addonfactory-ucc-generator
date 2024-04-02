@@ -1,6 +1,97 @@
 # Contributing Guidelines
 
-## Development flow
+## Build and Test
+
+Prerequisites:
+- Node.js LTS version ([Node.js](https://nodejs.org/en/download), or use [nvm](https://github.com/nvm-sh/nvm))
+- Yarn Classic (`npm install --global yarn`)
+- Poetry 1.5.1. [Installation guide](https://python-poetry.org/docs/#installing-with-the-official-installer)
+
+If you are interested in contributing to the UI, the `ui` folder has a separate README.md.
+
+
+Script for building the backend, frontend, and spinning up the Docker container all at once:
+```bash
+./scripts/quick_start_ui.sh
+```
+
+Build the UI in the `ui/dist` folder and copy the files to the static folder of the UCC.
+```bash
+./scripts/build_ui.sh
+```
+
+Build a new local version of `ucc-gen`:
+
+```bash
+poetry build
+```
+
+### Unit tests
+
+```bash
+poetry run pytest tests/unit
+```
+
+### UI tests
+
+If you need to run UI tests for the PR, add a "run-ui-tests" label before the PR is created. 
+UI tests will run automatically for any PR towards the `main` / `develop` branches, and on the `main` / `develop` branch as well. 
+
+1. With local version of ucc-gen, create a UCCExample add-on for the output directory:
+    ```bash
+    poetry run ucc-gen build --source tests/testdata/test_addons/package_global_config_everything/package
+    ```
+2. Install docker, and run containerized Splunk Enterprise using script:
+    ```bash
+    ./scripts/run_splunk.sh
+    ```
+   There are mapped default Splunk ports to host. To use a different configuration, see [docker-splunk](https://splunk.github.io/docker-splunk/). Remember to mount the output package to the Splunk apps directory.
+3. Install any browser specific to this browser driver, such as [chromedriver](https://chromedriver.chromium.org/getting-started/) for Chrome.
+4. Run tests using the following command:
+    ```bash
+    poetry run pytest tests/ui
+    ```
+   Default test parameters use Splunk connection details and credentials from the earlier step, and `chromedriver` is used as a default webdriver.  
+   To use a different browser or Splunk configuration, set the proper parameters according to the [smartx-ui-test-library](https://addon-factory-smartx-ui-test-library.readthedocs.io/en/latest/how_to_use.html) documentation.
+
+## Linting and Type-checking
+
+`ucc-gen` uses the [`pre-commit`](https://pre-commit.com) framework for linting and type-checking.
+Consult with `pre-commit` documentation about what is the best way to install the software.
+
+To run it locally:
+
+```bash
+pre-commit run --all-files
+```
+
+## Documentation changes
+
+Documentation changes are also welcome!
+
+To verify changes locally:
+
+```bash
+poetry run mkdocs serve -a localhost:8001
+```
+
+## Issues and bug reports
+
+If you're seeing some unexpected behavior with `ucc-gen`, create an [issue](https://github.com/splunk/addonfactory-ucc-generator/issues) on GitHub. You can click on "New Issue" and use the template provided.
+
+## Pull requests
+
+We love to see pull requests!
+
+We are using [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/).
+The two most important types: "fix" and "feat", would result in the new version of the `ucc-gen` once merged.
+
+To do the changes you think are needed, run the previous steps (build / test / linting / documentation).
+After you create a PR, all the needed reviewers will be added automatically by GitHub.
+
+Gotcha: The `semgrep` and `fossa` steps might fail if you are an external contributor. This is expected for now.
+
+## Release flow
 
 The instructions below utilize the [GitHub CLI tool](https://cli.github.com/), which you can install via HomeBrew:
 ```bash
@@ -33,87 +124,3 @@ gh pr merge main --auto --merge
   * Merge the PR using the merge commit option on GitHub.
   * Backport the bug fix PR to the develop branch.
 
-## Build and Test
-
-Prerequisites:
-- Node.js LTS version ([NodeJS](https://nodejs.org/en/download), or use [nvm](https://github.com/nvm-sh/nvm))
-- Yarn Classic (`npm install --global yarn`)
-- Poetry 1.5.1. [Installation guide](https://python-poetry.org/docs/#installing-with-the-official-installer)
-
-If you are interested in contributing to the UI, the `ui` folder has a separate README.md.
-
-Build the UI in the `ui/dist` folder and copy the files to the static folder of the UCC.
-```
-./build-ui.sh
-```
-
-Build a new local version of `ucc-gen`:
-
-```
-poetry build
-```
-
-### Unit tests
-
-```
-poetry run pytest tests/unit
-```
-
-### UI tests
-
-If you need to run UI tests for the PR, add a "run-ui-tests" label before the PR is created. 
-UI tests will run automatically for any PR towards the `main` / `develop` branches, and on the `main` / `develop` branch as well. 
-
-1. With local version of ucc-gen, create a UCCExample add-on for the output directory:
-    ```
-    poetry run ucc-gen build --source tests/testdata/test_addons/package_global_config_everything/package
-    ```
-2. Install docker, and run containerized Splunk Enterprise using script:
-    ```
-    ./run_splunk.sh
-    ```
-   There are mapped default Splunk ports to host. To use a different configuration, see [docker-splunk](https://splunk.github.io/docker-splunk/). Remember to mount the output package to the Splunk apps directory.
-3. Install any browser specific to this browser driver, such as [chromedriver](https://chromedriver.chromium.org/getting-started/) for Chrome.
-4. Run tests using the following command:
-    ```
-    poetry run pytest tests/ui
-    ```
-   Default test parameters use Splunk connection details and credentials from the earlier step, and `chromedriver` is used as a default webdriver.  
-   To use a different browser or Splunk configuration, set the proper parameters according to the [smartx-ui-test-library](https://addon-factory-smartx-ui-test-library.readthedocs.io/en/latest/how_to_use.html) documentation.
-
-## Linting and Type-checking
-
-`ucc-gen` uses the [`pre-commit`](https://pre-commit.com) framework for linting and type-checking.
-Consult with `pre-commit` documentation about what is the best way to install the software.
-
-To run it locally:
-
-```
-pre-commit run --all-files
-```
-
-## Documentation changes
-
-Documentation changes are also welcome!
-
-To verify changes locally:
-
-```
-poetry run mkdocs serve
-```
-
-## Issues and bug reports
-
-If you're seeing some unexpected behavior with `ucc-gen`, create an [issue](https://github.com/splunk/addonfactory-ucc-generator/issues) on GitHub. You can click on "New Issue" and use the template provided.
-
-## Pull requests
-
-We love to see pull requests!
-
-We are using [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/).
-The two most important types: "fix" and "feat", would result in the new version of the `ucc-gen` once merged.
-
-To do the changes you think are needed, run the previous steps (build / test / linting / documentation).
-After you create a PR, all the needed reviewers will be added automatically by GitHub.
-
-Gotcha: The `semgrep` and `fossa` steps might fail if you are an external contributor. This is expected for now.
