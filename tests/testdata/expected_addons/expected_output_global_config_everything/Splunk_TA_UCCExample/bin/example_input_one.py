@@ -4,6 +4,8 @@ import sys
 import json
 
 from splunklib import modularinput as smi
+from helper_one import validate_input
+
 
 class EXAMPLE_INPUT_ONE(smi.Script):
 
@@ -120,7 +122,7 @@ class EXAMPLE_INPUT_ONE(smi.Script):
         return scheme
 
     def validate_input(self, definition):
-        return
+        return validate_input(self, definition)
 
     def stream_events(self, inputs, ew):
         input_items = [{'count': len(inputs.inputs)}]

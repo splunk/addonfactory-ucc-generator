@@ -4,6 +4,17 @@ import sys
 import json
 
 from splunklib import modularinput as smi
+{%- if input_helper_module_stream_events %}
+from {{ input_helper_module_stream_events }} import stream_events
+{%- elif input_helper_module %}
+from {{ input_helper_module }} import stream_events
+{%- endif %}
+{%- if input_helper_module_validate_input %}
+from {{ input_helper_module_validate_input }} import validate_input
+{%- elif input_helper_module %}
+from {{ input_helper_module }} import validate_input
+{%- endif %}
+
 
 class {{class_name}}(smi.Script):
 
@@ -36,9 +47,16 @@ class {{class_name}}(smi.Script):
         return scheme
 
     def validate_input(self, definition):
+        {%- if input_helper_module_validate_input or input_helper_module %}
+        return validate_input(self, definition)
+        {%- else %}
         return
+        {%- endif %}
 
     def stream_events(self, inputs, ew):
+        {%- if input_helper_module_stream_events or input_helper_module %}
+        return stream_events(self, inputs, ew)
+        {%- else %}
         input_items = [{'count': len(inputs.inputs)}]
         for input_name, input_item in inputs.inputs.items():
             input_item['name'] = input_name
@@ -48,6 +66,7 @@ class {{class_name}}(smi.Script):
             sourcetype='{{input_name}}',
         )
         ew.write_event(event)
+        {%- endif %}
 
 
 if __name__ == '__main__':

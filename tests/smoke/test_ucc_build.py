@@ -188,6 +188,8 @@ def test_ucc_generate_with_everything():
             ("default", "data", "ui", "views", "dashboard.xml"),
             ("default", "data", "ui", "views", "splunk_ta_uccexample_redirect.xml"),
             ("bin", "splunk_ta_uccexample", "modalert_test_alert_helper.py"),
+            ("bin", "helper_common.py"),
+            ("bin", "helper_one.py"),
             ("bin", "example_input_one.py"),
             ("bin", "example_input_two.py"),
             ("bin", "example_input_three.py"),

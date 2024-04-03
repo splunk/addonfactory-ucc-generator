@@ -152,6 +152,13 @@ def _add_modular_input(
                 class_name=class_name,
                 description=description,
                 entity=entity,
+                input_helper_module=service.get("inputHelperModule"),
+                input_helper_module_stream_events=service.get(
+                    "inputHelperModuleStreamEvents"
+                ),
+                input_helper_module_validate_input=service.get(
+                    "inputHelperModuleValidateInput"
+                ),
             )
         )
         input_file_name = os.path.join(outputdir, ta_name, "bin", input_name + ".py")
