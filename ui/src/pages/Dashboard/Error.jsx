@@ -6,6 +6,23 @@ import EnterpriseViewOnlyPreset from '@splunk/dashboard-presets/EnterpriseViewOn
 import { waitForElementToDisplay } from './utils';
 
 export const ErrorDashboard = ({ dashboardDefinition }) => {
+
+    useEffect(()=>{
+        waitForElementToDisplay(
+            '[data-input-id="errors_tab_input"]',
+            '#errors_tab_description_viz',
+            () => {
+                const overviewTimeInput = document.querySelector(
+                    '[data-input-id="errors_tab_input"]'
+                );
+                const overViewContainer = document.querySelector('#errors_tab_description_viz');
+                overViewContainer?.after(overviewTimeInput);
+            },
+            300,
+            5000
+        );
+    },[])
+
     return dashboardDefinition ? (
         <DashboardContextProvider
             preset={EnterpriseViewOnlyPreset}
