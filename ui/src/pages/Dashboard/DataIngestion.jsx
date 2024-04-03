@@ -3,7 +3,7 @@ import { DashboardCore } from '@splunk/dashboard-core';
 import { DashboardContextProvider } from '@splunk/dashboard-context';
 import EnterpriseViewOnlyPreset from '@splunk/dashboard-presets/EnterpriseViewOnlyPreset';
 import Search from '@splunk/react-ui/Search';
-import { waitForElementToDisplay } from './utils';
+import { waitForElementToDisplay, createNewQueryBasedOnSearchAndHideTraffic } from './utils';
 import { debounce } from 'lodash';
 import Switch from '@splunk/react-ui/Switch';
 
@@ -69,8 +69,7 @@ export const DataIngestionDashboard = ({ dashboardDefinition }) => {
 
         // Callback function to execute when mutations are observed
         const callback = function (mutationsList) {
-            console.log('mutationsList', mutationsList);
-            for (var mutation of mutationsList) {
+            for (const mutation of mutationsList) {
                 if (mutation.attributeName === 'data-test-value') {
                     tryToRevertDefinitionToNormal();
                 }
@@ -91,71 +90,55 @@ export const DataIngestionDashboard = ({ dashboardDefinition }) => {
     const tryToRevertDefinitionToNormal = () => {
         apiReference.updateDefinition(dashboardDefinition);
         setSearchInput('');
+        setToggleNoTraffic(false);
     };
 
     const [searchInput, setSearchInput] = useState('');
-    const [toggleNoTraffic, setToggleNoTraffic] = useState(0);
+    const [toggleNoTraffic, setToggleNoTraffic] = useState(false);
 
     const setDashboardCoreApi = (api) => {
         apiReference = api;
-        window.apiReference = api;
     };
 
-    const handleCha = (searchValue) => {
+    const handleQueryChange = (searchValue, hideToggleValue) => {
         const copyJson = JSON.parse(JSON.stringify(dashboardDefinition));
 
-        const queryMap = {
-            'Source type': 'st',
-            Source: 's',
-            Host: 'h',
-            Index: 'i',
-            Account: 'event_account',
-        };
-
-        const selectedLabel =
-            document
-                .querySelector('[data-input-id="data_ingestion_table_input"] button')
-                ?.getAttribute('label') || 'Source type';
-
         if (copyJson?.inputs?.data_ingestion_table_input?.options?.items?.length > 0) {
+            const selectedLabel =
+                document
+                    ?.querySelector('[data-input-id="data_ingestion_table_input"] button')
+                    ?.getAttribute('label') || 'Source type';
+
             const item = copyJson.inputs.data_ingestion_table_input.options.items.find(
                 (it) => it.label === selectedLabel
             );
 
-            const firstPipeIndex = item.value.indexOf('|');
-            const part1 = item.value.substring(0, firstPipeIndex);
-            const part2 = item.value.substring(firstPipeIndex);
-            const newQuery = `${part1}${queryMap[selectedLabel] || 'st'}=*${searchValue}* ${part2}`;
-
+            const newQuery = createNewQueryBasedOnSearchAndHideTraffic(
+                searchValue,
+                hideToggleValue,
+                item.value,
+                selectedLabel
+            );
             copyJson.dataSources.data_ingestion_table_ds.options.query = newQuery;
             apiReference.updateDefinition(copyJson);
         }
     };
 
-    const debounceHandlerToggleNoTraffic = useCallback(
-        debounce((toggleValue) => {
-            console.log('debounce toggle 2', toggleValue);
-            console.log('we should edit dashboard definition', dashboardDefinition, definitionJson);
+    const debounceHandlerChangeData = useCallback(
+        debounce((searchValue, hideToggleValue) => {
+            handleQueryChange(searchValue, hideToggleValue);
         }, 1000),
         []
     );
 
-    const debounceHandlerSearchData = useCallback(
-        debounce((searchValue) => {
-            handleCha(searchValue);
-        }, 1000),
-        []
-    );
-
-    const handleChangeSearch = (e, { value: searchValue }) => {
-        setSearchInput(searchValue);
-        // handleCha(searchValue);
-        debounceHandlerSearchData(searchValue);
+    const handleChangeSearch = (e, { value }) => {
+        setSearchInput(value);
+        debounceHandlerChangeData(value, toggleNoTraffic);
     };
 
     const handleChangeSwitch = (e, { value }) => {
         setToggleNoTraffic(!value);
-        debounceHandlerToggleNoTraffic(value);
+        debounceHandlerChangeData(searchInput, !value);
     };
 
     return (

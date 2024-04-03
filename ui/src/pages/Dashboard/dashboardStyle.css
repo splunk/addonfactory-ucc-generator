@@ -103,7 +103,8 @@
 
 #data_ingestion_table_viz{
     grid-column: 1 / 8;
-    height: fit-content;;
+    height: 100%;
+    max-height: 500px;
     grid-row: 6;
     margin-top: 100px;
 }
