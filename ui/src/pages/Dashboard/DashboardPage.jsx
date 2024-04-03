@@ -59,7 +59,7 @@ function DashboardPage() {
         <ErrorBoundary>
             <div>
                 <OverviewDashboard dashboardDefinition={overviewDef} />
-                {dataIngestionDef && customDef ? (
+                {overviewDef ? (
                     <TabLayout
                         autoActivate
                         defaultActivePanelId={'dataIngestionTabPanel'}
@@ -96,7 +96,9 @@ function DashboardPage() {
                             </TabLayout.Panel>
                         )}
                     </TabLayout>
-                ) : null}
+                ) : (
+                    <CustomDashboard dashboardDefinition={customDef} />
+                )}
             </div>
         </ErrorBoundary>
     );
