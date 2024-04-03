@@ -68,18 +68,30 @@ function DashboardPage() {
                         }}
                     >
                         {dataIngestionDef && (
-                            <TabLayout.Panel label="Data ingestion" panelId="dataIngestionTabPanel">
+                            <TabLayout.Panel
+                                label="Data ingestion"
+                                panelId="dataIngestionTabPanel"
+                                style={{ minWidth: '150px' }}
+                            >
                                 <DataIngestionDashboard dashboardDefinition={dataIngestionDef} />
                             </TabLayout.Panel>
                         )}
 
                         {errorDef && (
-                            <TabLayout.Panel label="Errors" panelId="errorsTabPanel">
+                            <TabLayout.Panel
+                                label="Errors"
+                                panelId="errorsTabPanel"
+                                style={{ minWidth: '150px' }}
+                            >
                                 <ErrorDashboard dashboardDefinition={errorDef} />
                             </TabLayout.Panel>
                         )}
                         {customDef && (
-                            <TabLayout.Panel label="Custom" panelId="customTabPanel">
+                            <TabLayout.Panel
+                                label="Custom"
+                                panelId="customTabPanel"
+                                style={{ minWidth: '150px' }}
+                            >
                                 <CustomDashboard dashboardDefinition={customDef} />
                             </TabLayout.Panel>
                         )}

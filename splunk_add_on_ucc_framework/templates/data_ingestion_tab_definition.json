@@ -41,9 +41,7 @@
       "type": "splunk.line",
       "options": {
         "xAxisVisibility": "hide",
-        "seriesColors": [
-          "#A870EF"
-        ],
+        "seriesColors": ["#A870EF"],
         "yAxisTitleText": "Volume[GB]"
       },
       "title": "Data ingestion",
