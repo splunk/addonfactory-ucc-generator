@@ -15,12 +15,16 @@
  *
  */
 
-#dashboardTable [data-test='tab-bar'] button {
-    min-width: 115px;
+#dashboardTable [data-test='tab-bar'] {
+    margin-bottom: 15px;
+
+    button {
+        min-width: 115px;
+    }
 }
 
 [data-input-id='overview_input'] {
-    grid-column: 6 / 6;
+    grid-column: 5 / 5;
     align-content: flex-end;
     grid-row: 3;
     place-self: end;
@@ -51,21 +55,40 @@
 #main_page_description_viz {
     grid-column: 1 / span 4;
     grid-row: 2;
+    margin-left: 2px;
 }
 
 #overview_timerange_label_start_viz {
     grid-column: 1;
     grid-row: 4;
     inline-size: fit-content;
-    width: 130px;
+    width: 145px;
+
+    [data-test='majorValue'] {
+        font-size: 14px;
+        line-height: 14px;
+        font-family: 'Splunk Platform Sans', 'Splunk Platform Sans', 'Proxima Nova', Roboto, Droid,
+            'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-weight: 400;
+        color: rgb(108, 118, 133);
+    }
 }
 
 #overview_timerange_label_end_viz {
     grid-column: 1;
     grid-row: 4;
     inline-size: fit-content;
-    margin-left: 125px;
-    width: 130px;
+    margin-left: 140px;
+    width: 145px;
+
+    [data-test='majorValue'] {
+        font-size: 14px;
+        line-height: 14px;
+        font-family: 'Splunk Platform Sans', 'Splunk Platform Sans', 'Proxima Nova', Roboto, Droid,
+            'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-weight: 400;
+        color: rgb(108, 118, 133);
+    }
 }
 
 /* data ingestion */
@@ -97,21 +120,40 @@
     grid-column: 1 / span 4;
     grid-row: 2;
     height: fit-content;
+    margin-left: 2px;
 }
 
 #data_ingestion_timerange_label_start_viz {
     grid-column: 1;
     grid-row: 3;
     inline-size: fit-content;
-    width: 130px;
+    width: 145px;
+
+    [data-test='majorValue'] {
+        font-size: 14px;
+        line-height: 14px;
+        font-family: 'Splunk Platform Sans', 'Splunk Platform Sans', 'Proxima Nova', Roboto, Droid,
+            'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-weight: 400;
+        color: rgb(108, 118, 133);
+    }
 }
 
 #data_ingestion_timerange_label_end_viz {
     grid-column: 1;
     grid-row: 3;
     inline-size: fit-content;
-    margin-left: 125px;
-    width: 130px;
+    margin-left: 140px;
+    width: 145px;
+
+    [data-test='majorValue'] {
+        font-size: 14px;
+        line-height: 14px;
+        font-family: 'Splunk Platform Sans', 'Splunk Platform Sans', 'Proxima Nova', Roboto, Droid,
+            'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-weight: 400;
+        color: rgb(108, 118, 133);
+    }
 }
 
 #data_ingestion_table_viz {
@@ -180,15 +222,33 @@
     grid-column: 1;
     grid-row: 3;
     inline-size: fit-content;
-    width: 130px;
+    width: 145px;
+
+    [data-test='majorValue'] {
+        font-size: 14px;
+        line-height: 14px;
+        font-family: 'Splunk Platform Sans', 'Splunk Platform Sans', 'Proxima Nova', Roboto, Droid,
+            'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-weight: 400;
+        color: rgb(108, 118, 133);
+    }
 }
 
 #errors_tab_timerange_label_end_viz {
     grid-column: 1;
     grid-row: 3;
     inline-size: fit-content;
-    margin-left: 125px;
-    width: 130px;
+    margin-left: 140px;
+    width: 145px;
+
+    [data-test='majorValue'] {
+        font-size: 14px;
+        line-height: 14px;
+        font-family: 'Splunk Platform Sans', 'Splunk Platform Sans', 'Proxima Nova', Roboto, Droid,
+            'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-weight: 400;
+        color: rgb(108, 118, 133);
+    }
 }
 
 [data-test='status-icon-container'] {
