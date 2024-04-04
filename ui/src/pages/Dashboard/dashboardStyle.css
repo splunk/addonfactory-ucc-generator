@@ -15,9 +15,9 @@
  *
  */
 
- #dashboardTable [data-test="tab-bar"] button{
+#dashboardTable [data-test='tab-bar'] button {
     min-width: 115px;
- }
+}
 
 [data-input-id='overview_input'] {
     grid-column: 6 / 6;
