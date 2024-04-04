@@ -20,6 +20,11 @@ function getBuildDirPath() {
     return '';
 }
 
+/**
+ *
+ * @param {string} fileName name of json file in custom dir
+ * @param {string} setData callback, called with data as params
+ */
 function loadJson(fileName, setData) {
     fetch(/* webpackIgnore: true */ `${getBuildDirPath()}/custom/${fileName}`)
         .then((res) => res.json())
@@ -27,17 +32,12 @@ function loadJson(fileName, setData) {
             setData(external);
         })
         .catch((e) => {
+            // eslint-disable-next-line no-console
             console.error('Loading file failed: ', e);
         });
 }
 
 function DashboardPage() {
-    const themeToVariant = {
-        enterprise: { colorScheme: 'light', family: 'enterprise' },
-        enterpriseDark: { colorScheme: 'dark', family: 'enterprise' },
-        prisma: { colorScheme: 'dark', family: 'prisma' },
-    };
-
     const [overviewDef, setOverviewDef] = useState(null);
     const [dataIngestionDef, setDataIngestionDef] = useState(null);
     const [errorDef, setErrorDef] = useState(null);
@@ -62,36 +62,22 @@ function DashboardPage() {
                 {overviewDef ? (
                     <TabLayout
                         autoActivate
-                        defaultActivePanelId={'dataIngestionTabPanel'}
-                        onChange={(event, data) => {
-                            console.log({ event, data });
-                        }}
+                        defaultActivePanelId="dataIngestionTabPanel"
+                        id="dashboardTable"
                     >
                         {dataIngestionDef && (
-                            <TabLayout.Panel
-                                label="Data ingestion"
-                                panelId="dataIngestionTabPanel"
-                                style={{ minWidth: '150px' }}
-                            >
+                            <TabLayout.Panel label="Data ingestion" panelId="dataIngestionTabPanel">
                                 <DataIngestionDashboard dashboardDefinition={dataIngestionDef} />
                             </TabLayout.Panel>
                         )}
 
                         {errorDef && (
-                            <TabLayout.Panel
-                                label="Errors"
-                                panelId="errorsTabPanel"
-                                style={{ minWidth: '150px' }}
-                            >
+                            <TabLayout.Panel label="Errors" panelId="errorsTabPanel">
                                 <ErrorDashboard dashboardDefinition={errorDef} />
                             </TabLayout.Panel>
                         )}
                         {customDef && (
-                            <TabLayout.Panel
-                                label="Custom"
-                                panelId="customTabPanel"
-                                style={{ minWidth: '150px' }}
-                            >
+                            <TabLayout.Panel label="Custom" panelId="customTabPanel">
                                 <CustomDashboard dashboardDefinition={customDef} />
                             </TabLayout.Panel>
                         )}
