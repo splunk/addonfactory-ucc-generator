@@ -15,36 +15,40 @@
  *
  */
 
-[data-input-id="overview_input"] {
+ #dashboardTable [data-test="tab-bar"] button{
+    min-width: 115px;
+ }
+
+[data-input-id='overview_input'] {
     grid-column: 6 / 6;
     align-content: flex-end;
     grid-row: 3;
     place-self: end;
-    [data-test="input-container"] {
+    [data-test='input-container'] {
         display: inline-flex;
         padding: 0;
     }
-    [data-test="input-title-remove-container"]{
+    [data-test='input-title-remove-container'] {
         margin: 5px;
     }
-    [data-test="input-title"]{
+    [data-test='input-title'] {
         font-size: 14px;
     }
 }
 
-#overview_main_label_viz{
+#overview_main_label_viz {
     grid-column: 1 / 4;
     grid-row: 3;
     height: fit-content;
 }
 
-#main_page_label_viz{
+#main_page_label_viz {
     grid-column: 1 / span 4;
     grid-row: 1;
     height: fit-content;
 }
 
-#main_page_description_viz{
+#main_page_description_viz {
     grid-column: 1 / span 4;
     grid-row: 2;
 }
@@ -56,7 +60,7 @@
     width: 130px;
 }
 
-#overview_timerange_label_end_viz{
+#overview_timerange_label_end_viz {
     grid-column: 1;
     grid-row: 4;
     inline-size: fit-content;
@@ -66,30 +70,30 @@
 
 /* data ingestion */
 
-[data-input-id="data_ingestion_input"] {
+[data-input-id='data_ingestion_input'] {
     grid-column: 7 / 8;
     align-content: flex-end;
     grid-row: 2;
     place-self: end;
-    [data-test="input-container"] {
+    [data-test='input-container'] {
         display: inline-flex;
         padding: 0;
     }
-    [data-test="input-title-remove-container"]{
+    [data-test='input-title-remove-container'] {
         margin: 5px;
     }
-    [data-test="input-title"]{
+    [data-test='input-title'] {
         font-size: 14px;
     }
 }
 
-#data_ingestion_label_viz{
+#data_ingestion_label_viz {
     grid-column: 1 / span 4;
     grid-row: 1;
     height: fit-content;
 }
 
-#data_ingestion_description_viz{
+#data_ingestion_description_viz {
     grid-column: 1 / span 4;
     grid-row: 2;
     height: fit-content;
@@ -102,7 +106,7 @@
     width: 130px;
 }
 
-#data_ingestion_timerange_label_end_viz{
+#data_ingestion_timerange_label_end_viz {
     grid-column: 1;
     grid-row: 3;
     inline-size: fit-content;
@@ -110,7 +114,7 @@
     width: 130px;
 }
 
-#data_ingestion_table_viz{
+#data_ingestion_table_viz {
     grid-column: 1 / 8;
     height: 100%;
     max-height: 500px;
@@ -118,35 +122,35 @@
     margin-top: 100px;
 }
 
-#data_ingestion_data_volume_viz{
+#data_ingestion_data_volume_viz {
     grid-row: 4 / 6;
 }
 
-#data_ingestion_events_count_viz{
+#data_ingestion_events_count_viz {
     grid-row: 4 / 6;
 }
 
-#data_ingestion_search{
+#data_ingestion_search {
     grid-row: 6;
-    min-width: 150px;
+    width: 150px;
     grid-column: 1;
 }
 
-#data_ingestion_search_label{
-    margin: 8px 0 4px 0
+#data_ingestion_search_label {
+    margin: 8px 0 4px 0;
 }
 
-[data-input-id="data_ingestion_table_input"]{
+[data-input-id='data_ingestion_table_input'] {
     width: 200px;
     margin-left: 150px;
     grid-row: 6;
     grid-column: 1;
-    [data-test="input-title"]{
+    [data-test='input-title'] {
         font-size: 14px;
     }
 }
 
-#switch_hide_no_traffic_wrapper{
+#switch_hide_no_traffic_wrapper {
     grid-column: 1;
     grid-row: 6;
     width: 200px;
@@ -155,31 +159,31 @@
 
 /* error tab */
 
-[data-input-id="errors_tab_input"]{
+[data-input-id='errors_tab_input'] {
     grid-column: 5;
     align-content: flex-end;
     grid-row: 2;
     place-self: end;
-    [data-test="input-container"] {
+    [data-test='input-container'] {
         display: inline-flex;
         padding: 0;
     }
-    [data-test="input-title-remove-container"]{
+    [data-test='input-title-remove-container'] {
         margin: 5px;
     }
-    [data-test="input-title"]{
+    [data-test='input-title'] {
         font-size: 14px;
     }
 }
 
-#errors_tab_timerange_label_start_viz{
+#errors_tab_timerange_label_start_viz {
     grid-column: 1;
     grid-row: 3;
     inline-size: fit-content;
     width: 130px;
 }
 
-#errors_tab_timerange_label_end_viz{
+#errors_tab_timerange_label_end_viz {
     grid-column: 1;
     grid-row: 3;
     inline-size: fit-content;
@@ -187,6 +191,6 @@
     width: 130px;
 }
 
-[data-test="status-icon-container"]{
+[data-test='status-icon-container'] {
     z-index: 1;
 }

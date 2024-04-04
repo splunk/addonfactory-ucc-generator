@@ -1,134 +1,94 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import PropTypes from 'prop-types';
 import { DashboardCore } from '@splunk/dashboard-core';
 import { DashboardContextProvider } from '@splunk/dashboard-context';
 import EnterpriseViewOnlyPreset from '@splunk/dashboard-presets/EnterpriseViewOnlyPreset';
 import Search from '@splunk/react-ui/Search';
-import { waitForElementToDisplay, createNewQueryBasedOnSearchAndHideTraffic } from './utils';
-import { debounce } from 'lodash';
 import Switch from '@splunk/react-ui/Switch';
+import { debounce } from 'lodash';
+import {
+    waitForElementToDisplayAndMoveThemToCanvas,
+    createNewQueryBasedOnSearchAndHideTraffic,
+} from './utils';
 
 let apiReference = null;
 export const DataIngestionDashboard = ({ dashboardDefinition }) => {
+    const [searchInput, setSearchInput] = useState('');
+    const [toggleNoTraffic, setToggleNoTraffic] = useState(false);
+
     useEffect(() => {
-        waitForElementToDisplay(
+        waitForElementToDisplayAndMoveThemToCanvas(
             '[data-input-id="data_ingestion_input"]',
-            '#data_ingestion_label_viz',
-            () => {
-                const overviewTimeInput = document.querySelector(
-                    '[data-input-id="data_ingestion_input"]'
-                );
-                const overViewContainer = document.querySelector('#data_ingestion_label_viz');
-                overViewContainer?.after(overviewTimeInput);
-            },
-            300,
-            5000
-        );
-        waitForElementToDisplay(
-            '[data-input-id="data_ingestion_table_input"]',
-            '#data_ingestion_table_viz',
-            () => {
-                const overviewTimeInput = document.querySelector(
-                    '[data-input-id="data_ingestion_table_input"]'
-                );
-                const overViewContainer = document.querySelector('#data_ingestion_table_viz');
-                overViewContainer?.before(overviewTimeInput);
-            },
-            300,
-            5000
-        );
-        waitForElementToDisplay(
-            '#data_ingestion_table_viz',
-            '#data_ingestion_search',
-            () => {
-                const overviewSearch = document.querySelector('#data_ingestion_search');
-                const overViewContainer = document.querySelector('#data_ingestion_table_viz');
-                overViewContainer?.before(overviewSearch);
-            },
-            300,
-            5000
-        );
-        waitForElementToDisplay(
-            '#data_ingestion_table_viz',
-            '#switch_hide_no_traffic_wrapper',
-            () => {
-                const overviewSearch = document.querySelector('#switch_hide_no_traffic_wrapper');
-                const overViewContainer = document.querySelector('#data_ingestion_table_viz');
-                overViewContainer?.before(overviewSearch);
-            },
-            300,
-            5000
+            '#data_ingestion_label_viz'
         );
 
-        // Select the node that will be observed for mutations
+        waitForElementToDisplayAndMoveThemToCanvas(
+            '[data-input-id="data_ingestion_table_input"]',
+            '#data_ingestion_table_viz'
+        );
+
+        waitForElementToDisplayAndMoveThemToCanvas(
+            '#data_ingestion_search',
+            '#data_ingestion_table_viz'
+        );
+
+        waitForElementToDisplayAndMoveThemToCanvas(
+            '#switch_hide_no_traffic_wrapper',
+            '#data_ingestion_table_viz'
+        );
         const targetNode = document.querySelector(
             '[data-input-id="data_ingestion_table_input"] button'
         );
-
-        // Options for the observer (which mutations to observe)
         const config = { attributes: true };
-
-        // Callback function to execute when mutations are observed
-        const callback = function (mutationsList) {
-            for (const mutation of mutationsList) {
+        const callback = (mutationsList) => {
+            mutationsList.forEach((mutation) => {
                 if (mutation.attributeName === 'data-test-value') {
-                    tryToRevertDefinitionToNormal();
+                    apiReference?.updateDefinition(dashboardDefinition);
+                    setSearchInput('');
+                    setToggleNoTraffic(false);
                 }
-            }
+            });
         };
-
-        // Create an observer instance linked to the callback function
+        // mutation is used to detect if dropdown value is changed
+        // todo: do a better solution
         const observer = new MutationObserver(callback);
 
-        // Start observing the target node for configured mutations
         observer.observe(targetNode, config);
         return () => {
             observer.disconnect();
         };
-        // Later, you can stop observing
-    }, []);
-
-    const tryToRevertDefinitionToNormal = () => {
-        apiReference.updateDefinition(dashboardDefinition);
-        setSearchInput('');
-        setToggleNoTraffic(false);
-    };
-
-    const [searchInput, setSearchInput] = useState('');
-    const [toggleNoTraffic, setToggleNoTraffic] = useState(false);
+    }, [dashboardDefinition]);
 
     const setDashboardCoreApi = (api) => {
         apiReference = api;
     };
 
-    const handleQueryChange = (searchValue, hideToggleValue) => {
-        const copyJson = JSON.parse(JSON.stringify(dashboardDefinition));
+    const debounceHandlerChangeData = useMemo(
+        () =>
+            debounce((searchValue, hideToggleValue) => {
+                const copyJson = JSON.parse(JSON.stringify(dashboardDefinition));
 
-        if (copyJson?.inputs?.data_ingestion_table_input?.options?.items?.length > 0) {
-            const selectedLabel =
-                document
-                    ?.querySelector('[data-input-id="data_ingestion_table_input"] button')
-                    ?.getAttribute('label') || 'Source type';
+                if (copyJson?.inputs?.data_ingestion_table_input?.options?.items?.length > 0) {
+                    const selectedLabel =
+                        document
+                            ?.querySelector('[data-input-id="data_ingestion_table_input"] button')
+                            ?.getAttribute('label') || 'Source type';
 
-            const item = copyJson.inputs.data_ingestion_table_input.options.items.find(
-                (it) => it.label === selectedLabel
-            );
+                    const item = copyJson.inputs.data_ingestion_table_input.options.items.find(
+                        (it) => it.label === selectedLabel
+                    );
 
-            const newQuery = createNewQueryBasedOnSearchAndHideTraffic(
-                searchValue,
-                hideToggleValue,
-                item.value,
-                selectedLabel
-            );
-            copyJson.dataSources.data_ingestion_table_ds.options.query = newQuery;
-            apiReference.updateDefinition(copyJson);
-        }
-    };
-
-    const debounceHandlerChangeData = useCallback(
-        debounce((searchValue, hideToggleValue) => {
-            handleQueryChange(searchValue, hideToggleValue);
-        }, 1000),
-        []
+                    const newQuery = createNewQueryBasedOnSearchAndHideTraffic(
+                        searchValue,
+                        hideToggleValue,
+                        item.value,
+                        selectedLabel
+                    );
+                    copyJson.dataSources.data_ingestion_table_ds.options.query = newQuery;
+                    apiReference.updateDefinition(copyJson);
+                }
+            }, 1000),
+        [dashboardDefinition]
     );
 
     const handleChangeSearch = (e, { value }) => {
@@ -146,15 +106,11 @@ export const DataIngestionDashboard = ({ dashboardDefinition }) => {
             <DashboardContextProvider
                 preset={EnterpriseViewOnlyPreset}
                 initialDefinition={dashboardDefinition}
-                onItemsSelect={(x) => console.log(x)}
-                onDefinitionChange={(x, y) => console.log('definition was changed0', { x, y })}
             >
                 <DashboardCore
                     width="100%"
                     height="auto"
                     dashboardCoreApiRef={setDashboardCoreApi}
-                    onItemsSelect={(x) => console.log(x)}
-                    onClick={(x) => console.log(x)}
                 />
             </DashboardContextProvider>
             <div id="data_ingestion_search">
@@ -180,4 +136,8 @@ export const DataIngestionDashboard = ({ dashboardDefinition }) => {
             </div>
         </>
     );
+};
+
+DataIngestionDashboard.propTypes = {
+    dashboardDefinition: PropTypes.object,
 };

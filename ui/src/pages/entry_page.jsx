@@ -5,7 +5,7 @@ import { SplunkThemeProvider } from '@splunk/themes';
 import { WaitSpinnerWrapper } from '../components/table/CustomTableStyle';
 
 import { StyledContainer, ThemeProviderSettings } from './EntryPageStyle';
-import {PAGE_CONF, PAGE_DASHBOARD, PAGE_INPUT} from '../constants/pages';
+import { PAGE_CONF, PAGE_DASHBOARD, PAGE_INPUT } from '../constants/pages';
 import ConfigManager from '../util/configManager';
 import messageDict from '../constants/messageDict';
 import { getBuildDirPath } from '../util/script';

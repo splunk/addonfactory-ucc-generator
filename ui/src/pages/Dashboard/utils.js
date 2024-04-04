@@ -11,12 +11,32 @@ export const waitForElementToDisplay = (
             callback();
         } else {
             setTimeout(() => {
-                if (Date.now() - startTimeInMs > timeoutInMs) return;
+                if (Date.now() - startTimeInMs > timeoutInMs) {
+                    return;
+                }
                 loopSearch();
             }, checkFrequencyInMs);
         }
     };
     loopSearch();
+};
+
+/**
+ * @param {string} elemSelector
+ * @param {string} containerSelector
+ */
+export const waitForElementToDisplayAndMoveThemToCanvas = (elemSelector, containerSelector) => {
+    waitForElementToDisplay(
+        elemSelector,
+        containerSelector,
+        () => {
+            const element = document.querySelector(elemSelector);
+            const container = document.querySelector(containerSelector);
+            container?.before(element);
+        },
+        300,
+        5000
+    );
 };
 
 const queryMap = {
@@ -28,20 +48,18 @@ const queryMap = {
 };
 
 /**
- * 
+ *
  * @param {string} searchValue value of search input
  * @param {boolean} hideToggleValue state of toggle input
  * @param {string} oldQuery current query
  * @param {string} selectedLabel current selected query type
- * @returns 
  */
 export const createNewQueryBasedOnSearchAndHideTraffic = (
     searchValue,
     hideToggleValue,
     oldQuery,
-    selectedLabel,
+    selectedLabel
 ) => {
-
     const firstPipeIndex = oldQuery.indexOf('|');
     const part1 = oldQuery.substring(0, firstPipeIndex);
     const afterPart1 = oldQuery.substring(firstPipeIndex);

@@ -1,27 +1,17 @@
-import React, { useEffect, useState } from 'react';
-
+import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { DashboardCore } from '@splunk/dashboard-core';
 import { DashboardContextProvider } from '@splunk/dashboard-context';
 import EnterpriseViewOnlyPreset from '@splunk/dashboard-presets/EnterpriseViewOnlyPreset';
-import { waitForElementToDisplay } from './utils';
+import { waitForElementToDisplayAndMoveThemToCanvas } from './utils';
 
 export const ErrorDashboard = ({ dashboardDefinition }) => {
-
-    useEffect(()=>{
-        waitForElementToDisplay(
+    useEffect(() => {
+        waitForElementToDisplayAndMoveThemToCanvas(
             '[data-input-id="errors_tab_input"]',
-            '#errors_tab_description_viz',
-            () => {
-                const overviewTimeInput = document.querySelector(
-                    '[data-input-id="errors_tab_input"]'
-                );
-                const overViewContainer = document.querySelector('#errors_tab_description_viz');
-                overViewContainer?.after(overviewTimeInput);
-            },
-            300,
-            5000
+            '#errors_tab_description_viz'
         );
-    },[])
+    }, []);
 
     return dashboardDefinition ? (
         <DashboardContextProvider
@@ -31,4 +21,8 @@ export const ErrorDashboard = ({ dashboardDefinition }) => {
             <DashboardCore width="100%" height="auto" />
         </DashboardContextProvider>
     ) : null;
+};
+
+ErrorDashboard.propTypes = {
+    dashboardDefinition: PropTypes.object,
 };
