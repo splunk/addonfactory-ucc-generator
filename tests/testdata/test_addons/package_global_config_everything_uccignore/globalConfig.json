@@ -1300,6 +1300,7 @@
             "name": "test_alert",
             "label": "Test Alert",
             "description": "Description for test Alert Action",
+            "iconFileName": "test icon.png",
             "activeResponse": {
                 "task": [
                     "Create",
@@ -1349,12 +1350,12 @@
                     "options": {
                         "items": [
                             {
-                                "value": "Incident",
-                                "label": "incident"
+                                "value": "incident",
+                                "label": "Incident"
                             },
                             {
-                                "value": "Problem",
-                                "label": "problem"
+                                "value": "problem",
+                                "label": "Problem"
                             }
                         ]
                     },
@@ -1369,18 +1370,18 @@
                     "options": {
                         "items": [
                             {
-                                "value": "Update",
-                                "label": "update"
+                                "value": "update",
+                                "label": "Update"
                             },
                             {
-                                "value": "Delete",
-                                "label": "delete"
+                                "value": "delete",
+                                "label": "Delete"
                             }
                         ]
                     },
                     "help": "Select the action you want to perform",
                     "required": true,
-                    "defaultValue": "two"
+                    "defaultValue": "update"
                 },
                 {
                     "type": "singleSelectSplunkSearch",
@@ -1410,9 +1411,9 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.40.0R84ad898f",
+        "version": "5.41.0Rec8cd298",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.3",
-        "_uccVersion": "5.40.0"
+        "_uccVersion": "5.41.0"
     }
 }

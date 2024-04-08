@@ -93,6 +93,7 @@ class AlertActionsConfGeneration:
                 "largeIcon",
                 "smallIcon",
                 "index",
+                "iconFileName",  # it is a config from globalConfig that gets written to icon_path
             ]
         )
         alerts: Dict[str, Any] = {}
@@ -109,6 +110,9 @@ class AlertActionsConfGeneration:
                     value = f"param._cam = {json.dumps(new_cam)}"
                     alerts[alert_name].append(value)
                 elif k == "alert_props":
+                    alert["alert_props"]["icon_path"] = alert.get(
+                        "iconFileName", alert["alert_props"]["icon_path"]
+                    )
                     for pk, pv in v.items():
                         value = f"{str(pk).strip()} = {str(pv).strip()}"
                         alerts[alert_name].append(value)
