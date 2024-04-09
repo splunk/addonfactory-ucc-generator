@@ -7,6 +7,7 @@
   "VERSION                                                                         created\u001b[0m": "INFO",
   "\u001b[31mbin/import_declare_test.py                                                      conflict\u001b[0m": "INFO",
   "\u001b[32mbin/my_first_input.py                                                           copied\u001b[0m": "INFO",
+  "bin/my_first_input_helper.py                                                    created\u001B[0m": "INFO",
   "\u001b[31mbin/test_addon_rh_account.py                                                    conflict\u001b[0m": "INFO",
   "bin/test_addon_rh_my_first_input.py                                             created\u001b[0m": "INFO",
   "bin/test_addon_rh_settings.py                                                   created\u001b[0m": "INFO",

@@ -507,6 +507,7 @@
             "services": [
                 {
                     "name": "example_input_one",
+                    "inputHelperModule": "helper_one",
                     "warning": {
                         "create": {
                             "message": "Some warning for account text create"
@@ -792,6 +793,7 @@
                 },
                 {
                     "name": "example_input_two",
+                    "inputHelperModule": "helper_two",
                     "entity": [
                         {
                             "type": "text",
@@ -1410,9 +1412,9 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.40.0R84ad898f",
+        "version": "5.41.0R8098a302",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.3",
-        "_uccVersion": "5.40.0"
+        "_uccVersion": "5.41.0"
     }
 }
