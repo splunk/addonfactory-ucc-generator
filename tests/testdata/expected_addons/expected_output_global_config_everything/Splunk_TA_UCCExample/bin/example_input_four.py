@@ -25,7 +25,6 @@ class EXAMPLE_INPUT_FOUR(smi.Script):
                 required_on_create=True
             )
         )
-        
         return scheme
 
     def validate_input(self, definition: smi.ValidationDefinition):
