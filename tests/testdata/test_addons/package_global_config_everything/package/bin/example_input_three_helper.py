@@ -8,13 +8,13 @@ def validate_input(definition: smi.ValidationDefinition):
 
 
 def stream_events(inputs: smi.InputDefinition, ew: smi.EventWriter):
-    # INPUT 1
+    # INPUT 3
     input_items = [{'count': len(inputs.inputs)}]
     for input_name, input_item in inputs.inputs.items():
         input_item['name'] = input_name
         input_items.append(input_item)
     event = smi.Event(
         data=json.dumps(input_items),
-        sourcetype='example_input_one',
+        sourcetype='example_input_three',
     )
     ew.write_event(event)

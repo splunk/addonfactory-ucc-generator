@@ -658,7 +658,7 @@
             "services": [
                 {
                     "name": "example_input_one",
-                    "inputHelperModuleValidateInput": "helper_one",
+                    "inputHelperModule": "helper_one",
                     "warning": {
                         "create": {
                             "message": "Some warning for account text create"
@@ -944,7 +944,7 @@
                 },
                 {
                     "name": "example_input_two",
-                    "inputHelperModuleStreamEvents": "helper_one",
+                    "inputHelperModule": "helper_two",
                     "entity": [
                         {
                             "type": "text",
@@ -1264,8 +1264,6 @@
                 {
                     "name": "example_input_three",
                     "restHandlerName": "splunk_ta_uccexample_rh_three_custom",
-                    "inputHelperModuleStreamEvents": "helper_common",
-                    "inputHelperModuleValidateInput": "helper_one",
                     "entity": [
                         {
                             "type": "text",
@@ -1308,7 +1306,6 @@
                     "name": "example_input_four",
                     "restHandlerModule": "splunk_ta_uccexample_custom_rh",
                     "restHandlerClass": "CustomRestHandler",
-                    "inputHelperModule": "helper_common",
                     "entity": [
                         {
                             "type": "text",
@@ -1566,7 +1563,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.41.0Ra836b9f7",
+        "version": "5.41.0R1d87378e",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.3",
         "_uccVersion": "5.41.0"

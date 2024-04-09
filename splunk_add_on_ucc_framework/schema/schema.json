@@ -1472,14 +1472,6 @@
                     "type": "string",
                     "maxLength": 100
                   },
-                  "inputHelperModuleValidateInput": {
-                    "type": "string",
-                    "maxLength": 100
-                  },
-                  "inputHelperModuleStreamEvents": {
-                    "type": "string",
-                    "maxLength": 100
-                  },
                   "warning": {
                     "$ref": "#/definitions/WarningMessage"
                   }

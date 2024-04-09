@@ -144,6 +144,8 @@ def _add_modular_input(
         # filter fields in allow list
         entity = [x for x in entity if x.get("field") not in field_allow_list]
 
+        input_helper_module = service.get("inputHelperModule", f"{input_name}_helper")
+
         content = (
             utils.get_j2_env()
             .get_template(template)
@@ -152,18 +154,27 @@ def _add_modular_input(
                 class_name=class_name,
                 description=description,
                 entity=entity,
-                input_helper_module=service.get("inputHelperModule"),
-                input_helper_module_stream_events=service.get(
-                    "inputHelperModuleStreamEvents"
-                ),
-                input_helper_module_validate_input=service.get(
-                    "inputHelperModuleValidateInput"
-                ),
+                input_helper_module=input_helper_module,
             )
         )
         input_file_name = os.path.join(outputdir, ta_name, "bin", input_name + ".py")
         with open(input_file_name, "w") as input_file:
             input_file.write(content)
+
+        helper_filename = os.path.join(
+            outputdir, ta_name, "bin", f"{input_helper_module}.py"
+        )
+
+        if not os.path.exists(helper_filename):
+            content = (
+                utils.get_j2_env()
+                .get_template("helper_module.template")
+                .render(
+                    input_name=input_name,
+                )
+            )
+            with open(helper_filename, "w") as helper_file:
+                helper_file.write(content)
 
         input_default = os.path.join(outputdir, ta_name, "default", "inputs.conf")
         config = configparser.ConfigParser()
