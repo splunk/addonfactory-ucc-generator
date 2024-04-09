@@ -121,7 +121,7 @@ def _generate_addon(
     package_bin_input_path = os.path.join(package_bin_path, f"{addon_input_name}.py")
     input_rendered_content = (
         utils.get_j2_env()
-        .get_template("input.name.init-template")
+        .get_template("input.template")
         .render(
             addon_name=addon_name,
             addon_rest_root=addon_rest_root,
@@ -132,6 +132,22 @@ def _generate_addon(
     )
     with open(package_bin_input_path, "w") as _f:
         _f.write(input_rendered_content + "\n")
+
+    package_bin_helper_path = os.path.join(
+        package_bin_path, f"{addon_input_name}_helper.py"
+    )
+    helper_rendered_content = (
+        utils.get_j2_env()
+        .get_template("helper_module.init-template")
+        .render(
+            addon_name=addon_name,
+            addon_rest_root=addon_rest_root,
+            addon_input_name=addon_input_name,
+        )
+    )
+    with open(package_bin_helper_path, "w") as _f:
+        _f.write(helper_rendered_content + "\n")
+
     package_lib_path = os.path.join(package_path, "lib")
     os.makedirs(package_lib_path)
     package_lib_requirements_path = os.path.join(package_lib_path, "requirements.txt")
