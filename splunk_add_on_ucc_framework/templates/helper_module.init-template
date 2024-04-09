@@ -1,6 +1,5 @@
 import json
 import logging
-import sys
 
 import import_declare_test
 from solnlib import conf_manager, log
