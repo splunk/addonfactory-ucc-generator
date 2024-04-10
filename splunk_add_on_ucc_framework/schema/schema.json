@@ -975,7 +975,8 @@
               }
             ]
           }
-        }
+        },
+        "required" : true
       },
       "required": ["field", "label", "type", "options"],
       "additionalProperties": false

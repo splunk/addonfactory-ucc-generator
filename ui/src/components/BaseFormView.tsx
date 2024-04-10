@@ -944,7 +944,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
     ) => {
         const index = this.entities?.findIndex((x) => x.field === field);
         const validator = [{ type: 'custom', validatorFunc }];
-        if (index && this.entities?.[index]) {
+        if (index!=undefined && this.entities?.[index]) {
             // here the validators already exist for entities so new type is created here
             // @ts-expect-error todo create a generalized type to also consider it
             this.entities[index].validators = validator;
