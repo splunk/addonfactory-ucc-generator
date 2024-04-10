@@ -20,6 +20,7 @@ ACCOUNT_CONFIG = {
     "redirect_url": "",
     "endpoint": "",
     "example_help_link": "",
+    "url": "https://test.example.com",
 }
 
 
@@ -786,6 +787,7 @@ class TestAccount(UccTester):
             "disabled": False,
             "password": "******",
             "token": "******",
+            'url': 'https://test.example.com'
         }
 
     @pytest.mark.execute_enterprise_cloud_true
@@ -963,6 +965,7 @@ class TestAccount(UccTester):
             "disabled": False,
             "password": "TestEditPassword",
             "token": "TestEditToken",
+            'url': 'https://test.example.com'
         }
 
     @pytest.mark.execute_enterprise_cloud_true
@@ -994,6 +997,7 @@ class TestAccount(UccTester):
             "disabled": False,
             "password": "TestEditPassword",
             "token": "TestEditToken",
+            'url': 'https://test.example.com'
         }
 
     @pytest.mark.execute_enterprise_cloud_true
@@ -1086,3 +1090,114 @@ class TestAccount(UccTester):
         self.assert_util(account.entity.username.get_value, ACCOUNT_CONFIG["username"])
         self.assert_util(account.entity.password.get_value, "")
         self.assert_util(account.entity.security_token.get_value, "")
+
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.account
+    @pytest.mark.forwarder
+    def test_account_title_and_description(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
+    ):
+        """Verifies title and discription"""
+        account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        self.assert_util(account.title.wait_to_display, "Configuration")
+        self.assert_util(
+            account.description.wait_to_display,
+            "Set up your add-on",
+        )
+
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.account
+    @pytest.mark.forwarder
+    def test_account_valid_input_account_name(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
+    ):
+        """Verifies validation of field account_name"""
+        account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        account.entity.open()
+        account.entity.name.set_value("1234")
+        account.entity.URL.set_value(ACCOUNT_CONFIG.get("url"))
+        if account.entity.auth_type.get_value() == "oauth":
+            account.entity.auth_type.select(ACCOUNT_CONFIG.get("auth_type"))
+        account.entity.username.set_value(ACCOUNT_CONFIG.get("username"))
+        account.entity.password.set_value(ACCOUNT_CONFIG.get("password"))
+        self.assert_util(
+            account.entity.save,
+            "Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+            left_args={"expect_error": True},
+        )
+
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.account
+    @pytest.mark.forwarder
+    def test_account_valid_length_account_name(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
+    ):
+        """Verifies character lenth of field account_name"""
+        account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        account.entity.open()
+        account.entity.name.set_value(ACCOUNT_CONFIG.get("name") * 10)
+        account.entity.URL.set_value(ACCOUNT_CONFIG.get("url"))
+        if account.entity.auth_type.get_value() == "oauth":
+            account.entity.auth_type.select(ACCOUNT_CONFIG.get("auth_type"))
+        account.entity.username.set_value(ACCOUNT_CONFIG.get("username"))
+        account.entity.password.set_value(ACCOUNT_CONFIG.get("password"))
+        self.assert_util(
+            account.entity.save,
+            "Length of ID should be between 1 and 50",
+            left_args={"expect_error": True},
+        )
+
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.account
+    @pytest.mark.forwarder
+    def test_account_select_value_auth_type(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
+    ):
+        """Select the all the values from single select and verifies the selected value"""
+        account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        account.entity.open()
+        auth_value_dict = {
+            "basic": "Basic Authentication",
+            "oauth": "OAuth 2.0 Authentication",
+        }
+        for auth_type_value, auth_type_name in auth_value_dict.items():
+            if account.entity.auth_type.get_value() != auth_type_value:
+                account.entity.auth_type.select(auth_type_name)
+            self.assert_util(account.entity.auth_type.get_value, auth_type_value)
+
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.account
+    @pytest.mark.forwarder
+    def test_account_add_reserved_value_account_name(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
+    ):
+        """Select the all the values from single select and verifies the selected value"""
+        account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        account.entity.open()
+        account.entity.name.set_value("default")
+        account.entity.URL.set_value(ACCOUNT_CONFIG.get("url"))
+        if account.entity.auth_type.get_value() == "oauth":
+            account.entity.auth_type.select(ACCOUNT_CONFIG.get("auth_type"))
+        account.entity.username.set_value(ACCOUNT_CONFIG.get("username"))
+        account.entity.password.set_value(ACCOUNT_CONFIG.get("password"))
+        self.assert_util(
+            account.entity.save(expect_error=True),
+            r'"default", ".", "..", string started with "_" and string including any one of ["*", "\", "[", "]", "(", ")", "?", ":"] are reserved value which cannot be used for field Name',  # noqa: E501
+        )
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.account
+    @pytest.mark.forwarder
+    def test_account_url_validation(self, ucc_smartx_selenium_helper,  ucc_smartx_rest_helper):
+        account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        account.entity.open()
+        account.entity.name.set_value(ACCOUNT_CONFIG.get("name"))
+        invalid_url = "invalid_url"
+        account.entity.URL.set_value(invalid_url)
+        self.assert_util(account.entity.save(expect_error=True),
+                         "Invalid URL provided. URL should start with 'https' as only secure URLs are supported. Provide URL in this format")
