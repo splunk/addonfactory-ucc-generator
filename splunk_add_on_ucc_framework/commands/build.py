@@ -138,8 +138,12 @@ def _add_modular_input(
         entity = service.get("entity")
         field_allow_list = frozenset(["name", "interval", "index", "sourcetype"])
         template = "input.template"
+
         if "template" in service:
             template = service.get("template") + ".template"
+            helper_module = None
+        else:
+            helper_module = "input.module-template"
 
         # filter fields in allow list
         entity = [x for x in entity if x.get("field") not in field_allow_list]
@@ -165,10 +169,10 @@ def _add_modular_input(
             outputdir, ta_name, "bin", f"{input_helper_module}.py"
         )
 
-        if not os.path.exists(helper_filename):
+        if helper_module is not None and not os.path.exists(helper_filename):
             content = (
                 utils.get_j2_env()
-                .get_template("input.module-template")
+                .get_template(helper_module)
                 .render(
                     input_name=input_name,
                 )
