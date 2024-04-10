@@ -144,7 +144,7 @@ def _generate_addon(
     )
     helper_rendered_content = (
         utils.get_j2_env()
-        .get_template("helper_module.init-template")
+        .get_template("input.helper-init-template")
         .render(
             addon_name=addon_name,
             addon_rest_root=addon_rest_root,

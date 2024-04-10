@@ -168,7 +168,7 @@ def _add_modular_input(
         if not os.path.exists(helper_filename):
             content = (
                 utils.get_j2_env()
-                .get_template("helper_module.template")
+                .get_template("input.module-template")
                 .render(
                     input_name=input_name,
                 )
