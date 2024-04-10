@@ -493,19 +493,18 @@ def test_ucc_generate_with_everything_uccignore(caplog):
             f"{temp_dir}/Splunk_TA_UCCExample/bin/wrong_pattern"
         )
 
-        edm_lines = [
-            "Removed:",
-            f"\n{temp_dir}/Splunk_TA_UCCExample/bin/splunk_ta_uccexample_rh_example_input_one.py",
-            f"\n{temp_dir}/Splunk_TA_UCCExample/bin/helper_one.py",
-            f"\n{temp_dir}/Splunk_TA_UCCExample/bin/example_input_one.py",
-            f"\n{temp_dir}/Splunk_TA_UCCExample/bin/splunk_ta_uccexample_rh_example_input_two.py",
-        ]
-        edm1 = "".join(edm_lines)
-        edm_lines[1:3] = edm_lines[2:0:-1]  # swap first two paths
-        edm2 = "".join(edm_lines)
+        edm_paths = {
+            f"{temp_dir}/Splunk_TA_UCCExample/bin/splunk_ta_uccexample_rh_example_input_one.py",
+            f"{temp_dir}/Splunk_TA_UCCExample/bin/helper_one.py",
+            f"{temp_dir}/Splunk_TA_UCCExample/bin/example_input_one.py",
+            f"{temp_dir}/Splunk_TA_UCCExample/bin/splunk_ta_uccexample_rh_example_input_two.py",
+        }
+        removed = set(
+            caplog.text.split("Removed:", 1)[1].split("INFO")[0].strip().split("\n")
+        )
 
         assert expected_warning_msg in caplog.text
-        assert edm1 in caplog.text or edm2 in caplog.text
+        assert edm_paths == removed
 
         expected_folder = path.join(
             path.dirname(__file__),
