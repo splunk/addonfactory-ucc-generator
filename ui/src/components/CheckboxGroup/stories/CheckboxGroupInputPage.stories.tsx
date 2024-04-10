@@ -40,8 +40,7 @@ type Story = StoryObj<typeof BaseFormView>;
 export const InputPageView: Story = {};
 
 export const RequiredView: Story = {
-
-    args : {
+    args: {
         globalConfig: checkboxGroupRequiredConfig,
     },
     play: async ({ canvasElement }) => {
