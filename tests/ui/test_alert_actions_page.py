@@ -89,7 +89,7 @@ class TestAlertActions(UccTester):
             alert_page.action_entity.table_list.list_of_values, ["Incident", "Problem"]
         )
         alert_page.action_entity.table_list.select("Problem")
-        self.assert_util(alert_page.action_entity.table_list.get_value, "problem")
+        self.assert_util(alert_page.action_entity.table_list.get_value, "Problem")
 
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
