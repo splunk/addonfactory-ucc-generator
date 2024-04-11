@@ -15,7 +15,6 @@
 #
 import logging
 import os
-import shutil
 
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
@@ -43,15 +42,12 @@ def generate_alerts(
         global_config.namespace,
     )
     package_dir = os.path.join(output_dir, addon_name)
-    shutil.copy(
-        os.path.join(internal_source_dir, "static", "alerticon.png"),
-        os.path.join(package_dir, "appserver", "static"),
-    )
     schema_content = envs["schema.content"]
 
     conf_gen = alert_actions_conf_gen.AlertActionsConfGeneration(
         input_setting=schema_content,
         package_path=package_dir,
+        internal_source_path=internal_source_dir,
     )
     conf_gen.handle()
 

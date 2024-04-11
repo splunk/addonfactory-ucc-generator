@@ -39,7 +39,7 @@ def remove_alert_from_conf_file(alert: Any, conf_file: str) -> None:
         return
 
     if not isinstance(alert, dict):
-        msg = 'alert="{}", event="alert is not a dict, don\'t remove anything form file {}"'.format(
+        msg = 'alert="{}", event="alert is not a dict, don\'t remove anything from file {}"'.format(
             alert, conf_file
         )
         raise aae.AlertCleaningFormatFailure(msg)
