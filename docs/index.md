@@ -37,6 +37,7 @@ The `splunk-add-on-ucc-framework`:
 * generates the monitoring dashboard (for more information, see [here](dashboard.md)).
 * it possibly extends the UI with custom codes (for more information, see [here](custom_ui_extensions/custom_hook.md)).
 * it possibly extends the build process via a `additional_packaging.py` file (more information, [here](additional_packaging.md)).
+* generates the necessary files defined for the Alert Action, if defined in globalConfig (for more informaiton, see [here](alert_actions/index.md)).
 
 ## Installation
 
