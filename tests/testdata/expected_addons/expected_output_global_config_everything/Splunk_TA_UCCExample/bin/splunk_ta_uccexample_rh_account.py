@@ -30,6 +30,15 @@ fields = [
         validator=None
     ), 
     field.RestField(
+        'url',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=validator.Pattern(
+            regex=r"""^(https://)[^/]+/?$""", 
+        )
+    ), 
+    field.RestField(
         'account_checkbox',
         required=False,
         encrypted=False,
