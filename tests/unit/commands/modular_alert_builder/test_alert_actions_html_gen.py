@@ -15,7 +15,7 @@ def test_generate_alert_action(tmp_path):
                     "label": "Test Alert",
                     "description": "Description for test Alert Action",
                     "short_name": "test_alert",
-                    "active_response": {
+                    "adaptive_response": {
                         "task": ["Create", "Update"],
                         "subject": ["endpoint"],
                         "category": [

@@ -1,5 +1,5 @@
 import os
-
+import unittest.mock
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
     alert_actions_conf_gen,
 )
@@ -7,6 +7,8 @@ from tests.unit.helpers import get_testdata_file
 
 
 def test_generate_alert_action(tmp_path):
+    # mocking the shutil as we don't actually need to create the files
+    alert_actions_conf_gen.shutil = unittest.mock.MagicMock()
     conf_gen = alert_actions_conf_gen.AlertActionsConfGeneration(
         input_setting={
             "short_name": "splunk_ta_uccexample",
@@ -15,7 +17,7 @@ def test_generate_alert_action(tmp_path):
                     "label": "Test Alert",
                     "description": "Description for test Alert Action",
                     "short_name": "test_alert",
-                    "active_response": {
+                    "adaptive_response": {
                         "task": ["Create", "Update"],
                         "subject": ["endpoint"],
                         "category": [
@@ -91,6 +93,11 @@ def test_generate_alert_action(tmp_path):
             ],
         },
         package_path=tmp_path,
+        internal_source_path=os.path.dirname(
+            os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+        )
+        + os.path.sep
+        + "testdata",
     )
     conf_gen.handle()
 
