@@ -15,8 +15,9 @@
 #
 import json
 import logging
-from os import linesep, makedirs, path as op
-import shutil
+import os
+from os import linesep
+from os import path as op
 from typing import Dict, Any
 
 from jinja2 import Environment, FileSystemLoader
@@ -39,7 +40,6 @@ class AlertActionsConfGeneration:
         self,
         input_setting: Dict[str, Any],
         package_path: str,
-        internal_source_path: str,
     ) -> None:
         self._alert_conf_name = "alert_actions.conf"
         self._alert_spec_name = "alert_actions.conf.spec"
@@ -47,7 +47,6 @@ class AlertActionsConfGeneration:
         self._tags_conf = "tags.conf"
         self._alert_settings = input_setting[ac.MODULAR_ALERTS]
         self._package_path = package_path
-        self._internal_source_path = internal_source_path
         # nosemgrep: splunk.autoescape-disabled, python.jinja2.security.audit.autoescape-disabled.autoescape-disabled
         self._templates = Environment(
             loader=FileSystemLoader(
@@ -68,14 +67,14 @@ class AlertActionsConfGeneration:
     def get_local_conf_file_path(self, conf_name: str) -> str:
         local_path = op.join(self._package_path, "default")
         if not op.exists(local_path):
-            makedirs(local_path)
+            os.makedirs(local_path)
 
         return op.join(local_path, conf_name)
 
     def get_spec_file_path(self) -> str:
         readme_path = op.join(self._package_path, "README")
         if not op.exists(readme_path):
-            makedirs(readme_path)
+            os.makedirs(readme_path)
         return op.join(readme_path, self._alert_spec_name)
 
     def generate_conf(self) -> None:
@@ -94,7 +93,6 @@ class AlertActionsConfGeneration:
                 "largeIcon",
                 "smallIcon",
                 "index",
-                "iconFileName",  # it is a config from globalConfig that gets written to icon_path
             ]
         )
         alerts: Dict[str, Any] = {}
@@ -111,16 +109,6 @@ class AlertActionsConfGeneration:
                     value = f"param._cam = {json.dumps(new_cam)}"
                     alerts[alert_name].append(value)
                 elif k == "alert_props":
-                    if alert.get("iconFileName", "alerticon.png") != "alerticon.png":
-                        alert["alert_props"]["icon_path"] = alert["iconFileName"]
-                    else:
-                        # we copy UCC framework's alerticon.png only when a custom isn't provided
-                        shutil.copy(
-                            op.join(
-                                self._internal_source_path, "static", "alerticon.png"
-                            ),
-                            op.join(self._package_path, "appserver", "static"),
-                        )
                     for pk, pv in v.items():
                         value = f"{str(pk).strip()} = {str(pv).strip()}"
                         alerts[alert_name].append(value)
