@@ -36,7 +36,7 @@ class TestAlertActions(UccTester):
         alert_page.alert_entity.add_action_dropdown.select_action("Test Alert")
 
         self.assert_util(
-            alert_page.action_entity.table_list.list_of_values, ["incident", "problem"]
+            alert_page.action_entity.table_list.list_of_values, ["Incident", "Problem"]
         )
 
     @pytest.mark.execute_enterprise_cloud_true
@@ -86,10 +86,10 @@ class TestAlertActions(UccTester):
         alert_page.alert_entity.add_action_dropdown.select_action("Test Alert")
 
         self.assert_util(
-            alert_page.action_entity.table_list.list_of_values, ["incident", "problem"]
+            alert_page.action_entity.table_list.list_of_values, ["Incident", "Problem"]
         )
-        alert_page.action_entity.table_list.select("problem")
-        self.assert_util(alert_page.action_entity.table_list.get_value, "problem")
+        alert_page.action_entity.table_list.select("Problem")
+        self.assert_util(alert_page.action_entity.table_list.get_value, "Problem")
 
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
@@ -101,9 +101,9 @@ class TestAlertActions(UccTester):
         alert_page.alert_entity.add_action_dropdown.select_action("Test Alert")
 
         alert_page.action_entity.action.select("Delete")
-        assert alert_page.action_entity.action.get_value() == "Delete"
+        assert alert_page.action_entity.action.get_value() == "delete"
         alert_page.action_entity.action.select("Update")
-        assert alert_page.action_entity.action.get_value() == "Update"
+        assert alert_page.action_entity.action.get_value() == "update"
 
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder

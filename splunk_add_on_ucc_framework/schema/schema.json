@@ -14,7 +14,7 @@
         },
         "type": {
           "type": "string",
-          "enum": ["singleSelectSplunkSearch"]
+          "enum": ["text", "checkbox", "singleSelect", "radio", "singleSelectSplunkSearch"]
         },
         "help": {
           "type": "string",
@@ -78,6 +78,10 @@
         },
         "description": {
           "type": "string"
+        },
+        "iconFileName": {
+          "type": "string",
+          "maxLength": 100
         },
         "activeResponse": {
           "type": "object",
