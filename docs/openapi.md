@@ -5,7 +5,7 @@ There has to be defined, valid `globalConfig.json` and `app.manifest` to have th
 
 ## How to find the document?
 
-Once t`ucc-gen` command is executed, OpenAPI description document is located in the `appserver/static` output subdirectory.
+Once `ucc-gen` command is executed, OpenAPI description document is located in the `appserver/static` output subdirectory.
 
 One way to download it is through the button displayed on the top right corner of the configuration page.
 

@@ -1000,6 +1000,7 @@
                             "type": "checkboxGroup",
                             "label": "Mixed",
                             "field": "api3",
+                            "required": true,
                             "options": {
                                 "groups": [
                                     {
