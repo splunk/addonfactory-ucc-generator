@@ -23,9 +23,9 @@ def process_event(helper, *args, **kwargs):
     # and writes them to Splunk
     # NOTE: Call helper.writeevents() only once after all events
     # have been added
-    {% if mod_alert.get("active_response") and mod_alert.active_response.get("sourcetype") %}
-    helper.addevent("hello", sourcetype="{{ mod_alert.active_response.sourcetype }}")
-    helper.addevent("world", sourcetype="{{ mod_alert.active_response.sourcetype }}")
+    {% if mod_alert.get("adaptive_response") and mod_alert.adaptive_response.get("sourcetype") %}
+    helper.addevent("hello", sourcetype="{{ mod_alert.adaptive_response.sourcetype }}")
+    helper.addevent("world", sourcetype="{{ mod_alert.adaptive_response.sourcetype }}")
     {% else %}
     helper.addevent("hello", sourcetype="sample_sourcetype")
     helper.addevent("world", sourcetype="sample_sourcetype")
