@@ -124,11 +124,6 @@ def _generate_addon(
         utils.get_j2_env()
         .get_template("input.template")
         .render(
-            # addon_name=addon_name,
-            # addon_rest_root=addon_rest_root,
-            # addon_input_name=addon_input_name,
-            # addon_version=addon_version,
-            # addon_display_name=addon_display_name,
             input_name=addon_input_name,
             class_name=addon_input_name.upper(),
             description="demo_input input",
