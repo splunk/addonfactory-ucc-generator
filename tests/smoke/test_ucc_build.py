@@ -173,6 +173,7 @@ def test_ucc_generate_with_everything():
         # Expected add-on package folder does not have "lib" in it.
         files_to_be_equal = [
             ("README.txt",),
+            ("appserver", "static", "test icon.png"),
             ("default", "alert_actions.conf"),
             ("default", "eventtypes.conf"),
             ("default", "inputs.conf"),
@@ -511,6 +512,7 @@ def test_ucc_generate_with_everything_uccignore(caplog):
         _compare_app_conf(expected_folder, actual_folder)
         files_to_be_equal = [
             ("README.txt",),
+            ("appserver", "static", "test icon.png"),
             ("default", "alert_actions.conf"),
             ("default", "eventtypes.conf"),
             ("default", "inputs.conf"),
