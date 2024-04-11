@@ -91,6 +91,23 @@
                             }
                         },
                         {
+                            "field": "url",
+                            "label": "URL",
+                            "type": "text",
+                            "help": "Enter the URL, for example",
+                            "required": false,
+                            "options": {
+                                "placeholder": "Required"
+                            },
+                            "validators": [
+                                {
+                                    "errorMsg": "Invalid URL provided. URL should start with 'https' as only secure URLs are supported. Provide URL in this format",
+                                    "type": "regex",
+                                    "pattern": "^(https://)[^/]+/?$"
+                                }
+                            ]
+                        },
+                        {
                             "type": "checkbox",
                             "label": "Example Checkbox",
                             "field": "account_checkbox",
