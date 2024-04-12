@@ -195,6 +195,8 @@ def generate_dashboard(
     panels = global_config.dashboard.get("panels", [])
     panel_names = [panel["name"] for panel in panels]
 
+    panels_to_display = {PANEL_DEFAULT: False, PANEL_CUSTOM: False}
+
     if PANEL_DEFAULT in panel_names:
         for definition_json_name in default_definition_json_filename.values():
             content = generate_dashboard_content(
@@ -204,6 +206,7 @@ def generate_dashboard(
                 os.path.join(definition_json_path, definition_json_name), "w"
             ) as file:
                 file.write(content)
+        panels_to_display[PANEL_DEFAULT] = True
 
     if PANEL_CUSTOM in panel_names:
         dashboard_components_path = os.path.abspath(
@@ -216,6 +219,12 @@ def generate_dashboard(
         custom_content = get_custom_json_content(dashboard_components_path)
         with open(os.path.join(definition_json_path, "custom.json"), "w") as file:
             file.write(json.dumps(custom_content))
+        panels_to_display[PANEL_CUSTOM] = True
+
+    with open(
+        os.path.join(definition_json_path, "panels_to_display.json"), "w"
+    ) as file:
+        file.write(json.dumps(panels_to_display))
 
 
 def get_custom_json_content(custom_dashboard_path: str) -> Dict[Any, Any]:
