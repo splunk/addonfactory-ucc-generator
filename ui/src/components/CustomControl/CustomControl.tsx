@@ -1,14 +1,59 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import { _ } from '@splunk/ui-utils/i18n';
 
-import { getUnifiedConfigs } from '../util/util';
-import { getBuildDirPath } from '../util/script';
+import { getUnifiedConfigs } from '../../util/util';
+import { getBuildDirPath } from '../../util/script';
+import {
+    AcceptableFormValueOrNull,
+    AcceptableFormValueOrNullish,
+} from '../../types/components/shareableTypes';
+import { UtilBaseForm } from '../BaseFormTypes';
+import { GlobalConfig } from '../../types/globalConfig/globalConfig';
 
-class CustomControl extends Component {
-    static loadCustomControl = (module, type, appName) =>
+interface IData {
+    value: AcceptableFormValueOrNullish;
+    mode: string;
+    serviceName: string;
+}
+
+interface ICustomCompClass {
+    new (
+        config: GlobalConfig,
+        el: HTMLElement | undefined,
+        data: IData,
+        setValue: (field: string, newValue: AcceptableFormValueOrNull) => void,
+        util: UtilBaseForm
+    ): {
+        render: () => void;
+        validation?: (submittedField: string, submittedValue: string) => void;
+    };
+}
+
+interface ICustomCompProps {
+    data: IData;
+    field: string;
+    handleChange: (field: string, newValue: AcceptableFormValueOrNull) => void;
+    controlOptions: { src: string; type: string };
+    addCustomValidator: (
+        field: string,
+        validatorFunc: (submittedField: string, submittedValue: string) => void
+    ) => void;
+    utilCustomFunctions: UtilBaseForm;
+}
+
+interface ICustomCompState {
+    loading: boolean;
+}
+
+class CustomControl extends React.Component<ICustomCompProps, ICustomCompState> {
+    static loadCustomControl = (
+        module: string,
+        type: string,
+        appName: string
+    ): Promise<ICustomCompClass> =>
         new Promise((resolve) => {
             if (type === 'external') {
+                console.log(`login path: ${getBuildDirPath()}/custom/${module}.js`);
                 import(/* webpackIgnore: true */ `${getBuildDirPath()}/custom/${module}.js`).then(
                     (external) => {
                         const Control = external.default;
@@ -16,18 +61,24 @@ class CustomControl extends Component {
                     }
                 );
             } else {
+                // @ts-expect-error typeof __non_webpack_require__ is not known during bundle
                 __non_webpack_require__([`app/${appName}/js/build/custom/${module}`], (Control) => {
                     resolve(Control);
                 });
             }
         });
 
-    constructor(props) {
+    shouldRender: boolean;
+
+    el?: HTMLElement;
+
+    constructor(props: ICustomCompProps) {
         super(props);
         this.state = {
             loading: true,
         };
         this.shouldRender = true;
+        console.log('this.props ICustomCompProps', props);
     }
 
     componentDidMount() {
@@ -38,7 +89,7 @@ class CustomControl extends Component {
             this.props.controlOptions.src,
             this.props.controlOptions.type,
             appName
-        ).then((Control) => {
+        ).then((Control: ICustomCompClass) => {
             const customControl = new Control(
                 globalConfig,
                 this.el,
@@ -46,7 +97,7 @@ class CustomControl extends Component {
                 this.setValue,
                 this.props.utilCustomFunctions
             );
-            customControl.render();
+            customControl?.render();
 
             if (typeof customControl.validation === 'function') {
                 this.props.addCustomValidator(this.props.field, customControl.validation);
@@ -55,7 +106,7 @@ class CustomControl extends Component {
         });
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: ICustomCompProps, nextState: ICustomCompState) {
         if (!nextState.loading && this.shouldRender) {
             this.shouldRender = false;
             return true;
@@ -63,7 +114,7 @@ class CustomControl extends Component {
         return false;
     }
 
-    setValue = (newValue) => {
+    setValue = (newValue: AcceptableFormValueOrNull) => {
         this.props.handleChange(this.props.field, newValue);
     };
 
@@ -74,7 +125,9 @@ class CustomControl extends Component {
                 {
                     <span // nosemgrep: typescript.react.security.audit.react-no-refs.react-no-refs
                         ref={(el) => {
-                            this.el = el;
+                            if (el) {
+                                this.el = el;
+                            }
                         }}
                         style={{ visibility: this.state.loading ? 'hidden' : 'visible' }}
                     />
@@ -83,14 +136,5 @@ class CustomControl extends Component {
         );
     }
 }
-
-CustomControl.propTypes = {
-    data: PropTypes.object,
-    field: PropTypes.string,
-    handleChange: PropTypes.func,
-    controlOptions: PropTypes.object,
-    addCustomValidator: PropTypes.func,
-    utilCustomFunctions: PropTypes.object,
-};
 
 export default CustomControl;
