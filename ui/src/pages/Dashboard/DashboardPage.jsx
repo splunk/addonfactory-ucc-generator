@@ -25,11 +25,11 @@ function getBuildDirPath() {
  * @param {string} fileName name of json file in custom dir
  * @param {string} setData callback, called with data as params
  */
-function loadJson(fileName, setData) {
+function loadJson(fileName, dataHandler) {
     fetch(/* webpackIgnore: true */ `${getBuildDirPath()}/custom/${fileName}`)
         .then((res) => res.json())
         .then((external) => {
-            setData(external);
+            dataHandler(external);
         })
         .catch((e) => {
             // eslint-disable-next-line no-console
@@ -44,10 +44,16 @@ function DashboardPage() {
     const [customDef, setCustomDef] = useState(null);
 
     useEffect(() => {
-        loadJson('overview_definition.json', setOverviewDef);
-        loadJson('data_ingestion_tab_definition.json', setDataIngestionDef);
-        loadJson('errors_tab_definition.json', setErrorDef);
-        loadJson('custom.json', setCustomDef);
+        loadJson('panels_to_display.json', (data) => {
+            if (data?.default) {
+                loadJson('overview_definition.json', setOverviewDef);
+                loadJson('data_ingestion_tab_definition.json', setDataIngestionDef);
+                loadJson('errors_tab_definition.json', setErrorDef);
+            }
+            if (data?.custom) {
+                loadJson('custom.json', setCustomDef);
+            }
+        });
 
         document.body.classList.add('grey_background');
         return () => {
@@ -60,6 +66,7 @@ function DashboardPage() {
             <div>
                 <OverviewDashboard dashboardDefinition={overviewDef} />
                 {overviewDef ? (
+                    // if overview is loaded then all default tabs should be present so table is injected
                     <TabLayout
                         autoActivate
                         defaultActivePanelId="dataIngestionTabPanel"
@@ -83,6 +90,8 @@ function DashboardPage() {
                         )}
                     </TabLayout>
                 ) : (
+                    // if overview is null then custom tab is the only displayed component
+                    // so no need to show table
                     <CustomDashboard dashboardDefinition={customDef} />
                 )}
             </div>
