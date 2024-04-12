@@ -103,7 +103,7 @@ export interface UtilBaseForm {
 }
 
 export interface UtilControlWrapper {
-    handleChange: (field: string, targetValue: string) => void;
+    handleChange: (field: string, targetValue: AcceptableFormValueOrNullish) => void;
     addCustomValidator: (
         field: string,
         validatorFunc: (submittedField: string, submittedValue: string) => void

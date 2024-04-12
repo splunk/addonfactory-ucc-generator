@@ -70,7 +70,9 @@ class CustomControl {
         this.setValue = setValue;
     }
 
-    _onSelectOptionChange() { }
+    _onSelectOptionChange(event) {
+        this.setValue(event.target.value);
+    }
 
     validation(field, value) {
         // Validation logic for value. Return the error message if failed.
@@ -88,8 +90,8 @@ class CustomControl {
         `;
 
         this.el.innerHTML = content_html;
+        this.el.addEventListener('change', this._onSelectOptionChange);
 
-        $('select#custom_control').on('change', () => this._onSelectOptionChange());
         return this;
     }
 }

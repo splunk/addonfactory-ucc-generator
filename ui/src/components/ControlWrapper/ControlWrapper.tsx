@@ -5,6 +5,7 @@ import MarkdownMessage from '../MarkdownMessage/MarkdownMessage';
 import CONTROL_TYPE_MAP, { ComponentTypes } from '../../constants/ControlTypeMap';
 import { AnyEntity, UtilControlWrapper } from '../BaseFormTypes';
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
+import CustomControl from '../CustomControl/CustomControl';
 
 const CustomElement = styled.div``;
 
@@ -76,7 +77,7 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
             };
 
             rowView = this.controlType
-                ? React.createElement(this.controlType, {
+                ? React.createElement(this.controlType as typeof CustomControl, {
                       data,
                       handleChange,
                       addCustomValidator,
@@ -88,19 +89,23 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
                 : `No View Found for ${this?.props?.entity?.type} type`;
         } else {
             rowView = this.controlType
-                ? React.createElement(this.controlType, {
-                      handleChange,
-                      value: this.props.value,
-                      controlOptions: this.props.entity?.options,
-                      error: this.props.error,
-                      disabled: this.props.disabled,
-                      dependencyValues: this.props.dependencyValues,
-                      addCustomValidator,
-                      fileNameToDisplay: this.props.fileNameToDisplay,
-                      mode: this.props.mode,
-                      ...this?.props?.entity,
-                      ...this.props?.modifiedEntitiesData,
-                  })
+                ? React.createElement(
+                    // TODO: refactor props of each component or use switch case instead of CONTROL_TYPE_MAP
+                      this.controlType as any,
+                      {
+                          handleChange,
+                          value: this.props.value,
+                          controlOptions: this.props.entity?.options,
+                          error: this.props.error,
+                          disabled: this.props.disabled,
+                          dependencyValues: this.props.dependencyValues,
+                          addCustomValidator,
+                          fileNameToDisplay: this.props.fileNameToDisplay,
+                          mode: this.props.mode,
+                          ...this?.props?.entity,
+                          ...this.props?.modifiedEntitiesData,
+                      }
+                  )
                 : `No View Found for ${this?.props?.entity?.type} type`;
         }
 
