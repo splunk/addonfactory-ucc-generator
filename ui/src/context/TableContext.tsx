@@ -20,17 +20,12 @@ export type TableContextProviderType = {
 
 const TableContext = createContext<TableContextProviderType | null>(null);
 
-export function TableContextProvider({
-    children,
-}: {
-    children: (typeof PropTypes.node | typeof PropTypes.node)[];
-}) {
+export function TableContextProvider({ children }: { children: Node | Node[] }) {
     const [rowData, setRowData] = useState<TableContextProviderType['rowData']>({});
     const [searchText, setSearchText] = useState<string>('');
     const [searchType, setSearchType] = useState<string>('all');
     const [pageSize, setPageSize] = useState<number>(10);
     const [currentPage, setCurrentPage] = useState<number>(0);
-
     return (
         <TableContext.Provider
             value={{

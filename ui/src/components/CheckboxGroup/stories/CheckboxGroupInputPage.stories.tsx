@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { within, userEvent, expect } from '@storybook/test';
-import BaseFormView from '../../BaseFormView';
+import BaseFormView from '../../BaseFormView/BaseFormView';
 import { setUnifiedConfig } from '../../../util/util';
 import { serverHandlers } from '../checkboxGroupMocks';
 import checkboxGroupConfig from '../checkboxGroupMocks.json';

@@ -9,44 +9,40 @@ class CustomControl {
      * @param {function} setValue - set value of the custom field.
      */
     constructor(globalConfig, el, data, setValue, util) {
-        console.log('globalConfig, el, data, setValue, util', {
-            globalConfig,
-            el,
-            data,
-            setValue,
-            util,
-        });
         this.globalConfig = globalConfig;
         this.el = el;
         this.data = data;
         this.util = util;
         this.setValue = setValue;
 
-        this._onSelectOptionChange = this._onSelectOptionChange.bind(this);
+        this.onSelectOptionChange = this.onSelectOptionChange.bind(this);
     }
 
-    _onSelectOptionChange(event) {
+    onSelectOptionChange(event) {
         this.setValue(event.target.value);
     }
 
-    validation(field, value) {
+    /* eslint-disable class-methods-use-this */
+    validation(_field, value) {
         // Validation logic for value. Return the error message if failed.
         if (value === 'input_two') {
             return 'Wrong value selected.';
         }
+        return undefined;
     }
 
     render() {
-        console.log('this CustomControl', this);
-        let content_html = `
+        const contentHtml = `
             <select id="custom_control">
                 <option value="input_one">Input One</option>
+                <option value="input_three">Input Three</option>
+                <option value="input_four">Input Four</option>
                 <option value="input_two">Input Two</option>
             </select>
         `;
 
-        this.el.innerHTML = content_html;
-        this.el.addEventListener('change', this._onSelectOptionChange);
+        this.el.innerHTML = contentHtml;
+        this.el.addEventListener('change', this.onSelectOptionChange);
 
         return this;
     }

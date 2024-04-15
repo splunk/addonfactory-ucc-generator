@@ -3,7 +3,7 @@ import ControlGroup from '@splunk/react-ui/ControlGroup';
 import styled from 'styled-components';
 import MarkdownMessage from '../MarkdownMessage/MarkdownMessage';
 import CONTROL_TYPE_MAP, { ComponentTypes } from '../../constants/ControlTypeMap';
-import { AnyEntity, UtilControlWrapper } from '../BaseFormTypes';
+import { AnyEntity, UtilControlWrapper } from '../BaseFormView/BaseFormTypes';
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
 import CustomControl from '../CustomControl/CustomControl';
 
@@ -69,13 +69,14 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
         const { text, link, color, markdownType, token, linkText } =
             this.props.markdownMessage || {};
         let rowView;
+        // console.log('render custom component', this.props);
+
         if (this.props?.entity?.type === 'custom') {
             const data = {
                 value: this.props.value,
                 mode: this.props.mode,
                 serviceName: this.props.serviceName,
             };
-
             rowView = this.controlType
                 ? React.createElement(this.controlType as typeof CustomControl, {
                       data,
@@ -90,7 +91,8 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
         } else {
             rowView = this.controlType
                 ? React.createElement(
-                    // TODO: refactor props of each component or use switch case instead of CONTROL_TYPE_MAP
+                      // TODO: refactor props of each component or use switch case instead of CONTROL_TYPE_MAP
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
                       this.controlType as any,
                       {
                           handleChange,
