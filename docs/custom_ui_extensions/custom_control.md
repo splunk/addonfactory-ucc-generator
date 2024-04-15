@@ -70,7 +70,7 @@ class CustomControl {
         this.setValue = setValue;
     }
 
-    _onSelectOptionChange(event) {
+    onSelectOptionChange(event) {
         this.setValue(event.target.value);
     }
 
@@ -90,7 +90,7 @@ class CustomControl {
         `;
 
         this.el.innerHTML = content_html;
-        this.el.addEventListener('change', this._onSelectOptionChange);
+        this.el.addEventListener('change', this.onSelectOptionChange);
 
         return this;
     }
