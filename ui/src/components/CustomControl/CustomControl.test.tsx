@@ -1,90 +1,69 @@
 import { render, screen } from '@testing-library/react';
-import React, { createContext } from 'react';
+import React from 'react';
 import userEvent from '@testing-library/user-event';
-import { http, HttpResponse } from 'msw';
 import CustomControl from './CustomControl';
-import { server } from '../../mocks/server';
-import { AcceptableFormValueOrNull } from '../../types/components/shareableTypes';
-import { unknown } from 'zod';
-import { BaseFormState } from '../BaseFormTypes';
+import mockCustomControlMockForTest from './CustomControlMockForTest';
+import { getBuildDirPath } from '../../util/script';
+import { getGlobalConfigMock } from '../../mocks/globalConfigMock';
+import { setUnifiedConfig } from '../../util/util';
 
-jest.mock('immutability-helper');
-jest.mock('../../util/util');
+const MODULE = 'CustomControlForTest';
 
-const handleClose = jest.fn();
+const handleChange = jest.fn();
+const addingCustomValidation = jest.fn();
+const mockSetState = jest.fn();
+const mockSetErrorFieldMsg = jest.fn();
+const mockSetErrorMsg = jest.fn();
+const mockClearErrorMsg = jest.fn();
 
-const TableContext = createContext({
-    rowData: { serviceName: { stanzaName: 1 } },
-    setRowData: () => {},
-});
+const FIELD_NAME = 'testCustomField';
 
 beforeEach(() => {
+    const mockConfig = getGlobalConfigMock();
+    setUnifiedConfig(mockConfig);
+
+    jest.mock(`${getBuildDirPath()}/custom/${MODULE}.js`, () => mockCustomControlMockForTest, {
+        virtual: true,
+    });
+
     render(
-        <TableContext.Provider
-            value={{ rowData: { serviceName: { stanzaName: 1 } }, setRowData: () => {} }}
-        >
-            <CustomControl
-                data={{}}
-                field={''}
-                handleChange={function (field: string, newValue: AcceptableFormValueOrNull): void {
-                    throw new Error('Function not implemented.');
-                }}
-                controlOptions={{
-                    src: '',
-                    type: '',
-                }}
-                addCustomValidator={function (
-                    field: string,
-                    validatorFunc: (submittedField: string, submittedValue: string) => void
-                ): void {
-                    throw new Error('Function not implemented.');
-                }}
-                utilCustomFunctions={{
-                    setState: (callback: (prevState: BaseFormState) => void) => {
-                        console.log('setState');
-                    },
-                    setErrorFieldMsg: (field: string, msg: string) => {
-                        console.log('setErrorFieldMsg field msg', { msg, field });
-                    },
-                    clearAllErrorMsg: (State: BaseFormState) => {
-                        console.log('clearAllErrorMsg msg', State);
-                    },
-                    setErrorMsg: (msg: string) => {
-                        console.log('setErrorMsg msg', msg);
-                    },
-                }}
-            />
-        </TableContext.Provider>
+        <CustomControl
+            data={{
+                value: 'input_default',
+                mode: 'create',
+                serviceName: 'serviceName',
+            }}
+            field={FIELD_NAME}
+            handleChange={handleChange}
+            controlOptions={{
+                src: MODULE,
+                type: 'external',
+            }}
+            addCustomValidator={addingCustomValidation}
+            utilCustomFunctions={{
+                setState: mockSetState,
+                setErrorFieldMsg: mockSetErrorFieldMsg,
+                clearAllErrorMsg: mockClearErrorMsg,
+                setErrorMsg: mockSetErrorMsg,
+            }}
+        />
     );
 });
 
-it('should render delete modal correctly', () => {
-    const deleteModal = screen.getByTestId('modal');
-    expect(deleteModal).toBeInTheDocument();
-
-    const cancelButton = screen.getByRole('button', { name: /cancel/i });
-    expect(cancelButton).toBeInTheDocument();
-
-    const deleteButton = screen.getByRole('button', { name: /delete/i });
-    expect(deleteButton).toBeInTheDocument();
+it('should render custom component correctly', async () => {
+    const renderedModal = await screen.findByTestId('customSelect');
+    expect(renderedModal).toBeInTheDocument();
 });
 
-it('close model and callback after cancel click', async () => {
-    const cancelButton = screen.getByRole('button', { name: /cancel/i });
-
-    await userEvent.click(cancelButton);
-    expect(handleClose).toHaveBeenCalled();
+it('should try to add validator', async () => {
+    expect(addingCustomValidation).toHaveBeenCalled();
 });
 
-it('correct delete request', async () => {
-    server.use(
-        http.delete(
-            '/servicesNS/nobody/-/mockGeneratedEndPointUrl',
-            () => new HttpResponse(undefined, { status: 201 })
-        )
-    );
-    const deleteButton = screen.getByRole('button', { name: /delete/i });
-    await userEvent.click(deleteButton);
+it('should correctly call handler on change', async () => {
+    const selectElem = document.querySelector('select');
+    expect(selectElem).toBeInTheDocument();
+    const SELECTED_OPTION = 'input_one';
+    await userEvent.selectOptions(selectElem!, SELECTED_OPTION);
 
-    expect(handleClose).toHaveBeenCalled();
+    expect(handleChange).toHaveBeenCalledWith(FIELD_NAME, SELECTED_OPTION);
 });
