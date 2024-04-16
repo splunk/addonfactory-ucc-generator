@@ -458,17 +458,6 @@
                                 "text": "SSL configuration documentation",
                                 "link": "https://docs.splunk.com/Documentation"
                             }
-                        },
-                        {
-                            "type": "custom",
-                            "label": "Example Custom Control",
-                            "field": "custom_control_field",
-                            "help": "This is an example multipleSelect for account entity",
-                            "options": {
-                                "src": "CustomControl",
-                                "type": "external"
-                            },
-                            "required": false
                         }
                     ],
                     "title": "Account",
