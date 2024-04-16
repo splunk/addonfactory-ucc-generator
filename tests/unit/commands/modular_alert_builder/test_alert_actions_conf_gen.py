@@ -17,7 +17,7 @@ def test_generate_alert_action(tmp_path):
                     "label": "Test Alert",
                     "description": "Description for test Alert Action",
                     "short_name": "test_alert",
-                    "active_response": {
+                    "adaptive_response": {
                         "task": ["Create", "Update"],
                         "subject": ["endpoint"],
                         "category": [
@@ -33,6 +33,7 @@ def test_generate_alert_action(tmp_path):
                         ],
                         "sourcetype": "test:incident",
                         "supports_adhoc": True,
+                        "supports_cloud": True,
                         "drilldown_uri": 'search?q=search%20index%3D"_internal"&earliest=0&latest=',
                     },
                     "parameters": [
