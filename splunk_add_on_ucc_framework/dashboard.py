@@ -51,7 +51,7 @@ data_ingestion_and_events = (
     "index=_internal source=*/var/log/splunk/license_usage.log type=Usage "
     "(s IN ({input_names})) | timechart span=1d sum(b) as Usage "
     '| eval Usage=round(Usage/1024/1024/1024,3) | rename Usage as \\"Data volume\\" '
-    "| append [search index=_internal source=*{addon_name}* action=events_ingested "
+    "| join _time [search index=_internal source=*{addon_name}* action=events_ingested "
     '| timechart sum(n_events) as \\"Number of events\\" ] '
 )
 errors_count = (
