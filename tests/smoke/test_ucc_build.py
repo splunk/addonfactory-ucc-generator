@@ -224,16 +224,16 @@ def test_ucc_generate_with_everything():
         for f in files_to_exist:
             expected_file_path = path.join(expected_folder, *f)
             assert path.exists(expected_file_path)
-        
+
         # when custom files are provided, default files shouldn't be shipped
         files_should_be_absent = [
             ("appserver", "static", "alerticon.png"),
             ("bin", "splunk_ta_uccexample", "modalert_test_alert_helper.py"),
         ]
-        for f in files_should_be_absent:
-            expected_file_path = path.join(expected_folder, *f)
+        for af in files_should_be_absent:
+            expected_file_path = path.join(expected_folder, *af)
             assert not path.exists(expected_file_path)
-        
+
         _compare_logging_tabs(package_folder, actual_folder)
 
 
