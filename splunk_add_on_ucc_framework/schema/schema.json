@@ -83,7 +83,7 @@
           "type": "string",
           "maxLength": 100
         },
-        "activeResponse": {
+        "adaptiveResponse": {
           "type": "object",
           "properties": {
             "task": {
@@ -94,6 +94,9 @@
               "minItems": 1
             },
             "supportsAdhoc": {
+              "type": "boolean"
+            },
+            "supportsCloud": {
               "type": "boolean"
             },
             "subject": {
@@ -128,7 +131,6 @@
           },
           "required": [
             "task",
-            "supportsAdhoc",
             "subject",
             "category",
             "technology"

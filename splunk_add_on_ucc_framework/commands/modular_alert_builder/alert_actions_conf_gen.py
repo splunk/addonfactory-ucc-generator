@@ -103,7 +103,7 @@ class AlertActionsConfGeneration:
             alert_name = alert["short_name"]
             alerts[alert_name] = []
             for k, v in alert.items():
-                if k == "active_response":
+                if k == "adaptive_response":
                     new_cam = {
                         sub_k: sub_v
                         for sub_k, sub_v in list(v.items())
@@ -166,7 +166,7 @@ class AlertActionsConfGeneration:
 
         # remove the stanza if not checked
         for alert in self._alert_settings:
-            if alert.get("active_response") and alert["active_response"].get(
+            if alert.get("adaptive_response") and alert["adaptive_response"].get(
                 "sourcetype"
             ):
                 continue
@@ -189,7 +189,7 @@ class AlertActionsConfGeneration:
 
         # remove the stanza if not checked
         for alert in self._alert_settings:
-            if alert.get("active_response") and alert["active_response"].get(
+            if alert.get("adaptive_response") and alert["adaptive_response"].get(
                 "sourcetype"
             ):
                 continue
@@ -219,9 +219,9 @@ class AlertActionsConfGeneration:
             alert_name = alert["short_name"]
             alerts[alert_name] = []
             for k, v in alert.items():
-                if k == "active_response":
+                if k == "adaptive_response":
                     alerts[alert_name].append(
-                        "param._cam = <json> Active response parameters."
+                        "param._cam = <json> Adaptive Response parameters."
                     )
                 elif k == "parameters":
                     for param in v:

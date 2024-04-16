@@ -18,8 +18,9 @@ import copy
 from typing import Any, Dict, List
 
 mapping_keys = {
-    "activeResponse": "active_response",
+    "adaptiveResponse": "adaptive_response",
     "supportsAdhoc": "supports_adhoc",
+    "supportsCloud": "supports_cloud",
     "drilldownUri": "drilldown_uri",
     "entity": "parameters",
     "defaultValue": "default_value",

@@ -1469,12 +1469,13 @@
             "label": "Test Alert",
             "description": "Description for test Alert Action",
             "iconFileName": "test icon.png",
-            "activeResponse": {
+            "adaptiveResponse": {
                 "task": [
                     "Create",
                     "Update"
                 ],
                 "supportsAdhoc": true,
+                "supportsCloud": true,
                 "subject": [
                     "endpoint"
                 ],
@@ -1580,7 +1581,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.41.0R45554b7b",
+        "version": "5.41.0R9c5fbfe0",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.3",
         "_uccVersion": "5.41.0"

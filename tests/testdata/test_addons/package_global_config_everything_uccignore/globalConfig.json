@@ -1318,12 +1318,13 @@
             "label": "Test Alert",
             "description": "Description for test Alert Action",
             "iconFileName": "test icon.png",
-            "activeResponse": {
+            "adaptiveResponse": {
                 "task": [
                     "Create",
                     "Update"
                 ],
                 "supportsAdhoc": true,
+                "supportsCloud": true,
                 "subject": [
                     "endpoint"
                 ],
