@@ -95,6 +95,7 @@ class AlertActionsConfGeneration:
                 "smallIcon",
                 "index",
                 "iconFileName",  # it is a config from globalConfig that gets written to icon_path
+                "customScript",  # it is a config from globalConfig only for Python script
             ]
         )
         alerts: Dict[str, Any] = {}
