@@ -90,13 +90,12 @@ have `process_event()` function defined. An example declaration could be:
 
 ```python
 
-def validate_params(helper):
-    # logic to validate the params that are passed.
-    # they can be accessed via helper.get_param(<field_name>)
-    return 0 # for successful validations
+def my_custom_validation(helper):
+    # custom validation logic for the params that are passed
+    return 0 # for successful custom validations
 
 def process_event(helper, *args, **kwargs):
-    if not validate_params(helper):
+    if not my_custom_validation(helper):
         return 3
     
     helper.log_info("Alert action test_alert started.")
@@ -109,6 +108,6 @@ def process_event(helper, *args, **kwargs):
 
 ```
 
-This function then can have validations and the alert action logic required for your add-on. 
+This function then can have validations and the alert action logic required for your add-on. The preliminary check for required field validations is already provided by the UCC framework. However, if you have any other validations or pre-checks, you can call that function from `process_event()`.
 The `helper` variable would be an object of `splunktaucclib.alert_actions_base.ModularAlertBase` class. 
 This script would be then be copied to `output/` directory after you execute the `ucc-gen` command.
