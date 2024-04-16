@@ -56,7 +56,7 @@ export class CustomControlMockForTest {
         const options = ['input_default', 'input_one', 'input_two', 'input_three'].map(
             (value) =>
                 `<option value="${value}" ${
-                    value === this?.data?.value && 'selected'
+                    value === this?.data?.value ? 'selected' : ''
                 }>${value}</option>`
         );
         // using direct html string as thats the recommended way in docs
