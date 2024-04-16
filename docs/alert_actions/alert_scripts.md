@@ -79,3 +79,36 @@ if __name__ == "__main__":
 In this example, `modalert_test_alert_helper`'s `process_event()` method contains the logic of the actions to be 
 performed when the alert is triggered. It could either be fetch additional information from a service 
 into Splunk or to send any data from Splunk to a service via its APIs.
+
+### Custom Script for Alert Action
+
+Alternatively, you can provide the `process_event()` and `validate_params()` in the script you mentioned in 
+the `customScript` parameter in the globalConfig. If the parameter isn't provided in the globalConfig, UCC framework would provide a boiler plate code that you can leverage in writing your logic for alert action.
+
+This script should be present at `<YOUR_ADD-ON_REPOSITORY_PACKAGE>/bin/` in your respository and it should 
+have `process_event()` function defined. An example declaration could be:
+
+```python
+
+def validate_params(helper):
+    # logic to validate the params that are passed.
+    # they can be accessed via helper.get_param(<field_name>)
+    return 0 # for successful validations
+
+def process_event(helper, *args, **kwargs):
+    if not validate_params(helper):
+        return 3
+    
+    helper.log_info("Alert action test_alert started.")
+    # TODO: Implement your alert action logic here
+
+    
+    # if clean execution, return 0, 
+    # else non-zero number
+    return 0
+
+```
+
+This function then can have validations and the alert action logic required for your add-on. 
+The `helper` variable would be an object of `splunktaucclib.alert_actions_base.ModularAlertBase` class. 
+This script would be then be copied to `output/` directory after you execute the `ucc-gen` command.

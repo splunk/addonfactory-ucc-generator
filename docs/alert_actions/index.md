@@ -20,6 +20,7 @@ Developers are required to add alerts in the global config file to create an Ale
 | description<span class="required-asterisk">\*</span>                            | string | Description of the alert action. |
 | activeResponse                            | object | Define only if the alert action will be visible for AR in Splunk Enterprise Security app. Note: <strong>DEPRECATED. Use `adaptiveResponse` instead.</strong> |
 | adaptiveResponse                            | object | Define only if the alert action will be visible for AR in Splunk Enterprise Security app. Refer [this section](adaptive_response.md) for complete details. |
+| customScript | string | A Python script that would have validation and logic for alert action execution. The script should be present at `<YOUR_ADD-ON_NAME>/bin/`. Refer [this section](alert_scripts.md#custom-script-for-alert-action) for more information. |
 
 
 ### Alert Properties
