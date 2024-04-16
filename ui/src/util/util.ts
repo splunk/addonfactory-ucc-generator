@@ -1,6 +1,7 @@
 import { TOAST_TYPES } from '@splunk/react-toast-notifications/ToastConstants';
 import Toaster, { makeCreateToast } from '@splunk/react-toast-notifications/Toaster';
 import { GlobalConfig, GlobalConfigSchema } from '../types/globalConfig/globalConfig';
+import { AcceptableFormValueOrNullish } from '../types/components/shareableTypes';
 
 interface AppData {
     app: string;
@@ -23,7 +24,7 @@ export function getMetaInfo() {
     };
 }
 
-export function isFalse(value: unknown) {
+export function isFalse(value: AcceptableFormValueOrNullish) {
     return (
         value === null ||
         value === undefined ||
@@ -31,7 +32,7 @@ export function isFalse(value: unknown) {
     );
 }
 
-export function isTrue(value: unknown) {
+export function isTrue(value: AcceptableFormValueOrNullish) {
     return (
         value !== null &&
         value !== undefined &&

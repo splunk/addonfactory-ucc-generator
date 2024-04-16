@@ -10,7 +10,7 @@ import Heading from '@splunk/react-ui/Heading';
 import styled from 'styled-components';
 import { ButtonClickHandler } from '@splunk/react-ui/Button';
 import { MODE_CLONE, MODE_CREATE, MODE_EDIT, Mode } from '../../constants/modes';
-import BaseFormView from '../BaseFormView';
+import BaseFormView from '../BaseFormView/BaseFormView';
 import { SubTitleComponent } from '../../pages/Input/InputPageStyle';
 import { PAGE_INPUT } from '../../constants/pages';
 import { StyledButton } from '../../pages/EntryPageStyle';

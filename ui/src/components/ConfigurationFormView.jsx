@@ -5,7 +5,7 @@ import { _ } from '@splunk/ui-utils/i18n';
 import styled from 'styled-components';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 
-import BaseFormView from './BaseFormView';
+import BaseFormView from './BaseFormView/BaseFormView';
 import { StyledButton } from '../pages/EntryPageStyle';
 import { axiosCallWrapper } from '../util/axiosCallWrapper';
 import { MODE_CONFIG } from '../constants/modes';

@@ -1,10 +1,10 @@
 import { z } from 'zod';
-import { Mode } from '../constants/modes';
+import { Mode } from '../../constants/modes';
 import {
     AcceptableFormValueOrNull,
     AcceptableFormValueOrNullish,
-} from '../types/components/shareableTypes';
-import { MarkdownMessageProps } from './MarkdownMessage/MarkdownMessage';
+} from '../../types/components/shareableTypes';
+import { MarkdownMessageProps } from '../MarkdownMessage/MarkdownMessage';
 import {
     AnyOfEntity,
     CheckboxEntity,
@@ -15,7 +15,8 @@ import {
     SingleSelectEntity,
     TextAreaEntity,
     TextEntity,
-} from '../types/globalConfig/entities';
+} from '../../types/globalConfig/entities';
+import { GlobalConfig } from '../../types/globalConfig/globalConfig';
 
 export type CurrentBaseFormInput =
     | Record<string, AcceptableFormValueOrNull>
@@ -103,17 +104,12 @@ export interface UtilBaseForm {
 }
 
 export interface UtilControlWrapper {
-    handleChange: (field: string, targetValue: string) => void;
+    handleChange: (field: string, targetValue: AcceptableFormValueOrNullish) => void;
     addCustomValidator: (
         field: string,
         validatorFunc: (submittedField: string, submittedValue: string) => void
     ) => void;
-    utilCustomFunctions: {
-        setState: (callback: (prevState: BaseFormState) => void) => void;
-        setErrorFieldMsg: (field: string, msg: string) => void;
-        clearAllErrorMsg: (State: BaseFormState) => unknown;
-        setErrorMsg: (msg: string) => void;
-    };
+    utilCustomFunctions: UtilBaseForm;
 }
 
 export interface ServiceGroup {
@@ -137,7 +133,11 @@ export interface CustomHook {
     onEditLoad?: () => void;
     onSaveSuccess?: () => void;
     onSaveFail?: () => void;
-    onChange?: (field: string, targetValue: string, tempState: BaseFormState) => void;
+    onChange?: (
+        field: string,
+        targetValue: AcceptableFormValueOrNullish,
+        tempState: BaseFormState
+    ) => void;
     onSave?: (datadict?: Record<string, AcceptableFormValueOrNullish>) => boolean;
 }
 
@@ -165,13 +165,13 @@ export interface BasicEntity {
 
 export interface ChangeRecord {
     display?: { $set: boolean };
-    value?: { $set: string | null };
+    value?: { $set: AcceptableFormValueOrNullish };
     dependencyValues?: { $set: Record<string, AcceptableFormValueOrNullish> };
 }
 
 export interface CustomHookClass {
     new (
-        config: unknown,
+        config: GlobalConfig,
         serviceName: string,
         state: BaseFormState,
         mode: string,
@@ -187,7 +187,11 @@ export interface CustomHookClass {
         onEditLoad?: () => void;
         onSaveSuccess?: () => void;
         onSaveFail?: () => void;
-        onChange?: (field: string, targetValue: string, tempState: BaseFormState) => void;
+        onChange?: (
+            field: string,
+            targetValue: AcceptableFormValueOrNullish,
+            tempState: BaseFormState
+        ) => void;
         onSave?: (datadict?: Record<string, AcceptableFormValueOrNullish>) => boolean;
     };
 }

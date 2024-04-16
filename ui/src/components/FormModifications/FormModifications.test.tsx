@@ -11,7 +11,7 @@ import {
     thirdModificationField,
 } from './TestConfig';
 import EntityModal, { EntityModalProps } from '../EntityModal/EntityModal';
-import { EntitiesAllowingModifications } from '../BaseFormTypes';
+import { EntitiesAllowingModifications } from '../BaseFormView/BaseFormTypes';
 import { invariant } from '../../util/invariant';
 
 const handleRequestClose = jest.fn();
