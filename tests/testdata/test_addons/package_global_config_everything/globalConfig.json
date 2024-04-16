@@ -1573,7 +1573,8 @@
                     "help": "Select the account from the dropdown",
                     "required": true
                 }
-            ]
+            ],
+            "customScript": "myAlertLogic"
         }
     ],
     "meta": {
