@@ -158,6 +158,10 @@
               }
             ]
           }
+        },
+        "customScript": {
+          "type": "string",
+          "maxLength": 100
         }
       },
       "required": ["name", "label", "description"],
