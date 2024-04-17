@@ -15,13 +15,13 @@ import simpleExampleSchema from './globalConfig/exampleOfGlobalConfig.json';
 
 const meta = {
     title: 'GlobalConfigPlayground',
-    render: (globalConfig) => {
+    render: (configJson) => {
         const pageMap: Record<string, React.JSX.Element> = {
             configuration: <ConfigurationPage />,
             inputs: <InputPage />,
         };
 
-        const config = JSON.parse(JSON.stringify(globalConfig));
+        const config = JSON.parse(JSON.stringify(configJson));
 
         setUnifiedConfig(config);
         const pageKeys = Object.keys(config.pages);
