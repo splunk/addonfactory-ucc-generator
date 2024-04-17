@@ -3,21 +3,25 @@ import { SplunkThemeProvider } from '@splunk/themes';
 import TabBar from '@splunk/react-ui/TabBar';
 import React, { useCallback, useState } from 'react';
 import { http, HttpResponse } from 'msw';
-import globalConfig from './globalConfig.json';
+
 import { mockServerResponse, mockServerResponseWithContent } from '../../mocks/server-response';
 import ConfigurationPage from '../Configuration/ConfigurationPage';
 import InputPage from '../Input/InputPage';
 import { setUnifiedConfig } from '../../util/util';
 
+import globalConfig from './globalConfig/globalConfig.json';
+import schema from './globalConfig/schemaCopy.json';
+import simpleExampleSchema from './globalConfig/exampleOfGlobalConfig.json';
+
 const meta = {
     title: 'GlobalConfigPlayground',
-    render: (args) => {
+    render: (globalConfig) => {
         const pageMap: Record<string, React.JSX.Element> = {
             configuration: <ConfigurationPage />,
             inputs: <InputPage />,
         };
 
-        const config = JSON.parse(JSON.stringify(args.globalConfig));
+        const config = JSON.parse(JSON.stringify(globalConfig));
 
         setUnifiedConfig(config);
         const pageKeys = Object.keys(config.pages);
@@ -61,9 +65,7 @@ const meta = {
             </>
         );
     },
-    args: {
-        globalConfig,
-    },
+    args: globalConfig,
     parameters: {
         msw: {
             handlers: [
@@ -82,6 +84,9 @@ const meta = {
         snapshots: {
             width: 1200,
             height: 1200,
+        },
+        jsonschema: {
+            schema: { ...schema, examples: [simpleExampleSchema] },
         },
     },
 } satisfies Meta;
