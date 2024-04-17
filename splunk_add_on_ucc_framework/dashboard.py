@@ -70,7 +70,7 @@ table_sourcetype_query = (
     '| stats latest(_time) AS \\"Last seen\\", sum(n_events) by sourcetype_ingested '
     "| rename sourcetype_ingested as st ]"
     '| convert ctime(\\"Last seen\\") | eval GB=round(Bytes/1024/1024/1024,3) '
-    '| eval events=sum(b) | table st, GB, sum(n_events), sparkline(sum(b)), \\"Last seen\\" '
+    '| table st, GB, sum(n_events), sparkline(sum(b)), \\"Last seen\\" '
     '| rename st as \\"Source type\\", GB as \\"Data volume [GB]\\", '
     'sum(n_events) as \\"Number of events\\", sparkline(sum(b)) as \\"Data volume trend line\\"'
 )
@@ -93,9 +93,9 @@ table_host_query = (
     "| join type=left h [search index = _internal source=*{addon_name}* action=events_ingested "
     '| stats latest(_time) AS \\"Last seen\\", sum(n_events) by host | rename host as h ]'
     '| convert ctime(\\"Last seen\\") | eval GB=round(Bytes/1024/1024/1024,3)| eval events=sum(b)'
-    '| table h, GB, sum(n_events), sparkline(sum(b)), \\"Last seen\\" '
+    '| table h, GB, sparkline(sum(b)), \\"Last seen\\" '
     '| rename h as \\"Host\\", GB as \\"Data volume [GB]\\", '
-    'sum(n_events) as \\"Number of events\\", sparkline(sum(b)) as \\"Data volume trend line\\"'
+    'sparkline(sum(b)) as \\"Data volume trend line\\"'
 )
 table_index_query = (
     "index=_internal source=*/var/log/splunk/license_usage.log type=Usage "
@@ -112,14 +112,14 @@ table_index_query = (
 table_account_query = (
     "index = _internal source=*{addon_name}* action=events_ingested "
     "| stats latest(_time) as ls, sum(n_events) by event_account | convert ctime(ls) "
-    '| table event_account, \\"Data volume [GB]\\", sum(n_events), \\"Data volume trend line\\", ls '
+    "| table event_account, sum(n_events), ls "
     '| rename event_account as \\"Account\\", sum(n_events) as \\"Number of events\\", '
     'ls as \\"Last seen\\"'
 )
 table_input_query = (
     "index = _internal source=*{addon_name}* action=events_ingested "
     "| stats latest(_time) as ls, sum(n_events) by event_input | convert ctime(ls) "
-    '| table event_input, \\"Data volume [GB]\\", sum(n_events), \\"Data volume trend line\\", ls '
+    "| table event_input, sum(n_events), ls "
     '| rename event_input as \\"Input\\", sum(n_events) as \\"Number of events\\", '
     'ls as \\"Last seen\\"'
 )
