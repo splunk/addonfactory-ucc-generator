@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { SplunkThemeProvider } from '@splunk/themes';
+import TabBar from '@splunk/react-ui/TabBar';
 import React, { useCallback, useState } from 'react';
 import { http, HttpResponse } from 'msw';
 import globalConfig from './globalConfig.json';
-import ConfigurationPage from '../Configuration/ConfigurationPage';
 import { mockServerResponse, mockServerResponseWithContent } from '../../mocks/server-response';
-import { setUnifiedConfig } from '../../util/util';
-import TabBar from '@splunk/react-ui/TabBar';
+import ConfigurationPage from '../Configuration/ConfigurationPage';
 import InputPage from '../Input/InputPage';
-import { SplunkThemeProvider } from '@splunk/themes';
+import { setUnifiedConfig } from '../../util/util';
 
 const meta = {
     title: 'GlobalConfigPlayground',
@@ -21,7 +21,6 @@ const meta = {
 
         setUnifiedConfig(config);
         const pageKeys = Object.keys(config.pages);
-        console.log('pageKeys', pageKeys);
         const [activeTabId, setActiveTabId] = useState(pageKeys[0]);
 
         const handleChange = useCallback((e, { selectedTabId }) => {
