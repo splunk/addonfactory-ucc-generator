@@ -83,7 +83,7 @@
     "overview_data_time_label_start_ds": {
       "type": "ds.search",
       "options": {
-        "query": "| makeresults | addinfo | eval StartDate = strftime(info_min_time, \"%b %e,%Y %I:%M%p\") | table StartDate",
+        "query": "| makeresults | addinfo | eval StartDate = strftime(info_min_time, \"%e %b %Y %I:%M%p\") | table StartDate",
         "queryParameters": {
           "earliest": "$overview_time.earliest$",
           "latest": "$overview_time.latest$"
@@ -93,7 +93,7 @@
     "overview_data_time_label_end_ds": {
       "type": "ds.search",
       "options": {
-        "query": "| makeresults | addinfo | eval EndDate = strftime(info_max_time, \"%b %e,%Y %I:%M%p\") | table EndDate",
+        "query": "| makeresults | addinfo | eval EndDate = strftime(info_max_time, \"%e %b %Y %I:%M%p\") | table EndDate",
         "queryParameters": {
           "earliest": "$overview_time.earliest$",
           "latest": "$overview_time.latest$"
@@ -103,7 +103,7 @@
     "overview_data_volume_ds": {
       "type": "ds.search",
       "options": {
-        "query": "index=_internal source=*/var/log/splunk/license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | timechart span=1d sum(b) as Usage | eval Usage=round(Usage/1024/1024/1024,3) | rename Usage as \"Data volume\" | append [search index=_internal source=*splunk_ta_uccexample* action=events_ingested | timechart sum(n_events) as \"Number of events\" ] ",
+        "query": "index=_internal source=*/var/log/splunk/license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | timechart span=1d sum(b) as Usage | eval Usage=round(Usage/1024/1024/1024,3) | rename Usage as \"Data volume\" | join _time [search index=_internal source=*splunk_ta_uccexample* action=events_ingested | timechart sum(n_events) as \"Number of events\" ] ",
         "queryParameters": {
           "earliest": "$overview_time.earliest$",
           "latest": "$overview_time.latest$"
@@ -188,8 +188,8 @@
         "position": {
           "x": 20,
           "y": 150,
-          "w": 600,
-          "h": 330
+          "w": 620,
+          "h": 400
         }
       },
       {
@@ -197,8 +197,8 @@
         "position": {
           "x": 640,
           "y": 150,
-          "w": 600,
-          "h": 330
+          "w": 620,
+          "h": 400
         }
       }
     ]

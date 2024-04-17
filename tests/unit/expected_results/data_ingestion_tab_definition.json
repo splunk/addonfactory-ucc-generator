@@ -41,9 +41,7 @@
       "type": "splunk.line",
       "options": {
         "xAxisVisibility": "hide",
-        "seriesColors": [
-          "#A870EF"
-        ],
+        "seriesColors": ["#A870EF"],
         "yAxisTitleText": "Volume[GB]"
       },
       "title": "Data ingestion",
@@ -85,7 +83,7 @@
     "data_ingestion_data_time_label_start_ds": {
       "type": "ds.search",
       "options": {
-        "query": "| makeresults | addinfo | eval StartDate = strftime(info_min_time, \"%b %e,%Y %I:%M%p\") | table StartDate",
+        "query": "| makeresults | addinfo | eval StartDate = strftime(info_min_time, \"%e %b %Y %I:%M%p\") | table StartDate",
         "queryParameters": {
           "earliest": "$data_ingestion_time.earliest$",
           "latest": "$data_ingestion_time.latest$"
@@ -95,7 +93,7 @@
     "data_ingestion_data_time_label_end_ds": {
       "type": "ds.search",
       "options": {
-        "query": "| makeresults | addinfo | eval EndDate = strftime(info_max_time, \"%b %e,%Y %I:%M%p\") | table EndDate",
+        "query": "| makeresults | addinfo | eval EndDate = strftime(info_max_time, \"%e %b %Y %I:%M%p\") | table EndDate",
         "queryParameters": {
           "earliest": "$data_ingestion_time.earliest$",
           "latest": "$data_ingestion_time.latest$"
@@ -226,7 +224,7 @@
         "position": {
           "x": 20,
           "y": 550,
-          "w": 600,
+          "w": 620,
           "h": 150
         }
       },
@@ -235,7 +233,7 @@
         "position": {
           "x": 640,
           "y": 550,
-          "w": 600,
+          "w": 620,
           "h": 150
         }
       },
