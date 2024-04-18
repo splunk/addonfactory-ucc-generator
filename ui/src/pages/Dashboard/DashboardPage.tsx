@@ -43,9 +43,9 @@ function DashboardPage() {
             }
         });
 
-        // document.body.classList.add('grey_background');
+        document.body.classList.add('grey_background');
         return () => {
-            // document.body.classList.remove('grey_background');
+            document.body.classList.remove('grey_background');
         };
     }, []);
 
