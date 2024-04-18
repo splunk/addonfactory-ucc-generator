@@ -10,7 +10,7 @@ import InputPage from '../Input/InputPage';
 import { setUnifiedConfig } from '../../util/util';
 
 import globalConfig from './globalConfig/globalConfig.json';
-import schema from './globalConfig/schemaCopy.json';
+import schema from '../../../../splunk_add_on_ucc_framework/schema/schema.json';
 import simpleExampleSchema from './globalConfig/exampleOfGlobalConfig.json';
 
 const meta = {

@@ -174,10 +174,12 @@
       "properties": {
         "title": {
           "type": "string",
+          "description": "Title of Configuration page",
           "maxLength": 60
         },
         "description": {
           "type": "string",
+          "description": "Description under title of Configuration page",
           "maxLength": 200
         },
         "subDescription": {
@@ -1725,6 +1727,7 @@
         }
       },
       "required": ["displayName", "name", "restRoot", "version"],
+      "description": "Meta deta regarding build",
       "additionalProperties": false
     },
     "NumberValidator": {
@@ -1827,6 +1830,7 @@
     },
     "Pages": {
       "type": "object",
+      "description": "Definition of addon pages (configuration, inputs, dashboard)",
       "properties": {
         "configuration": {
           "$ref": "#/definitions/ConfigurationPage"
