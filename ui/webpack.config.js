@@ -6,6 +6,18 @@ const { LicenseWebpackPlugin } = require('license-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const baseConfig = require('@splunk/webpack-configs/base.config').default;
 
+const proxyTargetUrl = 'http://localhost:8000';
+
+const jsAssetsRegex = /.+\/app\/.+\/js\/build(\/.+(js(.map)?))/;
+function isItStaticAsset(url) {
+    const isItAsset = jsAssetsRegex.test(url);
+    if (isItAsset) {
+        const isItCustomJs = url.includes('js/build/custom');
+        return !isItCustomJs;
+    }
+    return isItAsset;
+}
+
 module.exports = merge(baseConfig, {
     entry: {
         entry_page: path.join(__dirname, 'src/pages/entry_page'),
@@ -28,5 +40,37 @@ module.exports = merge(baseConfig, {
     devtool: 'source-map',
     resolve: {
         fallback: { querystring: require.resolve('querystring-es3') },
+    },
+    devServer: {
+        hot: false,
+        client: {
+            overlay: {
+                warnings: (warning) =>
+                    !warning.message.includes(
+                        'license-webpack-plugin: could not find any license file for styled-components'
+                    ),
+            },
+        },
+        proxy: [
+            {
+                target: proxyTargetUrl,
+                context(pathname) {
+                    if (pathname.endsWith('globalConfig.json')) {
+                        return true;
+                    }
+                    return !isItStaticAsset(pathname);
+                },
+            },
+        ],
+        setupMiddlewares: (middlewares, devServer) => {
+            devServer.app.use((req, res, next) => {
+                if (isItStaticAsset(req.url)) {
+                    req.url = req.url.replace(jsAssetsRegex, '$1');
+                }
+                next();
+            });
+
+            return middlewares;
+        },
     },
 });
