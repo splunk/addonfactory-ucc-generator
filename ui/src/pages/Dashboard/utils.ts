@@ -1,9 +1,9 @@
 export const waitForElementToDisplay = (
-    selector,
-    selector2,
-    callback,
-    checkFrequencyInMs,
-    timeoutInMs
+    selector: string,
+    selector2: string,
+    callback: { (): void; (): void },
+    checkFrequencyInMs: number | undefined,
+    timeoutInMs: number
 ) => {
     const startTimeInMs = Date.now();
     const loopSearch = () => {
@@ -25,21 +25,26 @@ export const waitForElementToDisplay = (
  * @param {string} elemSelector
  * @param {string} containerSelector
  */
-export const waitForElementToDisplayAndMoveThemToCanvas = (elemSelector, containerSelector) => {
+export const waitForElementToDisplayAndMoveThemToCanvas = (
+    elemSelector: string,
+    containerSelector: string
+) => {
     waitForElementToDisplay(
         elemSelector,
         containerSelector,
         () => {
             const element = document.querySelector(elemSelector);
             const container = document.querySelector(containerSelector);
-            container?.before(element);
+            if (element) {
+                container?.before(element);
+            }
         },
         300,
         5000
     );
 };
 
-const queryMap = {
+const queryMap: Record<string, string> = {
     'Source type': 'st',
     Source: 's',
     Host: 'h',
@@ -55,10 +60,10 @@ const queryMap = {
  * @param {string} selectedLabel current selected query type
  */
 export const createNewQueryBasedOnSearchAndHideTraffic = (
-    searchValue,
-    hideToggleValue,
-    oldQuery,
-    selectedLabel
+    searchValue: string,
+    hideToggleValue: unknown,
+    oldQuery: string,
+    selectedLabel: string
 ) => {
     const firstPipeIndex = oldQuery.indexOf('|');
     const part1 = oldQuery.substring(0, firstPipeIndex);

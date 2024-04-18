@@ -6,26 +6,14 @@ import { DataIngestionDashboard } from './DataIngestion';
 import { ErrorDashboard } from './Error';
 import { CustomDashboard } from './Custom';
 import './dashboardStyle.css';
-
-function getBuildDirPath() {
-    const scripts = document.getElementsByTagName('script');
-    const scriptsCount = scripts.length;
-    for (let i = 0; i < scriptsCount; i += 1) {
-        const s = scripts[i];
-        if (s.src && s.src.match(/js\/build/)) {
-            const lastSlashIndex = s.src.lastIndexOf('/');
-            return s.src.slice(0, lastSlashIndex);
-        }
-    }
-    return '';
-}
+import { getBuildDirPath } from '../../util/script';
 
 /**
  *
  * @param {string} fileName name of json file in custom dir
  * @param {string} setData callback, called with data as params
  */
-function loadJson(fileName, dataHandler) {
+function loadJson(fileName: string, dataHandler: (data: Record<string, unknown>) => void) {
     fetch(/* webpackIgnore: true */ `${getBuildDirPath()}/custom/${fileName}`)
         .then((res) => res.json())
         .then((external) => {
@@ -38,13 +26,13 @@ function loadJson(fileName, dataHandler) {
 }
 
 function DashboardPage() {
-    const [overviewDef, setOverviewDef] = useState(null);
-    const [dataIngestionDef, setDataIngestionDef] = useState(null);
-    const [errorDef, setErrorDef] = useState(null);
-    const [customDef, setCustomDef] = useState(null);
+    const [overviewDef, setOverviewDef] = useState<Record<string, unknown> | null>(null);
+    const [dataIngestionDef, setDataIngestionDef] = useState<Record<string, unknown> | null>(null);
+    const [errorDef, setErrorDef] = useState<Record<string, unknown> | null>(null);
+    const [customDef, setCustomDef] = useState<Record<string, unknown> | null>(null);
 
     useEffect(() => {
-        loadJson('panels_to_display.json', (data) => {
+        loadJson('panels_to_display.json', (data: { default?: boolean; custom?: boolean }) => {
             if (data?.default) {
                 loadJson('overview_definition.json', setOverviewDef);
                 loadJson('data_ingestion_tab_definition.json', setDataIngestionDef);
@@ -55,9 +43,9 @@ function DashboardPage() {
             }
         });
 
-        document.body.classList.add('grey_background');
+        // document.body.classList.add('grey_background');
         return () => {
-            document.body.classList.remove('grey_background');
+            // document.body.classList.remove('grey_background');
         };
     }, []);
 

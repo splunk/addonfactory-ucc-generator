@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import PropTypes from 'prop-types';
 import { DashboardCore } from '@splunk/dashboard-core';
 import { DashboardContextProvider } from '@splunk/dashboard-context';
 import EnterpriseViewOnlyPreset from '@splunk/dashboard-presets/EnterpriseViewOnlyPreset';
@@ -11,8 +10,12 @@ import {
     createNewQueryBasedOnSearchAndHideTraffic,
 } from './utils';
 
-let apiReference = null;
-export const DataIngestionDashboard = ({ dashboardDefinition }) => {
+let apiReference: { updateDefinition: (arg0: Record<string, unknown>) => void } | null = null;
+export const DataIngestionDashboard = ({
+    dashboardDefinition,
+}: {
+    dashboardDefinition: Record<string, unknown>;
+}) => {
     const [searchInput, setSearchInput] = useState('');
     const [toggleNoTraffic, setToggleNoTraffic] = useState(false);
 
@@ -40,8 +43,8 @@ export const DataIngestionDashboard = ({ dashboardDefinition }) => {
             '[data-input-id="data_ingestion_table_input"] button'
         );
         const config = { attributes: true };
-        const callback = (mutationsList) => {
-            mutationsList.forEach((mutation) => {
+        const callback = (mutationsList: MutationRecord[]) => {
+            mutationsList.forEach((mutation: MutationRecord) => {
                 if (mutation.attributeName === 'data-test-value') {
                     apiReference?.updateDefinition(dashboardDefinition);
                     setSearchInput('');
@@ -52,14 +55,17 @@ export const DataIngestionDashboard = ({ dashboardDefinition }) => {
         // mutation is used to detect if dropdown value is changed
         // todo: do a better solution
         const observer = new MutationObserver(callback);
-
-        observer.observe(targetNode, config);
+        if (targetNode) {
+            observer.observe(targetNode, config);
+        }
         return () => {
             observer.disconnect();
         };
     }, [dashboardDefinition]);
 
-    const setDashboardCoreApi = (api) => {
+    const setDashboardCoreApi = (api: {
+        updateDefinition: (arg0: Record<string, unknown>) => void;
+    }) => {
         apiReference = api;
     };
 
@@ -75,7 +81,7 @@ export const DataIngestionDashboard = ({ dashboardDefinition }) => {
                             ?.getAttribute('label') || 'Source type';
 
                     const item = copyJson.inputs.data_ingestion_table_input.options.items.find(
-                        (it) => it.label === selectedLabel
+                        (it: { label: string }) => it.label === selectedLabel
                     );
 
                     const newQuery = createNewQueryBasedOnSearchAndHideTraffic(
@@ -85,18 +91,18 @@ export const DataIngestionDashboard = ({ dashboardDefinition }) => {
                         selectedLabel
                     );
                     copyJson.dataSources.data_ingestion_table_ds.options.query = newQuery;
-                    apiReference.updateDefinition(copyJson);
+                    apiReference?.updateDefinition(copyJson);
                 }
             }, 1000),
         [dashboardDefinition]
     );
 
-    const handleChangeSearch = (e, { value }) => {
+    const handleChangeSearch = (e: unknown, { value }: { value: string }) => {
         setSearchInput(value);
         debounceHandlerChangeData(value, toggleNoTraffic);
     };
 
-    const handleChangeSwitch = (e, { value }) => {
+    const handleChangeSwitch = (e: unknown, { value }: { value?: unknown }) => {
         setToggleNoTraffic(!value);
         debounceHandlerChangeData(searchInput, !value);
     };
@@ -125,7 +131,6 @@ export const DataIngestionDashboard = ({ dashboardDefinition }) => {
             <div id="switch_hide_no_traffic_wrapper">
                 <Switch
                     id="switch_hide_no_traffic"
-                    key={toggleNoTraffic}
                     value={toggleNoTraffic}
                     onClick={handleChangeSwitch}
                     selected={!!toggleNoTraffic}
@@ -136,8 +141,4 @@ export const DataIngestionDashboard = ({ dashboardDefinition }) => {
             </div>
         </>
     );
-};
-
-DataIngestionDashboard.propTypes = {
-    dashboardDefinition: PropTypes.object,
 };
