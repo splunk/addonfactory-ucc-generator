@@ -334,7 +334,81 @@
                                         "oauth_field": "endpoint_token",
                                         "label": "Token endpoint",
                                         "field": "endpoint_token",
-                                        "help": "Put here endpoint used for token acqusition ie. login.salesforce.com"
+                                        "help": "Put here endpoint used for token acqusition ie. login.salesforce.com",
+                                        "modifyFieldsOnValue": [
+                                            {
+                                                "fieldValue": "[[any_other_value]]",
+                                                "fieldsToModify": [
+                                                    {
+                                                        "fieldId": "oauth_oauth_text",
+                                                        "disabled": false,
+                                                        "label": "Disabled on edit for oauth 55555"
+                                                    },
+                                                    {
+                                                        "fieldId": "endpoint_authorize",
+                                                        "display": true
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "fieldValue": "aaaaaa",
+                                                "fieldsToModify": [
+                                                    {
+                                                        "fieldId": "oauth_oauth_text",
+                                                        "disabled": false,
+                                                        "label": "Disabled on edit for oauth 1111"
+                                                    },
+                                                    {
+                                                        "fieldId": "endpoint_authorize",
+                                                        "display": true
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "fieldValue": "bbbbb",
+                                                "fieldsToModify": [
+                                                    {
+                                                        "fieldId": "oauth_oauth_text",
+                                                        "disabled": true,
+                                                        "label": "Disabled on edit for oauth 2222"
+                                                    },
+                                                    {
+                                                        "fieldId": "endpoint_authorize",
+                                                        "display": false
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "fieldValue": "ccccc",
+                                                "mode": "edit",
+                                                "fieldsToModify": [
+                                                    {
+                                                        "fieldId": "oauth_oauth_text",
+                                                        "disabled": false,
+                                                        "label": "Disabled on edit for oauth 3333"
+                                                    },
+                                                    {
+                                                        "fieldId": "endpoint_authorize",
+                                                        "display": false
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "fieldValue": "dddddd",
+                                                "mode": "create",
+                                                "fieldsToModify": [
+                                                    {
+                                                        "fieldId": "oauth_oauth_text",
+                                                        "disabled": true,
+                                                        "label": "Disabled on edit for oauth 44444"
+                                                    },
+                                                    {
+                                                        "fieldId": "endpoint_authorize",
+                                                        "display": false
+                                                    }
+                                                ]
+                                            }
+                                        ]
                                     },
                                     {
                                         "oauth_field": "endpoint_authorize",
@@ -1501,7 +1575,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.41.0R9c5fbfe0",
+        "version": "5.41.0R31e0e0e8",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.3",
         "_uccVersion": "5.41.0"
