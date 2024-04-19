@@ -1,0 +1,177 @@
+{
+  "visualizations": {
+    "errors_tab_label_viz": {
+      "type": "splunk.markdown",
+      "options": {
+        "markdown": "# Errors",
+        "fontSize": "large"
+      }
+    },
+    "errors_tab_description_viz": {
+      "type": "splunk.markdown",
+      "options": {
+        "markdown": "View error messages for your add-on within the selected time range.",
+        "customFontSize": 12,
+        "fontColor": "#6c7685"
+      }
+    },
+    "errors_tab_timerange_label_start_viz": {
+      "type": "splunk.singlevalue",
+      "options": {
+        "majorFontSize": 12,
+        "backgroundColor": "transparent",
+        "majorColor": "#9fa4af"
+      },
+      "dataSources": {
+        "primary": "errors_tab_data_time_label_start_ds"
+      }
+    },
+    "errors_tab_timerange_label_end_viz": {
+      "type": "splunk.singlevalue",
+      "options": {
+        "majorFontSize": 12,
+        "backgroundColor": "transparent",
+        "majorColor": "#9fa4af"
+      },
+      "dataSources": {
+        "primary": "errors_tab_data_time_label_end_ds"
+      }
+    },
+    "errors_tab_errors_count_viz": {
+      "type": "splunk.line",
+      "options": {
+        "xAxisVisibility": "hide",
+        "seriesColors": [
+          "#A870EF"
+        ],
+        "yAxisTitleText": "Errors count"
+      },
+      "title": "Errors count",
+      "dataSources": {
+        "primary": "errors_tab_errors_count_ds"
+      }
+    },
+    "errors_tab_errors_list_viz": {
+      "type": "splunk.events",
+      "options": {},
+      "dataSources": {
+        "primary": "errors_tab_errors_list_ds"
+      }
+    }
+  },
+  "dataSources": {
+    "errors_tab_data_time_label_start_ds": {
+      "type": "ds.search",
+      "options": {
+        "query": "| makeresults | addinfo | eval StartDate = strftime(info_min_time, \"%e %b %Y %I:%M%p\") | table StartDate",
+        "queryParameters": {
+          "earliest": "$errors_tab_time.earliest$",
+          "latest": "$errors_tab_time.latest$"
+        }
+      }
+    },
+    "errors_tab_data_time_label_end_ds": {
+      "type": "ds.search",
+      "options": {
+        "query": "| makeresults | addinfo | eval EndDate = strftime(info_max_time, \"%e %b %Y %I:%M%p\") | table EndDate",
+        "queryParameters": {
+          "earliest": "$errors_tab_time.earliest$",
+          "latest": "$errors_tab_time.latest$"
+        }
+      }
+    },
+    "errors_tab_errors_count_ds": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=_internal source=*splunk_ta_uccexample* ERROR | timechart span=1d count as Errors",
+        "queryParameters": {
+          "earliest": "$errors_tab_time.earliest$",
+          "latest": "$errors_tab_time.latest$"
+        }
+      }
+    },
+    "errors_tab_errors_list_ds": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=_internal source=*splunk_ta_uccexample* ERROR",
+        "queryParameters": {
+          "earliest": "$errors_tab_time.earliest$",
+          "latest": "$errors_tab_time.latest$"
+        }
+      }
+    }
+  },
+  "defaults": {},
+  "inputs": {
+    "errors_tab_input": {
+      "options": {
+        "defaultValue": "-7d,now",
+        "token": "errors_tab_time"
+      },
+      "title": "Time:",
+      "type": "input.timerange"
+    }
+  },
+  "layout": {
+    "type": "grid",
+    "globalInputs": [
+      "errors_tab_input"
+    ],
+    "structure": [
+      {
+        "item": "errors_tab_label_viz",
+        "position": {
+          "x": 20,
+          "y": 500,
+          "w": 300,
+          "h": 50
+        }
+      },
+      {
+        "item": "errors_tab_description_viz",
+        "position": {
+          "x": 20,
+          "y": 520,
+          "w": 500,
+          "h": 50
+        }
+      },
+      {
+        "item": "errors_tab_timerange_label_start_viz",
+        "position": {
+          "x": 20,
+          "y": 530,
+          "w": 100,
+          "h": 20
+        }
+      },
+      {
+        "item": "errors_tab_timerange_label_end_viz",
+        "position": {
+          "x": 120,
+          "y": 530,
+          "w": 100,
+          "h": 20
+        }
+      },
+      {
+        "item": "errors_tab_errors_count_viz",
+        "position": {
+          "x": 20,
+          "y": 550,
+          "w": 1220,
+          "h": 150
+        }
+      },
+      {
+        "item": "errors_tab_errors_list_viz",
+        "position": {
+          "x": 20,
+          "y": 710,
+          "w": 1220,
+          "h": 600
+        }
+      }
+    ]
+  }
+}
