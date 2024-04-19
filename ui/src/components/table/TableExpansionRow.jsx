@@ -54,14 +54,7 @@ export function getExpansionRow(colSpan, row, moreInfo) {
                         })}
                     </>
                 ) : (
-                    <>
-                        <DL termWidth={250}>{getExpansionRowData(row, moreInfo)}</DL>
-                        <Button
-                            to={`/app/search/search?q=search%20index%3D_internal%20source%3D*${row.name}*`}
-                            openInNewContext
-                            label={_(`Show ${row.name} input events`)}
-                        />
-                    </>
+                    <DL termWidth={250}>{getExpansionRowData(row, moreInfo)}</DL>
                 )}
             </TableCellWrapper>
         </Table.Row>

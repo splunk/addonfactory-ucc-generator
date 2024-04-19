@@ -7,6 +7,7 @@ import Table from '@splunk/react-ui/Table';
 import ButtonGroup from '@splunk/react-ui/ButtonGroup';
 import Tooltip from '@splunk/react-ui/Tooltip';
 import Pencil from '@splunk/react-icons/Pencil';
+import Magnifier from '@splunk/react-icons/Magnifier';
 import Clone from '@splunk/react-icons/enterprise/Clone';
 import Trash from '@splunk/react-icons/enterprise/Trash';
 import styled from 'styled-components';
@@ -37,6 +38,7 @@ function CustomTableRow(props) {
         handleToggleActionClick,
         handleEditActionClick,
         handleCloneActionClick,
+        handleSearchActionClick,
         handleDeleteActionClick,
     } = props;
 
@@ -70,6 +72,16 @@ function CustomTableRow(props) {
                                 icon={<Clone screenReaderText={null} size={1} />}
                                 onClick={() => handleCloneActionClick(selectedRow)}
                                 className="cloneBtn"
+                            />
+                        </Tooltip>
+                    )}
+                    {rowActions.includes('search') && (
+                        <Tooltip content={_('Search')}>
+                            <ActionButtonComponent
+                                appearance="flat"
+                                icon={<Magnifier screenReaderText={null} size={1} />}
+                                onClick={() => handleSearchActionClick(selectedRow)}
+                                className="searchBtn"
                             />
                         </Tooltip>
                     )}
@@ -179,6 +191,7 @@ CustomTableRow.propTypes = {
     handleToggleActionClick: PropTypes.func,
     handleEditActionClick: PropTypes.func,
     handleCloneActionClick: PropTypes.func,
+    handleSearchActionClick: PropTypes.func,
     handleDeleteActionClick: PropTypes.func,
 };
 

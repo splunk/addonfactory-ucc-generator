@@ -127,6 +127,13 @@ function CustomTable({
         [entityModal]
     );
 
+    const handleSearchActionClick = (selectedRow) => {
+        window.open(
+            `/app/search/search?q=search%20index%3D_internal%20source%3D*${selectedRow.name}*`,
+            '_blank'
+        );
+    };
+
     const handleDeleteActionClick = useCallback(
         (selectedRow) => {
             setDeleteModal({
@@ -232,6 +239,7 @@ function CustomTable({
                         {...{
                             handleEditActionClick,
                             handleCloneActionClick,
+                            handleSearchActionClick,
                             handleDeleteActionClick,
                         }}
                         handleToggleActionClick={handleToggleActionClick}
