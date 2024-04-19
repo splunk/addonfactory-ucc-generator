@@ -103,7 +103,7 @@
     "data_ingestion_data_volume_ds": {
       "type": "ds.search",
       "options": {
-        "query": "index=_internal source=*/var/log/splunk/license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | timechart span=1d sum(b) as Usage | eval Usage=round(Usage/1024/1024/1024,3) | rename Usage as \"Data volume\"",
+        "query": "index=_internal source=*license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | timechart span=1d sum(b) as Usage | eval Usage=round(Usage/1024/1024/1024,3) | rename Usage as \"Data volume\"",
         "queryParameters": {
           "earliest": "$data_ingestion_time.earliest$",
           "latest": "$data_ingestion_time.latest$"
@@ -147,19 +147,19 @@
         "items": [
           {
             "label": "Source type",
-            "value": "index=_internal source=*/var/log/splunk/license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | stats sparkline(sum(b)), sum(b) as Bytes by st | join type=left st [search index = _internal source=*splunk_ta_uccexample* action=events_ingested | stats latest(_time) AS \"Last seen\", sum(n_events) by sourcetype_ingested | rename sourcetype_ingested as st ]| convert ctime(\"Last seen\") | eval GB=round(Bytes/1024/1024/1024,3) | table st, GB, sum(n_events), sparkline(sum(b)), \"Last seen\" | rename st as \"Source type\", GB as \"Data volume [GB]\", sum(n_events) as \"Number of events\", sparkline(sum(b)) as \"Data volume trend line\""
+            "value": "index=_internal source=*license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | stats sparkline(sum(b)), sum(b) as Bytes by st | join type=left st [search index = _internal source=*splunk_ta_uccexample* action=events_ingested | stats latest(_time) AS \"Last seen\", sum(n_events) by sourcetype_ingested | rename sourcetype_ingested as st ]| convert ctime(\"Last seen\") | eval GB=round(Bytes/1024/1024/1024,3) | table st, GB, sum(n_events), sparkline(sum(b)), \"Last seen\" | rename st as \"Source type\", GB as \"Data volume [GB]\", sum(n_events) as \"Number of events\", sparkline(sum(b)) as \"Data volume trend line\""
           },
           {
             "label": "Source",
-            "value": "index=_internal source=*/var/log/splunk/license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | stats sparkline(sum(b)), sum(b) as Bytes by s | join type=left s [search index = _internal source=*splunk_ta_uccexample* action=events_ingested | stats latest(_time) AS \"Last seen\", sum(n_events) by modular_input_name | rename modular_input_name as s ]| convert ctime(\"Last seen\") | eval GB=round(Bytes/1024/1024/1024,3)| eval events=sum(b)| table s, GB, sum(n_events), sparkline(sum(b)), \"Last seen\" | rename s as \"Source\", GB as \"Data volume [GB]\", sum(n_events) as \"Number of events\", sparkline(sum(b)) as \"Data volume trend line\""
+            "value": "index=_internal source=*license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | stats sparkline(sum(b)), sum(b) as Bytes by s | join type=left s [search index = _internal source=*splunk_ta_uccexample* action=events_ingested | stats latest(_time) AS \"Last seen\", sum(n_events) by modular_input_name | rename modular_input_name as s ]| convert ctime(\"Last seen\") | eval GB=round(Bytes/1024/1024/1024,3)| eval events=sum(b)| table s, GB, sum(n_events), sparkline(sum(b)), \"Last seen\" | rename s as \"Source\", GB as \"Data volume [GB]\", sum(n_events) as \"Number of events\", sparkline(sum(b)) as \"Data volume trend line\""
           },
           {
             "label": "Host",
-            "value": "index=_internal source=*/var/log/splunk/license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | stats sparkline(sum(b)), sum(b) as Bytes by h | join type=left h [search index = _internal source=*splunk_ta_uccexample* action=events_ingested | stats latest(_time) AS \"Last seen\", sum(n_events) by host | rename host as h ]| convert ctime(\"Last seen\") | eval GB=round(Bytes/1024/1024/1024,3)| eval events=sum(b)| table h, GB, sparkline(sum(b)), \"Last seen\" | rename h as \"Host\", GB as \"Data volume [GB]\", sparkline(sum(b)) as \"Data volume trend line\""
+            "value": "index=_internal source=*license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | stats sparkline(sum(b)), sum(b) as Bytes by h | join type=left h [search index = _internal source=*splunk_ta_uccexample* action=events_ingested | stats latest(_time) AS \"Last seen\", sum(n_events) by host | rename host as h ]| convert ctime(\"Last seen\") | eval GB=round(Bytes/1024/1024/1024,3)| eval events=sum(b)| table h, GB, sparkline(sum(b)), \"Last seen\" | rename h as \"Host\", GB as \"Data volume [GB]\", sparkline(sum(b)) as \"Data volume trend line\""
           },
           {
             "label": "Index",
-            "value": "index=_internal source=*/var/log/splunk/license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | stats sparkline(sum(b)), sum(b) as Bytes by idx | join type=left idx [search index = _internal source=*splunk_ta_uccexample* action=events_ingested | stats latest(_time) AS \"Last seen\", sum(n_events) by event_index | rename event_index as idx ]| convert ctime(\"Last seen\") | eval GB=round(Bytes/1024/1024/1024,3)| eval events=sum(b)| table idx, GB, sum(n_events), sparkline(sum(b)), \"Last seen\" | rename idx as \"Index\", GB as \"Data volume [GB]\", sum(n_events) as \"Number of events\", sparkline(sum(b)) as \"Data volume trend line\""
+            "value": "index=_internal source=*license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | stats sparkline(sum(b)), sum(b) as Bytes by idx | join type=left idx [search index = _internal source=*splunk_ta_uccexample* action=events_ingested | stats latest(_time) AS \"Last seen\", sum(n_events) by event_index | rename event_index as idx ]| convert ctime(\"Last seen\") | eval GB=round(Bytes/1024/1024/1024,3)| eval events=sum(b)| table idx, GB, sum(n_events), sparkline(sum(b)), \"Last seen\" | rename idx as \"Index\", GB as \"Data volume [GB]\", sum(n_events) as \"Number of events\", sparkline(sum(b)) as \"Data volume trend line\""
           },
           {
             "label": "Account",
@@ -170,7 +170,7 @@
             "value": "index = _internal source=*splunk_ta_uccexample* action=events_ingested | stats latest(_time) as ls, sum(n_events) by event_input | convert ctime(ls) | table event_input, sum(n_events), ls | rename event_input as \"Input\", sum(n_events) as \"Number of events\", ls as \"Last seen\""
           }
         ],
-        "defaultValue": "index=_internal source=*/var/log/splunk/license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | stats sparkline(sum(b)), sum(b) as Bytes by st | join type=left st [search index = _internal source=*splunk_ta_uccexample* action=events_ingested | stats latest(_time) AS \"Last seen\", sum(n_events) by sourcetype_ingested | rename sourcetype_ingested as st ]| convert ctime(\"Last seen\") | eval GB=round(Bytes/1024/1024/1024,3) | table st, GB, sum(n_events), sparkline(sum(b)), \"Last seen\" | rename st as \"Source type\", GB as \"Data volume [GB]\", sum(n_events) as \"Number of events\", sparkline(sum(b)) as \"Data volume trend line\"",
+        "defaultValue": "index=_internal source=*license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | stats sparkline(sum(b)), sum(b) as Bytes by st | join type=left st [search index = _internal source=*splunk_ta_uccexample* action=events_ingested | stats latest(_time) AS \"Last seen\", sum(n_events) by sourcetype_ingested | rename sourcetype_ingested as st ]| convert ctime(\"Last seen\") | eval GB=round(Bytes/1024/1024/1024,3) | table st, GB, sum(n_events), sparkline(sum(b)), \"Last seen\" | rename st as \"Source type\", GB as \"Data volume [GB]\", sum(n_events) as \"Number of events\", sparkline(sum(b)) as \"Data volume trend line\"",
         "token": "table_view_by"
       },
       "title": "View by"
