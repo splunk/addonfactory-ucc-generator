@@ -110,7 +110,11 @@ class TestAlertActions(UccTester):
     @pytest.mark.sanity_test
     @pytest.mark.alert
     def test_alert_action_save(
-        self, ucc_smartx_selenium_helper, clean_alert, add_delete_account
+        self,
+        ucc_smartx_selenium_helper,
+        ucc_smartx_rest_helper,
+        clean_alert,
+        add_delete_account,
     ):
         alert_page = AlertPage(ucc_smartx_selenium_helper, None)
         alert_page.alert_entity.open()
@@ -129,9 +133,24 @@ class TestAlertActions(UccTester):
         alert_page.action_entity.action.select("Delete")
         alert_page.action_entity.account.select("TestAccount")
         alert_page.alert_entity.save()
-        alert_page = AlertPage(ucc_smartx_selenium_helper, None)
+
+        alert_page = AlertPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         alert_page.alert_table.wait_for_rows_to_appear()
         assert "test_alert" in alert_page.alert_table.get_column_values("name")
+
+        backend_stanza = alert_page.backend_conf.get_stanza("test_alert")
+        values_to_test = {
+            "action.test_alert": "1",
+            "action.test_alert.param.account": "TestAccount",
+            "action.test_alert.label": "Test Alert",
+            "action.test_alert.param.action": "Delete",
+            "action.test_alert.param.all_incidents": "1",
+        }
+
+        for key, value in values_to_test.items():
+            assert (
+                backend_stanza[key] == value
+            ), f"Value {value} does not match key: {key} in backend stanza"
 
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
