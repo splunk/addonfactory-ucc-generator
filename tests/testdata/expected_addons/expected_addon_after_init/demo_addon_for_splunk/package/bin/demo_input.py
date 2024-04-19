@@ -97,7 +97,7 @@ class Input(smi.Script):
                     input_name,
                     sourcetype,
                     len(data),
-                    index=input_item.get("index"),
+                    input_item.get("index"),
                     account=input_item.get("account")
                 )
                 log.modular_input_end(logger, normalized_input_name)
