@@ -1,3 +1,21 @@
+# [5.42.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.41.0...v5.42.0) (2024-04-19)
+
+
+### Bug Fixes
+
+* add customScript for alert action ([#1143](https://github.com/splunk/addonfactory-ucc-generator/issues/1143)) ([12d8392](https://github.com/splunk/addonfactory-ucc-generator/commit/12d8392cc87b8f8c8cd08e0e2f294a413beee7a6))
+* add schema version update for alert action ([#1150](https://github.com/splunk/addonfactory-ucc-generator/issues/1150)) ([94f3070](https://github.com/splunk/addonfactory-ucc-generator/commit/94f3070d92bff98aa6212f59230a1f3cd1b5d0aa))
+* update idna to 3.7 ([#1146](https://github.com/splunk/addonfactory-ucc-generator/issues/1146)) ([ece8f65](https://github.com/splunk/addonfactory-ucc-generator/commit/ece8f650430e0e5f8cc51f04c5d23caf5d582b14))
+
+
+### Features
+
+* **adaptiveResponse:** add verbose details for AR alert action ([#1135](https://github.com/splunk/addonfactory-ucc-generator/issues/1135)) ([b19d678](https://github.com/splunk/addonfactory-ucc-generator/commit/b19d678baa0abda207dcf669eaf2a9180bc6585d))
+* add iconFileName for alert action ([#1134](https://github.com/splunk/addonfactory-ucc-generator/issues/1134)) ([5a76706](https://github.com/splunk/addonfactory-ucc-generator/commit/5a76706df91ab115c285619adf5db5af712c4581)), closes [#1105](https://github.com/splunk/addonfactory-ucc-generator/issues/1105)
+* **CheckboxGroup:** add support for required field ([#1131](https://github.com/splunk/addonfactory-ucc-generator/issues/1131)) ([e101aa3](https://github.com/splunk/addonfactory-ucc-generator/commit/e101aa37263b4c26968c573682c29661a0ccd34a))
+* create a playground for global config ([#1144](https://github.com/splunk/addonfactory-ucc-generator/issues/1144)) ([791a6dc](https://github.com/splunk/addonfactory-ucc-generator/commit/791a6dc7ec6abea179c5601093a9bde86ba64ab4))
+* enhanced monitoring dashboard ([#1125](https://github.com/splunk/addonfactory-ucc-generator/issues/1125)) ([2d2b143](https://github.com/splunk/addonfactory-ucc-generator/commit/2d2b143c2e8d17341ad8860a4681a096e56eba4a))
+
 # [5.41.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.40.0...v5.41.0) (2024-04-02)
 
 
