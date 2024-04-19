@@ -114,8 +114,6 @@ jobs:
         if: "! github.event.pull_request.head.repo.fork "
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
       - run: poetry install
-      - name: Check docs
-        run: poetry run mkdocs build --strict
       - name: Build UCC
         run: |
           cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/

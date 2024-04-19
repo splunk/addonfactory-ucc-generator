@@ -24,9 +24,9 @@ jobs:
       - name: Build Storybook
         run: |
           cd ui
-          yarn run build-storybook --output-dir ../docs/storybook/
+          yarn run build-storybook --quiet --output-dir ../docs/storybook/
           cd ../
       - run: |
           curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
           poetry install
-      - run: poetry run mkdocs gh-deploy --force
+      - run: poetry run mkdocs gh-deploy --force --strict
