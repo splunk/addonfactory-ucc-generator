@@ -95,6 +95,25 @@ def _handle_alert_action_updates(global_config: global_config_lib.GlobalConfig) 
     global_config.update_schema_version("0.0.4")
 
 
+def _handle_xml_dashboard_update(global_config: global_config_lib.GlobalConfig) -> None:
+    panels_to_migrate = [
+        "addon_version",
+        "events_ingested_by_sourcetype",
+        "errors_in_the_addon",
+    ]
+    if global_config.has_dashboard():
+        panels = [panel["name"] for panel in global_config.dashboard["panels"]]
+        deprecated_panels = [el for el in panels if el in panels_to_migrate]
+        if deprecated_panels:
+            logger.warning(
+                f"deprecated dashboard panels found: {deprecated_panels}. "
+                f"Instead, use just one panel: \"'name': 'default'\""
+            )
+            global_config.dashboard["panels"] = [{"name": "default"}]
+            global_config.dump(global_config.original_path)
+    global_config.update_schema_version("0.0.5")
+
+
 def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -> None:
     """Handle changes in globalConfig file."""
     current_schema_version = global_config.schema_version
@@ -179,3 +198,8 @@ def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -
         _handle_alert_action_updates(global_config)
         global_config.dump(global_config.original_path)
         logger.info("Updated globalConfig schema to version 0.0.4")
+
+    if _version_tuple(version) < _version_tuple("0.0.5"):
+        _handle_xml_dashboard_update(global_config)
+        global_config.dump(global_config.original_path)
+        logger.info("Updated globalConfig schema to version 0.0.5")
