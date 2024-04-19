@@ -14,8 +14,9 @@ For a quickstart, please check [quick_start_ui.sh](../scripts/quick_start_ui.sh)
 
 After completing these steps, the following tasks will be available:
 
+* `yarn start` – Starts a server that serves JS bundles from memory and proxies other requests to the target, which is `localhost:8000` by default.
 * `yarn build` – Creates a production bundle.
-* `yarn start` – Builds bundle and watches for changes.
+* `yarn build:watch` – Creates a dev bundle and writes to output folder
 * `yarn run storybook` - Starts Storybook and opens http://localhost:6006.
 * `yarn run test-storybook` - Checks if screenshots match for every story.
 * `yarn run test-storybook:update-snapshots` - Updates screenshots. Must be run after every visual change.
@@ -26,6 +27,14 @@ After completing these steps, the following tasks will be available:
 Running `yarn run setup` is required to enable all other tasks. This command might take a few minutes to complete.
 
 We have published Storybook at: https://splunk.github.io/addonfactory-ucc-generator/storybook
+
+## Development Server
+This project integrates [webpack-dev-server](https://webpack.js.org/configuration/dev-server/) to enhance the development workflow, facilitating live reloading and in-memory serving of UI builds and static JavaScript files
+
+```bash
+yarn start
+```
+This initiates the server at http://localhost:8080 (or a custom port, if configured) and automatically refreshes the browser upon detecting file changes. It intersects static assets for all TAs. You may want to change target for the proxy in the file [webpack.config.js](webpack.config.js)
 
 ## Code Formatting
 
