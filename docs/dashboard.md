@@ -21,20 +21,20 @@ As of now, 3 pre-built panels are supported:
 <br>
 
 **IMPORTANT**: To fully use the panels available on the monitoring dashboard, use the `solnlib.log`'s [`events_ingested` function](https://github.com/splunk/addonfactory-solutions-library-python/blob/3045f9d15398fac0bd6740645ba119250ead129b/solnlib/log.py#L253), available from **version 4.14**, to record events. 
-The above function takes 4 positional parameters which are:
+The above function takes 5 positional parameters which are:
 
 * logger 
 * modular_input_name 
 * sourcetype
 * n_events
-
-and 3 named parameters:
-
 * index
-* account
-* host
 
-In addition to the first four arguments you must pass index and account to this function.
+and 2 named parameters:
+
+* account (optional)
+* host (optional)
+
+In addition to the first five arguments you must pass account to this function.
 Additionally, as "modular_input_name" you should pass the full input in the format **demo_input://my_input_1**
 
 example of a logging function:
@@ -44,7 +44,7 @@ example of a logging function:
                     "demo_input://my_input1",
                     "my_sourcetype",
                     2,
-                    index="my_index",
+                    "my_index",
                     account="my_account"
                 )
 ```
@@ -52,10 +52,6 @@ example of a logging function:
 as a reference, you can check the input in the demo add-on described here [Quickstart](quickstart.md)
 
 <br>
-
-> Note: if you change the dashboard page using the Edit button after the add-on is
-> installed, the changes go to the `local` folder. You will see your version
-> of the dashboard even if you update an add-on.
 
 To be able to add a monitoring dashboard page to an existing add-on, you need to adjust your 
 globalConfig file and include a new "dashboard" page there. See the following example:
