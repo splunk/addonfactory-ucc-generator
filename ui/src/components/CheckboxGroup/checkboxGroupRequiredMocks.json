@@ -1,0 +1,115 @@
+{
+  "meta": {
+    "name": "Splunk_TA_aws",
+    "displayName": "Splunk Add-on for AWS",
+    "version": "7.1.0",
+    "restRoot": "restRoot",
+    "schemaVersion": "0.0.3"
+  },
+  "pages": {
+    "configuration": {
+      "title": "",
+      "tabs": [
+        {
+          "name": "a",
+          "title": "",
+          "entity": []
+        }
+      ]
+    },
+    "inputs": {
+      "title": "Inputs",
+      "table": {
+        "header": [
+          {
+            "field": "name",
+            "label": "Input Name"
+          }
+        ],
+        "moreInfo": [
+          {
+            "field": "name",
+            "label": "Name"
+          }
+        ],
+        "actions": [
+          "edit",
+          "delete",
+          "clone"
+        ]
+      },
+      "services": [
+        {
+          "name": "example_input_required",
+          "title": "Required checkbox example",
+          "entity": [
+            {
+              "type": "checkboxGroup",
+              "label": "CheckboxGroupRequired",
+              "field": "api3",
+              "required": true,
+              "options": {
+                "groups": [
+                  {
+                    "label": "Group 1",
+                    "fields": [
+                      "collect_collaboration",
+                      "collect_file",
+                      "collect_task",
+                      "collect_folder_metadata"
+                    ],
+                    "options": {
+                      "isExpandable": true,
+                      "expand": true
+                    }
+                  }
+                ],
+                "rows": [
+                  {
+                    "field": "collect_collaboration",
+                    "checkbox": {
+                      "label": "Collect folder collaboration"
+                    },
+                    "input": {
+                      "required": true
+                    }
+                  },
+                  {
+                    "field": "collect_file",
+                    "checkbox": {
+                      "label": "Collect file metadata"
+                    },
+                    "input": {
+                      "defaultValue": 1,
+                      "required": true
+                    }
+                  },
+                  {
+                    "field": "collect_task",
+                    "checkbox": {
+                      "label": "Collect tasks and comments"
+                    },
+                    "input": {
+                      "defaultValue": 1,
+                      "required": true
+                    }
+                  },
+                  {
+                    "field": "collect_folder_metadata",
+                    "checkbox": {
+                      "label": "Collect folder metadata"
+                    },
+                    "input": {
+                      "defaultValue": 3600,
+                      "required": true
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

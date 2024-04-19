@@ -4,14 +4,14 @@ import { v4 as uuidv4 } from 'uuid';
 
 import Message from '@splunk/react-ui/Message';
 
-import ControlWrapper from './ControlWrapper/ControlWrapper';
-import Validator, { SaveValidator } from '../util/Validator';
-import { getUnifiedConfigs, generateToast } from '../util/util';
-import { MODE_CLONE, MODE_CREATE, MODE_EDIT, MODE_CONFIG } from '../constants/modes';
-import { PAGE_INPUT, PAGE_CONF } from '../constants/pages';
-import { axiosCallWrapper } from '../util/axiosCallWrapper';
-import { parseErrorMsg, getFormattedMessage } from '../util/messageUtil';
-import { getBuildDirPath } from '../util/script';
+import ControlWrapper from '../ControlWrapper/ControlWrapper';
+import Validator, { SaveValidator } from '../../util/Validator';
+import { getUnifiedConfigs, generateToast } from '../../util/util';
+import { MODE_CLONE, MODE_CREATE, MODE_EDIT, MODE_CONFIG } from '../../constants/modes';
+import { PAGE_INPUT, PAGE_CONF } from '../../constants/pages';
+import { axiosCallWrapper } from '../../util/axiosCallWrapper';
+import { parseErrorMsg, getFormattedMessage } from '../../util/messageUtil';
+import { getBuildDirPath } from '../../util/script';
 
 import {
     ERROR_REQUEST_TIMEOUT_TRY_AGAIN,
@@ -19,13 +19,13 @@ import {
     ERROR_OCCURRED_TRY_AGAIN,
     ERROR_AUTH_PROCESS_TERMINATED_TRY_AGAIN,
     ERROR_STATE_MISSING_TRY_AGAIN,
-} from '../constants/oAuthErrorMessage';
-import TableContext from '../context/TableContext';
-import Group from './Group/Group';
+} from '../../constants/oAuthErrorMessage';
+import TableContext from '../../context/TableContext';
+import Group from '../Group/Group';
 import {
     AcceptableFormValueOrNull,
     AcceptableFormValueOrNullish,
-} from '../types/components/shareableTypes';
+} from '../../types/components/shareableTypes';
 import {
     CustomHookError,
     BaseFormProps,
@@ -48,7 +48,8 @@ import {
 import {
     getAllFieldsWithModifications,
     getModifiedState,
-} from './FormModifications/FormModifications';
+} from '../FormModifications/FormModifications';
+import { GlobalConfig } from '../../types/globalConfig/globalConfig';
 
 function onCustomHookError(params: { methodName: string; error?: CustomHookError }) {
     // eslint-disable-next-line no-console
@@ -862,7 +863,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             });
     };
 
-    handleChange = (field: string, targetValue: string) => {
+    handleChange = (field: string, targetValue: AcceptableFormValueOrNullish) => {
         this.setState((prevState) => {
             const changes: Record<string, ChangeRecord> = {};
 
@@ -944,7 +945,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
     ) => {
         const index = this.entities?.findIndex((x) => x.field === field);
         const validator = [{ type: 'custom', validatorFunc }];
-        if (index && this.entities?.[index]) {
+        if (index !== undefined && this.entities?.[index]) {
             // here the validators already exist for entities so new type is created here
             // @ts-expect-error todo create a generalized type to also consider it
             this.entities[index].validators = validator;
@@ -1023,7 +1024,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
     };
 
     // generatesubmitMessage
-    loadHook = (module: string, type: string, globalConfig: unknown) => {
+    loadHook = (module: string, type: string, globalConfig: GlobalConfig) => {
         const myPromise = new Promise((resolve) => {
             if (type === 'external') {
                 import(/* webpackIgnore: true */ `${getBuildDirPath()}/custom/${module}.js`).then(

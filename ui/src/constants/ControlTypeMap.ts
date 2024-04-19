@@ -6,7 +6,7 @@ import MultiInputComponent from '../components/MultiInputComponent/MultiInputCom
 import CheckBoxComponent from '../components/CheckBoxComponent/CheckBoxComponent';
 import RadioComponent from '../components/RadioComponent/RadioComponent';
 import PlaceholderComponent from '../components/PlaceholderComponent/PlaceholderComponent';
-import CustomControl from '../components/CustomControl';
+import CustomControl from '../components/CustomControl/CustomControl';
 import FileInputComponent from '../components/FileInputComponent/FileInputComponent';
 import CheckboxGroup from '../components/CheckboxGroup/CheckboxGroup';
 

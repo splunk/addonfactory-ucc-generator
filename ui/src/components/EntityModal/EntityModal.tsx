@@ -7,7 +7,7 @@ import { _ } from '@splunk/ui-utils/i18n';
 import { ButtonClickHandler } from '@splunk/react-ui/Button';
 import { Mode, MODE_CLONE, MODE_CREATE, MODE_EDIT } from '../../constants/modes';
 import { StyledButton } from '../../pages/EntryPageStyle';
-import BaseFormView from '../BaseFormView';
+import BaseFormView from '../BaseFormView/BaseFormView';
 
 const ModalWrapper = styled(Modal)`
     width: 800px;

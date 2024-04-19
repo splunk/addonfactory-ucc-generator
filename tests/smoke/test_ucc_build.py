@@ -173,6 +173,7 @@ def test_ucc_generate_with_everything():
         # Expected add-on package folder does not have "lib" in it.
         files_to_be_equal = [
             ("README.txt",),
+            ("appserver", "static", "test icon.png"),
             ("default", "alert_actions.conf"),
             ("default", "eventtypes.conf"),
             ("default", "inputs.conf"),
@@ -187,7 +188,6 @@ def test_ucc_generate_with_everything():
             ("default", "data", "ui", "views", "inputs.xml"),
             ("default", "data", "ui", "views", "dashboard.xml"),
             ("default", "data", "ui", "views", "splunk_ta_uccexample_redirect.xml"),
-            ("bin", "splunk_ta_uccexample", "modalert_test_alert_helper.py"),
             ("bin", "example_input_one.py"),
             ("bin", "example_input_two.py"),
             ("bin", "example_input_three.py"),
@@ -202,6 +202,7 @@ def test_ucc_generate_with_everything():
             ("bin", "splunk_ta_uccexample_rh_oauth.py"),
             ("bin", "splunk_ta_uccexample_rh_settings.py"),
             ("bin", "splunk_ta_uccexample_validate_account_rh.py"),
+            ("bin", "myAlertLogic.py"),
             ("bin", "test_alert.py"),
             ("README", "alert_actions.conf.spec"),
             ("README", "inputs.conf.spec"),
@@ -223,6 +224,15 @@ def test_ucc_generate_with_everything():
         for f in files_to_exist:
             expected_file_path = path.join(expected_folder, *f)
             assert path.exists(expected_file_path)
+
+        # when custom files are provided, default files shouldn't be shipped
+        files_should_be_absent = [
+            ("appserver", "static", "alerticon.png"),
+            ("bin", "splunk_ta_uccexample", "modalert_test_alert_helper.py"),
+        ]
+        for af in files_should_be_absent:
+            expected_file_path = path.join(expected_folder, *af)
+            assert not path.exists(expected_file_path)
 
         _compare_logging_tabs(package_folder, actual_folder)
 
@@ -511,6 +521,7 @@ def test_ucc_generate_with_everything_uccignore(caplog):
         _compare_app_conf(expected_folder, actual_folder)
         files_to_be_equal = [
             ("README.txt",),
+            ("appserver", "static", "test icon.png"),
             ("default", "alert_actions.conf"),
             ("default", "eventtypes.conf"),
             ("default", "inputs.conf"),
@@ -525,7 +536,6 @@ def test_ucc_generate_with_everything_uccignore(caplog):
             ("default", "data", "ui", "views", "inputs.xml"),
             ("default", "data", "ui", "views", "dashboard.xml"),
             ("default", "data", "ui", "views", "splunk_ta_uccexample_redirect.xml"),
-            ("bin", "splunk_ta_uccexample", "modalert_test_alert_helper.py"),
             ("bin", "example_input_two.py"),
             ("bin", "example_input_three.py"),
             ("bin", "example_input_four.py"),

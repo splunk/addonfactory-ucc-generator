@@ -43,6 +43,10 @@ nav:
       - Logging: "configurations/logging.md"
       - Proxy: "configurations/proxy.md"
   - Dashboard: "dashboard.md"
+  - Alert Actions:
+    - "alert_actions/index.md"
+    - Alert Action Scripts: "alert_actions/alert_scripts.md"
+    - Adaptive Response: "alert_actions/adaptive_response.md"
   - Entity:
     - "entity/index.md"
     - Introduction: "entity/index.md"
