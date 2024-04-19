@@ -30,7 +30,7 @@
     "@splunk/ui-utils": "^1.6.0",
     "@storybook/test": "^8.0.8",
     "@splunk/dashboard-context": "^27.0.0",
-    "@splunk/dashboard-action-buttons": "^27.0.0",
+    "@splunk/dashboard-state": "^27.0.0",
     "@splunk/visualization-context": "^26.0.0",
     "@splunk/dashboard-core": "^27.0.0",
     "@splunk/dashboard-presets": "^27.0.0",
