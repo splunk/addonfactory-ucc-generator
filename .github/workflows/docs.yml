@@ -41,4 +41,4 @@ jobs:
         run: poetry run mkdocs gh-deploy --force --strict
       - name: Build Docs
         if: github.ref_name != 'main'
-        run: poetry run mkdocs build --force --strict
+        run: poetry run mkdocs build --strict
