@@ -92,6 +92,7 @@ def _handle_alert_action_updates(global_config: global_config_lib.GlobalConfig) 
             updated_alerts.append(modified_alert)
         global_config._content["alerts"] = updated_alerts
         global_config.dump(global_config.original_path)
+    global_config.update_schema_version("0.0.4")
 
 
 def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -> None:
@@ -174,4 +175,7 @@ def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -
         global_config.dump(global_config.original_path)
         logger.info("Updated globalConfig schema to version 0.0.3")
 
-    _handle_alert_action_updates(global_config)
+    if _version_tuple(version) < _version_tuple("0.0.4"):
+        _handle_alert_action_updates(global_config)
+        global_config.dump(global_config.original_path)
+        logger.info("Updated globalConfig schema to version 0.0.4")
