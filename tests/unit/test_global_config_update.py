@@ -61,6 +61,7 @@ def test_handle_dropping_api_version_update(filename, is_yaml):
 
 def test_handle_alert_action_updates(tmp_path, caplog):
     tmp_file_gc = tmp_path / "globalConfig.json"
+    # a new globalConfig with minimal configs for input and configuration
     helpers.copy_testdata_gc_to_tmp_file(tmp_file_gc, "valid_config_all_alerts.json")
     global_config = global_config_lib.GlobalConfig(str(tmp_file_gc), False)
 
@@ -78,14 +79,13 @@ def test_handle_alert_action_updates(tmp_path, caplog):
 
     for alert in global_config.alerts:
         assert alert.get("adaptiveResponse")
-        assert alert.get("activeResponse", "<NOT FOUND>") == "<NOT FOUND>"
+        assert alert.get("activeResponse") is None
         if alert["name"] == "test_alert_default":
-            # check the default values when these properties aren't provided
+            # check the default values when these properties aren't provided in an alert
             assert alert["adaptiveResponse"]["supportsAdhoc"] is False
             assert alert["adaptiveResponse"]["supportsCloud"] is True
         assert alert.get("adaptiveResponse", {}).get("supportsAdhoc") is not None
         assert alert.get("adaptiveResponse", {}).get("supportsCloud") is not None
-
 
 
 def test_migrate_old_dashboard(tmp_path, caplog):
