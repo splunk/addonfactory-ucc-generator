@@ -1,3 +1,10 @@
+## [5.42.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.42.0...v5.42.1) (2024-04-22)
+
+
+### Bug Fixes
+
+* **dashboard:** pin @splunk/react-ui version ([#1158](https://github.com/splunk/addonfactory-ucc-generator/issues/1158)) ([0e9a479](https://github.com/splunk/addonfactory-ucc-generator/commit/0e9a4793a83b81f3e71d7f8093a1a4b05254854b))
+
 # [5.42.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.41.0...v5.42.0) (2024-04-19)
 
 
