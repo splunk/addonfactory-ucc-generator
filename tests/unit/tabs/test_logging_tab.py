@@ -114,3 +114,32 @@ def test_logging_tab_migration_different_parameters(generic_tab_def):
         "type": "loggingTab",
     }
     assert tab.render() == generic_tab_def
+
+
+def test_logging_tab_aaa():
+    tab_json = {
+        "name": "logging",
+        "title": "Logging",
+        "entity": [
+            {
+                "type": "singleSelect",
+                "label": "Log Level",
+                "help": "(DEBUG, INFO, WARNING, ERROR or CRITICAL)",
+                "required": True,
+                "options": {
+                    "disableSearch": True,
+                    "autoCompleteFields": [
+                        {"value": "DEBUG", "label": "DEBUG"},
+                        {"value": "INFO", "label": "INFO"},
+                        {"value": "WARNING", "label": "WARNING"},
+                        {"value": "ERROR", "label": "ERROR"},
+                        {"value": "CRITICAL", "label": "CRITICAL"},
+                    ],
+                },
+                "field": "loglevel",
+            }
+        ],
+    }
+
+    tab = LoggingTab.from_definition(tab_json)
+    assert tab is None

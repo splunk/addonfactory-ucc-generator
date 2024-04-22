@@ -99,6 +99,9 @@ class LoggingTab(Tab):
 
         entity = definition["entity"][0]
 
+        if entity.keys() != {"type", "label", "options", "field", "defaultValue"}:
+            return None
+
         if entity["type"] != "singleSelect":
             return None
 
