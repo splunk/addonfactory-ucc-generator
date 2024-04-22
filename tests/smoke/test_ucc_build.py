@@ -106,8 +106,6 @@ def test_ucc_generate_with_config_param():
     def check_ucc_versions():
         global_config_path = path.join(
             path.dirname(path.realpath(__file__)),
-            "..",
-            "..",
             "output",
             "Splunk_TA_UCCExample",
             "appserver",
@@ -117,6 +115,7 @@ def test_ucc_generate_with_config_param():
             "globalConfig.json",
         )
 
+        print(global_config_path)
         with open(global_config_path) as _f:
             global_config = json.load(_f)
 
@@ -396,7 +395,7 @@ def test_ucc_build_verbose_mode(caplog):
             if copy_logs:
                 return_logs.append(record)
 
-            if record.message[:22] == message_to_end:
+            if record.message.startswith(message_to_end):
                 copy_logs = False
 
         return return_logs
