@@ -70,7 +70,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: apache/skywalking-eyes@v0.5.0
+      - uses: apache/skywalking-eyes@v0.6.0
 
   build-ui:
     name: Build UCC UI
@@ -298,7 +298,7 @@ jobs:
           poetry install
           mkdir tests/packaged
           poetry run ucc-gen package --path tests/testdata/expected_addons/expected_output_global_config_everything/Splunk_TA_UCCExample -o tests/packaged
-      - uses: splunk/appinspect-cli-action@v2.5
+      - uses: splunk/appinspect-cli-action@v2.6
         with:
           app_path: tests/packaged
           included_tags: ${{ matrix.tags }}

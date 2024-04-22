@@ -6,7 +6,7 @@ import os
 import sys
 
 from splunktaucclib.alert_actions_base import ModularAlertBase
-from splunk_ta_uccexample import modalert_test_alert_helper
+import myAlertLogic
 
 class AlertActionWorkertest_alert(ModularAlertBase):
 
@@ -34,7 +34,7 @@ class AlertActionWorkertest_alert(ModularAlertBase):
         try:
             if not self.validate_params():
                 return 3
-            status = modalert_test_alert_helper.process_event(self, *args, **kwargs)
+            status = myAlertLogic.process_event(self, *args, **kwargs)
         except (AttributeError, TypeError) as ae:
             self.log_error("Error: {}. Please double check spelling and also verify that a compatible version of Splunk_SA_CIM is installed.".format(str(ae)))#ae.message replaced with str(ae)
             return 4

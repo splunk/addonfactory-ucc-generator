@@ -1,6 +1,10 @@
 import { Mode } from '../../constants/modes';
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
-import { BaseFormState, AnyEntity, EntitiesAllowingModifications } from '../BaseFormTypes';
+import {
+    BaseFormState,
+    AnyEntity,
+    EntitiesAllowingModifications,
+} from '../BaseFormView/BaseFormTypes';
 import { MarkdownMessageProps } from '../MarkdownMessage/MarkdownMessage';
 
 const VALUE_TO_TRIGGER_UPDATE_FOR_ANY_NOT_LISTED_VALUES = '[[any_other_value]]';

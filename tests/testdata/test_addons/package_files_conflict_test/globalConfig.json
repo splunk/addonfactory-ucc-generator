@@ -198,13 +198,7 @@
         "dashboard": {
             "panels": [
                 {
-                    "name": "addon_version"
-                },
-                {
-                    "name": "events_ingested_by_sourcetype"
-                },
-                {
-                    "name": "errors_in_the_addon"
+                    "name": "default"
                 }
             ]
         }
@@ -212,7 +206,7 @@
     "meta": {
         "name": "test_addon",
         "restRoot": "test_addon",
-        "version": "5.41.0Ra86f3f2a",
+        "version": "5.41.0R45554b7b",
         "displayName": "This is my add-on",
         "schemaVersion": "0.0.3",
         "_uccVersion": "5.41.0"

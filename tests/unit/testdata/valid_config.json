@@ -1184,13 +1184,7 @@
         "dashboard": {
             "panels": [
                 {
-                    "name": "addon_version"
-                },
-                {
-                    "name": "events_ingested_by_sourcetype"
-                },
-                {
-                    "name": "errors_in_the_addon"
+                    "name": "default"
                 }
             ]
         }
@@ -1200,12 +1194,13 @@
             "name": "test_alert",
             "label": "Test Alert",
             "description": "Description for test Alert Action",
-            "activeResponse": {
+            "adaptiveResponse": {
                 "task": [
                     "Create",
                     "Update"
                 ],
                 "supportsAdhoc": true,
+                "supportsCloud": true,
                 "subject": [
                     "endpoint"
                 ],

@@ -82,6 +82,7 @@ class AlertActionsPyGenerator:
             lib_name=self._lib_dir,
             mod_alert=alert,
             helper_name=op.splitext(self._get_alert_helper_py_name(alert))[0],
+            custom_logic_handler=alert.get("customScript", ""),
         )
         logger.debug(f"Writing to file {self._get_alert_py_path(alert)}")
         write_file(
@@ -97,11 +98,13 @@ class AlertActionsPyGenerator:
             mod_alert=alert,
         )
         logger.debug(f"Writing to file {self._get_alert_py_path(alert)}")
-        write_file(
-            self._get_alert_helper_py_name(alert),
-            self._get_alert_helper_py_path(alert),
-            rendered_content,
-        )
+        if not alert.get("customScript"):
+            # we only write the template file if the custom Script isn't available.
+            write_file(
+                self._get_alert_helper_py_name(alert),
+                self._get_alert_helper_py_path(alert),
+                rendered_content,
+            )
 
     def handle(self) -> None:
         for alert in self._alert_actions_setting:
