@@ -45,10 +45,9 @@ module.exports = merge(baseConfig, {
         hot: false,
         client: {
             overlay: {
-                warnings: (warning) =>
-                    !warning.message.includes(
-                        'license-webpack-plugin: could not find any license file for styled-components'
-                    ),
+                errors: true,
+                warnings: false, // it throws warnings about lack of package licenses
+                runtimeErrors: true,
             },
         },
         proxy: [
