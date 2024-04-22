@@ -36,20 +36,21 @@ module.exports = merge(baseConfig, {
             },
         ],
     },
-    plugins: [new LicenseWebpackPlugin(), new ForkTsCheckerWebpackPlugin()],
+    plugins: [
+        new LicenseWebpackPlugin({
+            stats: {
+                warnings: false,
+                errors: true,
+            },
+        }),
+        new ForkTsCheckerWebpackPlugin(),
+    ],
     devtool: 'source-map',
     resolve: {
         fallback: { querystring: require.resolve('querystring-es3') },
     },
     devServer: {
         hot: false,
-        client: {
-            overlay: {
-                errors: true,
-                warnings: false, // it throws warnings about lack of package licenses
-                runtimeErrors: true,
-            },
-        },
         proxy: [
             {
                 target: proxyTargetUrl,
