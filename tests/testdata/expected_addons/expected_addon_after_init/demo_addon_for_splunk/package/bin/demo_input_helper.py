@@ -77,7 +77,10 @@ def stream_events(inputs: smi.InputDefinition, event_writer: smi.EventWriter):
                     )
                 )
             log.events_ingested(
-                logger, normalized_input_name, sourcetype, len(data)
+                logger,
+                normalized_input_name,
+                sourcetype,
+                len(data),
             )
             log.modular_input_end(logger, normalized_input_name)
         except Exception as e:
