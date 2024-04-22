@@ -104,7 +104,6 @@ def test_ucc_generate_with_config_param():
     """
 
     def check_ucc_versions(parent_folder):
-
         global_config_path = path.join(
             parent_folder,
             "Splunk_TA_UCCExample",
