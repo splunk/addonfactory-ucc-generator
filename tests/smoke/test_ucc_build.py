@@ -115,7 +115,6 @@ def test_ucc_generate_with_config_param():
             "globalConfig.json",
         )
 
-        print(global_config_path)
         with open(global_config_path) as _f:
             global_config = json.load(_f)
 
