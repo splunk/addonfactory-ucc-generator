@@ -137,7 +137,9 @@ def test_ucc_generate_with_config_param():
         "globalConfig.json",
     )
     with tempfile.TemporaryDirectory(prefix="ucc") as temp:
-        build.generate(source=package_folder, config_path=config_path, output_directory=temp)
+        build.generate(
+            source=package_folder, config_path=config_path, output_directory=temp
+        )
 
         check_ucc_versions(temp)
 
