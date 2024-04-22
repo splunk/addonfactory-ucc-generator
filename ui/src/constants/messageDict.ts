@@ -57,6 +57,7 @@ const MESSAGE_DICT: Record<number | 'unknown', string> = {
     117: 'Configuration',
     // globalConfig file not found error message
     118: 'configuration file not found',
+    119: 'Monitoring Dashboard',
 
     unknown: 'An unknown error occurred',
 };

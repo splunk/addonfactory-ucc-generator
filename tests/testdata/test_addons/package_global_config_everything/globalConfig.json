@@ -1452,13 +1452,7 @@
         "dashboard": {
             "panels": [
                 {
-                    "name": "addon_version"
-                },
-                {
-                    "name": "events_ingested_by_sourcetype"
-                },
-                {
-                    "name": "errors_in_the_addon"
+                    "name": "default"
                 }
             ]
         }
@@ -1581,7 +1575,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.41.0R9c5fbfe0",
+        "version": "5.41.0R31e0e0e8",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.3",
         "_uccVersion": "5.41.0"

@@ -70,9 +70,6 @@
     "dashboard": {
       "panels": [
         {
-          "name": "default"
-        },
-        {
           "name": "custom"
         }
       ]
