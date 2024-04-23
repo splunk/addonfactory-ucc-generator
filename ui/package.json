@@ -122,7 +122,8 @@
     "postcss": "^8.4.38",
     "semver": "^7.6.0",
     "strip-ansi": "^6.0.1",
-    "string-width": "^4.2.3"
+    "string-width": "^4.2.3",
+    "@splunk/react-ui": "4.28.2"
   },
   "engines": {
     "node": ">=20.10.0",
