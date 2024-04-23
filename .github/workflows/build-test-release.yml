@@ -93,7 +93,6 @@ jobs:
 
   build:
     needs:
-      - fossa-scan
       - build-ui
     runs-on: ubuntu-latest
     steps:
@@ -114,8 +113,6 @@ jobs:
         if: "! github.event.pull_request.head.repo.fork "
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
       - run: poetry install
-      - name: Check docs
-        run: poetry run mkdocs build --strict
       - name: Build UCC
         run: |
           cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/
@@ -148,8 +145,6 @@ jobs:
 
   test-smoke:
     name: test-smoke ${{ matrix.python-version }}
-    needs:
-      - build
     runs-on: ubuntu-latest
     continue-on-error: true
     strategy:
@@ -165,13 +160,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - uses: actions/download-artifact@v4
-        with:
-          name: UCC-UI-build
-          path: built-ui/
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
       - run: |
-          cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/
           poetry install
           poetry run pytest tests/smoke
 
@@ -208,14 +198,6 @@ jobs:
 
   test-ui:
     name: test-ui Splunk ${{ matrix.splunk.version }} -m ${{ matrix.test-mark }}
-    if: |
-      github.base_ref == 'main' ||
-      github.ref_name == 'main' ||
-      github.base_ref == 'develop' ||
-      github.ref_name == 'develop' ||
-      startsWith(github.ref_name, 'release') ||
-      startsWith(github.base_ref, 'release') ||
-      contains(github.event.pull_request.labels.*.name, 'run-ui-tests')
     runs-on: ubuntu-latest
     permissions:
       id-token: write

@@ -2670,7 +2670,7 @@
     prop-types "^15.6.2"
     react-flip-move "^3.0.1"
 
-"@splunk/react-ui@4.28.2":
+"@splunk/react-ui@4.28.2", "@splunk/react-ui@^4.17.1", "@splunk/react-ui@^4.19.0", "@splunk/react-ui@^4.23.0", "@splunk/react-ui@^4.25.0", "@splunk/react-ui@^4.28.2":
   version "4.28.2"
   resolved "https://registry.npmjs.org/@splunk/react-ui/-/react-ui-4.28.2.tgz#91ab62a5c07d967c592df0bf6e2b1c7604c22b72"
   integrity sha512-krYWurzg/Y9G4J8pfmPusUaCIVHFldq8jS85OdsW91hHCML8ZqlK8/PyJy9loDPrxNyz48MX1pd6JqS5PVWxFA==
@@ -2679,28 +2679,6 @@
     "@dnd-kit/sortable" "7.0.2"
     "@dnd-kit/utilities" "3.2.1"
     "@splunk/react-icons" "^4.3.0"
-    "@splunk/themes" "^0.17.0"
-    "@splunk/ui-utils" "^1.6.0"
-    commonmark "^0.30.0"
-    commonmark-react-renderer "^4.3.2"
-    decimal.js-light "^2.2.3"
-    lodash "^4.17.14"
-    moment "^2.29.4"
-    prop-types "^15.6.2"
-    react-resize-detector "^3.2.1"
-    react-spring "9.2.4"
-    tinycolor2 "^1.4.1"
-    use-typed-event-listener "^3.0.0"
-
-"@splunk/react-ui@^4.17.1", "@splunk/react-ui@^4.19.0", "@splunk/react-ui@^4.23.0", "@splunk/react-ui@^4.25.0", "@splunk/react-ui@^4.28.2":
-  version "4.29.0"
-  resolved "https://registry.npmjs.org/@splunk/react-ui/-/react-ui-4.29.0.tgz#b7dc9314db2671e3f3d76df195d4d9411e1eabab"
-  integrity sha512-6qTYOFFUnuBEgExYRKyFJMvGS11lqPpaR3fFabmMr3Mah+lOWLRimqbtlEMqLWfjubUb7kePsrx0Ofb1Qih5BA==
-  dependencies:
-    "@dnd-kit/core" "6.0.8"
-    "@dnd-kit/sortable" "7.0.2"
-    "@dnd-kit/utilities" "3.2.1"
-    "@splunk/react-icons" "^4.4.0"
     "@splunk/themes" "^0.17.0"
     "@splunk/ui-utils" "^1.6.0"
     commonmark "^0.30.0"
