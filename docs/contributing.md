@@ -3,6 +3,7 @@
 ## Build and Test
 
 Prerequisites:
+
 - Node.js LTS version ([Node.js](https://nodejs.org/en/download), or use [nvm](https://github.com/nvm-sh/nvm))
 - Yarn Classic (`npm install --global yarn`)
 - Poetry 1.5.1. [Installation guide](https://python-poetry.org/docs/#installing-with-the-official-installer)

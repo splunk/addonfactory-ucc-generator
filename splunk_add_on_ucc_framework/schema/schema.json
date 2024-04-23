@@ -14,7 +14,13 @@
         },
         "type": {
           "type": "string",
-          "enum": ["text", "checkbox", "singleSelect", "radio", "singleSelectSplunkSearch"]
+          "enum": [
+            "text",
+            "checkbox",
+            "singleSelect",
+            "radio",
+            "singleSelectSplunkSearch"
+          ]
         },
         "help": {
           "type": "string",
@@ -129,12 +135,7 @@
               "maxLength": 50
             }
           },
-          "required": [
-            "task",
-            "subject",
-            "category",
-            "technology"
-          ]
+          "required": ["task", "subject", "category", "technology"]
         },
         "entity": {
           "type": "array",
@@ -174,16 +175,19 @@
       "properties": {
         "title": {
           "type": "string",
+          "description": "Title of Configuration page",
           "maxLength": 60
         },
         "description": {
           "type": "string",
+          "description": "Description under title of Configuration page",
           "maxLength": 200
         },
         "subDescription": {
           "$ref": "#/definitions/SubDescription"
         },
         "tabs": {
+          "description": "Array of forms to be displayed in separate tabs",
           "type": "array",
           "items": {
             "anyOf": [
@@ -191,7 +195,7 @@
                 "$ref": "#/definitions/TabContent"
               },
               {
-                "$ref": "#/definitions/tabs/Logging"
+                "$ref": "#/definitions/PredefinedLoggingTab"
               }
             ]
           },
@@ -315,6 +319,7 @@
     },
     "Groups": {
       "type": "array",
+      "description": "It is used to divide forms into distinct sections, each comprising relevant fields.",
       "items": {
         "type": "object",
         "properties": {
@@ -986,7 +991,7 @@
             ]
           }
         },
-        "required" : {
+        "required": {
           "type": "boolean"
         }
       },
@@ -1317,6 +1322,7 @@
     },
     "AnyOfEntity": {
       "type": "array",
+      "description": "It is a list of fields and their properties.",
       "items": {
         "anyOf": [
           {
@@ -1384,188 +1390,13 @@
       ]
     },
     "InputsPage": {
+      "description": "Definition of Input Page",
       "oneOf": [
         {
-          "type": "object",
-          "properties": {
-            "title": {
-              "type": "string",
-              "maxLength": 60
-            },
-            "description": {
-              "type": "string",
-              "maxLength": 200
-            },
-            "subDescription": {
-              "$ref": "#/definitions/SubDescription"
-            },
-            "menu": {
-              "type": "object"
-            },
-            "table": {
-              "$ref": "#/definitions/InputsTable"
-            },
-            "groupsMenu": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "groupName": {
-                    "type": "string",
-                    "pattern": "^[0-9a-zA-Z][\\w-]*$",
-                    "maxLength": 50
-                  },
-                  "groupTitle": {
-                    "type": "string",
-                    "maxLength": 100
-                  },
-                  "groupServices": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "pattern": "^[0-9a-zA-Z][\\w-]*$",
-                      "maxLength": 50
-                    }
-                  }
-                },
-                "required": ["groupTitle", "groupName"]
-              }
-            },
-            "services": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "pattern": "^[0-9a-zA-Z][\\w-]*$",
-                    "maxLength": 50
-                  },
-                  "title": {
-                    "type": "string",
-                    "maxLength": 100
-                  },
-                  "subTitle": {
-                    "type": "string",
-                    "maxLength": 50
-                  },
-                  "entity": {
-                    "$ref": "#/definitions/AnyOfEntity"
-                  },
-                  "options": {
-                    "$ref": "#/definitions/Hooks"
-                  },
-                  "groups": {
-                    "$ref": "#/definitions/Groups"
-                  },
-                  "style": {
-                    "type": "string",
-                    "enum": ["page", "dialog"]
-                  },
-                  "hook": {
-                    "type": "object"
-                  },
-                  "conf": {
-                    "type": "string",
-                    "maxLength": 100
-                  },
-                  "restHandlerName": {
-                    "type": "string",
-                    "maxLength": 100
-                  },
-                  "restHandlerModule": {
-                    "type": "string",
-                    "maxLength": 100
-                  },
-                  "restHandlerClass": {
-                    "type": "string",
-                    "maxLength": 100
-                  },
-                  "warning": {
-                    "$ref": "#/definitions/WarningMessage"
-                  }
-                },
-                "not": {
-                  "required": ["table"]
-                },
-                "required": ["name", "title", "entity"]
-              }
-            }
-          },
-          "required": ["title", "table", "services"],
-          "additionalProperties": false
+          "$ref": "#/definitions/InputPageSingleTable"
         },
         {
-          "type": "object",
-          "properties": {
-            "title": {
-              "type": "string",
-              "maxLength": 60
-            },
-            "services": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "pattern": "^[0-9a-zA-Z][0-9a-zA-Z_-]*$",
-                    "maxLength": 50
-                  },
-                  "title": {
-                    "type": "string",
-                    "maxLength": 100
-                  },
-                  "subTitle": {
-                    "type": "string",
-                    "maxLength": 50
-                  },
-                  "description": {
-                    "type": "string",
-                    "maxLength": 200
-                  },
-                  "table": {
-                    "$ref": "#/definitions/InputsTable"
-                  },
-                  "entity": {
-                    "$ref": "#/definitions/AnyOfEntity"
-                  },
-                  "options": {
-                    "$ref": "#/definitions/Hooks"
-                  },
-                  "groups": {
-                    "$ref": "#/definitions/Groups"
-                  },
-                  "style": {
-                    "type": "string",
-                    "enum": ["page", "dialog"]
-                  },
-                  "hook": {
-                    "type": "object"
-                  },
-                  "conf": {
-                    "type": "string",
-                    "maxLength": 100
-                  },
-                  "restHandlerName": {
-                    "type": "string",
-                    "maxLength": 100
-                  },
-                  "restHandlerModule": {
-                    "type": "string",
-                    "maxLength": 100
-                  },
-                  "restHandlerClass": {
-                    "type": "string",
-                    "maxLength": 100
-                  }
-                },
-                "required": ["name", "title", "table", "entity"]
-              }
-            }
-          },
-          "required": ["title", "services"],
-          "additionalProperties": false
+          "$ref": "#/definitions/InputPageTablePerService"
         }
       ]
     },
@@ -1725,6 +1556,7 @@
         }
       },
       "required": ["displayName", "name", "restRoot", "version"],
+      "description": "Meta deta regarding build",
       "additionalProperties": false
     },
     "NumberValidator": {
@@ -1827,6 +1659,7 @@
     },
     "Pages": {
       "type": "object",
+      "description": "Definition of addon pages (configuration, inputs, dashboard)",
       "properties": {
         "configuration": {
           "$ref": "#/definitions/ConfigurationPage"
@@ -1882,17 +1715,20 @@
     },
     "TabContent": {
       "type": "object",
+      "description": "Content for separated Tab",
       "properties": {
         "entity": {
           "$ref": "#/definitions/AnyOfEntity"
         },
         "name": {
           "type": "string",
+          "description": "Tab identificator",
           "pattern": "^[\\/\\w]+$",
           "maxLength": 250
         },
         "title": {
           "type": "string",
+          "description": "Displayed title",
           "maxLength": 50
         },
         "options": {
@@ -1902,6 +1738,7 @@
           "$ref": "#/definitions/ConfigurationTable"
         },
         "style": {
+          "description": "By specifying this property in the global configuration file, the forms can either be opened as a new page or in a dialog.",
           "type": "string",
           "enum": ["page", "dialog"]
         },
@@ -2016,6 +1853,7 @@
     },
     "WarningMessage": {
       "type": "object",
+      "description": "It is used to add the custom warning message for each of the modes of ‘create’, ‘edit’, ‘config’, and ‘clone’. The message is displayed on the form.",
       "properties": {
         "create": {
           "$ref": "#/definitions/WarningMessageObject"
@@ -2033,6 +1871,7 @@
     },
     "WarningMessageObject": {
       "type": "object",
+      "description": "Object for warning message definition",
       "properties": {
         "message": {
           "type": "string",
@@ -2051,6 +1890,7 @@
     },
     "SubDescription": {
       "type": "object",
+      "description": "Place to provide broader description of page",
       "properties": {
         "text": {
           "type": "string",
@@ -2082,6 +1922,7 @@
     },
     "singleFieldToModify": {
       "type": "object",
+      "description": "Information about single field that will be modified.",
       "properties": {
         "fieldId": {
           "type": "string"
@@ -2135,10 +1976,12 @@
         },
         "mode": {
           "type": "string",
+          "description": "Defines under which Mode modifications should occure. If not present modifications occure for all Mods",
           "enum": ["create", "edit", "config", "clone"]
         },
         "fieldsToModify": {
           "type": "array",
+          "description": "Array of fields that will be modified when Field Value matches component current value",
           "items": {
             "$ref": "#/definitions/singleFieldToModify"
           },
@@ -2214,6 +2057,7 @@
       "required": ["text"]
     },
     "markdownMessage": {
+      "description": "Message that will be displayed as additional information",
       "anyOf": [
         {
           "$ref": "#/definitions/markdownMessageText"
@@ -2229,45 +2073,239 @@
         }
       ]
     },
-    "tabs": {
-      "Logging": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string",
-            "const": "loggingTab"
-          },
-          "name": {
-            "type": "string",
-            "pattern": "^[\\/\\w]+$",
-            "maxLength": 250
-          },
-          "title": {
-            "type": "string",
-            "maxLength": 50
-          },
-          "label": {
-            "type": "string"
-          },
-          "field": {
-            "$ref": "#/definitions/Field",
-            "default": "loglevel"
-          },
-          "levels": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "defaultLevel": {
+    "PredefinedLoggingTab": {
+      "type": "object",
+      "description": "Predefined Loggin tab configuration, can be used to reduce length of config",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "loggingTab"
+        },
+        "name": {
+          "type": "string",
+          "pattern": "^[\\/\\w]+$",
+          "maxLength": 250
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "label": {
+          "type": "string"
+        },
+        "field": {
+          "$ref": "#/definitions/Field",
+          "default": "loglevel"
+        },
+        "levels": {
+          "type": "array",
+          "items": {
             "type": "string"
           }
         },
-        "required":  [
-          "type"
-        ],
-        "additionalProperties": false
-      }
+        "defaultLevel": {
+          "type": "string"
+        }
+      },
+      "required": ["type"],
+      "additionalProperties": false
+    },
+    "InputPageSingleTable": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "description": {
+          "description": "It provides a brief summary of an inputs page.",
+          "type": "string",
+          "maxLength": 200
+        },
+        "subDescription": {
+          "$ref": "#/definitions/SubDescription"
+        },
+        "menu": {
+          "description": "This property allows you to enable the custom menu feature",
+          "type": "object"
+        },
+        "table": {
+          "$ref": "#/definitions/InputsTable"
+        },
+        "groupsMenu": {
+          "type": "array",
+          "description": "This property allows you to enable the multi-level menu feature.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "groupName": {
+                "type": "string",
+                "pattern": "^[0-9a-zA-Z][\\w-]*$",
+                "maxLength": 50
+              },
+              "groupTitle": {
+                "type": "string",
+                "maxLength": 100
+              },
+              "groupServices": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[0-9a-zA-Z][\\w-]*$",
+                  "maxLength": 50
+                }
+              }
+            },
+            "required": ["groupTitle", "groupName"]
+          }
+        },
+        "services": {
+          "type": "array",
+          "description": "It specifies a list of modular inputs.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "description": "It defines the particular service name.",
+                "type": "string",
+                "pattern": "^[0-9a-zA-Z][\\w-]*$",
+                "maxLength": 50
+              },
+              "title": {
+                "description": "It shows the title of the service.",
+                "type": "string",
+                "maxLength": 100
+              },
+              "subTitle": {
+                "description": "It shows the subtitle (or additional information) of the service.",
+                "type": "string",
+                "maxLength": 50
+              },
+              "entity": {
+                "$ref": "#/definitions/AnyOfEntity"
+              },
+              "options": {
+                "$ref": "#/definitions/Hooks"
+              },
+              "groups": {
+                "$ref": "#/definitions/Groups"
+              },
+              "style": {
+                "description": "By specifying this property in the global configuration file, the forms can either be opened as a new page or in a dialog.",
+                "type": "string",
+                "enum": ["page", "dialog"]
+              },
+              "hook": {
+                "description": "It is used to add custom behaviour to forms.",
+                "type": "object"
+              },
+              "conf": {
+                "type": "string",
+                "maxLength": 100
+              },
+              "restHandlerName": {
+                "type": "string",
+                "maxLength": 100
+              },
+              "restHandlerModule": {
+                "type": "string",
+                "maxLength": 100
+              },
+              "restHandlerClass": {
+                "type": "string",
+                "maxLength": 100
+              },
+              "warning": {
+                "$ref": "#/definitions/WarningMessage"
+              }
+            },
+            "not": {
+              "required": ["table"]
+            },
+            "required": ["name", "title", "entity"]
+          }
+        }
+      },
+      "required": ["title", "table", "services"],
+      "additionalProperties": false
+    },
+    "InputPageTablePerService": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "services": {
+          "description": "It specifies a list of modular inputs.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "It defines the particular service name.",
+                "pattern": "^[0-9a-zA-Z][0-9a-zA-Z_-]*$",
+                "maxLength": 50
+              },
+              "title": {
+                "description": "It shows the title of the service.",
+                "type": "string",
+                "maxLength": 100
+              },
+              "subTitle": {
+                "type": "string",
+                "description": "It shows the subtitle (or additional information) of the service.",
+                "maxLength": 50
+              },
+              "description": {
+                "type": "string",
+                "maxLength": 200
+              },
+              "table": {
+                "$ref": "#/definitions/InputsTable"
+              },
+              "entity": {
+                "$ref": "#/definitions/AnyOfEntity"
+              },
+              "options": {
+                "$ref": "#/definitions/Hooks"
+              },
+              "groups": {
+                "$ref": "#/definitions/Groups"
+              },
+              "style": {
+                "description": "By specifying this property in the global configuration file, the forms can either be opened as a new page or in a dialog.",
+                "type": "string",
+                "enum": ["page", "dialog"]
+              },
+              "hook": {
+                "description": "It is used to add custom behaviour to forms.",
+                "type": "object"
+              },
+              "conf": {
+                "type": "string",
+                "maxLength": 100
+              },
+              "restHandlerName": {
+                "type": "string",
+                "maxLength": 100
+              },
+              "restHandlerModule": {
+                "type": "string",
+                "maxLength": 100
+              },
+              "restHandlerClass": {
+                "type": "string",
+                "maxLength": 100
+              }
+            },
+            "required": ["name", "title", "table", "entity"]
+          }
+        }
+      },
+      "required": ["title", "services"],
+      "additionalProperties": false
     }
   },
   "type": "object",

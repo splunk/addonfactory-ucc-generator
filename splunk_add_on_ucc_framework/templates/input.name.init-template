@@ -93,7 +93,12 @@ class Input(smi.Script):
                         )
                     )
                 log.events_ingested(
-                    logger, normalized_input_name, sourcetype, len(data)
+                    logger,
+                    input_name,
+                    sourcetype,
+                    len(data),
+                    input_item.get("index"),
+                    account=input_item.get("account")
                 )
                 log.modular_input_end(logger, normalized_input_name)
             except Exception as e:
