@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Dict, List, Any, Optional
+from typing import Dict, Any, Optional
 
 from splunk_add_on_ucc_framework.tabs.tab import Tab
 
@@ -29,52 +29,24 @@ DEFAULTLEVEL = "INFO"
 
 class LoggingTab(Tab):
     @property
-    def name(self) -> str:
-        return self.get("name", NAME)
+    def tab_type(self) -> Optional[str]:
+        return "loggingTab"
 
-    @property
-    def title(self) -> str:
-        return self.get("title", TITLE)
+    def short_form(self) -> Dict[str, Any]:
+        entity = self["entity"][0]
+        new_definition = {"type": "loggingTab"}
 
-    @property
-    def label(self) -> str:
-        return self.get("label", LABEL)
+        for key, value, default in {
+            ("name", self["name"], NAME),
+            ("title", self["title"], TITLE),
+            ("label", entity["label"], LABEL),
+            ("field", entity["field"], FIELD),
+            ("defaultLevel", entity["defaultValue"], DEFAULTLEVEL),
+        }:
+            if value != default:
+                new_definition[key] = value
 
-    @property
-    def field(self) -> str:
-        return self.get("field", FIELD)
-
-    @property
-    def levels(self) -> List[str]:
-        return self.get("levels", LEVELS)
-
-    @property
-    def default_level(self) -> str:
-        return self.get("defaultLevel", DEFAULTLEVEL)
-
-    @property
-    def entity(self) -> List[Dict[str, Any]]:
-        return [
-            {
-                "type": "singleSelect",
-                "label": self.label,
-                "options": {
-                    "disableSearch": True,
-                    "autoCompleteFields": [
-                        {"value": lvl, "label": lvl} for lvl in self.levels
-                    ],
-                },
-                "defaultValue": self.default_level,
-                "field": self.field,
-            }
-        ]
-
-    def render(self) -> Dict[str, Any]:
-        return {
-            "name": self.name,
-            "title": self.title,
-            "entity": self.entity,
-        }
+        return new_definition
 
     @classmethod
     def from_definition(cls, definition: Dict[str, Any]) -> Optional["Tab"]:
@@ -89,7 +61,29 @@ class LoggingTab(Tab):
         to determine whether the tab is indeed a logging tab.
         """
         if definition.get("type") == "loggingTab":
-            return LoggingTab(definition)
+            return LoggingTab(
+                {
+                    "name": definition.get("name", NAME),
+                    "title": definition.get("title", TITLE),
+                    "entity": [
+                        {
+                            "type": "singleSelect",
+                            "label": definition.get("label", LABEL),
+                            "options": {
+                                "disableSearch": True,
+                                "autoCompleteFields": [
+                                    {"value": lvl, "label": lvl}
+                                    for lvl in definition.get("levels", LEVELS)
+                                ],
+                            },
+                            "defaultValue": definition.get(
+                                "defaultLevel", DEFAULTLEVEL
+                            ),
+                            "field": definition.get("field", FIELD),
+                        }
+                    ],
+                }
+            )
 
         if definition.keys() != {"name", "title", "entity"}:
             return None
@@ -117,16 +111,4 @@ class LoggingTab(Tab):
         }:
             return None
 
-        new_definition = {"type": "loggingTab"}
-
-        for key, value, default in {
-            ("name", definition["name"], NAME),
-            ("title", definition["title"], TITLE),
-            ("label", entity["label"], LABEL),
-            ("field", entity["field"], FIELD),
-            ("defaultLevel", entity["defaultValue"], DEFAULTLEVEL),
-        }:
-            if value != default:
-                new_definition[key] = value
-
-        return LoggingTab(new_definition)
+        return LoggingTab(definition)
