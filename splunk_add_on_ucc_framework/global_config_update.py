@@ -206,16 +206,16 @@ def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -
         global_config.dump(global_config.original_path)
         logger.info("Updated globalConfig schema to version 0.0.5")
 
-    _dump_with_migrated_tabs(global_config)
+    _dump_with_migrated_tabs(global_config, global_config.original_path)
 
 
-def _dump_with_migrated_tabs(global_config: GlobalConfig) -> None:
+def _dump_with_migrated_tabs(global_config: GlobalConfig, path: str) -> None:
     content = copy.deepcopy(global_config.content)
 
     for i, tab in enumerate(content["pages"]["configuration"]["tabs"]):
         content["pages"]["configuration"]["tabs"][i] = tab.short_form()
 
     if global_config._is_global_config_yaml:
-        utils.dump_yaml_config(content, global_config.original_path)
+        utils.dump_yaml_config(content, path)
     else:
-        utils.dump_json_config(content, global_config.original_path)
+        utils.dump_json_config(content, path)
