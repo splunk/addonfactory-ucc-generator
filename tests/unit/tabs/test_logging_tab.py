@@ -116,7 +116,7 @@ def test_logging_tab_migration_different_parameters(generic_tab_def):
     assert tab.render() == generic_tab_def
 
 
-def test_logging_tab_aaa():
+def test_logging_tab_help_and_defaultvalue_fields_skipped():
     tab_json = {
         "name": "logging",
         "title": "Logging",
