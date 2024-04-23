@@ -1,7 +1,6 @@
 import React from 'react';
 import DL from '@splunk/react-ui/DefinitionList';
 import Table from '@splunk/react-ui/Table';
-import Button from '@splunk/react-ui/Button';
 import styled from 'styled-components';
 import { _ } from '@splunk/ui-utils/i18n';
 

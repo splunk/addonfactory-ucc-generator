@@ -38,7 +38,6 @@ function CustomTableRow(props) {
         handleToggleActionClick,
         handleEditActionClick,
         handleCloneActionClick,
-        handleSearchActionClick,
         handleDeleteActionClick,
     } = props;
 
@@ -80,8 +79,13 @@ function CustomTableRow(props) {
                             <ActionButtonComponent
                                 appearance="flat"
                                 icon={<Magnifier screenReaderText={null} size={1} />}
-                                onClick={() => handleSearchActionClick(selectedRow)}
+                                to={`/app/search/search?q=search%20index%3D_internal%20source%3D*${selectedRow.name}*`}
                                 className="searchBtn"
+                                style={{
+                                    display: 'inline-flex',
+                                    justifyContent: 'center',
+                                }}
+                                inline
                             />
                         </Tooltip>
                     )}
@@ -191,7 +195,6 @@ CustomTableRow.propTypes = {
     handleToggleActionClick: PropTypes.func,
     handleEditActionClick: PropTypes.func,
     handleCloneActionClick: PropTypes.func,
-    handleSearchActionClick: PropTypes.func,
     handleDeleteActionClick: PropTypes.func,
 };
 
