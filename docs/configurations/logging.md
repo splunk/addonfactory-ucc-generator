@@ -45,7 +45,7 @@ It is placed just like every other configuration tab.
 | field        | Configuration field name. Default is `loglevel`                                                 |
 | levels       | List of all possible log levels. Default is `["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]` |
 | defaultLevel | Default log level at the beginning. Default is `INFO`                                           |
-| help         | It is displayed directly below the input field. By default it not shown.                        |
+| help         | It is displayed directly below the input field. By default it is not shown.                     |
 
 ### Example
 
