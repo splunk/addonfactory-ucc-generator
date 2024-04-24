@@ -78,7 +78,7 @@
     grid-column: 1;
     grid-row: 4;
     inline-size: fit-content;
-    margin-left: 140px;
+    margin-left: 145px;
     width: 145px;
 
     [data-test='majorValue'] {
@@ -143,7 +143,7 @@
     grid-column: 1;
     grid-row: 3;
     inline-size: fit-content;
-    margin-left: 140px;
+    margin-left: 145px;
     width: 145px;
 
     [data-test='majorValue'] {
@@ -238,7 +238,7 @@
     grid-column: 1;
     grid-row: 3;
     inline-size: fit-content;
-    margin-left: 140px;
+    margin-left: 145px;
     width: 145px;
 
     [data-test='majorValue'] {
@@ -253,4 +253,22 @@
 
 [data-test='status-icon-container'] {
     z-index: 1;
+}
+
+.invisible_before_moving {
+    display: none;
+}
+
+#data_ingestion_last_seen_tooltip {
+    max-width: 16px;
+    max-height: 16px;
+    margin: 1px 0 0 7px;
+    scale: 0.65;
+    * {
+        line-height: 16px;
+    }
+}
+
+#errors_tab_errors_list_viz {
+    height: 600px;
 }

@@ -2237,6 +2237,23 @@
   resolved "https://registry.npmjs.org/@splunk/charting-bundle/-/charting-bundle-26.0.0.tgz#ff7d01fe8fadbbf31272824a3880168268489988"
   integrity sha512-Fq4Zjcgi6czrcXugqTbFfK5zbHYZAcupdugUjGdLduKtnMaMxRkr/yBeLg3ggY0slF70XMfC6hsPkyWxgP5e3A==
 
+"@splunk/dashboard-action-buttons@^27.0.0":
+  version "27.0.0"
+  resolved "https://registry.npmjs.org/@splunk/dashboard-action-buttons/-/dashboard-action-buttons-27.0.0.tgz#06ec3c411492aef82599b4c43bd175c9e06977d8"
+  integrity sha512-ygfac8ysyshfuSh6MBEU8b3FpqHPTe1S0KvICVITLO3AUF4KrYp2tWywazBH12RYZP/5MmaVmm2bkaPipmviHw==
+  dependencies:
+    "@splunk/dashboard-icons" "^27.0.0"
+    "@splunk/dashboard-telemetry" "^27.0.0"
+    "@splunk/dashboard-ui" "^27.0.0"
+    "@splunk/dashboard-utils" "^27.0.0"
+    "@splunk/react-icons" "^4.4.0"
+    "@splunk/react-toast-notifications" "^0.11.1"
+    "@splunk/react-ui" "^4.28.2"
+    "@splunk/themes" "^0.17.0"
+    "@splunk/ui-utils" "^1.4.0"
+    lodash "^4.17.21"
+    prop-types "^15.7.2"
+
 "@splunk/dashboard-context@^27.0.0":
   version "27.0.0"
   resolved "https://registry.npmjs.org/@splunk/dashboard-context/-/dashboard-context-27.0.0.tgz#c71bca5ba491f011a648bcfcbf0b27ba8e3a4f5c"
@@ -2657,7 +2674,7 @@
     lodash "^4.17.19"
     prop-types "^15.6.0"
 
-"@splunk/react-toast-notifications@^0.11.3":
+"@splunk/react-toast-notifications@^0.11.1", "@splunk/react-toast-notifications@^0.11.3":
   version "0.11.3"
   resolved "https://registry.npmjs.org/@splunk/react-toast-notifications/-/react-toast-notifications-0.11.3.tgz#8224d3614c0af8d63170274e4ef0edd9e67af50c"
   integrity sha512-qXJr7kgJep7pyhspqyq+B7oDDKIHJDohsrZ01t+QLh/6gWhjCnmryROzuSdh/TwQvMvaERLRx3my2vpIavQ0KQ==
