@@ -53,7 +53,7 @@
           "#A870EF",
           "#029ceb"
         ],
-        "yAxisTitleText": "Volume[GB]",
+        "yAxisTitleText": "Volume (bytes)",
         "overlayFields": "Number of events",
         "y2AxisTitleText": "Number of events",
         "y2AxisLineVisibility": "show",

@@ -42,7 +42,7 @@
       "options": {
         "xAxisVisibility": "hide",
         "seriesColors": ["#A870EF"],
-        "yAxisTitleText": "Volume[GB]"
+        "yAxisTitleText": "Volume (bytes)"
       },
       "title": "Data ingestion",
       "dataSources": {
@@ -65,6 +65,24 @@
     },
     "data_ingestion_table_viz": {
       "type": "splunk.table",
+      "context": {
+        "formattedVolume": {
+          "number": {
+            "output": "byte",
+            "base": "decimal",
+            "mantissa": 2,
+            "spaceSeparated": true
+          }
+        },
+        "formattedEvent": {
+          "number": {
+            "trimMantissa": true,
+            "average": true,
+            "mantissa": 2,
+            "spaceSeparated": false
+          }
+        }
+      },
       "dataSources": {
         "primary": "data_ingestion_table_ds"
       },
@@ -74,6 +92,14 @@
           "headerBackgroundColor": "> backgroundColor | setColorChannel(tableHeaderBackgroundColorConfig)",
           "rowColors": "> rowBackgroundColors | maxContrast(tableRowColorMaxContrast)",
           "headerColor": "> headerBackgroundColor | maxContrast(tableRowColorMaxContrast)"
+        },
+        "columnFormat": {
+          "Data volume": {
+            "data": "> table | seriesByName(\"Data volume\") | formatByType(formattedVolume)"
+          },
+          "Number of events": {
+            "data": "> table | seriesByName(\"Number of events\") | formatByType(formattedEvent)"
+          }
         },
         "count": 10
       }
