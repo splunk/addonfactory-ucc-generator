@@ -39,7 +39,7 @@ export const waitForElementToDisplayAndMoveThemToCanvas = (
         () => {
             const element = document.querySelector(elemSelector);
             const container = document.querySelector(containerSelector);
-            if (element) {
+            if (element && container) {
                 if (ifMoveAfter) {
                     container?.after(element);
                 } else {
@@ -146,11 +146,11 @@ export const makeVisualAdjustmentsOnDataIngestionPage = () => {
         '#data_ingestion_table_viz div'
     );
 
-    waitForElementToDisplayAndMoveThemToCanvas(
-        '#data_ingestion_last_seen_tooltip',
-        '#data_ingestion_table_viz [data-test-label="Last seen"] span',
-        true
-    );
+    // waitForElementToDisplayAndMoveThemToCanvas(
+    //     '#data_ingestion_last_seen_tooltip',
+    //     '#data_ingestion_table_viz [data-test-label="Last event"] span',
+    //     true
+    // );
 };
 
 const VIEW_BY_EXTRA_LABEL_DESC: Record<string, string> = {
