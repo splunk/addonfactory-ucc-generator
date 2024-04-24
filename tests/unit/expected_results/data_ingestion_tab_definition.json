@@ -3,7 +3,7 @@
     "data_ingestion_label_viz": {
       "type": "splunk.markdown",
       "options": {
-        "markdown": "# Data Ingestion",
+        "markdown": "## Data Ingestion",
         "fontSize": "large"
       }
     },
@@ -42,7 +42,8 @@
       "options": {
         "xAxisVisibility": "hide",
         "seriesColors": ["#A870EF"],
-        "yAxisTitleText": "Volume (bytes)"
+        "yAxisTitleText": "Volume (bytes)",
+        "xAxisTitleText": "Time"
       },
       "title": "Data ingestion",
       "dataSources": {
@@ -53,6 +54,7 @@
       "type": "splunk.line",
       "options": {
         "xAxisVisibility": "hide",
+        "xAxisTitleText": "Time",
         "seriesColors": [
           "#A870EF"
         ],
@@ -129,7 +131,7 @@
     "data_ingestion_data_volume_ds": {
       "type": "ds.search",
       "options": {
-        "query": "index=_internal source=*license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | timechart span=1d sum(b) as Usage | rename Usage as \"Data volume\"",
+        "query": "index=_internal source=*license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | timechart sum(b) as Usage | rename Usage as \"Data volume\"",
         "queryParameters": {
           "earliest": "$data_ingestion_time.earliest$",
           "latest": "$data_ingestion_time.latest$"
@@ -173,30 +175,30 @@
         "items": [
           {
             "label": "Source type",
-            "value": "index=_internal source=*license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | stats sparkline(sum(b)) as sparkvolume, sum(b) as Bytes by st | join type=left st [search index = _internal source=*splunk_ta_uccexample* action=events_ingested | stats latest(_time) AS \"Last event\", sparkline(sum(n_events)) as sparkevent, sum(n_events) as events by sourcetype_ingested | rename sourcetype_ingested as st ] | makemv delim=\",\" sparkevent | convert ctime(\"Last event\") | table st, Bytes, sparkvolume, events, sparkevent, \"Last event\" | rename st as \"Source type\", Bytes as \"Data volume\", events as \"Number of events\", sparkvolume as \"Volume trendline (Bytes)\", sparkevent as \"Event trendline\""
+            "value": "index=_internal source=*license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | stats sparkline(sum(b)) as sparkvolume, sum(b) as Bytes by st | join type=left st [search index = _internal source=*splunk_ta_uccexample* action=events_ingested | stats latest(_time) AS le, sparkline(sum(n_events)) as sparkevent, sum(n_events) as events by sourcetype_ingested | rename sourcetype_ingested as st ] | makemv delim=\",\" sparkevent | eval \"Last event\" = strftime(le, \"%e %b %Y %I:%M%p\") | table st, Bytes, sparkvolume, events, sparkevent, \"Last event\" | rename st as \"Source type\", Bytes as \"Data volume\", events as \"Number of events\", sparkvolume as \"Volume trendline (Bytes)\", sparkevent as \"Event trendline\""
           },
           {
             "label": "Source",
-            "value": "index=_internal source=*license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | stats sparkline(sum(b)) as sparkvolume, sum(b) as Bytes by s | join type=left s [search index = _internal source=*splunk_ta_uccexample* action=events_ingested | stats latest(_time) AS \"Last event\", sparkline(sum(n_events)) as sparkevent, sum(n_events) as events by modular_input_name | rename modular_input_name as s ] | makemv delim=\",\" sparkevent | convert ctime(\"Last event\") | table s, Bytes, sparkvolume, events, sparkevent, \"Last event\" | rename s as \"Source\", Bytes as \"Data volume\", events as \"Number of events\", sparkvolume as \"Volume trendline (Bytes)\", sparkevent as \"Event trendline\""
+            "value": "index=_internal source=*license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | stats sparkline(sum(b)) as sparkvolume, sum(b) as Bytes by s | join type=left s [search index = _internal source=*splunk_ta_uccexample* action=events_ingested | stats latest(_time) AS le, sparkline(sum(n_events)) as sparkevent, sum(n_events) as events by modular_input_name | rename modular_input_name as s ] | makemv delim=\",\" sparkevent | eval \"Last event\" = strftime(le, \"%e %b %Y %I:%M%p\") | table s, Bytes, sparkvolume, events, sparkevent, \"Last event\" | rename s as \"Source\", Bytes as \"Data volume\", events as \"Number of events\", sparkvolume as \"Volume trendline (Bytes)\", sparkevent as \"Event trendline\""
           },
           {
             "label": "Host",
-            "value": "index=_internal source=*license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | stats sparkline(sum(b)) as sparkvolume, sum(b) as Bytes by h | convert ctime(\"Last event\") | table h, Bytes, sparkvolume | rename h as \"Host\", Bytes as \"Data volume\", sparkvolume as \"Volume trendline (Bytes)\""
+            "value": "index=_internal source=*license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | stats sparkline(sum(b)) as sparkvolume, sum(b) as Bytes by h | table h, Bytes, sparkvolume | rename h as \"Host\", Bytes as \"Data volume\", sparkvolume as \"Volume trendline (Bytes)\""
           },
           {
             "label": "Index",
-            "value": "index=_internal source=*license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | stats sparkline(sum(b)) as sparkvolume, sum(b) as Bytes by idx | join type=left idx [search index = _internal source=*splunk_ta_uccexample* action=events_ingested | stats latest(_time) AS \"Last event\", sparkline(sum(n_events)) as sparkevent, sum(n_events) as events by event_index | rename event_index as idx ] | makemv delim=\",\" sparkevent | convert ctime(\"Last event\") | table idx, Bytes, sparkvolume, events, sparkevent, \"Last event\" | rename idx as \"Index\", Bytes as \"Data volume\", events as \"Number of events\", sparkvolume as \"Volume trendline (Bytes)\", sparkevent as \"Event trendline\""
+            "value": "index=_internal source=*license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | stats sparkline(sum(b)) as sparkvolume, sum(b) as Bytes by idx | join type=left idx [search index = _internal source=*splunk_ta_uccexample* action=events_ingested | stats latest(_time) AS le, sparkline(sum(n_events)) as sparkevent, sum(n_events) as events by event_index | rename event_index as idx ] | makemv delim=\",\" sparkevent | eval \"Last event\" = strftime(le, \"%e %b %Y %I:%M%p\") | table idx, Bytes, sparkvolume, events, sparkevent, \"Last event\" | rename idx as \"Index\", Bytes as \"Data volume\", events as \"Number of events\", sparkvolume as \"Volume trendline (Bytes)\", sparkevent as \"Event trendline\""
           },
           {
             "label": "Account",
-            "value": "index = _internal source=*splunk_ta_uccexample* action=events_ingested | stats latest(_time) as ls, sparkline(sum(n_events)) as sparkevent, sum(n_events) as events by event_account | convert ctime(ls) | table event_account, events, sparkevent, ls | rename event_account as \"Account\", events as \"Number of events\", sparkevent as \"Event trendline\", ls as \"Last event\""
+            "value": "index = _internal source=*splunk_ta_uccexample* action=events_ingested | stats latest(_time) as le, sparkline(sum(n_events)) as sparkevent, sum(n_events) as events by event_account | eval \"Last event\" = strftime(le, \"%e %b %Y %I:%M%p\") | table event_account, events, sparkevent, \"Last event\" | rename event_account as \"Account\", events as \"Number of events\", sparkevent as \"Event trendline\""
           },
           {
             "label": "Input",
-            "value": "index = _internal source=*splunk_ta_uccexample* action=events_ingested | stats latest(_time) as ls, sparkline(sum(n_events)) as sparkevent, sum(n_events) as events by event_input | convert ctime(ls) | table event_input, events, sparkevent, ls | rename event_input as \"Input\", events as \"Number of events\", sparkevent as \"Event trendline\", ls as \"Last event\""
+            "value": "index = _internal source=*splunk_ta_uccexample* action=events_ingested | stats latest(_time) as le, sparkline(sum(n_events)) as sparkevent, sum(n_events) as events by event_input | eval \"Last event\" = strftime(le, \"%e %b %Y %I:%M%p\") | table event_input, events, sparkevent, \"Last event\" | rename event_input as \"Input\", events as \"Number of events\", sparkevent as \"Event trendline\""
           }
         ],
-        "defaultValue": "index=_internal source=*license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | stats sparkline(sum(b)) as sparkvolume, sum(b) as Bytes by st | join type=left st [search index = _internal source=*splunk_ta_uccexample* action=events_ingested | stats latest(_time) AS \"Last event\", sparkline(sum(n_events)) as sparkevent, sum(n_events) as events by sourcetype_ingested | rename sourcetype_ingested as st ] | makemv delim=\",\" sparkevent | convert ctime(\"Last event\") | table st, Bytes, sparkvolume, events, sparkevent, \"Last event\" | rename st as \"Source type\", Bytes as \"Data volume\", events as \"Number of events\", sparkvolume as \"Volume trendline (Bytes)\", sparkevent as \"Event trendline\"",
+        "defaultValue": "index=_internal source=*license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | stats sparkline(sum(b)) as sparkvolume, sum(b) as Bytes by st | join type=left st [search index = _internal source=*splunk_ta_uccexample* action=events_ingested | stats latest(_time) AS le, sparkline(sum(n_events)) as sparkevent, sum(n_events) as events by sourcetype_ingested | rename sourcetype_ingested as st ] | makemv delim=\",\" sparkevent | eval \"Last event\" = strftime(le, \"%e %b %Y %I:%M%p\") | table st, Bytes, sparkvolume, events, sparkevent, \"Last event\" | rename st as \"Source type\", Bytes as \"Data volume\", events as \"Number of events\", sparkvolume as \"Volume trendline (Bytes)\", sparkevent as \"Event trendline\"",
         "token": "table_view_by"
       },
       "title": "View by"

@@ -3,7 +3,7 @@
     "errors_tab_label_viz": {
       "type": "splunk.markdown",
       "options": {
-        "markdown": "# Errors",
+        "markdown": "## Errors",
         "fontSize": "large"
       }
     },
@@ -41,6 +41,7 @@
       "type": "splunk.line",
       "options": {
         "xAxisVisibility": "hide",
+        "xAxisTitleText": "Time",
         "seriesColors": [
           "#A870EF"
         ],
@@ -83,7 +84,7 @@
     "errors_tab_errors_count_ds": {
       "type": "ds.search",
       "options": {
-        "query": "index=_internal source=*splunk_ta_uccexample* ERROR | timechart span=1d count as Errors",
+        "query": "index=_internal source=*splunk_ta_uccexample* ERROR | timechart count as Errors",
         "queryParameters": {
           "earliest": "$errors_tab_time.earliest$",
           "latest": "$errors_tab_time.latest$"

@@ -56,7 +56,9 @@
         "yAxisTitleText": "Volume (bytes)",
         "overlayFields": "Number of events",
         "y2AxisTitleText": "Number of events",
+        "xAxisTitleText": "Time",
         "y2AxisLineVisibility": "show",
+        "showRoundedY2AxisLabels": true,
         "showOverlayY2Axis": true
       },
       "title": "Data ingestion",
@@ -68,6 +70,7 @@
       "type": "splunk.line",
       "options": {
         "xAxisVisibility": "hide",
+        "xAxisTitleText": "Time",
         "seriesColors": [
           "#A870EF"
         ],

@@ -56,7 +56,9 @@
         "yAxisTitleText": "Volume (bytes)",
         "overlayFields": "Number of events",
         "y2AxisTitleText": "Number of events",
+        "xAxisTitleText": "Time",
         "y2AxisLineVisibility": "show",
+        "showRoundedY2AxisLabels": true,
         "showOverlayY2Axis": true
       },
       "title": "Data ingestion",
@@ -68,6 +70,7 @@
       "type": "splunk.line",
       "options": {
         "xAxisVisibility": "hide",
+        "xAxisTitleText": "Time",
         "seriesColors": [
           "#A870EF"
         ],
@@ -103,7 +106,7 @@
     "overview_data_volume_ds": {
       "type": "ds.search",
       "options": {
-        "query": "index=_internal source=*license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | timechart span=1d sum(b) as Usage | rename Usage as \"Data volume\" | join _time [search index=_internal source=*splunk_ta_uccexample* action=events_ingested | timechart sum(n_events) as \"Number of events\" ] ",
+        "query": "index=_internal source=*license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | timechart sum(b) as Usage | rename Usage as \"Data volume\" | join _time [search index=_internal source=*splunk_ta_uccexample* action=events_ingested | timechart sum(n_events) as \"Number of events\" ]",
         "queryParameters": {
           "earliest": "$overview_time.earliest$",
           "latest": "$overview_time.latest$"
@@ -113,7 +116,7 @@
     "overview_errors_count_ds": {
       "type": "ds.search",
       "options": {
-        "query": "index=_internal source=*splunk_ta_uccexample* ERROR | timechart span=1d count as Errors",
+        "query": "index=_internal source=*splunk_ta_uccexample* ERROR | timechart count as Errors",
         "queryParameters": {
           "earliest": "$overview_time.earliest$",
           "latest": "$overview_time.latest$"

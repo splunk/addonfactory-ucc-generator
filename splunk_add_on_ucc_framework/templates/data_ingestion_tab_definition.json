@@ -3,7 +3,7 @@
     "data_ingestion_label_viz": {
       "type": "splunk.markdown",
       "options": {
-        "markdown": "# Data Ingestion",
+        "markdown": "## Data Ingestion",
         "fontSize": "large"
       }
     },
@@ -42,7 +42,8 @@
       "options": {
         "xAxisVisibility": "hide",
         "seriesColors": ["#A870EF"],
-        "yAxisTitleText": "Volume (bytes)"
+        "yAxisTitleText": "Volume (bytes)",
+        "xAxisTitleText": "Time"
       },
       "title": "Data ingestion",
       "dataSources": {
@@ -53,6 +54,7 @@
       "type": "splunk.line",
       "options": {
         "xAxisVisibility": "hide",
+        "xAxisTitleText": "Time",
         "seriesColors": [
           "#A870EF"
         ],
