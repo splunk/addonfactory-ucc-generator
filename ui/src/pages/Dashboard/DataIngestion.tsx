@@ -18,8 +18,8 @@ import {
 let apiReference: { updateDefinition: (arg0: Record<string, unknown>) => void } | null = null;
 
 const VIEW_BY_INFO_MAP: Record<string, string> = {
-    Input: 'Volume metrics are not available when viewing by inputs.',
-    Account: 'Volume metrics are not available when viewing by account.',
+    Input: 'Volume metrics are not available when the Input view is selected.',
+    Account: 'Volume metrics are not available when the Account view is selected.',
     Host: 'Event metrics are not available when the Host view is selected.',
 };
 
