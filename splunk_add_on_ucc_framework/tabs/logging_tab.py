@@ -26,6 +26,9 @@ FIELD = "loglevel"
 LABEL = "Log level"
 DEFAULTLEVEL = "INFO"
 
+ENTITY_KEYS_REQUIRED = {"type", "label", "options", "field"}
+ENTITY_KEYS_OPTIONAL = {"help", "defaultValue", "required"}
+
 
 class LoggingTab(Tab):
     @property
@@ -41,10 +44,13 @@ class LoggingTab(Tab):
             ("title", self["title"], TITLE),
             ("label", entity["label"], LABEL),
             ("field", entity["field"], FIELD),
-            ("defaultLevel", entity["defaultValue"], DEFAULTLEVEL),
+            ("defaultLevel", entity.get("defaultValue", DEFAULTLEVEL), DEFAULTLEVEL),
         }:
             if value != default:
                 new_definition[key] = value
+
+        if "help" in entity:
+            new_definition["help"] = entity["help"]
 
         return new_definition
 
@@ -61,29 +67,30 @@ class LoggingTab(Tab):
         to determine whether the tab is indeed a logging tab.
         """
         if definition.get("type") == "loggingTab":
-            return LoggingTab(
-                {
-                    "name": definition.get("name", NAME),
-                    "title": definition.get("title", TITLE),
-                    "entity": [
-                        {
-                            "type": "singleSelect",
-                            "label": definition.get("label", LABEL),
-                            "options": {
-                                "disableSearch": True,
-                                "autoCompleteFields": [
-                                    {"value": lvl, "label": lvl}
-                                    for lvl in definition.get("levels", LEVELS)
-                                ],
-                            },
-                            "defaultValue": definition.get(
-                                "defaultLevel", DEFAULTLEVEL
-                            ),
-                            "field": definition.get("field", FIELD),
-                        }
+            entity = {
+                "type": "singleSelect",
+                "label": definition.get("label", LABEL),
+                "options": {
+                    "disableSearch": True,
+                    "autoCompleteFields": [
+                        {"value": lvl, "label": lvl}
+                        for lvl in definition.get("levels", LEVELS)
                     ],
-                }
-            )
+                },
+                "defaultValue": definition.get("defaultLevel", DEFAULTLEVEL),
+                "field": definition.get("field", FIELD),
+            }
+
+            new_definition = {
+                "name": definition.get("name", NAME),
+                "title": definition.get("title", TITLE),
+                "entity": [entity],
+            }
+
+            if "help" in definition:
+                entity["help"] = definition["help"]
+
+            return LoggingTab(new_definition)
 
         if definition.keys() != {"name", "title", "entity"}:
             return None
@@ -93,7 +100,10 @@ class LoggingTab(Tab):
 
         entity = definition["entity"][0]
 
-        if entity.keys() != {"type", "label", "options", "field", "defaultValue"}:
+        if not all(key in entity.keys() for key in ENTITY_KEYS_REQUIRED):
+            return None
+
+        if entity.keys() - ENTITY_KEYS_REQUIRED - ENTITY_KEYS_OPTIONAL:
             return None
 
         if entity["type"] != "singleSelect":
@@ -110,5 +120,8 @@ class LoggingTab(Tab):
             ],
         }:
             return None
+
+        # It doesn't make sense to use False here
+        entity["required"] = True
 
         return LoggingTab(definition)

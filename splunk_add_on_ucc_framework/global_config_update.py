@@ -207,8 +207,8 @@ def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -
         logger.info("Updated globalConfig schema to version 0.0.5")
 
     if _version_tuple(version) < _version_tuple("0.0.6"):
-        _dump_with_migrated_tabs(global_config, global_config.original_path)
         global_config.update_schema_version("0.0.6")
+        _dump_with_migrated_tabs(global_config, global_config.original_path)
         logger.info("Updated globalConfig schema to version 0.0.6")
 
 

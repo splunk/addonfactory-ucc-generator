@@ -105,6 +105,9 @@ def test_global_config_logging_component(migration, tmp_path):
     with open(render_true) as fp:
         render_true_dict = json.load(fp)
 
+    # add automatically filled field
+    long_tabs[0]["entity"][0]["required"] = True
+
     assert render_true_dict["pages"]["configuration"]["tabs"] == long_tabs
 
     _dump_with_migrated_tabs(global_config, render_false)

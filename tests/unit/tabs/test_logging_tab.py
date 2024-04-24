@@ -107,7 +107,7 @@ def test_logging_tab_migration_different_parameters(generic_tab_def):
     assert tab == generic_tab_def
 
 
-def test_logging_tab_help_field_is_skipped():
+def test_logging_tab_with_help_and_required_fields():
     tab_json = {
         "name": "logging",
         "title": "Logging",
@@ -133,4 +133,9 @@ def test_logging_tab_help_field_is_skipped():
     }
 
     tab = LoggingTab.from_definition(tab_json)
-    assert tab is None
+    assert tab == tab_json
+    assert tab.short_form() == {
+        "type": "loggingTab",
+        "label": "Log Level",
+        "help": "(DEBUG, INFO, WARNING, ERROR or CRITICAL)",
+    }
