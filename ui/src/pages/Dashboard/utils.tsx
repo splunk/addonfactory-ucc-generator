@@ -57,8 +57,9 @@ const queryMap: Record<string, string> = {
     'Source type': 'st',
     Source: 's',
     Host: 'h',
-    Index: 'i',
+    Index: 'idx',
     Account: 'event_account',
+    Input: 'event_input',
 };
 
 /**
@@ -78,19 +79,19 @@ export const createNewQueryBasedOnSearchAndHideTraffic = (
     const part1 = oldQuery.substring(0, firstPipeIndex);
     const afterPart1 = oldQuery.substring(firstPipeIndex);
 
-    const gbCalculationIndex = afterPart1.indexOf('GB=round');
-    const beforeGbRoundPart = afterPart1.substring(0, gbCalculationIndex);
+    // const gbCalculationIndex = afterPart1.indexOf('GB=round');
+    // const beforeGbRoundPart = afterPart1.substring(0, gbCalculationIndex);
 
-    const gbRoundAndAfter = afterPart1.substring(gbCalculationIndex);
-    const firstPipeAfterGbRound = gbRoundAndAfter.indexOf('|');
-    const gbRoundPipe = gbRoundAndAfter.substring(0, firstPipeAfterGbRound);
-    const afterGbRoundipe = gbRoundAndAfter.substring(firstPipeAfterGbRound);
+    // const gbRoundAndAfter = afterPart1.substring(gbCalculationIndex);
+    // const firstPipeAfterGbRound = gbRoundAndAfter.indexOf('|');
+    // const gbRoundPipe = gbRoundAndAfter.substring(0, firstPipeAfterGbRound);
+    // const afterGbRoundipe = gbRoundAndAfter.substring(firstPipeAfterGbRound);
 
     const searchQuery = searchValue ? `${queryMap[selectedLabel] || 'st'}=*${searchValue}* ` : '';
 
-    const hideNoTrafficQuery = hideToggleValue ? '| where GB>0 ' : '';
-
-    const newQuery = `${part1}${searchQuery}${beforeGbRoundPart}${gbRoundPipe}${hideNoTrafficQuery}${afterGbRoundipe}`;
+    // const hideNoTrafficQuery = hideToggleValue ? '| where Bytes>0 ' : '';
+    const newQuery = `${part1}${searchQuery}${afterPart1}`;
+    // const newQuery = `${part1}${searchQuery}${beforeGbRoundPart}${gbRoundPipe}${hideNoTrafficQuery}${afterGbRoundipe}`;
     return newQuery;
 };
 
@@ -135,10 +136,10 @@ export const makeVisualAdjustmentsOnDataIngestionPage = () => {
         '#data_ingestion_table_viz'
     );
 
-    waitForElementToDisplayAndMoveThemToCanvas(
-        '#switch_hide_no_traffic_wrapper',
-        '#data_ingestion_table_viz'
-    );
+    // waitForElementToDisplayAndMoveThemToCanvas(
+    //     '#switch_hide_no_traffic_wrapper',
+    //     '#data_ingestion_table_viz'
+    // );
 
     waitForElementToDisplayAndMoveThemToCanvas(
         '#info_message_for_data_ingestion',

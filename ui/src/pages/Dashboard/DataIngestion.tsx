@@ -3,7 +3,6 @@ import { DashboardCore } from '@splunk/dashboard-core';
 import { DashboardContextProvider } from '@splunk/dashboard-context';
 import EnterpriseViewOnlyPreset from '@splunk/dashboard-presets/EnterpriseViewOnlyPreset';
 import Search from '@splunk/react-ui/Search';
-import Switch from '@splunk/react-ui/Switch';
 import Message from '@splunk/react-ui/Message';
 import Tooltip from '@splunk/react-ui/Tooltip';
 
@@ -108,10 +107,10 @@ export const DataIngestionDashboard = ({
         debounceHandlerChangeData(value, toggleNoTraffic);
     };
 
-    const handleChangeSwitch = (e: unknown, { value }: { value?: unknown }) => {
-        setToggleNoTraffic(!value);
-        debounceHandlerChangeData(searchInput, !value);
-    };
+    // const handleChangeSwitch = (e: unknown, { value }: { value?: unknown }) => {
+    //     setToggleNoTraffic(!value);
+    //     debounceHandlerChangeData(searchInput, !value);
+    // };
 
     const infoMessage = VIEW_BY_INFO_MAP[viewByInput];
 
@@ -138,7 +137,7 @@ export const DataIngestionDashboard = ({
                             style={{ minWidth: '150px', gridRow: '6', gridColumn: '1' }}
                         />
                     </div>
-                    <div id="switch_hide_no_traffic_wrapper" className="invisible_before_Moving">
+                    {/* <div id="switch_hide_no_traffic_wrapper" className="invisible_before_Moving">
                         <Switch
                             id="switch_hide_no_traffic"
                             value={toggleNoTraffic}
@@ -148,7 +147,7 @@ export const DataIngestionDashboard = ({
                         >
                             Hide items with no traffic
                         </Switch>
-                    </div>
+                    </div> */}
                     <div id="info_message_for_data_ingestion" className="invisible_before_Moving">
                         {infoMessage ? (
                             <Message appearance="fill" type="info">
