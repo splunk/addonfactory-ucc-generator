@@ -34,7 +34,8 @@
                                 ]
                             },
                             "defaultValue": "INFO",
-                            "field": "loglevel"
+                            "field": "loglevel",
+                            "required": true
                         }
                     ],
                     "title": "Logging"

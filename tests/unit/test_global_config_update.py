@@ -111,9 +111,7 @@ def test_migrate_old_dashboard(tmp_path, caplog):
 
 def test_tab_migration(tmp_path):
     tmp_file_gc = tmp_path / "globalConfig.json"
-    helpers.copy_testdata_gc_to_tmp_file(
-        tmp_file_gc, "valid_config_logging_tab_not_migrated.json"
-    )
+    helpers.copy_testdata_gc_to_tmp_file(tmp_file_gc, "valid_config_only_logging.json")
     assert "loggingTab" not in tmp_file_gc.read_text()
 
     global_config = global_config_lib.GlobalConfig(str(tmp_file_gc), False)
