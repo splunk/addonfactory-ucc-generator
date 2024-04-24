@@ -206,10 +206,13 @@ def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -
         global_config.dump(global_config.original_path)
         logger.info("Updated globalConfig schema to version 0.0.5")
 
-    _dump_with_migrated_tabs(global_config, global_config.original_path)
+    if _version_tuple(version) < _version_tuple("0.0.6"):
+        _handle_tab_component_migrations(global_config, global_config.original_path)
+        global_config.update_schema_version("0.0.6")
+        logger.info("Updated globalConfig schema to version 0.0.6")
 
 
-def _dump_with_migrated_tabs(global_config: GlobalConfig, path: str) -> None:
+def _handle_tab_component_migrations(global_config: GlobalConfig, path: str) -> None:
     content = copy.deepcopy(global_config.content)
 
     for i, tab in enumerate(content["pages"]["configuration"]["tabs"]):
