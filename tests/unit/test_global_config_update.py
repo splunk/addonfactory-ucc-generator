@@ -8,6 +8,7 @@ from splunk_add_on_ucc_framework.global_config_update import (
     _handle_dropping_api_version_update,
     _handle_xml_dashboard_update,
     _handle_alert_action_updates,
+    _dump_with_migrated_tabs,
 )
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 
@@ -106,3 +107,24 @@ def test_migrate_old_dashboard(tmp_path, caplog):
     assert expected_schema_version == global_config.schema_version
     assert expected_panel == global_config.dashboard
     assert expected_info in caplog.text
+
+
+def test_tab_migration(tmp_path):
+    tmp_file_gc = tmp_path / "globalConfig.json"
+    helpers.copy_testdata_gc_to_tmp_file(
+        tmp_file_gc, "valid_config_logging_tab_not_migrated.json"
+    )
+    assert "loggingTab" not in tmp_file_gc.read_text()
+
+    global_config = global_config_lib.GlobalConfig(str(tmp_file_gc), False)
+    _dump_with_migrated_tabs(global_config, global_config.original_path)
+
+    assert "loggingTab" in tmp_file_gc.read_text()
+
+    gc_json = json.loads(tmp_file_gc.read_text())
+
+    for tab in gc_json["pages"]["configuration"]["tabs"]:
+        if tab == {"type": "loggingTab"}:
+            break
+    else:
+        assert False, "No tab found"

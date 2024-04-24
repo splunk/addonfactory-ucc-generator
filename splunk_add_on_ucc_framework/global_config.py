@@ -61,7 +61,6 @@ class GlobalConfig:
         self._content = (
             yaml_load(config_raw) if is_global_config_yaml else json.loads(config_raw)
         )
-        self._resolve_tabs()
         self._is_global_config_yaml = is_global_config_yaml
         self._original_path = global_config_path
 
@@ -71,7 +70,7 @@ class GlobalConfig:
         else:
             utils.dump_json_config(self.content, path)
 
-    def _resolve_tabs(self) -> None:
+    def expand_tabs(self) -> None:
         for i, tab in enumerate(self._content["pages"]["configuration"]["tabs"]):
             self._content["pages"]["configuration"]["tabs"][i] = resolve_tab(tab)
 

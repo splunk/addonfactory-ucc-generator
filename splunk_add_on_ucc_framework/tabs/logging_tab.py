@@ -79,6 +79,7 @@ class LoggingTab(Tab):
                 },
                 "defaultValue": definition.get("defaultLevel", DEFAULTLEVEL),
                 "field": definition.get("field", FIELD),
+                "required": True,
             }
 
             new_definition = {

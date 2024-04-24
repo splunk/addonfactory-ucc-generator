@@ -4,18 +4,6 @@
             "tabs": [
                 {
                     "name": "account",
-                    "warning": {
-                        "create": {
-                            "message": "Some warning for account text create",
-                            "alwaysDisplay": true
-                        },
-                        "edit": {
-                            "message": "Some warning for account text edit"
-                        },
-                        "clone": {
-                            "message": "Some warning for account text clone"
-                        }
-                    },
                     "table": {
                         "actions": [
                             "edit",
@@ -33,6 +21,8 @@
                             }
                         ]
                     },
+                    "restHandlerModule": "splunk_ta_uccexample_validate_account_rh",
+                    "restHandlerClass": "CustomAccountValidator",
                     "entity": [
                         {
                             "type": "text",
@@ -86,26 +76,8 @@
                             "help": "Enter the endpoint URL.",
                             "field": "endpoint",
                             "options": {
-                                "display": false,
-                                "requiredWhenVisible": true
+                                "display": false
                             }
-                        },
-                        {
-                            "field": "url",
-                            "label": "URL",
-                            "type": "text",
-                            "help": "Enter the URL, for example",
-                            "required": false,
-                            "options": {
-                                "placeholder": "Required"
-                            },
-                            "validators": [
-                                {
-                                    "errorMsg": "Invalid URL provided. URL should start with 'https' as only secure URLs are supported. Provide URL in this format",
-                                    "type": "regex",
-                                    "pattern": "^(https://)[^/]+/?$"
-                                }
-                            ]
                         },
                         {
                             "type": "checkbox",
@@ -154,6 +126,15 @@
                             }
                         },
                         {
+                            "type": "text",
+                            "label": "State",
+                            "help": "This is a boolean field for developers to decide whether state parameter will be passed in the OAuth flow. Value: true|false",
+                            "field": "oauth_state_enabled",
+                            "options": {
+                                "display": false
+                            }
+                        },
+                        {
                             "type": "oauth",
                             "field": "oauth",
                             "label": "Not used",
@@ -182,16 +163,6 @@
                                         "encrypted": true,
                                         "help": "Enter the security token.",
                                         "field": "token"
-                                    },
-                                    {
-                                        "oauth_field": "some_text",
-                                        "label": "Disabled on edit for oauth",
-                                        "help": "Enter text for field disabled on edit",
-                                        "field": "basic_oauth_text",
-                                        "required": false,
-                                        "options": {
-                                            "disableonEdit": true
-                                        }
                                     }
                                 ],
                                 "oauth": [
@@ -213,35 +184,11 @@
                                         "label": "Redirect url",
                                         "field": "redirect_url",
                                         "help": "Copy and paste this URL into your app."
-                                    },
-                                    {
-                                        "oauth_field": "endpoint_token",
-                                        "label": "Token endpoint",
-                                        "field": "endpoint_token",
-                                        "help": "Put here endpoint used for token acqusition ie. login.salesforce.com"
-                                    },
-                                    {
-                                        "oauth_field": "endpoint_authorize",
-                                        "label": "Authorize endpoint",
-                                        "field": "endpoint_authorize",
-                                        "help": "Put here endpoint used for authorization ie. login.salesforce.com"
-                                    },
-                                    {
-                                        "oauth_field": "oauth_some_text",
-                                        "label": "Disabled on edit for oauth",
-                                        "help": "Enter text for field disabled on edit",
-                                        "field": "oauth_oauth_text",
-                                        "required": false,
-                                        "options": {
-                                            "disableonEdit": true,
-                                            "enable": false
-                                        }
                                     }
                                 ],
                                 "auth_code_endpoint": "/services/oauth2/authorize",
                                 "access_token_endpoint": "/services/oauth2/token",
-                                "oauth_timeout": 30,
-                                "oauth_state_enabled": false
+                                "oauth_timeout": 30
                             }
                         },
                         {
@@ -254,33 +201,36 @@
                             }
                         },
                         {
-                            "field": "config1_help_link",
-                            "type": "helpLink",
+                            "type": "textarea",
+                            "label": "Textarea Field",
+                            "field": "textarea_field",
+                            "help": "Help message",
                             "options": {
-                                "text": "Add-on configuration documentation",
-                                "link": "https://docs.splunk.com/Documentation"
-                            }
+                                "rowsMin": 3,
+                                "rowsMax": 15
+                            },
+                            "required": true
                         },
                         {
-                            "field": "config2_help_link",
-                            "type": "helpLink",
+                            "type": "file",
+                            "label": "Upload File",
+                            "help": "Upload service account's certificate",
+                            "field": "service_account",
                             "options": {
-                                "text": "SSL configuration documentation",
-                                "link": "https://docs.splunk.com/Documentation"
-                            }
+                                "fileSupportMessage": "Here is the support message",
+                                "supportedFileTypes": [
+                                    "json",
+                                    "pem"
+                                ]
+                            },
+                            "encrypted": true,
+                            "required": true
                         }
                     ],
-                    "title": "Account",
-                    "restHandlerModule": "splunk_ta_uccexample_validate_account_rh",
-                    "restHandlerClass": "CustomAccountValidator"
+                    "title": "Account"
                 },
                 {
                     "name": "proxy",
-                    "warning": {
-                        "config": {
-                            "message": "Some warning for account text config"
-                        }
-                    },
                     "entity": [
                         {
                             "type": "checkbox",
@@ -319,11 +269,6 @@
                                     "errorMsg": "Max host length is 4096",
                                     "minLength": 0,
                                     "maxLength": 4096
-                                },
-                                {
-                                    "type": "regex",
-                                    "errorMsg": "Proxy Host should not have special characters",
-                                    "pattern": "^[a-zA-Z]\\w*$"
                                 }
                             ],
                             "field": "proxy_url"
@@ -381,7 +326,41 @@
                     "title": "Proxy"
                 },
                 {
-                    "type": "loggingTab"
+                    "name": "logging",
+                    "entity": [
+                        {
+                            "type": "singleSelect",
+                            "label": "Log level",
+                            "options": {
+                                "disableSearch": true,
+                                "autoCompleteFields": [
+                                    {
+                                        "value": "DEBUG",
+                                        "label": "DEBUG"
+                                    },
+                                    {
+                                        "value": "INFO",
+                                        "label": "INFO"
+                                    },
+                                    {
+                                        "value": "WARNING",
+                                        "label": "WARNING"
+                                    },
+                                    {
+                                        "value": "ERROR",
+                                        "label": "ERROR"
+                                    },
+                                    {
+                                        "value": "CRITICAL",
+                                        "label": "CRITICAL"
+                                    }
+                                ]
+                            },
+                            "defaultValue": "INFO",
+                            "field": "loglevel"
+                        }
+                    ],
+                    "title": "Logging"
                 },
                 {
                     "name": "custom_abc",
@@ -401,7 +380,7 @@
                         },
                         {
                             "field": "testNumber",
-                            "label": "Test Number",
+                            "label": "Test number",
                             "type": "text",
                             "validators": [
                                 {
@@ -415,7 +394,7 @@
                         },
                         {
                             "field": "testRegex",
-                            "label": "Test Regex",
+                            "label": "Test regex",
                             "type": "text",
                             "validators": [
                                 {
@@ -437,7 +416,7 @@
                         },
                         {
                             "field": "testIpv4",
-                            "label": "Test Ipv4",
+                            "label": "Test ipv4",
                             "type": "text",
                             "validators": [
                                 {
@@ -447,7 +426,7 @@
                         },
                         {
                             "field": "testDate",
-                            "label": "Test Date",
+                            "label": "Test date",
                             "type": "text",
                             "validators": [
                                 {
@@ -457,7 +436,7 @@
                         },
                         {
                             "field": "testUrl",
-                            "label": "Test Url",
+                            "label": "Test url",
                             "type": "text",
                             "validators": [
                                 {
@@ -469,36 +448,15 @@
                 }
             ],
             "title": "Configuration",
-            "description": "Set up your add-on",
-            "subDescription": {
-                "text": "Configuration page - Ingesting data from to Splunk Cloud? Have you tried the new Splunk Data Manager yet?\nData Manager makes AWS data ingestion simpler, more automated and centrally managed for you, while co-existing with AWS and/or Kinesis TAs.\nRead our [[blogPost]] to learn more about Data Manager and it's availability on your Splunk Cloud instance.",
-                "links": [
-                    {
-                        "slug": "blogPost",
-                        "link": "https://splk.it/31oy2b2",
-                        "linkText": "blog post"
-                    }
-                ]
-            }
+            "description": "Set up your add-on"
         },
         "inputs": {
             "services": [
                 {
-                    "name": "example_input_one",
-                    "warning": {
-                        "create": {
-                            "message": "Some warning for account text create"
-                        },
-                        "edit": {
-                            "message": "Some warning for account text edit"
-                        },
-                        "clone": {
-                            "message": "Some warning for account text clone"
-                        },
-                        "delete": {
-                            "message": "Some warning for account text delete"
-                        }
+                    "hook": {
+                        "src": "Hook"
                     },
+                    "name": "example_input_one",
                     "entity": [
                         {
                             "type": "text",
@@ -524,8 +482,7 @@
                             "type": "checkbox",
                             "label": "Example Checkbox",
                             "field": "input_one_checkbox",
-                            "help": "This is an example checkbox for the input one entity",
-                            "defaultValue": true
+                            "help": "This is an example checkbox for the input one entity"
                         },
                         {
                             "type": "radio",
@@ -588,7 +545,6 @@
                             "field": "multipleSelectTest",
                             "label": "Multiple Select Test",
                             "type": "multipleSelect",
-                            "defaultValue": "a|b",
                             "options": {
                                 "delimiter": "|",
                                 "items": [
@@ -746,17 +702,6 @@
                             "required": false
                         },
                         {
-                            "type": "textarea",
-                            "label": "Example Textarea Field",
-                            "field": "example_textarea_field",
-                            "help": "Help message",
-                            "options": {
-                                "rowsMin": 3,
-                                "rowsMax": 15
-                            },
-                            "required": true
-                        },
-                        {
                             "field": "example_help_link",
                             "label": "",
                             "type": "helpLink",
@@ -864,8 +809,9 @@
                             "type": "radio",
                             "label": "Example Radio",
                             "field": "input_two_radio",
+                            "defaultValue": "yes",
                             "help": "This is an example radio button for the input two entity",
-                            "required": true,
+                            "required": false,
                             "options": {
                                 "items": [
                                     {
@@ -926,55 +872,84 @@
                             }
                         },
                         {
-                            "field": "apis",
-                            "label": "APIs/Interval (in seconds)",
                             "type": "checkboxGroup",
+                            "label": "Two groups",
+                            "field": "api1",
                             "options": {
                                 "groups": [
                                     {
-                                        "label": "EC2",
-                                        "options": {
-                                            "isExpandable": true
-                                        },
+                                        "label": "Collect",
                                         "fields": [
-                                            "ec2_volumes",
-                                            "ec2_instances",
-                                            "ec2_reserved_instances",
-                                            "ebs_snapshots",
-                                            "rds_instances",
-                                            "rds_reserved_instances",
-                                            "ec2_key_pairs",
-                                            "ec2_security_groups",
-                                            "ec2_images",
-                                            "ec2_addresses"
+                                            "collectFolderCollaboration",
+                                            "collectFileMetadata",
+                                            "collectTasksAndComments"
                                         ]
                                     },
                                     {
-                                        "label": "ELB",
+                                        "label": "Collect2",
                                         "options": {
                                             "isExpandable": true
                                         },
-                                        "fields": [
-                                            "classic_load_balancers",
-                                            "application_load_balancers"
-                                        ]
-                                    },
-                                    {
-                                        "label": "VPC",
-                                        "options": {
-                                            "isExpandable": true
-                                        },
-                                        "fields": [
-                                            "vpcs",
-                                            "vpc_network_acls",
-                                            "vpc_subnets"
-                                        ]
+                                        "fields": ["collectFolderMetadata"]
                                     }
                                 ],
                                 "rows": [
                                     {
-                                        "field": "ec2_volumes",
+                                        "field": "collectFolderCollaboration",
+                                        "input": {
+                                            "defaultValue": 1200,
+                                            "required": false,
+                                            "validators": [
+                                                {
+                                                    "type": "number",
+                                                    "range": [1, 1200]
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "field": "collectFileMetadata",
                                         "checkbox": {
+                                            "label": "Collect file metadata"
+                                        },
+                                        "input": {
+                                            "defaultValue": 1,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "collectTasksAndComments",
+                                        "checkbox": {
+                                            "label": "This is a very very long line"
+                                        },
+                                        "input": {
+                                            "defaultValue": 1,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "collectFolderMetadata",
+                                        "checkbox": {
+                                            "label": "Collect folder metadata"
+                                        },
+                                        "input": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "checkboxGroup",
+                            "label": "No groups",
+                            "field": "api2",
+                            "options": {
+                                "rows": [
+                                    {
+                                        "field": "collectFolderMetadata",
+                                        "checkbox": {
+                                            "label": "Collect folder metadata",
                                             "defaultValue": true
                                         },
                                         "input": {
@@ -983,101 +958,141 @@
                                         }
                                     },
                                     {
-                                        "field": "ec2_instances",
+                                        "field": "collectFolderCollaboration",
+                                        "checkbox": {
+                                            "label": "Collect folder collaboration"
+                                        },
+                                        "input": {
+                                            "defaultValue": 1200,
+                                            "required": false,
+                                            "validators": [
+                                                {
+                                                    "type": "number",
+                                                    "range": [1, 1200]
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "field": "collectFileMetadata",
+                                        "checkbox": {
+                                            "label": "Collect file metadata"
+                                        },
+                                        "input": {
+                                            "defaultValue": 1,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "collectTasksAndComments",
+                                        "checkbox": {
+                                            "label": "Collect tasks and comments"
+                                        },
+                                        "input": {
+                                            "defaultValue": 1,
+                                            "required": true
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "checkboxGroup",
+                            "label": "Mixed",
+                            "field": "api3",
+                            "required": true,
+                            "options": {
+                                "groups": [
+                                    {
+                                        "label": "Group 1",
+                                        "options": {
+                                            "isExpandable": true,
+                                            "expand": true
+                                        },
+                                        "fields": ["collectFolderCollaboration"]
+                                    },
+                                    {
+                                        "label": "Group 3",
+                                        "options": {
+                                            "isExpandable": true,
+                                            "expand": true
+                                        },
+                                        "fields": ["collectFolderMetadata"]
+                                    }
+                                ],
+                                "rows": [
+                                    {
+                                        "field": "collectFolderCollaboration",
+                                        "checkbox": {
+                                            "label": "Collect folder collaboration",
+                                            "defaultValue": true
+                                        },
+                                        "input": {
+                                            "defaultValue": 1200,
+                                            "required": false
+                                        }
+                                    },
+                                    {
+                                        "field": "collectFileMetadata",
+                                        "checkbox": {
+                                            "label": "Collect file metadata",
+                                            "defaultValue": false
+                                        },
+                                        "input": {
+                                            "defaultValue": 1,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "collectTasksAndComments",
+                                        "checkbox": {
+                                            "label": "Collect tasks and comments"
+                                        },
+                                        "input": {
+                                            "defaultValue": 1,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "collectFolderMetadata",
+                                        "checkbox": {
+                                            "label": "Collect folder metadata"
+                                        },
                                         "input": {
                                             "defaultValue": 3600,
                                             "required": true
                                         }
                                     },
                                     {
-                                        "field": "ec2_reserved_instances",
+                                        "field": "field223",
+                                        "checkbox": {
+                                            "label": "Required field"
+                                        },
                                         "input": {
-                                            "defaultValue": 3600,
                                             "required": true
                                         }
                                     },
                                     {
-                                        "field": "ebs_snapshots",
+                                        "field": "field23",
+                                        "checkbox": {
+                                            "label": "No more 2 characters"
+                                        },
                                         "input": {
-                                            "defaultValue": 3600,
-                                            "required": true
+                                            "defaultValue": 123
                                         }
                                     },
                                     {
-                                        "field": "rds_instances",
+                                        "field": "160validation",
+                                        "checkbox": {
+                                            "label": "from 1 to 60 validation"
+                                        },
                                         "input": {
-                                            "defaultValue": 3600,
-                                            "required": true
-                                        }
-                                    },
-                                    {
-                                        "field": "rds_reserved_instances",
-                                        "input": {
-                                            "defaultValue": 3600,
-                                            "required": true
-                                        }
-                                    },
-                                    {
-                                        "field": "ec2_key_pairs",
-                                        "input": {
-                                            "defaultValue": 3600,
-                                            "required": true
-                                        }
-                                    },
-                                    {
-                                        "field": "ec2_security_groups",
-                                        "input": {
-                                            "defaultValue": 3600,
-                                            "required": true
-                                        }
-                                    },
-                                    {
-                                        "field": "ec2_images",
-                                        "input": {
-                                            "defaultValue": 3600,
-                                            "required": true
-                                        }
-                                    },
-                                    {
-                                        "field": "ec2_addresses",
-                                        "input": {
-                                            "defaultValue": 3600,
-                                            "required": true
-                                        }
-                                    },
-                                    {
-                                        "field": "classic_load_balancers",
-                                        "input": {
-                                            "defaultValue": 3600,
-                                            "required": true
-                                        }
-                                    },
-                                    {
-                                        "field": "application_load_balancers",
-                                        "input": {
-                                            "defaultValue": 3600,
-                                            "required": true
-                                        }
-                                    },
-                                    {
-                                        "field": "vpcs",
-                                        "input": {
-                                            "defaultValue": 3600,
-                                            "required": true
-                                        }
-                                    },
-                                    {
-                                        "field": "vpc_network_acls",
-                                        "input": {
-                                            "defaultValue": 3600,
-                                            "required": true
-                                        }
-                                    },
-                                    {
-                                        "field": "vpc_subnets",
-                                        "input": {
-                                            "defaultValue": 3600,
-                                            "required": true
+                                            "validators": [
+                                                {
+                                                    "type": "number",
+                                                    "range": [1, 60]
+                                                }
+                                            ]
                                         }
                                     }
                                 ]
@@ -1085,103 +1100,10 @@
                         }
                     ],
                     "title": "Example Input Two"
-                },
-                {
-                    "name": "example_input_three",
-                    "restHandlerName": "splunk_ta_uccexample_rh_three_custom",
-                    "entity": [
-                        {
-                            "type": "text",
-                            "label": "Name",
-                            "validators": [
-                                {
-                                    "type": "regex",
-                                    "errorMsg": "Input Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
-                                    "pattern": "^[a-zA-Z]\\w*$"
-                                },
-                                {
-                                    "type": "string",
-                                    "errorMsg": "Length of input name should be between 1 and 100",
-                                    "minLength": 1,
-                                    "maxLength": 100
-                                }
-                            ],
-                            "field": "name",
-                            "help": "A unique name for the data input.",
-                            "required": true
-                        },
-                        {
-                            "type": "text",
-                            "label": "Interval",
-                            "validators": [
-                                {
-                                    "type": "regex",
-                                    "errorMsg": "Interval must be an integer.",
-                                    "pattern": "^\\-[1-9]\\d*$|^\\d*$"
-                                }
-                            ],
-                            "field": "interval",
-                            "help": "Time interval of the data input, in seconds.",
-                            "required": true
-                        }
-                    ],
-                    "title": "Example Input Three"
-                },
-                {
-                    "name": "example_input_four",
-                    "restHandlerModule": "splunk_ta_uccexample_custom_rh",
-                    "restHandlerClass": "CustomRestHandler",
-                    "entity": [
-                        {
-                            "type": "text",
-                            "label": "Name",
-                            "validators": [
-                                {
-                                    "type": "regex",
-                                    "errorMsg": "Input Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
-                                    "pattern": "^[a-zA-Z]\\w*$"
-                                },
-                                {
-                                    "type": "string",
-                                    "errorMsg": "Length of input name should be between 1 and 100",
-                                    "minLength": 1,
-                                    "maxLength": 100
-                                }
-                            ],
-                            "field": "name",
-                            "help": "A unique name for the data input.",
-                            "required": true
-                        },
-                        {
-                            "type": "text",
-                            "label": "Interval",
-                            "validators": [
-                                {
-                                    "type": "regex",
-                                    "errorMsg": "Interval must be an integer.",
-                                    "pattern": "^\\-[1-9]\\d*$|^\\d*$"
-                                }
-                            ],
-                            "field": "interval",
-                            "help": "Time interval of the data input, in seconds.",
-                            "required": true
-                        }
-                    ],
-                    "title": "Example Input Four"
                 }
             ],
             "title": "Inputs",
             "description": "Manage your data inputs",
-            "subDescription": {
-                "text": "Input page - Ingesting data from to Splunk Cloud? Have you tried the new Splunk Data Manager yet?\nData Manager makes AWS data ingestion simpler, more automated and centrally managed for you, while co-existing with AWS and/or Kinesis TAs.\nRead our [[blogPost]] to learn more about Data Manager and it's availability on your Splunk Cloud instance.",
-                "links": [
-                    {
-                        "slug": "blogPost",
-                        "link": "https://splk.it/31oy2b2",
-                        "linkText": "blog post"
-                    }
-                ]
-            },
             "table": {
                 "actions": [
                     "edit",
@@ -1195,7 +1117,7 @@
                         "field": "name"
                     },
                     {
-                        "label": "Account",
+                        "label": "Account Name",
                         "field": "account"
                     },
                     {
@@ -1272,7 +1194,6 @@
             "name": "test_alert",
             "label": "Test Alert",
             "description": "Description for test Alert Action",
-            "iconFileName": "test icon.png",
             "adaptiveResponse": {
                 "task": [
                     "Create",
@@ -1323,12 +1244,12 @@
                     "options": {
                         "items": [
                             {
-                                "value": "incident",
-                                "label": "Incident"
+                                "value": "Incident",
+                                "label": "incident"
                             },
                             {
-                                "value": "problem",
-                                "label": "Problem"
+                                "value": "Problem",
+                                "label": "problem"
                             }
                         ]
                     },
@@ -1343,24 +1264,27 @@
                     "options": {
                         "items": [
                             {
-                                "value": "update",
-                                "label": "Update"
+                                "value": "Update",
+                                "label": "update"
                             },
                             {
-                                "value": "delete",
-                                "label": "Delete"
+                                "value": "Delete",
+                                "label": "delete"
                             }
                         ]
                     },
                     "help": "Select the action you want to perform",
                     "required": true,
-                    "defaultValue": "update"
+                    "defaultValue": "two"
                 },
                 {
                     "type": "singleSelectSplunkSearch",
                     "label": "Select Account",
                     "field": "account",
                     "search": "| rest /servicesNS/nobody/Splunk_TA_UCCExample/splunk_ta_uccexample_account | dedup title",
+                    "valueField": "title",
+                    "labelField": "title",
+                    "help": "Select the account from the dropdown",
                     "options": {
                         "items": [
                             {
@@ -1373,21 +1297,43 @@
                             }
                         ]
                     },
-                    "valueField": "title",
-                    "labelField": "title",
-                    "help": "Select the account from the dropdown",
                     "required": true
                 }
-            ],
-            "customScript": "myAlertLogic"
+            ]
         }
     ],
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.42.1R67372a0b",
+        "version": "1.0.0",
         "displayName": "Splunk UCC test Add-on",
-        "schemaVersion": "0.0.6",
-        "_uccVersion": "5.42.1"
+        "schemaVersion": "0.0.3",
+        "os-dependentLibraries": [
+            {
+              "name": "cryptography",
+              "version": "41.0.5",
+              "platform": "win_amd64",
+              "python_version": "37",
+              "os": "windows",
+              "target": "3rdparty/windows"
+            },
+            {
+              "name": "cryptography",
+              "version": "41.0.5",
+              "platform": "macosx_10_12_universal2",
+              "python_version": "37",
+              "os": "darwin",
+              "target": "3rdparty/darwin"
+            },
+            {
+              "name": "cryptography",
+              "version": "41.0.5",
+              "dependencies": true,
+              "platform": "manylinux2014_x86_64",
+              "python_version": "37",
+              "os": "linux",
+              "target": "3rdparty/linux"
+            }
+        ]
     }
 }
