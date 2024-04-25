@@ -450,9 +450,11 @@ This is how it looks in the UI:
 
 See the underlying `@splunk/react-ui` component: [`File`](https://splunkui.splunk.com/Packages/react-ui/File).
 
-It supports files that can be opened in text mode or with a text editor, which are files with extensions such as txt, json, xml, yaml, pem, key, crt, etc.
+By default it supports files that can be opened in text mode or with a text editor, which are files with extensions such as txt, json, xml, yaml, pem, key, crt, etc.
 
 It only sends file content to the server by reading it using the [readAsArrayBuffer](https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsArrayBuffer) method of the FileReader class, and then decoding it into **UTF-8** format, using the [decode](https://developer.mozilla.org/en-US/docs/Web/API/TextDecoder/decode) method of the TextDecoder class.
+
+If `options` property contains useBase64Encoding is set up as true, then readAsArrayBuffer method is replaced with [readAsDataURL](https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL) and proceeded correctly to pass only file content. With that approach any file is stored in **Base64** format.
 
 The file content can be validated using in-built validators such as [string](validators.md#string) and [regex](validators.md#regex), and a custom validator can also be implemented using a [custom hook](../custom_ui_extensions/custom_hook.md) and [saveValidator](../advanced/save_validator.md).
 
@@ -460,11 +462,12 @@ This feature allows you to upload a single file.
 
 <h3> Options </h3>
 
-| Property                                                   | Type   | Description                                                | Default Value |
-| ---------------------------------------------------------- | ------ | ---------------------------------------------------------- | ------------- |
-| fileSupportMessage                                          | string | It displays a message inside a file component.                   | -             |
-| supportedFileTypes<span class="required-asterisk">*</span> | array  | It is a list of the file types that the user can upload.          | -             |
-| maxFileSize                                                | number | It sets the maximum file size in KB that a user can upload.  | 500KB         |
+| Property                                                    | Type    | Description                                                                                 | Default Value |
+| ----------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------- | ------------- |
+| fileSupportMessage                                          | string  | It displays a message inside a file component.                                              | -             |
+| supportedFileTypes<span class="required-asterisk">\*</span> | array   | It is a list of the file types that the user can upload.                                    | -             |
+| maxFileSize                                                 | number  | It sets the maximum file size in KB that a user can upload.                                 | 500KB         |
+| useBase64Encoding                                           | boolean | It defines used encoding for files. If true base64 will be used, if false utf-8 is applied. | false         |
 
 See the following example usage:
 ```json
@@ -476,7 +479,8 @@ See the following example usage:
     "options": {
         "fileSupportMessage": "Support message",
         "supportedFileTypes": ["pem", "txt"],
-        "maxFileSize": 100
+        "maxFileSize": 100,
+        "useBase64Encoding": false
     },
     "validators": [
         {

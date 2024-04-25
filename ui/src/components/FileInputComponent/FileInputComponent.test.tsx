@@ -346,3 +346,33 @@ it('File input disabled - rendered correctly with disabled attr', () => {
     expect(fileComponent).toHaveAttribute('disabled');
     consoleSpy.mockRestore();
 });
+
+test('Check FileInputComponent encodes base64 correctly and passed it to handler', async () => {
+    const field = 'testFileField';
+    const disabled = false;
+    const controlOptions = {
+        fileSupportMessage: 'Support Message',
+        supportedFileTypes: ['json'],
+        useBase64Encoding: true,
+    };
+    const handleChange = jest.fn();
+
+    const testfile = new File(['{"test":"test"}'], 'test.json', {
+        type: 'application/json',
+    });
+
+    render(
+        <FileInputComponent
+            field={field}
+            disabled={disabled}
+            controlOptions={controlOptions}
+            handleChange={handleChange}
+        />
+    );
+
+    const fileInput = screen.getByTestId('file-input');
+    await userEvent.upload(fileInput, testfile);
+
+    // Check that handleChange is called with valid args.
+    expect(handleChange).toHaveBeenCalledWith('testFileField', btoa(`{"test":"test"}`));
+});
