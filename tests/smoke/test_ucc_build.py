@@ -78,6 +78,7 @@ def _compare_logging_tabs(package_dir: str, output_dir: str) -> None:
                     "disableSearch": True,
                 },
                 "type": "singleSelect",
+                "required": True,
             }
         ],
         "name": "logging",

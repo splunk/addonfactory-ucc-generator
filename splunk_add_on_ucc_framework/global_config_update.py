@@ -13,10 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import copy
 import logging
 from typing import Any, Dict, Tuple, List
 
-from splunk_add_on_ucc_framework import global_config as global_config_lib
+from splunk_add_on_ucc_framework import global_config as global_config_lib, utils
+from splunk_add_on_ucc_framework.global_config import GlobalConfig
+from splunk_add_on_ucc_framework.tabs import resolve_tab
 
 logger = logging.getLogger("ucc_gen")
 
@@ -127,7 +130,7 @@ def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -
 
     if _version_tuple(version) < _version_tuple("0.0.2"):
         for tab in global_config.tabs:
-            if tab.name == "account":
+            if tab["name"] == "account":
                 conf_entities = tab.get("entity")
 
                 if conf_entities is None:
@@ -203,3 +206,24 @@ def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -
         _handle_xml_dashboard_update(global_config)
         global_config.dump(global_config.original_path)
         logger.info("Updated globalConfig schema to version 0.0.5")
+
+    if _version_tuple(version) < _version_tuple("0.0.6"):
+        global_config.update_schema_version("0.0.6")
+        _dump_with_migrated_tabs(global_config, global_config.original_path)
+        logger.info("Updated globalConfig schema to version 0.0.6")
+
+
+def _dump_with_migrated_tabs(global_config: GlobalConfig, path: str) -> None:
+    content = copy.deepcopy(global_config.content)
+
+    for i, tab in enumerate(content["pages"]["configuration"]["tabs"]):
+        content["pages"]["configuration"]["tabs"][i] = _collapse_tab(tab)
+
+    if global_config._is_global_config_yaml:
+        utils.dump_yaml_config(content, path)
+    else:
+        utils.dump_json_config(content, path)
+
+
+def _collapse_tab(tab: Dict[str, Any]) -> Dict[str, Any]:
+    return resolve_tab(tab).short_form()
