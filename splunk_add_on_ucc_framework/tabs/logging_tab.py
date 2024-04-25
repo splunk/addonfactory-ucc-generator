@@ -122,6 +122,9 @@ class LoggingTab(Tab):
         levels = []
 
         for field in entity["options"]["autoCompleteFields"]:
+            if "value" not in field:
+                return None
+
             level = field["value"]
 
             if level not in AVAILABLE_LEVELS:
