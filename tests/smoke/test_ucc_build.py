@@ -6,7 +6,7 @@ from os import path
 from pathlib import Path
 
 from tests.smoke import helpers
-
+from tempfile import TemporaryDirectory
 import addonfactory_splunk_conf_parser_lib as conf_parser
 
 from splunk_add_on_ucc_framework.commands import build
@@ -509,19 +509,16 @@ def test_ucc_generate_with_everything_uccignore(caplog):
             edm1 + edm3 + edm2 + edm4
         ) in caplog.text
 
-        expected_folder = path.join(
-            path.dirname(__file__),
-            "..",
-            "testdata",
-            "expected_addons",
-            "expected_output_global_config_everything",
-            "Splunk_TA_UCCExample",
+        tmp_expected_folder = TemporaryDirectory(
+            prefix="test_", suffix="_everything_uccignore"
         )
+        helpers._create_everything_uccignore_dir(tmp_expected_folder.name)
+
         actual_folder = path.join(temp_dir, "Splunk_TA_UCCExample")
-        _compare_app_conf(expected_folder, actual_folder)
+        _compare_app_conf(tmp_expected_folder.name, actual_folder)
         files_to_be_equal = [
             ("README.txt",),
-            ("appserver", "static", "test icon.png"),
+            ("appserver", "static", "alerticon.png"),
             ("default", "alert_actions.conf"),
             ("default", "eventtypes.conf"),
             ("default", "inputs.conf"),
@@ -536,6 +533,7 @@ def test_ucc_generate_with_everything_uccignore(caplog):
             ("default", "data", "ui", "views", "inputs.xml"),
             ("default", "data", "ui", "views", "dashboard.xml"),
             ("default", "data", "ui", "views", "splunk_ta_uccexample_redirect.xml"),
+            ("bin", "splunk_ta_uccexample", "modalert_test_alert_helper.py"),
             ("bin", "example_input_two.py"),
             ("bin", "example_input_three.py"),
             ("bin", "example_input_four.py"),
@@ -555,7 +553,7 @@ def test_ucc_generate_with_everything_uccignore(caplog):
         ]
         helpers.compare_file_content(
             files_to_be_equal,
-            expected_folder,
+            tmp_expected_folder.name,
             actual_folder,
         )
         files_to_exist = [
@@ -565,8 +563,10 @@ def test_ucc_generate_with_everything_uccignore(caplog):
             ("static", "appIconAlt_2x.png"),
         ]
         for f in files_to_exist:
-            expected_file_path = path.join(expected_folder, *f)
+            expected_file_path = path.join(tmp_expected_folder.name, *f)
             assert path.exists(expected_file_path)
+        # explicitly cleaning up temp folder after test has completed
+        tmp_expected_folder.cleanup()
 
 
 def test_ucc_generate_only_one_tab():

@@ -1,7 +1,8 @@
 import difflib
 import os
 from typing import List, Tuple
-
+from shutil import copy2
+from pathlib import Path
 import xmldiff.main
 
 
@@ -70,3 +71,66 @@ def _compare_content(
             diff_results.append(line)
 
     return diff_results
+
+
+def _create_everything_uccignore_dir(tmp_dest_dir_name: str) -> None:
+    def __copy_files(
+        source_dir: str, destination_dir: str, ignore_files: List[str] = []
+    ) -> None:
+        # Walk through the source directory
+        for root, dirs, files in os.walk(source_dir):
+            # Create corresponding directories in the destination directory
+            for directory in dirs:
+                source_directory = os.path.join(root, directory)
+                destination_directory = source_directory.replace(
+                    source_dir, destination_dir
+                )
+                if not os.path.exists(destination_directory):
+                    os.makedirs(destination_directory)
+
+            # Copy files to corresponding destination directories
+            for file in files:
+                if file in ignore_files:
+                    continue
+                source_file = os.path.join(root, file)
+                destination_file = source_file.replace(source_dir, destination_dir)
+                copy2(source_file, destination_file)  # copy2 preserves file metadata
+
+    src_path = Path(
+        os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "testdata",
+            "expected_addons",
+            "expected_output_global_config_everything",
+            "Splunk_TA_UCCExample",
+        )
+    )
+
+    ignore_files = [
+        "test icon.png",
+        "myAlertLogic.py",
+        "alert_actions.conf",
+        "test_alert.py",
+    ]
+    __copy_files(
+        source_dir=str(src_path),
+        destination_dir=tmp_dest_dir_name,
+        ignore_files=ignore_files,
+    )
+
+    for af in ignore_files:
+        expected_file_path = os.path.join(tmp_dest_dir_name, *af)
+        assert not os.path.exists(expected_file_path)
+
+    src_path_uccignore = Path(
+        os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "testdata",
+            "expected_addons",
+            "expected_output_global_config_everything_uccignore",
+            "Splunk_TA_UCCExample",
+        )
+    )
+    __copy_files(source_dir=str(src_path_uccignore), destination_dir=tmp_dest_dir_name)
