@@ -1311,7 +1311,6 @@
             "name": "test_alert",
             "label": "Test Alert",
             "description": "Description for test Alert Action",
-            "iconFileName": "test icon.png",
             "adaptiveResponse": {
                 "task": [
                     "Create",
@@ -1417,16 +1416,15 @@
                     "help": "Select the account from the dropdown",
                     "required": true
                 }
-            ],
-            "customScript": "myAlertLogic"
+            ]
         }
     ],
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.41.0R9c5fbfe0",
+        "version": "5.42.1R306a828b",
         "displayName": "Splunk UCC test Add-on",
-        "schemaVersion": "0.0.3",
-        "_uccVersion": "5.41.0"
+        "schemaVersion": "0.0.5",
+        "_uccVersion": "5.42.1"
     }
 }
