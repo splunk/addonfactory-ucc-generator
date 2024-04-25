@@ -83,6 +83,7 @@
     inline-size: fit-content;
     margin-left: 145px;
     width: 145px;
+    display: flex;
 
     [data-test='majorValue'] {
         font-size: 14px;
@@ -95,6 +96,10 @@
     [data-test='action-menu-wrapper'] {
         display: none;
     }
+}
+#overview_timerange_label_end_viz::before {
+    content: '- ';
+    margin: auto;
 }
 
 /* data ingestion */
@@ -154,6 +159,7 @@
     inline-size: fit-content;
     margin-left: 145px;
     width: 145px;
+    display: flex;
 
     [data-test='majorValue'] {
         font-size: 14px;
@@ -166,6 +172,11 @@
     [data-test='action-menu-wrapper'] {
         display: none;
     }
+}
+
+#data_ingestion_timerange_label_end_viz::before {
+    content: '- ';
+    margin: auto;
 }
 
 #data_ingestion_table_viz {
@@ -255,6 +266,7 @@
     inline-size: fit-content;
     margin-left: 145px;
     width: 145px;
+    display: flex;
 
     [data-test='majorValue'] {
         font-size: 14px;
@@ -267,6 +279,11 @@
     [data-test='action-menu-wrapper'] {
         display: none;
     }
+}
+
+#errors_tab_timerange_label_end_viz::before {
+    content: '- ';
+    margin: auto;
 }
 
 [data-test='status-icon-container'] {
