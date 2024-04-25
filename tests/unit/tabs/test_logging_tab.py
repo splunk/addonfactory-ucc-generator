@@ -139,3 +139,42 @@ def test_logging_tab_with_help_and_required_fields():
         "label": "Log Level",
         "help": "(DEBUG, INFO, WARNING, ERROR or CRITICAL)",
     }
+
+
+def test_logging_tab_different_levels():
+    tab_json = {
+        "entity": [
+            {
+                "defaultValue": "INFO",
+                "field": "loglevel",
+                "type": "singleSelect",
+                "label": "Log level",
+                "required": True,
+                "options": {
+                    "autoCompleteFields": [
+                        {"value": "DEBUG", "label": "DEBUG"},
+                        {"value": "INFO", "label": "INFO"},
+                        {"value": "WARN", "label": "WARN"},
+                        {"value": "ERROR", "label": "ERROR"},
+                        {"value": "CRITICAL", "label": "CRITICAL"},
+                    ],
+                    "disableSearch": True,
+                },
+            }
+        ],
+        "name": "logging",
+        "title": "Logging",
+    }
+
+    tab = LoggingTab.from_definition(tab_json)
+    assert tab == tab_json
+    assert tab.short_form() == {
+        "type": "loggingTab",
+        "levels": [
+            "DEBUG",
+            "INFO",
+            "WARN",
+            "ERROR",
+            "CRITICAL",
+        ],
+    }

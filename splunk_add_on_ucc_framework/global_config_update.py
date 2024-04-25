@@ -130,7 +130,7 @@ def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -
 
     if _version_tuple(version) < _version_tuple("0.0.2"):
         for tab in global_config.tabs:
-            if tab.name == "account":
+            if tab["name"] == "account":
                 conf_entities = tab.get("entity")
 
                 if conf_entities is None:

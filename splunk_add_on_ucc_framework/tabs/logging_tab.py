@@ -28,6 +28,7 @@ DEFAULTLEVEL = "INFO"
 
 ENTITY_KEYS_REQUIRED = {"type", "label", "options", "field"}
 ENTITY_KEYS_OPTIONAL = {"help", "defaultValue", "required"}
+AVAILABLE_LEVELS = {"DEBUG", "INFO", "WARN", "WARNING", "ERROR", "CRITICAL"}
 
 
 class LoggingTab(Tab):
@@ -37,15 +38,17 @@ class LoggingTab(Tab):
 
     def short_form(self) -> Dict[str, Any]:
         entity = self["entity"][0]
+        levels = [i["value"] for i in entity["options"]["autoCompleteFields"]]
         new_definition = {"type": "loggingTab"}
 
-        for key, value, default in {
+        for key, value, default in [
             ("name", self["name"], NAME),
             ("title", self["title"], TITLE),
             ("label", entity["label"], LABEL),
             ("field", entity["field"], FIELD),
+            ("levels", levels, LEVELS),
             ("defaultLevel", entity.get("defaultValue", DEFAULTLEVEL), DEFAULTLEVEL),
-        }:
+        ]:
             if value != default:
                 new_definition[key] = value
 
@@ -110,19 +113,23 @@ class LoggingTab(Tab):
         if entity["type"] != "singleSelect":
             return None
 
-        if entity["options"] != {
-            "disableSearch": True,
-            "autoCompleteFields": [
-                {"value": "DEBUG", "label": "DEBUG"},
-                {"value": "INFO", "label": "INFO"},
-                {"value": "WARNING", "label": "WARNING"},
-                {"value": "ERROR", "label": "ERROR"},
-                {"value": "CRITICAL", "label": "CRITICAL"},
-            ],
-        }:
+        if entity["options"].keys() != {
+            "disableSearch",
+            "autoCompleteFields",
+        } and entity["options"].keys() != {"autoCompleteFields"}:
             return None
 
-        # It doesn't make sense to use False here
+        levels = []
+
+        for field in entity["options"]["autoCompleteFields"]:
+            level = field["value"]
+
+            if level not in AVAILABLE_LEVELS:
+                return None
+
+            levels.append(level)
+
         entity["required"] = True
+        entity["options"]["disableSearch"] = True
 
         return LoggingTab(definition)
