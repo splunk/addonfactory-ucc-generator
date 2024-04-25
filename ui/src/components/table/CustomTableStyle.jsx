@@ -6,6 +6,9 @@ import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 export const ActionButtonComponent = styled(Button)`
     margin: 0px 1px;
     border: none;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
 `;
 
 export const WaitSpinnerWrapper = styled(WaitSpinner)`

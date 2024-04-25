@@ -75,16 +75,16 @@ function CustomTableRow(props) {
                         </Tooltip>
                     )}
                     {rowActions.includes('search') && (
-                        <Tooltip content={_('Search')}>
+                        <Tooltip
+                            content={_(
+                                `Go to search for events associated with ${selectedRow.name}`
+                            )}
+                        >
                             <ActionButtonComponent
                                 appearance="flat"
                                 icon={<Magnifier screenReaderText={null} size={1} />}
                                 to={`/app/search/search?q=search%20index%3D_internal%20source%3D*${selectedRow.name}*`}
                                 className="searchBtn"
-                                style={{
-                                    display: 'inline-flex',
-                                    justifyContent: 'center',
-                                }}
                                 inline
                             />
                         </Tooltip>
