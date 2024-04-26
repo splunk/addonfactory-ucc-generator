@@ -12,7 +12,6 @@ import {
     getActionButtons,
     makeVisualAdjustmentsOnDataIngestionPage,
     addDescriptionToExpandedViewByOptions,
-    waitForElementToDisplay,
 } from './utils';
 
 let apiReference: { updateDefinition: (arg0: Record<string, unknown>) => void } | null = null;
@@ -60,19 +59,11 @@ export const DataIngestionDashboard = ({
             observer.observe(targetNode, config);
         }
 
-        // waitForElementToDisplay(
-        //     '[data-input-id="data_ingestion_table_input"]',
-        //     'div',
-        //     () => {
         const currentViewBy = document
             .querySelector('[data-input-id="data_ingestion_table_input"] button')
             ?.getAttribute('label');
 
         setViewByInput(currentViewBy || '');
-        //     },
-        //     250,
-        //     2000
-        // );
 
         return () => {
             observer.disconnect();
