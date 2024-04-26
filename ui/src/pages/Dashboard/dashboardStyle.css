@@ -54,15 +54,17 @@
 
 #main_page_description_viz {
     grid-column: 1 / span 4;
-    grid-row: 2;
-    margin-left: 2px;
+    grid-row: 1;
+    height: fit-content;
+    margin-top: 40px;
 }
 
 #overview_timerange_label_start_viz {
     grid-column: 1;
-    grid-row: 4;
+    grid-row: 3;
     inline-size: fit-content;
     width: 145px;
+    margin-top: 28px;
 
     [data-test='majorValue'] {
         font-size: 14px;
@@ -79,10 +81,11 @@
 
 #overview_timerange_label_end_viz {
     grid-column: 1;
-    grid-row: 4;
+    grid-row: 3;
     inline-size: fit-content;
     margin-left: 145px;
     width: 145px;
+    margin-top: 28px;
     display: flex;
 
     [data-test='majorValue'] {
@@ -100,6 +103,7 @@
 #overview_timerange_label_end_viz::before {
     content: '- ';
     margin: auto;
+    color: rgb(108, 118, 133);
 }
 
 /* data ingestion */
@@ -129,16 +133,17 @@
 
 #data_ingestion_description_viz {
     grid-column: 1 / span 4;
-    grid-row: 2;
+    grid-row: 1;
     height: fit-content;
-    margin-left: 2px;
+    margin-top: 32px;
 }
 
 #data_ingestion_timerange_label_start_viz {
     grid-column: 1;
-    grid-row: 3;
+    grid-row: 2;
     inline-size: fit-content;
     width: 145px;
+    margin-top: 12px;
 
     [data-test='majorValue'] {
         font-size: 14px;
@@ -155,11 +160,12 @@
 
 #data_ingestion_timerange_label_end_viz {
     grid-column: 1;
-    grid-row: 3;
+    grid-row: 2;
     inline-size: fit-content;
     margin-left: 145px;
     width: 145px;
     display: flex;
+    margin-top: 12px;
 
     [data-test='majorValue'] {
         font-size: 14px;
@@ -177,6 +183,7 @@
 #data_ingestion_timerange_label_end_viz::before {
     content: '- ';
     margin: auto;
+    color: rgb(108, 118, 133);
 }
 
 #data_ingestion_table_viz {
@@ -185,24 +192,31 @@
     max-height: 500px;
     grid-row: 6;
     margin-top: 100px;
+
+    [data-test='viz-waiting-for-input'] {
+        min-height: 100px;
+    }
 }
 
 #data_ingestion_data_volume_viz {
-    grid-row: 4 / 6;
+    grid-row: 3 / 6;
+    margin-top: 20px;
 }
 
 #data_ingestion_events_count_viz {
-    grid-row: 4 / 6;
+    grid-row: 3 / 6;
+    margin-top: 20px;
 }
 
 #data_ingestion_search {
     grid-row: 6;
     width: 150px;
     grid-column: 1;
+    margin-top: 16px;
 }
 
 #data_ingestion_search_label {
-    margin: 8px 0 4px 0;
+    margin-bottom: 4px;
 }
 
 [data-input-id='data_ingestion_table_input'] {
@@ -210,6 +224,7 @@
     margin-left: 150px;
     grid-row: 6;
     grid-column: 1;
+    margin-top: 21px;
     [data-test='input-title'] {
         font-size: 14px;
     }
@@ -241,11 +256,19 @@
     }
 }
 
+#errors_tab_description_viz {
+    grid-column: 1 / span 4;
+    grid-row: 1;
+    height: fit-content;
+    margin-top: 32px;
+}
+
 #errors_tab_timerange_label_start_viz {
     grid-column: 1;
-    grid-row: 3;
+    grid-row: 2;
     inline-size: fit-content;
     width: 145px;
+    margin-top: 12px;
 
     [data-test='majorValue'] {
         font-size: 14px;
@@ -262,11 +285,12 @@
 
 #errors_tab_timerange_label_end_viz {
     grid-column: 1;
-    grid-row: 3;
+    grid-row: 2;
     inline-size: fit-content;
     margin-left: 145px;
     width: 145px;
     display: flex;
+    margin-top: 12px;
 
     [data-test='majorValue'] {
         font-size: 14px;
@@ -284,6 +308,7 @@
 #errors_tab_timerange_label_end_viz::before {
     content: '- ';
     margin: auto;
+    color: rgb(108, 118, 133);
 }
 
 [data-test='status-icon-container'] {
@@ -306,4 +331,10 @@
 
 #errors_tab_errors_list_viz {
     height: 600px;
+    grid-row: 7 / 7;
+}
+
+#errors_tab_errors_count_viz {
+    grid-row: 3 / 6;
+    margin-top: 16px;
 }

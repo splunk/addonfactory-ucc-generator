@@ -12,6 +12,7 @@ import {
     getActionButtons,
     makeVisualAdjustmentsOnDataIngestionPage,
     addDescriptionToExpandedViewByOptions,
+    waitForElementToDisplay,
 } from './utils';
 
 let apiReference: { updateDefinition: (arg0: Record<string, unknown>) => void } | null = null;
@@ -58,11 +59,21 @@ export const DataIngestionDashboard = ({
         if (targetNode) {
             observer.observe(targetNode, config);
         }
+
+        // waitForElementToDisplay(
+        //     '[data-input-id="data_ingestion_table_input"]',
+        //     'div',
+        //     () => {
         const currentViewBy = document
-            .querySelector('[data-input-id="data_ingestion_table_input"]')
+            .querySelector('[data-input-id="data_ingestion_table_input"] button')
             ?.getAttribute('label');
 
         setViewByInput(currentViewBy || '');
+        //     },
+        //     250,
+        //     2000
+        // );
+
         return () => {
             observer.disconnect();
         };
@@ -107,11 +118,6 @@ export const DataIngestionDashboard = ({
         debounceHandlerChangeData(value, toggleNoTraffic);
     };
 
-    // const handleChangeSwitch = (e: unknown, { value }: { value?: unknown }) => {
-    //     setToggleNoTraffic(!value);
-    //     debounceHandlerChangeData(searchInput, !value);
-    // };
-
     const infoMessage = VIEW_BY_INFO_MAP[viewByInput];
 
     return (
@@ -129,7 +135,7 @@ export const DataIngestionDashboard = ({
                     />
 
                     <div id="data_ingestion_search" className="invisible_before_Moving">
-                        <p id="data_ingestion_search_label">Search:</p>
+                        <p id="data_ingestion_search_label">Search</p>
                         <Search
                             id="data_ingestion_search_input"
                             onChange={handleChangeSearch}
