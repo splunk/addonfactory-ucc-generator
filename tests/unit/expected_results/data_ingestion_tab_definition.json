@@ -166,7 +166,7 @@
         "defaultValue": "-7d,now",
         "token": "data_ingestion_time"
       },
-      "title": "Time:",
+      "title": "Time",
       "type": "input.timerange"
     },
     "data_ingestion_table_input": {

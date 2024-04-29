@@ -109,7 +109,7 @@
         "defaultValue": "-7d,now",
         "token": "errors_tab_time"
       },
-      "title": "Time:",
+      "title": "Time",
       "type": "input.timerange"
     }
   },

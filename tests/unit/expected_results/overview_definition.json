@@ -131,7 +131,7 @@
         "defaultValue": "-7d,now",
         "token": "overview_time"
       },
-      "title": "Time:",
+      "title": "Time",
       "type": "input.timerange"
     }
   },
@@ -192,7 +192,7 @@
           "x": 20,
           "y": 150,
           "w": 620,
-          "h": 400
+          "h": 300
         }
       },
       {
@@ -201,7 +201,7 @@
           "x": 640,
           "y": 150,
           "w": 620,
-          "h": 400
+          "h": 300
         }
       }
     ]
