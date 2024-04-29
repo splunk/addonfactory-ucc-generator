@@ -21,19 +21,19 @@
     "test-storybook:update-snapshots": "yarn run test-storybook -u"
   },
   "dependencies": {
+    "@splunk/dashboard-context": "^27.0.0",
+    "@splunk/dashboard-core": "^27.0.0",
+    "@splunk/dashboard-presets": "^27.0.0",
+    "@splunk/dashboard-state": "^27.0.0",
     "@splunk/react-icons": "^4.4.0",
     "@splunk/react-page": "^7.0.0",
     "@splunk/react-toast-notifications": "^0.11.3",
-    "@splunk/react-ui": "4.29.0",
+    "@splunk/react-ui": "4.28.2",
     "@splunk/splunk-utils": "^3.0.1",
     "@splunk/themes": "^0.17.0",
     "@splunk/ui-utils": "^1.6.0",
-    "@storybook/test": "^8.0.9",
-    "@splunk/dashboard-context": "^27.0.0",
-    "@splunk/dashboard-state": "^27.0.0",
     "@splunk/visualization-context": "^26.0.0",
-    "@splunk/dashboard-core": "^27.0.0",
-    "@splunk/dashboard-presets": "^27.0.0",
+    "@storybook/test": "^8.0.9",
     "axios": "^1.6.8",
     "immutability-helper": "^3.1.1",
     "license-webpack-plugin": "^4.0.2",
@@ -53,7 +53,7 @@
     "@babel/plugin-transform-runtime": "^7.24.3",
     "@babel/preset-env": "^7.24.4",
     "@babel/preset-react": "^7.24.1",
-    "@kickstartds/core": "^4.0.3",
+    "@kickstartds/core": "4.0.2",
     "@kickstartds/storybook-addon-jsonschema": "^4.0.0",
     "@splunk/babel-preset": "^4.0.0",
     "@splunk/eslint-config": "^4.0.0",
@@ -123,7 +123,7 @@
     "semver": "^7.6.0",
     "strip-ansi": "^6.0.1",
     "string-width": "^4.2.3",
-    "@splunk/react-ui": "4.29.0"
+    "@splunk/react-ui": "4.28.2"
   },
   "engines": {
     "node": ">=20.10.0",
