@@ -355,9 +355,10 @@ test('Check FileInputComponent encodes base64 correctly and passed it to handler
         supportedFileTypes: ['json'],
         useBase64Encoding: true,
     };
+    const fileContent = '{"test":"test"}';
     const handleChange = jest.fn();
 
-    const testfile = new File(['{"test":"test"}'], 'test.json', {
+    const testfile = new File([fileContent], 'test.json', {
         type: 'application/json',
     });
 
@@ -374,5 +375,5 @@ test('Check FileInputComponent encodes base64 correctly and passed it to handler
     await userEvent.upload(fileInput, testfile);
 
     // Check that handleChange is called with valid args.
-    expect(handleChange).toHaveBeenCalledWith('testFileField', btoa(`{"test":"test"}`));
+    expect(handleChange).toHaveBeenCalledWith(field, btoa(fileContent));
 });

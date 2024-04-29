@@ -454,7 +454,7 @@ By default it supports files that can be opened in text mode or with a text edit
 
 It only sends file content to the server by reading it using the [readAsArrayBuffer](https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsArrayBuffer) method of the FileReader class, and then decoding it into **UTF-8** format, using the [decode](https://developer.mozilla.org/en-US/docs/Web/API/TextDecoder/decode) method of the TextDecoder class.
 
-If `options` property contains useBase64Encoding is set up as true, then readAsArrayBuffer method is replaced with [readAsDataURL](https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL) and proceeded correctly to pass only file content. With that approach any file is stored in **Base64** format.
+If `options` property contains useBase64Encoding is set up as true, then readAsArrayBuffer method is replaced with [readAsDataURL](https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL) and obtained data are correctly proceeded to store only file content (beggining of result is removed, as it contains unwanted informations and pure encoded file content is saved). With that approach any file is stored in **Base64** format.
 
 The file content can be validated using in-built validators such as [string](validators.md#string) and [regex](validators.md#regex), and a custom validator can also be implemented using a [custom hook](../custom_ui_extensions/custom_hook.md) and [saveValidator](../advanced/save_validator.md).
 
