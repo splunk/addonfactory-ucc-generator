@@ -1,7 +1,6 @@
 import difflib
 import os
 from typing import List, Tuple
-
 import xmldiff.main
 
 

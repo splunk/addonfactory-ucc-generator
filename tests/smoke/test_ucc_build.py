@@ -6,7 +6,6 @@ from os import path
 from pathlib import Path
 
 from tests.smoke import helpers
-
 import addonfactory_splunk_conf_parser_lib as conf_parser
 
 from splunk_add_on_ucc_framework.commands import build
@@ -232,8 +231,8 @@ def test_ucc_generate_with_everything():
             ("bin", "splunk_ta_uccexample", "modalert_test_alert_helper.py"),
         ]
         for af in files_should_be_absent:
-            expected_file_path = path.join(expected_folder, *af)
-            assert not path.exists(expected_file_path)
+            actual_file_path = path.join(actual_folder, *af)
+            assert not path.exists(actual_file_path)
 
         _compare_logging_tabs(package_folder, actual_folder)
 
@@ -484,6 +483,10 @@ def test_ucc_build_verbose_mode(caplog):
 
 
 def test_ucc_generate_with_everything_uccignore(caplog):
+    """
+    Checks the functioning of .uccignore present in a repo.
+    Compare only the files that shouldn't be present in the output directory.
+    """
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
             path.dirname(path.realpath(__file__)),
@@ -506,68 +509,18 @@ def test_ucc_generate_with_everything_uccignore(caplog):
         edm4 = f"\n{temp_dir}/Splunk_TA_UCCExample/bin/splunk_ta_uccexample_rh_example_input_two.py"
 
         assert expected_warning_msg in caplog.text
-        assert (edm1 + edm2 + edm3 + edm4) in caplog.text or (
-            edm1 + edm3 + edm2 + edm4
-        ) in caplog.text
+        assert (edm1 + edm2 + edm3 + edm4) in caplog.text
 
-        expected_folder = path.join(
-            path.dirname(__file__),
-            "..",
-            "testdata",
-            "expected_addons",
-            "expected_output_global_config_everything",
-            "Splunk_TA_UCCExample",
-        )
         actual_folder = path.join(temp_dir, "Splunk_TA_UCCExample")
-        _compare_app_conf(expected_folder, actual_folder)
-        files_to_be_equal = [
-            ("README.txt",),
-            ("appserver", "static", "test icon.png"),
-            ("default", "alert_actions.conf"),
-            ("default", "eventtypes.conf"),
-            ("default", "inputs.conf"),
-            ("default", "restmap.conf"),
-            ("default", "tags.conf"),
-            ("default", "splunk_ta_uccexample_settings.conf"),
-            ("default", "web.conf"),
-            ("default", "server.conf"),
-            ("default", "data", "ui", "alerts", "test_alert.html"),
-            ("default", "data", "ui", "nav", "default.xml"),
-            ("default", "data", "ui", "views", "configuration.xml"),
-            ("default", "data", "ui", "views", "inputs.xml"),
-            ("default", "data", "ui", "views", "dashboard.xml"),
-            ("default", "data", "ui", "views", "splunk_ta_uccexample_redirect.xml"),
-            ("bin", "example_input_two.py"),
-            ("bin", "example_input_three.py"),
-            ("bin", "example_input_four.py"),
-            ("bin", "import_declare_test.py"),
-            ("bin", "splunk_ta_uccexample_rh_account.py"),
-            ("bin", "splunk_ta_uccexample_rh_three_custom.py"),
-            ("bin", "splunk_ta_uccexample_rh_example_input_four.py"),
-            ("bin", "splunk_ta_uccexample_custom_rh.py"),
-            ("bin", "splunk_ta_uccexample_rh_oauth.py"),
-            ("bin", "splunk_ta_uccexample_rh_settings.py"),
-            ("bin", "test_alert.py"),
-            ("README", "alert_actions.conf.spec"),
-            ("README", "inputs.conf.spec"),
-            ("README", "splunk_ta_uccexample_account.conf.spec"),
-            ("README", "splunk_ta_uccexample_settings.conf.spec"),
-            ("metadata", "default.meta"),
+        # when custom files are provided, default files shouldn't be shipped
+        files_should_be_absent = [
+            ("bin", "splunk_ta_uccexample_rh_example_input_one.py"),
+            ("bin", "example_input_one.py"),
+            ("bin", "splunk_ta_uccexample_rh_example_input_two.py"),
         ]
-        helpers.compare_file_content(
-            files_to_be_equal,
-            expected_folder,
-            actual_folder,
-        )
-        files_to_exist = [
-            ("static", "appIcon.png"),
-            ("static", "appIcon_2x.png"),
-            ("static", "appIconAlt.png"),
-            ("static", "appIconAlt_2x.png"),
-        ]
-        for f in files_to_exist:
-            expected_file_path = path.join(expected_folder, *f)
-            assert path.exists(expected_file_path)
+        for af in files_should_be_absent:
+            actual_file_path = path.join(actual_folder, *af)
+            assert not path.exists(actual_file_path)
 
 
 def test_ucc_generate_only_one_tab():
