@@ -61,7 +61,7 @@
         "showRoundedY2AxisLabels": true,
         "showOverlayY2Axis": true
       },
-      "title": "Data volume",
+      "title": "Data ingestion",
       "dataSources": {
         "primary": "overview_data_volume_ds"
       }

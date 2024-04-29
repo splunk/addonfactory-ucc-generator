@@ -45,7 +45,7 @@
         "yAxisTitleText": "Volume (bytes)",
         "xAxisTitleText": "Time"
       },
-      "title": "Data ingestion",
+      "title": "Data volume",
       "dataSources": {
         "primary": "data_ingestion_data_volume_ds"
       }
