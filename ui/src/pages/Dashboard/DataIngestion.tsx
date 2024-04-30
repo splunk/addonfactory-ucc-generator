@@ -124,7 +124,7 @@ export const DataIngestionDashboard = ({
                         actionMenus={getActionButtons('data_ingestion')}
                     />
 
-                    <div id="data_ingestion_search" className="invisible_before_Moving">
+                    <div id="data_ingestion_search" className="invisible_before_moving">
                         <p id="data_ingestion_search_label">Search</p>
                         <Search
                             id="data_ingestion_search_input"
@@ -133,7 +133,7 @@ export const DataIngestionDashboard = ({
                             style={{ minWidth: '150px', gridRow: '6', gridColumn: '1' }}
                         />
                     </div>
-                    {/* <div id="switch_hide_no_traffic_wrapper" className="invisible_before_Moving">
+                    {/* <div id="switch_hide_no_traffic_wrapper" className="invisible_before_moving">
                         <Switch
                             id="switch_hide_no_traffic"
                             value={toggleNoTraffic}
@@ -144,7 +144,7 @@ export const DataIngestionDashboard = ({
                             Hide items with no traffic
                         </Switch>
                     </div> */}
-                    <div id="info_message_for_data_ingestion" className="invisible_before_Moving">
+                    <div id="info_message_for_data_ingestion" className="invisible_before_moving">
                         {infoMessage ? (
                             <Message appearance="fill" type="info">
                                 {infoMessage}
