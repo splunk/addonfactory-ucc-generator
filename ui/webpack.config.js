@@ -36,21 +36,21 @@ module.exports = merge(baseConfig, {
             },
         ],
     },
-    plugins: [new LicenseWebpackPlugin(), new ForkTsCheckerWebpackPlugin()],
+    plugins: [
+        new LicenseWebpackPlugin({
+            stats: {
+                warnings: false,
+                errors: true,
+            },
+        }),
+        new ForkTsCheckerWebpackPlugin(),
+    ],
     devtool: 'source-map',
     resolve: {
         fallback: { querystring: require.resolve('querystring-es3') },
     },
     devServer: {
         hot: false,
-        client: {
-            overlay: {
-                warnings: (warning) =>
-                    !warning.message.includes(
-                        'license-webpack-plugin: could not find any license file for styled-components'
-                    ),
-            },
-        },
         proxy: [
             {
                 target: proxyTargetUrl,
