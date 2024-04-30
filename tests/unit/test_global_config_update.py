@@ -7,6 +7,8 @@ from splunk_add_on_ucc_framework.global_config_update import (
     _handle_biased_terms_update,
     _handle_dropping_api_version_update,
     _handle_xml_dashboard_update,
+    _handle_alert_action_updates,
+    _dump_with_migrated_tabs,
 )
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 
@@ -58,17 +60,38 @@ def test_handle_dropping_api_version_update(filename, is_yaml):
     assert "apiVersion" not in global_config.meta
 
 
-def test_migrate_old_dashboard(tmp_path, caplog):
+def test_handle_alert_action_updates(tmp_path, caplog):
     tmp_file_gc = tmp_path / "globalConfig.json"
-    global_config_path = helpers.get_testdata_file_path(
-        "valid_config_old_dashboard.json"
+    # a new globalConfig with minimal configs for input and configuration
+    helpers.copy_testdata_gc_to_tmp_file(tmp_file_gc, "valid_config_all_alerts.json")
+    global_config = global_config_lib.GlobalConfig(str(tmp_file_gc), False)
+
+    _handle_alert_action_updates(global_config)
+
+    expected_schema_version = "0.0.4"
+    assert expected_schema_version == global_config.schema_version
+    expected_text = (
+        "'activeResponse' is deprecated. Please use 'adaptiveResponse' instead."
     )
 
-    with open(global_config_path) as file:
-        data = file.read()
+    for log_tuple in caplog.record_tuples:
+        assert log_tuple[1] == 30  # 'WARNING' log's numeric value is 30
+        assert log_tuple[2] == expected_text
 
-    with open(tmp_file_gc, "w+") as file:
-        file.write(data)
+    for alert in global_config.alerts:
+        assert alert.get("adaptiveResponse")
+        assert alert.get("activeResponse") is None
+        if alert["name"] == "test_alert_default":
+            # check the default values when these properties aren't provided in an alert
+            assert alert["adaptiveResponse"]["supportsAdhoc"] is False
+            assert alert["adaptiveResponse"]["supportsCloud"] is True
+        assert alert.get("adaptiveResponse", {}).get("supportsAdhoc") is not None
+        assert alert.get("adaptiveResponse", {}).get("supportsCloud") is not None
+
+
+def test_migrate_old_dashboard(tmp_path, caplog):
+    tmp_file_gc = tmp_path / "globalConfig.json"
+    helpers.copy_testdata_gc_to_tmp_file(tmp_file_gc, "valid_config_old_dashboard.json")
 
     global_config = global_config_lib.GlobalConfig(str(tmp_file_gc), False)
     _handle_xml_dashboard_update(global_config)
@@ -84,3 +107,22 @@ def test_migrate_old_dashboard(tmp_path, caplog):
     assert expected_schema_version == global_config.schema_version
     assert expected_panel == global_config.dashboard
     assert expected_info in caplog.text
+
+
+def test_tab_migration(tmp_path):
+    tmp_file_gc = tmp_path / "globalConfig.json"
+    helpers.copy_testdata_gc_to_tmp_file(tmp_file_gc, "valid_config_only_logging.json")
+    assert "loggingTab" not in tmp_file_gc.read_text()
+
+    global_config = global_config_lib.GlobalConfig(str(tmp_file_gc), False)
+    _dump_with_migrated_tabs(global_config, global_config.original_path)
+
+    assert "loggingTab" in tmp_file_gc.read_text()
+
+    gc_json = json.loads(tmp_file_gc.read_text())
+
+    for tab in gc_json["pages"]["configuration"]["tabs"]:
+        if tab == {"type": "loggingTab"}:
+            break
+    else:
+        assert False, "No tab found"
