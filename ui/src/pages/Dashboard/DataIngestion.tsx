@@ -4,7 +4,6 @@ import { DashboardContextProvider } from '@splunk/dashboard-context';
 import EnterpriseViewOnlyPreset from '@splunk/dashboard-presets/EnterpriseViewOnlyPreset';
 import Search from '@splunk/react-ui/Search';
 import Message from '@splunk/react-ui/Message';
-import Tooltip from '@splunk/react-ui/Tooltip';
 
 import { debounce } from 'lodash';
 import {
